@@ -1,0 +1,391 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{AAC0F132-0A9F-45B3-B682-77AC9B24B352}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>VECTO.My.MyApplication</StartupObject>
+    <RootNamespace>VECTO</RootNamespace>
+    <AssemblyName>VECTO</AssemblyName>
+    <MyType>WindowsForms</MyType>
+    <ApplicationIcon>Resources\Icon2.ico</ApplicationIcon>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>VECTO.xml</DocumentationFile>
+    <NoWarn>41999,42016,42017,42018,42019,42032,42036</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>None</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>VECTO.xml</DocumentationFile>
+    <NoWarn>41999,42016,42017,42018,42019,42032,42036</NoWarn>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ivtlic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ivtlic\ivtlic.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="ADVANCE\cADV.vb" />
+    <Compile Include="cVECTO.vb" />
+    <Compile Include="cVSUM.vb" />
+    <Compile Include="GUI\F_ENG.Designer.vb">
+      <DependentUpon>F_ENG.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_ENG.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\F_GBX.Designer.vb">
+      <DependentUpon>F_GBX.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_GBX.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\F_StrInpBox.designer.vb">
+      <DependentUpon>F_StrInpBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_StrInpBox.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\F_VEH_AuxDlog.Designer.vb">
+      <DependentUpon>F_VEH_AuxDlog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_VEH_AuxDlog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\F_VEH_Axle.Designer.vb">
+      <DependentUpon>F_VEH_Axle.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_VEH_Axle.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Input Files\cAux.vb" />
+    <Compile Include="Input Files\cENG.vb" />
+    <Compile Include="Input Files\cGBX.vb" />
+    <Compile Include="MODcalc\cBatModel.vb" />
+    <Compile Include="cConfig.vb" />
+    <Compile Include="cCustomMap.vb" />
+    <Compile Include="cDelaunayMap.vb" />
+    <Compile Include="cDEV.vb" />
+    <Compile Include="cEmComp.vb" />
+    <Compile Include="Input Files\cEMO.vb" />
+    <Compile Include="cHEVctrl.vb" />
+    <Compile Include="File Browser\cFileBrowser.vb" />
+    <Compile Include="MODcalc\cVh.vb" />
+    <Compile Include="MODcalc\Em Calc.vb" />
+    <Compile Include="File Browser\FB_Dialog.designer.vb">
+      <DependentUpon>FB_Dialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="File Browser\FB_Dialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="File Browser\FB_FavDlog.designer.vb">
+      <DependentUpon>FB_FavDlog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="File Browser\FB_FavDlog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MODcalc\cPower.vb" />
+    <Compile Include="MODcalc\cMOD.vb" />
+    <Compile Include="Input Files\cTRS.vb" />
+    <Compile Include="Input Files\cFLD.vb" />
+    <Compile Include="Input Files\cMAP.vb" />
+    <Compile Include="Input Files\cDRI.vb" />
+    <Compile Include="Input Files\cGEN.vb" />
+    <Compile Include="Input Files\cVEH.vb" />
+    <Compile Include="GUI\F_VEH_GearDlog.Designer.vb">
+      <DependentUpon>F_VEH_GearDlog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_VEH_GearDlog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Input Files\cSubPath.vb" />
+    <Compile Include="GUI\F_ShutDown.Designer.vb">
+      <DependentUpon>F_ShutDown.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_ShutDown.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\F_ADVfzp.Designer.vb">
+      <DependentUpon>F_ADVfzp.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_ADVfzp.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\F_GEN.Designer.vb">
+      <DependentUpon>F_GEN.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_GEN.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\F_ModSplit.Designer.vb">
+      <DependentUpon>F_ModSplit.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_ModSplit.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="cFile V3.vb" />
+    <Compile Include="VECTO_Global.vb" />
+    <Compile Include="VECTO_Types.vb" />
+    <Compile Include="M_SOC_Iter.vb" />
+    <Compile Include="cRegression.vb" />
+    <Compile Include="ADVANCE\cADVANCE.vb" />
+    <Compile Include="GUI\GUI_Subs.vb" />
+    <Compile Include="GUI\F_VEH.Designer.vb">
+      <DependentUpon>F_VEH.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_VEH.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\F_Options.Designer.vb">
+      <DependentUpon>F_Options.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_Options.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\F_TEM_Creator.Designer.vb">
+      <DependentUpon>F_TEM_Creator.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_TEM_Creator.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\F_ADV.Designer.vb">
+      <DependentUpon>F_ADV.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_ADV.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\F_AboutBox.Designer.vb">
+      <DependentUpon>F_AboutBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_AboutBox.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="M_Lese.vb" />
+    <Compile Include="M_MAIN.vb" />
+    <Compile Include="cERG.vb" />
+    <Compile Include="GUI\F_MAINForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\F_MAINForm.Designer.vb">
+      <DependentUpon>F_MAINForm.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="File Browser\FB_Global.vb" />
+    <Compile Include="M_FCCor.vb" />
+    <Compile Include="M_OptInterface.vb" />
+    <Compile Include="cCycleKin.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="File Browser\FB_Dialog.resx">
+      <DependentUpon>FB_Dialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="File Browser\FB_FavDlog.resx">
+      <DependentUpon>FB_FavDlog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_ADVfzp.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>F_ADVfzp.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_ENG.resx">
+      <DependentUpon>F_ENG.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_GBX.resx">
+      <DependentUpon>F_GBX.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_MAINForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>F_MAINForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_GEN.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>F_GEN.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_ModSplit.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>F_ModSplit.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_ShutDown.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>F_ShutDown.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_StrInpBox.resx">
+      <DependentUpon>F_StrInpBox.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_VEH.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>F_VEH.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_Options.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>F_Options.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_TEM_Creator.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>F_TEM_Creator.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_ADV.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>F_ADV.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_AboutBox.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>F_AboutBox.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_VEH_AuxDlog.resx">
+      <DependentUpon>F_VEH_AuxDlog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_VEH_Axle.resx">
+      <DependentUpon>F_VEH_Axle.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_VEH_GearDlog.resx">
+      <DependentUpon>F_VEH_GearDlog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\app.manifest" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TUG-About.png" />
+    <None Include="Resources\VECTO-About.png" />
+    <None Include="Resources\VECTO-VEH.png" />
+    <None Include="Resources\VECTO-GBX.png" />
+    <None Include="Resources\VECTO-ENG.png" />
+    <None Include="Resources\VECTO-VECTO.png" />
+    <None Include="Resources\VECTO-Mainform.png" />
+    <None Include="Resources\Play-icon-gray.png" />
+    <None Include="Resources\Stop-icon.png" />
+    <None Include="Resources\Play-icon.png" />
+    <None Include="Resources\plus-circle-icon.png" />
+    <None Include="Resources\IVT_91x44.png" />
+    <None Include="Resources\Actions-document-save-as-icon.png" />
+    <None Include="Resources\Actions-document-save-icon.png" />
+    <None Include="Resources\minus-circle-icon.png" />
+    <None Include="Resources\Open-icon.png" />
+    <None Include="Resources\Actions-arrow-up-icon.png" />
+    <None Include="Resources\Actions-arrow-down-icon.png" />
+    <None Include="Resources\blue-document-icon.png" />
+    <None Include="Resources\Misc-Tools-icon.png" />
+    <None Include="Resources\export-icon.png" />
+    <None Include="Resources\Information-icon.png" />
+    <None Include="Resources\JRC-About.png" />
+    <None Include="Resources\Icon.png" />
+    <None Include="Resources\Icon2.ico" />
+    <None Include="Resources\IVT_About.png" />
+    <None Include="Resources\Help-icon.png" />
+    <None Include="app.config" />
+    <None Include="Resources\TUG_91x34.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
