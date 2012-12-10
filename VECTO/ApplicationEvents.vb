@@ -137,8 +137,8 @@ Namespace My
             End If
 
             'Lizenz initialisieren
-            Lic = New ivtlic.cLicense
-            Lic.AppCode = "VECTO"
+            Lic = New vectolic.cLicense
+            Lic.AppVersion = VECTOvers
             Lic.FilePath = MyAppPath & "license.dat"
 
         End Sub
