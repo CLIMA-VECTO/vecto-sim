@@ -124,7 +124,7 @@
 
     End Sub
 
-    'Speichern oder Speichern als Function = true wenn Datei gespeichert
+    'Save or Save As function = true if file is saved
     Private Function SaveOrSaveAs(ByVal SaveAs As Boolean) As Boolean
         If EngFile = "" Or SaveAs Then
             If fbENG.SaveDialog(EngFile) Then
@@ -136,7 +136,7 @@
         Return saveENG(EngFile)
     End Function
 
-    'ENG speichern
+    'Save ENG
     Private Function saveENG(ByVal file As String) As Boolean
         Dim ENG0 As cENG
 
@@ -177,7 +177,7 @@
 
 #Region "Change Events"
 
-    'Change Status ändern
+    'Change Status ändern |@@| Change Status change
     Private Sub Change()
         If Not Changed Then
             Me.LbStatus.Text = "Unsaved changes in current file"
@@ -185,7 +185,7 @@
         End If
     End Sub
 
-    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht
+    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht |@@| Save changes? "... Return True if User aborts
     Private Function ChangeCheckCancel() As Boolean
 
         If Changed Then

@@ -1,0 +1,2295 @@
+﻿>>> ApplicationEvents.vb
+5:    ' Für MyApplication sind folgende Ereignisse verfügbar:
+7:    ' Startup: Wird beim Starten der Anwendung noch vor dem Erstellen des Startformulars ausgelöst.
+8:    ' Shutdown: Wird nach dem Schließen aller Anwendungsformulare ausgelöst. Dieses Ereignis wird nicht ausgelöst, wenn die Anwendung nicht normal beendet wird.
+9:    ' UnhandledException: Wird ausgelöst, wenn in der Anwendung eine unbehandelte Ausnahme auftritt.
+10:    ' StartupNextInstance: Wird beim Starten einer Einzelinstanzanwendung ausgelöst, wenn diese bereits aktiv ist. 
+11:    ' NetworkAvailabilityChanged: Wird beim Herstellen oder Trennen der Netzwerkverbindung ausgelöst.
+14:        'Initialisierung
+25:            'Pfade
+33:            'Falls Ordner nicht vorhanden: Erstellen!
+52:                    'Directories.txt vorkonfigurieren
+78:            'Trennzeichen!
+91:            'Klassen initialisieren
+102:            'Config
+106:            'Log starten
+109:                'Dateigröße checken
+112:                'Falls Log zu groß: löschen
+139:            'Lizenz initialisieren
+>>> cConfig.vb
+49:        '*** Erste Zeile: Version
+52:            ' "V" entfernen => Zahl bleibt übrig
+55:                'Falls Version ungültig: Abbruch
+58:                'Version festgelegt
+134:        'Zeile      Variable        Typ         Beschreibung
+135:        '(01)       WorkDPath       String      WorkDir
+136:        '(02)       LastMode        Short       Letzter verwendeter Modus (entspricht CBoxMODE.SelectedIndex)
+137:        '(03)       IntpV2          Boolean     Neuen Interpolator verwenden
+138:        '(04)       nnormEngStop    Single      Unter dieser Drehzahl Engine Stop
+139:        '(05)       TEMpath         String      TEM_Data Pfad
+140:        '(06)       LastTEM         String      Letzte TEM Datei   -nicht in Options Form!!!
+141:        '(07)       TEMexl          Boolean     Open TEM in Excel  -nicht in Options Form!!!
+142:        '(08)       EAAvInt         Short       Analyse intervals of seconds. Wenn 0: Wert abfragen
+143:        '(09)       ModOut          Boolean     Modale Ausgabe
+144:        '(10)       WegKorJa        Boolean     Wegkorrektur damit bei Geschw. Reduktion Zyklus nicht kürzer wird
+145:        '(11)       GnVorgab        Boolean     Gang- bzw. Drehzahl
+146:        '(12)       LogSize         Int16       Maximale Log-Größe [MiB]
+147:        '(13)       FZPsort         Boolean     FZP sortieren (früher Standard da VISSIM die .fzp nach Sekunden sortiert ausgibt)
+148:        '(14)       FZPsortExp      Boolean     Sortierte FZP exportieren
+149:        '(15)       BATCHoutpath    Boolean     Ausgabepfad für BATCH-Modus:   <WORKDIR>, <GENPATH> oder Pfad
+150:        '(16)       BATCHoutSubD    Boolean     BATCH-Ausgabe in Unterordner (je .gen Datei)
+151:        '(17)       AirDensity      Single      Luftdichte
+152:        '(18)       FinalEmOnly     Boolean     Nur Final-Emissions ausgeben
+153:        '(19)       FCcorrection    Boolean     FC-Korrektur im BATCH-Modus
+175:                    'Früher:  IntpV2 = CBool(line)
+>>> cCustomMap.vb
+85:        'Min/Max suchen
+105:        'Normieren
+125:            'Wenn Vorzeichen von x oder y nicht gleich Vorzeichen von xA(i) oder yA(i) dann wird Zeile i übersprungen
+>>> cCycleKin.vb
+9:    'Fahrzustände in Sekunden
+15:    'Fahrzustands-Anteile
+21:    'Beschl.-Parameter
+82:        '3s-Beschl
+91:            'Fahranteile Stop/Acc/Dec/Cruise
+106:            'Durchschnitts-Beschl
+>>> cDelaunayMap.vb
+35:        'XY-Triangulierung
+50:        'XZ-Triangulierung
+>>> cDEV.vb
+13:    '********************************* Anleitung zur Einbindung neuer DEV-Options *********************************
+15:    '1. Eintrag in "Sub New()"
+17:    '   I) Neues cDEVoption Objekt definieren mit "Conf0 = New cDEVoption(ConfigType, Description, SaveInConfg, Enabled)"
+19:    '       ConfigType      <tDEVconfType>  ...definiert Typ: Boolean, Integer, Single, String, Menüauswahl (Integer) oder Verweis auf Funktion
+20:    '       Description     <String>        ...Beschreibung des Parameters
+21:    '       SaveInConfg     <Boolean>       ...Ob Einstellung für nächsten PHEM-Start gespeichert werden soll
+22:    '       Enabled         <Boolean>       ...Ob Einstellung im DEV-Tab geändert werden kann
+24:    '   II) Default-Wert definieren. Hier wird unterschieden welcher ConfigType verwendet wird:
+26:    '       a) ConfigType = tBoolean:
+28:    '           Conf0.BoolVal = ...             <Boolean> 
+30:    '       b) ConfigType = tSingleVal:  
+32:    '           Conf0.SingleVal = ...           <Single>
+34:    '       c) ConfigType = tStringVal:    
+36:    '           Conf0.StringVal = ...           <String>
+38:    '       d) ConfigType = tIntVal:    
+40:    '           Conf0.IntVal = ...              <Integer>
+42:    '       e) ConfigType = tAction:
+44:    '           Conf0.ActionDelegate = New cDEVoption.dActionDelegate(AddressOf NameDerFunktion)
+46:    '           Wobei NameDerFunktion die aufzurufende Funktion ist die einen <String> übergibt: "Public Function NameDerFunktion() As String"
+48:    '       f) ConfigType = tContMenIndex:
+50:    '           Verfügbare Auswahl-Möglichkeiten als <String> definieren:
+52:    '               Conf0.AddMode("Auswahl 1")
+53:    '               Conf0.AddMode("Auswahl 2")
+54:    '               usw...
+56:    '           Default-Wert definieren: Erste Auswahl = 0
+58:    '               Conf0.ModeIndex = ...       <Integer>
+73:        '**************************** START: Parameter konfigurieren '****************************
+113:        '**************************** ENDE: Parameter konfigurieren '*****************************
+121:    'Initialisiert die tatsächlichen Config-Parameter aus der MyConfigs-Liste 
+126:    'Demo für Delegate Function
+327:                    '??? Darf nicht sein
+>>> cEmComp.vb
+21:    'Transient Correction
+25:    'Komponente wird sekündlich ausgegeben
+28:    'ATVals definiert (EXS)
+31:    'Summen/DruchschnittsWerte
+109:        'Durchschnitt
+113:        'Summe (g/h umgerechnet in g)
+>>> cERG.vb
+47:        '********************** GEN-Liste raussuchen. Bei ADVANCE aus Flotte sonst aus Jobliste '**********************
+84:        '********************** Erg-Einträge erstellen '**********************
+90:        'Fahrzeugtyp-unabhängig
+94:        'Jede GEN-Datei auf Modus und Kennfeld checken
+115:                    'nix...
+136:            'Elektrofahrzeug / Hybrid
+139:                'EV & HEV
+158:                'Nur EV:
+171:            'Konventionell / Hybrid  (Alles außer EV)
+174:                'Konventionelles Fahrzeug...
+182:                    'Aus den Messdaten
+197:                            'x/h-Ausgabe falls ADVANCE Modus -oder- EngineOnly -oder- Einheit nicht in x/h und somit keine Umrechnung in x/km möglich
+212:                    'Aus dem Kennfeld
+240:                            'x/h-Ausgabe falls ADVANCE Modus -oder- EngineOnly -oder- Einheit nicht in x/h und somit keine Umrechnung in x/km möglich
+260:            'derzeit nix
+266:            'Fahrzeugbesogene Felder
+280:            'CylceKin
+288:        'ErgListe sortieren damit g/km und g/h nebeneinander liegen
+357:        'Fahrzeugtyp-unabhängig
+361:        'Länge, Geschw., Steigung
+364:            'Durchschnitts-Geschw. berechnen
+374:            'Durchschnitts-Steigung berechnen
+388:            'Positive effektive EM-Leistung
+399:            'Positive effektive Batterie-Leistung = innere EM-Leistung
+410:            'Positive innere Batterie-Leistung
+421:            'Verbrauchte Energie berechnen
+424:            'Negative effektive EM-Leistung
+435:            'Negative effektive Batterie-Leistung = innere EM-Leistung
+446:            'Negative innere Batterie-Leistung
+457:            'Geladene Energie berechnen
+460:            'Energie in/aus Batterie
+464:            'EtaEM
+478:            'EtaBat
+492:            'Delta SOC
+495:            'Nur EV:
+498:                'Energieverbrauch
+505:        'Konventionell d.h. alles mit ICE (nicht EV)
+508:            'Emissionen
+511:                'x/h-Ausgabe falls ADVANCE Modus -oder- EngineOnly -oder- Einheit nicht in x/h und somit keine Umrechnung in x/km möglich
+522:            'Leistung, Drehzahl
+535:            'Ppos
+542:            'Pneg
+551:        'Nur Gesamtfahrzeug (nicht EngOnly)
+554:            'Pbrake-norm
+561:            'Eair
+568:            'Eroll
+575:            'Egrad
+582:            'Eacc
+589:            'Eaux
+596:            'Ebrake
+603:            'Etransm
+610:            'Masse, Loading
+614:            'CylceKin
+620:                'EposICE
+627:                'EnegICE
+637:        'Ausgabe-String erstellen:
+655:        'Datei öffnen
+668:        'Datei schließen (wird nach jedem Job neu geöffnet)
+687:        'Datei öffnen
+704:        'Datei schließen
+739:        'Ausgabepfad definieren
+753:        'Datei öffnen
+755:            'Datei öffnen
+769:        'Datei schließen (wird nach jedem Job neu geöffnet)
+>>> cVSUM.vb
+46:        'Durchschnitts-Geschw. berechnen
+114:        'TODO: Mission nicht Zyklusname
+117:        'TODO: Test Setup
+>>> M_FCCor.vb
+5:    'C     Unterprogramm zur Korrektur der verbrauchswerte nach Motorgroesse (fuer HBEFA-Berechnungen, da dort
+6:    'C     alle LKW-Groessen mit gleichem *.mep gerechnet werden
+32:        'c  Korrektur des Kraftstoffverbrauches
+33:        'c  nur für Handbuchrechnungen und LKW
+35:            'c        für Euro0 und früher werden größenabhängig 3 verschiedene KF verwendet
+36:            'c        daher hier keine Größenkorrektur
+39:            'c         Korrekturfunktion für Euro1 und Euro 2 1:1 von Stand ARTEMIS übernommen
+50:            'c        Korrekturfunktion Euro 3 gg. ARTEMIS geringfügig adaptiert (siehe FcCorr_Eu3ff.xls)
+55:            'c         Korrekturfunktion für Euro 4 ff analog zu Euro3
+56:            'c         lediglich adaptiert: Durchschnittsnennleistung der ins mep verwursteten Motoren
+61:            'c         Euro6ff
+>>> M_Lese.vb
+16:        'GEN einlesen
+35:        'VECTO: Defaultwerte für Parameter die nicht mehr in der .GEN/.VECTO sind werden beim Einlesen über SetDefault belegt.
+46:        'Fehlermeldung in Init()
+51:        'Einlesen der KFZ-Spezifikationen aus 'KFZspez'
+131:        '   FLD muss jetzt vor MAP/MEP eingelesen werden falls dort <DRAG> Einträge sind!
+142:        'Normieren
+146:        '    Kennfeld: Spalten 1 und 2 sind die x- und y- Koordinaten (Pe,n), die
+147:        '    uebrigen sind Messwerte
+148:        '    Emissionen und Verbrauch in (g/(h*(kW_Nennleistung) bei SNF
+149:        '    Emissionen in (g/h) und Verbrauch in (g/(h*(kW_Nennleistung) bei PKW und LNF
+152:            'Kennfeld einlesen
+163:            'Normieren
+170:        '    Einlesen des KFZ-Fahrzyklus (Nicht in ADVANCE).
+171:        '       LUZ: 04.02.2011: Ab jetzt ausserhalb von LESE wegen neuer BATCH-Struktur
+174:        '    Dynamik-Korrekturparameter, falls dynamokkorrektur ausgewählt:
+175:        '    Parameter aus multipler Regressionsanalyse, Differenz zu stationär in
+176:        '      SNF: (g/h)/kW_Nennleistung fuer einzelne Parameter
+177:        '      PKW  (g/h) für Emissionen , (g/h)/kW fuer Verbrauch
+192:        'Einlesen der Daten fuer Hybridsimulation:
+195:            'TODO: EV/HEV Init hierher!
+>>> M_MAIN.vb
+31:        'Hauptprogramm für alle Modi
+48:        'Falls es zu "ungeplanten" Abbruch kommt
+51:        'Fehler zurücksetzen
+54:        'Modus festlegen und Meldung
+70:        'Lizenz checken
+93:        'BATCH-Ausgabeordner erstellen falls notwendig
+114:        'MOD-Daten Klasse initialisieren
+116:        'TEST: Schaun ob's auch ohne dem geht: MODdata.Init()
+118:        'ERG-Klasse initialisieren
+128:        'Warnung wenn ungültige/unrealistische Einstellungen
+131:        'Meldungen
+134:        'Progbar-Init
+139:        '       Schleife zur Berechnung fuer alle vorgegebenen Zyklen und Fahrzeuge:
+142:        '**************************************** Job-Schleife ****************************************
+192:            'Check ob Abbruch
+195:            'Falls Error beim GEN einlesen
+198:            'Einlesen der Inputfiles
+199:            '   BATCH: Zyklus aus DRI-Liste
+200:            '   ADVANCE: Zyklus wird nicht eingelesen
+206:            'Überprüfe ob alle Modi in der GEN Datei lizenziert sind
+229:            'Falls Optimierer aktiv werden hier die Parameter eingelesen
+232:            'BATCH: Sub-Dir Ausgabeordner erstellen
+255:            '************************************** Zylus-Schleife ****************************************
+264:                    'ProgBar
+268:                    'BATCH-Modus: Fahrzyklus nicht aus GEN-Datei sondern aus DRI-Liste
+272:                    'Status
+277:                    'Ausgabe-Name definieren
+296:                '********************************** VECTO-Zylus-Schleife **********************************
+304:                        'ProgBar
+321:                    'TODO: Loading Schleife
+322:                    '***************************** VECTO-Loading-Schleife *********************************
+326:                    'Einstiegspunkt für SOC-Start Iteration
+329:                    'Aufraumen
+332:                    'Zyklus einlesen
+335:                        'Einlesen
+344:                        'v(s) in v(t) konvertieren (optional)
+352:                        'In 1Hz konvertieren (optional)
+356:                                'Fehlermeldung in DRI.Convert()
+362:                        'Entnormieren
+370:                    'Zyklus-Vorgaben initialisieren (Geschw, Beschl, ...)
+377:                        'Rechne .npi-Leistung in Pe und P_clutch um
+385:                        'ACHTUNG: VehmodeInit benötigt Infos aus GEN und DRI!
+387:                            'Fehlermeldung innerhalb VehmodeInit()
+416:                                    'TODO: Meldung...
+444:                        'CycleKin (für erg/sum usw.) berechnen
+452:                    'Emissionen und Nachbehandlung - wird bei EV-Modus nicht ausgeführt
+457:                        'Sekündliche TC Parameter ermittlen
+460:                        'Kennfeld Erstellung
+476:                        'Rohemissionen berechnen
+479:                        'TC Parameter umrechnen in Differenz zu Kennfeld-TC-Parameter
+482:                        'Dynamik-Korrektur
+488:                        'Korrektur der Verbrauchswerte kleiner LKW-Motoren bei HBEFA
+494:                        'Exhaust System Simulation
+504:                        'Summen / Durchschnitte bilden
+507:                        'Engine Analysis
+520:                    '*** Sekündliche Ausgabe ***
+532:                    'VECTO Ausgabe
+533:                    'TODO: Loadings umschalten...
+540:                    'Ausgabe für BATCH und ADVANCE
+544:                        'In ADVANCE ist Zyklus-Abbruch = Job-Abbruch
+560:                        'Ausgabe in Erg (Erste Berechnung - Initialisieren & Header)
+567:                    'Daten aufräumen
+570:                    'Status-Update
+577:                    'TODO: Loading Schleife
+578:                    '******************** ENDE *** VECTO-Loading-Schleife *** ENDE ************************
+588:                '************************* ENDE *** VECTO-Zylus-Schleife *** ENDE *************************
+595:            '****************************** ENDE *** Zylus-Schleife *** ENDE ******************************
+621:                'If GEN.irechwahl = tCalcMode.cmHEV Then MsgStrBuilder.Append(" (dSOC = " & SOC(MODdata.tDim) - SOC(0) & ")")
+641:            'Check ob Abbruch
+647:        '******************************* ENDE *** Job-Schleife *** ENDE *******************************
+>>> M_OptInterface.vb
+21:    'Korrigierte Emissionen (wird von SOC-Iterations-Modul bestimmt)
+24:    '*** Opt_Interface Ein/Ausschalten
+32:                'Initialisierung
+40:    '*** Initialisierung
+44:        'Zähler null setzen
+47:        'Korr. Em. löschen 
+52:        'TODO: I/O-Verzeichnis festlegen
+85:        'Timer initialisieren/starten
+92:    '*** Parameter einlesen
+98:        '**** Einlesen der Input-Datei mit Opt-Parameter
+108:    '*** Parameter ausgeben
+114:        '**** Ausgabe der Output-Datei mit Zielfunktion
+124:        'Ausgabe StatusString
+133:        'Berechnung der Zielfunktion
+136:        'Ausgabe der Zielfunktion
+144:    '*** Opt Deaktivieren
+153:    '*** Status-Meldung (darf nicht von BGWorker aufgerufen werden)
+158:    '*** Starte PHEM - wird von F_MAINForm.ComMsgTimer aufgerufen wenn Start-Signal erhalten
+161:        'PHEM starten
+165:        'Timer anhalten
+167:        'Zähler + 1
+169:        'PHEM starten
+174:    '*** PHEM fertig - wird von BackgroundWorker1_RunWorkerCompleted aufgerufen wenn PHEM beendet
+177:        'Ausgabe der Zielfunktion
+180:        'PHEM_Launcher beenden
+183:        'Timer wieder starten
+190:    '*** Beendet PHEM_Launcher
+>>> M_SOC_Iter.vb
+97:        'Check ob Vorzeichen von Delta-SOC sich ändert
+102:                'Vorzeichenwechsel...
+105:                    '...Limit erreicht => Abbruch
+126:                'Falls die letzte Iteration die Beste war (SOCnAbbr = True): Abbruch
+131:                'Falls eine andere Iteration besser war (SOCnAbbr = False): Wiederholen
+168:        'Check ob LinReg möglich: Mind. 2 Berechnungen; Mind. 1 dSOC-Vorzeichenwechsel
+271:            'Unkorrigierte Em verwenden wenn SOC-Iteration OK
+276:            'Unkorrigierte Em verwenden
+284:        'Korrigierte Emissionen für Optimierer
+286:            'Falls SOC-Iteration erfolgreich (oder Lin.Reg. nicht möglich) dann Emissionen der letzten Berechnung (unkorrigiert) verwenden
+>>> VECTO_Global.vb
+20:    'TODO: Weg damit! SOC-Iteration gehört in die Leistungsschleife oder nach Em-Berechnung für LinReg
+27:    'Dateiformat
+346:        'Log starten
+>>> ADVANCE\cADV.vb
+84:        'Zeile 1: FZP-Datei
+87:        'Zeile 2: FLT-Datei
+90:        'Zeile 3: TEM-Datei
+93:        'Zeile 4: RndSeed
+96:        'Zeile 5: MISKAMout True/False
+99:        'Zeile 6: STRfilter True/False
+102:        'Zeile 7: Distance filter für SUM.STR
+105:        'Zeile 8+: STR Dateien
+>>> ADVANCE\cADVANCE.vb
+71:    'Felder für Streckennummer, Spur und Koordinaten für alle STR-Dateien 
+103:    'Berechnung
+113:    'ADVANCE Initialisierung
+126:        'ADV Datei einlesen
+129:        'Check ob FLT vorhanden
+135:        'Check ob sortierte FZP vorhanden
+159:        'FLT einlesen (muss vor STR sein wegen cSTRerg)
+164:        'EMlist erstellen
+183:        'STR einlesen
+204:        'Listen erstellen
+209:        'FZP einlesen
+213:        'FZP sortieren (und exportieren)
+223:        'FZP Check
+233:        'Für AusgVis
+236:        'Ausgabe-Initialisierung
+238:        '   Dateinamen
+241:        ' Modale Ausgabe
+246:        'Startwerte
+260:    'ADVANCE Speicher frei geben
+270:        'Ausgabe
+273:        'Speicher freigeben
+333:        'Listen löschen
+340:        'Garbage Collection - Soll "System Out of Memory" Exception verhindern (tut's aber nicht!)
+346:    'ADVANCE Fahrzeugberechnung
+361:        'Check ob Fertig
+368:        'Zyklus-Klasse initialisieren
+374:        'Fahzeugnummer und Typ definieren (bleibt hier konstant)
+375:        '   Altes Fahrzeug ist VehStrAlt, Aktuelles ist VehStr
+380:        'Listen erstellen
+385:        't0
+388:        'Definiere Felder für Fahrzeug-Berechnung
+391:            'Check ob neues Fahrzeug 
+396:            'Allgemeiner Fahrzyklus
+401:            '   Strecken-Auswertung (MISKAM)
+408:                ''StatusMSG(7, "Calculation running... " & CInt(zFZP / FZPlen * 100).ToString("00") & "%", False)
+415:        '   Fahrzeug-Identifizierung
+419:        'Check ob Zyklus zu kurz => Überspringen
+422:        'Fahrzeuganzahl je Typ erhöhen
+427:        'Check ob letzte Gen-Datei neu zu verwenden ist, sonst Belegung durch FLT
+440:        'VehStr ist ab jetzt ALT
+449:    'Abschnittsweise Berechnung
+469:        'Zyklus durchschleifen
+472:            'Nr. der STR-Datei
+475:            'Falls Wechsel in STR-Nr:
+476:            '   Alte STR-Nr abschließen
+485:                        'Distanz (gefahrene km)
+488:                        'Reisezeit in h
+491:                        'Kfz-Anz
+494:                        'Summen-Emissionen
+513:            'Aufsummieren
+527:        'Letzte STR abschließen
+534:                'Distanz (gefahrene km)
+537:                'Reisezeit in h
+540:                'Kfz-Anz
+543:                'Summen-Emissionen
+565:    'FLT einlesen
+667:    'FZP einlesen
+696:        'Dateilänge bestimmen
+730:        'Arrays dimensionieren
+750:        'Datei einlesen
+755:        'Kommentare überspringen
+765:            'Strecken die nicht in der STR Datei aufgeführt sind werden hier entfernt
+783:            'Arrays belegen
+794:            'Progress-Ausgabe
+804:        'Speicher freigeben
+814:            'Arrays neu dimensionieren
+830:    'FZP sortiren
+872:            'Aktuelles Fahrzeug ist vNr1
+874:            'Zähle Fahrzeuge mit vNr = vNr1
+883:            'vNrAnz = Anzahl der Fahrzeuge mit vNr = vNr1
+884:            'Sortiere alle Fahrzeuge mit vNr = vNr1 nach Fahrzeugnummer
+892:                        'Zwischenspeicher = Zeile x1
+901:                        'Zeile x1 = Zeile x2
+910:                        'Zeile x2 = Zwischenspeicher
+924:            'vNr1 nach Zeit sortieren
+931:                            'Zwischenspeicher = Zeile xx1
+938:                            'Zeile xx1 = Zeile xx2
+946:                            'Zeile x2 = Zwischenspeicher
+960:            'Status-Ausgabe
+974:    'FZP exportieren
+1016:        'Daten
+1042:    'STR einlesen
+1133:        'SID-Liste erstellen
+1162:    '   ...Fahrzeuge aufteilen, die Lücke im Zeitverlauf haben
+1194:    'ADV einlesen
+1208:        '********** .ADV Datei einlesen ********
+1217:        'Zeile 1: FZP-Datei
+1220:        'Zeile 2: FLT-Datei
+1223:        'Zeile 3: TEM-Datei
+1226:        'Zeile 4: RndSeed
+1229:        'Zeile 5: MISKAMout True/False
+1232:        'Zeile 6: STRfilter True/False
+1235:        'Zeile 7: STR.SUM Streckenfilter
+1238:        'Zeile 8+: STR Dateien
+1258:            'Ausgabepfad definieren
+1286:        'File mit Summen Ergebnissen ueber alle Kfz:
+1308:    'Ausgabe Schließen
+1331:            'C      Umrechnung auf g Emissionen je Sekunde sowie Kfz/Tag
+1346:            'C      Umrechnung auf mg Emissionen je Meter
+1347:            'C     Streckenlaenge [m] wird aus Gerade zwischen Anfangs- und Endpunkt berechnet:
+1363:            'C      Ausgabe der Ergebnisse
+1365:            'C      Filename fuer Ergebnisfile = Name Eingabefile aber mit *.sd3:
+1369:            'C       File mit Summen Ergebnissen ueber alle Streckenstuecke:
+1439:        'C     Unterprogramm zu PHEM/Advance zur Ausgabe der Ergebnisse an MISKAM Luftguetemodell von Lohmeyer
+1440:        'C     Daten jeweils durch Semikolon getrennt ausgegeben
+1452:        'C     Aufaddieren der Emissionsdaten nach Streckenabschnitten, ueber jede Sekunde fuer jedes Fahrzeug
+1453:        'C     Achtung: jeweils 2 Richtungen je Abschnitt moeglich aber nur StrId in *.fzp uebergeben -> auf "naechstgelegene"
+1454:        'C     Richtung zugewiesen
+1464:                    'C      Suche nach naechstgelegenem Strassenteilstueck
+1465:                    'C      Koordinaten Kfz:
+1468:                    'C      Koordinaten Strecke: sSegAnX(j), sSegEnX(j), sSegAnY(j), sSegEnY(j) aus Eingabe
+1469:                    'C      Abstandsumme zu Anfang- und Endpunkt des Streckenabschnittes j
+1479:            'C      Falls Streckennummer auf *.fzp File in *.str File nicht existiert, wird auf naechstgelegenes Stueck zugewiesen (gleiches System wie oben):
+1495:            'C     Aufsummierung der Emissionen auf den jeweils zugehoerigen Streckenabschnitten:
+1496:            'C     berechnung sekuendlich in (g/h)/3600 -> g/Strecke ueber gesamte Zeit
+1503:            'C      Zaehlen der Kfz fuer DTV (nur wenn nicht in voriger Sekunde auch schon auf der Strecke
+1511:            'C     Grobe Rechnung Benzol nach GLOBEMI (HBEFA):
+1512:            'C      Trennung nach Otto, Diesel, LKW, PKW,vor/nach EURO 1
+1534:            'C     Grobe Rechnung Russ, Anteile Russ an PM derzeit nur Schaetzwerte!!!!:
+1535:            'C      Trennung nach Otto, Diesel, LKW, PKW,vor/nach EURO 1
+1562:            'C     SO2-Emissionen aus dem  im Kraftstoff enthaltenen
+1563:            'C     Schwefel gerechnet. Mit Masse SO2 = (Masse% S / 100) * 2
+1596:        '******** Ausgabe der einzelnen STR-Ergebnisse '*********
+1601:        '********* Ausgabe Summen über alle STR's '*********
+1611:        '** Datei-Header
+1618:        '*************************** Em je km ***************************
+1648:        '** Em je Segment
+1653:            'Segment-Name
+1656:            'Anzahl Fahrzeuge
+1659:            'Reisezeit
+1674:            'Em je km
+1683:            'Schreiben
+1688:        '** Em je Vehicle Type
+1696:            'Anzahl Fahrzeuge
+1699:            'Reisezeit, Strecke, Avg.Speed
+1714:            'Em
+1727:            'Schreiben
+1732:        '** Summe
+1735:        'Segment
+1738:        'Anzahl Fahrzeuge wird nicht aus STRerg berechnet (macht keinen Sinn) sondern aus cFLTfleet-Aufzeichnung
+1745:        'Reisezeit
+1766:        'Em je km
+1779:        'Schreiben
+1783:        '**************************** Em abs ****************************
+1815:        '** Em je Segment
+1820:            'Segment-Name
+1823:            'Em abs
+1828:            'Schreiben
+1833:        '** Em je Vehicle Type
+1841:            'Em
+1850:            'Schreiben
+1855:        '** Summe
+1858:        'Segment
+1861:        'Em abs
+1870:        'Schreiben
+1879:    '.mod-Datei zerlegen
+1895:        'InFile öffnen
+1910:        'Anzahl VehNummern
+1915:        'Schleife durch alle VehNummern in Liste
+1918:            'Abbruch falls Userabbruch
+1924:            'Abbruch falls Datei fertig
+1931:            'Ausgabedatei öffnen / Abbruch wenn Fehler beim Öffnen
+1937:            'Schleife durch Datei
+1940:                'Falls String schon eine VehNr enthält wird Zeile nicht nochmal eingelesen (siehe unten)
+1944:                    'Zeile einlesen
+1948:                'Falls Zeile mit VehNr gefunden: VehNr rausholen
+1952:                    'Falls VehNr die gesuchte ist: Ausgabedatei schreiben
+1955:                        'Erste Zeile schreiben ("VehNr: ...")
+1958:                        'Nächste Zeile lesen (sonst wird Do While übersprungen)
+1961:                        'Schleife bis nächste VehNr / Dateiende
+1964:                            'Wenn nächstes Fahrzeug:
+1967:                                    'Wenn gleiche Fahrzeugnummer: Datei weiter schreiben
+1968:                                    'Header und Units überspringen
+1973:                                    'Sonst: Raus aus Schleife
+1978:                            'Zeile schreiben
+1981:                            'Zeile lesen
+1986:                        'Falls nicht EndOfStream Flag setzen damit nächste VehNr nicht übersprungen wird
+1989:                        'Ausgabedatei schließen
+1992:                        'Aus der VehNr-Such-Schleife raus springen
+2001:            'ProgBar
+2026:    'FLT Klasse
+2042:        'Initialisieren
+2075:        'GenDatei Zufallsgenerator
+2125:    'Klasse für abschnittsweise Auswertung
+2191:            'Datei-Header
+2202:            '*************************** Em je km ***************************
+2232:            '** Ergebnisse je Veh-Type
+2240:                'Anzahl Fahrzeuge
+2243:                'Reisezeit
+2258:                'Em
+2267:                'Schreiben
+2272:            '** Summe
+2278:            'Anzahl Fahrzeuge
+2281:            'Reisezeit
+2296:            'Em
+2309:            'Schreiben
+2315:            '*************************** Em absolut *************************
+2345:            '** Ergebnisse je Veh-Type
+2353:                'Em
+2358:                'Schreiben
+2363:            '** Summe
+2369:            'Em
+2378:            'Schreiben
+2381:            'Datei schließen
+>>> File Browser\cFileBrowser.vb
+13:'   - Fav-Dlog: "Abbrechen" => "Cancel"
+14:'   - Fav-Dlog: Statt leeren Items in Fav-Liste "<undefined>"
+18:'**Anwendung
+25:'**Benötigte Globale Variablen (Default):
+49:    'Neue Instanz - ID definieren, umschalten auf FolderBrowser
+58:    'OpenDialog - Öffnen Dialog - Übergibt True wenn Dialog mit OK beendet wurde
+63:    'SaveDialog - Speichern Dialog - Übergibt True wenn Dialog mit OK beendet wurde
+74:    'Dialog öffnen - Übergibt True wenn Dialog mit OK beendet wurde
+80:    'File-History manuell updaten
+86:    'File / Folder History speichen und Speicher freigeben
+104:    'Dateiendungen definieren
+115:    'Dateien abfragen
+>>> File Browser\FB_Dialog.designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> File Browser\FB_Dialog.vb
+32:        ' Dieser Aufruf ist für den Windows Form-Designer erforderlich.
+34:        ' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
+83:                'Wenn leerer Pfad: Aktuellen Ordner (MyFolder) nehmen
+98:                'Abbruch wenn leerer Pfad
+104:                'Dateien in Array übernehmen
+106:                    'Mehrere Dateien ausgewählt 
+117:                    'Einzelne Datei
+119:                    'Primäre Extension (u.a. für bForceExt)
+121:                    'Falls Datei ohne Pfad angegeben dann Pfad hinzufügen
+123:                    'Falls statt Datei ein Ordner eingegeben wurde: Auf Ordner wechseln und Abbruch
+134:                        'Check ob Datei mit Ext angegeben
+137:                    'Falls Datei ohne Endung (nach bForceExt-Abfrage) und nicht existiert dann primäre Endung hinzufügen
+143:                    'Check ob Datei existiert
+145:                        'Ja: Check ob Overwrite wenn bOverwriteCheck
+153:                        'Nein: Abbruch wenn bFileMustExist
+160:                    'MyFiles definieren
+175:        'FolderHistory ContextMenu laden
+221:        'Pfad definieren
+222:        '   Falls kein Pfad angegeben wird: Letzter Ordner, kein Dateiname
+225:        '   Falls Pfadlänge zu klein (Pfad ungültig): Letzte Datei
+228:        'Ordner öffnen - Falls kein Ordner im Pfad: Letzter Ordner
+230:            'Falls Datei ohne Pfad angegeben
+237:            '...sonst: 
+247:        'Form anzeigen----------------------------------------------------
+259:            'Globale Folder History updaten
+272:    'Schließen und File/Folder History speichern
+309:    'Umschalten auf FolderBrowser
+321:    'Initialisieren
+329:        'Globale FileBrowser Initialisierung
+332:        'Laufwerk-ComboBox laden
+395:        'Laufwerk-Liste erstellen
+403:        'FolderHistory einlesen
+728:        'Context Menu sortieren
+741:        'Context Menu sortieren
+760:        'Dateien
+762:        'Ordner
+773:    'Ordner wechseln
+776:        'Abbruch wenn keine Laufwerk-Angabe
+781:        'Suchfelder löschen
+785:        'Laufwerk setzen
+791:        'Ordner setzen
+806:    'Ordner Eine Ebene hinauf
+817:    'FolderListe laden
+820:        'FolderListe löschen
+824:            'Ordner hinzufügen
+837:    'Dateiliste laden
+845:        'Abbruch wenn bBrowseFolder
+849:        'Extension-Filter definieren
+856:        'FileListe löschen
+863:            'Ordner hinzufügen
+>>> File Browser\FB_FavDlog.designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_AboutBox.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_AboutBox.vb
+4:    'Initialisieren
+33:    'Bild Links------------------------------------------------------------------
+>>> GUI/F_ADV.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_ADV.vb
+7:    'Initialisieren
+12:    'Schließen
+19:    'Inputfile- Steuerelemente------------------------------------------
+21:    'Browse Button-Click Events
+91:    'ADV speichern
+108:    'Neue leere ADV
+126:    'ADV in Form laden
+149:        'Zeile 1: FZP-Datei
+152:        'Zeile 2: FLT-Datei
+155:        'Zeile 3: TEM-Datei
+158:        'Zeile 4: RndSeed
+161:        'Zeile 5: MISKAMout True/False
+164:        'Zeile 6: STRfilter True/False
+167:        'Zeile 7: Distance filter für SUM.STR
+170:        'Zeile 8+: STR Dateien
+181:    'ADV aus Form speichern
+204:        'ADV.STRpathsClear()    '<= Nicht notwendig da neues lokales cADV-Objekt
+234:    'Formular Änderungen (Kontrolle ob GEN gespeichert)---------------------------------
+235:    'Event Handler für Formänderungen
+237:    'Change Status ändern
+243:    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht
+>>> GUI/F_ADVfzp.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_ENG.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_ENG.vb
+127:    'Speichern oder Speichern als Function = true wenn Datei gespeichert
+139:    'ENG speichern
+180:    'Change Status ändern
+188:    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht
+>>> GUI/F_GBX.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_GBX.vb
+154:    'Speichern oder Speichern als Function = true wenn Datei gespeichert
+206:    'Change Status ändern
+214:    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht
+>>> GUI/F_GEN.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_GEN.vb
+23:    'Coolant System Simulation Zwischenspeicher
+31:    'Initialisiere Form (Lade Verlauf, Combobox-Listen,...)
+45:        'Damit Combobox-Inhalte aktuell sind
+59:    'Schließen
+75:    'Änderung der DynKor Checkbox
+83:    'Änderung der Kaltstart Checkbox
+89:    'Änderund der SCR Checkbox
+338:    'a_DesMax
+352:        'Damit Veh-Datei übergeben wird
+378:        'Damit Veh-Datei übergeben wird
+404:        'Damit Veh-Datei übergeben wird
+520:    'Speichern ("Save" bzw. "Save As" falls neue Datei)
+532:    'GEN in Form laden
+544:        'GEN einlesen
+559:        'Form updaten
+587:        'Kennfeld Erstellung-----------------
+601:        'Kalt Start--------------------------
+608:        'Dateien-----------------------------
+617:        'Kalt Start
+699:    'GEN aus Form speichern
+720:        'Kennfeld Erstellung------------------------------------------------------
+730:        'Kalt Start---------------------------------------------------------------
+736:        'Dateien------------------------------------------------------------------
+750:        'Kalt Start
+833:    'Neue leere GEN
+848:        'Kennfeld Erstellung-----------------
+858:        'Kalt Start--------------------------
+864:        'Dateien-----------------------------
+865:        'Kalt Start
+933:    'Event Handler für Formänderungen
+949:    'Start/Stop - Checkbox Änderung
+955:    'Start/Stop - Textbox Änderung
+960:    'TextBox.TextChanged Events => Change()
+1072:    'Change Status ändern
+1080:    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht
+>>> GUI/F_MAINForm.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_MAINForm.vb
+176:    'PHEM-Launcher
+180:        'Falls Aufruf während PHEM schon läuft
+186:        'GENlist-Selection löschen
+189:        'Modus festlegen
+199:        'Wenn mehr als 100 Kombinationen in Batch fragen ob sekündliche Ausgabe
+210:        'Status
+214:        'Job-Liste definieren
+216:        'File- / Zylus- Liste definieren
+219:        'Zyklus-Liste definieren (falls nicht BATCH-Modus wird in SetCycleList nur die Liste gelöscht und nicht neu belegt)
+222:        'Check ob Overall-Progbar benötigt
+225:        'Launch über Job_Launcher
+259:    'Datei-Listen definieren
+291:    'Job-Launcher
+296:        'Options aus Options-Tab laden
+299:        'Config speichern
+304:        'Msg-Ausgabe zurück setzen
+307:        'Button umschalten
+311:        'Options disablen
+314:        'ProgBars Start
+323:        'BG-Worker starten
+339:    'Beginne Arbeit
+342:        'SLEEP verhindern
+377:                'Bei x.ProgSec = -1 kein Update von ProgBarSec
+404:    'Arbeit fertig
+409:        'Progbar Reset
+415:        'Damit ListView-Item Farben (Warnung = Gelb, etc..) richtig sichtbar
+424:                'Falls Optimierer aktiv werden hier die Zielfunktion ausgegeben und Signal an Interface
+436:        'ShutDown wenn Unexpected Error
+443:        'Options enablen / GUI Reset
+450:        'CommandLine Shutdown
+453:        'Auto Shutdown
+464:        'SLEEP reaktivieren
+477:    'Initialisieren
+490:        'Tabs richtig laden (sonst Problem mit Listviews)
+511:        'FileLists
+521:        'GUI Options laden (hier werden die GEN/ADV/DRI Listen geladen)
+524:        'Spalten skalieren... erst nach dem Laden der Dateilisten
+529:        'BackgroundWorker initialisieren
+534:        'Lizenz überprüfen
+559:    'Shown Event (Form-Load abgeschlossen)  ...hier werden StartUp-Forms geladen (DEV, GEN/ADV- Editor..)
+587:    'Datei mit PHEM öffnen
+599:        'ComLineArgs auslesen
+614:        'Modus umschalten
+621:        'Falls Datei angegeben
+626:    'Schließen
+629:        'FileLists speichern
+632:        'Log schließen
+641:        'Config speichern
+646:        'FileBrowser-Instanzen schließen
+705:        'Gesperrte Funktionen ein/ausblenden
+791:    'Datei aus Liste entfernen
+830:    'Datei zu Liste hinzufügen
+855:    'Datei öffnen
+880:    'GEN/ADV Liste: Datei hinzufügen
+889:        'Falls PHEM läuft: Vorgang abbrechen (weil Modusänderung während Berechnung nix gscheit)
+895:        'Modus umschalten falls nötig
+923:                    'Wenn Datei schon in Liste vorhanden: Nicht hinzufügen (nur wenn einzelne Datei)
+926:                        'Status reset
+931:                        'Element auswählen und anhaken
+942:            'Sonst: Datei hinzufügen (ohne WorkDir)
+956:        'Anzahl updaten
+1160:    'DRI Liste: Datei hinzufügen
+1171:        'Modus umschalten falls nötig
+1185:        'Anzahl updaten
+1202:        'Me.TabPageDRI.Text = "Driving Cycles (" & c & ")"
+1222:    'New GEN/ADV
+1231:    'Open GEN/ADV
+1293:        'Worker starten
+1363:        'Selected Items zwischenspeichern
+1384:        'Selected Items löschen
+1389:        'Items einfügen und auswählen
+1428:                'Modus ggf. umschalten (auf BATCH)
+1499:            'Falls PHEM schon rennt: STOP
+1503:            '...Sonst: START
+1505:            'Listen speichern falls Crash
+1515:    'Modus Change
+1521:        'Alte Liste speichern
+1543:        'Neue Liste laden
+1730:    'GEN Editor öffnen und Datei laden
+1750:    'ADV Editor öffnen und Datei laden
+1761:    'FileLists speichern
+1774:    '*** ComMsgTimer_Tick Tick - Check ob neue Nachricht
+1856:        'Modus einstellen
+1875:        'Allgemein
+2106:    'Falls Link => Öffnen
+2119:    'Hand-Cursor für Links
+>>> GUI/F_ModSplit.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_ModSplit.vb
+11:        ' Dieser Aufruf ist für den Windows Form-Designer erforderlich.
+14:        ' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
+59:        '   Split
+62:        '   Zu Int32 convertieren
+71:        '   Sort
+76:        'Ende
+>>> GUI/F_Options.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_Options.vb
+5:    'Initialisiere - Lade Config
+14:    'Config laden
+61:    'Optionen-----------------------------------
+>>> GUI/F_ShutDown.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_StrInpBox.designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_TEM_Creator.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_TEM_Creator.vb
+3:    'Initialisierung
+>>> GUI/F_VEH.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_VEH.vb
+99:    'Speichern oder Speichern als Function = true wenn Datei gespeichert
+111:    'Neue VEH
+164:    'VEH öffnen
+234:    'VEH speichern
+405:    'Change Status ändern
+413:    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht
+>>> GUI/F_VEH_AuxDlog.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_VEH_Axle.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/F_VEH_GearDlog.Designer.vb
+5:    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+17:    'Wird vom Windows Form-Designer benötigt.
+20:    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+21:    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+22:    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+>>> GUI/GUI_Subs.vb
+33:    'Job-Status => Jobliste Status-Spalte
+43:    'Zyklus-Status => Zyklusliste Status-Spalte
+52:    'Worker Progress => Progbar (ProgBarSec Update wenn ProgSec > -1; ProgBarSec-Reset bei ProgSec = 0)
+59:    'Progbar auf Continuous setzen
+65:    'Abbruch
+77:    'Status Message direkt an GUI - darf nicht durch den Backgroundworker geschehen!
+82:    'Statusbar  - Aufruf durch WorkerMSG oder direkt über Form, NIEMALS über Worker
+87:    'Status Form zurück setzen - Aufruf NUR durch Events, NIEMALS über Worker
+94:    'Klasse zum Übergeben von Nachrichten vom Backgroundworker
+176:    'Falls String nicht Zahl dann Null
+202:    'Datei in Excel öffnen
+216:    'WorkDir oder MainDir einfügen falls kein Pfad angegeben. Spezial-Ordner einfügen
+221:        'Pfad trimmen
+224:        'Falls leere Datei => Abbruch
+227:        'sKeys ersetzen
+232:        'Replace - Ordner bestimmen
+239:        ' "..\" => Eine Ordner-Ebene hoch
+246:        'Pfad ergänzen falls nicht vorhanden
+257:    'Pfad eine Ebene nach oben      "C:\temp\ordner1\"  >>  "C:\temp\"
+271:    'Dateiname ohne Pfad    "C:\temp\TEST.txt"  >>  "TEST.txt" oder "TEST"
+283:    'Dateiname ohne Extension   "C:\temp\TEST.txt" >> "C:\temp\TEST"
+288:    'Dateiname ohne Pfad falls Pfad = WorkDir oder MainDir
+305:    'Pfad allein        "C:\temp\TEST.txt"  >>  "C:\temp\"
+306:    '                   "TEST.txt"          >>  ""
+314:    'Endung allein      "C:\temp\TEST.txt" >> ".txt"
+>>> Input Files\cAux.vb
+21:        'Abbruch wenn's Datei nicht gibt
+27:        'Datei öffnen
+35:        'Kennfeld zurück setzen
+42:            'Transmission ration to engine rpm [-]
+47:            'Efficiency to engine [-]
+52:            'Efficiency auxiliary to supply [-]
+57:            'Efficiency Map
+60:            'Spalte 1 = Auxiliary speed [rpm]   => X-Achse
+61:            'Spalte 2 = Mechanical power [kW]   => Z-Achse (!)
+62:            'Spalte 3 = Output power [kW]       => Y-Achse (!)
+>>> Input Files\cDRI.vb
+5:    'Private Const FormatVersion As Integer = 1
+6:    'Private FileVersion As Integer
+30:    'Vorgabe für EXS
+34:    'Parameter für KF-Erstellung
+39:    'Vorgabe für AUX
+88:        'Values.Add(tDriComp.t, New List(Of Single))            '<= brauchen wir erst wenn bei ADVANCE > 1Hz unterstützt wird
+123:        'Reset
+126:        'Abbruch wenn's Datei nicht gibt
+132:        'EmComp Init
+133:        '...jetzt in New()
+135:        'Datei öffnen
+157:        ''*** Erste Zeile: Version
+164:        '        'Falls Version ungültig: Abbruch
+168:        '        'Version festgelegt
+172:        '    'Falls keine Versionsangabe: Altes Format
+177:        ''Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+183:        ''Spalte 2: Option "+" = Parameter für KF-Erstellung gegeben
+200:        '*** Zweite Zeile: Namen/Identifizierung der Komponenten
+203:        'Spaltenanzahl/Komponenten checken
+210:            'Falls DRIcomp = Undefined dann wirds als EXS-Comp oder als Emission für KF-Erstellung / Eng-Analysis verwendet
+245:                        'ERROR wenn Komponente in spitzen Klammern aber nicht bekannt
+275:                    'Falls erste EXS-Spalte dann Dictionary erstellen
+281:                    'Falls EXS-Componenten noch nicht in Dictionary dann erstellen
+293:                    'Check ob ExsComp/Modul-Kombination schon vorhanden => ERROR
+321:        'Gvorg / Nvorg setzen:
+333:        '*** Dritte Zeile: Einheiten/Normierung
+334:        'VECTO: nix einlesen. Fixe Units (line = file.ReadLine)
+336:        'Normierungs-Unterstützte DRI-Komponenten
+338:            'PeNormed = (UCase(Trim(line(Spalten(tDriComp.Pe)))) = sKey.Normed)
+343:            'nNormed = (UCase(Trim(line(Spalten(tDriComp.nn)))) = sKey.Normed)
+348:            'PaddNormed = (UCase(Trim(line(Spalten(tDriComp.Padd)))) = sKey.Normed)
+352:        'MAP-Komponenten VECTO: Immer [g/h]!  
+355:            ''Unit in String für weitere Checks speichern
+358:            ''Klammern entfernen
+362:            ''Normierung und Unit festlegen
+393:        '*** Zeile 4, 5: (optional, wenn oben "+"): Einstellungen für KF-Erstellung
+395:        'Falls "+" aktiviert
+398:            'Instanzen erstellen
+402:            '1. Option "Kennfeld normieren durch Pnenn"
+408:            '2. Option "Pfak anwenden"
+429:        '*** Ab 4.Zeile bzw. Ab 6.Zeile: Werte (derzeit keine unterschiedlichen Einheiten/Normierungen unterstützt)
+490:        'Datei öffnen
+517:                        'TODO...
+552:        'Nvorg / Gvorg wird in ResetMe zurück gesetzt
+607:        'Geschw. umrechnen in m/s
+615:        'Normieren, falls notwendig
+625:        'Padd entnormieren, falls notwendig
+635:        'Pe normieren, falls notwendig
+647:        '!!!!!!!! Emissionen werden nur in x/h oder x akzeptiert (siehe ReadFile) !!!!!!!!
+759:        '*********************************** Verzögerung limitieren ********************************
+786:        '*********************************** Zeitreihe erstellen '***********************************
+891:        '*********************************** Umrechnen in 1Hz '***********************************
+1009:        'Check ob Zeit nicht rückwärts 
+1017:        'Zeitgrenzen definieren
+1021:        'Ausgabe-, Summen- und Anz- Dictionaries erstellen
+1060:        'Startwerte
+1077:            'Nächster Zeitschritt
+1082:            'Falls Zeitschritt > tMax:
+1085:                'Sekunde abschließen
+1088:                'Falls keine Werte in Summe: Interpolieren
+1140:                        'Falls nur ein Wert: Inter- / Extrapolieren
+1223:                    'Neuen Bereich festlegen
+1228:                    'Check ob letzte Sekunde
+1234:                    'Neue Summe/Anz beginnen
+1291:        'Neue Felder übernehmen
+>>> Input Files\cEMO.vb
+40:        'Abbruch wenn's Datei nicht gibt
+44:        'Datei öffnen
+51:        'Kennfeld-Konfig
+54:        'FLD und MAP einlesen
+76:        'Kennfeld normieren
+83:    'Übergibt aktuell mögliche Antriebsleistung für geg. Drehzahl
+87:        'Extrapolation für x < x(1)
+99:        'Extrapolation für x > x(imax)
+105:        'Interpolation
+114:    'Übergibt aktuell mögliche Generatorleistung für geg. Drehzahl
+118:        'Extrapolation für x < x(1)
+130:        'Extrapolation für x > x(imax)
+136:        'Interpolation
+>>> Input Files\cFLD.vb
+67:        'Abbruch wenn's Datei nicht gibt
+73:        'Datei öffnen
+81:        'Listen initialisieren
+91:        ''*** Erste Zeile: Version
+98:        '        'Falls Version ungültig: Abbruch
+102:        '        'Version festgelegt
+107:        '    'Falls keine Versionsangabe: Altes Format
+112:        ''Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+121:        '*** Zweite Zeile: Namen/Identifizierung der Komponenten (Schlepp-Emissionen f. KF-Erstellung)
+124:        ''Spaltenanzahl checken
+127:        ''Abbruch falls weniger als 3 Spalten
+168:        'VECTO: Keine Header/Unit-Spalte. Immer PT1!
+174:        '*** Dritte Zeile: Normierung/Einheit
+177:        ''Abbruch falls weniger Spalten als in zweiter Zeile
+189:        '            'Alles okay
+231:        ''Zusatzkomponenten
+237:        '        'Klammern entfernen
+241:        '        'Normierung und Unit festlegen
+260:        'Ab Zeile 4: Werte
+265:                'Zeile einlesen
+268:                'VECTO: M => Pe
+276:                'Falls PT1 nicht vorgegeben wird Defaultwert verwendet (siehe oben)
+296:                'Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+309:        'Datei schließen
+315:        'ERROR-Label für sauberen Abbruch
+328:        'Datei öffnen
+348:            'Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+353:        'Datei schließen
+371:        'Drehzahl normieren
+378:        'Leistung normieren
+385:        'Leistung normieren
+392:        'Pe-Target normieren
+399:        'Em ent-normieren
+415:        'Extrapolation für x < x(1)
+427:        'Extrapolation für x > x(imax)
+433:        'Interpolation
+444:        'Extrapolation für x < x(1)
+456:        'Extrapolation für x > x(imax)
+462:        'Interpolation
+466:        'Dynamische Volllast
+475:        'Extrapolation für x < x(1)
+487:        'Extrapolation für x > x(imax)
+493:        'Interpolation
+500:        'Extrapolation für x < x(1)
+512:        'Extrapolation für x > x(imax)
+518:        'Interpolation
+530:        'Extrapolation für x < x(1)
+542:        'Extrapolation für x > x(imax)
+548:        'Interpolation
+>>> Input Files\cGEN.vb
+12:    'Modus
+154:        ''*** Erste Zeile: Version
+172:        ''Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+178:        '**** GEN Datei einlesen ****
+180:        'Allgemein
+208:        'KF Erstellung
+253:        'Kaltstart
+297:        'Einzelne Nebenverbraucher
+333:        'Schaltmodell-Verteilung
+357:        'ERROR-Label für sauberen Abbruch
+380:        '**** GEN Datei einlesen ****
+390:        'Alten Rechenmodus in neue Modus-Schalter umwandeln
+547:        'Kennfeld Erstellung------------------------------------------------------
+790:    'Liest Sub Input Files ein die keine eigene Klasse haben, etc.
+1327:        'Extrapolation für x < x(1)
+1339:        'Extrapolation für x > x(imax)
+1345:        'Interpolation
+1353:        'Extrapolation für x < x(1)
+1365:        'Extrapolation für x > x(imax)
+1371:        'Interpolation
+>>> Input Files\cMAP.vb
+140:        'Abbruch wenn's Datei nicht gibt
+146:        'Datei öffnen
+154:        'Listen initialisieren (vor Version-Check damit ReadOldFormat funktioniert)
+163:        'Check ob MEP oder MAP
+164:        '...wird jetzt weiter unten gecheckt beim Einlesen.
+167:        ''*** Erste Zeile: Version
+177:        '        'Version festgelegt
+185:        ''Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+191:        ''Spalte 2: Option "+" = Parameter für KF-Erstellung gegeben
+200:        '*** Zweite Zeile: Namen/Identifizierung der Komponenten (Nur Em. Leistung, Drehzahl ist fix!)
+203:        ''Spaltenanzahl checken
+207:        ''Abbruch falls weniger als 3 Spalten
+210:        ' ''Check ob Leistung/Drehzahl vertauscht
+215:        ''Em-Komponenten initialisieren
+224:        '    'Default-Interpolator definiert in Em0 = New cEmComp
+225:        '    'Default Pe-Correction definiert in Em0 = New cEmComp
+235:        '        'Dictionary füllen....
+238:        '            'ERROR wenn Komponente in spitzen Klammern aber nicht bekannt
+245:        '            'Custom Em-Komponenten Dictionary:
+251:        '            '*** Default Em-Komponenten ***
+253:        '            'Default-Interpolator
+256:        '            'Default Pe-Correction
+259:        '            'Default-Name
+262:        '            'TC-Komponenten werden nicht ausgegeben
+268:        '            'Custom Em-Komponenten Dictionary:
+272:        '            'Eintrag in Referenz-Dictionary
+279:        'VECTO: Spalte 3 immer Verbrauch
+289:            'Abbruch falls schon definiert
+302:        '*** Dritte Zeile: Normierung/Einheit
+305:        ''Abbruch falls weniger Spalten als in zweiter Zeile
+308:        ''Normierung/Einheit einlesen
+311:        '    'EM-Komp Referenz
+314:        '    'Unit in String für weitere Checks speichern
+317:        '    'Klammern entfernen
+321:        '    'Normierung und Unit festlegen
+353:        ''Check ob n/Pe Einheiten OK:
+357:        '            'Alles okay
+375:        '*** Zeile 4,5: (optional, wenn oben "+"): Einstellungen für Pe-Cor (altes Pfak)
+376:        '   Falls nicht "+" werden Default Interpolatoren verwendet (s.o.)
+379:            'Zeile 4 einlesen
+382:            'Schleife über Em-Komponenten
+408:            'Zeile 5 einlesen
+411:            'Schleife über Em-Komponenten
+436:        'Ab Zeile 4 (bzw. 6): Werte
+440:                'Zeile einlesen
+443:                'Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+446:                'Drehzahl
+451:                'Leistung
+462:                'Emissionen
+474:        'Shep-Init
+477:        'Datei schließen
+487:        'ERROR-Label für sauberen Abbruch
+506:        'Datei öffnen
+513:        'Alte Kennfelder haben immer TC-Faktoren (sind halt evtl. Null)
+776:        'Werte
+778:            'Zeile einlesen
+781:            'Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+784:            'Drehzahl
+787:            'Leistung
+792:            'Emissionen
+803:        'Shep-Init
+806:        'Datei schließen
+821:        'Abbruch falls Em-Komponente nicht in MAP
+828:        'Abbruch falls TC-Faktoren für die Komponente schon definiert
+859:        'Drehzahl normieren
+866:        ' "anders" normierte Drehzahl berechnen
+871:        'Leistung normieren
+878:        'Emissionen entnormieren
+879:        '   ACHTUNG: Selbst wenn x_kWh bzw. x_hPnenn in x_h umgewandelt werden muss Normed gleich bleiben weil sonst die DynKor nicht stimmt!
+891:                    'Werte sind bereits absolut angegeben
+892:                    'Unterscheidung in [x] und [x/h] derzeit nicht verwendet/unterstützt
+896:        'Check ob Drehzahl/Leistung vertauscht
+926:        'FC Delauney
+958:    'Kennfeld-Erstellung
+1025:        '***************** Initialisiere Em-Komponenten *******************
+1067:            'PeCorMode: Falls nicht in MES/NPI vorgegeben gilt bei Nicht-Default-Em was in cEmComp.New() eingestellt ist
+1078:                    'Falls TC angegeben dann Abbruch
+1084:                    'Interpolator auswählen
+1087:                    'Eintrag in Referenz-Dictionary (Es wird nicht überprüft ob Em-Comp. doppelt vorkommt weil das schon in DRI.ReadFile passiert)
+1097:            'Infos ausgeben
+1102:        'Dynamikparameter und Extrapol kommen noch dazu
+1247:        '************* Mittelwert-Dictionary initialisieren ***************
+1271:        '********************* Mittelwerte berechnen **********************
+1273:        'Haupt-Schleife
+1276:            'Listen erstellen
+1291:            'Schleife über Messwerte
+1296:                    'Bereich unter iMsek mit Messwert belegen
+1310:                    'Bereich über iMsek mit Mittelwerten der Messwerte belegen
+1331:            'Keine Mittelwertbildung
+1347:        'EmCheck: False = Wert noch nicht verwendet, True = Wert wurde bereits in Kennfeld verwurschtet
+1353:        '*************************** Rasterung ****************************
+1418:        'Schlepp hinzufügen mit halber nn-Schrittweite. Wird für Pfak benötigt. Falls GEN.KFinsertDrag deaktiviert wird sie später wieder gelöscht.
+1428:        'Leerlaufpunkt hinzufügen
+1435:        '**************** NrUsed Erstellung / Null setzen *****************
+1442:        '**************** Messwerte in Raster reinrechnen *****************
+1444:        'Basis Schrittweite zwischenspeichern
+1448:        'Schleife über Rasterpunkte (i)
+1451:            'Summen/Anzahl/Flags zurücksetzen
+1456:            'Schlepp-Leistung
+1459:            'Schleife bis genug Werte im Radius gefunden
+1462:                'Zähler/Summen zurück setzen
+1469:                'Schleife über Messwerte    (j)
+1472:                    'Falls innerhalb von Radius...
+1475:                        'Anz + 1
+1478:                        'Schleife über alle Em-Komp.
+1481:                            'Summe +
+1484:                            'Min/Max belegen (für Log-Ausgabe)
+1495:                        'Interpolierte Leistung aufsummieren (wird dann durch Anz dividiert)
+1498:                        'Zählen wieviel Messwerte für Rasterpunkt verwendet werden (Log-Ausgabe)
+1509:                'Falls keine Messwerte im Radius (Anz=0) dann Radius vergrößern und Extra-Flag setzen
+1518:            'NrUsed belegen
+1523:            'Interpolierte Leistung = Summe / Anz
+1526:            'Pfak berechnen:
+1527:            '   Falls oberhalb Pschlepp dann Pfak laut Formel oder 1 falls Abstand zw. Pe-Interpol und Pschlepp zu gering
+1528:            '   Unterhalb von Pschlepp Pfak=0 => Em-Wert=Null
+1539:            'Extrapol-Flag in Extrapol-Spalte (1/0) übernehmen
+1546:            'Für Log-Ausgabe
+1550:            'Schleife über Em-Comp (innerhalb Rasterpunkt Schleife)
+1553:                'Falls Option 'Schlepp-Em aus .FLD' belegen und Rasterpunkt-Leistung <= Schleppleistung
+1556:                    'Falls Schlepp-Em in .FLD vorhanden dann nehmen sonst mit Null belegen
+1565:                    'Em-Belegung ohne Pfak (=> Pfak wird später gemacht)
+1570:                'Für Log-Ausgabe
+1576:            'TC-Faktoren ohne Pfak übernehmen
+1584:        '*****************************  Pfak ******************************
+1586:        '!!! WICHTIG !!!
+1587:        'Schleife geht über alle Rasterpunkt (auch über die Pe <= PeSchlepp bzw. PeIntpol nahe an Pschlepp).
+1588:        '   Das ist OK weil Pfak dort sowieso mit Eins beleget.
+1590:        'Schleife über Em-Comp
+1593:            'Falls keine Create Map Einstellungen (in .NPI/.MES) oder Pfak explizit aktiviert => Pfak verwenden
+1596:                'Schleife über Rasterpunkte (i)
+1601:                        'Altes Pfak mit Extrapolation von Null weg
+1606:                        'Schlepp-Emission raus suchen
+1607:                        '   Schlepp-Em aus nächstgelegenen Rasterpunkt nehmen. Das geht weil Schleppkurve 
+1608:                        '   immer ins Map kommt (auch wenn sie dann später raus gelöscht wird) !!
+1609:                        '   Option 'Schlepp-Em aus .FLD' spielt keine Rolle weil das nur die Belegungs-Methode der Schleppkurve betrifft (s.o.) 
+1623:                    'Pfak anwenden
+1633:        '******************* Normieren (Wert und Unit) ********************
+1636:            'Falls Vorgabe in MES/NPI-Datei dann verwenden
+1641:                    'Werte normieren
+1652:                'Sonst Standard-Normierung verwenden
+1657:                        'Werte normieren
+1673:        '****************** EmComponents zusammenfassen *******************
+1688:        '*********** Schleppkurve wieder raus nehmen (optional) ***********
+1691:            'Schleife über Rasterpunkte (i). Keine For-Schleife weil iMapDim reduziert wird
+1713:        '************************** Ausgabe Map '**************************
+1732:            'ACHTUNG: Nicht Name sondern sKey !!!
+1751:        'Werte
+1765:        '********************** Ausgabe Zusatzinfo '***********************
+1804:        'Werte
+1857:        'Shep-Init
+1864:    'Default Shepard wie in intpshep()
+1873:        'Interpolator V1
+1879:        'Interpolator V2
+1924:            'Abstand berechnen und korrigieren.
+1928:                    'Um Nullleistung werden Kennfeldpunkte um Pe=0 hoeher gewichtet und Drehzahlabstand geringer,
+1929:                    ' da Interpolation aus Punkten mit hoeherer last dort schlecht passt:
+1935:                    'Quadrat des Abstandes:             
+1938:                    'Falls Vorzeichen von Pe unterschiedlich (Last/Schlepp-Trennung) wird Abstand vergroessert um Schlepp bei Schlepp mehr zu gewichten:
+1945:            'Punkte innerhalb Radius zählen und ggf. Radius erhöhen
+1962:            'Abstand-Array erstellen und Leistung interpolieren für Pe-Korrektur
+1974:            'Berechnung von wisum
+1980:            'Interpolierte Leistung berechnen
+1992:            'Abstand berechnen und korrigieren.
+1995:                'Quadrat des Abstandes:                 
+2000:            'Punkte innerhalb Radius zählen und ggf. Radius erhöhen
+2017:            'Abstand-Array erstellen und Leistung interpolieren für Pe-Korrektur
+2029:            'Berechnung von wisumV2
+2035:            'Interpolierte Leistung berechnen
+2112:        'Berechnet Emission an Schleppkurve
+2129:            'Es wird an Schleppkurve gesucht
+2131:            'n0 ist schon in Init definiert worden
+2133:            'Abstand berechnen und korrigieren.
+2136:                'Quadrat des Abstandes:
+2139:                'Falls Vorzeichen von Pe unterschiedlich (Last/Schlepp-Trennung) wird Abstand vergroessert um Schlepp bei Schlepp mehr zu gewichten:
+2146:            'Punkte innerhalb Radius zählen und ggf. Radius erhöhen
+2163:            'Abstand-Array erstellen
+2173:            'Berechnung von wisum
+2179:            'Emission berechnen
+>>> Input Files\cTRS.vb
+32:        'Abbruch wenn's Datei nicht gibt
+38:        'Datei öffnen
+47:        '*** Erste Zeile: Version
+51:            ' "V" entfernen => Zahl bleibt übrig
+54:                'Falls Version ungültig: Abbruch
+58:                'Version festgelegt
+62:            'Falls keine Versionsangabe: Altes Format
+67:        'Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+79:        '*** Zweite Zeile: Check welche TC-Faktoren in welcher Spalte stehen (ab Spalte 1!!)
+83:        'Abbruch falls weniger als 2 Spalen:
+91:            'Abbruch wenn unbekannter TC-Faktor
+96:            'Zu Dict hinzufügen
+101:        '*** Ab Zeile 3: TC-Faktoren für die einzelnen Em-Komponeten 
+102:        '   l ist nur für Fehlerausgabe
+163:        'Datei öffnen
+207:            'Abbruch falls weniger als 11 Spalen:
+>>> Input Files\cVEH.vb
+220:        'Update 07.08.2012 (CO2 Demo)
+221:        'Einzelne Nebenverbraucher
+249:        'Zugkraftunterbrechung - Update 09.08.2012 (CO2 Demo)
+260:        'Cd Modus / Input Datei - Update 14.08.2012 (CO2 Demo)
+284:        'Axle configuration - Update 16.10.2012
+316:        '************************ Ende Einlesen ****************************
+401:        'Zugkraftunterbrechung (Update 09.08.2012 - CO2 Demo)
+405:        'Cd Modus / Input Datei (Update 14.08.2012 - CO2 Demo)
+409:        'Retarder (Update 02.10.2012 - CO2 Demo)
+417:        'Axle configuration - Update 16.10.2012
+451:        'Fehlermeldung innerhalb AuxInit
+454:        'Cd-Init
+457:        'Transmission Loss Maps
+468:        'Fr0
+531:                'Getriebe-Nenndrehzahl
+534:                'Getriebe-Nennleistung
+537:                'Wenn nix angegeben: Motor-Nennleistung und Nenndrehzahl zur Normierung
+551:                        'PHEM:    n, PeIn, PeOut => x=n, y=PeOut, z=PeIn
+552:                        'PHEM: GBmap0.AddPoints(CDbl(line(0)) * n_norm, CDbl(line(2)) * Pe_norm, CDbl(line(1)) * Pe_norm)
+553:                        'VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn
+619:                'Interpolieren mit Original Werten
+624:                'Falls Fehler: Extrapolation versuchen
+626:                'Suche nach nächstgelegenen Kennfeldpunkt
+640:                'Wirkungsgrad
+644:                        'Antrieb => Antrieb
+651:                        'Schlepp => Antrieb: ERROR!
+661:                        'Antrieb => Schlepp: ERROR!
+668:                        'Schlepp => Schlepp
+677:                'Mit Wirkungsgrad PeIn für original PeOut ausrechnen
+720:                'Interpolieren mit Original Werten
+725:                'Falls Fehler: Extrapolation versuchen
+727:                'Suche nach nächstgelegenen Kennfeldpunkt
+741:                'Wirkungsgrad
+745:                        'Antrieb => Antrieb
+750:                        'Schlepp => Antrieb: ERROR!
+760:                        'Antrieb => Schlepp: ERROR!
+767:                        'Schlepp => Schlepp
+774:                'Mit Wirkungsgrad PeIn für original PeOut ausrechnen
+838:                'Meldung in Readfile()
+934:        'Falls Vair-Vorgabe in DRI aber nicht CdType= CdOfBeta dann Warnung
+946:        'Falls konstanter Cd-Wert dann is nix zu tun
+949:        'Inputdatei einlesen
+996:        'Extrapolation für x < x(1)
+1014:        'Extrapolation für x > x(imax)
+1024:        'Interpolation
+1042:        'Inputdatei einlesen
+1104:        'Extrapolation für x < x(1)
+1116:        'Extrapolation für x > x(imax)
+1120:        'Interpolation
+>>> MODcalc\cBatModel.vb
+21:    'Aktuelle Daten (d.h. zum aktuellen (zuletzt berechneten) Zeitschritt)
+55:    'Maximal zulässige Leistung zum Antreiben (Batterie entladen) [kW]    Vorzeichen positiv (PHEM Standard)
+62:    'Maximal zulässige Leistung zum Generieren/Rekuperiren (Batterie laden) [kW]    Vorzeichen negativ (PHEM Standard)
+72:    '--------------------------------- ~Batteriemodell Renhart~ ---------------------------------
+74:    'Methode zur Initialisierung - wird einmal aufgerufen
+82:        'Abbruch wenn's Datei nicht gibt
+91:        'Einlesen der Parameter:
+132:        ' Berechnung der Batteriespannung bei TempBat und SOC(0), Entladekurve
+138:        ' Berechnung der Batteriespannung bei TempBat und SOC(0), Ladekurve
+148:    'Methode zur Berechnung der zulässigen Leistung - sekündlicher Aufruf
+174:    'Methode zur Berechnung der Batterieveluste und SOC für geg. Leistung - sekündlicher Aufruf
+201:        'Input:
+202:        '   Perf ...geforderte Leistung. Bedingung: PgMAX < Perf < PaMAX [kW]
+203:        '   alle Paramer die in Bat_Init bestimmt/eingelesen wurden
+204:        '   jz ...Aktueller Zeitschritt
+205:        '   Alle Arrays von Zeitschritt 1 bis jz-1
+225:    'Übergibt PeBat für geg. PiBat (Vorzeichen nach PHEM)
+247:    '----------------------------------------- PRIVATE ------------------------------------------
+250:    'Batterie entladen
+256:        'Temperaturfunktion
+259:        'Ri bestimmen abhängig von Temperatur
+262:        'Spannung bestimmen aus SOC und Spannungskurve
+265:        'Strom berechnen
+268:        'Batterieverluste
+271:        'Batterietemperatur
+277:        'SOC berechnen
+280:        'Korrektur für den aktuellen Zeitschritt
+287:    'Batterie laden
+294:        'Temperaturfunktion
+297:        'Ri bestimmen abhängig von Temperatur
+300:        'Spannung bestimmen aus SOC und Spannungskurve
+303:        'Strom berechnen
+306:        'Batterieverluste
+309:        'Batterietemperatur
+315:        'SOC berechnen
+318:        'Korrektur für den aktuellen Zeitschritt
+325:    'Batterie nix tun
+336:        ' ALT: Ubat(jz) = Ubat(jz - 1)
+340:    'Übergibt PeBat beim Laden mit PEmot (Vorzeichen nach Renhart)
+362:    'Übergibt PeBat beim Entladen mit PEmot (Vorzeichen nach Renhart)
+>>> MODcalc\cMOD.vb
+19:    'Leistungen
+36:    'Fahrzeug
+192:        'Zykluslänge definieren (Um 1s kürzer als Original weil Zwischensekunden)
+195:        'Hier wird der eigentliche Zyklus eingelesen:
+198:        'Drehzahl-Vorgabe
+206:            'Drehzahl
+211:            'Winkelbeschleunigung
+218:        'Em-Komponenten mitteln (Zwischensekunden) für KF-Erstellung oder Eng-Analysis
+227:        'EXS Vorgaben mitteln
+238:        'Aux Vorgaben mitteln und Aux-Listen falls Aux in Dri und Veh vorhanden
+258:        'Zykluslänge definieren: Gleiche Länge wie Zyklus (nicht reduziert weil keine "Zwischensekunden")
+261:        'Hier wird der eigentliche Zyklus eingelesen:
+264:        'Drehzahl-Vorgabe
+272:            'Drehzahl
+277:            'Winkelbeschleunigung
+315:        '*********** Initialisierung / Datei öffnen **************
+370:        '*** ID-Zeile (Nur ADVANCE)
+431:        'ADVANCE-spezifisch
+479:        'Berechnete Dynamikparameter (Diff zu Kennfeld)
+488:        'In Datei schreiben
+497:        '*** Werte *************************************************************************************
+505:                'Zeit
+510:                    'Strecke
+514:                    'Ist-Geschw.
+517:                    'Soll-Geschw.
+520:                    'Beschl.
+523:                    'Steigung
+532:                        'Drehzahl
+535:                        'Leistung 
+538:                        'Drehzahl normiert
+541:                        'Leistung normiert
+546:                    'Drehzahl in U/min
+549:                    'EM-Leistung in kW
+552:                    'Effektive Batterieleistung
+555:                    'Innere Batterieleistung
+558:                    'Batteriespannung
+561:                    'Batteriestrom
+564:                    'SOC
+569:                    'Drehzahl
+572:                    'Leistung 
+575:                    'Drehzahl normiert
+578:                    'Leistung normiert
+581:                    'Volllast und Schlepp
+592:                    'Leistung an Kupplung
+600:                    'Gang
+603:                    'Getriebeverluste
+606:                    'Diff-Verluste
+609:                    'Retarder-Verluste
+612:                    'PaEng
+615:                    'PaGB
+618:                    'Pa Veh
+621:                    'Roll..
+624:                    'Luft..
+627:                    'Steigung..
+630:                    'Aux..
+633:                    'Radleistung
+636:                    'Bremse
+639:                    'Auxiliaries
+646:                'ADVANCE-spezifisch
+649:                    'X
+652:                    'Y
+655:                    'StrId
+662:                    'Final-Emissionen (Tailpipe)
+680:                            'Roh-Emissionen
+683:                            'TC-Emissionen
+686:                            'AT-Emissionen (EXS)
+694:                'Berechnete Dynamikparameter (Diff zu Kennfeld)
+702:                'In Datei schreiben
+716:    'Errors/Warnings die sekündlich auftreten können
+731:        'Reset-Hierarchie:
+732:        ' ResetAll
+733:        '   DesMaxExtr
+734:        '   -GeschRedReset
+735:        '       CdExtrapol        
+736:        '       -PxReset
+737:        '           TrLossMapExtr 
+738:        '           AuxMapExtr 
+739:        '           AuxNegative
+740:        '           FLDextrapol
+742:        'Kompletter Reset (am Beginn jedes Sekundenschritts)
+748:        'Reset von Errors nach Geschw.-Reduktion (innerhalb Iteration)
+755:        'Reset von Errors die mit der Leistungsberechnung zu tun haben (nach Schaltmodell durchzuführen)
+763:        'Errors ausgeben
+>>> MODcalc\cPower.vb
+21:    'Sekündliche Daten
+33:    'Zugkraftunterbrechung
+87:    'Rekuperation
+88:    '   Projekt HERO - BMW Mini Hybrid
+89:    '   Standard Mini One D Radstand 2467 mm
+92:    'Annahme für Schwerpunkthöhe
+93:    '   nach http://www.colliseum.net/wiki/Schwerpunkth%C3%B6he
+95:    '       mit R = 2.467 [m] und m = 1335 [kg]
+189:    'Bat einlesen
+196:    'Maximale effektive EM-Leistung beim Antreiben abhängig von Überlast und Batteriezustand
+201:        'Basis: Volllastkurve
+204:        'Falls Überlast möglich: auf ÜL-Leistung hochskalieren
+207:        '=> PeFLD = maximale EM-Leistung nach FLD und ÜL
+209:        'PeMax aus PeBatMax berechnen
+212:        '=> PeBAT = maximale EM-Leistung nach Batterie
+214:        'Übergeben wird maximal die Leistung die die Batterie erlaubt
+219:    'Maximale effektive EM-Leistung beim Laden abhängig von Überlast und Batteriezustand
+224:        'Basis: Schleppkurve
+227:        'Falls Überlast möglich: auf ÜL-Leistung hochskalieren
+230:        '=> PeFLD = maximale EM-Leistung nach FLD und ÜL
+232:        'PeMax aus PeBatMax berechnen
+235:        '=> PeBAT = maximale EM-Leistung nach Batterie
+237:        'Übergeben wird maximal die Leistung die die Batterie erlaubt
+244:    'Umrechnung von PeBat(=PiEM) auf PeEM
+256:            'Wenn Vorzeichen von x oder y nicht gleich Vorzeichen von xA(i) oder yA(i) dann wird Zeile i übersprungen
+281:    'Umrechnung von PeEM auf PeBat(=PiEM)
+293:            'Wenn Vorzeichen von x oder y nicht gleich Vorzeichen von xA(i) oder yA(i) dann wird Zeile i übersprungen
+318:    'Maximale Rekup-Leistung
+324:        'Falls unter V-Untergrenze dann gleich Null übergeben
+327:        'Radaufstandskraft
+334:        'Vorzeichen "sollte" immer + sein
+337:        'Längskraft am Reifen
+340:        'Sicherheitsfaktor mitnehmen
+343:        'Leistung 
+346:        'Falls unter V-Obergrenze dann linear runter skalieren
+353:    ''PeEM-Max reduzieren bis es die Batterie aushaltet
+371:    ''PeEM-Min reduzieren bis es die Batterie aushaltet
+406:        'Start/Stop Steuerung
+444:        'Abbruch wenn keine Geschw. gegeben
+450:        '   Initialisieren
+486:        'Schaltpunkte für NEDC/FTP Schaltung
+521:                'Schaltparameter initialisieren
+523:                'Standard
+533:        'Theoretische Höchstgeschwindigkeit [m/s] - gesetzt auf Geschw. bei 1.2 x NennDrehzahl im höchsten Gang
+539:        '***********************************    Zeitschleife    ****************************************
+550:            'Sekundäre Progressbar
+553:            '   Zustand bestimmen
+556:            'Reset der sekündlichen Errors 
+559:            'Geschw. / Beschl. berechnen-------------------
+560:            'Jetzt durch DRI-Klasse
+564:            'Wenn Geschw. über theoretischer Höchstgeschw. => Reduzieren
+571:            'a_DesMax
+574:                'Check ob Beschleunigung zu hoch
+593:                    '- Verzögerung limitieren ---------------------------
+595:                    '    'Check ob Verzögerung zu hoch
+614:            'Aus Leistg-----
+624:            'Fahrzustand bestimmen-------------------------
+649:            'Schneller Check ob Leistung viel zu hoch
+656:            '************************************ Gangwahl ************************************
+675:                'Checken ob Kupplung schleift (wichtig für Schaltmodell):
+683:                    'Gang-Vorgabe
+686:                    'Drehzahlvorgabe
+692:                        'Gang nach Geschwindigkeit
+696:                        'Schaltmodell
+703:                        'Muss hier nochmal zurück gesetzt werden weil im Schaltmodell kann (und darf) das passieren
+709:                'Schaltmodell/Vorgabe kann Clutch öffnen 
+720:            ' Wichtige Checks
+723:            'Checken ob Geschwindigkeit reduzieren
+724:            ''If GeschwRed Then GoTo lbGeschwRed    <= stattdessen neues Konzept: Leistung wird "normal" berechnet und erst später überprüft ob Pe > Pmax... ?
+726:            'Checken ob Kupplung offen:
+727:            ''bKupplOffen = (bStehen Or Gang(jz) = 0) <= bereits durch Clutch bekannt
+729:            'Falls konventionell dann ICE-Kupplung = Hauptkupplung
+730:            ''bICEKupOffen = bKupplOffen <= Brauch i nix mehr
+732:            'Falls vor Gangwahl festgestellt wurde, dass nicht KupplSchleif, dann bei zu niedriger Drehzahl runterschalten:
+737:            'Checken ob Leerlauf obwohl Leistung > 0
+738:            '   wenn Leistung vor Diff > 0.1% von Nennleistung dann Korrigieren!
+759:            '************************************ Drehzahl ************************************
+761:            '*** Wenn Drehzahl vorgegeben dann wird der nächste Block übersprungen ***
+766:                'Falls Start/Stop dann wird gleich bei nn < -0.05 auf nU = 0 gesetzt
+784:            'Drehzahlabfall beim Auskuppeln
+806:                        'Leistungsabfall limitieren auf Pe(t-1) minus 75% von (Pe(t-1) - Pschlepp)
+807:                        '   aus Auswertung ETC des Motors mit dem dynamische Volllast parametriert wurde
+808:                        '   Einfluss auf Beschleunigungsvermögen gering (Einfluss durch Pe(t-1) bei dynamischer Volllast mit PT1)
+809:                        '   Luz/Rexeis 21.08.2012
+810:                        '   Iterations-Schleife: 01.10.2012    
+813:                        'original: M = -Pmin * 1000 * 60 / (2 * Math.PI * ((nU + nUx) / 2))
+818:                        '01.10.12 Luz: Drehzahl darf nicht höher werden als zuvor 
+825:                    'TODO: Auschalten?!
+838:                '*** Beginn: Drehzahl-Check
+840:                'Checken ob Drehzahl zu hoch! =>  Hochschalten
+846:                'Checken ob Drehzahl zu niedrig mit geschlossener Kupplung
+863:            '************************************ Motor-Zustand bestimmen ************************************
+864:            ' nn ist ab hier fix!
+867:            'Nebenverbrauch bestimmen (aus VEH und DRI)
+870:            'ICE-Trägheit
+875:                    'Nicht optimal da jz-1 bis jz nicht der richtige Zeitraum
+880:                    'Drehzahlvorgabe
+887:            'Gesamt-Motorleistung
+957:            '*************** Leistungsverteilung usw. ******************
+959:            'Volllast- / Schleppkurve
+965:                'Drehzahl korrigieren
+979:                'Falls Pmax < 0 oder Pmin > 0 dann Abbruch mit Error!
+1009:                        'VKM an Schleppkurve
+1012:                        'Forwärtsrechnung bis Rad (PvorD)
+1028:            'Check ob Abbruch (vor Geschw.Red-Iteration sonst kann sichs aufhängen)
+1031:            'Check ob P über Volllast => Geschw.-Reduktion
+1046:                        'FEHLER: Geschw.-Red. bringt nix?!...
+1051:                    'FEHLER: Motor nicht in Antrieb ...kann nicht sein?!
+1059:            'Zugkraftunterbrechung
+1093:            '   Sekunde abschließen
+1095:            'Start / Stop - Aktivierung-Geschw. Steuerung
+1110:            'Modalwerte-Felder schreiben
+1141:            'Zugkraftunterbrechung
+1172:            'Meldungen (Abbruch falls Error)
+1185:        '***********************************    Zeitschleife ENDE    ***********************************
+1188:        'Meldungen (wenn nicht ADVANCE)
+1225:        'Abbruch falls Leistung/Drehzahl nicht gegeben
+1236:        'Drehzahlen vorher weil sonst scheitert die Pmr-Berechnung bei MODdata.nU(t + 1)
+1238:            'Modalwerte-Felder schreiben
+1239:            '   MODdata.Pe wird unten belegt
+1244:        'Leistung berechnen
+1247:            'Sekundäre Progressbar
+1250:            'Reset der sekündlichen Errors 
+1253:            'ALT und falsch weil Zeit nicht verschoben: P_mr(jz) = 0.001 * (I_mot * 0.0109662 * (n(jz) * nnenn) * nnenn * (n(jz) - n(jz - 1))) / Pnenn
+1260:            'Leistung aus Zyklus korrigiert um P_clutch
+1263:            'Drehzhal aus Zyklus => Durch CycleInit bestimmt
+1264:            'Falls Drehzahl unter Leerlauf wir Motor als abgestellt angenommen
+1276:                'Falls Pmax < 0 oder Pmin > 0 dann Abbruch mit Error!
+1285:                'FLD Check
+1314:            'Meldungen
+1336:        'Start/Stop Steuerung
+1367:        'WegKorrektur
+1381:        'Abbruch wenn keine Geschw. gegeben
+1387:        '   Initialisieren
+1415:        'WG-Kennfeld aus MAP übernehmen und Pi-Liste berechnen
+1432:        'Schaltpunkte für NEDC/FTP Schaltung
+1449:        'Theoretische Höchstgeschwindigkeit [m/s]
+1457:        '***********************************    Zeitschleife    ****************************************
+1465:            'Sekundäre Progressbar
+1468:            '   Zustand bestimmen
+1472:            'Geschw. / Beschl. berechnen-------------------
+1473:            'Jetzt durch DRI-Klasse
+1477:            'Wenn Geschw. über theoretischer Höchstgeschw. => Reduzieren
+1484:            'Aus Leistg-----
+1494:            'Fahrzustand bestimmen-------------------------
+1519:            'Maximal zulässige Batterieleistung
+1524:            '************************************ Gangwahl ************************************
+1529:                'Checken ob Kupplung schleift (wichtig für Schaltmodell):
+1537:                    'Gang-Vorgabe
+1540:                    'Drehzahlvorgabe
+1546:                        'Gang nach Geschwindigkeit wird hier nicht unterstützt
+1550:                        'Schaltmodell
+1553:                        'EV: Kein Leerlauf wegen Rekuperation
+1566:            'Falls Rekuperation laut Radleistung möglich: PrekupMax berechnen
+1568:                'Maximale Rekuperations-Leistung berechnen (abh. von Radlast/Reibkoef.)
+1573:            'Falls vor Gangwahl festgestellt wurde, dass nicht KupplSchleif, dann bei zu niedriger Drehzahl runterschalten:
+1578:            'Checken ob Leerlauf obwohl Leistung > 0
+1579:            '   wenn Leistung vor Diff > 0.1% von Nennleistung dann Korrigieren!
+1591:            '************************************ Drehzahl ************************************
+1593:            '*** Wenn Drehzahl vorgegeben (Gemess = 2) dann wird der nächste Block übersprungen ***
+1601:            'Drehzahlabfall beim Auskuppeln
+1622:                '*** Beginn: Drehzahl-Check wenn keine Vorgabe
+1624:                'Checken ob Drehzahl zu hoch! =>  Hochschalten
+1630:                'Checken ob Drehzahl zu niedrig mit geschlossener Kupplung
+1642:            '************************************ Motor-Zustand bestimmen ************************************
+1643:            ' nn ist ab hier fix!
+1646:            'Nebenverbrauch bestimmen (aus VEH und DRI)
+1649:            'MotorTrägheit
+1654:                    'Nicht optimal da jz-1 bis jz nicht der richtige Zeitraum
+1659:                    'Drehzahlvorgabe
+1666:            'Gesamt-Motorleistung
+1707:            '*************** Leistungsverteilung usw. ******************
+1709:            'Volllast- / Schleppkurve
+1729:                    'Maximale Rekuperations-Leistung berechnen (abh. von Radlast/Reibkoef.)
+1730:                    'PrekupMax = fPrekupMax()
+1732:                    'Falls RekupMax überschritten muss Pe neu berechnet werden
+1735:                        'PbrakeRek = Leistung die zusätzlich mechanisch gebremst werden muss wegen Überschreitung von RekupMax
+1736:                        'wird schon oben nach Gangwahl erledigt: PbrakeRek = Pantr - PrekupMax
+1738:                        'Neue EM-Leistung
+1743:                    'Check ob Leistung aufgenommen werden kann (abh. von FLD und Batterie). Bremsleistung berechnen.
+1752:                    'RekupMax-Bremsleistung dazu addieren
+1764:            'Check ob P über Volllast => Geschw.-Reduktion
+1768:                    'Falls Pmax=0 muss Batterie leer sein
+1782:                        'FEHLER: Geschw.-Red. bringt nix?!...
+1792:            '   Sekunde abschließen
+1805:            '***************** Batterie ***********************
+1817:            '****** Modalwerte-Felder schreiben **************
+1859:            'Meldungen
+1865:        '*********************************    Zeitschleife ENDE    *************************************
+1869:        'Meldungen (nicht ADV)
+1887:        'TODO.... Fehlermeldung etc
+1933:        'WegKorrektur
+2033:        'Abbruch wenn keine Geschw. gegeben
+2039:        '   Initialisieren
+2062:        'Schaltpunkte für NEDC/FTP Schaltung
+2097:                'Schaltparameter initialisieren
+2106:        'Theoretische Höchstgeschwindigkeit [m/s]
+2109:        'HEV
+2127:        '***********************************    Zeitschleife    ****************************************
+2134:            'Sekundäre Progressbar
+2137:            '   Zustand bestimmen
+2141:            'Geschw. / Beschl. berechnen-------------------
+2142:            'Jetzt durch DRI-Klasse
+2146:            'Wenn Geschw. über theoretischer Höchstgeschw. => Reduzieren
+2153:            'Aus Leistg-----
+2164:            '*************************** Fahrzustand bestimmen *****************************
+2166:            'Fahrzustand bestimmen-------------------------
+2249:            '************************************ Gangwahl ************************************
+2254:                'Checken ob Kupplung schleift (wichtig für Schaltmodell):
+2262:                    'Gang-Vorgabe
+2265:                    'Drehzahlvorgabe
+2271:                        'Gang nach Geschwindigkeit
+2274:                        'Schaltmodell
+2289:            'Nebenverbrauch bestimmen (aus VEH und DRI)
+2292:            'HEV-Teil kommt erst nach Gangwahl weil Getr./Diff-Loss den benötigt und EM zwischen ICE und GB liegt
+2300:                'Nebenverbrauch bestimmen (aus VEH und DRI)
+2306:                    'Wenn Drehzahl vorgegeben
+2309:                    'Sonst aus Vist und Gear
+2313:                'Normierte Drehzahl
+2316:                'Maximale Leistung der ICE
+2325:                'Nebenverbrauch bestimmen (aus VEH und DRI)
+2328:                'Maximal zulässige Batterieleistung
+2333:                'Maximale EM-Leistung. (Batterieleistung limitiert EM-Leistung)
+2344:                'Leistung bis ICE/EM (= an Kupplung) berechnen
+2350:                'Leistung an Kupplung
+2355:                    'Drehzahlvorgabe
+2363:                '***** Notwendige Leistung im EV-Betrieb
+2364:                '   Leistung an Kupplung plus EM-Trägheit
+2366:                '! ACHTUNG: Wenn ICE eingekuppelt dann muss PaICE auch noch dazu ! => Später bei Leistungsverteilung
+2368:                '***** Notwendige Leistung im ICE+EM-Betrieb
+2371:                '***** Notwendige Leistung im ICE-Betrieb
+2374:                '***** Check ob EV möglich
+2376:                '   => EM-Leistung >= Antriebsleistung
+2380:                '***** Falls EV möglich: Check ob kritisch
+2383:                '***** Check ob Assist / LPI / ICEonly möglich und ob Boost erforderlich
+2384:                '   => ICE-Ein muss möglich sein (ICElock)
+2387:                    'Assist / Boost
+2391:                        'Boost
+2392:                        '   => ICE an Volllast
+2405:                '***** Check ob Rekup möglich
+2411:                '********************************* Fahrzustands-Unterscheidung *********************************
+2417:                    '***************************** Betriebsmodus Vor-Auswahl ********************************
+2421:                        'Wenn Boost notwendig (und möglich), dann keine Wahl
+2426:                        'EV Mode wenn...
+2435:                        'Wenn EV & ICE nicht möglich dann EV-Modus bis ICE wieder startet.... sollte nie vorkommen weil keine ICE-Abschaltung wenn wenig SOC
+2445:                    'Falls Einsatz von HEV-Strategie:
+2446:                    '   Ke's berechnen
+2449:                        '************** Optimale Ke's berechnen und Leistungen dazu ************
+2451:                        'Emission/Verbrauch in g/h
+2458:                        'KeSTE aus STE-Kurve...
+2476:                                'Unter Max-Pe bleiben
+2479:                                'Wenn Pvkm negativ: Berechnung für reinen EM-Betrieb
+2482:                                    '    ...nicht gültig falls Batlvl <= Low oder ICEonLock
+2485:                                    'EM-Leistung = P-Antrieb
+2489:                                    'Verbrauchseinsparung in g/h 
+2492:                                    'Abbruch nach dieser Berechnung (mehr EM-Leistung macht keinen Sinn da hier schon rein elektrischer Antrieb)
+2497:                                    'Verbrauchseinsparung in g/h 
+2502:                                'Leistung nach E-Motor in kW
+2513:                                'Leistung in Batterie
+2518:                                'Div/0 und Vorzeichen-Check
+2521:                                    'KeA berechnen in kWh/kg
+2524:                                    'Check ob Optimum
+2532:                                'Abbruch falls reiner EM-Betrieb schon erreicht
+2565:                                'Falls Pvkm an Volllast:
+2568:                                    'Pvkm auf Volllast setzen
+2571:                                    'Elektromotor in Generatorbetrieb (Pges1 - Pvkm < 0)
+2574:                                    'Abbruch nach diesem Durchgang weil mehr Generieren nicht möglich
+2579:                                'Zusatzverbrauch in g/h 
+2582:                                'Leistung nach E-Motor in kW
+2593:                                'Leistung in Batterie
+2598:                                'Div/0 und Vorzeichen-Check
+2601:                                    'KeG berechnen in kWh/kg
+2604:                                    'Check ob Optimum
+2613:                                'Abbruch falls VKM-Volllast schon erreicht
+2622:                            'Abstand Eta zu Kurve berechnen
+2632:                        '********************** KeSTE, Deltas auswerten ************************
+2661:                        '************************* Betriebsstrategie ***************************
+2690:                        '** Ke-Modus einsetzen wenn...
+2693:                            '...Gleicher Modus wie vorher, Fahrzustands-Änderung oder Letzter Modus unmöglich
+2698:                            '...wenn Motor nicht läuft
+2703:                                '...wenn PeICE-Leistungsänderung mit neuen Modus am geringsten
+2728:                    '****************************** Leistungen je nach Modus verteilen **************************
+2735:                            'EM übernimmt gesamte Leistung
+2738:                            'Geschw. reduzieren falls Leistung zu hoch für EM oder Bat
+2744:                            'Falls ICElock oder EVcrit dann ICE ein (aber ausgekuppelt)
+2758:                            'ICE übernimmt gesamten Antrieb
+2826:                    'ACHTUNG: ICEclutch ist standardmäßig 'False' deshalb hier keine weiteren Statements mehr
+2828:                    'Maximale Rekup-Leistung berechnen
+2833:                        'Mit PrekupMax auf EM/ICE zurück rechnen
+2842:                        'Den Rest gleich auf die Bremse 
+2847:                    'Default für ICE (damit man sich die "Else"-Statements spart)
+2855:                            'EM-Leistung berechnen
+2860:                                'EM-Leistung neu
+2863:                                'Restliche Leistung an ICE
+2867:                                'Falls ICE über Schleppkurve
+2870:                                    'ICE-Leistung neu
+2873:                                    'Rest an Bremse
+2880:                                'ICE in Leerlauf (weil On-Lock)
+2889:                            'EM-Leistung berechnen
+2894:                                'EM-Leistung neu
+2899:                                    'ICE im Schubbetrieb
+2903:                                    'Falls ICE über Schleppkurve
+2906:                                        'ICE-Leistung neu
+2909:                                        'Rest an Bremse
+2932:                            'ICE im Schubbetrieb
+2936:                            'Falls ICE über Schleppkurve
+2939:                                'ICE-Leistung neu
+2942:                                'Rest an Bremse
+2962:                    'Leistung Null
+2973:            '****************************** Clutch und Drehzahlen *******************************
+2976:            'Haupt-Kupplung => muss hier schon bekannt sein!
+2989:            '************************************ Drehzahl ICE ************************************
+3034:            '************************************ Drehzahl EM *************************************
+3060:            '   Sekunde abschließen
+3065:            '   ACHTUNG: Die beiden If-Schleifen nicht verbinden weil LockCount sich sonst verzählt
+3082:            'Modalwerte-Felder schreiben
+3130:            'Meldungen
+3136:        '*********************************    Zeitschleife ENDE   **************************************
+3139:        'Meldungen (Nicht ADVANCE)
+3255:        '-----------------------------------Sekunde 1--------------------------------------
+3256:        'Erste Sekunde: Gang finden / Initialisierung
+3283:        '--------------------------------Ab Sekunde 2--------------------------------------
+3285:        '---------Startwerte---------
+3286:        'gangX = Letzter Gang d.h. Ausgangsbasis für Schaltmodell
+3293:        'Kuppelschleif-check  << Schon passiert in Power.Calc
+3296:        '-------------------Gang für die nächsten 6 Sekunden berechnen---------------------
+3303:            '-----------Schaltfunktion----------
+3341:            'Drehzahlschranke Hinaufschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+3344:            'Drehzahlschranke Hinunterschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+3346:            'Gelöscht LUZ 13.07.10: If (nnsaufi > 0.85) Then nnsaufi = 0.85
+3347:            'Umrechnung in hier verwendete Drehzahleinheit (n/n_nenn):
+3350:            'Drehzahl mit letzten Gang (gangX)
+3351:            'nx = fnU(Vist, gangX, Clutch = tEngClutch.Slipping) / VEH.nNenn
+3354:            ' ''Schalten Maximal alle 2 Sekunden schalten zulaessig:
+3357:            'Ueberpruefen ob hinunterschalten, nur wenn Geschw. abnimmt oder leistung zunimmt
+3366:            'Ueberpruefen ob hinaufschalten, nur wenn Geschw. zunimmt oder leistung abnimmt
+3374:            'Gangwahl korrigieren
+3383:            'Kein Leerlauf wenn Leistung > 0
+3388:            'Drehzahl neu
+3389:            ''nn = fnn(Vist, gangX, Clutch = tEngClutch.Slipping)
+3392:            'Überprüfe ob Gang innerhalb der Leistungs-/Drehzahl Grenzen. Schleppbetrieb wird nicht beachtet
+3406:            'Speichere Gänge in Feld für spätere Checks
+3418:        'Gang wird übernommen
+3426:        'Gang-Verlauf hinzufügen
+3430:        '--------------------------------Checks Teil 1-------------------------------------
+3431:        'Checks zur Saeuberung unsinniger Schlatmanoever:
+3433:        ''Unterteilung in "iphase(j)" Beschleunigungs- (=1), Verzoegerungs- (=2) und Cruise (=3) -Phasen:
+3443:        '   ============>> Schon bestimmt durch VehState0
+3445:        'Suche nach letztem Gangwechsel
+3456:        'Schaltvorgaenge max. alle 3 Sekunden zulaessig:
+3462:            'Cruise-Phasen:
+3463:            'Solange Geschwindigkeitsaenderung seit letztem Gangwechsel unter 6% und Pe/Pnenn aenderung unter 6% wird nicht geschaltet:
+3464:            'Verzoegerungsphasen: Hochschalten wird unterdrückt
+3465:            'Beschleunigungsphasen: Zurückschalten wird unterdrückt
+3486:                'Wenn innerhalb von 6 Sekunden wieder in vorigen Gang zurueck geschaltet wird, wird der vorige Gang
+3487:                'durchgehend beibehalten
+3499:                    'Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang
+3500:                    'geschaltet wird, wird voriger Gang durchgehend beibehalten
+3517:        '--------------------------------Checks Teil 2-------------------------------------
+3518:        'Schalten von 2. in 1. Gang wird bei v > 2,5 m/s unterdrueckt
+3519:        'NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl
+3524:        'bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet
+3538:        'wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
+3545:        'bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet
+3552:        'ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
+3553:        'sonst fehlt die leistung!
+3562:    'EV-Schaltmodell (auf Basis PKW)
+3592:        '-----------------------------------Sekunde 1--------------------------------------
+3593:        'Erste Sekunde: Gang finden / Initialisierung
+3620:        '--------------------------------Ab Sekunde 2--------------------------------------
+3622:        '---------Startwerte---------
+3623:        'gangX = Letzter Gang d.h. Ausgangsbasis für Schaltmodell
+3630:        'Kuppelschleif-check  << Schon passiert in Power.Calc
+3633:        '-------------------Gang für die nächsten 6 Sekunden berechnen---------------------
+3640:            '-----------Schaltfunktion----------
+3678:            'Drehzahlschranke Hinaufschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+3681:            'Drehzahlschranke Hinunterschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+3684:            'Umrechnung in hier verwendete Drehzahleinheit (n/n_nenn):
+3687:            'Drehzahl mit letzten Gang (gangX)
+3691:            ' ''Schalten Maximal alle 2 Sekunden schalten zulaessig:
+3694:            'Ueberpruefen ob hinunterschalten, nur wenn Geschw. abnimmt oder leistung zunimmt
+3703:            'Ueberpruefen ob hinaufschalten, nur wenn Geschw. zunimmt oder leistung abnimmt
+3711:            'Gangwahl korrigieren
+3720:            'Kein Leerlauf wenn Leistung > 0
+3725:            'Drehzahl neu
+3729:            'Überprüfe ob Gang innerhalb der Leistungs-/Drehzahl Grenzen. Schleppbetrieb wird nicht beachtet
+3743:            'Speichere Gänge in Feld für spätere Checks
+3755:        'Gang wird übernommen
+3763:        'Gang-Verlauf hinzufügen
+3767:        '--------------------------------Checks Teil 1-------------------------------------
+3768:        'Checks zur Saeuberung unsinniger Schlatmanoever:
+3770:        ''Unterteilung in "iphase(j)" Beschleunigungs- (=1), Verzoegerungs- (=2) und Cruise (=3) -Phasen:
+3780:        '   ============>> Schon bestimmt durch VehState0
+3782:        'Suche nach letztem Gangwechsel
+3793:        'Schaltvorgaenge max. alle 3 Sekunden zulaessig:
+3799:            'Cruise-Phasen:
+3800:            'Solange Geschwindigkeitsaenderung seit letztem Gangwechsel unter 6% und Pe/Pnenn aenderung unter 6% wird nicht geschaltet:
+3801:            'Verzoegerungsphasen: Hochschalten wird unterdrückt
+3802:            'Beschleunigungsphasen: Zurückschalten wird unterdrückt
+3823:                'Wenn innerhalb von 6 Sekunden wieder in vorigen Gang zurueck geschaltet wird, wird der vorige Gang
+3824:                'durchgehend beibehalten
+3836:                    'Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang
+3837:                    'geschaltet wird, wird voriger Gang durchgehend beibehalten
+3854:        '--------------------------------Checks Teil 2-------------------------------------
+3855:        'Schalten von 2. in 1. Gang wird bei v > 2,5 m/s unterdrueckt
+3856:        'NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl
+3861:        'bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet
+3875:        'wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
+3882:        'bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet
+3889:        'ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
+3890:        'sonst fehlt die leistung!
+3944:        '-----------------------------------Sekunde 1--------------------------------------
+3945:        'Erste Sekunde: Gang finden / Initialisierung
+3982:        '--------------------------------Ab Sekunde 2--------------------------------------
+3984:        '---------Startwerte---------
+4014:        'Leistung berechnen von jz bis jz + 6-----------------
+4027:            '     Berechnung nach Drehzahl/Leistung-Modell
+4030:            '(1) Nach Variante "schnelle Fahrweise"
+4032:            'Schaltmanoever erfolgt nur, wenn v-aenderung 5% seit letztem Gangwechsel,
+4033:            'VECTO: Auskommentiert START
+4045:            'VECTO: Auskommentiert ENDE
+4047:            'in ersten 10 Zyklussekunden kann zum Einregulieren immer geschlatet werden:
+4050:            'Bei Aenderung der Steigung kann ebenfalls immer geschaltet werden:
+4054:            'Hinunterschalten:
+4061:            'Hochschalten:
+4062:            ' bei Steigungszyklen mit zu hohen Geschwindigkeiten wird geschw. i+1 erst nach gangwahl berechnet
+4063:            ' dabei manchmal zu hoher gang -> Drehzahl und P_max viel zu nieder, daher nu bei niederen leistungen
+4064:            ' hochschalten erlaubt:
+4083:            '(2) Nach Variante "sparsame Fahrweise"
+4085:            '   Zurueckschalten erfolgt nur, wenn Geschwindigkeitsaenderung > 6%
+4086:            '   Hochschalten geht immer
+4087:            'VECTO: Auskommentiert START
+4099:            'VECTO: Auskommentiert ENDE
+4101:            '       in ersten 10 Zyklussekunden kann zum einregulieren immer geschlatet werden:
+4103:            '       Bei Aenderung der Steigung kann ebenfalls immer geschaltet werden:
+4107:            '    Hinunterschalten:
+4117:            'Hinaufschalten, nur ueberprueft wenn nicht schon hoechster Gang:
+4126:                'C     relevante Drehzahlen:
+4137:            ' Auswahl des Drehzahlverhaeltnisses aus der "schnellen (..h)" und
+4138:            ' der "sparsamen (..l)" Variante:
+4140:            '   Drehzahlverhhealtnisse nach "Modellmix":
+4141:            '   anhand der erforderlichen maximalen Motorleistung ueber die
+4142:            '   naechsten 6 Sekunden
+4150:            '     Festlegung der Anteile von schneller und sparsamer Fahrweise
+4151:            '      (Modell Hausberger):
+4158:            '     Mix der berechneten Gaenge gemaess Vorgabe in Eingabefile:
+4159:            '     (pmodell wird aus Eingabefile gelesen, = Anteil, zu der die Drehzahl
+4160:            '      nach "reales Modell" bestehen soll)
+4165:            '      Ermittlung des "virtuellen" aktuellen Ganges nach Modell
+4170:            '    ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
+4171:            '    sonst fehlt die leistung!
+4181:            '    ueberpruefung, ob erforderliche leistung ueber P_max(n) liegt
+4182:            '    dann wird zurueckgeschaltet:
+4208:            '    Eigentliche Ueberpruefung ob ueber P_max(n)
+4214:            'falls schlechte Vollastkurve ohne Moment in leerlauf wird korrigiert:
+4217:            '    Ueberpruefung, ob hoehere Leistung erforderlich ist als Maximalleistung bei nh
+4218:            '     dann wird zurueckgeschaltet:
+4256:        'c     Ende "Modell"-Basisgangwahl
+4260:        'Kuppelschleif-check
+4263:        '--------------------------------Checks Teil 1-------------------------------------
+4264:        'Checks zur Saeuberung unsinniger Schlatmanoever:
+4265:        'Unterteilung in "iphase(j)" Beschleunigungs- (=1), Verzoegerungs- (=2) und Cruise (=3) -Phasen:
+4290:        'Suche nach letztem Gangwechsel
+4299:        'Schaltvorgaenge max. alle 3 Sekunden zulaessig:
+4304:        'Cruise-Phasen:
+4305:        'Solange Geschwindigkeitsaenderung seit letztem Gangwechsel unter 6% und Pe/Pnenn aenderung unter 6% wird nicht geschaltet:
+4306:        'Verzoegerungsphasen: Hochschalten wird unterdrückt
+4307:        'Beschleunigungsphasen: Zurückschalten wird unterdrückt
+4326:        'Wenn innerhalb von 6 Sekunden wieder in vorigen Gang zurueck geschaltet wird, wird der vorige Gang
+4327:        'durchgehend beibehalten
+4328:        'VECTO: Ausnahme: Über Volllastkurve
+4339:        'Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang
+4340:        'geschaltet wird, wird voriger Gang durchgehend beibehalten
+4356:        '--------------------------------Checks Teil 2-------------------------------------
+4357:        'Schalten von 2. in 1. Gang wird bei v > 1.5 m/s unterdrueckt
+4358:        'NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl
+4363:        'bei verzoegerungsvorgaengen unter 1.5 m/s wird in Leerlauf geschaltet
+4375:        'wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
+4383:        'ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
+4384:        'sonst fehlt die leistung!
+4424:        'Geschwindigkeit vorausschauen
+4437:        'Checks aus PKWgear....
+4438:        'Schalten von 2. in 1. Gang wird bei v>2,5 m/s unterdrueckt
+4447:        'Bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet
+4456:        'Wenn v mehr als 1 Sek. <0.1 m/s wird auf Gang=0 geschaltet
+4461:        'Bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet
+4488:    'Funktion zur einfachen Leistungsberechnung für Schaltmodelle
+4493:    'Funktion zur einfachen Leistungsberechnung für EV-Schaltmodell
+4508:            'Drehzahlvorgabe
+4552:    '--------------Leistung vor Diff = Am Rad-------------
+4561:    '----------------Rollwiderstand----------------
+4566:    '----------------Luftwiderstand----------------
+4591:    '--------Beschleunigungsleistung Fahrzeug--------
+4593:        'Früher (PHEM 10.4.2 und älter) wurde statt m_raeder Massered verwendet, mit Massered = m_raeder + I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2
+4594:        '   Der fehlende Teil (I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2) wird jetzt durch fPaG(V,a) mit berücksichtigt
+4598:    '----------------Steigungswiderstand----------------
+4603:    '----------------Nebenaggregate----------------
+4608:    '-------------------Getriebe-------------------
+4633:                'Leistung nach Getriebe (Getriebeausgang)
+4636:                'Verluste berechnet (eignet sich nur für Schaltgetriebe)
+4637:                '       Interpolation der Getriebeverlustleistung
+4638:                '       Zwischen 1. und 8. gang sowie 9. und 16. Gang:
+4662:                '***Differenzial
+4663:                '   Leistung nach Diff (vor Getriebe)
+4682:                'Pdiff
+4691:                '***Differenzial
+4692:                '   Leistung vor Diff
+4744:    '----------------Getriebe Trägheit----------------
+>>> MODcalc\cVh.vb
+5:    'Aus DRI-Datei
+15:    'Berechnet
+18:    'WegKor
+58:        'Geschwindigkeit
+69:            'Original-Geschwindigkeit ist um 1 länger
+79:            'Strecke (aus Zwischensekunden sonst passiert Fehler)
+87:        'Steigung
+99:        'Gang - nicht Mittelwert sondern Gang(t) = DRI.Gang(t)
+112:        'Padd
+124:        'Beschl. berechnen
+132:        'Vair-Vorgaben: Nicht in Zwischensekunden!!
+157:        'Geschwindigkeit
+169:            'Strecke 
+177:        'Steigung
+189:        'Gang - nicht Mittelwert sonder Gang(t) = DRI.Gang(t)
+202:        'Padd
+214:        'Beschl. berechnen
+257:        'TODO: Wenn Fzg schneller als Zyklus...
+273:            'Falls Zeitschritt wiederholen näher an Wegvorgabe als aktueller Weg => Zeitschritt wiederholen
+279:                'Falls nächsten Zeitschritt löschen näher an Wegvorgabe als aktueller Weg => Nächsten Zeitschritt löschen
+291:                'Keine Korrektur
+>>> MODcalc\Em Calc.vb
+51:                            'Delaunay
+54:                            'Normale Interpolation
+101:                'Ersten zwei sekunden keine Korrektur:
+185:        'Dictionaries erstellen
+208:        'Summen ermitteln
+220:        'Mittelwerte
+243:        '************************************ 'Zyklus-Mittelwerte '************************************
+258:            '***** Messwert
+261:            '***** PHEM-Wert
+264:            '***** Diff - ACHTUNG: Keine Pnenn-Normierung! Vorsicht bei Dynamik-Korrektur!
+279:            'Über x Sekunden gemittelte Werte berechnen und sofort au
+282:                'Null setzen
+286:                'Aufsummieren
+292:                'Messwert
+295:                'PHEM-Wert
+311:        '************************************ Modale Ausgabe '************************************
+324:            'Messwert
+328:            'PHEM-Wert
+332:            'Diff - ACHTUNG: Keine Pnenn-Normierung! Vorsicht bei Dynamik-Korrektur!
+351:        'Header und Units schreiben
+355:        'Über x Sekunden gemittelte Werte berechnen und sofort au
+358:            'Null setzen
+371:            'Aufsummieren
+388:            'Ausgabe
+399:                'Messwert
+402:                'PHEM-Wert
+563:            'C      Lastwechsel (allgemeine Bedingung ausser bei Intervallen mit
+564:            'C      Konstantfahrt:
+572:            'C       Damit werden Trapezfoermige Zyklen nicht als lastwechsel erkannt
+573:            'C       da LWje = 0. In diesem fall wird voraus der naechste Wert gesucht,
+574:            'C       der nicht gleich Pe(jz) ist. Dieser wird anstelle von Pe(jz+1)
+575:            'C       gesetzt:
+603:            'C      lastwechsel werden nur als solche gezaehlt, wenn sie mehr als 0.05% von
+604:            'C      Pnenn betragen (sonst ist Ergebnis viel zu wackelig):
+605:            'C       (Lastwechsel wird gezaehlt, wenn LWja < 0)
+609:            'C     (1) Mittlere Amplitude vom Pe-Verlauf ("Ampl")
+610:            'C         Zwischenrechnung fue Zyklusmittelwert:
+617:            'C       Berechnung der mittleren Amplitude in 3 Sekunden vor Emission (Ampl3s)
+618:            'C       und der Anzahl der Pe-Sekundenschritten ueber 3% der Nennleistung
+619:            'C       (LW3p3s):
+650:            'C     (2) Aenderung der aktuellen Motorleistung (dP_2s):
+664:            'C     Mittelwert 3 sec. vor Emission:
+672:            'C    Gezaehlt nur bei dynamischem betrieb:
+681:            'C     (4) Mittelwert der negativen Motorleistung ("PnegMW"):
+687:            'C     Mittelwert 3 sec. vor Emission:
+695:            'C    Gezaehlt nur bei dynamischem betrieb:
+707:        'C     Berechnung der absoluten Dynamikkenngroessen:
+708:        'C      Addition der Amplituden von Pe (1. Pe-Wert
+709:        'C      wird fuer Amplitude auch als Maxima bzw. Minima gezaehlt)
+710:        'C    1. Sekunde:
+714:            'C     2. Sekunde bis Ende:
+717:                'C        Absolutwert:
+792:        'Geschw./Beschl.-abhängige Parameter nur wenn nicht Eng-Only
+805:        'Dynamikparameter als Differenz zu Dynamik in Kennfeld
+806:        '   ...war früher hier. Jetzt eigene Methode weil bei KF-Erstellung ungültig
+812:    'Dynamikparameter als Differenz zu Dynamik in Kennfeld:
+838:''' Klasse zur Berchnung der Abgastemperaturen
+846:    '! Felder für Größen aus PHEM Hauptprogramm
+895:    '**** Einlesen von tgas aus .npi (Projekt HERO) ****
+896:    ' => überschreibt tgas(jz) aus HtMass()
+897:    ' Luz/Rexeis 16.05.2011
+912:    ''' Hauptroutine für EXS Modul
+916:        '! Aufruf von Exs_Main(true) -> Developer Version ohne PHEM Hauptprogramm
+921:        '! Felder für Größen aus exs-File
+951:        'Allgemeine Konstanten
+955:        '!Stoffwerte Abgas:
+956:        '!unempfindlich gg. lambda, siehe "Stoffwerte_vollständigeVerbrennung_neu.xls"
+958:        'cp_exh = 1054.0 '!Wärmekapazität Abgas [J/(kg*K)], wird nicht mehr verwendet weil jetzt direkt in Abh. von T und Lambda berechnet
+964:        '!Anmerkung: Mittelwertwert aus Internetrecherche, in Literatur keine Angaben gefunden
+965:        '!kalibriert anhand Test an Thermoelement unter Annahme von Schichtdicke 0.1mm
+967:        'Reaktionsenthalpien in J/mol
+972:        'Molmassen
+977:        'Kompatibilität mit alter EXS-Strkutur. Bevor neues Konzept für Em-Komponenten mit cMAP-Klasse, tMapComp, etc. eingeführt wurde
+985:        'Verweise auf Emissionen: Gegebene falls vorhanden sonst die berechneten
+1006:        'Dimensionieren:
+1025:        'Übergabe der relevanten Größen aus dem PHEM Hauptprogramm
+1026:        'In DEV direkt aus der Datei *.phe eingelesen
+1045:        'Lambda
+1051:            'Wird weiter unten belegt weil mpexh vorhanden sein muss
+1056:        'Anfang exs-File einlesen
+1072:        'dummy = DatExs.ReadLine(0) 'alte dummy zeilen: auf exs-file kompatibilität achten
+1079:        'Initialisieren der entsprechenden Anzahl an Modulen
+1085:        'Lesen der Datenblöcke je Modul
+1088:                'Fehlermelderung in TempMod(iMod).Read(DatExs)
+1096:        'Ende exs-File einlesen
+1100:            'Anfang csy-File einlesen
+1121:            'Ende csy-File einlesen
+1133:        'Berechnungsschleife: je Zeitschritt /je Modul: 1. Temperaturen, 2.Konvertierungen
+1135:            'Sekündliche Ergebnisse werden in jeder Iteration ausgegeben
+1139:                    ' Header *.ter schreiben
+1159:                    ' Header der KonvMods schreiben
+1169:            'startwerte für kühlersimulation:
+1174:            'Wärmeeintrag ins Kühlsystem (Kennfeld)
+1189:                'Kühlsystem Simulation
+1191:                    'Wärmeeinträge in Massen 1 und 2
+1195:                    'Wärmeübergang Masse 1 und 2 ins Kühlsystem
+1199:                    'Massentemperaturen für nächsten Zeitschritt
+1205:                    'Wärmeverlust nach außen
+1208:                    'Gesamtwärmeeintrag ins Kühlsystem (Ausgabewert der Kühlersimulation)
+1218:                        'Berechnung Abgasmassenstrom aus gegebenem Kraftstoffverbrauch und Lambda
+1219:                        'nur zulässig bei Motoren ohne AGR
+1220:                        'Einheit mpexh.......[kg/s]
+1221:                        'Einheit Vpexh.......[m3/s]
+1222:                        'Fall 1: Berechnung aus Verbrauch und lambda
+1224:                        '!Fall 2: Berechnung aus durch Motor gepumpter Luftmenge
+1231:                        'Es fehlt: Methodik Massenstromberechnung für AGR Motoren BMW HERO Projekt
+1239:                'Lambda berechnen falls nicht explizit gegeben
+1252:                'Erstes Modul im Abgasstrang kann kein katalytisch aktives Element sein,
+1253:                'daher sind die Emissionen immer gleich der Rohemissionen aus dem PHEM-Hauptprogramm
+1269:                            'Qp_reak berechnen: massenstrom * konvertierungsrate * reaktionsenthalpie / molmasse
+1273:                            'Schadstoffkomponente berechnen
+1277:                            'Konvertierung von NOx, CO, HC -> alter Wert * (1-Konvertierungsrate)
+1291:                        'Falls Modul kein Konv-Element hat ändert sich nix (Anmerkung: Modul 1 hat immer ModTyp0)
+1304:                'Zeile in *.ter schreiben
+1323:            'Ende Berechnungsschleife
+1326:            'Alle sekündlichen Ergebnisfiles zumachen
+1338:            '---------- Abfrage Rücksprung im iterativen Berechnungsmodus für Starttemp -------------------
+1340:                'Abbruchbedingung: Temperatur des Massenelementes "t_m" des in "iter_pos" spezifizierten Moduls
+1341:                'am Beginn und am Ende des Zyklus innerhalb vorzugebender Bandbreite "iter_tol"
+1417:        '--- Ausgabefile *.ter schreiben ----------------------------------------------------------
+1419:        '--- Ende Ausgabefile *.ter schreiben -----------------------------------------------------
+1422:        'Aufräumen
+1431:    ''' Klasse für Temperaturmodule
+1433:    ''' <remarks>Art des Moduls wird mit ModTyp definiert</remarks>
+1492:        ''' Einlesen der EXS-Datei
+1494:        ''' <param name="Datei">Dateihandler</param>
+1512:            'Pfad für Konvertierungsraten bei Modulen mit Konvertierung
+1520:            'Initialisieren der Module & Einlesen des Parameterfiles je nach Modul
+1561:                    'Wärmeübergangsfaktor
+1563:                    'Oberfläche außen
+1565:                    'Emissivität
+1567:                    'Faktoren für Wärmeübergänge nach außen
+1571:                    'Faktoren für Temperaturzusammenhang t_katsubstrat <-> t_kat_außen
+1574:                    'Abkühlkurve Masse
+1576:                    'normierte Querschnittsfläche
+1578:                    'durchschnittlicher Gegendruck
+1580:                    'Durchmesser Thermoelement
+1583:                    'Abkühlkurve Thermoelement
+1595:                    'Faktoren für Wärmeübergänge nach außen
+1621:            'Check ob Tgas in Zyklus gegeben:
+1629:            'Entnormierungen und Berechnung weiterer Größen
+1638:                'Zusätzlich berechnete Parameter für Rohrmodule:
+1650:            'Für Strömungsberechnungen in SI-Einheiten wird Querschnittsfäche in m2 umgerechnet
+1653:            'Geometrische Größen berechnen
+1654:            'Anmerkung: es wird davon ausgegangen, dass Temperatursensoren
+1655:            'mittig ins Rohr stehen
+1660:            ' Anmerkung: Kugelkalotte an t-sensor spitze wird in der Betrachtung als
+1661:            ' umströmter Zylinder vernachlässigt
+1663:            'Abkühlkurven einlesen
+1691:        ''' Wärmeübergang Masse
+1708:            'Festlegung Schwellwert für Genauigkeit der Temperaturberechnung (wird wegen iterativem Berechnungsmodus benötigt)
+1711:            'Übergabe Eintrittstemperatur des Abgases aus oberhalb liegendem Modul bzw. dem Motor
+1730:            'Berechnung der aktuellen Massentemperatur
+1733:                '! bei n_iter > 0 ist bereits der Endwert der letzten Iteration zugewiesen
+1739:            'Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen:
+1761:                'Wärmekapazität (vgl. Bogdanic)
+1780:                'Schleife für Iteration Wärmeübergang
+1788:                    '                                     Abbruchkriterium siehe unten
+1794:                    'Ermittlung der Temperatur des Abgases in der Mitte der Masse ("t_gas_mid") aus einem nichtlinearem (logaritmisch) Temperaturverlauf 
+1803:                        'Wärmeübergang Konvektion innen für alle Module (außer Rohr)
+1807:                        'für Rohrmodule:
+1809:                        'Nusselt Zahl: Dichte = 345/t_gas_mid, Term in Klammer: mu_Rohr / mu_Mitte
+1811:                        'Wärmeübergang (Konvektion innen), d_pipe in m: char. Länge
+1815:                    'Wärmekapazität (vgl. Bogdanic)
+1820:                    'Abbruchkriterium: Änderung der Abgas-Austrittstemperatur im Vergleich zum letzten Iterationsschritt kleiner Schwellwert
+1838:            'Berechnung der Wärmeverluste der "thermischen Masse" nach außen
+1840:                'Parameter werden aus EXS-Datei eingelesen:
+1841:                'Daten für MuD:
+1842:                '   Oberfl_Kat = 0.12 'Oberfläche für Wärmeübergang in m^2
+1843:                '   Emiss = 0.5 'Emissivität
+1846:                'Empirische Formel, passt für alle Rollentests recht gut
+1848:                'Anm.: Versuch mit direkter Abhängigkeit von t_m -> funktioniert nicht gut
+1850:                'Wärmeverlust durch Strahlung
+1852:                'Wärmeverlust durch Konvektion
+1856:                'Parameter werden aus EXS-Datei eingelesen:
+1857:                'Daten für MuD:
+1858:                '   Modul Nr. 3:
+1859:                '       Oberfl_Mod3 = 0.169457508 'Oberfläche für Wärmeübergang in m^2
+1860:                '       Emiss = 0.5 'Emissivität
+1863:                '   Modul Nr. 4:
+1864:                '       Oberfl_Mod4 = 0.103596481 'Oberfläche für Wärmeübergang in m^2
+1865:                '       Emiss = 0.9 'Emissivität
+1869:                'Wärmeverlust durch Strahlung = Sichtfaktor * Emissivität * St.-Boltzm.-Konst * Oberfläche * (T_Rohr^4 - T_Umgebung^4)
+1871:                'Wärmeverlust durch Konvektion = Wärmeübergangskoeffizient * Oberfläche * (T_Rohr - T_Umgebung)
+1874:                'Standard: Crad konstant, keine Verluste durch Konvektion
+1879:            'Gesamtwärmeverlust
+1886:        ''' Wärmeübergang Thermoelement
+1899:                'Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen:
+1912:                '!Formelwerk Berechnung Wärmeübergang am umströmten Zylinder
+1921:                'Vereinfachte Lösung der Wärmeflussgleichung für den t-sensor
+1922:                'entspricht einer Diffgl. für ein PT1 glied
+1924:                'Zeitdiskrete Lösung der PT1-Diffgl
+1991:                ''Extrapolation für LastTemp > TempAr(0)
+2003:                'Extrapolation für LastTemp < TempAr(Adim)
+2005:                'lbInt:
+2013:                'Einen Zeitschritt vor ( = 1 Sekunde)
+2041:        'Klasse initialisiert als Unterelement von TempMod
+2047:        'c     Prefix "c" bedeutet: Zykluswert verwendet für Kennlinien-Korrektur
+2049:        'c     Index "cc" bedeutet: Wert aus Kennlinie (-> "c" - "cc" ist die Differenz, mit der Korrigiert wird)
+2053:        'Filename sekündliches Ausgabefile spezifizieren
+2105:            'Abbruch wenn kein NOx gegeben
+2126:            't-SCR (°C), deNOx(1-NOx-Auspuff/NOx-Roh), -t-upstream(°C), NOx-Roh (g/h)/kW_Nennleistg, Summe NOx ueber 60Sek vorher g/h)/kW_Nennleistg, Raumgeschwindigkeit (1/h)
+2149:            ' Programm zur Simulation SCR-Flottendurchschnitt
+2150:            ' Anmerkung: deNOx-Werte kleiner als Null sind möglich:
+2151:            '            dies entspricht höherem Roh-Nox-Niveau als im Basiskennfeld
+2162:            '     1.) Berechnung der sekündlichen Werte für Eingangsgrößen SCR-Modell
+2164:            '     a.) t_SCR: zusammengewichten der von t_upstream und t_downstream
+2165:            '     SCR-Model-intern werden dabei Temperaturen zwischen 50°C und 500°C begrenzt
+2166:            '     Temperaturmodelwerte (zB bei Kaltstart) werden nicht überschrieben
+2172:            '     b.) t_up, NOxraw, SV: 20s gleitender Mittelwert in die Vergangenheit
+2173:            '         Formel gilt auch für die ersten 20 Sekunden
+2187:            '     c.) NOx60s: Summe über letzten 60s der spezifischen NOx-Rohemissionen
+2188:            '         Formel gilt auch für die ersten 60 Sekunden
+2194:            '        Für Sekunde 1 bis 59 muss summenwert hochgerechnet werden
+2201:            '     Berechnung deNOxmin aus Kennlinien-Wert bei 50°C
+2213:            '     2.) Berechnung deNOx
+2215:            '        a.) deNOx aus Kennlinie:
+2225:            'c        b.) Falls Korrekturkriterien erfüllt sind: deNOx-Korrektur gegenüber Kennlinie
+2228:                'c           t_up aus Kennlinie:
+2238:                'c           NOx_raw aus Kennlinie:
+2248:                'c           Summe NOxraw in den letzten 60 Sekunden aus Kennlinie:
+2258:                'c           Raumgeschwindigkeit aus Kennlinie:
+2276:            'Schreiben der Ergebnisse auf die standardisierten Variablen eEmKomp (iSchad, jz) und Qp_reak(jz)
+2312:    ''' SCR Modell
+2319:        'Klasse initialisiert als Unterelement von TempMod
+2325:        'c     Prefix "c" bedeutet: Zykluswert verwendet für Kennlinien-Korrektur
+2327:        'c     Index "cc" bedeutet: Wert aus Kennlinie (-> "c" - "cc" ist die Differenz, mit der Korrigiert wird)
+2331:        'Filename sekündliches Ausgabefile spezifizieren
+2385:            'Abbruch wenn kein NOx gegeben
+2405:            't-SCR (°C), deNOx(1-NOx-Auspuff/NOx-Roh), -t-upstream(°C), NOx-Roh (g/h)/kW_Nennleistg, Summe NOx ueber 60Sek vorher g/h)/kW_Nennleistg, Raumgeschwindigkeit (1/h)
+2429:            ' Programm zur Simulation SCR-Flottendurchschnitt
+2430:            ' Anmerkung: deNOx-Werte kleiner als Null sind möglich:
+2431:            '            dies entspricht höherem Roh-Nox-Niveau als im Basiskennfeld
+2443:            '     1.) Berechnung der sekündlichen Werte für Eingangsgrößen SCR-Modell
+2445:            '     a.) t_SCR: zusammengewichten der von t_upstream und t_downstream
+2446:            '     SCR-Model-intern werden dabei Temperaturen zwischen 50°C und 500°C begrenzt
+2447:            '     Temperaturmodelwerte (zB bei Kaltstart) werden nicht überschrieben
+2453:            '     b.) t_up, NOxraw, SV: 20s gleitender Mittelwert in die Vergangenheit
+2454:            '         Formel gilt auch für die ersten 20 Sekunden
+2470:            '     c.) NOx60s: Summe über letzten 60s der spezifischen NOx-Rohemissionen
+2471:            '         Formel gilt auch für die ersten 60 Sekunden
+2479:            '        Für Sekunde 1 bis 59 muss summenwert hochgerechnet werden
+2486:            '     Berechnung deNOxmin aus Kennlinien-Wert bei 50°C
+2498:            '     2.) Berechnung deNOx
+2500:            '        a.) deNOx aus Kennlinie:
+2510:            'c        b.) Falls Korrekturkriterien erfüllt sind: deNOx-Korrektur gegenüber Kennlinie
+2513:                'c           t_up aus Kennlinie:
+2523:                'c           NOx_raw aus Kennlinie:
+2533:                'c           Summe NOxraw in den letzten 60 Sekunden aus Kennlinie:
+2543:                'c           Raumgeschwindigkeit aus Kennlinie:
+2561:            'Schreiben der Ergebnisse auf die standardisierten Variablen eEmKomp (iSchad, jz) und Qp_reak(jz)
+2593:    ''' KAT-Modell
+2600:        'Klasse initialisiert als Unterelement von TempMod
+2606:        'Kennfelddaten
+2627:        ''' Erstellen eines neuen KAT-Moduls
+2642:        ''' Interpolationsfunktion
+2644:        ''' <param name="x">Massenstrom</param>
+2645:        ''' <param name="y">Temperatur vor KAT</param>
+2646:        ''' <param name="MapID">MapID der entsprechenden Abgaskomponente</param>
+2647:        ''' <returns>interpolierten Wert für x und y aus Kennfeld</returns>
+2648:        ''' <remarks>Aus Massenstrom-Temperatur Kennfeld wird Konvertierungsrate für entsprechende Abgaskomponente berechnet</remarks>
+2660:        ''' Einlesen der Kennfelder für Konvertierungsraten
+2662:        ''' <param name="Name">Dateiname</param>
+2716:            'Units (wird nicht ausgewertet)
+2719:            'Werte
+2731:                'KonvRaten Null setzen wenn Komponente nicht gegeben
+2742:            'Triangulieren
+2750:            'Dic. für modale Konvrate definieren
+2763:        ''' Berechnung der Konvertierungsrate aus Kennfeld
+2765:        ''' <param name="jz">Zeit</param>
+2766:        ''' <remarks>Für die Berechnung wird die Temperatur des Thermoelements am Kateingang (entspricht Modulnummer i-1) verwendet!!!</remarks>
+2768:            'Konvertierungsrate aus Kennfeld berechnen
+2784:        ''' Header für Ausgabedatei
+2796:        ''' Daten für Ausgabedatei
+2798:        ''' <param name="jz">Zeit</param>
+2819:    ''' Interface zur Konverter-Klasse cScrMod, cDocMod , usw...
+2835:        'C     Unterprogramm zu PHEM zur linearen INterpolation aus einem Polygonzug (z.B. in Vissimzs.for aufgerufen)
+2836:        'C     uebergeben wid "such" als X-Wert, der dann als berechneter Y-Wert wieder zurueck gegeben wird
+2837:        'C     Zu Belegen sind vorher:
+2838:        'C     Xis(j) und Yis(j)
+2839:        'c     Zu uebergeben der gesuchte Wert (such) und die Anzahl an vorhandenen Polyginpunkten (izpl)
+2850:        'C    Suche der naechstgelegenen Drehzahlpunkte aus eingegebener Vollastkurve:
+2851:        'c     Abstand zu Eingabepunkten und Suche des Punktes mit geringstem Abstand:
+2862:        'C      Festlegung des zweiten INterpolationspunktes (nur interpolieren, nicht extrapolieren)
+2868:                '!Extrapolation nach oben
+2874:                '!Extrapolation nach unten
+2879:        'c      Sortieren der 2 Werte nach aufsteigendem n:
+2887:        'c     Interpolation der zugehoerigen Maximalleistung (P/Pnenn)
+>>> My Project\Application.Designer.vb
+3:'     Dieser Code wurde von einem Tool generiert.
+4:'     Laufzeitversion:4.0.30319.269
+6:'     Änderungen an dieser Datei können falsches Verhalten verursachen und gehen verloren, wenn
+7:'     der Code erneut generiert wird.
+17:    'HINWEIS: Diese Datei wird automatisch generiert. Ändern Sie sie nicht direkt. Zum Ändern
+18:    ' oder bei in dieser Datei auftretenden Buildfehlern wechseln Sie zum Projekt-Designer.
+19:    ' (Wechseln Sie dazu zu den Projekteigenschaften, oder doppelklicken Sie auf den Knoten "Mein Projekt" im
+20:    ' Projektmappen-Explorer). Nehmen Sie auf der Registerkarte "Anwendung" entsprechende Änderungen vor.
+>>> My Project\AssemblyInfo.vb
+5:' Allgemeine Informationen über eine Assembly werden über die folgenden 
+6:' Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
+7:' die mit einer Assembly verknüpft sind.
+9:' Die Werte der Assemblyattribute überprüfen
+20:'Die folgende GUID bestimmt die ID der Typbibliothek, wenn dieses Projekt für COM verfügbar gemacht wird
+23:' Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
+25:'      Hauptversion
+26:'      Nebenversion 
+27:'      Buildnummer
+28:'      Revision
+30:' Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
+31:' übernehmen, indem Sie "*" eingeben:
+>>> My Project\Resources.Designer.vb
+3:'     Dieser Code wurde von einem Tool generiert.
+4:'     Laufzeitversion:4.0.30319.269
+6:'     Änderungen an dieser Datei können falsches Verhalten verursachen und gehen verloren, wenn
+7:'     der Code erneut generiert wird.
+18:    'Diese Klasse wurde von der StronglyTypedResourceBuilder automatisch generiert
+19:    '-Klasse über ein Tool wie ResGen oder Visual Studio automatisch generiert.
+20:    'Um einen Member hinzuzufügen oder zu entfernen, bearbeiten Sie die .ResX-Datei und führen dann ResGen
+21:    'mit der /str-Option erneut aus, oder Sie erstellen Ihr VS-Projekt neu.
+23:    '''  Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
+36:        '''  Gibt die zwischengespeicherte ResourceManager-Instanz zurück, die von dieser Klasse verwendet wird.
+50:        '''  Überschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads für alle
+51:        '''  Ressourcenzuordnungen, die diese stark typisierte Ressourcenklasse verwenden.
+>>> My Project\Settings.Designer.vb
+3:'     Dieser Code wurde von einem Tool generiert.
+4:'     Laufzeitversion:4.0.30319.269
+6:'     Änderungen an dieser Datei können falsches Verhalten verursachen und gehen verloren, wenn
+7:'     der Code erneut generiert wird.

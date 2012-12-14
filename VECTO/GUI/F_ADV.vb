@@ -4,19 +4,19 @@
     Dim Advfile As String
     Dim Changed As Boolean = False
 
-    'Initialisieren
+    'Initialize
     Private Sub F05_ADV_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Changed = False
     End Sub
 
-    'Schließen
+    'Close
     Private Sub F05_ADV_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
             e.Cancel = ChangeCheckCancel()
         End If
     End Sub
 
-    'Inputfile- Steuerelemente------------------------------------------
+    'InputFile controls ------------------------------------------
   
     'Browse Button-Click Events
     Private Sub ButtonFZP_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonFZP.Click
@@ -88,7 +88,7 @@
 
 #End Region
 
-    'ADV speichern
+    'Save ADV
     Private Function Save() As Boolean
         If Advfile = "" Then
             If fbADV.SaveDialog("") Then
@@ -105,7 +105,7 @@
     '-------------------------------------------------------------------
 
 
-    'Neue leere ADV
+    'New empty ADV
     Public Sub ADVnew()
         If ChangeCheckCancel() Then Exit Sub
         Me.TBseed.Text = "1"
@@ -123,7 +123,7 @@
         Me.ToolStripStatusLabelADV.Text = "New file"
     End Sub
 
-    'ADV in Form laden
+    'Load ADV in Form
     Public Sub ADVload2Form(ByVal file As String)
         Dim ADV As cADV
         Dim i As Integer
@@ -146,28 +146,28 @@
             Exit Sub
         End If
 
-        'Zeile 1: FZP-Datei
+        'Line 1: FZP file
         Me.TextBoxFZP.Text = ADV.FZPpath(True)
 
-        'Zeile 2: FLT-Datei
+        'Line 2: FLT file
         Me.TextBoxFLT.Text = ADV.FLTpath(True)
 
-        'Zeile 3: TEM-Datei
+        'Line 3: TEM file
         Me.TextBoxTEM.Text = ADV.TEMpath(True)
 
-        'Zeile 4: RndSeed
+        'Line 4: RndSeed
         Me.TBseed.Text = ADV.RndSeed
 
-        'Zeile 5: MISKAMout True/False
+        'Line 5: MISKAMout True/False
         Me.CheckBoxMISKAM.Checked = ADV.SD3out
 
-        'Zeile 6: STRfilter True/False
+        'Line 6: strFilter True/False
         Me.CheckBoxSTRfilter.Checked = ADV.STRfilter
 
-        'Zeile 7: Distance filter für SUM.STR
+        'Line 7: Distance filter for SUM.STR
         Me.TbFilter.Text = ADV.STRSUMdistflt
 
-        'Zeile 8+: STR Dateien
+        'Line 8 +: STR files
         For i = 1 To ADV.STRcount
             Me.LbSTR.Items.Add(ADV.STRpaths(i - 1, True))
         Next
@@ -178,7 +178,7 @@
         Me.ToolStripStatusLabelADV.Text = "" 'file
     End Sub
 
-    'ADV aus Form speichern
+    'Save ADV from Form
     Private Function ADVsave(ByVal file As String) As Boolean
         Dim ADV As cADV
         Dim s As String
@@ -201,7 +201,7 @@
 
         ADV.STRSUMdistflt = Me.TbFilter.Text
 
-        'ADV.STRpathsClear()    '<= Nicht notwendig da neues lokales cADV-Objekt
+        'ADV.STRpathsClear()    '<= Nicht notwendig da neues lokales cADV-Objekt |@@| ADV.STRpathsClear()     '<= Not necessary because new local cADV object
         For Each s In Me.LbSTR.Items
             ADV.STRpathsAdd(s)
         Next
@@ -231,16 +231,16 @@
         Me.TextBoxTEM.Text = txt
     End Sub
 
-    'Formular Änderungen (Kontrolle ob GEN gespeichert)---------------------------------
-    'Event Handler für Formänderungen
+    'Form changes (control whether GEN saved) ---------------------------------
+    'Event handler for the Form changes
 
-    'Change Status ändern
+    'Change Status ändern |@@| Change Status change
     Private Sub Change()
         Me.ToolStripStatusLabelADV.Text = "Unsaved changes in current file"
         Changed = True
     End Sub
 
-    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht
+    ' "Save changes? "... Return True if user aborts
     Private Function ChangeCheckCancel() As Boolean
 
         If Changed Then

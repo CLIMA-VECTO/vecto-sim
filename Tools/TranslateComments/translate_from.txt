@@ -1,0 +1,2295 @@
+﻿
+Für MyApplication sind folgende Ereignisse verfügbar:
+Startup: Wird beim Starten der Anwendung noch vor dem Erstellen des Startformulars ausgelöst.
+Shutdown: Wird nach dem Schließen aller Anwendungsformulare ausgelöst. Dieses Ereignis wird nicht ausgelöst, wenn die Anwendung nicht normal beendet wird.
+UnhandledException: Wird ausgelöst, wenn in der Anwendung eine unbehandelte Ausnahme auftritt.
+StartupNextInstance: Wird beim Starten einer Einzelinstanzanwendung ausgelöst, wenn diese bereits aktiv ist. 
+NetworkAvailabilityChanged: Wird beim Herstellen oder Trennen der Netzwerkverbindung ausgelöst.
+Initialisierung
+Pfade
+Falls Ordner nicht vorhanden: Erstellen!
+Directories.txt vorkonfigurieren
+Trennzeichen!
+Klassen initialisieren
+Config
+Log starten
+Dateigröße checken
+Falls Log zu groß: löschen
+Lizenz initialisieren
+
+Erste Zeile: Version
+V" entfernen => Zahl bleibt übrig
+Falls Version ungültig: Abbruch
+Version festgelegt
+Zeile      Variable        Typ         Beschreibung
+01)       WorkDPath       String      WorkDir
+02)       LastMode        Short       Letzter verwendeter Modus (entspricht CBoxMODE.SelectedIndex)
+03)       IntpV2          Boolean     Neuen Interpolator verwenden
+04)       nnormEngStop    Single      Unter dieser Drehzahl Engine Stop
+05)       TEMpath         String      TEM_Data Pfad
+06)       LastTEM         String      Letzte TEM Datei   -nicht in Options Form!!!
+07)       TEMexl          Boolean     Open TEM in Excel  -nicht in Options Form!!!
+08)       EAAvInt         Short       Analyse intervals of seconds. Wenn 0: Wert abfragen
+09)       ModOut          Boolean     Modale Ausgabe
+10)       WegKorJa        Boolean     Wegkorrektur damit bei Geschw. Reduktion Zyklus nicht kürzer wird
+11)       GnVorgab        Boolean     Gang- bzw. Drehzahl
+12)       LogSize         Int16       Maximale Log-Größe [MiB]
+13)       FZPsort         Boolean     FZP sortieren (früher Standard da VISSIM die .fzp nach Sekunden sortiert ausgibt)
+14)       FZPsortExp      Boolean     Sortierte FZP exportieren
+15)       BATCHoutpath    Boolean     Ausgabepfad für BATCH-Modus:   <WORKDIR>, <GENPATH> oder Pfad
+16)       BATCHoutSubD    Boolean     BATCH-Ausgabe in Unterordner (je .gen Datei)
+17)       AirDensity      Single      Luftdichte
+18)       FinalEmOnly     Boolean     Nur Final-Emissions ausgeben
+19)       FCcorrection    Boolean     FC-Korrektur im BATCH-Modus
+Früher:  IntpV2 = CBool(line)
+
+Min/Max suchen
+Normieren
+Wenn Vorzeichen von x oder y nicht gleich Vorzeichen von xA(i) oder yA(i) dann wird Zeile i übersprungen
+
+Fahrzustände in Sekunden
+Fahrzustands-Anteile
+Beschl.-Parameter
+3s-Beschl
+Fahranteile Stop/Acc/Dec/Cruise
+Durchschnitts-Beschl
+
+XY-Triangulierung
+XZ-Triangulierung
+
+Anleitung zur Einbindung neuer DEV-Options *********************************
+1. Eintrag in "Sub New()"
+I) Neues cDEVoption Objekt definieren mit "Conf0 = New cDEVoption(ConfigType, Description, SaveInConfg, Enabled)"
+ConfigType      <tDEVconfType>  ...definiert Typ: Boolean, Integer, Single, String, Menüauswahl (Integer) oder Verweis auf Funktion
+Description     <String>        ...Beschreibung des Parameters
+SaveInConfg     <Boolean>       ...Ob Einstellung für nächsten PHEM-Start gespeichert werden soll
+Enabled         <Boolean>       ...Ob Einstellung im DEV-Tab geändert werden kann
+II) Default-Wert definieren. Hier wird unterschieden welcher ConfigType verwendet wird:
+a) ConfigType = tBoolean:
+Conf0.BoolVal = ...             <Boolean> 
+b) ConfigType = tSingleVal:  
+Conf0.SingleVal = ...           <Single>
+c) ConfigType = tStringVal:    
+Conf0.StringVal = ...           <String>
+d) ConfigType = tIntVal:    
+Conf0.IntVal = ...              <Integer>
+e) ConfigType = tAction:
+Conf0.ActionDelegate = New cDEVoption.dActionDelegate(AddressOf NameDerFunktion)
+Wobei NameDerFunktion die aufzurufende Funktion ist die einen <String> übergibt: "Public Function NameDerFunktion() As String"
+f) ConfigType = tContMenIndex:
+Verfügbare Auswahl-Möglichkeiten als <String> definieren:
+Conf0.AddMode("Auswahl 1")
+Conf0.AddMode("Auswahl 2")
+usw...
+Default-Wert definieren: Erste Auswahl = 0
+Conf0.ModeIndex = ...       <Integer>
+START: Parameter konfigurieren '****************************
+ENDE: Parameter konfigurieren '*****************************
+Initialisiert die tatsächlichen Config-Parameter aus der MyConfigs-Liste 
+Demo für Delegate Function
+Darf nicht sein
+
+Transient Correction
+Komponente wird sekündlich ausgegeben
+ATVals definiert (EXS)
+Summen/DruchschnittsWerte
+Durchschnitt
+Summe (g/h umgerechnet in g)
+
+GEN-Liste raussuchen. Bei ADVANCE aus Flotte sonst aus Jobliste '**********************
+Erg-Einträge erstellen '**********************
+Fahrzeugtyp-unabhängig
+Jede GEN-Datei auf Modus und Kennfeld checken
+nix...
+Elektrofahrzeug / Hybrid
+EV & HEV
+Nur EV:
+Konventionell / Hybrid  (Alles außer EV)
+Konventionelles Fahrzeug...
+Aus den Messdaten
+x/h-Ausgabe falls ADVANCE Modus -oder- EngineOnly -oder- Einheit nicht in x/h und somit keine Umrechnung in x/km möglich
+Aus dem Kennfeld
+x/h-Ausgabe falls ADVANCE Modus -oder- EngineOnly -oder- Einheit nicht in x/h und somit keine Umrechnung in x/km möglich
+derzeit nix
+Fahrzeugbesogene Felder
+CylceKin
+ErgListe sortieren damit g/km und g/h nebeneinander liegen
+Fahrzeugtyp-unabhängig
+Länge, Geschw., Steigung
+Durchschnitts-Geschw. berechnen
+Durchschnitts-Steigung berechnen
+Positive effektive EM-Leistung
+Positive effektive Batterie-Leistung = innere EM-Leistung
+Positive innere Batterie-Leistung
+Verbrauchte Energie berechnen
+Negative effektive EM-Leistung
+Negative effektive Batterie-Leistung = innere EM-Leistung
+Negative innere Batterie-Leistung
+Geladene Energie berechnen
+Energie in/aus Batterie
+EtaEM
+EtaBat
+Delta SOC
+Nur EV:
+Energieverbrauch
+Konventionell d.h. alles mit ICE (nicht EV)
+Emissionen
+x/h-Ausgabe falls ADVANCE Modus -oder- EngineOnly -oder- Einheit nicht in x/h und somit keine Umrechnung in x/km möglich
+Leistung, Drehzahl
+Ppos
+Pneg
+Nur Gesamtfahrzeug (nicht EngOnly)
+Pbrake-norm
+Eair
+Eroll
+Egrad
+Eacc
+Eaux
+Ebrake
+Etransm
+Masse, Loading
+CylceKin
+EposICE
+EnegICE
+Ausgabe-String erstellen:
+Datei öffnen
+Datei schließen (wird nach jedem Job neu geöffnet)
+Datei öffnen
+Datei schließen
+Ausgabepfad definieren
+Datei öffnen
+Datei öffnen
+Datei schließen (wird nach jedem Job neu geöffnet)
+
+Durchschnitts-Geschw. berechnen
+TODO: Mission nicht Zyklusname
+TODO: Test Setup
+
+Unterprogramm zur Korrektur der verbrauchswerte nach Motorgroesse (fuer HBEFA-Berechnungen, da dort
+alle LKW-Groessen mit gleichem *.mep gerechnet werden
+Korrektur des Kraftstoffverbrauches
+nur für Handbuchrechnungen und LKW
+für Euro0 und früher werden größenabhängig 3 verschiedene KF verwendet
+daher hier keine Größenkorrektur
+Korrekturfunktion für Euro1 und Euro 2 1:1 von Stand ARTEMIS übernommen
+Korrekturfunktion Euro 3 gg. ARTEMIS geringfügig adaptiert (siehe FcCorr_Eu3ff.xls)
+Korrekturfunktion für Euro 4 ff analog zu Euro3
+lediglich adaptiert: Durchschnittsnennleistung der ins mep verwursteten Motoren
+Euro6ff
+
+GEN einlesen
+VECTO: Defaultwerte für Parameter die nicht mehr in der .GEN/.VECTO sind werden beim Einlesen über SetDefault belegt.
+Fehlermeldung in Init()
+Einlesen der KFZ-Spezifikationen aus 'KFZspez'
+FLD muss jetzt vor MAP/MEP eingelesen werden falls dort <DRAG> Einträge sind!
+Normieren
+Kennfeld: Spalten 1 und 2 sind die x- und y- Koordinaten (Pe,n), die
+uebrigen sind Messwerte
+Emissionen und Verbrauch in (g/(h*(kW_Nennleistung) bei SNF
+Emissionen in (g/h) und Verbrauch in (g/(h*(kW_Nennleistung) bei PKW und LNF
+Kennfeld einlesen
+Normieren
+Einlesen des KFZ-Fahrzyklus (Nicht in ADVANCE).
+LUZ: 04.02.2011: Ab jetzt ausserhalb von LESE wegen neuer BATCH-Struktur
+Dynamik-Korrekturparameter, falls dynamokkorrektur ausgewählt:
+Parameter aus multipler Regressionsanalyse, Differenz zu stationär in
+SNF: (g/h)/kW_Nennleistung fuer einzelne Parameter
+PKW  (g/h) für Emissionen , (g/h)/kW fuer Verbrauch
+Einlesen der Daten fuer Hybridsimulation:
+TODO: EV/HEV Init hierher!
+
+Hauptprogramm für alle Modi
+Falls es zu "ungeplanten" Abbruch kommt
+Fehler zurücksetzen
+Modus festlegen und Meldung
+Lizenz checken
+BATCH-Ausgabeordner erstellen falls notwendig
+MOD-Daten Klasse initialisieren
+TEST: Schaun ob's auch ohne dem geht: MODdata.Init()
+ERG-Klasse initialisieren
+Warnung wenn ungültige/unrealistische Einstellungen
+Meldungen
+Progbar-Init
+Schleife zur Berechnung fuer alle vorgegebenen Zyklen und Fahrzeuge:
+Job-Schleife ****************************************
+Check ob Abbruch
+Falls Error beim GEN einlesen
+Einlesen der Inputfiles
+BATCH: Zyklus aus DRI-Liste
+ADVANCE: Zyklus wird nicht eingelesen
+Überprüfe ob alle Modi in der GEN Datei lizenziert sind
+Falls Optimierer aktiv werden hier die Parameter eingelesen
+BATCH: Sub-Dir Ausgabeordner erstellen
+Zylus-Schleife ****************************************
+ProgBar
+BATCH-Modus: Fahrzyklus nicht aus GEN-Datei sondern aus DRI-Liste
+Status
+Ausgabe-Name definieren
+VECTO-Zylus-Schleife **********************************
+ProgBar
+TODO: Loading Schleife
+VECTO-Loading-Schleife *********************************
+Einstiegspunkt für SOC-Start Iteration
+Aufraumen
+Zyklus einlesen
+Einlesen
+v(s) in v(t) konvertieren (optional)
+In 1Hz konvertieren (optional)
+Fehlermeldung in DRI.Convert()
+Entnormieren
+Zyklus-Vorgaben initialisieren (Geschw, Beschl, ...)
+Rechne .npi-Leistung in Pe und P_clutch um
+ACHTUNG: VehmodeInit benötigt Infos aus GEN und DRI!
+Fehlermeldung innerhalb VehmodeInit()
+TODO: Meldung...
+CycleKin (für erg/sum usw.) berechnen
+Emissionen und Nachbehandlung - wird bei EV-Modus nicht ausgeführt
+Sekündliche TC Parameter ermittlen
+Kennfeld Erstellung
+Rohemissionen berechnen
+TC Parameter umrechnen in Differenz zu Kennfeld-TC-Parameter
+Dynamik-Korrektur
+Korrektur der Verbrauchswerte kleiner LKW-Motoren bei HBEFA
+Exhaust System Simulation
+Summen / Durchschnitte bilden
+Engine Analysis
+Sekündliche Ausgabe ***
+VECTO Ausgabe
+TODO: Loadings umschalten...
+Ausgabe für BATCH und ADVANCE
+In ADVANCE ist Zyklus-Abbruch = Job-Abbruch
+Ausgabe in Erg (Erste Berechnung - Initialisieren & Header)
+Daten aufräumen
+Status-Update
+TODO: Loading Schleife
+ENDE *** VECTO-Loading-Schleife *** ENDE ************************
+ENDE *** VECTO-Zylus-Schleife *** ENDE *************************
+ENDE *** Zylus-Schleife *** ENDE ******************************
+If GEN.irechwahl = tCalcMode.cmHEV Then MsgStrBuilder.Append(" (dSOC = " & SOC(MODdata.tDim) - SOC(0) & ")")
+Check ob Abbruch
+ENDE *** Job-Schleife *** ENDE *******************************
+
+Korrigierte Emissionen (wird von SOC-Iterations-Modul bestimmt)
+Opt_Interface Ein/Ausschalten
+Initialisierung
+Initialisierung
+Zähler null setzen
+Korr. Em. löschen 
+TODO: I/O-Verzeichnis festlegen
+Timer initialisieren/starten
+Parameter einlesen
+Einlesen der Input-Datei mit Opt-Parameter
+Parameter ausgeben
+Ausgabe der Output-Datei mit Zielfunktion
+Ausgabe StatusString
+Berechnung der Zielfunktion
+Ausgabe der Zielfunktion
+Opt Deaktivieren
+Status-Meldung (darf nicht von BGWorker aufgerufen werden)
+Starte PHEM - wird von F_MAINForm.ComMsgTimer aufgerufen wenn Start-Signal erhalten
+PHEM starten
+Timer anhalten
+Zähler + 1
+PHEM starten
+PHEM fertig - wird von BackgroundWorker1_RunWorkerCompleted aufgerufen wenn PHEM beendet
+Ausgabe der Zielfunktion
+PHEM_Launcher beenden
+Timer wieder starten
+Beendet PHEM_Launcher
+
+Check ob Vorzeichen von Delta-SOC sich ändert
+Vorzeichenwechsel...
+Limit erreicht => Abbruch
+Falls die letzte Iteration die Beste war (SOCnAbbr = True): Abbruch
+Falls eine andere Iteration besser war (SOCnAbbr = False): Wiederholen
+Check ob LinReg möglich: Mind. 2 Berechnungen; Mind. 1 dSOC-Vorzeichenwechsel
+Unkorrigierte Em verwenden wenn SOC-Iteration OK
+Unkorrigierte Em verwenden
+Korrigierte Emissionen für Optimierer
+Falls SOC-Iteration erfolgreich (oder Lin.Reg. nicht möglich) dann Emissionen der letzten Berechnung (unkorrigiert) verwenden
+
+TODO: Weg damit! SOC-Iteration gehört in die Leistungsschleife oder nach Em-Berechnung für LinReg
+Dateiformat
+Log starten
+
+Zeile 1: FZP-Datei
+Zeile 2: FLT-Datei
+Zeile 3: TEM-Datei
+Zeile 4: RndSeed
+Zeile 5: MISKAMout True/False
+Zeile 6: STRfilter True/False
+Zeile 7: Distance filter für SUM.STR
+Zeile 8+: STR Dateien
+
+Felder für Streckennummer, Spur und Koordinaten für alle STR-Dateien 
+Berechnung
+ADVANCE Initialisierung
+ADV Datei einlesen
+Check ob FLT vorhanden
+Check ob sortierte FZP vorhanden
+FLT einlesen (muss vor STR sein wegen cSTRerg)
+EMlist erstellen
+STR einlesen
+Listen erstellen
+FZP einlesen
+FZP sortieren (und exportieren)
+FZP Check
+Für AusgVis
+Ausgabe-Initialisierung
+Dateinamen
+Modale Ausgabe
+Startwerte
+ADVANCE Speicher frei geben
+Ausgabe
+Speicher freigeben
+Listen löschen
+Garbage Collection - Soll "System Out of Memory" Exception verhindern (tut's aber nicht!)
+ADVANCE Fahrzeugberechnung
+Check ob Fertig
+Zyklus-Klasse initialisieren
+Fahzeugnummer und Typ definieren (bleibt hier konstant)
+Altes Fahrzeug ist VehStrAlt, Aktuelles ist VehStr
+Listen erstellen
+t0
+Definiere Felder für Fahrzeug-Berechnung
+Check ob neues Fahrzeug 
+Allgemeiner Fahrzyklus
+Strecken-Auswertung (MISKAM)
+StatusMSG(7, "Calculation running... " & CInt(zFZP / FZPlen * 100).ToString("00") & "%", False)
+Fahrzeug-Identifizierung
+Check ob Zyklus zu kurz => Überspringen
+Fahrzeuganzahl je Typ erhöhen
+Check ob letzte Gen-Datei neu zu verwenden ist, sonst Belegung durch FLT
+VehStr ist ab jetzt ALT
+Abschnittsweise Berechnung
+Zyklus durchschleifen
+Nr. der STR-Datei
+Falls Wechsel in STR-Nr:
+Alte STR-Nr abschließen
+Distanz (gefahrene km)
+Reisezeit in h
+Kfz-Anz
+Summen-Emissionen
+Aufsummieren
+Letzte STR abschließen
+Distanz (gefahrene km)
+Reisezeit in h
+Kfz-Anz
+Summen-Emissionen
+FLT einlesen
+FZP einlesen
+Dateilänge bestimmen
+Arrays dimensionieren
+Datei einlesen
+Kommentare überspringen
+Strecken die nicht in der STR Datei aufgeführt sind werden hier entfernt
+Arrays belegen
+Progress-Ausgabe
+Speicher freigeben
+Arrays neu dimensionieren
+FZP sortiren
+Aktuelles Fahrzeug ist vNr1
+Zähle Fahrzeuge mit vNr = vNr1
+vNrAnz = Anzahl der Fahrzeuge mit vNr = vNr1
+Sortiere alle Fahrzeuge mit vNr = vNr1 nach Fahrzeugnummer
+Zwischenspeicher = Zeile x1
+Zeile x1 = Zeile x2
+Zeile x2 = Zwischenspeicher
+vNr1 nach Zeit sortieren
+Zwischenspeicher = Zeile xx1
+Zeile xx1 = Zeile xx2
+Zeile x2 = Zwischenspeicher
+Status-Ausgabe
+FZP exportieren
+Daten
+STR einlesen
+SID-Liste erstellen
+Fahrzeuge aufteilen, die Lücke im Zeitverlauf haben
+ADV einlesen
+ADV Datei einlesen ********
+Zeile 1: FZP-Datei
+Zeile 2: FLT-Datei
+Zeile 3: TEM-Datei
+Zeile 4: RndSeed
+Zeile 5: MISKAMout True/False
+Zeile 6: STRfilter True/False
+Zeile 7: STR.SUM Streckenfilter
+Zeile 8+: STR Dateien
+Ausgabepfad definieren
+File mit Summen Ergebnissen ueber alle Kfz:
+Ausgabe Schließen
+Umrechnung auf g Emissionen je Sekunde sowie Kfz/Tag
+Umrechnung auf mg Emissionen je Meter
+Streckenlaenge [m] wird aus Gerade zwischen Anfangs- und Endpunkt berechnet:
+Ausgabe der Ergebnisse
+Filename fuer Ergebnisfile = Name Eingabefile aber mit *.sd3:
+File mit Summen Ergebnissen ueber alle Streckenstuecke:
+Unterprogramm zu PHEM/Advance zur Ausgabe der Ergebnisse an MISKAM Luftguetemodell von Lohmeyer
+Daten jeweils durch Semikolon getrennt ausgegeben
+Aufaddieren der Emissionsdaten nach Streckenabschnitten, ueber jede Sekunde fuer jedes Fahrzeug
+Achtung: jeweils 2 Richtungen je Abschnitt moeglich aber nur StrId in *.fzp uebergeben -> auf "naechstgelegene"
+Richtung zugewiesen
+Suche nach naechstgelegenem Strassenteilstueck
+Koordinaten Kfz:
+Koordinaten Strecke: sSegAnX(j), sSegEnX(j), sSegAnY(j), sSegEnY(j) aus Eingabe
+Abstandsumme zu Anfang- und Endpunkt des Streckenabschnittes j
+Falls Streckennummer auf *.fzp File in *.str File nicht existiert, wird auf naechstgelegenes Stueck zugewiesen (gleiches System wie oben):
+Aufsummierung der Emissionen auf den jeweils zugehoerigen Streckenabschnitten:
+berechnung sekuendlich in (g/h)/3600 -> g/Strecke ueber gesamte Zeit
+Zaehlen der Kfz fuer DTV (nur wenn nicht in voriger Sekunde auch schon auf der Strecke
+Grobe Rechnung Benzol nach GLOBEMI (HBEFA):
+Trennung nach Otto, Diesel, LKW, PKW,vor/nach EURO 1
+Grobe Rechnung Russ, Anteile Russ an PM derzeit nur Schaetzwerte!!!!:
+Trennung nach Otto, Diesel, LKW, PKW,vor/nach EURO 1
+SO2-Emissionen aus dem  im Kraftstoff enthaltenen
+Schwefel gerechnet. Mit Masse SO2 = (Masse% S / 100) * 2
+Ausgabe der einzelnen STR-Ergebnisse '*********
+Ausgabe Summen über alle STR's '*********
+Datei-Header
+Em je km ***************************
+Em je Segment
+Segment-Name
+Anzahl Fahrzeuge
+Reisezeit
+Em je km
+Schreiben
+Em je Vehicle Type
+Anzahl Fahrzeuge
+Reisezeit, Strecke, Avg.Speed
+Em
+Schreiben
+Summe
+Segment
+Anzahl Fahrzeuge wird nicht aus STRerg berechnet (macht keinen Sinn) sondern aus cFLTfleet-Aufzeichnung
+Reisezeit
+Em je km
+Schreiben
+Em abs ****************************
+Em je Segment
+Segment-Name
+Em abs
+Schreiben
+Em je Vehicle Type
+Em
+Schreiben
+Summe
+Segment
+Em abs
+Schreiben
+mod-Datei zerlegen
+InFile öffnen
+Anzahl VehNummern
+Schleife durch alle VehNummern in Liste
+Abbruch falls Userabbruch
+Abbruch falls Datei fertig
+Ausgabedatei öffnen / Abbruch wenn Fehler beim Öffnen
+Schleife durch Datei
+Falls String schon eine VehNr enthält wird Zeile nicht nochmal eingelesen (siehe unten)
+Zeile einlesen
+Falls Zeile mit VehNr gefunden: VehNr rausholen
+Falls VehNr die gesuchte ist: Ausgabedatei schreiben
+Erste Zeile schreiben ("VehNr: ...")
+Nächste Zeile lesen (sonst wird Do While übersprungen)
+Schleife bis nächste VehNr / Dateiende
+Wenn nächstes Fahrzeug:
+Wenn gleiche Fahrzeugnummer: Datei weiter schreiben
+Header und Units überspringen
+Sonst: Raus aus Schleife
+Zeile schreiben
+Zeile lesen
+Falls nicht EndOfStream Flag setzen damit nächste VehNr nicht übersprungen wird
+Ausgabedatei schließen
+Aus der VehNr-Such-Schleife raus springen
+ProgBar
+FLT Klasse
+Initialisieren
+GenDatei Zufallsgenerator
+Klasse für abschnittsweise Auswertung
+Datei-Header
+Em je km ***************************
+Ergebnisse je Veh-Type
+Anzahl Fahrzeuge
+Reisezeit
+Em
+Schreiben
+Summe
+Anzahl Fahrzeuge
+Reisezeit
+Em
+Schreiben
+Em absolut *************************
+Ergebnisse je Veh-Type
+Em
+Schreiben
+Summe
+Em
+Schreiben
+Datei schließen
+
+Fav-Dlog: "Abbrechen" => "Cancel"
+Fav-Dlog: Statt leeren Items in Fav-Liste "<undefined>"
+Anwendung
+Benötigte Globale Variablen (Default):
+Neue Instanz - ID definieren, umschalten auf FolderBrowser
+OpenDialog - Öffnen Dialog - Übergibt True wenn Dialog mit OK beendet wurde
+SaveDialog - Speichern Dialog - Übergibt True wenn Dialog mit OK beendet wurde
+Dialog öffnen - Übergibt True wenn Dialog mit OK beendet wurde
+File-History manuell updaten
+File / Folder History speichen und Speicher freigeben
+Dateiendungen definieren
+Dateien abfragen
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Dieser Aufruf ist für den Windows Form-Designer erforderlich.
+Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
+Wenn leerer Pfad: Aktuellen Ordner (MyFolder) nehmen
+Abbruch wenn leerer Pfad
+Dateien in Array übernehmen
+Mehrere Dateien ausgewählt 
+Einzelne Datei
+Primäre Extension (u.a. für bForceExt)
+Falls Datei ohne Pfad angegeben dann Pfad hinzufügen
+Falls statt Datei ein Ordner eingegeben wurde: Auf Ordner wechseln und Abbruch
+Check ob Datei mit Ext angegeben
+Falls Datei ohne Endung (nach bForceExt-Abfrage) und nicht existiert dann primäre Endung hinzufügen
+Check ob Datei existiert
+Ja: Check ob Overwrite wenn bOverwriteCheck
+Nein: Abbruch wenn bFileMustExist
+MyFiles definieren
+FolderHistory ContextMenu laden
+Pfad definieren
+Falls kein Pfad angegeben wird: Letzter Ordner, kein Dateiname
+Falls Pfadlänge zu klein (Pfad ungültig): Letzte Datei
+Ordner öffnen - Falls kein Ordner im Pfad: Letzter Ordner
+Falls Datei ohne Pfad angegeben
+sonst: 
+Form anzeigen----------------------------------------------------
+Globale Folder History updaten
+Schließen und File/Folder History speichern
+Umschalten auf FolderBrowser
+Initialisieren
+Globale FileBrowser Initialisierung
+Laufwerk-ComboBox laden
+Laufwerk-Liste erstellen
+FolderHistory einlesen
+Context Menu sortieren
+Context Menu sortieren
+Dateien
+Ordner
+Ordner wechseln
+Abbruch wenn keine Laufwerk-Angabe
+Suchfelder löschen
+Laufwerk setzen
+Ordner setzen
+Ordner Eine Ebene hinauf
+FolderListe laden
+FolderListe löschen
+Ordner hinzufügen
+Dateiliste laden
+Abbruch wenn bBrowseFolder
+Extension-Filter definieren
+FileListe löschen
+Ordner hinzufügen
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Initialisieren
+Bild Links------------------------------------------------------------------
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Initialisieren
+Schließen
+Inputfile- Steuerelemente------------------------------------------
+Browse Button-Click Events
+ADV speichern
+Neue leere ADV
+ADV in Form laden
+Zeile 1: FZP-Datei
+Zeile 2: FLT-Datei
+Zeile 3: TEM-Datei
+Zeile 4: RndSeed
+Zeile 5: MISKAMout True/False
+Zeile 6: STRfilter True/False
+Zeile 7: Distance filter für SUM.STR
+Zeile 8+: STR Dateien
+ADV aus Form speichern
+ADV.STRpathsClear()    '<= Nicht notwendig da neues lokales cADV-Objekt
+Formular Änderungen (Kontrolle ob GEN gespeichert)---------------------------------
+Event Handler für Formänderungen
+Change Status ändern
+Save changes ?" ...liefert True wenn User Vorgang abbricht
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Speichern oder Speichern als Function = true wenn Datei gespeichert
+ENG speichern
+Change Status ändern
+Save changes ?" ...liefert True wenn User Vorgang abbricht
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Speichern oder Speichern als Function = true wenn Datei gespeichert
+Change Status ändern
+Save changes ?" ...liefert True wenn User Vorgang abbricht
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Coolant System Simulation Zwischenspeicher
+Initialisiere Form (Lade Verlauf, Combobox-Listen,...)
+Damit Combobox-Inhalte aktuell sind
+Schließen
+Änderung der DynKor Checkbox
+Änderung der Kaltstart Checkbox
+Änderund der SCR Checkbox
+a_DesMax
+Damit Veh-Datei übergeben wird
+Damit Veh-Datei übergeben wird
+Damit Veh-Datei übergeben wird
+Speichern ("Save" bzw. "Save As" falls neue Datei)
+GEN in Form laden
+GEN einlesen
+Form updaten
+Kennfeld Erstellung-----------------
+Kalt Start--------------------------
+Dateien-----------------------------
+Kalt Start
+GEN aus Form speichern
+Kennfeld Erstellung------------------------------------------------------
+Kalt Start---------------------------------------------------------------
+Dateien------------------------------------------------------------------
+Kalt Start
+Neue leere GEN
+Kennfeld Erstellung-----------------
+Kalt Start--------------------------
+Dateien-----------------------------
+Kalt Start
+Event Handler für Formänderungen
+Start/Stop - Checkbox Änderung
+Start/Stop - Textbox Änderung
+TextBox.TextChanged Events => Change()
+Change Status ändern
+Save changes ?" ...liefert True wenn User Vorgang abbricht
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+PHEM-Launcher
+Falls Aufruf während PHEM schon läuft
+GENlist-Selection löschen
+Modus festlegen
+Wenn mehr als 100 Kombinationen in Batch fragen ob sekündliche Ausgabe
+Status
+Job-Liste definieren
+File- / Zylus- Liste definieren
+Zyklus-Liste definieren (falls nicht BATCH-Modus wird in SetCycleList nur die Liste gelöscht und nicht neu belegt)
+Check ob Overall-Progbar benötigt
+Launch über Job_Launcher
+Datei-Listen definieren
+Job-Launcher
+Options aus Options-Tab laden
+Config speichern
+Msg-Ausgabe zurück setzen
+Button umschalten
+Options disablen
+ProgBars Start
+BG-Worker starten
+Beginne Arbeit
+SLEEP verhindern
+Bei x.ProgSec = -1 kein Update von ProgBarSec
+Arbeit fertig
+Progbar Reset
+Damit ListView-Item Farben (Warnung = Gelb, etc..) richtig sichtbar
+Falls Optimierer aktiv werden hier die Zielfunktion ausgegeben und Signal an Interface
+ShutDown wenn Unexpected Error
+Options enablen / GUI Reset
+CommandLine Shutdown
+Auto Shutdown
+SLEEP reaktivieren
+Initialisieren
+Tabs richtig laden (sonst Problem mit Listviews)
+FileLists
+GUI Options laden (hier werden die GEN/ADV/DRI Listen geladen)
+Spalten skalieren... erst nach dem Laden der Dateilisten
+BackgroundWorker initialisieren
+Lizenz überprüfen
+Shown Event (Form-Load abgeschlossen)  ...hier werden StartUp-Forms geladen (DEV, GEN/ADV- Editor..)
+Datei mit PHEM öffnen
+ComLineArgs auslesen
+Modus umschalten
+Falls Datei angegeben
+Schließen
+FileLists speichern
+Log schließen
+Config speichern
+FileBrowser-Instanzen schließen
+Gesperrte Funktionen ein/ausblenden
+Datei aus Liste entfernen
+Datei zu Liste hinzufügen
+Datei öffnen
+GEN/ADV Liste: Datei hinzufügen
+Falls PHEM läuft: Vorgang abbrechen (weil Modusänderung während Berechnung nix gscheit)
+Modus umschalten falls nötig
+Wenn Datei schon in Liste vorhanden: Nicht hinzufügen (nur wenn einzelne Datei)
+Status reset
+Element auswählen und anhaken
+Sonst: Datei hinzufügen (ohne WorkDir)
+Anzahl updaten
+DRI Liste: Datei hinzufügen
+Modus umschalten falls nötig
+Anzahl updaten
+Me.TabPageDRI.Text = "Driving Cycles (" & c & ")"
+New GEN/ADV
+Open GEN/ADV
+Worker starten
+Selected Items zwischenspeichern
+Selected Items löschen
+Items einfügen und auswählen
+Modus ggf. umschalten (auf BATCH)
+Falls PHEM schon rennt: STOP
+Sonst: START
+Listen speichern falls Crash
+Modus Change
+Alte Liste speichern
+Neue Liste laden
+GEN Editor öffnen und Datei laden
+ADV Editor öffnen und Datei laden
+FileLists speichern
+ComMsgTimer_Tick Tick - Check ob neue Nachricht
+Modus einstellen
+Allgemein
+Falls Link => Öffnen
+Hand-Cursor für Links
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Dieser Aufruf ist für den Windows Form-Designer erforderlich.
+Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
+Split
+Zu Int32 convertieren
+Sort
+Ende
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Initialisiere - Lade Config
+Config laden
+Optionen-----------------------------------
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Initialisierung
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Speichern oder Speichern als Function = true wenn Datei gespeichert
+Neue VEH
+VEH öffnen
+VEH speichern
+Change Status ändern
+Save changes ?" ...liefert True wenn User Vorgang abbricht
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Wird vom Windows Form-Designer benötigt.
+Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Job-Status => Jobliste Status-Spalte
+Zyklus-Status => Zyklusliste Status-Spalte
+Worker Progress => Progbar (ProgBarSec Update wenn ProgSec > -1; ProgBarSec-Reset bei ProgSec = 0)
+Progbar auf Continuous setzen
+Abbruch
+Status Message direkt an GUI - darf nicht durch den Backgroundworker geschehen!
+Statusbar  - Aufruf durch WorkerMSG oder direkt über Form, NIEMALS über Worker
+Status Form zurück setzen - Aufruf NUR durch Events, NIEMALS über Worker
+Klasse zum Übergeben von Nachrichten vom Backgroundworker
+Falls String nicht Zahl dann Null
+Datei in Excel öffnen
+WorkDir oder MainDir einfügen falls kein Pfad angegeben. Spezial-Ordner einfügen
+Pfad trimmen
+Falls leere Datei => Abbruch
+sKeys ersetzen
+Replace - Ordner bestimmen
+Eine Ordner-Ebene hoch
+Pfad ergänzen falls nicht vorhanden
+Pfad eine Ebene nach oben      "C:\temp\ordner1\"  >>  "C:\temp\"
+Dateiname ohne Pfad    "C:\temp\TEST.txt"  >>  "TEST.txt" oder "TEST"
+Dateiname ohne Extension   "C:\temp\TEST.txt" >> "C:\temp\TEST"
+Dateiname ohne Pfad falls Pfad = WorkDir oder MainDir
+Pfad allein        "C:\temp\TEST.txt"  >>  "C:\temp\"
+TEST.txt"          >>  ""
+Endung allein      "C:\temp\TEST.txt" >> ".txt"
+
+Abbruch wenn's Datei nicht gibt
+Datei öffnen
+Kennfeld zurück setzen
+Transmission ration to engine rpm [-]
+Efficiency to engine [-]
+Efficiency auxiliary to supply [-]
+Efficiency Map
+Spalte 1 = Auxiliary speed [rpm]   => X-Achse
+Spalte 2 = Mechanical power [kW]   => Z-Achse (!)
+Spalte 3 = Output power [kW]       => Y-Achse (!)
+
+Private Const FormatVersion As Integer = 1
+Private FileVersion As Integer
+Vorgabe für EXS
+Parameter für KF-Erstellung
+Vorgabe für AUX
+Values.Add(tDriComp.t, New List(Of Single))            '<= brauchen wir erst wenn bei ADVANCE > 1Hz unterstützt wird
+Reset
+Abbruch wenn's Datei nicht gibt
+EmComp Init
+jetzt in New()
+Datei öffnen
+Erste Zeile: Version
+Falls Version ungültig: Abbruch
+Version festgelegt
+Falls keine Versionsangabe: Altes Format
+Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+Spalte 2: Option "+" = Parameter für KF-Erstellung gegeben
+Zweite Zeile: Namen/Identifizierung der Komponenten
+Spaltenanzahl/Komponenten checken
+Falls DRIcomp = Undefined dann wirds als EXS-Comp oder als Emission für KF-Erstellung / Eng-Analysis verwendet
+ERROR wenn Komponente in spitzen Klammern aber nicht bekannt
+Falls erste EXS-Spalte dann Dictionary erstellen
+Falls EXS-Componenten noch nicht in Dictionary dann erstellen
+Check ob ExsComp/Modul-Kombination schon vorhanden => ERROR
+Gvorg / Nvorg setzen:
+Dritte Zeile: Einheiten/Normierung
+VECTO: nix einlesen. Fixe Units (line = file.ReadLine)
+Normierungs-Unterstützte DRI-Komponenten
+PeNormed = (UCase(Trim(line(Spalten(tDriComp.Pe)))) = sKey.Normed)
+nNormed = (UCase(Trim(line(Spalten(tDriComp.nn)))) = sKey.Normed)
+PaddNormed = (UCase(Trim(line(Spalten(tDriComp.Padd)))) = sKey.Normed)
+MAP-Komponenten VECTO: Immer [g/h]!  
+Unit in String für weitere Checks speichern
+Klammern entfernen
+Normierung und Unit festlegen
+Zeile 4, 5: (optional, wenn oben "+"): Einstellungen für KF-Erstellung
+Falls "+" aktiviert
+Instanzen erstellen
+1. Option "Kennfeld normieren durch Pnenn"
+2. Option "Pfak anwenden"
+Ab 4.Zeile bzw. Ab 6.Zeile: Werte (derzeit keine unterschiedlichen Einheiten/Normierungen unterstützt)
+Datei öffnen
+TODO...
+Nvorg / Gvorg wird in ResetMe zurück gesetzt
+Geschw. umrechnen in m/s
+Normieren, falls notwendig
+Padd entnormieren, falls notwendig
+Pe normieren, falls notwendig
+Emissionen werden nur in x/h oder x akzeptiert (siehe ReadFile) !!!!!!!!
+Verzögerung limitieren ********************************
+Zeitreihe erstellen '***********************************
+Umrechnen in 1Hz '***********************************
+Check ob Zeit nicht rückwärts 
+Zeitgrenzen definieren
+Ausgabe-, Summen- und Anz- Dictionaries erstellen
+Startwerte
+Nächster Zeitschritt
+Falls Zeitschritt > tMax:
+Sekunde abschließen
+Falls keine Werte in Summe: Interpolieren
+Falls nur ein Wert: Inter- / Extrapolieren
+Neuen Bereich festlegen
+Check ob letzte Sekunde
+Neue Summe/Anz beginnen
+Neue Felder übernehmen
+
+Abbruch wenn's Datei nicht gibt
+Datei öffnen
+Kennfeld-Konfig
+FLD und MAP einlesen
+Kennfeld normieren
+Übergibt aktuell mögliche Antriebsleistung für geg. Drehzahl
+Extrapolation für x < x(1)
+Extrapolation für x > x(imax)
+Interpolation
+Übergibt aktuell mögliche Generatorleistung für geg. Drehzahl
+Extrapolation für x < x(1)
+Extrapolation für x > x(imax)
+Interpolation
+
+Abbruch wenn's Datei nicht gibt
+Datei öffnen
+Listen initialisieren
+Erste Zeile: Version
+Falls Version ungültig: Abbruch
+Version festgelegt
+Falls keine Versionsangabe: Altes Format
+Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+Zweite Zeile: Namen/Identifizierung der Komponenten (Schlepp-Emissionen f. KF-Erstellung)
+Spaltenanzahl checken
+Abbruch falls weniger als 3 Spalten
+VECTO: Keine Header/Unit-Spalte. Immer PT1!
+Dritte Zeile: Normierung/Einheit
+Abbruch falls weniger Spalten als in zweiter Zeile
+Alles okay
+Zusatzkomponenten
+Klammern entfernen
+Normierung und Unit festlegen
+Ab Zeile 4: Werte
+Zeile einlesen
+VECTO: M => Pe
+Falls PT1 nicht vorgegeben wird Defaultwert verwendet (siehe oben)
+Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+Datei schließen
+ERROR-Label für sauberen Abbruch
+Datei öffnen
+Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+Datei schließen
+Drehzahl normieren
+Leistung normieren
+Leistung normieren
+Pe-Target normieren
+Em ent-normieren
+Extrapolation für x < x(1)
+Extrapolation für x > x(imax)
+Interpolation
+Extrapolation für x < x(1)
+Extrapolation für x > x(imax)
+Interpolation
+Dynamische Volllast
+Extrapolation für x < x(1)
+Extrapolation für x > x(imax)
+Interpolation
+Extrapolation für x < x(1)
+Extrapolation für x > x(imax)
+Interpolation
+Extrapolation für x < x(1)
+Extrapolation für x > x(imax)
+Interpolation
+
+Modus
+Erste Zeile: Version
+Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+GEN Datei einlesen ****
+Allgemein
+KF Erstellung
+Kaltstart
+Einzelne Nebenverbraucher
+Schaltmodell-Verteilung
+ERROR-Label für sauberen Abbruch
+GEN Datei einlesen ****
+Alten Rechenmodus in neue Modus-Schalter umwandeln
+Kennfeld Erstellung------------------------------------------------------
+Liest Sub Input Files ein die keine eigene Klasse haben, etc.
+Extrapolation für x < x(1)
+Extrapolation für x > x(imax)
+Interpolation
+Extrapolation für x < x(1)
+Extrapolation für x > x(imax)
+Interpolation
+
+Abbruch wenn's Datei nicht gibt
+Datei öffnen
+Listen initialisieren (vor Version-Check damit ReadOldFormat funktioniert)
+Check ob MEP oder MAP
+wird jetzt weiter unten gecheckt beim Einlesen.
+Erste Zeile: Version
+Version festgelegt
+Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+Spalte 2: Option "+" = Parameter für KF-Erstellung gegeben
+Zweite Zeile: Namen/Identifizierung der Komponenten (Nur Em. Leistung, Drehzahl ist fix!)
+Spaltenanzahl checken
+Abbruch falls weniger als 3 Spalten
+Check ob Leistung/Drehzahl vertauscht
+Em-Komponenten initialisieren
+Default-Interpolator definiert in Em0 = New cEmComp
+Default Pe-Correction definiert in Em0 = New cEmComp
+Dictionary füllen....
+ERROR wenn Komponente in spitzen Klammern aber nicht bekannt
+Custom Em-Komponenten Dictionary:
+Default Em-Komponenten ***
+Default-Interpolator
+Default Pe-Correction
+Default-Name
+TC-Komponenten werden nicht ausgegeben
+Custom Em-Komponenten Dictionary:
+Eintrag in Referenz-Dictionary
+VECTO: Spalte 3 immer Verbrauch
+Abbruch falls schon definiert
+Dritte Zeile: Normierung/Einheit
+Abbruch falls weniger Spalten als in zweiter Zeile
+Normierung/Einheit einlesen
+EM-Komp Referenz
+Unit in String für weitere Checks speichern
+Klammern entfernen
+Normierung und Unit festlegen
+Check ob n/Pe Einheiten OK:
+Alles okay
+Zeile 4,5: (optional, wenn oben "+"): Einstellungen für Pe-Cor (altes Pfak)
+Falls nicht "+" werden Default Interpolatoren verwendet (s.o.)
+Zeile 4 einlesen
+Schleife über Em-Komponenten
+Zeile 5 einlesen
+Schleife über Em-Komponenten
+Ab Zeile 4 (bzw. 6): Werte
+Zeile einlesen
+Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+Drehzahl
+Leistung
+Emissionen
+Shep-Init
+Datei schließen
+ERROR-Label für sauberen Abbruch
+Datei öffnen
+Alte Kennfelder haben immer TC-Faktoren (sind halt evtl. Null)
+Werte
+Zeile einlesen
+Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+Drehzahl
+Leistung
+Emissionen
+Shep-Init
+Datei schließen
+Abbruch falls Em-Komponente nicht in MAP
+Abbruch falls TC-Faktoren für die Komponente schon definiert
+Drehzahl normieren
+anders" normierte Drehzahl berechnen
+Leistung normieren
+Emissionen entnormieren
+ACHTUNG: Selbst wenn x_kWh bzw. x_hPnenn in x_h umgewandelt werden muss Normed gleich bleiben weil sonst die DynKor nicht stimmt!
+Werte sind bereits absolut angegeben
+Unterscheidung in [x] und [x/h] derzeit nicht verwendet/unterstützt
+Check ob Drehzahl/Leistung vertauscht
+FC Delauney
+Kennfeld-Erstellung
+Initialisiere Em-Komponenten *******************
+PeCorMode: Falls nicht in MES/NPI vorgegeben gilt bei Nicht-Default-Em was in cEmComp.New() eingestellt ist
+Falls TC angegeben dann Abbruch
+Interpolator auswählen
+Eintrag in Referenz-Dictionary (Es wird nicht überprüft ob Em-Comp. doppelt vorkommt weil das schon in DRI.ReadFile passiert)
+Infos ausgeben
+Dynamikparameter und Extrapol kommen noch dazu
+Mittelwert-Dictionary initialisieren ***************
+Mittelwerte berechnen **********************
+Haupt-Schleife
+Listen erstellen
+Schleife über Messwerte
+Bereich unter iMsek mit Messwert belegen
+Bereich über iMsek mit Mittelwerten der Messwerte belegen
+Keine Mittelwertbildung
+EmCheck: False = Wert noch nicht verwendet, True = Wert wurde bereits in Kennfeld verwurschtet
+Rasterung ****************************
+Schlepp hinzufügen mit halber nn-Schrittweite. Wird für Pfak benötigt. Falls GEN.KFinsertDrag deaktiviert wird sie später wieder gelöscht.
+Leerlaufpunkt hinzufügen
+NrUsed Erstellung / Null setzen *****************
+Messwerte in Raster reinrechnen *****************
+Basis Schrittweite zwischenspeichern
+Schleife über Rasterpunkte (i)
+Summen/Anzahl/Flags zurücksetzen
+Schlepp-Leistung
+Schleife bis genug Werte im Radius gefunden
+Zähler/Summen zurück setzen
+Schleife über Messwerte    (j)
+Falls innerhalb von Radius...
+Anz + 1
+Schleife über alle Em-Komp.
+Summe +
+Min/Max belegen (für Log-Ausgabe)
+Interpolierte Leistung aufsummieren (wird dann durch Anz dividiert)
+Zählen wieviel Messwerte für Rasterpunkt verwendet werden (Log-Ausgabe)
+Falls keine Messwerte im Radius (Anz=0) dann Radius vergrößern und Extra-Flag setzen
+NrUsed belegen
+Interpolierte Leistung = Summe / Anz
+Pfak berechnen:
+Falls oberhalb Pschlepp dann Pfak laut Formel oder 1 falls Abstand zw. Pe-Interpol und Pschlepp zu gering
+Unterhalb von Pschlepp Pfak=0 => Em-Wert=Null
+Extrapol-Flag in Extrapol-Spalte (1/0) übernehmen
+Für Log-Ausgabe
+Schleife über Em-Comp (innerhalb Rasterpunkt Schleife)
+Falls Option 'Schlepp-Em aus .FLD' belegen und Rasterpunkt-Leistung <= Schleppleistung
+Falls Schlepp-Em in .FLD vorhanden dann nehmen sonst mit Null belegen
+Em-Belegung ohne Pfak (=> Pfak wird später gemacht)
+Für Log-Ausgabe
+TC-Faktoren ohne Pfak übernehmen
+Pfak ******************************
+WICHTIG !!!
+Schleife geht über alle Rasterpunkt (auch über die Pe <= PeSchlepp bzw. PeIntpol nahe an Pschlepp).
+Das ist OK weil Pfak dort sowieso mit Eins beleget.
+Schleife über Em-Comp
+Falls keine Create Map Einstellungen (in .NPI/.MES) oder Pfak explizit aktiviert => Pfak verwenden
+Schleife über Rasterpunkte (i)
+Altes Pfak mit Extrapolation von Null weg
+Schlepp-Emission raus suchen
+Schlepp-Em aus nächstgelegenen Rasterpunkt nehmen. Das geht weil Schleppkurve 
+immer ins Map kommt (auch wenn sie dann später raus gelöscht wird) !!
+Option 'Schlepp-Em aus .FLD' spielt keine Rolle weil das nur die Belegungs-Methode der Schleppkurve betrifft (s.o.) 
+Pfak anwenden
+Normieren (Wert und Unit) ********************
+Falls Vorgabe in MES/NPI-Datei dann verwenden
+Werte normieren
+Sonst Standard-Normierung verwenden
+Werte normieren
+EmComponents zusammenfassen *******************
+Schleppkurve wieder raus nehmen (optional) ***********
+Schleife über Rasterpunkte (i). Keine For-Schleife weil iMapDim reduziert wird
+Ausgabe Map '**************************
+ACHTUNG: Nicht Name sondern sKey !!!
+Werte
+Ausgabe Zusatzinfo '***********************
+Werte
+Shep-Init
+Default Shepard wie in intpshep()
+Interpolator V1
+Interpolator V2
+Abstand berechnen und korrigieren.
+Um Nullleistung werden Kennfeldpunkte um Pe=0 hoeher gewichtet und Drehzahlabstand geringer,
+da Interpolation aus Punkten mit hoeherer last dort schlecht passt:
+Quadrat des Abstandes:             
+Falls Vorzeichen von Pe unterschiedlich (Last/Schlepp-Trennung) wird Abstand vergroessert um Schlepp bei Schlepp mehr zu gewichten:
+Punkte innerhalb Radius zählen und ggf. Radius erhöhen
+Abstand-Array erstellen und Leistung interpolieren für Pe-Korrektur
+Berechnung von wisum
+Interpolierte Leistung berechnen
+Abstand berechnen und korrigieren.
+Quadrat des Abstandes:                 
+Punkte innerhalb Radius zählen und ggf. Radius erhöhen
+Abstand-Array erstellen und Leistung interpolieren für Pe-Korrektur
+Berechnung von wisumV2
+Interpolierte Leistung berechnen
+Berechnet Emission an Schleppkurve
+Es wird an Schleppkurve gesucht
+n0 ist schon in Init definiert worden
+Abstand berechnen und korrigieren.
+Quadrat des Abstandes:
+Falls Vorzeichen von Pe unterschiedlich (Last/Schlepp-Trennung) wird Abstand vergroessert um Schlepp bei Schlepp mehr zu gewichten:
+Punkte innerhalb Radius zählen und ggf. Radius erhöhen
+Abstand-Array erstellen
+Berechnung von wisum
+Emission berechnen
+
+Abbruch wenn's Datei nicht gibt
+Datei öffnen
+Erste Zeile: Version
+V" entfernen => Zahl bleibt übrig
+Falls Version ungültig: Abbruch
+Version festgelegt
+Falls keine Versionsangabe: Altes Format
+Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+Zweite Zeile: Check welche TC-Faktoren in welcher Spalte stehen (ab Spalte 1!!)
+Abbruch falls weniger als 2 Spalen:
+Abbruch wenn unbekannter TC-Faktor
+Zu Dict hinzufügen
+Ab Zeile 3: TC-Faktoren für die einzelnen Em-Komponeten 
+l ist nur für Fehlerausgabe
+Datei öffnen
+Abbruch falls weniger als 11 Spalen:
+
+Update 07.08.2012 (CO2 Demo)
+Einzelne Nebenverbraucher
+Zugkraftunterbrechung - Update 09.08.2012 (CO2 Demo)
+Cd Modus / Input Datei - Update 14.08.2012 (CO2 Demo)
+Axle configuration - Update 16.10.2012
+Ende Einlesen ****************************
+Zugkraftunterbrechung (Update 09.08.2012 - CO2 Demo)
+Cd Modus / Input Datei (Update 14.08.2012 - CO2 Demo)
+Retarder (Update 02.10.2012 - CO2 Demo)
+Axle configuration - Update 16.10.2012
+Fehlermeldung innerhalb AuxInit
+Cd-Init
+Transmission Loss Maps
+Fr0
+Getriebe-Nenndrehzahl
+Getriebe-Nennleistung
+Wenn nix angegeben: Motor-Nennleistung und Nenndrehzahl zur Normierung
+PHEM:    n, PeIn, PeOut => x=n, y=PeOut, z=PeIn
+PHEM: GBmap0.AddPoints(CDbl(line(0)) * n_norm, CDbl(line(2)) * Pe_norm, CDbl(line(1)) * Pe_norm)
+VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn
+Interpolieren mit Original Werten
+Falls Fehler: Extrapolation versuchen
+Suche nach nächstgelegenen Kennfeldpunkt
+Wirkungsgrad
+Antrieb => Antrieb
+Schlepp => Antrieb: ERROR!
+Antrieb => Schlepp: ERROR!
+Schlepp => Schlepp
+Mit Wirkungsgrad PeIn für original PeOut ausrechnen
+Interpolieren mit Original Werten
+Falls Fehler: Extrapolation versuchen
+Suche nach nächstgelegenen Kennfeldpunkt
+Wirkungsgrad
+Antrieb => Antrieb
+Schlepp => Antrieb: ERROR!
+Antrieb => Schlepp: ERROR!
+Schlepp => Schlepp
+Mit Wirkungsgrad PeIn für original PeOut ausrechnen
+Meldung in Readfile()
+Falls Vair-Vorgabe in DRI aber nicht CdType= CdOfBeta dann Warnung
+Falls konstanter Cd-Wert dann is nix zu tun
+Inputdatei einlesen
+Extrapolation für x < x(1)
+Extrapolation für x > x(imax)
+Interpolation
+Inputdatei einlesen
+Extrapolation für x < x(1)
+Extrapolation für x > x(imax)
+Interpolation
+
+Aktuelle Daten (d.h. zum aktuellen (zuletzt berechneten) Zeitschritt)
+Maximal zulässige Leistung zum Antreiben (Batterie entladen) [kW]    Vorzeichen positiv (PHEM Standard)
+Maximal zulässige Leistung zum Generieren/Rekuperiren (Batterie laden) [kW]    Vorzeichen negativ (PHEM Standard)
+Batteriemodell Renhart~ ---------------------------------
+Methode zur Initialisierung - wird einmal aufgerufen
+Abbruch wenn's Datei nicht gibt
+Einlesen der Parameter:
+Berechnung der Batteriespannung bei TempBat und SOC(0), Entladekurve
+Berechnung der Batteriespannung bei TempBat und SOC(0), Ladekurve
+Methode zur Berechnung der zulässigen Leistung - sekündlicher Aufruf
+Methode zur Berechnung der Batterieveluste und SOC für geg. Leistung - sekündlicher Aufruf
+Input:
+Perf ...geforderte Leistung. Bedingung: PgMAX < Perf < PaMAX [kW]
+alle Paramer die in Bat_Init bestimmt/eingelesen wurden
+jz ...Aktueller Zeitschritt
+Alle Arrays von Zeitschritt 1 bis jz-1
+Übergibt PeBat für geg. PiBat (Vorzeichen nach PHEM)
+PRIVATE ------------------------------------------
+Batterie entladen
+Temperaturfunktion
+Ri bestimmen abhängig von Temperatur
+Spannung bestimmen aus SOC und Spannungskurve
+Strom berechnen
+Batterieverluste
+Batterietemperatur
+SOC berechnen
+Korrektur für den aktuellen Zeitschritt
+Batterie laden
+Temperaturfunktion
+Ri bestimmen abhängig von Temperatur
+Spannung bestimmen aus SOC und Spannungskurve
+Strom berechnen
+Batterieverluste
+Batterietemperatur
+SOC berechnen
+Korrektur für den aktuellen Zeitschritt
+Batterie nix tun
+ALT: Ubat(jz) = Ubat(jz - 1)
+Übergibt PeBat beim Laden mit PEmot (Vorzeichen nach Renhart)
+Übergibt PeBat beim Entladen mit PEmot (Vorzeichen nach Renhart)
+
+Leistungen
+Fahrzeug
+Zykluslänge definieren (Um 1s kürzer als Original weil Zwischensekunden)
+Hier wird der eigentliche Zyklus eingelesen:
+Drehzahl-Vorgabe
+Drehzahl
+Winkelbeschleunigung
+Em-Komponenten mitteln (Zwischensekunden) für KF-Erstellung oder Eng-Analysis
+EXS Vorgaben mitteln
+Aux Vorgaben mitteln und Aux-Listen falls Aux in Dri und Veh vorhanden
+Zykluslänge definieren: Gleiche Länge wie Zyklus (nicht reduziert weil keine "Zwischensekunden")
+Hier wird der eigentliche Zyklus eingelesen:
+Drehzahl-Vorgabe
+Drehzahl
+Winkelbeschleunigung
+Initialisierung / Datei öffnen **************
+ID-Zeile (Nur ADVANCE)
+ADVANCE-spezifisch
+Berechnete Dynamikparameter (Diff zu Kennfeld)
+In Datei schreiben
+Werte *************************************************************************************
+Zeit
+Strecke
+Ist-Geschw.
+Soll-Geschw.
+Beschl.
+Steigung
+Drehzahl
+Leistung 
+Drehzahl normiert
+Leistung normiert
+Drehzahl in U/min
+EM-Leistung in kW
+Effektive Batterieleistung
+Innere Batterieleistung
+Batteriespannung
+Batteriestrom
+SOC
+Drehzahl
+Leistung 
+Drehzahl normiert
+Leistung normiert
+Volllast und Schlepp
+Leistung an Kupplung
+Gang
+Getriebeverluste
+Diff-Verluste
+Retarder-Verluste
+PaEng
+PaGB
+Pa Veh
+Roll..
+Luft..
+Steigung..
+Aux..
+Radleistung
+Bremse
+Auxiliaries
+ADVANCE-spezifisch
+X
+Y
+StrId
+Final-Emissionen (Tailpipe)
+Roh-Emissionen
+TC-Emissionen
+AT-Emissionen (EXS)
+Berechnete Dynamikparameter (Diff zu Kennfeld)
+In Datei schreiben
+Errors/Warnings die sekündlich auftreten können
+Reset-Hierarchie:
+ResetAll
+DesMaxExtr
+GeschRedReset
+CdExtrapol        
+PxReset
+TrLossMapExtr 
+AuxMapExtr 
+AuxNegative
+FLDextrapol
+Kompletter Reset (am Beginn jedes Sekundenschritts)
+Reset von Errors nach Geschw.-Reduktion (innerhalb Iteration)
+Reset von Errors die mit der Leistungsberechnung zu tun haben (nach Schaltmodell durchzuführen)
+Errors ausgeben
+
+Sekündliche Daten
+Zugkraftunterbrechung
+Rekuperation
+Projekt HERO - BMW Mini Hybrid
+Standard Mini One D Radstand 2467 mm
+Annahme für Schwerpunkthöhe
+nach http://www.colliseum.net/wiki/Schwerpunkth%C3%B6he
+mit R = 2.467 [m] und m = 1335 [kg]
+Bat einlesen
+Maximale effektive EM-Leistung beim Antreiben abhängig von Überlast und Batteriezustand
+Basis: Volllastkurve
+Falls Überlast möglich: auf ÜL-Leistung hochskalieren
+PeFLD = maximale EM-Leistung nach FLD und ÜL
+PeMax aus PeBatMax berechnen
+PeBAT = maximale EM-Leistung nach Batterie
+Übergeben wird maximal die Leistung die die Batterie erlaubt
+Maximale effektive EM-Leistung beim Laden abhängig von Überlast und Batteriezustand
+Basis: Schleppkurve
+Falls Überlast möglich: auf ÜL-Leistung hochskalieren
+PeFLD = maximale EM-Leistung nach FLD und ÜL
+PeMax aus PeBatMax berechnen
+PeBAT = maximale EM-Leistung nach Batterie
+Übergeben wird maximal die Leistung die die Batterie erlaubt
+Umrechnung von PeBat(=PiEM) auf PeEM
+Wenn Vorzeichen von x oder y nicht gleich Vorzeichen von xA(i) oder yA(i) dann wird Zeile i übersprungen
+Umrechnung von PeEM auf PeBat(=PiEM)
+Wenn Vorzeichen von x oder y nicht gleich Vorzeichen von xA(i) oder yA(i) dann wird Zeile i übersprungen
+Maximale Rekup-Leistung
+Falls unter V-Untergrenze dann gleich Null übergeben
+Radaufstandskraft
+Vorzeichen "sollte" immer + sein
+Längskraft am Reifen
+Sicherheitsfaktor mitnehmen
+Leistung 
+Falls unter V-Obergrenze dann linear runter skalieren
+PeEM-Max reduzieren bis es die Batterie aushaltet
+PeEM-Min reduzieren bis es die Batterie aushaltet
+Start/Stop Steuerung
+Abbruch wenn keine Geschw. gegeben
+Initialisieren
+Schaltpunkte für NEDC/FTP Schaltung
+Schaltparameter initialisieren
+Standard
+Theoretische Höchstgeschwindigkeit [m/s] - gesetzt auf Geschw. bei 1.2 x NennDrehzahl im höchsten Gang
+Zeitschleife    ****************************************
+Sekundäre Progressbar
+Zustand bestimmen
+Reset der sekündlichen Errors 
+Geschw. / Beschl. berechnen-------------------
+Jetzt durch DRI-Klasse
+Wenn Geschw. über theoretischer Höchstgeschw. => Reduzieren
+a_DesMax
+Check ob Beschleunigung zu hoch
+Verzögerung limitieren ---------------------------
+Check ob Verzögerung zu hoch
+Aus Leistg-----
+Fahrzustand bestimmen-------------------------
+Schneller Check ob Leistung viel zu hoch
+Gangwahl ************************************
+Checken ob Kupplung schleift (wichtig für Schaltmodell):
+Gang-Vorgabe
+Drehzahlvorgabe
+Gang nach Geschwindigkeit
+Schaltmodell
+Muss hier nochmal zurück gesetzt werden weil im Schaltmodell kann (und darf) das passieren
+Schaltmodell/Vorgabe kann Clutch öffnen 
+Wichtige Checks
+Checken ob Geschwindigkeit reduzieren
+If GeschwRed Then GoTo lbGeschwRed    <= stattdessen neues Konzept: Leistung wird "normal" berechnet und erst später überprüft ob Pe > Pmax... ?
+Checken ob Kupplung offen:
+bKupplOffen = (bStehen Or Gang(jz) = 0) <= bereits durch Clutch bekannt
+Falls konventionell dann ICE-Kupplung = Hauptkupplung
+bICEKupOffen = bKupplOffen <= Brauch i nix mehr
+Falls vor Gangwahl festgestellt wurde, dass nicht KupplSchleif, dann bei zu niedriger Drehzahl runterschalten:
+Checken ob Leerlauf obwohl Leistung > 0
+wenn Leistung vor Diff > 0.1% von Nennleistung dann Korrigieren!
+Drehzahl ************************************
+Wenn Drehzahl vorgegeben dann wird der nächste Block übersprungen ***
+Falls Start/Stop dann wird gleich bei nn < -0.05 auf nU = 0 gesetzt
+Drehzahlabfall beim Auskuppeln
+Leistungsabfall limitieren auf Pe(t-1) minus 75% von (Pe(t-1) - Pschlepp)
+aus Auswertung ETC des Motors mit dem dynamische Volllast parametriert wurde
+Einfluss auf Beschleunigungsvermögen gering (Einfluss durch Pe(t-1) bei dynamischer Volllast mit PT1)
+Luz/Rexeis 21.08.2012
+Iterations-Schleife: 01.10.2012    
+original: M = -Pmin * 1000 * 60 / (2 * Math.PI * ((nU + nUx) / 2))
+01.10.12 Luz: Drehzahl darf nicht höher werden als zuvor 
+TODO: Auschalten?!
+Beginn: Drehzahl-Check
+Checken ob Drehzahl zu hoch! =>  Hochschalten
+Checken ob Drehzahl zu niedrig mit geschlossener Kupplung
+Motor-Zustand bestimmen ************************************
+nn ist ab hier fix!
+Nebenverbrauch bestimmen (aus VEH und DRI)
+ICE-Trägheit
+Nicht optimal da jz-1 bis jz nicht der richtige Zeitraum
+Drehzahlvorgabe
+Gesamt-Motorleistung
+Leistungsverteilung usw. ******************
+Volllast- / Schleppkurve
+Drehzahl korrigieren
+Falls Pmax < 0 oder Pmin > 0 dann Abbruch mit Error!
+VKM an Schleppkurve
+Forwärtsrechnung bis Rad (PvorD)
+Check ob Abbruch (vor Geschw.Red-Iteration sonst kann sichs aufhängen)
+Check ob P über Volllast => Geschw.-Reduktion
+FEHLER: Geschw.-Red. bringt nix?!...
+FEHLER: Motor nicht in Antrieb ...kann nicht sein?!
+Zugkraftunterbrechung
+Sekunde abschließen
+Start / Stop - Aktivierung-Geschw. Steuerung
+Modalwerte-Felder schreiben
+Zugkraftunterbrechung
+Meldungen (Abbruch falls Error)
+Zeitschleife ENDE    ***********************************
+Meldungen (wenn nicht ADVANCE)
+Abbruch falls Leistung/Drehzahl nicht gegeben
+Drehzahlen vorher weil sonst scheitert die Pmr-Berechnung bei MODdata.nU(t + 1)
+Modalwerte-Felder schreiben
+MODdata.Pe wird unten belegt
+Leistung berechnen
+Sekundäre Progressbar
+Reset der sekündlichen Errors 
+ALT und falsch weil Zeit nicht verschoben: P_mr(jz) = 0.001 * (I_mot * 0.0109662 * (n(jz) * nnenn) * nnenn * (n(jz) - n(jz - 1))) / Pnenn
+Leistung aus Zyklus korrigiert um P_clutch
+Drehzhal aus Zyklus => Durch CycleInit bestimmt
+Falls Drehzahl unter Leerlauf wir Motor als abgestellt angenommen
+Falls Pmax < 0 oder Pmin > 0 dann Abbruch mit Error!
+FLD Check
+Meldungen
+Start/Stop Steuerung
+WegKorrektur
+Abbruch wenn keine Geschw. gegeben
+Initialisieren
+WG-Kennfeld aus MAP übernehmen und Pi-Liste berechnen
+Schaltpunkte für NEDC/FTP Schaltung
+Theoretische Höchstgeschwindigkeit [m/s]
+Zeitschleife    ****************************************
+Sekundäre Progressbar
+Zustand bestimmen
+Geschw. / Beschl. berechnen-------------------
+Jetzt durch DRI-Klasse
+Wenn Geschw. über theoretischer Höchstgeschw. => Reduzieren
+Aus Leistg-----
+Fahrzustand bestimmen-------------------------
+Maximal zulässige Batterieleistung
+Gangwahl ************************************
+Checken ob Kupplung schleift (wichtig für Schaltmodell):
+Gang-Vorgabe
+Drehzahlvorgabe
+Gang nach Geschwindigkeit wird hier nicht unterstützt
+Schaltmodell
+EV: Kein Leerlauf wegen Rekuperation
+Falls Rekuperation laut Radleistung möglich: PrekupMax berechnen
+Maximale Rekuperations-Leistung berechnen (abh. von Radlast/Reibkoef.)
+Falls vor Gangwahl festgestellt wurde, dass nicht KupplSchleif, dann bei zu niedriger Drehzahl runterschalten:
+Checken ob Leerlauf obwohl Leistung > 0
+wenn Leistung vor Diff > 0.1% von Nennleistung dann Korrigieren!
+Drehzahl ************************************
+Wenn Drehzahl vorgegeben (Gemess = 2) dann wird der nächste Block übersprungen ***
+Drehzahlabfall beim Auskuppeln
+Beginn: Drehzahl-Check wenn keine Vorgabe
+Checken ob Drehzahl zu hoch! =>  Hochschalten
+Checken ob Drehzahl zu niedrig mit geschlossener Kupplung
+Motor-Zustand bestimmen ************************************
+nn ist ab hier fix!
+Nebenverbrauch bestimmen (aus VEH und DRI)
+MotorTrägheit
+Nicht optimal da jz-1 bis jz nicht der richtige Zeitraum
+Drehzahlvorgabe
+Gesamt-Motorleistung
+Leistungsverteilung usw. ******************
+Volllast- / Schleppkurve
+Maximale Rekuperations-Leistung berechnen (abh. von Radlast/Reibkoef.)
+PrekupMax = fPrekupMax()
+Falls RekupMax überschritten muss Pe neu berechnet werden
+PbrakeRek = Leistung die zusätzlich mechanisch gebremst werden muss wegen Überschreitung von RekupMax
+wird schon oben nach Gangwahl erledigt: PbrakeRek = Pantr - PrekupMax
+Neue EM-Leistung
+Check ob Leistung aufgenommen werden kann (abh. von FLD und Batterie). Bremsleistung berechnen.
+RekupMax-Bremsleistung dazu addieren
+Check ob P über Volllast => Geschw.-Reduktion
+Falls Pmax=0 muss Batterie leer sein
+FEHLER: Geschw.-Red. bringt nix?!...
+Sekunde abschließen
+Batterie ***********************
+Modalwerte-Felder schreiben **************
+Meldungen
+Zeitschleife ENDE    *************************************
+Meldungen (nicht ADV)
+TODO.... Fehlermeldung etc
+WegKorrektur
+Abbruch wenn keine Geschw. gegeben
+Initialisieren
+Schaltpunkte für NEDC/FTP Schaltung
+Schaltparameter initialisieren
+Theoretische Höchstgeschwindigkeit [m/s]
+HEV
+Zeitschleife    ****************************************
+Sekundäre Progressbar
+Zustand bestimmen
+Geschw. / Beschl. berechnen-------------------
+Jetzt durch DRI-Klasse
+Wenn Geschw. über theoretischer Höchstgeschw. => Reduzieren
+Aus Leistg-----
+Fahrzustand bestimmen *****************************
+Fahrzustand bestimmen-------------------------
+Gangwahl ************************************
+Checken ob Kupplung schleift (wichtig für Schaltmodell):
+Gang-Vorgabe
+Drehzahlvorgabe
+Gang nach Geschwindigkeit
+Schaltmodell
+Nebenverbrauch bestimmen (aus VEH und DRI)
+HEV-Teil kommt erst nach Gangwahl weil Getr./Diff-Loss den benötigt und EM zwischen ICE und GB liegt
+Nebenverbrauch bestimmen (aus VEH und DRI)
+Wenn Drehzahl vorgegeben
+Sonst aus Vist und Gear
+Normierte Drehzahl
+Maximale Leistung der ICE
+Nebenverbrauch bestimmen (aus VEH und DRI)
+Maximal zulässige Batterieleistung
+Maximale EM-Leistung. (Batterieleistung limitiert EM-Leistung)
+Leistung bis ICE/EM (= an Kupplung) berechnen
+Leistung an Kupplung
+Drehzahlvorgabe
+Notwendige Leistung im EV-Betrieb
+Leistung an Kupplung plus EM-Trägheit
+ACHTUNG: Wenn ICE eingekuppelt dann muss PaICE auch noch dazu ! => Später bei Leistungsverteilung
+Notwendige Leistung im ICE+EM-Betrieb
+Notwendige Leistung im ICE-Betrieb
+Check ob EV möglich
+EM-Leistung >= Antriebsleistung
+Falls EV möglich: Check ob kritisch
+Check ob Assist / LPI / ICEonly möglich und ob Boost erforderlich
+ICE-Ein muss möglich sein (ICElock)
+Assist / Boost
+Boost
+ICE an Volllast
+Check ob Rekup möglich
+Fahrzustands-Unterscheidung *********************************
+Betriebsmodus Vor-Auswahl ********************************
+Wenn Boost notwendig (und möglich), dann keine Wahl
+EV Mode wenn...
+Wenn EV & ICE nicht möglich dann EV-Modus bis ICE wieder startet.... sollte nie vorkommen weil keine ICE-Abschaltung wenn wenig SOC
+Falls Einsatz von HEV-Strategie:
+Ke's berechnen
+Optimale Ke's berechnen und Leistungen dazu ************
+Emission/Verbrauch in g/h
+KeSTE aus STE-Kurve...
+Unter Max-Pe bleiben
+Wenn Pvkm negativ: Berechnung für reinen EM-Betrieb
+nicht gültig falls Batlvl <= Low oder ICEonLock
+EM-Leistung = P-Antrieb
+Verbrauchseinsparung in g/h 
+Abbruch nach dieser Berechnung (mehr EM-Leistung macht keinen Sinn da hier schon rein elektrischer Antrieb)
+Verbrauchseinsparung in g/h 
+Leistung nach E-Motor in kW
+Leistung in Batterie
+Div/0 und Vorzeichen-Check
+KeA berechnen in kWh/kg
+Check ob Optimum
+Abbruch falls reiner EM-Betrieb schon erreicht
+Falls Pvkm an Volllast:
+Pvkm auf Volllast setzen
+Elektromotor in Generatorbetrieb (Pges1 - Pvkm < 0)
+Abbruch nach diesem Durchgang weil mehr Generieren nicht möglich
+Zusatzverbrauch in g/h 
+Leistung nach E-Motor in kW
+Leistung in Batterie
+Div/0 und Vorzeichen-Check
+KeG berechnen in kWh/kg
+Check ob Optimum
+Abbruch falls VKM-Volllast schon erreicht
+Abstand Eta zu Kurve berechnen
+KeSTE, Deltas auswerten ************************
+Betriebsstrategie ***************************
+Ke-Modus einsetzen wenn...
+Gleicher Modus wie vorher, Fahrzustands-Änderung oder Letzter Modus unmöglich
+wenn Motor nicht läuft
+wenn PeICE-Leistungsänderung mit neuen Modus am geringsten
+Leistungen je nach Modus verteilen **************************
+EM übernimmt gesamte Leistung
+Geschw. reduzieren falls Leistung zu hoch für EM oder Bat
+Falls ICElock oder EVcrit dann ICE ein (aber ausgekuppelt)
+ICE übernimmt gesamten Antrieb
+ACHTUNG: ICEclutch ist standardmäßig 'False' deshalb hier keine weiteren Statements mehr
+Maximale Rekup-Leistung berechnen
+Mit PrekupMax auf EM/ICE zurück rechnen
+Den Rest gleich auf die Bremse 
+Default für ICE (damit man sich die "Else"-Statements spart)
+EM-Leistung berechnen
+EM-Leistung neu
+Restliche Leistung an ICE
+Falls ICE über Schleppkurve
+ICE-Leistung neu
+Rest an Bremse
+ICE in Leerlauf (weil On-Lock)
+EM-Leistung berechnen
+EM-Leistung neu
+ICE im Schubbetrieb
+Falls ICE über Schleppkurve
+ICE-Leistung neu
+Rest an Bremse
+ICE im Schubbetrieb
+Falls ICE über Schleppkurve
+ICE-Leistung neu
+Rest an Bremse
+Leistung Null
+Clutch und Drehzahlen *******************************
+Haupt-Kupplung => muss hier schon bekannt sein!
+Drehzahl ICE ************************************
+Drehzahl EM *************************************
+Sekunde abschließen
+ACHTUNG: Die beiden If-Schleifen nicht verbinden weil LockCount sich sonst verzählt
+Modalwerte-Felder schreiben
+Meldungen
+Zeitschleife ENDE   **************************************
+Meldungen (Nicht ADVANCE)
+Sekunde 1--------------------------------------
+Erste Sekunde: Gang finden / Initialisierung
+Ab Sekunde 2--------------------------------------
+Startwerte---------
+gangX = Letzter Gang d.h. Ausgangsbasis für Schaltmodell
+Kuppelschleif-check  << Schon passiert in Power.Calc
+Gang für die nächsten 6 Sekunden berechnen---------------------
+Schaltfunktion----------
+Drehzahlschranke Hinaufschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+Drehzahlschranke Hinunterschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+Gelöscht LUZ 13.07.10: If (nnsaufi > 0.85) Then nnsaufi = 0.85
+Umrechnung in hier verwendete Drehzahleinheit (n/n_nenn):
+Drehzahl mit letzten Gang (gangX)
+nx = fnU(Vist, gangX, Clutch = tEngClutch.Slipping) / VEH.nNenn
+Schalten Maximal alle 2 Sekunden schalten zulaessig:
+Ueberpruefen ob hinunterschalten, nur wenn Geschw. abnimmt oder leistung zunimmt
+Ueberpruefen ob hinaufschalten, nur wenn Geschw. zunimmt oder leistung abnimmt
+Gangwahl korrigieren
+Kein Leerlauf wenn Leistung > 0
+Drehzahl neu
+nn = fnn(Vist, gangX, Clutch = tEngClutch.Slipping)
+Überprüfe ob Gang innerhalb der Leistungs-/Drehzahl Grenzen. Schleppbetrieb wird nicht beachtet
+Speichere Gänge in Feld für spätere Checks
+Gang wird übernommen
+Gang-Verlauf hinzufügen
+Checks Teil 1-------------------------------------
+Checks zur Saeuberung unsinniger Schlatmanoever:
+Unterteilung in "iphase(j)" Beschleunigungs- (=1), Verzoegerungs- (=2) und Cruise (=3) -Phasen:
+Schon bestimmt durch VehState0
+Suche nach letztem Gangwechsel
+Schaltvorgaenge max. alle 3 Sekunden zulaessig:
+Cruise-Phasen:
+Solange Geschwindigkeitsaenderung seit letztem Gangwechsel unter 6% und Pe/Pnenn aenderung unter 6% wird nicht geschaltet:
+Verzoegerungsphasen: Hochschalten wird unterdrückt
+Beschleunigungsphasen: Zurückschalten wird unterdrückt
+Wenn innerhalb von 6 Sekunden wieder in vorigen Gang zurueck geschaltet wird, wird der vorige Gang
+durchgehend beibehalten
+Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang
+geschaltet wird, wird voriger Gang durchgehend beibehalten
+Checks Teil 2-------------------------------------
+Schalten von 2. in 1. Gang wird bei v > 2,5 m/s unterdrueckt
+NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl
+bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet
+wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
+bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet
+ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
+sonst fehlt die leistung!
+EV-Schaltmodell (auf Basis PKW)
+Sekunde 1--------------------------------------
+Erste Sekunde: Gang finden / Initialisierung
+Ab Sekunde 2--------------------------------------
+Startwerte---------
+gangX = Letzter Gang d.h. Ausgangsbasis für Schaltmodell
+Kuppelschleif-check  << Schon passiert in Power.Calc
+Gang für die nächsten 6 Sekunden berechnen---------------------
+Schaltfunktion----------
+Drehzahlschranke Hinaufschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+Drehzahlschranke Hinunterschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+Umrechnung in hier verwendete Drehzahleinheit (n/n_nenn):
+Drehzahl mit letzten Gang (gangX)
+Schalten Maximal alle 2 Sekunden schalten zulaessig:
+Ueberpruefen ob hinunterschalten, nur wenn Geschw. abnimmt oder leistung zunimmt
+Ueberpruefen ob hinaufschalten, nur wenn Geschw. zunimmt oder leistung abnimmt
+Gangwahl korrigieren
+Kein Leerlauf wenn Leistung > 0
+Drehzahl neu
+Überprüfe ob Gang innerhalb der Leistungs-/Drehzahl Grenzen. Schleppbetrieb wird nicht beachtet
+Speichere Gänge in Feld für spätere Checks
+Gang wird übernommen
+Gang-Verlauf hinzufügen
+Checks Teil 1-------------------------------------
+Checks zur Saeuberung unsinniger Schlatmanoever:
+Unterteilung in "iphase(j)" Beschleunigungs- (=1), Verzoegerungs- (=2) und Cruise (=3) -Phasen:
+Schon bestimmt durch VehState0
+Suche nach letztem Gangwechsel
+Schaltvorgaenge max. alle 3 Sekunden zulaessig:
+Cruise-Phasen:
+Solange Geschwindigkeitsaenderung seit letztem Gangwechsel unter 6% und Pe/Pnenn aenderung unter 6% wird nicht geschaltet:
+Verzoegerungsphasen: Hochschalten wird unterdrückt
+Beschleunigungsphasen: Zurückschalten wird unterdrückt
+Wenn innerhalb von 6 Sekunden wieder in vorigen Gang zurueck geschaltet wird, wird der vorige Gang
+durchgehend beibehalten
+Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang
+geschaltet wird, wird voriger Gang durchgehend beibehalten
+Checks Teil 2-------------------------------------
+Schalten von 2. in 1. Gang wird bei v > 2,5 m/s unterdrueckt
+NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl
+bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet
+wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
+bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet
+ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
+sonst fehlt die leistung!
+Sekunde 1--------------------------------------
+Erste Sekunde: Gang finden / Initialisierung
+Ab Sekunde 2--------------------------------------
+Startwerte---------
+Leistung berechnen von jz bis jz + 6-----------------
+Berechnung nach Drehzahl/Leistung-Modell
+1) Nach Variante "schnelle Fahrweise"
+Schaltmanoever erfolgt nur, wenn v-aenderung 5% seit letztem Gangwechsel,
+VECTO: Auskommentiert START
+VECTO: Auskommentiert ENDE
+in ersten 10 Zyklussekunden kann zum Einregulieren immer geschlatet werden:
+Bei Aenderung der Steigung kann ebenfalls immer geschaltet werden:
+Hinunterschalten:
+Hochschalten:
+bei Steigungszyklen mit zu hohen Geschwindigkeiten wird geschw. i+1 erst nach gangwahl berechnet
+dabei manchmal zu hoher gang -> Drehzahl und P_max viel zu nieder, daher nu bei niederen leistungen
+hochschalten erlaubt:
+2) Nach Variante "sparsame Fahrweise"
+Zurueckschalten erfolgt nur, wenn Geschwindigkeitsaenderung > 6%
+Hochschalten geht immer
+VECTO: Auskommentiert START
+VECTO: Auskommentiert ENDE
+in ersten 10 Zyklussekunden kann zum einregulieren immer geschlatet werden:
+Bei Aenderung der Steigung kann ebenfalls immer geschaltet werden:
+Hinunterschalten:
+Hinaufschalten, nur ueberprueft wenn nicht schon hoechster Gang:
+relevante Drehzahlen:
+Auswahl des Drehzahlverhaeltnisses aus der "schnellen (..h)" und
+der "sparsamen (..l)" Variante:
+Drehzahlverhhealtnisse nach "Modellmix":
+anhand der erforderlichen maximalen Motorleistung ueber die
+naechsten 6 Sekunden
+Festlegung der Anteile von schneller und sparsamer Fahrweise
+Modell Hausberger):
+Mix der berechneten Gaenge gemaess Vorgabe in Eingabefile:
+pmodell wird aus Eingabefile gelesen, = Anteil, zu der die Drehzahl
+nach "reales Modell" bestehen soll)
+Ermittlung des "virtuellen" aktuellen Ganges nach Modell
+ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
+sonst fehlt die leistung!
+ueberpruefung, ob erforderliche leistung ueber P_max(n) liegt
+dann wird zurueckgeschaltet:
+Eigentliche Ueberpruefung ob ueber P_max(n)
+falls schlechte Vollastkurve ohne Moment in leerlauf wird korrigiert:
+Ueberpruefung, ob hoehere Leistung erforderlich ist als Maximalleistung bei nh
+dann wird zurueckgeschaltet:
+Ende "Modell"-Basisgangwahl
+Kuppelschleif-check
+Checks Teil 1-------------------------------------
+Checks zur Saeuberung unsinniger Schlatmanoever:
+Unterteilung in "iphase(j)" Beschleunigungs- (=1), Verzoegerungs- (=2) und Cruise (=3) -Phasen:
+Suche nach letztem Gangwechsel
+Schaltvorgaenge max. alle 3 Sekunden zulaessig:
+Cruise-Phasen:
+Solange Geschwindigkeitsaenderung seit letztem Gangwechsel unter 6% und Pe/Pnenn aenderung unter 6% wird nicht geschaltet:
+Verzoegerungsphasen: Hochschalten wird unterdrückt
+Beschleunigungsphasen: Zurückschalten wird unterdrückt
+Wenn innerhalb von 6 Sekunden wieder in vorigen Gang zurueck geschaltet wird, wird der vorige Gang
+durchgehend beibehalten
+VECTO: Ausnahme: Über Volllastkurve
+Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang
+geschaltet wird, wird voriger Gang durchgehend beibehalten
+Checks Teil 2-------------------------------------
+Schalten von 2. in 1. Gang wird bei v > 1.5 m/s unterdrueckt
+NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl
+bei verzoegerungsvorgaengen unter 1.5 m/s wird in Leerlauf geschaltet
+wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
+ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
+sonst fehlt die leistung!
+Geschwindigkeit vorausschauen
+Checks aus PKWgear....
+Schalten von 2. in 1. Gang wird bei v>2,5 m/s unterdrueckt
+Bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet
+Wenn v mehr als 1 Sek. <0.1 m/s wird auf Gang=0 geschaltet
+Bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet
+Funktion zur einfachen Leistungsberechnung für Schaltmodelle
+Funktion zur einfachen Leistungsberechnung für EV-Schaltmodell
+Drehzahlvorgabe
+Leistung vor Diff = Am Rad-------------
+Rollwiderstand----------------
+Luftwiderstand----------------
+Beschleunigungsleistung Fahrzeug--------
+Früher (PHEM 10.4.2 und älter) wurde statt m_raeder Massered verwendet, mit Massered = m_raeder + I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2
+Der fehlende Teil (I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2) wird jetzt durch fPaG(V,a) mit berücksichtigt
+Steigungswiderstand----------------
+Nebenaggregate----------------
+Getriebe-------------------
+Leistung nach Getriebe (Getriebeausgang)
+Verluste berechnet (eignet sich nur für Schaltgetriebe)
+Interpolation der Getriebeverlustleistung
+Zwischen 1. und 8. gang sowie 9. und 16. Gang:
+Differenzial
+Leistung nach Diff (vor Getriebe)
+Pdiff
+Differenzial
+Leistung vor Diff
+Getriebe Trägheit----------------
+
+Aus DRI-Datei
+Berechnet
+WegKor
+Geschwindigkeit
+Original-Geschwindigkeit ist um 1 länger
+Strecke (aus Zwischensekunden sonst passiert Fehler)
+Steigung
+Gang - nicht Mittelwert sondern Gang(t) = DRI.Gang(t)
+Padd
+Beschl. berechnen
+Vair-Vorgaben: Nicht in Zwischensekunden!!
+Geschwindigkeit
+Strecke 
+Steigung
+Gang - nicht Mittelwert sonder Gang(t) = DRI.Gang(t)
+Padd
+Beschl. berechnen
+TODO: Wenn Fzg schneller als Zyklus...
+Falls Zeitschritt wiederholen näher an Wegvorgabe als aktueller Weg => Zeitschritt wiederholen
+Falls nächsten Zeitschritt löschen näher an Wegvorgabe als aktueller Weg => Nächsten Zeitschritt löschen
+Keine Korrektur
+
+Delaunay
+Normale Interpolation
+Ersten zwei sekunden keine Korrektur:
+Dictionaries erstellen
+Summen ermitteln
+Mittelwerte
+Zyklus-Mittelwerte '************************************
+Messwert
+PHEM-Wert
+Diff - ACHTUNG: Keine Pnenn-Normierung! Vorsicht bei Dynamik-Korrektur!
+Über x Sekunden gemittelte Werte berechnen und sofort au
+Null setzen
+Aufsummieren
+Messwert
+PHEM-Wert
+Modale Ausgabe '************************************
+Messwert
+PHEM-Wert
+Diff - ACHTUNG: Keine Pnenn-Normierung! Vorsicht bei Dynamik-Korrektur!
+Header und Units schreiben
+Über x Sekunden gemittelte Werte berechnen und sofort au
+Null setzen
+Aufsummieren
+Ausgabe
+Messwert
+PHEM-Wert
+Lastwechsel (allgemeine Bedingung ausser bei Intervallen mit
+Konstantfahrt:
+Damit werden Trapezfoermige Zyklen nicht als lastwechsel erkannt
+da LWje = 0. In diesem fall wird voraus der naechste Wert gesucht,
+der nicht gleich Pe(jz) ist. Dieser wird anstelle von Pe(jz+1)
+gesetzt:
+lastwechsel werden nur als solche gezaehlt, wenn sie mehr als 0.05% von
+Pnenn betragen (sonst ist Ergebnis viel zu wackelig):
+Lastwechsel wird gezaehlt, wenn LWja < 0)
+1) Mittlere Amplitude vom Pe-Verlauf ("Ampl")
+Zwischenrechnung fue Zyklusmittelwert:
+Berechnung der mittleren Amplitude in 3 Sekunden vor Emission (Ampl3s)
+und der Anzahl der Pe-Sekundenschritten ueber 3% der Nennleistung
+LW3p3s):
+2) Aenderung der aktuellen Motorleistung (dP_2s):
+Mittelwert 3 sec. vor Emission:
+Gezaehlt nur bei dynamischem betrieb:
+4) Mittelwert der negativen Motorleistung ("PnegMW"):
+Mittelwert 3 sec. vor Emission:
+Gezaehlt nur bei dynamischem betrieb:
+Berechnung der absoluten Dynamikkenngroessen:
+Addition der Amplituden von Pe (1. Pe-Wert
+wird fuer Amplitude auch als Maxima bzw. Minima gezaehlt)
+1. Sekunde:
+2. Sekunde bis Ende:
+Absolutwert:
+Geschw./Beschl.-abhängige Parameter nur wenn nicht Eng-Only
+Dynamikparameter als Differenz zu Dynamik in Kennfeld
+war früher hier. Jetzt eigene Methode weil bei KF-Erstellung ungültig
+Dynamikparameter als Differenz zu Dynamik in Kennfeld:
+Klasse zur Berchnung der Abgastemperaturen
+Felder für Größen aus PHEM Hauptprogramm
+Einlesen von tgas aus .npi (Projekt HERO) ****
+überschreibt tgas(jz) aus HtMass()
+Luz/Rexeis 16.05.2011
+Hauptroutine für EXS Modul
+Aufruf von Exs_Main(true) -> Developer Version ohne PHEM Hauptprogramm
+Felder für Größen aus exs-File
+Allgemeine Konstanten
+Stoffwerte Abgas:
+unempfindlich gg. lambda, siehe "Stoffwerte_vollständigeVerbrennung_neu.xls"
+cp_exh = 1054.0 '!Wärmekapazität Abgas [J/(kg*K)], wird nicht mehr verwendet weil jetzt direkt in Abh. von T und Lambda berechnet
+Anmerkung: Mittelwertwert aus Internetrecherche, in Literatur keine Angaben gefunden
+kalibriert anhand Test an Thermoelement unter Annahme von Schichtdicke 0.1mm
+Reaktionsenthalpien in J/mol
+Molmassen
+Kompatibilität mit alter EXS-Strkutur. Bevor neues Konzept für Em-Komponenten mit cMAP-Klasse, tMapComp, etc. eingeführt wurde
+Verweise auf Emissionen: Gegebene falls vorhanden sonst die berechneten
+Dimensionieren:
+Übergabe der relevanten Größen aus dem PHEM Hauptprogramm
+In DEV direkt aus der Datei *.phe eingelesen
+Lambda
+Wird weiter unten belegt weil mpexh vorhanden sein muss
+Anfang exs-File einlesen
+dummy = DatExs.ReadLine(0) 'alte dummy zeilen: auf exs-file kompatibilität achten
+Initialisieren der entsprechenden Anzahl an Modulen
+Lesen der Datenblöcke je Modul
+Fehlermelderung in TempMod(iMod).Read(DatExs)
+Ende exs-File einlesen
+Anfang csy-File einlesen
+Ende csy-File einlesen
+Berechnungsschleife: je Zeitschritt /je Modul: 1. Temperaturen, 2.Konvertierungen
+Sekündliche Ergebnisse werden in jeder Iteration ausgegeben
+Header *.ter schreiben
+Header der KonvMods schreiben
+startwerte für kühlersimulation:
+Wärmeeintrag ins Kühlsystem (Kennfeld)
+Kühlsystem Simulation
+Wärmeeinträge in Massen 1 und 2
+Wärmeübergang Masse 1 und 2 ins Kühlsystem
+Massentemperaturen für nächsten Zeitschritt
+Wärmeverlust nach außen
+Gesamtwärmeeintrag ins Kühlsystem (Ausgabewert der Kühlersimulation)
+Berechnung Abgasmassenstrom aus gegebenem Kraftstoffverbrauch und Lambda
+nur zulässig bei Motoren ohne AGR
+Einheit mpexh.......[kg/s]
+Einheit Vpexh.......[m3/s]
+Fall 1: Berechnung aus Verbrauch und lambda
+Fall 2: Berechnung aus durch Motor gepumpter Luftmenge
+Es fehlt: Methodik Massenstromberechnung für AGR Motoren BMW HERO Projekt
+Lambda berechnen falls nicht explizit gegeben
+Erstes Modul im Abgasstrang kann kein katalytisch aktives Element sein,
+daher sind die Emissionen immer gleich der Rohemissionen aus dem PHEM-Hauptprogramm
+Qp_reak berechnen: massenstrom * konvertierungsrate * reaktionsenthalpie / molmasse
+Schadstoffkomponente berechnen
+Konvertierung von NOx, CO, HC -> alter Wert * (1-Konvertierungsrate)
+Falls Modul kein Konv-Element hat ändert sich nix (Anmerkung: Modul 1 hat immer ModTyp0)
+Zeile in *.ter schreiben
+Ende Berechnungsschleife
+Alle sekündlichen Ergebnisfiles zumachen
+Abfrage Rücksprung im iterativen Berechnungsmodus für Starttemp -------------------
+Abbruchbedingung: Temperatur des Massenelementes "t_m" des in "iter_pos" spezifizierten Moduls
+am Beginn und am Ende des Zyklus innerhalb vorzugebender Bandbreite "iter_tol"
+Ausgabefile *.ter schreiben ----------------------------------------------------------
+Ende Ausgabefile *.ter schreiben -----------------------------------------------------
+Aufräumen
+Klasse für Temperaturmodule
+remarks>Art des Moduls wird mit ModTyp definiert</remarks>
+Einlesen der EXS-Datei
+param name="Datei">Dateihandler</param>
+Pfad für Konvertierungsraten bei Modulen mit Konvertierung
+Initialisieren der Module & Einlesen des Parameterfiles je nach Modul
+Wärmeübergangsfaktor
+Oberfläche außen
+Emissivität
+Faktoren für Wärmeübergänge nach außen
+Faktoren für Temperaturzusammenhang t_katsubstrat <-> t_kat_außen
+Abkühlkurve Masse
+normierte Querschnittsfläche
+durchschnittlicher Gegendruck
+Durchmesser Thermoelement
+Abkühlkurve Thermoelement
+Faktoren für Wärmeübergänge nach außen
+Check ob Tgas in Zyklus gegeben:
+Entnormierungen und Berechnung weiterer Größen
+Zusätzlich berechnete Parameter für Rohrmodule:
+Für Strömungsberechnungen in SI-Einheiten wird Querschnittsfäche in m2 umgerechnet
+Geometrische Größen berechnen
+Anmerkung: es wird davon ausgegangen, dass Temperatursensoren
+mittig ins Rohr stehen
+Anmerkung: Kugelkalotte an t-sensor spitze wird in der Betrachtung als
+umströmter Zylinder vernachlässigt
+Abkühlkurven einlesen
+Wärmeübergang Masse
+Festlegung Schwellwert für Genauigkeit der Temperaturberechnung (wird wegen iterativem Berechnungsmodus benötigt)
+Übergabe Eintrittstemperatur des Abgases aus oberhalb liegendem Modul bzw. dem Motor
+Berechnung der aktuellen Massentemperatur
+bei n_iter > 0 ist bereits der Endwert der letzten Iteration zugewiesen
+Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen:
+Wärmekapazität (vgl. Bogdanic)
+Schleife für Iteration Wärmeübergang
+Abbruchkriterium siehe unten
+Ermittlung der Temperatur des Abgases in der Mitte der Masse ("t_gas_mid") aus einem nichtlinearem (logaritmisch) Temperaturverlauf 
+Wärmeübergang Konvektion innen für alle Module (außer Rohr)
+für Rohrmodule:
+Nusselt Zahl: Dichte = 345/t_gas_mid, Term in Klammer: mu_Rohr / mu_Mitte
+Wärmeübergang (Konvektion innen), d_pipe in m: char. Länge
+Wärmekapazität (vgl. Bogdanic)
+Abbruchkriterium: Änderung der Abgas-Austrittstemperatur im Vergleich zum letzten Iterationsschritt kleiner Schwellwert
+Berechnung der Wärmeverluste der "thermischen Masse" nach außen
+Parameter werden aus EXS-Datei eingelesen:
+Daten für MuD:
+Oberfl_Kat = 0.12 'Oberfläche für Wärmeübergang in m^2
+Emiss = 0.5 'Emissivität
+Empirische Formel, passt für alle Rollentests recht gut
+Anm.: Versuch mit direkter Abhängigkeit von t_m -> funktioniert nicht gut
+Wärmeverlust durch Strahlung
+Wärmeverlust durch Konvektion
+Parameter werden aus EXS-Datei eingelesen:
+Daten für MuD:
+Modul Nr. 3:
+Oberfl_Mod3 = 0.169457508 'Oberfläche für Wärmeübergang in m^2
+Emiss = 0.5 'Emissivität
+Modul Nr. 4:
+Oberfl_Mod4 = 0.103596481 'Oberfläche für Wärmeübergang in m^2
+Emiss = 0.9 'Emissivität
+Wärmeverlust durch Strahlung = Sichtfaktor * Emissivität * St.-Boltzm.-Konst * Oberfläche * (T_Rohr^4 - T_Umgebung^4)
+Wärmeverlust durch Konvektion = Wärmeübergangskoeffizient * Oberfläche * (T_Rohr - T_Umgebung)
+Standard: Crad konstant, keine Verluste durch Konvektion
+Gesamtwärmeverlust
+Wärmeübergang Thermoelement
+Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen:
+Formelwerk Berechnung Wärmeübergang am umströmten Zylinder
+Vereinfachte Lösung der Wärmeflussgleichung für den t-sensor
+entspricht einer Diffgl. für ein PT1 glied
+Zeitdiskrete Lösung der PT1-Diffgl
+Extrapolation für LastTemp > TempAr(0)
+Extrapolation für LastTemp < TempAr(Adim)
+lbInt:
+Einen Zeitschritt vor ( = 1 Sekunde)
+Klasse initialisiert als Unterelement von TempMod
+Prefix "c" bedeutet: Zykluswert verwendet für Kennlinien-Korrektur
+Index "cc" bedeutet: Wert aus Kennlinie (-> "c" - "cc" ist die Differenz, mit der Korrigiert wird)
+Filename sekündliches Ausgabefile spezifizieren
+Abbruch wenn kein NOx gegeben
+t-SCR (°C), deNOx(1-NOx-Auspuff/NOx-Roh), -t-upstream(°C), NOx-Roh (g/h)/kW_Nennleistg, Summe NOx ueber 60Sek vorher g/h)/kW_Nennleistg, Raumgeschwindigkeit (1/h)
+Programm zur Simulation SCR-Flottendurchschnitt
+Anmerkung: deNOx-Werte kleiner als Null sind möglich:
+dies entspricht höherem Roh-Nox-Niveau als im Basiskennfeld
+1.) Berechnung der sekündlichen Werte für Eingangsgrößen SCR-Modell
+a.) t_SCR: zusammengewichten der von t_upstream und t_downstream
+SCR-Model-intern werden dabei Temperaturen zwischen 50°C und 500°C begrenzt
+Temperaturmodelwerte (zB bei Kaltstart) werden nicht überschrieben
+b.) t_up, NOxraw, SV: 20s gleitender Mittelwert in die Vergangenheit
+Formel gilt auch für die ersten 20 Sekunden
+c.) NOx60s: Summe über letzten 60s der spezifischen NOx-Rohemissionen
+Formel gilt auch für die ersten 60 Sekunden
+Für Sekunde 1 bis 59 muss summenwert hochgerechnet werden
+Berechnung deNOxmin aus Kennlinien-Wert bei 50°C
+2.) Berechnung deNOx
+a.) deNOx aus Kennlinie:
+b.) Falls Korrekturkriterien erfüllt sind: deNOx-Korrektur gegenüber Kennlinie
+t_up aus Kennlinie:
+NOx_raw aus Kennlinie:
+Summe NOxraw in den letzten 60 Sekunden aus Kennlinie:
+Raumgeschwindigkeit aus Kennlinie:
+Schreiben der Ergebnisse auf die standardisierten Variablen eEmKomp (iSchad, jz) und Qp_reak(jz)
+SCR Modell
+Klasse initialisiert als Unterelement von TempMod
+Prefix "c" bedeutet: Zykluswert verwendet für Kennlinien-Korrektur
+Index "cc" bedeutet: Wert aus Kennlinie (-> "c" - "cc" ist die Differenz, mit der Korrigiert wird)
+Filename sekündliches Ausgabefile spezifizieren
+Abbruch wenn kein NOx gegeben
+t-SCR (°C), deNOx(1-NOx-Auspuff/NOx-Roh), -t-upstream(°C), NOx-Roh (g/h)/kW_Nennleistg, Summe NOx ueber 60Sek vorher g/h)/kW_Nennleistg, Raumgeschwindigkeit (1/h)
+Programm zur Simulation SCR-Flottendurchschnitt
+Anmerkung: deNOx-Werte kleiner als Null sind möglich:
+dies entspricht höherem Roh-Nox-Niveau als im Basiskennfeld
+1.) Berechnung der sekündlichen Werte für Eingangsgrößen SCR-Modell
+a.) t_SCR: zusammengewichten der von t_upstream und t_downstream
+SCR-Model-intern werden dabei Temperaturen zwischen 50°C und 500°C begrenzt
+Temperaturmodelwerte (zB bei Kaltstart) werden nicht überschrieben
+b.) t_up, NOxraw, SV: 20s gleitender Mittelwert in die Vergangenheit
+Formel gilt auch für die ersten 20 Sekunden
+c.) NOx60s: Summe über letzten 60s der spezifischen NOx-Rohemissionen
+Formel gilt auch für die ersten 60 Sekunden
+Für Sekunde 1 bis 59 muss summenwert hochgerechnet werden
+Berechnung deNOxmin aus Kennlinien-Wert bei 50°C
+2.) Berechnung deNOx
+a.) deNOx aus Kennlinie:
+b.) Falls Korrekturkriterien erfüllt sind: deNOx-Korrektur gegenüber Kennlinie
+t_up aus Kennlinie:
+NOx_raw aus Kennlinie:
+Summe NOxraw in den letzten 60 Sekunden aus Kennlinie:
+Raumgeschwindigkeit aus Kennlinie:
+Schreiben der Ergebnisse auf die standardisierten Variablen eEmKomp (iSchad, jz) und Qp_reak(jz)
+KAT-Modell
+Klasse initialisiert als Unterelement von TempMod
+Kennfelddaten
+Erstellen eines neuen KAT-Moduls
+Interpolationsfunktion
+param name="x">Massenstrom</param>
+param name="y">Temperatur vor KAT</param>
+param name="MapID">MapID der entsprechenden Abgaskomponente</param>
+returns>interpolierten Wert für x und y aus Kennfeld</returns>
+remarks>Aus Massenstrom-Temperatur Kennfeld wird Konvertierungsrate für entsprechende Abgaskomponente berechnet</remarks>
+Einlesen der Kennfelder für Konvertierungsraten
+param name="Name">Dateiname</param>
+Units (wird nicht ausgewertet)
+Werte
+KonvRaten Null setzen wenn Komponente nicht gegeben
+Triangulieren
+Dic. für modale Konvrate definieren
+Berechnung der Konvertierungsrate aus Kennfeld
+param name="jz">Zeit</param>
+remarks>Für die Berechnung wird die Temperatur des Thermoelements am Kateingang (entspricht Modulnummer i-1) verwendet!!!</remarks>
+Konvertierungsrate aus Kennfeld berechnen
+Header für Ausgabedatei
+Daten für Ausgabedatei
+param name="jz">Zeit</param>
+Interface zur Konverter-Klasse cScrMod, cDocMod , usw...
+Unterprogramm zu PHEM zur linearen INterpolation aus einem Polygonzug (z.B. in Vissimzs.for aufgerufen)
+uebergeben wid "such" als X-Wert, der dann als berechneter Y-Wert wieder zurueck gegeben wird
+Zu Belegen sind vorher:
+Xis(j) und Yis(j)
+Zu uebergeben der gesuchte Wert (such) und die Anzahl an vorhandenen Polyginpunkten (izpl)
+Suche der naechstgelegenen Drehzahlpunkte aus eingegebener Vollastkurve:
+Abstand zu Eingabepunkten und Suche des Punktes mit geringstem Abstand:
+Festlegung des zweiten INterpolationspunktes (nur interpolieren, nicht extrapolieren)
+Extrapolation nach oben
+Extrapolation nach unten
+Sortieren der 2 Werte nach aufsteigendem n:
+Interpolation der zugehoerigen Maximalleistung (P/Pnenn)
+
+Dieser Code wurde von einem Tool generiert.
+Laufzeitversion:4.0.30319.269
+Änderungen an dieser Datei können falsches Verhalten verursachen und gehen verloren, wenn
+der Code erneut generiert wird.
+HINWEIS: Diese Datei wird automatisch generiert. Ändern Sie sie nicht direkt. Zum Ändern
+oder bei in dieser Datei auftretenden Buildfehlern wechseln Sie zum Projekt-Designer.
+Wechseln Sie dazu zu den Projekteigenschaften, oder doppelklicken Sie auf den Knoten "Mein Projekt" im
+Projektmappen-Explorer). Nehmen Sie auf der Registerkarte "Anwendung" entsprechende Änderungen vor.
+
+Allgemeine Informationen über eine Assembly werden über die folgenden 
+Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
+die mit einer Assembly verknüpft sind.
+Die Werte der Assemblyattribute überprüfen
+Die folgende GUID bestimmt die ID der Typbibliothek, wenn dieses Projekt für COM verfügbar gemacht wird
+Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
+Hauptversion
+Nebenversion 
+Buildnummer
+Revision
+Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
+übernehmen, indem Sie "*" eingeben:
+
+Dieser Code wurde von einem Tool generiert.
+Laufzeitversion:4.0.30319.269
+Änderungen an dieser Datei können falsches Verhalten verursachen und gehen verloren, wenn
+der Code erneut generiert wird.
+Diese Klasse wurde von der StronglyTypedResourceBuilder automatisch generiert
+Klasse über ein Tool wie ResGen oder Visual Studio automatisch generiert.
+Um einen Member hinzuzufügen oder zu entfernen, bearbeiten Sie die .ResX-Datei und führen dann ResGen
+mit der /str-Option erneut aus, oder Sie erstellen Ihr VS-Projekt neu.
+Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
+Gibt die zwischengespeicherte ResourceManager-Instanz zurück, die von dieser Klasse verwendet wird.
+Überschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads für alle
+Ressourcenzuordnungen, die diese stark typisierte Ressourcenklasse verwenden.
+
+Dieser Code wurde von einem Tool generiert.
+Laufzeitversion:4.0.30319.269
+Änderungen an dieser Datei können falsches Verhalten verursachen und gehen verloren, wenn
+der Code erneut generiert wird.

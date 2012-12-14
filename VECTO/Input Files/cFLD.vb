@@ -64,13 +64,13 @@ Public Class cFLD
         'Reset
         ResetMe()
 
-        'Abbruch wenn's Datei nicht gibt
+        'Stop if there's no file
         If sFilePath = "" OrElse Not IO.File.Exists(sFilePath) Then
             WorkerMsg(tMsgID.Err, "FLD file '" & sFilePath & "' not found!", MsgSrc)
             Return False
         End If
 
-        'Datei öffnen
+        'Open file
         file = New cFile_V3
         If Not file.OpenRead(sFilePath) Then
             WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
@@ -78,7 +78,7 @@ Public Class cFLD
             Return False
         End If
 
-        'Listen initialisieren
+        'Initialize Lists
         LPfull = New System.Collections.Generic.List(Of Single)
         LPdrag = New System.Collections.Generic.List(Of Single)
         Lnn = New System.Collections.Generic.List(Of Single)
@@ -88,28 +88,28 @@ Public Class cFLD
         sEmDrag = New Dictionary(Of String, Integer)
 
         ''***
-        ''*** Erste Zeile: Version
+        ''*** First line: Version
         'line = file.ReadLine
         'txt = Trim(UCase(line(0)))
         'If Microsoft.VisualBasic.Left(txt, 1) = "V" Then
         '    ' "V" entfernen => Zahl bleibt übrig
         '    txt = txt.Replace("V", "")
         '    If Not IsNumeric(txt) Then
-        '        'Falls Version ungültig: Abbruch
+        '        'If invalid version: Abort
         '        WorkerMsg(tMsgID.Err, "File Version invalid!", MsgSrc)
         '        GoTo lbEr
         '    Else
-        '        'Version festgelegt
+        '        'Set Version
         '        FileVersion = CInt(txt)
         '    End If
 
         'Else
-        '    'Falls keine Versionsangabe: Altes Format
+        '    'If no version information: Old format
         '    file.Close()
         '    Return ReadOldFormat()
         'End If
 
-        ''Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+        ''Version Check: Abort if input file format is newer than PHEM-version
         'If FileVersion > FormatVersion Then
         '    WorkerMsg(tMsgID.Err, "File Version not supported!", MsgSrc)
         '    GoTo lbEr
@@ -118,13 +118,13 @@ Public Class cFLD
 
 
         '***
-        '*** Zweite Zeile: Namen/Identifizierung der Komponenten (Schlepp-Emissionen f. KF-Erstellung)
+        '*** Second Line: Name/Identification of components (Drag-Emissions  create-KF)
         'line = file.ReadLine
 
-        ''Spaltenanzahl checken
+        ''Column count check,
         's1 = UBound(line)
 
-        ''Abbruch falls weniger als 3 Spalten
+        ''Abort if less than 3 columns
         'If s1 < 3 Then
         '    WorkerMsg(tMsgID.Err, "Format invalid!", MsgSrc)
         '    GoTo lbEr
@@ -165,16 +165,16 @@ Public Class cFLD
         '    Next
         'End If
 
-        'VECTO: Keine Header/Unit-Spalte. Immer PT1!
+        'VECTO: No Header/Unit column. Always PT1!
         s1 = 3
         sPT1 = 3
         bEmDef = False
 
         '***
-        '*** Dritte Zeile: Normierung/Einheit
+        '*** Third Line: Normalized/Measured
         'line = file.ReadLine
 
-        ''Abbruch falls weniger Spalten als in zweiter Zeile
+        ''Abort when fewer Columns than in the second Line
         'If UBound(line) < s1 Then
         '    WorkerMsg(tMsgID.Err, "Format invalid!", MsgSrc)
         '    GoTo lbEr
@@ -186,7 +186,7 @@ Public Class cFLD
         'If Not nNormed Then
         '    Select Case Trim(UCase(line(0)))
         '        Case "[U/MIN]", "RPM", "[1/MIN]", "[MIN^-1]"
-        '            'Alles okay
+        '            'Everything is okay
         '        Case Else
         '            WorkerMsg(tMsgID.Err, "Engine Speed Unit '" & line(0) & "' unknown! '[U/min]' expected.", MsgSrc)
         '    End Select
@@ -228,17 +228,17 @@ Public Class cFLD
 
         'End If
 
-        ''Zusatzkomponenten
+        ''Additional Components
         'If bEmDef Then
         '    For Each EmKV In sEmDrag
 
         '        txt = line(EmKV.Value)
 
-        '        'Klammern entfernen
+        '        'Remove brackets
         '        txt = txt.Replace("[", "")
         '        txt = txt.Replace("]", "")
 
-        '        'Normierung und Unit festlegen
+        '        'Set Scaling and Unit
         '        If txt.Contains("/") Then
         '            Select Case UCase(Right(txt, txt.Length - txt.IndexOf("/") - 1))
         '                Case "H"
@@ -257,12 +257,12 @@ Public Class cFLD
         'End If
 
 
-        'Ab Zeile 4: Werte
+        'From Line 4: Values
         Try
 
             Do While Not file.EndOfFile
 
-                'Zeile einlesen
+                'Read Line
                 line = file.ReadLine
 
                 'VECTO: M => Pe
@@ -273,7 +273,7 @@ Public Class cFLD
                 LPdrag.Add(nMtoPe(nU, CDbl(line(2))))
                 If PtargetDef Then LPtarget.Add(CSng(line(sTarget)))
 
-                'Falls PT1 nicht vorgegeben wird Defaultwert verwendet (siehe oben)
+                'If PT1 not given, use default value (see above)
                 If sPT1 > -1 Then
 
                     PT1 = CSng(line(sPT1))
@@ -293,7 +293,7 @@ Public Class cFLD
                     Next
                 End If
 
-                'Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+                'Line-counter up (was reset in ResetMe)
                 iDim += 1
 
             Loop
@@ -306,13 +306,13 @@ Public Class cFLD
         End Try
 
 
-        'Datei schließen
+        'Close file
         file.Close()
 
         Return True
 
 
-        'ERROR-Label für sauberen Abbruch
+        'ERROR-label for clean Abort
 lbEr:
         file.Close()
         file = Nothing
@@ -325,7 +325,7 @@ lbEr:
         Dim File As cFile_V3
         Dim line As String()
 
-        'Datei öffnen
+        'Open file
         File = New cFile_V3
         If Not File.OpenRead(sFilePath, ",", True, True) Then
             File = Nothing
@@ -345,12 +345,12 @@ lbEr:
 
             LPT1.Add(0)
 
-            'Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+            'Line counter up (was reset in ResetMe)
             iDim += 1
 
         Loop
 
-        'Datei schließen
+        'Close file
         File.Close()
 
         Return True
@@ -368,35 +368,35 @@ lbEr:
         nleerl = VEH.nLeerl
         nnenn = VEH.nNenn
 
-        'Drehzahl normieren
+        'Normalized Revolutions
         If Not nNormed Then
             For i = 0 To iDim
                 Lnn(i) = (Lnn(i) - nleerl) / (nnenn - nleerl)
             Next
         End If
 
-        'Leistung normieren
+        'Normalized Power
         If Not PfullNormed Then
             For i = 0 To iDim
                 LPfull(i) /= Pnenn
             Next
         End If
 
-        'Leistung normieren
+        'Normalized Power
         If Not PdragNormed Then
             For i = 0 To iDim
                 LPdrag(i) /= Pnenn
             Next
         End If
 
-        'Pe-Target normieren
+        'Normalized Pe-Target
         If PtargetDef AndAlso Not PtargetNormed Then
             For i = 0 To iDim
                 LPtarget(i) /= Pnenn
             Next
         End If
 
-        'Em ent-normieren
+        'Em ent-normalize
         If bEmDef Then
             For Each EmKV In EmDragNormed
                 If EmKV.Value Then
@@ -412,7 +412,7 @@ lbEr:
     Public Function Pdrag(ByVal nnorm As Single) As Single
         Dim i As Int32
 
-        'Extrapolation für x < x(1)
+        'Extrapolation for x < x(1)
         If Lnn(0) >= nnorm Then
             If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
             i = 1
@@ -424,7 +424,7 @@ lbEr:
             i += 1
         Loop
 
-        'Extrapolation für x > x(imax)
+        'Extrapolation for x > x(imax)
         If Lnn(i) < nnorm Then
             MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
         End If
@@ -441,7 +441,7 @@ lbInt:
         Dim PfullStat As Single
         Dim PT1 As Single
 
-        'Extrapolation für x < x(1)
+        'Extrapolation for x < x(1)
         If Lnn(0) >= nnorm Then
             If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
             i = 1
@@ -453,7 +453,7 @@ lbInt:
             i += 1
         Loop
 
-        'Extrapolation für x > x(imax)
+        'Extrapolation for x > x(imax)
         If Lnn(i) < nnorm Then
             MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
         End If
@@ -463,7 +463,7 @@ lbInt:
         PfullStat = (nnorm - Lnn(i - 1)) * (LPfull(i) - LPfull(i - 1)) / (Lnn(i) - Lnn(i - 1)) + LPfull(i - 1)
         PT1 = (nnorm - Lnn(i - 1)) * (LPT1(i) - LPT1(i - 1)) / (Lnn(i) - Lnn(i - 1)) + LPT1(i - 1)
 
-        'Dynamische Volllast
+        'Dynamic Full-load
         Return Math.Min(VEH.Pnenn * (1 / (PT1 + 1)) * (PfullStat + PT1 * LastPenorm), PfullStat * VEH.Pnenn)
 
     End Function
@@ -472,7 +472,7 @@ lbInt:
     Public Function Pfull(ByVal nnorm As Single) As Single
         Dim i As Int32
 
-        'Extrapolation für x < x(1)
+        'Extrapolation for x < x(1)
         If Lnn(0) >= nnorm Then
             If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
             i = 1
@@ -484,7 +484,7 @@ lbInt:
             i += 1
         Loop
 
-        'Extrapolation für x > x(imax)
+        'Extrapolation for x > x(imax)
         If Lnn(i) < nnorm Then
             MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
         End If
@@ -497,7 +497,7 @@ lbInt:
     Public Function Ptarget(ByVal nnorm As Single) As Single
         Dim i As Int32
 
-        'Extrapolation für x < x(1)
+        'Extrapolation for x < x(1)
         If Lnn(0) >= nnorm Then
             If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
             i = 1
@@ -509,7 +509,7 @@ lbInt:
             i += 1
         Loop
 
-        'Extrapolation für x > x(imax)
+        'Extrapolation for x > x(imax)
         If Lnn(i) < nnorm Then
             MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
         End If
@@ -527,7 +527,7 @@ lbInt:
 
         EmL = EmDragD(EmComp)
 
-        'Extrapolation für x < x(1)
+        'Extrapolation for x <x(1)
         If Lnn(0) >= nnorm Then
             If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
             i = 1
@@ -539,7 +539,7 @@ lbInt:
             i += 1
         Loop
 
-        'Extrapolation für x > x(imax)
+        'Extrapolation for x > x(imax)
         If Lnn(i) < nnorm Then
             MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
         End If

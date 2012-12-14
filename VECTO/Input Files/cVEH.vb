@@ -218,7 +218,7 @@ Public Class cVEH
         'If ((sipspar + sipmodell) > 1.0) Then sipmodell = 1.0 - sipspar
 
         'Update 07.08.2012 (CO2 Demo)
-        'Einzelne Nebenverbraucher
+        'Einzelne Nebenverbraucher |@@| Individual next consumer
         'Do While Not file.EndOfFile
 
         '    line = file.ReadLine
@@ -246,7 +246,7 @@ Public Class cVEH
 
         If file.EndOfFile Then GoTo lbError
 
-        'Zugkraftunterbrechung - Update 09.08.2012 (CO2 Demo)
+        'Zugkraftunterbrechung - Update 09.08.2012 (CO2 Demo) |@@| Interruption of Traction - Update 09/08/2012 (CO2 demo)
         'Try
         '    TracIntrSi = CSng(file.ReadLine(0))
         'Catch ex As Exception
@@ -257,7 +257,7 @@ Public Class cVEH
 
         If file.EndOfFile Then GoTo lbError
 
-        'Cd Modus / Input Datei - Update 14.08.2012 (CO2 Demo)
+        'Cd mode / Input File - Update 08/14/2012 (CO2 demo)
         Try
             line = file.ReadLine
             CdMode = CType(CInt(line(0)), tCdMode)
@@ -313,7 +313,7 @@ Public Class cVEH
         End Try
 
 
-        '************************ Ende Einlesen ****************************
+        '************************ End reading ****************************
 
         file.Close()
         Return True
@@ -398,7 +398,7 @@ lbError:
         'Next
         'file.WriteLine(sKey.Break)
 
-        'Zugkraftunterbrechung (Update 09.08.2012 - CO2 Demo)
+        'Interruption of traction (Update 09.08.2012 - CO2 demo)
         'file.WriteLine("c Traction Interruption")
         'file.WriteLine(CStr(TracIntrSi))
 
@@ -448,7 +448,7 @@ lbError:
 
         MsgSrc = "VEH/Init"
 
-        'Fehlermeldung innerhalb AuxInit
+        'Error-message within AuxInit
         If Not AuxInit() Then Return False
 
         'Cd-Init
@@ -528,13 +528,13 @@ lbError:
                     Return False
                 End If
 
-                'Getriebe-Nenndrehzahl
+                'Transmission Nominal-Revolutions
                 'n_norm = CSng(file.ReadLine(0))
 
-                'Getriebe-Nennleistung
+                'Transmission Nominal-Power
                 'Pe_norm = CSng(file.ReadLine(0))
 
-                'Wenn nix angegeben: Motor-Nennleistung und Nenndrehzahl zur Normierung
+                'If nothing specified: Engine's Nominal-power and Nominal-Revolutions from Normalized ones
                 'If n_norm < 0.0001 Then
                 '    n_norm = sinNenn
                 '    Pe_norm = siPnenn
@@ -548,9 +548,9 @@ lbError:
                     l += 1
                     line = file.ReadLine
                     Try
-                        'PHEM:    n, PeIn, PeOut => x=n, y=PeOut, z=PeIn
-                        'PHEM: GBmap0.AddPoints(CDbl(line(0)) * n_norm, CDbl(line(2)) * Pe_norm, CDbl(line(1)) * Pe_norm)
-                        'VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn
+                        'PHEM:    n, PeIn, PeOut => x=n, y=PeOut, z=PeIn |@@| PHEM:    n, PeIn, PeOut => x=n, y=PeOut, z=PeIn
+                        'PHEM: GBmap0.AddPoints(CDbl(line(0)) * n_norm, CDbl(line(2)) * Pe_norm, CDbl(line(1)) * Pe_norm) |@@| PHEM: GBmap0.AddPoints(CDbl(line(0)) * n_norm, CDbl(line(2)) * Pe_norm, CDbl(line(1)) * Pe_norm)
+                        'VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn |@@| VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn
                         nU = CDbl(line(0))
                         M_in = CDbl(line(1))
                         M_loss = CDbl(line(2))
@@ -616,14 +616,14 @@ lbError:
             GBmap = MyGBmaps(Gear)
 
             Try
-                'Interpolieren mit Original Werten
+                'Interpolate with Original Values
                 PeIn = GBmap.Intpol(nU, PeOut)
 
             Catch ex As Exception
 
-                'Falls Fehler: Extrapolation versuchen
+                'If error: try extrapolation
 
-                'Suche nach nächstgelegenen Kennfeldpunkt
+                'Search for the nearest Map point
                 AbMin = ((GBmap.ptList(0).X - nU) ^ 2 + (GBmap.ptList(0).Y - PeOut) ^ 2) ^ 0.5
                 iMin = 0
                 For i = 1 To GBmap.ptDim
@@ -637,18 +637,18 @@ lbError:
                 PeOutX = GBmap.ptList(iMin).Y
                 PeIn = GBmap.ptList(iMin).Z
 
-                'Wirkungsgrad
+                'Efficiency
                 If PeOutX > 0 Then
                     If PeIn > 0 Then
 
-                        'Antrieb => Antrieb
+                        'Drivetrain=> Drivetrain
                         If PeIn = 0 Then Return 0
 
                         WG = PeOutX / PeIn
 
                     Else
 
-                        'Schlepp => Antrieb: ERROR!
+                        'Drag => Drivetrain: ERROR!
                         WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & Gear & ", nU= " & nU.ToString("0.00") & ", PeIn=" & PeIn.ToString("0.0") & ", PeOut=" & PeOutX.ToString("0.0"), MsgSrc)
                         WorkerAbort()
                         Return 0
@@ -658,14 +658,14 @@ lbError:
                 Else
                     If PeIn > 0 Then
 
-                        'Antrieb => Schlepp: ERROR!
+                        'Drivetrain => Drag: ERROR!
                         WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & Gear & ", nU= " & nU.ToString("0.00") & ", PeIn=" & PeIn.ToString("0.00") & ", PeOut=" & PeOutX.ToString("0.00"), MsgSrc)
                         WorkerAbort()
                         Return 0
 
                     Else
 
-                        'Schlepp => Schlepp
+                        'Drag => Drag
                         If PeOutX = 0 Then Return 0
 
                         WG = PeIn / PeOutX
@@ -674,7 +674,7 @@ lbError:
                 End If
 
 
-                'Mit Wirkungsgrad PeIn für original PeOut ausrechnen
+                'Calculate efficiency with PeIn for original PeOut
                 PeIn = PeOut / WG
 
                 MODdata.ModErrors.TrLossMapExtr = "Gear= " & Gear & ", nU= " & nU.ToString("0.00") & " [U/min], MeOut=" & PToM(nU, PeOut).ToString("0.00") & " [Nm]"
@@ -717,14 +717,14 @@ lbError:
             GBmap = MyGBmaps(Gear)
 
             Try
-                'Interpolieren mit Original Werten
+                'Interpolate with original values
                 PeOut = GBmap.IntpolXZ(nU, PeIn)
 
             Catch ex As Exception
 
-                'Falls Fehler: Extrapolation versuchen
+                'If error: try extrapolation
 
-                'Suche nach nächstgelegenen Kennfeldpunkt
+                'Search for the nearest Map-point
                 AbMin = ((GBmap.ptList(0).X - nU) ^ 2 + (GBmap.ptList(0).Z - PeIn) ^ 2) ^ 0.5
                 iMin = 0
                 For i = 1 To GBmap.ptDim
@@ -738,16 +738,16 @@ lbError:
                 PeInX = GBmap.ptList(iMin).Z
                 PeOut = GBmap.ptList(iMin).Y
 
-                'Wirkungsgrad
+                'Efficiency
                 If PeOut > 0 Then
                     If PeInX > 0 Then
 
-                        'Antrieb => Antrieb
+                        'Drivetrain => Drivetrain
                         WG = PeOut / PeInX
 
                     Else
 
-                        'Schlepp => Antrieb: ERROR!
+                        'Drag => Drivetrain: ERROR!
                         WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & Gear & ", nU= " & nU.ToString("0.00") & ", PeIn=" & PeInX.ToString("0.00") & ", PeOut=" & PeOut.ToString("0.00"), MsgSrc)
                         WorkerAbort()
                         Return 0
@@ -757,21 +757,21 @@ lbError:
                 Else
                     If PeInX > 0 Then
 
-                        'Antrieb => Schlepp: ERROR!
+                        'Drivetrain => Drag: ERROR!
                         WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & Gear & ", nU= " & nU.ToString("0.00") & ", PeIn=" & PeInX.ToString("0.00") & ", PeOut=" & PeOut.ToString("0.00"), MsgSrc)
                         WorkerAbort()
                         Return 0
 
                     Else
 
-                        'Schlepp => Schlepp
+                        'Drag => Drag
                         WG = PeInX / PeOut
 
 
                     End If
                 End If
 
-                'Mit Wirkungsgrad PeIn für original PeOut ausrechnen
+                'Calculate efficiency with PeIn for original PeOut
                 PeOut = PeIn * WG
 
                 MODdata.ModErrors.TrLossMapExtr = "Gear= " & Gear & ", nU= " & nU.ToString("0.00") & " [U/min], MeIn=" & PToM(nU, PeIn).ToString("0.00") & " [Nm] (fwd)"
@@ -835,7 +835,7 @@ lbError:
             Aux0.Filepath = AuxPathKV.Value.Path.FullPath
 
             If Not Aux0.Readfile Then
-                'Meldung in Readfile()
+                'Notificationin ReadFile()
                 Return False
             End If
 
@@ -931,7 +931,7 @@ lbAuxError:
 
         MsgSrc = "VEH/CdInit"
 
-        'Falls Vair-Vorgabe in DRI aber nicht CdType= CdOfBeta dann Warnung
+        'Warn If Vair specified in DRI but CdType != CdOfBeta
         If DRI.VairVorg Xor CdMode = tCdMode.CdOfBeta Then
 
             If DRI.VairVorg Then
@@ -943,10 +943,10 @@ lbAuxError:
 
         End If
 
-        'Falls konstanter Cd-Wert dann is nix zu tun
+        'If Cd-value is constant then do nothing
         If CdMode = tCdMode.ConstCd0 Then Return True
 
-        'Inputdatei einlesen
+        'Read Inputfile
         file = New cFile_V3
 
         If Not file.OpenRead(CdFile.FullPath) Then
@@ -993,7 +993,7 @@ lbAuxError:
     Private Function CdIntpol(ByVal x As Single) As Single
         Dim i As Int32
 
-        'Extrapolation für x < x(1)
+        'Extrapolation for x < x(1)
         If CdX(0) >= x Then
             If CdX(0) > x Then
                 If CdMode = tCdMode.CdOfBeta Then
@@ -1011,7 +1011,7 @@ lbAuxError:
             i += 1
         Loop
 
-        'Extrapolation für x > x(imax)
+        'Extrapolation for x > x(imax)
         If CdX(i) < x Then
             If CdMode = tCdMode.CdOfBeta Then
                 MODdata.ModErrors.CdExtrapol = "β= " & x
@@ -1039,7 +1039,7 @@ lbInt:
 
         If RtType = tRtType.None Then Return True
 
-        'Inputdatei einlesen
+        'Read Inputfile
         file = New cFile_V3
         If Not file.OpenRead(RtFile.FullPath) Then
             WorkerMsg(tMsgID.Err, "Failed to read Retarder input file! (" & RtFile.FullPath & ")", MsgSrc)
@@ -1101,7 +1101,7 @@ lbInt:
     Private Function RtIntpol(ByVal nU As Single) As Single
         Dim i As Int32
 
-        'Extrapolation für x < x(1)
+        'Extrapolation for x < x(1)
         If RtnU(0) >= nU Then
             If RtnU(0) > nU Then MODdata.ModErrors.RtExtrapol = "n= " & nU & " [U/min]"
             i = 1
@@ -1113,7 +1113,7 @@ lbInt:
             i += 1
         Loop
 
-        'Extrapolation für x > x(imax)
+        'Extrapolation for x> x(imax)
         If RtnU(i) < nU Then MODdata.ModErrors.RtExtrapol = "n= " & nU & " [U/min]"
 
 lbInt:

@@ -37,21 +37,21 @@ Public Class cEMO
 
         EtaKF = New cCustomMap
 
-        'Abbruch wenn's Datei nicht gibt
+        'Abort if there's no file
         If sFilePath = "" Then Return False
         If Not IO.File.Exists(sFilePath) Then Return False
 
-        'Datei öffnen
+        'Open file
         file = New cFile_V3
         If Not file.OpenRead(sFilePath) Then
             file = Nothing
             Return False
         End If
 
-        'Kennfeld-Konfig
+        'Map-Config
         EtaKF.Init()
 
-        'FLD und MAP einlesen
+        'Read FLD and MAP
         FLDdone = False
         Do While Not file.EndOfFile
             line = file.ReadLine
@@ -73,18 +73,18 @@ Public Class cEMO
 
         file.Close()
 
-        'Kennfeld normieren
+        'Normalize Map
         EtaKF.Norm()
 
         Return True
 
     End Function
 
-    'Übergibt aktuell mögliche Antriebsleistung für geg. Drehzahl
+    'Returns the maximum available Drivetrain-power for given  Revolutions
     Public Function PeMax(ByVal nU As Single) As Single
         Dim i As Int32
 
-        'Extrapolation für x < x(1)
+        'Extrapolation for x < x(1)
         If lnU(0) >= nU Then
             If lnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "EMO: nU= " & nU
             i = 1
@@ -96,7 +96,7 @@ Public Class cEMO
             i += 1
         Loop
 
-        'Extrapolation für x > x(imax)
+        'Extrapolation for x > x(imax)
         If lnU(i) < nU Then
             MODdata.ModErrors.FLDextrapol = "EMO: nU= " & nU
         End If
@@ -111,11 +111,11 @@ lbInt:
 
     End Function
 
-    'Übergibt aktuell mögliche Generatorleistung für geg. Drehzahl
+    'Returns the maximum available Generator-power for the given  Revolutions
     Public Function PeMin(ByVal nU As Single) As Single
         Dim i As Int32
 
-        'Extrapolation für x < x(1)
+        'Extrapolation for x < x(1)
         If lnU(0) >= nU Then
             If lnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "EMO: nU= " & nU
             i = 1
@@ -127,7 +127,7 @@ lbInt:
             i += 1
         Loop
 
-        'Extrapolation für x > x(imax)
+        'Extrapolation for x > x(imax)
         If lnU(i) < nU Then
             MODdata.ModErrors.FLDextrapol = "EMO: nU= " & nU
         End If

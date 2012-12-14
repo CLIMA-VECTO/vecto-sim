@@ -2,8 +2,8 @@
 
     'C
     'C
-    'C     Unterprogramm zur Korrektur der verbrauchswerte nach Motorgroesse (fuer HBEFA-Berechnungen, da dort
-    'C     alle LKW-Groessen mit gleichem *.mep gerechnet werden
+    'C     Subroutine to correct the Consumption-values from Engine-size (HBEFA-calculations because
+    'C     all HDV(LKW)-sizes are calculated from the same *. mep
     'C
     'C
     Sub FcCorr()
@@ -29,14 +29,14 @@
         L = MODdata.Em.EmDefComp(tMapComp.FC).FinalVals
 
         'C
-        'c  Korrektur des Kraftstoffverbrauches
-        'c  nur für Handbuchrechnungen und LKW
+        'c  Correction of the Fuel-consumption
+        'c  only for manual calculations and HDV(LKW)
         If (GEN.eklasse = 0) Then
-            'c        für Euro0 und früher werden größenabhängig 3 verschiedene KF verwendet
-            'c        daher hier keine Größenkorrektur
+            'c        for Euro0 and earlier, 3 different KF used depending on the size
+            'c        therefore no Size-correction here
             corr = 1
         ElseIf (GEN.eklasse = 1) Then
-            'c         Korrekturfunktion für Euro1 und Euro 2 1:1 von Stand ARTEMIS übernommen
+            'c         Correction-function for EUR1 and EUR 2 adopted 1:1 from ARTEMIS standard
             fc_pnen = 230.55 - 0.0798 * Pnenn
             fc_pnen = Math.Max(fc_pnen, 206.2)
             fc_ave = 213.9
@@ -47,13 +47,13 @@
             fc_ave = 206.8
             corr = (fc_pnen / fc_ave)
         ElseIf (GEN.eklasse = 3) Then
-            'c        Korrekturfunktion Euro 3 gg. ARTEMIS geringfügig adaptiert (siehe FcCorr_Eu3ff.xls)
+            'c        Korrekturfunktion Euro 3 gg. ARTEMIS geringfügig adaptiert (siehe FcCorr_Eu3ff.xls) |@@| Correction-function for Euro 3 like  ARTEMIS slightly adapted (see FcCorr_Eu3ff.xls)
             fc_pnen = 239.4 - (0.08465 * (Math.Min(Pnenn, 345)))
             fc_ave = 239.4 - (0.08465 * 273.5)
             corr = (fc_pnen / fc_ave)
         ElseIf ((GEN.eklasse = 4) Or (GEN.eklasse = 5)) Then
-            'c         Korrekturfunktion für Euro 4 ff analog zu Euro3
-            'c         lediglich adaptiert: Durchschnittsnennleistung der ins mep verwursteten Motoren
+            'c         Correction function for Euro 4 similar to Euro3
+            'c         but lightly adapted: Average Nominal-Power of the engines into mep verwursteten
             fc_pnen = 239.4 - (0.08465 * (Math.Min(Pnenn, 345)))
             fc_ave = 239.4 - (0.08465 * 287.1)
             corr = (fc_pnen / fc_ave)

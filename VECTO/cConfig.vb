@@ -46,16 +46,16 @@
         c.OpenRead(MyConfPath & "settings.txt", "+hugo+")
 
         '***
-        '*** Erste Zeile: Version
+        '*** First line: Version
         txt = Trim(UCase(c.ReadLine(0)))
         If Microsoft.VisualBasic.Left(txt, 1) = "V" Then
-            ' "V" entfernen => Zahl bleibt übrig
+            ' "Remove V'' => It remains the number
             txt = txt.Replace("V", "")
             If Not IsNumeric(txt) Then
-                'Falls Version ungültig: Abbruch
+                'If invalid version: Abort
                 GoTo lbEr
             Else
-                'Version festgelegt
+                'Version settled
                 FileVersion = CInt(txt)
             End If
         Else
@@ -131,26 +131,26 @@ lbEr:
         Dim x As Short
 
         'Config.txt
-        'Zeile      Variable        Typ         Beschreibung
+        'Line      Variable        Type         Description
         '(01)       WorkDPath       String      WorkDir
-        '(02)       LastMode        Short       Letzter verwendeter Modus (entspricht CBoxMODE.SelectedIndex)
-        '(03)       IntpV2          Boolean     Neuen Interpolator verwenden
-        '(04)       nnormEngStop    Single      Unter dieser Drehzahl Engine Stop
-        '(05)       TEMpath         String      TEM_Data Pfad
-        '(06)       LastTEM         String      Letzte TEM Datei   -nicht in Options Form!!!
-        '(07)       TEMexl          Boolean     Open TEM in Excel  -nicht in Options Form!!!
-        '(08)       EAAvInt         Short       Analyse intervals of seconds. Wenn 0: Wert abfragen
-        '(09)       ModOut          Boolean     Modale Ausgabe
-        '(10)       WegKorJa        Boolean     Wegkorrektur damit bei Geschw. Reduktion Zyklus nicht kürzer wird
-        '(11)       GnVorgab        Boolean     Gang- bzw. Drehzahl
-        '(12)       LogSize         Int16       Maximale Log-Größe [MiB]
-        '(13)       FZPsort         Boolean     FZP sortieren (früher Standard da VISSIM die .fzp nach Sekunden sortiert ausgibt)
-        '(14)       FZPsortExp      Boolean     Sortierte FZP exportieren
-        '(15)       BATCHoutpath    Boolean     Ausgabepfad für BATCH-Modus:   <WORKDIR>, <GENPATH> oder Pfad
-        '(16)       BATCHoutSubD    Boolean     BATCH-Ausgabe in Unterordner (je .gen Datei)
-        '(17)       AirDensity      Single      Luftdichte
-        '(18)       FinalEmOnly     Boolean     Nur Final-Emissions ausgeben
-        '(19)       FCcorrection    Boolean     FC-Korrektur im BATCH-Modus
+        '(02)       LastMode        Short      Last used mode (equivalent CBoxMODE.SelectedIndex)
+        '(03)       IntpV2          Boolean     New interpolator to use
+        '(04)       nnormEngStop    Single      Stop engine if under this Revolutions
+        '(05)       TEMpath         String      TEM_Data path
+        '(06)       LastTEM         String      Last TEM file -not in Options Form!!!!
+        '(07)       TEMexl          Boolean     Open TEM in Excel  -not in Options Form!!!
+        '(08)       EAAvInt         Short       Analysis intervals in seconds. If 0: Ask for Value
+        '(09)       ModOut          Boolean     Dump Modal
+        '(10)       WegKorJa        Boolean     Wegkorrektur damit bei Geschw. Reduktion Zyklus nicht kürzer wird |@@| 10)       WegKorJa        Boolean     Path-correction in so speed. Reduction cycle is not shorter
+        '(11)       GnVorgab        Boolean     Gear-per- Revolutions
+        '(12)       LogSize         Int16       Maximum Log-size [MiB]
+        '(13)       FZPsort         Boolean     FZP sortieren (früher Standard da VISSIM die .fzp nach Sekunden sortiert ausgibt) |@@| 13)       FZPsort         Boolean     FZP sort (formerly standard since the VISSIM. Fzp sorted according seconds) outputs
+        '(14)       FZPsortExp      Boolean     Export FZP Sorted
+        '(15)       BATCHoutpath    Boolean     Output path for BATCH mode:   <WORKDIR>, <GENPATH> or path
+        '(16)       BATCHoutSubD    Boolean     Dump-BATCH in Subfolders (per .gen File)
+        '(17)       AirDensity      Single      Air-density
+        '(18)       FinalEmOnly     Boolean     Dump only Final Emission
+        '(19)       FCcorrection    Boolean     FC-Correction in BATCH-mode
 
         If Not IO.File.Exists(MyConfPath & "settings.txt") Then
             GUImsg(tMsgID.Err, "Config-file not found! Using default settings.")
@@ -172,7 +172,7 @@ lbEr:
                 Case 2
                     LastMode = line 'Früher GenLpath = line
                 Case 3
-                    'Früher:  IntpV2 = CBool(line)
+                    'Previously: IntpV2 = CBool(line)
                 Case 4
                     nnormEngStop = CSng(line)
                 Case 5

@@ -3,10 +3,10 @@ Imports System.Reflection
 Imports System.Runtime.InteropServices
 
 ' Allgemeine Informationen über eine Assembly werden über die folgenden 
-' Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
-' die mit einer Assembly verknüpft sind.
+' Below is the General Information about the Attributes
+' controlling the Assembly. Change these attribute values to modify the information
 
-' Die Werte der Assemblyattribute überprüfen
+' associated with the Assembly.
 
 <Assembly: AssemblyTitle("VECTO")> 
 <Assembly: AssemblyDescription("")> 
@@ -17,18 +17,18 @@ Imports System.Runtime.InteropServices
 
 <Assembly: ComVisible(False)>
 
-'Die folgende GUID bestimmt die ID der Typbibliothek, wenn dieses Projekt für COM verfügbar gemacht wird
+'Review the values of the Assembly Attributes
 <Assembly: Guid("175c31e7-2d95-4afb-afec-c4d7719177db")> 
 
-' Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
+' The following GUID is for the ID of the Typelib if this project is exposed to COM
 '
-'      Hauptversion
-'      Nebenversion 
-'      Buildnummer
-'      Revision
+'      Version information for an assembly consists of the following four values:
+'      Major Release
+'      Minor Release
+'      Build Number
 '
 ' Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
-' übernehmen, indem Sie "*" eingeben:
+' You can specify all the values or use the defaults for Build and Revision Numbers
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
 <Assembly: AssemblyVersion("1.0.0.0")> 

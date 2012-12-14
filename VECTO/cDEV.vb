@@ -10,18 +10,18 @@ Public Class cDEV
 
     '**************************************************************************************************************
     '**************************************************************************************************************
-    '********************************* Anleitung zur Einbindung neuer DEV-Options *********************************
+    '********************************* Instructions for integrating new DEV-Options *********************************
 
-    '1. Eintrag in "Sub New()"
+    '1. Entry in "Sub New()"
     '
-    '   I) Neues cDEVoption Objekt definieren mit "Conf0 = New cDEVoption(ConfigType, Description, SaveInConfg, Enabled)"
+    '   I) Define new cDEVoption Object with "Conf0 = New cDEVoption(ConfigType, Description, SaveInConfg, Enabled)"
     '
-    '       ConfigType      <tDEVconfType>  ...definiert Typ: Boolean, Integer, Single, String, Menüauswahl (Integer) oder Verweis auf Funktion
-    '       Description     <String>        ...Beschreibung des Parameters
-    '       SaveInConfg     <Boolean>       ...Ob Einstellung für nächsten PHEM-Start gespeichert werden soll
-    '       Enabled         <Boolean>       ...Ob Einstellung im DEV-Tab geändert werden kann
+    '       ConfigType      <tDEVconfType>  ...Type definition: Boolean, Integer, Single, String, menu selection (Integer) or Reference to Function
+    '       Description     <String>        ...Description of the parameters
+    '       SaveInConfg     <Boolean>       ...Whether you want to save settings for next PHEM-startup
+    '       Enabled         <Boolean>       ...Whether settings in the DEV-tab can be changed
     '
-    '   II) Default-Wert definieren. Hier wird unterschieden welcher ConfigType verwendet wird:
+    '   II) default value definition. Distinguish which ConfigType to use:
     '
     '       a) ConfigType = tBoolean:
     '
@@ -43,17 +43,17 @@ Public Class cDEV
     '
     '           Conf0.ActionDelegate = New cDEVoption.dActionDelegate(AddressOf NameDerFunktion)
     '
-    '           Wobei NameDerFunktion die aufzurufende Funktion ist die einen <String> übergibt: "Public Function NameDerFunktion() As String"
+    '           Where NameDerFunktion is a function to call returning a <String>: "Public Function NameDerFunktion() As String"
     '
     '       f) ConfigType = tContMenIndex:
     '
-    '           Verfügbare Auswahl-Möglichkeiten als <String> definieren:
+    '           Definition of Available selection options as <String>:
     '
-    '               Conf0.AddMode("Auswahl 1")
-    '               Conf0.AddMode("Auswahl 2")
-    '               usw...
+    '               Conf0.AddMode ("select 1")
+    '               Conf0.AddMode ("Option 2")
+    '               and so forth.
     '
-    '           Default-Wert definieren: Erste Auswahl = 0
+    '           Default value definition: First choice = 0
     '
     '               Conf0.ModeIndex = ...       <Integer>
 
@@ -70,7 +70,7 @@ Public Class cDEV
 
         '*****************************************************************************************
         '*****************************************************************************************
-        '**************************** START: Parameter konfigurieren '****************************
+        '**************************** START: Parameters Configuration '****************************
 
         Dim Conf0 As cDEVoption
 
@@ -110,7 +110,7 @@ Public Class cDEV
         Conf0.BoolVal = False
         MyOptions.Add("TestOptions", Conf0)
 
-        '**************************** ENDE: Parameter konfigurieren '*****************************
+        '**************************** END: Parameters Configuration '*****************************
         '*****************************************************************************************
         '*****************************************************************************************
 
@@ -118,12 +118,12 @@ Public Class cDEV
 
     End Sub
 
-    'Initialisiert die tatsächlichen Config-Parameter aus der MyConfigs-Liste 
+    'Initialize the actual Config-Parameters from MyConfigs list
     Public Sub SetOptions()
 
     End Sub
 
-    'Demo für Delegate Function
+    'Demo for Delegate Function
     Public Function TestFunction() As String
         Return "OK...?"
     End Function
@@ -324,7 +324,7 @@ Public Class cDEVoption
         Try
             Select Case MyConfType
                 Case tDEVconfType.tAction
-                    '??? Darf nicht sein
+                    '??? Darf nicht sein |@@| May not be
 
                 Case tDEVconfType.tBoolean
                     BoolVal = CBool(StrExpr)

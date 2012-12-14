@@ -1,7 +1,7 @@
 ﻿Public Class F_AboutBox
 
 
-    'Initialisieren
+    'Initialize
     Private Sub F10_AboutBox_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.Text = "VECTO " & VECTOvers '& "/ GUI " & GUIvers
         Me.LabelLic.Text = Lic.LicString
@@ -30,7 +30,7 @@
     End Sub
     '----------------------------------------------------------------------------
 
-    'Bild Links------------------------------------------------------------------
+    'Picture Links------------------------------------------------------------------
     Private Sub PictureBoxFVT_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles PictureBoxFVT.Click
         System.Diagnostics.Process.Start("http://www.ivt.tugraz.at/")
     End Sub
