@@ -1,4 +1,4 @@
-Module M_FCCor
+ï»¿Module M_FCCor
 
     'C
     'C
@@ -30,13 +30,13 @@ Module M_FCCor
 
         'C
         'c  Korrektur des Kraftstoffverbrauches
-        'c  nur für Handbuchrechnungen und LKW
+        'c  nur fÃ¼r Handbuchrechnungen und LKW
         If (GEN.eklasse = 0) Then
-            'c        für Euro0 und früher werden größenabhängig 3 verschiedene KF verwendet
-            'c        daher hier keine Größenkorrektur
+            'c        fÃ¼r Euro0 und frÃ¼her werden grÃ¶ÃŸenabhÃ¤ngig 3 verschiedene KF verwendet
+            'c        daher hier keine GrÃ¶ÃŸenkorrektur
             corr = 1
         ElseIf (GEN.eklasse = 1) Then
-            'c         Korrekturfunktion für Euro1 und Euro 2 1:1 von Stand ARTEMIS übernommen
+            'c         Korrekturfunktion fÃ¼r Euro1 und Euro 2 1:1 von Stand ARTEMIS Ã¼bernommen
             fc_pnen = 230.55 - 0.0798 * Pnenn
             fc_pnen = Math.Max(fc_pnen, 206.2)
             fc_ave = 213.9
@@ -47,12 +47,12 @@ Module M_FCCor
             fc_ave = 206.8
             corr = (fc_pnen / fc_ave)
         ElseIf (GEN.eklasse = 3) Then
-            'c        Korrekturfunktion Euro 3 gg. ARTEMIS geringfügig adaptiert (siehe FcCorr_Eu3ff.xls)
+            'c        Korrekturfunktion Euro 3 gg. ARTEMIS geringfÃ¼gig adaptiert (siehe FcCorr_Eu3ff.xls)
             fc_pnen = 239.4 - (0.08465 * (Math.Min(Pnenn, 345)))
             fc_ave = 239.4 - (0.08465 * 273.5)
             corr = (fc_pnen / fc_ave)
         ElseIf ((GEN.eklasse = 4) Or (GEN.eklasse = 5)) Then
-            'c         Korrekturfunktion für Euro 4 ff analog zu Euro3
+            'c         Korrekturfunktion fÃ¼r Euro 4 ff analog zu Euro3
             'c         lediglich adaptiert: Durchschnittsnennleistung der ins mep verwursteten Motoren
             fc_pnen = 239.4 - (0.08465 * (Math.Min(Pnenn, 345)))
             fc_ave = 239.4 - (0.08465 * 287.1)

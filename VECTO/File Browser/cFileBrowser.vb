@@ -1,4 +1,4 @@
-Imports System.Collections
+ï»¿Imports System.Collections
 'Imports System.Windows.Forms
 
 'V1.0 10.12.2010
@@ -22,7 +22,7 @@ Imports System.Collections
 '...
 'fbTXT.Close()
 
-'**Benötigte Globale Variablen (Default):
+'**BenÃ¶tigte Globale Variablen (Default):
 'Public FB_Drives() As String
 'Public FB_Init As Boolean = False
 'Public FB_FilHisDir As String
@@ -55,12 +55,12 @@ Public Class cFileBrowser
         bLightMode = LightMode
     End Sub
 
-    'OpenDialog - Öffnen Dialog - Übergibt True wenn Dialog mit OK beendet wurde
+    'OpenDialog - Ã–ffnen Dialog - Ãœbergibt True wenn Dialog mit OK beendet wurde
     Public Function OpenDialog(ByVal path As String, Optional ByVal MultiFile As Boolean = False, Optional ByVal Ext As String = "") As Boolean
         Return CustomDialog(path, True, False, eExtMode.MultiExt, MultiFile, Ext, "Open")
     End Function
 
-    'SaveDialog - Speichern Dialog - Übergibt True wenn Dialog mit OK beendet wurde
+    'SaveDialog - Speichern Dialog - Ãœbergibt True wenn Dialog mit OK beendet wurde
     Public Function SaveDialog(ByVal path As String, Optional ByVal ForceExt As Boolean = True, Optional ByVal Ext As String = "") As Boolean
         Dim x As eExtMode
         If ForceExt Then
@@ -71,7 +71,7 @@ Public Class cFileBrowser
         Return CustomDialog(path, False, True, x, False, Ext, "Save As")
     End Function
 
-    'Dialog öffnen - Übergibt True wenn Dialog mit OK beendet wurde
+    'Dialog Ã¶ffnen - Ãœbergibt True wenn Dialog mit OK beendet wurde
     Public Function CustomDialog(ByVal path As String, ByVal FileMustExist As Boolean, ByVal OverwriteCheck As Boolean, ByVal ExtMode As eExtMode, ByVal MultiFile As Boolean, ByVal Ext As String, Optional Title As String = "File Browser") As Boolean
         If Not Initialized Then Init()
         Return Dlog.Browse(path, FileMustExist, OverwriteCheck, ExtMode, MultiFile, Ext, Title)

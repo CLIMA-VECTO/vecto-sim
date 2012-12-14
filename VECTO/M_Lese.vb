@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+ï»¿Imports System.Collections.Generic
 
 Module M_Lese
 
@@ -32,7 +32,7 @@ Module M_Lese
             Return False
         End Try
 
-        'VECTO: Defaultwerte für Parameter die nicht mehr in der .GEN/.VECTO sind werden beim Einlesen über SetDefault belegt.
+        'VECTO: Defaultwerte fÃ¼r Parameter die nicht mehr in der .GEN/.VECTO sind werden beim Einlesen Ã¼ber SetDefault belegt.
 
 
         CycleFiles.Clear()
@@ -128,7 +128,7 @@ Module M_Lese
 
 
         '-----------------------------    ~FLD~    -----------------------------
-        '   FLD muss jetzt vor MAP/MEP eingelesen werden falls dort <DRAG> Einträge sind!
+        '   FLD muss jetzt vor MAP/MEP eingelesen werden falls dort <DRAG> EintrÃ¤ge sind!
         FLD = New cFLD
         FLD.FilePath = ENG.PathFLD
 
@@ -171,10 +171,10 @@ Module M_Lese
         '       LUZ: 04.02.2011: Ab jetzt ausserhalb von LESE wegen neuer BATCH-Struktur
 
         '-----------------------------    ~TRS~    -----------------------------
-        '    Dynamik-Korrekturparameter, falls dynamokkorrektur ausgewählt:
-        '    Parameter aus multipler Regressionsanalyse, Differenz zu stationär in
+        '    Dynamik-Korrekturparameter, falls dynamokkorrektur ausgewÃ¤hlt:
+        '    Parameter aus multipler Regressionsanalyse, Differenz zu stationÃ¤r in
         '      SNF: (g/h)/kW_Nennleistung fuer einzelne Parameter
-        '      PKW  (g/h) für Emissionen , (g/h)/kW fuer Verbrauch
+        '      PKW  (g/h) fÃ¼r Emissionen , (g/h)/kW fuer Verbrauch
         If GEN.dynkorja Then
             TRS = New cTRS
             TRS.FilePath = GEN.dynspez

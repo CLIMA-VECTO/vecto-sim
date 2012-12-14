@@ -1,4 +1,4 @@
-Module GUI_Subs
+ï»¿Module GUI_Subs
 
 
 #Region "GUI Steuerung durch BG-Worker"
@@ -72,26 +72,26 @@ Module GUI_Subs
 
 #End Region
 
-#Region "GUI Steuerung durch GUI direkt - NICHT über BG-Worker"
+#Region "GUI Steuerung durch GUI direkt - NICHT Ã¼ber BG-Worker"
 
     'Status Message direkt an GUI - darf nicht durch den Backgroundworker geschehen!
     Public Sub GUImsg(ByVal ID As tMsgID, ByVal Msg As String)
         F_MAINForm.MSGtoForm(ID, Msg, "", "")
     End Sub
 
-    'Statusbar  - Aufruf durch WorkerMSG oder direkt über Form, NIEMALS über Worker
+    'Statusbar  - Aufruf durch WorkerMSG oder direkt Ã¼ber Form, NIEMALS Ã¼ber Worker
     Public Sub Status(ByVal txt As String)
         F_MAINForm.ToolStripLbStatus.Text = txt
     End Sub
 
-    'Status Form zurück setzen - Aufruf NUR durch Events, NIEMALS über Worker
+    'Status Form zurÃ¼ck setzen - Aufruf NUR durch Events, NIEMALS Ã¼ber Worker
     Public Sub ClearMSG()
         F_MAINForm.LvMsg.Items.Clear()
     End Sub
 
 #End Region
 
-    'Klasse zum Übergeben von Nachrichten vom Backgroundworker
+    'Klasse zum Ãœbergeben von Nachrichten vom Backgroundworker
     Public Class cWorkProg
         Private MyTarget As tWorkMsgType
         Private MyID As tMsgID
@@ -199,7 +199,7 @@ Module GUI_Subs
         End If
     End Function
 
-    'Datei in Excel öffnen
+    'Datei in Excel Ã¶ffnen
     Public Function FileOpen(ByVal file As String) As Boolean
         Dim PSI As New ProcessStartInfo
         PSI.FileName = ChrW(34) & Cfg.OpenCmd & ChrW(34)
@@ -213,7 +213,7 @@ Module GUI_Subs
     End Function
 
 #Region "Dateipfad Funktionen"
-    'WorkDir oder MainDir einfügen falls kein Pfad angegeben. Spezial-Ordner einfügen
+    'WorkDir oder MainDir einfÃ¼gen falls kein Pfad angegeben. Spezial-Ordner einfÃ¼gen
     Public Function fFileRepl(ByVal file As String, Optional ByVal MainDir As String = "") As String
 
         Dim ReplPath As String
@@ -243,7 +243,7 @@ Module GUI_Subs
         Loop
 
 
-        'Pfad ergänzen falls nicht vorhanden
+        'Pfad ergÃ¤nzen falls nicht vorhanden
         If fPATH(file) = "" Then
 
             Return ReplPath & file

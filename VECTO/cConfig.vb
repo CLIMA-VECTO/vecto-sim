@@ -1,4 +1,4 @@
-Public Class cConfig
+ï»¿Public Class cConfig
 
     Private Const FormatVersion As Short = 1
     Private FileVersion As Short
@@ -12,7 +12,7 @@ Public Class cConfig
     Public TEMexl As Boolean
     Public EAAvInt As Short
     Public ModOut As Boolean
-    Public BATCHoutpath As String   'Ausgabepfad für BATCH-Modus:   <WORKDIR>, <GENPATH> oder Pfad
+    Public BATCHoutpath As String   'Ausgabepfad fÃ¼r BATCH-Modus:   <WORKDIR>, <GENPATH> oder Pfad
     Public BATCHoutSubD As Boolean
     Public WegKorJa As Boolean
     Public LogSize As Single
@@ -49,10 +49,10 @@ Public Class cConfig
         '*** Erste Zeile: Version
         txt = Trim(UCase(c.ReadLine(0)))
         If Microsoft.VisualBasic.Left(txt, 1) = "V" Then
-            ' "V" entfernen => Zahl bleibt übrig
+            ' "V" entfernen => Zahl bleibt Ã¼brig
             txt = txt.Replace("V", "")
             If Not IsNumeric(txt) Then
-                'Falls Version ungültig: Abbruch
+                'Falls Version ungÃ¼ltig: Abbruch
                 GoTo lbEr
             Else
                 'Version festgelegt
@@ -141,12 +141,12 @@ lbEr:
         '(07)       TEMexl          Boolean     Open TEM in Excel  -nicht in Options Form!!!
         '(08)       EAAvInt         Short       Analyse intervals of seconds. Wenn 0: Wert abfragen
         '(09)       ModOut          Boolean     Modale Ausgabe
-        '(10)       WegKorJa        Boolean     Wegkorrektur damit bei Geschw. Reduktion Zyklus nicht kürzer wird
+        '(10)       WegKorJa        Boolean     Wegkorrektur damit bei Geschw. Reduktion Zyklus nicht kÃ¼rzer wird
         '(11)       GnVorgab        Boolean     Gang- bzw. Drehzahl
-        '(12)       LogSize         Int16       Maximale Log-Größe [MiB]
-        '(13)       FZPsort         Boolean     FZP sortieren (früher Standard da VISSIM die .fzp nach Sekunden sortiert ausgibt)
+        '(12)       LogSize         Int16       Maximale Log-GrÃ¶ÃŸe [MiB]
+        '(13)       FZPsort         Boolean     FZP sortieren (frÃ¼her Standard da VISSIM die .fzp nach Sekunden sortiert ausgibt)
         '(14)       FZPsortExp      Boolean     Sortierte FZP exportieren
-        '(15)       BATCHoutpath    Boolean     Ausgabepfad für BATCH-Modus:   <WORKDIR>, <GENPATH> oder Pfad
+        '(15)       BATCHoutpath    Boolean     Ausgabepfad fÃ¼r BATCH-Modus:   <WORKDIR>, <GENPATH> oder Pfad
         '(16)       BATCHoutSubD    Boolean     BATCH-Ausgabe in Unterordner (je .gen Datei)
         '(17)       AirDensity      Single      Luftdichte
         '(18)       FinalEmOnly     Boolean     Nur Final-Emissions ausgeben
@@ -170,9 +170,9 @@ lbEr:
                         WorkDirHome = True
                     End If
                 Case 2
-                    LastMode = line 'Früher GenLpath = line
+                    LastMode = line 'FrÃ¼her GenLpath = line
                 Case 3
-                    'Früher:  IntpV2 = CBool(line)
+                    'FrÃ¼her:  IntpV2 = CBool(line)
                 Case 4
                     nnormEngStop = CSng(line)
                 Case 5

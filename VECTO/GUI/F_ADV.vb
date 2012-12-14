@@ -1,4 +1,4 @@
-Public Class F_ADV
+ï»¿Public Class F_ADV
 
     Private Const IFanz As Int16 = 4
     Dim Advfile As String
@@ -9,7 +9,7 @@ Public Class F_ADV
         Changed = False
     End Sub
 
-    'Schließen
+    'SchlieÃŸen
     Private Sub F05_ADV_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
             e.Cancel = ChangeCheckCancel()
@@ -164,7 +164,7 @@ Public Class F_ADV
         'Zeile 6: STRfilter True/False
         Me.CheckBoxSTRfilter.Checked = ADV.STRfilter
 
-        'Zeile 7: Distance filter für SUM.STR
+        'Zeile 7: Distance filter fÃ¼r SUM.STR
         Me.TbFilter.Text = ADV.STRSUMdistflt
 
         'Zeile 8+: STR Dateien
@@ -231,10 +231,10 @@ Public Class F_ADV
         Me.TextBoxTEM.Text = txt
     End Sub
 
-    'Formular Änderungen (Kontrolle ob GEN gespeichert)---------------------------------
-    'Event Handler für Formänderungen
+    'Formular Ã„nderungen (Kontrolle ob GEN gespeichert)---------------------------------
+    'Event Handler fÃ¼r FormÃ¤nderungen
 
-    'Change Status ändern
+    'Change Status Ã¤ndern
     Private Sub Change()
         Me.ToolStripStatusLabelADV.Text = "Unsaved changes in current file"
         Changed = True

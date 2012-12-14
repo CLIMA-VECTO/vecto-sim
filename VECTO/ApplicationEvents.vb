@@ -1,14 +1,14 @@
-Imports System.Collections.Generic
+ï»¿Imports System.Collections.Generic
 
 Namespace My
 
-    ' Für MyApplication sind folgende Ereignisse verfügbar:
+    ' FÃ¼r MyApplication sind folgende Ereignisse verfÃ¼gbar:
     ' 
-    ' Startup: Wird beim Starten der Anwendung noch vor dem Erstellen des Startformulars ausgelöst.
-    ' Shutdown: Wird nach dem Schließen aller Anwendungsformulare ausgelöst. Dieses Ereignis wird nicht ausgelöst, wenn die Anwendung nicht normal beendet wird.
-    ' UnhandledException: Wird ausgelöst, wenn in der Anwendung eine unbehandelte Ausnahme auftritt.
-    ' StartupNextInstance: Wird beim Starten einer Einzelinstanzanwendung ausgelöst, wenn diese bereits aktiv ist. 
-    ' NetworkAvailabilityChanged: Wird beim Herstellen oder Trennen der Netzwerkverbindung ausgelöst.
+    ' Startup: Wird beim Starten der Anwendung noch vor dem Erstellen des Startformulars ausgelÃ¶st.
+    ' Shutdown: Wird nach dem SchlieÃŸen aller Anwendungsformulare ausgelÃ¶st. Dieses Ereignis wird nicht ausgelÃ¶st, wenn die Anwendung nicht normal beendet wird.
+    ' UnhandledException: Wird ausgelÃ¶st, wenn in der Anwendung eine unbehandelte Ausnahme auftritt.
+    ' StartupNextInstance: Wird beim Starten einer Einzelinstanzanwendung ausgelÃ¶st, wenn diese bereits aktiv ist. 
+    ' NetworkAvailabilityChanged: Wird beim Herstellen oder Trennen der Netzwerkverbindung ausgelÃ¶st.
     Partial Friend Class MyApplication
 
         'Initialisierung
@@ -95,7 +95,7 @@ Namespace My
             DEV = New cDEV
             VEC = New cVECTO
 
-            Cfg = New cConfig   'ACHTUNG: cConfig.New löst cConfig.SetDefault aus welches sKey benötigt dehalb muss sKey schon vorher initialisiert werden!!
+            Cfg = New cConfig   'ACHTUNG: cConfig.New lÃ¶st cConfig.SetDefault aus welches sKey benÃ¶tigt dehalb muss sKey schon vorher initialisiert werden!!
 
             ProgBarCtrl = New cProgBarCtrl
 
@@ -106,10 +106,10 @@ Namespace My
             'Log starten
             If IO.File.Exists(MyAppPath & "LOG.txt") Then
 
-                'Dateigröße checken
+                'DateigrÃ¶ÃŸe checken
                 logfDetail = My.Computer.FileSystem.GetFileInfo(MyAppPath & "LOG.txt")
 
-                'Falls Log zu groß: löschen
+                'Falls Log zu groÃŸ: lÃ¶schen
                 If logfDetail.Length / (2 ^ 20) > Cfg.LogSize Then
 
                     LOGfile.WriteLine("Starting new logfile")

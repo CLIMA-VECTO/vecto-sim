@@ -1,4 +1,4 @@
-Public Class F_Options
+﻿Public Class F_Options
 
     Dim WD As String = " "
 

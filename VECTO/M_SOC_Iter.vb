@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+ï»¿Imports System.Collections.Generic
 
 Module M_SOC_Iter
 
@@ -94,7 +94,7 @@ Module M_SOC_Iter
         SOChistory.Add(SOCstart)
         SOCdeltaHis.Add(SOC(MODdata.tDim) - SOCstart)
 
-        'Check ob Vorzeichen von Delta-SOC sich ändert
+        'Check ob Vorzeichen von Delta-SOC sich Ã¤ndert
         SOCvzX = 0
 
         For x = SOCcount - 1 To 1 Step -1
@@ -165,7 +165,7 @@ Module M_SOC_Iter
         Dim VorzPlus As Boolean
         Dim UseEmOgl As Boolean
 
-        'Check ob LinReg möglich: Mind. 2 Berechnungen; Mind. 1 dSOC-Vorzeichenwechsel
+        'Check ob LinReg mÃ¶glich: Mind. 2 Berechnungen; Mind. 1 dSOC-Vorzeichenwechsel
         Check = SOCcount > 1
         If Check Then
             VorzPlus = (SOCdeltaHis(0) > 0)
@@ -281,9 +281,9 @@ lb10:
 
         End If
 
-        'Korrigierte Emissionen für Optimierer
+        'Korrigierte Emissionen fÃ¼r Optimierer
         If bOptOn Then
-            'Falls SOC-Iteration erfolgreich (oder Lin.Reg. nicht möglich) dann Emissionen der letzten Berechnung (unkorrigiert) verwenden
+            'Falls SOC-Iteration erfolgreich (oder Lin.Reg. nicht mÃ¶glich) dann Emissionen der letzten Berechnung (unkorrigiert) verwenden
             If UseEmOgl Then
                 OptEMkor(1) = gesVerbr / Vquer
                 OptEMkor(2) = gesNOx / Vquer

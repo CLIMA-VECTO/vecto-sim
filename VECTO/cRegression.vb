@@ -1,4 +1,4 @@
-Public Class cRegression
+﻿Public Class cRegression
 
     Public Class RegressionProcessInfo
 

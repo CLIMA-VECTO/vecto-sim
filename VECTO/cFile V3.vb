@@ -1,4 +1,4 @@
-Public Class cFile_V3
+﻿Public Class cFile_V3
 
     Private TxtFldParser As Microsoft.VisualBasic.FileIO.TextFieldParser
     Private StrWrter As System.IO.StreamWriter

@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+ï»¿Imports System.Collections.Generic
 
 Public Class F_VEH
 
@@ -25,7 +25,7 @@ Public Class F_VEH
 
     End Sub
 
-#Region "Menü / Toolstrip"
+#Region "MenÃ¼ / Toolstrip"
 
     'New
     Private Sub ToolStripBtNew_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtNew.Click
@@ -161,7 +161,7 @@ Public Class F_VEH
 
     End Sub
 
-    'VEH öffnen
+    'VEH Ã¶ffnen
     Sub openVEH(ByVal file As String)
         Dim i As Int16
         Dim VEH0 As cVEH
@@ -334,7 +334,7 @@ Public Class F_VEH
 
             Case Else ' tCdMode.CdOfBeta
                 bEnabled = True
-                Me.LbCdMode.Text = "Input file: Yaw Angle [°], Cd Scaling Factor [-]"
+                Me.LbCdMode.Text = "Input file: Yaw Angle [Â°], Cd Scaling Factor [-]"
 
         End Select
 
@@ -402,7 +402,7 @@ Public Class F_VEH
 
 #Region "Change Events"
 
-    'Change Status ändern
+    'Change Status Ã¤ndern
     Private Sub Change()
         If Not Changed Then
             Me.LbStatus.Text = "Unsaved changes in current file"

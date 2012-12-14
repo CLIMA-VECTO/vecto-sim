@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+ï»¿Imports System.Collections.Generic
 
 Public Class F_MAINForm
 
@@ -177,13 +177,13 @@ Public Class F_MAINForm
     Public Sub PHEM_Launcher()
         Dim ProgOverall As Boolean
 
-        'Falls Aufruf während PHEM schon läuft
+        'Falls Aufruf wÃ¤hrend PHEM schon lÃ¤uft
         If PHEMworker.IsBusy Then
             GUImsg(tMsgID.Err, "PHEM is already running!")
             Exit Sub
         End If
 
-        'GENlist-Selection löschen
+        'GENlist-Selection lÃ¶schen
         Me.LvGEN.SelectedItems.Clear()
 
         'Modus festlegen
@@ -196,7 +196,7 @@ Public Class F_MAINForm
                 PHEMmode = tPHEMmode.ModeADVANCE
         End Select
 
-        'Wenn mehr als 100 Kombinationen in Batch fragen ob sekündliche Ausgabe
+        'Wenn mehr als 100 Kombinationen in Batch fragen ob sekÃ¼ndliche Ausgabe
         If (PHEMmode = tPHEMmode.ModeBATCH) And ((Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) > 100) And Me.ChBoxModOut.Checked Then
             Select Case MsgBox("You are about to run PHEM BATCH with " & (Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) & " calculations!" & ChrW(10) & "Do you still want to write second-by-second results?", MsgBoxStyle.YesNoCancel)
                 Case MsgBoxResult.No
@@ -216,13 +216,13 @@ Public Class F_MAINForm
         'File- / Zylus- Liste definieren
         SetJobList()
 
-        'Zyklus-Liste definieren (falls nicht BATCH-Modus wird in SetCycleList nur die Liste gelöscht und nicht neu belegt)
+        'Zyklus-Liste definieren (falls nicht BATCH-Modus wird in SetCycleList nur die Liste gelÃ¶scht und nicht neu belegt)
         SetCycleList()
 
-        'Check ob Overall-Progbar benötigt
+        'Check ob Overall-Progbar benÃ¶tigt
         ProgOverall = PHEMmode <> tPHEMmode.ModeADVANCE  ' JobFileList.Count > 1 Or PHEMmode = tPHEMmode.ModeBATCH
 
-        'Launch über Job_Launcher
+        'Launch Ã¼ber Job_Launcher
         BGjob = tBGjob.PHEM
         Job_Launcher(ProgOverall)
 
@@ -301,7 +301,7 @@ Public Class F_MAINForm
 
         If DEV.Enabled Then DEV.SaveToFile()
 
-        'Msg-Ausgabe zurück setzen
+        'Msg-Ausgabe zurÃ¼ck setzen
         ClearMSG()
 
         'Button umschalten
@@ -531,7 +531,7 @@ Public Class F_MAINForm
         PHEMworker.WorkerReportsProgress = True
         PHEMworker.WorkerSupportsCancellation = True
 
-        'Lizenz überprüfen
+        'Lizenz Ã¼berprÃ¼fen
         If Not Lic.LICcheck() Then
             MsgBox("License File invalid!" & vbCrLf & vbCrLf & Lic.FailMsg)
             If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
@@ -584,7 +584,7 @@ Public Class F_MAINForm
 
     End Sub
 
-    'Datei mit PHEM öffnen
+    'Datei mit PHEM Ã¶ffnen
     Private Sub CmdLineCtrl(ByVal ComLineArgs As System.Collections.ObjectModel.ReadOnlyCollection(Of String))
         Dim bBATCH As Boolean
         Dim bRUN As Boolean
@@ -623,13 +623,13 @@ Public Class F_MAINForm
 
     End Sub
 
-    'Schließen
+    'SchlieÃŸen
     Private Sub F01_MAINForm_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
 
         'FileLists speichern
         SaveFileLists()
 
-        'Log schließen
+        'Log schlieÃŸen
         Try
             LOGfile.WriteLine("Closing Session " & Now)
             LOGfile.WriteLine("------------------------------------------------------------------------------------------")
@@ -643,7 +643,7 @@ Public Class F_MAINForm
         Cfg.ConfigSAVE()
         If DEV.Enabled Then DEV.SaveToFile()
 
-        'FileBrowser-Instanzen schließen
+        'FileBrowser-Instanzen schlieÃŸen
         FB_Close()
 
     End Sub
@@ -827,7 +827,7 @@ Public Class F_MAINForm
         UpdateGENTabText()
     End Sub
 
-    'Datei zu Liste hinzufügen
+    'Datei zu Liste hinzufÃ¼gen
     Private Sub addGEN()
         Dim x As String()
         Dim Chck As Boolean = False
@@ -852,7 +852,7 @@ Public Class F_MAINForm
 
     End Sub
 
-    'Datei öffnen
+    'Datei Ã¶ffnen
     Private Sub OpenGenOrAdv()
         Dim f As String
 
@@ -877,7 +877,7 @@ Public Class F_MAINForm
         End If
     End Sub
 
-    'GEN/ADV Liste: Datei hinzufügen
+    'GEN/ADV Liste: Datei hinzufÃ¼gen
     Private Sub AddToListViewGEN(ByVal Path As String(), Optional ByVal Txt As String = " ")
         Dim pDim As Int16
         Dim p As Int16
@@ -886,13 +886,13 @@ Public Class F_MAINForm
         Dim fListDim As Int16 = -1
         Dim ListViewItem0 As ListViewItem
 
-        'Falls PHEM läuft: Vorgang abbrechen (weil Modusänderung während Berechnung nix gscheit)
+        'Falls PHEM lÃ¤uft: Vorgang abbrechen (weil ModusÃ¤nderung wÃ¤hrend Berechnung nix gscheit)
         If PHEMworker.IsBusy Then Exit Sub
 
         pDim = UBound(Path)
         ReDim fList(0)     'um Nullverweisausnahme-Warnung zu verhindern
 
-        'Modus umschalten falls nötig
+        'Modus umschalten falls nÃ¶tig
         Select Case UCase(fEXT(Path(0)))
             Case ".GEN"
                 If (LastModeIndex = 2) Then Me.CBoxMODE.SelectedIndex = 0
@@ -920,7 +920,7 @@ Public Class F_MAINForm
 
                 For f = 0 To fListDim
 
-                    'Wenn Datei schon in Liste vorhanden: Nicht hinzufügen (nur wenn einzelne Datei)
+                    'Wenn Datei schon in Liste vorhanden: Nicht hinzufÃ¼gen (nur wenn einzelne Datei)
                     If UCase(Path(p)) = UCase(fList(f)) Then
 
                         'Status reset
@@ -928,7 +928,7 @@ Public Class F_MAINForm
                         Me.LvGEN.Items(f).BackColor = Color.FromKnownColor(KnownColor.Window)
                         Me.LvGEN.Items(f).ForeColor = Color.FromKnownColor(KnownColor.WindowText)
 
-                        'Element auswählen und anhaken
+                        'Element auswÃ¤hlen und anhaken
                         Me.LvGEN.Items(f).Selected = True
                         Me.LvGEN.Items(f).Checked = True
                         Me.LvGEN.Items(f).EnsureVisible()
@@ -939,7 +939,7 @@ Public Class F_MAINForm
 
             End If
 
-            'Sonst: Datei hinzufügen (ohne WorkDir)
+            'Sonst: Datei hinzufÃ¼gen (ohne WorkDir)
             ListViewItem0 = New ListViewItem(Path(p))   'fFileWD(Path(p)))
             ListViewItem0.SubItems.Add(" ")
             ListViewItem0.Checked = True
@@ -1157,7 +1157,7 @@ lbFound:
         FileOpen(fFileRepl(Me.LvDRI.SelectedItems(0).SubItems(0).Text, Cfg.WorkDPath))
     End Sub
 
-    'DRI Liste: Datei hinzufügen
+    'DRI Liste: Datei hinzufÃ¼gen
     Private Sub AddToListViewDRI(ByVal Path As String())
         Dim pDim As Int16
         Dim p As Int16
@@ -1168,7 +1168,7 @@ lbFound:
         Me.LvDRI.BeginUpdate()
         CheckLock = True
 
-        'Modus umschalten falls nötig
+        'Modus umschalten falls nÃ¶tig
         If (LastModeIndex <> 1) Then Me.CBoxMODE.SelectedIndex = 1
 
         For p = 0 To pDim
@@ -1381,12 +1381,12 @@ lbFound:
 
         ListV.BeginUpdate()
 
-        'Selected Items löschen
+        'Selected Items lÃ¶schen
         For Each ListViewItem0 In ListV.SelectedItems
             ListViewItem0.Remove()
         Next
 
-        'Items einfügen und auswählen
+        'Items einfÃ¼gen und auswÃ¤hlen
         'For y = y1 To 0 Step -1
         For y = 0 To y1
             ListViewItem0 = ListV.Items.Insert(index(y), items(y))
@@ -1727,7 +1727,7 @@ lbFound:
 
     End Sub
 
-    'GEN Editor öffnen und Datei laden
+    'GEN Editor Ã¶ffnen und Datei laden
     Friend Sub OpenGENEditor(ByVal x As String)
 
         If Not F_GEN.Visible Then
@@ -1747,7 +1747,7 @@ lbFound:
 
     End Sub
 
-    'ADV Editor öffnen und Datei laden
+    'ADV Editor Ã¶ffnen und Datei laden
     Friend Sub OpenADVEditor(ByVal x As String)
         If Not F_ADV.Visible Then
             F_ADV.Show()
@@ -1784,7 +1784,7 @@ lbFound:
     End Sub
 
 
-#Region "Sekundäre Progressbar (ToolStripProgBarSec) ...auch Update von ToolStripProgBarPrim möglich"
+#Region "SekundÃ¤re Progressbar (ToolStripProgBarSec) ...auch Update von ToolStripProgBarPrim mÃ¶glich"
 
     Private Sub ProgSecStart()
         ProgBarCtrl.ProgJobInt = 0
@@ -2103,7 +2103,7 @@ lbFound:
     '    If LvMsg.SelectedItems.Count > 0 Then LvMsg.SelectedItems.Clear()
     'End Sub
 
-    'Falls Link => Öffnen
+    'Falls Link => Ã–ffnen
     Private Sub LvMsg_MouseClick(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvMsg.MouseClick
         If Me.LvMsg.SelectedIndices.Count > 0 Then
             If Not Me.LvMsg.SelectedItems(0).Tag Is Nothing Then
@@ -2116,7 +2116,7 @@ lbFound:
         End If
     End Sub
 
-    'Hand-Cursor für Links
+    'Hand-Cursor fÃ¼r Links
     Private Sub LvMsg_MouseMove(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvMsg.MouseMove
         Dim lv0 As ListViewItem
         lv0 = Me.LvMsg.GetItemAt(e.Location.X, e.Location.Y)

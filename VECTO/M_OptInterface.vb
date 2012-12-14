@@ -1,4 +1,4 @@
-Imports System.Runtime.Remoting
+ï»¿Imports System.Runtime.Remoting
 Imports System.Runtime.Remoting.Channels
 Imports System.Runtime.Remoting.Channels.Ipc
 
@@ -41,16 +41,16 @@ Module M_OptInterface
     Private Sub OptInit()
 
 
-        'Zähler null setzen
+        'ZÃ¤hler null setzen
         OptZaehl = 0
 
-        'Korr. Em. löschen 
+        'Korr. Em. lÃ¶schen 
         ReDim OptEMkor(10)
 
         OptERstat = False
 
         'TODO: I/O-Verzeichnis festlegen
-        OptDir = "TODO"        '  Früher: F_DEV.TbOptInOut.Text
+        OptDir = "TODO"        '  FrÃ¼her: F_DEV.TbOptInOut.Text
         If Right(OptDir, 1) <> "\" Then OptDir &= "\"
 
         'Communication - Input
@@ -164,7 +164,7 @@ Module M_OptInterface
     Public Sub OptStartRun()
         'Timer anhalten
         F_MAINForm.ComMsgTimer.Stop()
-        'Zähler + 1
+        'ZÃ¤hler + 1
         OptZaehl += 1
         'PHEM starten
         GUImsg(tMsgID.Normal, "Starte PHEM. Durchgang " & OptZaehl)

@@ -1,4 +1,4 @@
-Imports System.Windows.Forms
+ï»¿Imports System.Windows.Forms
 
 Public Class F_ModSplit
 
@@ -8,10 +8,10 @@ Public Class F_ModSplit
     Dim FBtemp As cFileBrowser
 
     Public Sub New()
-        ' Dieser Aufruf ist für den Windows Form-Designer erforderlich.
+        ' Dieser Aufruf ist fÃ¼r den Windows Form-Designer erforderlich.
         InitializeComponent()
 
-        ' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
+        ' FÃ¼gen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
         FBtemp = New cFileBrowser("temp", False, True)
         FBtemp.Extensions = New String() {"mod"}
     End Sub

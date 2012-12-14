@@ -1,4 +1,4 @@
-Public Class F_AboutBox
+﻿Public Class F_AboutBox
 
 
     'Initialisieren

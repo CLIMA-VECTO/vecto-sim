@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+ï»¿Imports System.Collections.Generic
 
 Module VECTO_Global
 
@@ -17,7 +17,7 @@ Module VECTO_Global
     'Config-------------------------------------------------------
     Public Cfg As cConfig
 
-    'TODO: Weg damit! SOC-Iteration gehört in die Leistungsschleife oder nach Em-Berechnung für LinReg
+    'TODO: Weg damit! SOC-Iteration gehÃ¶rt in die Leistungsschleife oder nach Em-Berechnung fÃ¼r LinReg
     Public SOCstart As Single
     Public SOC(izykt) As Single
     Public Const izykt As Integer = 40000

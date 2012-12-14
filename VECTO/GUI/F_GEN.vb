@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+ï»¿Imports System.Collections.Generic
 
 Public Class F_GEN
 
@@ -56,7 +56,7 @@ Public Class F_GEN
 
     End Sub
 
-    'Schließen
+    'SchlieÃŸen
     Private Sub F02_GEN_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
             e.Cancel = ChangeCheckCancel()
@@ -71,8 +71,8 @@ Public Class F_GEN
     End Sub
 
 
-#Region "Schaltflächen Ein-/Ausblenden (und ggf. Change() aufrufen)"
-    'Änderung der DynKor Checkbox
+#Region "SchaltflÃ¤chen Ein-/Ausblenden (und ggf. Change() aufrufen)"
+    'Ã„nderung der DynKor Checkbox
     Private Sub CheckBoxDynKor_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxDynKor.CheckedChanged
         Me.ButOpenTRS.Enabled = Me.CheckBoxDynKor.Checked
         Me.TextBoxTRS.Enabled = Me.CheckBoxDynKor.Checked
@@ -80,13 +80,13 @@ Public Class F_GEN
         Call Change()
     End Sub
 
-    'Änderung der Kaltstart Checkbox
+    'Ã„nderung der Kaltstart Checkbox
     Private Sub CheckBoxColdSt_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxColdSt.CheckedChanged
         SetCStab(Me.CheckBoxColdSt.Checked)
         Call Change()
     End Sub
 
-    'Änderund der SCR Checkbox
+    'Ã„nderund der SCR Checkbox
     Private Sub CheckBoxSCR_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxSCR.CheckedChanged
         Me.ButOpenEXS.Enabled = Me.CheckBoxSCR.Checked
         Me.TextBoxEXS.Enabled = Me.CheckBoxSCR.Checked
@@ -349,7 +349,7 @@ Public Class F_GEN
         Dim f As String
         f = fFileRepl(TextBoxVEH.Text, fPATH(Genfile))
 
-        'Damit Veh-Datei übergeben wird
+        'Damit Veh-Datei Ã¼bergeben wird
         F_VEH.GenDir = fPATH(Genfile)
         F_VEH.AutoSendTo = True
 
@@ -375,7 +375,7 @@ Public Class F_GEN
         Dim f As String
         f = fFileRepl(TbENG.Text, fPATH(Genfile))
 
-        'Damit Veh-Datei übergeben wird
+        'Damit Veh-Datei Ã¼bergeben wird
         F_ENG.GenDir = fPATH(Genfile)
         F_ENG.AutoSendTo = True
 
@@ -401,7 +401,7 @@ Public Class F_GEN
         Dim f As String
         f = fFileRepl(TbGBX.Text, fPATH(Genfile))
 
-        'Damit Veh-Datei übergeben wird
+        'Damit Veh-Datei Ã¼bergeben wird
         F_GBX.GenDir = fPATH(Genfile)
         F_GBX.AutoSendTo = True
 
@@ -469,7 +469,7 @@ Public Class F_GEN
     End Sub
 #End Region
 
-#Region "Menüleiste / Toolbar"
+#Region "MenÃ¼leiste / Toolbar"
 
     'New
     Private Sub ToolStripBtNew_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtNew.Click
@@ -926,11 +926,11 @@ Public Class F_GEN
 #End Region
 
 
-#Region "Formular Änderungen (Change() Aufruf) und ggf. Tabs ein/ausblenden"
+#Region "Formular Ã„nderungen (Change() Aufruf) und ggf. Tabs ein/ausblenden"
 
-#Region "Event Handler für Formänderungen"
+#Region "Event Handler fÃ¼r FormÃ¤nderungen"
 
-    'Event Handler für Formänderungen
+    'Event Handler fÃ¼r FormÃ¤nderungen
     Private Sub FormChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles _
     ComboBoxVehType.SelectedIndexChanged, _
     ComboBoxGearShift.SelectedIndexChanged, _
@@ -946,13 +946,13 @@ Public Class F_GEN
         Call Change()
     End Sub
 
-    'Start/Stop - Checkbox Änderung
+    'Start/Stop - Checkbox Ã„nderung
     Private Sub ChBStartStop_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ChBStartStop.CheckedChanged
         SetStStoptab(Me.ChBStartStop.Checked)
         Change()
     End Sub
 
-    'Start/Stop - Textbox Änderung
+    'Start/Stop - Textbox Ã„nderung
     Private Sub TBSSspeed_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TBSSspeed.TextChanged, TBSStime.TextChanged
         Change()
     End Sub
@@ -1069,7 +1069,7 @@ Public Class F_GEN
 
 #End Region
 
-    'Change Status ändern
+    'Change Status Ã¤ndern
     Private Sub Change()
         If Not Changed Then
             Me.ToolStripStatusLabelGEN.Text = "Unsaved changes in current file"
@@ -1115,7 +1115,7 @@ Public Class F_GEN
         AuxDlog.TbPath.Text = ""
         AuxDlog.CbType.SelectedIndex = -1
         AuxDlog.CbType.Text = ""
-        AuxDlog.TbID.Text = ""       '!!! Vorher Type setzen weil ID beim ändern von Type überschrieben wird !!!"
+        AuxDlog.TbID.Text = ""       '!!! Vorher Type setzen weil ID beim Ã¤ndern von Type Ã¼berschrieben wird !!!"
 
 lbDlog:
         If AuxDlog.ShowDialog = Windows.Forms.DialogResult.OK Then
@@ -1172,7 +1172,7 @@ lbDlog:
         AuxDlog.TbPath.Text = LV0.SubItems(2).Text
         AuxDlog.CbType.SelectedIndex = -1
         AuxDlog.CbType.Text = LV0.SubItems(1).Text
-        AuxDlog.TbID.Text = LV0.SubItems(0).Text        '!!! Vorher Type setzen weil ID beim ändern von Type überschrieben wird !!!
+        AuxDlog.TbID.Text = LV0.SubItems(0).Text        '!!! Vorher Type setzen weil ID beim Ã¤ndern von Type Ã¼berschrieben wird !!!
 
         If AuxDlog.ShowDialog = Windows.Forms.DialogResult.OK Then
             LV0.SubItems(0).Text = UCase(Trim(AuxDlog.TbID.Text))

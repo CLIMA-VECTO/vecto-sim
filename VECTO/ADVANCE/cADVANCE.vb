@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+ï»¿Imports System.Collections.Generic
 
 Public Class cADVANCE_V3
 
@@ -45,7 +45,7 @@ Public Class cADVANCE_V3
     Private t0 As Int32
     Private vX() As Single
     Private vY() As Single
-    Private vNr() As Int32      '<< Int16 zu klein (EkoZara: vNr's bis ~ 48000). Möglich wäre allerdings Int16 von -32767 bis +32767 verwenden d.h. Max = 65534
+    Private vNr() As Int32      '<< Int16 zu klein (EkoZara: vNr's bis ~ 48000). MÃ¶glich wÃ¤re allerdings Int16 von -32767 bis +32767 verwenden d.h. Max = 65534
     Private vNrSub() As Int16   '<< Evtl. weghaun...?
     Private vVm() As Single
     Private vStg() As Single
@@ -68,7 +68,7 @@ Public Class cADVANCE_V3
     Private sSIDlist As List(Of Int32)      'Streckennummer-Liste, aufsteigend sortiert, keine Duplikate
     Private sSIDfiles As List(Of Int32)     'Dateinummern, gleich sortiert wie sSIDlist
 
-    'Felder für Streckennummer, Spur und Koordinaten für alle STR-Dateien 
+    'Felder fÃ¼r Streckennummer, Spur und Koordinaten fÃ¼r alle STR-Dateien 
     Private STRlen As Int32
     Private sStr As List(Of Int32)
     Private sSp As List(Of Int16)
@@ -103,7 +103,7 @@ Public Class cADVANCE_V3
     'Berechnung
     Private zFZP As Int32           'Globale FZP-Zeile
     Private LastGen As String       'Letzte .gen-Datei
-    Private VehStrAlt As String     'VehStr = Fahrzeug ID: bestehend aus Fahrzeugnummer (aus VISSIM) und SubNr um Zeitlücken zu korrigieren
+    Private VehStrAlt As String     'VehStr = Fahrzeug ID: bestehend aus Fahrzeugnummer (aus VISSIM) und SubNr um ZeitlÃ¼cken zu korrigieren
     Private vNrAlt As Int32
     Private fzpL10 As Int32
     Private fzpL As Int32
@@ -230,7 +230,7 @@ Public Class cADVANCE_V3
         Rnd(-1)
         Randomize(RndSeed)
 
-        'Für AusgVis
+        'FÃ¼r AusgVis
         iadvance = FZPlen
 
         'Ausgabe-Initialisierung
@@ -330,7 +330,7 @@ Public Class cADVANCE_V3
         End If
         iadvance = 0
 
-        'Listen löschen
+        'Listen lÃ¶schen
         aWorldX = Nothing
         aWorldY = Nothing
         aStrId = Nothing
@@ -385,7 +385,7 @@ lbStart:
         't0
         DRI.t0 = vt(zFZP + 1)
 
-        'Definiere Felder für Fahrzeug-Berechnung
+        'Definiere Felder fÃ¼r Fahrzeug-Berechnung
         z = -1
         Do
             'Check ob neues Fahrzeug 
@@ -416,10 +416,10 @@ lbStart:
         aVehNr = vNrAkt
         aVehType = CStr(vIDi)
 
-        'Check ob Zyklus zu kurz => Überspringen
+        'Check ob Zyklus zu kurz => Ãœberspringen
         If z < 1 Then GoTo lbStart
 
-        'Fahrzeuganzahl je Typ erhöhen
+        'Fahrzeuganzahl je Typ erhÃ¶hen
         FLTfleet(aVehType).VehCount += 1
 
         DRI.tDim = z
@@ -473,7 +473,7 @@ lbStart:
             STR1 = getSTRfileNr(aStrId(t))
 
             'Falls Wechsel in STR-Nr:
-            '   Alte STR-Nr abschließen
+            '   Alte STR-Nr abschlieÃŸen
             If STR0 <> STR1 Then
 
                 If t0 > -1 Then ' STR0 > -1 Then
@@ -524,7 +524,7 @@ lbStart:
 
         Next
 
-        'Letzte STR abschließen
+        'Letzte STR abschlieÃŸen
         If t0 > -1 Then
 
             STRergRef = STRerg(STR0)
@@ -693,7 +693,7 @@ lbStart:
         WorkerMsg(tMsgID.Normal, "Traffic File: Counting lines...", MsgSrc)
 
 
-        'Dateilänge bestimmen
+        'DateilÃ¤nge bestimmen
         Try
             f = New System.IO.StreamReader(FZPpath)
         Catch ex As Exception
@@ -752,7 +752,7 @@ lbStart:
         fReader.TextFieldType = Microsoft.VisualBasic.FileIO.FieldType.Delimited
         fReader.Delimiters = New String() {";"}
 
-        'Kommentare überspringen
+        'Kommentare Ã¼berspringen
         For l = 1 To LineSkip
             fReader.ReadLine()
         Next
@@ -762,7 +762,7 @@ lbStart:
         lc10 = Math.Max(FZPlen / 100, 1000)
         Do While Not fReader.EndOfData
             line = fReader.ReadFields()
-            'Strecken die nicht in der STR Datei aufgeführt sind werden hier entfernt
+            'Strecken die nicht in der STR Datei aufgefÃ¼hrt sind werden hier entfernt
             If STRfilter Then
                 If line(FZProwStr) <> lastSID Then
                     lastSID = line(FZProwStr)
@@ -871,7 +871,7 @@ lbProg1:
         Do
             'Aktuelles Fahrzeug ist vNr1
             vNr1 = vNrSort(x1)
-            'Zähle Fahrzeuge mit vNr = vNr1
+            'ZÃ¤hle Fahrzeuge mit vNr = vNr1
             x2 = x1
             vNrAnz = 0
             Do
@@ -1159,7 +1159,7 @@ lbProg1:
 
 
     'FZP Check:
-    '   ...Fahrzeuge aufteilen, die Lücke im Zeitverlauf haben
+    '   ...Fahrzeuge aufteilen, die LÃ¼cke im Zeitverlauf haben
     Private Sub FZPcheck()
 
         Dim z As Int32
@@ -1305,7 +1305,7 @@ lbProg1:
 
     End Function
 
-    'Ausgabe Schließen
+    'Ausgabe SchlieÃŸen
     Private Function AusgVis_V3_Close() As Boolean
         Dim F611 As New cFile_V3
         Dim secvis As Single
@@ -1374,7 +1374,7 @@ lbProg1:
             Call F611.WriteLine("Average results per line over total time interval [sec]:", secvis)   ' Format 640
             Call F611.WriteLine("Cold start extra emissions are included")   ' Format *
             Call F611.WriteLine("lfd.; x1; y1; x2; y2;Strassen;; mittl.Emiss. [mg/(m*s)];;; ; ; ; ; ; ; ;DTV;Lkw-An-; Fahr-; Qh/;Typ; S_z0;Str-;; lNfz; lBus; F; L; W;Abschn.-")   ' Format '(A150)'
-            Call F611.WriteLine("Nr.;[m];[m];[m];[m];Breite[m];Höhe[m];NOx;BENZOL;RUSS;PM10;KW;CO;CO2;SO2;Stoff 9; Stoff 10;[Kfz/d];teil[-];muster;SBr[m];[-];[m];Nr;Strassenkategorie;[-];[-]; S; N; O;Laenge[m]")   ' Format '(A180)'
+            Call F611.WriteLine("Nr.;[m];[m];[m];[m];Breite[m];HÃ¶he[m];NOx;BENZOL;RUSS;PM10;KW;CO;CO2;SO2;Stoff 9; Stoff 10;[Kfz/d];teil[-];muster;SBr[m];[-];[m];Nr;Strassenkategorie;[-];[-]; S; N; O;Laenge[m]")   ' Format '(A180)'
             'C
             For js = 1 To STRlen
                 ivd = Math.Round(vDTV(js), 0, MidpointRounding.AwayFromZero)
@@ -1598,7 +1598,7 @@ lbProg1:
             If Not STRergRef.Ausg() Then Return False
         Next
 
-        '********* Ausgabe Summen über alle STR's '*********
+        '********* Ausgabe Summen Ã¼ber alle STR's '*********
 
         STRSUMpath = fFileWoExt(JobFile) & ".segment.sum"
 
@@ -1892,7 +1892,7 @@ lbProg1:
 
         WorkerMsg(tMsgID.Normal, "Starting .mod split.", MsgSrc)
 
-        'InFile öffnen
+        'InFile Ã¶ffnen
         Try
             f = New System.IO.StreamReader(InPath)
         Catch ex As Exception
@@ -1928,7 +1928,7 @@ lbProg1:
                 GoTo lbDone
             End If
 
-            'Ausgabedatei öffnen / Abbruch wenn Fehler beim Öffnen
+            'Ausgabedatei Ã¶ffnen / Abbruch wenn Fehler beim Ã–ffnen
             If Not fOut.OpenWrite(fFileWoExt(InPath) & "_Veh" & VehNr & ".mod") Then
                 WorkerMsg(tMsgID.Err, "Cannot create output file. Veh.Nr. " & VehNr, MsgSrc)
                 GoTo lbDone
@@ -1937,7 +1937,7 @@ lbProg1:
             'Schleife durch Datei
             Do While Not f.EndOfStream
 
-                'Falls String schon eine VehNr enthält wird Zeile nicht nochmal eingelesen (siehe unten)
+                'Falls String schon eine VehNr enthÃ¤lt wird Zeile nicht nochmal eingelesen (siehe unten)
                 If CheckLast Then
                     CheckLast = False
                 Else
@@ -1955,17 +1955,17 @@ lbProg1:
                         'Erste Zeile schreiben ("VehNr: ...")
                         fOut.WriteLine(laststring)
 
-                        'Nächste Zeile lesen (sonst wird Do While übersprungen)
+                        'NÃ¤chste Zeile lesen (sonst wird Do While Ã¼bersprungen)
                         laststring = f.ReadLine
 
-                        'Schleife bis nächste VehNr / Dateiende
+                        'Schleife bis nÃ¤chste VehNr / Dateiende
                         Do While Not f.EndOfStream
 
-                            'Wenn nächstes Fahrzeug:
+                            'Wenn nÃ¤chstes Fahrzeug:
                             If InStr(laststring, "VehNr:", CompareMethod.Text) > 0 Then
                                 If GetVehNr(laststring) = VehNr Then
                                     'Wenn gleiche Fahrzeugnummer: Datei weiter schreiben
-                                    'Header und Units überspringen
+                                    'Header und Units Ã¼berspringen
                                     f.ReadLine()
                                     f.ReadLine()
                                     laststring = f.ReadLine
@@ -1983,10 +1983,10 @@ lbProg1:
 
                         Loop
 
-                        'Falls nicht EndOfStream Flag setzen damit nächste VehNr nicht übersprungen wird
+                        'Falls nicht EndOfStream Flag setzen damit nÃ¤chste VehNr nicht Ã¼bersprungen wird
                         If Not f.EndOfStream Then CheckLast = True
 
-                        'Ausgabedatei schließen
+                        'Ausgabedatei schlieÃŸen
                         fOut.Close()
 
                         'Aus der VehNr-Such-Schleife raus springen
@@ -2122,7 +2122,7 @@ lbDone:
 
     End Class
 
-    'Klasse für abschnittsweise Auswertung
+    'Klasse fÃ¼r abschnittsweise Auswertung
     Private Class cSTRerg
 
         Public MySTRpath As String
@@ -2133,7 +2133,7 @@ lbDone:
 
         Public EMsum As Dictionary(Of String, List(Of Double))      'Summen-Emissionen je Fahrzeugtyp und Em-Komponente Absolut [g]
 
-        Public Distance As Single                                   'STR-Länge für Filter in km
+        Public Distance As Single                                   'STR-LÃ¤nge fÃ¼r Filter in km
 
         Public Sub Init()
             Dim KV As KeyValuePair(Of String, cFLTfleet)
@@ -2378,7 +2378,7 @@ lbDone:
             'Schreiben
             fSSUM.WriteLine(s.ToString)
 
-            'Datei schließen
+            'Datei schlieÃŸen
             fSSUM.Close()
 
             Return True

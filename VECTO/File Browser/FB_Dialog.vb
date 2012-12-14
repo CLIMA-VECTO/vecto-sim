@@ -1,4 +1,4 @@
-Public Class FB_Dialog
+ï»¿Public Class FB_Dialog
 
     Private MyFolder As String
     Private MyFiles() As String
@@ -29,9 +29,9 @@ Public Class FB_Dialog
 
     'New
     Public Sub New(ByVal LightMode As Boolean)
-        ' Dieser Aufruf ist für den Windows Form-Designer erforderlich.
+        ' Dieser Aufruf ist fÃ¼r den Windows Form-Designer erforderlich.
         InitializeComponent()
-        ' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
+        ' FÃ¼gen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
         MyID = "Default"
         UpdateLock = False
         Initialized = False
@@ -101,9 +101,9 @@ Public Class FB_Dialog
                     Exit Sub
                 End If
                 LastExt = Trim(Me.ComboBoxExt.Text)
-                'Dateien in Array übernehmen
+                'Dateien in Array Ã¼bernehmen
                 If Microsoft.VisualBasic.Left(Me.TextBoxPath.Text, 1) = "<" And Me.ListViewFiles.SelectedItems.Count > 0 Then
-                    'Mehrere Dateien ausgewählt 
+                    'Mehrere Dateien ausgewÃ¤hlt 
                     ReDim MyFiles(Me.ListViewFiles.SelectedItems.Count - 1)
                     x = -1
                     For Each lv0 As ListViewItem In Me.ListViewFiles.Items
@@ -116,9 +116,9 @@ Public Class FB_Dialog
                 Else
                     'Einzelne Datei
                     path = Trim(Me.TextBoxPath.Text)
-                    'Primäre Extension (u.a. für bForceExt)
+                    'PrimÃ¤re Extension (u.a. fÃ¼r bForceExt)
                     Ext = Trim(Me.ComboBoxExt.Text.Split(",")(0))
-                    'Falls Datei ohne Pfad angegeben dann Pfad hinzufügen
+                    'Falls Datei ohne Pfad angegeben dann Pfad hinzufÃ¼gen
                     If Microsoft.VisualBasic.Mid(path, 2, 1) <> ":" Then path = MyFolder & path
                     'Falls statt Datei ein Ordner eingegeben wurde: Auf Ordner wechseln und Abbruch
                     If IO.Directory.Exists(path) Then
@@ -134,7 +134,7 @@ Public Class FB_Dialog
                         'Check ob Datei mit Ext angegeben
                         HasExt = (Microsoft.VisualBasic.Len(IO.Path.GetExtension(path)) > 1)
                     End If
-                    'Falls Datei ohne Endung (nach bForceExt-Abfrage) und nicht existiert dann primäre Endung hinzufügen
+                    'Falls Datei ohne Endung (nach bForceExt-Abfrage) und nicht existiert dann primÃ¤re Endung hinzufÃ¼gen
                     If Not HasExt Then
                         If Ext <> "*" And Ext <> "" Then
                             If Not IO.File.Exists(path) Then path &= "." & Ext
@@ -222,10 +222,10 @@ Public Class FB_Dialog
         '   Falls kein Pfad angegeben wird: Letzter Ordner, kein Dateiname
         If path = "" Then path = FB_FolderHistory(0)
 
-        '   Falls Pfadlänge zu klein (Pfad ungültig): Letzte Datei
+        '   Falls PfadlÃ¤nge zu klein (Pfad ungÃ¼ltig): Letzte Datei
         If path.Length < 2 Then path = LastFile
 
-        'Ordner öffnen - Falls kein Ordner im Pfad: Letzter Ordner
+        'Ordner Ã¶ffnen - Falls kein Ordner im Pfad: Letzter Ordner
         If fPATH(path) = "" Then
             'Falls Datei ohne Pfad angegeben
             If Trim(FB_FolderHistory(0)) = "" Then
@@ -269,7 +269,7 @@ Public Class FB_Dialog
         End If
     End Function
 
-    'Schließen und File/Folder History speichern
+    'SchlieÃŸen und File/Folder History speichern
     Public Sub SaveAndClose()
         Dim f As System.IO.StreamWriter
         Dim x As Int16
@@ -778,7 +778,7 @@ Public Class FB_Dialog
 
         UpdateLock = True
 
-        'Suchfelder löschen
+        'Suchfelder lÃ¶schen
         Me.TextBoxSearchFile.Text = ""
         Me.TextBoxSearchFolder.Text = ""
 
@@ -817,11 +817,11 @@ Public Class FB_Dialog
     'FolderListe laden
     Private Sub LoadListFolder()
         Dim SearchPat As String
-        'FolderListe löschen
+        'FolderListe lÃ¶schen
         Me.ListViewFolder.Items.Clear()
         SearchPat = "*" & Me.TextBoxSearchFolder.Text & "*"
         Try
-            'Ordner hinzufügen
+            'Ordner hinzufÃ¼gen
             Dim di As New IO.DirectoryInfo(MyFolder)
             Dim aryFi As IO.DirectoryInfo()
             Dim fi As IO.DirectoryInfo
@@ -853,14 +853,14 @@ Public Class FB_Dialog
             ExtStr = Me.ComboBoxExt.Text.ToString.Split(",")
         End If
 
-        'FileListe löschen
+        'FileListe lÃ¶schen
         Me.ListViewFiles.Items.Clear()
 
         SearchFile = Me.TextBoxSearchFile.Text
 
         Me.ListViewFiles.BeginUpdate()
         Try
-            'Ordner hinzufügen
+            'Ordner hinzufÃ¼gen
             Dim di As New IO.DirectoryInfo(MyFolder)
             Dim aryFi As IO.FileInfo()
             Dim fi As IO.FileInfo

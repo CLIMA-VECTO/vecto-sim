@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+ï»¿Imports System.Collections.Generic
 
 Module M_MAIN
 
@@ -28,7 +28,7 @@ Module M_MAIN
 
     Public Function PHEM() As tCalcResult
 
-        'Hauptprogramm für alle Modi
+        'Hauptprogramm fÃ¼r alle Modi
 
         Dim MsgStrBuilder As System.Text.StringBuilder
 
@@ -48,7 +48,7 @@ Module M_MAIN
         'Falls es zu "ungeplanten" Abbruch kommt
         PHEM = tCalcResult.Err
 
-        'Fehler zurücksetzen
+        'Fehler zurÃ¼cksetzen
         ''ClearErrors()
 
         'Modus festlegen und Meldung
@@ -125,7 +125,7 @@ lbSkip0:
             If Not ERG.ErgEntryInit() Then GoTo lbErrBefore
         End If
 
-        'Warnung wenn ungültige/unrealistische Einstellungen
+        'Warnung wenn ungÃ¼ltige/unrealistische Einstellungen
         If Cfg.AirDensity > 2 Then WorkerMsg(tMsgID.Err, "Air Density = " & Cfg.AirDensity & " ?!", MsgSrc)
 
         'Meldungen
@@ -203,7 +203,7 @@ lbADV:
                 GoTo lbNextJob
             End If
 
-            'Überprüfe ob alle Modi in der GEN Datei lizenziert sind
+            'ÃœberprÃ¼fe ob alle Modi in der GEN Datei lizenziert sind
             LicErrorFeat = 0
 
             If GEN.VehMode = tVehMode.HEV Then
@@ -323,7 +323,7 @@ lbADV:
                     '**************************************************************************************
 
 
-                    'Einstiegspunkt für SOC-Start Iteration
+                    'Einstiegspunkt fÃ¼r SOC-Start Iteration
                     If GEN.ModeHorEV And SOCnJa Then SOCfirst = True
 
                     'Aufraumen
@@ -382,7 +382,7 @@ lbADV:
 
                     Else
 
-                        'ACHTUNG: VehmodeInit benötigt Infos aus GEN und DRI!
+                        'ACHTUNG: VehmodeInit benÃ¶tigt Infos aus GEN und DRI!
                         If Not VEH.VehmodeInit() Then
                             'Fehlermeldung innerhalb VehmodeInit()
                             JobAbortedByErr = True
@@ -441,7 +441,7 @@ lbADV:
 
                         If PHEMworker.CancellationPending Then GoTo lbAbort
 
-                        'CycleKin (für erg/sum usw.) berechnen
+                        'CycleKin (fÃ¼r erg/sum usw.) berechnen
                         MODdata.CylceKin.Calc()
 
                     End If
@@ -449,12 +449,12 @@ lbADV:
                     '----------------------------------------------------------------------------
 
 
-                    'Emissionen und Nachbehandlung - wird bei EV-Modus nicht ausgeführt
+                    'Emissionen und Nachbehandlung - wird bei EV-Modus nicht ausgefÃ¼hrt
                     If Not GEN.VehMode = tVehMode.EV Then
 
                         If MsgOut Then WorkerMsg(tMsgID.Normal, "Calculating Transient Correction Factors", MsgSrc)
 
-                        'Sekündliche TC Parameter ermittlen
+                        'SekÃ¼ndliche TC Parameter ermittlen
                         MODdata.TC.Calc()
 
                         'Kennfeld Erstellung
@@ -517,7 +517,7 @@ lbADV:
 
                     If PHEMworker.CancellationPending Then GoTo lbAbort
 
-                    '*** Sekündliche Ausgabe ***
+                    '*** SekÃ¼ndliche Ausgabe ***
                     If Cfg.ModOut Then
                         If MsgOut Then WorkerMsg(tMsgID.Normal, "Writing modal output", MsgSrc)
                         If Not MODdata.Output() Then
@@ -537,7 +537,7 @@ lbADV:
                     End If
 
 
-                    'Ausgabe für BATCH und ADVANCE
+                    'Ausgabe fÃ¼r BATCH und ADVANCE
 lbAusg:
                     If (PHEMmode = tPHEMmode.ModeADVANCE) Then
 
@@ -564,7 +564,7 @@ lbAusg:
 
                     End If
 
-                    'Daten aufräumen
+                    'Daten aufrÃ¤umen
                     MODdata.CleanUp()
 
                     'Status-Update

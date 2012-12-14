@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+﻿Imports System.Collections.Generic
 
 Public Class cCycleKin
 
@@ -6,7 +6,7 @@ Public Class cCycleKin
     Private Const aDecThres As Single = -0.125  '[m/s2]
     Private Const vStopThres As Single = 0.1    '[m/s]
 
-    'Fahrzust�nde in Sekunden
+    'Fahrzustände in Sekunden
     Private tStop0 As Integer
     Private tAcc0 As Integer
     Private tDec0 As Integer

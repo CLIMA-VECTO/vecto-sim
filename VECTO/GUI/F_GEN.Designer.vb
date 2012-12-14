@@ -1,8 +1,8 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class F_GEN
     Inherits System.Windows.Forms.Form
 
-    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+    'Das Formular Ã¼berschreibt den LÃ¶schvorgang, um die Komponentenliste zu bereinigen.
     <System.Diagnostics.DebuggerNonUserCode()> _
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
@@ -14,12 +14,12 @@ Partial Class F_GEN
         End Try
     End Sub
 
-    'Wird vom Windows Form-Designer benötigt.
+    'Wird vom Windows Form-Designer benÃ¶tigt.
     Private components As System.ComponentModel.IContainer
 
-    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
-    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
-    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+    'Hinweis: Die folgende Prozedur ist fÃ¼r den Windows Form-Designer erforderlich.
+    'Das Bearbeiten ist mit dem Windows Form-Designer mÃ¶glich.  
+    'Das Bearbeiten mit dem Code-Editor ist nicht mÃ¶glich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_GEN))
@@ -624,7 +624,7 @@ Partial Class F_GEN
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(96, 13)
         Me.Label5.TabIndex = 1
-        Me.Label5.Text = "Coolant Temp [°C]:"
+        Me.Label5.Text = "Coolant Temp [Â°C]:"
         '
         'Label4
         '
@@ -633,7 +633,7 @@ Partial Class F_GEN
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(97, 13)
         Me.Label4.TabIndex = 0
-        Me.Label4.Text = "Catalyst Temp [°C]:"
+        Me.Label4.Text = "Catalyst Temp [Â°C]:"
         '
         'ButOpenMAC
         '
