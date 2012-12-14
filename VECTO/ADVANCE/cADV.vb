@@ -81,28 +81,28 @@ lbClose:
 
         If Not fADV.OpenWrite(sFilePath) Then Return False
 
-        'Zeile 1: FZP-Datei
+        'Line 1: FZP file
         fADV.WriteLine(fFZPpath.PathOrDummy)
 
-        'Zeile 2: FLT-Datei
+        'Line 2: FLT file
         fADV.WriteLine(fFLTpath.PathOrDummy)
 
-        'Zeile 3: TEM-Datei
+        'Line 3: TEM file
         fADV.WriteLine(fTEMpath.PathOrDummy)
 
-        'Zeile 4: RndSeed
+        'Line 4: RndSeed
         fADV.WriteLine(RndSeed.ToString)
 
-        'Zeile 5: MISKAMout True/False
+        'Line 5: MISKAMout True/False|
         fADV.WriteLine(Math.Abs(CInt(SD3out)))
 
-        'Zeile 6: STRfilter True/False
+        'Line 6: STRfilter True/False
         fADV.WriteLine(Math.Abs(CInt(STRfilter)))
 
-        'Zeile 7: Distance filter für SUM.STR
+        'Line 7: Distance filters for SUM.STR
         fADV.WriteLine(STRSUMdistflt.ToString)
 
-        'Zeile 8+: STR Dateien
+        'Line 8 +: STR files
         For Each SubPath In fSTRpaths
             fADV.WriteLine(SubPath.PathOrDummy)
         Next

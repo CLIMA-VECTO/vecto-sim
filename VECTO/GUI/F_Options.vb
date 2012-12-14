@@ -2,7 +2,7 @@
 
     Dim WD As String = " "
 
-    'Initialisiere - Lade Config
+    'Initialize - load config
     Private Sub F03_Options_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         LoadConfig()
     End Sub
@@ -11,7 +11,7 @@
         If Not DEV.Options("TestOptions").BoolVal Then Me.TabControl1.Controls.Remove(TabPgTest)
     End Sub
 
-    'Config laden
+    'Load Config
     Private Sub LoadConfig()
         Me.TextBoxWorDir.Text = Cfg.WorkDPath
         WD = Cfg.WorkDPath
@@ -58,7 +58,7 @@
         Me.Close()
     End Sub
 
-    'Optionen-----------------------------------
+    'Options-----------------------------------
     Private Sub ButtonWorDir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonWorDir.Click
         If fbWorkDir.OpenDialog(Me.TextBoxWorDir.Text) Then
             Me.TextBoxWorDir.Text = fbWorkDir.Files(0)

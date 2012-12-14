@@ -82,7 +82,7 @@ Public Class cCustomMap
         Ymin = lY(0)
         Ymax = lY(0)
 
-        'Min/Max suchen
+        'Search Min/Max
         For i = 1 To lDim
 
             x = lX(i)
@@ -102,7 +102,7 @@ Public Class cCustomMap
 
         Next
 
-        'Normieren
+        'Normalize
         For i = 1 To lDim
             lX(i) = (lX(i) - Xmin) / (Xmax - Xmin)
             lY(i) = (lY(i) - Ymin) / (Ymax - Ymin)
@@ -122,7 +122,7 @@ Public Class cCustomMap
 
         For i = 0 To lDim
 
-            'Wenn Vorzeichen von x oder y nicht gleich Vorzeichen von xA(i) oder yA(i) dann wird Zeile i übersprungen
+            'When sign of x and y is not equal to the sign of xA(i) and yA(i) respectively, then skip Row i
             If x * lX(i) < 0 Or y * lY(i) < 0 Then Continue For
 
             ab = (x - lX(i)) ^ 2 + (y - lY(i)) ^ 2

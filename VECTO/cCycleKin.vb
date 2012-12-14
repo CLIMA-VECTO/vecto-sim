@@ -6,19 +6,19 @@ Public Class cCycleKin
     Private Const aDecThres As Single = -0.125  '[m/s2]
     Private Const vStopThres As Single = 0.1    '[m/s]
 
-    'Fahrzustände in Sekunden
+    'Fahrzustände in Sekunden |@@| Driving-states in seconds
     Private tStop0 As Integer
     Private tAcc0 As Integer
     Private tDec0 As Integer
     Private tCruise0 As Integer
 
-    'Fahrzustands-Anteile
+    'Fahrzustands-Anteile |@@| Driving-state ratios
     Private pStop0 As Single
     Private pAcc0 As Single
     Private pDec0 As Single
     Private pCruise0 As Single
 
-    'Beschl.-Parameter
+    'Acceleration parameters
     Private aAvg0 As Single
     Private aPos0 As Single
     Private aNeg0 As Single
@@ -79,7 +79,7 @@ Public Class cCycleKin
         pCruise0 = 0
         ReDim a3save(t1)
 
-        '3s-Beschl
+        '3s-Accel
         a3save(0) = MODdata.Vh.a(0)
         For t = 1 To t1 - 1
             a3save(t) = (MODdata.Vh.a(t - 1) + MODdata.Vh.a(t) + MODdata.Vh.a(t + 1)) * (1.0 / 3.0)
@@ -88,7 +88,7 @@ Public Class cCycleKin
 
         't_apos, t_aneg, t_cruise, t_stop
         For t = 0 To t1
-            'Fahranteile Stop/Acc/Dec/Cruise
+            'Driving-state ratios:  Stop/Acc/Dec/Cruise
             If MODdata.Vh.V(t) < vStopThres Then
                 tStop0 += 1
             Else
@@ -103,7 +103,7 @@ Public Class cCycleKin
                         tCruise0 += 1
                 End Select
             End If
-            'Durchschnitts-Beschl
+            'Average-Accel
             aAvg0 += MODdata.Vh.a(t)
         Next
 

@@ -32,7 +32,7 @@ Public Class cDelaunayMap
 
         ptDim = ptList.Count - 1
 
-        'XY-Triangulierung
+        'XY-triangulation
         Try
             DT = New dTriangulation
             lDT = DT.Triangulate(ptList)
@@ -47,7 +47,7 @@ Public Class cDelaunayMap
         Next
 
 
-        'XZ-Triangulierung
+        'XZ-triangulation
         If DualMode Then
 
             If ptDim <> ptListXZ.Count - 1 Then Return False

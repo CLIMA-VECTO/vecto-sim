@@ -20,7 +20,7 @@ Public Class F_GEN
 
     Private MyVehMode As tVehMode
 
-    'Coolant System Simulation Zwischenspeicher
+    'Cache Coolant System Simulation
     Private CoolantsimJa As Boolean = False
     Private CoolantSimPath As String = ""
 
@@ -28,7 +28,7 @@ Public Class F_GEN
 
 
 
-    'Initialisiere Form (Lade Verlauf, Combobox-Listen,...)
+    'Initialize form (Load Drives, Combo-lists, ...)
     Private Sub F02_GEN_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Dim x As Int16
 
@@ -42,7 +42,7 @@ Public Class F_GEN
 
         MyVehMode = tVehMode.StandardMode
 
-        'Damit Combobox-Inhalte aktuell sind
+        'Damit Combobox-Inhalte aktuell sind |@@| So Combo-content is current
         For x = 0 To Me.TabControl1.TabCount - 1
             Me.TabControl1.TabPages(x).Show()
         Next
@@ -56,7 +56,7 @@ Public Class F_GEN
 
     End Sub
 
-    'Schließen
+    'Close
     Private Sub F02_GEN_FormClosing(ByVal sender As Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
             e.Cancel = ChangeCheckCancel()
@@ -72,7 +72,7 @@ Public Class F_GEN
 
 
 #Region "Schaltflächen Ein-/Ausblenden (und ggf. Change() aufrufen)"
-    'Änderung der DynKor Checkbox
+    'Change the DynKor checkbox
     Private Sub CheckBoxDynKor_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxDynKor.CheckedChanged
         Me.ButOpenTRS.Enabled = Me.CheckBoxDynKor.Checked
         Me.TextBoxTRS.Enabled = Me.CheckBoxDynKor.Checked
@@ -80,13 +80,13 @@ Public Class F_GEN
         Call Change()
     End Sub
 
-    'Änderung der Kaltstart Checkbox
+    'Change the Cold-start checkbox
     Private Sub CheckBoxColdSt_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxColdSt.CheckedChanged
         SetCStab(Me.CheckBoxColdSt.Checked)
         Call Change()
     End Sub
 
-    'Änderund der SCR Checkbox
+    'Change the SCR checkbox
     Private Sub CheckBoxSCR_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CheckBoxSCR.CheckedChanged
         Me.ButOpenEXS.Enabled = Me.CheckBoxSCR.Checked
         Me.TextBoxEXS.Enabled = Me.CheckBoxSCR.Checked
@@ -349,7 +349,7 @@ Public Class F_GEN
         Dim f As String
         f = fFileRepl(TextBoxVEH.Text, fPATH(Genfile))
 
-        'Damit Veh-Datei übergeben wird
+        'Thus Veh-file is returned
         F_VEH.GenDir = fPATH(Genfile)
         F_VEH.AutoSendTo = True
 
@@ -375,7 +375,7 @@ Public Class F_GEN
         Dim f As String
         f = fFileRepl(TbENG.Text, fPATH(Genfile))
 
-        'Damit Veh-Datei übergeben wird
+        'Thus Veh-file is returned
         F_ENG.GenDir = fPATH(Genfile)
         F_ENG.AutoSendTo = True
 
@@ -401,7 +401,7 @@ Public Class F_GEN
         Dim f As String
         f = fFileRepl(TbGBX.Text, fPATH(Genfile))
 
-        'Damit Veh-Datei übergeben wird
+        'Thus Veh-file is returned
         F_GBX.GenDir = fPATH(Genfile)
         F_GBX.AutoSendTo = True
 
@@ -517,7 +517,7 @@ Public Class F_GEN
 
 #Region "Datei Funktionen"
 
-    'Speichern ("Save" bzw. "Save As" falls neue Datei)
+    'Save ("Save" or "Save As" when new file)
     Private Function Save() As Boolean
         If Genfile = "" Then
             If fbGEN.SaveDialog("") Then
@@ -529,7 +529,7 @@ Public Class F_GEN
         Return GENsave(Genfile)
     End Function
 
-    'GEN in Form laden
+    'Load GEN in the form
     Public Sub GENload2Form(ByVal file As String)
         Dim x As Int16
         Dim Gfile As cGEN
@@ -541,7 +541,7 @@ Public Class F_GEN
 
         GENnew()
 
-        'GEN einlesen
+        'Read GEN
         Gfile = New cGEN
         Gfile.FilePath = file
         Try
@@ -556,7 +556,7 @@ Public Class F_GEN
         End Try
       
 
-        'Form updaten
+        'Update Form
         If Gfile.PKWja Then
             Me.ComboBoxVehType.SelectedIndex = 1
         Else
@@ -584,7 +584,7 @@ Public Class F_GEN
         Me.ChCreateMap.Checked = Gfile.CreateMap
         Me.ChEngAnalysis.Checked = Gfile.EngAnalysis
 
-        'Kennfeld Erstellung-----------------
+        'Map creation -----------------
         Me.TextBoxIncPe.Text = Gfile.Pschrit
         Me.TextBoxIncn.Text = Gfile.nschrit
         Me.CheckBoxGS.Checked = Gfile.MapSchaltja
@@ -598,14 +598,14 @@ Public Class F_GEN
             Me.CbDragIntp.SelectedIndex = 0
         End If
 
-        'Kalt Start--------------------------
+        'Cold start --------------------------
         If Gfile.kaltst1 Then MsgBox("Cold Start is not supported in this version!")
         Me.CheckBoxColdSt.Checked = False       ' Gfile.kaltst1
         Me.TextBoxTKat.Text = Gfile.tkat1
         Me.TextBoxTKW.Text = Gfile.tkw1
         Me.TextBoxTofSt.Text = Gfile.hsstart
 
-        'Dateien-----------------------------
+        'Files -----------------------------
         TextBoxVEH.Text = Gfile.PathVEH(True)
         TbENG.Text = Gfile.PathENG(True)
 
@@ -614,7 +614,7 @@ Public Class F_GEN
         TbGBX.Text = Gfile.PathGBX(True)
         TextBoxTRS.Text = Gfile.dynspez(True)
 
-        'Kalt Start
+        'Cold start
         TextBoxMAA.Text = Gfile.katmap(True)
         TextBoxMAC.Text = Gfile.kwmap(True)
         TextBoxWUA.Text = Gfile.katkurv(True)
@@ -696,7 +696,7 @@ Public Class F_GEN
 
     End Sub
 
-    'GEN aus Form speichern
+    'GEN save from form
     Private Function GENsave(ByVal file As String) As Boolean
 
         Dim g As cGEN
@@ -717,7 +717,7 @@ Public Class F_GEN
         g.EngAnalysis = Me.ChEngAnalysis.Checked
 
 
-        'Kennfeld Erstellung------------------------------------------------------
+        'Map creation ------------------------------------------------ ------
         g.Pschrit = CShort(fTextboxToNumString(Me.TextBoxIncPe.Text))
         g.nschrit = CShort(fTextboxToNumString(Me.TextBoxIncn.Text))
         g.MapSchaltja = Math.Abs(CInt(Me.CheckBoxGS.Checked))
@@ -727,13 +727,13 @@ Public Class F_GEN
         g.KFinsertDrag = Me.ChInsertDrag.Checked
         g.KFDragIntp = (Me.CbDragIntp.SelectedIndex = 1)
 
-        'Kalt Start---------------------------------------------------------------
+        'Cold start ------------------------------------------------ ---------------
         g.kaltst1 = Me.CheckBoxColdSt.Checked
         g.tkat1 = CSng(fTextboxToNumString(Me.TextBoxTKat.Text))
         g.tkw1 = CSng(fTextboxToNumString(Me.TextBoxTKW.Text))
         g.hsstart = CSng(fTextboxToNumString(Me.TextBoxTofSt.Text))
 
-        'Dateien------------------------------------------------------------------
+        'Files ------------------------------------------------- -----------------
 
         g.PathVEH = Me.TextBoxVEH.Text
         g.PathENG = Me.TbENG.Text
@@ -747,7 +747,7 @@ Public Class F_GEN
         g.PathGBX = Me.TbGBX.Text
         g.dynspez = Me.TextBoxTRS.Text
 
-        'Kalt Start
+        'Cold start
         g.katmap = Me.TextBoxMAA.Text
         g.kwmap = Me.TextBoxMAC.Text
         g.katkurv = Me.TextBoxWUA.Text
@@ -830,7 +830,7 @@ Public Class F_GEN
 
     End Function
 
-    'Neue leere GEN
+    'New BlankGEN
     Public Sub GENnew()
 
         If ChangeCheckCancel() Then Exit Sub
@@ -845,7 +845,7 @@ Public Class F_GEN
         Me.ChEngAnalysis.Checked = False
         Me.ChCreateMap.Checked = False
 
-        'Kennfeld Erstellung-----------------
+        'Map creation -----------------
         Me.TextBoxIncPe.Text = 20
         Me.TextBoxIncn.Text = 20
         Me.CheckBoxGS.Checked = True
@@ -855,14 +855,14 @@ Public Class F_GEN
         Me.ChInsertDrag.Checked = True
         Me.CbDragIntp.SelectedIndex = 1
 
-        'Kalt Start--------------------------
+        'Cold start --------------------------
         Me.CheckBoxColdSt.Checked = False
         Me.TextBoxTKat.Text = 20
         Me.TextBoxTKW.Text = 20
         Me.TextBoxTofSt.Text = 1
 
-        'Dateien-----------------------------
-        'Kalt Start
+        'Files -----------------------------
+        'Cold start
 
         'HEV
         Me.TbSOCstart.Text = "0.5"
@@ -930,7 +930,7 @@ Public Class F_GEN
 
 #Region "Event Handler für Formänderungen"
 
-    'Event Handler für Formänderungen
+    'Event handler for the form changes
     Private Sub FormChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles _
     ComboBoxVehType.SelectedIndexChanged, _
     ComboBoxGearShift.SelectedIndexChanged, _
@@ -946,13 +946,13 @@ Public Class F_GEN
         Call Change()
     End Sub
 
-    'Start/Stop - Checkbox Änderung
+    'Start/Stop - checkbox change
     Private Sub ChBStartStop_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ChBStartStop.CheckedChanged
         SetStStoptab(Me.ChBStartStop.Checked)
         Change()
     End Sub
 
-    'Start/Stop - Textbox Änderung
+    'Start / Stop - Textbox change
     Private Sub TBSSspeed_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TBSSspeed.TextChanged, TBSStime.TextChanged
         Change()
     End Sub
@@ -1069,7 +1069,7 @@ Public Class F_GEN
 
 #End Region
 
-    'Change Status ändern
+    'Change Status Change
     Private Sub Change()
         If Not Changed Then
             Me.ToolStripStatusLabelGEN.Text = "Unsaved changes in current file"
@@ -1077,7 +1077,7 @@ Public Class F_GEN
         End If
     End Sub
 
-    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht
+    ' "Save changes? "... Returns True if User aborts
     Private Function ChangeCheckCancel() As Boolean
 
         If Changed Then

@@ -43,7 +43,7 @@ Public Class cVSUM
         Em0 = MODdata.Em.EmDefComp(tMapComp.FC)
         t1 = MODdata.tDim
 
-        'Durchschnitts-Geschw. berechnen
+        'Average Speed calculation
         sum = 0
         For t = 0 To t1
             sum += MODdata.Vh.V(t)
@@ -111,7 +111,7 @@ Public Class cVSUM
         file.WriteLine("Date:" & vbTab & Now.ToString)
         file.WriteLine(" ")
         file.WriteLine("Specifications")
-        'TODO: Mission nicht Zyklusname
+        'TODO: Mission without Cycle-name
         file.WriteLine(vbTab & "Mission: " & vbTab & fFILE(CurrentCycleFile, False))
         file.WriteLine(vbTab & "Vehicle Class: " & vbTab & VehConfig)
         'TODO: Test Setup

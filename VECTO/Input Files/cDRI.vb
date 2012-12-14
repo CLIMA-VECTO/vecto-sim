@@ -27,16 +27,16 @@ Public Class cDRI
     Public EmComponents As Dictionary(Of String, cEmComp)
     Public EmDefRef As Dictionary(Of tMapComp, cEmComp)
 
-    'Vorgabe für EXS
+    'Defaults(Vorgabe) for EXS
     Private bExsCompDef As Boolean
     Public ExsComponents As Dictionary(Of tExsComp, Dictionary(Of Short, List(Of Single)))
 
-    'Parameter für KF-Erstellung
+    'Parameters for KF-creation
     Public MapUnitsNormed As Dictionary(Of String, Boolean)
     Public MapPfak As Dictionary(Of String, tIntpPeCorMode)
     Private bCreateMapParDef As Boolean
 
-    'Vorgabe für AUX
+    'Defaults(Vorgabe) for AUX
     Private bAuxDef As Boolean
     Public AuxComponents As Dictionary(Of String, List(Of Single))
 
@@ -85,7 +85,7 @@ Public Class cDRI
         Vvorg = True
         GradVorg = True
         Values = New Dictionary(Of tDriComp, List(Of Double))
-        'Values.Add(tDriComp.t, New List(Of Single))            '<= brauchen wir erst wenn bei ADVANCE > 1Hz unterstützt wird
+        'Values.Add(tDriComp.t, New List (Of Single))             '<= Needed only if ADVANCE > 1 Hz supported
         Values.Add(tDriComp.V, New List(Of Double))
         Values.Add(tDriComp.Grad, New List(Of Double))
     End Sub
@@ -123,16 +123,16 @@ Public Class cDRI
         'Reset
         ResetMe()
 
-        'Abbruch wenn's Datei nicht gibt
+        'Abort if there's no file
         If sFilePath = "" OrElse Not IO.File.Exists(sFilePath) Then
             WorkerMsg(tMsgID.Err, "Cycle file not found (" & sFilePath & ") !", MsgSrc)
             Return False
         End If
 
         'EmComp Init
-        '...jetzt in New()
+        '...now in New()
 
-        'Datei öffnen
+        'Open file
         file = New cFile_V3
         If Not file.OpenRead(sFilePath) Then
             WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
@@ -154,33 +154,33 @@ Public Class cDRI
         DRIcheck.Add(tDriComp.StopTime, False)
 
         ''***
-        ''*** Erste Zeile: Version
+        ''*** First line: Version
         'line = file.ReadLine
         'txt = Trim(UCase(line(0)))
         'If Microsoft.VisualBasic.Left(txt, 1) = "V" Then
         '    ' "V" entfernen => Zahl bleibt übrig
         '    txt = txt.Replace("V", "")
         '    If Not IsNumeric(txt) Then
-        '        'Falls Version ungültig: Abbruch
+        '        'If invalid Version: Abort
         '        WorkerMsg(tMsgID.Err, "File Version invalid!", MsgSrc)
         '        GoTo lbEr
         '    Else
-        '        'Version festgelegt
+        '        'Version specified
         '        FileVersion = CInt(txt)
         '    End If
         'Else
-        '    'Falls keine Versionsangabe: Altes Format
+        '    'If no version information: Old Format
         '    file.Close()
         '    Return ReadOldFormat()
         'End If
 
-        ''Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+        ''Version Check: Abort if input file format is newer than PHEM-version
         'If FileVersion > FormatVersion Then
         '    WorkerMsg(tMsgID.Err, "File Version not supported!", MsgSrc)
         '    GoTo lbEr
         'End If
 
-        ''Spalte 2: Option "+" = Parameter für KF-Erstellung gegeben
+        ''Column 2: added option "+" = parameter for KF-creation
         'If UBound(line) > 0 Then
         '    If Trim(line(1)) = "+" Then
         '        bCreateMapParDef = True
@@ -197,17 +197,17 @@ Public Class cDRI
         Values = New Dictionary(Of tDriComp, List(Of Double))
 
         '***
-        '*** Zweite Zeile: Namen/Identifizierung der Komponenten
+        '*** Second row: Name/Identification of the Components
         line = file.ReadLine
 
-        'Spaltenanzahl/Komponenten checken
+        'Check Number of Columns/Components
         s1 = UBound(line)
 
         For s = 0 To s1
 
             Comp = fDriComp(line(s))
 
-            'Falls DRIcomp = Undefined dann wirds als EXS-Comp oder als Emission für KF-Erstellung / Eng-Analysis verwendet
+            'Falls DRIcomp = Undefined dann wirds als EXS-Comp oder als Emission für KF-Erstellung / Eng-Analysis verwendet |@@| If used DRIcomp = Undefined it will get as EXS-Comp or Emission for KF-Creation / Eng-Analysis
             If Comp = tDriComp.Undefined Then
 
                 ExsComp = fExsComp(line(s))
@@ -242,7 +242,7 @@ Public Class cDRI
 
                         bEmCompDef = True
 
-                        'ERROR wenn Komponente in spitzen Klammern aber nicht bekannt
+                        'ERROR when component in angle brackets is unknown
                         If MapComp = tMapComp.Undefined And Em0.IDstring.Length > 1 Then
                             If Left(Em0.IDstring, 1) = "<" And Right(Em0.IDstring, 1) = ">" Then
                                 WorkerMsg(tMsgID.Err, "'" & Em0.Name & "' is no valid Default Map, Cycle or EXS Component!", MsgSrc)
@@ -272,13 +272,13 @@ Public Class cDRI
 
                 Else
 
-                    'Falls erste EXS-Spalte dann Dictionary erstellen
+                    'if first EXS-column, then create Dictionary
                     If Not bExsCompDef Then
                         ExsSpalten = New Dictionary(Of Integer, List(Of Single))
                         ExsComponents = New Dictionary(Of tExsComp, Dictionary(Of Short, List(Of Single)))
                     End If
 
-                    'Falls EXS-Componenten noch nicht in Dictionary dann erstellen
+                    'If EXS-Component not yet in Dictionary, create
                     If Not ExsComponents.ContainsKey(ExsComp) Then ExsComponents.Add(ExsComp, New Dictionary(Of Short, List(Of Single)))
 
                     txt = fCompSubStr(line(s))
@@ -290,7 +290,7 @@ Public Class cDRI
                         ModNr = CShort(txt)
                     End If
 
-                    'Check ob ExsComp/Modul-Kombination schon vorhanden => ERROR
+                    'Check whether ExsComp/Module-combination already exists => ERROR
                     If ExsComponents(ExsComp).ContainsKey(ModNr) Then
                         WorkerMsg(tMsgID.Err, "Component '" & line(s) & "' already defined! Column " & s + 1, MsgSrc)
                         GoTo lbEr
@@ -318,7 +318,7 @@ Public Class cDRI
 
         Next
 
-        'Gvorg / Nvorg setzen:
+        'Set Gvorg/Nvorg:
         Tvorg = DRIcheck(tDriComp.t)
         Vvorg = DRIcheck(tDriComp.V)
         Svorg = DRIcheck(tDriComp.s)
@@ -330,10 +330,10 @@ Public Class cDRI
         VairVorg = DRIcheck(tDriComp.VairVres) And DRIcheck(tDriComp.VairBeta)
 
         '***
-        '*** Dritte Zeile: Einheiten/Normierung
-        'VECTO: nix einlesen. Fixe Units (line = file.ReadLine)
+        '*** Third row: Units/Normalization
+        'VECTO: nothing read. Fixed Units (line = file.ReadLine)
 
-        'Normierungs-Unterstützte DRI-Komponenten
+        'Normalization-compatible DRI-components
         If DRIcheck(tDriComp.Pe) Then
             'PeNormed = (UCase(Trim(line(Spalten(tDriComp.Pe)))) = sKey.Normed)
             PeNormed = False
@@ -349,17 +349,17 @@ Public Class cDRI
             PaddNormed = False
         End If
 
-        'MAP-Komponenten VECTO: Immer [g/h]!  
+        'VECTO MAP-components: Always [g/h]!
         For Each Em0 In EmComponents.Values
 
-            ''Unit in String für weitere Checks speichern
+            ''Store Unit in String for further checks
             'txt = Trim(line(Em0.Col))
 
-            ''Klammern entfernen
+            ''Remove brackets
             'txt = txt.Replace("[", "")
             'txt = txt.Replace("]", "")
 
-            ''Normierung und Unit festlegen
+            ''Set Scaling and Unit
             'If txt.Contains("/") Then
 
 
@@ -390,22 +390,22 @@ Public Class cDRI
         Next
 
         '***
-        '*** Zeile 4, 5: (optional, wenn oben "+"): Einstellungen für KF-Erstellung
+        '*** Line 4, 5: (optional when "+"): Settings for KF-creation
 
-        'Falls "+" aktiviert
+        'If "+" enabled
         If bCreateMapParDef Then
 
-            'Instanzen erstellen
+            'Creating instances
             MapUnitsNormed = New Dictionary(Of String, Boolean)
             MapPfak = New Dictionary(Of String, tIntpPeCorMode)
 
-            '1. Option "Kennfeld normieren durch Pnenn"
+            '1. Option "Map normalized by Pnom"
             line = file.ReadLine
             For Each Em0 In EmComponents.Values
                 MapUnitsNormed.Add(Em0.IDstring, CBool(line(Em0.Col)))
             Next
 
-            '2. Option "Pfak anwenden"
+            '2. Option "PfAK apply"
             line = file.ReadLine
             For Each Em0 In EmComponents.Values
 
@@ -426,7 +426,7 @@ Public Class cDRI
         End If
 
         '***
-        '*** Ab 4.Zeile bzw. Ab 6.Zeile: Werte (derzeit keine unterschiedlichen Einheiten/Normierungen unterstützt)
+        '*** Ab 4.Zeile bzw. Ab 6.Zeile: Werte (derzeit keine unterschiedlichen Einheiten/Normierungen unterstützt) |@@| From 4th line or From 6th line: values (no different units/normalizations support)
         Try
             Do While Not file.EndOfFile
                 tDim += 1       'wird in ResetMe zurück gesetzt
@@ -487,7 +487,7 @@ lbEr:
 
         MsgSrc = "Main/ReadInp/DRI"
 
-        'Datei öffnen
+        'Open file
         File = New cFile_V3
         If Not File.OpenRead(sFilePath, ",", True, True) Then
             File = Nothing
@@ -549,7 +549,7 @@ lbEr:
 
         File.Close()
 
-        'Nvorg / Gvorg wird in ResetMe zurück gesetzt
+        'ResetMe resets Nvorg / Gvorg
 
         If GNok Then
 
@@ -604,7 +604,7 @@ lbEr:
         Dim s As Integer
         Dim L As List(Of Double)
 
-        'Geschw. umrechnen in m/s
+        'Convert Speed to m/s
         If Vvorg Then
             For s = 0 To tDim
                 Values(tDriComp.V)(s) /= 3.6
@@ -612,7 +612,7 @@ lbEr:
             Next
         End If
 
-        'Normieren, falls notwendig
+        'Normalize, if necessary
         If Nvorg Then
             If Not nNormed Then
                 L = Values(tDriComp.nn)
@@ -622,7 +622,7 @@ lbEr:
             End If
         End If
 
-        'Padd entnormieren, falls notwendig
+        'Padd unnormalised, if neccesary
         If PaddVorg Then
             If PaddNormed Then
                 L = Values(tDriComp.Padd)
@@ -632,7 +632,7 @@ lbEr:
             End If
         End If
 
-        'Pe normieren, falls notwendig
+        'Pe normalize, if necessary
         If Pvorg Then
             If Not PeNormed Then
                 L = Values(tDriComp.Pe)
@@ -644,7 +644,7 @@ lbEr:
 
         L = Nothing
 
-        '!!!!!!!! Emissionen werden nur in x/h oder x akzeptiert (siehe ReadFile) !!!!!!!!
+        '!!!!!!!! Emissions are only accepted in x/h or x (see ReadFile)!!!!!!!!
 
     End Sub
 
@@ -756,7 +756,7 @@ lbEr:
             Next
         End If
 
-        '*********************************** Verzögerung limitieren ********************************
+        '*********************************** Deceleration(Verzögerung) limit ********************************
         For i = tDim To 1 Step -1
 
             ds = Dist(i) - Dist(i - 1)
@@ -783,7 +783,7 @@ lbEr:
 
         Next
 
-        '*********************************** Zeitreihe erstellen '***********************************
+        '*********************************** Create Time-sequence '***********************************
         t = 0
         s = Dist(0)
 
@@ -888,7 +888,7 @@ lbEr:
 
         Next
 
-        '*********************************** Umrechnen in 1Hz '***********************************
+        '*********************************** Convert to 1Hz '***********************************
         i = 0
         j = -1
         tDim = Time.Count - 1
@@ -1006,7 +1006,7 @@ lbEr:
 
         fTime = Values(tDriComp.t)
 
-        'Check ob Zeit nicht rückwärts 
+        'Check whether Time is not reversed
         For z = 1 To tDim
             If fTime(z) < fTime(z - 1) Then
                 WorkerMsg(tMsgID.Err, "Time step invalid! t(" & z - 1 & ") = " & fTime(z - 1) & "[s], t(" & z & ") = " & fTime(z) & "[s]", MsgSrc)
@@ -1014,11 +1014,11 @@ lbEr:
             End If
         Next
 
-        'Zeitgrenzen definieren
+        'Define Time-range
         t0 = CInt(Math.Round(fTime(0), 0, MidpointRounding.AwayFromZero))
         t1 = fTime(tDim)
 
-        'Ausgabe-, Summen- und Anz- Dictionaries erstellen
+        'Create Output, Total and Num-of-Dictionaries
         NewValues = New Dictionary(Of tDriComp, List(Of Double))
         Summe = New Dictionary(Of tDriComp, Double)
 
@@ -1057,7 +1057,7 @@ lbEr:
             Next
         End If
 
-        'Startwerte
+        'Start-values
         tMin = fTime(0)
         tMid = CInt(tMin)
         tMax = tMid + 0.5
@@ -1074,18 +1074,18 @@ lbEr:
 
         For z = 0 To tDim
 
-            'Nächster Zeitschritt
+            'Next Time-step
             Time = fTime(z)
 
 lb10:
 
-            'Falls Zeitschritt > tMax:
+            'If Time-step > tMax:
             If Time >= tMax Or z = tDim Then
 
-                'Sekunde abschließen
+                'Conclude Second
                 NewValues(tDriComp.t).Add(tMid)
 
-                'Falls keine Werte in Summe: Interpolieren
+                'If no values ​​in Sum: Interpolate
                 If Anz = 0 Then
 
                     For Each KVd In Summe
@@ -1137,7 +1137,7 @@ lb10:
                         End If
 
                     Else
-                        'Falls nur ein Wert: Inter- / Extrapolieren
+                        'If only one Value: Inter- /Extrapolate
                         If Anz = 1 Then
 
                             If z < 2 OrElse fTime(z - 1) < tMid Then
@@ -1220,18 +1220,18 @@ lb10:
 
                 If Not Finish Then
 
-                    'Neuen Bereich festlegen
+                    'Set New Area(Bereich)
                     tMid = tMid + 1
                     tMin = tMid - 0.5
                     tMax = tMid + 0.5
 
-                    'Check ob letzte Sekunde
+                    'Check whether last second
                     If tMax > t1 Then
                         tMax = t1
                         Finish = True
                     End If
 
-                    'Neue Summe/Anz beginnen
+                    'New Sum /Num no start
                     For Each KV In Values
                         If KV.Key <> tDriComp.t Then Summe(KV.Key) = 0
                     Next
@@ -1288,7 +1288,7 @@ lb10:
 
         Next
 
-        'Neue Felder übernehmen
+        'Accept New fields
         Values = NewValues
         tDim = Values(tDriComp.t).Count - 1
 

@@ -29,13 +29,13 @@
         'Reset
         ResetMe()
 
-        'Abbruch wenn's Datei nicht gibt
+        'Stop if there's no file
         If sFilePath = "" OrElse Not IO.File.Exists(sFilePath) Then
             WorkerMsg(tMsgID.Err, "TRS file not found! (" & sFilePath & ")", MsgSrc)
             Return False
         End If
 
-        'Datei öffnen
+        'Open file
         file = New cFile_V3
         If Not file.OpenRead(sFilePath) Then
             file = Nothing
@@ -44,27 +44,27 @@
         End If
 
         '***
-        '*** Erste Zeile: Version
+        '*** First Line: Version
         line = file.ReadLine
         txt = Trim(UCase(line(0)))
         If Microsoft.VisualBasic.Left(txt, 1) = "V" Then
-            ' "V" entfernen => Zahl bleibt übrig
+            ' "Remove "V" => Number remains
             txt = txt.Replace("V", "")
             If Not IsNumeric(txt) Then
-                'Falls Version ungültig: Abbruch
+                'If invalid version: Abort
                 WorkerMsg(tMsgID.Err, "File Version invalid!", MsgSrc)
                 GoTo lbEr
             Else
-                'Version festgelegt
+                'Version set
                 FileVersion = CInt(txt)
             End If
         Else
-            'Falls keine Versionsangabe: Altes Format
+            'If no version information: Old format
             file.Close()
             Return ReadOldFormat()
         End If
 
-        'Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+        'Version Check: Abort if Input-file-format is newer than PHEM-version
         If FileVersion > FormatVersion Then
             WorkerMsg(tMsgID.Err, "File Version not supported!", MsgSrc)
             GoTo lbEr
@@ -76,11 +76,11 @@
 
 
         '***
-        '*** Zweite Zeile: Check welche TC-Faktoren in welcher Spalte stehen (ab Spalte 1!!)
+        '*** Second Line: Check which TC-factors exist in any column (from column 1!)
         line = file.ReadLine
         s1 = UBound(line)
 
-        'Abbruch falls weniger als 2 Spalen:
+        'Abort if less than 2 Columns:
         If s1 < 1 Then
             WorkerMsg(tMsgID.Err, "Format invalid!", MsgSrc)
             GoTo lbEr
@@ -88,18 +88,18 @@
 
         For s = 1 To s1
             MapC = fMapComp(line(s))
-            'Abbruch wenn unbekannter TC-Faktor
+            'Abort if unknown TC-factor
             If MapC = tMapComp.Undefined Then
                 WorkerMsg(tMsgID.Err, "Component '" & line(s) & "' is invalid!", MsgSrc)
                 GoTo lbEr
             End If
-            'Zu Dict hinzufügen
+            'Add to Dict
             sTC.Add(MapC, s)
         Next
 
         '***
-        '*** Ab Zeile 3: TC-Faktoren für die einzelnen Em-Komponeten 
-        '   l ist nur für Fehlerausgabe
+        '*** From Line 3: TC-factors for each Em-component
+        '   l is for Error-output
         l = 0
         Try
 
@@ -160,7 +160,7 @@ lbEr:
         Dim Em0 As cEmComp
         Dim x As Short
 
-        'Datei öffnen
+        'Open file
         File = New cFile_V3
         If Not File.OpenRead(sFilePath) Then
             File = Nothing
@@ -204,7 +204,7 @@ lbEr:
                 Next
             End If
 
-            'Abbruch falls weniger als 11 Spalen:
+            'Abort if less than 11 Columns:
             If UBound(line) < 10 Then GoTo lbEr
 
             TCvals = New System.Collections.Generic.Dictionary(Of tMapComp, Double)

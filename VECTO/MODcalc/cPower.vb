@@ -18,7 +18,7 @@ Public Class cPower
     Private Bobi As Single
     Private Cobi As Single
 
-    'Sekündliche Daten
+    'Data per second
     Private Clutch As tEngClutch
     Private VehState0 As tVehState
     Private EngState0 As tEngState
@@ -30,7 +30,7 @@ Public Class cPower
     Private aist As Single
 
 
-    'Zugkraftunterbrechung
+    'Interruption of traction
     Private TracIntrI As Integer
     Private TracIntrIx As Integer
     Private TracIntrOn As Boolean
@@ -84,15 +84,15 @@ Public Class cPower
     Private WGL As List(Of Single)
     Private Ldim As Integer
 
-    'Rekuperation
-    '   Projekt HERO - BMW Mini Hybrid
-    '   Standard Mini One D Radstand 2467 mm
+    'Recuperation
+    '   Project HERO - BMW Mini Hybrid
+    '   Standard Mini One D Wheelbase 2467 mm
     Private lSHv As Single = 1.2335    'Annahme 50/50 (Laut Internet Gewichtsverteilung vom MINI E)
     Private lSHh As Single = 1.2335
-    'Annahme für Schwerpunkthöhe
-    '   nach http://www.colliseum.net/wiki/Schwerpunkth%C3%B6he
+    'Specification of Center-of-gravity height (approximation)
+    '   from http://www.colliseum.net/wiki/Schwerpunkth% C3% B6he
     '   X = 0.2 * m / 1000 = h/R
-    '       mit R = 2.467 [m] und m = 1335 [kg]
+    '       with R = 2467 [m], and m = 1335 [kg]
     Private hSH As Single = 0.659
     Private RekupVorne As Boolean = True
     Private muReifStr As Single = 1
@@ -186,62 +186,62 @@ Public Class cPower
 
     End Function
 
-    'Bat einlesen
+    'Read Bat
     Private Function BATread() As Boolean
         BAT.FilePath = GEN.Batfile
         SOCstart = GEN.SOCstart
         Return BAT.Bat_Init()
     End Function
 
-    'Maximale effektive EM-Leistung beim Antreiben abhängig von Überlast und Batteriezustand
+    'Maximum effective EM-Power in driving depends on Overload and Battery-status
     Private Function fPeEMmax(ByVal nn As Single) As Single
         Dim PeFLD As Single
         Dim PeBAT As Single
 
-        'Basis: Volllastkurve
+        'Based: Full-load-curve
         PeFLD = FLD.Pfull(nn)
 
-        'Falls Überlast möglich: auf ÜL-Leistung hochskalieren
+        'If Overload possible, upscale Overload(ÜL)-power
         If ULok Then PeFLD *= PeUL / VEH.Pnenn
 
-        '=> PeFLD = maximale EM-Leistung nach FLD und ÜL
+        '=> PeFLD = maximum EM-Power by(nach) FLD and Overload(ÜL)
 
-        'PeMax aus PeBatMax berechnen
+        'Calculate PeMax from PeBatMax
         PeBAT = 0.9 * fPefromPi(nn, PeBatMax)
 
-        '=> PeBAT = maximale EM-Leistung nach Batterie
+        '=> PeBAT = maximum EM-power to Battery
 
-        'Übergeben wird maximal die Leistung die die Batterie erlaubt
+        'Return the maximum Power allowed by the Battery
         Return Math.Min(PeFLD, PeBAT)
 
     End Function
 
-    'Maximale effektive EM-Leistung beim Laden abhängig von Überlast und Batteriezustand
+    'Maximum effective EM charging power depending on Overload and Battery-state
     Private Function fPeEMmin(ByVal nn As Single) As Single
         Dim PeFLD As Single
         Dim PeBAT As Single
 
-        'Basis: Schleppkurve
+        'Base: Drag-curve
         PeFLD = FLD.Pdrag(nn)
 
-        'Falls Überlast möglich: auf ÜL-Leistung hochskalieren
+        'If Overload possible, upscale to Overload(ÜL)-power
         If ULok Then PeFLD *= PeUL / VEH.Pnenn
 
-        '=> PeFLD = maximale EM-Leistung nach FLD und ÜL
+        '=> PeFLD = maximum EM-Power by(nach) FLD and Overload(ÜL)
 
-        'PeMax aus PeBatMax berechnen
+        'Calculate PeMax from PeBatMax
         PeBAT = 0.9 * fPefromPi(nn, PeBatMin)
 
-        '=> PeBAT = maximale EM-Leistung nach Batterie
+        '=> PeBAT = maximum EM-power to Battery
 
-        'Übergeben wird maximal die Leistung die die Batterie erlaubt
+        'Return the maximum Power allowed by the Battery
         Return Math.Max(PeFLD, PeBAT)
 
 
 
     End Function
 
-    'Umrechnung von PeBat(=PiEM) auf PeEM
+    'Conversion of PeBat (=PiEM) to PeEM
     Private Function fPefromPi(ByVal nn As Single, ByVal Pi As Single) As Single
         Dim wisum As Double = 0
         Dim sumo As Double = 0
@@ -253,7 +253,7 @@ Public Class cPower
         Pinorm = Pi / VEH.Pnenn
 
         For i = 0 To Ldim
-            'Wenn Vorzeichen von x oder y nicht gleich Vorzeichen von xA(i) oder yA(i) dann wird Zeile i übersprungen
+            'When sign of x an y is not-equal to the sign of xA(i) and yA(i) respectively, then skip Row i
             If nn * nnL(i) < 0 Or Pi * PiL(i) < 0 Then Continue For
             ab = (nn - nnL(i)) ^ 2 + (Pinorm - PiL(i)) ^ 2
             If ab = 0 Then
@@ -278,7 +278,7 @@ lb10:
 
     End Function
 
-    'Umrechnung von PeEM auf PeBat(=PiEM)
+    'Conversion of PeEM to PeBat (=piEM)
     Private Function fPifromPe(ByVal nn As Single, ByVal Pe As Single) As Single
         Dim wisum As Double = 0
         Dim sumo As Double = 0
@@ -290,7 +290,7 @@ lb10:
         Penorm = Pe / VEH.Pnenn
 
         For i = 0 To Ldim
-            'Wenn Vorzeichen von x oder y nicht gleich Vorzeichen von xA(i) oder yA(i) dann wird Zeile i übersprungen
+            'When sign of x and y is not-equal to the sign of xA(i) and yA(i) respectively, then skipp Row i
             If nn * nnL(i) < 0 Or Pe * PeL(i) < 0 Then Continue For
             ab = (nn - nnL(i)) ^ 2 + (Penorm - PeL(i)) ^ 2
             If ab = 0 Then
@@ -315,42 +315,42 @@ lb10:
 
     End Function
 
-    'Maximale Rekup-Leistung
+    'Maximum Recuparation-power
     Private Function fPrekupMax() As Single
         Dim Fz As Single
         Dim Fx As Single
         Dim Prekup As Single
 
-        'Falls unter V-Untergrenze dann gleich Null übergeben
+        'If speed is already under ceiling then return Zero
         If Vist < RekupVu Then Return 0
 
-        'Radaufstandskraft
+        'Wheel contact
         If RekupVorne Then
             Fz = ((VEH.Mass + VEH.MassExtra + VEH.Loading) * (9.81F * lSHh - aist * hSH)) / (lSHv + lSHh)
         Else
             Fz = ((VEH.Mass + VEH.MassExtra + VEH.Loading) * (9.81F * lSHv + aist * hSH)) / (lSHv + lSHh)
         End If
 
-        'Vorzeichen "sollte" immer + sein
+        'Sign "should" always be +
         Fz = Math.Max(0, Fz)
 
-        'Längskraft am Reifen
+        'Longitudinal-force on the Tire
         Fx = Fz * muReifStr
 
-        'Sicherheitsfaktor mitnehmen
+        'Consider Safety-factor
         Fx /= RekupS
 
-        'Leistung 
+        'Power
         Prekup = -Fx * Vist / 1000
 
-        'Falls unter V-Obergrenze dann linear runter skalieren
+        'If below upper V-upper-limit, then scale down linearly
         If Vist <= RekupVo Then Prekup *= (Vist - RekupVu) / (RekupVo - RekupVu)
 
         Return Prekup
 
     End Function
 
-    ''PeEM-Max reduzieren bis es die Batterie aushaltet
+    ''Reduce PeEM-Max until battery current is okay
     'Private Function RedPiToPbatMax(ByVal PeEM As Single) As Single
 
     '    Dim PiEM As Single
@@ -368,7 +368,7 @@ lb10:
 
     'End Function
 
-    ''PeEM-Min reduzieren bis es die Batterie aushaltet
+    ''Reduce PeEM-Min until battery current is okay
     'Private Function RedPiToPbatMin(ByVal PeEM As Single) As Single
 
     '    Dim PiEM As Single
@@ -403,7 +403,7 @@ lb10:
 
         Dim jz As Integer
 
-        'Start/Stop Steuerung
+        'Start/Stop Control
         Dim StStAus As Boolean
         Dim StStTx As Single
 
@@ -441,13 +441,13 @@ lb10:
         StdMode = (PHEMmode = tPHEMmode.ModeSTANDARD)
         NotAdvMode = Not (PHEMmode = tPHEMmode.ModeADVANCE)
 
-        'Abbruch wenn keine Geschw. gegeben
+        'Abort if no speed given
         If Not DRI.Vvorg Then
             WorkerMsg(tMsgID.Err, "Driving cycle is not valid! Vehicle Speed required.", MsgSrc)
             Return False
         End If
 
-        '   Initialisieren
+        '   Initialize
         Vh = MODdata.Vh
         If Cfg.GnVorgab Then
             Gvorg = DRI.Gvorg
@@ -483,7 +483,7 @@ lb10:
             KupplEta = 1
         End If
 
-        'Schaltpunkte für NEDC/FTP Schaltung
+        'Gear-shifting points for NEDC / FTP
         Select Case GEN.izykwael
             Case 0  'Nefzja = True
                 GnachV = True
@@ -518,7 +518,7 @@ lb10:
                 avl(6) = 200 / 3.6
             Case Else
                 GnachV = False
-                'Schaltparameter initialisieren
+                'Initialize Gear-shifting parameters
 
                 'Standard
                 Aaufi = 0.3
@@ -530,13 +530,13 @@ lb10:
 
         End Select
 
-        'Theoretische Höchstgeschwindigkeit [m/s] - gesetzt auf Geschw. bei 1.2 x NennDrehzahl im höchsten Gang
+        'Theoretical maximum speed [m/s] - set to Speed ​​at 1.2 x Nominal-Revolutions in top-Gear
         GVmax = 1.2 * VEH.nNenn * VEH.Dreifen * Math.PI / (VEH.AchsI * VEH.Igetr(VEH.ganganz) * 60)
 
         jz = -1
 
         '***********************************************************************************************
-        '***********************************    Zeitschleife    ****************************************
+        '***********************************    Time-loop ****************************************
         '***********************************************************************************************
 
         Do
@@ -547,21 +547,21 @@ lb10:
             GVset = False
             FirstSecItar = True
 
-            'Sekundäre Progressbar
+            'Secondary Progressbar
             If NotAdvMode Then ProgBarCtrl.ProgJobInt = CInt(100 * jz / MODdata.tDim)
 
-            '   Zustand bestimmen
+            '   Determine State
 lbGschw:
 
-            'Reset der sekündlichen Errors 
+            'Reset the second by second Errors
             MODdata.ModErrors.GeschRedReset()
 
-            'Geschw. / Beschl. berechnen-------------------
-            'Jetzt durch DRI-Klasse
+            'Calculate Speed​/Acceleration -------------------
+            'Now through DRI-class
             Vist = Vh.V(jz)
             aist = Vh.a(jz)
 
-            'Wenn Geschw. über theoretischer Höchstgeschw. => Reduzieren
+            'If Speed over Top theoretical Speed => Reduce
             If Vist > GVmax + 0.0001 And Not GVset Then
                 Vh.SetSpeed0(jz, GVmax)
                 GVset = True
@@ -571,7 +571,7 @@ lbGschw:
             'a_DesMax
             If GEN.DesMaxJa Then
 
-                'Check ob Beschleunigung zu hoch
+                'Check if Acceleration is too high
 
                 If jz = 0 Then
                     amax = GEN.aDesMax(Vist)
@@ -590,9 +590,9 @@ lbGschw:
 
                     GoTo lbGschw
 
-                    '- Verzögerung limitieren ---------------------------
+                    '- Deceleration limit ---------------------------
                     'Else
-                    '    'Check ob Verzögerung zu hoch
+                    '    'Check whether Deceleration too high
                     '    amax = GEN.aDesMin(Vist)
                     '    If amax > -0.001 Then
                     '        WorkerMsg(tMsgID.Err, "aDesMax(dec) invalid! v= " & Vist & ", aDesMax(dec) =" & amax, MsgSrc)
@@ -611,7 +611,7 @@ lbGschw:
 
 
 
-            'Aus Leistg-----
+            'From Power -----
             If aist < 0 Then
                 If (Vist < 0.025) Then
                     'Vh.SetSpeed(jz, 0)
@@ -621,7 +621,7 @@ lbGschw:
             End If
             '---------------
 
-            'Fahrzustand bestimmen-------------------------
+            'Determine Driving-state  -------------------------
             Pplus = False
             Pminus = False
 
@@ -646,14 +646,14 @@ lbGschw:
                     Pminus = True
             End Select
 
-            'Schneller Check ob Leistung viel zu hoch
+            'Faster check if Power is too high
             If PvorD > 2 * VEH.Pnenn Then
                 Vh.ReduceSpeed(jz, 0.98)
                 GoTo lbGschw
             End If
 
 
-            '************************************ Gangwahl ************************************
+            '************************************ Gear selection ************************************
             If VehState0 = tVehState.Stopped Or TracIntrOn Then
 
                 If TracIntrTurnOff Then
@@ -672,7 +672,7 @@ lbGschw:
                 End If
 
             Else
-                'Checken ob Kupplung schleift (wichtig für Schaltmodell):
+                'Check whether Clutch will slip (important for Gear-shifting model):
                 If fnn(Vist, 1, False) < Kuppln_norm And Pplus Then
                     Clutch = tEngClutch.Slipping
                 Else
@@ -680,33 +680,33 @@ lbGschw:
                 End If
 
                 If Gvorg Then
-                    'Gang-Vorgabe
+                    'Gear-settings
                     Gear = Math.Min(Vh.GearVorg(jz), VEH.ganganz)
                 ElseIf Nvorg Then
-                    'Drehzahlvorgabe
+                    'Revolutions-setting
                     Gear = fGearByU(MODdata.nUvorg(jz), Vist)
                 ElseIf VEH.ganganz = 1 Then
                     Gear = 1
                 Else
                     If GnachV Then
-                        'Gang nach Geschwindigkeit
+                        'Gear by speed dependent function
                         Gear = fGearBySpeed(jz)
                     Else
 
-                        'Schaltmodell
+                        'Gear-shifting Model
                         If PKWja Then
                             Gear = fGearPKW(jz)
                         Else
                             Gear = fGearLKW(jz)
                         End If
 
-                        'Muss hier nochmal zurück gesetzt werden weil im Schaltmodell kann (und darf) das passieren
+                        'Must be reset here because the Gear-shifting model may cause changes
                         MODdata.ModErrors.PxReset()
 
                     End If
                 End If
 
-                'Schaltmodell/Vorgabe kann Clutch öffnen 
+                'Gear shifting-model / gear input can open Clutch
                 If Gear < 1 Then Clutch = tEngClutch.Opened
 
             End If
@@ -717,25 +717,25 @@ lbGschw:
             End If
 
 
-            ' Wichtige Checks
+            ' Important checks
 lbCheck:
 
-            'Checken ob Geschwindigkeit reduzieren
-            ''If GeschwRed Then GoTo lbGeschwRed    <= stattdessen neues Konzept: Leistung wird "normal" berechnet und erst später überprüft ob Pe > Pmax... ?
+            'Check whether to reduce speed
+            ''If GeschwRed Then GoTo lbGeschwRed
 
-            'Checken ob Kupplung offen:
-            ''bKupplOffen = (bStehen Or Gang(jz) = 0) <= bereits durch Clutch bekannt
+            'Check whether Clutch is open:
+            ''bKupplOffen = (bStehen Or Gear(jz) = 0) <= Already known by Clutch
 
-            'Falls konventionell dann ICE-Kupplung = Hauptkupplung
-            ''bICEKupOffen = bKupplOffen <= Brauch i nix mehr
+            'If conventionall then ICE-clutch = master clutch
+            ''bICEKupOffen = bKupplOffen <= i need nothing more
 
-            'Falls vor Gangwahl festgestellt wurde, dass nicht KupplSchleif, dann bei zu niedriger Drehzahl runterschalten:
+            'Falls vor Gangwahl festgestellt wurde, dass nicht KupplSchleif, dann bei zu niedriger Drehzahl runterschalten: |@@| If before?(vor) Gear-shift is detected that Clutch does not Lock, then Downshift at too low Revolutions:
             If Clutch = tEngClutch.Closed Then
                 If fnn(Vist, Gear, False) < Kuppln_norm And Not VehState0 = tVehState.Dec And Gear > 1 Then Gear -= 1
             End If
 
-            'Checken ob Leerlauf obwohl Leistung > 0
-            '   wenn Leistung vor Diff > 0.1% von Nennleistung dann Korrigieren!
+            'Check whether idling although Power > 0
+            '   wenn Leistung vor Diff > 0.1% von Nennleistung dann Korrigieren! |@@| when Power before?(vor) Diff > 0.1% of Nominal-power, then Correct!
             If Clutch = tEngClutch.Opened Then
                 If PvorD > 0.001 * VEH.Pnenn Then
 
@@ -756,14 +756,14 @@ lbCheck:
                 End If
             End If
 
-            '************************************ Drehzahl ************************************
+            '************************************ Revolutions ************************************
 
-            '*** Wenn Drehzahl vorgegeben dann wird der nächste Block übersprungen ***
+            '*** If Revolutions specified then the next block is skipped ***
             If Nvorg Then
 
                 nn = (MODdata.nUvorg(jz) - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
 
-                'Falls Start/Stop dann wird gleich bei nn < -0.05 auf nU = 0 gesetzt
+                'If Start/Stop then it will be set at the same nn < -0.05 to nU = 0
                 If GEN.StartStop And nn < Cfg.nnormEngStop Then
                     If Pplus Then
                         nn = 0
@@ -781,7 +781,7 @@ lbCheck:
 
             End If
 
-            'Drehzahlabfall beim Auskuppeln
+            'Revolutions drop when decoupling
             If Clutch = tEngClutch.Opened Then
                 If jz = 0 Then
                     nn = 0
@@ -803,11 +803,11 @@ lbCheck:
                     Do
                         PminX = Pmin
                         Pmin = FLD.Pdrag((nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl))
-                        'Leistungsabfall limitieren auf Pe(t-1) minus 75% von (Pe(t-1) - Pschlepp)
-                        '   aus Auswertung ETC des Motors mit dem dynamische Volllast parametriert wurde
-                        '   Einfluss auf Beschleunigungsvermögen gering (Einfluss durch Pe(t-1) bei dynamischer Volllast mit PT1)
+                        'Leistungsabfall limitieren auf Pe(t-1) minus 75% von (Pe(t-1) - Pschlepp) |@@| Limit Power-drop to Pe(t-1) minus 75% of (Pe(t-1) - Pdrag)
+                        '   aus Auswertung ETC des Motors mit dem dynamische Volllast parametriert wurde |@@| of the evaluated ETC of the Enginges with the dynamic parametrized Full-load
+                        '   Einfluss auf Beschleunigungsvermögen gering (Einfluss durch Pe(t-1) bei dynamischer Volllast mit PT1) |@@| Influence at low acceleration (influence dynamic Full-load through Pe(t-1) with PT1)
                         '   Luz/Rexeis 21.08.2012
-                        '   Iterations-Schleife: 01.10.2012    
+                        '   Iteration loop: 01.10.2012
                         P = MODdata.Pe(jz - 1) * VEH.Pnenn - 0.75 * (MODdata.Pe(jz - 1) * VEH.Pnenn - Pmin)
                         M = -P * 1000 * 60 / (2 * Math.PI * nU)
                         'original: M = -Pmin * 1000 * 60 / (2 * Math.PI * ((nU + nUx) / 2))
@@ -815,14 +815,14 @@ lbCheck:
                         omega2 = omega1 - omega_p
                         nU = omega2 * 60 / (2 * Math.PI)
                         i += 1
-                        '01.10.12 Luz: Drehzahl darf nicht höher werden als zuvor 
+                        '01:10:12 Luz: Revolutions must not be higher than previously
                         If nU > nUx Then
                             nU = nUx
                             Exit Do
                         End If
                     Loop Until Math.Abs(Pmin - PminX) < 0.001 Or nU <= VEH.nLeerl Or i = 999
 
-                    'TODO: Auschalten?!
+                    'TODO: Switch off?
                     If i = 999 Then WorkerMsg(tMsgID.Warn, "i=999", MsgSrc & "/t= " & jz + 1)
 
                     nn = (Math.Max(VEH.nLeerl, nU) - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
@@ -835,15 +835,15 @@ lbCheck:
 
                 nn = fnn(Vist, Gear, Clutch = tEngClutch.Slipping)
 
-                '*** Beginn: Drehzahl-Check
+                '*** Start: Revolutions Check
 
-                'Checken ob Drehzahl zu hoch! =>  Hochschalten
+                'Check whether Revolutions too high! => Upshift
                 Do While nn > 1.2 And Gear < VEH.ganganz
                     Gear += 1
                     nn = fnn(Vist, Gear, Clutch = tEngClutch.Slipping)
                 Loop
 
-                'Checken ob Drehzahl zu niedrig mit geschlossener Kupplung
+                'Check whether Revolutions too low with the Clutch closed
                 If Clutch = tEngClutch.Closed Then
                     If nn < 0.0001 Then
                         Gear -= 1
@@ -860,31 +860,31 @@ lbCheck:
 lb_nOK:
 
 
-            '************************************ Motor-Zustand bestimmen ************************************
-            ' nn ist ab hier fix!
+            '************************************ Determine Engine-state ************************************
+            ' fix nn here!
             nU = nn * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl
 
-            'Nebenverbrauch bestimmen (aus VEH und DRI)
+            'Determine next Consumption (from VEH and DRI)
             Paux = fPaux(jz, nU)
 
-            'ICE-Trägheit
+            'ICE-inertia
             If Clutch = tEngClutch.Opened Then
                 If jz = 0 Then
                     PaMot = 0
                 Else
-                    'Nicht optimal da jz-1 bis jz nicht der richtige Zeitraum
+                    'Not optimal since jz-1 to jz not the right interval
                     PaMot = (VEH.I_mot * (nU - MODdata.nU(jz - 1)) * 0.01096 * nU) * 0.001
                 End If
             Else
                 If Nvorg Then
-                    'Drehzahlvorgabe
+                    'Revolutions-setting
                     PaMot = (VEH.I_mot * MODdata.dnUvorg(jz) * 0.01096 * MODdata.nUvorg(jz)) * 0.001
                 Else
                     PaMot = ((VEH.I_mot * (VEH.AchsI * VEH.Igetr(Gear) / (0.5 * VEH.Dreifen)) ^ 2) * aist * Vist) * 0.001
                 End If
             End If
 
-            'Gesamt-Motorleistung
+            'Total Engine-power
             '   => Pantr
             '   => P
             '   => Pkup
@@ -954,15 +954,15 @@ lb_nOK:
 
 
 
-            '*************** Leistungsverteilung usw. ******************
+            '*************** Leistungsverteilung usw. ****************** |@@| Power distribution, etc. ******************
 
-            'Volllast- / Schleppkurve
+            'Full-Load/Drag curve
             If EngState0 = tEngState.Stopped Then
 
                 Pmin = 0
                 Pmax = 0
 
-                'Drehzahl korrigieren
+                'Revolutions Correction
                 nU = 0
                 nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
 
@@ -976,7 +976,7 @@ lb_nOK:
                     Pmax = FLD.Pfull(nn, MODdata.Pe(jz - 1))
                 End If
 
-                'Falls Pmax < 0 oder Pmin > 0 dann Abbruch mit Error!
+                'If Pmax < 0 or Pmin > 0 then Abort with Error!
                 If Pmin >= 0 And P < 0 Then
                     WorkerMsg(tMsgID.Err, "Pe_drag > 0! n_norm= " & nn, MsgSrc & "/t= " & jz + 1)
                     Return False
@@ -1006,10 +1006,10 @@ lb_nOK:
 
                         MODdata.ModErrors.TrLossMapExtr = ""
 
-                        'VKM an Schleppkurve
+                        'VKM to Drag-curve
                         P = Pmin
 
-                        'Forwärtsrechnung bis Rad (PvorD)
+                        'Forward-calculation to Wheel (PvorD)
                         Pkup = P - Paux - PaMot
                         PaGetr = fPaG(Vist, aist)
                         PlossGB = fPlossGBfwd(Pkup, Vist, Gear)
@@ -1025,10 +1025,10 @@ lb_nOK:
                 End If
             End If
 
-            'Check ob Abbruch (vor Geschw.Red-Iteration sonst kann sichs aufhängen)
+            'Check or Abort (before Speed-reduce-iteration, otherwise it hangs)
             If PHEMworker.CancellationPending Then Return True
 
-            'Check ob P über Volllast => Geschw.-Reduktion
+            'Check whether P above Full-load => Reduce Speed
             If Pplus And P > Pmax Then
                 If EngState0 = tEngState.Load Or EngState0 = tEngState.FullLoad Then
                     If Vist > 0.01 Then
@@ -1043,12 +1043,12 @@ lb_nOK:
                         FirstSecItar = False
                         GoTo lbGschw
                     Else
-                        'FEHLER: Geschw.-Red. bringt nix?!...
+                        'ERROR: Speed Reduction brings nothing? ...
                         WorkerMsg(tMsgID.Err, "Speed reduction failed!", MsgSrc & "/t= " & jz + 1)
                         Return False
                     End If
                 Else 'tEngState.Idle, tEngState.Stopped, tEngState.Drag
-                    'FEHLER: Motor nicht in Antrieb ...kann nicht sein?!
+                    'ERROR:  Engine not in Drivetrain ... can it be?
                     If FirstSecItar Then
                         If P > 0.1 Then WorkerMsg(tMsgID.Warn, "Pwheel > 0 but EngState undefined ?!", MsgSrc & "/t= " & jz + 1)
                     End If
@@ -1056,7 +1056,7 @@ lb_nOK:
             End If
 
 
-            'Zugkraftunterbrechung
+            'Interruption of traction(Zugkraftunterbrechung)
             If TracIntrI > 0 Then
 
                 If Not TracIntrOn Then
@@ -1090,9 +1090,9 @@ lb_nOK:
             '--------------------------------------------------------------------------------------------------
             '------------------------- PNR --------------------------------------------------------------------
             '--------------------------------------------------------------------------------------------------
-            '   Sekunde abschließen
+            '   Finish Second
 
-            'Start / Stop - Aktivierung-Geschw. Steuerung
+            'Start / Stop - Activation-Speed Control
             If GEN.StartStop Then
                 If StStAus Then
                     If Not EngState0 = tEngState.Stopped Then
@@ -1107,7 +1107,7 @@ lb_nOK:
                 End If
             End If
 
-            'Modalwerte-Felder schreiben
+            'Write Modal-values Fields
             MODdata.Pe.Add(P / VEH.Pnenn)
             MODdata.nn.Add(nn)
             MODdata.nU.Add(nU)
@@ -1138,7 +1138,7 @@ lb_nOK:
 
             If Cfg.WegKorJa Then Vh.DistCorrection(jz)
 
-            'Zugkraftunterbrechung
+            'Interruption of traction(Zugkraftunterbrechung)
             If TracIntrTurnOff Then
 
                 TracIntrOn = False
@@ -1169,7 +1169,7 @@ lb_nOK:
 
             If Vh.Vsoll(jz) - Vist > 1.5 Then SecSpeedRed += 1
 
-            'Meldungen (Abbruch falls Error)
+            'Notify (abort if error)
             If MODdata.ModErrors.MsgOutputAbort(jz + 1, MsgSrc) Then Return False
 
             If Clutch = tEngClutch.Closed And Nvorg Then
@@ -1182,10 +1182,10 @@ lb_nOK:
         Loop Until jz >= MODdata.tDim
 
         '***********************************************************************************************
-        '***********************************    Zeitschleife ENDE    ***********************************
+        '***********************************    Time loop END ***********************************
         '***********************************************************************************************
 
-        'Meldungen (wenn nicht ADVANCE)
+        'Notify (When not ADVANCE)
         If NotAdvMode Then
 
             If Cfg.WegKorJa Then
@@ -1222,7 +1222,7 @@ lb_nOK:
         StdMode = (PHEMmode = tPHEMmode.ModeSTANDARD)
         NotAdvMode = Not (PHEMmode = tPHEMmode.ModeADVANCE)
 
-        'Abbruch falls Leistung/Drehzahl nicht gegeben
+        'Abort if Power/Revolutions not given
         If Not (DRI.Nvorg And DRI.Pvorg) Then
             WorkerMsg(tMsgID.Err, "Load cycle is not valid! rpm and load required.", MsgSrc)
             Return False
@@ -1233,35 +1233,35 @@ lb_nOK:
         nnDRI = DRI.Values(tDriComp.nn)
         PeDRI = DRI.Values(tDriComp.Pe)
 
-        'Drehzahlen vorher weil sonst scheitert die Pmr-Berechnung bei MODdata.nU(t + 1)
+        'Drehzahlen vorher weil sonst scheitert die Pmr-Berechnung bei MODdata.nU(t + 1) |@@| Revolutions previously, otherwise Pmr-calculation fails at MODdata.nU(t + 1)
         For t = 0 To t1
-            'Modalwerte-Felder schreiben
-            '   MODdata.Pe wird unten belegt
+            'Write Modal value Fields
+            '   Allocate MODdata.Pe
             MODdata.nn.Add(nnDRI(t))
             MODdata.nU.Add(Math.Max(0, nnDRI(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl))
         Next
 
-        'Leistung berechnen
+        'Power calculation
         For t = 0 To t1
 
-            'Sekundäre Progressbar
+            'Secondary Progressbar
             If NotAdvMode Then ProgBarCtrl.ProgJobInt = CInt(100 * t / t1)
 
-            'Reset der sekündlichen Errors 
+            'Reset the second-by-second Errors
             MODdata.ModErrors.ResetAll()
 
-            'ALT und falsch weil Zeit nicht verschoben: P_mr(jz) = 0.001 * (I_mot * 0.0109662 * (n(jz) * nnenn) * nnenn * (n(jz) - n(jz - 1))) / Pnenn
+            'OLD and wrong because not time shifted: P_mr(jz) = 0.001 * (I_mot * 0.0109662 * (n(jz) * nnrom) * nnrom * (n(jz) - n(jz - 1))) / Pnrom
             If t > 0 And t < t1 Then
                 Pmr = 0.001 * (VEH.I_mot * (2 * Math.PI / 60) ^ 2 * MODdata.nU(t) * 0.5 * (MODdata.nU(t + 1) - MODdata.nU(t - 1))) / VEH.Pnenn
             Else
                 Pmr = 0
             End If
 
-            'Leistung aus Zyklus korrigiert um P_clutch
+            'Power of the Cycle corrected by P_clutch
             MODdata.Pe.Add(PeDRI(t) + Pmr)
 
-            'Drehzhal aus Zyklus => Durch CycleInit bestimmt
-            'Falls Drehzahl unter Leerlauf wir Motor als abgestellt angenommen
+            'Revolutions of the Cycle => Determined in Cycle-init
+            'If Revolutions under idle, assume Engine is stopped
             If MODdata.nn(t) < Cfg.nnormEngStop Then
                 EngState0 = tEngState.Stopped
             Else
@@ -1273,7 +1273,7 @@ lb_nOK:
                     PmaxN = FLD.Pfull(MODdata.nn(t), MODdata.Pe(t - 1)) / VEH.Pnenn
                 End If
 
-                'Falls Pmax < 0 oder Pmin > 0 dann Abbruch mit Error!
+                'If Pmax < 0 or Pmin >  0 then Abort with Error!
                 If PminN >= 0 AndAlso MODdata.Pe(t) < 0 Then
                     WorkerMsg(tMsgID.Err, "Pe_drag > 0! n_norm= " & MODdata.nn(t), MsgSrc & "/t= " & t + 1)
                     Return False
@@ -1311,7 +1311,7 @@ lb_nOK:
 
             MODdata.EngState.Add(EngState0)
 
-            'Meldungen
+            'Notify
             If MODdata.ModErrors.MsgOutputAbort(t + 1, MsgSrc) Then Return False
 
         Next
@@ -1333,7 +1333,7 @@ lb_nOK:
         Dim jz As Integer
         Dim Tzykl As Integer
 
-        'Start/Stop Steuerung
+        'Start/Stop Control
         Dim StStAus As Boolean
         Dim StStTx As Single
 
@@ -1364,7 +1364,7 @@ lb_nOK:
 
         Dim GVset As Boolean
 
-        'WegKorrektur
+        'WegKorrektur |@@| Route-correction
         Dim WegIst As Single
         Dim WegX As Integer
         Dim SecSpeedRed As Integer
@@ -1378,13 +1378,13 @@ lb_nOK:
         StdMode = (PHEMmode = tPHEMmode.ModeSTANDARD)
         NotAdvMode = Not (PHEMmode = tPHEMmode.ModeADVANCE)
 
-        'Abbruch wenn keine Geschw. gegeben
+        'Abort if no speed given
         If Not DRI.Vvorg Then
             WorkerMsg(tMsgID.Err, "Driving cycle is not valid! Vehicle Speed required.", MsgSrc)
             Return False
         End If
 
-        '   Initialisieren
+        '   Initialize
         Vh = MODdata.Vh
         WegIst = 0
         WegX = 0
@@ -1412,7 +1412,7 @@ lb_nOK:
             KupplEta = 1
         End If
 
-        'WG-Kennfeld aus MAP übernehmen und Pi-Liste berechnen
+        'Take WG-map from MAP and calculate Pi-list
         PeL = MAP.LPe
         nnL = MAP.Lnn
         Ldim = PeL.Count - 1
@@ -1429,7 +1429,7 @@ lb_nOK:
             End If
         Next
 
-        'Schaltpunkte für NEDC/FTP Schaltung
+        'Gear-shifting points for NEDC/FTP
         Select Case GEN.izykwael
             Case 0  'Nefzja = True
                 GnachV = True
@@ -1446,7 +1446,7 @@ lb_nOK:
         End Select
 
 
-        'Theoretische Höchstgeschwindigkeit [m/s]
+        'Theoretical Maximum-speed [m/s]
         GVmax = VEH.nNenn * VEH.Dreifen * Math.PI / (VEH.AchsI * VEH.Igetr(VEH.ganganz) * 60)
 
         jz = -1
@@ -1454,7 +1454,7 @@ lb_nOK:
         TzyklOgl = Tzykl
 
         '***********************************************************************************************
-        '***********************************    Zeitschleife    ****************************************
+        '***********************************    Time-loop ****************************************
         '***********************************************************************************************
 
         Do
@@ -1462,26 +1462,26 @@ lb_nOK:
 
             GVset = False
 
-            'Sekundäre Progressbar
+            'Secondary Progressbar
             If NotAdvMode Then ProgBarCtrl.ProgJobInt = CInt(100 * jz / MODdata.tDim)
 
-            '   Zustand bestimmen
+            '   Determine State
 
 lbGschw:
 
-            'Geschw. / Beschl. berechnen-------------------
-            'Jetzt durch DRI-Klasse
+            'Calculate Speed/Acceleration -------------------
+            'Now by DRI-class
             Vist = Vh.V(jz)
             aist = Vh.a(jz)
 
-            'Wenn Geschw. über theoretischer Höchstgeschw. => Reduzieren
+            'If Speed over the theoretical Top-Speed => Reduce
             If Vist > GVmax + 0.0001 And Not GVset Then
                 Vh.SetSpeed0(jz, GVmax)
                 GVset = True
                 GoTo lbGschw
             End If
 
-            'Aus Leistg-----
+            'From Power -----
             If aist < 0 Then
                 If (Vist < 0.025) Then
                     Vist = 0
@@ -1491,7 +1491,7 @@ lbGschw:
 
             PbrakeRek = 0
 
-            'Fahrzustand bestimmen-------------------------
+            'Determine Driving-state -------------------------
             Pplus = False
             Pminus = False
 
@@ -1516,17 +1516,17 @@ lbGschw:
                     Pminus = True
             End Select
 
-            'Maximal zulässige Batterieleistung
+            'Maximum allowable Battery-power
             BAT.Bat_Pzul(jz)
             PeBatMax = BAT.PmaxAntr
             PeBatMin = BAT.PmaxLaden
 
-            '************************************ Gangwahl ************************************
+            '************************************ Gear selection ************************************
             If VehState0 = tVehState.Stopped Then
                 Gear = 0
                 Clutch = tEngClutch.Opened
             Else
-                'Checken ob Kupplung schleift (wichtig für Schaltmodell):
+                'Check whether Clutch-lock (important for Gear-shifting model):
                 If fnn(Vist, 1, False) < Kuppln_norm And Pplus Then
                     Clutch = tEngClutch.Slipping
                 Else
@@ -1534,23 +1534,23 @@ lbGschw:
                 End If
 
                 If Gvorg Then
-                    'Gang-Vorgabe
+                    'Gear-setting
                     Gear = Math.Min(Vh.GearVorg(jz), VEH.ganganz)
                 ElseIf Nvorg Then
-                    'Drehzahlvorgabe
+                    'Revolutions-setting
                     Gear = fGearByU(MODdata.nUvorg(jz), Vist)
                 ElseIf VEH.ganganz = 1 Then
                     Gear = 1
                 Else
                     If GnachV Then
-                        'Gang nach Geschwindigkeit wird hier nicht unterstützt
+                        'Gear from Speed is not supported here
                         WorkerMsg(tMsgID.Err, "Geary-By-Speed not supported in EV mode!", MsgSrc)
                         Return False
                     Else
-                        'Schaltmodell
+                        'Gear-shifting Model
                         Gear = fGearEV(jz)
 
-                        'EV: Kein Leerlauf wegen Rekuperation
+                        'EV: No idle due to recuperation
                         If Gear = 0 Then Gear = 1
                     End If
                 End If
@@ -1563,20 +1563,20 @@ lbGschw:
 
             If Gear < 1 Then Clutch = tEngClutch.Opened
 
-            'Falls Rekuperation laut Radleistung möglich: PrekupMax berechnen
+            'If regenerative braking is possible according to Wheel-power: Calculate PrekupMax
             If Pminus And Clutch = tEngClutch.Closed Then
-                'Maximale Rekuperations-Leistung berechnen (abh. von Radlast/Reibkoef.)
+                'Calculate Maximum Recuperation-power (depending on Wheel-load/Friction-coefficient)
                 PrekupMax = fPrekupMax()
                 If PrekupMax > -0.000001 Then Clutch = tEngClutch.Opened
             End If
 
-            'Falls vor Gangwahl festgestellt wurde, dass nicht KupplSchleif, dann bei zu niedriger Drehzahl runterschalten:
+            'Falls vor Gangwahl festgestellt wurde, dass nicht KupplSchleif, dann bei zu niedriger Drehzahl runterschalten: |@@| If before Gear-selection it Clutch was not Locked, then Shift-down at too low a Revolutions:
             If Clutch = tEngClutch.Closed Then
                 If fnn(Vist, Gear, False) < Kuppln_norm And Not VehState0 = tVehState.Dec And Gear > 1 Then Gear -= 1
             End If
 
-            'Checken ob Leerlauf obwohl Leistung > 0
-            '   wenn Leistung vor Diff > 0.1% von Nennleistung dann Korrigieren!
+            'Check whether Idling although Power > 0
+            '   When Power before Diff > 0.1% of Nominal-power then Correct!
             If Clutch = tEngClutch.Opened Then
                 If PvorD > 0.001 * VEH.Pnenn Then
                     Gear = 1
@@ -1588,9 +1588,9 @@ lbGschw:
                 End If
             End If
 
-            '************************************ Drehzahl ************************************
+            '************************************ Revolutions ************************************
 
-            '*** Wenn Drehzahl vorgegeben (Gemess = 2) dann wird der nächste Block übersprungen ***
+            '*** If the Revolutions is specified (Gemess = 2) then the next block is skipped ***
             If Nvorg Then
                 nn = (MODdata.nUvorg(jz) - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
                 GoTo lb_nOK
@@ -1598,7 +1598,7 @@ lbGschw:
 
 lb10:
 
-            'Drehzahlabfall beim Auskuppeln
+            'Revolutions drop when decoupling
             If Clutch = tEngClutch.Opened Then
                 If jz = 0 Then
                     nn = 0
@@ -1619,15 +1619,15 @@ lb10:
 
                 nn = fnn(Vist, Gear, Clutch = tEngClutch.Slipping)
 
-                '*** Beginn: Drehzahl-Check wenn keine Vorgabe
+                '*** Start: Revolutions-Check if not specified
 
-                'Checken ob Drehzahl zu hoch! =>  Hochschalten
+                'Check whether Revolutions too high! => Upshift
                 Do While nn > 1 And Gear < VEH.ganganz
                     Gear += 1
                     nn = fnn(Vist, Gear, Clutch = tEngClutch.Slipping)
                 Loop
 
-                'Checken ob Drehzahl zu niedrig mit geschlossener Kupplung
+                'Check whether Revolutions too low with the Clutch-closed
                 If Clutch = tEngClutch.Closed Then
                     If nn < 0.001 Then
                         Gear = 0
@@ -1639,31 +1639,31 @@ lb10:
 
 
 lb_nOK:
-            '************************************ Motor-Zustand bestimmen ************************************
-            ' nn ist ab hier fix!
+            '************************************ Determine Engine-state ************************************
+            ' nn fix is here!
             nU = nn * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl
 
-            'Nebenverbrauch bestimmen (aus VEH und DRI)
+            'Nebenverbrauch bestimmen (aus VEH und DRI) |@@| Determine next Consumption (from VEH and DRI)
             Paux = fPaux(jz, nU)
 
-            'MotorTrägheit
+            'Engine-inertia
             If Clutch = tEngClutch.Opened Then
                 If jz = 0 Then
                     PaMot = 0
                 Else
-                    'Nicht optimal da jz-1 bis jz nicht der richtige Zeitraum
+                    'Not optimal since jz-1 to jz not the right Interval
                     PaMot = (VEH.I_mot * (nU - MODdata.nU(jz - 1)) * 0.01096 * (nU + MODdata.nU(jz - 1) / 2)) * 0.001
                 End If
             Else
                 If Nvorg Then
-                    'Drehzahlvorgabe
+                    'Revolutions-setting
                     PaMot = (VEH.I_mot * MODdata.dnUvorg(jz) * 0.01096 * MODdata.nUvorg(jz)) * 0.001
                 Else
                     PaMot = ((VEH.I_mot * (VEH.AchsI * VEH.Igetr(Gear) / (0.5 * VEH.Dreifen)) ^ 2) * aist * Vist) * 0.001
                 End If
             End If
 
-            'Gesamt-Motorleistung
+            'Total Engine-power
             '   => Pantr
             '   => P
             '   => Pkup
@@ -1704,9 +1704,9 @@ lb_nOK:
             End Select
 
 
-            '*************** Leistungsverteilung usw. ******************
+            '*************** Power distribution, etc. ******************
 
-            'Volllast- / Schleppkurve
+            'Full-load/Drag-curve
             If EngState0 = tEngState.Stopped Then
                 Pmin = 0
                 Pmax = 0
@@ -1726,21 +1726,21 @@ lb_nOK:
                     If Math.Abs(P / Pmax - 1) < 0.02 Then EngState0 = tEngState.FullLoad
                 Case tEngState.Drag
 
-                    'Maximale Rekuperations-Leistung berechnen (abh. von Radlast/Reibkoef.)
+                    'Calculate Maximum Recuperation power (depending on Wheel-load/Friction-coefficient)
                     'PrekupMax = fPrekupMax()
 
-                    'Falls RekupMax überschritten muss Pe neu berechnet werden
+                    'If RecupMax exceeded, then must recalculate Pe
                     If PrekupMax > PvorD And Clutch = tEngClutch.Closed Then
 
-                        'PbrakeRek = Leistung die zusätzlich mechanisch gebremst werden muss wegen Überschreitung von RekupMax
-                        'wird schon oben nach Gangwahl erledigt: PbrakeRek = Pantr - PrekupMax
+                        'PbrakeRek = power which must be additionally hampered mechanical overrun of RekupMax
+                        'wird schon oben nach Gangwahl erledigt: PbrakeRek = Pantr - PrekupMax |@@| is already done by top gear selection: PbrakeRek = Pantr - PrekupMax
 
-                        'Neue EM-Leistung
+                        'New EM-Power
                         P = PrekupMax + fPlossGB(PrekupMax, Vist, Gear) + fPlossDiff(PrekupMax, Vist) + fPaG(Vist, aist) + PaMot
 
                     End If
 
-                    'Check ob Leistung aufgenommen werden kann (abh. von FLD und Batterie). Bremsleistung berechnen.
+                    'Check ob Leistung aufgenommen werden kann (abh. von FLD und Batterie). Bremsleistung berechnen. |@@| Check whether power can be added (depending on battery and FLD). Compute Braking Power.
                     If P < Pmin Then
                         Pbrake = P - Pmin
                         P = Pmin
@@ -1749,7 +1749,7 @@ lb_nOK:
                         Pbrake = 0
                     End If
 
-                    'RekupMax-Bremsleistung dazu addieren
+                    'Addup RekupMax-Braking-power
                     Pbrake += PbrakeRek
 
                 Case Else 'tEngState.Idle, tEngState.Stopped
@@ -1761,11 +1761,11 @@ lb_nOK:
 
             End Select
 
-            'Check ob P über Volllast => Geschw.-Reduktion
+            'Check whether above Full-load => Speed-reduction
             If Pplus And P > Pmax Then
                 If EngState0 = tEngState.Load Or EngState0 = tEngState.FullLoad Then
 
-                    'Falls Pmax=0 muss Batterie leer sein
+                    'When Pmax = 0 then Battery must be empty
                     If Pmax < 0.0001 Then GoTo lbBatLeer
 
                     If Vist > 0.01 Then
@@ -1779,7 +1779,7 @@ lb_nOK:
                         End Select
                         GoTo lbGschw
                     Else
-                        'FEHLER: Geschw.-Red. bringt nix?!...
+                        'ERROR: Velocity reduction brings nothing? ...
                         WorkerMsg(tMsgID.Err, "P > Pmax ?!", MsgSrc)
                         Return False
                     End If
@@ -1789,7 +1789,7 @@ lb_nOK:
             '-------------------------------------------------------
             '------------------------- PNR -------------------------
             '-------------------------------------------------------
-            '   Sekunde abschließen
+            '   Finish Second
 
             If PHEMworker.CancellationPending Then Return True
 
@@ -1802,7 +1802,7 @@ lb_nOK:
             End If
 
             '**************************************************
-            '***************** Batterie ***********************
+            '***************** Battery ***********************
             If EngState0 = tEngState.Stopped Or P = 0 Then
                 PeBat0 = Paux
             Else
@@ -1814,7 +1814,7 @@ lb_nOK:
             PiBat0 = PeBat0 + BAT.PbatV
 
             '*************************************************
-            '****** Modalwerte-Felder schreiben **************
+            '****** Write Modal-value Fields **************
             MODdata.Pe.Add(P / VEH.Pnenn)
             MODdata.nn.Add(nn)
             MODdata.nU.Add(nU)
@@ -1856,17 +1856,17 @@ lb_nOK:
 
             If Vh.Vsoll(jz) - Vist > 1.5 Then SecSpeedRed += 1
 
-            'Meldungen
+            'Notify
             If MODdata.ModErrors.MsgOutputAbort(jz + 1, MsgSrc) Then Return False
 
         Loop Until jz >= Tzykl
 
         '***********************************************************************************************
-        '*********************************    Zeitschleife ENDE    *************************************
+        '*********************************    Time loop END *************************************
         '***********************************************************************************************
 
 
-        'Meldungen (nicht ADV)
+        'Notify (not ADV)
         If NotAdvMode Then
 
             If Cfg.WegKorJa Then
@@ -1884,7 +1884,7 @@ lb_nOK:
 
 lbBatLeer:
 
-        'TODO.... Fehlermeldung etc
+        'TODO Error message etc
         MODdata.tDim = jz - 1
         WorkerMsg(tMsgID.Warn, "SOC-Min reached! Calculation aborted!", MsgSrc)
 
@@ -1930,7 +1930,7 @@ lbDone:
 
         Dim GVset As Boolean
 
-        'WegKorrektur
+        'Route(Weg) correction
         Dim WegIst As Single
         Dim WegX As Integer
 
@@ -2030,13 +2030,13 @@ lbDone:
         ModeCheck.Add(tHEVparMode.ICEonly, False)
         ModeCheck.Add(tHEVparMode.Rekup, False)
 
-        'Abbruch wenn keine Geschw. gegeben
+        'Abort when no speed given
         If Not DRI.Vvorg Then
             WorkerMsg(tMsgID.Err, "Driving cycle is not valid! Vehicle Speed required.", MsgSrc)
             Return False
         End If
 
-        '   Initialisieren
+        '   Initialize
         Vh = MODdata.Vh
         If Cfg.GnVorgab Then
             Gvorg = DRI.Gvorg
@@ -2059,7 +2059,7 @@ lbDone:
             KupplEta = 1
         End If
 
-        'Schaltpunkte für NEDC/FTP Schaltung
+        'Gear-shifting points for NEDC/FTP
         Select Case GEN.izykwael
             Case 0  'Nefzja = True
                 GnachV = True
@@ -2094,7 +2094,7 @@ lbDone:
                 avl(6) = 200 / 3.6
             Case Else
                 GnachV = False
-                'Schaltparameter initialisieren
+                'Gear-shifting parameters initialization
                 Aaufi = 0.3
                 Baufi = 0.3
                 Caufi = 0.4
@@ -2103,7 +2103,7 @@ lbDone:
                 Cobi = 0.46
         End Select
 
-        'Theoretische Höchstgeschwindigkeit [m/s]
+        'Theoretical maximum speed [m/s]
         GVmax = VEH.nNenn * VEH.Dreifen * Math.PI / (VEH.AchsI * VEH.Igetr(VEH.ganganz) * 60)
 
         'HEV
@@ -2124,33 +2124,33 @@ lbDone:
         TzyklOgl = MODdata.tDim
 
         '***********************************************************************************************
-        '***********************************    Zeitschleife    ****************************************
+        '***********************************    Time-loop ****************************************
         '***********************************************************************************************
 
         Do
             jz += 1
             GVset = False
 
-            'Sekundäre Progressbar
+            'Secondary Progressbar
             If NotAdvMode Then ProgBarCtrl.ProgJobInt = CInt(100 * jz / MODdata.tDim)
 
-            '   Zustand bestimmen
+            '   Determine State
 
 lbGschw:
 
-            'Geschw. / Beschl. berechnen-------------------
-            'Jetzt durch DRI-Klasse
+            'Speed / Acceleration calculation -------------------
+            'Now by DRI-class
             Vist = Vh.V(jz)
             aist = Vh.a(jz)
 
-            'Wenn Geschw. über theoretischer Höchstgeschw. => Reduzieren
+            'If Speed over Theoretical-top-speed => Reduce
             If Vist > GVmax + 0.0001 And Not GVset Then
                 Vh.SetSpeed0(jz, GVmax)
                 GVset = True
                 GoTo lbGschw
             End If
 
-            'Aus Leistg-----
+            'From Power -----
             If aist < 0 Then
                 If (Vist < 0.025) Then
                     'Vh.SetSpeed(jz, 0)
@@ -2161,9 +2161,9 @@ lbGschw:
             '---------------
 
             '*******************************************************************************
-            '*************************** Fahrzustand bestimmen *****************************
+            '*************************** Determine Driving-state *****************************
 
-            'Fahrzustand bestimmen-------------------------
+            'Determine Driving-state-------------------------
             Pplus = False
             Pminus = False
 
@@ -2246,12 +2246,12 @@ lbGschw:
                     Pminus = True
             End Select
 
-            '************************************ Gangwahl ************************************
+            '************************************ Gear selection ************************************
             If VehState0 = tVehState.Stopped Then
                 Gear = 0
                 Clutch = tEngClutch.Opened
             Else
-                'Checken ob Kupplung schleift (wichtig für Schaltmodell):
+                'Check whether Clutch Locks (important for Gear-shifting model):
                 If fnn(Vist, 1, False) < Kuppln_norm And Pplus Then
                     Clutch = tEngClutch.Slipping
                 Else
@@ -2259,19 +2259,19 @@ lbGschw:
                 End If
 
                 If Gvorg Then
-                    'Gang-Vorgabe
+                    'Gear-settings
                     Gear = Math.Min(Vh.GearVorg(jz), VEH.ganganz)
                 ElseIf Nvorg Then
-                    'Drehzahlvorgabe
+                    'Revolutions-setting
                     Gear = fGearByU(MODdata.nUvorg(jz), Vist)
                 ElseIf VEH.ganganz = 1 Then
                     Gear = 1
                 Else
                     If GnachV Then
-                        'Gang nach Geschwindigkeit
+                        'Gear from Speed
                         Gear = fGearBySpeed(jz)
                     Else
-                        'Schaltmodell
+                        'Gear-shifting Model
                         If PKWja Then
                             Gear = fGearPKW(jz)
                         Else
@@ -2286,10 +2286,10 @@ lbGschw:
                 Return False
             End If
 
-            'Nebenverbrauch bestimmen (aus VEH und DRI)
+            'Nebenverbrauch bestimmen (aus VEH und DRI) |@@| Determine next Consumption (from VEH and DRI)
             Paux = fPaux(jz, 0)
 
-            'HEV-Teil kommt erst nach Gangwahl weil Getr./Diff-Loss den benötigt und EM zwischen ICE und GB liegt
+            'HEV-Teil kommt erst nach Gangwahl weil Getr./Diff-Loss den benötigt und EM zwischen ICE und GB liegt |@@| HEV-part comes after Gear-selection because Transmission/Diff-loss and requires the EM is between ICE and GB
             If VehState0 = tVehState.Stopped Then
 
                 PeICE = 0
@@ -2297,23 +2297,23 @@ lbGschw:
                 ICEclutch = False
                 EMclutch = False
 
-                'Nebenverbrauch bestimmen (aus VEH und DRI)
+                'Nebenverbrauch bestimmen (aus VEH und DRI) |@@| Determine next consumption (from VEH and DRI)
                 Paux = fPaux(jz, 0)
 
             Else
 
                 If Nvorg Then
-                    'Wenn Drehzahl vorgegeben
+                    'If Revolutions specified
                     nU = MODdata.nUvorg(jz)
                 Else
-                    'Sonst aus Vist und Gear
+                    'Otherwise from Vist and Gear
                     nU = fnU(Vist, Gear, Clutch = tEngClutch.Slipping)
                 End If
 
-                'Normierte Drehzahl
+                'Normalized Revolutions
                 nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
 
-                'Maximale Leistung der ICE
+                'Maximum power of the ICE
                 If jz = 0 Then
                     ICEmax = FLD.Pfull(nn)
                 Else
@@ -2322,15 +2322,15 @@ lbGschw:
 
                 ICEmin = FLD.Pdrag(nn)
 
-                'Nebenverbrauch bestimmen (aus VEH und DRI)
+                'Nebenverbrauch bestimmen (aus VEH und DRI) |@@| Determine next consumption (from VEH and DRI)
                 Paux = fPaux(jz, nU)
 
-                'Maximal zulässige Batterieleistung
+                'Maximum allowable Battery-power
                 BAT.Bat_Pzul(jz)
                 PeBatMax = Math.Max(BAT.PmaxAntr - Paux, 0)     'Paux reduziert maximale Entlade-Leistung
                 PeBatMin = Math.Min(BAT.PmaxLaden - Paux, 0)    'Paux erhöht (!) maximale Lade-Leistung
 
-                'Maximale EM-Leistung. (Batterieleistung limitiert EM-Leistung)
+                'Maximale EM-Leistung. (Batterieleistung limitiert EM-Leistung) |@@| Maximum EM-Power (Battery-power limited by EM power)
                 EMmax = EMO.PeMax(nU)
                 Do While EMO.PiEM(nU, EMmax) > PeBatMax
                     EMmax *= 0.995
@@ -2341,18 +2341,18 @@ lbGschw:
                     EMmax *= 0.995
                 Loop
 
-                'Leistung bis ICE/EM (= an Kupplung) berechnen
+                'Leistung bis ICE/EM (= an Kupplung) berechnen |@@| Power to ICE/EM (= coupling to) get
                 PlossGB = fPlossGB(PvorD, Vist, Gear)
                 PlossDiff = fPlossDiff(PvorD, Vist)
                 PlossRt = fPlossRt(Vist, Gear)
                 PaGetr = fPaG(Vist, aist)
 
-                'Leistung an Kupplung
+                'Power to clutch
                 Pkup = PvorD + PlossGB + PlossDiff + PaGetr + PlossRt
 
                 'PaMot
                 If Nvorg Then
-                    'Drehzahlvorgabe
+                    'Revolutions-setting
                     PaICE = (VEH.I_mot * MODdata.dnUvorg(jz) * 0.01096 * MODdata.nUvorg(jz)) * 0.001
                     PaEM = (EMO.I_mot * MODdata.dnUvorg(jz) * 0.01096 * MODdata.nUvorg(jz)) * 0.001
                 Else
@@ -2360,28 +2360,28 @@ lbGschw:
                     PaEM = ((EMO.I_mot * (VEH.AchsI * VEH.Igetr(Gear) / (0.5 * VEH.Dreifen)) ^ 2) * aist * Vist) * 0.001
                 End If
 
-                '***** Notwendige Leistung im EV-Betrieb
-                '   Leistung an Kupplung plus EM-Trägheit
+                '***** Power required in EV-mode
+                '   Power to Clutch plus EM-inertia
                 PeEV = Pkup + PaEM
-                '! ACHTUNG: Wenn ICE eingekuppelt dann muss PaICE auch noch dazu ! => Später bei Leistungsverteilung
+                '! CAUTION: If ICE is engaged then PaICE must also be !  => Later in power distribution
 
-                '***** Notwendige Leistung im ICE+EM-Betrieb
+                '***** Power required in the ICE+EM-operation
                 PeKomb = Pkup + PaICE + PaEM
 
-                '***** Notwendige Leistung im ICE-Betrieb
+                '***** Power required in ICE-operation
                 PeICEonly = Pkup + PaICE
 
-                '***** Check ob EV möglich
+                '***** Check whether EV possible
                 '   => Bat <> Low
-                '   => EM-Leistung >= Antriebsleistung
+                '   => EM-Power >= Drivetrain-power
                 '   => v < vEVo
                 If BatLvl <> tBatLvl.Empty And BatLvl <> tBatLvl.Low And PeEV <= EMmax And Under_vEVo Then ModeCheck(tHEVparMode.EV) = True
 
-                '***** Falls EV möglich: Check ob kritisch
+                '***** If EV possible: check whether critical
                 If ModeCheck(tHEVparMode.EV) And PeEV > 0.9 * EMmax Then EVcrit = True
 
-                '***** Check ob Assist / LPI / ICEonly möglich und ob Boost erforderlich
-                '   => ICE-Ein muss möglich sein (ICElock)
+                '***** Check whether Assist / LPI / ICEonly is possible and if Boost is needed
+                '   => ICE-On must be possible (ICElock)
                 If ICElock <> tICElock.OffLock Then
 
                     'Assist / Boost
@@ -2389,7 +2389,7 @@ lbGschw:
                     If BatLvl <> tBatLvl.Empty Then
                         ModeCheck(tHEVparMode.Assist) = True
                         'Boost
-                        '   => ICE an Volllast
+                        '   => ICE at Full-load
                         If PeICEonly > ICEmax Then NeedBoost = True
                     End If
 
@@ -2402,28 +2402,28 @@ lbGschw:
 
                 End If
 
-                '***** Check ob Rekup möglich
+                '***** Check whether Recuparation possible
                 ModeCheck(tHEVparMode.Rekup) = (BatLvl <> tBatLvl.Full)
                 Pbrake = 0
 
 
                 '***********************************************************************************************
-                '********************************* Fahrzustands-Unterscheidung *********************************
+                '********************************* Driving-state distinction *********************************
                 '***********************************************************************************************
 
                 If Pplus Then
 
                     '****************************************************************************************
-                    '***************************** Betriebsmodus Vor-Auswahl ********************************
+                    '***************************** Transmission-Mode pre-selection ********************************
 
                     If NeedBoost Then
 
-                        'Wenn Boost notwendig (und möglich), dann keine Wahl
+                        'if Boost necessary (and possible), then no Choice
                         HEVmode0 = tHEVparMode.Assist
 
                     ElseIf ModeCheck(tHEVparMode.EV) Then
 
-                        'EV Mode wenn...
+                        'EV mode when ...
                         If Not ModeCheck(tHEVparMode.ICEonly) Or Under_vEVu Or BatLvl = tBatLvl.High Then  'ICE nicht möglich, Vist unter EVu oder Batterieladung hoch 
 
                             HEVmode0 = tHEVparMode.EV
@@ -2432,7 +2432,7 @@ lbGschw:
 
                     Else
 
-                        'Wenn EV & ICE nicht möglich dann EV-Modus bis ICE wieder startet.... sollte nie vorkommen weil keine ICE-Abschaltung wenn wenig SOC
+                        'If EV & ICE is not possible then EV-mode till ICE starts again .... should never happen because no ICE-shutdown when little SOC
                         If Not ModeCheck(tHEVparMode.ICEonly) Then
 
                             HEVmode0 = tHEVparMode.EV
@@ -2442,20 +2442,20 @@ lbGschw:
                     End If
 
 
-                    'Falls Einsatz von HEV-Strategie:
-                    '   Ke's berechnen
+                    'If use of HEV strategy:
+                    '   Ke's calculation
                     If HEVmode0 = tHEVparMode.Undefined Then
 
-                        '************** Optimale Ke's berechnen und Leistungen dazu ************
+                        '************** Calculate optimal Ke's and Power for it ************
 
-                        'Emission/Verbrauch in g/h
+                        'Emission/Consumption in g/h
                         FCbasis = MAP.GetSingleValue(tMapComp.FC, nn, PeICEonly / VEH.Pnenn)
 
                         '***********************************************************************
                         '******************************* KeSTE *********************************
                         '***********************************************************************
 
-                        'KeSTE aus STE-Kurve...
+                        'KeSTE from STE-curve ...
                         KeSTE = HEV.STEintp(SOC0)
 
 
@@ -2473,33 +2473,33 @@ lbGschw:
                                 Pel += PelStep
                                 Pvkm = PeKomb - Pel
 
-                                'Unter Max-Pe bleiben
+                                'Remain under Max-Pe
                                 If Pvkm > ICEmax Then Continue Do
 
-                                'Wenn Pvkm negativ: Berechnung für reinen EM-Betrieb
+                                'If Pvkm negative: Calculation of the pure EM-transmission?(Betrieb)
                                 If Pvkm <= 0 Then
 
-                                    '    ...nicht gültig falls Batlvl <= Low oder ICEonLock
+                                    '    ...not valid if Batlvl <= Low or ICEonLock
                                     If Not ModeCheck(tHEVparMode.EV) Or ICElock = tICElock.OnLock Then Exit Do
 
-                                    'EM-Leistung = P-Antrieb
+                                    'EM-Power = P-Drivetrain
                                     Pel = PeEV
                                     Pvkm = 0
 
-                                    'Verbrauchseinsparung in g/h 
+                                    'Consumption-reduction in g/h
                                     FCminus = FCbasis
 
-                                    'Abbruch nach dieser Berechnung (mehr EM-Leistung macht keinen Sinn da hier schon rein elektrischer Antrieb)
+                                    'Abort according to this calculation (more EM-power makes no sense because Drivetrain already pure electric)
                                     bAbort = True
 
                                 Else
 
-                                    'Verbrauchseinsparung in g/h 
+                                    'Consumption-savings in g/h
                                     FCminus = FCbasis - MAP.GetSingleValue(tMapComp.FC, nn, Pvkm / VEH.Pnenn)
 
                                 End If
 
-                                'Leistung nach E-Motor in kW
+                                'Power to electric motor in kW
                                 Pmot = EMO.PiEM(nU, Pel)
 
                                 If Pmot > PeBatMax Then
@@ -2510,18 +2510,18 @@ lbGschw:
                                     End If
                                 End If
 
-                                'Leistung in Batterie
+                                'Power in battery
                                 Pbat = BAT.PiBat(Pmot)
 
                                 If Pbat = 0 Then Stop
 
-                                'Div/0 und Vorzeichen-Check
+                                'Div/0 and Sign checks
                                 If FCminus > 0 Then
 
-                                    'KeA berechnen in kWh/kg
+                                    'KeA calculated in kWh/kg
                                     KeA = 1000 * Pbat / FCminus
 
-                                    'Check ob Optimum
+                                    'Check whether Optimum
                                     If KeA < KeAmin Then
                                         KeAmin = KeA
                                         PelOpt = Pel
@@ -2529,7 +2529,7 @@ lbGschw:
                                     End If
                                 End If
 
-                                'Abbruch falls reiner EM-Betrieb schon erreicht
+                                'Abort when already reached pure EM-mode
                                 If bAbort Then Exit Do
 
                             Loop
@@ -2562,24 +2562,24 @@ lbGschw:
                                 Pel -= PelStep
                                 Pvkm = PeKomb - Pel
 
-                                'Falls Pvkm an Volllast:
+                                'If Pvkm at Full-load:
                                 If Pvkm > 0.99 * ICEmax Then
 
-                                    'Pvkm auf Volllast setzen
+                                    'Put Pvkm on full load
                                     Pvkm = 0.99F * ICEmax
 
-                                    'Elektromotor in Generatorbetrieb (Pges1 - Pvkm < 0)
+                                    'EM in generator-mode (Pges1 - Pvkm < 0)
                                     Pel = PeKomb - Pvkm
 
-                                    'Abbruch nach diesem Durchgang weil mehr Generieren nicht möglich
+                                    'Abort after this pass because Generating more impossible
                                     bAbort = True
 
                                 End If
 
-                                'Zusatzverbrauch in g/h 
+                                'Additional consumption in g/h
                                 FCplus = MAP.GetSingleValue(tMapComp.FC, nn, Pvkm / VEH.Pnenn) - FCbasis
 
-                                'Leistung nach E-Motor in kW
+                                'Power to Electric-motor in kW
                                 Pmot = EMO.PiEM(nU, Pel)
 
                                 If Pmot < PeBatMin Then
@@ -2590,18 +2590,18 @@ lbGschw:
                                     End If
                                 End If
 
-                                'Leistung in Batterie
+                                'Power in battery
                                 Pbat = BAT.PiBat(Pmot)
 
                                 If Pbat = 0 Then Exit Do
 
-                                'Div/0 und Vorzeichen-Check
+                                'Div/0 and Sign checks
                                 If FCplus > 0 Then
 
-                                    'KeG berechnen in kWh/kg
+                                    'Calculate KeG in kWh/kg
                                     KeG = -1000 * Pbat / FCplus
 
-                                    'Check ob Optimum
+                                    'Check whether Optimum
                                     If KeG > KeGmax Then
                                         KeGmax = KeG
                                         PelOpt = Pel
@@ -2610,7 +2610,7 @@ lbGschw:
 
                                 End If
 
-                                'Abbruch falls VKM-Volllast schon erreicht
+                                'Abort when already reached VKM-full-load
                                 If bAbort Then Exit Do
 
                             Loop
@@ -2619,7 +2619,7 @@ lbGschw:
 
                             KeG = KeGmax
 
-                            'Abstand Eta zu Kurve berechnen
+                            'Abstand Eta zu Kurve berechnen |@@| Calculate Distance Eta from Curve
                             DeltaG = KeG - KeSTE
 
                         Else
@@ -2629,7 +2629,7 @@ lbGschw:
                         End If
 
                         '***********************************************************************
-                        '********************** KeSTE, Deltas auswerten ************************
+                        '********************** Evaluate KeSTE, Deltas ************************
                         '***********************************************************************
 
                         If DeltaG < 0 And DeltaA < 0 Then
@@ -2658,7 +2658,7 @@ lbGschw:
 
 
                         '***********************************************************************
-                        '************************* Betriebsstrategie ***************************
+                        '************************* Operating strategy ***************************
                         '***********************************************************************
 
                         'LastHEVmode-Check
@@ -2687,20 +2687,20 @@ lbGschw:
 
                         End If
 
-                        '** Ke-Modus einsetzen wenn...
+                        '** Ke-mode used when ...
                         If HEVmodeByKe = LastHEVmode Or StateChange Or LastHEVnotPossible Then
 
-                            '...Gleicher Modus wie vorher, Fahrzustands-Änderung oder Letzter Modus unmöglich
+                            '...Same mode as before, change Driving-state or last mode impossible
                             HEVmode0 = HEVmodeByKe
 
                         Else
 
-                            '...wenn Motor nicht läuft
+                            '...when Engine is not running
                             If LastEngState = tEngState.Stopped Then
 
                                 HEVmode0 = HEVmodeByKe
 
-                                '...wenn PeICE-Leistungsänderung mit neuen Modus am geringsten
+                                '...if the PeICE Power-change is lowest with the new Mode
                             Else
 
                                 Select Case HEVmodeByKe
@@ -2725,23 +2725,23 @@ lbGschw:
                     End If
 
                     '********************************************************************************************
-                    '****************************** Leistungen je nach Modus verteilen **************************
+                    '****************************** Distribute Power to each Mode **************************
                     '********************************************************************************************
 
                     Select Case HEVmode0
 
                         Case tHEVparMode.EV
 
-                            'EM übernimmt gesamte Leistung
+                            'EM assumes the entire Power
                             PeEM = PeEV
 
-                            'Geschw. reduzieren falls Leistung zu hoch für EM oder Bat
+                            'Speed reduced if power is too high for EM or Bat
                             If PeEM > EMmax Or EMO.PiEM(nU, PeEM) > PeBatMax Then
                                 Vh.ReduceSpeed(jz, 0.995)
                                 GoTo lbGschw
                             End If
 
-                            'Falls ICElock oder EVcrit dann ICE ein (aber ausgekuppelt)
+                            'If ICElock or EVcrit then ICE on (but disconnected)
                             If ICElock = tICElock.OnLock Or (EVcrit And ICElock <> tICElock.OffLock) Then
                                 EngState0 = tEngState.Idle
                             Else
@@ -2755,7 +2755,7 @@ lbGschw:
 
                         Case tHEVparMode.ICEonly
 
-                            'ICE übernimmt gesamten Antrieb
+                            'ICE assumes the entire Drivetrain
                             If PeICEonly > ICEmax Then
                                 Vh.ReduceSpeed(jz, 0.995)
                                 GoTo lbGschw
@@ -2823,14 +2823,14 @@ lbGschw:
 
                     HEVmode0 = tHEVparMode.Rekup
 
-                    'ACHTUNG: ICEclutch ist standardmäßig 'False' deshalb hier keine weiteren Statements mehr
+                    'CAUTION: ICEclutch defaults to 'false' so here no more statements
 
-                    'Maximale Rekup-Leistung berechnen
+                    'Calculate maximum Recuparation-Power
                     PrekupMax = fPrekupMax()
 
                     If PrekupMax > PvorD Then 'Falls Rekup-Limit erreicht
 
-                        'Mit PrekupMax auf EM/ICE zurück rechnen
+                        'Mit PrekupMax auf EM/ICE zurück rechnen |@@| Calculate back PrecupMax from(auf) EM/ICE
                         PlossGB = fPlossGB(PrekupMax, Vist, Gear)
                         PlossDiff = fPlossDiff(PrekupMax, Vist)
                         PlossRt = fPlossRt(Vist, Gear)
@@ -2839,12 +2839,12 @@ lbGschw:
                         PeICEonly = Pkup + PaICE
                         PeEV = Pkup + PaEM
 
-                        'Den Rest gleich auf die Bremse 
+                        'Den Rest gleich auf die Bremse  |@@| The Residual equals that to(auf) the Brakes
                         Pbrake = PvorD - PrekupMax
 
                     End If
 
-                    'Default für ICE (damit man sich die "Else"-Statements spart)
+                    'Default for ICE (so as to save the "Else" statement)
                     PeICE = 0
                     EngState0 = tEngState.Stopped
 
@@ -2852,32 +2852,32 @@ lbGschw:
 
                         If ICElock = tICElock.OnLock Then   'Falls ICElock, dann ICE-Schub dazu wenn EM nicht ausreicht. Basis ist immer PeKomb
 
-                            'EM-Leistung berechnen
+                            'Compute EM-power
                             PeEM = PeKomb
 
                             If PeEM < EMmin Then    'Falls maximale EM-Max-Rekup überschritten...
 
-                                'EM-Leistung neu
+                                'New EM-performance
                                 PeEM = EMmin
 
-                                'Restliche Leistung an ICE
+                                'Residual power to ICE
                                 PeICE = PeKomb - PeEM
                                 EngState0 = tEngState.Drag
 
-                                'Falls ICE über Schleppkurve
+                                'If ICE over Drag-curve
                                 If PeICE < ICEmin Then
 
-                                    'ICE-Leistung neu
+                                    'New ICE power
                                     PeICE = ICEmin
 
-                                    'Rest an Bremse
+                                    'Rest to Brakes
                                     Pbrake += PeKomb - PeEM - PeICE
 
                                 End If
 
                             Else    'Falls EM-Max-Rekup nicht überschritten
 
-                                'ICE in Leerlauf (weil On-Lock)
+                                'ICE is idle (because On-Lock)
                                 EngState0 = tEngState.Idle
 
                             End If
@@ -2886,27 +2886,27 @@ lbGschw:
 
                         Else    'Falls nicht ICElock, dann ICE-Schub nur dazu wenn ICE nicht aus. Basis ist PeEV
 
-                            'EM-Leistung berechnen
+                            'Compute EM-power
                             PeEM = PeEV
 
                             If PeEM < EMmin Then    'Falls maximale EM-Max-Rekup überschritten...
 
-                                'EM-Leistung neu
+                                'New EM-performance
                                 PeEM = EMmin
 
                                 If LastEngState <> tEngState.Stopped And PeKomb < EMmin Then    'Falls ICE nicht aus und kombinierte Leistung unter EM-Max-Rekup dann ICE in Schub
 
-                                    'ICE im Schubbetrieb
+                                    'ICE im Schubbetrieb |@@| ICE on the overrun
                                     PeICE = PeKomb - PeEM
                                     EngState0 = tEngState.Drag
 
-                                    'Falls ICE über Schleppkurve
+                                    'If ICE over Drag-curve
                                     If PeICE < ICEmin Then
 
-                                        'ICE-Leistung neu
+                                        'New ICE-power
                                         PeICE = ICEmin
 
-                                        'Rest an Bremse
+                                        'The rest to Brakes
                                         Pbrake += PeKomb - PeEM - PeICE
 
                                     End If
@@ -2929,17 +2929,17 @@ lbGschw:
 
                         If LastEngState <> tEngState.Stopped Then  'Falls ICE nicht aus dann Schub
 
-                            'ICE im Schubbetrieb
+                            'ICE on the Overrun(Schubbetrieb)
                             PeICE = PeICEonly
                             EngState0 = tEngState.Drag
 
-                            'Falls ICE über Schleppkurve
+                            'When ICE above Drag-curve
                             If PeICE < ICEmin Then
 
-                                'ICE-Leistung neu
+                                'New ICE-power
                                 PeICE = ICEmin
 
-                                'Rest an Bremse
+                                'The rest of on Brakes
                                 Pbrake += PeKomb - PeEM - PeICE
 
                             End If
@@ -2959,7 +2959,7 @@ lbGschw:
 
                 Else
 
-                    'Leistung Null
+                    'Power zero
                     PeICE = 0
                     PeEM = 0
                     ICEclutch = False
@@ -2970,10 +2970,10 @@ lbGschw:
             End If
 
             '************************************************************************************
-            '****************************** Clutch und Drehzahlen *******************************
+            '****************************** Clutch and Revolutions *******************************
             '************************************************************************************
 
-            'Haupt-Kupplung => muss hier schon bekannt sein!
+            'Main clutch => must already be known here!
             'If ICEclutch Then
             '    If PeICE > 0 And fnn(Vist, Gear, False) < Kuppln_norm Then
             '        Clutch = tEngClutch.Slipping
@@ -2986,7 +2986,7 @@ lbGschw:
             '    Clutch = tEngClutch.Opened
             'End If
 
-            '************************************ Drehzahl ICE ************************************
+            '************************************ ICE Revolutions************************************
             If ICEclutch Then
 
                 nnICE = fnn(Vist, Gear, Clutch = tEngClutch.Slipping)
@@ -3031,7 +3031,7 @@ lbGschw:
 
             End If
 
-            '************************************ Drehzahl EM *************************************
+            '************************************ EM Revolutions ​​*************************************
             If EMclutch Then
                 nUEM = fnU(Vist, Gear, Clutch = tEngClutch.Slipping)
             Else
@@ -3057,12 +3057,12 @@ lbGschw:
 
             If PHEMworker.CancellationPending Then Return True
 
-            '   Sekunde abschließen
+            '   Finish Second
 
             If FirstSec Then FirstSec = False
 
             'ICE-Lock
-            '   ACHTUNG: Die beiden If-Schleifen nicht verbinden weil LockCount sich sonst verzählt
+            '   ACHTUNG: Die beiden If-Schleifen nicht verbinden weil LockCount sich sonst verzählt |@@| CAUTION: The two If-Schleifen do not bind(verbiden) because LockCount is miscounted
             If ICElock <> tICElock.NoLock Then
                 LockCount += 1
                 If LockCount > GEN.StStT Then
@@ -3079,7 +3079,7 @@ lbGschw:
                 End If
             End If
 
-            'Modalwerte-Felder schreiben
+            'Write Modal-values Fields
             MODdata.Pe.Add(PeICE / VEH.Pnenn)
             MODdata.nn.Add(nnICE)
             MODdata.nU.Add(nUICE)
@@ -3127,16 +3127,16 @@ lbGschw:
 
             If Vh.Vsoll(jz) - Vist > 1.5 Then SecSpeedRed += 1
 
-            'Meldungen
+            'Notify
             If MODdata.ModErrors.MsgOutputAbort(jz + 1, MsgSrc) Then Return False
 
         Loop Until jz >= MODdata.tDim
 
         '***********************************************************************************************
-        '*********************************    Zeitschleife ENDE   **************************************
+        '*********************************    Time-loop END **************************************
         '***********************************************************************************************
 
-        'Meldungen (Nicht ADVANCE)
+        'Notify (Not ADVANCE)
         If NotAdvMode Then
 
             If Cfg.WegKorJa Then
@@ -3252,8 +3252,8 @@ lbGschw:
         Dim nx As Single
         Dim Vist0 As Single
 
-        '-----------------------------------Sekunde 1--------------------------------------
-        'Erste Sekunde: Gang finden / Initialisierung
+        '-----------------------------------Second 1 --------------------------------------
+        'First second: find Gear / Initialization
         If t = 0 Then
             gangX = -1
             If (Vist <= 1.5) Then
@@ -3280,27 +3280,27 @@ lbGschw:
             Return Gear
         End If
 
-        '--------------------------------Ab Sekunde 2--------------------------------------
+        '--------------------------------From second 2 --------------------------------------
 
-        '---------Startwerte---------
-        'gangX = Letzter Gang d.h. Ausgangsbasis für Schaltmodell
+        '---------Start-values ---------
+        'gangX = Last Gang ie Basis for Gear-shiftching model
         LastGear = MODdata.Gear(t - 1)
         gangX = LastGear
         Gear = LastGear
         t1 = MODdata.tDim
         itgangwL = -1
 
-        'Kuppelschleif-check  << Schon passiert in Power.Calc
+        'Clutch-lock(Kuppelschleif) check << already happened in Power.Calc
         ''If bPplus And fn_norm(1) < Kuppln_norm Then bKupplSchleif = True
 
-        '-------------------Gang für die nächsten 6 Sekunden berechnen---------------------
+        '-------------------Calculate Gear for the next 6 seconds ---------------------
         '-------------------------------------------------------------
 
         Pvorher = MODdata.Pe(t - 1)
 
         tx = t
         Do
-            '-----------Schaltfunktion----------
+            '-----------Gear-shifting function ----------
             Vist0 = MODdata.Vh.V(t)
             V_norm = Vist0 / GVmax
             nx = fnU(Vist0, gangX, False) / VEH.nNenn
@@ -3338,23 +3338,23 @@ lbGschw:
             Loop Until ix = 11 Or t > t1
             t = t - ix + jpm + 1
 
-            'Drehzahlschranke Hinaufschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+            'Revolutions-limit for Upshifting  n_normiert (Idle = 0, Nominal-revolutions = 1)
             nnsaufi = Aaufi + Baufi * V_norm + Caufi * AP10
             If (nnsaufi > 0.95) Then nnsaufi = 0.95
-            'Drehzahlschranke Hinunterschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+            'Revolutions-limit for Downhifting  n_normiert (Idle = 0, Nominal-revolutions = 1)
             nnsobi = Aobi + Bobi * V_norm + Cobi * AP10
-            'Gelöscht LUZ 13.07.10: If (nnsaufi > 0.85) Then nnsaufi = 0.85
-            'Umrechnung in hier verwendete Drehzahleinheit (n/n_nenn):
+            'Deleted by LUZ  13.07.10: If (nnsaufi > 0.85)  Then nnsaufi = 0.85
+            'Convert here the Revolutions-units (n/n_nom):
             nsa = (VEH.nLeerl / VEH.nNenn) + nnsaufi * (1 - (VEH.nLeerl / VEH.nNenn))
             nsd = (VEH.nLeerl / VEH.nNenn) + nnsobi * (1 - (VEH.nLeerl / VEH.nNenn))
-            'Drehzahl mit letzten Gang (gangX)
+            'Revolutions with last Gear (gangX)
             'nx = fnU(Vist, gangX, Clutch = tEngClutch.Slipping) / VEH.nNenn
             '-----------------------------------
 
-            ' ''Schalten Maximal alle 2 Sekunden schalten zulaessig:
+            ' ''Maximum permissible Gear-shift every 2 seconds:
             If (t - itgangwL) < 3 And itgangwL > -1 Then GoTo lb10
 
-            'Ueberpruefen ob hinunterschalten, nur wenn Geschw. abnimmt oder leistung zunimmt
+            'Check whether Downshift, only when Speed decreases or Power increases
             bCheck = False
             Pjetzt = fPeGearMod(gangX, t)
             If Vist0 < Valt Then bCheck = True
@@ -3363,7 +3363,7 @@ lbGschw:
                 If nx < nsd Then gangX -= 1
             End If
 
-            'Ueberpruefen ob hinaufschalten, nur wenn Geschw. zunimmt oder leistung abnimmt
+            'Check whether Upshift, only when Speed increases or Power decreases
             bCheck = False
             If (Vist0 > Valt) Then bCheck = True
             If (Pjetzt < Pvorher) Then bCheck = True
@@ -3371,7 +3371,7 @@ lbGschw:
                 If nx > nsa Then gangX += 1
             End If
 
-            'Gangwahl korrigieren
+            'Correct Gear-selection
             If gangX > VEH.ganganz Then
                 gangX = VEH.ganganz
             ElseIf gangX < 1 Then
@@ -3380,16 +3380,16 @@ lbGschw:
 
 lb10:
 
-            'Kein Leerlauf wenn Leistung > 0
+            'Not Idle when Power > 0
             If gangX = 0 Then
                 If Pjzx > 0.001 Then gangX = 1
             End If
 
-            'Drehzahl neu
+            'New Revolutions
             ''nn = fnn(Vist, gangX, Clutch = tEngClutch.Slipping)
             nn = fnn(Vist0, gangX, False)
 
-            'Überprüfe ob Gang innerhalb der Leistungs-/Drehzahl Grenzen. Schleppbetrieb wird nicht beachtet
+            'Check whether Gear within the Power/Revolutions limits. Drag is not respected
             Select Case nn
                 Case Is < Kuppln_norm
                     If gangX > 1 Then
@@ -3403,7 +3403,7 @@ lb10:
                     End If
             End Select
 
-            'Speichere Gänge in Feld für spätere Checks
+            'Save for Gear in Field for further checks
             Gcheck(t - tx) = gangX
 
             If gangX <> Gear Then itgangwL = t
@@ -3415,7 +3415,7 @@ lb10:
         Loop Until t = tx + 11 Or t > t1
         t = tx
         '-------------------------------------------------------------
-        'Gang wird übernommen
+        'Gear accepted
         gangX = Gcheck(0)
         For ix = t To t + 10
             Gears(ix - t) = Gcheck(ix - t)
@@ -3423,14 +3423,14 @@ lb10:
 
         Gear = Gears(0)
 
-        'Gang-Verlauf hinzufügen
+        'Gang-Verlauf hinzufügen |@@| Add to Gears-sequence
 
         '----------------------------------------------------------------------------------
 
-        '--------------------------------Checks Teil 1-------------------------------------
-        'Checks zur Saeuberung unsinniger Schlatmanoever:
+        '--------------------------------Checks Part 1 -------------------------------------
+        'Checks to Purge non-sensible Gear-shift:
 
-        ''Unterteilung in "iphase(j)" Beschleunigungs- (=1), Verzoegerungs- (=2) und Cruise (=3) -Phasen:
+        ''Division into "iphase(j)" stages: Acceleration(=1), Deceleration(=2) and Cruise(=3):
         'iphase = 0
         'Select Case (beschl(jz - 2) + beschl(jz - 1) + beschl(jz)) / 3
         '    Case Is >= 0.125
@@ -3440,9 +3440,9 @@ lb10:
         '    Case Else
         '        iphase = 3
         'End Select
-        '   ============>> Schon bestimmt durch VehState0
+        '   ============>> Already determined by VehState0
 
-        'Suche nach letztem Gangwechsel
+        'Search by last Gear-change
         itgangwL = -1
         If t > 2 Then
             For ix = t - 1 To 1 Step -1
@@ -3453,16 +3453,16 @@ lb10:
             Next
         End If
 
-        'Schaltvorgaenge max. alle 3 Sekunden zulaessig:
+        'Maximum permissible Gear-shifts every 3 seconds:
         If t - itgangwL <= 2 And t > 2 And LastGear <> 0 Then
             Return LastGear    '<<< keine weiteren Checks!!!
         End If
 
         If Gear <> LastGear Then
-            'Cruise-Phasen:
-            'Solange Geschwindigkeitsaenderung seit letztem Gangwechsel unter 6% und Pe/Pnenn aenderung unter 6% wird nicht geschaltet:
-            'Verzoegerungsphasen: Hochschalten wird unterdrückt
-            'Beschleunigungsphasen: Zurückschalten wird unterdrückt
+            'Cruise-phases:
+            'Do not change Gear for as long Speed-change since last Gear-shift is below 6% and Pe/Pnorm change is below 6%:
+            'Deceleration-phases: Upshift is suppressed
+            'Acceleration-phases: Downshift?(Zurückschalten) suppressed
             If itgangwL = -1 Then itgangwL = 0
             bCheck = False
             Pjetzt = fPeGearMod(Gear, t)
@@ -3483,8 +3483,8 @@ lb10:
             If bCheck Then
                 Gear = LastGear
             Else
-                'Wenn innerhalb von 6 Sekunden wieder in vorigen Gang zurueck geschaltet wird, wird der vorige Gang
-                'durchgehend beibehalten
+                'If within 6 seconds it Shifts back to the previous-Gear,
+                'then maintain the previous-Gear throughout.
                 bCheck = False
                 For ix = t + 1 To t + 6
                     If ix > t1 Then Exit For
@@ -3496,8 +3496,8 @@ lb10:
                 If bCheck Then
                     Gear = LastGear
                 Else
-                    'Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang
-                    'geschaltet wird, wird voriger Gang durchgehend beibehalten
+                    'Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang |@@| If within 6 seconds it Shifts once above and once below the previous-Gear,
+                    'geschaltet wird, wird voriger Gang durchgehend beibehalten |@@| then maintain the previous-Gear throughout.
                     a = 0
                     b = 0
                     For ix = t To t + 6
@@ -3514,14 +3514,14 @@ lb10:
             End If
         End If
 
-        '--------------------------------Checks Teil 2-------------------------------------
-        'Schalten von 2. in 1. Gang wird bei v > 2,5 m/s unterdrueckt
-        'NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl
+        '--------------------------------Checks Part 2 -------------------------------------
+        'Gear-shift from 2 to 1 are suppressed when v > 2.5 m/s
+        'NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl |@@| NEW LUZ 040210: Upshifting only when in 2nd Gear over Cluch-Revolutions
         If Gear = 1 And LastGear > 1 And Vist >= 2.5 Then
             If fnn(Vist, 2, False) > Kuppln_norm Then Gear = 2
         End If
 
-        'bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet
+        'bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet |@@| at decelerations below 2.5 m/s, shift to idle
         bCheck = True
         For ix = t To t + 2
             If ix > t1 Then Exit For
@@ -3535,22 +3535,22 @@ lb10:
             Return 0  '<<< keine weiteren Checks!!!
         End If
 
-        'wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
+        'wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet |@@| wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
         If t < t1 Then
             If (Vist < 0.1 And MODdata.Vh.V(t + 1) < 0.1) Then
                 Return 0    '<<< keine weiteren Checks!!!
             End If
         End If
 
-        'bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet
+        'bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet |@@| If v <0.1 m/s for more than 1 sec then shift to Gear=0
         If Vist < 1.5 And t < t1 Then
             If (Vist > 0.01 + MODdata.Vh.V(t - 1) And MODdata.Vh.V(t + 1) > 0.01 + Vist) Then
                 Gear = 1
             End If
         End If
 
-        'ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
-        'sonst fehlt die leistung!
+        'ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden |@@| at Beschleunigungsvorgaengen below 1.5 m/s is used in 1 Gear is engaged
+        'checking if Revolutions above Nominal-Revolutions, then always Upshift
         Do While fnn(Vist, Gear, Clutch = tEngClutch.Slipping) > 1 And Gear < VEH.ganganz
             Gear += 1
         Loop
@@ -3559,7 +3559,7 @@ lb10:
 
     End Function
 
-    'EV-Schaltmodell (auf Basis PKW)
+    'otherwise lack the power!
     Private Function fGearEV(ByVal t As Integer) As Integer
 
         Dim gangX As Int16
@@ -3589,8 +3589,8 @@ lb10:
         Dim nx As Single
         Dim Vist0 As Single
 
-        '-----------------------------------Sekunde 1--------------------------------------
-        'Erste Sekunde: Gang finden / Initialisierung
+        '-----------------------------------EV-Gear-shifting model (based on Cars(PKW))
+        'Second 1 --------------------------------------
         If t = 0 Then
             gangX = -1
             If (Vist <= 1.5) Then
@@ -3617,27 +3617,27 @@ lb10:
             Return Gear
         End If
 
-        '--------------------------------Ab Sekunde 2--------------------------------------
+        '--------------------------------First second: Find Gear / initialization
 
-        '---------Startwerte---------
-        'gangX = Letzter Gang d.h. Ausgangsbasis für Schaltmodell
+        '---------From second 2 --------------------------------------
+        'Start-values ---------
         LastGear = MODdata.Gear(t - 1)
         gangX = LastGear
         Gear = LastGear
         t1 = MODdata.tDim
         itgangwL = -1
 
-        'Kuppelschleif-check  << Schon passiert in Power.Calc
+        'gangX = Last Gear ie Starting-base for Shifting-model
         ''If bPplus And fn_norm(1) < Kuppln_norm Then bKupplSchleif = True
 
-        '-------------------Gang für die nächsten 6 Sekunden berechnen---------------------
+        '-------------------Clutch-lock check << already happened in Power.Calc
         '-------------------------------------------------------------
 
         Pvorher = MODdata.Pe(t - 1)
 
         tx = t
         Do
-            '-----------Schaltfunktion----------
+            '-----------Calculate Gear for the next 6 seconds ---------------------
             Vist0 = MODdata.Vh.V(t)
             V_norm = Vist0 / GVmax
             nx = fnU(Vist0, gangX, False) / VEH.nNenn
@@ -3675,23 +3675,23 @@ lb10:
             Loop Until ix = 11 Or t > t1
             t = t - ix + jpm + 1
 
-            'Drehzahlschranke Hinaufschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+            'Shifting-function ----------
             nnsaufi = Aaufi + Baufi * V_norm + Caufi * AP10
             If (nnsaufi > 0.95) Then nnsaufi = 0.95
-            'Drehzahlschranke Hinunterschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+            'Revolutions-limit for Upshift, n_normiert (Idle = 0, Nominal-Revolutions = 1)
             nnsobi = Aobi + Bobi * V_norm + Cobi * AP10
             'Gelöscht LUZ 13.07.10: If (nnsaufi > 0.85) Then nnsaufi = 0.85
-            'Umrechnung in hier verwendete Drehzahleinheit (n/n_nenn):
+            'Revolutions-limit for Downshift, n_normiert (Idle = 0, Nominal-Revolutions = 1)
             nsa = (VEH.nLeerl / VEH.nNenn) + nnsaufi * (1 - (VEH.nLeerl / VEH.nNenn))
             nsd = (VEH.nLeerl / VEH.nNenn) + nnsobi * (1 - (VEH.nLeerl / VEH.nNenn))
-            'Drehzahl mit letzten Gang (gangX)
+            'Convert here of Revolutions units to use (n/n_nominal):
             'nx = fnU(Vist, gangX, Clutch = tEngClutch.Slipping) / VEH.nNenn
             '-----------------------------------
 
-            ' ''Schalten Maximal alle 2 Sekunden schalten zulaessig:
+            ' ''Revolutions with last Gear (gangX)
             If (t - itgangwL) < 3 And itgangwL > -1 Then GoTo lb10
 
-            'Ueberpruefen ob hinunterschalten, nur wenn Geschw. abnimmt oder leistung zunimmt
+            'Maximum permissible Gear-shifting every 2 seconds:
             bCheck = False
             Pjetzt = fPeGearEV(gangX, t)
             If Vist0 < Valt Then bCheck = True
@@ -3700,7 +3700,7 @@ lb10:
                 If nx < nsd Then gangX -= 1
             End If
 
-            'Ueberpruefen ob hinaufschalten, nur wenn Geschw. zunimmt oder leistung abnimmt
+            'Check whether Downshifting-gear, only when Revolutions decrease or Power increases
             bCheck = False
             If (Vist0 > Valt) Then bCheck = True
             If (Pjetzt < Pvorher) Then bCheck = True
@@ -3708,7 +3708,7 @@ lb10:
                 If nx > nsa Then gangX += 1
             End If
 
-            'Gangwahl korrigieren
+            'Check whether Upshifting-gear, only when Revolutions increase or Power decreases
             If gangX > VEH.ganganz Then
                 gangX = VEH.ganganz
             ElseIf gangX < 1 Then
@@ -3717,16 +3717,16 @@ lb10:
 
 lb10:
 
-            'Kein Leerlauf wenn Leistung > 0
+            'Correct Gear-selection
             If gangX = 0 Then
                 If Pjzx > 0.001 Then gangX = 1
             End If
 
-            'Drehzahl neu
+            'Not idle when Power > 0
             ''nn = fnn(Vist, gangX, Clutch = tEngClutch.Slipping)
             nn = fnn(Vist0, gangX, False)
 
-            'Überprüfe ob Gang innerhalb der Leistungs-/Drehzahl Grenzen. Schleppbetrieb wird nicht beachtet
+            'New Revolutions
             Select Case nn
                 Case Is < Kuppln_norm
                     If gangX > 1 Then
@@ -3740,7 +3740,7 @@ lb10:
                     End If
             End Select
 
-            'Speichere Gänge in Feld für spätere Checks
+            'Check if Gear within Power/Revolutions limits. Drag-operation is not respected
             Gcheck(t - tx) = gangX
 
             If gangX <> Gear Then itgangwL = t
@@ -3752,7 +3752,7 @@ lb10:
         Loop Until t = tx + 11 Or t > t1
         t = tx
         '-------------------------------------------------------------
-        'Gang wird übernommen
+        'Save Gears in field for later checks
         gangX = Gcheck(0)
         For ix = t To t + 10
             Gears(ix - t) = Gcheck(ix - t)
@@ -3760,14 +3760,14 @@ lb10:
 
         Gear = Gears(0)
 
-        'Gang-Verlauf hinzufügen
+        'Accept Gear
 
         '----------------------------------------------------------------------------------
 
-        '--------------------------------Checks Teil 1-------------------------------------
-        'Checks zur Saeuberung unsinniger Schlatmanoever:
+        '--------------------------------Checks Teil 1------------------------------------- |@@| Add to Gang-sequence
+        'Checks Part 1 -------------------------------------
 
-        ''Unterteilung in "iphase(j)" Beschleunigungs- (=1), Verzoegerungs- (=2) und Cruise (=3) -Phasen:
+        ''Checks to Purge non-sensible Gear-shift:
         'iphase = 0
         'Select Case (beschl(jz - 2) + beschl(jz - 1) + beschl(jz)) / 3
         '    Case Is >= 0.125
@@ -3777,9 +3777,9 @@ lb10:
         '    Case Else
         '        iphase = 3
         'End Select
-        '   ============>> Schon bestimmt durch VehState0
+        '   ============>> Division into "IPhase(j)" stages: acceleration(=1), Deceleration(=2) and Cruise(=3):
 
-        'Suche nach letztem Gangwechsel
+        'Already determined by VehState0
         itgangwL = -1
         If t > 2 Then
             For ix = t - 1 To 1 Step -1
@@ -3790,16 +3790,16 @@ lb10:
             Next
         End If
 
-        'Schaltvorgaenge max. alle 3 Sekunden zulaessig:
+        'Search by last Gear-change
         If t - itgangwL <= 2 And t > 2 And LastGear <> 0 Then
             Return LastGear    '<<< keine weiteren Checks!!!
         End If
 
         If Gear <> LastGear Then
-            'Cruise-Phasen:
-            'Solange Geschwindigkeitsaenderung seit letztem Gangwechsel unter 6% und Pe/Pnenn aenderung unter 6% wird nicht geschaltet:
-            'Verzoegerungsphasen: Hochschalten wird unterdrückt
-            'Beschleunigungsphasen: Zurückschalten wird unterdrückt
+            'Max permissible Gear-change every 3 seconds:
+            'Cruise-phases:
+            'Verzoegerungsphasen: Hochschalten wird unterdrückt |@@| As long Speed-change since last Gear-shift is under 6% and Pe/Pnom below 6%, do not run:
+            'Deceleration phases: Upshift suppressed
             If itgangwL = -1 Then itgangwL = 0
             bCheck = False
             Pjetzt = fPeGearEV(Gear, t)
@@ -3820,8 +3820,8 @@ lb10:
             If bCheck Then
                 Gear = LastGear
             Else
-                'Wenn innerhalb von 6 Sekunden wieder in vorigen Gang zurueck geschaltet wird, wird der vorige Gang
-                'durchgehend beibehalten
+                'Acceleration phases: Downshift?(Zurückschalten) suppressed
+                'durchgehend beibehalten |@@| If within 6 seconds switched back again to the previous Gear, stick
                 bCheck = False
                 For ix = t + 1 To t + 6
                     If ix > t1 Then Exit For
@@ -3833,8 +3833,8 @@ lb10:
                 If bCheck Then
                     Gear = LastGear
                 Else
-                    'Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang
-                    'geschaltet wird, wird voriger Gang durchgehend beibehalten
+                    'Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang |@@| to the previous Gear
+                    'geschaltet wird, wird voriger Gang durchgehend beibehalten |@@| If within 6 seconds it Shifts once above and once below the previous-Gear,
                     a = 0
                     b = 0
                     For ix = t To t + 6
@@ -3851,14 +3851,14 @@ lb10:
             End If
         End If
 
-        '--------------------------------Checks Teil 2-------------------------------------
-        'Schalten von 2. in 1. Gang wird bei v > 2,5 m/s unterdrueckt
-        'NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl
+        '--------------------------------Checks Teil 2------------------------------------- |@@| then maintain the previous-Gear throughout.
+        'Checks Part 2 -------------------------------------
+        'Suppress Gear-shift from 2 to 1 when v > 2.5 m/s
         If Gear = 1 And LastGear > 1 And Vist >= 2.5 Then
             If fnn(Vist, 2, False) > Kuppln_norm Then Gear = 2
         End If
 
-        'bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet
+        'bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet |@@| NEW LUZ 040210: Upshift only when in 2 Gear over Clutch-revolutions
         bCheck = True
         For ix = t To t + 2
             If ix > t1 Then Exit For
@@ -3872,22 +3872,22 @@ lb10:
             Return 0  '<<< keine weiteren Checks!!!
         End If
 
-        'wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
+        'wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet |@@| at decelerations below 2.5 m/s, shift to Idle
         If t < t1 Then
             If (Vist < 0.1 And MODdata.Vh.V(t + 1) < 0.1) Then
                 Return 0    '<<< keine weiteren Checks!!!
             End If
         End If
 
-        'bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet
+        'bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet |@@| If v < 0.1 m/s for more than 1 sec, then shift to Gear=0
         If Vist < 1.5 And t < t1 Then
             If (Vist > 0.01 + MODdata.Vh.V(t - 1) And MODdata.Vh.V(t + 1) > 0.01 + Vist) Then
                 Gear = 1
             End If
         End If
 
-        'ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
-        'sonst fehlt die leistung!
+        'ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden |@@| at acceleration processes below 1.5 m/s is used in first Gear is engaged
+        'Check whether Revolutions over Nominal-Revolutions, then should always Upshift,
         Do While fnn(Vist, Gear, Clutch = tEngClutch.Slipping) > 1 And Gear < VEH.ganganz
             Gear += 1
         Loop
@@ -3941,8 +3941,8 @@ lb10:
 
 
 
-        '-----------------------------------Sekunde 1--------------------------------------
-        'Erste Sekunde: Gang finden / Initialisierung
+        '-----------------------------------otherwise Power not enough!
+        'Second 1 --------------------------------------
         If t = 0 Then
             gangX = -1
             If (MODdata.Vh.V(t) <= 1.5) Then
@@ -3979,9 +3979,9 @@ lb10:
 
         End If
 
-        '--------------------------------Ab Sekunde 2--------------------------------------
+        '--------------------------------First second: Find Gear/Initialization
 
-        '---------Startwerte---------
+        '---------From second 2 --------------------------------------
         gangX = MODdata.Gear(t - 1)
         LastGear = gangX
         GangXl = GangL(t - 1)
@@ -4011,7 +4011,7 @@ lb10:
 
 
 
-        'Leistung berechnen von jz bis jz + 6-----------------
+        'Start-values ---------
         tx = t
         For t = tx To tx + 6
             If t > t1 Then Exit For
@@ -4024,13 +4024,13 @@ lb10:
 
             '-----------------------------------------------------------------
             '
-            '     Berechnung nach Drehzahl/Leistung-Modell
+            '     Compute power from jz to (jz + 6) -----------------
             '
             '    --------------------------------------------------------------
-            '(1) Nach Variante "schnelle Fahrweise"
+            '(1) Nach Variante "schnelle Fahrweise" |@@| Calculated towards a Revolutions/Power model
 
-            'Schaltmanoever erfolgt nur, wenn v-aenderung 5% seit letztem Gangwechsel,
-            'VECTO: Auskommentiert START
+            '1) "Fast Driving" variant
+            'Gear-shift only if v-change 5% since last Gear-shift
             'achek = 1
             'If (MODdata.Vh.V(itgangwH) <> 0) Then
             '    avchek = Math.Abs(Vist0 / MODdata.Vh.V(itgangwH) - 1)
@@ -4042,26 +4042,26 @@ lb10:
             'Else
             '    achek = 1
             'End If
-            'VECTO: Auskommentiert ENDE
+            'VECTO: Commented out START
 
-            'in ersten 10 Zyklussekunden kann zum Einregulieren immer geschlatet werden:
+            'VECTO: Commented out END
             If (t <= 9) Then achek = -1
 
-            'Bei Aenderung der Steigung kann ebenfalls immer geschaltet werden:
+            'Bei Aenderung der Steigung kann ebenfalls immer geschaltet werden: |@@| the first 10 seconds of the cycle can always be used for balancing gear-shifting:
             achstg = Math.Abs(MODdata.Vh.Grad(t) - MODdata.Vh.Grad(itgangwH))
             If (achstg > 0.001) Then achek = -1
 
-            'Hinunterschalten:
+            'A Change in the Slope can always result in Gear-shift:
             If (n0 <= VEH.hinunter) Then
                 If (achek < 0.9) Then
                     gangX = gangX - 1
                 End If
             End If
 
-            'Hochschalten:
-            ' bei Steigungszyklen mit zu hohen Geschwindigkeiten wird geschw. i+1 erst nach gangwahl berechnet
-            ' dabei manchmal zu hoher gang -> Drehzahl und P_max viel zu nieder, daher nu bei niederen leistungen
-            ' hochschalten erlaubt:
+            'Downshift:
+            ' Upshift:
+            ' dabei manchmal zu hoher gang -> Drehzahl und P_max viel zu nieder, daher nu bei niederen leistungen |@@| at Sloped-cycles with excessive speed the Gear i +1 is calculated
+            ' hochschalten erlaubt: |@@| sometimes Gear is too high -> Revolutions and P_max too low, so only at low Power
             If (Pe0 > 0.8) Then
                 If (n0 < 0.9) Then
                     achek = 1
@@ -4080,11 +4080,11 @@ lb10:
             GangH(t) = gangX
 
             '   -----------------------------------------------------------------
-            '(2) Nach Variante "sparsame Fahrweise"
+            '(2) Nach Variante "sparsame Fahrweise" |@@| Upshift allowed:
 
-            '   Zurueckschalten erfolgt nur, wenn Geschwindigkeitsaenderung > 6%
-            '   Hochschalten geht immer
-            'VECTO: Auskommentiert START
+            '   2) "Economical Driving" Variant
+            '   Downshift?(Zurueckschalten) happens only when Speed-change > 6%
+            'Always Upshift
             'achek = 1
             'If (MODdata.Vh.V(itgangwL) <> 0) Then
             '    avchek = Math.Abs(Vist0 / MODdata.Vh.V(itgangwL) - 1)
@@ -4096,15 +4096,15 @@ lb10:
             'Else
             '    achek = 1
             'End If
-            'VECTO: Auskommentiert ENDE
+            'VECTO: Commented out START
 
-            '       in ersten 10 Zyklussekunden kann zum einregulieren immer geschlatet werden:
+            '       VECTO: Commented out END
             If (t <= 9) Then achek = -1
-            '       Bei Aenderung der Steigung kann ebenfalls immer geschaltet werden:
+            '       Bei Aenderung der Steigung kann ebenfalls immer geschaltet werden: |@@| The first 10 seconds cycle can always be used for balancing Gear-shift:
             achstg = Math.Abs(MODdata.Vh.Grad(t) - MODdata.Vh.Grad(itgangwL))
             If (achstg > 0.001) Then achek = -1
 
-            '    Hinunterschalten:
+            '    When slope changes always may result in Gear-shift:
             If (GangXl > 1) Then
                 cnl = fnU(Vist0, GangXl, False) / VEH.nNenn
                 If (cnl <= VEH.lhinunter) Then
@@ -4114,7 +4114,7 @@ lb10:
                 End If
             End If
 
-            'Hinaufschalten, nur ueberprueft wenn nicht schon hoechster Gang:
+            'Downshift:
             If (GangXl < VEH.ganganz) Then
                 'C
                 If (Pe0 > 0.8) Then
@@ -4123,7 +4123,7 @@ lb10:
                     End If
                 End If
                 'C
-                'C     relevante Drehzahlen:
+                'C     Upshift, only if checked not the highest Gear:
                 cnl = fnU(Vist0, GangXl + 1, False) / VEH.nNenn
 
 
@@ -4134,12 +4134,12 @@ lb10:
 
             GangL(t) = GangXl
 
-            ' Auswahl des Drehzahlverhaeltnisses aus der "schnellen (..h)" und
-            ' der "sparsamen (..l)" Variante:
+            ' Relative Revolutions:
+            ' der "sparsamen (..l)" Variante: |@@| Select Revolutions-relationship for the "fast (h ..)" and
 
-            '   Drehzahlverhhealtnisse nach "Modellmix":
-            '   anhand der erforderlichen maximalen Motorleistung ueber die
-            '   naechsten 6 Sekunden
+            '   Drehzahlverhhealtnisse nach "Modellmix": |@@| the "economical (.. l)"  Variant:
+            '   anhand der erforderlichen maximalen Motorleistung ueber die |@@| Revolutions-relationship for "Modelmix":
+            '   naechsten 6 Sekunden |@@| according to the required maximum Engine-power over the
             P_maxg = Pe0
             For ix = t To t + 5
                 If ix > t1 Then Exit For
@@ -4147,28 +4147,28 @@ lb10:
                 If (PeX > P_maxg) Then P_maxg = PeX
             Next
 
-            '     Festlegung der Anteile von schneller und sparsamer Fahrweise
-            '      (Modell Hausberger):
+            '     next 6 seconds
+            '      (Determine the proportions between the Fast and the Economical Driving-style
             pschnellm = 3.3333 * P_maxg - 1.6667
 
             If (pschnellm > 1) Then pschnellm = 1
             If (pschnellm < 0) Then pschnellm = 0
             psparm = 1.0 - pschnellm
 
-            '     Mix der berechneten Gaenge gemaess Vorgabe in Eingabefile:
-            '     (pmodell wird aus Eingabefile gelesen, = Anteil, zu der die Drehzahl
-            '      nach "reales Modell" bestehen soll)
+            '     Hausberger model):
+            '     (pmodell wird aus Eingabefile gelesen, = Anteil, zu der die Drehzahl |@@| Mix the calculated Gears as specified in the input file:
+            '      nach "reales Modell" bestehen soll) |@@| from the Input-file it is read the pmodell = ratios of the revolutions
 
             psparist = VEH.pspar + psparm * VEH.pmodell
             pschist = 1.0 - psparist
 
-            '      Ermittlung des "virtuellen" aktuellen Ganges nach Modell
+            '      Ermittlung des "virtuellen" aktuellen Ganges nach Modell |@@| towards a "real model")
             Gear = Math.Round((pschist) * GangH(t) + (psparist) * GangL(t), 0, MidpointRounding.AwayFromZero)
             If (Gear > VEH.ganganz) Then Gear = VEH.ganganz
             If (Gear < 1) Then Gear = 1
 
-            '    ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
-            '    sonst fehlt die leistung!
+            '    ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden |@@| Determine the "virtual" up-to-date Gears from the Model
+            '    check if Revolutions over Nominal-Revolutions, then must always upshift,
 lb88:
             n0 = fnU(Vist0, Gear, False) / VEH.nNenn
             If (n0 > 1) Then
@@ -4178,8 +4178,8 @@ lb88:
                 End If
             End If
 
-            '    ueberpruefung, ob erforderliche leistung ueber P_max(n) liegt
-            '    dann wird zurueckgeschaltet:
+            '    otherwise Power not enough!
+            '    Check whether required Power is over P_max (s)
 
             For ix = 1 To VEH.ganganz
                 n0 = fnU(Vist0, ix, False) / VEH.nNenn
@@ -4205,17 +4205,17 @@ lb88:
                 End If
             Next
 
-            '    Eigentliche Ueberpruefung ob ueber P_max(n)
+            '    then Downshift?(zurueckgeschaltet):
 
 lb909:
 
             Pivoll = FLD.Pfull(fnn(MODdata.Vh.V(t), Gear, ClutchSlip), LastPe) / VEH.Pnenn
 
-            'falls schlechte Vollastkurve ohne Moment in leerlauf wird korrigiert:
+            'falls schlechte Vollastkurve ohne Moment in leerlauf wird korrigiert: |@@| Check whether Actual over P_max (s)
             If (Pivoll < 0.06) Then Pivoll = 0.06
 
-            '    Ueberpruefung, ob hoehere Leistung erforderlich ist als Maximalleistung bei nh
-            '     dann wird zurueckgeschaltet:
+            '    Ueberpruefung, ob hoehere Leistung erforderlich ist als Maximalleistung bei nh |@@| if bad Full-load-curve without Torque, then correct in Idle:
+            '     dann wird zurueckgeschaltet: |@@| Checking whether required Power is higher than maximum power at nh
             If (Pe0 > Pivoll) Then
 
                 If t = tx Then OverPfull = True
@@ -4253,16 +4253,16 @@ lb909:
         ''    Exit Function
         ''End If
 
-        'c     Ende "Modell"-Basisgangwahl
+        'c     Ende "Modell"-Basisgangwahl |@@| then Gear-shift-back?(zurueckgeschaltet):
         '---------------------------------------------------
 
 
-        'Kuppelschleif-check
+        'Kuppelschleif-check |@@| End "model"-Gear-selection basis
         ''If bPplus And fn_norm(1) < Kuppln_norm Then bKupplSchleif = True
 
-        '--------------------------------Checks Teil 1-------------------------------------
-        'Checks zur Saeuberung unsinniger Schlatmanoever:
-        'Unterteilung in "iphase(j)" Beschleunigungs- (=1), Verzoegerungs- (=2) und Cruise (=3) -Phasen:
+        '--------------------------------Checks Teil 1------------------------------------- |@@| Clutch-lock check
+        'Checks Part 1 -------------------------------------
+        'Checks to Purge non-sensible Gear-shift:
         iphase = 0
         If t > 1 Then
             Select Case (MODdata.Vh.a(t - 2) + MODdata.Vh.a(t - 1) + MODdata.Vh.a(t)) / 3
@@ -4287,7 +4287,7 @@ lb909:
             End Select
         End If
 
-        'Suche nach letztem Gangwechsel
+        'Division into "IPhase(j)" stages: Acceleration(=1), Deceleration(=2) and Cruise(=3):
         itgangwL = 0
         For ix = t - 1 To 1 Step -1
             If MODdata.Gear(ix) <> MODdata.Gear(ix - 1) Then
@@ -4296,15 +4296,15 @@ lb909:
             End If
         Next
 
-        'Schaltvorgaenge max. alle 3 Sekunden zulaessig:
+        'Search by last Gear-change
         If t - itgangwL <= 3 And t > 2 Then
             Return LastGear    '<<< keine weiteren Checks!!!
         End If
 
-        'Cruise-Phasen:
-        'Solange Geschwindigkeitsaenderung seit letztem Gangwechsel unter 6% und Pe/Pnenn aenderung unter 6% wird nicht geschaltet:
-        'Verzoegerungsphasen: Hochschalten wird unterdrückt
-        'Beschleunigungsphasen: Zurückschalten wird unterdrückt
+        'Maximum permissible Gear-shifts every 3 seconds:
+        'Cruise-phases:
+        'As long Speed-change since last Gear-shift is below 6% and Pe/Pnom below 6% then do not Gear-shift:
+        'Deceleration-phases: Upshift suppressed
         bCheck = False
         Pjetzt = fPeGearMod(Gear, t)
         Pvorher = MODdata.Pe(itgangwL)
@@ -4323,9 +4323,9 @@ lb909:
         If (iphase = 2) And Gear > MODdata.Gear(t - 1) Then bCheck = True
         If bCheck Then Gear = LastGear
 
-        'Wenn innerhalb von 6 Sekunden wieder in vorigen Gang zurueck geschaltet wird, wird der vorige Gang
-        'durchgehend beibehalten
-        'VECTO: Ausnahme: Über Volllastkurve
+        'Acceleration phases: Downshift?(Zurückschalten) suppressed
+        'If within 6 seconds switched back again to the previous Gear, then
+        'stick to previous Gear
         If Not OverPfull Then
             bCheck = False
             For ix = t + 1 To t + 6
@@ -4336,8 +4336,8 @@ lb909:
         End If
 
 
-        'Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang
-        'geschaltet wird, wird voriger Gang durchgehend beibehalten
+        'VECTO: Exception: on Full-load curve
+        'If within the 6 seconds, it shifts once to higher and once to lower-Gear than the previous one, then
         a = 0
         b = 0
         If (Gear <> LastGear) Then
@@ -4353,14 +4353,14 @@ lb909:
             End If
         End If
 
-        '--------------------------------Checks Teil 2-------------------------------------
-        'Schalten von 2. in 1. Gang wird bei v > 1.5 m/s unterdrueckt
-        'NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl
+        '--------------------------------stick to the previous Gear.
+        'Checks Part 2 -------------------------------------
+        'Shifting from 2nd to 1st Gear is suppressed when v > 1.5 m/s
         If Gear = 1 And LastGear > 1 And Vist >= 1.5 Then
             If fnn(Vist, 2, False) > Kuppln_norm Then Gear = 2
         End If
 
-        'bei verzoegerungsvorgaengen unter 1.5 m/s wird in Leerlauf geschaltet
+        'bei verzoegerungsvorgaengen unter 1.5 m/s wird in Leerlauf geschaltet |@@| NEW LUZ 040210: Upshifting only when in 2nd Gear over the Clutch-revolutions
         bCheck = False
         For ix = t To t + 2
             If ix > t1 Then Exit For
@@ -4372,7 +4372,7 @@ lb20:
             Return 0    '<<< keine weiteren Checks!!!
         End If
 
-        'wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
+        'wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet |@@| at decelerations below 1.5 m/s, shift to Idle
         If t < t1 Then
             If (Vist < 0.1 And MODdata.Vh.V(t + 1) < 0.1) Then
                 Return 0    '<<< keine weiteren Checks!!!
@@ -4380,8 +4380,8 @@ lb20:
         End If
 
 
-        'ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
-        'sonst fehlt die leistung!
+        'If v < 0.1 m/s for more than 1 sec, then shift to Gear=0
+        'Check if Revolutions over Nominal-revolutions, then should always Upshift,
         Do While fnn(Vist, Gear, ClutchSlip) > 1 And Gear < VEH.ganganz
             Gear += 1
         Loop
@@ -4421,7 +4421,7 @@ lb20:
             End If
         End If
 
-        'Geschwindigkeit vorausschauen
+        'otherwise Power not enough!
         If t = MODdata.tDim Then
             v1 = v
             v2 = v
@@ -4434,8 +4434,8 @@ lb20:
             End If
         End If
 
-        'Checks aus PKWgear....
-        'Schalten von 2. in 1. Gang wird bei v>2,5 m/s unterdrueckt
+        'Speed look-ahead
+        'Checks Gears for Cars(PKW) ....
         If (g = 1) Then
             If (g0 > g) Then
                 If (v >= 2.5) Then
@@ -4444,7 +4444,7 @@ lb20:
             End If
         End If
 
-        'Bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet
+        'Bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet |@@| Gear-shifting from 2nd to 1st is suppressed at v > 2.5 m/s
         If (v < 2.5) Then
             If (v <= v0 And v1 <= v) Then
                 If (v2 <= v1) Then
@@ -4453,12 +4453,12 @@ lb20:
             End If
         End If
 
-        'Wenn v mehr als 1 Sek. <0.1 m/s wird auf Gang=0 geschaltet
+        'Wenn v mehr als 1 Sek. <0.1 m/s wird auf Gang=0 geschaltet |@@| At decelerations below 2.5 m/s, shift to Idle
         If (v < 0.1 And v1 < 0.1) Then
             g = 0
         End If
 
-        'Bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet
+        'If v < 0.1 m/s for  more than 1 sec, then shift to Gear=0
         If (v < 1.5) Then
             If v > v0 And v1 > v Then
                 g = 1
@@ -4485,12 +4485,12 @@ lb20:
         Return g0
     End Function
 
-    'Funktion zur einfachen Leistungsberechnung für Schaltmodelle
+    'When Speed?(Beschleunigungsvorgaengen) below 1.5 m/s, then shift to 1st Gear
     Private Function fPeGearMod(ByVal Gear As Integer, ByVal t As Integer) As Single
         Return fPvD(t) / VEH.Pnenn
     End Function
 
-    'Funktion zur einfachen Leistungsberechnung für EV-Schaltmodell
+    'Function calculating the Power easily for Gear-shift-model
     Private Function fPeGearEV(ByVal Gear As Integer, ByVal t As Integer) As Single
         Dim PaM As Single
         Dim nU As Single
@@ -4505,7 +4505,7 @@ lb20:
         nU = fnU(V, Gear, False)
 
         If Nvorg Then
-            'Drehzahlvorgabe
+            'Function calculating the Power easily for EV-shift-model
             PaM = (VEH.I_mot * MODdata.dnUvorg(t) * 0.01096 * MODdata.nUvorg(t)) * 0.001
         Else
             PaM = ((VEH.I_mot * (VEH.AchsI * VEH.Igetr(Gear) / (0.5 * VEH.Dreifen)) ^ 2) * a * V) * 0.001
@@ -4549,7 +4549,7 @@ lb20:
 
 #Region "Leistungsberechnung"
 
-    '--------------Leistung vor Diff = Am Rad-------------
+    '--------------Revolutions-setting
     Private Function fPvD(ByVal t As Integer) As Single
         Return fPr(MODdata.Vh.V(t)) + fPair(MODdata.Vh.V(t), t) + fPaFZ(MODdata.Vh.V(t), MODdata.Vh.a(t)) + fPs(MODdata.Vh.V(t), t)
     End Function
@@ -4558,12 +4558,12 @@ lb20:
         Return fPr(v) + fPair(v, t) + fPaFZ(v, a) + fPs(v, t)
     End Function
 
-    '----------------Rollwiderstand----------------
+    '----------------Power in-front?(vor) of Diff = At Wheel -------------
     Private Function fPr(ByVal v As Single) As Single
         Return CSng((VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * (VEH.Fr0 + VEH.Fr1 * v + VEH.Fr2 * v ^ 2 + VEH.Fr3 * v ^ 3 + VEH.Fr4 * v ^ 4) * v * 0.001)
     End Function
 
-    '----------------Luftwiderstand----------------
+    '----------------Rolling-resistance----------------
     Private Function fPair(ByVal v As Single, ByVal t As Integer) As Single
         Dim vair As Single
         Dim Cd As Single
@@ -4588,24 +4588,24 @@ lb20:
 
     End Function
 
-    '--------Beschleunigungsleistung Fahrzeug--------
+    '--------Drag-resistance----------------
     Private Function fPaFZ(ByVal v As Single, ByVal a As Single) As Single
-        'Früher (PHEM 10.4.2 und älter) wurde statt m_raeder Massered verwendet, mit Massered = m_raeder + I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2
-        '   Der fehlende Teil (I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2) wird jetzt durch fPaG(V,a) mit berücksichtigt
+        'Vehicle Acceleration-capability(Beschleunigungsleistung) --------
+        '   Previously (PHEM 10.4.2 and older) the m_raeder was used for Massered instead, with Massered = m_raeder + I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2
         Return CSng(((VEH.Mass + VEH.MassExtra + VEH.m_raeder_red + VEH.Loading) * a * v) * 0.001)
     End Function
 
-    '----------------Steigungswiderstand----------------
+    '----------------The missing part (I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2) is now considered by fPaG(V,a)
     Private Function fPs(ByVal v As Single, ByVal t As Integer) As Single
         fPs = CSng(((VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * MODdata.Vh.Grad(t) * 0.01 * v) * 0.001)
     End Function
 
-    '----------------Nebenaggregate----------------
+    '----------------Slope resistance ----------------
     Private Function fPaux(ByVal t As Integer, ByVal nU As Single) As Single
         Return CSng(VEH.Paux0 * VEH.Pnenn + MODdata.Vh.Padd(t) + VEH.PauxSum(t, nU))
     End Function
 
-    '-------------------Getriebe-------------------
+    '-------------------Ancillaries(Nebenaggregate) ----------------
     Private Function fPlossGB(ByVal PvD As Single, ByVal V As Single, ByVal Gear As Integer) As Single
         Dim Pdiff As Single
         Dim P As Single
@@ -4630,12 +4630,12 @@ lb20:
 
                 n = nU / VEH.nNenn
 
-                'Leistung nach Getriebe (Getriebeausgang)
+                'Transmission(Getriebe)-------------------
                 P = Math.Abs(PvD) + Pdiff
 
-                'Verluste berechnet (eignet sich nur für Schaltgetriebe)
-                '       Interpolation der Getriebeverlustleistung
-                '       Zwischen 1. und 8. gang sowie 9. und 16. Gang:
+                'Verluste berechnet (eignet sich nur für Schaltgetriebe) |@@| Power to Transmission (Transmission-output)
+                '       Calculate Losses (suitable only for Manual-transmission(Schaltgetriebe))
+                '       Interpolation of the Transmission-power-loss
                 If (Gear <= 8) Then
                     iTemp = VEH.Igetr(1)
                     P1_getr = VEH.Pnenn * 0.0025F * (-0.45F + 36.03F * (n / iTemp) + 14.97F * (P / VEH.Pnenn))
@@ -4659,8 +4659,8 @@ lb20:
 
             Case Else 'tTransLossModel.Detailed
 
-                '***Differenzial
-                '   Leistung nach Diff (vor Getriebe)
+                '***Between 1 and 8 Gear, as well as between 9 and 16 Gear:
+                '   Differential
                 P = PvD + Pdiff
 
                 Return Math.Max(VEH.IntpolPeLoss(Gear, nU, P), 0)
@@ -4679,7 +4679,7 @@ lb20:
 
             Case tTransLossModel.Basic
 
-                'Pdiff
+                'Power after Differential (before Transmission)
                 anrad = (60 * V) / (VEH.Dreifen * Math.PI)
                 Pdiff = VEH.fGetr * VEH.Pnenn * 0.0025 * (-0.47 + 8.34 * (anrad / VEH.nNenn) + 9.53 * (Math.Abs(PvD) / VEH.Pnenn))
                 If (Pdiff <= 0) Then Pdiff = 0
@@ -4689,7 +4689,7 @@ lb20:
             Case Else 'tTransLossModel.Detailed
 
                 '***Differenzial
-                '   Leistung vor Diff
+                '   Differential
                 Return Math.Max(VEH.IntpolPeLoss(0, (60 * V) / (VEH.Dreifen * Math.PI) * VEH.Igetr(0), PvD), 0)
 
         End Select
@@ -4741,7 +4741,7 @@ lb20:
         Return VEH.RtPeLoss(Vist, Gear)
     End Function
 
-    '----------------Getriebe Trägheit----------------
+    '----------------Power before Differential
     Private Function fPaG(ByVal V As Single, ByVal a As Single) As Single
         Dim Mred As Single
         Mred = CSng(VEH.I_Getriebe * (VEH.AchsI / (0.5 * VEH.Dreifen)) ^ 2)

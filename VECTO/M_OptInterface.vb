@@ -18,10 +18,10 @@ Module M_OptInterface
     Public SlB_nU_opt As Single
     Public SlB_Pe_opt As Single
 
-    'Korrigierte Emissionen (wird von SOC-Iterations-Modul bestimmt)
+    'Corrected Emissions (determined by SOC-iteration-module)
     Public OptEMkor() As Single
 
-    '*** Opt_Interface Ein/Ausschalten
+    '*** Opt_Interface On/Off
     Public Sub OptOnOff()
         If bOptOn Then
             bOptOn = False
@@ -29,7 +29,7 @@ Module M_OptInterface
             OptStatus("OFF")
         Else
             Try
-                'Initialisierung
+                'Initialization
                 OptInit()
             Catch ex As Exception
                 GUImsg(tMsgID.Err, ex.Message.ToString)
@@ -37,19 +37,19 @@ Module M_OptInterface
         End If
     End Sub
 
-    '*** Initialisierung
+    '*** Initialization
     Private Sub OptInit()
 
 
-        'Zähler null setzen
+        'Count to Zero
         OptZaehl = 0
 
-        'Korr. Em. löschen 
+        'Delete Corr. Em.
         ReDim OptEMkor(10)
 
         OptERstat = False
 
-        'TODO: I/O-Verzeichnis festlegen
+        'TODO: I/O-Verzeichnis festlegen |@@| TODO: Specify I/O-directory
         OptDir = "TODO"        '  Früher: F_DEV.TbOptInOut.Text
         If Right(OptDir, 1) <> "\" Then OptDir &= "\"
 
@@ -82,20 +82,20 @@ Module M_OptInterface
         'file.Close()
         'file = Nothing
 
-        'Timer initialisieren/starten
+        'Timer Initialization/Start
         F_MAINForm.ComMsgTimer.Start()
         GUImsg(tMsgID.Normal, "Warte auf START-Signal...")
 
 
     End Sub
 
-    '*** Parameter einlesen
+    '*** Read Parameters
     Public Sub OptInput()
         Dim file As New cFile_V3
 
         GUImsg(tMsgID.Normal, "Lese Opt_In.txt")
 
-        '**** Einlesen der Input-Datei mit Opt-Parameter
+        '**** Reading the Input-file with Opt-parameter
         file.OpenRead(OptDir & "Opt_In.txt")
 
         '...
@@ -105,13 +105,13 @@ Module M_OptInterface
 
     End Sub
 
-    '*** Parameter ausgeben
+    '*** Dump parameters
     Private Sub OptOutput()
 
         Dim StreamF As System.IO.StreamWriter
         Dim Zielf As Single
     
-        '**** Ausgabe der Output-Datei mit Zielfunktion
+        '**** Ausgabe der Output-Datei mit Zielfunktion |@@| Dump the output file along with the Objective-function(Zielfunktion)
         GUImsg(tMsgID.Normal, "Schreibe Opt_Out.txt")
 
         Try
@@ -121,7 +121,7 @@ Module M_OptInterface
             Exit Sub
         End Try
 
-        'Ausgabe StatusString
+        'Dump the StatusString
         If OptERstat Then
             StreamF.WriteLine("ER")
             OptERstat = False
@@ -130,10 +130,10 @@ Module M_OptInterface
             StreamF.WriteLine("OK")
         End If
 
-        'Berechnung der Zielfunktion
+        'Berechnung der Zielfunktion |@@| Calculation of the Objective-function(Zielfunktion)
         Zielf = OptEMkor(1) / 40 + (OptEMkor(2) / 0.2) ^ 4
 
-        'Ausgabe der Zielfunktion
+        'Ausgabe der Zielfunktion |@@| Dump the Objective-function(Zielfunktion)
         StreamF.WriteLine(Zielf)
 
         StreamF.Close()
@@ -141,7 +141,7 @@ Module M_OptInterface
 
     End Sub
 
-    '*** Opt Deaktivieren
+    '*** Opt Deactivation
     Private Sub OptClose()
         F_MAINForm.ComMsgTimer.Stop()
         ChannelServices.UnregisterChannel(ipcCh)
@@ -150,44 +150,44 @@ Module M_OptInterface
         GUImsg(tMsgID.Normal, "OptInterface deaktiviert")
     End Sub
 
-    '*** Status-Meldung (darf nicht von BGWorker aufgerufen werden)
+    '*** Status-notification (must not be called by BGWorker)
     Private Sub OptStatus(ByVal txt As String)
         'F_DEV.LbOptStatus.Text = txt
     End Sub
 
-    '*** Starte PHEM - wird von F_MAINForm.ComMsgTimer aufgerufen wenn Start-Signal erhalten
+    '*** Start PHEM - Called from F_MAINForm.ComMsgTimer when the Start-signal is received
     Public Sub OptSTART()
         GUImsg(tMsgID.Normal, "START-Signal erhalten.")
-        'PHEM starten
+        'PHEM start
         If bOptStartPHEM Then OptStartRun()
     End Sub
     Public Sub OptStartRun()
-        'Timer anhalten
+        'Stop the timer
         F_MAINForm.ComMsgTimer.Stop()
-        'Zähler + 1
+        'Count + 1
         OptZaehl += 1
-        'PHEM starten
+        'PHEM start
         GUImsg(tMsgID.Normal, "Starte PHEM. Durchgang " & OptZaehl)
         F_MAINForm.PHEM_Launcher()
     End Sub
 
-    '*** PHEM fertig - wird von BackgroundWorker1_RunWorkerCompleted aufgerufen wenn PHEM beendet
+    '*** PHEM ready - called by BackgroundWorker1_RunWorkerCompleted when PHEM finished
     Public Sub OptEND()
 
-        'Ausgabe der Zielfunktion
+        'Ausgabe der Zielfunktion |@@| Dump of the Objective-function(Zielfunktion)
         OptOutput()
 
-        'PHEM_Launcher beenden
+        'Finish PHEM_Launcher
         If bOptKillLauncher Then KillLauncher()
 
-        'Timer wieder starten
+        'Start the Timer again
         F_MAINForm.ComMsgTimer.Start()
 
         GUImsg(tMsgID.Normal, "Warte auf START-Signal...")
 
     End Sub
 
-    '*** Beendet PHEM_Launcher
+    '*** Finished PHEM_Launcher
     Public Sub KillLauncher()
         Dim pProcess() As Process = System.Diagnostics.Process.GetProcessesByName("PHEM_Launcher")
         If UBound(pProcess) > -1 Then

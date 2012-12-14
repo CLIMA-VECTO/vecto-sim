@@ -18,13 +18,13 @@
 
         MsgSrc = "Main/ReadInp/Aux"
 
-        'Abbruch wenn's Datei nicht gibt
+        'Abort if there's no file
         If Filepath = "" OrElse Not IO.File.Exists(Filepath) Then
             WorkerMsg(tMsgID.Err, "Aux file not found (" & Filepath & ") !", MsgSrc)
             Return False
         End If
 
-        'Datei öffnen
+        'Open file
         file = New cFile_V3
         If Not file.OpenRead(Filepath) Then
             file = Nothing
@@ -32,7 +32,7 @@
             Return False
         End If
 
-        'Kennfeld zurück setzen
+        'Map reset
         EffMap = New cDelaunayMap
 
         If file.EndOfFile Then GoTo lbFileEndErr
@@ -57,9 +57,9 @@
             'Efficiency Map
             If file.EndOfFile Then GoTo lbFileEndErr
 
-            'Spalte 1 = Auxiliary speed [rpm]   => X-Achse
-            'Spalte 2 = Mechanical power [kW]   => Z-Achse (!)
-            'Spalte 3 = Output power [kW]       => Y-Achse (!)
+            'Column 1 = Auxiliary speed [rpm] => X-axis
+            'Column 2 = Mechanical power [kW] => Z-Axis (!)
+            'Column 3 = Output power [kW] => Y-Axis (!)
 
             Do While Not file.EndOfFile
                 line = file.ReadLine

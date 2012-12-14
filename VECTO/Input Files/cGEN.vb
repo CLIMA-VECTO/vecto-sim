@@ -9,7 +9,7 @@ Public Class cGEN
 
     Private MyPath As String
 
-    'Modus
+    'Mode
     Public VehMode As tVehMode
     Public EngAnalysis As Boolean
     Public CreateMap As Boolean
@@ -151,7 +151,7 @@ Public Class cGEN
         End If
 
         ''***
-        ''*** Erste Zeile: Version
+        ''*** First line: Version
         'line = file.ReadLine
         'txt = Trim(UCase(line(0)))
         'If Microsoft.VisualBasic.Left(txt, 1) = "V" Then
@@ -169,15 +169,15 @@ Public Class cGEN
         '    Return ReadOldFormat()
         'End If
 
-        ''Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+        ''Version Check: abort if Input-file's format is newer than PHEM-version
         'If FileVersion > FormatVersion Then
         '    WorkerMsg(tMsgID.Err, "File Version not supported!", MsgSrc)
         '    GoTo lbEr
         'End If
 
-        '**** GEN Datei einlesen ****
+        '**** GEN Datei einlesen **** |@@| Read GEN file ****
 
-        'Allgemein
+        'Allgemein |@@| Common
         'boPKWja = CBool(file.ReadLine(0))
         'bodynkorja = CBool(file.ReadLine(0))
         'ineklasse = CShort(file.ReadLine(0))
@@ -205,7 +205,7 @@ Public Class cGEN
         'ModeHorEV = (VehMode = tVehMode.HEV Or VehMode = tVehMode.EV)
 
 
-        'KF Erstellung
+        'KF creation
         'line = file.ReadLine
         'inPschrit = CShort(line(0))
         'innschrit = CShort(line(1))
@@ -250,7 +250,7 @@ Public Class cGEN
 
         'stdynspez.Init(MyPath, file.ReadLine(0))
 
-        'Kaltstart
+        'Cold start
         'stkatmap.Init(MyPath, file.ReadLine(0))
         'stkwmap.Init(MyPath, file.ReadLine(0))
         'stkatkurv.Init(MyPath, file.ReadLine(0))
@@ -294,7 +294,7 @@ Public Class cGEN
 
         'If file.EndOfFile Then GoTo lbClose
 
-        'Einzelne Nebenverbraucher
+        'Einzelne Nebenverbraucher |@@| Individual next consumer
         Do While Not file.EndOfFile
 
             line = file.ReadLine
@@ -330,7 +330,7 @@ Public Class cGEN
         pspar = CSng(file.ReadLine(0))
         pmodell = CSng(file.ReadLine(0))
 
-        'Schaltmodell-Verteilung
+        'Schaltmodell-Verteilung |@@| Gear-shifting Model Distribution
         If (pspar > 1) Then
             pspar = 1
         ElseIf (pspar < 0) Then
@@ -354,7 +354,7 @@ lbClose:
         Return True
 
 
-        'ERROR-Label für sauberen Abbruch
+        'ERROR-label for clean Abort
 lbEr:
         file.Close()
         file = Nothing
@@ -377,7 +377,7 @@ lbEr:
         End If
 
 
-        '**** GEN Datei einlesen ****
+        '**** Read GEN file ****
 
         boPKWja = CBool(file.ReadLine(0))
 
@@ -387,7 +387,7 @@ lbEr:
         inizykwael = CShort(file.ReadLine(0))
         ialt = CShort(file.ReadLine(0))
 
-        'Alten Rechenmodus in neue Modus-Schalter umwandeln
+        'Convert Old Calculation-mode into New-one
         EngAnalysis = False
         CreateMap = False
         ModeHorEV = False
@@ -544,7 +544,7 @@ lbClose:
         's &= "," & Math.Abs(CInt(CreateMap))
         'fGEN.WriteLine(s)
 
-        'Kennfeld Erstellung------------------------------------------------------
+        'Map creation ------------------------------------------------ ------
         'fGEN.WriteLine("c Settings for Emission Map Creation Mode:")
         'fGEN.WriteLine("c Increment Pe, n:")
         'fGEN.WriteLine(inPschrit & "," & innschrit)
@@ -787,7 +787,7 @@ lbClose:
 
     End Sub
 
-    'Liest Sub Input Files ein die keine eigene Klasse haben, etc.
+    'This Sub reads those Input-files that do not have their own class, etc.
     Public Function Init() As Boolean
         Dim file As cFile_V3
         Dim line As String()
@@ -1324,7 +1324,7 @@ lbClose:
     Public Function aDesMax(ByVal v As Single) As Single
         Dim i As Int32
 
-        'Extrapolation für x < x(1)
+        'Extrapolation for x < x(1)
         If laDesV(0) >= v Then
             If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v
             i = 1
@@ -1336,7 +1336,7 @@ lbClose:
             i += 1
         Loop
 
-        'Extrapolation für x > x(imax)
+        'Extrapolation for x > x(imax)
         If laDesV(i) < v Then
             MODdata.ModErrors.DesMaxExtr = "v= " & v
         End If
@@ -1350,7 +1350,7 @@ lbInt:
     Public Function aDesMin(ByVal v As Single) As Single
         Dim i As Int32
 
-        'Extrapolation für x < x(1)
+        'Extrapolation for x < x(1)
         If laDesV(0) >= v Then
             If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v
             i = 1
@@ -1362,7 +1362,7 @@ lbInt:
             i += 1
         Loop
 
-        'Extrapolation für x > x(imax)
+        'Extrapolation for x > x(imax)
         If laDesV(i) < v Then
             MODdata.ModErrors.DesMaxExtr = "v= " & v
         End If

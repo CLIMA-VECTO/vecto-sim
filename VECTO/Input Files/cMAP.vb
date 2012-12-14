@@ -137,13 +137,13 @@ Public Class cMAP
         'Reset
         ResetMe()
 
-        'Abbruch wenn's Datei nicht gibt
+        'Stop if there's no file
         If sFilePath = "" OrElse Not IO.File.Exists(sFilePath) Then
             WorkerMsg(tMsgID.Err, "Map file not found! (" & sFilePath & ")", MsgSrc)
             Return False
         End If
 
-        'Datei öffnen
+        'Open file
         file = New cFile_V3
         If Not file.OpenRead(sFilePath) Then
             file = Nothing
@@ -151,7 +151,7 @@ Public Class cMAP
             Return False
         End If
 
-        'Listen initialisieren (vor Version-Check damit ReadOldFormat funktioniert)
+        'Initi Lists (before version check so ReadOldFormat works)
         MyEmList = New List(Of String)
         EmComponents = New System.Collections.Generic.Dictionary(Of String, cEmComp)
         EmDefRef = New System.Collections.Generic.Dictionary(Of tMapComp, cEmComp)
@@ -160,11 +160,11 @@ Public Class cMAP
         Ln = New System.Collections.Generic.List(Of Single)
         SwitchOn = False
 
-        'Check ob MEP oder MAP
-        '...wird jetzt weiter unten gecheckt beim Einlesen.
+        'Now checking whether MIP or MAP
+        '...is Read.
 
         ''***
-        ''*** Erste Zeile: Version
+        ''*** First line: Version
         'line = file.ReadLine
         'txt = Trim(UCase(line(0)))
         'If Microsoft.VisualBasic.Left(txt, 1) = "V" Then
@@ -174,7 +174,7 @@ Public Class cMAP
         '        WorkerMsg(tMsgID.Err, "File Version invalid!", MsgSrc)
         '        GoTo lbEr
         '    Else
-        '        'Version festgelegt
+        '        'Specify Version
         '        FileVersion = CInt(txt)
         '    End If
         'Else
@@ -182,13 +182,13 @@ Public Class cMAP
         '    Return ReadOldFormat()
         'End If
 
-        ''Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+        ''Version Check: abort if input file format is newer than version PHEM
         'If FileVersion > FormatVersion Then
         '    WorkerMsg(tMsgID.Err, "File Version not supported!", MsgSrc)
         '    GoTo lbEr
         'End If
 
-        ''Spalte 2: Option "+" = Parameter für KF-Erstellung gegeben
+        ''Column 2: Option "+" = parameter for KF creation
         'If UBound(line) > 0 Then
         '    If Trim(line(1)) = "+" Then
         '        SwitchOn = True
@@ -197,22 +197,22 @@ Public Class cMAP
         'End If
 
         '***
-        '*** Zweite Zeile: Namen/Identifizierung der Komponenten (Nur Em. Leistung, Drehzahl ist fix!)
+        '*** Second Line: Name/Identification of Components (Only Em. Power, Revolutions is fixed!)
         'line = file.ReadLine
 
-        ''Spaltenanzahl checken
+        ''Column-count check
         's1 = UBound(line)
         s1 = 2
 
-        ''Abbruch falls weniger als 3 Spalten
+        ''Abort if less than 3 columns
         'If s1 < 2 Then GoTo lbEr
 
-        ' ''Check ob Leistung/Drehzahl vertauscht
+        ' ''Check whether Power/Revolutions swapped
         ''If UCase(line(0)).Contains("PE") Then
         ''    If MsgOutput Then WorkerMsg(tMsgID.Warn, "Expected Emission Map format: 1st column = Engine Speed, 2nd column = Engine Power (Header Check failed)", MsgSrc)
         ''End If
 
-        ''Em-Komponenten initialisieren
+        ''Em-components initialize
         'For s = 3 To s1
 
         '    Em0 = New cEmComp
@@ -221,8 +221,8 @@ Public Class cMAP
         '    Em0.IDstring = Trim(UCase(line(s)))
         '    Em0.MapCompID = fMapComp(Em0.Name)
         '    Em0.NormID = tEmNorm.x  'wird ggf. weiter unten korrigiert!
-        '    'Default-Interpolator definiert in Em0 = New cEmComp
-        '    'Default Pe-Correction definiert in Em0 = New cEmComp
+        '    'Default interpolator defined in Em0 = New cEmComp
+        '    'Default Correction Pe defined in Em0 = New cEmComp
 
         '    If EmComponents.ContainsKey(UCase(Em0.Name)) Then
 
@@ -232,23 +232,23 @@ Public Class cMAP
 
         '    Else
 
-        '        'Dictionary füllen....
+        '        'Dictionary .... fill
         '        If Em0.MapCompID = tMapComp.Undefined Then
 
-        '            'ERROR wenn Komponente in spitzen Klammern aber nicht bekannt
+        '            'ERROR when Component in angle brackets but unknown
         '            If Em0.IDstring.Length > 1 Then
         '                If Left(Em0.IDstring, 1) = "<" And Right(Em0.IDstring, 1) = ">" Then
         '                    If MsgOutput Then WorkerMsg(tMsgID.Err, "'" & Em0.Name & "' is no valid Default Map Component!", MsgSrc)
         '                End If
         '            End If
 
-        '            'Custom Em-Komponenten Dictionary:
+        '            'Custom Em-Components Dictionary:
         '            EmComponents.Add(Em0.IDstring, Em0)
         '            MyEmList.Add(Em0.IDstring)
 
         '        Else
 
-        '            '*** Default Em-Komponenten ***
+        '            '*** Default Em components ***
 
         '            'Default-Interpolator
         '            Em0.IntpolV2 = fDefIntpV2(Em0.MapCompID)
@@ -259,24 +259,24 @@ Public Class cMAP
         '            'Default-Name
         '            Em0.Name = fMapCompName(Em0.MapCompID)
 
-        '            'TC-Komponenten werden nicht ausgegeben
+        '            'TC-components are not dumped
         '            If fMapCompIsTC(Em0.MapCompID) Then
         '                TransMap = True
         '                Em0.WriteOutput = False
         '            End If
 
-        '            'Custom Em-Komponenten Dictionary:
+        '            'Custom Em-Components Dictionary:
         '            EmComponents.Add(Em0.IDstring, Em0)
         '            MyEmList.Add(Em0.IDstring)
 
-        '            'Eintrag in Referenz-Dictionary
+        '            'Entry in Reference-dictionary
         '            EmDefRef.Add(Em0.MapCompID, Em0)
 
         '        End If
         '    End If
         'Next
 
-        'VECTO: Spalte 3 immer Verbrauch
+        'VECTO: Column 3 alwaysd consumption(Verbrauch)
         s = 2
         Em0 = New cEmComp
         Em0.Col = s
@@ -286,7 +286,7 @@ Public Class cMAP
         Em0.MapCompID = tMapComp.FC
         Em0.NormID = tEmNorm.x_h
         If EmComponents.ContainsKey(UCase(Em0.Name)) Then
-            'Abbruch falls schon definiert
+            'Abort if already defined
             WorkerMsg(tMsgID.Err, "Component '" & Em0.Name & "' already defined! Col. " & s + 1, MsgSrc)
             GoTo lbEr
         Else
@@ -299,26 +299,26 @@ Public Class cMAP
         End If
 
         '***
-        '*** Dritte Zeile: Normierung/Einheit
+        '*** Read Normalized/Measured
         'line = file.ReadLine
 
-        ''Abbruch falls weniger Spalten als in zweiter Zeile
+        ''Abort when fewer columns than in the second Line
         'If UBound(line) < s1 Then GoTo lbEr
 
-        ''Normierung/Einheit einlesen
+        ''Read Normalized/Measured
         'For Each EmKV In EmComponents
 
-        '    'EM-Komp Referenz
+        '    'EM-component reference
         '    Em0 = EmKV.Value
 
-        '    'Unit in String für weitere Checks speichern
+        '    'Store Unit in String for further checks
         '    txt = Trim(line(Em0.Col))
 
-        '    'Klammern entfernen
+        '    'Remove brackets
         '    txt = txt.Replace("[", "")
         '    txt = txt.Replace("]", "")
 
-        '    'Normierung und Unit festlegen
+        '    'Normalize and set Unit
         '    If txt.Contains("/") Then
         '        Select Case UCase(Right(txt, txt.Length - txt.IndexOf("/") - 1))
 
@@ -350,11 +350,11 @@ Public Class cMAP
         nNormed = False
         PeNormed = False
 
-        ''Check ob n/Pe Einheiten OK:
+        ''Check whether n/Pe measured(Einheiten) OK:
         'If Not nNormed Then
         '    Select Case Trim(UCase(line(0)))
         '        Case "[U/MIN]", "RPM", "[1/MIN]", "[MIN^-1]"
-        '            'Alles okay
+        '            'Everything is okay
         '        Case Else
         '            If MsgOutput Then WorkerMsg(tMsgID.Err, "Engine Speed Unit '" & line(0) & "' unknown! '[U/min]' expected.", MsgSrc)
         '    End Select
@@ -372,14 +372,14 @@ Public Class cMAP
 
 
         '***
-        '*** Zeile 4,5: (optional, wenn oben "+"): Einstellungen für Pe-Cor (altes Pfak)
-        '   Falls nicht "+" werden Default Interpolatoren verwendet (s.o.)
+        '*** Line 4.5: (optional when "+"): Settings for Pe-Cor (old PfAK)
+        '   If not "+", use default Interpolators (see above)
         If SwitchOn Then
 
-            'Zeile 4 einlesen
+            'Line 4 Reading
             line = file.ReadLine
 
-            'Schleife über Em-Komponenten
+            'Loop over Em-components
             For Each EmKV In EmComponents
 
                 If UBound(line) < EmKV.Value.Col Then
@@ -405,10 +405,10 @@ Public Class cMAP
             Next
 
 
-            'Zeile 5 einlesen
+            'Line 5 Reading
             line = file.ReadLine
 
-            'Schleife über Em-Komponenten
+            'Loop over Em-components
             For Each EmKV In EmComponents
 
                 If UBound(line) < EmKV.Value.Col Then
@@ -433,22 +433,22 @@ Public Class cMAP
 
         End If
 
-        'Ab Zeile 4 (bzw. 6): Werte
+        'From line 4 (or  6): Values
         Try
             Do While Not file.EndOfFile
 
-                'Zeile einlesen
+                'Line read
                 line = file.ReadLine
 
-                'Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+                'Line counter up (was reset in ResetMe)
                 iMapDim += 1
 
-                'Drehzahl
+                'Revolutions
                 nU = CDbl(line(0))
 
                 Lnn.Add(nU)
 
-                'Leistung
+                'Power
                 'If Trim(UCase(line(1))) = sKey.MAP.Drag Then
                 '    If PeNormed Then
                 '        LPe.Add(FLD.Pdrag(Lnn(iMapDim)) / VEH.Pnenn)
@@ -459,7 +459,7 @@ Public Class cMAP
                 LPe.Add(nMtoPe(nU, CDbl(line(1))))
                 'End If
 
-                'Emissionen
+                'Emissions
                 For Each EmKV In EmComponents
                     EmKV.Value.RawVals.Add(CSng(line(EmKV.Value.Col)))
                 Next
@@ -474,7 +474,7 @@ Public Class cMAP
         'Shep-Init
         MapIntp = New cMapInterpol(Me)
 
-        'Datei schließen
+        'Close file
         file.Close()
 
         file = Nothing
@@ -484,7 +484,7 @@ Public Class cMAP
         Return True
 
 
-        'ERROR-Label für sauberen Abbruch
+        'ERROR-label for clean Abort
 lbEr:
         file.Close()
         file = Nothing
@@ -503,14 +503,14 @@ lbEr:
         Dim s1 As Integer
         Dim s As Integer
 
-        'Datei öffnen
+        'Open file
         File = New cFile_V3
         If Not File.OpenRead(sFilePath, ",", True, True) Then
             File = Nothing
             Return False
         End If
 
-        'Alte Kennfelder haben immer TC-Faktoren (sind halt evtl. Null)
+        'Old maps have always TC-factors are (possibly  null)
         TransMap = True
 
         Em0 = New cEmComp
@@ -773,23 +773,23 @@ lbEr:
         nNormed = True
         PeNormed = True
 
-        'Werte
+        'Values
         Do While Not File.EndOfFile
-            'Zeile einlesen
+            'Line read
             line = File.ReadLine
 
-            'Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+            'Line counter up (was reset in ResetMe)
             iMapDim += 1
 
-            'Drehzahl
+            'Revolutions
             Lnn.Add(CSng(line(1)))
 
-            'Leistung
+            'Power
             LPe.Add(CSng(line(0)))
 
             If iMapDim = 0 Then s1 = UBound(line)
 
-            'Emissionen
+            'Emissions
             For Each EmKV In EmComponents
                 s = EmKV.Value.Col
                 If s > s1 Then
@@ -803,7 +803,7 @@ lbEr:
         'Shep-Init
         MapIntp = New cMapInterpol(Me)
 
-        'Datei schließen
+        'Close file
         File.Close()
 
         Return True
@@ -818,14 +818,14 @@ lbEr:
         ID = fMapComp(sK)
         StringID = Trim(UCase(sK))
 
-        'Abbruch falls Em-Komponente nicht in MAP
+        'Abort when Em-component not in MAP
         If ID = tMapComp.Undefined Then
             If Not EmComponents.ContainsKey(StringID) Then Return False
         Else
             If Not EmDefRef.ContainsKey(ID) Then Return False
         End If
 
-        'Abbruch falls TC-Faktoren für die Komponente schon definiert
+        'Abort if TC-factors for the component already defined
         If EmComponents(StringID).TCdef Then Return False
 
         EmComponents(StringID).InitTC()
@@ -856,27 +856,27 @@ lbEr:
         nleerl = VEH.nLeerl
         nnenn = VEH.nNenn
 
-        'Drehzahl normieren
+        'Speed Normalized
         If Not nNormed Then
             For i = 0 To iMapDim
                 Lnn(i) = (Lnn(i) - nleerl) / (nnenn - nleerl)
             Next
         End If
 
-        ' "anders" normierte Drehzahl berechnen
+        ' "otherwise calculate normalized Revolutions
         For i = 0 To iMapDim
             Ln.Add((Lnn(i) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / VEH.nNenn)
         Next
 
-        'Leistung normieren
+        'Normalized Power
         If Not PeNormed Then
             For i = 0 To iMapDim
                 LPe(i) /= Pnenn
             Next
         End If
 
-        'Emissionen entnormieren
-        '   ACHTUNG: Selbst wenn x_kWh bzw. x_hPnenn in x_h umgewandelt werden muss Normed gleich bleiben weil sonst die DynKor nicht stimmt!
+        'Emissions unnormalised
+        '   CAUTION: Even if x_kWh and x_hPnenn are to be transformed into x_h, the Normed must remain the same because otherwise the DynKor will not be right!
         For Each Em0 In EmComponents.Values
             Select Case Em0.NormID
                 Case tEmNorm.x_hPnenn
@@ -888,12 +888,12 @@ lbEr:
                         Em0.RawVals(i) *= LPe(i) * Pnenn
                     Next
                 Case Else
-                    'Werte sind bereits absolut angegeben
-                    'Unterscheidung in [x] und [x/h] derzeit nicht verwendet/unterstützt
+                    'Values are already specified in absolute
+                    'Distinction between [x] and [x/h] currently not used/supported
             End Select
         Next
 
-        'Check ob Drehzahl/Leistung vertauscht
+        'Check whether Revolutions/Power reversed
         For i = 0 To iMapDim
 
             If Lnn(i) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl < 0 Then
@@ -955,7 +955,7 @@ lbEr:
         End Try
     End Function
 
-    'Kennfeld-Erstellung
+    'Map creation
     Public Function CreateMAP() As Boolean
 
         Dim file As cFile_V3
@@ -1022,7 +1022,7 @@ lbEr:
         End If
 
         '******************************************************************
-        '***************** Initialisiere Em-Komponenten *******************
+        '***************** Initialize Em-components *******************
         MyEmList = New List(Of String)
         EmComponents = New Dictionary(Of String, cEmComp)
         TCcomponents = New Dictionary(Of tMapComp, cEmComp)
@@ -1064,7 +1064,7 @@ lbEr:
             Em0.NormID = EmKV.Value.NormID
             Em0.IDstring = EmKV.Value.IDstring
 
-            'PeCorMode: Falls nicht in MES/NPI vorgegeben gilt bei Nicht-Default-Em was in cEmComp.New() eingestellt ist
+            'PeCorMode: Falls nicht in MES/NPI vorgegeben gilt bei Nicht-Default-Em was in cEmComp.New() eingestellt ist |@@| PeCorMode: Unless specified in MES/NPI with non-default Em what is in cEmComp.New()
             If DRI.CreateMapParDef Then
                 Em0.PeCorMode = DRI.MapPfak(EmKV.Key)
             ElseIf Em0.MapCompID <> tMapComp.Undefined Then
@@ -1075,16 +1075,16 @@ lbEr:
 
                 If fMapCompIsTC(Em0.MapCompID) Then
 
-                    'Falls TC angegeben dann Abbruch
+                    'If TC specified, then Abort
                     WorkerMsg(tMsgID.Err, "Component '" & Em0.Name & "' is invalid (Trans.Corr. Parameter)!", MsgSrc)
                     Return False
 
                 Else
 
-                    'Interpolator auswählen
+                    'Select interpolator
                     Em0.IntpolV2 = fDefIntpV2(Em0.MapCompID)
 
-                    'Eintrag in Referenz-Dictionary (Es wird nicht überprüft ob Em-Comp. doppelt vorkommt weil das schon in DRI.ReadFile passiert)
+                    'Entry in Reference Dictionary (It does not check whether Em-Comp occurs twice since it has been caught in DRI.ReadFile)
                     EmDefRef.Add(Em0.MapCompID, Em0)
 
                 End If
@@ -1094,12 +1094,12 @@ lbEr:
             EmComponents.Add(EmKV.Key, Em0)
             MyEmList.Add(EmKV.Key)
 
-            'Infos ausgeben
+            'Dump Infos
             WorkerMsg(tMsgID.Normal, "   '" & Em0.Name & "': Unit = " & Em0.Unit & ", PeCorMode = " & fPwCorName(Em0.PeCorMode), MsgSrc)
 
         Next
 
-        'Dynamikparameter und Extrapol kommen noch dazu
+        'Dynamic parameters and Extrapol to be added
         Em0 = New cEmComp
         Em0.Col = s + 1
         Em0.NormID = tEmNorm.x
@@ -1244,7 +1244,7 @@ lbEr:
 
 
         '******************************************************************
-        '************* Mittelwert-Dictionary initialisieren ***************
+        '************* Initialize Mean-value Dictionary ***************
         For Each EmKV In EmComponents
 
             EmMW.Add(EmKV.Key, New List(Of Single))
@@ -1268,12 +1268,12 @@ lbEr:
         Next
 
         '******************************************************************
-        '********************* Mittelwerte berechnen **********************
+        '********************* Calculate Mean-values **********************
 
-        'Haupt-Schleife
+        'Main-loop
         If GEN.iMsek > 1 Then
 
-            'Listen erstellen
+            'Create Lists
             For i = 0 To MODdata.tDim
 
                 pe.Add(0)
@@ -1288,12 +1288,12 @@ lbEr:
 
             Next
 
-            'Schleife über Messwerte
+            'Loop over Measurement-values
             For i = 0 To MODdata.tDim
 
                 If i + 1 < GEN.iMsek Then
 
-                    'Bereich unter iMsek mit Messwert belegen
+                    'Fill the Area below iMsek with Measurement-values
                     pe(i) = MODdata.Pe(i)
                     nn(i) = MODdata.nn(i)
 
@@ -1307,7 +1307,7 @@ lbEr:
 
                 Else
 
-                    'Bereich über iMsek mit Mittelwerten der Messwerte belegen
+                    'Fill the Area above iMsek with the Mean-values of the Measurement-values
                     For j = 0 To (GEN.iMsek - 1)
 
                         pe(i) += MODdata.Pe(i - j) / GEN.iMsek
@@ -1328,7 +1328,7 @@ lbEr:
 
         Else
 
-            'Keine Mittelwertbildung
+            'No averaging
             For i = 0 To MODdata.tDim
 
                 pe.Add(MODdata.Pe(i))
@@ -1344,13 +1344,13 @@ lbEr:
 
         End If
 
-        'EmCheck: False = Wert noch nicht verwendet, True = Wert wurde bereits in Kennfeld verwurschtet
+        'EmCheck: False = Wert noch nicht verwendet, True = Wert wurde bereits in Kennfeld verwurschtet |@@| EmCheck: False = value is not used, True = Value is already(verwurschtet) in the Map
         For j = 0 To MODdata.tDim
             EmCheck.Add(False)
         Next
 
         '******************************************************************
-        '*************************** Rasterung ****************************
+        '*************************** Rasterung **************************** |@@| Grd-ing(Rasterung) ****************************
 
         dnn = 1.2 / (GEN.nschrit)
         dp = 1.4 / (GEN.Pschrit)
@@ -1415,7 +1415,7 @@ lbEr:
 
         Loop
 
-        'Schlepp hinzufügen mit halber nn-Schrittweite. Wird für Pfak benötigt. Falls GEN.KFinsertDrag deaktiviert wird sie später wieder gelöscht.
+        'Add Drag at half nn-increments. Needed for PfAK. If GEN.KFinsertDrag is disabled, it will be deleted later.
         nnx = 0 - dnn / 2
         Do While nnx + dnn / 2 <= 1.20001
             nnx += dnn / 2
@@ -1425,63 +1425,63 @@ lbEr:
             iMapDim += 1
         Loop
 
-        'Leerlaufpunkt hinzufügen
+        'Add Idle-point
         LPe.Add(0)
         Lnn.Add(0)
         IsDrag.Add(False)
         iMapDim += 1
 
         '******************************************************************
-        '**************** NrUsed Erstellung / Null setzen *****************
+        '**************** Create NrUsed / Set to zero set *****************
         For j = 0 To MODdata.tDim
             NrUsed.Add(0)
             Used.Add(False)
         Next
 
         '******************************************************************
-        '**************** Messwerte in Raster reinrechnen *****************
+        '**************** Expect pure Measurement-values in Grid *****************
 
-        'Basis Schrittweite zwischenspeichern
+        'Basis Schrittweite zwischenspeichern |@@| Basis for step-size buffering
         dnn0 = dnn
         dp0 = dp
 
-        'Schleife über Rasterpunkte (i)
+        'Loop over Grid-points(i)
         For i = 0 To iMapDim
 
-            'Summen/Anzahl/Flags zurücksetzen
+            'Return Totals/Numbers/Flags
             Extra = False
             dnn = dnn0
             dp = dp0
 
-            'Schlepp-Leistung
+            'Drag-Power
             pm = FLD.Pdrag(Lnn(i)) / VEH.Pnenn
 
-            'Schleife bis genug Werte im Radius gefunden
+            'Loop until enough Values found in Radius
             Do
 
-                'Zähler/Summen zurück setzen
+                'Reset Counter/Totals
                 anz = 0
                 For Each EmMW0 In EmMW
                     EmSum(EmMW0.Key) = 0
                 Next
                 IntpPe = 0
 
-                'Schleife über Messwerte    (j)
+                'Loop over Measured-values   ​​(j)
                 For j = 0 To MODdata.tDim
 
-                    'Falls innerhalb von Radius...
+                    'If within Radius ...
                     If Math.Abs(pe(j) - LPe(i)) <= dp / 2 And Math.Abs(nn(j) - Lnn(i)) <= dnn / 2 Then
 
-                        'Anz + 1
+                        'Num + 1
                         anz += 1
 
-                        'Schleife über alle Em-Komp.
+                        'Loop over all Em-comp.
                         For Each EmMW0 In EmMW
 
-                            'Summe +
+                            'Total +
                             EmSum(EmMW0.Key) += EmMW0.Value(j)
 
-                            'Min/Max belegen (für Log-Ausgabe)
+                            'Calculate Min/Max (for Log-output)
                             If anz = 1 Then
                                 ValMin(EmMW0.Key) = EmMW0.Value(j)
                                 ValMax(EmMW0.Key) = EmMW0.Value(j)
@@ -1492,10 +1492,10 @@ lbEr:
 
                         Next
 
-                        'Interpolierte Leistung aufsummieren (wird dann durch Anz dividiert)
+                        'Interpolierte Leistung aufsummieren (wird dann durch Anz dividiert) |@@| Sum-up Interpolated Power (then divided by Num)
                         IntpPe += pe(j)
 
-                        'Zählen wieviel Messwerte für Rasterpunkt verwendet werden (Log-Ausgabe)
+                        'Count how many Measurement-values exist for the Grid-points (Log-output)
                         Used(j) = True
 
                     Else
@@ -1506,7 +1506,7 @@ lbEr:
 
                 Next
 
-                'Falls keine Messwerte im Radius (Anz=0) dann Radius vergrößern und Extra-Flag setzen
+                'If none Measured-value in Radius (Num = 0), then enlarge Radius and set Extra-flag
                 If anz < 2 Then
                     Extra = True
                     dp *= 1.1
@@ -1515,17 +1515,17 @@ lbEr:
 
             Loop Until anz > 1
 
-            'NrUsed belegen
+            'Allocate NrUsed
             For j = 0 To MODdata.tDim
                 If Used(j) Then NrUsed(j) += 1
             Next
 
-            'Interpolierte Leistung = Summe / Anz
+            'Interpolated-Power = Sum / number
             IntpPe /= anz
 
-            'Pfak berechnen:
-            '   Falls oberhalb Pschlepp dann Pfak laut Formel oder 1 falls Abstand zw. Pe-Interpol und Pschlepp zu gering
-            '   Unterhalb von Pschlepp Pfak=0 => Em-Wert=Null
+            'Calculate PfAK:
+            '   If above Drag then PfAK according to Formula, or 1 when the difference between  Pe-Interpol and Drag-power is too low
+            '   If below Drag, Pfak=0 => Em-value = Zero
             If LPe(i) > pm Then
                 If (IntpPe - pm) > 0.05 Then
                     Pfak.Add(Math.Abs((LPe(i) - pm) / (IntpPe - pm)))
@@ -1536,24 +1536,24 @@ lbEr:
                 Pfak.Add(0)
             End If
 
-            'Extrapol-Flag in Extrapol-Spalte (1/0) übernehmen
+            'Get the Extrapol flag from the Extrapol-column (1/0)
             If Extra Then
                 EmExtra.RawVals.Add(1)
             Else
                 EmExtra.RawVals.Add(0)
             End If
 
-            'Für Log-Ausgabe
+            'For Log-output
             KFanz.Add(anz)
             KFradproz.Add(dnn / dnn0)
 
-            'Schleife über Em-Comp (innerhalb Rasterpunkt Schleife)
+            'Loop through Em-Comp (within Grid-points-loop)
             For Each EmKV In EmComponents
 
-                'Falls Option 'Schlepp-Em aus .FLD' belegen und Rasterpunkt-Leistung <= Schleppleistung
+                'Falls Option 'Schlepp-Em aus .FLD' belegen und Rasterpunkt-Leistung <= Schleppleistung |@@| If Option 'Drag-Em' from .FLD 'and Power-gridpoints <= Drag-power
                 If Not GEN.KFDragIntp And LPe(i) <= pm + 0.0001 Then
 
-                    'Falls Schlepp-Em in .FLD vorhanden dann nehmen sonst mit Null belegen
+                    'If Drag-Em exists in .FLD, then use it otherwise alocate with zero
                     If FLD.EmDef(EmKV.Key) Then
                         EmKV.Value.RawVals.Add(FLD.EmDrag(EmKV.Key, Lnn(i)))
                     Else
@@ -1562,18 +1562,18 @@ lbEr:
 
                 Else    'Option 'Schlepp-Em aus Messwerten' bzw. Punkte über Schleppleistung
 
-                    'Em-Belegung ohne Pfak (=> Pfak wird später gemacht)
+                    'Em-allocation without PfAK (=> PfAK is crafted later)
                     EmKV.Value.RawVals.Add(CSng(EmSum(EmKV.Key) / anz))
 
                 End If
 
-                'Für Log-Ausgabe
+                'For Log-output
                 KFmin(EmKV.Key).Add(ValMin(EmKV.Key))
                 KFmax(EmKV.Key).Add(ValMax(EmKV.Key))
 
             Next
 
-            'TC-Faktoren ohne Pfak übernehmen
+            'Assume TC-factors without Pfak
             For Each Em0 In TCcomponents.Values
                 Em0.RawVals.Add(CSng(EmSum(Em0.Name) / anz))
             Next
@@ -1583,30 +1583,30 @@ lbEr:
         '******************************************************************
         '*****************************  Pfak ******************************
 
-        '!!! WICHTIG !!!
-        'Schleife geht über alle Rasterpunkt (auch über die Pe <= PeSchlepp bzw. PeIntpol nahe an Pschlepp).
-        '   Das ist OK weil Pfak dort sowieso mit Eins beleget.
+        '!!! IMPORTANT !!!
+        'Loop passes over all Grid-points (also for Pe <= PeDrag and  respectively for PeIntpol near Pdrag).
+        '   That's OK because PfAK is in anyway allocated with 1s.
 
-        'Schleife über Em-Comp
+        'Loop through Em-Comp
         For Each EmKV In EmComponents
 
-            'Falls keine Create Map Einstellungen (in .NPI/.MES) oder Pfak explizit aktiviert => Pfak verwenden
+            'Falls keine Create Map Einstellungen (in .NPI/.MES) oder Pfak explizit aktiviert => Pfak verwenden |@@| If no Create Map is set (in .NPI/.MES) or PfAK activated explicitly => Use PfAK
             If EmKV.Value.PeCorMode <> tIntpPeCorMode.PeCorOff Then
 
-                'Schleife über Rasterpunkte (i)
+                'Loop over Grid-points (i)
                 For i = 0 To iMapDim
 
                     If EmKV.Value.PeCorMode = tIntpPeCorMode.PeCorNull Then
 
-                        'Altes Pfak mit Extrapolation von Null weg
+                        'Altes Pfak mit Extrapolation von Null weg |@@| Old PfAK with Extrapolation from Zero route?
                         EmDrag = 0
 
                     Else    'PeCorMode = tIntpPeCorMode.PeCorEmDrag
 
-                        'Schlepp-Emission raus suchen
-                        '   Schlepp-Em aus nächstgelegenen Rasterpunkt nehmen. Das geht weil Schleppkurve 
-                        '   immer ins Map kommt (auch wenn sie dann später raus gelöscht wird) !!
-                        '   Option 'Schlepp-Em aus .FLD' spielt keine Rolle weil das nur die Belegungs-Methode der Schleppkurve betrifft (s.o.) 
+                        'Schlepp-Emission raus suchen |@@| Pick Drag-Emission
+                        '   Schlepp-Em aus nächstgelegenen Rasterpunkt nehmen. Das geht weil Schleppkurve  |@@| Take the Drag-Em from the nearest Grid-point. This is because the Drag-curve
+                        '   immer ins Map kommt (auch wenn sie dann später raus gelöscht wird) !! |@@| always comes into the Map (even if it is later deleted) !!
+                        '   Option 'Schlepp-Em aus .FLD' spielt keine Rolle weil das nur die Belegungs-Methode der Schleppkurve betrifft (s.o.)  |@@| Option 'Drag-Em(Schlepp-Em)' from .FLD plays no role because it affects only the Allocation-method of the Drag-curve (see above)
                         EmDrag = 0
                         nnAb = dnn0
                         For j = 0 To iMapDim
@@ -1620,7 +1620,7 @@ lbEr:
 
                     End If
 
-                    'Pfak anwenden
+                    'Apply PfAK
                     EmKV.Value.RawVals(i) = CSng(Pfak(i) * (EmKV.Value.RawVals(i) - EmDrag) + EmDrag)
 
                 Next
@@ -1630,15 +1630,15 @@ lbEr:
         Next
 
         '******************************************************************
-        '******************* Normieren (Wert und Unit) ********************
+        '******************* Normalize (Value and Unit) ********************
         For Each EmKV In EmComponents
 
-            'Falls Vorgabe in MES/NPI-Datei dann verwenden
+            'Use them If specified in MES/NPI-files
             If DRI.CreateMapParDef Then
 
                 If DRI.MapUnitsNormed(EmKV.Key) Then
 
-                    'Werte normieren
+                    'Values normalized
                     For i = 0 To iMapDim
                         EmKV.Value.RawVals(i) /= VEH.Pnenn
                     Next
@@ -1649,12 +1649,12 @@ lbEr:
 
             Else
 
-                'Sonst Standard-Normierung verwenden
+                'Otherwise, use a standard normalization
                 If EmKV.Value.MapCompID <> tMapComp.Undefined Then
 
                     If fDefEmNormID(EmKV.Value.MapCompID) = tEmNorm.x_hPnenn Then
 
-                        'Werte normieren
+                        'Normalized Values
                         For i = 0 To iMapDim
                             EmKV.Value.RawVals(i) /= VEH.Pnenn
                         Next
@@ -1670,7 +1670,7 @@ lbEr:
         Next
 
         '******************************************************************
-        '****************** EmComponents zusammenfassen *******************
+        '****************** EmComponents zusammenfassen ******************* |@@| Summarized EmComponents *******************
         For Each Em0 In TCcomponents.Values
             EmComponents.Add(Em0.Name, Em0)
             MyEmList.Add(Em0.Name)
@@ -1685,10 +1685,10 @@ lbEr:
 
 
         '******************************************************************
-        '*********** Schleppkurve wieder raus nehmen (optional) ***********
+        '*********** Schleppkurve wieder raus nehmen (optional) *********** |@@| Get Load-curve again (optional) ***********
         If Not GEN.KFinsertDrag Then
 
-            'Schleife über Rasterpunkte (i). Keine For-Schleife weil iMapDim reduziert wird
+            'Schleife über Rasterpunkte (i). Keine For-Schleife weil iMapDim reduziert wird |@@| Loop over Grid-points(i). No For-loop because iMapDim is reduced
             i = -1
             Do While i < iMapDim
                 i += 1
@@ -1710,7 +1710,7 @@ lbEr:
 
 
         '******************************************************************
-        '************************** Ausgabe Map '**************************
+        '************************** Dump Map '**************************
 
         str = New System.Text.StringBuilder
 
@@ -1729,7 +1729,7 @@ lbEr:
         str.Append("n_norm,Pe_norm")
 
         For Each Key In KeyListFull
-            'ACHTUNG: Nicht Name sondern sKey !!!
+            'CAUTION: Not Name but sKey !!!
             str.Append("," & EmComponents(Key).IDstring)
         Next
 
@@ -1748,7 +1748,7 @@ lbEr:
         Next
         file.WriteLine(str.ToString)
 
-        'Werte
+        'Values
         For i = 0 To iMapDim
             str.Length = 0
             str.Append(CStr(Lnn(i)))
@@ -1762,7 +1762,7 @@ lbEr:
         file.Close()
 
         '******************************************************************
-        '********************** Ausgabe Zusatzinfo '***********************
+        '********************** Dump Extended-Info '***********************
 
         If Not file.OpenWrite(fFileWoExt(sFilePath) & ".log") Then
             WorkerMsg(tMsgID.Err, "Cannot access file (" & fFileWoExt(sFilePath) & ".log" & ")!", MsgSrc)
@@ -1801,7 +1801,7 @@ lbEr:
         Next
         file.WriteLine(str.ToString)
 
-        'Werte
+        'Values
         str.Length = 0
         For i = 0 To iMapDim
 
@@ -1861,7 +1861,7 @@ lbEr:
 
     End Function
 
-    'Default Shepard wie in intpshep()
+    'Default Shepard in intpshep ()
     Private Class cMapInterpol
 
         Private iMapDim As Integer
@@ -1921,28 +1921,28 @@ lbEr:
 
             ReDim abOK(iMapDim)
 
-            'Abstand berechnen und korrigieren.
+            'Calculate Distance and Correction.
             For i = 0 To iMapDim
                 If (Pnorm < 0.05 And Pnorm >= 0.0) Then
 
-                    'Um Nullleistung werden Kennfeldpunkte um Pe=0 hoeher gewichtet und Drehzahlabstand geringer,
-                    ' da Interpolation aus Punkten mit hoeherer last dort schlecht passt:
+                    'Um Nullleistung werden Kennfeldpunkte um Pe=0 hoeher gewichtet und Drehzahlabstand geringer, |@@| ????The Map-points with zero-Power (Pe=0) will be weighted higher and Revolution-distances lower,
+                    ' da Interpolation aus Punkten mit hoeherer last dort schlecht passt: |@@| because interpolation of Points with higher Load is fitted badly:
                     ab0(i) = (Pnorm - myMap.LPe(i)) ^ 2 + (n0 - myMap.Ln(i)) ^ 2 * 888.9 * (Math.Abs(Pnorm) ^ 3 + 0.001)
                     ab0(i) = ab0(i) * (Math.Abs(Pnorm) + Math.Abs(myMap.LPe(i)) + 0.005) * 9.52
 
                 Else
 
-                    'Quadrat des Abstandes:             
+                    'Square of the distance:
                     ab0(i) = (Pnorm - myMap.LPe(i)) ^ 2 + (n0 - myMap.Ln(i)) ^ 2
 
-                    'Falls Vorzeichen von Pe unterschiedlich (Last/Schlepp-Trennung) wird Abstand vergroessert um Schlepp bei Schlepp mehr zu gewichten:
+                    'Falls Vorzeichen von Pe unterschiedlich (Last/Schlepp-Trennung) wird Abstand vergroessert um Schlepp bei Schlepp mehr zu gewichten: |@@| ????If the Sign of Pe unequal (Load /Drag separation), then Distance increases more weight to Drag by Drag:
                     If Pnorm * myMap.LPe(i) < 0 Then ab0(i) *= 50
 
                 End If
 
             Next
 
-            'Punkte innerhalb Radius zählen und ggf. Radius erhöhen
+            'Punkte innerhalb Radius zählen und ggf. Radius erhöhen |@@| Points are within radius and possibly within  a bigger Radius
             Radius = 0.01   '<= Startwert ist Radius * 2 weil in Do-Schleife gleich verdoppelt wird!   
             iminMin = 2
 
@@ -1959,7 +1959,7 @@ lbEr:
                 Next
             Loop Until inim >= iminMin
 
-            'Abstand-Array erstellen und Leistung interpolieren für Pe-Korrektur
+            'Abstand-Array erstellen und Leistung interpolieren für Pe-Korrektur |@@| Distance array and create Power interpolate for Pe-correction
             ReDim ab(inim - 1)
             i0 = -1
             sumo = 0
@@ -1971,13 +1971,13 @@ lbEr:
                 End If
             Next
 
-            'Berechnung von wisum
+            'Calculation of Wisum
             wisum = 0
             For i = 0 To inim - 1
                 wisum = wisum + 1.0 / ab(i)
             Next
 
-            'Interpolierte Leistung berechnen
+            'Calcluate Interpolated Power
             PeIntp = sumo / wisum
 
 
@@ -1989,15 +1989,15 @@ lbEr:
 
             ReDim abOKV2(iMapDim)
 
-            'Abstand berechnen und korrigieren.
+            'Calculate Distance and Correction.
             For i = 0 To iMapDim
 
-                'Quadrat des Abstandes:                 
+                'Square of the distance:
                 ab0(i) = (Pnorm - myMap.LPe(i)) ^ 2 + (nnorm - myMap.Lnn(i)) ^ 2
 
             Next
 
-            'Punkte innerhalb Radius zählen und ggf. Radius erhöhen
+            'Punkte innerhalb Radius zählen und ggf. Radius erhöhen |@@| Points are within radius and possibly within  a bigger Radius
             Radius = 0.0001   '<= Startwert ist Radius * 2 weil in Do-Schleife gleich verdoppelt wird!       '0.0001
             iminMin = 3
 
@@ -2014,7 +2014,7 @@ lbEr:
                 Next
             Loop Until inim >= iminMin
 
-            'Abstand-Array erstellen und Leistung interpolieren für Pe-Korrektur
+            'Abstand-Array erstellen und Leistung interpolieren für Pe-Korrektur |@@| Distance array and create Power interpolate for Pe-correction
             ReDim abV2(inim - 1)
             i0 = -1
             sumo = 0
@@ -2026,13 +2026,13 @@ lbEr:
                 End If
             Next
 
-            'Berechnung von wisumV2
+            'Calculation of wisumV2
             wisumV2 = 0
             For i = 0 To inim - 1
                 wisumV2 = wisumV2 + 1.0 / abV2(i)
             Next
 
-            'Interpolierte Leistung berechnen
+            'Calculate Interpolated Power
             PeIntpV2 = sumo / wisumV2
 
         End Sub
@@ -2109,7 +2109,7 @@ lbEr:
 
         End Function
 
-        'Berechnet Emission an Schleppkurve
+        'Berechnet Emission an Schleppkurve |@@| Calculated Emission on Drag-curve
         Private Function fEmDrag(ByRef EmComp As cEmComp) As Single
             Dim ab0 As Double()
             Dim abOK_loc As Boolean()
@@ -2126,24 +2126,24 @@ lbEr:
             ReDim abOK_loc(iMapDim)
             Dim inim As Integer
 
-            'Es wird an Schleppkurve gesucht
+            'Es wird an Schleppkurve gesucht |@@| Search on Drag-curve
             Pnorm = PeDrag
-            'n0 ist schon in Init definiert worden
+            'n0 has already been defined in Init
 
-            'Abstand berechnen und korrigieren.
+            'Calculate Distance and Correction.
             For i = 0 To iMapDim
 
-                'Quadrat des Abstandes:
+                'Square of the Distances:
                 ab0(i) = (Pnorm - myMap.LPe(i)) ^ 2 + (n0 - myMap.Ln(i)) ^ 2
 
-                'Falls Vorzeichen von Pe unterschiedlich (Last/Schlepp-Trennung) wird Abstand vergroessert um Schlepp bei Schlepp mehr zu gewichten:
+                'Falls Vorzeichen von Pe unterschiedlich (Last/Schlepp-Trennung) wird Abstand vergroessert um Schlepp bei Schlepp mehr zu gewichten: |@@| ????If the Sign of Pe unequal (Load /Drag separation), then Distance increases more weight to Drag by Drag:
                 If Not EmComp.IntpolV2 Then
                     If Pnorm * myMap.LPe(i) < 0 Then ab0(i) *= 50
                 End If
 
             Next
 
-            'Punkte innerhalb Radius zählen und ggf. Radius erhöhen
+            'Punkte innerhalb Radius zählen und ggf. Radius erhöhen |@@| Points are within radius and possibly within a  bigger Radius
             Radius = 0.0001   '<= Startwert ist Radius * 2 weil in Do-Schleife gleich verdoppelt wird!       '0.0001
             iminMin = 3
 
@@ -2160,7 +2160,7 @@ lbEr:
                 Next
             Loop Until inim >= iminMin
 
-            'Abstand-Array erstellen
+            'Create Distances-array
             ReDim ab_loc(inim - 1)
             i0 = -1
             For i = 0 To iMapDim
@@ -2170,13 +2170,13 @@ lbEr:
                 End If
             Next
 
-            'Berechnung von wisum
+            'Calculation of wisum
             wisum_loc = 0
             For i = 0 To inim - 1
                 wisum_loc = wisum_loc + 1.0 / ab_loc(i)
             Next
 
-            'Emission berechnen
+            'Calculate emission
             sumo = 0
             i0 = -1
             For i = 0 To iMapDim

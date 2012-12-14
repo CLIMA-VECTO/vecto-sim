@@ -11,18 +11,18 @@
 '   - Dir-Favorites
 'V2.0.1 01.12.2011
 '   - Fav-Dlog: "Abbrechen" => "Cancel"
-'   - Fav-Dlog: Statt leeren Items in Fav-Liste "<undefined>"
+'   - Fav-Dlog: Statt leeren Items in Fav-Liste "<undefined>" |@@| Fav-Dlog: Empty Items in Fav list Instead "<undefined>"
 
 
 
-'**Anwendung
+'**Application
 'Dim fbTXT As cFileBrowser
 'fbTXT = New cFileBrowser("TXT")
 'fbTXT.Extensions = New String() {"txt,log", "csv"}
 '...
 'fbTXT.Close()
 
-'**Benötigte Globale Variablen (Default):
+'**Required Global variables (default):
 'Public FB_Drives() As String
 'Public FB_Init As Boolean = False
 'Public FB_FilHisDir As String
@@ -46,7 +46,7 @@ Public Class cFileBrowser
     Private bFolderBrowser As Boolean
     Private bLightMode As Boolean
 
-    'Neue Instanz - ID definieren, umschalten auf FolderBrowser
+    'New Instance - define ID, switch to FolderBrowser
     Public Sub New(ByVal ID As String, Optional ByVal FolderBrowser As Boolean = False, Optional ByVal LightMode As Boolean = False)
         Initialized = False
         MyID = ID
@@ -55,12 +55,12 @@ Public Class cFileBrowser
         bLightMode = LightMode
     End Sub
 
-    'OpenDialog - Öffnen Dialog - Übergibt True wenn Dialog mit OK beendet wurde
+    'OpenDialog Return True when Dialog ended with OK
     Public Function OpenDialog(ByVal path As String, Optional ByVal MultiFile As Boolean = False, Optional ByVal Ext As String = "") As Boolean
         Return CustomDialog(path, True, False, eExtMode.MultiExt, MultiFile, Ext, "Open")
     End Function
 
-    'SaveDialog - Speichern Dialog - Übergibt True wenn Dialog mit OK beendet wurde
+    'SaveDialog - Returns True when Dialog ended with OK
     Public Function SaveDialog(ByVal path As String, Optional ByVal ForceExt As Boolean = True, Optional ByVal Ext As String = "") As Boolean
         Dim x As eExtMode
         If ForceExt Then
@@ -71,19 +71,19 @@ Public Class cFileBrowser
         Return CustomDialog(path, False, True, x, False, Ext, "Save As")
     End Function
 
-    'Dialog öffnen - Übergibt True wenn Dialog mit OK beendet wurde
+    'Open dialogue - Return True if Dialogue ended with OK
     Public Function CustomDialog(ByVal path As String, ByVal FileMustExist As Boolean, ByVal OverwriteCheck As Boolean, ByVal ExtMode As eExtMode, ByVal MultiFile As Boolean, ByVal Ext As String, Optional Title As String = "File Browser") As Boolean
         If Not Initialized Then Init()
         Return Dlog.Browse(path, FileMustExist, OverwriteCheck, ExtMode, MultiFile, Ext, Title)
     End Function
 
-    'File-History manuell updaten
+    'Manually update File History
     Public Sub UpdateHistory(ByVal Path As String)
         If Not Initialized Then Init()
         Dlog.UpdateHistory(Path)
     End Sub
 
-    'File / Folder History speichen und Speicher freigeben
+    'File / Folder History speichen und Speicher freigeben |@@| File / Folder History spokes and Release memory
     Public Sub Close()
         If Initialized Then
             Dlog.SaveAndClose()
@@ -101,7 +101,7 @@ Public Class cFileBrowser
         Initialized = True
     End Sub
 
-    'Dateiendungen definieren
+    'Define File-Extensions
     Public Property Extensions() As String()
         Get
             Return MyExt
@@ -112,7 +112,7 @@ Public Class cFileBrowser
         End Set
     End Property
 
-    'Dateien abfragen
+    'Ask for Files
     Public ReadOnly Property Files() As String()
         Get
             If Initialized Then

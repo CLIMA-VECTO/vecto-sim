@@ -22,13 +22,13 @@
     Private bTCdef As Boolean
     Public TCfactors As System.Collections.Generic.Dictionary(Of tMapComp, Double)
 
-    'Komponente wird sekündlich ausgegeben
+    'Component is dumped every one second
     Public WriteOutput As Boolean
 
-    'ATVals definiert (EXS)
+    'Define ATVals (EXS)
     Private bATdef As Boolean
 
-    'Summen/DruchschnittsWerte
+    'Totals/Average Values
     Public FinalAvg As Single       'Durchschnittswert [g/h]
     Public FinalSum As Single       'Summe [g]
     Public FinalAvgPos As Single    'Durchschnittswert ohne negative Werte [g/h]
@@ -106,11 +106,11 @@
             sumPos += Math.Max(x, 0)
         Next
 
-        'Durchschnitt
+        'Averaged
         FinalAvg = CSng(sum / FinalVals.Count)
         FinalAvgPos = CSng(sumPos / FinalVals.Count)
 
-        'Summe (g/h umgerechnet in g)
+        'Total (g/h converted into g)
         Select Case NormID
             Case tEmNorm.x
                 FinalSum = sum

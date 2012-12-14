@@ -30,7 +30,7 @@
         PHEMworker.ReportProgress(0, WorkProg)
     End Sub
 
-    'Job-Status => Jobliste Status-Spalte
+    'Job status => Job-list Status-column
     Public Sub WorkerJobStatus(ByVal JobIndex As Int16, ByVal Msg As String, ByVal Status As tJobStatus)
         Dim WorkProg As cWorkProg
         WorkProg = New cWorkProg(tWorkMsgType.JobStatus)
@@ -40,7 +40,7 @@
         PHEMworker.ReportProgress(0, WorkProg)
     End Sub
 
-    'Zyklus-Status => Zyklusliste Status-Spalte
+    'Cycle status => Cycle-list Status-column
     Public Sub WorkerCycleStatus(ByVal CycleIndex As Int16, ByVal Msg As String)
         Dim WorkProg As cWorkProg
         WorkProg = New cWorkProg(tWorkMsgType.CycleStatus)
@@ -49,20 +49,20 @@
         PHEMworker.ReportProgress(0, WorkProg)
     End Sub
 
-    'Worker Progress => Progbar (ProgBarSec Update wenn ProgSec > -1; ProgBarSec-Reset bei ProgSec = 0)
+    'Worker Progress => Progbar (ProgBarSec Update when ProgSec > -1; ProgBarSec-Reset at ProgSec = 0)
     Public Sub WorkerProg(ByVal Prog As Int16, Optional ByVal ProgSec As Integer = -1)
         Dim WorkProg As New cWorkProg(tWorkMsgType.ProgBars)
         WorkProg.ProgSec = ProgSec
         PHEMworker.ReportProgress(Prog, WorkProg)
     End Sub
 
-    'Progbar auf Continuous setzen
+    'Progbar set to Continuous
     Public Sub WorkerProgInit()
         Dim WorkProg As New cWorkProg(tWorkMsgType.InitProgBar)
         PHEMworker.ReportProgress(0, WorkProg)
     End Sub
 
-    'Abbruch
+    'Abort
     Public Sub WorkerAbort()
         Dim WorkProg As New cWorkProg(tWorkMsgType.Abort)
         PHEMworker.ReportProgress(0, WorkProg)
@@ -74,24 +74,24 @@
 
 #Region "GUI Steuerung durch GUI direkt - NICHT über BG-Worker"
 
-    'Status Message direkt an GUI - darf nicht durch den Backgroundworker geschehen!
+    'Status message directly to GUI - can not be called by the BackgroundWorker!
     Public Sub GUImsg(ByVal ID As tMsgID, ByVal Msg As String)
         F_MAINForm.MSGtoForm(ID, Msg, "", "")
     End Sub
 
-    'Statusbar  - Aufruf durch WorkerMSG oder direkt über Form, NIEMALS über Worker
+    'Statusbar - called either by WorkerMSG or directly by the form, NEVER by the Worker
     Public Sub Status(ByVal txt As String)
         F_MAINForm.ToolStripLbStatus.Text = txt
     End Sub
 
-    'Status Form zurück setzen - Aufruf NUR durch Events, NIEMALS über Worker
+    'Status form reset - ONLY called by Events, NEVER by Worker
     Public Sub ClearMSG()
         F_MAINForm.LvMsg.Items.Clear()
     End Sub
 
 #End Region
 
-    'Klasse zum Übergeben von Nachrichten vom Backgroundworker
+    'Class used to pass Messages from BackgroundWorker
     Public Class cWorkProg
         Private MyTarget As tWorkMsgType
         Private MyID As tMsgID
@@ -173,7 +173,7 @@
 
     '-----------------------------------------------------------------------
 
-    'Falls String nicht Zahl dann Null
+    'If string not a number, then Zero
     Public Function fTextboxToNumString(ByVal txt As String) As String
         If Not IsNumeric(txt) Then
             'GUImsg(tMsgID.Err, "'" & txt & "' is no numeric expression!")
@@ -199,7 +199,7 @@
         End If
     End Function
 
-    'Datei in Excel öffnen
+    'Open File in Excel
     Public Function FileOpen(ByVal file As String) As Boolean
         Dim PSI As New ProcessStartInfo
         PSI.FileName = ChrW(34) & Cfg.OpenCmd & ChrW(34)
@@ -213,37 +213,37 @@
     End Function
 
 #Region "Dateipfad Funktionen"
-    'WorkDir oder MainDir einfügen falls kein Pfad angegeben. Spezial-Ordner einfügen
+    'When no path is specified, then insert either WorkDir or MainDir   Special-folders
     Public Function fFileRepl(ByVal file As String, Optional ByVal MainDir As String = "") As String
 
         Dim ReplPath As String
 
-        'Pfad trimmen
+        'Trim Path
         file = Trim(file)
 
-        'Falls leere Datei => Abbruch
+        'If empty file => Abort
         If file = "" Then Return ""
 
-        'sKeys ersetzen
+        'Replace sKeys
         file = Microsoft.VisualBasic.Strings.Replace(file, sKey.DefVehPath & "\", MyAppPath & "Default Vehicles\", 1, -1, CompareMethod.Text)
         file = Microsoft.VisualBasic.Strings.Replace(file, sKey.WorkDir & "\", Cfg.WorkDPath, 1, -1, CompareMethod.Text)
         file = Microsoft.VisualBasic.Strings.Replace(file, sKey.HomePath & "\", MyAppPath, 1, -1, CompareMethod.Text)
 
-        'Replace - Ordner bestimmen
+        'Replace - Determine folder
         If MainDir = "" Then
             ReplPath = Cfg.WorkDPath
         Else
             ReplPath = MainDir
         End If
 
-        ' "..\" => Eine Ordner-Ebene hoch
+        ' "..\" => One folder-level up
         Do While ReplPath.Length > 0 AndAlso Left(file, 3) = "..\"
             ReplPath = fPathUp(ReplPath)
             file = file.Substring(3)
         Loop
 
 
-        'Pfad ergänzen falls nicht vorhanden
+        'Supplement Path, if not available
         If fPATH(file) = "" Then
 
             Return ReplPath & file
@@ -254,7 +254,7 @@
 
     End Function
 
-    'Pfad eine Ebene nach oben      "C:\temp\ordner1\"  >>  "C:\temp\"
+    'Path one-level-up      "C:\temp\ordner1\"  >>  "C:\temp\"
     Private Function fPathUp(ByVal Pfad As String) As String
         Dim x As Int16
 
@@ -268,7 +268,7 @@
 
     End Function
 
-    'Dateiname ohne Pfad    "C:\temp\TEST.txt"  >>  "TEST.txt" oder "TEST"
+    'File name without the path    "C:\temp\TEST.txt"  >>  "TEST.txt" oder "TEST"
     Public Function fFILE(ByVal Pfad As String, ByVal MitEndung As Boolean) As String
         Dim x As Int16
         x = Pfad.LastIndexOf("\") + 1
@@ -280,12 +280,12 @@
         Return Pfad
     End Function
 
-    'Dateiname ohne Extension   "C:\temp\TEST.txt" >> "C:\temp\TEST"
+    'Filename without extension   "C:\temp\TEST.txt" >> "C:\temp\TEST"
     Public Function fFileWoExt(ByVal Path As String) As String
         Return fPATH(Path) & fFILE(Path, False)
     End Function
 
-    'Dateiname ohne Pfad falls Pfad = WorkDir oder MainDir
+    'Filename without path if Path = WorkDir or MainDir
     Public Function fFileWoDir(ByVal file As String, Optional ByVal MainDir As String = "") As String
         Dim path As String
 
@@ -302,7 +302,7 @@
 
     End Function
 
-    'Pfad allein        "C:\temp\TEST.txt"  >>  "C:\temp\"
+    'Path alone        "C:\temp\TEST.txt"  >>  "C:\temp\"
     '                   "TEST.txt"          >>  ""
     Public Function fPATH(ByVal Pfad As String) As String
         Dim x As Int16
@@ -311,7 +311,7 @@
         Return Microsoft.VisualBasic.Left(Pfad, x + 1)
     End Function
 
-    'Endung allein      "C:\temp\TEST.txt" >> ".txt"
+    'Extension alone      "C:\temp\TEST.txt" >> ".txt"
     Public Function fEXT(ByVal Pfad As String) As String
         Dim x As Int16
         x = Pfad.LastIndexOf(".")
