@@ -1994,7 +1994,7 @@
 2874:                '!Extrapolation up
 2879:        'c      Extrapolation down
 2887:        'c     Sort the 2 Values by ascending n:
->>> My Project\Application.Designer.vb
+>>> My Project\AssemblyInfo.vb
 6:' Below is the General Information about the Attributes
 7:' controlling the Assembly. Change these attribute values to modify the information
 9:' associated with the Assembly.

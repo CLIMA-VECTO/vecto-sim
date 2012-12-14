@@ -1,4 +1,19 @@
-﻿
+﻿## 0. Transform all ACII files to UTF
+$basepath = '../../VECTO';
+ls "*/*/*/*.vb","*/*/*.vb","*/*.vb","*.vb" | 
+    %{
+        $f=$_; 
+        if ((Get-FileEncoding $f) -ne UTF8) {
+            echo "Re-encoding $f";
+            (cat $f) | 
+            Out-File -FilePath $f -Encoding UTF8
+        } else {
+            echo "Skipping $f";
+        }
+    }
+    
+    
+
 ## 1. Gather all single-line comments.
 ##
 filter extract-comments {
@@ -57,83 +72,141 @@ function isolate-untranslated($coms, $from, $to) {
     } 
 }
 
-## 5. Merge translated comment-lines with original ones.
+## 5.a. Merge translated comment-lines with original ones.
 ##
-function merge-translated($coms, $from, $to) {
 $r=for($i=0; $i -lt $coms.length; $i++) {
-        $cline = $coms[$i];
-        $fline = $from[$i];
-        $tline = $to[$i];
-        $tline = $tline.trim();
-        if ($cline.startsWith('>>> ')) {
-            echo "$cline"
+    $cline = $coms[$i];
+    $fline = $from[$i];
+    $tline = $to[$i];
+    $tline = $tline.trim();
+    if ($cline.startsWith('>>> ')) {
+        echo "$cline"
+    } else {
+        $m = [regex]::Matches($cline, "(\d+):\s*'(C )?\W*(\w.*)$", "IgnoreCase");
+        if ($m[0]) {
+            $ccm = $m[0].Groups[3];
+            $ocom = $ccm.Value;
+            $ocomi = $ccm.Index;
+            $ln = $m[0].Groups[1].Value;
         } else {
-            $m = [regex]::Matches($cline, "(\d+):\s*'(C )?\W*(\w.*)$", "IgnoreCase");
-            if ($m) {
-                $ccm = $m[0].Groups[3];
-                $ocom = $ccm.Value;
-                $ocomi = $ccm.Index;
-                $ln = $m[0].Groups[1].Value;
-            } else {
-                $ocom = "";
-                $ln = "<?>"
-            }
-            
-            if ($ocom -ne $fline) {
-                echo "Unmtached with Original(parsed) line ${ln}:`n  Parsed: ${ocom}`n  TrFrom: $fline";
-                return;
-            }
-            
-            if (!$tline) {
-                #$nline = $cline;
-                continue;
-            } elseif ($tline.startsWith('@')) {
-                $tline = $tline.Substring(1);
-                $nline = $cline.Substring(0, $ocomi) + "$tline";
-            } else {
-                $nline = $cline.Substring(0, $ocomi) + "${fline} |@@| ${tline}";
-            }
-            echo "$nline"
+            $ocom = "";
+            $ln = "<?>"
         }
-    } 
-    
-    Set-Content -Path comments2-trans.txt -Value $r -Encoding UTF8
-}
+        
+        if ($ocom -ne $fline) {
+            echo "Unmtached with Original(parsed) line ${ln}:`n  Parsed: ${ocom}`n  TrFrom: $fline";
+            return;
+        }
+        
+        if (!$tline) {
+            #$nline = $cline;
+            continue;
+        } elseif ($tline.startsWith('@')) {
+            $tline = $tline.Substring(1);
+            $nline = $cline.Substring(0, $ocomi) + "$tline";
+        } else {
+            $nline = $cline.Substring(0, $ocomi) + "${fline} |@@| ${tline}";
+        }
+        echo "$nline"
+    }
+} 
+
+Set-Content -Path comments2-trans.txt -Value $r -Encoding UTF8
  
+## 5.b Manually remove empty filepaths (those without translated lines)
 
 
+## 6.a comments2-orig.txt: Created by runing the above code slightly modified
+##   so as to remove those non-translated lines from the verbatim-comments, and then 
+## 6.b  Manually remove empty filepaths (those without translated lines)
         
 
+
 ## 7. PATCH files
-$coms=cat comments2.txt
+function matchTransLine($line) {
+    [hashtable]$res = @{};
+    
+    $m = [regex]::Matches($line, "^(\d+):(.*)");
+    if ($m[0]) {
+        $mm = $m[0];
+        $res.lnum = $mm.Groups[1].Value;
+        $res.line = $mm.Groups[2].Value;
+        return $res;
+    } else {
+        echo "Bad comment line: `n$line"
+        return $Null;
+    }
+}
+
+$coms=cat comments2-orig.txt
 filter Patch-Comments() {
 BEGIN {
-    $basepath = '../../VECTO/';
+    $basepath = '../../VECTO';
     $i = -1;
+    $file = $Null;
+    $isFileOK = $true;
 }
 PROCESS {
     $i++;
     if ($_.startsWith('>>> ')) {
-        $file = $_.Substring(4);
-        echo "Merging: $basepath$file";
-    } else {
-        $expline = $coms[$i];
-        $m = [regex]::Matches($_, "(\d+):(.*)");
-        if ($m) {
-            $mm = $m[0];
-            $lnum = $mm.Groups[1].Value;
-            $newline = $mm.Groups[2].Value;
-            
-            if ($expline -ne $_) {
-                echo "Unexpected line $lnum:`n  EXP:$expline`n  GOT:$_"
+        if ($file) {
+            if ($isFileOK) {
+                echo $file | Out-File -FilePath $fname -Encoding UTF8
+                echo "Merged $fname";
+            } else {
+                echo "FAILED $fname";
             }
+        }
+        $isFileOK = $true;
+        
+        $fname = "$basepath/" + $_.Substring(4);
+        echo "Merging: ${fname}";
+        $file = cat "$fname";
+    } else {
+        $m = matchTransLine($coms[$i]);
+        if (!$m) {
+            $isFileOK = $false;
+            return;
+        }
+        $expline = $m.line;
+        $explnum = $m.lnum;
+
+        $m = matchTransLine($_);
+        if (!$m) {
+            $isFileOK = $false;
+            return;
+        }
+        $trnline = $m.line;
+        $trnlnum = $m.lnum;
+
+        if ($explnum -ne $trnlnum) {
+            $isFileOK = $false;
+            echo "Mismatch in line-nums:`n  EXP($explnum):$expline`n  TRN($trnlnum):$trnline"
         } else {
-                echo "Bad comment line $lnum:`n  GOT:$_"
+            $orgline = $file[($trnlnum - 1)];
+            
+            if ($orgline -ne $expline) {
+                $isFileOK = $false;
+                echo "Unexpected line $lnum:`n  ORG:$orgline`n  EXP:$expline`n  TRN:$trnline"
+            } else {
+                $file[($trnlnum - 1)] = $trnline;
+            }
         }
     }
 }## End proc-loop
+
+END {
+    if ($file) {
+        if ($isFileOK) {
+            echo $file | Out-File -FilePath $fname -Encoding UTF8
+            echo "Merged $fname";
+        } else {
+            echo "FAILED $fname";
+        }
+    }
 }
-cat comments2-trans.txt | Merge-Comments
+}
+cat comments2-trans.txt | Patch-Comments
 
 
 ## DONE
