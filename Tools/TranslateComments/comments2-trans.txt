@@ -144,7 +144,7 @@
 56:            'c         but lightly adapted: Average Nominal-Power of the engines into mep verwursteten
 >>> M_Lese.vb
 16:        'Read GEN
-35:        'VECTO: Defaultwerte für Parameter die nicht mehr in der .GEN/.VECTO sind werden beim Einlesen über SetDefault belegt. |@@| VECTO: Default values for the parameters are no longer in GEN/.VECTO are to be occupied in reading about SetDefault.
+35:        'VECTO: Defaultwerte für Parameter die nicht mehr in der .GEN/.VECTO sind werden beim Einlesen über SetDefault belegt. |@@| VECTO: Default values for the parameters are no longer in GEN/.VECTO but are allocated when Read about SetDefault.
 46:        'Error message in init()
 51:        'Einlesen der KFZ-Spezifikationen aus 'KFZspez' |@@| Read the Vehicle(KFZ)-specifications from 'KFZspez'
 131:        '   FLD muss jetzt vor MAP/MEP eingelesen werden falls dort <DRAG> Einträge sind! |@@| if there are <DRAG> entries, then read FLD before MAP/MEP!
@@ -1196,7 +1196,7 @@
 755:        'Reset von Errors die mit der Leistungsberechnung zu tun haben (nach Schaltmodell durchzuführen) |@@| Reset errors related to Power-calculation (towards performing the Gear-shifting model)
 763:        'Emit Errors
 >>> MODcalc\cPower.vb
-21:    'Data per second
+21:    'Per-second Data
 33:    'Interruption of traction
 87:    'Recuperation
 88:    '   Project HERO - BMW Mini Hybrid
@@ -1541,467 +1541,470 @@
 3465:            'Acceleration-phases: Downshift?(Zurückschalten) suppressed
 3486:                'If within 6 seconds it Shifts back to the previous-Gear,
 3487:                'then maintain the previous-Gear throughout.
-3499:                    'Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang |@@| If within 6 seconds it Shifts once above and once below the previous-Gear,
-3500:                    'geschaltet wird, wird voriger Gang durchgehend beibehalten |@@| then maintain the previous-Gear throughout.
+3499:                    'If within 6 seconds it Shifts once above and once below the previous-Gear,
+3500:                    'then maintain the previous-Gear throughout.
 3517:        '--------------------------------Checks Part 2 -------------------------------------
 3518:        'Gear-shift from 2 to 1 are suppressed when v > 2.5 m/s
 3519:        'NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl |@@| NEW LUZ 040210: Upshifting only when in 2nd Gear over Cluch-Revolutions
 3524:        'bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet |@@| at decelerations below 2.5 m/s, shift to idle
-3538:        'wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet |@@| wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
-3545:        'bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet |@@| If v <0.1 m/s for more than 1 sec then shift to Gear=0
-3552:        'ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden |@@| at Beschleunigungsvorgaengen below 1.5 m/s is used in 1 Gear is engaged
-3553:        'checking if Revolutions above Nominal-Revolutions, then always Upshift
-3562:    'otherwise lack the power!
-3592:        '-----------------------------------EV-Gear-shifting model (based on Cars(PKW))
-3593:        'Second 1 --------------------------------------
-3620:        '--------------------------------First second: Find Gear / initialization
-3622:        '---------From second 2 --------------------------------------
-3623:        'Start-values ---------
-3630:        'gangX = Last Gear ie Starting-base for Shifting-model
-3633:        '-------------------Clutch-lock check << already happened in Power.Calc
-3640:            '-----------Calculate Gear for the next 6 seconds ---------------------
-3678:            'Shifting-function ----------
-3681:            'Revolutions-limit for Upshift, n_normiert (Idle = 0, Nominal-Revolutions = 1)
-3684:            'Revolutions-limit for Downshift, n_normiert (Idle = 0, Nominal-Revolutions = 1)
-3687:            'Convert here of Revolutions units to use (n/n_nominal):
-3691:            ' ''Revolutions with last Gear (gangX)
-3694:            'Maximum permissible Gear-shifting every 2 seconds:
-3703:            'Check whether Downshifting-gear, only when Revolutions decrease or Power increases
-3711:            'Check whether Upshifting-gear, only when Revolutions increase or Power decreases
-3720:            'Correct Gear-selection
-3725:            'Not idle when Power > 0
-3729:            'New Revolutions
-3743:            'Check if Gear within Power/Revolutions limits. Drag-operation is not respected
-3755:        'Save Gears in field for later checks
-3763:        'Accept Gear
-3767:        '--------------------------------Checks Teil 1------------------------------------- |@@| Add to Gang-sequence
-3768:        'Checks Part 1 -------------------------------------
-3770:        ''Checks to Purge non-sensible Gear-shift:
-3780:        '   ============>> Division into "IPhase(j)" stages: acceleration(=1), Deceleration(=2) and Cruise(=3):
-3782:        'Already determined by VehState0
-3793:        'Search by last Gear-change
-3799:            'Max permissible Gear-change every 3 seconds:
-3800:            'Cruise-phases:
-3801:            'Verzoegerungsphasen: Hochschalten wird unterdrückt |@@| As long Speed-change since last Gear-shift is under 6% and Pe/Pnom below 6%, do not run:
-3802:            'Deceleration phases: Upshift suppressed
-3823:                'Acceleration phases: Downshift?(Zurückschalten) suppressed
-3824:                'durchgehend beibehalten |@@| If within 6 seconds switched back again to the previous Gear, stick
-3836:                    'Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang |@@| to the previous Gear
-3837:                    'geschaltet wird, wird voriger Gang durchgehend beibehalten |@@| If within 6 seconds it Shifts once above and once below the previous-Gear,
-3854:        '--------------------------------Checks Teil 2------------------------------------- |@@| then maintain the previous-Gear throughout.
-3855:        'Checks Part 2 -------------------------------------
-3856:        'Suppress Gear-shift from 2 to 1 when v > 2.5 m/s
-3861:        'bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet |@@| NEW LUZ 040210: Upshift only when in 2 Gear over Clutch-revolutions
-3875:        'wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet |@@| at decelerations below 2.5 m/s, shift to Idle
-3882:        'bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet |@@| If v < 0.1 m/s for more than 1 sec, then shift to Gear=0
-3889:        'ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden |@@| at acceleration processes below 1.5 m/s is used in first Gear is engaged
-3890:        'Check whether Revolutions over Nominal-Revolutions, then should always Upshift,
-3944:        '-----------------------------------otherwise Power not enough!
-3945:        'Second 1 --------------------------------------
-3982:        '--------------------------------First second: Find Gear/Initialization
-3984:        '---------From second 2 --------------------------------------
-4014:        'Start-values ---------
-4027:            '     Compute power from jz to (jz + 6) -----------------
-4030:            '(1) Nach Variante "schnelle Fahrweise" |@@| Calculated towards a Revolutions/Power model
-4032:            '1) "Fast Driving" variant
-4033:            'Gear-shift only if v-change 5% since last Gear-shift
-4045:            'VECTO: Commented out START
-4047:            'VECTO: Commented out END
-4050:            'Bei Aenderung der Steigung kann ebenfalls immer geschaltet werden: |@@| the first 10 seconds of the cycle can always be used for balancing gear-shifting:
-4054:            'A Change in the Slope can always result in Gear-shift:
-4061:            'Downshift:
-4062:            ' Upshift:
-4063:            ' dabei manchmal zu hoher gang -> Drehzahl und P_max viel zu nieder, daher nu bei niederen leistungen |@@| at Sloped-cycles with excessive speed the Gear i +1 is calculated
-4064:            ' hochschalten erlaubt: |@@| sometimes Gear is too high -> Revolutions and P_max too low, so only at low Power
-4083:            '(2) Nach Variante "sparsame Fahrweise" |@@| Upshift allowed:
-4085:            '   2) "Economical Driving" Variant
-4086:            '   Downshift?(Zurueckschalten) happens only when Speed-change > 6%
-4087:            'Always Upshift
-4099:            'VECTO: Commented out START
-4101:            '       VECTO: Commented out END
-4103:            '       Bei Aenderung der Steigung kann ebenfalls immer geschaltet werden: |@@| The first 10 seconds cycle can always be used for balancing Gear-shift:
-4107:            '    When slope changes always may result in Gear-shift:
-4117:            'Downshift:
-4126:                'C     Upshift, only if checked not the highest Gear:
-4137:            ' Relative Revolutions:
-4138:            ' der "sparsamen (..l)" Variante: |@@| Select Revolutions-relationship for the "fast (h ..)" and
-4140:            '   Drehzahlverhhealtnisse nach "Modellmix": |@@| the "economical (.. l)"  Variant:
-4141:            '   anhand der erforderlichen maximalen Motorleistung ueber die |@@| Revolutions-relationship for "Modelmix":
-4142:            '   naechsten 6 Sekunden |@@| according to the required maximum Engine-power over the
-4150:            '     next 6 seconds
-4151:            '      (Determine the proportions between the Fast and the Economical Driving-style
-4158:            '     Hausberger model):
-4159:            '     (pmodell wird aus Eingabefile gelesen, = Anteil, zu der die Drehzahl |@@| Mix the calculated Gears as specified in the input file:
-4160:            '      nach "reales Modell" bestehen soll) |@@| from the Input-file it is read the pmodell = ratios of the revolutions
-4165:            '      Ermittlung des "virtuellen" aktuellen Ganges nach Modell |@@| towards a "real model")
-4170:            '    ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden |@@| Determine the "virtual" up-to-date Gears from the Model
-4171:            '    check if Revolutions over Nominal-Revolutions, then must always upshift,
-4181:            '    otherwise Power not enough!
-4182:            '    Check whether required Power is over P_max (s)
-4208:            '    then Downshift?(zurueckgeschaltet):
-4214:            'falls schlechte Vollastkurve ohne Moment in leerlauf wird korrigiert: |@@| Check whether Actual over P_max (s)
-4217:            '    Ueberpruefung, ob hoehere Leistung erforderlich ist als Maximalleistung bei nh |@@| if bad Full-load-curve without Torque, then correct in Idle:
-4218:            '     dann wird zurueckgeschaltet: |@@| Checking whether required Power is higher than maximum power at nh
-4256:        'c     Ende "Modell"-Basisgangwahl |@@| then Gear-shift-back?(zurueckgeschaltet):
-4260:        'Kuppelschleif-check |@@| End "model"-Gear-selection basis
-4263:        '--------------------------------Checks Teil 1------------------------------------- |@@| Clutch-lock check
-4264:        'Checks Part 1 -------------------------------------
-4265:        'Checks to Purge non-sensible Gear-shift:
-4290:        'Division into "IPhase(j)" stages: Acceleration(=1), Deceleration(=2) and Cruise(=3):
-4299:        'Search by last Gear-change
-4304:        'Maximum permissible Gear-shifts every 3 seconds:
-4305:        'Cruise-phases:
-4306:        'As long Speed-change since last Gear-shift is below 6% and Pe/Pnom below 6% then do not Gear-shift:
-4307:        'Deceleration-phases: Upshift suppressed
-4326:        'Acceleration phases: Downshift?(Zurückschalten) suppressed
-4327:        'If within 6 seconds switched back again to the previous Gear, then
-4328:        'stick to previous Gear
-4339:        'VECTO: Exception: on Full-load curve
-4340:        'If within the 6 seconds, it shifts once to higher and once to lower-Gear than the previous one, then
-4356:        '--------------------------------stick to the previous Gear.
-4357:        'Checks Part 2 -------------------------------------
-4358:        'Shifting from 2nd to 1st Gear is suppressed when v > 1.5 m/s
-4363:        'bei verzoegerungsvorgaengen unter 1.5 m/s wird in Leerlauf geschaltet |@@| NEW LUZ 040210: Upshifting only when in 2nd Gear over the Clutch-revolutions
-4375:        'wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet |@@| at decelerations below 1.5 m/s, shift to Idle
-4383:        'If v < 0.1 m/s for more than 1 sec, then shift to Gear=0
-4384:        'Check if Revolutions over Nominal-revolutions, then should always Upshift,
-4424:        'otherwise Power not enough!
-4437:        'Speed look-ahead
-4438:        'Checks Gears for Cars(PKW) ....
-4447:        'Bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet |@@| Gear-shifting from 2nd to 1st is suppressed at v > 2.5 m/s
-4456:        'Wenn v mehr als 1 Sek. <0.1 m/s wird auf Gang=0 geschaltet |@@| At decelerations below 2.5 m/s, shift to Idle
-4461:        'If v < 0.1 m/s for  more than 1 sec, then shift to Gear=0
-4488:    'When Speed?(Beschleunigungsvorgaengen) below 1.5 m/s, then shift to 1st Gear
-4493:    'Function calculating the Power easily for Gear-shift-model
-4508:            'Function calculating the Power easily for EV-shift-model
-4552:    '--------------Revolutions-setting
-4561:    '----------------Power in-front?(vor) of Diff = At Wheel -------------
-4566:    '----------------Rolling-resistance----------------
-4591:    '--------Drag-resistance----------------
-4593:        'Vehicle Acceleration-capability(Beschleunigungsleistung) --------
-4594:        '   Previously (PHEM 10.4.2 and older) the m_raeder was used for Massered instead, with Massered = m_raeder + I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2
-4598:    '----------------The missing part (I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2) is now considered by fPaG(V,a)
-4603:    '----------------Slope resistance ----------------
-4608:    '-------------------Ancillaries(Nebenaggregate) ----------------
-4633:                'Transmission(Getriebe)-------------------
-4636:                'Verluste berechnet (eignet sich nur für Schaltgetriebe) |@@| Power to Transmission (Transmission-output)
-4637:                '       Calculate Losses (suitable only for Manual-transmission(Schaltgetriebe))
-4638:                '       Interpolation of the Transmission-power-loss
-4662:                '***Between 1 and 8 Gear, as well as between 9 and 16 Gear:
-4663:                '   Differential
-4682:                'Power after Differential (before Transmission)
-4692:                '   Differential
-4744:    '----------------Power before Differential
+3538:        'If v <0.1 m/s for more than 1 sec then shift to Gear=0
+3545:        'at Acceleration processes below 1.5 m/s, then shift to 1st Gear
+3552:        'checking if Revolutions above Nominal-Revolutions, then always Upshift
+3553:        'otherwise lack the power!
+3562:    'EV-Gear-shifting model (based on Cars(PKW))
+3592:        '-----------------------------------Second 1 --------------------------------------
+3593:        'First second: Find Gear / initialization
+3620:        '--------------------------------From second 2 --------------------------------------
+3622:        '---------Start-values ---------
+3623:        'gangX = Last Gear ie Starting-base for Shifting-model
+3630:        'Clutch-lock check << already happened in Power.Calc
+3633:        '-------------------Calculate Gear for the next 6 seconds ---------------------
+3640:            '-----------Shifting-function ----------
+3678:            'Revolutions-limit for Upshift, n_normiert (Idle = 0, Nominal-Revolutions = 1)
+3681:            'Revolutions-limit for Downshift, n_normiert (Idle = 0, Nominal-Revolutions = 1)
+3684:            'Convert here of Revolutions units to use (n/n_nominal):
+3687:            'Revolutions with last Gear (gangX)
+3691:            ' ''Maximum permissible Gear-shifting every 2 seconds:
+3694:            'Check whether Downshifting-gear, only when Revolutions decrease or Power increases
+3703:            'Check whether Upshifting-gear, only when Revolutions increase or Power decreases
+3711:            'Correct Gear-selection
+3720:            'Not idle when Power > 0
+3725:            'New Revolutions
+3729:            'Check if Gear within Power/Revolutions limits. Drag-operation is not respected
+3743:            'Save Gears in field for later checks
+3755:        'Accept Gear
+3763:        'Gang-Verlauf hinzufügen |@@| Add to Gang-sequence
+3767:        '--------------------------------Checks Part 1 -------------------------------------
+3768:        'Checks to Purge non-sensible Gear-shift:
+3770:        ''Division into "IPhase(j)" stages: acceleration(=1), Deceleration(=2) and Cruise(=3):
+3780:        '   ============>> Already determined by VehState0
+3782:        'Search by last Gear-change
+3793:        'Max permissible Gear-change every 3 seconds:
+3799:            'Cruise-phases:
+3800:            'Solange Geschwindigkeitsaenderung seit letztem Gangwechsel unter 6% und Pe/Pnenn aenderung unter 6% wird nicht geschaltet: |@@| As long Speed-change since last Gear-shift is under 6% and Pe/Pnom below 6%, do not run:
+3801:            'Deceleration phases: Upshift suppressed
+3802:            'Acceleration phases: Downshift?(Zurückschalten) suppressed
+3823:                'Wenn innerhalb von 6 Sekunden wieder in vorigen Gang zurueck geschaltet wird, wird der vorige Gang |@@| If within 6 seconds switched back again to the previous Gear, stick
+3824:                'durchgehend beibehalten |@@| to the previous Gear
+3836:                    'Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang |@@| If within 6 seconds it Shifts once above and once below the previous-Gear,
+3837:                    'geschaltet wird, wird voriger Gang durchgehend beibehalten |@@| then maintain the previous-Gear throughout.
+3854:        '--------------------------------Checks Part 2 -------------------------------------
+3855:        'Suppress Gear-shift from 2 to 1 when v > 2.5 m/s
+3856:        'NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl |@@| NEW LUZ 040210: Upshift only when in 2 Gear over Clutch-revolutions
+3861:        'bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet |@@| at decelerations below 2.5 m/s, shift to Idle
+3875:        'wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet |@@| If v < 0.1 m/s for more than 1 sec, then shift to Gear=0
+3882:        'at Acceleration below 1.5 m/s, then shift to 1st Gear
+3889:        'Check whether Revolutions over Nominal-Revolutions, then should always Upshift,
+3890:        'otherwise Power not enough!
+3944:        '-----------------------------------Second 1 --------------------------------------
+3945:        'First second: Find Gear/Initialization
+3982:        '--------------------------------From second 2 --------------------------------------
+3984:        '---------Start-values ---------
+4014:        'Compute power from jz to (jz + 6) -----------------
+4027:            '     Berechnung nach Drehzahl/Leistung-Modell |@@| Calculated towards a Revolutions/Power model
+4030:            '(1) "Fast Driving" variant
+4032:            'Gear-shift only if v-change 5% since last Gear-shift
+4033:            'VECTO: Commented out START
+4045:            'VECTO: Commented out END
+4047:            'in ersten 10 Zyklussekunden kann zum Einregulieren immer geschlatet werden: |@@| the first 10 seconds of the cycle can always be used for balancing gear-shifting:
+4050:            'A Change in the Slope can always result in Gear-shift:
+4054:            'Downshift:
+4061:            'Upshift:
+4062:            ' bei Steigungszyklen mit zu hohen Geschwindigkeiten wird geschw. i+1 erst nach gangwahl berechnet |@@| at Sloped-cycles with excessive speed the Gear i +1 is calculated
+4063:            ' dabei manchmal zu hoher gang -> Drehzahl und P_max viel zu nieder, daher nu bei niederen leistungen |@@| sometimes Gear is too high -> Revolutions and P_max too low, so only at low Power
+4064:            ' hochschalten erlaubt: |@@| Upshift allowed:
+4083:            '(2) "Economical Driving" Variant
+4085:            '   Downshift?(Zurueckschalten) happens only when Speed-change > 6%
+4086:            '   Always Upshift
+4087:            'VECTO: Commented out START
+4099:            'VECTO: Commented out END
+4101:            '       in ersten 10 Zyklussekunden kann zum einregulieren immer geschlatet werden: |@@| The first 10 seconds cycle can always be used for balancing Gear-shift:
+4103:            '       When slope changes always may result in Gear-shift:
+4107:            '    Downshift:
+4117:            'Upshift, only if checked not the highest Gear:
+4126:                'C     Relative Revolutions:
+4137:            ' Auswahl des Drehzahlverhaeltnisses aus der "schnellen (..h)" und |@@| Select Revolutions-relationship for the "fast (h ..)" and
+4138:            ' der "sparsamen (..l)" Variante: |@@| the "economical (.. l)"  Variant:
+4140:            '   Drehzahlverhhealtnisse nach "Modellmix": |@@| Revolutions-relationship for "Modelmix":
+4141:            '   anhand der erforderlichen maximalen Motorleistung ueber die |@@| according to the required maximum Engine-power over the
+4142:            '   next 6 seconds
+4150:            '     Determine the proportions between the Fast and the Economical Driving-style
+4151:            '      (Hausberger model):
+4158:            '     Mix der berechneten Gaenge gemaess Vorgabe in Eingabefile: |@@| Mix the calculated Gears as specified in the input file:
+4159:            '     (pmodell wird aus Eingabefile gelesen, = Anteil, zu der die Drehzahl |@@| from the Input-file it is read the pmodell = ratios of the revolutions
+4160:            '      nach "reales Modell" bestehen soll) |@@| towards a "real model")
+4165:            '      Ermittlung des "virtuellen" aktuellen Ganges nach Modell |@@| Determine the "virtual" up-to-date Gears from the Model
+4170:            '    check if Revolutions over Nominal-Revolutions, then must always upshift,
+4171:            '    otherwise Power not enough!
+4181:            '    Check whether required Power is over P_max (s)
+4182:            '    then Downshift?(zurueckgeschaltet):
+4208:            '    Eigentliche Ueberpruefung ob ueber P_max(n) |@@| Check whether Actual over P_max (s)
+4214:            'falls schlechte Vollastkurve ohne Moment in leerlauf wird korrigiert: |@@| if bad Full-load-curve without Torque, then correct in Idle:
+4217:            '    Ueberpruefung, ob hoehere Leistung erforderlich ist als Maximalleistung bei nh |@@| Checking whether required Power is higher than maximum power at nh
+4218:            '     dann wird zurueckgeschaltet: |@@| then Gear-shift-back?(zurueckgeschaltet):
+4256:        'c     Ende "Modell"-Basisgangwahl |@@| End "model"-Gear-selection basis
+4260:        'Kuppelschleif-check |@@| Clutch-lock check
+4263:        '--------------------------------Checks Part 1 -------------------------------------
+4264:        'Checks to Purge non-sensible Gear-shift:
+4265:        'Division into "IPhase(j)" stages: Acceleration(=1), Deceleration(=2) and Cruise(=3):
+4290:        'Search by last Gear-change
+4299:        'Maximum permissible Gear-shifts every 3 seconds:
+4304:        'Cruise-phases:
+4305:        'As long Speed-change since last Gear-shift is below 6% and Pe/Pnom below 6% then do not Gear-shift:
+4306:        'Deceleration-phases: Upshift suppressed
+4307:        'Acceleration phases: Downshift?(Zurückschalten) suppressed
+4326:        'If within 6 seconds switched back again to the previous Gear, then
+4327:        'stick to previous Gear
+4328:        'VECTO: Exception: on Full-load curve
+4339:        'If within the 6 seconds, it shifts once to higher and once to lower-Gear than the previous one, then
+4340:        'stick to the previous Gear.
+4356:        '--------------------------------Checks Part 2 -------------------------------------
+4357:        'Shifting from 2nd to 1st Gear is suppressed when v > 1.5 m/s
+4358:        'NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl |@@| NEW LUZ 040210: Upshifting only when in 2nd Gear over the Clutch-revolutions
+4363:        'bei verzoegerungsvorgaengen unter 1.5 m/s wird in Leerlauf geschaltet |@@| at decelerations below 1.5 m/s, shift to Idle
+4375:        'If v < 0.1 m/s for more than 1 sec, then shift to Gear=0
+4383:        'Check if Revolutions over Nominal-revolutions, then should always Upshift,
+4384:        'otherwise Power not enough!
+4424:        'Speed look-ahead
+4437:        'Checks Gears for Cars(PKW) ....
+4438:        'Schalten von 2. in 1. Gang wird bei v>2,5 m/s unterdrueckt |@@| Gear-shifting from 2nd to 1st is suppressed at v > 2.5 m/s
+4447:        'Bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet |@@| At decelerations below 2.5 m/s, shift to Idle
+4456:        'If v < 0.1 m/s for  more than 1 sec, then shift to Gear=0
+4461:        'When Acceleration below 1.5 m/s, then shift to 1st Gear
+4488:    'Function calculating the Power easily for Gear-shift-model
+4493:    'Function calculating the Power easily for EV-shift-model
+4508:            'Revolutions-setting
+4552:    '--------------Power in-front?(vor) of Diff = At Wheel -------------
+4561:    '----------------Rolling-resistance----------------
+4566:    '----------------Drag-resistance----------------
+4591:    '--------Vehicle Acceleration-capability(Beschleunigungsleistung) --------
+4593:        'Previously (PHEM 10.4.2 and older) the m_raeder was used for Massered instead, with Massered = m_raeder + I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2
+4594:        '   The missing part (I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2) is now considered by fPaG(V,a)
+4598:    '----------------Slope resistance ----------------
+4603:    '----------------Ancillaries(Nebenaggregate) ----------------
+4608:    '-------------------Transmission(Getriebe)-------------------
+4633:                'Leistung nach Getriebe (Getriebeausgang) |@@| Power to Transmission (Transmission-output)
+4636:                'Calculate Losses (suitable only for Manual-transmission(Schaltgetriebe))
+4637:                '       Interpolation of the Transmission-power-loss
+4638:                '       Between 1 and 8 Gear, as well as between 9 and 16 Gear:
+4662:                '***Differential
+4663:                '   Power after Differential (before Transmission)
+4691:                '***Differential
+4692:                '   Power before Differential
+4744:    '----------------Gearbox inertia ----------------
 >>> MODcalc\cVh.vb
-15:    'From DRI file
-18:    'Calculated
-58:        'Geschwindigkeit |@@| Route(Weg)Correct
-69:            'Speed
-79:            'Original-speed is longer by 1
-87:        'Steigung |@@| Segment (from Intermediate-seconds, otherwise Error)
-99:        'Slope
-112:        'Gear - but not Averaged, rather Gang(t) = DRI.Gear(t)
-132:        'Calculate Acceleration
-157:        'Vair specifications: Not in Intermediate-seconds!
-169:            'Speed
-177:        'Steigung |@@| Segment
-189:        'Slope
-202:        'Gear - not Averaged, rather Gear(t) = DRI.Gear(t)
-257:        'Calculate Acceleration
-273:            'TODO: If veh faster than cycle ...
-279:                'Falls nächsten Zeitschritt löschen näher an Wegvorgabe als aktueller Weg => Nächsten Zeitschritt löschen |@@| If the repeating Time-step is closer to the Specified-route than the Actual-route => Repeat Time-step
-291:                'Keine Korrektur |@@| If the next Time-step to Delete closer to specified Route than the Actual-route => Delete Next Time-step
+5:    'From DRI file
+15:    'Calculated
+18:    'WegKor |@@| Route(Weg)Correct
+58:        'Speed
+69:            'Original-speed is longer by 1
+79:            'Strecke (aus Zwischensekunden sonst passiert Fehler) |@@| Segment (from Intermediate-seconds, otherwise Error)
+87:        'Slope
+99:        'Gear - but not Averaged, rather Gang(t) = DRI.Gear(t)
+124:        'Calculate Acceleration
+132:        'Vair specifications: Not in Intermediate-seconds!
+157:        'Speed
+169:            'Strecke  |@@| Segment
+177:        'Slope
+189:        'Gear - not Averaged, rather Gear(t) = DRI.Gear(t)
+214:        'Calculate Acceleration
+257:        'TODO: If veh faster than cycle ...
+273:            'Falls Zeitschritt wiederholen näher an Wegvorgabe als aktueller Weg => Zeitschritt wiederholen |@@| If the repeating Time-step is closer to the Specified-route than the Actual-route => Repeat Time-step
+279:                'Falls nächsten Zeitschritt löschen näher an Wegvorgabe als aktueller Weg => Nächsten Zeitschritt löschen |@@| If the next Time-step to Delete closer to specified Route than the Actual-route => Delete Next Time-step
+291:                'No correction
 >>> MODcalc\Em Calc.vb
-101:                'Normal interpolation
-185:        'First two seconds, no correction:
-208:        'Create Dictionaries
-220:        'Calculate sums
-243:        '************************************ 'Mean-values
-258:            '***** Cycle Mean-values ************************************
-261:            '***** Measurement-value
-264:            '***** PHEM value
-279:            'Diff - CAUTION: No Pnom normalization! Beware of the Dynamic-correction!
-282:                'Average values over x seconds and imediately put au
-286:                'Set to zero
-292:                'Messwert |@@| Accumulate(Aufsummieren)
-295:                'Measurement-value
-311:        '************************************ PHEM-value
-324:            'Dump Modal '************************************
-328:            'Measurement-value
-332:            'PHEM-value
-351:        'Diff - CAUTION: No Pnominal-normalized! Beware of the Dynamic-correction!
-355:        'Header and write units
-358:            'Average Values over x seconds and imediately set au
-371:            'to zero
-388:            'Ausgabe |@@| Accumulati(Aufsummieren)
-399:                'Output
-402:                'Measurement-values
-563:            'C      PHEM-value
-564:            'C      Konstantfahrt: |@@| Load-cycle(lastwechsel) (general Qualification(Bedingung ) except for Intervals with
-572:            'C       Damit werden Trapezfoermige Zyklen nicht als lastwechsel erkannt |@@| Constant-traveling:
-573:            'C       da LWje = 0. In diesem fall wird voraus der naechste Wert gesucht, |@@| Thus Trapezoid-Cycles are not recognized as Load-cycle(lastwechsel)
-574:            'C       der nicht gleich Pe(jz) ist. Dieser wird anstelle von Pe(jz+1) |@@| since LWje = 0. In this case, search ahead of next Value,
-575:            'C       gesetzt: |@@| which is not equal to Pe(jz).
-603:            'C      lastwechsel werden nur als solche gezaehlt, wenn sie mehr als 0.05% von |@@| This will replace Pe(jz +1):
-604:            'C      Pnenn betragen (sonst ist Ergebnis viel zu wackelig): |@@| Load-cycles(lastwechsel) are accounted as such only if they exceed 0.05% of Pnom
-605:            'C       (Lastwechsel wird gezaehlt, wenn LWja < 0) |@@| otherwise Outcome is too unstable):
-609:            'C     (1) Mittlere Amplitude vom Pe-Verlauf ("Ampl") |@@| accounted as Load-cycle(lastwechsel) when LWja < 0)
-610:            'C         Zwischenrechnung fue Zyklusmittelwert: |@@| 1) Mean Amplitude of the running(Verlauf) Pe ("Ampl")
-617:            'C       Berechnung der mittleren Amplitude in 3 Sekunden vor Emission (Ampl3s) |@@| Intermediate calculation of Cycle-average:
-618:            'C       und der Anzahl der Pe-Sekundenschritten ueber 3% der Nennleistung |@@| Calculate the mean Amplitude in 3 seconds of(vor) Emissions (Ampl3s)
-619:            'C       (and the number of Second-steps where Pe is 3% above the Nominal-power
-664:            'C     2) Change the current Engine-power (dP_2s):
-672:            'C    Gezaehlt nur bei dynamischem betrieb: |@@| Average 3 sec of(vor) Emission:
-681:            'C     (Counted only in dynamic operation:
-687:            'C     4) Average of the negative Engine-power ("PnegMW"):
-695:            'C    Gezaehlt nur bei dynamischem betrieb: |@@| Average 3 sec of(vor) Emission:
-707:        'C     Counted only in dynamic operation:
-708:        'C      Addition der Amplituden von Pe (1. Pe-Wert |@@| Calculation of absolute Dynamic-map sizes:
-709:        'C      Addition of Pe Amplitudes (1 Pe-Value
-710:        'C    is counted also for Maxima and for Minima Amplitudes )
-714:            'C     First Second:
-717:                'C        2. Second to End:
-792:        'Absolute-value:
-805:        'Speed/Accel-dependent parameters only when not Eng-Only
-806:        '   ...Dynamic-parameters as the Differential of Dynamics of the Map
-812:    'was here before. Now in its own method because of KF-creation invalidity
-838:''' Dynamic parameters as the Differential of Dynamics in the Map:
-846:    '! Class for calculating the Exhaust-temperatures
-895:    '**** Einlesen von tgas aus .npi (Projekt HERO) **** |@@| Fields for Quantities from PHEM main-program
-896:    ' => Reading about tgas from .npi (Project HERO) ****
-897:    ' Luz/Rexeis 16.05.2011 |@@| overwrites tgas(jz) over(aus) HtMass()
-916:        '! Main-routine for EXS module
-921:        '! Calling from Exs_Main(true) -> Developer Version without PHEM main-program
-951:        'Fields for Quantities from exs-file
-955:        '!General Constants
-956:        '!Exhaust Physical-values:
-958:        'insensitive vs. lambda, see "Stoffwerte_vollständigeVerbrennung_neu.xls"
-964:        '!cp_exh = 1054.0 '!Exhaust heat-capacity [J/(kg*K)] is no longer used because it is now calculated directly in Abh from T and Lambda
-965:        '!Note: Average-value from searching the Internet, found no information in literature
-967:        'Reaktionsenthalpien in J/mol |@@| calibrated based on Test Thermocouple assuming Coating-thickness(Schichtdicke) 0.1mm
-972:        'Molmassen |@@| Reaction-enthalpies in J/mol
-977:        'Molecular-weights
-985:        'Compatibility with old EXS-structure Introduced before the new Concept for Em-components with cMap-class tMAP-class, etc.
-1006:        'References for Emissions: The given, if available, otherwise the calculated
-1025:        'Dimensioning:
-1026:        'In DEV direkt aus der Datei *.phe eingelesen |@@| Return of the relevant Quantities from(aus) the PHEM main-program
-1045:        'Read in DEV directly from the *. phe file
-1056:        'Anfang exs-File einlesen |@@| It is allocated below because there must be further mpexh
-1072:        'Begin readning exs-file
-1079:        'dummy = DatExs.ReadLine(0) 'old dummy line: caution for exs-file compatibility
-1085:        'Initialize the respective Number of Modules
-1088:                'Reading of the Data-blocks for each Module
-1096:        'Error-message in TempMod(iMod).Read(DatExs)
-1100:            'End reading exs-file
-1121:            'Beginning reading csy-file
-1133:        'End reading csy-file
-1135:            'Calculation loop: Per Time-step / per Module: 1. Temperatures, 2. Conversions
-1139:                    ' Display per-second Results on each iteration Results
-1159:                    ' Write Header *.ter
-1169:            'Write the Header for KonvMods
-1174:            'Start-values ​​for Cooling-system simulation:
-1189:                'Heat transfer into the Cooling-system (Map)
-1191:                    'Cooling-System Simulation
-1195:                    'Heat inputs in Masses 1 and 2
-1199:                    'The Heat-transfer Mass 1 and 2 for Cooling -system
-1205:                    'Bulk-temperatures for the next Time-step
-1208:                    'Heat-loss to the outside
-1218:                        'Total Heat-input into the Cooling-system (Output value of the simulation)
-1219:                        'Calculation of the Exhaust-gas-flow from a given Fuel-consumption and lambda
-1220:                        'Permitted only for engines without EGR
-1221:                        'Unit mpexh ....... [kg/s]
-1222:                        'Unit Vpexh ....... [m3/s]
-1224:                        '!Case 1: Calculation of Consumption and lambda
-1231:                        'Case 2: Calculation of pumped Airflow through engine
-1239:                'Missing: Methodology for Mass-flow calculation for EGR Engines BMW HERO Project
-1252:                'Calculate Lambda  if not explicitly given
-1253:                'The First Module in the Exhausts-system may not be a catalytically active Element,
-1269:                            'therefore, emissions are always equal to the untreated emissions from the PHEM main-program
-1273:                            'Calculate Qp_reak: Mass-flow-rate * Conversion * Reactive-enthalpy / molar-mass
-1277:                            'Compute Pollutant-components
-1291:                        'Conversion of NOx, CO, HC -> old value * (1-conversion-rate)
-1304:                'Zeile in *.ter schreiben |@@| If Module has no Conv-element changes nothing (Note: Module 1 has always ModTyp0)
-1323:            'Write Line in *.ter.
-1326:            'End Calculation-loop
-1338:            '---------- Close all second-by-second Result-files
-1340:                'Abbruchbedingung: Temperatur des Massenelementes "t_m" des in "iter_pos" spezifizierten Moduls |@@| Query return in the iterative Calculation-mode for Starttemp -------------------
-1341:                'am Beginn und am Ende des Zyklus innerhalb vorzugebender Bandbreite "iter_tol" |@@| Termination-condition: Temperature of the Mass-elements "t_M" in the "iter_pos" specified module
-1417:        '--- Ausgabefile *.ter schreiben ---------------------------------------------------------- |@@| at the Beginning and End of the Cycle within vorzugebender bandwidth "iter_tol"
-1419:        '--- Write Output-file *. Ter --------------------------------------------- -------------
-1422:        'End wrtting Output-file *. ter -------------------------------------------- ---------
-1431:    ''' Clean up
-1433:    ''' <Class for Temperature-modules
-1492:        ''' remarks>Type of module is defined with Mod\typ </remarks>
-1494:        ''' <Reading the EXS file
-1512:            'Pfad für Konvertierungsraten bei Modulen mit Konvertierung |@@| param name="Datei"> File-handler </param>
-1520:            'Path to Conversion-rates for Modules with Conversion
-1561:                    'Initialize the modules & Read the Parameter-files, depending on Module
-1563:                    'Heat-transfer factor
-1565:                    'surface of exterior
-1567:                    'Faktoren für Wärmeübergänge nach außen |@@| Emissivity
-1571:                    'Factors for Heat-transfer to the outside
-1574:                    'Factors for Temperature related t_katsubstrat  <-> t_kat_außen
-1576:                    'Cooling-mass curve
-1578:                    'Normalized Cross-sectional area
-1580:                    'Durchmesser Thermoelement |@@| average backpressure(Gegendruck)
-1583:                    'Thermocouple Diameter
-1595:                    'Thermocouple Cooling-curve
-1621:            'Heat-transfer-Factors to the outside
-1629:            'Check whether Tgas given in Cycle:
-1638:                'Zusätzlich berechnete Parameter für Rohrmodule: |@@| Normalize(Entnormierungen) and Calculating other Variables
-1650:            'Additionally calculated parameters for Pipe-module:
-1653:            'Geometrische Größen berechnen |@@| For Flow-calculations in SI-units is Querschnittsfäche converted into m2
-1654:            'Geometrical Quantities calculated
-1655:            'Note: it is assumed that temperature sensors are
-1660:            ' centered in the Pipe
-1661:            ' umströmter Zylinder vernachlässigt |@@| Note: Ball joint on t-sensor tip is neglected
-1663:            'Abkühlkurven einlesen |@@| in the analysis of Airstream-cylinder
-1691:        ''' Read Cooling-curves
-1708:            'Heat-transfer mass
-1711:            'Setting Threshold for Precision of the Temperature-calculation (needed for iterative Calculation-mode)
-1730:            'Return the Inlet-temperature of the Exhaust-gas from the Module above or from the Engine
-1733:                '! Calculation of the current Mass-temperature
-1739:            'Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen: |@@| at n_iter > 0 the Final-value is already assigned to the last Iteration
-1761:                'Wärmekapazität (vgl. Bogdanic) |@@| If Engine-OFF, wait Cooling-curve and exit method:
-1780:                'Heat-capacity (see Bogdanic)
-1788:                    '                                     Iteration-loop for Heat-transfer
-1794:                    'Termination-criterion below
-1803:                        'Determining the Temperature of the Exhaust-gas at the Center of Mass ("t_gas_mid") consists of a non-linear (logarithmic) Temperature-curve(verlauf)
-1807:                        'Heat-transfer Convection inside all Modules (except for Pipe)
-1809:                        'for Pipe-modules:
-1811:                        'Nusselt Number: Density = 345/t_gas_mid, Term in Parenthesis: mu_Rohr / mu_Mitte
-1815:                    'Heat-transfer (Convection inside) d_pipe, in m: char. Length
-1820:                    'Heat-capacity (see Bogdanic)
-1838:            'Termination-criterion: Change of the Exhaust Outlet-temperature compared to the last Iteration-step smaller than Threshold
-1840:                'Calculate the Heat loss of the "thermal mass" to the outside
-1841:                'Parameters are read from EXS file:
-1842:                '   Data for MuD:
-1843:                '   Oberfl_Kat = 0.12 'Surface for Heat-transfer in m^2
-1846:                'Empirische Formel, passt für alle Rollentests recht gut |@@| Emiss = 0.5 'emissivity
-1848:                'Anm.: Versuch mit direkter Abhängigkeit von t_m -> funktioniert nicht gut |@@| Empirical formula, suitable for all OK Roll-tests
-1850:                'Note: Tests with direct Dependence on t_m -> does not work well
-1852:                'Heat-loss by Radiation
-1856:                'Heat-loss by Convection
-1857:                'Parameters are read from EXS file:
-1858:                '   Data for MuD:
-1859:                '       Module 3:
-1860:                '       Oberfl_Mod3 = 0.169457508 'Surface for Heat-transfer in m^2
-1863:                '   Modul Nr. 4: |@@| Emiss = 0.5 'emissivity
-1864:                '       Module 4:
-1865:                '       Emiss = 0.9 'Emissivität |@@| Oberfl_Mod4 = 0.103596481 'Surface for Heat-transfer in m^2
-1869:                'Wärmeverlust durch Strahlung = Sichtfaktor * Emissivität * St.-Boltzm.-Konst * Oberfläche * (T_Rohr^4 - T_Umgebung^4) |@@| Emiss = 0.9 'emissivity
-1871:                'Heat-loss by Radiation = View_factor * Emissivity * St.-Boltzm.-const * Surface * (T_Pipe^4 - T_Environ^4)
-1874:                'Heat-loss by Convection = Heat_transfer_coefficient * Surface * (T_Pipe - T_Environ)
-1879:            'Standard: Crad constant, no Loss by Convection
-1886:        ''' Total-heat-loss
-1899:                'Thermocouple-Heat-transfer
-1912:                '!Formelwerk Berechnung Wärmeübergang am umströmten Zylinder |@@| If Engine-OFF, wait for Cooling-curve and exit method:
-1921:                'Formula Calculating Heat-transfer-flow around the Cylinder
-1922:                'Simplified solution of the Heat-flow-equation for the t-sensor
-1924:                'Zeitdiskrete Lösung der PT1-Diffgl |@@| corresponds to a Diffgl. for a PT1 section(glied)
-1991:                ''Discrete-time Solution of the PT1-Diffgl
-2003:                'Extrapolation for LastTemp > TempAR(0)
-2005:                'Extrapolation for LastTemp < TempAR(Adim)
-2041:        'Klasse initialisiert als Unterelement von TempMod |@@| One Time-step forward(vor)( =1 second)
-2047:        'c     Class initialized as a Subelement of TempMod
-2049:        'c     Prefix "c" means: use Cycle-value for Characteristic-correction
-2053:        'Index "cc" means: Value of Charachteristic-curve (-> "c" - "cc" is the Derivative, corrected)
-2105:            'Specify Filename for per-second Output-file
-2126:            'Abort if given no NOx
-2149:            ' t-SCR (° C), deNOx (1-NOx-Exhaust/NOx-Raw), t-upstream (°C), NOx-raw (g/h)/kW_Nominal-power, total NOx over 60sec before g/h)/kW_Nominal-power, space velocity (1/h)
-2150:            ' Program to simulate SCR-fleet-model
-2151:            '            Note: deNOx values less than zero are possible:
-2162:            '     this corresponds to higher NOx-raw level than in the Base-map
-2164:            '     1.) Calculation of per-second Values ​​for Input-variables of the SCR-model
-2165:            '     a.) t_SCR: combined-weight of t_upstream and t_downstream
-2166:            '     Temperaturmodelwerte (zB bei Kaltstart) werden nicht überschrieben |@@| SCR-model-internally there are Temperatures between 50 ° C and 500 ° C limits
-2172:            '     Temperature-model-values (eg Cold-start) will not be overwritten
-2173:            '         b.) t_up, NOxraw, SV. 20s Moving-average in the past
-2187:            '     Formula applied also to the first 20 seconds
-2188:            '         c.) NOx60s: Sum over the last 60s of the specific NOx-raw emissions
-2194:            '        Formula applied to the first 60 seconds
-2201:            '     for seconds 1-59 must Extrapolate total-value
-2213:            '     Calculation of deNOxmin value from Characteristic-curves at 50 ° C
-2215:            '        2.) Calculation deNOx
-2225:            'c        a.) deNOx of characteristic:
-2228:                'c           b.) If correction criteria are met: deNOx-correction compared against Characteristic
-2238:                'c           t_up from characteristics:
-2248:                'c           NOx_raw of characteristics:
-2258:                'c           Sum of the NOxraw in the last 60 seconds from characteristics:
-2276:            'Schreiben der Ergebnisse auf die standardisierten Variablen eEmKomp (iSchad, jz) und Qp_reak(jz) |@@| Space/Velocity from(aus) characteristics:
-2312:    ''' SCR Modell |@@| Write the results on the standardized variables eEmKomp (iSchad, jz) and Qp_reak (jz)
-2319:        'SCR model
-2325:        'c     Class initialized as a Subelement of TempMod
-2327:        'c     Prefix "c" means: use Cycle value for Characteristic-correction
-2331:        'Index "cc" means: Value of Characteristic (-> "c" - "cc" is the Derivative, corrected)
-2385:            'Specify Filename for per-second Output-file
-2405:            'Abort if no NOx given
-2429:            ' Programm zur Simulation SCR-Flottendurchschnitt |@@| t-SCR (° C), deNOx (1-NOx-Exhaust/NOx-raw), t-upstream (° C), NOx-raw (g/h) / kW_Nominal-power, total NOx over 60sec before g/h)/kW_Nominal-power, space velocity (1/h)
-2430:            ' Program to Simulate SCR-fleet-model
-2431:            '            Note: deNOx with values less than zero are possible:
-2443:            '     this corresponds to higher NOx-raw level than in the Base-map
-2445:            '     1.) Calculation of per-second Values ​for Input-variables of the SCR model
-2446:            '     a) t_SCR: combined-weight of the t_upstream and t_downstream
-2447:            '     Temperaturmodelwerte (zB bei Kaltstart) werden nicht überschrieben |@@| SCR model internally there are temperatures between 50 ° C and 500 ° C limits
-2453:            '     Temperature-model values (eg cold start) will not be overwritten
-2454:            '         b.) t_up, NOxraw, SV. 20s moving average in the past
-2470:            '     Formula applies to the first 20 seconds
-2471:            '         c.) NOx60s: Sum over the last 60s of the specific NOx-raw emissions
-2479:            '        Formula applies to the first 60 seconds
-2486:            '     For seconds 1 to 59 must sum the projected values
-2498:            '     Calculation of the Characteristic-curves for deNOxmin values at 50 ° C
-2500:            '        2.) Calculation of deNOx
-2510:            'c        a.) Characteristic of deNOx:
-2513:                'c           b.) If Correction-criteria are met: Correct deNOx against the Characteristic
-2523:                'c           Characteristic of t_up:
-2533:                'c           Characteristic-curve of the NOx_raw:
-2543:                'c           Sum of NOxraw in the last 60 seconds of Characteristic-curve:
-2561:            'Characteristic-curve of Distnace-Speed(Raumgeschwindigkeit):
-2593:    ''' Write the results on the standardized variables eEmKomp(iSchad, jz) and Qp_reak(jz)
-2600:        'KAT-model
-2606:        'Class initialized as a Sub-element of TempMod
-2627:        ''' Mapped-data
-2642:        ''' Creating a new CAT module
-2644:        ''' <Interpolation-Function
-2645:        ''' <param name="x">Mass-flow(Massenstrom)</param>
-2646:        ''' <param name="y"> Temperature before(vor) KAT </param>
-2647:        ''' <param name="MapID">The MapID of the corresponding Exhaust-gas-component</param>
-2648:        ''' <returns>The interpolated value for x and y from the Map</returns>
-2660:        ''' remarks> It calculates the converted rate of the appropriate Exhaust-gas-component from the Mass-flow temperature Map</remarks>
-2662:        ''' <Reading the Maps for Conversion-rates
-2716:            'param name="Name">Filename</param>
-2719:            'Units (are not evaluated)
-2731:                'Values
-2742:            'Set KonvRaten to Zero when no component given
-2750:            'Triangulating
-2763:        ''' define Dic. for modal Konvrate
-2765:        ''' <Calculation of the Conversion-rate from Map
-2766:        ''' <param name="jz">Time</param>
-2768:            'remarks> Used to calculate the temperature of the Thermoelements on Kateingang (corresponds to  Module-number i-1)!</remarks>
-2784:        ''' Conversion-rate calculated from Map
-2796:        ''' Header for Output-file
-2798:        ''' <Data for Output-file
-2819:    ''' param name="jz">Time</param>
-2835:        'C     Interface to Converter-classes cScrMod, cDocMod, etc. ..
-2836:        'C     uebergeben wid "such" als X-Wert, der dann als berechneter Y-Wert wieder zurueck gegeben wird |@@| Subroutine of(zu) PHEM for linear Interpolation of a Polygon (eg called by Vissimzs.for)
-2837:        'C     Zu Belegen sind vorher: |@@| It is given the X-value to "search", and it gives back the calculated Y-value
-2838:        'C     Xis(j) und Yis(j) |@@| for previous Allocation:
-2839:        'c     Xis(j) and Yis(j)
-2850:        'C    Given the desired Value(search) and the Number of the existing Polygon-points (izpl)
-2851:        'c     Search the closest points of the Revolutions from the input Full-load curve:
-2862:        'C      Distance to Input-points and Search those Points with the smallest Distance:
-2868:                '!Fix the second Interpolation-points (only interpolation, no extrapolation)
-2874:                '!Extrapolation up
-2879:        'c      Extrapolation down
-2887:        'c     Sort the 2 Values by ascending n:
+54:                            'Normal interpolation
+101:                'First two seconds, no correction:
+185:        'Create Dictionaries
+208:        'Calculate sums
+220:        'Mean-values
+243:        '************************************ 'Cycle Mean-values ************************************
+258:            '***** Measurement-value
+261:            '***** PHEM value
+264:            '***** Diff - CAUTION: No Pnom normalization! Beware of the Dynamic-correction!
+279:            'Average values over x seconds and imediately put au
+282:                'Set to zero
+286:                'Aufsummieren |@@| Accumulate(Aufsummieren)
+292:                'Measurement-value
+295:                'PHEM-value
+311:        '************************************ Dump Modal '************************************
+324:            'Measurement-value
+328:            'PHEM-value
+332:            'Diff - CAUTION: No Pnominal-normalized! Beware of the Dynamic-correction!
+351:        'Header and write units
+355:        'Average Values over x seconds and imediately set au
+358:            'to zero
+371:            'Aufsummieren |@@| Accumulati(Aufsummieren)
+388:            'Output
+399:                'Measurement-values
+402:                'PHEM-value
+563:            'C      Lastwechsel (allgemeine Bedingung ausser bei Intervallen mit |@@| Load-cycle(lastwechsel) (general Qualification(Bedingung ) except for Intervals with
+564:            'C      Konstantfahrt: |@@| Constant-traveling:
+572:            'C       Damit werden Trapezfoermige Zyklen nicht als lastwechsel erkannt |@@| Thus Trapezoid-Cycles are not recognized as Load-cycle(lastwechsel)
+573:            'C       da LWje = 0. In diesem fall wird voraus der naechste Wert gesucht, |@@| since LWje = 0. In this case, search ahead of next Value,
+574:            'C       der nicht gleich Pe(jz) ist. Dieser wird anstelle von Pe(jz+1) |@@| which is not equal to Pe(jz).
+575:            'C       gesetzt: |@@| This will replace Pe(jz +1):
+603:            'C      lastwechsel werden nur als solche gezaehlt, wenn sie mehr als 0.05% von |@@| Load-cycles(lastwechsel) are accounted as such only if they exceed 0.05% of Pnom
+604:            'C      Pnenn betragen (sonst ist Ergebnis viel zu wackelig): |@@| otherwise Outcome is too unstable):
+605:            'C       (Lastwechsel wird gezaehlt, wenn LWja < 0) |@@| accounted as Load-cycle(lastwechsel) when LWja < 0)
+609:            'C     (1) Mittlere Amplitude vom Pe-Verlauf ("Ampl") |@@| 1) Mean Amplitude of the running(Verlauf) Pe ("Ampl")
+610:            'C         Zwischenrechnung fue Zyklusmittelwert: |@@| Intermediate calculation of Cycle-average:
+617:            'C       Berechnung der mittleren Amplitude in 3 Sekunden vor Emission (Ampl3s) |@@| Calculate the mean Amplitude in 3 seconds of(vor) Emissions (Ampl3s)
+618:            'C       and the number of Second-steps where Pe is 3% above the Nominal-power
+650:            'C     (2) Change the current Engine-power (dP_2s):
+664:            'C     Mittelwert 3 sec. vor Emission: |@@| Average 3 sec of(vor) Emission:
+672:            'C    Counted only in dynamic operation:
+681:            'C     (4) Average of the negative Engine-power ("PnegMW"):
+687:            'C     Mittelwert 3 sec. vor Emission: |@@| Average 3 sec of(vor) Emission:
+695:            'C    Counted only in dynamic operation:
+707:        'C     Berechnung der absoluten Dynamikkenngroessen: |@@| Calculation of absolute Dynamic-map sizes:
+708:        'C      Addition of Pe Amplitudes (1 Pe-Value
+709:        'C      is counted also for Maxima and for Minima Amplitudes )
+710:        'C    First Second:
+714:            'C     2. Second to End:
+717:                'C        Absolute-value:
+792:        'Speed/Accel-dependent parameters only when not Eng-Only
+805:        'Dynamic-parameters as the Differential of Dynamics of the Map
+806:        '   ...was here before. Now in its own method because of KF-creation invalidity
+812:    'Dynamic parameters as the Differential of Dynamics in the Map:
+838:''' Class for calculating the Exhaust-temperatures
+846:    '! Felder für Größen aus PHEM Hauptprogramm |@@| Fields for Quantities from PHEM main-program
+895:    '**** Reading about tgas from .npi (Project HERO) ****
+896:    ' => überschreibt tgas(jz) aus HtMass() |@@| overwrites tgas(jz) over(aus) HtMass()
+912:    ''' Main-routine for EXS module
+916:        '! Calling from Exs_Main(true) -> Developer Version without PHEM main-program
+921:        '! Fields for Quantities from exs-file
+951:        'General Constants
+955:        '!Exhaust Physical-values:
+956:        '!insensitive vs. lambda, see "Stoffwerte_vollständigeVerbrennung_neu.xls"
+958:        'cp_exh = 1054.0 '!Exhaust heat-capacity [J/(kg*K)] is no longer used because it is now calculated directly in Abh from T and Lambda
+964:        '!Note: Average-value from searching the Internet, found no information in literature
+965:        '!kalibriert anhand Test an Thermoelement unter Annahme von Schichtdicke 0.1mm |@@| calibrated based on Test Thermocouple assuming Coating-thickness(Schichtdicke) 0.1mm
+967:        'Reaktionsenthalpien in J/mol |@@| Reaction-enthalpies in J/mol
+972:        'Molecular-weights
+977:        'Compatibility with old EXS-structure Introduced before the new Concept for Em-components with cMap-class tMAP-class, etc.
+985:        'References for Emissions: The given, if available, otherwise the calculated
+1006:        'Dimensioning:
+1025:        'Übergabe der relevanten Größen aus dem PHEM Hauptprogramm |@@| Return of the relevant Quantities from(aus) the PHEM main-program
+1026:        'Read in DEV directly from the *. phe file
+1051:            'Wird weiter unten belegt weil mpexh vorhanden sein muss |@@| It is allocated below because there must be further mpexh
+1056:        'Begin readning exs-file
+1072:        'dummy = DatExs.ReadLine(0) 'old dummy line: caution for exs-file compatibility
+1079:        'Initialize the respective Number of Modules
+1085:        'Reading of the Data-blocks for each Module
+1088:                'Error-message in TempMod(iMod).Read(DatExs)
+1096:        'End reading exs-file
+1100:            'Beginning reading csy-file
+1121:            'End reading csy-file
+1133:        'Calculation loop: Per Time-step / per Module: 1. Temperatures, 2. Conversions
+1135:            'Display per-second Results on each iteration Results
+1139:                    ' Write Header *.ter
+1159:                    ' Write the Header for KonvMods
+1169:            'Start-values ​​for Cooling-system simulation:
+1174:            'Heat transfer into the Cooling-system (Map)
+1189:                'Cooling-System Simulation
+1191:                    'Heat inputs in Masses 1 and 2
+1195:                    'The Heat-transfer Mass 1 and 2 for Cooling -system
+1199:                    'Bulk-temperatures for the next Time-step
+1205:                    'Heat-loss to the outside
+1208:                    'Total Heat-input into the Cooling-system (Output value of the simulation)
+1218:                        'Calculation of the Exhaust-gas-flow from a given Fuel-consumption and lambda
+1219:                        'Permitted only for engines without EGR
+1220:                        'Unit mpexh ....... [kg/s]
+1221:                        'Unit Vpexh ....... [m3/s]
+1222:                        'Case 1: Calculation of Consumption and lambda
+1224:                        '!Case 2: Calculation of pumped Airflow through engine
+1231:                        'Missing: Methodology for Mass-flow calculation for EGR Engines BMW HERO Project
+1239:                'Calculate Lambda  if not explicitly given
+1252:                'The First Module in the Exhausts-system may not be a catalytically active Element,
+1253:                'therefore, emissions are always equal to the untreated emissions from the PHEM main-program
+1269:                            'Calculate Qp_reak: Mass-flow-rate * Conversion * Reactive-enthalpy / molar-mass
+1273:                            'Compute Pollutant-components
+1277:                            'Conversion of NOx, CO, HC -> old value * (1-conversion-rate)
+1291:                        'Falls Modul kein Konv-Element hat ändert sich nix (Anmerkung: Modul 1 hat immer ModTyp0) |@@| If Module has no Conv-element changes nothing (Note: Module 1 has always ModTyp0)
+1304:                'Write Line in *.ter.
+1323:            'End Calculation-loop
+1326:            'Close all second-by-second Result-files
+1338:            '---------- Abfrage Rücksprung im iterativen Berechnungsmodus für Starttemp ------------------- |@@| Query return in the iterative Calculation-mode for Starttemp -------------------
+1340:                'Abbruchbedingung: Temperatur des Massenelementes "t_m" des in "iter_pos" spezifizierten Moduls |@@| Termination-condition: Temperature of the Mass-elements "t_M" in the "iter_pos" specified module
+1341:                'am Beginn und am Ende des Zyklus innerhalb vorzugebender Bandbreite "iter_tol" |@@| at the Beginning and End of the Cycle within vorzugebender bandwidth "iter_tol"
+1417:        '--- Write Output-file *. Ter --------------------------------------------- -------------
+1419:        '--- End wrtting Output-file *. ter -------------------------------------------- ---------
+1422:        'Clean up
+1431:    ''' Class for Temperature-modules
+1433:    ''' <remarks>Type of module is defined with Mod\typ </remarks>
+1492:        ''' Reading the EXS file
+1494:        ''' <param name="Datei">Dateihandler</param> |@@| param name="Datei"> File-handler </param>
+1512:            'Path to Conversion-rates for Modules with Conversion
+1520:            'Initialize the modules & Read the Parameter-files, depending on Module
+1561:                    'Heat-transfer factor
+1563:                    'surface of exterior
+1565:                    'Emissivität |@@| Emissivity
+1567:                    'Factors for Heat-transfer to the outside
+1571:                    'Factors for Temperature related t_katsubstrat  <-> t_kat_außen
+1574:                    'Cooling-mass curve
+1576:                    'Normalized Cross-sectional area
+1578:                    'durchschnittlicher Gegendruck |@@| average backpressure(Gegendruck)
+1580:                    'Thermocouple Diameter
+1583:                    'Thermocouple Cooling-curve
+1595:                    'Heat-transfer-Factors to the outside
+1621:            'Check whether Tgas given in Cycle:
+1629:            'Entnormierungen und Berechnung weiterer Größen |@@| Normalize(Entnormierungen) and Calculating other Variables
+1638:                'Additionally calculated parameters for Pipe-module:
+1650:            'Für Strömungsberechnungen in SI-Einheiten wird Querschnittsfäche in m2 umgerechnet |@@| For Flow-calculations in SI-units is Querschnittsfäche converted into m2
+1653:            'Geometrical Quantities calculated
+1654:            'Note: it is assumed that temperature sensors are
+1655:            'centered in the Pipe
+1660:            ' Anmerkung: Kugelkalotte an t-sensor spitze wird in der Betrachtung als |@@| Note: Ball joint on t-sensor tip is neglected
+1661:            ' umströmter Zylinder vernachlässigt |@@| in the analysis of Airstream-cylinder
+1663:            'Read Cooling-curves
+1691:        ''' Heat-transfer mass
+1708:            'Setting Threshold for Precision of the Temperature-calculation (needed for iterative Calculation-mode)
+1711:            'Return the Inlet-temperature of the Exhaust-gas from the Module above or from the Engine
+1730:            'Calculation of the current Mass-temperature
+1733:                '! bei n_iter > 0 ist bereits der Endwert der letzten Iteration zugewiesen |@@| at n_iter > 0 the Final-value is already assigned to the last Iteration
+1739:            'Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen: |@@| If Engine-OFF, wait Cooling-curve and exit method:
+1761:                'Heat-capacity (see Bogdanic)
+1780:                'Iteration-loop for Heat-transfer
+1788:                    '                                     Termination-criterion below
+1794:                    'Determining the Temperature of the Exhaust-gas at the Center of Mass ("t_gas_mid") consists of a non-linear (logarithmic) Temperature-curve(verlauf)
+1803:                        'Heat-transfer Convection inside all Modules (except for Pipe)
+1807:                        'for Pipe-modules:
+1809:                        'Nusselt Number: Density = 345/t_gas_mid, Term in Parenthesis: mu_Rohr / mu_Mitte
+1811:                        'Heat-transfer (Convection inside) d_pipe, in m: char. Length
+1815:                    'Heat-capacity (see Bogdanic)
+1820:                    'Termination-criterion: Change of the Exhaust Outlet-temperature compared to the last Iteration-step smaller than Threshold
+1838:            'Calculate the Heat loss of the "thermal mass" to the outside
+1840:                'Parameters are read from EXS file:
+1841:                'Data for MuD:
+1842:                '   Oberfl_Kat = 0.12 'Surface for Heat-transfer in m^2
+1843:                '   Emiss = 0.5 'Emissivität |@@| Emiss = 0.5 'emissivity
+1846:                'Empirische Formel, passt für alle Rollentests recht gut |@@| Empirical formula, suitable for all OK Roll-tests
+1848:                'Note: Tests with direct Dependence on t_m -> does not work well
+1850:                'Heat-loss by Radiation
+1852:                'Heat-loss by Convection
+1856:                'Parameters are read from EXS file:
+1857:                'Data for MuD:
+1858:                '   Module 3:
+1859:                '       Oberfl_Mod3 = 0.169457508 'Surface for Heat-transfer in m^2
+1860:                '       Emiss = 0.5 'Emissivität |@@| Emiss = 0.5 'emissivity
+1863:                '   Module 4:
+1864:                '       Oberfl_Mod4 = 0.103596481 'Oberfläche für Wärmeübergang in m^2 |@@| Oberfl_Mod4 = 0.103596481 'Surface for Heat-transfer in m^2
+1865:                '       Emiss = 0.9 'Emissivität |@@| Emiss = 0.9 'emissivity
+1869:                'Heat-loss by Radiation = View_factor * Emissivity * St.-Boltzm.-const * Surface * (T_Pipe^4 - T_Environ^4)
+1871:                'Heat-loss by Convection = Heat_transfer_coefficient * Surface * (T_Pipe - T_Environ)
+1874:                'Standard: Crad constant, no Loss by Convection
+1879:            'Total-heat-loss
+1886:        ''' Thermocouple-Heat-transfer
+1899:                'Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen: |@@| If Engine-OFF, wait for Cooling-curve and exit method:
+1912:                '!Formula Calculating Heat-transfer-flow around the Cylinder
+1921:                'Simplified solution of the Heat-flow-equation for the t-sensor
+1922:                'entspricht einer Diffgl. für ein PT1 glied |@@| corresponds to a Diffgl. for a PT1 section(glied)
+1924:                'Discrete-time Solution of the PT1-Diffgl
+1991:                ''Extrapolation for LastTemp > TempAR(0)
+2003:                'Extrapolation for LastTemp < TempAR(Adim)
+2013:                'Einen Zeitschritt vor ( = 1 Sekunde) |@@| One Time-step forward(vor)( =1 second)
+2041:        'Class initialized as a Subelement of TempMod
+2047:        'c     Prefix "c" means: use Cycle-value for Characteristic-correction
+2049:        'c     Index "cc" means: Value of Charachteristic-curve (-> "c" - "cc" is the Derivative, corrected)
+2053:        'Specify Filename for per-second Output-file
+2105:            'Abort if given no NOx
+2126:            't-SCR (° C), deNOx (1-NOx-Exhaust/NOx-Raw), t-upstream (°C), NOx-raw (g/h)/kW_Nominal-power, total NOx over 60sec before g/h)/kW_Nominal-power, space velocity (1/h)
+2149:            ' Program to simulate SCR-fleet-model
+2150:            ' Note: deNOx values less than zero are possible:
+2151:            '            this corresponds to higher NOx-raw level than in the Base-map
+2162:            '     1.) Calculation of per-second Values ​​for Input-variables of the SCR-model
+2164:            '     a.) t_SCR: combined-weight of t_upstream and t_downstream
+2165:            '     SCR-Model-intern werden dabei Temperaturen zwischen 50°C und 500°C begrenzt |@@| SCR-model-internally there are Temperatures between 50 ° C and 500 ° C limits
+2166:            '     Temperature-model-values (eg Cold-start) will not be overwritten
+2172:            '     b.) t_up, NOxraw, SV. 20s Moving-average in the past
+2173:            '         Formula applied also to the first 20 seconds
+2187:            '     c.) NOx60s: Sum over the last 60s of the specific NOx-raw emissions
+2188:            '         Formula applied to the first 60 seconds
+2194:            '        for seconds 1-59 must Extrapolate total-value
+2201:            '     Calculation of deNOxmin value from Characteristic-curves at 50 ° C
+2213:            '     2.) Calculation deNOx
+2215:            '        a.) deNOx of characteristic:
+2225:            'c        b.) If correction criteria are met: deNOx-correction compared against Characteristic
+2228:                'c           t_up from characteristics:
+2238:                'c           NOx_raw of characteristics:
+2248:                'c           Sum of the NOxraw in the last 60 seconds from characteristics:
+2258:                'c           Raumgeschwindigkeit aus Kennlinie: |@@| Space/Velocity from(aus) characteristics:
+2276:            'Schreiben der Ergebnisse auf die standardisierten Variablen eEmKomp (iSchad, jz) und Qp_reak(jz) |@@| Write the results on the standardized variables eEmKomp (iSchad, jz) and Qp_reak (jz)
+2312:    ''' SCR model
+2319:        'Class initialized as a Subelement of TempMod
+2325:        'c     Prefix "c" means: use Cycle value for Characteristic-correction
+2327:        'c     Index "cc" means: Value of Characteristic (-> "c" - "cc" is the Derivative, corrected)
+2331:        'Specify Filename for per-second Output-file
+2385:            'Abort if no NOx given
+2405:            't-SCR (°C), deNOx(1-NOx-Auspuff/NOx-Roh), -t-upstream(°C), NOx-Roh (g/h)/kW_Nennleistg, Summe NOx ueber 60Sek vorher g/h)/kW_Nennleistg, Raumgeschwindigkeit (1/h) |@@| t-SCR (° C), deNOx (1-NOx-Exhaust/NOx-raw), t-upstream (° C), NOx-raw (g/h) / kW_Nominal-power, total NOx over 60sec before g/h)/kW_Nominal-power, space velocity (1/h)
+2429:            ' Program to Simulate SCR-fleet-model
+2430:            ' Note: deNOx with values less than zero are possible:
+2431:            '            this corresponds to higher NOx-raw level than in the Base-map
+2443:            '     1.) Calculation of per-second Values ​for Input-variables of the SCR model
+2445:            '     a) t_SCR: combined-weight of the t_upstream and t_downstream
+2446:            '     SCR-Model-intern werden dabei Temperaturen zwischen 50°C und 500°C begrenzt |@@| SCR model internally there are temperatures between 50 ° C and 500 ° C limits
+2447:            '     Temperature-model values (eg cold start) will not be overwritten
+2453:            '     b.) t_up, NOxraw, SV. 20s moving average in the past
+2454:            '         Formula applies to the first 20 seconds
+2470:            '     c.) NOx60s: Sum over the last 60s of the specific NOx-raw emissions
+2471:            '         Formula applies to the first 60 seconds
+2479:            '        For seconds 1 to 59 must sum the projected values
+2486:            '     Calculation of the Characteristic-curves for deNOxmin values at 50 ° C
+2498:            '     2.) Calculation of deNOx
+2500:            '        a.) Characteristic of deNOx:
+2510:            'c        b.) If Correction-criteria are met: Correct deNOx against the Characteristic
+2513:                'c           Characteristic of t_up:
+2523:                'c           Characteristic-curve of the NOx_raw:
+2533:                'c           Sum of NOxraw in the last 60 seconds of Characteristic-curve:
+2543:                'c           Characteristic-curve of Distnace-Speed(Raumgeschwindigkeit):
+2561:            'Write the results on the standardized variables eEmKomp(iSchad, jz) and Qp_reak(jz)
+2593:    ''' KAT-model
+2600:        'Class initialized as a Sub-element of TempMod
+2606:        'Mapped-data
+2627:        ''' Creating a new CAT module
+2642:        ''' Interpolation-Function
+2644:        ''' <param name="x">Mass-flow(Massenstrom)</param>
+2645:        ''' <param name="y"> Temperature before(vor) KAT </param>
+2646:        ''' <param name="MapID">The MapID of the corresponding Exhaust-gas-component</param>
+2647:        ''' <returns>The interpolated value for x and y from the Map</returns>
+2648:        ''' <remarks> It calculates the converted rate of the appropriate Exhaust-gas-component from the Mass-flow temperature Map</remarks>
+2660:        ''' Reading the Maps for Conversion-rates
+2662:        ''' <param name="Name">Filename</param>
+2716:            'Units (are not evaluated)
+2719:            'Values
+2731:                'Set KonvRaten to Zero when no component given
+2742:            'Triangulating
+2750:            'define Dic. for modal Konvrate
+2763:        ''' Calculation of the Conversion-rate from Map
+2765:        ''' <param name="jz">Time</param>
+2766:        ''' <remarks> Used to calculate the temperature of the Thermoelements on Kateingang (corresponds to  Module-number i-1)!</remarks>
+2768:            'Conversion-rate calculated from Map
+2784:        ''' Header for Output-file
+2796:        ''' Data for Output-file
+2798:        ''' <param name="jz">Time</param>
+2819:    ''' Interface to Converter-classes cScrMod, cDocMod, etc. ..
+2835:        'C     Unterprogramm zu PHEM zur linearen INterpolation aus einem Polygonzug (z.B. in Vissimzs.for aufgerufen) |@@| Subroutine of(zu) PHEM for linear Interpolation of a Polygon (eg called by Vissimzs.for)
+2836:        'C     uebergeben wid "such" als X-Wert, der dann als berechneter Y-Wert wieder zurueck gegeben wird |@@| It is given the X-value to "search", and it gives back the calculated Y-value
+2837:        'C     Zu Belegen sind vorher: |@@| for previous Allocation:
+2838:        'C     Xis(j) and Yis(j)
+2839:        'c     Given the desired Value(search) and the Number of the existing Polygon-points (izpl)
+2850:        'C    Search the closest points of the Revolutions from the input Full-load curve:
+2851:        'c     Distance to Input-points and Search those Points with the smallest Distance:
+2862:        'C      Fix the second Interpolation-points (only interpolation, no extrapolation)
+2868:                '!Extrapolation up
+2874:                '!Extrapolation down
+2879:        'c      Sort the 2 Values by ascending n:
+2887:        'c     Interpolation of the associated Maximum-power (P/Pnom)
 >>> My Project\AssemblyInfo.vb
-6:' Below is the General Information about the Attributes
-7:' controlling the Assembly. Change these attribute values to modify the information
-9:' associated with the Assembly.
-20:'Review the values of the Assembly Attributes
-23:' The following GUID is for the ID of the Typelib if this project is exposed to COM
-25:'      Version information for an assembly consists of the following four values:
-26:'      Major Release
-27:'      Minor Release
-28:'      Build Number
-31:' You can specify all the values or use the defaults for Build and Revision Numbers
+5:' Below is the General Information about the Attributes
+6:' controlling the Assembly. Change these attribute values to modify the information
+7:' associated with the Assembly.
+9:' Review the values of the Assembly Attributes
+20:'The following GUID is for the ID of the Typelib if this project is exposed to COM
+23:' Version information for an assembly consists of the following four values:
+25:'      Major Release
+26:'      Minor Release
+27:'      Build Number
+30:' You can specify all the values or use the defaults for Build and Revision Numbers
+31:' by entering "*" in them:

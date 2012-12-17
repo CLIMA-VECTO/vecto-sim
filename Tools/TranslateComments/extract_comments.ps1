@@ -51,12 +51,6 @@ cat comments2.txt |
 ## 4a. (MANUAL)Inspect translation and go back to 1 or 4a in case of problems.
 ## 5b. (MANUAL) Store translated-comments into ../translate_to.txt
 
-$coms=cat comments2.txt
-$from=cat translate_from.txt
-$to=cat translate_to.txt
-$coms.length, $from.length, $to.length
-
-
 
 function isolate-untranslated($coms, $from, $to) {
     for($i=0; $i -lt $coms.length; $i++) {
@@ -74,6 +68,12 @@ function isolate-untranslated($coms, $from, $to) {
 
 ## 5.a. Merge translated comment-lines with original ones.
 ##
+$coms=cat comments2.txt
+$from=cat translate_from.txt
+$to=cat translate_to.txt
+$coms.length, $from.length, $to.length
+
+
 $r=for($i=0; $i -lt $coms.length; $i++) {
     $cline = $coms[$i];
     $fline = $from[$i];
@@ -99,7 +99,7 @@ $r=for($i=0; $i -lt $coms.length; $i++) {
         }
         
         if (!$tline) {
-            #$nline = $cline;
+            #echo "$nline"; ## UNCOMMENT HERE and delete the rest else-case for producing original.txt
             continue;
         } elseif ($tline.startsWith('@')) {
             $tline = $tline.Substring(1);
@@ -138,10 +138,10 @@ function matchTransLine($line) {
     }
 }
 
-$coms=cat comments2-orig.txt
 filter Patch-Comments() {
 BEGIN {
-    $basepath = '../../VECTO';
+    # Define it externally, depending on the PWD.
+    #$basepath = '../../VECTO';
     $i = -1;
     $file = $Null;
     $isFileOK = $true;
@@ -206,7 +206,10 @@ END {
     }
 }
 }
-cat comments2-trans.txt | Patch-Comments
+$coms=cat ..\Tools\TranslateComments\comments2-orig-EmCalc.txt
+$basepath = '.';
+cat ..\Tools\TranslateComments\comments2-trans-EmCalc.txt| Patch-Comments
+## The last cmd should run without any errors.
 
 
 ## DONE

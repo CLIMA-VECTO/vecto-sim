@@ -1689,10 +1689,11 @@
 4638:                '       Zwischen 1. und 8. gang sowie 9. und 16. Gang:
 4662:                '***Differenzial
 4663:                '   Leistung nach Diff (vor Getriebe)
-4682:                'Pdiff
+4691:                '***Differenzial
 4692:                '   Leistung vor Diff
 4744:    '----------------Getriebe Trägheit----------------
 >>> MODcalc\cVh.vb
+5:    'Aus DRI-Datei
 15:    'Berechnet
 18:    'WegKor
 58:        'Geschwindigkeit
@@ -1700,18 +1701,19 @@
 79:            'Strecke (aus Zwischensekunden sonst passiert Fehler)
 87:        'Steigung
 99:        'Gang - nicht Mittelwert sondern Gang(t) = DRI.Gang(t)
-112:        'Padd
+124:        'Beschl. berechnen
 132:        'Vair-Vorgaben: Nicht in Zwischensekunden!!
 157:        'Geschwindigkeit
 169:            'Strecke 
 177:        'Steigung
 189:        'Gang - nicht Mittelwert sonder Gang(t) = DRI.Gang(t)
-202:        'Padd
+214:        'Beschl. berechnen
 257:        'TODO: Wenn Fzg schneller als Zyklus...
 273:            'Falls Zeitschritt wiederholen näher an Wegvorgabe als aktueller Weg => Zeitschritt wiederholen
 279:                'Falls nächsten Zeitschritt löschen näher an Wegvorgabe als aktueller Weg => Nächsten Zeitschritt löschen
 291:                'Keine Korrektur
 >>> MODcalc\Em Calc.vb
+54:                            'Normale Interpolation
 101:                'Ersten zwei sekunden keine Korrektur:
 185:        'Dictionaries erstellen
 208:        'Summen ermitteln
@@ -1749,7 +1751,7 @@
 610:            'C         Zwischenrechnung fue Zyklusmittelwert:
 617:            'C       Berechnung der mittleren Amplitude in 3 Sekunden vor Emission (Ampl3s)
 618:            'C       und der Anzahl der Pe-Sekundenschritten ueber 3% der Nennleistung
-619:            'C       (LW3p3s):
+650:            'C     (2) Aenderung der aktuellen Motorleistung (dP_2s):
 664:            'C     Mittelwert 3 sec. vor Emission:
 672:            'C    Gezaehlt nur bei dynamischem betrieb:
 681:            'C     (4) Mittelwert der negativen Motorleistung ("PnegMW"):
@@ -1769,7 +1771,7 @@
 846:    '! Felder für Größen aus PHEM Hauptprogramm
 895:    '**** Einlesen von tgas aus .npi (Projekt HERO) ****
 896:    ' => überschreibt tgas(jz) aus HtMass()
-897:    ' Luz/Rexeis 16.05.2011
+912:    ''' Hauptroutine für EXS Modul
 916:        '! Aufruf von Exs_Main(true) -> Developer Version ohne PHEM Hauptprogramm
 921:        '! Felder für Größen aus exs-File
 951:        'Allgemeine Konstanten
@@ -1785,7 +1787,7 @@
 1006:        'Dimensionieren:
 1025:        'Übergabe der relevanten Größen aus dem PHEM Hauptprogramm
 1026:        'In DEV direkt aus der Datei *.phe eingelesen
-1045:        'Lambda
+1051:            'Wird weiter unten belegt weil mpexh vorhanden sein muss
 1056:        'Anfang exs-File einlesen
 1072:        'dummy = DatExs.ReadLine(0) 'alte dummy zeilen: auf exs-file kompatibilität achten
 1079:        'Initialisieren der entsprechenden Anzahl an Modulen
@@ -1901,7 +1903,7 @@
 1924:                'Zeitdiskrete Lösung der PT1-Diffgl
 1991:                ''Extrapolation für LastTemp > TempAr(0)
 2003:                'Extrapolation für LastTemp < TempAr(Adim)
-2005:                'lbInt:
+2013:                'Einen Zeitschritt vor ( = 1 Sekunde)
 2041:        'Klasse initialisiert als Unterelement von TempMod
 2047:        'c     Prefix "c" bedeutet: Zykluswert verwendet für Kennlinien-Korrektur
 2049:        'c     Index "cc" bedeutet: Wert aus Kennlinie (-> "c" - "cc" ist die Differenz, mit der Korrigiert wird)
@@ -1958,7 +1960,6 @@
 2543:                'c           Raumgeschwindigkeit aus Kennlinie:
 2561:            'Schreiben der Ergebnisse auf die standardisierten Variablen eEmKomp (iSchad, jz) und Qp_reak(jz)
 2593:    ''' KAT-Modell
-2600:        'Klasse initialisiert als Unterelement von TempMod
 2606:        'Kennfelddaten
 2627:        ''' Erstellen eines neuen KAT-Moduls
 2642:        ''' Interpolationsfunktion
@@ -1995,6 +1996,7 @@
 2879:        'c      Sortieren der 2 Werte nach aufsteigendem n:
 2887:        'c     Interpolation der zugehoerigen Maximalleistung (P/Pnenn)
 >>> My Project\AssemblyInfo.vb
+5:' Allgemeine Informationen über eine Assembly werden über die folgenden 
 6:' Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 7:' die mit einer Assembly verknüpft sind.
 9:' Die Werte der Assemblyattribute überprüfen
@@ -2003,5 +2005,5 @@
 25:'      Hauptversion
 26:'      Nebenversion 
 27:'      Buildnummer
-28:'      Revision
+30:' Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 31:' übernehmen, indem Sie "*" eingeben:
