@@ -178,7 +178,7 @@ Correction-function for Euro 3 like  ARTEMIS slightly adapted (see FcCorr_Eu3ff.
 
 
 @Read GEN
-VECTO: Default values for the parameters are no longer in GEN/.VECTO are to be occupied in reading about SetDefault.
+VECTO: Default values for the parameters are no longer in GEN/.VECTO but are allocated when Read about SetDefault.
 @Error message in init()
 Read the Vehicle(KFZ)-specifications from 'KFZspez'
 if there are <DRAG> entries, then read FLD before MAP/MEP!
@@ -1434,7 +1434,7 @@ Errors/Warnings occuring every second
 Reset errors related to Power-calculation (towards performing the Gear-shifting model)
 @Emit Errors
 
-@Data per second
+@Per-second Data
 @Interruption of traction
 @Recuperation
 @Project HERO - BMW Mini Hybrid
@@ -1790,15 +1790,14 @@ Add to Gears-sequence
 @Acceleration-phases: Downshift?(Zurückschalten) suppressed
 @If within 6 seconds it Shifts back to the previous-Gear,
 @then maintain the previous-Gear throughout.
-If within 6 seconds it Shifts once above and once below the previous-Gear, 
-then maintain the previous-Gear throughout.
+@If within 6 seconds it Shifts once above and once below the previous-Gear, 
+@then maintain the previous-Gear throughout.
 @Checks Part 2 -------------------------------------
 @Gear-shift from 2 to 1 are suppressed when v > 2.5 m/s
 NEW LUZ 040210: Upshifting only when in 2nd Gear over Cluch-Revolutions
 at decelerations below 2.5 m/s, shift to idle
-wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
-If v <0.1 m/s for more than 1 sec then shift to Gear=0
-at Beschleunigungsvorgaengen below 1.5 m/s is used in 1 Gear is engaged
+@If v <0.1 m/s for more than 1 sec then shift to Gear=0
+@at Acceleration processes below 1.5 m/s, then shift to 1st Gear
 @checking if Revolutions above Nominal-Revolutions, then always Upshift
 @otherwise lack the power!
 @EV-Gear-shifting model (based on Cars(PKW))
@@ -1843,7 +1842,7 @@ then maintain the previous-Gear throughout.
 NEW LUZ 040210: Upshift only when in 2 Gear over Clutch-revolutions
 at decelerations below 2.5 m/s, shift to Idle
 If v < 0.1 m/s for more than 1 sec, then shift to Gear=0
-at acceleration processes below 1.5 m/s is used in first Gear is engaged
+@at Acceleration below 1.5 m/s, then shift to 1st Gear
 @Check whether Revolutions over Nominal-Revolutions, then should always Upshift, 
 @otherwise Power not enough!
 @Second 1 --------------------------------------
@@ -1920,7 +1919,7 @@ at decelerations below 1.5 m/s, shift to Idle
 Gear-shifting from 2nd to 1st is suppressed at v > 2.5 m/s
 At decelerations below 2.5 m/s, shift to Idle
 @If v < 0.1 m/s for  more than 1 sec, then shift to Gear=0
-@When Speed?(Beschleunigungsvorgaengen) below 1.5 m/s, then shift to 1st Gear
+@When Acceleration below 1.5 m/s, then shift to 1st Gear
 @Function calculating the Power easily for Gear-shift-model
 @Function calculating the Power easily for EV-shift-model
 @Revolutions-setting
@@ -2276,6 +2275,7 @@ for previous Allocation:
 
 @You can specify all the values or use the defaults for Build and Revision Numbers 
 @by entering "*" in them:
+
 
 
 

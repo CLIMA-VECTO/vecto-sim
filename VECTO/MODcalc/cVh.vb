@@ -2,7 +2,7 @@
 
 Public Class cVh
 
-    'Aus DRI-Datei
+    'From DRI file
     Private lV As List(Of Single)       'Ist-Geschw. in Zwischensekunden.
     Private lV0ogl As List(Of Single)   'Original DRI-Geschwindigkeit. Wird nicht geändert.
     Private lV0 As List(Of Single)      'DRI-Geschwindigkeit. Bei Geschw.-Reduktion in Zeitschritt t wird LV0(t+1) reduziert.
@@ -12,10 +12,10 @@ Public Class cVh
     Private lVairVres As List(Of Single)
     Private lVairBeta As List(Of Single)
 
-    'From DRI file
+    'Calculated
     Private la As List(Of Single)
 
-    'Calculated
+    'WegKor |@@| Route(Weg)Correct
     Private WegIst As Single
     Private Weg As List(Of Single)
     Private WegX As Integer
@@ -55,7 +55,7 @@ Public Class cVh
         Dim L As List(Of Double)
         Dim Val As Single
 
-        'Geschwindigkeit |@@| Route(Weg)Correct
+        'Speed
         If DRI.Vvorg Then
 
             L = DRI.Values(tDriComp.V)
@@ -66,7 +66,7 @@ Public Class cVh
                 If lV(s) < 0.001 Then lV(s) = 0 '<= aus Leistg
             Next
 
-            'Speed
+            'Original-speed is longer by 1
             lV0.Add(DRI.Values(tDriComp.V)(MODdata.tDim + 1))
             If DRI.Scycle Then
                 For s = 0 To MODdata.tDim + 1
@@ -76,7 +76,7 @@ Public Class cVh
                 lV0ogl.Add(DRI.Values(tDriComp.V)(MODdata.tDim + 1))
             End If
 
-            'Original-speed is longer by 1
+            'Strecke (aus Zwischensekunden sonst passiert Fehler) |@@| Segment (from Intermediate-seconds, otherwise Error)
             Weg.Add(lV(0))
             For s = 1 To MODdata.tDim
                 Weg.Add(Weg(s - 1) + lV(s))
@@ -84,7 +84,7 @@ Public Class cVh
 
         End If
 
-        'Steigung |@@| Segment (from Intermediate-seconds, otherwise Error)
+        'Slope
         If DRI.GradVorg Then
             L = DRI.Values(tDriComp.Grad)
             For s = 0 To MODdata.tDim
@@ -96,7 +96,7 @@ Public Class cVh
             Next
         End If
 
-        'Slope
+        'Gear - but not Averaged, rather Gang(t) = DRI.Gear(t)
         If DRI.Gvorg Then
             L = DRI.Values(tDriComp.Gears)
             For s = 0 To MODdata.tDim
@@ -109,7 +109,7 @@ Public Class cVh
             Next
         End If
 
-        'Gear - but not Averaged, rather Gang(t) = DRI.Gear(t)
+        'Padd
         If DRI.PaddVorg Then
             L = DRI.Values(tDriComp.Padd)
             For s = 0 To MODdata.tDim
@@ -121,7 +121,7 @@ Public Class cVh
             Next
         End If
 
-        'Beschl. berechnen
+        'Calculate Acceleration
         If DRI.Vvorg Then
             L = DRI.Values(tDriComp.V)
             For s = 0 To MODdata.tDim
@@ -129,7 +129,7 @@ Public Class cVh
             Next
         End If
 
-        'Calculate Acceleration
+        'Vair specifications: Not in Intermediate-seconds!
         If DRI.VairVorg Then
 
             L = DRI.Values(tDriComp.VairVres)
@@ -154,7 +154,7 @@ Public Class cVh
         Dim s As Integer
         Dim L As List(Of Double)
 
-        'Vair specifications: Not in Intermediate-seconds!
+        'Speed
         If DRI.Vvorg Then
 
             L = DRI.Values(tDriComp.V)
@@ -166,7 +166,7 @@ Public Class cVh
                 If lV(s) < 0.001 Then lV(s) = 0 '<= aus Leistg
             Next
 
-            'Speed
+            'Strecke  |@@| Segment
             Weg.Add(lV(0))
             For s = 1 To MODdata.tDim
                 Weg.Add(Weg(s - 1) + lV(s))
@@ -174,7 +174,7 @@ Public Class cVh
 
         End If
 
-        'Steigung |@@| Segment
+        'Slope
         If DRI.GradVorg Then
             L = DRI.Values(tDriComp.Grad)
             For s = 0 To MODdata.tDim
@@ -186,7 +186,7 @@ Public Class cVh
             Next
         End If
 
-        'Slope
+        'Gear - not Averaged, rather Gear(t) = DRI.Gear(t)
         If DRI.Gvorg Then
             L = DRI.Values(tDriComp.Gears)
             For s = 0 To MODdata.tDim
@@ -199,7 +199,7 @@ Public Class cVh
             Next
         End If
 
-        'Gear - not Averaged, rather Gear(t) = DRI.Gear(t)
+        'Padd
         If DRI.PaddVorg Then
             L = DRI.Values(tDriComp.Padd)
             For s = 0 To MODdata.tDim
@@ -211,7 +211,7 @@ Public Class cVh
             Next
         End If
 
-        'Beschl. berechnen
+        'Calculate Acceleration
         If DRI.Vvorg Then
             la.Add(DRI.Values(tDriComp.V)(1) - DRI.Values(tDriComp.V)(0))
             For s = 1 To MODdata.tDim - 1
@@ -254,7 +254,7 @@ Public Class cVh
 
     Public Sub DistCorrection(ByVal t As Integer)
 
-        'Calculate Acceleration
+        'TODO: If veh faster than cycle ...
 
         Dim v As Single
         Dim a As Single
@@ -270,13 +270,13 @@ Public Class cVh
 
 
 
-            'TODO: If veh faster than cycle ...
+            'Falls Zeitschritt wiederholen näher an Wegvorgabe als aktueller Weg => Zeitschritt wiederholen |@@| If the repeating Time-step is closer to the Specified-route than the Actual-route => Repeat Time-step
             If (Math.Abs(WegIst + Vsoll(t) - Weg(WegX)) < Math.Abs(WegIst - Weg(WegX))) And v > 0.1 Then
 
                 Duplicate(t + 1)
                 MODdata.tDim += 1
 
-                'Falls nächsten Zeitschritt löschen näher an Wegvorgabe als aktueller Weg => Nächsten Zeitschritt löschen |@@| If the repeating Time-step is closer to the Specified-route than the Actual-route => Repeat Time-step
+                'Falls nächsten Zeitschritt löschen näher an Wegvorgabe als aktueller Weg => Nächsten Zeitschritt löschen |@@| If the next Time-step to Delete closer to specified Route than the Actual-route => Delete Next Time-step
                 'ElseIf WegX < MODdata.tDimOgl - 1 AndAlso t < MODdata.tDim - 1 AndAlso WegIst > Weg(WegX + 1) AndAlso Math.Abs(WegIst - Weg(WegX + 1)) <= Math.Abs(WegIst - Weg(WegX)) Then
 
                 '    Do
@@ -288,7 +288,7 @@ Public Class cVh
 
             Else
 
-                'Keine Korrektur |@@| If the next Time-step to Delete closer to specified Route than the Actual-route => Delete Next Time-step
+                'No correction
                 WegX += 1
 
             End If

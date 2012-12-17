@@ -32,7 +32,7 @@ Module M_Lese
             Return False
         End Try
 
-        'VECTO: Defaultwerte für Parameter die nicht mehr in der .GEN/.VECTO sind werden beim Einlesen über SetDefault belegt. |@@| VECTO: Default values for the parameters are no longer in GEN/.VECTO are to be occupied in reading about SetDefault.
+        'VECTO: Defaultwerte für Parameter die nicht mehr in der .GEN/.VECTO sind werden beim Einlesen über SetDefault belegt. |@@| VECTO: Default values for the parameters are no longer in GEN/.VECTO but are allocated when Read about SetDefault.
 
 
         CycleFiles.Clear()
