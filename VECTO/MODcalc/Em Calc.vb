@@ -51,7 +51,7 @@ Public Class cEm
                             'Delaunay
                             EmComp(KV.Key).RawVals.Add(MAP.fFCdelaunay_Intp(MODdata.nn(i), MODdata.Pe(i)))
                         Else
-                            'Normale Interpolation
+                            'Normal interpolation
                             EmComp(KV.Key).RawVals.Add(MAP.fShep_Intp(KV.Value))
                         End If
 
@@ -98,7 +98,7 @@ Public Class cEm
 
                 EmL = New List(Of Single)
 
-                'Ersten zwei sekunden keine Korrektur:
+                'First two seconds, no correction:
                 EmL.Add(KV.Value.RawVals(0))
 
                 If MODdata.tDim > 0 Then
@@ -182,7 +182,7 @@ Public Class cEm
             Return False
         End If
 
-        'Dictionaries erstellen
+        'Create Dictionaries
         For Each EmKV0 In DRI.EmComponents
             If EmComp.ContainsKey(EmKV0.Key) Then
                 EmMesMW.Add(EmKV0.Key, 0)
@@ -205,7 +205,7 @@ Public Class cEm
             TCMW.Add(TCKV.Key, 0)
         Next
 
-        'Summen ermitteln
+        'Calculate sums
         For Each EAcomp0 In EAcomp
 
             DriEmRef = DRI.EmComponents(EAcomp0)
@@ -217,7 +217,7 @@ Public Class cEm
 
         Next
 
-        'Mittelwerte
+        'Mean-values
         For Each EAcomp0 In EAcomp
 
             EmMesMW(EAcomp0) /= MODdata.tDim + 1
@@ -240,7 +240,7 @@ Public Class cEm
         file.WriteLine("Cycle average results")
         file.WriteLine("EmComp,Unit,Meas,Sim,Diff,Delta,R" & ChrW(178))
 
-        '************************************ 'Zyklus-Mittelwerte '************************************
+        '************************************ 'Cycle Mean-values ************************************
         For Each EAcomp0 In EAcomp
 
             s.Length = 0
@@ -255,13 +255,13 @@ Public Class cEm
                 s.Append("," & DRI.EmComponents(EAcomp0).Unit)
             End If
 
-            '***** Messwert
+            '***** Measurement-value
             s.Append("," & EmMesMW(EAcomp0))
 
-            '***** PHEM-Wert
+            '***** PHEM value
             s.Append("," & EmSimMW(EAcomp0))
 
-            '***** Diff - ACHTUNG: Keine Pnenn-Normierung! Vorsicht bei Dynamik-Korrektur!
+            '***** Diff - CAUTION: No Pnom normalization! Beware of the Dynamic-correction!
             s.Append("," & EmSimMW(EAcomp0) - EmMesMW(EAcomp0))
 
             '***** Delta
@@ -276,23 +276,23 @@ Public Class cEm
             a = New List(Of Double)
             b = New List(Of Double)
 
-            'Über x Sekunden gemittelte Werte berechnen und sofort au
+            'Average values over x seconds and imediately put au
             For t = isinterv To MODdata.tDim Step isinterv
 
-                'Null setzen
+                'Set to zero
                 EmMesMW(EAcomp0) = 0
                 EmSimMW(EAcomp0) = 0
 
-                'Aufsummieren
+                'Aufsummieren |@@| Accumulate(Aufsummieren)
                 For t1 = (t - isinterv) To t - 1
                     EmMesMW(EAcomp0) += DRI.EmComponents(EAcomp0).RawVals(t1) / isinterv
                     EmSimMW(EAcomp0) += EmComp(EAcomp0).FinalVals(t1) / isinterv
                 Next
 
-                'Messwert
+                'Measurement-value
                 a.Add(CDbl(EmMesMW(EAcomp0)))
 
-                'PHEM-Wert
+                'PHEM-value
                 b.Add(CDbl(EmSimMW(EAcomp0)))
 
             Next
@@ -308,7 +308,7 @@ Public Class cEm
 
         Next
 
-        '************************************ Modale Ausgabe '************************************
+        '************************************ Dump Modal '************************************
         file.WriteLine(" ")
         file.WriteLine("Modal results averaged over " & isinterv & " seconds.")
 
@@ -321,15 +321,15 @@ Public Class cEm
 
             DriEmRef = DRI.EmComponents(EAcomp0)
 
-            'Messwert
+            'Measurement-value
             s.Append("," & DriEmRef.Name & "_Meas")
             sU.Append("," & DriEmRef.Unit)
 
-            'PHEM-Wert
+            'PHEM-value
             s.Append("," & EmComp(EAcomp0).Name & "_PHEM")
             sU.Append("," & EmComp(EAcomp0).Unit)
 
-            'Diff - ACHTUNG: Keine Pnenn-Normierung! Vorsicht bei Dynamik-Korrektur!
+            'Diff - CAUTION: No Pnominal-normalized! Beware of the Dynamic-correction!
             s.Append("," & DriEmRef.Name & "_Diff")
             If UnitsErr.ContainsKey(EAcomp0) Then
                 sU.Append(",?!")
@@ -348,14 +348,14 @@ Public Class cEm
             sU.Append("," & "-")
         Next
 
-        'Header und Units schreiben
+        'Header and write units
         file.WriteLine(s.ToString)
         file.WriteLine(sU.ToString)
 
-        'Über x Sekunden gemittelte Werte berechnen und sofort au
+        'Average Values over x seconds and imediately set au
         For t = isinterv To MODdata.tDim Step isinterv
 
-            'Null setzen
+            'to zero
             For Each EAcomp0 In EAcomp
                 EmMesMW(EAcomp0) = 0
                 EmSimMW(EAcomp0) = 0
@@ -368,7 +368,7 @@ Public Class cEm
                 TCMW(TCKV.Key) = 0
             Next
 
-            'Aufsummieren
+            'Aufsummieren |@@| Accumulati(Aufsummieren)
             For t1 = (t - isinterv) To t - 1
 
                 pe += MODdata.Pe(t1) / isinterv
@@ -385,7 +385,7 @@ Public Class cEm
 
             Next
 
-            'Ausgabe
+            'Output
             s.Length = 0
 
             s.Append(CStr(DRI.t0 + t - ((isinterv - 1) / 2) - 1))
@@ -396,10 +396,10 @@ Public Class cEm
 
             For Each EAcomp0 In EAcomp
 
-                'Messwert
+                'Measurement-values
                 s.Append("," & EmMesMW(EAcomp0))
 
-                'PHEM-Wert
+                'PHEM-value
                 s.Append("," & EmSimMW(EAcomp0))
 
                 'Diff
@@ -560,8 +560,8 @@ Public Class cTC
         For i = 1 To MODdata.tDim
 
             Pfind = 0
-            'C      Lastwechsel (allgemeine Bedingung ausser bei Intervallen mit
-            'C      Konstantfahrt:
+            'C      Lastwechsel (allgemeine Bedingung ausser bei Intervallen mit |@@| Load-cycle(lastwechsel) (general Qualification(Bedingung ) except for Intervals with
+            'C      Konstantfahrt: |@@| Constant-traveling:
             'C
             If i = MODdata.tDim Then
                 LWja = 0
@@ -569,10 +569,10 @@ Public Class cTC
                 LWja = (Pe(i + 1) - Pe(i)) * (Pe(i) - Pe(i - 1))
             End If
             'C
-            'C       Damit werden Trapezfoermige Zyklen nicht als lastwechsel erkannt
-            'C       da LWje = 0. In diesem fall wird voraus der naechste Wert gesucht,
-            'C       der nicht gleich Pe(jz) ist. Dieser wird anstelle von Pe(jz+1)
-            'C       gesetzt:
+            'C       Damit werden Trapezfoermige Zyklen nicht als lastwechsel erkannt |@@| Thus Trapezoid-Cycles are not recognized as Load-cycle(lastwechsel)
+            'C       da LWje = 0. In diesem fall wird voraus der naechste Wert gesucht, |@@| since LWje = 0. In this case, search ahead of next Value,
+            'C       der nicht gleich Pe(jz) ist. Dieser wird anstelle von Pe(jz+1) |@@| which is not equal to Pe(jz).
+            'C       gesetzt: |@@| This will replace Pe(jz +1):
             If i = MODdata.tDim Then
                 For js = i + 2 To MODdata.tDim
                     If (Pe(js) <> Pe(i)) Then
@@ -600,22 +600,22 @@ Public Class cTC
             End If
 
             'C
-            'C      lastwechsel werden nur als solche gezaehlt, wenn sie mehr als 0.05% von
-            'C      Pnenn betragen (sonst ist Ergebnis viel zu wackelig):
-            'C       (Lastwechsel wird gezaehlt, wenn LWja < 0)
+            'C      lastwechsel werden nur als solche gezaehlt, wenn sie mehr als 0.05% von |@@| Load-cycles(lastwechsel) are accounted as such only if they exceed 0.05% of Pnom
+            'C      Pnenn betragen (sonst ist Ergebnis viel zu wackelig): |@@| otherwise Outcome is too unstable):
+            'C       (Lastwechsel wird gezaehlt, wenn LWja < 0) |@@| accounted as Load-cycle(lastwechsel) when LWja < 0)
             'C
             If (LWja > -0.0005) Then LWja = 0.1
             'C
-            'C     (1) Mittlere Amplitude vom Pe-Verlauf ("Ampl")
-            'C         Zwischenrechnung fue Zyklusmittelwert:
+            'C     (1) Mittlere Amplitude vom Pe-Verlauf ("Ampl") |@@| 1) Mean Amplitude of the running(Verlauf) Pe ("Ampl")
+            'C         Zwischenrechnung fue Zyklusmittelwert: |@@| Intermediate calculation of Cycle-average:
             'C
             If (LWja < 0) Then
                 LWzahl = LWzahl + 1
                 maxmin(LWzahl) = Pe(i)
             End If
             'C
-            'C       Berechnung der mittleren Amplitude in 3 Sekunden vor Emission (Ampl3s)
-            'C       und der Anzahl der Pe-Sekundenschritten ueber 3% der Nennleistung
+            'C       Berechnung der mittleren Amplitude in 3 Sekunden vor Emission (Ampl3s) |@@| Calculate the mean Amplitude in 3 seconds of(vor) Emissions (Ampl3s)
+            'C       and the number of Second-steps where Pe is 3% above the Nominal-power
             'C       (LW3p3s):
             LW3p3s(i) = 0
             If (i < 2) Then
@@ -647,7 +647,7 @@ Public Class cTC
 
         For i = 0 To MODdata.tDim
             'C
-            'C     (2) Aenderung der aktuellen Motorleistung (dP_2s):
+            'C     (2) Change the current Engine-power (dP_2s):
             'C
             If (i = 0) Then
                 dP_2s(i) = 0
@@ -661,7 +661,7 @@ Public Class cTC
             If (Ppos(i) <= 0) Then
                 Ppos(i) = 0
             End If
-            'C     Mittelwert 3 sec. vor Emission:
+            'C     Mittelwert 3 sec. vor Emission: |@@| Average 3 sec of(vor) Emission:
             If (i >= 2) Then
                 Ppos3s(i) = (Ppos(i) + Ppos(i - 1) + Ppos(i - 2)) / 3
             ElseIf (i = 2) Then
@@ -669,7 +669,7 @@ Public Class cTC
             ElseIf (i = 1) Then
                 Ppos3s(i) = Ppos(i)
             End If
-            'C    Gezaehlt nur bei dynamischem betrieb:
+            'C    Counted only in dynamic operation:
             xcheck = dP_2s(i) * dP_2s(i)
             If (xcheck >= 0.0000001) Then
                 Ppos3s(i) = Ppos3s(i)
@@ -678,13 +678,13 @@ Public Class cTC
             End If
             'C
             'C
-            'C     (4) Mittelwert der negativen Motorleistung ("PnegMW"):
+            'C     (4) Average of the negative Engine-power ("PnegMW"):
             'C
             Pneg(i) = Pe(i)
             If (Pneg(i) >= 0) Then
                 Pneg(i) = 0
             End If
-            'C     Mittelwert 3 sec. vor Emission:
+            'C     Mittelwert 3 sec. vor Emission: |@@| Average 3 sec of(vor) Emission:
             If (i >= 2) Then
                 Pneg3s(i) = (Pneg(i) + Pneg(i - 1) + Pneg(i - 2)) / 3
             ElseIf (i = 2) Then
@@ -692,7 +692,7 @@ Public Class cTC
             ElseIf (i = 1) Then
                 Pneg3s(i) = Pneg(i)
             End If
-            'C    Gezaehlt nur bei dynamischem betrieb:
+            'C    Counted only in dynamic operation:
             xcheck = dP_2s(i) * dP_2s(i)
             If (xcheck >= 0.0000001) Then
                 Pneg3s(i) = Pneg3s(i)
@@ -704,17 +704,17 @@ Public Class cTC
 
         'C
         'C
-        'C     Berechnung der absoluten Dynamikkenngroessen:
-        'C      Addition der Amplituden von Pe (1. Pe-Wert
-        'C      wird fuer Amplitude auch als Maxima bzw. Minima gezaehlt)
-        'C    1. Sekunde:
+        'C     Berechnung der absoluten Dynamikkenngroessen: |@@| Calculation of absolute Dynamic-map sizes:
+        'C      Addition of Pe Amplitudes (1 Pe-Value
+        'C      is counted also for Maxima and for Minima Amplitudes )
+        'C    First Second:
         If (LWzahl >= 1) Then
 
             'C
-            'C     2. Sekunde bis Ende:
+            'C     2. Second to End:
             For i = 2 To LWzahl
                 Ampl0(i) = maxmin(i) - maxmin(i - 1)
-                'C        Absolutwert:
+                'C        Absolute-value:
                 If (Ampl0(i) < 0) Then
                     Ampl0(i) = Ampl0(i) * (-1)
                 End If
@@ -789,7 +789,7 @@ Public Class cTC
 
         Next i
 
-        'Geschw./Beschl.-abhängige Parameter nur wenn nicht Eng-Only
+        'Speed/Accel-dependent parameters only when not Eng-Only
         If Not GEN.VehMode = tVehMode.EngineOnly Then
             For i = 0 To MODdata.tDim
                 dynV(i) = MODdata.Vh.V(i)
@@ -802,14 +802,14 @@ Public Class cTC
             Next i
         End If
 
-        'Dynamikparameter als Differenz zu Dynamik in Kennfeld
-        '   ...war früher hier. Jetzt eigene Methode weil bei KF-Erstellung ungültig
+        'Dynamic-parameters as the Differential of Dynamics of the Map
+        '   ...was here before. Now in its own method because of KF-creation invalidity
 
         Calculated = True
 
     End Sub
 
-    'Dynamikparameter als Differenz zu Dynamik in Kennfeld:
+    'Dynamic parameters as the Differential of Dynamics in the Map:
     Public Sub CalcDiff()
         Dim i As Integer
 
@@ -835,7 +835,7 @@ Public Class cTC
 End Class
 
 ''' <summary>
-''' Klasse zur Berchnung der Abgastemperaturen
+''' Class for calculating the Exhaust-temperatures
 ''' </summary>
 ''' <remarks></remarks>
 Public Class cEXS
@@ -843,7 +843,7 @@ Public Class cEXS
     Private TempMod() As cTempMod
     Private ModAnz As Int16
 
-    '! Felder für Größen aus PHEM Hauptprogramm
+    '! Felder für Größen aus PHEM Hauptprogramm |@@| Fields for Quantities from PHEM main-program
     Private vehspe(izykt) As Single
     Private nnorm As List(Of Single)
     Private p_norm As List(Of Single)
@@ -892,8 +892,8 @@ Public Class cEXS
     Public Xis(100) As Single
     Public Yis(100) As Single
 
-    '**** Einlesen von tgas aus .npi (Projekt HERO) ****
-    ' => überschreibt tgas(jz) aus HtMass()
+    '**** Reading about tgas from .npi (Project HERO) ****
+    ' => überschreibt tgas(jz) aus HtMass() |@@| overwrites tgas(jz) over(aus) HtMass()
     ' Luz/Rexeis 16.05.2011
     Private t_gas1npi() As Single
     Private t_gas2npi() As Single
@@ -909,16 +909,16 @@ Public Class cEXS
     End Function
 
     ''' <summary>
-    ''' Hauptroutine für EXS Modul
+    ''' Main-routine for EXS module
     ''' </summary>
     ''' <remarks></remarks>
     Public Function Exs_Main() As Boolean 'aufzurufen im PHEM-Ablauf nach Dynamikkorrektur und vor Summenbildung
-        '! Aufruf von Exs_Main(true) -> Developer Version ohne PHEM Hauptprogramm
+        '! Calling from Exs_Main(true) -> Developer Version without PHEM main-program
 
         Dim ii As Long, ij As Long, Diff As Single
         Dim t1 As Long
 
-        '! Felder für Größen aus exs-File
+        '! Fields for Quantities from exs-file
         Dim iMod As Int16, iSchad As Int16
         Dim efm_mode As Int16, cap_norm As Single, t_inl As Single, p_rel_inl As Single, fp4_efm As Single
         Dim dummy As String = ""
@@ -948,33 +948,33 @@ Public Class cEXS
         MsgSrc = "EmCalc/EXS/Main"
 
         '------------------------------------------------------------------------------------------
-        'Allgemeine Konstanten
+        'General Constants
         Pi_ = 3.1416
         St_Boltz = 0.0000000567 'Stephan-Boltzmann Konstante
         R_air = 287.0 '!Gaskonstante Luft [J/(kg*K)]
-        '!Stoffwerte Abgas:
-        '!unempfindlich gg. lambda, siehe "Stoffwerte_vollständigeVerbrennung_neu.xls"
+        '!Exhaust Physical-values:
+        '!insensitive vs. lambda, see "Stoffwerte_vollständigeVerbrennung_neu.xls"
         R_exh = 288.2 '!Gaskonstante Abgas [J/(kg*K)]
-        'cp_exh = 1054.0 '!Wärmekapazität Abgas [J/(kg*K)], wird nicht mehr verwendet weil jetzt direkt in Abh. von T und Lambda berechnet
+        'cp_exh = 1054.0 '!Exhaust heat-capacity [J/(kg*K)] is no longer used because it is now calculated directly in Abh from T and Lambda
         Pr_exh = 0.73 '!Prandtlzahl [-]
         '!
         cp_steel = 460.0 '!Wärmekapazität Edelstahl [J/(kg*K)]
         rho_steel = 7860.0 '!Dichte Edelstahl [[kg/m3]
         hc_soot = 0.15 '!Wärmeleitfähigkeit Russ [W/(mK)] "in loser Schichtung"
-        '!Anmerkung: Mittelwertwert aus Internetrecherche, in Literatur keine Angaben gefunden
-        '!kalibriert anhand Test an Thermoelement unter Annahme von Schichtdicke 0.1mm
+        '!Note: Average-value from searching the Internet, found no information in literature
+        '!kalibriert anhand Test an Thermoelement unter Annahme von Schichtdicke 0.1mm |@@| calibrated based on Test Thermocouple assuming Coating-thickness(Schichtdicke) 0.1mm
 
-        'Reaktionsenthalpien in J/mol
+        'Reaktionsenthalpien in J/mol |@@| Reaction-enthalpies in J/mol
         H_reak_co = 283200.0
         H_reak_nox = 1928000.0
         H_reak_hc = 483000.0
 
-        'Molmassen
+        'Molecular-weights
         M_co = 28.0
         M_nox = 46.0
         M_hc = 42.0
 
-        'Kompatibilität mit alter EXS-Strkutur. Bevor neues Konzept für Em-Komponenten mit cMAP-Klasse, tMapComp, etc. eingeführt wurde
+        'Compatibility with old EXS-structure Introduced before the new Concept for Em-components with cMap-class tMAP-class, etc.
         eNOxOK = MODdata.Em.EmDefComp.ContainsKey(tMapComp.NOx)
         eHCOK = MODdata.Em.EmDefComp.ContainsKey(tMapComp.HC)
         eCOOK = MODdata.Em.EmDefComp.ContainsKey(tMapComp.CO)
@@ -982,7 +982,7 @@ Public Class cEXS
         eEk1OK = MODdata.Em.EmDefComp.ContainsKey(tMapComp.PN)
         eEk2OK = MODdata.Em.EmDefComp.ContainsKey(tMapComp.NO)
 
-        'Verweise auf Emissionen: Gegebene falls vorhanden sonst die berechneten
+        'References for Emissions: The given, if available, otherwise the calculated
         If DRI.EmComponents.ContainsKey(sKey.MAP.HC) Then
             HC = DRI.EmComponents(sKey.MAP.HC).FinalVals
         Else
@@ -1003,7 +1003,7 @@ Public Class cEXS
 
         t1 = MODdata.tDim
 
-        'Dimensionieren:
+        'Dimensioning:
         ReDim vehspe(t1)
 
 
@@ -1022,8 +1022,8 @@ Public Class cEXS
 
         n_iter = 0 'Zählvariable für Iterationen zur Berechnung der zyklusrepräsentativen Starttemperaturen
 
-        'Übergabe der relevanten Größen aus dem PHEM Hauptprogramm
-        'In DEV direkt aus der Datei *.phe eingelesen
+        'Übergabe der relevanten Größen aus dem PHEM Hauptprogramm |@@| Return of the relevant Quantities from(aus) the PHEM main-program
+        'Read in DEV directly from the *. phe file
 
         PathTer = MODdata.ModOutpName & ".ter"   'Left(JobFile, Len(JobFile) - 4) & ".ter"
         p_rated = VEH.Pnenn
@@ -1048,12 +1048,12 @@ Public Class cEXS
             lambda = MODdata.Em.EmDefComp(tMapComp.Lambda).FinalVals
         Else
             LambdaGegJa = False
-            'Wird weiter unten belegt weil mpexh vorhanden sein muss
+            'Wird weiter unten belegt weil mpexh vorhanden sein muss |@@| It is allocated below because there must be further mpexh
             lambda = New List(Of Single)
         End If
 
         '------------------------------------------------------------------------------------------
-        'Anfang exs-File einlesen
+        'Begin readning exs-file
         If Not DatExs.OpenRead(GEN.PathExs) Then
             WorkerMsg(tMsgID.Err, "Failed to open file '" & GEN.PathExs & "'!", MsgSrc)
             DatExs = Nothing
@@ -1069,23 +1069,23 @@ Public Class cEXS
         cap_norm = CSng(DatExs.ReadLine(0))
         t_inl = CSng(DatExs.ReadLine(0))
         p_rel_inl = CSng(DatExs.ReadLine(0))
-        'dummy = DatExs.ReadLine(0) 'alte dummy zeilen: auf exs-file kompatibilität achten
+        'dummy = DatExs.ReadLine(0) 'old dummy line: caution for exs-file compatibility
         'dummy = DatExs.ReadLine(0)
         'dummy = DatExs.ReadLine(0)
         fp4_efm = CSng(DatExs.ReadLine(0))
 
         cap = cap_norm * p_rated    'Hubraum in [liter]
 
-        'Initialisieren der entsprechenden Anzahl an Modulen
+        'Initialize the respective Number of Modules
         ReDim TempMod(ModAnz)
         For iMod = 1 To ModAnz
             TempMod(iMod) = New cTempMod(iMod, Me)
         Next
 
-        'Lesen der Datenblöcke je Modul
+        'Reading of the Data-blocks for each Module
         For iMod = 1 To ModAnz
             If Not TempMod(iMod).Read(DatExs) Then 'Dabei werden auch KonvMods initialisiert & Fileköpfe der entsprechenden Ausgabefiles geschrieben
-                'Fehlermelderung in TempMod(iMod).Read(DatExs)
+                'Error-message in TempMod(iMod).Read(DatExs)
                 DatExs.Close()
                 DatExs = Nothing
                 Return False
@@ -1093,11 +1093,11 @@ Public Class cEXS
         Next
 
         DatExs.Close()
-        'Ende exs-File einlesen
+        'End reading exs-file
         '------------------------------------------------------------------------------------------
 
         If GEN.CoolantsimJa Then
-            'Anfang csy-File einlesen
+            'Beginning reading csy-file
             If Not DatCsy.OpenRead(GEN.CoolantSimPath) Then
                 WorkerMsg(tMsgID.Err, "Failed to open file '" & GEN.CoolantSimPath & "'!", MsgSrc)
                 Return False
@@ -1118,7 +1118,7 @@ Public Class cEXS
             t_start_m1_m2 = CSng(DatCsy.ReadLine(0)) 'Starttemperatur für Masse 1 und 2
 
             DatCsy.Close()
-            'Ende csy-File einlesen
+            'End reading csy-file
             '------------------------------------------------------------------------------------------
         End If
 
@@ -1130,13 +1130,13 @@ Public Class cEXS
 
 lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
         '------------------------------------------------------------------------------------------
-        'Berechnungsschleife: je Zeitschritt /je Modul: 1. Temperaturen, 2.Konvertierungen
+        'Calculation loop: Per Time-step / per Module: 1. Temperatures, 2. Conversions
         While True
-            'Sekündliche Ergebnisse werden in jeder Iteration ausgegeben
+            'Display per-second Results on each iteration Results
             If Not (PHEMmode = tPHEMmode.ModeADVANCE) Then
                 If Not (PHEMmode = tPHEMmode.ModeBATCH) Or Cfg.ModOut Then
 
-                    ' Header *.ter schreiben
+                    ' Write Header *.ter
                     DatTer.OpenWrite(PathTer, ",")
                     DatTer.WriteLine("result-file for temperatures in the exhaust system")
                     DatTer.WriteLine("VECTO " & VECTOvers)
@@ -1156,7 +1156,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                     DatTer.WriteLine(line1)
                     DatTer.WriteLine(line2)
 
-                    ' Header der KonvMods schreiben
+                    ' Write the Header for KonvMods
                     For ii = 1 To ModAnz
                         If TempMod(ii).ModTyp = 1 Or TempMod(ii).ModTyp = 2 Then
                             TempMod(ii).KonvMod.Header()
@@ -1166,12 +1166,12 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 End If
             End If
 
-            'startwerte für kühlersimulation:
+            'Start-values ​​for Cooling-system simulation:
             t_mass1(0) = t_start_m1_m2
             t_mass2(0) = t_start_m1_m2
 
 
-            'Wärmeeintrag ins Kühlsystem (Kennfeld)
+            'Heat transfer into the Cooling-system (Map)
             If GEN.CoolantsimJa Then
                 If MODdata.Em.EmDefComp.ContainsKey(tMapComp.Qp_coolant) Then
                     qp_coolant = MODdata.Em.EmDefComp(tMapComp.Qp_coolant).FinalVals
@@ -1186,26 +1186,26 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
 
             For jz = 0 To t1
 
-                'Kühlsystem Simulation
+                'Cooling-System Simulation
                 If GEN.CoolantsimJa Then
-                    'Wärmeeinträge in Massen 1 und 2
+                    'Heat inputs in Masses 1 and 2
                     qp_coolant1(jz) = ratio_h_to_m1 * qp_coolant(jz)
                     qp_coolant2(jz) = ratio_h_to_m2 * qp_coolant(jz)
 
-                    'Wärmeübergang Masse 1 und 2 ins Kühlsystem
+                    'The Heat-transfer Mass 1 and 2 for Cooling -system
                     qp_loss1(jz) = alpha_A1 * (t_mass1(jz) - t_coolant)
                     qp_loss2(jz) = alpha_A2 * (t_mass2(jz) - t_coolant)
 
-                    'Massentemperaturen für nächsten Zeitschritt
+                    'Bulk-temperatures for the next Time-step
                     If jz <> t1 Then
                         t_mass1(jz + 1) = t_mass1(jz) + (qp_coolant1(jz) - qp_loss1(jz)) / (eng_mass1 * h_cap_mass1)
                         t_mass2(jz + 1) = t_mass2(jz) + (qp_coolant2(jz) - qp_loss2(jz)) / (eng_mass2 * h_cap_mass2)
                     End If
 
-                    'Wärmeverlust nach außen
+                    'Heat-loss to the outside
                     qp_out(jz) = 0.21 * vehspe(jz) * surf_engine * (surf_temp_eng - t_amb)
 
-                    'Gesamtwärmeeintrag ins Kühlsystem (Ausgabewert der Kühlersimulation)
+                    'Total Heat-input into the Cooling-system (Output value of the simulation)
                     qp_loss(jz) = qp_loss1(jz) + qp_loss2(jz) - qp_out(jz)
                 End If
 
@@ -1215,20 +1215,20 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                     mpexh(jz) = 0
                 Else
                     If efm_mode = 0 Then
-                        'Berechnung Abgasmassenstrom aus gegebenem Kraftstoffverbrauch und Lambda
-                        'nur zulässig bei Motoren ohne AGR
-                        'Einheit mpexh.......[kg/s]
-                        'Einheit Vpexh.......[m3/s]
-                        'Fall 1: Berechnung aus Verbrauch und lambda
+                        'Calculation of the Exhaust-gas-flow from a given Fuel-consumption and lambda
+                        'Permitted only for engines without EGR
+                        'Unit mpexh ....... [kg/s]
+                        'Unit Vpexh ....... [m3/s]
+                        'Case 1: Calculation of Consumption and lambda
                         mpexh_fc = ((14.7 * lambda(jz)) + 1) * fc(jz) / 3600000
-                        '!Fall 2: Berechnung aus durch Motor gepumpter Luftmenge
+                        '!Case 2: Calculation of pumped Airflow through engine
                         Vpexh_mot = ((cap / 1000) / 2) * (rpm(jz) / 60)
                         zaehler = ((1 + (p_rel_inl / 1000)) * 100000) * Vpexh_mot
                         nenner = (R_air * (t_inl + 273.15))
                         mpexh_mot = zaehler / nenner
                         mpexh(jz) = Math.Max(mpexh_fc, mpexh_mot)
                     ElseIf efm_mode = 1 Then
-                        'Es fehlt: Methodik Massenstromberechnung für AGR Motoren BMW HERO Projekt
+                        'Missing: Methodology for Mass-flow calculation for EGR Engines BMW HERO Project
                         mpexh(jz) = MODdata.Em.EmDefComp(tMapComp.MassFlow).FinalVals(jz)
                     Else
                         WorkerMsg(tMsgID.Err, "Ungültige Auswahl für Abgasmassenstromberechnung", MsgSrc)
@@ -1236,7 +1236,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                     End If
                 End If
 
-                'Lambda berechnen falls nicht explizit gegeben
+                'Calculate Lambda  if not explicitly given
                 If Not LambdaGegJa Then
                     If fc(jz) < 1 Then
                         lambda.Add(1000)
@@ -1249,8 +1249,8 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 '-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-
                 '------------------------------------------------------------------------------------------
 
-                'Erstes Modul im Abgasstrang kann kein katalytisch aktives Element sein,
-                'daher sind die Emissionen immer gleich der Rohemissionen aus dem PHEM-Hauptprogramm
+                'The First Module in the Exhausts-system may not be a catalytically active Element,
+                'therefore, emissions are always equal to the untreated emissions from the PHEM main-program
                 If eNOxOK Then TempMod(1).eEmKomp(2, jz) = NOx(jz)
                 If eHCOK Then TempMod(1).eEmKomp(3, jz) = HC(jz)
                 If eCOOK Then TempMod(1).eEmKomp(4, jz) = CO(jz)
@@ -1266,15 +1266,15 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                         TempMod(iMod).KonvMod.Konv(jz) 'Berechnung Konvertierung der Emissionskomponenten
 
                         If (TempMod(iMod).ModTyp = 2) Then
-                            'Qp_reak berechnen: massenstrom * konvertierungsrate * reaktionsenthalpie / molmasse
+                            'Calculate Qp_reak: Mass-flow-rate * Conversion * Reactive-enthalpy / molar-mass
                             TempMod(iMod).Qp_reak(jz) = CO(jz) / 3600 * TempMod(iMod).KonvMod.KonvRate(tMapComp.CO)(jz) * H_reak_co / M_co + _
                                 HC(jz) / 3600 * TempMod(iMod).KonvMod.KonvRate(tMapComp.HC)(jz) * H_reak_hc / M_hc + _
                                 NOx(jz) / 3600 * TempMod(iMod).KonvMod.KonvRate(tMapComp.NOx)(jz) * H_reak_nox / M_nox
-                            'Schadstoffkomponente berechnen
+                            'Compute Pollutant-components
                             For iSchad = 2 To 8
                                 TempMod(iMod).eEmKomp(iSchad, jz) = TempMod(iMod - 1).eEmKomp(iSchad, jz)
                             Next iSchad
-                            'Konvertierung von NOx, CO, HC -> alter Wert * (1-Konvertierungsrate)
+                            'Conversion of NOx, CO, HC -> old value * (1-conversion-rate)
                             TempMod(iMod).eEmKomp(2, jz) = TempMod(iMod - 1).eEmKomp(2, jz) * (1 - TempMod(iMod).KonvMod.KonvRate(tMapComp.NOx)(jz))
                             TempMod(iMod).eEmKomp(3, jz) = TempMod(iMod - 1).eEmKomp(3, jz) * (1 - TempMod(iMod).KonvMod.KonvRate(tMapComp.HC)(jz))
                             TempMod(iMod).eEmKomp(4, jz) = TempMod(iMod - 1).eEmKomp(4, jz) * (1 - TempMod(iMod).KonvMod.KonvRate(tMapComp.CO)(jz))
@@ -1288,7 +1288,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                         End If
 
                     Else
-                        'Falls Modul kein Konv-Element hat ändert sich nix (Anmerkung: Modul 1 hat immer ModTyp0)
+                        'Falls Modul kein Konv-Element hat ändert sich nix (Anmerkung: Modul 1 hat immer ModTyp0) |@@| If Module has no Conv-element changes nothing (Note: Module 1 has always ModTyp0)
                         If iMod > 1 Then
 
                             TempMod(iMod).Qp_reak(jz) = 0
@@ -1301,7 +1301,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
 
                 Next
 
-                'Zeile in *.ter schreiben
+                'Write Line in *.ter.
                 If Not (PHEMmode = tPHEMmode.ModeADVANCE) Then
                     If Not (PHEMmode = tPHEMmode.ModeBATCH) Or Cfg.ModOut Then
                         line1 = jz & "," & vehspe(jz) & "," & nnorm(jz) & "," & p_norm(jz) & "," & rpm(jz) & "," & fc(jz) & "," & lambda(jz) & "," & mpexh(jz) & "," & tqs(jz)
@@ -1320,10 +1320,10 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 '------------------------------------------------------------------------------------------
 
             Next
-            'Ende Berechnungsschleife
+            'End Calculation-loop
             '----------------------------------------------------------------------------------------------
 
-            'Alle sekündlichen Ergebnisfiles zumachen
+            'Close all second-by-second Result-files
             If Not (PHEMmode = tPHEMmode.ModeADVANCE) Then
                 If Not (PHEMmode = tPHEMmode.ModeBATCH) Or Cfg.ModOut Then
                     DatTer.Close()
@@ -1335,10 +1335,10 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 End If
             End If
 
-            '---------- Abfrage Rücksprung im iterativen Berechnungsmodus für Starttemp -------------------
+            '---------- Abfrage Rücksprung im iterativen Berechnungsmodus für Starttemp ------------------- |@@| Query return in the iterative Calculation-mode for Starttemp -------------------
             If (iter_mode = True) Then
-                'Abbruchbedingung: Temperatur des Massenelementes "t_m" des in "iter_pos" spezifizierten Moduls
-                'am Beginn und am Ende des Zyklus innerhalb vorzugebender Bandbreite "iter_tol"
+                'Abbruchbedingung: Temperatur des Massenelementes "t_m" des in "iter_pos" spezifizierten Moduls |@@| Termination-condition: Temperature of the Mass-elements "t_M" in the "iter_pos" specified module
+                'am Beginn und am Ende des Zyklus innerhalb vorzugebender Bandbreite "iter_tol" |@@| at the Beginning and End of the Cycle within vorzugebender bandwidth "iter_tol"
                 Diff = Math.Abs(TempMod(iter_pos).t_m(t1) - TempMod(iter_pos).t_m(0))
                 If (Diff > iter_tol) Then
                     n_iter = n_iter + 1
@@ -1414,12 +1414,12 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             MODdata.Em.EmDefComp(tMapComp.NO).FinalVals = Em0
         End If
 
-        '--- Ausgabefile *.ter schreiben ----------------------------------------------------------
+        '--- Write Output-file *. Ter --------------------------------------------- -------------
 
-        '--- Ende Ausgabefile *.ter schreiben -----------------------------------------------------
+        '--- End wrtting Output-file *. ter -------------------------------------------- ---------
 
 
-        'Aufräumen
+        'Clean up
         TempMod = Nothing
 
         Return True
@@ -1428,9 +1428,9 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
 
 
     ''' <summary>
-    ''' Klasse für Temperaturmodule
+    ''' Class for Temperature-modules
     ''' </summary>
-    ''' <remarks>Art des Moduls wird mit ModTyp definiert</remarks>
+    ''' <remarks>Type of module is defined with Mod\typ </remarks>
     Class cTempMod
         Dim Id As Int16
         Public ModTyp As Int16, PathConv As String, m_norm As Single, heat_cap_m As Single, t_m_init As Single 'Normierte Masse, Wärmekapazität Masse, Starttemp. Masse
@@ -1489,9 +1489,9 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
         End Sub
 
         ''' <summary>
-        ''' Einlesen der EXS-Datei
+        ''' Reading the EXS file
         ''' </summary>
-        ''' <param name="Datei">Dateihandler</param>
+        ''' <param name="Datei">Dateihandler |@@| param name="Datei"> File-handler </param>
         ''' <remarks></remarks>
         Public Function Read(ByVal Datei As cFile_V3) As Boolean
             Dim TmAbkPfad As String = ""
@@ -1509,7 +1509,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 ModTyp = CShort(Datei.ReadLine(0))
             End If
 
-            'Pfad für Konvertierungsraten bei Modulen mit Konvertierung
+            'Path to Conversion-rates for Modules with Conversion
             If ModTyp = 1 Or ModTyp = 2 Then
                 PathConv = Datei.ReadLine(0)
                 PathConv = fFileRepl(PathConv, fPATH(GEN.PathExs))
@@ -1517,7 +1517,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 PathConv = ""
             End If
 
-            'Initialisieren der Module & Einlesen des Parameterfiles je nach Modul
+            'Initialize the modules & Read the Parameter-files, depending on Module
             Select Case ModTyp
                 Case 0 'nach Turbolader
                     m_norm = CSng(Datei.ReadLine(0))
@@ -1558,29 +1558,29 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                     heat_cap_m = CSng(Datei.ReadLine(0))
                     t_m_init = CSng(Datei.ReadLine(0))
                     FlowTyp = CShort(Datei.ReadLine(0))
-                    'Wärmeübergangsfaktor
+                    'Heat-transfer factor
                     cht_norm = CSng(Datei.ReadLine(0))
-                    'Oberfläche außen
+                    'surface of exterior
                     ext_surface = CSng(Datei.ReadLine(0))
-                    'Emissivität
+                    'Emissivität |@@| Emissivity
                     emissivity = CSng(Datei.ReadLine(0))
-                    'Faktoren für Wärmeübergänge nach außen
+                    'Factors for Heat-transfer to the outside
                     A_fak = CSng(Datei.ReadLine(0))
                     B_fak = CSng(Datei.ReadLine(0))
                     C_fak = CSng(Datei.ReadLine(0))
-                    'Faktoren für Temperaturzusammenhang t_katsubstrat <-> t_kat_außen
+                    'Factors for Temperature related t_katsubstrat  <-> t_kat_außen
                     T_relation_k = CSng(Datei.ReadLine(0))
                     T_relation_d = CSng(Datei.ReadLine(0))
-                    'Abkühlkurve Masse
+                    'Cooling-mass curve
                     TmAbkPfad = Datei.ReadLine(0)
-                    'normierte Querschnittsfläche
+                    'Normalized Cross-sectional area
                     cs_norm = CSng(Datei.ReadLine(0))
-                    'durchschnittlicher Gegendruck
+                    'durchschnittlicher Gegendruck |@@| average backpressure(Gegendruck)
                     p_rel_bk = CSng(Datei.ReadLine(0))
-                    'Durchmesser Thermoelement
+                    'Thermocouple Diameter
                     d_tc = CSng(Datei.ReadLine(0))
                     d_soot = CSng(Datei.ReadLine(0))
-                    'Abkühlkurve Thermoelement
+                    'Thermocouple Cooling-curve
                     TtcAbkPfad = Datei.ReadLine(0)
 
                 Case 3 'Rohrmodul
@@ -1592,7 +1592,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                     t_m_init = CSng(Datei.ReadLine(0))
                     cht_norm = CSng(Datei.ReadLine(0))
                     emissivity = CSng(Datei.ReadLine(0))
-                    'Faktoren für Wärmeübergänge nach außen
+                    'Heat-transfer-Factors to the outside
                     A_fak = CSng(Datei.ReadLine(0))
                     B_fak = CSng(Datei.ReadLine(0))
                     TmAbkPfad = Datei.ReadLine(0)
@@ -1618,7 +1618,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                     TtcAbkPfad = Datei.ReadLine(0)
             End Select
 
-            'Check ob Tgas in Zyklus gegeben:
+            'Check whether Tgas given in Cycle:
             If Id > 1 Then
                 bTgasGegJa = DRI.ExsCompDef(tExsComp.Tgas, Id)
                 If bTgasGegJa = True Then
@@ -1626,7 +1626,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 End If
             End If
 
-            'Entnormierungen und Berechnung weiterer Größen
+            'Entnormierungen und Berechnung weiterer Größen |@@| Normalize(Entnormierungen) and Calculating other Variables
 
 
             If ModTyp <> 3 Then
@@ -1635,7 +1635,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 d_pipe = ((4 * cs_pipe) / myEXS.Pi_) ^ 0.5 'Rohrdurchmesser in mm
                 Cht = cht_norm * d_pipe 'WÜ-Faktor prop. Rohrdurchmesser
             Else
-                'Zusätzlich berechnete Parameter für Rohrmodule:
+                'Additionally calculated parameters for Pipe-module:
                 ext_surface = d_pipe * 0.001 * myEXS.Pi_ * l_pipe * 0.001 'Oberfläche in m^2
                 mass = ext_surface * thickness_pipe * 0.001 * density 'Masse in kg
                 cs_pipe = (d_pipe * 0.5) ^ 2 * myEXS.Pi_ 'Querschnitt in mm^2
@@ -1647,20 +1647,20 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 Crad = crad_norm * myEXS.p_rated 'Abstrahlung prop. Nennleistung (Begründung siehe Diss)
             End If
 
-            'Für Strömungsberechnungen in SI-Einheiten wird Querschnittsfäche in m2 umgerechnet
+            'Für Strömungsberechnungen in SI-Einheiten wird Querschnittsfäche in m2 umgerechnet |@@| For Flow-calculations in SI-units is Querschnittsfäche converted into m2
             cs_pipe = cs_pipe * (0.001 ^ 2)
 
-            'Geometrische Größen berechnen
-            'Anmerkung: es wird davon ausgegangen, dass Temperatursensoren
-            'mittig ins Rohr stehen
+            'Geometrical Quantities calculated
+            'Note: it is assumed that temperature sensors are
+            'centered in the Pipe
             cl_cyl = (d_tc * 0.001) * myEXS.Pi_ * 0.5 'char. Länge umström Zyl
             cs_tc = (((d_tc * 0.001) / 2) ^ 2) * myEXS.Pi_ 'QS-Fläche t-sensor [m2]
             m_tc = cs_tc * ((d_pipe / 2) * 0.001) * myEXS.rho_steel 'Masse t_sensor [kg]
             surf_tc = (d_tc * 0.001) * myEXS.Pi_ * (d_pipe * 0.001) / 2 'Oberfläche t-sensor
-            ' Anmerkung: Kugelkalotte an t-sensor spitze wird in der Betrachtung als
-            ' umströmter Zylinder vernachlässigt
+            ' Anmerkung: Kugelkalotte an t-sensor spitze wird in der Betrachtung als |@@| Note: Ball joint on t-sensor tip is neglected
+            ' umströmter Zylinder vernachlässigt |@@| in the analysis of Airstream-cylinder
 
-            'Abkühlkurven einlesen
+            'Read Cooling-curves
             If Trim(UCase(TmAbkPfad)) = sKey.NoFile Then
                 If myEXS.n_iter = 0 And PHEMmode = tPHEMmode.ModeSTANDARD Then WorkerMsg(tMsgID.Warn, "EXS-Module " & Id & ": No cool down curve for mass component defined. Cool down calculation disabled.", MsgSrc)
                 NoCoolDown = True
@@ -1688,7 +1688,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
         End Function
 
         ''' <summary>
-        ''' Wärmeübergang Masse
+        ''' Heat-transfer mass
         ''' </summary>
         ''' <param name="jz">Zeit</param>
         ''' <remarks></remarks>
@@ -1705,10 +1705,10 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             Dim T_aussen As Single
             Dim Nus_exh As Single, Re_exh As Single
 
-            'Festlegung Schwellwert für Genauigkeit der Temperaturberechnung (wird wegen iterativem Berechnungsmodus benötigt)
+            'Setting Threshold for Precision of the Temperature-calculation (needed for iterative Calculation-mode)
             dt_schwell = 0.01
 
-            'Übergabe Eintrittstemperatur des Abgases aus oberhalb liegendem Modul bzw. dem Motor
+            'Return the Inlet-temperature of the Exhaust-gas from the Module above or from the Engine
             If Id = 1 Then
                 t_gas_in = myEXS.tqs(jz) 'Motor
             Else
@@ -1727,16 +1727,16 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 ht_exp = 0.8  'Turbulente Strömung. Keine Abhängigkeit Wärmeübergang von Volume Flow 
             End If
 
-            'Berechnung der aktuellen Massentemperatur
+            'Calculation of the current Mass-temperature
             If ((jz = 0) And (myEXS.n_iter = 0)) Then
                 t_m(jz) = t_m_init '!Sekunde 1: Temperatur auf Startwert setzen
-                '! bei n_iter > 0 ist bereits der Endwert der letzten Iteration zugewiesen
+                '! bei n_iter > 0 ist bereits der Endwert der letzten Iteration zugewiesen |@@| at n_iter > 0 the Final-value is already assigned to the last Iteration
             ElseIf (jz > 0) Then
                 dt_m = (Qp_exh(jz - 1) + Qp_loss(jz - 1) - Qp_reak(jz - 1)) / (mass * heat_cap_m) 'Reaktionswärme geht derzeit zu 100% in die Katmasse
                 t_m(jz) = t_m(jz - 1) - dt_m
             End If
 
-            'Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen:
+            'Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen: |@@| If Engine-OFF, wait Cooling-curve and exit method:
             If MODdata.EngState(jz) = tEngState.Stopped Then
                 t_gas(jz) = -1
                 Qp_exh(jz) = -1
@@ -1758,7 +1758,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 t_gas_out = 0.5 * (t_gas_in + t_m(jz))
                 t_gas_mid = 0.5 * (t_gas_in + t_gas_out)
 
-                'Wärmekapazität (vgl. Bogdanic)
+                'Heat-capacity (see Bogdanic)
                 cp_exh = 144.7 * (-3 * (0.0975 + (0.0485 / myEXS.lambda(jz) ^ 0.75)) * (t_gas_mid) ^ 2 / (10 ^ 6) + 2 * (7.768 + 3.36 / (myEXS.lambda(jz) ^ 0.8)) * (t_gas_mid) / (10 ^ 4) + (4.896 + 0.464 / (myEXS.lambda(jz) ^ 0.93))) + 287.7
                 Qp_exh(jz) = myEXS.mpexh(jz) * cp_exh * (t_gas_out - t_gas_in)
                 t_gas(jz) = t_gas_out
@@ -1777,7 +1777,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                     t_unter = t_gas_in
                 End If
 
-                'Schleife für Iteration Wärmeübergang
+                'Iteration-loop for Heat-transfer
                 While True
                     i_iter = i_iter + 1
                     If i_iter > 1 Then
@@ -1785,13 +1785,13 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                     End If
 
                     t_gas_out = 0.5 * (t_ober + t_unter) 'Solver halbiert fortschreitend Intervall, in dem die Temperatur des aus der Masse austretenden Abgases sein muss
-                    '                                     Abbruchkriterium siehe unten
+                    '                                     Termination-criterion below
 
                     If i_iter > 1 Then
                         dt_konv = Math.Abs(t_gas_out - t_gas_out_alt)
                     End If
 
-                    'Ermittlung der Temperatur des Abgases in der Mitte der Masse ("t_gas_mid") aus einem nichtlinearem (logaritmisch) Temperaturverlauf 
+                    'Determining the Temperature of the Exhaust-gas at the Center of Mass ("t_gas_mid") consists of a non-linear (logarithmic) Temperature-curve(verlauf)
                     delta_tin = t_m(jz) - t_gas_in
                     delta_tout = t_m(jz) - t_gas_out
                     delta_t = (delta_tin - delta_tout) / Math.Log(delta_tin / delta_tout)
@@ -1800,24 +1800,24 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                     vp_exh_mid = (myEXS.mpexh(jz) * myEXS.R_exh * (t_gas_mid + 273.15)) / ((1 + (p_rel_bk / 1000)) * 100000)
 
                     If ModTyp <> 3 Then
-                        'Wärmeübergang Konvektion innen für alle Module (außer Rohr)
+                        'Heat-transfer Convection inside all Modules (except for Pipe)
                         ht_factor = myEXS.hc_exh(t_gas_mid) * ((vp_exh_mid / myEXS.kv_exh(t_gas_mid)) ^ ht_exp)
                         Qp_ht = Cht * ht_factor * delta_t 'Cht -> hier: Faktor für Wärmeübergang
                     Else
-                        'für Rohrmodule:
+                        'for Pipe-modules:
                         Re_exh = d_pipe * 0.001 * (vp_exh_mid / cs_pipe) / myEXS.kv_exh(t_gas_mid) 'd_pipe in m
-                        'Nusselt Zahl: Dichte = 345/t_gas_mid, Term in Klammer: mu_Rohr / mu_Mitte
+                        'Nusselt Number: Density = 345/t_gas_mid, Term in Parenthesis: mu_Rohr / mu_Mitte
                         Nus_exh = 0.027 * Re_exh ^ 0.8 * myEXS.Pr_exh ^ 0.333 * ((myEXS.kv_exh(t_gas_mid) * 345 / t_gas_mid) / (myEXS.kv_exh(t_m(jz)) * 345 / t_m(jz))) ^ 0.14
-                        'Wärmeübergang (Konvektion innen), d_pipe in m: char. Länge
+                        'Heat-transfer (Convection inside) d_pipe, in m: char. Length
                         Qp_ht = Cht * Nus_exh * ext_surface * (myEXS.hc_exh(t_gas_mid) / (d_pipe * 0.001)) * delta_t 'Cht -> hier: Faktor für Rohrkrümmung
                     End If
 
-                    'Wärmekapazität (vgl. Bogdanic)
+                    'Heat-capacity (see Bogdanic)
                     cp_exh = 144.7 * (-3 * (0.0975 + (0.0485 / myEXS.lambda(jz) ^ 0.75)) * (t_gas_mid) ^ 2 / 10 ^ 6 + 2 * (7.768 + 3.36 / myEXS.lambda(jz) ^ 0.8) * (t_gas_mid) / 10 ^ 4 + (4.896 + 0.464 / myEXS.lambda(jz) ^ 0.93)) + 287.7
                     Qp_thd = myEXS.mpexh(jz) * cp_exh * (t_gas_out - t_gas_in)
                     diffQp = Qp_ht - Qp_thd
 
-                    'Abbruchkriterium: Änderung der Abgas-Austrittstemperatur im Vergleich zum letzten Iterationsschritt kleiner Schwellwert
+                    'Termination-criterion: Change of the Exhaust Outlet-temperature compared to the last Iteration-step smaller than Threshold
                     If dt_konv < dt_schwell Then AbbruchIter = True
 
                     If AbbruchIter Then
@@ -1835,55 +1835,55 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             End If
 
 
-            'Berechnung der Wärmeverluste der "thermischen Masse" nach außen
+            'Calculate the Heat loss of the "thermal mass" to the outside
             If ModTyp = 2 Then '3-W Kat
-                'Parameter werden aus EXS-Datei eingelesen:
-                'Daten für MuD:
-                '   Oberfl_Kat = 0.12 'Oberfläche für Wärmeübergang in m^2
-                '   Emiss = 0.5 'Emissivität
+                'Parameters are read from EXS file:
+                'Data for MuD:
+                '   Oberfl_Kat = 0.12 'Surface for Heat-transfer in m^2
+                '   Emiss = 0.5 'Emissivität |@@| Emiss = 0.5 'emissivity
                 '   A = 7, B = 0.21, C = 8, k = 1, d = -340
 
-                'Empirische Formel, passt für alle Rollentests recht gut
+                'Empirische Formel, passt für alle Rollentests recht gut |@@| Empirical formula, suitable for all OK Roll-tests
                 T_aussen = t_m(jz) - 340
-                'Anm.: Versuch mit direkter Abhängigkeit von t_m -> funktioniert nicht gut
+                'Note: Tests with direct Dependence on t_m -> does not work well
 
-                'Wärmeverlust durch Strahlung
+                'Heat-loss by Radiation
                 Qp_loss_rad = C_fak * ext_surface * myEXS.St_Boltz * emissivity * ((T_aussen + 273.15) ^ 4 - (myEXS.t_amb + 273.15) ^ 4)
-                'Wärmeverlust durch Konvektion
+                'Heat-loss by Convection
                 Qp_loss_konv = (B_fak * myEXS.vehspe(jz) + A_fak) * ext_surface * (T_aussen - myEXS.t_amb)
 
             ElseIf ModTyp = 3 Then 'Rohr
-                'Parameter werden aus EXS-Datei eingelesen:
-                'Daten für MuD:
-                '   Modul Nr. 3:
-                '       Oberfl_Mod3 = 0.169457508 'Oberfläche für Wärmeübergang in m^2
-                '       Emiss = 0.5 'Emissivität
+                'Parameters are read from EXS file:
+                'Data for MuD:
+                '   Module 3:
+                '       Oberfl_Mod3 = 0.169457508 'Surface for Heat-transfer in m^2
+                '       Emiss = 0.5 'Emissivität |@@| Emiss = 0.5 'emissivity
                 '       A = 7
                 '       B = 0.42
-                '   Modul Nr. 4:
-                '       Oberfl_Mod4 = 0.103596481 'Oberfläche für Wärmeübergang in m^2
-                '       Emiss = 0.9 'Emissivität
+                '   Module 4:
+                '       Oberfl_Mod4 = 0.103596481 'Oberfläche für Wärmeübergang in m^2 |@@| Oberfl_Mod4 = 0.103596481 'Surface for Heat-transfer in m^2
+                '       Emiss = 0.9 'Emissivität |@@| Emiss = 0.9 'emissivity
                 '       A = 7
                 '       B = 0
 
-                'Wärmeverlust durch Strahlung = Sichtfaktor * Emissivität * St.-Boltzm.-Konst * Oberfläche * (T_Rohr^4 - T_Umgebung^4)
+                'Heat-loss by Radiation = View_factor * Emissivity * St.-Boltzm.-const * Surface * (T_Pipe^4 - T_Environ^4)
                 Qp_loss_rad = emissivity * myEXS.St_Boltz * ext_surface * ((t_m(jz) + 273.15) ^ 4 - (myEXS.t_amb + 273.15) ^ 4)
-                'Wärmeverlust durch Konvektion = Wärmeübergangskoeffizient * Oberfläche * (T_Rohr - T_Umgebung)
+                'Heat-loss by Convection = Heat_transfer_coefficient * Surface * (T_Pipe - T_Environ)
                 Qp_loss_konv = (B_fak * myEXS.vehspe(jz) + A_fak) * ext_surface * (t_m(jz) - myEXS.t_amb)
             Else
-                'Standard: Crad konstant, keine Verluste durch Konvektion
+                'Standard: Crad constant, no Loss by Convection
                 Qp_loss_rad = Crad * (((t_m(jz) + 273.15) ^ 4) - ((myEXS.t_amb + 273.15) ^ 4))
                 Qp_loss_konv = 0
             End If
 
-            'Gesamtwärmeverlust
+            'Total-heat-loss
             Qp_loss(jz) = Qp_loss_rad + Qp_loss_konv
 
 
         End Sub
 
         ''' <summary>
-        ''' Wärmeübergang Thermoelement
+        ''' Thermocouple-Heat-transfer
         ''' </summary>
         ''' <param name="jz">Zeit</param>
         ''' <remarks></remarks>
@@ -1896,7 +1896,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 t_tc(0) = t_m(0) 'Als Startwert für das Thermoelement wird die Temperatur der thermischen Masse verwendet
             Else
 
-                'Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen:
+                'Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen: |@@| If Engine-OFF, wait for Cooling-curve and exit method:
                 If MODdata.EngState(jz) = tEngState.Stopped Then
                     If NoCoolDown Then
                         t_tc(jz) = t_tc(jz - 1)
@@ -1909,7 +1909,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 vp_exh_tc = (myEXS.mpexh(jz) * myEXS.R_exh * (t_gas(jz) + 273.15)) / ((1 + (p_rel_bk / 1000)) * 100000) '!lokaler Volumenstrom im [m3/s]
                 vms = vp_exh_tc / cs_pipe '!lokale Strömungsgeschwindigkeit [m/s]
 
-                '!Formelwerk Berechnung Wärmeübergang am umströmten Zylinder
+                '!Formula Calculating Heat-transfer-flow around the Cylinder
                 Re = (cl_cyl * vms) / myEXS.kv_exh(t_gas(jz))
                 Nu_lam = 0.664 * (Re ^ 0.5) * (myEXS.Pr_exh ^ 0.333) 'Nusselt laminar
                 Nu_turb = 0.037 * ((Re ^ 0.8) * myEXS.Pr_exh) / (1 + 2.443 * (Re ^ (-0.1)) * ((myEXS.Pr_exh ^ 0.667) - 1)) 'Nusselt turbulent
@@ -1918,10 +1918,10 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 alpha_conv = Nu_ave * myEXS.hc_exh(t_gas(jz)) / cl_cyl
                 alpha_tot = 1 / ((1 / alpha_conv) + ((d_soot * 0.001) / myEXS.hc_soot))
 
-                'Vereinfachte Lösung der Wärmeflussgleichung für den t-sensor
-                'entspricht einer Diffgl. für ein PT1 glied
+                'Simplified solution of the Heat-flow-equation for the t-sensor
+                'entspricht einer Diffgl. für ein PT1 glied |@@| corresponds to a Diffgl. for a PT1 section(glied)
                 k_pt1 = (m_tc * myEXS.cp_steel) / (alpha_tot * surf_tc)
-                'Zeitdiskrete Lösung der PT1-Diffgl
+                'Discrete-time Solution of the PT1-Diffgl
                 t_tc(jz) = (1 / (k_pt1 + 1)) * (t_gas(jz) + (k_pt1 * t_tc(jz - 1)))
             End If
 
@@ -1988,7 +1988,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                     i = 1
                 End If
 
-                ''Extrapolation für LastTemp > TempAr(0)
+                ''Extrapolation for LastTemp > TempAR(0)
                 'If TempAr(0) < LastTemp Then
                 '    'TODO: StatusMSG(8, "Extrapolation of Cool Down Temperature! t = " & jz & ", Temp(t-1) = " & LastTemp)
                 '    i = 1
@@ -2000,7 +2000,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 '    i += 1
                 'Loop
 
-                'Extrapolation für LastTemp < TempAr(Adim)
+                'Extrapolation for LastTemp < TempAR(Adim)
 
                 'lbInt:
                 'Interpolation
@@ -2010,7 +2010,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                     t = (LastTemp - TempAr(i - 1)) * (tAr(i) - tAr(i - 1)) / (TempAr(i) - TempAr(i - 1)) + tAr(i - 1)
                 End If
 
-                'Einen Zeitschritt vor ( = 1 Sekunde)
+                'Einen Zeitschritt vor ( = 1 Sekunde) |@@| One Time-step forward(vor)( =1 second)
                 t += 1
 
                 i = 0
@@ -2038,19 +2038,19 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
 
         Implements KonvInterf
 
-        'Klasse initialisiert als Unterelement von TempMod
+        'Class initialized as a Subelement of TempMod
 
         Dim DatKonvOut As New cFile_V3    'PHEM SCR model result file
         Dim PathKonvOut As String = ""
 
         Dim t_SCR As Single
-        'c     Prefix "c" bedeutet: Zykluswert verwendet für Kennlinien-Korrektur
+        'c     Prefix "c" means: use Cycle-value for Characteristic-correction
         Dim ct_up As Single, cNOxraw As Single, cNOx60s As Single, cSV As Single
-        'c     Index "cc" bedeutet: Wert aus Kennlinie (-> "c" - "cc" ist die Differenz, mit der Korrigiert wird)
+        'c     Index "cc" means: Value of Charachteristic-curve (-> "c" - "cc" is the Derivative, corrected)
         Dim denox_cc As Single, t_up_cc As Single, NOxraw_cc As Single, NOx60s_cc As Single, SV_cc As Single, deNOxmin As Single
         Dim deNOx_cor As Single '! deNOx-Wert nach Korrektur as single, vor End-Filterung as single
         Dim deNOx As Single '! Endwert zur Berechnung von NOx-tailpipe as single
-        'Filename sekündliches Ausgabefile spezifizieren
+        'Specify Filename for per-second Output-file
 
         Dim pt_SCR(izykt) As Single
         Dim pdeNOx(izykt) As Single
@@ -2102,7 +2102,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 Return False
             End If
 
-            'Abbruch wenn kein NOx gegeben
+            'Abort if given no NOx
             If Not MAP.EmDefRef.ContainsKey(tMapComp.NOx) Then
                 WorkerMsg(tMsgID.Err, "'NOx' not defined in emission map!", MsgSrc)
                 Return False
@@ -2123,7 +2123,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             DatKonvIn.ReadLine()
 
             iz = 0
-            't-SCR (°C), deNOx(1-NOx-Auspuff/NOx-Roh), -t-upstream(°C), NOx-Roh (g/h)/kW_Nennleistg, Summe NOx ueber 60Sek vorher g/h)/kW_Nennleistg, Raumgeschwindigkeit (1/h)
+            't-SCR (° C), deNOx (1-NOx-Exhaust/NOx-Raw), t-upstream (°C), NOx-raw (g/h)/kW_Nominal-power, total NOx over 60sec before g/h)/kW_Nominal-power, space velocity (1/h)
             Do While Not DatKonvIn.EndOfFile
                 iz = iz + 1
                 line = DatKonvIn.ReadLine
@@ -2146,9 +2146,9 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
         Public Sub Konv(ByVal jz As Integer) Implements KonvInterf.Konv
 
             ' -----------------------------------------------------------------------
-            ' Programm zur Simulation SCR-Flottendurchschnitt
-            ' Anmerkung: deNOx-Werte kleiner als Null sind möglich:
-            '            dies entspricht höherem Roh-Nox-Niveau als im Basiskennfeld
+            ' Program to simulate SCR-fleet-model
+            ' Note: deNOx values less than zero are possible:
+            '            this corresponds to higher NOx-raw level than in the Base-map
             ' -----------------------------------------------------------------------
             '
             Dim is0 As Long
@@ -2159,18 +2159,18 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             eNOx = MODdata.Em.EmDefComp(tMapComp.NOx).FinalVals
             '   
             '     -----------------------------------------------------------------
-            '     1.) Berechnung der sekündlichen Werte für Eingangsgrößen SCR-Modell
+            '     1.) Calculation of per-second Values ​​for Input-variables of the SCR-model
             '
-            '     a.) t_SCR: zusammengewichten der von t_upstream und t_downstream
-            '     SCR-Model-intern werden dabei Temperaturen zwischen 50°C und 500°C begrenzt
-            '     Temperaturmodelwerte (zB bei Kaltstart) werden nicht überschrieben
+            '     a.) t_SCR: combined-weight of t_upstream and t_downstream
+            '     SCR-Model-intern werden dabei Temperaturen zwischen 50°C und 500°C begrenzt |@@| SCR-model-internally there are Temperatures between 50 ° C and 500 ° C limits
+            '     Temperature-model-values (eg Cold-start) will not be overwritten
 
             t_SCR = ((1 - Sharetdown) * myEXS.TempMod(id - 1).t_tc(jz)) + (Sharetdown * myEXS.TempMod(id).t_tc(jz))
             t_SCR = Math.Max(50.001, t_SCR)
             t_SCR = Math.Min(499.999, t_SCR)
             '
-            '     b.) t_up, NOxraw, SV: 20s gleitender Mittelwert in die Vergangenheit
-            '         Formel gilt auch für die ersten 20 Sekunden
+            '     b.) t_up, NOxraw, SV. 20s Moving-average in the past
+            '         Formula applied also to the first 20 seconds
             '
             ct_up = 0
             cNOxraw = 0
@@ -2184,21 +2184,21 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             cNOxraw = cNOxraw / (jz - Math.Max(0, jz - 19) + 1)
             cSV = cSV / (jz - Math.Max(0, jz - 19) + 1)
             '
-            '     c.) NOx60s: Summe über letzten 60s der spezifischen NOx-Rohemissionen
-            '         Formel gilt auch für die ersten 60 Sekunden
+            '     c.) NOx60s: Sum over the last 60s of the specific NOx-raw emissions
+            '         Formula applied to the first 60 seconds
 
             cNOx60s = 0
             For is0 = Math.Max(0, jz - 59) To jz
                 cNOx60s = cNOx60s + (eNOx(is0) / myEXS.p_rated)
             Next is0
-            '        Für Sekunde 1 bis 59 muss summenwert hochgerechnet werden
+            '        for seconds 1-59 must Extrapolate total-value
             cNOx60s = cNOx60s / (Math.Min(60, jz + 1) / 60.0)
 
             '     -----------------------------------------------------------------
             '
             '
             '
-            '     Berechnung deNOxmin aus Kennlinien-Wert bei 50°C
+            '     Calculation of deNOxmin value from Characteristic-curves at 50 ° C
             For is0 = 1 To iSCRAnz
                 myEXS.Xis(is0) = pt_SCR(is0)
                 myEXS.Yis(is0) = pdeNOx(is0)
@@ -2210,9 +2210,9 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             '
             '
             '     -----------------------------------------------------------------
-            '     2.) Berechnung deNOx
+            '     2.) Calculation deNOx
             '
-            '        a.) deNOx aus Kennlinie:
+            '        a.) deNOx of characteristic:
             For is0 = 1 To iSCRAnz
                 myEXS.Xis(is0) = pt_SCR(is0)
                 myEXS.Yis(is0) = pdeNOx(is0)
@@ -2222,10 +2222,10 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             Call myEXS.Intlin(such, izpl)
             denox_cc = such
 
-            'c        b.) Falls Korrekturkriterien erfüllt sind: deNOx-Korrektur gegenüber Kennlinie
+            'c        b.) If correction criteria are met: deNOx-correction compared against Characteristic
             If ((t_SCR > tminCor) And (t_SCR < tmaxCor)) Then
                 'c
-                'c           t_up aus Kennlinie:
+                'c           t_up from characteristics:
                 For is0 = 1 To iSCRAnz
                     myEXS.Xis(is0) = pt_SCR(is0)
                     myEXS.Yis(is0) = pt_up(is0)
@@ -2235,7 +2235,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 Call myEXS.Intlin(such, izpl)
                 t_up_cc = such
                 'c
-                'c           NOx_raw aus Kennlinie:
+                'c           NOx_raw of characteristics:
                 For is0 = 1 To iSCRAnz
                     myEXS.Xis(is0) = pt_SCR(is0)
                     myEXS.Yis(is0) = pNOxraw(is0)
@@ -2245,7 +2245,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 Call myEXS.Intlin(such, izpl)
                 NOxraw_cc = such
                 'c
-                'c           Summe NOxraw in den letzten 60 Sekunden aus Kennlinie:
+                'c           Sum of the NOxraw in the last 60 seconds from characteristics:
                 For is0 = 1 To iSCRAnz
                     myEXS.Xis(is0) = pt_SCR(is0)
                     myEXS.Yis(is0) = pNOx60s(is0)
@@ -2255,7 +2255,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 Call myEXS.Intlin(such, izpl)
                 NOx60s_cc = such
                 'c
-                'c           Raumgeschwindigkeit aus Kennlinie:
+                'c           Raumgeschwindigkeit aus Kennlinie: |@@| Space/Velocity from(aus) characteristics:
                 For is0 = 1 To iSCRAnz
                     myEXS.Xis(is0) = pt_SCR(is0)
                     myEXS.Yis(is0) = pSV(is0)
@@ -2273,7 +2273,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 deNOx = Math.Max(Math.Min(denox_cc, DeNOxMax), deNOxmin)
             End If
 
-            'Schreiben der Ergebnisse auf die standardisierten Variablen eEmKomp (iSchad, jz) und Qp_reak(jz)
+            'Schreiben der Ergebnisse auf die standardisierten Variablen eEmKomp (iSchad, jz) und Qp_reak(jz) |@@| Write the results on the standardized variables eEmKomp (iSchad, jz) and Qp_reak (jz)
             For iSchad = 2 To 8
                 KonvRate(iSchad) = 0
             Next iSchad
@@ -2309,26 +2309,26 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
 
 
     ''' <summary>
-    ''' SCR Modell
+    ''' SCR model
     ''' </summary>
     ''' <remarks></remarks>
     Class cScrMod_10sMW 'SCR Modell
 
         Implements KonvInterf
 
-        'Klasse initialisiert als Unterelement von TempMod
+        'Class initialized as a Subelement of TempMod
 
         Dim DatKonvOut As New cFile_V3    'PHEM SCR model result file
         Dim PathKonvOut As String = ""
 
         Dim t_SCR As Single
-        'c     Prefix "c" bedeutet: Zykluswert verwendet für Kennlinien-Korrektur
+        'c     Prefix "c" means: use Cycle value for Characteristic-correction
         Dim ct_up As Single, cNOxraw As Single, cNOx30s As Single, cSV As Single
-        'c     Index "cc" bedeutet: Wert aus Kennlinie (-> "c" - "cc" ist die Differenz, mit der Korrigiert wird)
+        'c     Index "cc" means: Value of Characteristic (-> "c" - "cc" is the Derivative, corrected)
         Dim denox_cc As Single, t_up_cc As Single, NOxraw_cc As Single, NOx30s_cc As Single, SV_cc As Single, deNOxmin As Single
         Dim deNOx_cor As Single '! deNOx-Wert nach Korrektur as single, vor End-Filterung as single
         Dim deNOx As Single '! Endwert zur Berechnung von NOx-tailpipe as single
-        'Filename sekündliches Ausgabefile spezifizieren
+        'Specify Filename for per-second Output-file
 
         Dim pt_SCR(izykt) As Single
         Dim pdeNOx(izykt) As Single
@@ -2382,7 +2382,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 Return False
             End If
 
-            'Abbruch wenn kein NOx gegeben
+            'Abort if no NOx given
             If Not MAP.EmDefRef.ContainsKey(tMapComp.NOx) Then
                 WorkerMsg(tMsgID.Err, "'NOx' not defined in emission map!", MsgSrc)
                 Return False
@@ -2402,7 +2402,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             DatKonvIn.ReadLine()
 
             iz = 0
-            't-SCR (°C), deNOx(1-NOx-Auspuff/NOx-Roh), -t-upstream(°C), NOx-Roh (g/h)/kW_Nennleistg, Summe NOx ueber 60Sek vorher g/h)/kW_Nennleistg, Raumgeschwindigkeit (1/h)
+            't-SCR (°C), deNOx(1-NOx-Auspuff/NOx-Roh), -t-upstream(°C), NOx-Roh (g/h)/kW_Nennleistg, Summe NOx ueber 60Sek vorher g/h)/kW_Nennleistg, Raumgeschwindigkeit (1/h) |@@| t-SCR (° C), deNOx (1-NOx-Exhaust/NOx-raw), t-upstream (° C), NOx-raw (g/h) / kW_Nominal-power, total NOx over 60sec before g/h)/kW_Nominal-power, space velocity (1/h)
             Do While Not DatKonvIn.EndOfFile
                 iz = iz + 1
                 line = DatKonvIn.ReadLine
@@ -2426,9 +2426,9 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
         Public Sub Konv(ByVal jz As Integer) Implements KonvInterf.Konv
 
             ' -----------------------------------------------------------------------
-            ' Programm zur Simulation SCR-Flottendurchschnitt
-            ' Anmerkung: deNOx-Werte kleiner als Null sind möglich:
-            '            dies entspricht höherem Roh-Nox-Niveau als im Basiskennfeld
+            ' Program to Simulate SCR-fleet-model
+            ' Note: deNOx with values less than zero are possible:
+            '            this corresponds to higher NOx-raw level than in the Base-map
             ' -----------------------------------------------------------------------
             '
             Dim is0 As Long
@@ -2440,18 +2440,18 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
 
             '   
             '     -----------------------------------------------------------------
-            '     1.) Berechnung der sekündlichen Werte für Eingangsgrößen SCR-Modell
+            '     1.) Calculation of per-second Values ​for Input-variables of the SCR model
             '
-            '     a.) t_SCR: zusammengewichten der von t_upstream und t_downstream
-            '     SCR-Model-intern werden dabei Temperaturen zwischen 50°C und 500°C begrenzt
-            '     Temperaturmodelwerte (zB bei Kaltstart) werden nicht überschrieben
+            '     a) t_SCR: combined-weight of the t_upstream and t_downstream
+            '     SCR-Model-intern werden dabei Temperaturen zwischen 50°C und 500°C begrenzt |@@| SCR model internally there are temperatures between 50 ° C and 500 ° C limits
+            '     Temperature-model values (eg cold start) will not be overwritten
 
             t_SCR = ((1 - Sharetdown) * myEXS.TempMod(id - 1).t_tc(jz)) + (Sharetdown * myEXS.TempMod(id).t_tc(jz))
             t_SCR = Math.Max(50.001, t_SCR)
             t_SCR = Math.Min(499.999, t_SCR)
             '
-            '     b.) t_up, NOxraw, SV: 20s gleitender Mittelwert in die Vergangenheit
-            '         Formel gilt auch für die ersten 20 Sekunden
+            '     b.) t_up, NOxraw, SV. 20s moving average in the past
+            '         Formula applies to the first 20 seconds
             '
             ct_up = 0
             cNOxraw = 0
@@ -2467,8 +2467,8 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             cNOxraw = cNOxraw / (jz - Math.Max(1, jz - 9) + 1)
             cSV = cSV / (jz - Math.Max(1, jz - 9) + 1)
             '
-            '     c.) NOx60s: Summe über letzten 60s der spezifischen NOx-Rohemissionen
-            '         Formel gilt auch für die ersten 60 Sekunden
+            '     c.) NOx60s: Sum over the last 60s of the specific NOx-raw emissions
+            '         Formula applies to the first 60 seconds
 
             cNOx30s = 0
             For is0 = Math.Max(0, jz - 29) To jz
@@ -2476,14 +2476,14 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                     cNOx30s = cNOx30s + (eNOx(is0) / myEXS.p_rated)
                 End If
             Next is0
-            '        Für Sekunde 1 bis 59 muss summenwert hochgerechnet werden
+            '        For seconds 1 to 59 must sum the projected values
             cNOx30s = cNOx30s / (Math.Min(30, jz + 1) / 30.0)
 
             '     -----------------------------------------------------------------
             '
             '
             '
-            '     Berechnung deNOxmin aus Kennlinien-Wert bei 50°C
+            '     Calculation of the Characteristic-curves for deNOxmin values at 50 ° C
             For is0 = 1 To iSCRAnz
                 myEXS.Xis(is0) = pt_SCR(is0)
                 myEXS.Yis(is0) = pdeNOx(is0)
@@ -2495,9 +2495,9 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             '
             '
             '     -----------------------------------------------------------------
-            '     2.) Berechnung deNOx
+            '     2.) Calculation of deNOx
             '
-            '        a.) deNOx aus Kennlinie:
+            '        a.) Characteristic of deNOx:
             For is0 = 1 To iSCRAnz
                 myEXS.Xis(is0) = pt_SCR(is0)
                 myEXS.Yis(is0) = pdeNOx(is0)
@@ -2507,10 +2507,10 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             Call myEXS.Intlin(such, izpl)
             denox_cc = such
 
-            'c        b.) Falls Korrekturkriterien erfüllt sind: deNOx-Korrektur gegenüber Kennlinie
+            'c        b.) If Correction-criteria are met: Correct deNOx against the Characteristic
             If ((t_SCR > tminCor) And (t_SCR < tmaxCor)) Then
                 'c
-                'c           t_up aus Kennlinie:
+                'c           Characteristic of t_up:
                 For is0 = 1 To iSCRAnz
                     myEXS.Xis(is0) = pt_SCR(is0)
                     myEXS.Yis(is0) = pt_up(is0)
@@ -2520,7 +2520,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 Call myEXS.Intlin(such, izpl)
                 t_up_cc = such
                 'c
-                'c           NOx_raw aus Kennlinie:
+                'c           Characteristic-curve of the NOx_raw:
                 For is0 = 1 To iSCRAnz
                     myEXS.Xis(is0) = pt_SCR(is0)
                     myEXS.Yis(is0) = pNOxraw(is0)
@@ -2530,7 +2530,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 Call myEXS.Intlin(such, izpl)
                 NOxraw_cc = such
                 'c
-                'c           Summe NOxraw in den letzten 60 Sekunden aus Kennlinie:
+                'c           Sum of NOxraw in the last 60 seconds of Characteristic-curve:
                 For is0 = 1 To iSCRAnz
                     myEXS.Xis(is0) = pt_SCR(is0)
                     myEXS.Yis(is0) = pNOx60s(is0)
@@ -2540,7 +2540,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 Call myEXS.Intlin(such, izpl)
                 NOx30s_cc = such
                 'c
-                'c           Raumgeschwindigkeit aus Kennlinie:
+                'c           Characteristic-curve of Distnace-Speed(Raumgeschwindigkeit):
                 For is0 = 1 To iSCRAnz
                     myEXS.Xis(is0) = pt_SCR(is0)
                     myEXS.Yis(is0) = pSV(is0)
@@ -2558,7 +2558,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 deNOx = Math.Max(Math.Min(denox_cc, DeNOxMax), deNOxmin)
             End If
 
-            'Schreiben der Ergebnisse auf die standardisierten Variablen eEmKomp (iSchad, jz) und Qp_reak(jz)
+            'Write the results on the standardized variables eEmKomp(iSchad, jz) and Qp_reak(jz)
             For iSchad = 2 To 8
                 KonvRate(iSchad) = 0
             Next iSchad
@@ -2590,20 +2590,20 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
 
 
     ''' <summary>
-    ''' KAT-Modell
+    ''' KAT-model
     ''' </summary>
     ''' <remarks></remarks>
     Class c3WayCatMod 'DOC Modell
 
         Implements KonvInterf
 
-        'Klasse initialisiert als Unterelement von TempMod
+        'Class initialized as a Sub-element of TempMod
         Dim iSchad As Long
         Dim id As Int16
 
         Private myEXS As cEXS
 
-        'Kennfelddaten
+        'Mapped-data
         'Private Massflow As List(Of Single)
         'Private Temp_KAT As List(Of Single)
         'Private Massflow_Norm As List(Of Single)
@@ -2624,7 +2624,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
 
 
         ''' <summary>
-        ''' Erstellen eines neuen KAT-Moduls
+        ''' Creating a new CAT module
         ''' </summary>
         ''' <param name="i">ID</param>
         ''' <param name="EXSref">EXS-Klasse</param>
@@ -2639,13 +2639,13 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
 
 
         ''' <summary>
-        ''' Interpolationsfunktion
+        ''' Interpolation-Function
         ''' </summary>
-        ''' <param name="x">Massenstrom</param>
-        ''' <param name="y">Temperatur vor KAT</param>
-        ''' <param name="MapID">MapID der entsprechenden Abgaskomponente</param>
-        ''' <returns>interpolierten Wert für x und y aus Kennfeld</returns>
-        ''' <remarks>Aus Massenstrom-Temperatur Kennfeld wird Konvertierungsrate für entsprechende Abgaskomponente berechnet</remarks>
+        ''' <param name="x">Mass-flow(Massenstrom)</param>
+        ''' <param name="y"> Temperature before(vor) KAT </param>
+        ''' <param name="MapID">The MapID of the corresponding Exhaust-gas-component</param>
+        ''' <returns>The interpolated value for x and y from the Map</returns>
+        ''' <remarks> It calculates the converted rate of the appropriate Exhaust-gas-component from the Mass-flow temperature Map</remarks>
         Private Function Intpol(ByVal x As Double, ByVal y As Double, ByVal MapID As tMapComp) As Double
             Try
                 Return KonvRateMap(MapID).Intpol(x, y)
@@ -2657,9 +2657,9 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
 
 
         ''' <summary>
-        ''' Einlesen der Kennfelder für Konvertierungsraten
+        ''' Reading the Maps for Conversion-rates
         ''' </summary>
-        ''' <param name="Name">Dateiname</param>
+        ''' <param name="Name">Filename</param>
         ''' <remarks></remarks>
         Public Function Read(ByVal Name As String) As Boolean Implements KonvInterf.Read
             Dim DatKonv As New cFile_V3
@@ -2713,10 +2713,10 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
 
             Next
 
-            'Units (wird nicht ausgewertet)
+            'Units (are not evaluated)
             line = DatKonv.ReadLine
 
-            'Werte
+            'Values
             Do While Not DatKonv.EndOfFile
 
                 line = DatKonv.ReadLine
@@ -2728,7 +2728,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                     KonvRateMap(Sp0.Key).AddPoints(Massflow, Temp_KAT, CDbl(line(Sp0.Value)))
                 Next
 
-                'KonvRaten Null setzen wenn Komponente nicht gegeben
+                'Set KonvRaten to Zero when no component given
                 For Each KonvRate0 In KonvRateMap
                     If Not Spalten.ContainsKey(KonvRate0.Key) Then
                         KonvRate0.Value.AddPoints(Massflow, Temp_KAT, 0)
@@ -2739,7 +2739,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
 
             DatKonv.Close()
 
-            'Triangulieren
+            'Triangulating
             For Each KonvRate0 In KonvRateMap
                 If Not KonvRate0.Value.Triangulate() Then
                     WorkerMsg(tMsgID.Err, "Triangulation-ERROR", MsgSrc)
@@ -2747,7 +2747,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 End If
             Next
 
-            'Dic. für modale Konvrate definieren
+            'define Dic. for modal Konvrate
             KonvRate = New Dictionary(Of tMapComp, List(Of Single))
             KonvRate.Add(tMapComp.NOx, New List(Of Single))
             KonvRate.Add(tMapComp.HC, New List(Of Single))
@@ -2760,12 +2760,12 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
 
 
         ''' <summary>
-        ''' Berechnung der Konvertierungsrate aus Kennfeld
+        ''' Calculation of the Conversion-rate from Map
         ''' </summary>
-        ''' <param name="jz">Zeit</param>
-        ''' <remarks>Für die Berechnung wird die Temperatur des Thermoelements am Kateingang (entspricht Modulnummer i-1) verwendet!!!</remarks>
+        ''' <param name="jz">Time</param>
+        ''' <remarks> Used to calculate the temperature of the Thermoelements on Kateingang (corresponds to  Module-number i-1)!</remarks>
         Public Sub Konv(ByVal jz As Integer) Implements KonvInterf.Konv
-            'Konvertierungsrate aus Kennfeld berechnen
+            'Conversion-rate calculated from Map
             Dim massflow As Single
             Dim temp As Single
 
@@ -2781,7 +2781,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
         End Sub
 
         ''' <summary>
-        ''' Header für Ausgabedatei
+        ''' Header for Output-file
         ''' </summary>
         ''' <remarks></remarks>
         Public Sub Header() Implements KonvInterf.Header
@@ -2793,9 +2793,9 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
         End Sub
 
         ''' <summary>
-        ''' Daten für Ausgabedatei
+        ''' Data for Output-file
         ''' </summary>
-        ''' <param name="jz">Zeit</param>
+        ''' <param name="jz">Time</param>
         ''' <remarks></remarks>
         Public Sub Write(ByVal jz As Integer) Implements KonvInterf.Write
             DatKonvOut.WriteLine(jz & "," & MODdata.Em.EmDefComp(tMapComp.MassFlow).FinalVals(jz) & "," _
@@ -2816,7 +2816,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
     End Class
 
     ''' <summary>
-    ''' Interface zur Konverter-Klasse cScrMod, cDocMod , usw...
+    ''' Interface to Converter-classes cScrMod, cDocMod, etc. ..
     ''' </summary>
     ''' <remarks></remarks>
     Interface KonvInterf
@@ -2832,11 +2832,11 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
 
     Sub Intlin(ByRef such As Single, ByVal izpl As Long)
         ''C
-        'C     Unterprogramm zu PHEM zur linearen INterpolation aus einem Polygonzug (z.B. in Vissimzs.for aufgerufen)
-        'C     uebergeben wid "such" als X-Wert, der dann als berechneter Y-Wert wieder zurueck gegeben wird
-        'C     Zu Belegen sind vorher:
-        'C     Xis(j) und Yis(j)
-        'c     Zu uebergeben der gesuchte Wert (such) und die Anzahl an vorhandenen Polyginpunkten (izpl)
+        'C     Unterprogramm zu PHEM zur linearen INterpolation aus einem Polygonzug (z.B. in Vissimzs.for aufgerufen) |@@| Subroutine of(zu) PHEM for linear Interpolation of a Polygon (eg called by Vissimzs.for)
+        'C     uebergeben wid "such" als X-Wert, der dann als berechneter Y-Wert wieder zurueck gegeben wird |@@| It is given the X-value to "search", and it gives back the calculated Y-value
+        'C     Zu Belegen sind vorher: |@@| for previous Allocation:
+        'C     Xis(j) and Yis(j)
+        'c     Given the desired Value(search) and the Number of the existing Polygon-points (izpl)
         'c
         'C
         ' INCLUDE "com.inc"<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -2847,8 +2847,8 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
         Dim x As Single
         'C
         'c
-        'C    Suche der naechstgelegenen Drehzahlpunkte aus eingegebener Vollastkurve:
-        'c     Abstand zu Eingabepunkten und Suche des Punktes mit geringstem Abstand:
+        'C    Search the closest points of the Revolutions from the input Full-load curve:
+        'c     Distance to Input-points and Search those Points with the smallest Distance:
         aminabst = Math.Abs(such - Xis(1)) + 1
         For ji = 1 To izpl
             x = such - Xis(ji)
@@ -2859,24 +2859,24 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             End If
         Next ji
         'c
-        'C      Festlegung des zweiten INterpolationspunktes (nur interpolieren, nicht extrapolieren)
+        'C      Fix the second Interpolation-points (only interpolation, no extrapolation)
         'C
         x = such - Xis(i1min)
         If (x >= 0) Then
             i2min = i1min + 1
             If (i2min > izpl) Then
-                '!Extrapolation nach oben
+                '!Extrapolation up
                 i2min = izpl - 1
             End If
         Else
             i2min = i1min - 1
             If (i2min < 1) Then
-                '!Extrapolation nach unten
+                '!Extrapolation down
                 i2min = 2
             End If
         End If
         'c
-        'c      Sortieren der 2 Werte nach aufsteigendem n:
+        'c      Sort the 2 Values by ascending n:
         'c
         If (Xis(i2min) < Xis(i1min)) Then
             igel = i2min
@@ -2884,7 +2884,7 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             i1min = igel
         End If
         'c
-        'c     Interpolation der zugehoerigen Maximalleistung (P/Pnenn)
+        'c     Interpolation of the associated Maximum-power (P/Pnom)
         'c
         If ((Xis(i2min) - Xis(i1min)) = 0) Then
             Xis(i2min) = Xis(i2min) + 0.000001

@@ -44,7 +44,7 @@ Class cERG
         ErgEntryList = New List(Of String)
 
 
-        '********************** GEN-Liste raussuchen. Bei ADVANCE aus Flotte sonst aus Jobliste '**********************
+        '********************** GEN-Liste raussuchen. Bei ADVANCE aus Flotte sonst aus Jobliste '********************** |@@| Select GEN-list for ADVANCE either from Fleet or from Job-list '**********************
         If PHEMmode = tPHEMmode.ModeADVANCE Then
 
             ADV0 = New cADV
@@ -81,17 +81,17 @@ Class cERG
         End If
 
 
-        '********************** Erg-Einträge erstellen '**********************
+        '********************** Create Erg-entries '**********************
         EVdone = False
         HEVorEVdone = False
         EngOnly = False
         NonEngOnly = False
 
-        'Fahrzeugtyp-unabhängig
+        'Vehicle type-independent
         AddToErg("\\T", "time", "[s]")
         AddToErg("\\Prated", "Prated", "[kW]")
 
-        'Jede GEN-Datei auf Modus und Kennfeld checken
+        'For each GEN-file check Mode and Map
         For Each str In GENs
 
             GEN0 = New cGEN
@@ -112,7 +112,7 @@ Class cERG
 
                 If Not EngOnly Then
 
-                    'nix...
+                    'nothing...
 
                     EngOnly = True
 
@@ -133,7 +133,7 @@ Class cERG
             End If
 
 
-            'Elektrofahrzeug / Hybrid
+            'Electric-Vehicle / Hybrid
             If GEN0.VehMode = tVehMode.EV Or GEN0.VehMode = tVehMode.HEV Then
 
                 'EV & HEV
@@ -155,7 +155,7 @@ Class cERG
 
                 End If
 
-                'Nur EV:
+                'Only EV:
                 If GEN0.VehMode = tVehMode.EV And Not EVdone Then
 
                     AddToErg("\\EC", "EC", "[kWh/km]")
@@ -168,10 +168,10 @@ Class cERG
             End If
 
 
-            'Konventionell / Hybrid  (Alles außer EV)
+            'Conventional / Hybrid (Everything except EV)
             If GEN0.VehMode <> tVehMode.EV Then
 
-                'Konventionelles Fahrzeug...
+                'Conventional vehicles ...
                 AddToErg("\\n_norm", "n_norm", "[-]")
                 AddToErg("\\Pe_norm", "Pe_norm", "[-]")
                 AddToErg("\\Ppos", "Ppos", "[-]")
@@ -179,7 +179,7 @@ Class cERG
 
                 If GEN0.CreateMap Then
 
-                    'Aus den Messdaten
+                    'From the measured data
                     DRI0 = New cDRI
                     DRI0.FilePath = GEN0.CycleFiles(0).FullPath
 
@@ -194,7 +194,7 @@ Class cERG
 
                         If Em0.WriteOutput Then
 
-                            'x/h-Ausgabe falls ADVANCE Modus -oder- EngineOnly -oder- Einheit nicht in x/h und somit keine Umrechnung in x/km möglich
+                            'Dump x/h if in ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into  x/km is not possible
                             If Em0.NormID = tEmNorm.x Or GEN0.VehMode = tVehMode.EngineOnly Or PHEMmode = tPHEMmode.ModeADVANCE Then
                                 AddToErg(Em0.IDstring, Em0.Name, Em0.Unit, False)
                             Else
@@ -209,7 +209,7 @@ Class cERG
 
                 Else
 
-                    'Aus dem Kennfeld
+                    'From the Engine-Map
                     ENG0 = New cENG
                     ENG0.FilePath = GEN0.PathENG
 
@@ -237,7 +237,7 @@ Class cERG
 
                         If Em0.WriteOutput Then
 
-                            'x/h-Ausgabe falls ADVANCE Modus -oder- EngineOnly -oder- Einheit nicht in x/h und somit keine Umrechnung in x/km möglich
+                            'Dump x/h if ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into x/km is not possible
                             If Em0.NormID = tEmNorm.x Or GEN0.VehMode = tVehMode.EngineOnly Or PHEMmode = tPHEMmode.ModeADVANCE Then
                                 AddToErg(Em0.IDstring, Em0.Name, Em0.Unit, False)
                             Else
@@ -257,13 +257,13 @@ Class cERG
 
         If EngOnly Then
 
-            'derzeit nix
+            'currently nothing
 
         End If
 
         If NonEngOnly Then
 
-            'Fahrzeugbesogene Felder
+            'Vehicle-related fields
             AddToErg("\\Pbrake", "Pbrake", "[-]")
             AddToErg("\\EposICE", "EposICE", "[kWh]")
             AddToErg("\\EnegICE", "EnegICE", "[kWh]")
@@ -285,7 +285,7 @@ Class cERG
 
         End If
 
-        'ErgListe sortieren damit g/km und g/h nebeneinander liegen
+        'ErgListe sortieren damit g/km und g/h nebeneinander liegen |@@| Sort ErgListe so that g/km and g/h are side-by-side
         iDim = ErgEntryList.Count - 1
 
         For i1 = 0 To iDim - 1
@@ -354,14 +354,14 @@ Class cERG
 
         t1 = MODdata.tDim
 
-        'Fahrzeugtyp-unabhängig
+        'Vehicle type-independent
         ErgEntries("\\T").ValueString = (t1 + 1).ToString
         ErgEntries("\\Prated").ValueString = VEH.Pnenn
 
-        'Länge, Geschw., Steigung
+        'Length, Speed, Slope
         If Not GEN.VehMode = tVehMode.EngineOnly Then
 
-            'Durchschnitts-Geschw. berechnen
+            'Average-Speed. calculation
             sum = 0
             For t = 0 To t1
                 sum += MODdata.Vh.V(t)
@@ -371,7 +371,7 @@ Class cERG
             ErgEntries("\\S").ValueString = (Vquer * (t1 + 1) / 3600).ToString
             ErgEntries("\\V").ValueString = Vquer.ToString
 
-            'Durchschnitts-Steigung berechnen
+            'Average-Slope calculation
             sum = 0
             For t = 0 To t1
                 sum += MODdata.Vh.Grad(t)
@@ -385,7 +385,7 @@ Class cERG
         'EV / Hybrid
         If GEN.VehMode = tVehMode.EV Or GEN.VehMode = tVehMode.HEV Then
 
-            'Positive effektive EM-Leistung
+            'Positive effective EM-Power
             sum = 0
             c = 0
             For t = 0 To t1
@@ -396,7 +396,7 @@ Class cERG
             Next
             If c > 0 Then ErgEntries("\\PeEM+").ValueString = (sum / c).ToString
 
-            'Positive effektive Batterie-Leistung = innere EM-Leistung
+            'Positive effective Battery-Power = internal EM-Power
             sum = 0
             c = 0
             For t = 0 To t1
@@ -407,7 +407,7 @@ Class cERG
             Next
             If c > 0 Then ErgEntries("\\PeBat+").ValueString = (sum / c).ToString
 
-            'Positive innere Batterie-Leistung
+            'Positive internal Battery-Power
             sum = 0
             c = 0
             For t = 0 To t1
@@ -418,10 +418,10 @@ Class cERG
             Next
             If c > 0 Then ErgEntries("\\PiBat+").ValueString = (sum / c).ToString
 
-            'Verbrauchte Energie berechnen
+            'Calculate Energy consumed
             EBatPlus = sum / 3600
 
-            'Negative effektive EM-Leistung
+            'Negative effective EM-Power
             sum = 0
             c = 0
             For t = 0 To t1
@@ -432,7 +432,7 @@ Class cERG
             Next
             If c > 0 Then ErgEntries("\\PeEM-").ValueString = (sum / c).ToString
 
-            'Negative effektive Batterie-Leistung = innere EM-Leistung
+            'Negative effective Battery-Power = internal EM-Power
             sum = 0
             c = 0
             For t = 0 To t1
@@ -443,7 +443,7 @@ Class cERG
             Next
             If c > 0 Then ErgEntries("\\PeBat-").ValueString = (sum / c).ToString
 
-            'Negative innere Batterie-Leistung
+            'Negative internal Battery-Power
             sum = 0
             c = 0
             For t = 0 To t1
@@ -454,10 +454,10 @@ Class cERG
             Next
             If c > 0 Then ErgEntries("\\PiBat-").ValueString = (sum / c).ToString
 
-            'Geladene Energie berechnen
+            'Charged-energy calculation
             EBatMinus = sum / 3600
 
-            'Energie in/aus Batterie
+            'Battery in/out Energy
             ErgEntries("\\EiBat+").ValueString = EBatPlus.ToString
             ErgEntries("\\EiBat-").ValueString = EBatMinus.ToString
 
@@ -492,23 +492,23 @@ Class cERG
             'Delta SOC
             ErgEntries("\\∆SOC").ValueString = (MODdata.Px.SOC(t1) - MODdata.Px.SOC(0)).ToString
 
-            'Nur EV:
+            'Only EV:
             If GEN.VehMode = tVehMode.EV Then
 
-                'Energieverbrauch
+                'Energy-consumption
                 ErgEntries("\\EC").ValueString = ((EBatPlus + EBatMinus) / (Vquer * (t1 + 1) / 3600)).ToString
 
             End If
 
         End If
 
-        'Konventionell d.h. alles mit ICE (nicht EV)
+        'Conventional means everything with ICE (not EV)
         If GEN.VehMode <> tVehMode.EV Then
 
-            'Emissionen
+            'Emissions
             For Each Em0 In MODdata.Em.EmComp.Values
 
-                'x/h-Ausgabe falls ADVANCE Modus -oder- EngineOnly -oder- Einheit nicht in x/h und somit keine Umrechnung in x/km möglich
+                'Dump x/h if ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into x/km is not possible
                 If Em0.WriteOutput Then
                     If Em0.NormID = tEmNorm.x Or GEN.VehMode = tVehMode.EngineOnly Or PHEMmode = tPHEMmode.ModeADVANCE Then
                         ErgEntries(Em0.IDstring).ValueString = Em0.FinalAvg.ToString
@@ -519,7 +519,7 @@ Class cERG
 
             Next
 
-            'Leistung, Drehzahl
+            'Power, Revolutions
             sum = 0
             For t = 0 To t1
                 sum += MODdata.Pe(t)
@@ -548,7 +548,7 @@ Class cERG
 
         End If
 
-        'Nur Gesamtfahrzeug (nicht EngOnly)
+        'Nur Gesamtfahrzeug (nicht EngOnly) |@@| Only Entire-vehicle (not EngOnly)
         If Not GEN.VehMode = tVehMode.EngineOnly Then
 
             'Pbrake-norm
@@ -634,7 +634,7 @@ Class cERG
 
         End If
 
-        'Ausgabe-String erstellen:
+        'Create Output-string:
         First = True
 
         For Each key In ErgEntryList
@@ -652,7 +652,7 @@ Class cERG
 
         MsgSrc = "SUMALL/Output"
 
-        'Datei öffnen
+        'Open file
         Try
             Ferg = My.Computer.FileSystem.OpenTextFileWriter(ERGpath, True, FileFormat)
             Ferg.AutoFlush = True
@@ -665,7 +665,7 @@ Class cERG
         Ferg.WriteLine("Job,Input File,Cycle," & ErgHead())
         Ferg.WriteLine("[-],[-],[-]," & ErgUnits())
 
-        'Datei schließen (wird nach jedem Job neu geöffnet)
+        'Close file (will open after each job)
         Ferg.Close()
 
         HeadInitialized = True
@@ -684,7 +684,7 @@ Class cERG
             If Not HeadInit() Then Return False
         End If
 
-        'Datei öffnen
+        'Open file
         Try
             Ferg = My.Computer.FileSystem.OpenTextFileWriter(ERGpath, True, FileFormat)
             Ferg.AutoFlush = True
@@ -701,7 +701,7 @@ Class cERG
             Ferg.WriteLine(str & ErgLine())
         End If
 
-        'Datei schließen
+        'Close file
         Ferg.Close()
         Ferg = Nothing
 
@@ -736,7 +736,7 @@ Class cERG
 
         MsgSrc = "SUMALL/Init"
 
-        'Ausgabepfad definieren
+        'Define Output-path
         If (PHEMmode = tPHEMmode.ModeBATCH) Then
             Select Case UCase(Cfg.BATCHoutpath)
                 Case sKey.WorkDir
@@ -750,9 +750,9 @@ Class cERG
             ERGpath = fFileWoExt(GenFile) & ".vsum"
         End If
 
-        'Datei öffnen
+        'Open file
         Try
-            'Datei öffnen
+            'Open file
             Ferg = My.Computer.FileSystem.OpenTextFileWriter(ERGpath, False, FileFormat)
             Ferg.AutoFlush = True
         Catch ex As Exception
@@ -766,7 +766,7 @@ Class cERG
         Ferg.WriteLine(Now.ToString)
         Ferg.WriteLine(ERGinfo)
 
-        'Datei schließen (wird nach jedem Job neu geöffnet)
+        'Close file (will open after each job)
         Ferg.Close()
 
         Return True

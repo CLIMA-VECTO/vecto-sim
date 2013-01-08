@@ -1,4 +1,4 @@
-Public Enum tPHEMmode As Short
+﻿Public Enum tPHEMmode As Short
     ModeSTANDARD = 0
     ModeBATCH = 1
     ModeADVANCE = 2

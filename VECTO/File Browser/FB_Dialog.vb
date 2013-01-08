@@ -1,4 +1,4 @@
-Public Class FB_Dialog
+ï»¿Public Class FB_Dialog
 
     Private MyFolder As String
     Private MyFiles() As String
@@ -29,9 +29,9 @@ Public Class FB_Dialog
 
     'New
     Public Sub New(ByVal LightMode As Boolean)
-        ' Dieser Aufruf ist für den Windows Form-Designer erforderlich.
+        ' This call is required by the Windows Form Designer.
         InitializeComponent()
-        ' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
+        ' Append any initialization after the InitializeComponent() call.
         MyID = "Default"
         UpdateLock = False
         Initialized = False
@@ -80,7 +80,7 @@ Public Class FB_Dialog
         If Me.DialogResult = Windows.Forms.DialogResult.OK Then
             If bBrowseFolder Then
                 path = Trim(Me.TextBoxPath.Text)
-                'Wenn leerer Pfad: Aktuellen Ordner (MyFolder) nehmen
+                'If empty path: use the Current-folder(MyFolder)
                 If path = "" Then
                     path = MyFolder
                 Else
@@ -95,15 +95,15 @@ Public Class FB_Dialog
                 ReDim MyFiles(0)
                 MyFiles(0) = path
             Else
-                'Abbruch wenn leerer Pfad
+                'Stop if empty path
                 If Trim(Me.TextBoxPath.Text) = "" Then
                     e.Cancel = True
                     Exit Sub
                 End If
                 LastExt = Trim(Me.ComboBoxExt.Text)
-                'Dateien in Array übernehmen
+                'Assume Files in array
                 If Microsoft.VisualBasic.Left(Me.TextBoxPath.Text, 1) = "<" And Me.ListViewFiles.SelectedItems.Count > 0 Then
-                    'Mehrere Dateien ausgewählt 
+                    'Multiple files selected
                     ReDim MyFiles(Me.ListViewFiles.SelectedItems.Count - 1)
                     x = -1
                     For Each lv0 As ListViewItem In Me.ListViewFiles.Items
@@ -114,13 +114,13 @@ Public Class FB_Dialog
                     Next
                     bMultiFiles = True
                 Else
-                    'Einzelne Datei
+                    'Single File
                     path = Trim(Me.TextBoxPath.Text)
-                    'Primäre Extension (u.a. für bForceExt)
+                    'Primary extension (eg for bForceExt)
                     Ext = Trim(Me.ComboBoxExt.Text.Split(",")(0))
-                    'Falls Datei ohne Pfad angegeben dann Pfad hinzufügen
+                    'If file without path then append path
                     If Microsoft.VisualBasic.Mid(path, 2, 1) <> ":" Then path = MyFolder & path
-                    'Falls statt Datei ein Ordner eingegeben wurde: Auf Ordner wechseln und Abbruch
+                    'If instead of File a Folder is entered: Switch to Folder and Abort
                     If IO.Directory.Exists(path) Then
                         SetFolder(path)
                         e.Cancel = True
@@ -131,18 +131,18 @@ Public Class FB_Dialog
                         If UCase(IO.Path.GetExtension(path)) <> "." & UCase(Ext) Then path &= "." & Ext
                         HasExt = True
                     Else
-                        'Check ob Datei mit Ext angegeben
+                        'Check whether specified a File with Ext
                         HasExt = (Microsoft.VisualBasic.Len(IO.Path.GetExtension(path)) > 1)
                     End If
-                    'Falls Datei ohne Endung (nach bForceExt-Abfrage) und nicht existiert dann primäre Endung hinzufügen
+                    'If File without Extension (after bForceExt question) and it does not exist, then add primary Extension
                     If Not HasExt Then
                         If Ext <> "*" And Ext <> "" Then
                             If Not IO.File.Exists(path) Then path &= "." & Ext
                         End If
                     End If
-                    'Check ob Datei existiert
+                    'Check that File exists
                     If IO.File.Exists(path) Then
-                        'Ja: Check ob Overwrite wenn bOverwriteCheck
+                        'Yes: when bOverwriteCheck, check for Overwrite
                         If bOverwriteCheck Then
                             If MsgBox("Overwrite " & path & " ?", MsgBoxStyle.YesNo) = MsgBoxResult.No Then
                                 e.Cancel = True
@@ -150,14 +150,14 @@ Public Class FB_Dialog
                             End If
                         End If
                     Else
-                        'Nein: Abbruch wenn bFileMustExist
+                        'No: abort if bFileMustExist
                         If bFileMustExist Then
                             MsgBox("The file " & path & " does not exist!", MsgBoxStyle.Critical)
                             e.Cancel = True
                             Exit Sub
                         End If
                     End If
-                    'MyFiles definieren
+                    'Define MyFiles
                     ReDim MyFiles(0)
                     MyFiles(0) = path
                     bMultiFiles = False
@@ -172,7 +172,7 @@ Public Class FB_Dialog
 
         If Not Initialized Then Init()
 
-        'FolderHistory ContextMenu laden
+        'Load Folder History ContextMenu
         For x = 0 To 9
             Me.ContextMenuHisFolder.Items(x).Text = FB_FolderHistory(x)
         Next
@@ -218,23 +218,23 @@ Public Class FB_Dialog
         End If
 
 
-        'Pfad definieren
-        '   Falls kein Pfad angegeben wird: Letzter Ordner, kein Dateiname
+        'Define Path
+        '   If no path is specified: Last folder, no file name
         If path = "" Then path = FB_FolderHistory(0)
 
-        '   Falls Pfadlänge zu klein (Pfad ungültig): Letzte Datei
+        '   If path-length too small  (Path is invalid): Last File
         If path.Length < 2 Then path = LastFile
 
-        'Ordner öffnen - Falls kein Ordner im Pfad: Letzter Ordner
+        'Open Folder - If no folder in the path: Last folder
         If fPATH(path) = "" Then
-            'Falls Datei ohne Pfad angegeben
+            'If given a file without path
             If Trim(FB_FolderHistory(0)) = "" Then
                 SetFolder("C:\")
             Else
                 SetFolder(FB_FolderHistory(0))
             End If
         Else
-            '...sonst: 
+            '...Otherwise:
             SetFolder(fPATH(path))
         End If
         If bBrowseFolder Then
@@ -244,7 +244,7 @@ Public Class FB_Dialog
             Me.TextBoxPath.Text = IO.Path.GetFileName(path)
         End If
 
-        'Form anzeigen----------------------------------------------------
+        'Show form ------------------------------------------------ ----
         Me.ShowDialog()
         If Me.DialogResult = Windows.Forms.DialogResult.OK Then
             'File / Folder History
@@ -256,7 +256,7 @@ Public Class FB_Dialog
                 UpdateHisFolder(fPATH(LastFile))
                 If Not bBrowseFolder Then UpdateHisFile(LastFile)
             End If
-            'Globale Folder History updaten
+            'Update Global History Folder
             For x = 0 To 9
                 FB_FolderHistory(x) = Me.ContextMenuHisFolder.Items(x).Text
             Next
@@ -269,7 +269,7 @@ Public Class FB_Dialog
         End If
     End Function
 
-    'Schließen und File/Folder History speichern
+    'Close and save File / Folder History
     Public Sub SaveAndClose()
         Dim f As System.IO.StreamWriter
         Dim x As Int16
@@ -306,7 +306,7 @@ Public Class FB_Dialog
         Me.Close()
     End Sub
 
-    'Umschalten auf FolderBrowser
+    'Switching to FolderBrowser
     Public Sub SetFolderBrowser()
         If Initialized Then Exit Sub
         bBrowseFolder = True
@@ -318,7 +318,7 @@ Public Class FB_Dialog
         Me.Text = "Directory Browser"
     End Sub
 
-    'Initialisieren
+    'Initialize
     Private Sub Init()
         Dim x As Int16
         Dim line As String
@@ -326,10 +326,10 @@ Public Class FB_Dialog
 
         UpdateLock = True
 
-        'Globale FileBrowser Initialisierung
+        'Initialization for Global File Browser
         If Not FB_Init Then GlobalInit()
 
-        'Laufwerk-ComboBox laden
+        'Load Drive ComboBox
         For x = 0 To UBound(FB_Drives)
             Me.ComboBoxDrive.Items.Add(FB_Drives(x))
         Next
@@ -392,7 +392,7 @@ Public Class FB_Dialog
 
         Dim f As System.IO.StreamReader
 
-        'Laufwerk-Liste erstellen
+        'Create Drive List
         ReDim FB_Drives(UBound(IO.Directory.GetLogicalDrives()))
         x = -1
         For Each drive In IO.Directory.GetLogicalDrives()
@@ -400,7 +400,7 @@ Public Class FB_Dialog
             FB_Drives(x) = Microsoft.VisualBasic.Left(drive, 2)
         Next
 
-        'FolderHistory einlesen
+        'Read Folder History
         For x = 0 To 19
             FB_FolderHistory(x) = EmptyText
         Next
@@ -725,7 +725,7 @@ Public Class FB_Dialog
         Dim x As Int16
         Dim y As Int16
         If bLightMode Then Exit Sub
-        'Context Menu sortieren
+        'Sort Context Menu
         For x = 0 To 8
             If UCase(Me.ContextMenuHisFile.Items(x).Text.ToString) = UCase(path) Then Exit For
         Next
@@ -738,7 +738,7 @@ Public Class FB_Dialog
         Dim x As Int16
         Dim y As Int16
 
-        'Context Menu sortieren
+        'Sort Context Menu
         For x = 0 To 8
             If UCase(Me.ContextMenuHisFolder.Items(x).Text.ToString) = UCase(path) Then Exit For
         Next
@@ -757,9 +757,9 @@ Public Class FB_Dialog
         Dim y As Int16
         'Init
         If Not Initialized Then Init()
-        'Dateien
+        'Files
         UpdateHisFile(path)
-        'Ordner
+        'Folder
         path = fPATH(path)
         For x = 0 To 8
             If UCase(FB_FolderHistory(x)) = UCase(path) Then Exit For
@@ -770,25 +770,25 @@ Public Class FB_Dialog
         FB_FolderHistory(0) = path
     End Sub
 
-    'Ordner wechseln
+    'Change folder
     Private Sub SetFolder(ByVal Path As String)
 
-        'Abbruch wenn keine Laufwerk-Angabe
+        'Abort if no drive specified
         If Microsoft.VisualBasic.Mid(Path, 2, 1) <> ":" Then Exit Sub
 
         UpdateLock = True
 
-        'Suchfelder löschen
+        'Delete Search-fields
         Me.TextBoxSearchFile.Text = ""
         Me.TextBoxSearchFolder.Text = ""
 
-        'Laufwerk setzen
+        'Set Drive
         If MyDrive <> Microsoft.VisualBasic.Left(Path, 2) Then
             MyDrive = UCase(Microsoft.VisualBasic.Left(Path, 2))
             Me.ComboBoxDrive.SelectedItem = MyDrive
         End If
 
-        'Ordner setzen
+        'Set Folder
         MyFolder = Path
         If Microsoft.VisualBasic.Right(MyFolder, 1) <> "\" Then MyFolder &= "\"
         LoadListFolder()
@@ -803,7 +803,7 @@ Public Class FB_Dialog
 
     End Sub
 
-    'Ordner Eine Ebene hinauf
+    'Folder one level up
     Private Sub FolderUp()
         Dim path As String
         Dim x As Int32
@@ -814,14 +814,14 @@ Public Class FB_Dialog
         End If
     End Sub
 
-    'FolderListe laden
+    'Load Folder-List
     Private Sub LoadListFolder()
         Dim SearchPat As String
-        'FolderListe löschen
+        'Delete Folder-List
         Me.ListViewFolder.Items.Clear()
         SearchPat = "*" & Me.TextBoxSearchFolder.Text & "*"
         Try
-            'Ordner hinzufügen
+            'Add Folder
             Dim di As New IO.DirectoryInfo(MyFolder)
             Dim aryFi As IO.DirectoryInfo()
             Dim fi As IO.DirectoryInfo
@@ -834,7 +834,7 @@ Public Class FB_Dialog
         End Try
     End Sub
 
-    'Dateiliste laden
+    'Load File-list
     Private Sub LoadListFiles()
         Dim x As Int32
         Dim SearchPat As String
@@ -842,25 +842,25 @@ Public Class FB_Dialog
         Dim SearchExt As String
         Dim ExtStr As String()
 
-        'Abbruch wenn bBrowseFolder
+        'Abort if bBrowseFolder
         If bBrowseFolder Then Exit Sub
 
         Me.LabelFileAnz.Text = "0 Files"
-        'Extension-Filter definieren
+        'Define Extension-filter
         If Trim(Me.ComboBoxExt.Text.ToString) = "" Then
             ExtStr = New String() {"*"}
         Else
             ExtStr = Me.ComboBoxExt.Text.ToString.Split(",")
         End If
 
-        'FileListe löschen
+        'Delete File-List
         Me.ListViewFiles.Items.Clear()
 
         SearchFile = Me.TextBoxSearchFile.Text
 
         Me.ListViewFiles.BeginUpdate()
         Try
-            'Ordner hinzufügen
+            'Add Folder
             Dim di As New IO.DirectoryInfo(MyFolder)
             Dim aryFi As IO.FileInfo()
             Dim fi As IO.FileInfo

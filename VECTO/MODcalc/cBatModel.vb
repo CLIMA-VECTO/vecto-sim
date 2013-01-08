@@ -18,7 +18,7 @@
     Public SOC_MAX As Single
     Public SOC_MIN As Single
 
-    'Aktuelle Daten (d.h. zum aktuellen (zuletzt berechneten) Zeitschritt)
+    'Current data (ie the current (last calculated) Time-step)
 
     Public TempBat As Single
     Public Ubat As Single           'Spannung   [V]     (Array)
@@ -52,14 +52,14 @@
 
     End Function
 
-    'Maximal zulässige Leistung zum Antreiben (Batterie entladen) [kW]    Vorzeichen positiv (PHEM Standard)
+    'Maximum allowable Power for driving (Battery discharged) [kW]    positive sign (PHEM Standard)
     Public ReadOnly Property PmaxAntr As Single
         Get
             Return -PmaxEntl
         End Get
     End Property
 
-    'Maximal zulässige Leistung zum Generieren/Rekuperiren (Batterie laden) [kW]    Vorzeichen negativ (PHEM Standard)
+    'Maximum allowable power for Generating/Rekuperiren (Battery-charging) [kW]    negative sign (PHEM Standard)
     Public ReadOnly Property PmaxLaden As Single
         Get
             Return -PmaxLad
@@ -69,9 +69,9 @@
 
 
     '--------------------------------------------------------------------------------------------
-    '--------------------------------- ~Batteriemodell Renhart~ ---------------------------------
+    '--------------------------------- ~Renhart Battery model ~ ---------------------------------
     '--------------------------------------------------------------------------------------------
-    'Methode zur Initialisierung - wird einmal aufgerufen
+    'Method for initializaztion - it is called once
     Public Function Bat_Init() As Boolean
 
         Dim BFile As New cFile_V3
@@ -79,7 +79,7 @@
         Dim U0_E As Single      ' Ubatt(SOC(T), Ibatt=0), Entladekurve
         Dim U0_L As Single      ' Ubatt(SOC(T), Ibatt=0), Ladekurve
 
-        'Abbruch wenn's Datei nicht gibt
+        'Abort if there's no file
         If sFilePath = "" Then Return False
         If Not IO.File.Exists(sFilePath) Then Return False
 
@@ -88,7 +88,7 @@
             Return False
         End If
 
-        'Einlesen der Parameter:
+        'Read the Parameters:
         a0 = BFile.ReadLine(0)
         a1 = BFile.ReadLine(0)
         a2 = BFile.ReadLine(0)
@@ -129,13 +129,13 @@
         SOC = GEN.SOCstart
         LastSOC = MyEV.SOCstart
         ' ----------------------------------------------------------------------------------------
-        ' Berechnung der Batteriespannung bei TempBat und SOC(0), Entladekurve
+        ' Calculation of the Battery-voltage at TempBat and SOC(0), Discharge curve
         ' ----------------------------------------------------------------------------------------
         FunkTemp = Ftemp(TempBat)
         U0_E = Uent(SOC) - (Uent(1) - Uent(0)) * 1.1 * (1 - FunkTemp)
         Ubat = U0_E
         ' ----------------------------------------------------------------------------------------
-        ' Berechnung der Batteriespannung bei TempBat und SOC(0), Ladekurve
+        ' Calculation of the Battery-voltage at TempBat and SOC(0), Charging-curve
         ' ----------------------------------------------------------------------------------------
         U0_L = Ulad(SOC) - (Uent(1) - Uent(0)) * 1.1 * (1 - FunkTemp)
         ' ----------------------------------------------------------------------------------------
@@ -145,7 +145,7 @@
 
     End Function
 
-    'Methode zur Berechnung der zulässigen Leistung - sekündlicher Aufruf
+    'Method of calculating the allowable power - Invoked second by second
     Public Sub Bat_Pzul(ByVal t As Integer)
         Dim FunkTemp As Single  ' Temp-Funktion für Ri(Temp)
         Dim U0_E As Single      ' Ubatt(SOC(T), Ibatt=0), Entladekurve
@@ -171,7 +171,7 @@
 
     End Sub
 
-    'Methode zur Berechnung der Batterieveluste und SOC für geg. Leistung - sekündlicher Aufruf
+    'Method of calculating the Batterie-losses and SOC for the given  Power - Invoked second by second
     Public Sub Bat_Calc(ByVal Perf As Single, ByVal t As Integer)
         Dim epsilon As Single = 0.001 ' Abfrageschranke
 
@@ -199,10 +199,10 @@
 
 
         'Input:
-        '   Perf ...geforderte Leistung. Bedingung: PgMAX < Perf < PaMAX [kW]
-        '   alle Paramer die in Bat_Init bestimmt/eingelesen wurden
-        '   jz ...Aktueller Zeitschritt
-        '   Alle Arrays von Zeitschritt 1 bis jz-1
+        '   Perf ... required Power  Condition: PgMAX < Perf < PaMAX [kW]
+        '   all Paramers were determined/read in Bat_Init
+        '   jz ...Current time-step
+        '   All arrays from Time-step 1 to jz-1
 
         'Output:
         '   SOC(jz)
@@ -222,7 +222,7 @@
 
     End Sub
 
-    'Übergibt PeBat für geg. PiBat (Vorzeichen nach PHEM)
+    'Returns PeBat for the given  PiBat (sign from PHEM)
     Public Function fPeBat(ByVal PiBat As Single) As Single
         If PiBat < 0 Then
             Return -fPbatLad(-PiBat)
@@ -247,82 +247,82 @@
     '----------------------------------------- PRIVATE ------------------------------------------
     '--------------------------------------------------------------------------------------------
 
-    'Batterie entladen
+    'Battery discharged
     Private Sub Bat_Ent(ByVal Perf As Single)
         Dim FunkTemp As Single  ' Temp-Funktion für Ri(Temp)
         Dim U0_E As Single      ' Ubatt(SOC(T), Ibatt=0), Entladekurve
         Dim Ri_T As Single      ' Ri bei Temperatur T, lokal
 
-        'Temperaturfunktion
+        'Temperature Function
         FunkTemp = Ftemp(LastTempBat)
 
-        'Ri bestimmen abhängig von Temperatur
+        'Determine Ri depending on temperature
         Ri_T = RiTemp(LastTempBat)
 
-        'Spannung bestimmen aus SOC und Spannungskurve
+        'Voltage determined from SOC and Voltage-curve
         U0_E = Uent(LastSOC) - (Uent(1) - Uent(0)) * 1.1 * (1 - FunkTemp)
 
-        'Strom berechnen
+        'Current calculation
         Ibat = -U0_E / 2 / Ri_T + Math.Sqrt((U0_E / 2 / Ri_T) ^ 2 + Perf * 1000 / Ri_T)
 
-        'Batterieverluste
+        'Battery-losses
         PbatV = Ibat ^ 2 * Ri_T / 1000.0
 
-        'Batterietemperatur
+        'Battery-temperature
         TempBat = LastTempBat + PbatV * 1000.0 * 1.0 / CP / MB
         If TempBat >= T_MAX Then
             TempBat = T_MAX
         End If
 
-        'SOC berechnen
+        'SOC calculation
         SOC = LastSOC + Ibat * 1.0 / (SOC_Kap * 3600)
 
-        'Korrektur für den aktuellen Zeitschritt
+        'Adjustment for the current time-step
         FunkTemp = Ftemp(TempBat)
         U0_E = Uent(SOC) - (Uent(1) - Uent(0)) * 1.1 * (1 - FunkTemp)
         Ri_T = RiTemp(TempBat)
         Ubat = U0_E + Ibat * Ri_T
     End Sub
 
-    'Batterie laden
+    'Charging Battery
     Private Sub Bat_Lad(ByVal Perf As Single)
         Dim FunkTemp As Single  ' Temp-Funktion für Ri(Temp)
         Dim U0_L As Single      ' Ubatt(SOC(T), Ibatt=0), Entladekurve
         Dim Ri_T As Single      ' Ri bei Temperatur T, lokal
 
 
-        'Temperaturfunktion
+        'Temperature-Function
         FunkTemp = Ftemp(LastTempBat)
 
-        'Ri bestimmen abhängig von Temperatur
+        'Determine Ri depending on temperature
         Ri_T = RiTemp(LastTempBat)
 
-        'Spannung bestimmen aus SOC und Spannungskurve
+        'Voltage determined from SOC and Voltage-curve
         U0_L = Ulad(LastSOC) - (Ulad(1) - Ulad(0)) * 1.1 * (1 - FunkTemp)
 
-        'Strom berechnen
+        'Current calculation
         Ibat = +U0_L / 2 / Ri_T - Math.Sqrt((U0_L / 2 / Ri_T) ^ 2 - Perf * 1000 / Ri_T)
 
-        'Batterieverluste
+        'Battery-losses
         PbatV = Ibat ^ 2 * Ri_T / 1000.0
 
-        'Batterietemperatur
+        'Battery-temperature
         TempBat = LastTempBat + PbatV * 1000.0 * 1.0 / CP / MB
         If TempBat >= T_MAX Then
             TempBat = T_MAX
         End If
 
-        'SOC berechnen
+        'SOC  calculation
         SOC = LastSOC + Ibat * 1.0 / (SOC_Kap * 3600)
 
-        'Korrektur für den aktuellen Zeitschritt
+        'Adjustment for the current time-step
         FunkTemp = Ftemp(TempBat)
         U0_L = Ulad(SOC) - (Ulad(1) - Ulad(0)) * 1.1 * (1 - FunkTemp)
         Ri_T = RiTemp(TempBat)
         Ubat = U0_L + Ibat * Ri_T
     End Sub
 
-    'Batterie nix tun
+    'Battery do nothing
     Private Sub Bat_Nix()
         'Dim SocProz As Single   ' lokal, SOC in Prozent
         'Dim FunkTemp As Single  ' Temp-Funktion für Ri(Temp)
@@ -337,7 +337,7 @@
     End Sub
 
 
-    'Übergibt PeBat beim Laden mit PEmot (Vorzeichen nach Renhart)
+    'Returns PeBat when invoked(Laden) with PEmot (sign from(nach)Renhart)
     Private Function fPbatLad(ByVal PEmot As Single) As Single
         Dim FunkTemp As Single
         Dim U0_L As Single
@@ -359,7 +359,7 @@
 
     End Function
 
-    'Übergibt PeBat beim Entladen mit PEmot (Vorzeichen nach Renhart)
+    'Return PeBat when Unloaded(Entladen) with PEmot (sign  from(nach) Renhart)
     Private Function fPbatEnt(ByVal PEmot As Single) As Single
         Dim FunkTemp As Single
         Dim U0_E As Single

@@ -1,4 +1,4 @@
-Imports System.Windows.Forms
+ï»¿Imports System.Windows.Forms
 
 Public Class F_ModSplit
 
@@ -8,10 +8,10 @@ Public Class F_ModSplit
     Dim FBtemp As cFileBrowser
 
     Public Sub New()
-        ' Dieser Aufruf ist für den Windows Form-Designer erforderlich.
+        ' Dieser Aufruf ist fÃ¼r den Windows Form-Designer erforderlich. |@@| This call is required by the Windows Form Designer.
         InitializeComponent()
 
-        ' Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
+        ' Add any initialization after the InitializeComponent() invocation.
         FBtemp = New cFileBrowser("temp", False, True)
         FBtemp.Extensions = New String() {"mod"}
     End Sub
@@ -59,7 +59,7 @@ Public Class F_ModSplit
         '   Split
         VehStrList = VehStr.Split(SplitArray.ToArray, StringSplitOptions.RemoveEmptyEntries)
 
-        '   Zu Int32 convertieren
+        '   Convert to Int32
         ReDim iVehList(UBound(VehStrList))
         For x = 0 To UBound(VehStrList)
             If IsNumeric(VehStrList(x)) Then
@@ -73,7 +73,7 @@ Public Class F_ModSplit
 
         LastFile = sMODpath
 
-        'Ende
+        'End
         Me.DialogResult = System.Windows.Forms.DialogResult.OK
         Me.Close()
     End Sub

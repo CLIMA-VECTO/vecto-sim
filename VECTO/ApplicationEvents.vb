@@ -1,17 +1,17 @@
-Imports System.Collections.Generic
+ï»¿Imports System.Collections.Generic
 
 Namespace My
 
-    ' Für MyApplication sind folgende Ereignisse verfügbar:
+    ' The following events are available for MyApplication:
     ' 
-    ' Startup: Wird beim Starten der Anwendung noch vor dem Erstellen des Startformulars ausgelöst.
-    ' Shutdown: Wird nach dem Schließen aller Anwendungsformulare ausgelöst. Dieses Ereignis wird nicht ausgelöst, wenn die Anwendung nicht normal beendet wird.
-    ' UnhandledException: Wird ausgelöst, wenn in der Anwendung eine unbehandelte Ausnahme auftritt.
-    ' StartupNextInstance: Wird beim Starten einer Einzelinstanzanwendung ausgelöst, wenn diese bereits aktiv ist. 
-    ' NetworkAvailabilityChanged: Wird beim Herstellen oder Trennen der Netzwerkverbindung ausgelöst.
+    ' Startup: Raised when the application starts even before the creation of the Startup-forms.
+    ' Shutdown: Raised after closing all the application forms. This event is not raised if the application terminates abnormally.
+    ' UnhandledException: Raised if the application encounters an unhandled exception.
+    ' StartupNextInstance: Raised when launching a single-instance application, and one is already active.
+    ' NetworkAvailabilityChanged: Occurs when connecting or disconnecting to the network.
     Partial Friend Class MyApplication
 
-        'Initialisierung
+        'Initialization
         Private Sub MyApplication_Startup(ByVal sender As Object, ByVal e As Microsoft.VisualBasic.ApplicationServices.StartupEventArgs) Handles Me.Startup
 
             Dim logfDetail As IO.FileInfo
@@ -22,7 +22,7 @@ Namespace My
 
             FirstTime = False
 
-            'Pfade
+            'Paths
             MyAppPath = My.Application.Info.DirectoryPath & "\"
             MyConfPath = MyAppPath & "config\"
             MyDeclPath = MyAppPath & "Declaration\"
@@ -30,7 +30,7 @@ Namespace My
 
             StartLogfile()
 
-            'Falls Ordner nicht vorhanden: Erstellen!
+            'If folder does not exist: Create!
             If Not IO.Directory.Exists(MyConfPath) Then
                 FirstTime = True
                 Try
@@ -49,7 +49,7 @@ Namespace My
                 Try
                     IO.Directory.CreateDirectory(FB_FilHisDir)
 
-                    'Directories.txt vorkonfigurieren
+                    'Preconfigure Directories.txt
                     Try
                         s = IO.Directory.GetParent(My.Application.Info.DirectoryPath).ToString & "\"
                     Catch ex As Exception
@@ -75,7 +75,7 @@ Namespace My
                 End Try
             End If
 
-            'Trennzeichen!
+            'Separator!
             SetCulture = False
             If System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator <> "." Then
                 SetCulture = True
@@ -88,14 +88,14 @@ Namespace My
                 End Try
             End If
 
-            'Klassen initialisieren
+            'Initialize Classes
             sKey = New csKey
             JobFileList = New List(Of String)
             JobCycleList = New List(Of String)
             DEV = New cDEV
             VEC = New cVECTO
 
-            Cfg = New cConfig   'ACHTUNG: cConfig.New löst cConfig.SetDefault aus welches sKey benötigt dehalb muss sKey schon vorher initialisiert werden!!
+            Cfg = New cConfig   'ACHTUNG: cConfig.New lÃ¶st cConfig.SetDefault aus welches sKey benÃ¶tigt dehalb muss sKey schon vorher initialisiert werden!!
 
             ProgBarCtrl = New cProgBarCtrl
 
@@ -103,13 +103,13 @@ Namespace My
             Cfg.ConfigLOAD()
 
 
-            'Log starten
+            'Start Log
             If IO.File.Exists(MyAppPath & "LOG.txt") Then
 
-                'Dateigröße checken
+                'File size check
                 logfDetail = My.Computer.FileSystem.GetFileInfo(MyAppPath & "LOG.txt")
 
-                'Falls Log zu groß: löschen
+                'If Log too large: Delete
                 If logfDetail.Length / (2 ^ 20) > Cfg.LogSize Then
 
                     LOGfile.WriteLine("Starting new logfile")
@@ -136,7 +136,7 @@ Namespace My
 
             End If
 
-            'Lizenz initialisieren
+            'License initialization
             Lic = New vectolic.cLicense
             Lic.AppVersion = VECTOvers
             Lic.FilePath = MyAppPath & "license.dat"

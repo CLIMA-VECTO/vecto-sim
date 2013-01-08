@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+ï»¿Imports System.Collections.Generic
 
 Public Class F_VEH
 
@@ -25,7 +25,7 @@ Public Class F_VEH
 
     End Sub
 
-#Region "Menü / Toolstrip"
+#Region "MenÃ¼ / Toolstrip"
 
     'New
     Private Sub ToolStripBtNew_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtNew.Click
@@ -96,7 +96,7 @@ Public Class F_VEH
 
 #Region "Speichern/Laden/Neue Datei"
 
-    'Speichern oder Speichern als Function = true wenn Datei gespeichert
+    'Save or Save As function = true if file is saved
     Private Function SaveOrSaveAs(ByVal SaveAs As Boolean) As Boolean
         If VehFile = "" Or SaveAs Then
             If fbVEH.SaveDialog(VehFile) Then
@@ -108,7 +108,7 @@ Public Class F_VEH
         Return saveVEH(VehFile)
     End Function
 
-    'Neue VEH
+    'New VEH
     Private Sub newVEH()
         Dim i As Integer
         Dim lvi As ListViewItem
@@ -161,7 +161,7 @@ Public Class F_VEH
 
     End Sub
 
-    'VEH öffnen
+    'Open VEH
     Sub openVEH(ByVal file As String)
         Dim i As Int16
         Dim VEH0 As cVEH
@@ -231,7 +231,7 @@ Public Class F_VEH
 
     End Sub
 
-    'VEH speichern
+    'Save VEH
     Private Function saveVEH(ByVal file As String) As Boolean
 
         Dim VEH0 As cVEH
@@ -334,7 +334,7 @@ Public Class F_VEH
 
             Case Else ' tCdMode.CdOfBeta
                 bEnabled = True
-                Me.LbCdMode.Text = "Input file: Yaw Angle [°], Cd Scaling Factor [-]"
+                Me.LbCdMode.Text = "Input file: Yaw Angle [Â°], Cd Scaling Factor [-]"
 
         End Select
 
@@ -402,7 +402,7 @@ Public Class F_VEH
 
 #Region "Change Events"
 
-    'Change Status ändern
+    'Change Status Ã¤ndern |@@| Change Status change
     Private Sub Change()
         If Not Changed Then
             Me.LbStatus.Text = "Unsaved changes in current file"
@@ -410,7 +410,7 @@ Public Class F_VEH
         End If
     End Sub
 
-    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht
+    ' "Save changes? "... Returns True if user aborts
     Private Function ChangeCheckCancel() As Boolean
 
         If Changed Then

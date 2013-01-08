@@ -1,0 +1,2010 @@
+﻿>>> ApplicationEvents.vb
+5:    ' The following events are available for MyApplication:
+7:    ' Startup: Raised when the application starts even before the creation of the Startup-forms.
+8:    ' Shutdown: Raised after closing all the application forms. This event is not raised if the application terminates abnormally.
+9:    ' UnhandledException: Raised if the application encounters an unhandled exception.
+10:    ' StartupNextInstance: Raised when launching a single-instance application, and one is already active.
+11:    ' NetworkAvailabilityChanged: Occurs when connecting or disconnecting to the network.
+14:        'Initialization
+25:            'Paths
+33:            'If folder does not exist: Create!
+52:                    'Preconfigure Directories.txt
+78:            'Separator!
+91:            'Initialize Classes
+106:            'Start Log
+109:                'File size check
+112:                'If Log too large: Delete
+139:            'License initialization
+>>> cConfig.vb
+49:        '*** First line: Version
+52:            ' "Remove V'' => It remains the number
+55:                'If invalid version: Abort
+58:                'Version settled
+134:        'Line      Variable        Type         Description
+135:        '(01)       WorkDPath       String      WorkDir
+136:        '(02)       LastMode        Short      Last used mode (equivalent CBoxMODE.SelectedIndex)
+137:        '(03)       IntpV2          Boolean     New interpolator to use
+138:        '(04)       nnormEngStop    Single      Stop engine if under this Revolutions
+139:        '(05)       TEMpath         String      TEM_Data path
+140:        '(06)       LastTEM         String      Last TEM file -not in Options Form!!!!
+141:        '(07)       TEMexl          Boolean     Open TEM in Excel  -not in Options Form!!!
+142:        '(08)       EAAvInt         Short       Analysis intervals in seconds. If 0: Ask for Value
+143:        '(09)       ModOut          Boolean     Dump Modal
+144:        '(10)       WegKorJa        Boolean     Wegkorrektur damit bei Geschw. Reduktion Zyklus nicht kürzer wird |@@| 10)       WegKorJa        Boolean     Path-correction in so speed. Reduction cycle is not shorter
+145:        '(11)       GnVorgab        Boolean     Gear-per- Revolutions
+146:        '(12)       LogSize         Int16       Maximum Log-size [MiB]
+147:        '(13)       FZPsort         Boolean     FZP sortieren (früher Standard da VISSIM die .fzp nach Sekunden sortiert ausgibt) |@@| 13)       FZPsort         Boolean     FZP sort (formerly standard since the VISSIM. Fzp sorted according seconds) outputs
+148:        '(14)       FZPsortExp      Boolean     Export FZP Sorted
+149:        '(15)       BATCHoutpath    Boolean     Output path for BATCH mode:   <WORKDIR>, <GENPATH> or path
+150:        '(16)       BATCHoutSubD    Boolean     Dump-BATCH in Subfolders (per .gen File)
+151:        '(17)       AirDensity      Single      Air-density
+152:        '(18)       FinalEmOnly     Boolean     Dump only Final Emission
+153:        '(19)       FCcorrection    Boolean     FC-Correction in BATCH-mode
+175:                    'Previously: IntpV2 = CBool(line)
+>>> cCustomMap.vb
+85:        'Search Min/Max
+105:        'Normalize
+125:            'When sign of x and y is not equal to the sign of xA(i) and yA(i) respectively, then skip Row i
+>>> cCycleKin.vb
+9:    'Fahrzustände in Sekunden |@@| Driving-states in seconds
+15:    'Fahrzustands-Anteile |@@| Driving-state ratios
+21:    'Acceleration parameters
+82:        '3s-Accel
+91:            'Driving-state ratios:  Stop/Acc/Dec/Cruise
+106:            'Average-Accel
+>>> cDelaunayMap.vb
+35:        'XY-triangulation
+50:        'XZ-triangulation
+>>> cDEV.vb
+13:    '********************************* Instructions for integrating new DEV-Options *********************************
+15:    '1. Entry in "Sub New()"
+17:    '   I) Define new cDEVoption Object with "Conf0 = New cDEVoption(ConfigType, Description, SaveInConfg, Enabled)"
+19:    '       ConfigType      <tDEVconfType>  ...Type definition: Boolean, Integer, Single, String, menu selection (Integer) or Reference to Function
+20:    '       Description     <String>        ...Description of the parameters
+21:    '       SaveInConfg     <Boolean>       ...Whether you want to save settings for next PHEM-startup
+22:    '       Enabled         <Boolean>       ...Whether settings in the DEV-tab can be changed
+24:    '   II) default value definition. Distinguish which ConfigType to use:
+46:    '           Where NameDerFunktion is a function to call returning a <String>: "Public Function NameDerFunktion() As String"
+50:    '           Definition of Available selection options as <String>:
+52:    '               Conf0.AddMode ("select 1")
+53:    '               Conf0.AddMode ("Option 2")
+54:    '               and so forth.
+56:    '           Default value definition: First choice = 0
+73:        '**************************** START: Parameters Configuration '****************************
+113:        '**************************** END: Parameters Configuration '*****************************
+121:    'Initialize the actual Config-Parameters from MyConfigs list
+126:    'Demo for Delegate Function
+327:                    '??? Darf nicht sein |@@| May not be
+>>> cEmComp.vb
+21:    'Transient Correction
+25:    'Component is dumped every one second
+28:    'Define ATVals (EXS)
+31:    'Totals/Average Values
+109:        'Averaged
+113:        'Total (g/h converted into g)
+>>> cERG.vb
+47:        '********************** GEN-Liste raussuchen. Bei ADVANCE aus Flotte sonst aus Jobliste '********************** |@@| Select GEN-list for ADVANCE either from Fleet or from Job-list '**********************
+84:        '********************** Create Erg-entries '**********************
+90:        'Vehicle type-independent
+94:        'For each GEN-file check Mode and Map
+115:                    'nothing...
+136:            'Electric-Vehicle / Hybrid
+158:                'Only EV:
+171:            'Conventional / Hybrid (Everything except EV)
+174:                'Conventional vehicles ...
+182:                    'From the measured data
+197:                            'Dump x/h if in ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into  x/km is not possible
+212:                    'From the Engine-Map
+240:                            'Dump x/h if ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into x/km is not possible
+260:            'currently nothing
+266:            'Vehicle-related fields
+288:        'ErgListe sortieren damit g/km und g/h nebeneinander liegen |@@| Sort ErgListe so that g/km and g/h are side-by-side
+357:        'Vehicle type-independent
+361:        'Length, Speed, Slope
+364:            'Average-Speed. calculation
+374:            'Average-Slope calculation
+388:            'Positive effective EM-Power
+399:            'Positive effective Battery-Power = internal EM-Power
+410:            'Positive internal Battery-Power
+421:            'Calculate Energy consumed
+424:            'Negative effective EM-Power
+435:            'Negative effective Battery-Power = internal EM-Power
+446:            'Negative internal Battery-Power
+457:            'Charged-energy calculation
+460:            'Battery in/out Energy
+495:            'Only EV:
+498:                'Energy-consumption
+505:        'Conventional means everything with ICE (not EV)
+508:            'Emissions
+511:                'Dump x/h if ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into x/km is not possible
+522:            'Power, Revolutions
+551:        'Nur Gesamtfahrzeug (nicht EngOnly) |@@| Only Entire-vehicle (not EngOnly)
+637:        'Create Output-string:
+655:        'Open file
+668:        'Close file (will open after each job)
+687:        'Open file
+704:        'Close file
+739:        'Define Output-path
+753:        'Open file
+755:            'Open file
+769:        'Close file (will open after each job)
+>>> cVSUM.vb
+46:        'Average Speed calculation
+114:        'TODO: Mission without Cycle-name
+>>> M_FCCor.vb
+5:    'C     Subroutine to correct the Consumption-values from Engine-size (HBEFA-calculations because
+6:    'C     all HDV(LKW)-sizes are calculated from the same *. mep
+32:        'c  Correction of the Fuel-consumption
+33:        'c  only for manual calculations and HDV(LKW)
+35:            'c        for Euro0 and earlier, 3 different KF used depending on the size
+36:            'c        therefore no Size-correction here
+39:            'c         Correction-function for EUR1 and EUR 2 adopted 1:1 from ARTEMIS standard
+50:            'c        Korrekturfunktion Euro 3 gg. ARTEMIS geringfügig adaptiert (siehe FcCorr_Eu3ff.xls) |@@| Correction-function for Euro 3 like  ARTEMIS slightly adapted (see FcCorr_Eu3ff.xls)
+55:            'c         Correction function for Euro 4 similar to Euro3
+56:            'c         but lightly adapted: Average Nominal-Power of the engines into mep verwursteten
+>>> M_Lese.vb
+16:        'Read GEN
+35:        'VECTO: Defaultwerte für Parameter die nicht mehr in der .GEN/.VECTO sind werden beim Einlesen über SetDefault belegt. |@@| VECTO: Default values for the parameters are no longer in GEN/.VECTO but are allocated when Read about SetDefault.
+46:        'Error message in init()
+51:        'Einlesen der KFZ-Spezifikationen aus 'KFZspez' |@@| Read the Vehicle(KFZ)-specifications from 'KFZspez'
+131:        '   FLD muss jetzt vor MAP/MEP eingelesen werden falls dort <DRAG> Einträge sind! |@@| if there are <DRAG> entries, then read FLD before MAP/MEP!
+142:        'Normalize
+146:        '    Map: Columns 1 and 2 are the x-and y-coordinates (Pe, n)
+147:        '    the rest are Measurement-values
+148:        '    Emissions and Consumption in (g/(h*kW_NominalPower) at HDV(SNF)
+149:        '    Emissions (g/h) and consumption in (g/(h*kW_NominalPower) in cars(PKW) and LCV(LNF)
+152:            'Kennfeld read
+163:            'Normalize
+170:        '    Reading the Vehicle Driving-cycle (Not in ADVANCE).
+171:        '       LUZ: 04.02.2011: From now outside of READING because of new BATCH structure
+174:        '    Dynamik-Korrekturparameter, falls dynamokkorrektur ausgewählt: |@@| Dynamic correction parameter, if exclusively Dynamic-correction(dynamokkorrektur):
+175:        '    Parameter aus multipler Regressionsanalyse, Differenz zu stationär in |@@| Parameters of multiple regression analysis, Difference with stationary
+176:        '      HDV(SNF): (g/h) / kW_Nominal-power for individual parameters
+177:        '      Cars(PKW) (g/h) for emissions (g/h)/kW for consumption
+192:        'Reading data for hybrid simulation:
+195:            'TODO: Init EV/HEV here!
+>>> M_MAIN.vb
+31:        'Main program for all modes
+48:        'If there are any "unplanned" Aborts
+51:        'Reset the fault
+54:        'Specify Mode and Notification-msg
+70:        'License check
+93:        'Create BATCH Output-folder if necessary
+114:        'MOD-Data class initialization
+116:        'TEST: Schaun ob's auch ohne dem geht: MODdata.Init() |@@| TEST: Just look whether it's even without the: MODdata.Init()
+118:        'ERG-class initialization
+128:        'Warning on invalid/unrealistic settings
+131:        'Notify
+139:        '       Calculation Loop for all Preset-cycles and Vehicles:
+142:        '**************************************** Job loop ****************************************
+192:            'Check if Abort
+195:            'If error when read GEN
+198:            'Reading the input files
+199:            '   BATCH: Cycle from DRI list
+200:            '   ADVANCE: Cycle is not read
+206:            'Check if all the modes are licensed in the GEN file
+229:            'If optimizer is active, then read parameters here
+232:            'BATCH: Create Output-sub-folder
+255:            '************************************** Cycle-loop ****************************************
+268:                    'BATCH mode: Cycle from GEN-file but not from DRI list
+277:                    'Output name definition
+296:                '********************************** VECTO-Cycle-loop **********************************
+321:                    'TODO: Loading-loop
+322:                    '***************************** VECTO-loading-loop *********************************
+326:                    'Entry point for SOC-start iteration
+329:                    'Clean up
+332:                    'Read cycle
+335:                        'Read in
+344:                        'convert v(s) into v(t) (optional)
+352:                        'Convert to 1Hz (optional)
+356:                                'Error-notification in DRI.Convert()
+362:                        'Unnormalised
+370:                    'Initialize Cycle-specs (Speed, Accel, ...)
+377:                        'Rechne .npi-Leistung in Pe und P_clutch um |@@| Expect Npi-Power into Pe and P_clutch
+385:                        'CAUTION: VehmodeInit() requires information from GEN and DRI!
+387:                            'Error-notification within VehmodeInit()
+416:                                    'TODO: notification...
+444:                        'Calculate CycleKin (for erg/sum, etc.)
+452:                    'Emissionen und Nachbehandlung - wird bei EV-Modus nicht ausgeführt |@@| Emissions and After-treatment - it will not run in EV mode
+457:                        'Determine TC parameters per second
+460:                        'Map creation
+476:                        'Calculate Raw emissions
+479:                        'TC Parameter umrechnen in Differenz zu Kennfeld-TC-Parameter |@@| Convert TC parameters to differences with Map-TC-parameters
+482:                        'Dynamic correction
+488:                        'Korrektur der Verbrauchswerte kleiner LKW-Motoren bei HBEFA |@@| Correction of consumption values smaller HDV(LKW) engines by HBEFA
+494:                        'Exhaust system simulation
+504:                        'Totals / Averages form
+520:                    '*** Output Every second ***
+532:                    'VECTO Output
+533:                    'TODO: Loadings umschalten... |@@| TODO: Loadings Gear-shift ...
+540:                    'Output for BATCH and ADVANCE
+544:                        'In ADVANCE, Cycle-cancel = Job-cancel
+560:                        'Output in Erg (first Calculation - Initialization & Header)
+567:                    'Data Cleanup
+577:                    'TODO: Loading Loop
+578:                    '******************** END *** VECTO-loading loop *** END ************************
+588:                '************************* END *** VECTO Cycle-loop *** END *************************
+595:            '****************************** END *** Cycle-loop *** END ******************************
+641:            'Check whether Abort
+647:        '******************************* END *** Job loop *** END *******************************
+>>> M_OptInterface.vb
+21:    'Corrected Emissions (determined by SOC-iteration-module)
+24:    '*** Opt_Interface On/Off
+32:                'Initialization
+40:    '*** Initialization
+44:        'Count to Zero
+47:        'Delete Corr. Em.
+52:        'TODO: I/O-Verzeichnis festlegen |@@| TODO: Specify I/O-directory
+85:        'Timer Initialization/Start
+92:    '*** Read Parameters
+98:        '**** Reading the Input-file with Opt-parameter
+108:    '*** Dump parameters
+114:        '**** Ausgabe der Output-Datei mit Zielfunktion |@@| Dump the output file along with the Objective-function(Zielfunktion)
+124:        'Dump the StatusString
+133:        'Berechnung der Zielfunktion |@@| Calculation of the Objective-function(Zielfunktion)
+136:        'Ausgabe der Zielfunktion |@@| Dump the Objective-function(Zielfunktion)
+144:    '*** Opt Deactivation
+153:    '*** Status-notification (must not be called by BGWorker)
+158:    '*** Start PHEM - Called from F_MAINForm.ComMsgTimer when the Start-signal is received
+161:        'PHEM start
+165:        'Stop the timer
+167:        'Count + 1
+169:        'PHEM start
+174:    '*** PHEM ready - called by BackgroundWorker1_RunWorkerCompleted when PHEM finished
+177:        'Ausgabe der Zielfunktion |@@| Dump of the Objective-function(Zielfunktion)
+180:        'Finish PHEM_Launcher
+183:        'Start the Timer again
+190:    '*** Finished PHEM_Launcher
+>>> M_SOC_Iter.vb
+97:        'Check whether the Sign of Delta-SOC changes
+102:                'Sign changes ...
+105:                    '...Limit reached => Abort
+126:                'If the last iteration was the best (SOCnAbbr = True): Exit
+131:                'If another iteration was better (SOCnAbbr = False): Repeat
+168:        'Check whether LinReg possible: Mind. 2 calculations; Mind. dSOC-1 sign-changes
+271:            'Uncorrected Em use if SOC-iteration OK
+276:            'Uncorrected Em used
+284:        'Corrected Emissions for Optimizer
+286:            'If SOC-iteration was successful (or Lin.Reg not possible) then use Emissions from the last (uncorrected) calculation
+>>> VECTO_Global.vb
+20:    'TODO: Get rid of it! SOC-iteration belongs either in the Power-loop or Em-calculation for LinReg
+27:    'File format
+346:        'Log start
+>>> ADVANCE\cADV.vb
+84:        'Line 1: FZP file
+87:        'Line 2: FLT file
+90:        'Line 3: TEM file
+93:        'Line 4: RndSeed
+96:        'Line 5: MISKAMout True/False|
+99:        'Line 6: STRfilter True/False
+102:        'Line 7: Distance filters for SUM.STR
+105:        'Line 8 +: STR files
+>>> ADVANCE\cADVANCE.vb
+71:    'Felder für Streckennummer, Spur und Koordinaten für alle STR-Dateien  |@@| Fields for Route-number, Track and Coordinates for all STR files
+103:    'Calculation
+113:    'ADVANCE initialization
+126:        'Read ADV-File
+129:        'Check whether FLT is available
+135:        'Check whether FZP is sorted
+159:        'FLT einlesen (muss vor STR sein wegen cSTRerg) |@@| Read FLT  (must be done before STR because of cSTRerg)
+164:        'Create EMlist
+183:        'STR read
+204:        'Create Lists
+209:        'Read FZP
+213:        'FZP sort (and export)
+233:        'For Output-Vis
+236:        'Dump-initialization
+238:        '   Filename
+241:        ' Dump Modal
+246:        'Start-values
+260:    'ADVANCE memory release
+270:        'Dump
+273:        'Free memory
+333:        'Delete Lists
+340:        'Garbage Collection - Soll "System Out of Memory" Exception verhindern (tut's aber nicht!) |@@| Garbage Collection - If "System Out of Memory" Exception prevents it (but does not do it!)
+346:    'ADVANCE Vehicle calculation
+361:        'Check whether finished
+368:        'Initialize Cycle-class
+374:        'Fahzeugnummer und Typ definieren (bleibt hier konstant) |@@| Vehicle-number and Type definition (here remains constant)
+375:        '   Old Vehicle is VehStrAlt, New is VehStr
+380:        'Create Lists
+388:        'Define Fields for Vehicle-calculations
+391:            'Check whether it is a new Vehicle
+396:            'General(Allgemeiner) Vehicle-Cycle
+401:            '   Strecken-Auswertung (MISKAM) |@@| Road-Distance evaluation (MISKAM)
+415:        '   Vehicle identification
+419:        'Check whether Cycle too short => skip
+422:        'Increase number of Vehicles per each Type
+427:        'Check whethert last GEN-file to use is new, otherwise occupied(Belegung ) by FLT
+440:        'VehStr is now ALT
+449:    'Section by section calculation
+469:        'Zyklus durchschleifen |@@| through Cycle-loop
+472:            'No. of STR-file
+475:            'If STR-No has changed:
+476:            '   Finish with Old STR-No.
+485:                        'Distance (km driven)
+488:                        'Travel-Time in h
+491:                        'Vehicle(KFZ) No.
+494:                        'Cumulative emissions
+513:            'Add up
+527:        'Last STR completed
+534:                'Distance (km driven)
+537:                'Time in h
+540:                'Vehicle(KFZ) No.
+543:                'Cumulative emissions
+565:    'Read FLT
+667:    'Read FZP
+696:        'Determine File-length
+730:        'Dimension arrays
+750:        'Import File
+755:        'Skip Comments
+765:            'Strecken die nicht in der STR Datei aufgeführt sind werden hier entfernt |@@| Routes that are not listed in the STR file, are ignoted(?) here
+783:            'Show Arrays
+794:            'Display Progress
+804:        'Free memory
+814:            'Newly dimensioned arrays
+830:    'Sort FZP
+872:            'Current Vehicle is vNr1
+874:            'Count vehicles with vNr = vNr1
+883:            'vNrAnz = Number of Vehicles with vNr = vNr1
+884:            'Sort all vehicles with vNr = vNr1 by Vehicle-number
+892:                        'Cache = line x1
+901:                        'Linex1 = line x2
+910:                        'Line x2 = cache
+924:            'vNr1 sorted by time
+931:                            'Cache = line xx1
+938:                            'Line xx1 = Line xx2
+946:                            'Line x2 = Cache
+960:            'Display Status
+974:    'FZP export
+1016:        'Data
+1042:    'Read STR
+1133:        'Create SID-List
+1162:    '   ...Fahrzeuge aufteilen, die Lücke im Zeitverlauf haben |@@| Vehicles divisions, have the bridge the gap over time
+1194:    'Read ADV
+1208:        '********** .Read ADV-file ********
+1217:        'Line 1: FZP file
+1220:        'Line 2: FLT file
+1223:        'Line 3: TEM file
+1226:        'Line 4: RndSeed
+1229:        'Line 5: MISKAMout True/False
+1232:        'Line 6: strFilter True/False
+1235:        'Zeile 7: STR.SUM Streckenfilter |@@| Line 7: STR.SUM Route-filter
+1238:        'Line 8+: STR files
+1258:            'Define Output-path
+1286:        'File results with sums over all Vehicles(KFZs):
+1308:    'Close Output
+1331:            'C      Convert Emissions to g per second and Vehicle(KFZ)/day
+1346:            'C      Convert Emissions to mg per Meter
+1347:            'C     Streckenlaenge [m] wird aus Gerade zwischen Anfangs- und Endpunkt berechnet: |@@| Route-length [m] is calculated from straight line between start and end points:
+1363:            'C      Dump Results
+1365:            'C      Filename for ResultFile = Input-filename but with *.sd3:
+1369:            'C       File mit Summen Ergebnissen ueber alle Streckenstuecke: |@@| File with sums over all results Route-sections:
+1439:        'C     Subroutine of PHEM/Advance for dumping the results of MISKAM Air-Quality-Model of Lohmeyer
+1440:        'C     Dump Data separated by Semicolons
+1452:        'C     Adding up the Emission-data for Route-segments, for every Vehicle over each second
+1453:        'C     Caution: There are 2 possible Directions(Richtungen) for each section but only the StrId is given to *.fzp -> the "Closest" assigned Direction(Richtungen)
+1454:        'C     Richtung zugewiesen |@@| Direction assigned
+1464:                    'C      Suche nach naechstgelegenem Strassenteilstueck |@@| Find nearest Road-section
+1465:                    'C      Koordinaten Kfz: |@@| Coordinate vehicle(KFZ):
+1468:                    'C      Koordinaten Strecke: sSegAnX(j), sSegEnX(j), sSegAnY(j), sSegEnY(j) aus Eingabe |@@| Route Coordinates: sSegAnX(j), sSegEnX(j), sSegAnY(j), sSegEnY(j) from Input
+1469:                    'C      Abstandsumme zu Anfang- und Endpunkt des Streckenabschnittes j |@@| Total distance to the beginning and end of the Route-section j
+1479:            'C      Falls Streckennummer auf *.fzp File in *.str File nicht existiert, wird auf naechstgelegenes Stueck zugewiesen (gleiches System wie oben): |@@| If the Route number in *.fzp file not exist in *.str file, it is assigned the nearest section (same method as above):
+1495:            'C     Aufsummierung der Emissionen auf den jeweils zugehoerigen Streckenabschnitten: |@@| Summation of the emissions to the respective associated sections:
+1496:            'C     berechnung sekuendlich in (g/h)/3600 -> g/Strecke ueber gesamte Zeit |@@| calculation in every second (g/h) / 3600 - by> g / haul all the time
+1503:            'C      Zaehlen der Kfz fuer DTV (nur wenn nicht in voriger Sekunde auch schon auf der Strecke |@@| Counting the Vehicle for DTV (only if not already in previous second on the track
+1511:            'C     Grobe Rechnung Benzol nach GLOBEMI (HBEFA): |@@| Rough calculation for benzene GLOBEMI (HBEFA):
+1512:            'C      Distinguish as: Otto, Diesel, HDV(LKW), Car(PKW), before/after EURO 1
+1534:            'C     Grobe Rechnung Russ, Anteile Russ an PM derzeit nur Schaetzwerte!!!!: |@@| Rough calculation of Soot, Soot shares of PM currently only Schaetz-values!!:
+1535:            'C      Distinguish as: Otto, Diesel, HDV(LKW), Car(PKW), before/after EURO 1
+1562:            'C     SO2-Emissionen aus dem  im Kraftstoff enthaltenen |@@| SO2-Emissions as contained in the Fuel
+1563:            'C     Schwefel gerechnet. Mit Masse SO2 = (Masse% S / 100) * 2 |@@| Sulfur expected. With SO2 mass = (mass% S / 100) * 2
+1596:        '******** Dump each STR results ' *********
+1601:        '********* Dump Totals of all STR's ' *********
+1611:        '** File Header
+1618:        '*************************** Em per km ***************************
+1648:        '** Em per segment
+1656:            'Number of Vehicles
+1659:            'Travel time
+1674:            'Em per km
+1683:            'Writing
+1688:        '** Em per Vehicle Type
+1696:            'Number of Vehicles
+1699:            'Reisezeit, Strecke, Avg.Speed |@@| Travel time, Route-Distance, Avg. Speed
+1727:            'Writing
+1732:        '** Total
+1738:        'Number of Vehicles is not calculated from STRerg (makes no sense) but from cFLTfleet-recording
+1745:        'Travelling time
+1766:        'Em per km
+1779:        'Writing
+1815:        '** Em per segment
+1828:            'Writing
+1833:        '** Em per Vehicle Type
+1850:            'Writing
+1855:        '** Total
+1870:        'Writing
+1879:    '.Analyze Mod-file
+1895:        'Open Infile
+1910:        'Anzahl VehNummern |@@| Number of VehNummern
+1915:        'Loop through all VehNummern in list
+1918:            'Abort when User-abort
+1924:            'Abort when File finished
+1931:            'Open Output-File / Abort if Error on Opening
+1937:            'Loop through file
+1940:                'If string already contains a VehNr do not read again Line (see below)
+1944:                    'Read Line
+1948:                'If Line with VehNr found: extract VehNr
+1952:                    'If VehNr is the required one: write the Output-file
+1955:                        'First line write ("VehNr: ...")
+1958:                        'Read next Line (otherwise Do-While skipped)
+1961:                        'Loop until next VehNr / end_of_file
+1964:                            'If next Vehicle:
+1967:                                    'If Vehicle-number is the same: Continue writing File
+1968:                                    'Skip header and Units
+1973:                                    'Otherwise: Get out of loop
+1978:                            'Write Line
+1981:                            'Read line
+1986:                        'If not EndOfStream Set flag so next VehNr is not skipped
+1989:                        'Close Output-file
+1992:                        'Jump out of the VehNr-search-loop
+2026:    'FLT-class
+2042:        'Initialize
+2075:        'GenFile Random-generator
+2125:    'Klasse für abschnittsweise Auswertung |@@| Class for sections evaluation
+2191:            'File Header
+2202:            '*************************** Em per km ***************************
+2232:            '** Results per Veh-Type
+2240:                'Number of Vehicles
+2243:                'Travellingtime
+2267:                'Writing
+2272:            '** Total
+2278:            'Number of Vehicles
+2281:            'Travelling-time
+2309:            'Writing
+2345:            '** Results per Veh-Type
+2358:                'Writing
+2363:            '** Total
+2378:            'Writing
+2381:            'Close file
+>>> File Browser\cFileBrowser.vb
+14:'   - Fav-Dlog: Statt leeren Items in Fav-Liste "<undefined>" |@@| Fav-Dlog: Empty Items in Fav list Instead "<undefined>"
+18:'**Application
+25:'**Required Global variables (default):
+49:    'New Instance - define ID, switch to FolderBrowser
+58:    'OpenDialog Return True when Dialog ended with OK
+63:    'SaveDialog - Returns True when Dialog ended with OK
+74:    'Open dialogue - Return True if Dialogue ended with OK
+80:    'Manually update File History
+86:    'File / Folder History speichen und Speicher freigeben |@@| File / Folder History spokes and Release memory
+104:    'Define File-Extensions
+115:    'Ask for Files
+>>> File Browser\FB_Dialog.vb
+32:        ' This call is required by the Windows Form Designer.
+34:        ' Append any initialization after the InitializeComponent() call.
+83:                'If empty path: use the Current-folder(MyFolder)
+98:                'Stop if empty path
+104:                'Assume Files in array
+106:                    'Multiple files selected
+117:                    'Single File
+119:                    'Primary extension (eg for bForceExt)
+121:                    'If file without path then append path
+123:                    'If instead of File a Folder is entered: Switch to Folder and Abort
+134:                        'Check whether specified a File with Ext
+137:                    'If File without Extension (after bForceExt question) and it does not exist, then add primary Extension
+143:                    'Check that File exists
+145:                        'Yes: when bOverwriteCheck, check for Overwrite
+153:                        'No: abort if bFileMustExist
+160:                    'Define MyFiles
+175:        'Load Folder History ContextMenu
+221:        'Define Path
+222:        '   If no path is specified: Last folder, no file name
+225:        '   If path-length too small  (Path is invalid): Last File
+228:        'Open Folder - If no folder in the path: Last folder
+230:            'If given a file without path
+237:            '...Otherwise:
+247:        'Show form ------------------------------------------------ ----
+259:            'Update Global History Folder
+272:    'Close and save File / Folder History
+309:    'Switching to FolderBrowser
+321:    'Initialize
+329:        'Initialization for Global File Browser
+332:        'Load Drive ComboBox
+395:        'Create Drive List
+403:        'Read Folder History
+728:        'Sort Context Menu
+741:        'Sort Context Menu
+760:        'Files
+762:        'Folder
+773:    'Change folder
+776:        'Abort if no drive specified
+781:        'Delete Search-fields
+785:        'Set Drive
+791:        'Set Folder
+806:    'Folder one level up
+817:    'Load Folder-List
+820:        'Delete Folder-List
+824:            'Add Folder
+837:    'Load File-list
+845:        'Abort if bBrowseFolder
+849:        'Define Extension-filter
+856:        'Delete File-List
+863:            'Add Folder
+>>> GUI/F_AboutBox.vb
+4:    'Initialize
+33:    'Picture Links------------------------------------------------------------------
+>>> GUI/F_ADV.vb
+7:    'Initialize
+12:    'Close
+19:    'InputFile controls ------------------------------------------
+91:    'Save ADV
+108:    'New empty ADV
+126:    'Load ADV in Form
+149:        'Line 1: FZP file
+152:        'Line 2: FLT file
+155:        'Line 3: TEM file
+158:        'Line 4: RndSeed
+161:        'Line 5: MISKAMout True/False
+164:        'Line 6: strFilter True/False
+167:        'Line 7: Distance filter for SUM.STR
+170:        'Line 8 +: STR files
+181:    'Save ADV from Form
+204:        'ADV.STRpathsClear()    '<= Nicht notwendig da neues lokales cADV-Objekt |@@| ADV.STRpathsClear()     '<= Not necessary because new local cADV object
+234:    'Form changes (control whether GEN saved) ---------------------------------
+235:    'Event handler for the Form changes
+237:    'Change Status ändern |@@| Change Status change
+243:    ' "Save changes? "... Return True if user aborts
+>>> GUI/F_ENG.vb
+127:    'Save or Save As function = true if file is saved
+139:    'Save ENG
+180:    'Change Status ändern |@@| Change Status change
+188:    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht |@@| Save changes? "... Return True if User aborts
+>>> GUI/F_GBX.vb
+154:    'Save or Save As function = true if file is saved
+206:    'Change Status ändern |@@| Change Status change
+214:    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht |@@| Save changes? "... Returns True if user aborts
+>>> GUI/F_GEN.vb
+23:    'Cache Coolant System Simulation
+31:    'Initialize form (Load Drives, Combo-lists, ...)
+45:        'Damit Combobox-Inhalte aktuell sind |@@| So Combo-content is current
+59:    'Close
+75:    'Change the DynKor checkbox
+83:    'Change the Cold-start checkbox
+89:    'Change the SCR checkbox
+352:        'Thus Veh-file is returned
+378:        'Thus Veh-file is returned
+404:        'Thus Veh-file is returned
+520:    'Save ("Save" or "Save As" when new file)
+532:    'Load GEN in the form
+544:        'Read GEN
+559:        'Update Form
+587:        'Map creation -----------------
+601:        'Cold start --------------------------
+608:        'Files -----------------------------
+617:        'Cold start
+699:    'GEN save from form
+720:        'Map creation ------------------------------------------------ ------
+730:        'Cold start ------------------------------------------------ ---------------
+736:        'Files ------------------------------------------------- -----------------
+750:        'Cold start
+833:    'New BlankGEN
+848:        'Map creation -----------------
+858:        'Cold start --------------------------
+864:        'Files -----------------------------
+865:        'Cold start
+933:    'Event handler for the form changes
+949:    'Start/Stop - checkbox change
+955:    'Start / Stop - Textbox change
+960:    'TextBox.TextChanged Events => Change()
+1072:    'Change Status Change
+1080:    ' "Save changes? "... Returns True if User aborts
+>>> GUI/F_MAINForm.vb
+180:        'Called when PHEM already running
+186:        'Delete GENlist-Selection
+189:        'Set Mode
+199:        'Wenn mehr als 100 Kombinationen in Batch fragen ob sekündliche Ausgabe |@@| When Batch resulting in more than 100 combinations per second, ask whether to dump-output  per second
+214:        'Define Job-0list
+216:        'Define File / Cycle list
+219:        'Zyklus-Liste definieren (falls nicht BATCH-Modus wird in SetCycleList nur die Liste gelöscht und nicht neu belegt) |@@| Define Cycle-list (if not BATCH mode in SetCycleList deleted only the list and not reassigned)
+222:        'Check whether Overall-progbar is needed
+225:        'Launch through Job_Launcher
+259:    'Define File-lists
+291:    'Job Launcher
+296:        'Load Options from Options Tab
+299:        'Save Config
+304:        'Reset Msg-output
+307:        'Button switch
+311:        'Disable Options
+314:        'ProgBars start
+323:        'BG-Worker start
+339:    'Begin work
+342:        'Prevent SLEEP
+377:                'At x.ProgSec = -1 no update of ProgBarSec
+404:    'Work completed
+409:        'Progbar reset
+415:        'So ListView-Item Colors (Warning = Yellow, etc..) are correctly visible
+424:                'Falls Optimierer aktiv werden hier die Zielfunktion ausgegeben und Signal an Interface |@@| If Optimizers(Optimierer ) are active here, then dump the Objective-function(Zielfunktion ) and Signal to interface
+436:        'ShutDown when Unexpected Error
+443:        'Options enable / GUI reset
+450:        'Command Line Shutdown
+464:        'SLEEP reactivate
+477:    'Initialize
+490:        'Load Tabs properly (otherwise problem with ListViews)
+521:        'Load GUI Options (here, the GEN/ADV/DRI lists are loaded)
+524:        'Resize columns ... after Loading the @file-lists
+529:        'Initialize BackgroundWorker
+534:        'License check
+559:    'Shown Event (Form-Load finished) ... here StartUp Forms are loaded (DEV, GEN/ADV- Editor ..)
+587:    'Open file with PHEM
+599:        'Read Command-Line Args
+614:        'Mode switch
+621:        'If file is specified
+626:    'Close
+629:        'Save File-Lists
+632:        'Login close
+641:        'Config save
+646:        'File browser instances close
+705:        'Locked functions show/hide
+791:    'Remove File from list
+830:    'Append File to List
+855:    'Open file
+880:    'GEN/ADV list: Add File
+889:        'If PHEM runs: Cancel operation (because Mode-change during calculation is not very clever)
+895:        'Mode-switch if necessary
+923:                    'If file already exists in the list: Do not append (only when a single file)
+931:                        'Element auswählen und anhaken |@@| Element selection and hook
+942:            'Otherwise: Add File (without WorkDir)
+956:        'Number update
+1160:    'DRI list: Add File
+1171:        'Mode switch if necessary
+1185:        'Number update
+1293:        'Worker start
+1363:        'Cache Selected Items
+1384:        'Delete Selected Items
+1389:        'Items select and Insert
+1428:                'Mode toggle (from(auf) BATCH)
+1499:            'If PHEM already running: STOP
+1503:            '...Otherwise: START
+1505:            'Save Lists if Crash
+1515:    'Mode Change
+1521:        'Save Old list
+1543:        'Load New List
+1730:    'Open GEN-editor and load File
+1750:    'Open ADV-editor and load file
+1761:    'Save File-Lists
+1774:    '*** ComMsgTimer_Tick Tick - Check whether new Message
+1856:        'Set Mode
+1875:        'General(Allgemein)
+2106:    'If it is a Link => Open it
+2119:    'Hand cursor for links
+>>> GUI/F_ModSplit.vb
+11:        ' Dieser Aufruf ist für den Windows Form-Designer erforderlich. |@@| This call is required by the Windows Form Designer.
+14:        ' Add any initialization after the InitializeComponent() invocation.
+62:        '   Convert to Int32
+76:        'End
+>>> GUI/F_Options.vb
+5:    'Initialize - load config
+14:    'Load Config
+61:    'Options-----------------------------------
+>>> GUI/F_TEM_Creator.vb
+3:    'Initialization
+>>> GUI/F_VEH.vb
+99:    'Save or Save As function = true if file is saved
+111:    'New VEH
+164:    'Open VEH
+234:    'Save VEH
+405:    'Change Status ändern |@@| Change Status change
+413:    ' "Save changes? "... Returns True if user aborts
+>>> GUI/GUI_Subs.vb
+33:    'Job status => Job-list Status-column
+43:    'Cycle status => Cycle-list Status-column
+52:    'Worker Progress => Progbar (ProgBarSec Update when ProgSec > -1; ProgBarSec-Reset at ProgSec = 0)
+59:    'Progbar set to Continuous
+65:    'Abort
+77:    'Status message directly to GUI - can not be called by the BackgroundWorker!
+82:    'Statusbar - called either by WorkerMSG or directly by the form, NEVER by the Worker
+87:    'Status form reset - ONLY called by Events, NEVER by Worker
+94:    'Class used to pass Messages from BackgroundWorker
+176:    'If string not a number, then Zero
+202:    'Open File in Excel
+216:    'When no path is specified, then insert either WorkDir or MainDir   Special-folders
+221:        'Trim Path
+224:        'If empty file => Abort
+227:        'Replace sKeys
+232:        'Replace - Determine folder
+239:        ' "..\" => One folder-level up
+246:        'Supplement Path, if not available
+257:    'Path one-level-up      "C:\temp\ordner1\"  >>  "C:\temp\"
+271:    'File name without the path    "C:\temp\TEST.txt"  >>  "TEST.txt" oder "TEST"
+283:    'Filename without extension   "C:\temp\TEST.txt" >> "C:\temp\TEST"
+288:    'Filename without path if Path = WorkDir or MainDir
+305:    'Path alone        "C:\temp\TEST.txt"  >>  "C:\temp\"
+314:    'Extension alone      "C:\temp\TEST.txt" >> ".txt"
+>>> Input Files\cAux.vb
+21:        'Abort if there's no file
+27:        'Open file
+35:        'Map reset
+60:            'Column 1 = Auxiliary speed [rpm] => X-axis
+61:            'Column 2 = Mechanical power [kW] => Z-Axis (!)
+62:            'Column 3 = Output power [kW] => Y-Axis (!)
+>>> Input Files\cDRI.vb
+30:    'Defaults(Vorgabe) for EXS
+34:    'Parameters for KF-creation
+39:    'Defaults(Vorgabe) for AUX
+88:        'Values.Add(tDriComp.t, New List (Of Single))             '<= Needed only if ADVANCE > 1 Hz supported
+126:        'Abort if there's no file
+133:        '...now in New()
+135:        'Open file
+157:        ''*** First line: Version
+164:        '        'If invalid Version: Abort
+168:        '        'Version specified
+172:        '    'If no version information: Old Format
+177:        ''Version Check: Abort if input file format is newer than PHEM-version
+183:        ''Column 2: added option "+" = parameter for KF-creation
+200:        '*** Second row: Name/Identification of the Components
+203:        'Check Number of Columns/Components
+210:            'Falls DRIcomp = Undefined dann wirds als EXS-Comp oder als Emission für KF-Erstellung / Eng-Analysis verwendet |@@| If used DRIcomp = Undefined it will get as EXS-Comp or Emission for KF-Creation / Eng-Analysis
+245:                        'ERROR when component in angle brackets is unknown
+275:                    'if first EXS-column, then create Dictionary
+281:                    'If EXS-Component not yet in Dictionary, create
+293:                    'Check whether ExsComp/Module-combination already exists => ERROR
+321:        'Set Gvorg/Nvorg:
+333:        '*** Third row: Units/Normalization
+334:        'VECTO: nothing read. Fixed Units (line = file.ReadLine)
+336:        'Normalization-compatible DRI-components
+352:        'VECTO MAP-components: Always [g/h]!
+355:            ''Store Unit in String for further checks
+358:            ''Remove brackets
+362:            ''Set Scaling and Unit
+393:        '*** Line 4, 5: (optional when "+"): Settings for KF-creation
+395:        'If "+" enabled
+398:            'Creating instances
+402:            '1. Option "Map normalized by Pnom"
+408:            '2. Option "PfAK apply"
+429:        '*** Ab 4.Zeile bzw. Ab 6.Zeile: Werte (derzeit keine unterschiedlichen Einheiten/Normierungen unterstützt) |@@| From 4th line or From 6th line: values (no different units/normalizations support)
+490:        'Open file
+552:        'ResetMe resets Nvorg / Gvorg
+607:        'Convert Speed to m/s
+615:        'Normalize, if necessary
+625:        'Padd unnormalised, if neccesary
+635:        'Pe normalize, if necessary
+647:        '!!!!!!!! Emissions are only accepted in x/h or x (see ReadFile)!!!!!!!!
+759:        '*********************************** Deceleration(Verzögerung) limit ********************************
+786:        '*********************************** Create Time-sequence '***********************************
+891:        '*********************************** Convert to 1Hz '***********************************
+1009:        'Check whether Time is not reversed
+1017:        'Define Time-range
+1021:        'Create Output, Total and Num-of-Dictionaries
+1060:        'Start-values
+1077:            'Next Time-step
+1082:            'If Time-step > tMax:
+1085:                'Conclude Second
+1088:                'If no values ​​in Sum: Interpolate
+1140:                        'If only one Value: Inter- /Extrapolate
+1223:                    'Set New Area(Bereich)
+1228:                    'Check whether last second
+1234:                    'New Sum /Num no start
+1291:        'Accept New fields
+>>> Input Files\cEMO.vb
+40:        'Abort if there's no file
+44:        'Open file
+51:        'Map-Config
+54:        'Read FLD and MAP
+76:        'Normalize Map
+83:    'Returns the maximum available Drivetrain-power for given  Revolutions
+87:        'Extrapolation for x < x(1)
+99:        'Extrapolation for x > x(imax)
+114:    'Returns the maximum available Generator-power for the given  Revolutions
+118:        'Extrapolation for x < x(1)
+130:        'Extrapolation for x > x(imax)
+136:        'Interpolation
+>>> Input Files\cFLD.vb
+67:        'Stop if there's no file
+73:        'Open file
+81:        'Initialize Lists
+91:        ''*** First line: Version
+98:        '        'If invalid version: Abort
+102:        '        'Set Version
+107:        '    'If no version information: Old format
+112:        ''Version Check: Abort if input file format is newer than PHEM-version
+121:        '*** Second Line: Name/Identification of components (Drag-Emissions  create-KF)
+124:        ''Column count check,
+127:        ''Abort if less than 3 columns
+168:        'VECTO: No Header/Unit column. Always PT1!
+174:        '*** Third Line: Normalized/Measured
+177:        ''Abort when fewer Columns than in the second Line
+189:        '            'Everything is okay
+231:        ''Additional Components
+237:        '        'Remove brackets
+241:        '        'Set Scaling and Unit
+260:        'From Line 4: Values
+265:                'Read Line
+276:                'If PT1 not given, use default value (see above)
+296:                'Line-counter up (was reset in ResetMe)
+309:        'Close file
+315:        'ERROR-label for clean Abort
+328:        'Open file
+348:            'Line counter up (was reset in ResetMe)
+353:        'Close file
+371:        'Normalized Revolutions
+378:        'Normalized Power
+385:        'Normalized Power
+392:        'Normalized Pe-Target
+399:        'Em ent-normalize
+415:        'Extrapolation for x < x(1)
+427:        'Extrapolation for x > x(imax)
+444:        'Extrapolation for x < x(1)
+456:        'Extrapolation for x > x(imax)
+466:        'Dynamic Full-load
+475:        'Extrapolation for x < x(1)
+487:        'Extrapolation for x > x(imax)
+493:        'Interpolation
+500:        'Extrapolation for x < x(1)
+512:        'Extrapolation for x > x(imax)
+530:        'Extrapolation for x <x(1)
+542:        'Extrapolation for x > x(imax)
+>>> Input Files\cGEN.vb
+12:    'Mode
+154:        ''*** First line: Version
+172:        ''Version Check: abort if Input-file's format is newer than PHEM-version
+178:        '**** GEN Datei einlesen **** |@@| Read GEN file ****
+180:        'Allgemein |@@| Common
+208:        'KF creation
+253:        'Cold start
+297:        'Einzelne Nebenverbraucher |@@| Individual next consumer
+333:        'Schaltmodell-Verteilung |@@| Gear-shifting Model Distribution
+357:        'ERROR-label for clean Abort
+380:        '**** Read GEN file ****
+390:        'Convert Old Calculation-mode into New-one
+547:        'Map creation ------------------------------------------------ ------
+790:    'This Sub reads those Input-files that do not have their own class, etc.
+1327:        'Extrapolation for x < x(1)
+1339:        'Extrapolation for x > x(imax)
+1353:        'Extrapolation for x < x(1)
+1365:        'Extrapolation for x > x(imax)
+>>> Input Files\cMAP.vb
+140:        'Stop if there's no file
+146:        'Open file
+154:        'Initi Lists (before version check so ReadOldFormat works)
+163:        'Now checking whether MIP or MAP
+164:        '...is Read.
+167:        ''*** First line: Version
+177:        '        'Specify Version
+185:        ''Version Check: abort if input file format is newer than version PHEM
+191:        ''Column 2: Option "+" = parameter for KF creation
+200:        '*** Second Line: Name/Identification of Components (Only Em. Power, Revolutions is fixed!)
+203:        ''Column-count check
+207:        ''Abort if less than 3 columns
+210:        ' ''Check whether Power/Revolutions swapped
+215:        ''Em-components initialize
+224:        '    'Default interpolator defined in Em0 = New cEmComp
+225:        '    'Default Correction Pe defined in Em0 = New cEmComp
+235:        '        'Dictionary .... fill
+238:        '            'ERROR when Component in angle brackets but unknown
+245:        '            'Custom Em-Components Dictionary:
+251:        '            '*** Default Em components ***
+262:        '            'TC-components are not dumped
+268:        '            'Custom Em-Components Dictionary:
+272:        '            'Entry in Reference-dictionary
+279:        'VECTO: Column 3 alwaysd consumption(Verbrauch)
+289:            'Abort if already defined
+302:        '*** Read Normalized/Measured
+305:        ''Abort when fewer columns than in the second Line
+308:        ''Read Normalized/Measured
+311:        '    'EM-component reference
+314:        '    'Store Unit in String for further checks
+317:        '    'Remove brackets
+321:        '    'Normalize and set Unit
+353:        ''Check whether n/Pe measured(Einheiten) OK:
+357:        '            'Everything is okay
+375:        '*** Line 4.5: (optional when "+"): Settings for Pe-Cor (old PfAK)
+376:        '   If not "+", use default Interpolators (see above)
+379:            'Line 4 Reading
+382:            'Loop over Em-components
+408:            'Line 5 Reading
+411:            'Loop over Em-components
+436:        'From line 4 (or  6): Values
+440:                'Line read
+443:                'Line counter up (was reset in ResetMe)
+446:                'Revolutions
+451:                'Power
+462:                'Emissions
+474:        'Shep-Init
+477:        'Close file
+487:        'ERROR-label for clean Abort
+506:        'Open file
+513:        'Old maps have always TC-factors are (possibly  null)
+776:        'Values
+778:            'Line read
+781:            'Line counter up (was reset in ResetMe)
+784:            'Revolutions
+787:            'Power
+792:            'Emissions
+803:        'Shep-Init
+806:        'Close file
+821:        'Abort when Em-component not in MAP
+828:        'Abort if TC-factors for the component already defined
+859:        'Speed Normalized
+866:        ' "otherwise calculate normalized Revolutions
+871:        'Normalized Power
+878:        'Emissions unnormalised
+879:        '   CAUTION: Even if x_kWh and x_hPnenn are to be transformed into x_h, the Normed must remain the same because otherwise the DynKor will not be right!
+891:                    'Values are already specified in absolute
+892:                    'Distinction between [x] and [x/h] currently not used/supported
+896:        'Check whether Revolutions/Power reversed
+926:        'FC Delauney
+958:    'Map creation
+1025:        '***************** Initialize Em-components *******************
+1067:            'PeCorMode: Falls nicht in MES/NPI vorgegeben gilt bei Nicht-Default-Em was in cEmComp.New() eingestellt ist |@@| PeCorMode: Unless specified in MES/NPI with non-default Em what is in cEmComp.New()
+1078:                    'If TC specified, then Abort
+1084:                    'Select interpolator
+1087:                    'Entry in Reference Dictionary (It does not check whether Em-Comp occurs twice since it has been caught in DRI.ReadFile)
+1097:            'Dump Infos
+1102:        'Dynamic parameters and Extrapol to be added
+1247:        '************* Initialize Mean-value Dictionary ***************
+1271:        '********************* Calculate Mean-values **********************
+1273:        'Main-loop
+1276:            'Create Lists
+1291:            'Loop over Measurement-values
+1296:                    'Fill the Area below iMsek with Measurement-values
+1310:                    'Fill the Area above iMsek with the Mean-values of the Measurement-values
+1331:            'No averaging
+1347:        'EmCheck: False = Wert noch nicht verwendet, True = Wert wurde bereits in Kennfeld verwurschtet |@@| EmCheck: False = value is not used, True = Value is already(verwurschtet) in the Map
+1353:        '*************************** Rasterung **************************** |@@| Grd-ing(Rasterung) ****************************
+1418:        'Add Drag at half nn-increments. Needed for PfAK. If GEN.KFinsertDrag is disabled, it will be deleted later.
+1428:        'Add Idle-point
+1435:        '**************** Create NrUsed / Set to zero set *****************
+1442:        '**************** Expect pure Measurement-values in Grid *****************
+1444:        'Basis Schrittweite zwischenspeichern |@@| Basis for step-size buffering
+1448:        'Loop over Grid-points(i)
+1451:            'Return Totals/Numbers/Flags
+1456:            'Drag-Power
+1459:            'Loop until enough Values found in Radius
+1462:                'Reset Counter/Totals
+1469:                'Loop over Measured-values   ​​(j)
+1472:                    'If within Radius ...
+1475:                        'Num + 1
+1478:                        'Loop over all Em-comp.
+1481:                            'Total +
+1484:                            'Calculate Min/Max (for Log-output)
+1495:                        'Interpolierte Leistung aufsummieren (wird dann durch Anz dividiert) |@@| Sum-up Interpolated Power (then divided by Num)
+1498:                        'Count how many Measurement-values exist for the Grid-points (Log-output)
+1509:                'If none Measured-value in Radius (Num = 0), then enlarge Radius and set Extra-flag
+1518:            'Allocate NrUsed
+1523:            'Interpolated-Power = Sum / number
+1526:            'Calculate PfAK:
+1527:            '   If above Drag then PfAK according to Formula, or 1 when the difference between  Pe-Interpol and Drag-power is too low
+1528:            '   If below Drag, Pfak=0 => Em-value = Zero
+1539:            'Get the Extrapol flag from the Extrapol-column (1/0)
+1546:            'For Log-output
+1550:            'Loop through Em-Comp (within Grid-points-loop)
+1553:                'Falls Option 'Schlepp-Em aus .FLD' belegen und Rasterpunkt-Leistung <= Schleppleistung |@@| If Option 'Drag-Em' from .FLD 'and Power-gridpoints <= Drag-power
+1556:                    'If Drag-Em exists in .FLD, then use it otherwise alocate with zero
+1565:                    'Em-allocation without PfAK (=> PfAK is crafted later)
+1570:                'For Log-output
+1576:            'Assume TC-factors without Pfak
+1584:        '*****************************  Pfak ******************************
+1586:        '!!! IMPORTANT !!!
+1587:        'Loop passes over all Grid-points (also for Pe <= PeDrag and  respectively for PeIntpol near Pdrag).
+1588:        '   That's OK because PfAK is in anyway allocated with 1s.
+1590:        'Loop through Em-Comp
+1593:            'Falls keine Create Map Einstellungen (in .NPI/.MES) oder Pfak explizit aktiviert => Pfak verwenden |@@| If no Create Map is set (in .NPI/.MES) or PfAK activated explicitly => Use PfAK
+1596:                'Loop over Grid-points (i)
+1601:                        'Altes Pfak mit Extrapolation von Null weg |@@| Old PfAK with Extrapolation from Zero route?
+1606:                        'Schlepp-Emission raus suchen |@@| Pick Drag-Emission
+1607:                        '   Schlepp-Em aus nächstgelegenen Rasterpunkt nehmen. Das geht weil Schleppkurve  |@@| Take the Drag-Em from the nearest Grid-point. This is because the Drag-curve
+1608:                        '   immer ins Map kommt (auch wenn sie dann später raus gelöscht wird) !! |@@| always comes into the Map (even if it is later deleted) !!
+1609:                        '   Option 'Schlepp-Em aus .FLD' spielt keine Rolle weil das nur die Belegungs-Methode der Schleppkurve betrifft (s.o.)  |@@| Option 'Drag-Em(Schlepp-Em)' from .FLD plays no role because it affects only the Allocation-method of the Drag-curve (see above)
+1623:                    'Apply PfAK
+1633:        '******************* Normalize (Value and Unit) ********************
+1636:            'Use them If specified in MES/NPI-files
+1641:                    'Values normalized
+1652:                'Otherwise, use a standard normalization
+1657:                        'Normalized Values
+1673:        '****************** EmComponents zusammenfassen ******************* |@@| Summarized EmComponents *******************
+1688:        '*********** Schleppkurve wieder raus nehmen (optional) *********** |@@| Get Load-curve again (optional) ***********
+1691:            'Schleife über Rasterpunkte (i). Keine For-Schleife weil iMapDim reduziert wird |@@| Loop over Grid-points(i). No For-loop because iMapDim is reduced
+1713:        '************************** Dump Map '**************************
+1732:            'CAUTION: Not Name but sKey !!!
+1751:        'Values
+1765:        '********************** Dump Extended-Info '***********************
+1804:        'Values
+1857:        'Shep-Init
+1864:    'Default Shepard in intpshep ()
+1924:            'Calculate Distance and Correction.
+1928:                    'Um Nullleistung werden Kennfeldpunkte um Pe=0 hoeher gewichtet und Drehzahlabstand geringer, |@@| ????The Map-points with zero-Power (Pe=0) will be weighted higher and Revolution-distances lower,
+1929:                    ' da Interpolation aus Punkten mit hoeherer last dort schlecht passt: |@@| because interpolation of Points with higher Load is fitted badly:
+1935:                    'Square of the distance:
+1938:                    'Falls Vorzeichen von Pe unterschiedlich (Last/Schlepp-Trennung) wird Abstand vergroessert um Schlepp bei Schlepp mehr zu gewichten: |@@| ????If the Sign of Pe unequal (Load /Drag separation), then Distance increases more weight to Drag by Drag:
+1945:            'Punkte innerhalb Radius zählen und ggf. Radius erhöhen |@@| Points are within radius and possibly within  a bigger Radius
+1962:            'Abstand-Array erstellen und Leistung interpolieren für Pe-Korrektur |@@| Distance array and create Power interpolate for Pe-correction
+1974:            'Calculation of Wisum
+1980:            'Calcluate Interpolated Power
+1992:            'Calculate Distance and Correction.
+1995:                'Square of the distance:
+2000:            'Punkte innerhalb Radius zählen und ggf. Radius erhöhen |@@| Points are within radius and possibly within  a bigger Radius
+2017:            'Abstand-Array erstellen und Leistung interpolieren für Pe-Korrektur |@@| Distance array and create Power interpolate for Pe-correction
+2029:            'Calculation of wisumV2
+2035:            'Calculate Interpolated Power
+2112:        'Berechnet Emission an Schleppkurve |@@| Calculated Emission on Drag-curve
+2129:            'Es wird an Schleppkurve gesucht |@@| Search on Drag-curve
+2131:            'n0 has already been defined in Init
+2133:            'Calculate Distance and Correction.
+2136:                'Square of the Distances:
+2139:                'Falls Vorzeichen von Pe unterschiedlich (Last/Schlepp-Trennung) wird Abstand vergroessert um Schlepp bei Schlepp mehr zu gewichten: |@@| ????If the Sign of Pe unequal (Load /Drag separation), then Distance increases more weight to Drag by Drag:
+2146:            'Punkte innerhalb Radius zählen und ggf. Radius erhöhen |@@| Points are within radius and possibly within a  bigger Radius
+2163:            'Create Distances-array
+2173:            'Calculation of wisum
+2179:            'Calculate emission
+>>> Input Files\cTRS.vb
+32:        'Stop if there's no file
+38:        'Open file
+47:        '*** First Line: Version
+51:            ' "Remove "V" => Number remains
+54:                'If invalid version: Abort
+58:                'Version set
+62:            'If no version information: Old format
+67:        'Version Check: Abort if Input-file-format is newer than PHEM-version
+79:        '*** Second Line: Check which TC-factors exist in any column (from column 1!)
+83:        'Abort if less than 2 Columns:
+91:            'Abort if unknown TC-factor
+96:            'Add to Dict
+101:        '*** From Line 3: TC-factors for each Em-component
+102:        '   l is for Error-output
+163:        'Open file
+207:            'Abort if less than 11 Columns:
+>>> Input Files\cVEH.vb
+221:        'Einzelne Nebenverbraucher |@@| Individual next consumer
+249:        'Zugkraftunterbrechung - Update 09.08.2012 (CO2 Demo) |@@| Interruption of Traction - Update 09/08/2012 (CO2 demo)
+260:        'Cd mode / Input File - Update 08/14/2012 (CO2 demo)
+316:        '************************ End reading ****************************
+401:        'Interruption of traction (Update 09.08.2012 - CO2 demo)
+451:        'Error-message within AuxInit
+531:                'Transmission Nominal-Revolutions
+534:                'Transmission Nominal-Power
+537:                'If nothing specified: Engine's Nominal-power and Nominal-Revolutions from Normalized ones
+551:                        'PHEM:    n, PeIn, PeOut => x=n, y=PeOut, z=PeIn |@@| PHEM:    n, PeIn, PeOut => x=n, y=PeOut, z=PeIn
+552:                        'PHEM: GBmap0.AddPoints(CDbl(line(0)) * n_norm, CDbl(line(2)) * Pe_norm, CDbl(line(1)) * Pe_norm) |@@| PHEM: GBmap0.AddPoints(CDbl(line(0)) * n_norm, CDbl(line(2)) * Pe_norm, CDbl(line(1)) * Pe_norm)
+553:                        'VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn |@@| VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn
+619:                'Interpolate with Original Values
+624:                'If error: try extrapolation
+626:                'Search for the nearest Map point
+640:                'Efficiency
+644:                        'Drivetrain=> Drivetrain
+651:                        'Drag => Drivetrain: ERROR!
+661:                        'Drivetrain => Drag: ERROR!
+668:                        'Drag => Drag
+677:                'Calculate efficiency with PeIn for original PeOut
+720:                'Interpolate with original values
+725:                'If error: try extrapolation
+727:                'Search for the nearest Map-point
+741:                'Efficiency
+745:                        'Drivetrain => Drivetrain
+750:                        'Drag => Drivetrain: ERROR!
+760:                        'Drivetrain => Drag: ERROR!
+767:                        'Drag => Drag
+774:                'Calculate efficiency with PeIn for original PeOut
+838:                'Notificationin ReadFile()
+934:        'Warn If Vair specified in DRI but CdType != CdOfBeta
+946:        'If Cd-value is constant then do nothing
+949:        'Read Inputfile
+996:        'Extrapolation for x < x(1)
+1014:        'Extrapolation for x > x(imax)
+1042:        'Read Inputfile
+1104:        'Extrapolation for x < x(1)
+1116:        'Extrapolation for x> x(imax)
+>>> MODcalc\cBatModel.vb
+21:    'Current data (ie the current (last calculated) Time-step)
+55:    'Maximum allowable Power for driving (Battery discharged) [kW]    positive sign (PHEM Standard)
+62:    'Maximum allowable power for Generating/Rekuperiren (Battery-charging) [kW]    negative sign (PHEM Standard)
+72:    '--------------------------------- ~Renhart Battery model ~ ---------------------------------
+74:    'Method for initializaztion - it is called once
+82:        'Abort if there's no file
+91:        'Read the Parameters:
+132:        ' Calculation of the Battery-voltage at TempBat and SOC(0), Discharge curve
+138:        ' Calculation of the Battery-voltage at TempBat and SOC(0), Charging-curve
+148:    'Method of calculating the allowable power - Invoked second by second
+174:    'Method of calculating the Batterie-losses and SOC for the given  Power - Invoked second by second
+202:        '   Perf ... required Power  Condition: PgMAX < Perf < PaMAX [kW]
+203:        '   all Paramers were determined/read in Bat_Init
+204:        '   jz ...Current time-step
+205:        '   All arrays from Time-step 1 to jz-1
+225:    'Returns PeBat for the given  PiBat (sign from PHEM)
+250:    'Battery discharged
+256:        'Temperature Function
+259:        'Determine Ri depending on temperature
+262:        'Voltage determined from SOC and Voltage-curve
+265:        'Current calculation
+268:        'Battery-losses
+271:        'Battery-temperature
+277:        'SOC calculation
+280:        'Adjustment for the current time-step
+287:    'Charging Battery
+294:        'Temperature-Function
+297:        'Determine Ri depending on temperature
+300:        'Voltage determined from SOC and Voltage-curve
+303:        'Current calculation
+306:        'Battery-losses
+309:        'Battery-temperature
+315:        'SOC  calculation
+318:        'Adjustment for the current time-step
+325:    'Battery do nothing
+340:    'Returns PeBat when invoked(Laden) with PEmot (sign from(nach)Renhart)
+362:    'Return PeBat when Unloaded(Entladen) with PEmot (sign  from(nach) Renhart)
+>>> MODcalc\cMOD.vb
+19:    'Power
+36:    'Vehicle
+192:        'Define Cycle-length (shorter by 1sec than original because of Interim-seconds)
+195:        'Here the actual cycle is read:
+198:        'Revolutions-setting
+206:            'Revolutions
+211:            'Angular acceleration
+218:        'Average EM-components (between-seconds) for KF-creation or Eng-Analysis
+227:        'Specify average EXS
+238:        'Specify average Aux and Aux-lists, when Au8x present in DRI and VEH
+258:        'Zykluslänge definieren: Gleiche Länge wie Zyklus (nicht reduziert weil keine "Zwischensekunden") |@@| Define Cycle-length: Same length as Cycle (not reduced because no "interim seconds")
+261:        'Here the actual cycle is read:
+264:        'Revolutions-setting
+272:            'Revolutions
+277:            'Angular acceleration
+315:        '*********** Initialization / Open File **************
+370:        '*** ID line (Only ADVANCE)
+431:        'ADVANCE-specific
+479:        'Berechnete Dynamikparameter (Diff zu Kennfeld) |@@| Calculated dynamics parameters (Diff to Map)
+488:        'Write to File
+497:        '*** Values *************************************************************************************
+505:                'Time
+510:                    'Strecke |@@| Route
+514:                    'Actual-speed.
+517:                    'Target-speed
+520:                    'Acc.
+523:                    'Slope
+532:                        'Revolutions
+535:                        'Power
+538:                        'Revolutions normalized
+541:                        'Power normalized
+546:                    'Revolutions in U/min
+549:                    'EM-power in kW
+552:                    'Effective Battery-power
+555:                    'Internal Battery-power
+558:                    'Battery-voltage
+561:                    'Battery-Power
+569:                    'Revolutions
+572:                    'Power
+575:                    'Revolutions normalized
+578:                    'Power normalized
+581:                    'Full-load and Drag
+592:                    'Power to Clutch
+600:                    'Gear
+603:                    'Transmission-losses
+606:                    'Diff-losses
+609:                    'Retarder-losses
+624:                    'Drag
+627:                    'Slope ..
+633:                    'Wheel-power
+636:                    'Brake
+646:                'ADVANCE-specific
+662:                    'Final-emissions (tailpipe)
+680:                            'Raw-emissions
+683:                            'TC-Emissions
+686:                            'AT-Emissions (EXS)
+694:                'Calculated Dynamics-parameters (Diff from(zu) Map)
+702:                'Write to File
+716:    'Errors/Warnings die sekündlich auftreten können |@@| Errors/Warnings occuring every second
+734:        '   -GeschRedReset(Speed-Reduce-Reset)
+742:        'Full reset (at the beginning of each second step)
+748:        'Reset Errors related to Speed Reduction (within iteration)
+755:        'Reset von Errors die mit der Leistungsberechnung zu tun haben (nach Schaltmodell durchzuführen) |@@| Reset errors related to Power-calculation (towards performing the Gear-shifting model)
+763:        'Emit Errors
+>>> MODcalc\cPower.vb
+21:    'Per-second Data
+33:    'Interruption of traction
+87:    'Recuperation
+88:    '   Project HERO - BMW Mini Hybrid
+89:    '   Standard Mini One D Wheelbase 2467 mm
+92:    'Specification of Center-of-gravity height (approximation)
+93:    '   from http://www.colliseum.net/wiki/Schwerpunkth% C3% B6he
+95:    '       with R = 2467 [m], and m = 1335 [kg]
+189:    'Read Bat
+196:    'Maximum effective EM-Power in driving depends on Overload and Battery-status
+201:        'Based: Full-load-curve
+204:        'If Overload possible, upscale Overload(ÜL)-power
+207:        '=> PeFLD = maximum EM-Power by(nach) FLD and Overload(ÜL)
+209:        'Calculate PeMax from PeBatMax
+212:        '=> PeBAT = maximum EM-power to Battery
+214:        'Return the maximum Power allowed by the Battery
+219:    'Maximum effective EM charging power depending on Overload and Battery-state
+224:        'Base: Drag-curve
+227:        'If Overload possible, upscale to Overload(ÜL)-power
+230:        '=> PeFLD = maximum EM-Power by(nach) FLD and Overload(ÜL)
+232:        'Calculate PeMax from PeBatMax
+235:        '=> PeBAT = maximum EM-power to Battery
+237:        'Return the maximum Power allowed by the Battery
+244:    'Conversion of PeBat (=PiEM) to PeEM
+256:            'When sign of x an y is not-equal to the sign of xA(i) and yA(i) respectively, then skip Row i
+281:    'Conversion of PeEM to PeBat (=piEM)
+293:            'When sign of x and y is not-equal to the sign of xA(i) and yA(i) respectively, then skipp Row i
+318:    'Maximum Recuparation-power
+324:        'If speed is already under ceiling then return Zero
+327:        'Wheel contact
+334:        'Sign "should" always be +
+337:        'Longitudinal-force on the Tire
+340:        'Consider Safety-factor
+343:        'Power
+346:        'If below upper V-upper-limit, then scale down linearly
+353:    ''Reduce PeEM-Max until battery current is okay
+371:    ''Reduce PeEM-Min until battery current is okay
+406:        'Start/Stop Control
+444:        'Abort if no speed given
+450:        '   Initialize
+486:        'Gear-shifting points for NEDC / FTP
+521:                'Initialize Gear-shifting parameters
+533:        'Theoretical maximum speed [m/s] - set to Speed ​​at 1.2 x Nominal-Revolutions in top-Gear
+539:        '***********************************    Time-loop ****************************************
+550:            'Secondary Progressbar
+553:            '   Determine State
+556:            'Reset the second by second Errors
+559:            'Calculate Speed​/Acceleration -------------------
+560:            'Now through DRI-class
+564:            'If Speed over Top theoretical Speed => Reduce
+574:                'Check if Acceleration is too high
+593:                    '- Deceleration limit ---------------------------
+595:                    '    'Check whether Deceleration too high
+614:            'From Power -----
+624:            'Determine Driving-state  -------------------------
+649:            'Faster check if Power is too high
+656:            '************************************ Gear selection ************************************
+675:                'Check whether Clutch will slip (important for Gear-shifting model):
+683:                    'Gear-settings
+686:                    'Revolutions-setting
+692:                        'Gear by speed dependent function
+696:                        'Gear-shifting Model
+703:                        'Must be reset here because the Gear-shifting model may cause changes
+709:                'Gear shifting-model / gear input can open Clutch
+720:            ' Important checks
+723:            'Check whether to reduce speed
+724:            ''If GeschwRed Then GoTo lbGeschwRed
+726:            'Check whether Clutch is open:
+727:            ''bKupplOffen = (bStehen Or Gear(jz) = 0) <= Already known by Clutch
+729:            'If conventionall then ICE-clutch = master clutch
+730:            ''bICEKupOffen = bKupplOffen <= i need nothing more
+732:            'Falls vor Gangwahl festgestellt wurde, dass nicht KupplSchleif, dann bei zu niedriger Drehzahl runterschalten: |@@| If before?(vor) Gear-shift is detected that Clutch does not Lock, then Downshift at too low Revolutions:
+737:            'Check whether idling although Power > 0
+738:            '   wenn Leistung vor Diff > 0.1% von Nennleistung dann Korrigieren! |@@| when Power before?(vor) Diff > 0.1% of Nominal-power, then Correct!
+759:            '************************************ Revolutions ************************************
+761:            '*** If Revolutions specified then the next block is skipped ***
+766:                'If Start/Stop then it will be set at the same nn < -0.05 to nU = 0
+784:            'Revolutions drop when decoupling
+806:                        'Leistungsabfall limitieren auf Pe(t-1) minus 75% von (Pe(t-1) - Pschlepp) |@@| Limit Power-drop to Pe(t-1) minus 75% of (Pe(t-1) - Pdrag)
+807:                        '   aus Auswertung ETC des Motors mit dem dynamische Volllast parametriert wurde |@@| of the evaluated ETC of the Enginges with the dynamic parametrized Full-load
+808:                        '   Einfluss auf Beschleunigungsvermögen gering (Einfluss durch Pe(t-1) bei dynamischer Volllast mit PT1) |@@| Influence at low acceleration (influence dynamic Full-load through Pe(t-1) with PT1)
+810:                        '   Iteration loop: 01.10.2012
+818:                        '01:10:12 Luz: Revolutions must not be higher than previously
+825:                    'TODO: Switch off?
+838:                '*** Start: Revolutions Check
+840:                'Check whether Revolutions too high! => Upshift
+846:                'Check whether Revolutions too low with the Clutch closed
+863:            '************************************ Determine Engine-state ************************************
+864:            ' fix nn here!
+867:            'Determine next Consumption (from VEH and DRI)
+870:            'ICE-inertia
+875:                    'Not optimal since jz-1 to jz not the right interval
+880:                    'Revolutions-setting
+887:            'Total Engine-power
+957:            '*************** Leistungsverteilung usw. ****************** |@@| Power distribution, etc. ******************
+959:            'Full-Load/Drag curve
+965:                'Revolutions Correction
+979:                'If Pmax < 0 or Pmin > 0 then Abort with Error!
+1009:                        'VKM to Drag-curve
+1012:                        'Forward-calculation to Wheel (PvorD)
+1028:            'Check or Abort (before Speed-reduce-iteration, otherwise it hangs)
+1031:            'Check whether P above Full-load => Reduce Speed
+1046:                        'ERROR: Speed Reduction brings nothing? ...
+1051:                    'ERROR:  Engine not in Drivetrain ... can it be?
+1059:            'Interruption of traction(Zugkraftunterbrechung)
+1093:            '   Finish Second
+1095:            'Start / Stop - Activation-Speed Control
+1110:            'Write Modal-values Fields
+1141:            'Interruption of traction(Zugkraftunterbrechung)
+1172:            'Notify (abort if error)
+1185:        '***********************************    Time loop END ***********************************
+1188:        'Notify (When not ADVANCE)
+1225:        'Abort if Power/Revolutions not given
+1236:        'Drehzahlen vorher weil sonst scheitert die Pmr-Berechnung bei MODdata.nU(t + 1) |@@| Revolutions previously, otherwise Pmr-calculation fails at MODdata.nU(t + 1)
+1238:            'Write Modal value Fields
+1239:            '   Allocate MODdata.Pe
+1244:        'Power calculation
+1247:            'Secondary Progressbar
+1250:            'Reset the second-by-second Errors
+1253:            'OLD and wrong because not time shifted: P_mr(jz) = 0.001 * (I_mot * 0.0109662 * (n(jz) * nnrom) * nnrom * (n(jz) - n(jz - 1))) / Pnrom
+1260:            'Power of the Cycle corrected by P_clutch
+1263:            'Revolutions of the Cycle => Determined in Cycle-init
+1264:            'If Revolutions under idle, assume Engine is stopped
+1276:                'If Pmax < 0 or Pmin >  0 then Abort with Error!
+1314:            'Notify
+1336:        'Start/Stop Control
+1367:        'WegKorrektur |@@| Route-correction
+1381:        'Abort if no speed given
+1387:        '   Initialize
+1415:        'Take WG-map from MAP and calculate Pi-list
+1432:        'Gear-shifting points for NEDC/FTP
+1449:        'Theoretical Maximum-speed [m/s]
+1457:        '***********************************    Time-loop ****************************************
+1465:            'Secondary Progressbar
+1468:            '   Determine State
+1472:            'Calculate Speed/Acceleration -------------------
+1473:            'Now by DRI-class
+1477:            'If Speed over the theoretical Top-Speed => Reduce
+1484:            'From Power -----
+1494:            'Determine Driving-state -------------------------
+1519:            'Maximum allowable Battery-power
+1524:            '************************************ Gear selection ************************************
+1529:                'Check whether Clutch-lock (important for Gear-shifting model):
+1537:                    'Gear-setting
+1540:                    'Revolutions-setting
+1546:                        'Gear from Speed is not supported here
+1550:                        'Gear-shifting Model
+1553:                        'EV: No idle due to recuperation
+1566:            'If regenerative braking is possible according to Wheel-power: Calculate PrekupMax
+1568:                'Calculate Maximum Recuperation-power (depending on Wheel-load/Friction-coefficient)
+1573:            'Falls vor Gangwahl festgestellt wurde, dass nicht KupplSchleif, dann bei zu niedriger Drehzahl runterschalten: |@@| If before Gear-selection it Clutch was not Locked, then Shift-down at too low a Revolutions:
+1578:            'Check whether Idling although Power > 0
+1579:            '   When Power before Diff > 0.1% of Nominal-power then Correct!
+1591:            '************************************ Revolutions ************************************
+1593:            '*** If the Revolutions is specified (Gemess = 2) then the next block is skipped ***
+1601:            'Revolutions drop when decoupling
+1622:                '*** Start: Revolutions-Check if not specified
+1624:                'Check whether Revolutions too high! => Upshift
+1630:                'Check whether Revolutions too low with the Clutch-closed
+1642:            '************************************ Determine Engine-state ************************************
+1643:            ' nn fix is here!
+1646:            'Nebenverbrauch bestimmen (aus VEH und DRI) |@@| Determine next Consumption (from VEH and DRI)
+1649:            'Engine-inertia
+1654:                    'Not optimal since jz-1 to jz not the right Interval
+1659:                    'Revolutions-setting
+1666:            'Total Engine-power
+1707:            '*************** Power distribution, etc. ******************
+1709:            'Full-load/Drag-curve
+1729:                    'Calculate Maximum Recuperation power (depending on Wheel-load/Friction-coefficient)
+1732:                    'If RecupMax exceeded, then must recalculate Pe
+1735:                        'PbrakeRek = power which must be additionally hampered mechanical overrun of RekupMax
+1736:                        'wird schon oben nach Gangwahl erledigt: PbrakeRek = Pantr - PrekupMax |@@| is already done by top gear selection: PbrakeRek = Pantr - PrekupMax
+1738:                        'New EM-Power
+1743:                    'Check ob Leistung aufgenommen werden kann (abh. von FLD und Batterie). Bremsleistung berechnen. |@@| Check whether power can be added (depending on battery and FLD). Compute Braking Power.
+1752:                    'Addup RekupMax-Braking-power
+1764:            'Check whether above Full-load => Speed-reduction
+1768:                    'When Pmax = 0 then Battery must be empty
+1782:                        'ERROR: Velocity reduction brings nothing? ...
+1792:            '   Finish Second
+1805:            '***************** Battery ***********************
+1817:            '****** Write Modal-value Fields **************
+1859:            'Notify
+1865:        '*********************************    Time loop END *************************************
+1869:        'Notify (not ADV)
+1887:        'TODO Error message etc
+1933:        'Route(Weg) correction
+2033:        'Abort when no speed given
+2039:        '   Initialize
+2062:        'Gear-shifting points for NEDC/FTP
+2097:                'Gear-shifting parameters initialization
+2106:        'Theoretical maximum speed [m/s]
+2127:        '***********************************    Time-loop ****************************************
+2134:            'Secondary Progressbar
+2137:            '   Determine State
+2141:            'Speed / Acceleration calculation -------------------
+2142:            'Now by DRI-class
+2146:            'If Speed over Theoretical-top-speed => Reduce
+2153:            'From Power -----
+2164:            '*************************** Determine Driving-state *****************************
+2166:            'Determine Driving-state-------------------------
+2249:            '************************************ Gear selection ************************************
+2254:                'Check whether Clutch Locks (important for Gear-shifting model):
+2262:                    'Gear-settings
+2265:                    'Revolutions-setting
+2271:                        'Gear from Speed
+2274:                        'Gear-shifting Model
+2289:            'Nebenverbrauch bestimmen (aus VEH und DRI) |@@| Determine next Consumption (from VEH and DRI)
+2292:            'HEV-Teil kommt erst nach Gangwahl weil Getr./Diff-Loss den benötigt und EM zwischen ICE und GB liegt |@@| HEV-part comes after Gear-selection because Transmission/Diff-loss and requires the EM is between ICE and GB
+2300:                'Nebenverbrauch bestimmen (aus VEH und DRI) |@@| Determine next consumption (from VEH and DRI)
+2306:                    'If Revolutions specified
+2309:                    'Otherwise from Vist and Gear
+2313:                'Normalized Revolutions
+2316:                'Maximum power of the ICE
+2325:                'Nebenverbrauch bestimmen (aus VEH und DRI) |@@| Determine next consumption (from VEH and DRI)
+2328:                'Maximum allowable Battery-power
+2333:                'Maximale EM-Leistung. (Batterieleistung limitiert EM-Leistung) |@@| Maximum EM-Power (Battery-power limited by EM power)
+2344:                'Leistung bis ICE/EM (= an Kupplung) berechnen |@@| Power to ICE/EM (= coupling to) get
+2350:                'Power to clutch
+2355:                    'Revolutions-setting
+2363:                '***** Power required in EV-mode
+2364:                '   Power to Clutch plus EM-inertia
+2366:                '! CAUTION: If ICE is engaged then PaICE must also be !  => Later in power distribution
+2368:                '***** Power required in the ICE+EM-operation
+2371:                '***** Power required in ICE-operation
+2374:                '***** Check whether EV possible
+2376:                '   => EM-Power >= Drivetrain-power
+2380:                '***** If EV possible: check whether critical
+2383:                '***** Check whether Assist / LPI / ICEonly is possible and if Boost is needed
+2384:                '   => ICE-On must be possible (ICElock)
+2392:                        '   => ICE at Full-load
+2405:                '***** Check whether Recuparation possible
+2411:                '********************************* Driving-state distinction *********************************
+2417:                    '***************************** Transmission-Mode pre-selection ********************************
+2421:                        'if Boost necessary (and possible), then no Choice
+2426:                        'EV mode when ...
+2435:                        'If EV & ICE is not possible then EV-mode till ICE starts again .... should never happen because no ICE-shutdown when little SOC
+2445:                    'If use of HEV strategy:
+2446:                    '   Ke's calculation
+2449:                        '************** Calculate optimal Ke's and Power for it ************
+2451:                        'Emission/Consumption in g/h
+2458:                        'KeSTE from STE-curve ...
+2476:                                'Remain under Max-Pe
+2479:                                'If Pvkm negative: Calculation of the pure EM-transmission?(Betrieb)
+2482:                                    '    ...not valid if Batlvl <= Low or ICEonLock
+2485:                                    'EM-Power = P-Drivetrain
+2489:                                    'Consumption-reduction in g/h
+2492:                                    'Abort according to this calculation (more EM-power makes no sense because Drivetrain already pure electric)
+2497:                                    'Consumption-savings in g/h
+2502:                                'Power to electric motor in kW
+2513:                                'Power in battery
+2518:                                'Div/0 and Sign checks
+2521:                                    'KeA calculated in kWh/kg
+2524:                                    'Check whether Optimum
+2532:                                'Abort when already reached pure EM-mode
+2565:                                'If Pvkm at Full-load:
+2568:                                    'Put Pvkm on full load
+2571:                                    'EM in generator-mode (Pges1 - Pvkm < 0)
+2574:                                    'Abort after this pass because Generating more impossible
+2579:                                'Additional consumption in g/h
+2582:                                'Power to Electric-motor in kW
+2593:                                'Power in battery
+2598:                                'Div/0 and Sign checks
+2601:                                    'Calculate KeG in kWh/kg
+2604:                                    'Check whether Optimum
+2613:                                'Abort when already reached VKM-full-load
+2622:                            'Abstand Eta zu Kurve berechnen |@@| Calculate Distance Eta from Curve
+2632:                        '********************** Evaluate KeSTE, Deltas ************************
+2661:                        '************************* Operating strategy ***************************
+2690:                        '** Ke-mode used when ...
+2693:                            '...Same mode as before, change Driving-state or last mode impossible
+2698:                            '...when Engine is not running
+2703:                                '...if the PeICE Power-change is lowest with the new Mode
+2728:                    '****************************** Distribute Power to each Mode **************************
+2735:                            'EM assumes the entire Power
+2738:                            'Speed reduced if power is too high for EM or Bat
+2744:                            'If ICElock or EVcrit then ICE on (but disconnected)
+2758:                            'ICE assumes the entire Drivetrain
+2826:                    'CAUTION: ICEclutch defaults to 'false' so here no more statements
+2828:                    'Calculate maximum Recuparation-Power
+2833:                        'Mit PrekupMax auf EM/ICE zurück rechnen |@@| Calculate back PrecupMax from(auf) EM/ICE
+2842:                        'Den Rest gleich auf die Bremse  |@@| The Residual equals that to(auf) the Brakes
+2847:                    'Default for ICE (so as to save the "Else" statement)
+2855:                            'Compute EM-power
+2860:                                'New EM-performance
+2863:                                'Residual power to ICE
+2867:                                'If ICE over Drag-curve
+2870:                                    'New ICE power
+2873:                                    'Rest to Brakes
+2880:                                'ICE is idle (because On-Lock)
+2889:                            'Compute EM-power
+2894:                                'New EM-performance
+2899:                                    'ICE im Schubbetrieb |@@| ICE on the overrun
+2903:                                    'If ICE over Drag-curve
+2906:                                        'New ICE-power
+2909:                                        'The rest to Brakes
+2932:                            'ICE on the Overrun(Schubbetrieb)
+2936:                            'When ICE above Drag-curve
+2939:                                'New ICE-power
+2942:                                'The rest of on Brakes
+2962:                    'Power zero
+2973:            '****************************** Clutch and Revolutions *******************************
+2976:            'Main clutch => must already be known here!
+2989:            '************************************ ICE Revolutions************************************
+3034:            '************************************ EM Revolutions ​​*************************************
+3060:            '   Finish Second
+3065:            '   ACHTUNG: Die beiden If-Schleifen nicht verbinden weil LockCount sich sonst verzählt |@@| CAUTION: The two If-Schleifen do not bind(verbiden) because LockCount is miscounted
+3082:            'Write Modal-values Fields
+3130:            'Notify
+3136:        '*********************************    Time-loop END **************************************
+3139:        'Notify (Not ADVANCE)
+3255:        '-----------------------------------Second 1 --------------------------------------
+3256:        'First second: find Gear / Initialization
+3283:        '--------------------------------From second 2 --------------------------------------
+3285:        '---------Start-values ---------
+3286:        'gangX = Last Gang ie Basis for Gear-shiftching model
+3293:        'Clutch-lock(Kuppelschleif) check << already happened in Power.Calc
+3296:        '-------------------Calculate Gear for the next 6 seconds ---------------------
+3303:            '-----------Gear-shifting function ----------
+3341:            'Revolutions-limit for Upshifting  n_normiert (Idle = 0, Nominal-revolutions = 1)
+3344:            'Revolutions-limit for Downhifting  n_normiert (Idle = 0, Nominal-revolutions = 1)
+3346:            'Deleted by LUZ  13.07.10: If (nnsaufi > 0.85)  Then nnsaufi = 0.85
+3347:            'Convert here the Revolutions-units (n/n_nom):
+3350:            'Revolutions with last Gear (gangX)
+3354:            ' ''Maximum permissible Gear-shift every 2 seconds:
+3357:            'Check whether Downshift, only when Speed decreases or Power increases
+3366:            'Check whether Upshift, only when Speed increases or Power decreases
+3374:            'Correct Gear-selection
+3383:            'Not Idle when Power > 0
+3388:            'New Revolutions
+3392:            'Check whether Gear within the Power/Revolutions limits. Drag is not respected
+3406:            'Save for Gear in Field for further checks
+3418:        'Gear accepted
+3426:        'Gang-Verlauf hinzufügen |@@| Add to Gears-sequence
+3430:        '--------------------------------Checks Part 1 -------------------------------------
+3431:        'Checks to Purge non-sensible Gear-shift:
+3433:        ''Division into "iphase(j)" stages: Acceleration(=1), Deceleration(=2) and Cruise(=3):
+3443:        '   ============>> Already determined by VehState0
+3445:        'Search by last Gear-change
+3456:        'Maximum permissible Gear-shifts every 3 seconds:
+3462:            'Cruise-phases:
+3463:            'Do not change Gear for as long Speed-change since last Gear-shift is below 6% and Pe/Pnorm change is below 6%:
+3464:            'Deceleration-phases: Upshift is suppressed
+3465:            'Acceleration-phases: Downshift?(Zurückschalten) suppressed
+3486:                'If within 6 seconds it Shifts back to the previous-Gear,
+3487:                'then maintain the previous-Gear throughout.
+3499:                    'If within 6 seconds it Shifts once above and once below the previous-Gear,
+3500:                    'then maintain the previous-Gear throughout.
+3517:        '--------------------------------Checks Part 2 -------------------------------------
+3518:        'Gear-shift from 2 to 1 are suppressed when v > 2.5 m/s
+3519:        'NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl |@@| NEW LUZ 040210: Upshifting only when in 2nd Gear over Cluch-Revolutions
+3524:        'bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet |@@| at decelerations below 2.5 m/s, shift to idle
+3538:        'If v <0.1 m/s for more than 1 sec then shift to Gear=0
+3545:        'at Acceleration processes below 1.5 m/s, then shift to 1st Gear
+3552:        'checking if Revolutions above Nominal-Revolutions, then always Upshift
+3553:        'otherwise lack the power!
+3562:    'EV-Gear-shifting model (based on Cars(PKW))
+3592:        '-----------------------------------Second 1 --------------------------------------
+3593:        'First second: Find Gear / initialization
+3620:        '--------------------------------From second 2 --------------------------------------
+3622:        '---------Start-values ---------
+3623:        'gangX = Last Gear ie Starting-base for Shifting-model
+3630:        'Clutch-lock check << already happened in Power.Calc
+3633:        '-------------------Calculate Gear for the next 6 seconds ---------------------
+3640:            '-----------Shifting-function ----------
+3678:            'Revolutions-limit for Upshift, n_normiert (Idle = 0, Nominal-Revolutions = 1)
+3681:            'Revolutions-limit for Downshift, n_normiert (Idle = 0, Nominal-Revolutions = 1)
+3684:            'Convert here of Revolutions units to use (n/n_nominal):
+3687:            'Revolutions with last Gear (gangX)
+3691:            ' ''Maximum permissible Gear-shifting every 2 seconds:
+3694:            'Check whether Downshifting-gear, only when Revolutions decrease or Power increases
+3703:            'Check whether Upshifting-gear, only when Revolutions increase or Power decreases
+3711:            'Correct Gear-selection
+3720:            'Not idle when Power > 0
+3725:            'New Revolutions
+3729:            'Check if Gear within Power/Revolutions limits. Drag-operation is not respected
+3743:            'Save Gears in field for later checks
+3755:        'Accept Gear
+3763:        'Gang-Verlauf hinzufügen |@@| Add to Gang-sequence
+3767:        '--------------------------------Checks Part 1 -------------------------------------
+3768:        'Checks to Purge non-sensible Gear-shift:
+3770:        ''Division into "IPhase(j)" stages: acceleration(=1), Deceleration(=2) and Cruise(=3):
+3780:        '   ============>> Already determined by VehState0
+3782:        'Search by last Gear-change
+3793:        'Max permissible Gear-change every 3 seconds:
+3799:            'Cruise-phases:
+3800:            'Solange Geschwindigkeitsaenderung seit letztem Gangwechsel unter 6% und Pe/Pnenn aenderung unter 6% wird nicht geschaltet: |@@| As long Speed-change since last Gear-shift is under 6% and Pe/Pnom below 6%, do not run:
+3801:            'Deceleration phases: Upshift suppressed
+3802:            'Acceleration phases: Downshift?(Zurückschalten) suppressed
+3823:                'Wenn innerhalb von 6 Sekunden wieder in vorigen Gang zurueck geschaltet wird, wird der vorige Gang |@@| If within 6 seconds switched back again to the previous Gear, stick
+3824:                'durchgehend beibehalten |@@| to the previous Gear
+3836:                    'Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang |@@| If within 6 seconds it Shifts once above and once below the previous-Gear,
+3837:                    'geschaltet wird, wird voriger Gang durchgehend beibehalten |@@| then maintain the previous-Gear throughout.
+3854:        '--------------------------------Checks Part 2 -------------------------------------
+3855:        'Suppress Gear-shift from 2 to 1 when v > 2.5 m/s
+3856:        'NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl |@@| NEW LUZ 040210: Upshift only when in 2 Gear over Clutch-revolutions
+3861:        'bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet |@@| at decelerations below 2.5 m/s, shift to Idle
+3875:        'wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet |@@| If v < 0.1 m/s for more than 1 sec, then shift to Gear=0
+3882:        'at Acceleration below 1.5 m/s, then shift to 1st Gear
+3889:        'Check whether Revolutions over Nominal-Revolutions, then should always Upshift,
+3890:        'otherwise Power not enough!
+3944:        '-----------------------------------Second 1 --------------------------------------
+3945:        'First second: Find Gear/Initialization
+3982:        '--------------------------------From second 2 --------------------------------------
+3984:        '---------Start-values ---------
+4014:        'Compute power from jz to (jz + 6) -----------------
+4027:            '     Berechnung nach Drehzahl/Leistung-Modell |@@| Calculated towards a Revolutions/Power model
+4030:            '(1) "Fast Driving" variant
+4032:            'Gear-shift only if v-change 5% since last Gear-shift
+4033:            'VECTO: Commented out START
+4045:            'VECTO: Commented out END
+4047:            'in ersten 10 Zyklussekunden kann zum Einregulieren immer geschlatet werden: |@@| the first 10 seconds of the cycle can always be used for balancing gear-shifting:
+4050:            'A Change in the Slope can always result in Gear-shift:
+4054:            'Downshift:
+4061:            'Upshift:
+4062:            ' bei Steigungszyklen mit zu hohen Geschwindigkeiten wird geschw. i+1 erst nach gangwahl berechnet |@@| at Sloped-cycles with excessive speed the Gear i +1 is calculated
+4063:            ' dabei manchmal zu hoher gang -> Drehzahl und P_max viel zu nieder, daher nu bei niederen leistungen |@@| sometimes Gear is too high -> Revolutions and P_max too low, so only at low Power
+4064:            ' hochschalten erlaubt: |@@| Upshift allowed:
+4083:            '(2) "Economical Driving" Variant
+4085:            '   Downshift?(Zurueckschalten) happens only when Speed-change > 6%
+4086:            '   Always Upshift
+4087:            'VECTO: Commented out START
+4099:            'VECTO: Commented out END
+4101:            '       in ersten 10 Zyklussekunden kann zum einregulieren immer geschlatet werden: |@@| The first 10 seconds cycle can always be used for balancing Gear-shift:
+4103:            '       When slope changes always may result in Gear-shift:
+4107:            '    Downshift:
+4117:            'Upshift, only if checked not the highest Gear:
+4126:                'C     Relative Revolutions:
+4137:            ' Auswahl des Drehzahlverhaeltnisses aus der "schnellen (..h)" und |@@| Select Revolutions-relationship for the "fast (h ..)" and
+4138:            ' der "sparsamen (..l)" Variante: |@@| the "economical (.. l)"  Variant:
+4140:            '   Drehzahlverhhealtnisse nach "Modellmix": |@@| Revolutions-relationship for "Modelmix":
+4141:            '   anhand der erforderlichen maximalen Motorleistung ueber die |@@| according to the required maximum Engine-power over the
+4142:            '   next 6 seconds
+4150:            '     Determine the proportions between the Fast and the Economical Driving-style
+4151:            '      (Hausberger model):
+4158:            '     Mix der berechneten Gaenge gemaess Vorgabe in Eingabefile: |@@| Mix the calculated Gears as specified in the input file:
+4159:            '     (pmodell wird aus Eingabefile gelesen, = Anteil, zu der die Drehzahl |@@| from the Input-file it is read the pmodell = ratios of the revolutions
+4160:            '      nach "reales Modell" bestehen soll) |@@| towards a "real model")
+4165:            '      Ermittlung des "virtuellen" aktuellen Ganges nach Modell |@@| Determine the "virtual" up-to-date Gears from the Model
+4170:            '    check if Revolutions over Nominal-Revolutions, then must always upshift,
+4171:            '    otherwise Power not enough!
+4181:            '    Check whether required Power is over P_max (s)
+4182:            '    then Downshift?(zurueckgeschaltet):
+4208:            '    Eigentliche Ueberpruefung ob ueber P_max(n) |@@| Check whether Actual over P_max (s)
+4214:            'falls schlechte Vollastkurve ohne Moment in leerlauf wird korrigiert: |@@| if bad Full-load-curve without Torque, then correct in Idle:
+4217:            '    Ueberpruefung, ob hoehere Leistung erforderlich ist als Maximalleistung bei nh |@@| Checking whether required Power is higher than maximum power at nh
+4218:            '     dann wird zurueckgeschaltet: |@@| then Gear-shift-back?(zurueckgeschaltet):
+4256:        'c     Ende "Modell"-Basisgangwahl |@@| End "model"-Gear-selection basis
+4260:        'Kuppelschleif-check |@@| Clutch-lock check
+4263:        '--------------------------------Checks Part 1 -------------------------------------
+4264:        'Checks to Purge non-sensible Gear-shift:
+4265:        'Division into "IPhase(j)" stages: Acceleration(=1), Deceleration(=2) and Cruise(=3):
+4290:        'Search by last Gear-change
+4299:        'Maximum permissible Gear-shifts every 3 seconds:
+4304:        'Cruise-phases:
+4305:        'As long Speed-change since last Gear-shift is below 6% and Pe/Pnom below 6% then do not Gear-shift:
+4306:        'Deceleration-phases: Upshift suppressed
+4307:        'Acceleration phases: Downshift?(Zurückschalten) suppressed
+4326:        'If within 6 seconds switched back again to the previous Gear, then
+4327:        'stick to previous Gear
+4328:        'VECTO: Exception: on Full-load curve
+4339:        'If within the 6 seconds, it shifts once to higher and once to lower-Gear than the previous one, then
+4340:        'stick to the previous Gear.
+4356:        '--------------------------------Checks Part 2 -------------------------------------
+4357:        'Shifting from 2nd to 1st Gear is suppressed when v > 1.5 m/s
+4358:        'NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl |@@| NEW LUZ 040210: Upshifting only when in 2nd Gear over the Clutch-revolutions
+4363:        'bei verzoegerungsvorgaengen unter 1.5 m/s wird in Leerlauf geschaltet |@@| at decelerations below 1.5 m/s, shift to Idle
+4375:        'If v < 0.1 m/s for more than 1 sec, then shift to Gear=0
+4383:        'Check if Revolutions over Nominal-revolutions, then should always Upshift,
+4384:        'otherwise Power not enough!
+4424:        'Speed look-ahead
+4437:        'Checks Gears for Cars(PKW) ....
+4438:        'Schalten von 2. in 1. Gang wird bei v>2,5 m/s unterdrueckt |@@| Gear-shifting from 2nd to 1st is suppressed at v > 2.5 m/s
+4447:        'Bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet |@@| At decelerations below 2.5 m/s, shift to Idle
+4456:        'If v < 0.1 m/s for  more than 1 sec, then shift to Gear=0
+4461:        'When Acceleration below 1.5 m/s, then shift to 1st Gear
+4488:    'Function calculating the Power easily for Gear-shift-model
+4493:    'Function calculating the Power easily for EV-shift-model
+4508:            'Revolutions-setting
+4552:    '--------------Power in-front?(vor) of Diff = At Wheel -------------
+4561:    '----------------Rolling-resistance----------------
+4566:    '----------------Drag-resistance----------------
+4591:    '--------Vehicle Acceleration-capability(Beschleunigungsleistung) --------
+4593:        'Previously (PHEM 10.4.2 and older) the m_raeder was used for Massered instead, with Massered = m_raeder + I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2
+4594:        '   The missing part (I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2) is now considered by fPaG(V,a)
+4598:    '----------------Slope resistance ----------------
+4603:    '----------------Ancillaries(Nebenaggregate) ----------------
+4608:    '-------------------Transmission(Getriebe)-------------------
+4633:                'Leistung nach Getriebe (Getriebeausgang) |@@| Power to Transmission (Transmission-output)
+4636:                'Calculate Losses (suitable only for Manual-transmission(Schaltgetriebe))
+4637:                '       Interpolation of the Transmission-power-loss
+4638:                '       Between 1 and 8 Gear, as well as between 9 and 16 Gear:
+4662:                '***Differential
+4663:                '   Power after Differential (before Transmission)
+4691:                '***Differential
+4692:                '   Power before Differential
+4744:    '----------------Gearbox inertia ----------------
+>>> MODcalc\cVh.vb
+5:    'From DRI file
+15:    'Calculated
+18:    'WegKor |@@| Route(Weg)Correct
+58:        'Speed
+69:            'Original-speed is longer by 1
+79:            'Strecke (aus Zwischensekunden sonst passiert Fehler) |@@| Segment (from Intermediate-seconds, otherwise Error)
+87:        'Slope
+99:        'Gear - but not Averaged, rather Gang(t) = DRI.Gear(t)
+124:        'Calculate Acceleration
+132:        'Vair specifications: Not in Intermediate-seconds!
+157:        'Speed
+169:            'Strecke  |@@| Segment
+177:        'Slope
+189:        'Gear - not Averaged, rather Gear(t) = DRI.Gear(t)
+214:        'Calculate Acceleration
+257:        'TODO: If veh faster than cycle ...
+273:            'Falls Zeitschritt wiederholen näher an Wegvorgabe als aktueller Weg => Zeitschritt wiederholen |@@| If the repeating Time-step is closer to the Specified-route than the Actual-route => Repeat Time-step
+279:                'Falls nächsten Zeitschritt löschen näher an Wegvorgabe als aktueller Weg => Nächsten Zeitschritt löschen |@@| If the next Time-step to Delete closer to specified Route than the Actual-route => Delete Next Time-step
+291:                'No correction
+>>> MODcalc\Em Calc.vb
+54:                            'Normal interpolation
+101:                'First two seconds, no correction:
+185:        'Create Dictionaries
+208:        'Calculate sums
+220:        'Mean-values
+243:        '************************************ 'Cycle Mean-values ************************************
+258:            '***** Measurement-value
+261:            '***** PHEM value
+264:            '***** Diff - CAUTION: No Pnom normalization! Beware of the Dynamic-correction!
+279:            'Average values over x seconds and imediately put au
+282:                'Set to zero
+286:                'Aufsummieren |@@| Accumulate(Aufsummieren)
+292:                'Measurement-value
+295:                'PHEM-value
+311:        '************************************ Dump Modal '************************************
+324:            'Measurement-value
+328:            'PHEM-value
+332:            'Diff - CAUTION: No Pnominal-normalized! Beware of the Dynamic-correction!
+351:        'Header and write units
+355:        'Average Values over x seconds and imediately set au
+358:            'to zero
+371:            'Aufsummieren |@@| Accumulati(Aufsummieren)
+388:            'Output
+399:                'Measurement-values
+402:                'PHEM-value
+563:            'C      Lastwechsel (allgemeine Bedingung ausser bei Intervallen mit |@@| Load-cycle(lastwechsel) (general Qualification(Bedingung ) except for Intervals with
+564:            'C      Konstantfahrt: |@@| Constant-traveling:
+572:            'C       Damit werden Trapezfoermige Zyklen nicht als lastwechsel erkannt |@@| Thus Trapezoid-Cycles are not recognized as Load-cycle(lastwechsel)
+573:            'C       da LWje = 0. In diesem fall wird voraus der naechste Wert gesucht, |@@| since LWje = 0. In this case, search ahead of next Value,
+574:            'C       der nicht gleich Pe(jz) ist. Dieser wird anstelle von Pe(jz+1) |@@| which is not equal to Pe(jz).
+575:            'C       gesetzt: |@@| This will replace Pe(jz +1):
+603:            'C      lastwechsel werden nur als solche gezaehlt, wenn sie mehr als 0.05% von |@@| Load-cycles(lastwechsel) are accounted as such only if they exceed 0.05% of Pnom
+604:            'C      Pnenn betragen (sonst ist Ergebnis viel zu wackelig): |@@| otherwise Outcome is too unstable):
+605:            'C       (Lastwechsel wird gezaehlt, wenn LWja < 0) |@@| accounted as Load-cycle(lastwechsel) when LWja < 0)
+609:            'C     (1) Mittlere Amplitude vom Pe-Verlauf ("Ampl") |@@| 1) Mean Amplitude of the running(Verlauf) Pe ("Ampl")
+610:            'C         Zwischenrechnung fue Zyklusmittelwert: |@@| Intermediate calculation of Cycle-average:
+617:            'C       Berechnung der mittleren Amplitude in 3 Sekunden vor Emission (Ampl3s) |@@| Calculate the mean Amplitude in 3 seconds of(vor) Emissions (Ampl3s)
+618:            'C       and the number of Second-steps where Pe is 3% above the Nominal-power
+650:            'C     (2) Change the current Engine-power (dP_2s):
+664:            'C     Mittelwert 3 sec. vor Emission: |@@| Average 3 sec of(vor) Emission:
+672:            'C    Counted only in dynamic operation:
+681:            'C     (4) Average of the negative Engine-power ("PnegMW"):
+687:            'C     Mittelwert 3 sec. vor Emission: |@@| Average 3 sec of(vor) Emission:
+695:            'C    Counted only in dynamic operation:
+707:        'C     Berechnung der absoluten Dynamikkenngroessen: |@@| Calculation of absolute Dynamic-map sizes:
+708:        'C      Addition of Pe Amplitudes (1 Pe-Value
+709:        'C      is counted also for Maxima and for Minima Amplitudes )
+710:        'C    First Second:
+714:            'C     2. Second to End:
+717:                'C        Absolute-value:
+792:        'Speed/Accel-dependent parameters only when not Eng-Only
+805:        'Dynamic-parameters as the Differential of Dynamics of the Map
+806:        '   ...was here before. Now in its own method because of KF-creation invalidity
+812:    'Dynamic parameters as the Differential of Dynamics in the Map:
+838:''' Class for calculating the Exhaust-temperatures
+846:    '! Felder für Größen aus PHEM Hauptprogramm |@@| Fields for Quantities from PHEM main-program
+895:    '**** Reading about tgas from .npi (Project HERO) ****
+896:    ' => überschreibt tgas(jz) aus HtMass() |@@| overwrites tgas(jz) over(aus) HtMass()
+912:    ''' Main-routine for EXS module
+916:        '! Calling from Exs_Main(true) -> Developer Version without PHEM main-program
+921:        '! Fields for Quantities from exs-file
+951:        'General Constants
+955:        '!Exhaust Physical-values:
+956:        '!insensitive vs. lambda, see "Stoffwerte_vollständigeVerbrennung_neu.xls"
+958:        'cp_exh = 1054.0 '!Exhaust heat-capacity [J/(kg*K)] is no longer used because it is now calculated directly in Abh from T and Lambda
+964:        '!Note: Average-value from searching the Internet, found no information in literature
+965:        '!kalibriert anhand Test an Thermoelement unter Annahme von Schichtdicke 0.1mm |@@| calibrated based on Test Thermocouple assuming Coating-thickness(Schichtdicke) 0.1mm
+967:        'Reaktionsenthalpien in J/mol |@@| Reaction-enthalpies in J/mol
+972:        'Molecular-weights
+977:        'Compatibility with old EXS-structure Introduced before the new Concept for Em-components with cMap-class tMAP-class, etc.
+985:        'References for Emissions: The given, if available, otherwise the calculated
+1006:        'Dimensioning:
+1025:        'Übergabe der relevanten Größen aus dem PHEM Hauptprogramm |@@| Return of the relevant Quantities from(aus) the PHEM main-program
+1026:        'Read in DEV directly from the *. phe file
+1051:            'Wird weiter unten belegt weil mpexh vorhanden sein muss |@@| It is allocated below because there must be further mpexh
+1056:        'Begin readning exs-file
+1072:        'dummy = DatExs.ReadLine(0) 'old dummy line: caution for exs-file compatibility
+1079:        'Initialize the respective Number of Modules
+1085:        'Reading of the Data-blocks for each Module
+1088:                'Error-message in TempMod(iMod).Read(DatExs)
+1096:        'End reading exs-file
+1100:            'Beginning reading csy-file
+1121:            'End reading csy-file
+1133:        'Calculation loop: Per Time-step / per Module: 1. Temperatures, 2. Conversions
+1135:            'Display per-second Results on each iteration Results
+1139:                    ' Write Header *.ter
+1159:                    ' Write the Header for KonvMods
+1169:            'Start-values ​​for Cooling-system simulation:
+1174:            'Heat transfer into the Cooling-system (Map)
+1189:                'Cooling-System Simulation
+1191:                    'Heat inputs in Masses 1 and 2
+1195:                    'The Heat-transfer Mass 1 and 2 for Cooling -system
+1199:                    'Bulk-temperatures for the next Time-step
+1205:                    'Heat-loss to the outside
+1208:                    'Total Heat-input into the Cooling-system (Output value of the simulation)
+1218:                        'Calculation of the Exhaust-gas-flow from a given Fuel-consumption and lambda
+1219:                        'Permitted only for engines without EGR
+1220:                        'Unit mpexh ....... [kg/s]
+1221:                        'Unit Vpexh ....... [m3/s]
+1222:                        'Case 1: Calculation of Consumption and lambda
+1224:                        '!Case 2: Calculation of pumped Airflow through engine
+1231:                        'Missing: Methodology for Mass-flow calculation for EGR Engines BMW HERO Project
+1239:                'Calculate Lambda  if not explicitly given
+1252:                'The First Module in the Exhausts-system may not be a catalytically active Element,
+1253:                'therefore, emissions are always equal to the untreated emissions from the PHEM main-program
+1269:                            'Calculate Qp_reak: Mass-flow-rate * Conversion * Reactive-enthalpy / molar-mass
+1273:                            'Compute Pollutant-components
+1277:                            'Conversion of NOx, CO, HC -> old value * (1-conversion-rate)
+1291:                        'Falls Modul kein Konv-Element hat ändert sich nix (Anmerkung: Modul 1 hat immer ModTyp0) |@@| If Module has no Conv-element changes nothing (Note: Module 1 has always ModTyp0)
+1304:                'Write Line in *.ter.
+1323:            'End Calculation-loop
+1326:            'Close all second-by-second Result-files
+1338:            '---------- Abfrage Rücksprung im iterativen Berechnungsmodus für Starttemp ------------------- |@@| Query return in the iterative Calculation-mode for Starttemp -------------------
+1340:                'Abbruchbedingung: Temperatur des Massenelementes "t_m" des in "iter_pos" spezifizierten Moduls |@@| Termination-condition: Temperature of the Mass-elements "t_M" in the "iter_pos" specified module
+1341:                'am Beginn und am Ende des Zyklus innerhalb vorzugebender Bandbreite "iter_tol" |@@| at the Beginning and End of the Cycle within vorzugebender bandwidth "iter_tol"
+1417:        '--- Write Output-file *. Ter --------------------------------------------- -------------
+1419:        '--- End wrtting Output-file *. ter -------------------------------------------- ---------
+1422:        'Clean up
+1431:    ''' Class for Temperature-modules
+1433:    ''' <remarks>Type of module is defined with Mod\typ </remarks>
+1492:        ''' Reading the EXS file
+1494:        ''' <param name="Datei">Dateihandler</param> |@@| param name="Datei"> File-handler </param>
+1512:            'Path to Conversion-rates for Modules with Conversion
+1520:            'Initialize the modules & Read the Parameter-files, depending on Module
+1561:                    'Heat-transfer factor
+1563:                    'surface of exterior
+1565:                    'Emissivität |@@| Emissivity
+1567:                    'Factors for Heat-transfer to the outside
+1571:                    'Factors for Temperature related t_katsubstrat  <-> t_kat_außen
+1574:                    'Cooling-mass curve
+1576:                    'Normalized Cross-sectional area
+1578:                    'durchschnittlicher Gegendruck |@@| average backpressure(Gegendruck)
+1580:                    'Thermocouple Diameter
+1583:                    'Thermocouple Cooling-curve
+1595:                    'Heat-transfer-Factors to the outside
+1621:            'Check whether Tgas given in Cycle:
+1629:            'Entnormierungen und Berechnung weiterer Größen |@@| Normalize(Entnormierungen) and Calculating other Variables
+1638:                'Additionally calculated parameters for Pipe-module:
+1650:            'Für Strömungsberechnungen in SI-Einheiten wird Querschnittsfäche in m2 umgerechnet |@@| For Flow-calculations in SI-units is Querschnittsfäche converted into m2
+1653:            'Geometrical Quantities calculated
+1654:            'Note: it is assumed that temperature sensors are
+1655:            'centered in the Pipe
+1660:            ' Anmerkung: Kugelkalotte an t-sensor spitze wird in der Betrachtung als |@@| Note: Ball joint on t-sensor tip is neglected
+1661:            ' umströmter Zylinder vernachlässigt |@@| in the analysis of Airstream-cylinder
+1663:            'Read Cooling-curves
+1691:        ''' Heat-transfer mass
+1708:            'Setting Threshold for Precision of the Temperature-calculation (needed for iterative Calculation-mode)
+1711:            'Return the Inlet-temperature of the Exhaust-gas from the Module above or from the Engine
+1730:            'Calculation of the current Mass-temperature
+1733:                '! bei n_iter > 0 ist bereits der Endwert der letzten Iteration zugewiesen |@@| at n_iter > 0 the Final-value is already assigned to the last Iteration
+1739:            'Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen: |@@| If Engine-OFF, wait Cooling-curve and exit method:
+1761:                'Heat-capacity (see Bogdanic)
+1780:                'Iteration-loop for Heat-transfer
+1788:                    '                                     Termination-criterion below
+1794:                    'Determining the Temperature of the Exhaust-gas at the Center of Mass ("t_gas_mid") consists of a non-linear (logarithmic) Temperature-curve(verlauf)
+1803:                        'Heat-transfer Convection inside all Modules (except for Pipe)
+1807:                        'for Pipe-modules:
+1809:                        'Nusselt Number: Density = 345/t_gas_mid, Term in Parenthesis: mu_Rohr / mu_Mitte
+1811:                        'Heat-transfer (Convection inside) d_pipe, in m: char. Length
+1815:                    'Heat-capacity (see Bogdanic)
+1820:                    'Termination-criterion: Change of the Exhaust Outlet-temperature compared to the last Iteration-step smaller than Threshold
+1838:            'Calculate the Heat loss of the "thermal mass" to the outside
+1840:                'Parameters are read from EXS file:
+1841:                'Data for MuD:
+1842:                '   Oberfl_Kat = 0.12 'Surface for Heat-transfer in m^2
+1843:                '   Emiss = 0.5 'Emissivität |@@| Emiss = 0.5 'emissivity
+1846:                'Empirische Formel, passt für alle Rollentests recht gut |@@| Empirical formula, suitable for all OK Roll-tests
+1848:                'Note: Tests with direct Dependence on t_m -> does not work well
+1850:                'Heat-loss by Radiation
+1852:                'Heat-loss by Convection
+1856:                'Parameters are read from EXS file:
+1857:                'Data for MuD:
+1858:                '   Module 3:
+1859:                '       Oberfl_Mod3 = 0.169457508 'Surface for Heat-transfer in m^2
+1860:                '       Emiss = 0.5 'Emissivität |@@| Emiss = 0.5 'emissivity
+1863:                '   Module 4:
+1864:                '       Oberfl_Mod4 = 0.103596481 'Oberfläche für Wärmeübergang in m^2 |@@| Oberfl_Mod4 = 0.103596481 'Surface for Heat-transfer in m^2
+1865:                '       Emiss = 0.9 'Emissivität |@@| Emiss = 0.9 'emissivity
+1869:                'Heat-loss by Radiation = View_factor * Emissivity * St.-Boltzm.-const * Surface * (T_Pipe^4 - T_Environ^4)
+1871:                'Heat-loss by Convection = Heat_transfer_coefficient * Surface * (T_Pipe - T_Environ)
+1874:                'Standard: Crad constant, no Loss by Convection
+1879:            'Total-heat-loss
+1886:        ''' Thermocouple-Heat-transfer
+1899:                'Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen: |@@| If Engine-OFF, wait for Cooling-curve and exit method:
+1912:                '!Formula Calculating Heat-transfer-flow around the Cylinder
+1921:                'Simplified solution of the Heat-flow-equation for the t-sensor
+1922:                'entspricht einer Diffgl. für ein PT1 glied |@@| corresponds to a Diffgl. for a PT1 section(glied)
+1924:                'Discrete-time Solution of the PT1-Diffgl
+1991:                ''Extrapolation for LastTemp > TempAR(0)
+2003:                'Extrapolation for LastTemp < TempAR(Adim)
+2013:                'Einen Zeitschritt vor ( = 1 Sekunde) |@@| One Time-step forward(vor)( =1 second)
+2041:        'Class initialized as a Subelement of TempMod
+2047:        'c     Prefix "c" means: use Cycle-value for Characteristic-correction
+2049:        'c     Index "cc" means: Value of Charachteristic-curve (-> "c" - "cc" is the Derivative, corrected)
+2053:        'Specify Filename for per-second Output-file
+2105:            'Abort if given no NOx
+2126:            't-SCR (° C), deNOx (1-NOx-Exhaust/NOx-Raw), t-upstream (°C), NOx-raw (g/h)/kW_Nominal-power, total NOx over 60sec before g/h)/kW_Nominal-power, space velocity (1/h)
+2149:            ' Program to simulate SCR-fleet-model
+2150:            ' Note: deNOx values less than zero are possible:
+2151:            '            this corresponds to higher NOx-raw level than in the Base-map
+2162:            '     1.) Calculation of per-second Values ​​for Input-variables of the SCR-model
+2164:            '     a.) t_SCR: combined-weight of t_upstream and t_downstream
+2165:            '     SCR-Model-intern werden dabei Temperaturen zwischen 50°C und 500°C begrenzt |@@| SCR-model-internally there are Temperatures between 50 ° C and 500 ° C limits
+2166:            '     Temperature-model-values (eg Cold-start) will not be overwritten
+2172:            '     b.) t_up, NOxraw, SV. 20s Moving-average in the past
+2173:            '         Formula applied also to the first 20 seconds
+2187:            '     c.) NOx60s: Sum over the last 60s of the specific NOx-raw emissions
+2188:            '         Formula applied to the first 60 seconds
+2194:            '        for seconds 1-59 must Extrapolate total-value
+2201:            '     Calculation of deNOxmin value from Characteristic-curves at 50 ° C
+2213:            '     2.) Calculation deNOx
+2215:            '        a.) deNOx of characteristic:
+2225:            'c        b.) If correction criteria are met: deNOx-correction compared against Characteristic
+2228:                'c           t_up from characteristics:
+2238:                'c           NOx_raw of characteristics:
+2248:                'c           Sum of the NOxraw in the last 60 seconds from characteristics:
+2258:                'c           Raumgeschwindigkeit aus Kennlinie: |@@| Space/Velocity from(aus) characteristics:
+2276:            'Schreiben der Ergebnisse auf die standardisierten Variablen eEmKomp (iSchad, jz) und Qp_reak(jz) |@@| Write the results on the standardized variables eEmKomp (iSchad, jz) and Qp_reak (jz)
+2312:    ''' SCR model
+2319:        'Class initialized as a Subelement of TempMod
+2325:        'c     Prefix "c" means: use Cycle value for Characteristic-correction
+2327:        'c     Index "cc" means: Value of Characteristic (-> "c" - "cc" is the Derivative, corrected)
+2331:        'Specify Filename for per-second Output-file
+2385:            'Abort if no NOx given
+2405:            't-SCR (°C), deNOx(1-NOx-Auspuff/NOx-Roh), -t-upstream(°C), NOx-Roh (g/h)/kW_Nennleistg, Summe NOx ueber 60Sek vorher g/h)/kW_Nennleistg, Raumgeschwindigkeit (1/h) |@@| t-SCR (° C), deNOx (1-NOx-Exhaust/NOx-raw), t-upstream (° C), NOx-raw (g/h) / kW_Nominal-power, total NOx over 60sec before g/h)/kW_Nominal-power, space velocity (1/h)
+2429:            ' Program to Simulate SCR-fleet-model
+2430:            ' Note: deNOx with values less than zero are possible:
+2431:            '            this corresponds to higher NOx-raw level than in the Base-map
+2443:            '     1.) Calculation of per-second Values ​for Input-variables of the SCR model
+2445:            '     a) t_SCR: combined-weight of the t_upstream and t_downstream
+2446:            '     SCR-Model-intern werden dabei Temperaturen zwischen 50°C und 500°C begrenzt |@@| SCR model internally there are temperatures between 50 ° C and 500 ° C limits
+2447:            '     Temperature-model values (eg cold start) will not be overwritten
+2453:            '     b.) t_up, NOxraw, SV. 20s moving average in the past
+2454:            '         Formula applies to the first 20 seconds
+2470:            '     c.) NOx60s: Sum over the last 60s of the specific NOx-raw emissions
+2471:            '         Formula applies to the first 60 seconds
+2479:            '        For seconds 1 to 59 must sum the projected values
+2486:            '     Calculation of the Characteristic-curves for deNOxmin values at 50 ° C
+2498:            '     2.) Calculation of deNOx
+2500:            '        a.) Characteristic of deNOx:
+2510:            'c        b.) If Correction-criteria are met: Correct deNOx against the Characteristic
+2513:                'c           Characteristic of t_up:
+2523:                'c           Characteristic-curve of the NOx_raw:
+2533:                'c           Sum of NOxraw in the last 60 seconds of Characteristic-curve:
+2543:                'c           Characteristic-curve of Distnace-Speed(Raumgeschwindigkeit):
+2561:            'Write the results on the standardized variables eEmKomp(iSchad, jz) and Qp_reak(jz)
+2593:    ''' KAT-model
+2600:        'Class initialized as a Sub-element of TempMod
+2606:        'Mapped-data
+2627:        ''' Creating a new CAT module
+2642:        ''' Interpolation-Function
+2644:        ''' <param name="x">Mass-flow(Massenstrom)</param>
+2645:        ''' <param name="y"> Temperature before(vor) KAT </param>
+2646:        ''' <param name="MapID">The MapID of the corresponding Exhaust-gas-component</param>
+2647:        ''' <returns>The interpolated value for x and y from the Map</returns>
+2648:        ''' <remarks> It calculates the converted rate of the appropriate Exhaust-gas-component from the Mass-flow temperature Map</remarks>
+2660:        ''' Reading the Maps for Conversion-rates
+2662:        ''' <param name="Name">Filename</param>
+2716:            'Units (are not evaluated)
+2719:            'Values
+2731:                'Set KonvRaten to Zero when no component given
+2742:            'Triangulating
+2750:            'define Dic. for modal Konvrate
+2763:        ''' Calculation of the Conversion-rate from Map
+2765:        ''' <param name="jz">Time</param>
+2766:        ''' <remarks> Used to calculate the temperature of the Thermoelements on Kateingang (corresponds to  Module-number i-1)!</remarks>
+2768:            'Conversion-rate calculated from Map
+2784:        ''' Header for Output-file
+2796:        ''' Data for Output-file
+2798:        ''' <param name="jz">Time</param>
+2819:    ''' Interface to Converter-classes cScrMod, cDocMod, etc. ..
+2835:        'C     Unterprogramm zu PHEM zur linearen INterpolation aus einem Polygonzug (z.B. in Vissimzs.for aufgerufen) |@@| Subroutine of(zu) PHEM for linear Interpolation of a Polygon (eg called by Vissimzs.for)
+2836:        'C     uebergeben wid "such" als X-Wert, der dann als berechneter Y-Wert wieder zurueck gegeben wird |@@| It is given the X-value to "search", and it gives back the calculated Y-value
+2837:        'C     Zu Belegen sind vorher: |@@| for previous Allocation:
+2838:        'C     Xis(j) and Yis(j)
+2839:        'c     Given the desired Value(search) and the Number of the existing Polygon-points (izpl)
+2850:        'C    Search the closest points of the Revolutions from the input Full-load curve:
+2851:        'c     Distance to Input-points and Search those Points with the smallest Distance:
+2862:        'C      Fix the second Interpolation-points (only interpolation, no extrapolation)
+2868:                '!Extrapolation up
+2874:                '!Extrapolation down
+2879:        'c      Sort the 2 Values by ascending n:
+2887:        'c     Interpolation of the associated Maximum-power (P/Pnom)
+>>> My Project\AssemblyInfo.vb
+5:' Below is the General Information about the Attributes
+6:' controlling the Assembly. Change these attribute values to modify the information
+7:' associated with the Assembly.
+9:' Review the values of the Assembly Attributes
+20:'The following GUID is for the ID of the Typelib if this project is exposed to COM
+23:' Version information for an assembly consists of the following four values:
+25:'      Major Release
+26:'      Minor Release
+27:'      Build Number
+30:' You can specify all the values or use the defaults for Build and Revision Numbers
+31:' by entering "*" in them:

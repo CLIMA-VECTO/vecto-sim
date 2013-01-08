@@ -1,8 +1,8 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class F_VEH
     Inherits System.Windows.Forms.Form
 
-    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+    'Das Formular Ã¼berschreibt den LÃ¶schvorgang, um die Komponentenliste zu bereinigen.
     <System.Diagnostics.DebuggerNonUserCode()> _
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
@@ -14,12 +14,12 @@ Partial Class F_VEH
         End Try
     End Sub
 
-    'Wird vom Windows Form-Designer benötigt.
+    'Wird vom Windows Form-Designer benÃ¶tigt.
     Private components As System.ComponentModel.IContainer
 
-    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
-    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
-    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+    'Hinweis: Die folgende Prozedur ist fÃ¼r den Windows Form-Designer erforderlich.
+    'Das Bearbeiten ist mit dem Windows Form-Designer mÃ¶glich.  
+    'Das Bearbeiten mit dem Code-Editor ist nicht mÃ¶glich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_VEH))
@@ -246,7 +246,7 @@ Partial Class F_VEH
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(36, 13)
         Me.Label32.TabIndex = 24
-        Me.Label32.Text = "[kgm²]"
+        Me.Label32.Text = "[kgmÂ²]"
         '
         'Label35
         '
@@ -273,7 +273,7 @@ Partial Class F_VEH
         Me.Label38.Name = "Label38"
         Me.Label38.Size = New System.Drawing.Size(24, 13)
         Me.Label38.TabIndex = 24
-        Me.Label38.Text = "[m²]"
+        Me.Label38.Text = "[mÂ²]"
         '
         'CbCdMode
         '

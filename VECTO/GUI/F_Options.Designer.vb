@@ -1,8 +1,8 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class F_Options
     Inherits System.Windows.Forms.Form
 
-    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+    'Das Formular Ã¼berschreibt den LÃ¶schvorgang, um die Komponentenliste zu bereinigen.
     <System.Diagnostics.DebuggerNonUserCode()> _
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
@@ -14,12 +14,12 @@ Partial Class F_Options
         End Try
     End Sub
 
-    'Wird vom Windows Form-Designer benötigt.
+    'Wird vom Windows Form-Designer benÃ¶tigt.
     Private components As System.ComponentModel.IContainer
 
-    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
-    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
-    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+    'Hinweis: Die folgende Prozedur ist fÃ¼r den Windows Form-Designer erforderlich.
+    'Das Bearbeiten ist mit dem Windows Form-Designer mÃ¶glich.  
+    'Das Bearbeiten mit dem Code-Editor ist nicht mÃ¶glich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.TextBoxWorDir = New System.Windows.Forms.TextBox()
@@ -232,7 +232,7 @@ Partial Class F_Options
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(41, 13)
         Me.Label3.TabIndex = 16
-        Me.Label3.Text = "[kg/m³]"
+        Me.Label3.Text = "[kg/mÂ³]"
         '
         'TbCO2toFC
         '

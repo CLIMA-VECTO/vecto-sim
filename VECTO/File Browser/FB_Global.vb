@@ -1,4 +1,4 @@
-Module FB_Global
+﻿Module FB_Global
 
     Public FB_FolderHistory(19) As String
     Public FB_Drives() As String

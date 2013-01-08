@@ -1,6 +1,6 @@
-Public Class F_TEM_Creator
+﻿Public Class F_TEM_Creator
 
-    'Initialisierung
+    'Initialization
     Private Sub F04_TEM_Creator_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.TextBoxTemp.Text = "20"
         Me.ComboBoxDrCyc.Items.Add("Average")

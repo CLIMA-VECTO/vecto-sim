@@ -16,7 +16,7 @@ Public Class cMOD
     Public ModOutpName As String
     Public ModErrors As cModErrors
 
-    'Leistungen
+    'Power
     Public Psum As List(Of Single)
     Public Proll As List(Of Single)
     Public Pstg As List(Of Single)
@@ -33,7 +33,7 @@ Public Class cMOD
 
     Public EngState As List(Of tEngState)
 
-    'Fahrzeug
+    'Vehicle
     Public Gear As List(Of Single)
     Public VehState As List(Of tVehState)
 
@@ -189,13 +189,13 @@ Public Class cMOD
         Dim Exs0 As List(Of Single)
         Dim AuxKV As KeyValuePair(Of String, List(Of Single))
 
-        'Zykluslänge definieren (Um 1s kürzer als Original weil Zwischensekunden)
+        'Define Cycle-length (shorter by 1sec than original because of Interim-seconds)
         tDim = DRI.tDim - 1
 
-        'Hier wird der eigentliche Zyklus eingelesen:
+        'Here the actual cycle is read:
         Vh.VehCylceInit()
 
-        'Drehzahl-Vorgabe
+        'Revolutions-setting
         If DRI.Nvorg Then
 
             MODdata.nUvorg = New List(Of Single)
@@ -203,19 +203,19 @@ Public Class cMOD
 
             L = DRI.Values(tDriComp.nn)
 
-            'Drehzahl
+            'Revolutions
             For s = 0 To tDim
                 MODdata.nUvorg.Add(((L(s + 1) + L(s)) / 2) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl)
             Next
 
-            'Winkelbeschleunigung
+            'Angular acceleration
             For s = 0 To tDim
                 MODdata.dnUvorg.Add(L(s + 1) - L(s))
             Next
 
         End If
 
-        'Em-Komponenten mitteln (Zwischensekunden) für KF-Erstellung oder Eng-Analysis
+        'Average EM-components (between-seconds) for KF-creation or Eng-Analysis
         If DRI.EmCompDef Then
             For Each EmKV In DRI.EmComponents
                 For s = 0 To tDim
@@ -224,7 +224,7 @@ Public Class cMOD
             Next
         End If
 
-        'EXS Vorgaben mitteln
+        'Specify average EXS
         If DRI.ExsCompDef Then
             For Each ExsKV In DRI.ExsComponents
                 For Each Exs0 In ExsKV.Value.Values
@@ -235,7 +235,7 @@ Public Class cMOD
             Next
         End If
 
-        'Aux Vorgaben mitteln und Aux-Listen falls Aux in Dri und Veh vorhanden
+        'Specify average Aux and Aux-lists, when Au8x present in DRI and VEH
         If DRI.AuxDef Then
             For Each AuxKV In DRI.AuxComponents
 
@@ -255,13 +255,13 @@ Public Class cMOD
         Dim s As Integer
         Dim L As List(Of Double)
 
-        'Zykluslänge definieren: Gleiche Länge wie Zyklus (nicht reduziert weil keine "Zwischensekunden")
+        'Zykluslänge definieren: Gleiche Länge wie Zyklus (nicht reduziert weil keine "Zwischensekunden") |@@| Define Cycle-length: Same length as Cycle (not reduced because no "interim seconds")
         tDim = DRI.tDim - 1
 
-        'Hier wird der eigentliche Zyklus eingelesen:
+        'Here the actual cycle is read:
         Vh.EngCylceInit()
 
-        'Drehzahl-Vorgabe
+        'Revolutions-setting
         If DRI.Nvorg Then
 
             MODdata.nUvorg = New List(Of Single)
@@ -269,12 +269,12 @@ Public Class cMOD
 
             L = DRI.Values(tDriComp.nn)
 
-            'Drehzahl
+            'Revolutions
             For s = 0 To MODdata.tDim
                 MODdata.nUvorg.Add(L(s) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl)
             Next
 
-            'Winkelbeschleunigung
+            'Angular acceleration
             MODdata.dnUvorg.Add(L(1) - L(0))
             For s = 1 To MODdata.tDim - 1
                 MODdata.dnUvorg.Add((L(s + 1) - L(s - 1)) / 2)
@@ -312,7 +312,7 @@ Public Class cMOD
 
         MsgSrc = "MOD/Output"
 
-        '*********** Initialisierung / Datei öffnen **************
+        '*********** Initialization / Open File **************
         If ModOutpName = "" Then
             WorkerMsg(tMsgID.Err, "Invalid output path!", MsgSrc)
             Return False
@@ -367,7 +367,7 @@ Public Class cMOD
 
 
 
-        '*** ID-Zeile (Nur ADVANCE)
+        '*** ID line (Only ADVANCE)
         If ADVmode Then
             s.Append("VehNr: " & ADV.aVehNr)
             s.Append(",Input File: " & fFILE(GenFile, True))
@@ -428,7 +428,7 @@ Public Class cMOD
 
         End If
 
-        'ADVANCE-spezifisch
+        'ADVANCE-specific
         If ADVmode Then
 
             s.Append(",WorldX,WorldY,StrId")
@@ -476,7 +476,7 @@ Public Class cMOD
 
         End If
 
-        'Berechnete Dynamikparameter (Diff zu Kennfeld)
+        'Berechnete Dynamikparameter (Diff zu Kennfeld) |@@| Calculated dynamics parameters (Diff to Map)
         'If TC.Calculated Then
         '    For Each TcKey In TcList
         '        s.Append(Sepp & fMapCompName(TcKey))
@@ -485,7 +485,7 @@ Public Class cMOD
         'End If
 
 
-        'In Datei schreiben
+        'Write to File
         '   Header
         f.WriteLine(s.ToString)
         '   Units
@@ -494,7 +494,7 @@ Public Class cMOD
         '***********************************************************************************************
         '***********************************************************************************************
         '***********************************************************************************************
-        '*** Werte *************************************************************************************
+        '*** Values *************************************************************************************
 
         With MODdata
 
@@ -502,25 +502,25 @@ Public Class cMOD
 
                 s.Length = 0
 
-                'Zeit
+                'Time
                 s.Append(t + DRI.t0 + tdelta)
 
                 If Not GEN.VehMode = tVehMode.EngineOnly Then
 
-                    'Strecke
+                    'Strecke |@@| Route
                     dist += .Vh.V(t) / 1000
                     s.Append(Sepp & dist)
 
-                    'Ist-Geschw.
+                    'Actual-speed.
                     s.Append(Sepp & .Vh.V(t) * 3.6)
 
-                    'Soll-Geschw.
+                    'Target-speed
                     s.Append(Sepp & .Vh.Vsoll(t) * 3.6)
 
-                    'Beschl.
+                    'Acc.
                     s.Append(Sepp & .Vh.a(t))
 
-                    'Steigung
+                    'Slope
                     s.Append(Sepp & .Vh.Grad(t))
 
                 End If
@@ -529,36 +529,36 @@ Public Class cMOD
 
                     If Not GEN.VehMode = tVehMode.EV Then
 
-                        'Drehzahl
+                        'Revolutions
                         s.Append(Sepp & .nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl)
 
-                        'Leistung 
+                        'Power
                         s.Append(Sepp & .Pe(t) * VEH.Pnenn)
 
-                        'Drehzahl normiert
+                        'Revolutions normalized
                         s.Append(Sepp & .nn(t))
 
-                        'Leistung normiert
+                        'Power normalized
                         s.Append(Sepp & .Pe(t))
 
                     End If
 
-                    'Drehzahl in U/min
+                    'Revolutions in U/min
                     s.Append(Sepp & .nU(t))
 
-                    'EM-Leistung in kW
+                    'EM-power in kW
                     s.Append(Sepp & .Px.PeEMot(t))
 
-                    'Effektive Batterieleistung
+                    'Effective Battery-power
                     s.Append(Sepp & .Px.PeBat(t))
 
-                    'Innere Batterieleistung
+                    'Internal Battery-power
                     s.Append(Sepp & .Px.PiBat(t))
 
-                    'Batteriespannung
+                    'Battery-voltage
                     s.Append(Sepp & .Px.Ubat(t))
 
-                    'Batteriestrom
+                    'Battery-Power
                     s.Append(Sepp & .Px.Ibat(t))
 
                     'SOC
@@ -566,19 +566,19 @@ Public Class cMOD
 
                 Else
 
-                    'Drehzahl
+                    'Revolutions
                     s.Append(Sepp & .nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl)
 
-                    'Leistung 
+                    'Power
                     s.Append(Sepp & .Pe(t) * VEH.Pnenn)
 
-                    'Drehzahl normiert
+                    'Revolutions normalized
                     s.Append(Sepp & .nn(t))
 
-                    'Leistung normiert
+                    'Power normalized
                     s.Append(Sepp & .Pe(t))
 
-                    'Volllast und Schlepp
+                    'Full-load and Drag
                     If .EngState(t) = tEngState.Stopped Then
                         s.Append(Sepp & "-" & Sepp & "-")
                     Else
@@ -589,7 +589,7 @@ Public Class cMOD
                         End If
                     End If
 
-                    'Leistung an Kupplung
+                    'Power to Clutch
                     s.Append(Sepp & .Pe(t) * VEH.Pnenn - .PaEng(t) - .PauxSum(t))
 
 
@@ -597,16 +597,16 @@ Public Class cMOD
 
                 If Not GEN.VehMode = tVehMode.EngineOnly Then
 
-                    'Gang
+                    'Gear
                     s.Append(Sepp & .Gear(t))
 
-                    'Getriebeverluste
+                    'Transmission-losses
                     s.Append(Sepp & .PlossGB(t))
 
-                    'Diff-Verluste
+                    'Diff-losses
                     s.Append(Sepp & .PlossDiff(t))
 
-                    'Retarder-Verluste
+                    'Retarder-losses
                     s.Append(Sepp & .PlossRt(t))
 
                     'PaEng
@@ -621,19 +621,19 @@ Public Class cMOD
                     'Roll..
                     s.Append(Sepp & .Proll(t))
 
-                    'Luft..
+                    'Drag
                     s.Append(Sepp & .Pluft(t))
 
-                    'Steigung..
+                    'Slope ..
                     s.Append(Sepp & .Pstg(t))
 
                     'Aux..
                     s.Append(Sepp & .PauxSum(t))
 
-                    'Radleistung
+                    'Wheel-power
                     s.Append(Sepp & .Psum(t))
 
-                    'Bremse
+                    'Brake
                     s.Append(Sepp & .Pbrake(t))
 
                     'Auxiliaries
@@ -643,7 +643,7 @@ Public Class cMOD
 
                 End If
 
-                'ADVANCE-spezifisch
+                'ADVANCE-specific
                 If ADVmode Then
 
                     'X
@@ -659,7 +659,7 @@ Public Class cMOD
 
                 If Cfg.FinalEmOnly Then
 
-                    'Final-Emissionen (Tailpipe)
+                    'Final-emissions (tailpipe)
                     For Each StrKey In EmList
 
                         Em0 = .Em.EmComp(StrKey)
@@ -677,13 +677,13 @@ Public Class cMOD
                         Em0 = .Em.EmComp(StrKey)
 
                         If Em0.WriteOutput Then
-                            'Roh-Emissionen
+                            'Raw-emissions
                             s.Append(Sepp & Em0.RawVals(t))
 
-                            'TC-Emissionen
+                            'TC-Emissions
                             If Em0.TCdef Then s.Append(Sepp & Em0.TCVals(t))
 
-                            'AT-Emissionen (EXS)
+                            'AT-Emissions (EXS)
                             If Em0.ATdef Then s.Append(Sepp & Em0.ATVals(t))
                         End If
 
@@ -691,7 +691,7 @@ Public Class cMOD
 
                 End If
 
-                'Berechnete Dynamikparameter (Diff zu Kennfeld)
+                'Calculated Dynamics-parameters (Diff from(zu) Map)
                 'If TC.Calculated Then
                 '    For Each TcKey In TcList
                 '        TC0 = MODdata.TC.TCcomponents(TcKey)
@@ -699,7 +699,7 @@ Public Class cMOD
                 '    Next
                 'End If
 
-                'In Datei schreiben
+                'Write to File
                 f.WriteLine(s.ToString)
 
             Next
@@ -713,7 +713,7 @@ Public Class cMOD
 
     End Function
 
-    'Errors/Warnings die sekündlich auftreten können
+    'Errors/Warnings die sekündlich auftreten können |@@| Errors/Warnings occuring every second
     Public Class cModErrors
         Public TrLossMapExtr As String
         Public AuxMapExtr As String
@@ -731,7 +731,7 @@ Public Class cMOD
         'Reset-Hierarchie:
         ' ResetAll
         '   DesMaxExtr
-        '   -GeschRedReset
+        '   -GeschRedReset(Speed-Reduce-Reset)
         '       CdExtrapol        
         '       -PxReset
         '           TrLossMapExtr 
@@ -739,20 +739,20 @@ Public Class cMOD
         '           AuxNegative
         '           FLDextrapol
 
-        'Kompletter Reset (am Beginn jedes Sekundenschritts)
+        'Full reset (at the beginning of each second step)
         Public Sub ResetAll()
             DesMaxExtr = ""
             GeschRedReset()
         End Sub
 
-        'Reset von Errors nach Geschw.-Reduktion (innerhalb Iteration)
+        'Reset Errors related to Speed Reduction (within iteration)
         Public Sub GeschRedReset()
             CdExtrapol = ""
             RtExtrapol = ""
             PxReset()
         End Sub
 
-        'Reset von Errors die mit der Leistungsberechnung zu tun haben (nach Schaltmodell durchzuführen)
+        'Reset von Errors die mit der Leistungsberechnung zu tun haben (nach Schaltmodell durchzuführen) |@@| Reset errors related to Power-calculation (towards performing the Gear-shifting model)
         Public Sub PxReset()
             TrLossMapExtr = ""
             AuxMapExtr = ""
@@ -760,7 +760,7 @@ Public Class cMOD
             FLDextrapol = ""
         End Sub
 
-        'Errors ausgeben
+        'Emit Errors
         Public Function MsgOutputAbort(ByVal Second As String, ByVal MsgSrc As String) As Boolean
             Dim Abort As Boolean
 

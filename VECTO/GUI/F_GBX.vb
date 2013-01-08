@@ -151,7 +151,7 @@
 
     End Sub
 
-    'Speichern oder Speichern als Function = true wenn Datei gespeichert
+    'Save or Save As function = true if file is saved
     Private Function SaveOrSaveAs(ByVal SaveAs As Boolean) As Boolean
         If GbxFile = "" Or SaveAs Then
             If fbGBX.SaveDialog(GbxFile) Then
@@ -203,7 +203,7 @@
 
 #Region "Change Events"
 
-    'Change Status ändern
+    'Change Status ändern |@@| Change Status change
     Private Sub Change()
         If Not Changed Then
             Me.LbStatus.Text = "Unsaved changes in current file"
@@ -211,7 +211,7 @@
         End If
     End Sub
 
-    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht
+    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht |@@| Save changes? "... Returns True if user aborts
     Private Function ChangeCheckCancel() As Boolean
 
         If Changed Then

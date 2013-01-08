@@ -1,0 +1,2295 @@
+﻿
+Startup: Raised when the application starts even before the creation of the startup-forms. @@ Für MyApplication sind folgende Ereignisse verfügbar:
+Shutdown: Raised after closing all the application forms. This event is not raised if the application terminates abnormally. @@ Startup: Wird beim Starten der Anwendung noch vor dem Erstellen des Startformulars ausgelöst.
+UnhandledException: Raised if the application encounters an unhandled exception. @@ Shutdown: Wird nach dem Schließen aller Anwendungsformulare ausgelöst. Dieses Ereignis wird nicht ausgelöst, wenn die Anwendung nicht normal beendet wird.
+StartupNextInstance: Raised when launching a single-instance application, if it is already active. @@ UnhandledException: Wird ausgelöst, wenn in der Anwendung eine unbehandelte Ausnahme auftritt.
+NetworkAvailabilityChanged: Occurs when connecting or disconnecting to the network. @@ StartupNextInstance: Wird beim Starten einer Einzelinstanzanwendung ausgelöst, wenn diese bereits aktiv ist. 
+Initialization @@ NetworkAvailabilityChanged: Wird beim Herstellen oder Trennen der Netzwerkverbindung ausgelöst.
+Paths @@ Initialisierung
+If folder does not exist: Create! @@ Pfade
+Directories.txt preconfigure @@ Falls Ordner nicht vorhanden: Erstellen!
+Separator! @@ Directories.txt vorkonfigurieren
+Classes initialize @@ Trennzeichen!
+Config @@ Klassen initialisieren
+Log start @@ Config
+File size check @@ Log starten
+If log too large: Delete @@ Dateigröße checken
+License initialize @@ Falls Log zu groß: löschen
+Lizenz initialisieren
+
+Remove V'' => number remains @@ Erste Zeile: Version
+If invalid version: Abort @@ V" entfernen => Zahl bleibt übrig
+Version set @@ Falls Version ungültig: Abbruch
+Line      Variable        Type         Description @@ Version festgelegt
+01)       WorkDPath       String      WorkDir @@ Zeile      Variable        Typ         Beschreibung
+02)       LastMode        Short      Last used mode (equivalent CBoxMODE.SelectedIndex) @@ 01)       WorkDPath       String      WorkDir
+03)       IntpV2          Boolean     New interpolator to use @@ 02)       LastMode        Short       Letzter verwendeter Modus (entspricht CBoxMODE.SelectedIndex)
+04)       nnormEngStop    Single      Stop engine if under this Rotations @@ 03)       IntpV2          Boolean     Neuen Interpolator verwenden
+05)       TEMpath         String      TEM_Data path @@ 04)       nnormEngStop    Single      Unter dieser Drehzahl Engine Stop
+06)       LastTEM         String      Last TEM file -not in Options Form!!!! @@ 05)       TEMpath         String      TEM_Data Pfad
+07)       TEMexl          Boolean     Open TEM in Excel  -not in Options Form!!! @@ 06)       LastTEM         String      Letzte TEM Datei   -nicht in Options Form!!!
+08)       EAAvInt         Short      Analysis intervals in seconds. If 0: Query Value @@ 07)       TEMexl          Boolean     Open TEM in Excel  -nicht in Options Form!!!
+09)       ModOut          Boolean     Modal output @@ 08)       EAAvInt         Short       Analyse intervals of seconds. Wenn 0: Wert abfragen
+10)       WegKorJa        Boolean     Path-correction in so speed. Reduction cycle is not shorter @@ 09)       ModOut          Boolean     Modale Ausgabe
+11)       GnVorgab        Boolean     Gang- bzw. Rotations @@ 10)       WegKorJa        Boolean     Wegkorrektur damit bei Geschw. Reduktion Zyklus nicht kürzer wird
+12)       LogSize         Int16       Maximale Log-Größe [MiB] @@ 11)       GnVorgab        Boolean     Gang- bzw. Drehzahl
+13)       FZPsort         Boolean     FZP sort (formerly standard since the VISSIM. Fzp sorted according seconds) outputs @@ 12)       LogSize         Int16       Maximale Log-Größe [MiB]
+14)       FZPsortExp      Boolean     Sorted FZP export @@ 13)       FZPsort         Boolean     FZP sortieren (früher Standard da VISSIM die .fzp nach Sekunden sortiert ausgibt)
+15)       BATCHoutpath    Boolean     Output path for BATCH mode: <WORKDIR>, <GENPATH> or path @@ 14)       FZPsortExp      Boolean     Sortierte FZP exportieren
+16)       BATCHoutSubD    Boolean     BATCH-output in subfolders (depending. Tions file) @@ 15)       BATCHoutpath    Boolean     Ausgabepfad für BATCH-Modus:   <WORKDIR>, <GENPATH> oder Pfad
+17)       AirDensity      Single      Air-density @@ 16)       BATCHoutSubD    Boolean     BATCH-Ausgabe in Unterordner (je .gen Datei)
+18)       FinalEmOnly     Boolean     Only Final Emission output @@ 17)       AirDensity      Single      Luftdichte
+19)       FCcorrection    Boolean     FC-Correction in BATCH mode @@ 18)       FinalEmOnly     Boolean     Nur Final-Emissions ausgeben
+Previously: IntpV2 = CBool(line) @@ 19)       FCcorrection    Boolean     FC-Korrektur im BATCH-Modus
+Früher:  IntpV2 = CBool(line)
+
+Normalize @@ Min/Max suchen
+When sign of x or y is equal to the sign of xA(i) or yA(i), then skip row i @@ Normieren
+Wenn Vorzeichen von x oder y nicht gleich Vorzeichen von xA(i) oder yA(i) dann wird Zeile i übersprungen
+
+Driving state shares @@ Fahrzustände in Sekunden
+Acceleration parameters @@ Fahrzustands-Anteile
+3s-Accel @@ Beschl.-Parameter
+Driving mode  Stop/Acc/Dec/Cruise @@ 3s-Beschl
+Average-Accel @@ Fahranteile Stop/Acc/Dec/Cruise
+Durchschnitts-Beschl
+
+XZ-triangulation @@ XY-Triangulierung
+XZ-Triangulierung
+
+Entry in "Sub New () ' @@ Anleitung zur Einbindung neuer DEV-Options *********************************
+I) New cDEVoption object definition with "Conf0 = New cDEVoption(ConfigType, Description, SaveInConfg, Enabled)" @@ 1. Eintrag in "Sub New()"
+ConfigType <tDEVconfType> defined ... Type: Boolean, Integer, Single, String, menu selection (Integer) or Reference to Function @@ I) Neues cDEVoption Objekt definieren mit "Conf0 = New cDEVoption(ConfigType, Description, SaveInConfg, Enabled)"
+Description     <String>        ...Description of the parameter @@ ConfigType      <tDEVconfType>  ...definiert Typ: Boolean, Integer, Single, String, Menüauswahl (Integer) oder Verweis auf Funktion
+SaveInConfg     <Boolean>       ...Whether you want to save settings for next startup PHEM @@ Description     <String>        ...Beschreibung des Parameters
+Enabled         <Boolean>       ...Whether setting the DEV-tab can be changed @@ SaveInConfg     <Boolean>       ...Ob Einstellung für nächsten PHEM-Start gespeichert werden soll
+II) default value defined. A distinction which ConfigType is used: @@ Enabled         <Boolean>       ...Ob Einstellung im DEV-Tab geändert werden kann
+a) ConfigType = tBoolean: @@ II) Default-Wert definieren. Hier wird unterschieden welcher ConfigType verwendet wird:
+Conf0.BoolVal = ...             <Boolean> @@ a) ConfigType = tBoolean:
+b) ConfigType = tSingleVal: @@ Conf0.BoolVal = ...             <Boolean> 
+Conf0.SingleVal = ...           <Single> @@ b) ConfigType = tSingleVal:  
+c) ConfigType = tStringVal: @@ Conf0.SingleVal = ...           <Single>
+Conf0.StringVal = ...           <String> @@ c) ConfigType = tStringVal:    
+d) ConfigType = tIntVal: @@ Conf0.StringVal = ...           <String>
+Conf0.IntVal = ...              <Integer> @@ d) ConfigType = tIntVal:    
+e) ConfigType = tAction: @@ Conf0.IntVal = ...              <Integer>
+Conf0.ActionDelegate = New cDEVoption.dActionDelegate(AddressOf NameDerFunktion) @@ e) ConfigType = tAction:
+Where NameDerFunktion the called function that passes a <String> is: "Public Function NameDerFunktion() As String ' @@ Conf0.ActionDelegate = New cDEVoption.dActionDelegate(AddressOf NameDerFunktion)
+f) ConfigType = tContMenIndex: @@ Wobei NameDerFunktion die aufzurufende Funktion ist die einen <String> übergibt: "Public Function NameDerFunktion() As String"
+Definition of Available selection options as <String>: @@ f) ConfigType = tContMenIndex:
+Conf0.AddMode ("select 1") @@ Verfügbare Auswahl-Möglichkeiten als <String> definieren:
+Conf0.AddMode ("Option 2") @@ Conf0.AddMode("Auswahl 1")
+and so forth. @@ Conf0.AddMode("Auswahl 2")
+Default value definition: First choice = 0 @@ usw...
+Conf0.ModeIndex = ...       <Integer> @@ Default-Wert definieren: Erste Auswahl = 0
+START: Parameters Configuration '**************************** @@ Conf0.ModeIndex = ...       <Integer>
+END: Parameters Configuration '***************************** @@ START: Parameter konfigurieren '****************************
+Initializes the actual Config-Parameter from MyConfigs list @@ ENDE: Parameter konfigurieren '*****************************
+Demo for Delegate Function @@ Initialisiert die tatsächlichen Config-Parameter aus der MyConfigs-Liste 
+May not be @@ Demo für Delegate Function
+Darf nicht sein
+
+Component is output once per second @@ Transient Correction
+ATVals defined (EXS) @@ Komponente wird sekündlich ausgegeben
+Totals /AverageWerte @@ ATVals definiert (EXS)
+Averaged @@ Summen/DruchschnittsWerte
+Total (g/h converted into g) @@ Durchschnitt
+Summe (g/h umgerechnet in g)
+
+Create Erg entries '********************** @@ GEN-Liste raussuchen. Bei ADVANCE aus Flotte sonst aus Jobliste '**********************
+Vehicle type-independent @@ Erg-Einträge erstellen '**********************
+Each GEN file to map mode and check @@ Fahrzeugtyp-unabhängig
+nothing @@ Jede GEN-Datei auf Modus und Kennfeld checken
+Electric Vehicle / Hybrid @@ nix...
+EV & HEV @@ Elektrofahrzeug / Hybrid
+Only EV: @@ EV & HEV
+Conventional / Hybrid (Everything But EV) @@ Nur EV:
+Conventional vehicle ... @@ Konventionell / Hybrid  (Alles außer EV)
+From the measured data @@ Konventionelles Fahrzeug...
+x/h output if ADVANCE mode -or- engine only -or- unit is not in x/h and thereforeConversion into  x/km not possible @@ Aus den Messdaten
+From the map @@ x/h-Ausgabe falls ADVANCE Modus -oder- EngineOnly -oder- Einheit nicht in x/h und somit keine Umrechnung in x/km möglich
+x/h output if ADVANCE mode or engine only or unit is not in x/h and therefore Conversion into x/km not possible @@ Aus dem Kennfeld
+currently nothing @@ x/h-Ausgabe falls ADVANCE Modus -oder- EngineOnly -oder- Einheit nicht in x/h und somit keine Umrechnung in x/km möglich
+Fahrzeugbesogene fields @@ derzeit nix
+CylceKin @@ Fahrzeugbesogene Felder
+ErgListe sort order g/km and g/h side @@ CylceKin
+Vehicle type-independent @@ ErgListe sortieren damit g/km und g/h nebeneinander liegen
+Length, Speed, Pitch @@ Fahrzeugtyp-unabhängig
+Average-Speed. calculate @@ Länge, Geschw., Steigung
+Average-Slope calculated @@ Durchschnitts-Geschw. berechnen
+Positive effective EM-Power @@ Durchschnitts-Steigung berechnen
+Positive effective Battery-Power = internal EM-Power @@ Positive effektive EM-Leistung
+Positive internal Battery-Power @@ Positive effektive Batterie-Leistung = innere EM-Leistung
+Calculate Energy consumed @@ Positive innere Batterie-Leistung
+Negative effective EM-Power @@ Verbrauchte Energie berechnen
+Negative effective Battery-Capacity = internal EM-Power @@ Negative effektive EM-Leistung
+Negative internal Battery-Power @@ Negative effektive Batterie-Leistung = innere EM-Leistung
+Charged energy charge @@ Negative innere Batterie-Leistung
+Energy in/out battery @@ Geladene Energie berechnen
+EtaEM @@ Energie in/aus Batterie
+EtaBat @@ EtaEM
+Delta SOC @@ EtaBat
+Only EV: @@ Delta SOC
+Energy consumption @@ Nur EV:
+Conventional means everything with ICE (not EV) @@ Energieverbrauch
+Emissions @@ Konventionell d.h. alles mit ICE (nicht EV)
+x/h-Output if ADVANCE mode or engine only or unit is not in x/h and therefore not possible to convert into x/km @@ Emissionen
+Power, Rotations @@ x/h-Ausgabe falls ADVANCE Modus -oder- EngineOnly -oder- Einheit nicht in x/h und somit keine Umrechnung in x/km möglich
+Ppos @@ Leistung, Drehzahl
+Pneg @@ Ppos
+Only entire vehicle (not EngOnly) @@ Pneg
+Pbrake-norm @@ Nur Gesamtfahrzeug (nicht EngOnly)
+Eair @@ Pbrake-norm
+Eroll @@ Eair
+Egrad @@ Eroll
+EACC @@ Egrad
+Eaux @@ Eacc
+EBrake @@ Eaux
+Etransm @@ Ebrake
+Mass, Loading @@ Etransm
+CylceKin @@ Masse, Loading
+EposICE @@ CylceKin
+EnegICE @@ EposICE
+Create output string: @@ EnegICE
+Open file @@ Ausgabe-String erstellen:
+Close file (will open after each job) @@ Datei öffnen
+Open file @@ Datei schließen (wird nach jedem Job neu geöffnet)
+Close file @@ Datei öffnen
+Define output path @@ Datei schließen
+Open file @@ Ausgabepfad definieren
+Open file @@ Datei öffnen
+Close file (will open after each job) @@ Datei öffnen
+Datei schließen (wird nach jedem Job neu geöffnet)
+
+TODO: Mission withouyt Cycle-name @@ Durchschnitts-Geschw. berechnen
+TODO: Test Setup @@ TODO: Mission nicht Zyklusname
+TODO: Test Setup
+
+all truck sizes are calculated with the same *. mep @@ Unterprogramm zur Korrektur der verbrauchswerte nach Motorgroesse (fuer HBEFA-Berechnungen, da dort
+Correction of the fuel consumption @@ alle LKW-Groessen mit gleichem *.mep gerechnet werden
+only for manual calculations and trucks(LKW) @@ Korrektur des Kraftstoffverbrauches
+for Euro0 and earlier, 3 different KF used depending on the size @@ nur für Handbuchrechnungen und LKW
+therefore here no size correction @@ für Euro0 und früher werden größenabhängig 3 verschiedene KF verwendet
+Correction function for EUR1 and EUR 2 1:1 adopted by state ARTEMIS @@ daher hier keine Größenkorrektur
+Functionality vs. Euro 3 gg. ARTEMIS adapted slightly (see FcCorr_Eu3ff.xls) @@ Korrekturfunktion für Euro1 und Euro 2 1:1 von Stand ARTEMIS übernommen
+Correction function for Euro 4 ff similar to Euro3 @@ Korrekturfunktion Euro 3 gg. ARTEMIS geringfügig adaptiert (siehe FcCorr_Eu3ff.xls)
+merely adapted: Average Power-rating of the engines into mep verwursteten @@ Korrekturfunktion für Euro 4 ff analog zu Euro3
+Euro6ff @@ lediglich adaptiert: Durchschnittsnennleistung der ins mep verwursteten Motoren
+Euro6ff
+
+VECTO: Default values for the parameters are no longer in GEN/.VECTO are to be occupied in reading about SetDefault. @@ GEN einlesen
+Error message in init () @@ VECTO: Defaultwerte für Parameter die nicht mehr in der .GEN/.VECTO sind werden beim Einlesen über SetDefault belegt.
+Reading in the Vehicle-specifications from 'KFZspez' @@ Fehlermeldung in Init()
+if there are entries before <DRAG>, then read FLD before MAP/MEP! @@ Einlesen der KFZ-Spezifikationen aus 'KFZspez'
+Normalize @@ FLD muss jetzt vor MAP/MEP eingelesen werden falls dort <DRAG> Einträge sind!
+Characteristic field: Columns 1 and 2 are the x-and y-coordinates (Pe, n) @@ Normieren
+rest are measured values @@ Kennfeld: Spalten 1 und 2 sind die x- und y- Koordinaten (Pe,n), die
+Emissions and Consumption in (g/(h*kW_RatedPower) at SNF @@ uebrigen sind Messwerte
+Emissions (g/h) and consumption in (g/(h*kW_RatedPower) in cars(PKW) and UAA(LNF) @@ Emissionen und Verbrauch in (g/(h*(kW_Nennleistung) bei SNF
+Map read @@ Emissionen in (g/h) und Verbrauch in (g/(h*(kW_Nennleistung) bei PKW und LNF
+Normalize @@ Kennfeld einlesen
+Reading in the Vehicle driving cycle (Not in ADVANCE). @@ Normieren
+LUZ: 04.02.2011: From now on the outskirts of READING because new BATCH structure @@ Einlesen des KFZ-Fahrzyklus (Nicht in ADVANCE).
+Dynamic correction parameter, if dynamokkorrektur: @@ LUZ: 04.02.2011: Ab jetzt ausserhalb von LESE wegen neuer BATCH-Struktur
+Parameters of multiple regression analysis, difference with stationary @@ Dynamik-Korrekturparameter, falls dynamokkorrektur ausgewählt:
+SNF: (g/h) / kW Rated power for individual parameters @@ Parameter aus multipler Regressionsanalyse, Differenz zu stationär in
+Cars(PKW) (g/h) for emissions (g/h) / kW for consumption @@ SNF: (g/h)/kW_Nennleistung fuer einzelne Parameter
+Reading data for hybrid simulation: @@ PKW  (g/h) für Emissionen , (g/h)/kW fuer Verbrauch
+TODO: EV / HEV Init here! @@ Einlesen der Daten fuer Hybridsimulation:
+TODO: EV/HEV Init hierher!
+
+If there are any "unplanned" Abortion @@ Hauptprogramm für alle Modi
+Reset the fault @@ Falls es zu "ungeplanten" Abbruch kommt
+Mode and specify message @@ Fehler zurücksetzen
+License check @@ Modus festlegen und Meldung
+BATCH output folder if necessary @@ Lizenz checken
+MOD-class initialize data @@ BATCH-Ausgabeordner erstellen falls notwendig
+TEST: Just look whether it's even without the: MODdata.Init () @@ MOD-Daten Klasse initialisieren
+ERG-class initialize @@ TEST: Schaun ob's auch ohne dem geht: MODdata.Init()
+Warning on invalid/unrealistic settings @@ ERG-Klasse initialisieren
+Messages @@ Warnung wenn ungültige/unrealistische Einstellungen
+Progbar init @@ Meldungen
+Loop calculation for all preset cycles and vehicles: @@ Progbar-Init
+Job loop **************************************** @@ Schleife zur Berechnung fuer alle vorgegebenen Zyklen und Fahrzeuge:
+Check whether Aborted @@ Job-Schleife ****************************************
+If error when read GEN @@ Check ob Abbruch
+Reading the input files @@ Falls Error beim GEN einlesen
+BATCH: Cycle from DRI list @@ Einlesen der Inputfiles
+ADVANCE: Cycle is not read @@ BATCH: Zyklus aus DRI-Liste
+Check if all the modes are licensed in the GEN file @@ ADVANCE: Zyklus wird nicht eingelesen
+If optimizer active here, the parameters are read @@ Überprüfe ob alle Modi in der GEN Datei lizenziert sind
+BATCH: Create sub-folder you issue @@ Falls Optimierer aktiv werden hier die Parameter eingelesen
+Zylus loop **************************************** @@ BATCH: Sub-Dir Ausgabeordner erstellen
+ProgBar @@ Zylus-Schleife ****************************************
+BATCH mode: cycle from GEN-file but not from DRI list @@ ProgBar
+Status @@ BATCH-Modus: Fahrzyklus nicht aus GEN-Datei sondern aus DRI-Liste
+Output name define @@ Status
+VECTO-Zylus loop ********************************** @@ Ausgabe-Name definieren
+ProgBar @@ VECTO-Zylus-Schleife **********************************
+TODO: Loading Loop @@ ProgBar
+VECTO-loading loop ********************************* @@ TODO: Loading Schleife
+Entry point for SOC start iteration @@ VECTO-Loading-Schleife *********************************
+Aufraumen @@ Einstiegspunkt für SOC-Start Iteration
+Read cycle @@ Aufraumen
+Read in @@ Zyklus einlesen
+convert v(s) into v(t) (optional) @@ Einlesen
+Convert to 1Hz (optional) @@ v(s) in v(t) konvertieren (optional)
+Error message in DRI.Convert() @@ In 1Hz konvertieren (optional)
+Unnormalised @@ Fehlermeldung in DRI.Convert()
+Cycle requirements initialize (Speed, Accel, ...) @@ Entnormieren
+Expect Npi-Power into Pe and P_clutch @@ Zyklus-Vorgaben initialisieren (Geschw, Beschl, ...)
+WARNING: VehmodeInit needed information from GEN and DRI! @@ Rechne .npi-Leistung in Pe und P_clutch um
+Error message within VehmodeInit () @@ ACHTUNG: VehmodeInit benötigt Infos aus GEN und DRI!
+TODO: message ... @@ Fehlermeldung innerhalb VehmodeInit()
+Calculate CycleKin (for erg / sum, etc.) @@ TODO: Meldung...
+Emissions and treatment - is not running in EV mode @@ CycleKin (für erg/sum usw.) berechnen
+Every second TC parameters ermittlen @@ Emissionen und Nachbehandlung - wird bei EV-Modus nicht ausgeführt
+Map creation @@ Sekündliche TC Parameter ermittlen
+Raw emissions calculated @@ Kennfeld Erstellung
+TC parameters convert to differential to map-TC parameters @@ Rohemissionen berechnen
+Dynamic correction @@ TC Parameter umrechnen in Differenz zu Kennfeld-TC-Parameter
+Correction of consumption values ​​smaller truck engines at HBEFA @@ Dynamik-Korrektur
+Exhaust system simulation @@ Korrektur der Verbrauchswerte kleiner LKW-Motoren bei HBEFA
+Totals / Averages form @@ Exhaust System Simulation
+Engine Analysis @@ Summen / Durchschnitte bilden
+Every second edition *** @@ Engine Analysis
+VECTO edition @@ Sekündliche Ausgabe ***
+TODO: Loadings Gear-shift ... @@ VECTO Ausgabe
+Output for BATCH and ADVANCE @@ TODO: Loadings umschalten...
+In ADVANCE-cycle cancel = Cancel Job @@ Ausgabe für BATCH und ADVANCE
+Output in Erg (first calculation - Initialize & header) @@ In ADVANCE ist Zyklus-Abbruch = Job-Abbruch
+Data Cleanup @@ Ausgabe in Erg (Erste Berechnung - Initialisieren & Header)
+Status Update @@ Daten aufräumen
+TODO: Loading Loop @@ Status-Update
+END *** VECTO-loading loop *** END ************************ @@ TODO: Loading Schleife
+END *** VECTO Zylus-loop *** END ************************* @@ ENDE *** VECTO-Loading-Schleife *** ENDE ************************
+END *** Zylus loop *** END ****************************** @@ ENDE *** VECTO-Zylus-Schleife *** ENDE *************************
+If GEN.irechwahl = tCalcMode.cmHEV Then MsgStrBuilder.Append ("(DSOC =" & SOC (MODdata.tDim) - SOC (0) & ")") @@ ENDE *** Zylus-Schleife *** ENDE ******************************
+Check whether demolition @@ If GEN.irechwahl = tCalcMode.cmHEV Then MsgStrBuilder.Append(" (dSOC = " & SOC(MODdata.tDim) - SOC(0) & ")")
+END *** Job loop *** END ******************************* @@ Check ob Abbruch
+ENDE *** Job-Schleife *** ENDE *******************************
+
+Opt_Interface / off @@ Korrigierte Emissionen (wird von SOC-Iterations-Modul bestimmt)
+Initialization @@ Opt_Interface Ein/Ausschalten
+Initialization @@ Initialisierung
+Counter to Zero @@ Initialisierung
+Corr Em delete @@ Zähler null setzen
+TODO: Set I / O list @@ Korr. Em. löschen 
+Timer Start / Initialize @@ TODO: I/O-Verzeichnis festlegen
+Read in @@ Timer initialisieren/starten
+Reading the input file with opt-parameter @@ Parameter einlesen
+Output parameters @@ Einlesen der Input-Datei mit Opt-Parameter
+Edition of the output file with the objective function @@ Parameter ausgeben
+Issue Status String @@ Ausgabe der Output-Datei mit Zielfunktion
+Calculation of the objective function @@ Ausgabe StatusString
+Output of the objective function @@ Berechnung der Zielfunktion
+Opt off @@ Ausgabe der Zielfunktion
+Status message (must not be called by BGWorker) @@ Opt Deaktivieren
+Start PHEM - is of F_MAINForm.ComMsgTimer get called when start signal @@ Status-Meldung (darf nicht von BGWorker aufgerufen werden)
+PHEM start @@ Starte PHEM - wird von F_MAINForm.ComMsgTimer aufgerufen wenn Start-Signal erhalten
+Stop the timer @@ PHEM starten
+Count + 1 @@ Timer anhalten
+PHEM start @@ Zähler + 1
+PHEM ready - called by backgroundWorker1_RunWorkerCompleted when finished PHEM @@ PHEM starten
+Output of the objective function @@ PHEM fertig - wird von BackgroundWorker1_RunWorkerCompleted aufgerufen wenn PHEM beendet
+PHEM_Launcher finish @@ Ausgabe der Zielfunktion
+Start the timer again @@ PHEM_Launcher beenden
+Finished PHEM_Launcher @@ Timer wieder starten
+Beendet PHEM_Launcher
+
+Sign changes ... @@ Check ob Vorzeichen von Delta-SOC sich ändert
+Limit reached => Demolition @@ Vorzeichenwechsel...
+If the last iteration was the best (SOCnAbbr = True): demolition @@ Limit erreicht => Abbruch
+If another iteration was better (SOCnAbbr = False): Repeat @@ Falls die letzte Iteration die Beste war (SOCnAbbr = True): Abbruch
+Check whether LinReg possible: Mind. 2 calculations; Mind. DSOC-1 sign changes @@ Falls eine andere Iteration besser war (SOCnAbbr = False): Wiederholen
+Uncorrected Em use if SOC iteration OK @@ Check ob LinReg möglich: Mind. 2 Berechnungen; Mind. 1 dSOC-Vorzeichenwechsel
+Uncorrected Em use @@ Unkorrigierte Em verwenden wenn SOC-Iteration OK
+Corrected emissions for optimizer @@ Unkorrigierte Em verwenden
+If SOC successful iteration (or Lin.Reg not possible) then emissions from the last calculation using (uncorrected) @@ Korrigierte Emissionen für Optimierer
+Falls SOC-Iteration erfolgreich (oder Lin.Reg. nicht möglich) dann Emissionen der letzten Berechnung (unkorrigiert) verwenden
+
+File format @@ TODO: Weg damit! SOC-Iteration gehört in die Leistungsschleife oder nach Em-Berechnung für LinReg
+Log start @@ Dateiformat
+Log starten
+
+Line 2: FLT file @@ Zeile 1: FZP-Datei
+Line 3: TEM file @@ Zeile 2: FLT-Datei
+Line 4: RndSeed @@ Zeile 3: TEM-Datei
+Line 5: MISKAMout True / False @@ Zeile 4: RndSeed
+Line 6: strFilter True / False @@ Zeile 5: MISKAMout True/False
+Line 7: Distance filters for SUM.STR @@ Zeile 6: STRfilter True/False
+Line 8 +: STR files @@ Zeile 7: Distance filter für SUM.STR
+Zeile 8+: STR Dateien
+
+Calculation @@ Felder für Streckennummer, Spur und Koordinaten für alle STR-Dateien 
+ADVANCE initialization @@ Berechnung
+ADV Import File @@ ADVANCE Initialisierung
+Check whether there FLT @@ ADV Datei einlesen
+Check whether there assorted FZP @@ Check ob FLT vorhanden
+FLT read (must be before because cSTRerg STR) @@ Check ob sortierte FZP vorhanden
+Create EMlist @@ FLT einlesen (muss vor STR sein wegen cSTRerg)
+STR read @@ EMlist erstellen
+Lists @@ STR einlesen
+FZP read @@ Listen erstellen
+FZP sort (and export) @@ FZP einlesen
+Check FZP @@ FZP sortieren (und exportieren)
+For AusgVis @@ FZP Check
+Output initialization @@ Für AusgVis
+Filename @@ Ausgabe-Initialisierung
+Modal output @@ Dateinamen
+Home values @@ Modale Ausgabe
+ADVANCE memory release @@ Startwerte
+Output @@ ADVANCE Speicher frei geben
+Free memory @@ Ausgabe
+Delete records @@ Speicher freigeben
+Garbage Collection - If "System Out of Memory" Exception prevent (but does not do it!) @@ Listen löschen
+ADVANCE vehicle calculation @@ Garbage Collection - Soll "System Out of Memory" Exception verhindern (tut's aber nicht!)
+Check whether finished @@ ADVANCE Fahrzeugberechnung
+Cycle class initialize @@ Check ob Fertig
+Fahzeugnummer and type definition (here remains constant) @@ Zyklus-Klasse initialisieren
+Old vehicle is VehStrAlt, updates is VehStr @@ Fahzeugnummer und Typ definieren (bleibt hier konstant)
+Lists @@ Altes Fahrzeug ist VehStrAlt, Aktuelles ist VehStr
+T0 @@ Listen erstellen
+Define fields for vehicle computing @@ t0
+Check whether a new vehicle @@ Definiere Felder für Fahrzeug-Berechnung
+General cycle @@ Check ob neues Fahrzeug 
+Distance evaluation (MISKAM) @@ Allgemeiner Fahrzyklus
+StatusMsg (7, 'Calculation running ... "& CInt (zFZP / FZPlen * 100).ToString ("00") & "%", False) @@ Strecken-Auswertung (MISKAM)
+Vehicle identification @@ StatusMSG(7, "Calculation running... " & CInt(zFZP / FZPlen * 100).ToString("00") & "%", False)
+Check whether cycle too short => skip @@ Fahrzeug-Identifizierung
+Vehicle number per type increase @@ Check ob Zyklus zu kurz => Überspringen
+Check if last gen file to use new, otherwise occupied by FLT @@ Fahrzeuganzahl je Typ erhöhen
+VehStr is now ALT @@ Check ob letzte Gen-Datei neu zu verwenden ist, sonst Belegung durch FLT
+Section by section calculation @@ VehStr ist ab jetzt ALT
+Cycle loop through @@ Abschnittsweise Berechnung
+No. of STR file @@ Zyklus durchschleifen
+If changes in STR No.: @@ Nr. der STR-Datei
+Old STR No. conclude @@ Falls Wechsel in STR-Nr:
+Distance (km driven) @@ Alte STR-Nr abschließen
+Time in h @@ Distanz (gefahrene km)
+Vehicle No. @@ Reisezeit in h
+Cumulative emissions @@ Kfz-Anz
+Add up @@ Summen-Emissionen
+Last complete STR @@ Aufsummieren
+Distance (km driven) @@ Letzte STR abschließen
+Time in h @@ Distanz (gefahrene km)
+Vehicle No. @@ Reisezeit in h
+Cumulative emissions @@ Kfz-Anz
+FLT read @@ Summen-Emissionen
+FZP read @@ FLT einlesen
+File length determine @@ FZP einlesen
+Dimensioned arrays @@ Dateilänge bestimmen
+Import File @@ Arrays dimensionieren
+Comments skip @@ Datei einlesen
+Routes that are not listed in the STR file from here @@ Kommentare überspringen
+Arrays show @@ Strecken die nicht in der STR Datei aufgeführt sind werden hier entfernt
+Progress edition @@ Arrays belegen
+Free memory @@ Progress-Ausgabe
+Newly dimensioned arrays @@ Speicher freigeben
+FZP sorting, @@ Arrays neu dimensionieren
+Current vehicle is vNr1 @@ FZP sortiren
+Count vehicles VNR = vNr1 @@ Aktuelles Fahrzeug ist vNr1
+vNrAnz = number of vehicles with VNR = vNr1 @@ Zähle Fahrzeuge mit vNr = vNr1
+Sort all vehicles with VNR = vNr1 by vehicle number @@ vNrAnz = Anzahl der Fahrzeuge mit vNr = vNr1
+Cache = line x1 @@ Sortiere alle Fahrzeuge mit vNr = vNr1 nach Fahrzeugnummer
+Line line x1 = x2 @@ Zwischenspeicher = Zeile x1
+Line x2 = cache @@ Zeile x1 = Zeile x2
+vNr1 sort by time @@ Zeile x2 = Zwischenspeicher
+Cache = line xx1 @@ vNr1 nach Zeit sortieren
+Line xx1 = Line xx2 @@ Zwischenspeicher = Zeile xx1
+Line x2 = Cache @@ Zeile xx1 = Zeile xx2
+Status output @@ Zeile x2 = Zwischenspeicher
+FZP export @@ Status-Ausgabe
+Data @@ FZP exportieren
+STR read @@ Daten
+SID Create List @@ STR einlesen
+Vehicles divide, have the gap over time @@ SID-Liste erstellen
+ADV Reading @@ Fahrzeuge aufteilen, die Lücke im Zeitverlauf haben
+ADV file read ******** @@ ADV einlesen
+Line 1: FZP file @@ ADV Datei einlesen ********
+Line 2: FLT file @@ Zeile 1: FZP-Datei
+Line 3: TEM file @@ Zeile 2: FLT-Datei
+Line 4: RndSeed @@ Zeile 3: TEM-Datei
+Line 5: MISKAMout True / False @@ Zeile 4: RndSeed
+Line 6: strFilter True / False @@ Zeile 5: MISKAMout True/False
+Line 7: STR.SUM path filter @@ Zeile 6: STRfilter True/False
+Line 8+: STR files @@ Zeile 7: STR.SUM Streckenfilter
+Define output path @@ Zeile 8+: STR Dateien
+File results with sums over all Vehicles: @@ Ausgabepfad definieren
+Issue Close @@ File mit Summen Ergebnissen ueber alle Kfz:
+Conversion to g emissions per second and vehicles/day @@ Ausgabe Schließen
+Conversion to mg emissions per meter @@ Umrechnung auf g Emissionen je Sekunde sowie Kfz/Tag
+Route-length [m] is calculated from straight line between start and end points: @@ Umrechnung auf mg Emissionen je Meter
+Output of results @@ Streckenlaenge [m] wird aus Gerade zwischen Anfangs- und Endpunkt berechnet:
+ResultFile-filename = input-filename but with *.sd3: @@ Ausgabe der Ergebnisse
+File with sums over all results Route-sections: @@ Filename fuer Ergebnisfile = Name Eingabefile aber mit *.sd3:
+Subroutine to PHEM / Advance for outputting the results of at MISKAM Air Quality Model of Lohmeyer @@ File mit Summen Ergebnissen ueber alle Streckenstuecke:
+Data output, separated by semicolons @@ Unterprogramm zu PHEM/Advance zur Ausgabe der Ergebnisse an MISKAM Luftguetemodell von Lohmeyer
+Adding up the emission data for Route-section, for about every second of every vehicle @@ Daten jeweils durch Semikolon getrennt ausgegeben
+Handed over each 2 possible directions for each section but only in StrId in *.fzp -> to "Closest": Attention. @@ Aufaddieren der Emissionsdaten nach Streckenabschnitten, ueber jede Sekunde fuer jedes Fahrzeug
+Direction assigned @@ Achtung: jeweils 2 Richtungen je Abschnitt moeglich aber nur StrId in *.fzp uebergeben -> auf "naechstgelegene"
+Find nearest Road-section @@ Richtung zugewiesen
+Coordinate vehicle: @@ Suche nach naechstgelegenem Strassenteilstueck
+Coordinate distance: sSegAnX (j), sSegEnX (j), sSegAnY (j), sSegEnY (j) of input @@ Koordinaten Kfz:
+Total distance to the beginning and end of the Route-section j @@ Koordinaten Strecke: sSegAnX(j), sSegEnX(j), sSegAnY(j), sSegEnY(j) aus Eingabe
+If the Route number in *.fzp file not exist in *.str file, it is assigned the nearest section (same method as above): @@ Abstandsumme zu Anfang- und Endpunkt des Streckenabschnittes j
+Summation of the emissions to the respective associated sections: @@ Falls Streckennummer auf *.fzp File in *.str File nicht existiert, wird auf naechstgelegenes Stueck zugewiesen (gleiches System wie oben):
+calculation in every second (g/h) / 3600 - by> g / haul all the time @@ Aufsummierung der Emissionen auf den jeweils zugehoerigen Streckenabschnitten:
+Counting the Vehicle for DTV (only if not already in previous second on the track @@ berechnung sekuendlich in (g/h)/3600 -> g/Strecke ueber gesamte Zeit
+Rough calculation for benzene GLOBEMI (HBEFA): @@ Zaehlen der Kfz fuer DTV (nur wenn nicht in voriger Sekunde auch schon auf der Strecke
+Isolation to petrol, diesel, truck, car, 1 AM / EURO @@ Grobe Rechnung Benzol nach GLOBEMI (HBEFA):
+Gross invoice Russ, Russ shares of PM currently only Schaetzwerte!!: @@ Trennung nach Otto, Diesel, LKW, PKW,vor/nach EURO 1
+Isolation to petrol, diesel, truck, car, 1 AM / EURO @@ Grobe Rechnung Russ, Anteile Russ an PM derzeit nur Schaetzwerte!!!!:
+SO2 emissions from the fuel's @@ Trennung nach Otto, Diesel, LKW, PKW,vor/nach EURO 1
+Sulfur expected. With SO2 = mass (mass% S / 100) * 2 @@ SO2-Emissionen aus dem  im Kraftstoff enthaltenen
+Output of each STR results' ********* @@ Schwefel gerechnet. Mit Masse SO2 = (Masse% S / 100) * 2
+Output totals of all STR's' ********* @@ Ausgabe der einzelnen STR-Ergebnisse '*********
+File Header @@ Ausgabe Summen über alle STR's '*********
+Em per km *************************** @@ Datei-Header
+Em per segment @@ Em je km ***************************
+Segment Name @@ Em je Segment
+Number of cars @@ Segment-Name
+Travel time @@ Anzahl Fahrzeuge
+Em km per @@ Reisezeit
+Writing @@ Em je km
+Em depending Vehicle Type @@ Schreiben
+Number of cars @@ Em je Vehicle Type
+Travel time, distance, Avg.Speed @@ Anzahl Fahrzeuge
+Em @@ Reisezeit, Strecke, Avg.Speed
+Writing @@ Em
+Total @@ Schreiben
+Segment @@ Summe
+Number of vehicles is not calculated from STRerg (makes no sense) but from cFLTfleet recording @@ Segment
+Travelling season: Beginning of Mai till End of October @@ Anzahl Fahrzeuge wird nicht aus STRerg berechnet (macht keinen Sinn) sondern aus cFLTfleet-Aufzeichnung
+Em km per @@ Reisezeit
+Writing @@ Em je km
+Em abs **************************** @@ Schreiben
+Em per segment @@ Em abs ****************************
+Segment Name @@ Em je Segment
+Em abs @@ Segment-Name
+Writing @@ Em abs
+Em depending Vehicle Type @@ Schreiben
+Em @@ Em je Vehicle Type
+Writing @@ Em
+total @@ Schreiben
+Segment @@ Summe
+Em abs @@ Segment
+Writing @@ Em abs
+mod file to disassemble @@ Schreiben
+Infile open @@ mod-Datei zerlegen
+Number VehNummern @@ InFile öffnen
+Loop through all VehNummern in list @@ Anzahl VehNummern
+User abort abort when @@ Schleife durch alle VehNummern in Liste
+Abort when file finished @@ Abbruch falls Userabbruch
+Output File Open / Stop if error opening @@ Abbruch falls Datei fertig
+Loop through file @@ Ausgabedatei öffnen / Abbruch wenn Fehler beim Öffnen
+If string already contains one row is not VehNr again read (see below) @@ Schleife durch Datei
+Line read @@ Falls String schon eine VehNr enthält wird Zeile nicht nochmal eingelesen (siehe unten)
+If found with VehNr line: get out VehNr @@ Zeile einlesen
+If VehNr is the needed: write output file @@ Falls Zeile mit VehNr gefunden: VehNr rausholen
+First line write ("VehNr: ...") @@ Falls VehNr die gesuchte ist: Ausgabedatei schreiben
+Next Line (Do While otherwise skipped) @@ Erste Zeile schreiben ("VehNr: ...")
+Loop until next VehNr / end of file @@ Nächste Zeile lesen (sonst wird Do While übersprungen)
+If next vehicle: @@ Schleife bis nächste VehNr / Dateiende
+If the same vehicle number: Write file further @@ Wenn nächstes Fahrzeug:
+Skip header and Units @@ Wenn gleiche Fahrzeugnummer: Datei weiter schreiben
+Otherwise: Get out of loop @@ Header und Units überspringen
+Line write @@ Sonst: Raus aus Schleife
+Read line @@ Zeile schreiben
+If not EndOfStream Set flag so next VehNr is not skipped @@ Zeile lesen
+Output file close @@ Falls nicht EndOfStream Flag setzen damit nächste VehNr nicht übersprungen wird
+Jump out of the loop VehNr search out @@ Ausgabedatei schließen
+ProgBar @@ Aus der VehNr-Such-Schleife raus springen
+FLT class @@ ProgBar
+Initialize @@ FLT Klasse
+Random gene file @@ Initialisieren
+Class sections evaluation @@ GenDatei Zufallsgenerator
+File Header @@ Klasse für abschnittsweise Auswertung
+Em per km *************************** @@ Datei-Header
+Results per Veh-Type @@ Em je km ***************************
+Number of cars @@ Ergebnisse je Veh-Type
+Travelling season: Beginning of Mai till End of October @@ Anzahl Fahrzeuge
+Em @@ Reisezeit
+Writing @@ Em
+Total @@ Schreiben
+Number of cars @@ Summe
+Travelling season: Beginning of Mai till End of October @@ Anzahl Fahrzeuge
+Em @@ Reisezeit
+Writing @@ Em
+Em absolutely ************************* @@ Schreiben
+Results per Veh-Type @@ Em absolut *************************
+Em @@ Ergebnisse je Veh-Type
+Writing @@ Em
+Total @@ Schreiben
+Em @@ Summe
+Writing @@ Em
+Close file @@ Schreiben
+Datei schließen
+
+Fav-Dlog: Instead empty Items in Fav list "<undefined>" @@ Fav-Dlog: "Abbrechen" => "Cancel"
+Applications @@ Fav-Dlog: Statt leeren Items in Fav-Liste "<undefined>"
+Global variables needed (default): @@ Anwendung
+New instance - define ID, switch to FolderBrowserDialog @@ Benötigte Globale Variablen (Default):
+Open Dialog - Open Dialog - True Passes when ended with OK @@ Neue Instanz - ID definieren, umschalten auf FolderBrowser
+Save dialog - Save dialog - Passes True if dialog with OK ended @@ OpenDialog - Öffnen Dialog - Übergibt True wenn Dialog mit OK beendet wurde
+Open dialogue - True Passes if dialogue ended with OK @@ SaveDialog - Speichern Dialog - Übergibt True wenn Dialog mit OK beendet wurde
+File History manually update @@ Dialog öffnen - Übergibt True wenn Dialog mit OK beendet wurde
+File / Folder History spokes and release memory @@ File-History manuell updaten
+Extensions define @@ File / Folder History speichen und Speicher freigeben
+Query files @@ Dateiendungen definieren
+Dateien abfragen
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Add any initialization after the InitializeComponent (add) call. @@ Dieser Aufruf ist für den Windows Form-Designer erforderlich.
+If empty path: current folder (MyFolder) take @@ Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
+Stop if empty path @@ Wenn leerer Pfad: Aktuellen Ordner (MyFolder) nehmen
+Files in array assume @@ Abbruch wenn leerer Pfad
+Multiple files selected @@ Dateien in Array übernehmen
+Single File @@ Mehrere Dateien ausgewählt 
+Primary extension (eg for bForceExt) @@ Einzelne Datei
+If file without path then add path @@ Primäre Extension (u.a. für bForceExt)
+If instead of file folder is entered: Switch to Folder and demolition @@ Falls Datei ohne Pfad angegeben dann Pfad hinzufügen
+Check whether specified file with Ext @@ Falls statt Datei ein Ordner eingegeben wurde: Auf Ordner wechseln und Abbruch
+If no file extension (after bForceExt query) and not exists then add primary ending @@ Check ob Datei mit Ext angegeben
+Check that file exists @@ Falls Datei ohne Endung (nach bForceExt-Abfrage) und nicht existiert dann primäre Endung hinzufügen
+Yes: Check whether Overwrite if bOverwriteCheck @@ Check ob Datei existiert
+No: abort if bFileMustExist @@ Ja: Check ob Overwrite wenn bOverwriteCheck
+MyFiles define @@ Nein: Abbruch wenn bFileMustExist
+Folder History ContextMenu invite @@ MyFiles definieren
+Defining a Path @@ FolderHistory ContextMenu laden
+If no path is specified: Last folder, no file name @@ Pfad definieren
+If too small path length (Path is invalid): Recent File @@ Falls kein Pfad angegeben wird: Letzter Ordner, kein Dateiname
+Open Folder - If a folder in the path: Last folder @@ Falls Pfadlänge zu klein (Pfad ungültig): Letzte Datei
+If file without path @@ Ordner öffnen - Falls kein Ordner im Pfad: Letzter Ordner
+Other Drinks @@ Falls Datei ohne Pfad angegeben
+See form ------------------------------------------------ ---- @@ sonst: 
+Global History Folder Update @@ Form anzeigen----------------------------------------------------
+Close and File / Folder History save @@ Globale Folder History updaten
+Switching to FolderBrowserDialog @@ Schließen und File/Folder History speichern
+Initialize @@ Umschalten auf FolderBrowser
+Global Initialization File Browser @@ Initialisieren
+Drive ComboBox load @@ Globale FileBrowser Initialisierung
+Drive List Create @@ Laufwerk-ComboBox laden
+Folder History Reading @@ Laufwerk-Liste erstellen
+Sort Context Menu @@ FolderHistory einlesen
+Sort Context Menu @@ Context Menu sortieren
+Files @@ Context Menu sortieren
+File @@ Dateien
+Change folder @@ Ordner
+Abort if no drive specification @@ Ordner wechseln
+Delete search fields @@ Abbruch wenn keine Laufwerk-Angabe
+Drive set @@ Suchfelder löschen
+Folder set @@ Laufwerk setzen
+Folder one level up @@ Ordner setzen
+Folder List invite @@ Ordner Eine Ebene hinauf
+Folder Delete List @@ FolderListe laden
+Add Folder @@ FolderListe löschen
+File upload list @@ Ordner hinzufügen
+Abortion if bBrowseFolder @@ Dateiliste laden
+Extension filters define @@ Abbruch wenn bBrowseFolder
+File Delete List @@ Extension-Filter definieren
+Add Folder @@ FileListe löschen
+Ordner hinzufügen
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Picture Links: @@ Initialisieren
+Bild Links------------------------------------------------------------------
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Close @@ Initialisieren
+InputFile controls ------------------------------------------ @@ Schließen
+Browse button-click events @@ Inputfile- Steuerelemente------------------------------------------
+ADV store @@ Browse Button-Click Events
+New empty ADV @@ ADV speichern
+ADV load in the form @@ Neue leere ADV
+Line 1: FZP file @@ ADV in Form laden
+Line 2: FLT file @@ Zeile 1: FZP-Datei
+Line 3: TEM file @@ Zeile 2: FLT-Datei
+Line 4: RndSeed @@ Zeile 3: TEM-Datei
+Line 5: MISKAMout True / False @@ Zeile 4: RndSeed
+Line 6: strFilter True / False @@ Zeile 5: MISKAMout True/False
+Line 7: Distance filters for SUM.STR @@ Zeile 6: STRfilter True/False
+Line 8 +: STR files @@ Zeile 7: Distance filter für SUM.STR
+ADV save from form @@ Zeile 8+: STR Dateien
+ADV.STRpathsClear () '<= Not necessary because new local cADV object @@ ADV aus Form speichern
+Form changes (control whether GEN saved) --------------------------------- @@ ADV.STRpathsClear()    '<= Nicht notwendig da neues lokales cADV-Objekt
+Event handler for the form changes @@ Formular Änderungen (Kontrolle ob GEN gespeichert)---------------------------------
+Change Status Change @@ Event Handler für Formänderungen
+Save changes? "... Delivers True if user aborts @@ Change Status ändern
+Save changes ?" ...liefert True wenn User Vorgang abbricht
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+ENG save @@ Speichern oder Speichern als Function = true wenn Datei gespeichert
+Change Status Change @@ ENG speichern
+Save changes? "... Delivers True if user aborts @@ Change Status ändern
+Save changes ?" ...liefert True wenn User Vorgang abbricht
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Change Status Change @@ Speichern oder Speichern als Function = true wenn Datei gespeichert
+Save changes? "... Delivers True if user aborts @@ Change Status ändern
+Save changes ?" ...liefert True wenn User Vorgang abbricht
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Initialize form (charging process, combo lists, ...) @@ Coolant System Simulation Zwischenspeicher
+Thus combobox content is currently @@ Initialisiere Form (Lade Verlauf, Combobox-Listen,...)
+Close @@ Damit Combobox-Inhalte aktuell sind
+Change the checkbox DynKor @@ Schließen
+Change the cold start box @@ Änderung der DynKor Checkbox
+Änderund the SCR box @@ Änderung der Kaltstart Checkbox
+a_DesMax @@ Änderund der SCR Checkbox
+Thus Veh-file is passed @@ a_DesMax
+Thus Veh-file is passed @@ Damit Veh-Datei übergeben wird
+Thus Veh-file is passed @@ Damit Veh-Datei übergeben wird
+Save ("Save" or "Save As" if new file) @@ Damit Veh-Datei übergeben wird
+GEN load in the form @@ Speichern ("Save" bzw. "Save As" falls neue Datei)
+GEN read @@ GEN in Form laden
+Form update @@ GEN einlesen
+Map creation ----------------- @@ Form updaten
+Cold start -------------------------- @@ Kennfeld Erstellung-----------------
+Files ----------------------------- @@ Kalt Start--------------------------
+Cold start @@ Dateien-----------------------------
+GEN save from form @@ Kalt Start
+Map creation ------------------------------------------------ ------ @@ GEN aus Form speichern
+Cold start ------------------------------------------------ --------------- @@ Kennfeld Erstellung------------------------------------------------------
+Files ------------------------------------------------- ----------------- @@ Kalt Start---------------------------------------------------------------
+Cold start @@ Dateien------------------------------------------------------------------
+GEN New Blank @@ Kalt Start
+Map creation ----------------- @@ Neue leere GEN
+Cold start -------------------------- @@ Kennfeld Erstellung-----------------
+Files ----------------------------- @@ Kalt Start--------------------------
+Cold start @@ Dateien-----------------------------
+Event handler for the form changes @@ Kalt Start
+Start / Stop - checkbox change @@ Event Handler für Formänderungen
+Start / Stop - Textbox change @@ Start/Stop - Checkbox Änderung
+TextBox.TextChanged Events => Change () @@ Start/Stop - Textbox Änderung
+Change Status Change @@ TextBox.TextChanged Events => Change()
+Save changes? "... Delivers True if user aborts @@ Change Status ändern
+Save changes ?" ...liefert True wenn User Vorgang abbricht
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+If calling during PHEM is already running @@ PHEM-Launcher
+GENlist Delete Selection @@ Falls Aufruf während PHEM schon läuft
+Mode set @@ GENlist-Selection löschen
+Ask if more than 100 combinations in every second batch if output @@ Modus festlegen
+Status @@ Wenn mehr als 100 Kombinationen in Batch fragen ob sekündliche Ausgabe
+Job list define @@ Status
+File / Zylus list define @@ Job-Liste definieren
+Cycle-list define (if not BATCH mode in SetCycleList deleted only the list and not reassigned) @@ File- / Zylus- Liste definieren
+Check whether Coverall Progbar needed @@ Zyklus-Liste definieren (falls nicht BATCH-Modus wird in SetCycleList nur die Liste gelöscht und nicht neu belegt)
+Launch on Job_Launcher @@ Check ob Overall-Progbar benötigt
+File lists define @@ Launch über Job_Launcher
+Job Launcher @@ Datei-Listen definieren
+Options of Options Tab Load @@ Job-Launcher
+Config save @@ Options aus Options-Tab laden
+Msg output reset @@ Config speichern
+Button switch @@ Msg-Ausgabe zurück setzen
+Options disablen @@ Button umschalten
+ProgBars start @@ Options disablen
+BG-Worker start @@ ProgBars Start
+Begin work @@ BG-Worker starten
+SLEEP prevent @@ Beginne Arbeit
+At x.ProgSec = -1 no update of ProgBarSec @@ SLEEP verhindern
+Work completed @@ Bei x.ProgSec = -1 kein Update von ProgBarSec
+Progbar reset @@ Arbeit fertig
+So ListView Item colors (yellow = warning, etc..) Visible right @@ Progbar Reset
+If optimizers are active here, the objective function and output signal to interface @@ Damit ListView-Item Farben (Warnung = Gelb, etc..) richtig sichtbar
+ShutDown when Unexpected Error @@ Falls Optimierer aktiv werden hier die Zielfunktion ausgegeben und Signal an Interface
+Options enablen / GUI reset @@ ShutDown wenn Unexpected Error
+Command Line Shutdown @@ Options enablen / GUI Reset
+AutoShutdown @@ CommandLine Shutdown
+SLEEP reactivate @@ Auto Shutdown
+Initialize @@ SLEEP reaktivieren
+Tabs load properly (otherwise problem with ListViews) @@ Initialisieren
+File Lists @@ Tabs richtig laden (sonst Problem mit Listviews)
+Load GUI Options (here, the GEN / ADV / DRI lists are loaded) @@ FileLists
+Resize columns ... after loading the file lists @@ GUI Options laden (hier werden die GEN/ADV/DRI Listen geladen)
+BackgroundWorker initialize @@ Spalten skalieren... erst nach dem Laden der Dateilisten
+License check @@ BackgroundWorker initialisieren
+Shown event (-Load finished) ... here StartUp Forms are loaded (DEV, GEN/ADV- editor ..) @@ Lizenz überprüfen
+Open file with PHEM @@ Shown Event (Form-Load abgeschlossen)  ...hier werden StartUp-Forms geladen (DEV, GEN/ADV- Editor..)
+ComLineArgs read @@ Datei mit PHEM öffnen
+Mode switch @@ ComLineArgs auslesen
+If file is specified @@ Modus umschalten
+Close @@ Falls Datei angegeben
+File Lists store @@ Schließen
+Login close @@ FileLists speichern
+Config save @@ Log schließen
+File browser instances close @@ Config speichern
+Locked functions hide / @@ FileBrowser-Instanzen schließen
+Remove file from list @@ Gesperrte Funktionen ein/ausblenden
+File to list @@ Datei aus Liste entfernen
+Open file @@ Datei zu Liste hinzufügen
+GEN / ADV list: Add File @@ Datei öffnen
+If PHEM runs Cancel operation (because mode change during calculation gscheit nix) @@ GEN/ADV Liste: Datei hinzufügen
+Mode switch if necessary @@ Falls PHEM läuft: Vorgang abbrechen (weil Modusänderung während Berechnung nix gscheit)
+If file already exists in the list: Do not add (if only a single file) @@ Modus umschalten falls nötig
+Status reset @@ Wenn Datei schon in Liste vorhanden: Nicht hinzufügen (nur wenn einzelne Datei)
+Hook element and select @@ Status reset
+Otherwise: Add File (without WorkDir) @@ Element auswählen und anhaken
+Number update @@ Sonst: Datei hinzufügen (ohne WorkDir)
+DRI list: Add File @@ Anzahl updaten
+Mode switch if necessary @@ DRI Liste: Datei hinzufügen
+Number update @@ Modus umschalten falls nötig
+Me.TabPageDRI.Text = "Driving Cycles (" & c & ")" @@ Anzahl updaten
+New GEN / ADV @@ Me.TabPageDRI.Text = "Driving Cycles (" & c & ")"
+Open GEN / ADV @@ New GEN/ADV
+Worker start @@ Open GEN/ADV
+Selected Items cache @@ Worker starten
+Delete Selected Items @@ Selected Items zwischenspeichern
+Items and select Insert @@ Selected Items löschen
+Mode or toggle (on BATCH) @@ Items einfügen und auswählen
+If PHEM already running: STOP @@ Modus ggf. umschalten (auf BATCH)
+Otherwise: START @@ Falls PHEM schon rennt: STOP
+Save lists if crash @@ Sonst: START
+Mode Change @@ Listen speichern falls Crash
+Old Save list @@ Modus Change
+New List invite @@ Alte Liste speichern
+GEN editor and file upload @@ Neue Liste laden
+ADV editor and file upload @@ GEN Editor öffnen und Datei laden
+File Lists store @@ ADV Editor öffnen und Datei laden
+ComMsgTimer_Tick Tick - Check whether new message @@ FileLists speichern
+Mode Setting @@ ComMsgTimer_Tick Tick - Check ob neue Nachricht
+General @@ Modus einstellen
+If Link => Open @@ Allgemein
+Hand cursor for links @@ Falls Link => Öffnen
+Hand-Cursor für Links
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Add any initialization after the InitializeComponent (add) call. @@ Dieser Aufruf ist für den Windows Form-Designer erforderlich.
+Split @@ Fügen Sie Initialisierungen nach dem InitializeComponent()-Aufruf hinzu.
+Convert to Int32 @@ Split
+Sort @@ Zu Int32 convertieren
+End @@ Sort
+Ende
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Config load @@ Initialisiere - Lade Config
+Options----------------------------------- @@ Config laden
+Optionen-----------------------------------
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Initialisierung
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+New VEH @@ Speichern oder Speichern als Function = true wenn Datei gespeichert
+VEH open @@ Neue VEH
+VEH store @@ VEH öffnen
+Change Status check @@ VEH speichern
+Save changes? "... Delivers True if user aborts @@ Change Status ändern
+Save changes ?" ...liefert True wenn User Vorgang abbricht
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Required by the Windows Form Designer. @@ Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+Note: The following procedure is required by the Windows Form Designer. @@ Wird vom Windows Form-Designer benötigt.
+The editing is possible using the Windows Form Designer. @@ Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+Editing with the code editor is not possible. @@ Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+
+Cycle status => Cycle list status column @@ Job-Status => Jobliste Status-Spalte
+Worker Progress => Progbar (ProgBarSec update when ProgSec> -1; ProgBarSec reset at ProgSec = 0) @@ Zyklus-Status => Zyklusliste Status-Spalte
+Progbar set to Continuous @@ Worker Progress => Progbar (ProgBarSec Update wenn ProgSec > -1; ProgBarSec-Reset bei ProgSec = 0)
+Abort @@ Progbar auf Continuous setzen
+Status message directly to GUI - can not be done by the BackgroundWorker! @@ Abbruch
+Statusbar - call by WorkerMSG or directly via the form, NEVER on Worker @@ Status Message direkt an GUI - darf nicht durch den Backgroundworker geschehen!
+Status form reset - ONLY by calling Events, NEVER on Worker @@ Statusbar  - Aufruf durch WorkerMSG oder direkt über Form, NIEMALS über Worker
+Class used to pass messages from BackgroundWorker @@ Status Form zurück setzen - Aufruf NUR durch Events, NIEMALS über Worker
+If no string number zero then @@ Klasse zum Übergeben von Nachrichten vom Backgroundworker
+Open File in Excel @@ Falls String nicht Zahl dann Null
+WorkDir MainDir or insert if no path is specified. Special folder insert @@ Datei in Excel öffnen
+Path trim @@ WorkDir oder MainDir einfügen falls kein Pfad angegeben. Spezial-Ordner einfügen
+If empty file => Demolition @@ Pfad trimmen
+sKeys replace @@ Falls leere Datei => Abbruch
+Replace - determine folder @@ sKeys ersetzen
+A folder-level high @@ Replace - Ordner bestimmen
+Path supplement, if not available @@ Eine Ordner-Ebene hoch
+Level, a path to the top "C: \ temp \ folder1 \" >> "C: \ temp \" @@ Pfad ergänzen falls nicht vorhanden
+File name without the path "C: \ temp \ test.txt" >> "test.txt" or "TEST" @@ Pfad eine Ebene nach oben      "C:\temp\ordner1\"  >>  "C:\temp\"
+File name without the extension "C: \ temp \ test.txt" >> "C: \ temp \ test" @@ Dateiname ohne Pfad    "C:\temp\TEST.txt"  >>  "TEST.txt" oder "TEST"
+Filename without path if path = WorkDir or MainDir @@ Dateiname ohne Extension   "C:\temp\TEST.txt" >> "C:\temp\TEST"
+Path alone "C: \ temp \ test.txt" >> "C: \ temp \" @@ Dateiname ohne Pfad falls Pfad = WorkDir oder MainDir
+Test.txt ">>" " @@ Pfad allein        "C:\temp\TEST.txt"  >>  "C:\temp\"
+Extension alone "C: \ temp \ test.txt" >> ". Txt" @@ TEST.txt"          >>  ""
+Endung allein      "C:\temp\TEST.txt" >> ".txt"
+
+Open file @@ Abbruch wenn's Datei nicht gibt
+Map reset @@ Datei öffnen
+Transmission configuration to engine rpm [-] @@ Kennfeld zurück setzen
+Efficiency to engine [-] @@ Transmission ration to engine rpm [-]
+Efficiency auxiliary supply to [-] @@ Efficiency to engine [-]
+Efficiency Map @@ Efficiency auxiliary to supply [-]
+Column 1 = Auxiliary speed [rpm] => X-axis @@ Efficiency Map
+Column 2 = Mechanical power [kW] => Z-Axis (!) @@ Spalte 1 = Auxiliary speed [rpm]   => X-Achse
+Column 3 = Output power [kW] => Y-Axis (!) @@ Spalte 2 = Mechanical power [kW]   => Z-Achse (!)
+Spalte 3 = Output power [kW]       => Y-Achse (!)
+
+Private FileVersion As Integer @@ Private Const FormatVersion As Integer = 1
+Requirement for EXS @@ Private FileVersion As Integer
+Parameters for KF creation @@ Vorgabe für EXS
+Default for AUX @@ Parameter für KF-Erstellung
+Values.Add (tDriComp.t, New List (Of Single)) '<= Needed only if ADVANCE > 1 Hz is supported @@ Vorgabe für AUX
+Reset @@ Values.Add(tDriComp.t, New List(Of Single))            '<= brauchen wir erst wenn bei ADVANCE > 1Hz unterstützt wird
+Stop if there's no file @@ Reset
+EmComp Init @@ Abbruch wenn's Datei nicht gibt
+now in New() @@ EmComp Init
+Open file @@ jetzt in New()
+First line: Version @@ Datei öffnen
+If invalid version: Abort @@ Erste Zeile: Version
+Version set @@ Falls Version ungültig: Abbruch
+If no version information: Old format @@ Version festgelegt
+Version Check: abort if input file format is newer than PHEM-version @@ Falls keine Versionsangabe: Altes Format
+Column 2: added option "+" = parameter for KF-creation @@ Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+Second row: Name / Identification of the Components @@ Spalte 2: Option "+" = Parameter für KF-Erstellung gegeben
+Number of Columns / check components @@ Zweite Zeile: Namen/Identifizierung der Komponenten
+If used DRIcomp = Undefined it will get as EXS-Comp or Emission for KF-Creation / Eng-Analysis @@ Spaltenanzahl/Komponenten checken
+ERROR when component in angle brackets is unknown @@ Falls DRIcomp = Undefined dann wirds als EXS-Comp oder als Emission für KF-Erstellung / Eng-Analysis verwendet
+Create if the first column EXS in the Dictionary @@ ERROR wenn Komponente in spitzen Klammern aber nicht bekannt
+If EXS-Component not yet in Dictionary, create @@ Falls erste EXS-Spalte dann Dictionary erstellen
+Check whether ExsComp / module combination already exists => ERROR @@ Falls EXS-Componenten noch nicht in Dictionary dann erstellen
+Gvorg / Nvorg set: @@ Check ob ExsComp/Modul-Kombination schon vorhanden => ERROR
+Third row: units / normalization @@ Gvorg / Nvorg setzen:
+VECTO: nothing read. Fixed Units (line = file.ReadLine) @@ Dritte Zeile: Einheiten/Normierung
+Normalization Supported DRI-components @@ VECTO: nix einlesen. Fixe Units (line = file.ReadLine)
+PeNormed = (UCase(Trim(line(Spalten(tDriComp.Pe)))) = sKey.Normed) @@ Normierungs-Unterstützte DRI-Komponenten
+nNormed = (UCase(Trim(line(Spalten(tDriComp.nn)))) = sKey.Normed) @@ PeNormed = (UCase(Trim(line(Spalten(tDriComp.Pe)))) = sKey.Normed)
+PaddNormed = (UCase(Trim(line(Spalten(tDriComp.Padd)))) = sKey.Normed) @@ nNormed = (UCase(Trim(line(Spalten(tDriComp.nn)))) = sKey.Normed)
+MAP components VECTO: Always [g/h]! @@ PaddNormed = (UCase(Trim(line(Spalten(tDriComp.Padd)))) = sKey.Normed)
+Unit store in string for further checks @@ MAP-Komponenten VECTO: Immer [g/h]!  
+Remove brackets @@ Unit in String für weitere Checks speichern
+Scaling and Unit Set @@ Klammern entfernen
+Line 4, 5: (optional when "+"): Settings for CF creation @@ Normierung und Unit festlegen
+If "+" enabled @@ Zeile 4, 5: (optional, wenn oben "+"): Einstellungen für KF-Erstellung
+Creating instances @@ Falls "+" aktiviert
+First Option "map normalized by Pnom" @@ Instanzen erstellen
+Second Option "PfAK apply" @@ 1. Option "Kennfeld normieren durch Pnenn"
+From 4th line or From 6th line: values (no different units/normalizations support) @@ 2. Option "Pfak anwenden"
+Open file @@ Ab 4.Zeile bzw. Ab 6.Zeile: Werte (derzeit keine unterschiedlichen Einheiten/Normierungen unterstützt)
+toDo @@ Datei öffnen
+Nvorg / Gvorg is set back in ResetMe @@ TODO...
+Convert Speed to m/s @@ Nvorg / Gvorg wird in ResetMe zurück gesetzt
+Normalize, if necessary @@ Geschw. umrechnen in m/s
+Padd unnormalised, if necessary @@ Normieren, falls notwendig
+Pe normalize, if necessary @@ Padd entnormieren, falls notwendig
+Emissions are only accepted in x/h or x (see ReadFile)!!!!!!!! @@ Pe normieren, falls notwendig
+Delay limit ******************************** @@ Emissionen werden nur in x/h oder x akzeptiert (siehe ReadFile) !!!!!!!!
+Create time series '*********************************** @@ Verzögerung limitieren ********************************
+Convert to 1Hz '*********************************** @@ Zeitreihe erstellen '***********************************
+Check whether or not to reverse @@ Umrechnen in 1Hz '***********************************
+Time limits definition @@ Check ob Zeit nicht rückwärts 
+Output, total and ncols Dictionaries create @@ Zeitgrenzen definieren
+Home values @@ Ausgabe-, Summen- und Anz- Dictionaries erstellen
+Next time-step @@ Startwerte
+If time-step> tMax: @@ Nächster Zeitschritt
+Second conclude @@ Falls Zeitschritt > tMax:
+If no values ​​in sum: Interpolate @@ Sekunde abschließen
+If only one value: Inter- / Extrapolate @@ Falls keine Werte in Summe: Interpolieren
+New field set @@ Falls nur ein Wert: Inter- / Extrapolieren
+Check whether last second @@ Neuen Bereich festlegen
+New sum / no start @@ Check ob letzte Sekunde
+New fields take @@ Neue Summe/Anz beginnen
+Neue Felder übernehmen
+
+Open file @@ Abbruch wenn's Datei nicht gibt
+Map Config @@ Datei öffnen
+FLD and MAP Reading @@ Kennfeld-Konfig
+Map normalize @@ FLD und MAP einlesen
+Returns the maximum available Engine-power for given Rotations Rotations @@ Kennfeld normieren
+Extrapolation for x <x (1) @@ Übergibt aktuell mögliche Antriebsleistung für geg. Drehzahl
+Extrapolation for x> x (imax) @@ Extrapolation für x < x(1)
+Interpolation @@ Extrapolation für x > x(imax)
+Returns the maximum available  Generator-power for given Rotations Rotations @@ Interpolation
+Extrapolation for x <x (1) @@ Übergibt aktuell mögliche Generatorleistung für geg. Drehzahl
+Extrapolation for x> x (imax) @@ Extrapolation für x < x(1)
+Interpolation @@ Extrapolation für x > x(imax)
+Interpolation
+
+Open file @@ Abbruch wenn's Datei nicht gibt
+Lists initialize @@ Datei öffnen
+First line: Version @@ Listen initialisieren
+If invalid version: demolition @@ Erste Zeile: Version
+Version set @@ Falls Version ungültig: Abbruch
+If no version information: Old format @@ Version festgelegt
+Version Check: abort if input file format is newer than version PHEM @@ Falls keine Versionsangabe: Altes Format
+Second row: name / identification of components (drag emissions f KF-creation) @@ Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+Column count check @@ Zweite Zeile: Namen/Identifizierung der Komponenten (Schlepp-Emissionen f. KF-Erstellung)
+Abort if less than 3 columns @@ Spaltenanzahl checken
+VECTO: No header / Unit column. Always PT1! @@ Abbruch falls weniger als 3 Spalten
+Third row: scaling / unit @@ VECTO: Keine Header/Unit-Spalte. Immer PT1!
+Abort when fewer columns than in the second row @@ Dritte Zeile: Normierung/Einheit
+Everything is okay. " @@ Abbruch falls weniger Spalten als in zweiter Zeile
+Additional Components @@ Alles okay
+Remove brackets @@ Zusatzkomponenten
+Scaling and Unit Set @@ Klammern entfernen
+From Line 4: Values @@ Normierung und Unit festlegen
+Line read @@ Ab Zeile 4: Werte
+VECTO: M => Pe @@ Zeile einlesen
+If not PT1 given default value is used (see above) @@ VECTO: M => Pe
+Line counter (was put in ResetMe back) high @@ Falls PT1 nicht vorgegeben wird Defaultwert verwendet (siehe oben)
+Close file @@ Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+ERROR label for clean demolition @@ Datei schließen
+Open file @@ ERROR-Label für sauberen Abbruch
+Line counter (was put in ResetMe back) high @@ Datei öffnen
+Close file @@ Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+Normalized Rotations @@ Datei schließen
+Normalized Power @@ Drehzahl normieren
+Normalized Power @@ Leistung normieren
+Normalized Pe-Target @@ Leistung normieren
+Em normalize corresponding @@ Pe-Target normieren
+Extrapolation for x <x(1) @@ Em ent-normieren
+Extrapolation for x> x(imax) @@ Extrapolation für x < x(1)
+Interpolation @@ Extrapolation für x > x(imax)
+Extrapolation for x <x (1) @@ Interpolation
+Extrapolation for x> x (imax) @@ Extrapolation für x < x(1)
+Interpolation @@ Extrapolation für x > x(imax)
+Dynamic full load @@ Interpolation
+Extrapolation for x <x (1) @@ Dynamische Volllast
+Extrapolation for x> x (imax) @@ Extrapolation für x < x(1)
+Interpolation @@ Extrapolation für x > x(imax)
+Extrapolation for x <x (1) @@ Interpolation
+Extrapolation for x> x (imax) @@ Extrapolation für x < x(1)
+Interpolation @@ Extrapolation für x > x(imax)
+Extrapolation for x <x (1) @@ Interpolation
+Extrapolation for x> x (imax) @@ Extrapolation für x < x(1)
+Interpolation @@ Extrapolation für x > x(imax)
+Interpolation
+
+First line: Version @@ Modus
+Version Check: abort if input file format is newer than version PHEM @@ Erste Zeile: Version
+GEN file read **** @@ Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+General @@ GEN Datei einlesen ****
+KF creation @@ Allgemein
+Cold start @@ KF Erstellung
+In addition to individual consumers @@ Kaltstart
+Gear-shifting Model Distribution @@ Einzelne Nebenverbraucher
+ERROR label for clean demolition @@ Schaltmodell-Verteilung
+GEN file read **** @@ ERROR-Label für sauberen Abbruch
+Old calculation mode turn into new mode switch @@ GEN Datei einlesen ****
+Map creation ------------------------------------------------ ------ @@ Alten Rechenmodus in neue Modus-Schalter umwandeln
+Sub reads one input file that do not have their own class, etc. @@ Kennfeld Erstellung------------------------------------------------------
+Extrapolation for x <x (1) @@ Liest Sub Input Files ein die keine eigene Klasse haben, etc.
+Extrapolation for x> x (imax) @@ Extrapolation für x < x(1)
+Interpolation @@ Extrapolation für x > x(imax)
+Extrapolation for x <x (1) @@ Interpolation
+Extrapolation for x> x (imax) @@ Extrapolation für x < x(1)
+Interpolation @@ Extrapolation für x > x(imax)
+Interpolation
+
+Open file @@ Abbruch wenn's Datei nicht gibt
+Lists initialize (before version check so ReadOldFormat works) @@ Datei öffnen
+Check whether MIP or MAP @@ Listen initialisieren (vor Version-Check damit ReadOldFormat funktioniert)
+is now below checked when reading. @@ Check ob MEP oder MAP
+First line: Version @@ wird jetzt weiter unten gecheckt beim Einlesen.
+Version set @@ Erste Zeile: Version
+Version Check: abort if input file format is newer than version PHEM @@ Version festgelegt
+Column 2: added option "+" = parameter for CF creation @@ Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+Second row: name / identification of components (Only Em. Power, Rotations is fast!) @@ Spalte 2: Option "+" = Parameter für KF-Erstellung gegeben
+Column count check @@ Zweite Zeile: Namen/Identifizierung der Komponenten (Nur Em. Leistung, Drehzahl ist fix!)
+Abort if less than 3 columns @@ Spaltenanzahl checken
+Check whether Power/Rotations swapped @@ Abbruch falls weniger als 3 Spalten
+Em components initialize @@ Check ob Leistung/Drehzahl vertauscht
+Default interpolator defined in Em0 = New cEmComp @@ Em-Komponenten initialisieren
+Default Correction Pe defined in Em0 = New cEmComp @@ Default-Interpolator definiert in Em0 = New cEmComp
+Dictionary .... fill @@ Default Pe-Correction definiert in Em0 = New cEmComp
+ERROR component in angle brackets if not known @@ Dictionary füllen....
+Em Custom Components Dictionary: @@ ERROR wenn Komponente in spitzen Klammern aber nicht bekannt
+Default Em components *** @@ Custom Em-Komponenten Dictionary:
+Default interpolator @@ Default Em-Komponenten ***
+Default Pe-Correction @@ Default-Interpolator
+Default name @@ Default Pe-Correction
+TC components are not output @@ Default-Name
+Em Custom Components Dictionary: @@ TC-Komponenten werden nicht ausgegeben
+Entry in Reference Dictionary @@ Custom Em-Komponenten Dictionary:
+VECTO: Column 3 more consumption @@ Eintrag in Referenz-Dictionary
+Abort if already defined @@ VECTO: Spalte 3 immer Verbrauch
+Third row: scaling / unit @@ Abbruch falls schon definiert
+Abort when fewer columns than in the second row @@ Dritte Zeile: Normierung/Einheit
+Normalization / import unit @@ Abbruch falls weniger Spalten als in zweiter Zeile
+EM-component reference @@ Normierung/Einheit einlesen
+Unit store in string for further checks @@ EM-Komp Referenz
+Remove brackets @@ Unit in String für weitere Checks speichern
+Scaling and Unit Set @@ Klammern entfernen
+Check whether n / Pe units OK: @@ Normierung und Unit festlegen
+Everything is okay. " @@ Check ob n/Pe Einheiten OK:
+Line 4.5: (optional when "+"): Settings for Pe-Cor (old PfAK) @@ Alles okay
+If not the "+" default interpolators used (see above) @@ Zeile 4,5: (optional, wenn oben "+"): Einstellungen für Pe-Cor (altes Pfak)
+Line 4 Reading @@ Falls nicht "+" werden Default Interpolatoren verwendet (s.o.)
+Loop over Em components @@ Zeile 4 einlesen
+Line 5 Reading @@ Schleife über Em-Komponenten
+Loop over Em components @@ Zeile 5 einlesen
+From line 4 (or 6): values @@ Schleife über Em-Komponenten
+Line read @@ Ab Zeile 4 (bzw. 6): Werte
+Line counter (was put in ResetMe back) high @@ Zeile einlesen
+Rotations @@ Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+Power @@ Drehzahl
+Emissions @@ Leistung
+Shep-Init @@ Emissionen
+Close file @@ Shep-Init
+ERROR label for clean demolition @@ Datei schließen
+Open file @@ ERROR-Label für sauberen Abbruch
+Old maps have always TC factors are holding (possibly null @@ Datei öffnen
+Values @@ Alte Kennfelder haben immer TC-Faktoren (sind halt evtl. Null)
+Line read @@ Werte
+Line counter (was put in ResetMe back) high @@ Zeile einlesen
+Rotations @@ Zeilen-Zähler hoch (wurde in ResetMe zurück gesetzt)
+Power @@ Drehzahl
+Emissions @@ Leistung
+Shep-Init @@ Emissionen
+Close file @@ Shep-Init
+Abort when Em component not MAP @@ Datei schließen
+Abort if defined TC-factors for the component already @@ Abbruch falls Em-Komponente nicht in MAP
+Speed Normalized @@ Abbruch falls TC-Faktoren für die Komponente schon definiert
+otherwise calculate normalized Rotations @@ Drehzahl normieren
+Normalized Power @@ anders" normierte Drehzahl berechnen
+Emissions unnormalised @@ Leistung normieren
+PLEASE NOTE: Even if x_kWh x_hPnenn or be converted into Normed x_h must remain the same because otherwise the DynKor not true! @@ Emissionen entnormieren
+Values ​​are already specified in absolute @@ ACHTUNG: Selbst wenn x_kWh bzw. x_hPnenn in x_h umgewandelt werden muss Normed gleich bleiben weil sonst die DynKor nicht stimmt!
+Distinction between [x] and [x/h] is currently not used / supported @@ Werte sind bereits absolut angegeben
+Check if Rotations/Power reversed @@ Unterscheidung in [x] und [x/h] derzeit nicht verwendet/unterstützt
+FC Delauney @@ Check ob Drehzahl/Leistung vertauscht
+Map creation @@ FC Delauney
+Initialize Em components ******************* @@ Kennfeld-Erstellung
+PeCorMode: Unless specified in MES / NPI with non-default Em what is in cEmComp.New (set) @@ Initialisiere Em-Komponenten *******************
+If TC then specified termination @@ PeCorMode: Falls nicht in MES/NPI vorgegeben gilt bei Nicht-Default-Em was in cEmComp.New() eingestellt ist
+Select interpolator @@ Falls TC angegeben dann Abbruch
+Entry in Reference Dictionary (It does not check whether Em-Comp. Occurs twice since been caught in DRI.ReadFile) @@ Interpolator auswählen
+Info spend @@ Eintrag in Referenz-Dictionary (Es wird nicht überprüft ob Em-Comp. doppelt vorkommt weil das schon in DRI.ReadFile passiert)
+Dynamic parameters and are still added Extrapol @@ Infos ausgeben
+Average Dictionary *************** Initialize @@ Dynamikparameter und Extrapol kommen noch dazu
+Mean values ​​calculated ********************** @@ Mittelwert-Dictionary initialisieren ***************
+Main loop @@ Mittelwerte berechnen **********************
+Lists @@ Haupt-Schleife
+Loop over values @@ Listen erstellen
+Area under iMsek assign reading @@ Schleife über Messwerte
+Divisional iMsek assign mean values ​​of measured values @@ Bereich unter iMsek mit Messwert belegen
+No averaging @@ Bereich über iMsek mit Mittelwerten der Messwerte belegen
+EmCheck: = False value is not used = True Value has been in verwurschtet map @@ Keine Mittelwertbildung
+Screening **************************** @@ EmCheck: False = Wert noch nicht verwendet, True = Wert wurde bereits in Kennfeld verwurschtet
+Add trailing at half nn increment. Needed for PfAK. If it is disabled GEN.KFinsertDrag deleted later. @@ Rasterung ****************************
+Idle point, add @@ Schlepp hinzufügen mit halber nn-Schrittweite. Wird für Pfak benötigt. Falls GEN.KFinsertDrag deaktiviert wird sie später wieder gelöscht.
+NrUsed creation / zero set ***************** @@ Leerlaufpunkt hinzufügen
+Expect Measured values in Grid ***************** @@ NrUsed Erstellung / Null setzen *****************
+Basic step size cache @@ Messwerte in Raster reinrechnen *****************
+Loop over grid points (i) @@ Basis Schrittweite zwischenspeichern
+Return Totals/Numbers/Flags @@ Schleife über Rasterpunkte (i)
+Towing-Power @@ Summen/Anzahl/Flags zurücksetzen
+Loop to find enough value in the Radius @@ Schlepp-Leistung
+Counter / sum reset @@ Schleife bis genug Werte im Radius gefunden
+Loop over values ​​(j) @@ Zähler/Summen zurück setzen
+If within radius ... @@ Schleife über Messwerte    (j)
+Cnt + 1 @@ Falls innerhalb von Radius...
+Loop over all em-comp. @@ Anz + 1
+total @@ Schleife über alle Em-Komp.
+Verify Min/Max (for log output) @@ Summe +
+Sum Interpolated Power (then divided by No.) @@ Min/Max belegen (für Log-Ausgabe)
+Used include measurements of how much Dot are (log output) @@ Interpolierte Leistung aufsummieren (wird dann durch Anz dividiert)
+If measured values ​​in the radius (No. = 0) larger radius and then put extra flag @@ Zählen wieviel Messwerte für Rasterpunkt verwendet werden (Log-Ausgabe)
+NrUsed prove @@ Falls keine Messwerte im Radius (Anz=0) dann Radius vergrößern und Extra-Flag setzen
+Interpolated Power = sum / number @@ NrUsed belegen
+PfAK calculate: @@ Interpolierte Leistung = Summe / Anz
+If above Drag-power then PfAK loud formula or 1 when the difference between Pe-Interpol and Drag-power is too low @@ Pfak berechnen:
+Drag-power below Pfak=0 => Em-value = zero @@ Falls oberhalb Pschlepp dann Pfak laut Formel oder 1 falls Abstand zw. Pe-Interpol und Pschlepp zu gering
+Extrapol flag take Extrapol in column (1/0) @@ Unterhalb von Pschlepp Pfak=0 => Em-Wert=Null
+For log output @@ Extrapol-Flag in Extrapol-Spalte (1/0) übernehmen
+Loop through Em-Comp (within grid point loop) @@ Für Log-Ausgabe
+If option 'Schlepp-em' ofFLD verified 'and Gridpoint-power <= Towing-power @@ Schleife über Em-Comp (innerhalb Rasterpunkt Schleife)
+If towing in Em.FLD exists then prove otherwise take with zero @@ Falls Option 'Schlepp-Em aus .FLD' belegen und Rasterpunkt-Leistung <= Schleppleistung
+Em-verification without PfAK (=> PfAK is made later) @@ Falls Schlepp-Em in .FLD vorhanden dann nehmen sonst mit Null belegen
+For log output @@ Em-Belegung ohne Pfak (=> Pfak wird später gemacht)
+TC factors without PfAK take @@ Für Log-Ausgabe
+PfAK ****************************** @@ TC-Faktoren ohne Pfak übernehmen
+Important @@ Pfak ******************************
+Loop goes over all grid point (also on the Pe <= PeSchlepp or PeIntpol near Drag power). @@ WICHTIG !!!
+That's OK because there anyway PfAK Denecke with one. @@ Schleife geht über alle Rasterpunkt (auch über die Pe <= PeSchlepp bzw. PeIntpol nahe an Pschlepp).
+Loop through Em-Comp @@ Das ist OK weil Pfak dort sowieso mit Eins beleget.
+If no Create Map settings (in.NPI /.MES) or explicitly activated using PfAK => PfAK @@ Schleife über Em-Comp
+Loop over grid points (i) @@ Falls keine Create Map Einstellungen (in .NPI/.MES) oder Pfak explizit aktiviert => Pfak verwenden
+Old PfAK with extrapolation from zero @@ Schleife über Rasterpunkte (i)
+Towing emission looking out @@ Altes Pfak mit Extrapolation von Null weg
+Drag-em from the nearest grid point to take. This is because tractrix @@ Schlepp-Emission raus suchen
+always comes into the map (even if it is then dropped out later)! @@ Schlepp-Em aus nächstgelegenen Rasterpunkt nehmen. Das geht weil Schleppkurve 
+Option 'drag-em out.FLD 'plays no role because it affects only the occupancy method of the drag curve (see above) @@ immer ins Map kommt (auch wenn sie dann später raus gelöscht wird) !!
+PfAK apply @@ Option 'Schlepp-Em aus .FLD' spielt keine Rolle weil das nur die Belegungs-Methode der Schleppkurve betrifft (s.o.) 
+Normalize (value and unit) ******************** @@ Pfak anwenden
+If specified in MES / NPI file then use @@ Normieren (Wert und Unit) ********************
+Values ​​normalized @@ Falls Vorgabe in MES/NPI-Datei dann verwenden
+Otherwise, use a standard normalization @@ Werte normieren
+Values ​​normalized @@ Sonst Standard-Normierung verwenden
+******************* Summarized EmComponents @@ Werte normieren
+Tractrix again take out (optional) *********** @@ EmComponents zusammenfassen *******************
+Loop over grid points (i). No For loop is reduced because iMapDim @@ Schleppkurve wieder raus nehmen (optional) ***********
+Output Map '************************** @@ Schleife über Rasterpunkte (i). Keine For-Schleife weil iMapDim reduziert wird
+CAUTION: Do not Name but sKey! @@ Ausgabe Map '**************************
+Values @@ ACHTUNG: Nicht Name sondern sKey !!!
+Issue Extended Info '*********************** @@ Werte
+Values @@ Ausgabe Zusatzinfo '***********************
+Shep-Init @@ Werte
+Default Shepard in intpshep () @@ Shep-Init
+Interpolator V1 @@ Default Shepard wie in intpshep()
+Interpolator V2 @@ Interpolator V1
+Correct distance and calculate. @@ Interpolator V2
+To zero power map points to be weighted higher Pe = 0 and Rotations is the lesser, @@ Abstand berechnen und korrigieren.
+because interpolation points with higher load there bad fits: @@ Um Nullleistung werden Kennfeldpunkte um Pe=0 hoeher gewichtet und Drehzahlabstand geringer,
+Square of the distance: @@ da Interpolation aus Punkten mit hoeherer last dort schlecht passt:
+If the sign of Pe different (load / tow separation) distance increases weight to tow with tow more: @@ Quadrat des Abstandes:             
+Points are within radius and possibly Radius increase @@ Falls Vorzeichen von Pe unterschiedlich (Last/Schlepp-Trennung) wird Abstand vergroessert um Schlepp bei Schlepp mehr zu gewichten:
+Distance array and create Power interpolate for Pe-correction @@ Punkte innerhalb Radius zählen und ggf. Radius erhöhen
+Calculation of Wisum @@ Abstand-Array erstellen und Leistung interpolieren für Pe-Korrektur
+Interpolated Power compute @@ Berechnung von wisum
+Correct distance and calculate. @@ Interpolierte Leistung berechnen
+Square of the distance: @@ Abstand berechnen und korrigieren.
+Points are within radius and possibly Radius increase @@ Quadrat des Abstandes:                 
+Distance array and create Power interpolate for Pe-correction @@ Punkte innerhalb Radius zählen und ggf. Radius erhöhen
+Calculation of wisumV2 @@ Abstand-Array erstellen und Leistung interpolieren für Pe-Korrektur
+Interpolated Power compute @@ Berechnung von wisumV2
+Calculated emission of tractrix @@ Interpolierte Leistung berechnen
+A search is on tractrix @@ Berechnet Emission an Schleppkurve
+n0 has already been defined in Init @@ Es wird an Schleppkurve gesucht
+Correct distance and calculate. @@ n0 ist schon in Init definiert worden
+Square of the distance: @@ Abstand berechnen und korrigieren.
+If the sign of Pe different (load / tow separation) distance increases weight to tow with tow more: @@ Quadrat des Abstandes:
+Points are within radius and possibly Radius increase @@ Falls Vorzeichen von Pe unterschiedlich (Last/Schlepp-Trennung) wird Abstand vergroessert um Schlepp bei Schlepp mehr zu gewichten:
+Distance array create @@ Punkte innerhalb Radius zählen und ggf. Radius erhöhen
+Calculation of Wisum @@ Abstand-Array erstellen
+Calculate emission @@ Berechnung von wisum
+Emission berechnen
+
+Open file @@ Abbruch wenn's Datei nicht gibt
+First line: Version @@ Datei öffnen
+Remove V '=> number remains @@ Erste Zeile: Version
+If invalid version: demolition @@ V" entfernen => Zahl bleibt übrig
+Version set @@ Falls Version ungültig: Abbruch
+If no version information: Old format @@ Version festgelegt
+Version Check: abort if input file format is newer than version PHEM @@ Falls keine Versionsangabe: Altes Format
+Second row: Check which TC-factors involved in any column (from column 1!) @@ Version-Check: Abbruch falls Inputdateiformat neuer ist als PHEM-Version
+Abort if less than 2 Spalen: @@ Zweite Zeile: Check welche TC-Faktoren in welcher Spalte stehen (ab Spalte 1!!)
+Stop if unknown TC-factor @@ Abbruch falls weniger als 2 Spalen:
+Add to Dict @@ Abbruch wenn unbekannter TC-Faktor
+From Line 3: TC-factors for each Em-component @@ Zu Dict hinzufügen
+l is for error output @@ Ab Zeile 3: TC-Faktoren für die einzelnen Em-Komponeten 
+Open file @@ l ist nur für Fehlerausgabe
+Abort if less than 11 Spalen: @@ Datei öffnen
+Abbruch falls weniger als 11 Spalen:
+
+In addition to individual consumers @@ Update 07.08.2012 (CO2 Demo)
+Tractive force - Update 09/08/2012 (CO2 demo) @@ Einzelne Nebenverbraucher
+Cd mode / Input File - Update 08/14/2012 (CO2 demo) @@ Zugkraftunterbrechung - Update 09.08.2012 (CO2 Demo)
+Axle configuration - Update 16.10.2012 @@ Cd Modus / Input Datei - Update 14.08.2012 (CO2 Demo)
+End reading **************************** @@ Axle configuration - Update 16.10.2012
+Interruption of traction (Update 09.08.2012 - CO2 demo) @@ Ende Einlesen ****************************
+Cd mode / Input File (Update 14.08.2012 - CO2 demo) @@ Zugkraftunterbrechung (Update 09.08.2012 - CO2 Demo)
+Retarder (Update 02.10.2012 - CO2 demo) @@ Cd Modus / Input Datei (Update 14.08.2012 - CO2 Demo)
+Axle configuration - Update 16.10.2012 @@ Retarder (Update 02.10.2012 - CO2 Demo)
+Error message within AuxInit @@ Axle configuration - Update 16.10.2012
+Cd-Init @@ Fehlermeldung innerhalb AuxInit
+Transmission Loss Maps @@ Cd-Init
+Fr0 @@ Transmission Loss Maps
+Gear/Rated-Rotations @@ Fr0
+Gear/Rated-Power @@ Getriebe-Nenndrehzahl
+If nothing stated: motor power and Rated-Rotations for normalization @@ Getriebe-Nennleistung
+PHEM:    n, PeIn, PeOut => x=n, y=PeOut, z=PeIn @@ Wenn nix angegeben: Motor-Nennleistung und Nenndrehzahl zur Normierung
+PHEM: GBmap0.AddPoints(CDbl(line(0)) * n_norm, CDbl(line(2)) * Pe_norm, CDbl(line(1)) * Pe_norm) @@ PHEM:    n, PeIn, PeOut => x=n, y=PeOut, z=PeIn
+VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn @@ PHEM: GBmap0.AddPoints(CDbl(line(0)) * n_norm, CDbl(line(2)) * Pe_norm, CDbl(line(1)) * Pe_norm)
+Interpolating with original values @@ VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn
+If error: trying extrapolation @@ Interpolieren mit Original Werten
+Search for the nearest map point @@ Falls Fehler: Extrapolation versuchen
+Efficiency @@ Suche nach nächstgelegenen Kennfeldpunkt
+Drive => Drive @@ Wirkungsgrad
+Towing => Drive: ERROR! @@ Antrieb => Antrieb
+Drive => Towing: ERROR! @@ Schlepp => Antrieb: ERROR!
+Towing => Towing @@ Antrieb => Schlepp: ERROR!
+Calculate efficiency with anguish for original PeOut @@ Schlepp => Schlepp
+Interpolating with original values @@ Mit Wirkungsgrad PeIn für original PeOut ausrechnen
+If error: trying extrapolation @@ Interpolieren mit Original Werten
+Search for the nearest map point @@ Falls Fehler: Extrapolation versuchen
+Efficiency @@ Suche nach nächstgelegenen Kennfeldpunkt
+Drive => Drive @@ Wirkungsgrad
+Towing => Drive: ERROR! @@ Antrieb => Antrieb
+Drive => Towing: ERROR! @@ Schlepp => Antrieb: ERROR!
+Towing => Towing @@ Antrieb => Schlepp: ERROR!
+Calculate efficiency with anguish for original PeOut @@ Schlepp => Schlepp
+Message in ReadFile () @@ Mit Wirkungsgrad PeIn für original PeOut ausrechnen
+If Vair target in DRI but not CdType = CdOfBeta then warning @@ Meldung in Readfile()
+If constant Cd value then is to do nothing @@ Falls Vair-Vorgabe in DRI aber nicht CdType= CdOfBeta dann Warnung
+Input file read @@ Falls konstanter Cd-Wert dann is nix zu tun
+Extrapolation for x <x (1) @@ Inputdatei einlesen
+Extrapolation for x> x (imax) @@ Extrapolation für x < x(1)
+Interpolation @@ Extrapolation für x > x(imax)
+Input file read @@ Interpolation
+Extrapolation for x <x (1) @@ Inputdatei einlesen
+Extrapolation for x> x (imax) @@ Extrapolation für x < x(1)
+Interpolation @@ Extrapolation für x > x(imax)
+Interpolation
+
+Maximum allowable power for driving [kW] sign (battery discharged) positive (PHEM Standard) @@ Aktuelle Daten (d.h. zum aktuellen (zuletzt berechneten) Zeitschritt)
+Maximum allowable power for generating / Rekuperiren [kW] sign (battery charging) negative (PHEM Standard) @@ Maximal zulässige Leistung zum Antreiben (Batterie entladen) [kW]    Vorzeichen positiv (PHEM Standard)
+Battery model Renhart ~ --------------------------------- @@ Maximal zulässige Leistung zum Generieren/Rekuperiren (Batterie laden) [kW]    Vorzeichen negativ (PHEM Standard)
+Method to initialize - is called once @@ Batteriemodell Renhart~ ---------------------------------
+Stop if there's no file @@ Methode zur Initialisierung - wird einmal aufgerufen
+Parsing arguments: @@ Abbruch wenn's Datei nicht gibt
+Calculation of the battery voltage at TempBat and SOC (0), discharge curve @@ Einlesen der Parameter:
+Calculation of battery voltage TempBat and SOC (0), charging curve @@ Berechnung der Batteriespannung bei TempBat und SOC(0), Entladekurve
+Method of calculating the allowable power - second by second call @@ Berechnung der Batteriespannung bei TempBat und SOC(0), Ladekurve
+Method of calculating the Batterieveluste and SOC for the given  Power - second by second call @@ Methode zur Berechnung der zulässigen Leistung - sekündlicher Aufruf
+Input: @@ Methode zur Berechnung der Batterieveluste und SOC für geg. Leistung - sekündlicher Aufruf
+Perf ... required Power. Condition: PgMAX < Perf < PaMAX [kW] @@ Input:
+all Paramer were determined in Bat_Init read / @@ Perf ...geforderte Leistung. Bedingung: PgMAX < Perf < PaMAX [kW]
+jz ...Current time step @@ alle Paramer die in Bat_Init bestimmt/eingelesen wurden
+All arrays from time step 1 to jz-1 @@ jz ...Aktueller Zeitschritt
+Returns PeBat for the given  PiBat (signal towards PHEM) @@ Alle Arrays von Zeitschritt 1 bis jz-1
+PRIVATE ------------------------------------------ @@ Übergibt PeBat für geg. PiBat (Vorzeichen nach PHEM)
+Battery discharged @@ PRIVATE ------------------------------------------
+Temperature Function @@ Batterie entladen
+Ri determine depending on temperature @@ Temperaturfunktion
+Voltage determined from SOC and voltage curve @@ Ri bestimmen abhängig von Temperatur
+Current charge @@ Spannung bestimmen aus SOC und Spannungskurve
+Battery losses @@ Strom berechnen
+Battery temperature @@ Batterieverluste
+SOC charge @@ Batterietemperatur
+Adjustment for the current time step @@ SOC berechnen
+Charging the battery @@ Korrektur für den aktuellen Zeitschritt
+Temperature Function @@ Batterie laden
+Ri determine depending on temperature @@ Temperaturfunktion
+Voltage determined from SOC and voltage curve @@ Ri bestimmen abhängig von Temperatur
+Current charge @@ Spannung bestimmen aus SOC und Spannungskurve
+Battery losses @@ Strom berechnen
+Battery temperature @@ Batterieverluste
+SOC charge @@ Batterietemperatur
+Adjustment for the current time step @@ SOC berechnen
+Battery do nothing @@ Korrektur für den aktuellen Zeitschritt
+ALT: Ubat (jz) = Ubat (jz - 1) @@ Batterie nix tun
+Passes PeBat when invoked PEmot (sign after Renhart) @@ ALT: Ubat(jz) = Ubat(jz - 1)
+Passes PeBat unloading with PEmot (sign after Renhart) @@ Übergibt PeBat beim Laden mit PEmot (Vorzeichen nach Renhart)
+Übergibt PeBat beim Entladen mit PEmot (Vorzeichen nach Renhart)
+
+{0}{/0} {1}Vehicles{/1} @@ Leistungen
+Define cycle length (shorter than original order 1s because interim seconds) @@ Fahrzeug
+Here is the actual cycle is read: @@ Zykluslänge definieren (Um 1s kürzer als Original weil Zwischensekunden)
+Speed ​​selection @@ Hier wird der eigentliche Zyklus eingelesen:
+Rotations @@ Drehzahl-Vorgabe
+Angular acceleration @@ Drehzahl
+Em components communicate (between seconds) for KF-creation or Eng-Analysis @@ Winkelbeschleunigung
+EXS guidelines submit @@ Em-Komponenten mitteln (Zwischensekunden) für KF-Erstellung oder Eng-Analysis
+Aux requirements and submit Aux Aux lists if present in Dri and Veh @@ EXS Vorgaben mitteln
+Define cycle length: Same as cycle length (not reduced because no "interim seconds") @@ Aux Vorgaben mitteln und Aux-Listen falls Aux in Dri und Veh vorhanden
+Here is the actual cycle is read: @@ Zykluslänge definieren: Gleiche Länge wie Zyklus (nicht reduziert weil keine "Zwischensekunden")
+Rotations selection @@ Hier wird der eigentliche Zyklus eingelesen:
+Rotations @@ Drehzahl-Vorgabe
+Angular acceleration @@ Drehzahl
+Initialization / Open File ************** @@ Winkelbeschleunigung
+ID line (Only ADVANCE) @@ Initialisierung / Datei öffnen **************
+ADVANCE-specific @@ ID-Zeile (Nur ADVANCE)
+Calculated dynamics parameters (Diff to map) @@ ADVANCE-spezifisch
+Write to File @@ Berechnete Dynamikparameter (Diff zu Kennfeld)
+Values ************************************************************************************* @@ In Datei schreiben
+Time @@ Werte *************************************************************************************
+Route @@ Zeit
+Actual speed. @@ Strecke
+Speed Setpoint. @@ Ist-Geschw.
+Acc. @@ Soll-Geschw.
+Slope @@ Beschl.
+Rotations @@ Steigung
+Power @@ Drehzahl
+Rotations normalized @@ Leistung 
+Power normalized @@ Drehzahl normiert
+Rotations ​in r/min @@ Leistung normiert
+EM power in kW @@ Drehzahl in U/min
+Effective battery power @@ EM-Leistung in kW
+Internal battery power @@ Effektive Batterieleistung
+Battery voltage @@ Innere Batterieleistung
+Battery Power @@ Batteriespannung
+SOC @@ Batteriestrom
+Rotations @@ SOC
+Power @@ Drehzahl
+Rotations normalized @@ Leistung 
+Power normalized @@ Drehzahl normiert
+Full load and towing @@ Leistung normiert
+Power to clutch @@ Volllast und Schlepp
+Gear @@ Leistung an Kupplung
+Transmission losses @@ Gang
+Diff losses @@ Getriebeverluste
+Retarder losses @@ Diff-Verluste
+PaEng @@ Retarder-Verluste
+PaGB @@ PaEng
+Pa Veh @@ PaGB
+Roll @@ Pa Veh
+Drag @@ Roll..
+Slope .. @@ Luft..
+Aux .. @@ Steigung..
+Wheel power @@ Aux..
+Brake @@ Radleistung
+Auxiliaries @@ Bremse
+ADVANCE-specific @@ Auxiliaries
+X @@ ADVANCE-spezifisch
+Y @@ X
+Strid @@ Y
+Final emissions (tailpipe) @@ StrId
+Raw-emissions @@ Final-Emissionen (Tailpipe)
+TC-Emissions @@ Roh-Emissionen
+AT-Emissions (EXS) @@ TC-Emissionen
+Calculated dynamics parameters (Diff to map) @@ AT-Emissionen (EXS)
+Write to File @@ Berechnete Dynamikparameter (Diff zu Kennfeld)
+Errors/Warnings can occur every second @@ In Datei schreiben
+Reset hierarchy: @@ Errors/Warnings die sekündlich auftreten können
+ResetAll @@ Reset-Hierarchie:
+DesMaxExtr @@ ResetAll
+GeschRedReset @@ DesMaxExtr
+CdExtrapol @@ GeschRedReset
+PxReset @@ CdExtrapol        
+TrLossMapExtr @@ PxReset
+AuxMapExtr @@ TrLossMapExtr 
+AuxNegative @@ AuxMapExtr 
+FLDextrapol @@ AuxNegative
+Full reset (at the beginning of each second step) @@ FLDextrapol
+Reset of Errors by Speed Reduction (within iteration) @@ Kompletter Reset (am Beginn jedes Sekundenschritts)
+Reset of the errors have to do with the power calculation (carried out after Gear-shifting model) @@ Reset von Errors nach Geschw.-Reduktion (innerhalb Iteration)
+Emit Errors @@ Reset von Errors die mit der Leistungsberechnung zu tun haben (nach Schaltmodell durchzuführen)
+Errors ausgeben
+
+Interruption of traction @@ Sekündliche Daten
+Recuperation @@ Zugkraftunterbrechung
+Project HERO - BMW Mini Hybrid @@ Rekuperation
+Standard Mini One D Wheelbase 2467mm @@ Projekt HERO - BMW Mini Hybrid
+Adoption of gravity height @@ Standard Mini One D Radstand 2467 mm
+after http://www.colliseum.net/wiki/Schwerpunkth% C3% B6he @@ Annahme für Schwerpunkthöhe
+with R = 2467 [m], and m = 1335 [kg] @@ nach http://www.colliseum.net/wiki/Schwerpunkth%C3%B6he
+Bat Reading @@ mit R = 2.467 [m] und m = 1335 [kg]
+Maximum effective EM Power in driving depends on overload and battery status @@ Bat einlesen
+Based on full load curve @@ Maximale effektive EM-Leistung beim Antreiben abhängig von Überlast und Batteriezustand
+If possible overload: Upscale on OL Power @@ Basis: Volllastkurve
+PeFLD = maximum EM Power by FLD and OL @@ Falls Überlast möglich: auf ÜL-Leistung hochskalieren
+Pemax from PeBatMax calculate @@ PeFLD = maximale EM-Leistung nach FLD und ÜL
+PeBAT = maximum EM power to battery @@ PeMax aus PeBatMax berechnen
+Passing is the maximum power allowed by the battery @@ PeBAT = maximale EM-Leistung nach Batterie
+Maximum effective EM-load Power depends on overload and battery status @@ Übergeben wird maximal die Leistung die die Batterie erlaubt
+Base: tractrix @@ Maximale effektive EM-Leistung beim Laden abhängig von Überlast und Batteriezustand
+If possible overload: Upscale on OL Power @@ Basis: Schleppkurve
+PeFLD = maximum EM Power by FLD and OL @@ Falls Überlast möglich: auf ÜL-Leistung hochskalieren
+Pemax from PeBatMax calculate @@ PeFLD = maximale EM-Leistung nach FLD und ÜL
+PeBAT = maximum EM power to battery @@ PeMax aus PeBatMax berechnen
+Passing is the maximum power allowed by the battery @@ PeBAT = maximale EM-Leistung nach Batterie
+Conversion of PeBat (= piem) on PEEM @@ Übergeben wird maximal die Leistung die die Batterie erlaubt
+When sign of x or y is equal to the sign of xA (i) or yA (i) is then skipped row i @@ Umrechnung von PeBat(=PiEM) auf PeEM
+Conversion of PEEM to PeBat (= piem) @@ Wenn Vorzeichen von x oder y nicht gleich Vorzeichen von xA(i) oder yA(i) dann wird Zeile i übersprungen
+When sign of x or y is equal to the sign of xA (i) or yA (i) is then skipped row i @@ Umrechnung von PeEM auf PeBat(=PiEM)
+Maximum power Rekup @@ Wenn Vorzeichen von x oder y nicht gleich Vorzeichen von xA(i) oder yA(i) dann wird Zeile i übersprungen
+Appropriate V-lower limit of zero then the same @@ Maximale Rekup-Leistung
+Wheel contact @@ Falls unter V-Untergrenze dann gleich Null übergeben
+Sign "should" always be + @@ Radaufstandskraft
+Longitudinal force on the tire @@ Vorzeichen "sollte" immer + sein
+Safety factor to take @@ Längskraft am Reifen
+Power @@ Sicherheitsfaktor mitnehmen
+If scale linearly with V-ceiling then down @@ Leistung 
+PEEM Max reduce it to the battery aushaltet @@ Falls unter V-Obergrenze dann linear runter skalieren
+PEEM Min reduce it to the battery aushaltet @@ PeEM-Max reduzieren bis es die Batterie aushaltet
+Start / Stop Control @@ PeEM-Min reduzieren bis es die Batterie aushaltet
+Abortion if given no speed @@ Start/Stop Steuerung
+Initialize @@ Abbruch wenn keine Geschw. gegeben
+Gear-shifting points for NEDC / FTP circuit @@ Initialisieren
+Gear-shifting parameters initialize @@ Schaltpunkte für NEDC/FTP Schaltung
+Standard @@ Schaltparameter initialisieren
+Theoretical maximum speed [m/s] - set to Speed ​​at 1.2 x Rated-Rotations in top Gear @@ Standard
+Time warp **************************************** @@ Theoretische Höchstgeschwindigkeit [m/s] - gesetzt auf Geschw. bei 1.2 x NennDrehzahl im höchsten Gang
+Secondary Progressbar @@ Zeitschleife    ****************************************
+State determine @@ Sekundäre Progressbar
+Reset the second by second Errors @@ Zustand bestimmen
+Calculate Speed​/Acceleration ------------------- @@ Reset der sekündlichen Errors 
+Now by DRI-class @@ Geschw. / Beschl. berechnen-------------------
+If Speed over Top theoretical Speed => Reduce @@ Jetzt durch DRI-Klasse
+a_DesMax @@ Wenn Geschw. über theoretischer Höchstgeschw. => Reduzieren
+Check if acceleration is too high @@ a_DesMax
+Delay limit --------------------------- @@ Check ob Beschleunigung zu hoch
+Check whether to delay high @@ Verzögerung limitieren ---------------------------
+From Leistg ----- @@ Check ob Verzögerung zu hoch
+Driving conditions determine ------------------------- @@ Aus Leistg-----
+Quick check if power is much too high @@ Fahrzustand bestimmen-------------------------
+Gear selection ************************************ @@ Schneller Check ob Leistung viel zu hoch
+Check whether clutch will drag (important for Gear-shifting model): @@ Gangwahl ************************************
+Gear-setting @@ Checken ob Kupplung schleift (wichtig für Schaltmodell):
+Rotations-setting @@ Gang-Vorgabe
+Gear to speed @@ Drehzahlvorgabe
+Gear-shifting Model @@ Gang nach Geschwindigkeit
+Must be returned here again because in the Gear-shifting model can (and should) be used @@ Schaltmodell
+Shifting-model / specification can open Clutch @@ Muss hier nochmal zurück gesetzt werden weil im Schaltmodell kann (und darf) das passieren
+Important checks @@ Schaltmodell/Vorgabe kann Clutch öffnen 
+Check whether reduce speed @@ Wichtige Checks
+If GeschwRed Then GoTo lbGeschwRed <= instead new concept: Power is "normal" is calculated and later checked if Pe> Pmax ... ? @@ Checken ob Geschwindigkeit reduzieren
+Check whether Clutch open: @@ If GeschwRed Then GoTo lbGeschwRed    <= stattdessen neues Konzept: Leistung wird "normal" berechnet und erst später überprüft ob Pe > Pmax... ?
+bKupplOffen = (bStehen Or Gear(jz) = 0) <= Already known by Clutch @@ Checken ob Kupplung offen:
+If conventionall then ICE-clutch = master clutch @@ bKupplOffen = (bStehen Or Gang(jz) = 0) <= bereits durch Clutch bekannt
+bICEKupOffen = bKupplOffen <= i need nothing more @@ Falls konventionell dann ICE-Kupplung = Hauptkupplung
+If detected before gear selection was not that KupplSchleif, then shift down at too low Rotations: @@ bICEKupOffen = bKupplOffen <= Brauch i nix mehr
+Check whether idling although Power > 0 @@ Falls vor Gangwahl festgestellt wurde, dass nicht KupplSchleif, dann bei zu niedriger Drehzahl runterschalten:
+When Power > 0.1% of Rated-power, then Correct! @@ Checken ob Leerlauf obwohl Leistung > 0
+Rotations @@ wenn Leistung vor Diff > 0.1% von Nennleistung dann Korrigieren!
+If Rotations specified then the next block is skipped *** @@ Drehzahl ************************************
+If Start/Stop will be set at the same nn < -0.05 to nU = 0 @@ Wenn Drehzahl vorgegeben dann wird der nächste Block übersprungen ***
+Rotations drop when decoupling @@ Falls Start/Stop dann wird gleich bei nn < -0.05 auf nU = 0 gesetzt
+Power-loss limit on Pe(t-1) minus 75% of (Pe(t-1) - Drag power) @@ Drehzahlabfall beim Auskuppeln
+of evaluated ETC with the dynamic of the motor full load @@ Leistungsabfall limitieren auf Pe(t-1) minus 75% von (Pe(t-1) - Pschlepp)
+Impact on low acceleration (influence by Pe(t-1) with full load under dynamic PT1) @@ aus Auswertung ETC des Motors mit dem dynamische Volllast parametriert wurde
+Luz/Rexeis / 21.08.2012 @@ Einfluss auf Beschleunigungsvermögen gering (Einfluss durch Pe(t-1) bei dynamischer Volllast mit PT1)
+Iteration loop: 01.10.2012 @@ Luz/Rexeis 21.08.2012
+Iterations-Schleife: 01.10.2012    
+01:10:12 Luz: Rotations must not be higher than previously @@ original: M = -Pmin * 1000 * 60 / (2 * Math.PI * ((nU + nUx) / 2))
+TODO: Switch off? @@ 01.10.12 Luz: Drehzahl darf nicht höher werden als zuvor 
+Start: Rotations Check @@ TODO: Auschalten?!
+Check whether Rotations too high! => Upshift @@ Beginn: Drehzahl-Check
+Check whether Rotations too low with the Clutch closed @@ Checken ob Drehzahl zu hoch! =>  Hochschalten
+Determine Engine condition ************************************ @@ Checken ob Drehzahl zu niedrig mit geschlossener Kupplung
+nn fix is here! @@ Motor-Zustand bestimmen ************************************
+Besides consumption determine (from VEH and DRI) @@ nn ist ab hier fix!
+ICE-inertia @@ Nebenverbrauch bestimmen (aus VEH und DRI)
+Not optimal since jz-1 to jz not the right time @@ ICE-Trägheit
+Rotations setting @@ Nicht optimal da jz-1 bis jz nicht der richtige Zeitraum
+Total Engine-power @@ Drehzahlvorgabe
+Power distribution, etc. ****************** @@ Gesamt-Motorleistung
+Full-Load/Drag curve @@ Leistungsverteilung usw. ******************
+Correct Rotations @@ Volllast- / Schleppkurve
+If Pmax <0 or Pmin> 0 then Abort with Error! @@ Drehzahl korrigieren
+VKM to Drag-curve @@ Falls Pmax < 0 oder Pmin > 0 dann Abbruch mit Error!
+Forward-calculation to wheel (PvorD) @@ VKM an Schleppkurve
+Check or abort (reduce Speed before iteration otherwise it hangs) @@ Forwärtsrechnung bis Rad (PvorD)
+Check whether P above Full-load => Reduce Speed @@ Check ob Abbruch (vor Geschw.Red-Iteration sonst kann sichs aufhängen)
+ERROR: Velocity Reduction brings nothing? ... @@ Check ob P über Volllast => Geschw.-Reduktion
+ERROR:  Engine not in drive ... can it be? @@ FEHLER: Geschw.-Red. bringt nix?!...
+Interruption of traction @@ FEHLER: Motor nicht in Antrieb ...kann nicht sein?!
+Second conclude @@ Zugkraftunterbrechung
+Start / Stop - activation-Speed. Control @@ Sekunde abschließen
+Modal values Fields write @@ Start / Stop - Aktivierung-Geschw. Steuerung
+Interruption of traction @@ Modalwerte-Felder schreiben
+Messages (abort if error) @@ Zugkraftunterbrechung
+Time loop END *********************************** @@ Meldungen (Abbruch falls Error)
+Messages (When not ADVANCE) @@ Zeitschleife ENDE    ***********************************
+Abort if Power/Rotations not given @@ Meldungen (wenn nicht ADVANCE)
+Rotations previously otherwise fails Pmr calculation at MODdata.nU(t + 1) @@ Abbruch falls Leistung/Drehzahl nicht gegeben
+Modal value Fields write @@ Drehzahlen vorher weil sonst scheitert die Pmr-Berechnung bei MODdata.nU(t + 1)
+MODdata.Pe below shows @@ Modalwerte-Felder schreiben
+Power compute @@ MODdata.Pe wird unten belegt
+Secondary Progressbar @@ Leistung berechnen
+Reset the second-by-second Errors @@ Sekundäre Progressbar
+ALT and wrong because not time shifted: P_mr(jz) = 0.001 * (I_mot * 0.0109662 * (n(jz) * nnrom) * nnrom * (n(jz) - n(jz - 1))) / Pnrom @@ Reset der sekündlichen Errors 
+Power of the Cycle corrected by P_clutch @@ ALT und falsch weil Zeit nicht verschoben: P_mr(jz) = 0.001 * (I_mot * 0.0109662 * (n(jz) * nnenn) * nnenn * (n(jz) - n(jz - 1))) / Pnenn
+Rotations of the Cycle => Cycle-init Determined @@ Leistung aus Zyklus korrigiert um P_clutch
+If adopted under idle Rotations motor as we parked @@ Drehzhal aus Zyklus => Durch CycleInit bestimmt
+If Pmax < 0 or Pmin >  0 then Abort with Error! @@ Falls Drehzahl unter Leerlauf wir Motor als abgestellt angenommen
+FLD check @@ Falls Pmax < 0 oder Pmin > 0 dann Abbruch mit Error!
+Messages @@ FLD Check
+Start/Stop Control @@ Meldungen
+Path correction @@ Start/Stop Steuerung
+Abortion if given no speed @@ WegKorrektur
+Initialize @@ Abbruch wenn keine Geschw. gegeben
+WG-map take over from MAP and calculate Pi list @@ Initialisieren
+Gear-shifting points for NEDC/FTP @@ WG-Kennfeld aus MAP übernehmen und Pi-Liste berechnen
+Theoretical maximum speed [m/s] @@ Schaltpunkte für NEDC/FTP Schaltung
+Time-loop **************************************** @@ Theoretische Höchstgeschwindigkeit [m/s]
+Secondary Progressbar @@ Zeitschleife    ****************************************
+State determine @@ Sekundäre Progressbar
+Calculate Speed/Acceleration ------------------- @@ Zustand bestimmen
+Now by DRI-class @@ Geschw. / Beschl. berechnen-------------------
+If Speed over the theoretical Top-Speed => Reduce @@ Jetzt durch DRI-Klasse
+From Power ----- @@ Wenn Geschw. über theoretischer Höchstgeschw. => Reduzieren
+Determine Driving conditions ------------------------- @@ Aus Leistg-----
+Maximum allowable battery power @@ Fahrzustand bestimmen-------------------------
+Gear selection ************************************ @@ Maximal zulässige Batterieleistung
+Check whether clutch will drag (important for Gear-shifting model): @@ Gangwahl ************************************
+Gear setting @@ Checken ob Kupplung schleift (wichtig für Schaltmodell):
+Rotations setting @@ Gang-Vorgabe
+Transition to speed is not supported here @@ Drehzahlvorgabe
+Gear-shifting Model @@ Gang nach Geschwindigkeit wird hier nicht unterstützt
+EV: No idle due to recuperation @@ Schaltmodell
+If regenerative braking is possible under wheel power: Calculate PrekupMax @@ EV: Kein Leerlauf wegen Rekuperation
+Maximum recuperation power charge (depending on wheel load / Reibkoef.) @@ Falls Rekuperation laut Radleistung möglich: PrekupMax berechnen
+If detected before gear selection was not that KupplSchleif, then shift down at too low a speed: @@ Maximale Rekuperations-Leistung berechnen (abh. von Radlast/Reibkoef.)
+Check whether idling although power> 0 @@ Falls vor Gangwahl festgestellt wurde, dass nicht KupplSchleif, dann bei zu niedriger Drehzahl runterschalten:
+when power before Diff> 0.1% of rated output then Correct! @@ Checken ob Leerlauf obwohl Leistung > 0
+Rotations ************************************ @@ wenn Leistung vor Diff > 0.1% von Nennleistung dann Korrigieren!
+If the speed is specified (Meas = 2) then the next block is skipped *** @@ Drehzahl ************************************
+Rotations drop when decoupling @@ Wenn Drehzahl vorgegeben (Gemess = 2) dann wird der nächste Block übersprungen ***
+Start: Speed-Check if no default @@ Drehzahlabfall beim Auskuppeln
+Check whether speed too high! => Upshift @@ Beginn: Drehzahl-Check wenn keine Vorgabe
+Check whether speed too low with the clutch @@ Checken ob Drehzahl zu hoch! =>  Hochschalten
+Engine condition ************************************ determine @@ Checken ob Drehzahl zu niedrig mit geschlossener Kupplung
+nn fix is ​​here! @@ Motor-Zustand bestimmen ************************************
+Besides consumption determine (from PDB and DRI) @@ nn ist ab hier fix!
+Motor inertia @@ Nebenverbrauch bestimmen (aus VEH und DRI)
+Not optimal since jz-1 to jz not the right time @@ MotorTrägheit
+Speed ​​setting @@ Nicht optimal da jz-1 bis jz nicht der richtige Zeitraum
+Total motor power @@ Drehzahlvorgabe
+Power distribution, etc. ****************** @@ Gesamt-Motorleistung
+Full load / tractrix @@ Leistungsverteilung usw. ******************
+Maximum recuperation power charge (depending on wheel load / Reibkoef.) @@ Volllast- / Schleppkurve
+PrekupMax fPrekupMax = () @@ Maximale Rekuperations-Leistung berechnen (abh. von Radlast/Reibkoef.)
+Be exceeded if RekupMax recalculated Pe @@ PrekupMax = fPrekupMax()
+PbrakeRek = power which must be additionally hampered mechanical overrun of RekupMax @@ Falls RekupMax überschritten muss Pe neu berechnet werden
+is already done by top gear selection: PbrakeRek = Pantr - PrekupMax @@ PbrakeRek = Leistung die zusätzlich mechanisch gebremst werden muss wegen Überschreitung von RekupMax
+New EM Power @@ wird schon oben nach Gangwahl erledigt: PbrakeRek = Pantr - PrekupMax
+Check whether power can be added (depending on battery and FLD). Braking Power compute. @@ Neue EM-Leistung
+RekupMax braking power to add @@ Check ob Leistung aufgenommen werden kann (abh. von FLD und Batterie). Bremsleistung berechnen.
+Check whether P = on full load> Speed Reduction @@ RekupMax-Bremsleistung dazu addieren
+If Pmax = 0 must be empty battery @@ Check ob P über Volllast => Geschw.-Reduktion
+ERROR: Velocity Red. brings nothing? ... @@ Falls Pmax=0 muss Batterie leer sein
+Second conclude @@ FEHLER: Geschw.-Red. bringt nix?!...
+Battery *********************** @@ Sekunde abschließen
+Write-modal values ​​************** fields @@ Batterie ***********************
+Messages @@ Modalwerte-Felder schreiben **************
+Time loop END ************************************* @@ Meldungen
+Messages (ADV) @@ Zeitschleife ENDE    *************************************
+toDo  Error message etc @@ Meldungen (nicht ADV)
+Path correction @@ TODO.... Fehlermeldung etc
+Abortion if given no speed @@ WegKorrektur
+Initialize @@ Abbruch wenn keine Geschw. gegeben
+Gear-shifting points for NEDC/FTP @@ Initialisieren
+Gear-shifting parameters initialize @@ Schaltpunkte für NEDC/FTP Schaltung
+Theoretical maximum speed [m/s] @@ Schaltparameter initialisieren
+HEV @@ Theoretische Höchstgeschwindigkeit [m/s]
+Time warp **************************************** @@ HEV
+Secondary Progressbar @@ Zeitschleife    ****************************************
+State determine @@ Sekundäre Progressbar
+Speed ​​/ Acceleration calculate ------------------- @@ Zustand bestimmen
+Now by DRI-class @@ Geschw. / Beschl. berechnen-------------------
+If Speed ​​Top speed with theoretical. => Reduce @@ Jetzt durch DRI-Klasse
+From Leistg ----- @@ Wenn Geschw. über theoretischer Höchstgeschw. => Reduzieren
+Driving conditions determine ***************************** @@ Aus Leistg-----
+Driving conditions determine ------------------------- @@ Fahrzustand bestimmen *****************************
+Gear selection ************************************ @@ Fahrzustand bestimmen-------------------------
+Check whether clutch will drag (important for Gear-shifting model): @@ Gangwahl ************************************
+Gear-setting @@ Checken ob Kupplung schleift (wichtig für Schaltmodell):
+Rotations-setting @@ Gang-Vorgabe
+Gear from speed @@ Drehzahlvorgabe
+Gear-shifting Model @@ Gang nach Geschwindigkeit
+Besides consumption determine (from PDB and DRI) @@ Schaltmodell
+HEV part comes after gear selection because beverages. / Diff-loss and requires the EM between ICE and GB is @@ Nebenverbrauch bestimmen (aus VEH und DRI)
+Besides consumption determine (from PDB and DRI) @@ HEV-Teil kommt erst nach Gangwahl weil Getr./Diff-Loss den benötigt und EM zwischen ICE und GB liegt
+If specified speed @@ Nebenverbrauch bestimmen (aus VEH und DRI)
+Otherwise from Vist and Gear @@ Wenn Drehzahl vorgegeben
+Normalized speed @@ Sonst aus Vist und Gear
+Maximum power of the ICE @@ Normierte Drehzahl
+Besides consumption determine (from PDB and DRI) @@ Maximale Leistung der ICE
+Maximum allowable battery power @@ Nebenverbrauch bestimmen (aus VEH und DRI)
+Maximum EM Power. (Limited battery power EM power) @@ Maximal zulässige Batterieleistung
+Power to ICE / EM (= coupling to) get @@ Maximale EM-Leistung. (Batterieleistung limitiert EM-Leistung)
+Power to clutch @@ Leistung bis ICE/EM (= an Kupplung) berechnen
+Speed ​​setting @@ Leistung an Kupplung
+Power required in EV mode @@ Drehzahlvorgabe
+Power to clutch plus EM inertia @@ Notwendige Leistung im EV-Betrieb
+NOTE: If ICE has also engaged then Paice as well! => Later in power distribution @@ Leistung an Kupplung plus EM-Trägheit
+Necessary power in the ICE-EM + operation @@ ACHTUNG: Wenn ICE eingekuppelt dann muss PaICE auch noch dazu ! => Später bei Leistungsverteilung
+Power required in ICE operation @@ Notwendige Leistung im ICE+EM-Betrieb
+Check whether EV possible @@ Notwendige Leistung im ICE-Betrieb
+EM-Power> = input power @@ Check ob EV möglich
+If EV possible: check whether critical @@ EM-Leistung >= Antriebsleistung
+Check whether Assist / LPI / ICEonly possible and if needed boost @@ Falls EV möglich: Check ob kritisch
+ICE-A must be possible (Icelock) @@ Check ob Assist / LPI / ICEonly möglich und ob Boost erforderlich
+Assist / Boost @@ ICE-Ein muss möglich sein (ICElock)
+Boost @@ Assist / Boost
+ICE at full load @@ Boost
+Check whether Rekup possible @@ ICE an Volllast
+Driving state distinction ********************************* @@ Check ob Rekup möglich
+Mode pre-selection ******************************** @@ Fahrzustands-Unterscheidung *********************************
+Boost if necessary (and possible), then no choice @@ Betriebsmodus Vor-Auswahl ********************************
+EV mode when ... @@ Wenn Boost notwendig (und möglich), dann keine Wahl
+If EV & ICE is not possible then to ICE EV mode starts again .... should never happen because no ICE off when little SOC @@ EV Mode wenn...
+If use of HEV strategy: @@ Wenn EV & ICE nicht möglich dann EV-Modus bis ICE wieder startet.... sollte nie vorkommen weil keine ICE-Abschaltung wenn wenig SOC
+Ke's charge @@ Falls Einsatz von HEV-Strategie:
+Calculate optimal Ke's Power and to ************ @@ Ke's berechnen
+Emission / fuel consumption in g/h @@ Optimale Ke's berechnen und Leistungen dazu ************
+Keste from STE-curve ... @@ Emission/Verbrauch in g/h
+Remain under Max Pe @@ KeSTE aus STE-Kurve...
+If Pvkm negative: calculation for pure EM-operation @@ Unter Max-Pe bleiben
+not valid if Batlvl <= Low or ICEonLock @@ Wenn Pvkm negativ: Berechnung für reinen EM-Betrieb
+EM-Power = P drive @@ nicht gültig falls Batlvl <= Low oder ICEonLock
+Reduce consumption in g/h @@ EM-Leistung = P-Antrieb
+Termination according to this calculation (more EM Power makes no sense because even pure electric drive) @@ Verbrauchseinsparung in g/h 
+Reduce consumption in g/h @@ Abbruch nach dieser Berechnung (mehr EM-Leistung macht keinen Sinn da hier schon rein elektrischer Antrieb)
+Power to electric motor in kW @@ Verbrauchseinsparung in g/h 
+Power in battery @@ Leistung nach E-Motor in kW
+Div / 0 and sign check @@ Leistung in Batterie
+Kea calculated in kWh / kg @@ Div/0 und Vorzeichen-Check
+Check whether Optimum @@ KeA berechnen in kWh/kg
+Abort when pure EM mode already reached @@ Check ob Optimum
+If Pvkm at full load: @@ Abbruch falls reiner EM-Betrieb schon erreicht
+Pvkm put on full load @@ Falls Pvkm an Volllast:
+Electric motor in generator mode (Pges1 - Pvkm <0) @@ Pvkm auf Volllast setzen
+Abort after this passage because generating more impossible @@ Elektromotor in Generatorbetrieb (Pges1 - Pvkm < 0)
+Additional consumption in g/h @@ Abbruch nach diesem Durchgang weil mehr Generieren nicht möglich
+Power to electric motor in kW @@ Zusatzverbrauch in g/h 
+Power in battery @@ Leistung nach E-Motor in kW
+Div / 0 and sign check @@ Leistung in Batterie
+Keg calculated in kWh / kg @@ Div/0 und Vorzeichen-Check
+Check whether Optimum @@ KeG berechnen in kWh/kg
+Abort when VKM full load already reached @@ Check ob Optimum
+Eta calculate distance curve @@ Abbruch falls VKM-Volllast schon erreicht
+Keste, deltas evaluate ************************ @@ Abstand Eta zu Kurve berechnen
+Operating strategy *************************** @@ KeSTE, Deltas auswerten ************************
+Ke mode used when ... @@ Betriebsstrategie ***************************
+Same mode as before, driving condition changes or last mode impossible @@ Ke-Modus einsetzen wenn...
+when engine is not running @@ Gleicher Modus wie vorher, Fahrzustands-Änderung oder Letzter Modus unmöglich
+if the peice power change with the new mode lowest @@ wenn Motor nicht läuft
+************************** Distribute benefits depending on the mode @@ wenn PeICE-Leistungsänderung mit neuen Modus am geringsten
+EM assumes full power @@ Leistungen je nach Modus verteilen **************************
+Speed reduced if power is too high for EM or Bat @@ EM übernimmt gesamte Leistung
+If ICElock or EVcrit then ICE again (but disconnected) @@ Geschw. reduzieren falls Leistung zu hoch für EM oder Bat
+ICE takes over the entire drive @@ Falls ICElock oder EVcrit dann ICE ein (aber ausgekuppelt)
+WARNING: ICEclutch defaults to 'false' so here no more statements more @@ ICE übernimmt gesamten Antrieb
+Rekup maximum Power compute @@ ACHTUNG: ICEclutch ist standardmäßig 'False' deshalb hier keine weiteren Statements mehr
+Expect PrekupMax on EM / ICE back @@ Maximale Rekup-Leistung berechnen
+The remainder is on the brakes @@ Mit PrekupMax auf EM/ICE zurück rechnen
+Default for ICE (so that the "else" statement saves) @@ Den Rest gleich auf die Bremse 
+EM-performance compute @@ Default für ICE (damit man sich die "Else"-Statements spart)
+EM-performance new @@ EM-Leistung berechnen
+Residual power to ICE @@ EM-Leistung neu
+If ICE over tractrix @@ Restliche Leistung an ICE
+ICE power new @@ Falls ICE über Schleppkurve
+Rest of brake @@ ICE-Leistung neu
+ICE idle (because on-Lock) @@ Rest an Bremse
+EM-performance compute @@ ICE in Leerlauf (weil On-Lock)
+EM-performance new @@ EM-Leistung berechnen
+ICE on the overrun @@ EM-Leistung neu
+If ICE over tractrix @@ ICE im Schubbetrieb
+ICE power new @@ Falls ICE über Schleppkurve
+Rest of brake @@ ICE-Leistung neu
+ICE on the overrun @@ Rest an Bremse
+If ICE over tractrix @@ ICE im Schubbetrieb
+ICE power new @@ Falls ICE über Schleppkurve
+Rest of brake @@ ICE-Leistung neu
+Power zero @@ Rest an Bremse
+Clutch and speeds ******************************* @@ Leistung Null
+Main clutch => must already be known here! @@ Clutch und Drehzahlen *******************************
+ICE Rotations************************************ @@ Haupt-Kupplung => muss hier schon bekannt sein!
+EM Rotations ​​************************************* @@ Drehzahl ICE ************************************
+Second conclude @@ Drehzahl EM *************************************
+NOTE: If the two loops do not connect because LockCount otherwise miscounted @@ Sekunde abschließen
+Modal values ​​Fields write @@ ACHTUNG: Die beiden If-Schleifen nicht verbinden weil LockCount sich sonst verzählt
+Messages @@ Modalwerte-Felder schreiben
+Time loop END ************************************** @@ Meldungen
+Messages (Not ADVANCE) @@ Zeitschleife ENDE   **************************************
+Second 1 -------------------------------------- @@ Meldungen (Nicht ADVANCE)
+First second: transitional find / initialization @@ Sekunde 1--------------------------------------
+From second 2 -------------------------------------- @@ Erste Sekunde: Gang finden / Initialisierung
+Home values ​​--------- @@ Ab Sekunde 2--------------------------------------
+gangX = Last Gang ie Basis for Gear-shiftching model @@ Startwerte---------
+Dome grinding check << happened already in power.Calc @@ gangX = Letzter Gang d.h. Ausgangsbasis für Schaltmodell
+Transition for the next 6 seconds, calculate --------------------- @@ Kuppelschleif-check  << Schon passiert in Power.Calc
+Gear-shifting function ---------- @@ Gang für die nächsten 6 Sekunden berechnen---------------------
+N_normiert speed barrier upshift (Idle = 0, rated speed = 1) @@ Schaltfunktion----------
+N_normiert speed barrier Turn Down (Idle = 0, rated speed = 1) @@ Drehzahlschranke Hinaufschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+LUZ deleted 13.07.10: If (nnsaufi> 0.85) = 0.85 Then nnsaufi @@ Drehzahlschranke Hinunterschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+Conversion in here used speed unit (n / N_NENN): @@ Gelöscht LUZ 13.07.10: If (nnsaufi > 0.85) Then nnsaufi = 0.85
+Speed ​​with last gear (gangX) @@ Umrechnung in hier verwendete Drehzahleinheit (n/n_nenn):
+nx = FNU (Vist, gangX, Clutch = tEngClutch.Slipping) / VEH.nNenn @@ Drehzahl mit letzten Gang (gangX)
+Turn off every 2 seconds maximum permissible: @@ nx = fnU(Vist, gangX, Clutch = tEngClutch.Slipping) / VEH.nNenn
+Check whether down turn, only when speed decreases or increases Power @@ Schalten Maximal alle 2 Sekunden schalten zulaessig:
+Check whether turn up, only when speed increases or decreases Power @@ Ueberpruefen ob hinunterschalten, nur wenn Geschw. abnimmt oder leistung zunimmt
+Correct gear selection @@ Ueberpruefen ob hinaufschalten, nur wenn Geschw. zunimmt oder leistung abnimmt
+No idle when power> 0 @@ Gangwahl korrigieren
+Speed ​​new @@ Kein Leerlauf wenn Leistung > 0
+nn = fnn (Vist, gangX, Clutch = tEngClutch.Slipping) @@ Drehzahl neu
+Check if Power/Rotations transition within the limits. Towing is not respected @@ nn = fnn(Vist, gangX, Clutch = tEngClutch.Slipping)
+Save for later courses in field checks @@ Überprüfe ob Gang innerhalb der Leistungs-/Drehzahl Grenzen. Schleppbetrieb wird nicht beachtet
+Accept Gear @@ Speichere Gänge in Feld für spätere Checks
+Add Gang-shift @@ Gang wird übernommen
+Checks Part 1 ------------------------------------- @@ Gang-Verlauf hinzufügen
+Checks to Purge non-sensible Gear-shift: @@ Checks Teil 1-------------------------------------
+Division into "iphase(j)" stages: Acceleration(=1), Deceleration(=2) and Cruise(=3): @@ Checks zur Saeuberung unsinniger Schlatmanoever:
+Already determined by VehState0 @@ Unterteilung in "iphase(j)" Beschleunigungs- (=1), Verzoegerungs- (=2) und Cruise (=3) -Phasen:
+Search by last Gear-change @@ Schon bestimmt durch VehState0
+Maximum permissible Gear-shifts every 3 seconds: @@ Suche nach letztem Gangwechsel
+Cruise phases: @@ Schaltvorgaenge max. alle 3 Sekunden zulaessig:
+Do not change Gear for as long Speed-change since last Gear-shift under 6% and Pe/Pnorm below 6%: @@ Cruise-Phasen:
+Deceleration phase: upshift is suppressed @@ Solange Geschwindigkeitsaenderung seit letztem Gangwechsel unter 6% und Pe/Pnenn aenderung unter 6% wird nicht geschaltet:
+Acceleration phases: Downshift suppressed @@ Verzoegerungsphasen: Hochschalten wird unterdrückt
+If within 6 seconds it Shifts back to the previous-Gear, @@ Beschleunigungsphasen: Zurückschalten wird unterdrückt
+then maintain the previous-Gear throughout. @@ Wenn innerhalb von 6 Sekunden wieder in vorigen Gang zurueck geschaltet wird, wird der vorige Gang
+If within 6 seconds it Shifts once above and once below the previous-Gear, @@ durchgehend beibehalten
+then maintain the previous-Gear throughout. @@ Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang
+Checks Part 2 ------------------------------------- @@ geschaltet wird, wird voriger Gang durchgehend beibehalten
+Gear-shift from 2 to 1 are suppressed when v > 2.5 m/s @@ Checks Teil 2-------------------------------------
+NEW LUZ 040210: Upshifting only when in 2nd Gear over Kuppel-Rotations @@ Schalten von 2. in 1. Gang wird bei v > 2,5 m/s unterdrueckt
+at deceleration below 2.5 m/s is shifted to idle @@ NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl
+wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet @@ bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet
+If v <0.1 m/s for more than 1 sec then shift to Gear=0 @@ wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
+at Beschleunigungsvorgaengen below 1.5 m/s is used in 1 Gear is engaged @@ bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet
+checking if Rotations above Rated-rotations, then always upshift @@ ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
+otherwise lack the power! @@ sonst fehlt die leistung!
+EV-gear-shifting model (based on Cars) @@ EV-Schaltmodell (auf Basis PKW)
+Second 1 -------------------------------------- @@ Sekunde 1--------------------------------------
+First second: Find Gear / initialization @@ Erste Sekunde: Gang finden / Initialisierung
+From second 2 -------------------------------------- @@ Ab Sekunde 2--------------------------------------
+Start values --------- @@ Startwerte---------
+gangX = Last Gear ie Basis for gear-shifting-model @@ gangX = Letzter Gang d.h. Ausgangsbasis für Schaltmodell
+Kuppelschleif-check << happened already in power-calculation @@ Kuppelschleif-check  << Schon passiert in Power.Calc
+Calculate Gear for the next 6 seconds --------------------- @@ Gang für die nächsten 6 Sekunden berechnen---------------------
+Shifting-function ---------- @@ Schaltfunktion----------
+Rotations-limit for Upshift-Gear, N_normalized (Idle = 0, Rated-Rotations = 1) @@ Drehzahlschranke Hinaufschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+Rotations-limit for Downshift-Gear, N_normalized (Idle = 0, Rated-Rotations = 1) @@ Drehzahlschranke Hinunterschalten  n_normiert (leerl = 0, Nenndrehzahl = 1)
+Conversion here of Rotations units to use (n/n_rated): @@ Umrechnung in hier verwendete Drehzahleinheit (n/n_nenn):
+Rotations with last Gear (gangX) @@ Drehzahl mit letzten Gang (gangX)
+Maximum permissible Gear-shifting every 2 seconds: @@ Schalten Maximal alle 2 Sekunden schalten zulaessig:
+Check whether Downshifting-gear, only when Rotations decrease or Power increases @@ Ueberpruefen ob hinunterschalten, nur wenn Geschw. abnimmt oder leistung zunimmt
+Check whether Upshifting-gear, only when Rotations increase or Power decreases @@ Ueberpruefen ob hinaufschalten, nur wenn Geschw. zunimmt oder leistung abnimmt
+Correct Gear selection @@ Gangwahl korrigieren
+Not idle when Power > 0 @@ Kein Leerlauf wenn Leistung > 0
+new Rotation @@ Drehzahl neu
+Check if Gear within Power/Rotations limits. Drag not respected @@ Überprüfe ob Gang innerhalb der Leistungs-/Drehzahl Grenzen. Schleppbetrieb wird nicht beachtet
+Save Gears in field for later checks @@ Speichere Gänge in Feld für spätere Checks
+Accept Gear @@ Gang wird übernommen
+Add Gang-transition @@ Gang-Verlauf hinzufügen
+Checks Part 1 ------------------------------------- @@ Checks Teil 1-------------------------------------
+Checks to Purge non-sensible Gear-shift: @@ Checks zur Saeuberung unsinniger Schlatmanoever:
+Division into "IPhase (j)" stages: acceleration(=1), Deceleration(=2) and Cruise(=3): @@ Unterteilung in "iphase(j)" Beschleunigungs- (=1), Verzoegerungs- (=2) und Cruise (=3) -Phasen:
+Already determined by VehState0 @@ Schon bestimmt durch VehState0
+Search by last gear change @@ Suche nach letztem Gangwechsel
+Schaltvorgaenge max. every 3 seconds permissible: @@ Schaltvorgaenge max. alle 3 Sekunden zulaessig:
+Cruise phases: @@ Cruise-Phasen:
+As long Geschwindigkeitsaenderung change since last gear change under 6% and Pe / Pnom below 6% is not running: @@ Solange Geschwindigkeitsaenderung seit letztem Gangwechsel unter 6% und Pe/Pnenn aenderung unter 6% wird nicht geschaltet:
+Verzoegerungsphasen: upshift is suppressed @@ Verzoegerungsphasen: Hochschalten wird unterdrückt
+Acceleration phases will return suppressed @@ Beschleunigungsphasen: Zurückschalten wird unterdrückt
+If within 6 seconds switched back again to the previous Gear, shift to the previous Gear @@ Wenn innerhalb von 6 Sekunden wieder in vorigen Gang zurueck geschaltet wird, wird der vorige Gang
+consistently maintained @@ durchgehend beibehalten
+If within 6 seconds later, and once again lower than previous transition @@ Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang
+is connected, previous gear is maintained throughout @@ geschaltet wird, wird voriger Gang durchgehend beibehalten
+Checks Part 2 ------------------------------------- @@ Checks Teil 2-------------------------------------
+Turn of 2 in 1st Output is suppressed at v> 2.5 m/s @@ Schalten von 2. in 1. Gang wird bei v > 2,5 m/s unterdrueckt
+NEW LUZ 040210: upshifting only when the 2nd Response over speed dome @@ NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl
+at verzoegerungsvorgaengen below 2.5 m/s is shifted to idle @@ bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet
+If v < 0.1 m/s for more than 1 sec, then shift to Gear=0 @@ wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
+at acceleration processes below 1.5 m/s is used in first Gear is engaged @@ bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet
+checking if Rotations over Rated-Rotations, then you must always upshifted @@ ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
+otherwise lack the power! @@ sonst fehlt die leistung!
+Second 1 -------------------------------------- @@ Sekunde 1--------------------------------------
+First second: transitional find / initialization @@ Erste Sekunde: Gang finden / Initialisierung
+From second 2 -------------------------------------- @@ Ab Sekunde 2--------------------------------------
+Home values --------- @@ Startwerte---------
+Compute power from jz to (jz + 6) ----------------- @@ Leistung berechnen von jz bis jz + 6-----------------
+Calculated according to speed / Power model @@ Berechnung nach Drehzahl/Leistung-Modell
+1) After variant "fast driving" @@ 1) Nach Variante "schnelle Fahrweise"
+Gear-shift only if v-change 5% since last Gear change @@ Schaltmanoever erfolgt nur, wenn v-aenderung 5% seit letztem Gangwechsel,
+VECTO: Commented out START @@ VECTO: Auskommentiert START
+VECTO: Commented out END @@ VECTO: Auskommentiert ENDE
+in the first 10 second cycle can be used for balancing geschlatet always: @@ in ersten 10 Zyklussekunden kann zum Einregulieren immer geschlatet werden:
+With change in the slope can also be switched always: @@ Bei Aenderung der Steigung kann ebenfalls immer geschaltet werden:
+Turn down: @@ Hinunterschalten:
+Upshift: @@ Hochschalten:
+at pitch cycles with excessive speed is weakened. i +1 after Input Selector @@ bei Steigungszyklen mit zu hohen Geschwindigkeiten wird geschw. i+1 erst nach gangwahl berechnet
+sometimes there is too high output -> rotations and P_max too low, so only with low power @@ dabei manchmal zu hoher gang -> Drehzahl und P_max viel zu nieder, daher nu bei niederen leistungen
+upshift allowed: @@ hochschalten erlaubt:
+2) After variant "economical driving" @@ 2) Nach Variante "sparsame Fahrweise"
+Turn back only occurs when Speed-change > 6% @@ Zurueckschalten erfolgt nur, wenn Geschwindigkeitsaenderung > 6%
+Always Upshift @@ Hochschalten geht immer
+VECTO: Commented out START @@ VECTO: Auskommentiert START
+VECTO: Commented out END @@ VECTO: Auskommentiert ENDE
+in the first 10 seconds cycle can always be used for balancing geschlatet: @@ in ersten 10 Zyklussekunden kann zum einregulieren immer geschlatet werden:
+When slope changes always may Gear-change: @@ Bei Aenderung der Steigung kann ebenfalls immer geschaltet werden:
+Downsift: @@ Hinunterschalten:
+Upshift, only checked if not the highest Gear: @@ Hinaufschalten, nur ueberprueft wenn nicht schon hoechster Gang:
+Relative Rotations: @@ relevante Drehzahlen:
+Selection of Rotations-sation from the "fast (h ..)" and @@ Auswahl des Drehzahlverhaeltnisses aus der "schnellen (..h)" und
+the "economical (.. l)" 'version: @@ der "sparsamen (..l)" Variante:
+Rotations-ration after "model mix": @@ Drehzahlverhhealtnisse nach "Modellmix":
+according to the required maximum power over the @@ anhand der erforderlichen maximalen Motorleistung ueber die
+next 6 seconds @@ naechsten 6 Sekunden
+Determining the proportions between the Faster Economical driving style @@ Festlegung der Anteile von schneller und sparsamer Fahrweise
+Hausberger model): @@ Modell Hausberger):
+Mix the calculated transitions in default input file: @@ Mix der berechneten Gaenge gemaess Vorgabe in Eingabefile:
+pmodell is read from input-file = proportion to the Rotations @@ pmodell wird aus Eingabefile gelesen, = Anteil, zu der die Drehzahl
+should exist for "real model") @@ nach "reales Modell" bestehen soll)
+Determination of the "virtual" current gear on the model @@ Ermittlung des "virtuellen" aktuellen Ganges nach Modell
+checking if Rotations over Rated-Rotations, then must always upshift @@ ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
+otherwise lack the power! @@ sonst fehlt die leistung!
+Check whether power is required by P_max (s) @@ ueberpruefung, ob erforderliche leistung ueber P_max(n) liegt
+then Gear-shift-back: @@ dann wird zurueckgeschaltet:
+Actual checking whether by P_max (s) @@ Eigentliche Ueberpruefung ob ueber P_max(n)
+if bad moment in idle without full load curve is corrected: @@ falls schlechte Vollastkurve ohne Moment in leerlauf wird korrigiert:
+Checking whether higher powers required as maximum power at nh @@ Ueberpruefung, ob hoehere Leistung erforderlich ist als Maximalleistung bei nh
+then switched back: @@ dann wird zurueckgeschaltet:
+End "model"-based gear selection @@ Ende "Modell"-Basisgangwahl
+Dome grinding check @@ Kuppelschleif-check
+Checks Part 1 ------------------------------------- @@ Checks Teil 1-------------------------------------
+Checks to Purge non-sensible Gear-shift: @@ Checks zur Saeuberung unsinniger Schlatmanoever:
+Division into "IPhase (j)" acceleration (= 1), delay (= 2) and cruise (= 3)-stages: @@ Unterteilung in "iphase(j)" Beschleunigungs- (=1), Verzoegerungs- (=2) und Cruise (=3) -Phasen:
+Search by last gear change @@ Suche nach letztem Gangwechsel
+Schaltvorgaenge max. every 3 seconds permissible: @@ Schaltvorgaenge max. alle 3 Sekunden zulaessig:
+Cruise phases: @@ Cruise-Phasen:
+As long Geschwindigkeitsaenderung change since last gear change under 6% and Pe / Pnom below 6% is not running: @@ Solange Geschwindigkeitsaenderung seit letztem Gangwechsel unter 6% und Pe/Pnenn aenderung unter 6% wird nicht geschaltet:
+Verzoegerungsphasen: upshift is suppressed @@ Verzoegerungsphasen: Hochschalten wird unterdrückt
+Acceleration phases will return suppressed @@ Beschleunigungsphasen: Zurückschalten wird unterdrückt
+If within 6 seconds again switched back to the previous passage, the previous passage @@ Wenn innerhalb von 6 Sekunden wieder in vorigen Gang zurueck geschaltet wird, wird der vorige Gang
+consistently maintained @@ durchgehend beibehalten
+VECTO: Exception: full load curve @@ VECTO: Ausnahme: Über Volllastkurve
+If within 6 seconds later, and once again lower than previous transition @@ Wenn innerhalb von 6 Sekunden einmal höher und einmal niedriger als voriger Gang
+is connected, previous gear is maintained throughout @@ geschaltet wird, wird voriger Gang durchgehend beibehalten
+Checks Part 2 ------------------------------------- @@ Checks Teil 2-------------------------------------
+Turn of 2 in 1st Transition is suppressed at v> 1.5 m/s @@ Schalten von 2. in 1. Gang wird bei v > 1.5 m/s unterdrueckt
+NEW LUZ 040210: upshifting only when the 2nd Response over speed dome @@ NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl
+verzoegerungsvorgaengen at below 1.5 m/s is switched to idle @@ bei verzoegerungsvorgaengen unter 1.5 m/s wird in Leerlauf geschaltet
+v If more than 1 sec <0.1 m/s = 0 switched on transition @@ wenn v mehr als 1 Sek. < 0.1 m/s wird auf Gang=0 geschaltet
+checking if speed over rated speed, then you must always upshifted @@ ueberpruefung, ob Drehzahl ueber nenndrehzahl, dann muss immer hochgeschaltet werden
+otherwise lack the power! @@ sonst fehlt die leistung!
+Speed ​​look ahead @@ Geschwindigkeit vorausschauen
+Checks from PKWgear .... @@ Checks aus PKWgear....
+Turn of 2 in 1st Output is suppressed at v> 2.5 m/s @@ Schalten von 2. in 1. Gang wird bei v>2,5 m/s unterdrueckt
+At verzoegerungsvorgaengen below 2.5 m/s is shifted to idle @@ Bei verzoegerungsvorgaengen unter 2,5 m/s wird in Leerlauf geschaltet
+V If connected more than 1 sec <0.1 m/s = on port 0 @@ Wenn v mehr als 1 Sek. <0.1 m/s wird auf Gang=0 geschaltet
+When Beschleunigungsvorgaengen below 1.5 m/s in first Gear is engaged @@ Bei Beschleunigungsvorgaengen unter 1,5 m/s wird in 1. Gang geschaltet
+Function for easy switching models for Power calculation @@ Funktion zur einfachen Leistungsberechnung für Schaltmodelle
+Function for easy power calculation for EV-switching model @@ Funktion zur einfachen Leistungsberechnung für EV-Schaltmodell
+Speed ​​setting @@ Drehzahlvorgabe
+On the Power front wheel diff = ------------- @@ Leistung vor Diff = Am Rad-------------
+Rolling resistance ---------------- @@ Rollwiderstand----------------
+Drag resistance---------------- @@ Luftwiderstand----------------
+Acceleration Power vehicle -------- @@ Beschleunigungsleistung Fahrzeug--------
+Previously (PHEM 10.4.2 and above) was used instead m_raeder Massered with Massered = m_raeder I_Getriebe + * (Iachs / (0.5 * Dreifen)) ^ 2 @@ Früher (PHEM 10.4.2 und älter) wurde statt m_raeder Massered verwendet, mit Massered = m_raeder + I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2
+The missing part (I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2) is now considered by FPAG (V, a) with @@ Der fehlende Teil (I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2) wird jetzt durch fPaG(V,a) mit berücksichtigt
+Slope resistance ---------------- @@ Steigungswiderstand----------------
+Ancillaries ---------------- @@ Nebenaggregate----------------
+Gearbox @@ Getriebe-------------------
+Power after transmission (transmission output) @@ Leistung nach Getriebe (Getriebeausgang)
+Losses calculated (suitable only for manual transmission) @@ Verluste berechnet (eignet sich nur für Schaltgetriebe)
+Interpolation of the transmission power loss @@ Interpolation der Getriebeverlustleistung
+Between 1 and 8 transition as well as 9 and 16 Response: @@ Zwischen 1. und 8. gang sowie 9. und 16. Gang:
+Differential @@ Differenzial
+Power by Diff (before transmission) @@ Leistung nach Diff (vor Getriebe)
+Pdiff @@ Pdiff
+Differential @@ Differenzial
+Power before Diff @@ Leistung vor Diff
+Gearbox inertia ---------------- @@ Getriebe Trägheit----------------
+
+DRI file @@ Aus DRI-Datei
+calculated @@ Berechnet
+WegKor @@ WegKor
+speed @@ Geschwindigkeit
+Original speed is longer by 1 @@ Original-Geschwindigkeit ist um 1 länger
+Distance (from second intermediate happened otherwise error) @@ Strecke (aus Zwischensekunden sonst passiert Fehler)
+Slope @@ Steigung
+Transition - but not mean transition (t) = DRI.Gang (t) @@ Gang - nicht Mittelwert sondern Gang(t) = DRI.Gang(t)
+Padd @@ Padd
+Calculate Acceleration @@ Beschl. berechnen
+Vair specifications: Not in Between seconds! @@ Vair-Vorgaben: Nicht in Zwischensekunden!!
+speed @@ Geschwindigkeit
+Route @@ Strecke 
+Slope @@ Steigung
+Gear - not mean special transition (t) = DRI.Gang (t) @@ Gang - nicht Mittelwert sonder Gang(t) = DRI.Gang(t)
+Padd @@ Padd
+Calculate Acceleration @@ Beschl. berechnen
+TODO: If veh ... faster than cycle @@ TODO: Wenn Fzg schneller als Zyklus...
+If time step closer to repeating as the current path default path => repeat time step @@ Falls Zeitschritt wiederholen näher an Wegvorgabe als aktueller Weg => Zeitschritt wiederholen
+If the next time step closer to delete path default as the current path => Delete Next time step @@ Falls nächsten Zeitschritt löschen näher an Wegvorgabe als aktueller Weg => Nächsten Zeitschritt löschen
+No correction @@ Keine Korrektur
+
+Delaunay @@ Delaunay
+Normal interpolation @@ Normale Interpolation
+First two seconds, no correction: @@ Ersten zwei sekunden keine Korrektur:
+Dictionaries create @@ Dictionaries erstellen
+Calculate sums @@ Summen ermitteln
+Averages @@ Mittelwerte
+Cycle averages' ************************************ @@ Zyklus-Mittelwerte '************************************
+Reading @@ Messwert
+PHEM value @@ PHEM-Wert
+Diff - WARNING: No Pnom normalization! Beware of dynamic correction! @@ Diff - ACHTUNG: Keine Pnenn-Normierung! Vorsicht bei Dynamik-Korrektur!
+Averaged values ​​over x seconds and instantly calculate au @@ Über x Sekunden gemittelte Werte berechnen und sofort au
+Set to zero @@ Null setzen
+Add up @@ Aufsummieren
+Reading @@ Messwert
+PHEM value @@ PHEM-Wert
+Modal output '************************************ @@ Modale Ausgabe '************************************
+Reading @@ Messwert
+PHEM value @@ PHEM-Wert
+Diff - WARNING: No Pnom normalization! Beware of dynamic correction! @@ Diff - ACHTUNG: Keine Pnenn-Normierung! Vorsicht bei Dynamik-Korrektur!
+Header and write units @@ Header und Units schreiben
+Averaged values ​​over x seconds and instantly calculate au @@ Über x Sekunden gemittelte Werte berechnen und sofort au
+Set to zero @@ Null setzen
+Add up @@ Aufsummieren
+Expense @@ Ausgabe
+Reading @@ Messwert
+PHEM value @@ PHEM-Wert
+Cycles (general condition except for intervals with @@ Lastwechsel (allgemeine Bedingung ausser bei Intervallen mit
+Constant movement: @@ Konstantfahrt:
+This will Trapezfoermige cycles not recognized as load changes @@ Damit werden Trapezfoermige Zyklen nicht als lastwechsel erkannt
+because LWje = 0 In this case ahead of next value is sought, @@ da LWje = 0. In diesem fall wird voraus der naechste Wert gesucht,
+is Pe (jz) is not equal. This is instead of Pe (jz +1) @@ der nicht gleich Pe(jz) ist. Dieser wird anstelle von Pe(jz+1)
+set: @@ gesetzt:
+load changes are only counted as such if it more than 0.05% of @@ lastwechsel werden nur als solche gezaehlt, wenn sie mehr als 0.05% von
+Be Pnom (otherwise result is much too wobbly): @@ Pnenn betragen (sonst ist Ergebnis viel zu wackelig):
+Load change is counted when LWja <0) @@ Lastwechsel wird gezaehlt, wenn LWja < 0)
+1) Mean amplitude of Pe-course ("Ampl") @@ 1) Mittlere Amplitude vom Pe-Verlauf ("Ampl")
+Between invoice fue Cycle Mean: @@ Zwischenrechnung fue Zyklusmittelwert:
+Calculating the mean amplitude in 3 seconds before emission (Ampl3s) @@ Berechnung der mittleren Amplitude in 3 Sekunden vor Emission (Ampl3s)
+and the number of Pe-second increments over 3% of the rated power @@ und der Anzahl der Pe-Sekundenschritten ueber 3% der Nennleistung
+LW3p3s): @@ LW3p3s):
+2) change the current engine output (dP_2s): @@ 2) Aenderung der aktuellen Motorleistung (dP_2s):
+Average 3 sec ago emission: @@ Mittelwert 3 sec. vor Emission:
+Counted only in dynamic operation: @@ Gezaehlt nur bei dynamischem betrieb:
+4) of the negative power ("PnegMW"): @@ 4) Mittelwert der negativen Motorleistung ("PnegMW"):
+Average 3 sec ago emission: @@ Mittelwert 3 sec. vor Emission:
+Counted only in dynamic operation: @@ Gezaehlt nur bei dynamischem betrieb:
+Calculation of absolute Dynamikkenngroessen: @@ Berechnung der absoluten Dynamikkenngroessen:
+Addition of the amplitudes of Pe (1 Pe-value @@ Addition der Amplituden von Pe (1. Pe-Wert
+is for peak amplitudes as well or Minima) counted @@ wird fuer Amplitude auch als Maxima bzw. Minima gezaehlt)
+First Second: @@ 1. Sekunde:
+Second Second to end: @@ 2. Sekunde bis Ende:
+Absolute value: @@ Absolutwert:
+Speed. / Accel. Dependent parameters only if Eng-Only @@ Geschw./Beschl.-abhängige Parameter nur wenn nicht Eng-Only
+Dynamic parameters as the difference in dynamics to map @@ Dynamikparameter als Differenz zu Dynamik in Kennfeld
+was here before. Now own method invalid because of KF-creation @@ war früher hier. Jetzt eigene Methode weil bei KF-Erstellung ungültig
+Dynamic parameters as the difference in dynamics to map: @@ Dynamikparameter als Differenz zu Dynamik in Kennfeld:
+Class for Berchnung exhaust temperatures @@ Klasse zur Berchnung der Abgastemperaturen
+Fields for sizes from PHEM main program @@ Felder für Größen aus PHEM Hauptprogramm
+Reading from TGAs. Npi (Project HERO) **** @@ Einlesen von tgas aus .npi (Projekt HERO) ****
+overwrites TGAs (jz) from HtMass () @@ überschreibt tgas(jz) aus HtMass()
+Luz Rexeis / 16.05.2011 @@ Luz/Rexeis 16.05.2011
+Main routine for EXS module @@ Hauptroutine für EXS Modul
+Calling Exs_Main (true) -> Developer version without PHEM main program @@ Aufruf von Exs_Main(true) -> Developer Version ohne PHEM Hauptprogramm
+Fields for sizes from exs file @@ Felder für Größen aus exs-File
+General Constants @@ Allgemeine Konstanten
+Material values ​​exhaust: @@ Stoffwerte Abgas:
+insensitive vs. lambda see, "Stoffwerte_vollständigeVerbrennung_neu.xls" @@ unempfindlich gg. lambda, siehe "Stoffwerte_vollständigeVerbrennung_neu.xls"
+cp_exh = 1054.0 '!Exhaust heat capacity [J / (kg * K)] is no longer used because now calculated directly in Abh of T and lambda @@ cp_exh = 1054.0 '!Wärmekapazität Abgas [J/(kg*K)], wird nicht mehr verwendet weil jetzt direkt in Abh. von T und Lambda berechnet
+Note: mean value of Internet search found no information in literature @@ Anmerkung: Mittelwertwert aus Internetrecherche, in Literatur keine Angaben gefunden
+calibrated based on test thermocouple assuming thickness 0.1mm @@ kalibriert anhand Test an Thermoelement unter Annahme von Schichtdicke 0.1mm
+Enthalpies in J / mol @@ Reaktionsenthalpien in J/mol
+Molecular weights @@ Molmassen
+Compatibility with old EXS Strkutur. Before new concept for Em components with CMap class tMapComp, etc. was introduced @@ Kompatibilität mit alter EXS-Strkutur. Bevor neues Konzept für Em-Komponenten mit cMAP-Klasse, tMapComp, etc. eingeführt wurde
+References to emissions: Shared if available otherwise the calculated @@ Verweise auf Emissionen: Gegebene falls vorhanden sonst die berechneten
+Dimension: @@ Dimensionieren:
+Transfer of the relevant variables from the main program PHEM @@ Übergabe der relevanten Größen aus dem PHEM Hauptprogramm
+In DEV directly from the file *. Phe read @@ In DEV direkt aus der Datei *.phe eingelesen
+Lambda @@ Lambda
+Is further supported below because there must be mpexh @@ Wird weiter unten belegt weil mpexh vorhanden sein muss
+Beginning exs file read @@ Anfang exs-File einlesen
+dummy = DatExs.ReadLine (0) 'old dummy line: pay attention to exs-file compatibility @@ dummy = DatExs.ReadLine(0) 'alte dummy zeilen: auf exs-file kompatibilität achten
+Initialize the appropriate number of modules @@ Initialisieren der entsprechenden Anzahl an Modulen
+Reading of the data blocks for each module @@ Lesen der Datenblöcke je Modul
+Error message alteration in TempMod (iMod).Read (DatExs) @@ Fehlermelderung in TempMod(iMod).Read(DatExs)
+End exs file read @@ Ende exs-File einlesen
+Beginning csy file read @@ Anfang csy-File einlesen
+End csy file read @@ Ende csy-File einlesen
+Calculation loop: each time step / per module: 1 Temperatures 2.Konvertierungen @@ Berechnungsschleife: je Zeitschritt /je Modul: 1. Temperaturen, 2.Konvertierungen
+Results are displayed every second in each iteration @@ Sekündliche Ergebnisse werden in jeder Iteration ausgegeben
+* Header. Write th @@ Header *.ter schreiben
+Write the header KonvMods @@ Header der KonvMods schreiben
+start values ​​for cooler simulation: @@ startwerte für kühlersimulation:
+Heat transfer into the cooling system (map) @@ Wärmeeintrag ins Kühlsystem (Kennfeld)
+Cooling System Simulation @@ Kühlsystem Simulation
+Heat inputs in masses 1 and 2 @@ Wärmeeinträge in Massen 1 und 2
+The heat transfer material 1 and 2 cooling system @@ Wärmeübergang Masse 1 und 2 ins Kühlsystem
+Melt temperatures for the next time step @@ Massentemperaturen für nächsten Zeitschritt
+Heat loss to the outside @@ Wärmeverlust nach außen
+Total heat input into the cooling system (radiator output value of the simulation) @@ Gesamtwärmeeintrag ins Kühlsystem (Ausgabewert der Kühlersimulation)
+Exhaust gas flow calculation from a given fuel and lambda @@ Berechnung Abgasmassenstrom aus gegebenem Kraftstoffverbrauch und Lambda
+appear only for engines without EGR @@ nur zulässig bei Motoren ohne AGR
+Unit mpexh ....... [kg / s] @@ Einheit mpexh.......[kg/s]
+Unit Vpexh ....... [m3 / s] @@ Einheit Vpexh.......[m3/s]
+Case 1: Calculation of consumption and lambda @@ Fall 1: Berechnung aus Verbrauch und lambda
+Case 2: calculation of pumped airflow through engine @@ Fall 2: Berechnung aus durch Motor gepumpter Luftmenge
+Missing: mass flow calculation methodology for EGR engines BMW HERO Project @@ Es fehlt: Methodik Massenstromberechnung für AGR Motoren BMW HERO Projekt
+Lambda calculate if not explicitly given @@ Lambda berechnen falls nicht explizit gegeben
+The first module in the exhaust system may be a catalytically active element, @@ Erstes Modul im Abgasstrang kann kein katalytisch aktives Element sein,
+therefore, emissions are always equal to the untreated emissions from the main program PHEM @@ daher sind die Emissionen immer gleich der Rohemissionen aus dem PHEM-Hauptprogramm
+Qp_reak calculate: the mass flow rate * Conversion * enthalpy / molar mass @@ Qp_reak berechnen: massenstrom * konvertierungsrate * reaktionsenthalpie / molmasse
+Pollutant component compute @@ Schadstoffkomponente berechnen
+Conversion of NOx, CO, HC -> old value * (1-conversion rate) @@ Konvertierung von NOx, CO, HC -> alter Wert * (1-Konvertierungsrate)
+If module has no conv element changes nothing (Note: Module 1 has always ModTyp0) @@ Falls Modul kein Konv-Element hat ändert sich nix (Anmerkung: Modul 1 hat immer ModTyp0)
+Line write in th *. @@ Zeile in *.ter schreiben
+End calculation loop @@ Ende Berechnungsschleife
+Every second by second result Files undergo @@ Alle sekündlichen Ergebnisfiles zumachen
+Query return in the iterative calculation mode for Starttemp ------------------- @@ Abfrage Rücksprung im iterativen Berechnungsmodus für Starttemp -------------------
+Termination condition: Temperature of the mass element "T_M" in the "iter_pos" specified module @@ Abbruchbedingung: Temperatur des Massenelementes "t_m" des in "iter_pos" spezifizierten Moduls
+at the beginning and end of the cycle within vorzugebender bandwidth "iter_tol" @@ am Beginn und am Ende des Zyklus innerhalb vorzugebender Bandbreite "iter_tol"
+Output file *. Ter write --------------------------------------------- ------------- @@ Ausgabefile *.ter schreiben ----------------------------------------------------------
+End output file write *. Th -------------------------------------------- --------- @@ Ende Ausgabefile *.ter schreiben -----------------------------------------------------
+Clean up @@ Aufräumen
+Class modules for temperature @@ Klasse für Temperaturmodule
+remarks> type of module is defined with MODTYP </ remarks> @@ remarks>Art des Moduls wird mit ModTyp definiert</remarks>
+Reading the EXS file @@ Einlesen der EXS-Datei
+param name = "file"> file handler </ param> @@ param name="Datei">Dateihandler</param>
+Path to conversion rates for modules with conversion @@ Pfad für Konvertierungsraten bei Modulen mit Konvertierung
+Initialize the modules & reading the parameter file, depending on module @@ Initialisieren der Module & Einlesen des Parameterfiles je nach Modul
+Heat transfer factor @@ Wärmeübergangsfaktor
+Surface outside @@ Oberfläche außen
+Emissivity @@ Emissivität
+Factors for heat transfer to the outside @@ Faktoren für Wärmeübergänge nach außen
+Factors for temperature related t_katsubstrat - t_kat_außen <> @@ Faktoren für Temperaturzusammenhang t_katsubstrat <-> t_kat_außen
+Cooling curve mass @@ Abkühlkurve Masse
+Normalized cross-sectional area @@ normierte Querschnittsfläche
+average backpressure @@ durchschnittlicher Gegendruck
+Diameter thermocouple @@ Durchmesser Thermoelement
+Cooling curve thermocouple @@ Abkühlkurve Thermoelement
+Factors for heat transfer to the outside @@ Faktoren für Wärmeübergänge nach außen
+Check whether Tgas given in cycle: @@ Check ob Tgas in Zyklus gegeben:
+Entnormierungen and calculating other variables @@ Entnormierungen und Berechnung weiterer Größen
+Additionally calculated parameters for tubular modules: @@ Zusätzlich berechnete Parameter für Rohrmodule:
+For flow calculations in SI units is Querschnittsfäche converted into m2 @@ Für Strömungsberechnungen in SI-Einheiten wird Querschnittsfäche in m2 umgerechnet
+Geometrical quantities calculated @@ Geometrische Größen berechnen
+Note: If it is assumed that temperature sensors @@ Anmerkung: es wird davon ausgegangen, dass Temperatursensoren
+centered in the pipe are @@ mittig ins Rohr stehen
+Note: spherical cap on t-sensor tip is as in contemplation @@ Anmerkung: Kugelkalotte an t-sensor spitze wird in der Betrachtung als
+airstream cylinder neglected @@ umströmter Zylinder vernachlässigt
+Cooling curves Reading @@ Abkühlkurven einlesen
+Heat transfer mass @@ Wärmeübergang Masse
+Setting threshold for accuracy of the temperature calculation (needed for iterative calculation mode) @@ Festlegung Schwellwert für Genauigkeit der Temperaturberechnung (wird wegen iterativem Berechnungsmodus benötigt)
+Transfer inlet temperature of the exhaust gas from the engine module or lying above @@ Übergabe Eintrittstemperatur des Abgases aus oberhalb liegendem Modul bzw. dem Motor
+Calculation of the current melt temperature @@ Berechnung der aktuellen Massentemperatur
+at n_iter> 0 is already the final value assigned to the last iteration @@ bei n_iter > 0 ist bereits der Endwert der letzten Iteration zugewiesen
+If engine from cooling curve and is expected to leave method: @@ Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen:
+Heat capacity (see Bogdanic) @@ Wärmekapazität (vgl. Bogdanic)
+Iteration loop for heat transfer @@ Schleife für Iteration Wärmeübergang
+Termination criterion below @@ Abbruchkriterium siehe unten
+Determining the temperature of the exhaust gas at the center of mass ("t_gas_mid") consists of a non-linear (logarithmic) temperature curve @@ Ermittlung der Temperatur des Abgases in der Mitte der Masse ("t_gas_mid") aus einem nichtlinearem (logaritmisch) Temperaturverlauf 
+Heat transfer convection inside for all the modules (except for tube) @@ Wärmeübergang Konvektion innen für alle Module (außer Rohr)
+for tubular modules: @@ für Rohrmodule:
+Nusselt number: Density = 345/t_gas_mid, term in parenthesis: mu_Rohr / mu_Mitte @@ Nusselt Zahl: Dichte = 345/t_gas_mid, Term in Klammer: mu_Rohr / mu_Mitte
+Heat transfer (convection inside) d_pipe, in m: char. Length @@ Wärmeübergang (Konvektion innen), d_pipe in m: char. Länge
+Heat capacity (see Bogdanic) @@ Wärmekapazität (vgl. Bogdanic)
+Termination criterion: change the exhaust outlet temperature compared to the last iteration small threshold @@ Abbruchkriterium: Änderung der Abgas-Austrittstemperatur im Vergleich zum letzten Iterationsschritt kleiner Schwellwert
+Calculate the heat loss of the "thermal mass" to the outside @@ Berechnung der Wärmeverluste der "thermischen Masse" nach außen
+Parameters are read from EXS file: @@ Parameter werden aus EXS-Datei eingelesen:
+Data for MuD: @@ Daten für MuD:
+Oberfl_Kat = 0.12 'surface for heat transfer in m ^ 2 @@ Oberfl_Kat = 0.12 'Oberfläche für Wärmeübergang in m^2
+Emiss = 0.5 'emissivity @@ Emiss = 0.5 'Emissivität
+Empirical formula, suitable for all testing role quite well @@ Empirische Formel, passt für alle Rollentests recht gut
+Note: Experiment with direct dependence on T_M -> does not work well @@ Anm.: Versuch mit direkter Abhängigkeit von t_m -> funktioniert nicht gut
+Heat loss by radiation @@ Wärmeverlust durch Strahlung
+Heat loss by convection @@ Wärmeverlust durch Konvektion
+Parameters are read from EXS file: @@ Parameter werden aus EXS-Datei eingelesen:
+Data for MuD: @@ Daten für MuD:
+Module 3: @@ Modul Nr. 3:
+Oberfl_Mod3 = 0.169457508 'surface for heat transfer in m ^ 2 @@ Oberfl_Mod3 = 0.169457508 'Oberfläche für Wärmeübergang in m^2
+Emiss = 0.5 'emissivity @@ Emiss = 0.5 'Emissivität
+Module 4: @@ Modul Nr. 4:
+Oberfl_Mod4 = 0.103596481 'surface for heat transfer in m ^ 2 @@ Oberfl_Mod4 = 0.103596481 'Oberfläche für Wärmeübergang in m^2
+Emiss = 0.9 'emissivity @@ Emiss = 0.9 'Emissivität
+Heat loss by radiation view factor = * emissivity * St. Boltzm.-const * Surface * (T_Rohr ^ 4 - ^ T_Umgebung 4) @@ Wärmeverlust durch Strahlung = Sichtfaktor * Emissivität * St.-Boltzm.-Konst * Oberfläche * (T_Rohr^4 - T_Umgebung^4)
+= Heat loss by convection heat transfer coefficient * Surface * (T_Rohr - T_Umgebung) @@ Wärmeverlust durch Konvektion = Wärmeübergangskoeffizient * Oberfläche * (T_Rohr - T_Umgebung)
+Standard: Crad constant, no loss by convection @@ Standard: Crad konstant, keine Verluste durch Konvektion
+Total heat loss @@ Gesamtwärmeverlust
+Heat transfer thermocouple @@ Wärmeübergang Thermoelement
+If engine from cooling curve and is expected to leave method: @@ Falls Motor Aus wird nach Abkühlkurve gerechnet und Methode verlassen:
+Formula calculating heat transfer work flow around the cylinder @@ Formelwerk Berechnung Wärmeübergang am umströmten Zylinder
+Simplified solution of the heat flow equation for the t-sensor @@ Vereinfachte Lösung der Wärmeflussgleichung für den t-sensor
+corresponds to a Diffgl. Member for PT1 @@ entspricht einer Diffgl. für ein PT1 glied
+Discrete-time solution of the PT1 Diffgl @@ Zeitdiskrete Lösung der PT1-Diffgl
+Extrapolation for LastTemp> TempAR (0) @@ Extrapolation für LastTemp > TempAr(0)
+Extrapolation for LastTemp <TempAR (Adim) @@ Extrapolation für LastTemp < TempAr(Adim)
+lbInt: @@ lbInt:
+One time step before (= 1 second) @@ Einen Zeitschritt vor ( = 1 Sekunde)
+Class initialized as a subelement of TempMod @@ Klasse initialisiert als Unterelement von TempMod
+Prefix "c" means: use cycle value for characteristic correction @@ Prefix "c" bedeutet: Zykluswert verwendet für Kennlinien-Korrektur
+Index "cc" means value of curve (-> "c" - "cc" is the difference, is the corrected) @@ Index "cc" bedeutet: Wert aus Kennlinie (-> "c" - "cc" ist die Differenz, mit der Korrigiert wird)
+File name every second output file specified @@ Filename sekündliches Ausgabefile spezifizieren
+Abortion if given no NOx @@ Abbruch wenn kein NOx gegeben
+t-SCR (° C), deNOx (1-NOx-exhaust/NOx-Roh), t-upstream (°C), NOx-raw (g/h)/kW_Rated-power, total NOx over 60sec before g/h)/kW_Rated-power, space velocity (1/h) @@ t-SCR (°C), deNOx(1-NOx-Auspuff/NOx-Roh), -t-upstream(°C), NOx-Roh (g/h)/kW_Nennleistg, Summe NOx ueber 60Sek vorher g/h)/kW_Nennleistg, Raumgeschwindigkeit (1/h)
+Program to simulate SCR fleet average @@ Programm zur Simulation SCR-Flottendurchschnitt
+Note: deNOx values ​​are less than zero are possible: @@ Anmerkung: deNOx-Werte kleiner als Null sind möglich:
+this corresponds to higher NOx-raw level than in the base map @@ dies entspricht höherem Roh-Nox-Niveau als im Basiskennfeld
+1.) Calculation of second by second values ​​for input variables SCR model @@ 1.) Berechnung der sekündlichen Werte für Eingangsgrößen SCR-Modell
+a) t_SCR: combined weight of the t_upstream and t_downstream @@ a.) t_SCR: zusammengewichten der von t_upstream und t_downstream
+SCR model internally there are temperatures between 50 ° C and 500 ° C limits @@ SCR-Model-intern werden dabei Temperaturen zwischen 50°C und 500°C begrenzt
+Temperature model values ​​(eg cold start) will not be overwritten @@ Temperaturmodelwerte (zB bei Kaltstart) werden nicht überschrieben
+b) t_up, NOxraw, SV. 20s moving average in the past @@ b.) t_up, NOxraw, SV: 20s gleitender Mittelwert in die Vergangenheit
+Formula applies to the first 20 seconds @@ Formel gilt auch für die ersten 20 Sekunden
+c.) NOx60s: sum over the last 60s of the specific NOx raw emissions @@ c.) NOx60s: Summe über letzten 60s der spezifischen NOx-Rohemissionen
+Formula applies to the first 60 seconds @@ Formel gilt auch für die ersten 60 Sekunden
+Extrapolated total value for 1-59 seconds must @@ Für Sekunde 1 bis 59 muss summenwert hochgerechnet werden
+Calculation of characteristic curves deNOxmin value at 50 ° C @@ Berechnung deNOxmin aus Kennlinien-Wert bei 50°C
+2.) Calculation deNOx @@ 2.) Berechnung deNOx
+a) deNOx of characteristic: @@ a.) deNOx aus Kennlinie:
+b.) If correction criteria are met: deNOx correction towards characteristic @@ b.) Falls Korrekturkriterien erfüllt sind: deNOx-Korrektur gegenüber Kennlinie
+t_up of characteristics: @@ t_up aus Kennlinie:
+NOx_raw of characteristics: @@ NOx_raw aus Kennlinie:
+NOxraw sum in the last 60 seconds of characteristics: @@ Summe NOxraw in den letzten 60 Sekunden aus Kennlinie:
+Space velocity of characteristics: @@ Raumgeschwindigkeit aus Kennlinie:
+Write the results on the standardized variables eEmKomp (iSchad, jz) and Qp_reak (jz) @@ Schreiben der Ergebnisse auf die standardisierten Variablen eEmKomp (iSchad, jz) und Qp_reak(jz)
+SCR model @@ SCR Modell
+Class initialized as a subelement of TempMod @@ Klasse initialisiert als Unterelement von TempMod
+Prefix "c" means: use cycle value for characteristic correction @@ Prefix "c" bedeutet: Zykluswert verwendet für Kennlinien-Korrektur
+Index "cc" means: value of curve (-> "c" - "cc" is the difference, with the corrected) @@ Index "cc" bedeutet: Wert aus Kennlinie (-> "c" - "cc" ist die Differenz, mit der Korrigiert wird)
+File name every second output file specified @@ Filename sekündliches Ausgabefile spezifizieren
+Abort if given no NOx @@ Abbruch wenn kein NOx gegeben
+t-SCR (° C), deNOx (1-NOx-Exhaust/NOx-raw), t-upstream (° C), NOx-raw (g/h) / kW_Rated-power, total NOx over 60sec before g/h)/kW_Rated-power, space velocity (1/h) @@ t-SCR (°C), deNOx(1-NOx-Auspuff/NOx-Roh), -t-upstream(°C), NOx-Roh (g/h)/kW_Nennleistg, Summe NOx ueber 60Sek vorher g/h)/kW_Nennleistg, Raumgeschwindigkeit (1/h)
+Program to simulate SCR fleet average @@ Programm zur Simulation SCR-Flottendurchschnitt
+Note: deNOx with values less than zero are possible: @@ Anmerkung: deNOx-Werte kleiner als Null sind möglich:
+this corresponds to higher NOx-raw level than in the base map @@ dies entspricht höherem Roh-Nox-Niveau als im Basiskennfeld
+1.) Calculation of second by second values ​​for input variables SCR model @@ 1.) Berechnung der sekündlichen Werte für Eingangsgrößen SCR-Modell
+a) t_SCR: combined weight of the t_upstream and t_downstream @@ a.) t_SCR: zusammengewichten der von t_upstream und t_downstream
+SCR model internally there are temperatures between 50 ° C and 500 ° C limits @@ SCR-Model-intern werden dabei Temperaturen zwischen 50°C und 500°C begrenzt
+Temperature model values ​​(eg cold start) will not be overwritten @@ Temperaturmodelwerte (zB bei Kaltstart) werden nicht überschrieben
+b) t_up, NOxraw, SV. 20s moving average in the past @@ b.) t_up, NOxraw, SV: 20s gleitender Mittelwert in die Vergangenheit
+Formula applies to the first 20 seconds @@ Formel gilt auch für die ersten 20 Sekunden
+c.) NOx60s: sum over the last 60s of the specific NOx raw emissions @@ c.) NOx60s: Summe über letzten 60s der spezifischen NOx-Rohemissionen
+Formula applies to the first 60 seconds @@ Formel gilt auch für die ersten 60 Sekunden
+Extrapolated total value for 1-59 seconds must @@ Für Sekunde 1 bis 59 muss summenwert hochgerechnet werden
+Calculation of characteristic curves deNOxmin value at 50 ° C @@ Berechnung deNOxmin aus Kennlinien-Wert bei 50°C
+2.) Calculation deNOx @@ 2.) Berechnung deNOx
+a) deNOx of characteristic: @@ a.) deNOx aus Kennlinie:
+b.) If correction criteria are met: deNOx correction towards characteristic @@ b.) Falls Korrekturkriterien erfüllt sind: deNOx-Korrektur gegenüber Kennlinie
+t_up of characteristics: @@ t_up aus Kennlinie:
+NOx_raw of characteristics: @@ NOx_raw aus Kennlinie:
+NOxraw sum in the last 60 seconds of characteristics: @@ Summe NOxraw in den letzten 60 Sekunden aus Kennlinie:
+Space velocity of characteristics: @@ Raumgeschwindigkeit aus Kennlinie:
+Write the results on the standardized variables eEmKomp (iSchad, jz) and Qp_reak (jz) @@ Schreiben der Ergebnisse auf die standardisierten Variablen eEmKomp (iSchad, jz) und Qp_reak(jz)
+CAT model @@ KAT-Modell
+Class initialized as a subelement of TempMod @@ Klasse initialisiert als Unterelement von TempMod
+Mapped data @@ Kennfelddaten
+Creating a new CAT module @@ Erstellen eines neuen KAT-Moduls
+Interpolation @@ Interpolationsfunktion
+param name = "x"> mass flow rate </ param> @@ param name="x">Massenstrom</param>
+param name = "y"> temperature before KAT </ param> @@ param name="y">Temperatur vor KAT</param>
+param name = "MapID"> MapID the corresponding exhaust component </ param> @@ param name="MapID">MapID der entsprechenden Abgaskomponente</param>
+returns> interpolated value for x and y map </ returns> @@ returns>interpolierten Wert für x und y aus Kennfeld</returns>
+remarks> From mass flow temperature map is conversion rate calculated for appropriate exhaust component </ summary> @@ remarks>Aus Massenstrom-Temperatur Kennfeld wird Konvertierungsrate für entsprechende Abgaskomponente berechnet</remarks>
+Reading the maps for conversion rates @@ Einlesen der Kennfelder für Konvertierungsraten
+param name = "name"> filename </ param> @@ param name="Name">Dateiname</param>
+Units (is not evaluated) @@ Units (wird nicht ausgewertet)
+Values @@ Werte
+Set to zero if not KonvRaten component given @@ KonvRaten Null setzen wenn Komponente nicht gegeben
+Triangulating @@ Triangulieren
+Dic. define for modal Konvrate @@ Dic. für modale Konvrate definieren
+Calculation of the conversion rate from mapped @@ Berechnung der Konvertierungsrate aus Kennfeld
+param name="jz"> Time </ param> @@ param name="jz">Zeit</param>
+remarks> To calculate the temperature of the thermocouple is on Kateingang (module number corresponds to i-1) used!</ Remarks> @@ remarks>Für die Berechnung wird die Temperatur des Thermoelements am Kateingang (entspricht Modulnummer i-1) verwendet!!!</remarks>
+Conversion rate calculated from mapped @@ Konvertierungsrate aus Kennfeld berechnen
+Header for output file @@ Header für Ausgabedatei
+Data for output file @@ Daten für Ausgabedatei
+param name = "jz"> Time </ param> @@ param name="jz">Zeit</param>
+Interface converter for class cScrMod, cDocMod, etc. .. @@ Interface zur Konverter-Klasse cScrMod, cDocMod , usw...
+Subroutine to PHEM for linear interpolation of a polygon (eg Vissimzs.for called) @@ Unterprogramm zu PHEM zur linearen INterpolation aus einem Polygonzug (z.B. in Vissimzs.for aufgerufen)
+handed over "search" as the X-value, which is then given back as the calculated Y-value @@ uebergeben wid "such" als X-Wert, der dann als berechneter Y-Wert wieder zurueck gegeben wird
+Documents are to advance: @@ Zu Belegen sind vorher:
+Xis(j) and Yi(j) @@ Xis(j) und Yis(j)
+Given the desired value (search) and the number of the existing Polygon points (izpl) @@ Zu uebergeben der gesuchte Wert (such) und die Anzahl an vorhandenen Polyginpunkten (izpl)
+Search rotations of the closest points from inputted full load curve: @@ Suche der naechstgelegenen Drehzahlpunkte aus eingegebener Vollastkurve:
+Distance to input and search points of the point with the smallest distance: @@ Abstand zu Eingabepunkten und Suche des Punktes mit geringstem Abstand:
+Fixing the second interpolation (interpolate only, not extrapolate) @@ Festlegung des zweiten INterpolationspunktes (nur interpolieren, nicht extrapolieren)
+Extrapolation up @@ Extrapolation nach oben
+Extrapolation down @@ Extrapolation nach unten
+Sort by ascending values ​​of the 2 n: @@ Sortieren der 2 Werte nach aufsteigendem n:
+Interpolation of the associated maximum power (P / Pmax) @@ Interpolation der zugehoerigen Maximalleistung (P/Pnenn)
+
+This code was generated by a tool. @@ Dieser Code wurde von einem Tool generiert.
+Runtime Version: 4.0.30319.269 @@ Laufzeitversion:4.0.30319.269
+Changes to this file may cause incorrect behavior and will be lost if @@ Änderungen an dieser Datei können falsches Verhalten verursachen und gehen verloren, wenn
+the code is regenerated. @@ der Code erneut generiert wird.
+NOTE: This file is automatically generated. Do not change it directly. To change @@ HINWEIS: Diese Datei wird automatisch generiert. Ändern Sie sie nicht direkt. Zum Ändern
+or occurring in this file build errors go to the Project Designer. @@ oder bei in dieser Datei auftretenden Buildfehlern wechseln Sie zum Projekt-Designer.
+Go to the Project Properties, or double-click the node "My Project" in @@ Wechseln Sie dazu zu den Projekteigenschaften, oder doppelklicken Sie auf den Knoten "Mein Projekt" im
+Solution Explorer). Make on the "application" for amendments. @@ Projektmappen-Explorer). Nehmen Sie auf der Registerkarte "Anwendung" entsprechende Änderungen vor.
+
+General Information about an assembly is below the @@ Allgemeine Informationen über eine Assembly werden über die folgenden 
+Attributes controlled. Change these attribute values ​​to modify the information @@ Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
+that are associated with an assembly. @@ die mit einer Assembly verknüpft sind.
+The values ​​of the assembly attributes check @@ Die Werte der Assemblyattribute überprüfen
+The following GUID is for the ID of the typelib if this project is exposed to COM @@ Die folgende GUID bestimmt die ID der Typbibliothek, wenn dieses Projekt für COM verfügbar gemacht wird
+Version information for an assembly consists of the following four values: @@ Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
+Major Release @@ Hauptversion
+Minor Release @@ Nebenversion 
+Build Number @@ Buildnummer
+Revision @@ Revision
+You can specify all the values ​​or default the Build and Revision Numbers @@ Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
+take over by "*" in: @@ übernehmen, indem Sie "*" eingeben:
+
+This code was generated by a tool. @@ Dieser Code wurde von einem Tool generiert.
+Runtime Version: 4.0.30319.269 @@ Laufzeitversion:4.0.30319.269
+Changes to this file may cause incorrect behavior and will be lost if @@ Änderungen an dieser Datei können falsches Verhalten verursachen und gehen verloren, wenn
+the code is regenerated. @@ der Code erneut generiert wird.
+This class was automatically generated by the StronglyTypedResourceBuilder @@ Diese Klasse wurde von der StronglyTypedResourceBuilder automatisch generiert
+Class via a tool like ResGen or Visual Studio automatically generates. @@ Klasse über ein Tool wie ResGen oder Visual Studio automatisch generiert.
+To add or remove a member, edit your.ResX file and then run ResGen @@ Um einen Member hinzuzufügen oder zu entfernen, bearbeiten Sie die .ResX-Datei und führen dann ResGen
+with the / str option again, or create your VS project. @@ mit der /str-Option erneut aus, oder Sie erstellen Ihr VS-Projekt neu.
+A strongly typed resource class for finding localized strings, etc. @@ Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
+Returns the cached ResourceManager instance used by this class. @@ Gibt die zwischengespeicherte ResourceManager-Instanz zurück, die von dieser Klasse verwendet wird.
+Overrides the CurrentCulture property of the current thread for all @@ Überschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads für alle
+Resource allocations that use the strongly typed resource class. @@ Ressourcenzuordnungen, die diese stark typisierte Ressourcenklasse verwenden.
+
+This code was generated by a tool. @@ Dieser Code wurde von einem Tool generiert.
+Runtime Version: 4.0.30319.269 @@ Laufzeitversion:4.0.30319.269
+Changes to this file may cause incorrect behavior and will be lost if @@ Änderungen an dieser Datei können falsches Verhalten verursachen und gehen verloren, wenn
+the code is regenerated. @@ der Code erneut generiert wird.

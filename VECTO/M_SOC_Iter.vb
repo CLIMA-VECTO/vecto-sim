@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+ï»¿Imports System.Collections.Generic
 
 Module M_SOC_Iter
 
@@ -94,15 +94,15 @@ Module M_SOC_Iter
         SOChistory.Add(SOCstart)
         SOCdeltaHis.Add(SOC(MODdata.tDim) - SOCstart)
 
-        'Check ob Vorzeichen von Delta-SOC sich ändert
+        'Check whether the Sign of Delta-SOC changes
         SOCvzX = 0
 
         For x = SOCcount - 1 To 1 Step -1
             If SOCdeltaHis(x) * SOCdeltaHis(x - 1) < 0 Then
-                'Vorzeichenwechsel...
+                'Sign changes ...
                 SOCvzX += 1
                 If SOCvzX = 4 Then
-                    '...Limit erreicht => Abbruch
+                    '...Limit reached => Abort
                     SOCnAbbr = True
                     Exit For
                 End If
@@ -123,12 +123,12 @@ Module M_SOC_Iter
                 End If
             Next
             If SOCnAbbr Then
-                'Falls die letzte Iteration die Beste war (SOCnAbbr = True): Abbruch
+                'If the last iteration was the best (SOCnAbbr = True): Exit
                 WorkerMsg(2, "SOC-Start Iteration failed. Last Iteration produced best result: SOC-Start = " & SOCstart, MsgSrcSOC)
                 SOCnAbort()
                 Return True
             Else
-                'Falls eine andere Iteration besser war (SOCnAbbr = False): Wiederholen
+                'If another iteration was better (SOCnAbbr = False): Repeat
                 SOCnAbbr = True
                 SOCnLog.WriteLine("Repeating Iteration with best result.")
                 SOCnLog.WriteLine("SOC-Start,SOC-End,dSOC")
@@ -165,7 +165,7 @@ Module M_SOC_Iter
         Dim VorzPlus As Boolean
         Dim UseEmOgl As Boolean
 
-        'Check ob LinReg möglich: Mind. 2 Berechnungen; Mind. 1 dSOC-Vorzeichenwechsel
+        'Check whether LinReg possible: Mind. 2 calculations; Mind. dSOC-1 sign-changes
         Check = SOCcount > 1
         If Check Then
             VorzPlus = (SOCdeltaHis(0) > 0)
@@ -268,12 +268,12 @@ lb10:
 
             str = Nothing
 
-            'Unkorrigierte Em verwenden wenn SOC-Iteration OK
+            'Uncorrected Em use if SOC-iteration OK
             UseEmOgl = SOCok
 
         Else
 
-            'Unkorrigierte Em verwenden
+            'Uncorrected Em used
             UseEmOgl = True
 
             SOCnLog.WriteLine(" ")
@@ -281,9 +281,9 @@ lb10:
 
         End If
 
-        'Korrigierte Emissionen für Optimierer
+        'Corrected Emissions for Optimizer
         If bOptOn Then
-            'Falls SOC-Iteration erfolgreich (oder Lin.Reg. nicht möglich) dann Emissionen der letzten Berechnung (unkorrigiert) verwenden
+            'If SOC-iteration was successful (or Lin.Reg not possible) then use Emissions from the last (uncorrected) calculation
             If UseEmOgl Then
                 OptEMkor(1) = gesVerbr / Vquer
                 OptEMkor(2) = gesNOx / Vquer
