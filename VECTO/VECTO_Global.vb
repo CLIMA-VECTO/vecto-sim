@@ -2,7 +2,7 @@ Imports System.Collections.Generic
 
 Module VECTO_Global
 
-    Public Const VECTOvers As String = "1.0"
+    Public Const VECTOvers As String = "1.1"
     Public MyAppPath As String
     Public MyConfPath As String
     Public MyDeclPath As String

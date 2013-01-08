@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Modal Results - VECTO User Manual</title></head>
+<body>
+<table style="width: 100%; height: 54px; text-align: left; margin-left: auto; margin-right: auto;" border="0" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td style="width: 110px;"><a href="../usermanual.html"><img src="../pics/VECTO-small.PNG" style="border: 0px solid ; width: 106px; height: 36px;" alt="VECTO-Logo"></a></td>
+<td><a href="../usermanual.html"><span style="color: rgb(0, 0, 0); font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; font-family: Verdana;">User
+Manual</span></a><span style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; display: inline ! important; float: none;"></span></td>
+<td style="text-align: right; width: 405px;"><a href="http://ec.europa.eu/dgs/jrc/index.cfm" target="_blank"><img src="../pics/JRC.png" style="border: 0px solid ; width: 173px; height: 36px;" alt="JRC-Logo" hspace="5"></a><a href="http://www.ivt.tugraz.at/" target="_blank"><img src="../pics/IVT.png" alt="IVT-Logo" style="border: 0px solid ; width: 74px; height: 36px;" hspace="5"></a><a href="http://portal.tugraz.at/pls/portal/url/page/TU_Graz" target="_blank"><img src="../pics/TUG.png" alt="TUG-Logo" style="border: 0px solid ; width: 96px; height: 36px;" hspace="5"></a></td>
+</tr>
+</tbody>
+</table>
+<hr style="width: 100%; height: 2px;"><a href="usermanual.html"><span style="font-family: Verdana;"></span></a><span style="font-family: Verdana;"></span>
+<div style="text-align: center;">
+<div style="text-align: left; font-family: Times New Roman,Times,serif;">
+<h2><a href="index.html">Output Files</a>
+/ Modal Results (.vmod)</h2>
+</div>
+<div style="text-align: left;"><span style="font-family: Times New Roman,Times,serif;">Modal
+results are only created if enabled in the <a href="../GUI/mainform_options.html">Options</a> tab</span>.
+One file is created for each&nbsp;calculation and stored in the&nbsp;same directory as the .vecto file.<br><br><br>&nbsp;<span style="font-weight: bold;">Quantities:</span><br><table style="width: 100%;" border="1" cellpadding="5" cellspacing="0">
+<col span="2" style="width: 60pt;" width="80">
+<tbody>
+<tr>
+<td style="font-weight: bold; width: 95px;">Name</td>
+<td style="font-weight: bold; width: 66px;">Unit</td>
+<td style="font-weight: bold; width: 757px;">Description</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">time</td>
+<td style="width: 66px;">[s]</td>
+<td style="width: 757px;">Time step.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">dist</td>
+<td style="width: 66px;">[km]</td>
+<td style="width: 757px;">Travelled distance.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">v_act</td>
+<td style="width: 66px;">[km/h]</td>
+<td style="width: 757px;">Actual vehicle speed.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">v_targ</td>
+<td style="width: 66px;">[km/h]</td>
+<td style="width: 757px;">Target vehicle speed.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">acc</td>
+<td style="width: 66px;">[m/s<sup>2</sup>]</td>
+<td style="width: 757px;">Vehicle acceleration.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">grad</td>
+<td style="width: 66px;">[%]</td>
+<td style="width: 757px;">Road gradient.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">engine
+speed</td>
+<td style="width: 66px;">[rpm]</td>
+<td style="width: 757px;">Engine speed.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Pe</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Engine power.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">n_norm</td>
+<td style="width: 66px;">[-]</td>
+<td style="width: 757px;">Normalized engine speed.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Pe_norm</td>
+<td style="width: 66px;">[-]</td>
+<td style="width: 757px;">Normalized engine power.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Pe_full</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Engine full load power.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Pe_drag</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Engine drag power.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Pe_clutch</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Engine power at clutch (equals <span style="font-weight: bold;">Pe</span> minus loss due to rotational inertia <span style="font-weight: bold;">Pa
+Eng</span>).</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Gear</td>
+<td style="width: 66px;">[-]</td>
+<td style="width: 757px;">Gear. Zero = clutch opened / neutral.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Ploss
+GB</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Gearbox losses.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Ploss
+Diff</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Losses in differential / axle transmission.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Ploss
+Retarder</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Retarder losses.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Pa
+Eng</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Rotational acceleration power: Engine.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Pa
+GB</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Rotational acceleration power: Gearbox.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Pa
+Veh</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Vehicle acceleration power.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Proll</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Rolling resistance power demand.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Pair</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Air resistance power demand.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Pgrad</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Power demand due to road gradient.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Paux</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Total auxiliary power demand .</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Pwheel</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Total power demand at wheel = sum of rolling, air, acceleration and road gradient resistance.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Pbrake</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Brake power. Drag power is included in <span style="font-weight: bold;">Pe</span>.</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Paux_xxx</td>
+<td style="width: 66px;">[kW]</td>
+<td style="width: 757px;">Power demand of Auxiliary with ID <span style="font-style: italic; font-weight: bold;">xxx</span>. See also <a href="../GUI/VECTO-Editor_Aux.html">Aux Dialog</a> and <a href="VDRI.html">Driving Cycle</a>.</td>
+</tr>
+
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">FC</td>
+<td style="width: 66px;">[g/h]</td>
+<td style="width: 757px;">Fuel consumption.</td>
+</tr>
+</tbody>
+</table>
+<br>
+<span style="font-family: Verdana;"></span><br>
+<span style="font-family: Verdana;"></span></div>
+<span style="font-family: Verdana;"></span><br>
+<div style="text-align: left;">
+<div style="text-align: left;">
+<div style="text-align: left;">
+<hr style="width: 100%; height: 2px;"><a href="../contact.html">Contact</a>
+</div>
+</div>
+</div>
+<ul style="text-align: left; font-family: Tahoma;">
+</ul>
+</div>
+</body></html>
