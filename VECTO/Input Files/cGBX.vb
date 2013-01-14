@@ -1,4 +1,6 @@
-﻿Public Class cGBX
+﻿Imports System.Collections.Generic
+
+Public Class cGBX
 
     Private MyPath As String
     Private sFilePath As String
@@ -11,6 +13,15 @@
     Private GetrMaps(16) As cSubPath
 
     Private iganganz As Short
+
+    'Gear shift polygons
+    Private gs_file As New cSubPath
+    Private gs_M As New List(Of Single)
+    Private gs_nnUp As New List(Of Single)
+    Private gs_nnDown As New List(Of Single)
+    Private gs_Dim As Integer
+    Public gs_TorqueResv As Single
+    Public gs_SkipGears As Boolean
 
     Public Sub New()
         Dim i As Short
@@ -33,6 +44,13 @@
             GetrMaps(i).Clear()
         Next
         iganganz = 0
+        gs_M.Clear()
+        gs_nnDown.Clear()
+        gs_nnUp.Clear()
+        gs_file.Clear()
+        gs_Dim = -1
+        gs_TorqueResv = 0
+        gs_SkipGears = False
     End Sub
 
     Public Function SaveFile() As Boolean
@@ -62,6 +80,14 @@
             file.WriteLine("c Gear " & i)
             file.WriteLine(CStr(GetrI(i)), GetrMaps(i).PathOrDummy)
         Next
+
+        file.WriteLine("c Gear shift polygons file")
+        file.WriteLine(gs_file.PathOrDummy)
+        file.WriteLine("c Torque Reserve [%]")
+        file.WriteLine(CStr(gs_TorqueResv))
+        file.WriteLine("c Skip gears")
+        file.WriteLine(CStr(Math.Abs(CInt(gs_SkipGears))))
+
 
         file.Close()
         file = Nothing
@@ -107,6 +133,13 @@
                 If GetrI(i) > 0.0001 Then iganganz = i
             Next
 
+            'Allow file end here to keep compatibility to older versions
+            If Not file.EndOfFile Then
+                gs_file.Init(MyPath, file.ReadLine(0))
+                gs_TorqueResv = CSng(file.ReadLine(0))
+                gs_SkipGears = CBool(CInt(file.ReadLine(0)))
+            End If
+
         Catch ex As Exception
             WorkerMsg(tMsgID.Err, ex.Message, MsgSrc)
             file.Close()
@@ -120,6 +153,112 @@
 
     End Function
 
+    Public Function GSinit() As Boolean
+        Dim file As cFile_V3
+        Dim line As String()
+        Dim i As Integer
+
+        Dim MsgSrc As String
+
+        MsgSrc = "GBX/GSinit"
+
+        If Not IO.File.Exists(gs_file.FullPath) Then
+            WorkerMsg(tMsgID.Err, "Gear Shift Polygon File not found! '" & gs_file.FullPath & "'", MsgSrc)
+            Return False
+        End If
+
+        file = New cFile_V3
+
+        If Not file.OpenRead(gs_file.FullPath) Then
+            WorkerMsg(tMsgID.Err, "Failed to load Gear Shift Polygon File! '" & gs_file.FullPath & "'", MsgSrc)
+            Return False
+        End If
+
+        gs_M.Clear()
+        gs_nnDown.Clear()
+        gs_nnUp.Clear()
+        gs_Dim = -1
+
+        Try
+            Do While Not file.EndOfFile
+                line = file.ReadLine
+                gs_Dim += 1
+                gs_M.Add(CSng(line(0)))
+                gs_nnDown.Add(CSng(line(1)))
+                gs_nnUp.Add(CSng(line(2)))
+            Loop
+        Catch ex As Exception
+            WorkerMsg(tMsgID.Err, "Error while reading Gear Shift Polygon File! (" & ex.Message & ")", MsgSrc)
+            Return False
+        End Try
+
+        'Check if more then one point
+        If gs_Dim < 1 Then
+            WorkerMsg(tMsgID.Err, "More points in Gear Shift Polygon File needed!", MsgSrc)
+            Return False
+        End If
+       
+        'Normalize rpm
+        For i = 0 To gs_Dim
+            gs_nnDown(i) = (gs_nnDown(i) - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+            gs_nnUp(i) = (gs_nnUp(i) - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+        Next
+
+        Return True
+
+    End Function
+
+    Public Function fGSnnDown(ByVal Md As Single) As Single
+        Dim i As Int32
+
+        'Extrapolation for x < x(1)
+        If gs_M(0) >= Md Then
+            If gs_M(0) > Md Then MODdata.ModErrors.GSextrapol = "Md= " & Md & " [Nm]"
+            i = 1
+            GoTo lbInt
+        End If
+
+        i = 0
+        Do While gs_M(i) < Md And i < gs_Dim
+            i += 1
+        Loop
+
+        'Extrapolation for x > x(imax)
+        If gs_M(i) < Md Then
+            MODdata.ModErrors.GSextrapol = "Md= " & Md & " [Nm]"
+        End If
+
+lbInt:
+        'Interpolation
+        Return (Md - gs_M(i - 1)) * (gs_nnDown(i) - gs_nnDown(i - 1)) / (gs_M(i) - gs_M(i - 1)) + gs_nnDown(i - 1)
+
+    End Function
+
+    Public Function fGSnnUp(ByVal Md As Single) As Single
+        Dim i As Int32
+
+        'Extrapolation for x < x(1)
+        If gs_M(0) >= Md Then
+            If gs_M(0) > Md Then MODdata.ModErrors.GSextrapol = "Md= " & Md & " [Nm]"
+            i = 1
+            GoTo lbInt
+        End If
+
+        i = 0
+        Do While gs_M(i) < Md And i < gs_Dim
+            i += 1
+        Loop
+
+        'Extrapolation for x > x(imax)
+        If gs_M(i) < Md Then
+            MODdata.ModErrors.GSextrapol = "Md= " & Md & " [Nm]"
+        End If
+
+lbInt:
+        'Interpolation
+        Return (Md - gs_M(i - 1)) * (gs_nnUp(i) - gs_nnUp(i - 1)) / (gs_M(i) - gs_M(i - 1)) + gs_nnUp(i - 1)
+
+    End Function
 
     Public Property FilePath() As String
         Get

@@ -1,0 +1,11 @@
+tVECTOmission,Name,Zyklus
+0,LongHaul,MissionCycles\LongHaul.vdri
+1,Regional Delivery,MissionCycles\RegionalDelivery.vdri
+2,Urban Delivery,MissionCycles\UrbanDelivery.vdri
+3,Municipal Utility,MissionCycles\MunicipalUtility.vdri
+4,Construction,MissionCycles\Construction.vdri
+5,Heavy Urban,MissionCycles\HeavyUrban.vdri
+6,Urban,MissionCycles\Urban.vdri
+7,Suburban,MissionCycles\Suburban.vdri
+8,Interurban,MissionCycles\Interurban.vdri
+9,Coach,MissionCycles\Coach.vdri

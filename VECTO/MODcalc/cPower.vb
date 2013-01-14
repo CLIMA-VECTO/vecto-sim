@@ -29,7 +29,6 @@ Public Class cPower
     Private Vist As Single
     Private aist As Single
 
-
     'Interruption of traction
     Private TracIntrI As Integer
     Private TracIntrIx As Integer
@@ -608,9 +607,6 @@ lbGschw:
 
             End If
 
-
-
-
             'From Power -----
             If aist < 0 Then
                 If (Vist < 0.025) Then
@@ -697,7 +693,11 @@ lbGschw:
                         If PKWja Then
                             Gear = fGearPKW(jz)
                         Else
-                            Gear = fGearLKW(jz)
+                            If DEV.UseGearShiftPolygon Then
+                                Gear = fGearVECTO(jz)
+                            Else
+                                Gear = fGearLKW(jz)
+                            End If
                         End If
 
                         'Must be reset here because the Gear-shifting model may cause changes
@@ -3223,6 +3223,133 @@ lbGschw:
 
 #Region "Schaltmodelle"
 
+    Private Function fStartGear(ByVal FirstSec As Boolean) As Integer
+        Dim Gear As Integer
+        Dim ix As Integer
+        Dim nn As Single
+        Dim MsgSrc As String
+
+        MsgSrc = "StartGear"
+
+        If FirstSec AndAlso Vist <= 1.5 Then
+
+            Gear = -1
+
+            For ix = 1 To VEH.ganganz
+                nn = fnn(Vist, ix, False)
+
+                If (ix < VEH.ganganz) Then
+                    If (nn <= 0.8) Then
+                        Gear = ix
+                        Exit For
+                    End If
+                Else
+                    If (nn <= 1.06) Then
+                        Gear = ix
+                        Exit For
+                    End If
+                End If
+            Next ix
+
+            If Gear = -1 Then
+                WorkerMsg(tMsgID.Err, "Failed to calculate intial gear!", MsgSrc)
+                Return -1
+            End If
+
+
+            Return Gear
+
+        Else
+
+            'Calculate Start Gear 
+            Return 1
+
+        End If
+
+    End Function
+
+
+    Private Function fGearVECTO(ByVal t As Integer) As Integer
+        Dim nU As Single
+        Dim nn As Single
+        Dim nnUp As Single
+        Dim nnDown As Single
+        Dim Md As Single
+        Dim Pe As Single
+        Dim LastGear As Int16
+        Dim Gear As Int16
+        Dim MdMax As Single
+        Dim LastPeNorm As Single
+
+        'First time step: Starting gear 
+        If t = 0 Then Return fStartGear(True)
+
+        'First time step after stand still
+        If MODdata.VehState(t - 1) = tVehState.Stopped Then Return fStartGear(False)
+
+
+        '********* Gear Shift Polygon Model ********* 
+
+        'Previous normalized engine power
+        LastPeNorm = MODdata.Pe(t - 1)
+
+        'Previous Gear
+        LastGear = MODdata.Gear(t - 1)
+
+        'Current rpm with previous gear
+        nU = fnU(Vist, LastGear, Clutch = tEngClutch.Slipping)
+
+        'Current normalized rpm with previous gear
+        nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+
+        'Current power demand with previous gear
+        Pe = Math.Min(fPeGearMod(LastGear, t) * VEH.Pnenn, FLD.Pfull(nn))
+        Pe = Math.Max(Pe, FLD.Pdrag(nn))
+
+        'Current torque demand with previous gear
+        Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
+
+        'Up/Downshift rpms
+        nnUp = GBX.fGSnnUp(Md)
+        nnDown = GBX.fGSnnDown(Md)
+
+        'Compare rpm with Up/Downshift rpms 
+        If nn > nnUp And LastGear < VEH.ganganz Then
+
+            Gear = LastGear + 1
+
+            If GBX.gs_SkipGears Then
+                nU = fnU(Vist, Gear, False)
+                nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+                Pe = fPeGearMod(Gear, t) * VEH.Pnenn
+                Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
+                MdMax = FLD.Pfull(nn, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
+
+                Do While 1 - Md / MdMax >= GBX.gs_TorqueResv / 100 AndAlso Gear < VEH.ganganz AndAlso fnn(Vist, Gear + 1, False) > nnDown
+                    Gear += 1
+                    nU = fnU(Vist, Gear, False)
+                    nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+                    Pe = fPeGearMod(Gear, t) * VEH.Pnenn
+                    Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
+                    MdMax = FLD.Pfull(nn, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
+                Loop
+
+            End If
+
+        ElseIf nn < nnDown And LastGear > 1 Then
+
+            Gear = LastGear - 1
+
+        Else
+
+            Return LastGear
+
+        End If
+
+        Return Gear
+
+    End Function
+
     Private Function fGearPKW(ByVal t As Integer) As Integer
 
         Dim gangX As Int16
@@ -3319,7 +3446,7 @@ lbGschw:
                 If t < tx Then
                     Pjetzt = MODdata.Pe(t)
                 Else
-                    Pjetzt = fPeGearMod(gangX, t)
+                    Pjetzt = fPeGearModvD(t)
                     If t = tx Then Pjzx = Pjetzt
                 End If
 
@@ -3356,7 +3483,7 @@ lbGschw:
 
             'Check whether Downshift, only when Speed decreases or Power increases
             bCheck = False
-            Pjetzt = fPeGearMod(gangX, t)
+            Pjetzt = fPeGearModvD(t)
             If Vist0 < Valt Then bCheck = True
             If (Pjetzt > Pvorher) Then bCheck = True
             If bCheck Then
@@ -3465,7 +3592,7 @@ lb10:
             'Acceleration-phases: Downshift?(Zurückschalten) suppressed
             If itgangwL = -1 Then itgangwL = 0
             bCheck = False
-            Pjetzt = fPeGearMod(Gear, t)
+            Pjetzt = fPeGearModvD(t)
             Pvorher = MODdata.Pe(itgangwL)
             If MODdata.Vh.V(itgangwL) = 0 Then
                 a = Math.Abs(Vist / 0.0001 - 1)
@@ -3936,10 +4063,7 @@ lb10:
         Dim OverPfull As Boolean = False
         Dim MsgSrc As String
 
-
         MsgSrc = "Power/HDV_Gear"
-
-
 
         '-----------------------------------Second 1 --------------------------------------
         'First second: Find Gear/Initialization
@@ -4018,7 +4142,7 @@ lb10:
 
             Vist0 = MODdata.Vh.V(t)
 
-            Pe0 = fPeGearMod(gangX, t)
+            Pe0 = fPeGearModvD(t)
 
             n0 = fnU(MODdata.Vh.V(t), gangX, False) / VEH.nNenn
 
@@ -4143,7 +4267,7 @@ lb10:
             P_maxg = Pe0
             For ix = t To t + 5
                 If ix > t1 Then Exit For
-                PeX = fPeGearMod(gangX, ix)
+                PeX = fPeGearModvD(t)
                 If (PeX > P_maxg) Then P_maxg = PeX
             Next
 
@@ -4306,7 +4430,7 @@ lb909:
         'Deceleration-phases: Upshift suppressed
         'Acceleration phases: Downshift?(Zurückschalten) suppressed
         bCheck = False
-        Pjetzt = fPeGearMod(Gear, t)
+        Pjetzt = fPeGearModvD(t)
         Pvorher = MODdata.Pe(itgangwL)
         If MODdata.Vh.V(itgangwL) = 0 Then
             a = Math.Abs(Vist / 0.0001 - 1)
@@ -4486,9 +4610,39 @@ lb20:
     End Function
 
     'Function calculating the Power easily for Gear-shift-model
-    Private Function fPeGearMod(ByVal Gear As Integer, ByVal t As Integer) As Single
+    Private Function fPeGearModvD(ByVal t As Integer) As Single
         Return fPvD(t) / VEH.Pnenn
     End Function
+
+    Private Function fPeGearMod(ByVal Gear As Integer, ByVal t As Integer) As Single
+        Dim PaM As Single
+        Dim nU As Single
+        Dim PvD As Single
+        Dim V As Single
+        Dim a As Single
+
+        PvD = fPvD(t)
+        V = MODdata.Vh.V(t)
+        a = MODdata.Vh.a(t)
+
+        nU = fnU(V, Gear, False)
+
+        If Nvorg Then
+            'Drehzahlvorgabe
+            PaM = (VEH.I_mot * MODdata.dnUvorg(t) * 0.01096 * MODdata.nUvorg(t)) * 0.001
+        Else
+            PaM = ((VEH.I_mot * (VEH.AchsI * VEH.Igetr(Gear) / (0.5 * VEH.Dreifen)) ^ 2) * a * V) * 0.001
+        End If
+        If Clutch = tEngClutch.Closed Then
+            Return (PvD + fPlossGB(PvD, V, Gear) + fPlossDiff(PvD, V) + fPaG(V, a) + fPaux(t, nU) + PaM) / VEH.Pnenn
+        Else    'Clutch = tEngClutch.Slipping
+            Return ((PvD + fPlossGB(PvD, V, Gear) + fPlossDiff(PvD, V) + fPaG(V, a)) / KupplEta + fPaux(t, nU) + PaM) / VEH.Pnenn
+        End If
+
+
+    End Function
+
+
 
     'Function calculating the Power easily for EV-shift-model
     Private Function fPeGearEV(ByVal Gear As Integer, ByVal t As Integer) As Single
@@ -4517,6 +4671,10 @@ lb20:
         End If
 
     End Function
+
+
+
+
 
 #End Region
 

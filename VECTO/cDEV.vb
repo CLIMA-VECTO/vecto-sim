@@ -7,6 +7,8 @@ Public Class cDEV
     Private MyOptions As Dictionary(Of String, cDEVoption)
     Private iOptionsDim As Integer
 
+    Public UseGearShiftPolygon As Boolean
+
 
     '**************************************************************************************************************
     '**************************************************************************************************************
@@ -110,6 +112,11 @@ Public Class cDEV
         Conf0.BoolVal = False
         MyOptions.Add("TestOptions", Conf0)
 
+        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Use gear shift polygons instead of gear shift model", False)
+        Conf0.BoolVal = False
+        MyOptions.Add("GearShiftPoly", Conf0)
+
+
         '**************************** END: Parameters Configuration '*****************************
         '*****************************************************************************************
         '*****************************************************************************************
@@ -120,7 +127,7 @@ Public Class cDEV
 
     'Initialize the actual Config-Parameters from MyConfigs list
     Public Sub SetOptions()
-
+        UseGearShiftPolygon = MyOptions("GearShiftPoly").BoolVal
     End Sub
 
     'Demo for Delegate Function

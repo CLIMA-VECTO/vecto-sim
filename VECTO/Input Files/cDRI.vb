@@ -464,6 +464,12 @@ Public Class cDRI
 
         Scycle = (Svorg And Not Tvorg)
 
+        If Vvorg Then
+            For s = 0 To tDim
+                If Values(tDriComp.V)(s) < 0.09 Then Values(tDriComp.V)(s) = 0
+            Next
+        End If
+
         Return True
 
 lbEr:

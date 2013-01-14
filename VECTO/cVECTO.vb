@@ -19,18 +19,25 @@ Public Class cVECTO
         Dim line As String()
         Dim i As Integer
 
-        'Missions
+        'Initialize
         Missions = New Dictionary(Of tMission, cMission)
         SegmentTable = New cSegmentTable
 
+        If Not IO.Directory.Exists(MyDeclPath) Then
+            GUImsg(tMsgID.Err, "Failed to load Declaration Config!")
+            Return False
+        End If
+
+        'Missions
         If Not file.OpenRead(MyDeclPath & "Missions.csv") Then
-            GUImsg(tMsgID.Err, "Failed to load mission definitions!")
+            GUImsg(tMsgID.Err, "Failed to load Declaration Config (Mission Definitions)!")
             Return False
         End If
 
         Try
             'Header
             line = file.ReadLine
+            'Data
             Do While Not file.EndOfFile
                 m0 = New cMission
                 line = file.ReadLine
@@ -40,7 +47,7 @@ Public Class cVECTO
                 Missions.Add(m0.MissionID, m0)
             Loop
         Catch ex As Exception
-            GUImsg(tMsgID.Err, "Failed to load mission definitions!")
+            GUImsg(tMsgID.Err, "Failed to load Declaration Config (Mission Definitions)!")
             file.Close()
             Return False
         End Try
@@ -48,15 +55,15 @@ Public Class cVECTO
         file.Close()
 
         'Segment Table
-
         If Not file.OpenRead(MyDeclPath & "SegmentTable.csv") Then
-            GUImsg(tMsgID.Err, "Failed to load Segment Table!")
+            GUImsg(tMsgID.Err, "Failed to load Declaration Config (Segment Table)!")
             Return False
         End If
 
         Try
             'Header
             line = file.ReadLine
+            'Data
             Do While Not file.EndOfFile
                 line = file.ReadLine
                 s0 = New cSegmentTableEntry
@@ -65,7 +72,7 @@ Public Class cVECTO
                 s0.MaxGVW = CSng(line(2))
                 s0.VehClass = line(3)
                 For i = 4 To 13
-                    If Trim(UCase(line((i)))) = "x" Or Trim(UCase(line((i)))) = "xx" Then
+                    If Trim(UCase(line((i)))) = "X" Or Trim(UCase(line((i)))) = "XX" Then
                         s0.MissionList.Add(CType(CInt(i - 4), tMission))
                     End If
                 Next
@@ -73,14 +80,9 @@ Public Class cVECTO
             Loop
         Catch ex As Exception
             file.Close()
-            GUImsg(tMsgID.Err, "Failed to load Segment Table!")
+            GUImsg(tMsgID.Err, "Failed to load Declaration Config (Segment Table)!")
             Return False
         End Try
-
-
-
-
-
 
         GUImsg(tMsgID.Normal, "Declaration Config loaded.")
 

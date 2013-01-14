@@ -1,0 +1,24 @@
+VECTO 1.1 (current source)
+- New independent licensing dll replaces TUG's version
+- Speed values below 0.09km/h are set to 0km/h
+- Gear shift polygon model
+- Bugfix: command line argument "/run" was not processed
+- Changed command line args prefix form "/" to "-"
+
+VECTO 1.0 - 09.11.2012
+- Bugfix: Error in Distance Correction
+
+VECTO 1.0 RC1
+- Pe_full, Pe_drag output absolute (not normalized)
+
+VECTO 1.0 Beta 3
+- User Manual implemented
+- Declaration files processing (open)
+
+VECTO 1.0 Beta 2
+- "Open" Button in main form opens all editable files (.vecto, .vveh, .veng, .vgbx)
+- Editable files (.vecto, .vveh, .veng, .vgbx) can be opened via command line arguments (i.e. "Open with...") 
+- Bugfix: Torque below drag curve during traction interruption
+- Bugfix: Traction interruption failed in distance corrected time steps
+- Removed unused parameters from .vecto file. OLD FILES ARE NOT SUPPORTED!!!
+- Added JRC contact data in "About" form.

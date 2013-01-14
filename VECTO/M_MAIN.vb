@@ -389,6 +389,14 @@ lbADV:
                             GoTo lbNextJob
                         End If
 
+                        If DEV.UseGearShiftPolygon Then
+                            If Not GBX.GSinit Then
+                                'Error-notification within GSinit()
+                                JobAbortedByErr = True
+                                GoTo lbNextJob
+                            End If
+                        End If
+
                         If GEN.ModeHorEV Then
 
                             If GEN.VehMode = tVehMode.EV Then
@@ -525,7 +533,7 @@ lbADV:
                             GoTo lbAusg
                         End If
 
-                        WorkerMsg(tMsgID.Normal, "Results written to: " & fFILE(MODdata.ModOutpName & ".vmod", True), MsgSrc, MODdata.ModOutpName & ".vmod")
+                        WorkerMsg(tMsgID.Normal, "Modal Results written to: " & fFILE(MODdata.ModOutpName & ".vmod", True), MsgSrc, MODdata.ModOutpName & ".vmod")
 
                     End If
 

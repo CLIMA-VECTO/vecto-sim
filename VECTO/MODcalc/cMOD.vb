@@ -722,9 +722,10 @@ Public Class cMOD
         Public CdExtrapol As String
         Public RtExtrapol As String
         Public DesMaxExtr As String
+        Public GSextrapol As String
 
         Public Sub New()
-            Reset()
+            ResetAll()
         End Sub
 
 
@@ -749,6 +750,7 @@ Public Class cMOD
         Public Sub GeschRedReset()
             CdExtrapol = ""
             RtExtrapol = ""
+            GSextrapol = ""
             PxReset()
         End Sub
 
@@ -793,6 +795,10 @@ Public Class cMOD
 
             If RtExtrapol <> "" Then
                 WorkerMsg(tMsgID.Warn, "Extrapolation in Retarder input file (" & RtExtrapol & ")!", MsgSrc & "/t= " & Second)
+            End If
+
+            If GSextrapol <> "" Then
+                WorkerMsg(tMsgID.Warn, "Extrapolation in Gear Shift Polygon file (" & GSextrapol & ")!", MsgSrc & "/t= " & Second)
             End If
 
             Return Abort

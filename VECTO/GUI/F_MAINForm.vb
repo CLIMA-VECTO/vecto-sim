@@ -565,7 +565,7 @@ Public Class F_MAINForm
         End If
 
         'VECTO Init
-        ' VEC.Init()
+        VEC.Init()
 
         'Command Line Args
         If Command() <> "" Then
@@ -600,11 +600,11 @@ Public Class F_MAINForm
         For Each x In ComLineArgs
             str = Trim(Replace(x.ToString, ChrW(34), ""))
             Select Case UCase(str)
-                Case "/BATCH"
+                Case "-BATCH"
                     bBATCH = True
-                Case "/CLOSE"
+                Case "-CLOSE"
                     ComLineShutDown = True
-                Case "/RUN"
+                Case "-RUN"
                     bRUN = True
                 Case Else
                     ComFile = str
@@ -620,6 +620,9 @@ Public Class F_MAINForm
 
         'If file is specified
         If ComFile <> sKey.NoFile Then OpenVectoFile(ComFile)
+
+        'Run
+        If bRUN Then PHEM_Launcher()
 
     End Sub
 

@@ -1,8 +1,8 @@
-ï»¿Imports System.Collections.Generic
+Imports System.Collections.Generic
 
 Module VECTO_Global
 
-    Public Const VECTOvers As String = "1.1 beta"
+    Public Const VECTOvers As String = "1.1"
     Public MyAppPath As String
     Public MyConfPath As String
     Public MyDeclPath As String
@@ -17,14 +17,14 @@ Module VECTO_Global
     'Config-------------------------------------------------------
     Public Cfg As cConfig
 
-    'TODO: Get rid of it! SOC-iteration belongs either in the Power-loop or Em-calculation for LinReg
+    'TODO: Weg damit! SOC-Iteration gehört in die Leistungsschleife oder nach Em-Berechnung für LinReg
     Public SOCstart As Single
     Public SOC(izykt) As Single
     Public Const izykt As Integer = 40000
 
     Public sKey As csKey
 
-    'File format
+    'Dateiformat
     Public FileFormat As System.Text.Encoding = System.Text.Encoding.UTF8
 
     Public LOGfile As System.IO.StreamWriter
@@ -343,7 +343,7 @@ Module VECTO_Global
 
     Public Sub StartLogfile()
 
-        'Log start
+        'Log starten
         LOGfile = My.Computer.FileSystem.OpenTextFileWriter(MyAppPath & "LOG.txt", True, FileFormat)
         LOGfile.AutoFlush = True
 
