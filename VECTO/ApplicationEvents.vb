@@ -146,6 +146,7 @@ Namespace My
         Private Sub MyApplication_UnhandledException(ByVal sender As Object, ByVal e As Microsoft.VisualBasic.ApplicationServices.UnhandledExceptionEventArgs) Handles Me.UnhandledException
             e.ExitApplication = True
             MsgBox("ERROR!" & ChrW(10) & ChrW(10) & e.Exception.Message.ToString, MsgBoxStyle.Critical, "Unexpected Error")
+            LOGfile.WriteLine(">>>Unexpected Error:" & e.Exception.ToString())
         End Sub
 
     End Class

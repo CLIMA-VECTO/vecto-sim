@@ -732,7 +732,7 @@ Partial Class F_MAINForm
         '
         Me.ConMenFilelist.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SaveListToolStripMenuItem, Me.LoadListToolStripMenuItem, Me.LoadDefaultListToolStripMenuItem, Me.ClearListToolStripMenuItem, Me.ToolStripSeparator5, Me.RemovePathsToolStripMenuItem2})
         Me.ConMenFilelist.Name = "ConMenFilelist"
-        Me.ConMenFilelist.Size = New System.Drawing.Size(176, 120)
+        Me.ConMenFilelist.Size = New System.Drawing.Size(176, 142)
         '
         'SaveListToolStripMenuItem
         '

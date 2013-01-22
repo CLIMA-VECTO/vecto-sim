@@ -104,6 +104,15 @@
             lvi.ForeColor = Color.Gray
         Next
 
+        Me.TbShiftPolyFile.Text = ""
+        Me.ChSkipGears.Checked = False
+        Me.TbTqResv.Text = ""
+        Me.TbShiftTime.Text = ""
+        Me.TbTqResvStart.Text = ""
+        Me.TbStartSpeed.Text = ""
+        Me.TbStartAcc.Text = ""
+
+
         GbxFile = ""
         Me.Text = "GBX Editor"
         Me.LbStatus.Text = ""
@@ -140,6 +149,15 @@
                 Me.LvGears.Items(i).ForeColor = Color.Black
             End If
         Next
+
+        Me.TbShiftPolyFile.Text = GBX0.gsFile(True)
+        Me.ChSkipGears.Checked = GBX0.gs_SkipGears
+        Me.TbTqResv.Text = GBX0.gs_TorqueResv.ToString
+        Me.TbShiftTime.Text = GBX0.gs_ShiftTime.ToString
+        Me.TbTqResvStart.Text = GBX0.gs_TorqueResvStart.ToString
+        Me.TbStartSpeed.Text = GBX0.gs_StartSpeed.ToString
+        Me.TbStartAcc.Text = GBX0.gs_StartAcc.ToString
+
 
         fbGBX.UpdateHistory(file)
         Me.Text = fFILE(file, True)
@@ -180,6 +198,14 @@
             GBX0.GetrI(i) = CSng(Me.LvGears.Items(i).SubItems(1).Text)
             GBX0.GetrMap(i) = Me.LvGears.Items(i).SubItems(2).Text
         Next
+
+        GBX0.gsFile = fTextboxToNumString(Me.TbShiftPolyFile.Text)
+        GBX0.gs_TorqueResv = fTextboxToNumString(Me.TbTqResv.Text)
+        GBX0.gs_SkipGears = Me.ChSkipGears.Checked
+        GBX0.gs_ShiftTime = fTextboxToNumString(Me.TbShiftTime.Text)
+        GBX0.gs_TorqueResvStart = fTextboxToNumString(Me.TbTqResvStart.Text)
+        GBX0.gs_StartSpeed = fTextboxToNumString(Me.TbStartSpeed.Text)
+        GBX0.gs_StartAcc = fTextboxToNumString(Me.TbStartAcc.Text)
 
 
         If Not GBX0.SaveFile Then
@@ -244,6 +270,36 @@
     Private Sub TbTracInt_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbTracInt.TextChanged
         Change()
     End Sub
+
+    Private Sub TbShiftPolyFile_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbShiftPolyFile.TextChanged
+        Change()
+    End Sub
+
+    Private Sub ChSkipGears_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles ChSkipGears.CheckedChanged
+        Change()
+    End Sub
+
+    Private Sub TbTqResv_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbTqResv.TextChanged
+        Change()
+    End Sub
+
+    Private Sub TbShiftTime_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbShiftTime.TextChanged
+        Change()
+    End Sub
+
+    Private Sub TbTqResvStart_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbTqResvStart.TextChanged
+        Change()
+    End Sub
+
+    Private Sub TbStartSpeed_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbStartSpeed.TextChanged
+        Change()
+    End Sub
+
+    Private Sub TbStartAcc_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbStartAcc.TextChanged
+        Change()
+    End Sub
+
+
 
 #End Region
 
@@ -333,6 +389,15 @@
 
 
 #End Region
+
+    'Browse Shift Polygon File
+    Private Sub BtShiftPolyBrowse_Click(sender As System.Object, e As System.EventArgs) Handles BtShiftPolyBrowse.Click
+        Dim fb As cFileBrowser
+        fb = New cFileBrowser("ShiftPolygon", False, True)
+        If fb.OpenDialog(fFileRepl(Me.TbShiftPolyFile.Text, fPATH(GbxFile))) Then
+            Me.TbShiftPolyFile.Text = fFileWoDir(fb.Files(0), fPATH(GbxFile))
+        End If
+    End Sub
 
   
 End Class

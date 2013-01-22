@@ -22,6 +22,12 @@ Public Class cGBX
     Private gs_Dim As Integer
     Public gs_TorqueResv As Single
     Public gs_SkipGears As Boolean
+    Public gs_ShiftTime As Integer
+    Public gs_TorqueResvStart As Single
+    Public gs_StartSpeed As Single
+    Public gs_StartAcc As Single
+    'Public gs_Type As tGearbox 'not used yet
+
 
     Public Sub New()
         Dim i As Short
@@ -51,6 +57,12 @@ Public Class cGBX
         gs_Dim = -1
         gs_TorqueResv = 0
         gs_SkipGears = False
+        gs_ShiftTime = 0
+        gs_TorqueResvStart = 0
+        gs_StartSpeed = 0
+        gs_StartAcc = 0
+
+        'gs_Type = tGearbox.Manual
     End Sub
 
     Public Function SaveFile() As Boolean
@@ -87,6 +99,16 @@ Public Class cGBX
         file.WriteLine(CStr(gs_TorqueResv))
         file.WriteLine("c Skip gears")
         file.WriteLine(CStr(Math.Abs(CInt(gs_SkipGears))))
+        file.WriteLine("c Minimum time between two gear shifts [s]")
+        file.WriteLine(CStr(gs_ShiftTime))
+        file.WriteLine("c Start Torque Reserve [%]")
+        file.WriteLine(CStr(gs_TorqueResvStart))
+        file.WriteLine("c Vehicle speed with clutch fully closed [m/s]")
+        file.WriteLine(CStr(gs_StartSpeed))
+        file.WriteLine("c Acceleration during start [m/s2]")
+        file.WriteLine(CStr(gs_StartAcc))
+        'file.WriteLine("c Gearbox Type")
+        'file.WriteLine(CStr(CType(gs_Type, Integer)))
 
 
         file.Close()
@@ -138,6 +160,11 @@ Public Class cGBX
                 gs_file.Init(MyPath, file.ReadLine(0))
                 gs_TorqueResv = CSng(file.ReadLine(0))
                 gs_SkipGears = CBool(CInt(file.ReadLine(0)))
+                gs_ShiftTime = CInt(file.ReadLine(0))
+                gs_TorqueResvStart = CSng(file.ReadLine(0))
+                gs_StartSpeed = CSng(file.ReadLine(0))
+                gs_StartAcc = CSng(file.ReadLine(0))
+                'gs_Type = CType(CInt(file.ReadLine(0)), tGearbox)
             End If
 
         Catch ex As Exception
@@ -162,23 +189,31 @@ Public Class cGBX
 
         MsgSrc = "GBX/GSinit"
 
+        'Abort if Polygon Model is not activated
+        If Not DEV.UseGearShiftPolygon Then Return True
+
+        'Check if file exists
         If Not IO.File.Exists(gs_file.FullPath) Then
             WorkerMsg(tMsgID.Err, "Gear Shift Polygon File not found! '" & gs_file.FullPath & "'", MsgSrc)
             Return False
         End If
 
+        'Init file instance
         file = New cFile_V3
 
+        'Open file
         If Not file.OpenRead(gs_file.FullPath) Then
             WorkerMsg(tMsgID.Err, "Failed to load Gear Shift Polygon File! '" & gs_file.FullPath & "'", MsgSrc)
             Return False
         End If
 
+        'Clear lists
         gs_M.Clear()
         gs_nnDown.Clear()
         gs_nnUp.Clear()
         gs_Dim = -1
 
+        'Read file
         Try
             Do While Not file.EndOfFile
                 line = file.ReadLine
@@ -280,6 +315,19 @@ lbInt:
         End Get
         Set(ByVal value As String)
             GetrMaps(x).Init(MyPath, value)
+        End Set
+    End Property
+
+    Public Property gsFile(Optional ByVal Original As Boolean = False) As String
+        Get
+            If Original Then
+                Return gs_file.OriginalPath
+            Else
+                Return gs_file.FullPath
+            End If
+        End Get
+        Set(value As String)
+            gs_file.Init(MyPath, value)
         End Set
     End Property
 

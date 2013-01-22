@@ -377,7 +377,7 @@ Partial Class F_AboutBox
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Name = "F_AboutBox"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "About PHEM"
+        Me.Text = "About VECTO"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         CType(Me.PictureBoxJRC, System.ComponentModel.ISupportInitialize).EndInit()

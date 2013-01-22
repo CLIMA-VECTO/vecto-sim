@@ -54,10 +54,10 @@ Module M_MAIN
         'Specify Mode and Notification-msg
         Select Case PHEMmode
             Case tPHEMmode.ModeSTANDARD
-                WorkerMsg(tMsgID.Normal, "Starting PHEM STANDARD...", MsgSrc)
+                WorkerMsg(tMsgID.Normal, "Starting VECTO STANDARD...", MsgSrc)
                 CyclesDim = 0
             Case tPHEMmode.ModeBATCH
-                WorkerMsg(tMsgID.Normal, "Starting PHEM BATCH...", MsgSrc)
+                WorkerMsg(tMsgID.Normal, "Starting VECTO BATCH...", MsgSrc)
                 CyclesDim = JobCycleList.Count - 1
             Case tPHEMmode.ModeADVANCE
                 WorkerMsg(tMsgID.Normal, "Starting PHEM ADVANCE...", MsgSrc)

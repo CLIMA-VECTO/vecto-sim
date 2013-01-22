@@ -349,7 +349,7 @@ Module VECTO_Global
 
         LOGfile.WriteLine("------------------------------------------------------------------------------------------")
         LOGfile.WriteLine("Starting Session " & Now)
-        LOGfile.WriteLine("PHEM " & VECTOvers)
+        LOGfile.WriteLine("VECTO " & VECTOvers)
 
     End Sub
 

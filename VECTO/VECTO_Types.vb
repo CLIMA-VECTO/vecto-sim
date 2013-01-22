@@ -172,6 +172,13 @@ Public Enum tRtType
     Secondary = 2
 End Enum
 
+Public Enum tGearbox
+    Manual = 0
+    SemiAutomatic = 1
+    Automatic = 2
+End Enum
+
+
 
 
 #Region "VECTO Classifications"

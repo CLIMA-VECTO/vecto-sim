@@ -179,7 +179,7 @@ Public Class F_MAINForm
 
         'Called when PHEM already running
         If PHEMworker.IsBusy Then
-            GUImsg(tMsgID.Err, "PHEM is already running!")
+            GUImsg(tMsgID.Err, "VECTO is already running!")
             Exit Sub
         End If
 
@@ -198,7 +198,7 @@ Public Class F_MAINForm
 
         'Wenn mehr als 100 Kombinationen in Batch fragen ob sekündliche Ausgabe |@@| When Batch resulting in more than 100 combinations per second, ask whether to dump-output  per second
         If (PHEMmode = tPHEMmode.ModeBATCH) And ((Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) > 100) And Me.ChBoxModOut.Checked Then
-            Select Case MsgBox("You are about to run PHEM BATCH with " & (Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) & " calculations!" & ChrW(10) & "Do you still want to write second-by-second results?", MsgBoxStyle.YesNoCancel)
+            Select Case MsgBox("You are about to run BATCH Mode with " & (Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) & " calculations!" & ChrW(10) & "Do you still want to write second-by-second results?", MsgBoxStyle.YesNoCancel)
                 Case MsgBoxResult.No
                     Me.ChBoxModOut.Checked = False
                 Case MsgBoxResult.Cancel
@@ -208,7 +208,7 @@ Public Class F_MAINForm
         End If
 
         'Status
-        Status("Launching PHEM...")
+        Status("Launching VECTO...")
 
 
         'Define Job-0list
@@ -437,6 +437,7 @@ Public Class F_MAINForm
         If e.Error IsNot Nothing Then
             MsgBox("An Unexpected Error occurred!" & ChrW(10) & ChrW(10) & _
                      e.Error.Message.ToString, MsgBoxStyle.Critical, "Unexpected Error")
+            LOGfile.WriteLine(">>>Unexpected Error:" & e.Error.ToString())
             Me.Close()
         End If
 
@@ -591,6 +592,8 @@ Public Class F_MAINForm
         Dim x As Object
         Dim str As String
         Dim ComFile As String = ""
+        Dim vecFiles As New List(Of String)
+        Dim driFiles As New List(Of String)
 
         bBATCH = False
         bRUN = False
@@ -607,22 +610,46 @@ Public Class F_MAINForm
                 Case "-RUN"
                     bRUN = True
                 Case Else
-                    ComFile = str
+                    Select Case UCase(fEXT(str))
+                        Case ".VECTO"
+                            vecFiles.Add(str)
+                        Case ".VDRI"
+                            driFiles.Add(str)
+                        Case Else
+                            ComFile = str
+                    End Select
             End Select
         Next
 
-        'Mode switch
+        'Mode switch and load Driving Cycles
         If bBATCH Then
             Me.CBoxMODE.SelectedIndex = 1
+
+            If driFiles.Count > 0 Then
+                LvDRI.Items.Clear()
+                AddToListViewDRI(driFiles.ToArray)
+            End If
+
         Else
             Me.CBoxMODE.SelectedIndex = 0
         End If
 
-        'If file is specified
-        If ComFile <> sKey.NoFile Then OpenVectoFile(ComFile)
+        'Load Vecto files or open editor (if only one file)
+        If vecFiles.Count > 0 Then
+            If vecFiles.Count > 1 Or bRUN Then
+                LvGEN.Items.Clear()
+                AddToListViewGEN(vecFiles.ToArray)
+            Else
+                ComFile = vecFiles(0)
+            End If
+        End If
 
-        'Run
-        If bRUN Then PHEM_Launcher()
+        'Run or open file editor if file is specified
+        If bRUN Then
+            PHEM_Launcher()
+        Else
+            If ComFile <> sKey.NoFile Then OpenVectoFile(ComFile)
+        End If
 
     End Sub
 
