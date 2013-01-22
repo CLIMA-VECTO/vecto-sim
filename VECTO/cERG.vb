@@ -736,6 +736,12 @@ Class cERG
 
         MsgSrc = "SUMALL/Init"
 
+        'Check if file exists
+        If Not IO.File.Exists(GenFile) Then
+            WorkerMsg(tMsgID.Err, "Job file not found! (" & GenFile & ")", MsgSrc)
+            Return False
+        End If
+
         'Define Output-path
         If (PHEMmode = tPHEMmode.ModeBATCH) Then
             Select Case UCase(Cfg.BATCHoutpath)

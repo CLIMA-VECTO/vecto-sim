@@ -36,6 +36,9 @@ Public Class cPower
     Private TracIntrTurnOff As Boolean
     Private TracIntrGear As Integer
 
+    Private LastGearChange As Integer
+    Private LastClutch As tEngClutch
+
     Public Sub New()
         bHEVinit = False
         bHorEVinit = False
@@ -482,6 +485,8 @@ lb10:
             KupplEta = 1
         End If
 
+        LastClutch = tEngClutch.Opened
+
         'Gear-shifting points for NEDC / FTP
         Select Case GEN.izykwael
             Case 0  'Nefzja = True
@@ -655,7 +660,12 @@ lbGschw:
                 If TracIntrTurnOff Then
 
                     Gear = TracIntrGear
-
+                    'If DEV.UseGearShiftPolygon Then
+                    '    Gear = fGearVECTO(jz)
+                    'Else
+                    '    Gear = fGearLKW(jz)
+                    'End If
+                    
                     If fnn(Vist, Gear, False) < Kuppln_norm And Pplus Then
                         Clutch = tEngClutch.Slipping
                     Else
@@ -707,7 +717,15 @@ lbGschw:
                 End If
 
                 'Gear shifting-model / gear input can open Clutch
-                If Gear < 1 Then Clutch = tEngClutch.Opened
+                If Gear < 1 Then
+                    Clutch = tEngClutch.Opened
+                Else
+                    If fnn(Vist, Gear, False) < Kuppln_norm And Pplus Then
+                        Clutch = tEngClutch.Slipping
+                    Else
+                        Clutch = tEngClutch.Closed
+                    End If
+                End If
 
             End If
 
@@ -1169,7 +1187,21 @@ lb_nOK:
 
             If Vh.Vsoll(jz) - Vist > 1.5 Then SecSpeedRed += 1
 
-            'Notify (abort if error)
+
+            LastGearChange = -1
+            For i = jz - 1 To 0 Step -1
+                If MODdata.Gear(i) <> 0 Then
+                    If MODdata.Gear(i) <> Gear Then
+                        LastGearChange = i
+                        Exit For
+                    End If
+                End If
+            Next
+
+
+            LastClutch = Clutch
+
+            'Messages
             If MODdata.ModErrors.MsgOutputAbort(jz + 1, MsgSrc) Then Return False
 
             If Clutch = tEngClutch.Closed And Nvorg Then
@@ -3225,49 +3257,91 @@ lbGschw:
 
     Private Function fStartGear(ByVal FirstSec As Boolean) As Integer
         Dim Gear As Integer
-        Dim ix As Integer
         Dim nn As Single
         Dim MsgSrc As String
+        Dim nU As Single
+        Dim nnUp As Single
+        Dim nnDown As Single
+        Dim Md As Single
+        Dim Pe As Single
+        Dim MdMax As Single
 
         MsgSrc = "StartGear"
 
-        If FirstSec AndAlso Vist <= 1.5 Then
+        If FirstSec AndAlso VehState0 <> tVehState.Stopped Then
 
-            Gear = -1
+            'Calculate gear when cycle starts with speed > 0
+            For Gear = VEH.ganganz To 1 Step -1
 
-            For ix = 1 To VEH.ganganz
-                nn = fnn(Vist, ix, False)
+                'rpm
+                nU = fnU(Vist, Gear, Clutch = tEngClutch.Slipping)
 
-                If (ix < VEH.ganganz) Then
-                    If (nn <= 0.8) Then
-                        Gear = ix
-                        Exit For
-                    End If
-                Else
-                    If (nn <= 1.06) Then
-                        Gear = ix
-                        Exit For
-                    End If
+                'normalized rpm
+                nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+
+                'power demand - cut
+                Pe = Math.Min(fPeGearMod(Gear, 0) * VEH.Pnenn, FLD.Pfull(nn))
+                Pe = Math.Max(Pe, FLD.Pdrag(nn))
+
+                'torque demand
+                Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
+
+                'Up/Downshift rpms
+                nnUp = GBX.fGSnnUp(Md)
+                nnDown = GBX.fGSnnDown(Md)
+
+                'Max torque
+                MdMax = FLD.Pfull(nn) * 1000 / (nU * 2 * Math.PI / 60)
+
+                'Find highest gear with rpm below Upshift-rpm and with enough torque reserve 
+                If nn < nnUp And 1 - Md / MdMax >= GBX.gs_TorqueResv / 100 Then
+                    Exit For
+                ElseIf nn > nnUp And Gear < VEH.ganganz Then
+                    MODdata.ModErrors.GSextrapol = ""
+                    Return Gear + 1
                 End If
-            Next ix
 
-            If Gear = -1 Then
-                WorkerMsg(tMsgID.Err, "Failed to calculate intial gear!", MsgSrc)
-                Return -1
-            End If
-
-
-            Return Gear
+            Next
 
         Else
 
             'Calculate Start Gear 
-            Return 1
+
+            'TEST
+            'Return 1
+            'TEST
+
+
+            For Gear = VEH.ganganz To 1 Step -1
+
+                'rpm at 1.8m/s
+                nU = 1.8 * 60.0 * VEH.AchsI * VEH.Igetr(Gear) / (VEH.Dreifen * Math.PI)
+
+                'normalized rpm
+                nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+
+                'power demand
+                Pe = Math.Min(fPeGearMod(Gear, 0) * VEH.Pnenn, FLD.Pfull(nn))
+                Pe = Math.Max(Pe, FLD.Pdrag(nn))
+
+                'torque demand
+                Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
+
+                'Up/Downshift rpms
+                nnUp = GBX.fGSnnUp(Md)
+                nnDown = GBX.fGSnnDown(Md)
+
+                If nn > nnDown And nU >= VEH.nLeerl Then Exit For
+            Next
 
         End If
 
-    End Function
+        MODdata.ModErrors.GSextrapol = ""
 
+        Return Gear
+
+
+    End Function
 
     Private Function fGearVECTO(ByVal t As Integer) As Integer
         Dim nU As Single
@@ -3280,6 +3354,17 @@ lbGschw:
         Dim Gear As Int16
         Dim MdMax As Single
         Dim LastPeNorm As Single
+
+        Dim iphase As Int16
+        Dim iphase0 As Int16
+        Dim itgangw As Integer
+        Dim i As Integer
+        Dim bCheck As Boolean
+        Dim Pjetzt As Single
+        Dim Pvorher As Single
+        Dim a As Single
+        Dim b As Single
+        Dim tx As Int16
 
         'First time step: Starting gear 
         If t = 0 Then Return fStartGear(True)
@@ -3294,7 +3379,32 @@ lbGschw:
         LastPeNorm = MODdata.Pe(t - 1)
 
         'Previous Gear
-        LastGear = MODdata.Gear(t - 1)
+        tx = 1
+        LastGear = 0
+        Do While LastGear = 0 And t - tx > -1
+            LastGear = MODdata.Gear(t - tx)
+            tx += 1
+        Loop
+
+        'No gear change 3s after last one
+        If t - LastGearChange <= 3 Then Return LastGear
+
+        'During start (clutch slipping) no gear shift
+        If LastClutch = tEngClutch.Slipping And VehState0 = tVehState.Acc Then Return LastGear
+
+        ''Search for last Gear-change
+        'itgangw = 0
+        'For i = t - 1 To 1 Step -1
+        '    If MODdata.Gear(i) <> MODdata.Gear(i - 1) Then
+        '        itgangw = i
+        '        Exit For
+        '    End If
+        'Next
+
+        ''Maximum permissible Gear-shifts every 3 seconds:
+        'If t - itgangw <= 3 And t > 2 Then
+        '    Return LastGear    '<<< no further checks!!!
+        'End If
 
         'Current rpm with previous gear
         nU = fnU(Vist, LastGear, Clutch = tEngClutch.Slipping)
@@ -3325,7 +3435,10 @@ lbGschw:
                 Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
                 MdMax = FLD.Pfull(nn, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
 
-                Do While 1 - Md / MdMax >= GBX.gs_TorqueResv / 100 AndAlso Gear < VEH.ganganz AndAlso fnn(Vist, Gear + 1, False) > nnDown
+                nnUp = GBX.fGSnnUp(Md)
+                nnDown = GBX.fGSnnDown(Md)
+
+                Do While 1 - Md / MdMax >= GBX.gs_TorqueResv / 100 AndAlso Gear < VEH.ganganz AndAlso fnn(Vist, Gear + 1, False) > nnDown + 0.1 * (nnUp - nnDown)
                     Gear += 1
                     nU = fnU(Vist, Gear, False)
                     nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
@@ -3346,7 +3459,79 @@ lbGschw:
 
         End If
 
+        'If GearCorrection is OFF then return here
+        If Not DEV.GearCorrection Then Return Gear
+
+        'Search for last Gear-change
+        itgangw = 0
+        For i = t - 1 To 1 Step -1
+            If MODdata.Gear(i) <> MODdata.Gear(i - 1) Then
+                itgangw = i
+                Exit For
+            End If
+        Next
+
+        'Maximum permissible Gear-shifts every 3 seconds:
+        If t - itgangw <= 3 And t > 2 Then
+            Return LastGear    '<<< no further checks!!!
+        End If
+
+        'Checks to Purge non-sensible Gear-shift:
+        'Division into "IPhase(j)" stages: Acceleration(=1), Deceleration(=2) and Cruise(=3):
+        iphase = 0
+        If t > 1 Then
+            Select Case (MODdata.Vh.a(t - 2) + MODdata.Vh.a(t - 1) + MODdata.Vh.a(t)) / 3
+                Case Is >= 0.125
+                    iphase = 1
+                Case Is <= -0.125
+                    iphase = 2
+                Case Else
+                    iphase = 3
+            End Select
+        End If
+
+        iphase0 = 0
+        If t > 3 Then
+            Select Case (MODdata.Vh.a(t - 3) + MODdata.Vh.a(t - 2) + MODdata.Vh.a(t - 1)) / 3
+                Case Is >= 0.125
+                    iphase0 = 1
+                Case Is <= -0.125
+                    iphase0 = 2
+                Case Else
+                    iphase0 = 3
+            End Select
+        End If
+
+        'Cruise-phases:
+        'As long Speed-change since last Gear-shift is below 6% and Pe/Pnom below 6% then do not Gear-shift:
+        'Deceleration-phases: Upshift suppressed
+        'Acceleration phases: Downshift suppressed
+        bCheck = False
+        Pjetzt = fPeGearModvD(t)
+        Pvorher = MODdata.Pe(itgangw)
+        If MODdata.Vh.V(itgangw) = 0 Then
+            a = Math.Abs(Vist / 0.0001 - 1)
+        Else
+            a = Math.Abs(Vist / MODdata.Vh.V(itgangw) - 1)
+        End If
+        If Pvorher = 0 Then
+            b = Math.Abs(Pjetzt / 0.0001 - 1)
+        Else
+            b = Math.Abs(Pjetzt / Pvorher - 1)
+        End If
+        If iphase = 3 And a < 0.06 And b < 0.06 Then bCheck = True
+        If (iphase = 1) And Gear < MODdata.Gear(t - 1) And iphase0 = 1 Then bCheck = True
+        If (iphase = 2) And Gear > MODdata.Gear(t - 1) Then bCheck = True
+        If bCheck Then Gear = LastGear
+
+        'Shifting from 2nd to 1st Gear is suppressed when v > 1.5 m/s
+        'NEU LUZ 040210: Hochschalten nur wenn im 2. Gang über Kuppeldrehzahl |@@| NEW LUZ 040210: Upshifting only when in 2nd Gear over the Clutch-revolutions
+        If Gear = 1 And LastGear > 1 And Vist >= 1.5 Then
+            If fnn(Vist, 2, False) > Kuppln_norm Then Gear = 2
+        End If
+
         Return Gear
+
 
     End Function
 

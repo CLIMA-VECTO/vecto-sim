@@ -2,8 +2,12 @@ VECTO 1.1 (current source)
 - New independent licensing dll replaces TUG's version
 - Speed values below 0.09km/h are set to 0km/h
 - Gear shift polygon model
-- Bugfix: command line argument "/run" was not processed
-- Changed command line args prefix form "/" to "-"
+- Command Line Arguments processing:
+	o Changed prefix form "/" to "-"
+	o Bugfix: Argument "-run" was not processed
+	o Job files and driving cycles can be added via command line
+- Cleared out some "PHEM" remains in log and message output
+
 
 VECTO 1.0 - 09.11.2012
 - Bugfix: Error in Distance Correction
