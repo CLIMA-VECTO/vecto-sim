@@ -1040,27 +1040,27 @@ Public Class F_GEN
     End Sub
 
 
-    Private Sub TBhinauf_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBhinauf.TextChanged
+    Private Sub TBhinauf_TextChanged(sender As System.Object, e As System.EventArgs)
         Change()
     End Sub
 
-    Private Sub TBlhinauf_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBlhinauf.TextChanged
+    Private Sub TBlhinauf_TextChanged(sender As System.Object, e As System.EventArgs)
         Change()
     End Sub
 
-    Private Sub TBhinunter_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBhinunter.TextChanged
+    Private Sub TBhinunter_TextChanged(sender As System.Object, e As System.EventArgs)
         Change()
     End Sub
 
-    Private Sub TBlhinunter_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBlhinunter.TextChanged
+    Private Sub TBlhinunter_TextChanged(sender As System.Object, e As System.EventArgs)
         Change()
     End Sub
 
-    Private Sub TBpfast_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBpfast.TextChanged
+    Private Sub TBpfast_TextChanged(sender As System.Object, e As System.EventArgs)
         Change()
     End Sub
 
-    Private Sub TBpspar_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBpspar.TextChanged
+    Private Sub TBpspar_TextChanged(sender As System.Object, e As System.EventArgs)
         Change()
     End Sub
 
@@ -1186,6 +1186,7 @@ lbDlog:
     End Sub
 
     Private Sub RemoveAuxItem()
+        Dim i As Integer
 
         If LvAux.SelectedItems.Count = 0 Then
             If LvAux.Items.Count = 0 Then
@@ -1195,10 +1196,16 @@ lbDlog:
             End If
         End If
 
+        i = LvAux.SelectedItems(0).Index
+
         LvAux.SelectedItems(0).Remove()
 
         If LvAux.Items.Count > 0 Then
-            LvAux.Items(LvAux.Items.Count - 1).Selected = True
+            If i < LvAux.Items.Count Then
+                LvAux.Items(i).Selected = True
+            Else
+                LvAux.Items(LvAux.Items.Count - 1).Selected = True
+            End If
             LvAux.Focus()
         End If
 
@@ -1262,6 +1269,7 @@ lbDlog:
     End Sub
 
     Private Sub RemoveCycle()
+        Dim i As Integer
 
         If LvCycles.SelectedItems.Count = 0 Then
             If LvCycles.Items.Count = 0 Then
@@ -1271,10 +1279,17 @@ lbDlog:
             End If
         End If
 
+        i = LvCycles.SelectedItems(0).Index
+
         LvCycles.SelectedItems(0).Remove()
 
         If LvCycles.Items.Count > 0 Then
-            LvCycles.Items(LvCycles.Items.Count - 1).Selected = True
+            If i < LvCycles.Items.Count Then
+                LvCycles.Items(i).Selected = True
+            Else
+                LvCycles.Items(LvCycles.Items.Count - 1).Selected = True
+            End If
+
             LvCycles.Focus()
         End If
 

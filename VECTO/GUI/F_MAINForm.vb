@@ -566,7 +566,7 @@ Public Class F_MAINForm
         End If
 
         'VECTO Init
-        VEC.Init()
+        'VEC.Init()
 
         'Command Line Args
         If Command() <> "" Then
@@ -612,11 +612,11 @@ Public Class F_MAINForm
                 Case Else
                     Select Case UCase(fEXT(str))
                         Case ".VECTO"
-                            vecFiles.Add(str)
+                            vecFiles.Add(fFileRepl(str))
                         Case ".VDRI"
-                            driFiles.Add(str)
+                            driFiles.Add(fFileRepl(str))
                         Case Else
-                            ComFile = str
+                            ComFile = fFileRepl(str)
                     End Select
             End Select
         Next
@@ -681,39 +681,50 @@ Public Class F_MAINForm
 #End Region
 
     Private Sub OpenVectoFile(ByVal File As String)
-        Select Case UCase(fEXT(File))
-            Case ".VGBX"
-                If Not F_GBX.Visible Then
-                    F_GBX.Show()
-                Else
-                    F_GBX.GenDir = ""
-                    If F_GBX.WindowState = FormWindowState.Minimized Then F_GBX.WindowState = FormWindowState.Normal
-                    F_GBX.BringToFront()
-                End If
-                F_GBX.openGBX(File)
-            Case ".VVEH"
-                If Not F_VEH.Visible Then
-                    F_VEH.Show()
-                Else
-                    F_VEH.GenDir = ""
-                    If F_VEH.WindowState = FormWindowState.Minimized Then F_VEH.WindowState = FormWindowState.Normal
-                    F_VEH.BringToFront()
-                End If
-                F_VEH.openVEH(File)
-            Case ".VENG"
-                If Not F_ENG.Visible Then
-                    F_ENG.Show()
-                Else
-                    F_ENG.GenDir = ""
-                    If F_ENG.WindowState = FormWindowState.Minimized Then F_ENG.WindowState = FormWindowState.Normal
-                    F_ENG.BringToFront()
-                End If
-                F_ENG.openENG(File)
-            Case ".VECTO"
-                OpenGENEditor(File)
-            Case Else
-                MsgBox("Type '" & fEXT(File) & "' unknown!", MsgBoxStyle.Critical)
-        End Select
+
+        If Not IO.File.Exists(File) Then
+
+            GUImsg(tMsgID.Err, "File not found! (" & File & ")")
+            MsgBox("File not found! (" & File & ")", MsgBoxStyle.Critical)
+
+        Else
+
+            Select Case UCase(fEXT(File))
+                Case ".VGBX"
+                    If Not F_GBX.Visible Then
+                        F_GBX.Show()
+                    Else
+                        F_GBX.GenDir = ""
+                        If F_GBX.WindowState = FormWindowState.Minimized Then F_GBX.WindowState = FormWindowState.Normal
+                        F_GBX.BringToFront()
+                    End If
+                    F_GBX.openGBX(File)
+                Case ".VVEH"
+                    If Not F_VEH.Visible Then
+                        F_VEH.Show()
+                    Else
+                        F_VEH.GenDir = ""
+                        If F_VEH.WindowState = FormWindowState.Minimized Then F_VEH.WindowState = FormWindowState.Normal
+                        F_VEH.BringToFront()
+                    End If
+                    F_VEH.openVEH(File)
+                Case ".VENG"
+                    If Not F_ENG.Visible Then
+                        F_ENG.Show()
+                    Else
+                        F_ENG.GenDir = ""
+                        If F_ENG.WindowState = FormWindowState.Minimized Then F_ENG.WindowState = FormWindowState.Normal
+                        F_ENG.BringToFront()
+                    End If
+                    F_ENG.openENG(File)
+                Case ".VECTO"
+                    OpenGENEditor(File)
+                Case Else
+                    MsgBox("Type '" & fEXT(File) & "' unknown!", MsgBoxStyle.Critical)
+            End Select
+
+        End If
+
     End Sub
 
 #Region "GEN Liste"

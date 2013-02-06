@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Command line arguments - VECTO User Manual</title>
+
+</head>
+<body>
+<table style="width: 100%; height: 54px; text-align: left; margin-left: auto; margin-right: auto;" border="0" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td style="width: 110px;"><a href="../usermanual.html"><img src="../pics/VECTO-small.PNG" style="border: 0px solid ; width: 106px; height: 36px;" alt="VECTO-Logo"></a></td>
+<td><a href="../usermanual.html"><span style="color: rgb(0, 0, 0); font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; font-family: Verdana;">User
+Manual</span></a><span style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; display: inline ! important; float: none;"></span></td>
+<td style="text-align: right; width: 405px;"><a href="http://ec.europa.eu/dgs/jrc/index.cfm" target="_blank"><img src="../pics/JRC.png" style="border: 0px solid ; width: 173px; height: 36px;" alt="JRC-Logo" hspace="5"></a><a href="http://www.ivt.tugraz.at/" target="_blank"><img src="../pics/IVT.png" alt="IVT-Logo" style="border: 0px solid ; width: 74px; height: 36px;" hspace="5"></a><a href="http://portal.tugraz.at/pls/portal/url/page/TU_Graz" target="_blank"><img src="../pics/TUG.png" alt="TUG-Logo" style="border: 0px solid ; width: 96px; height: 36px;" hspace="5"></a></td>
+</tr>
+</tbody>
+</table>
+<hr style="width: 100%; height: 2px;"><a href="usermanual.html"><span style="font-family: Verdana;"></span></a><span style="font-family: Verdana;"></span>
+<div style="text-align: center;">
+<div style="text-align: left; font-family: Verdana;">
+<h2>Command line arguments</h2>
+</div>
+<img style="width: 677px; height: 342px;" alt="" usemap="#linkmap" src="cmd.png"><br>
+<span style="font-family: Verdana;"><br>
+</span>
+<div style="text-align: left;"><span style="font-family: Verdana;"></span>It
+is possible to control basic functions of VECTO via command line
+arguments (e.g.
+to automate calculations and results analysis using scripts).<br>
+<br>
+<big><big><span style="font-weight: bold; text-decoration: underline;">General
+Notes</span></big></big><br>
+<ul style="line-height: 1.7em;">
+<li>The order in which the arguments are provided is free.</li>
+<li>If a file path includes space characters (e.g. "C:\VECTO
+Test Files\Demo.vecto") then double quotes have to be used (as in the
+picture above). </li>
+<li>If not the complete file path is defined (e.g.
+"file1.vecto" instead of "c:\data\file1.vecto") then VECTO expects the
+file in the <a href="../GUI/mainform.html#tools">Working
+Directory</a>.</li>
+<li>In the instructions below square brackets "[ &nbsp;]"
+indicate optional arguments.</li>
+</ul>
+<br>
+<big><big><span style="text-decoration: underline; font-weight: bold;">STANDARD
+Mode:</span></big></big><br>
+<br style="background-color: rgb(1, 1, 1); color: rgb(253, 253, 253);">
+<span style="font-family: Consolas;">&nbsp;VECTO.exe
+-run [-close] [file1.vecto file2.vecto ... fileN.vecto] </span><br>
+<div style="margin-left: 40px;"><br>Runs
+calculation(s) either with the provided .vecto file(s) or (if no file
+names are defined) with the files already loaded on start up*. If
+-close is used VECTO closes after calculations are done. <br>
+</div>
+<br>
+<br>
+<big><big><span style="font-weight: bold; text-decoration: underline;">BATCH
+Mode:</span></big></big><br>
+<br>
+<span style="font-family: Consolas;">&nbsp;VECTO.exe
+-run -batch [-close] [file1.vecto file2.vecto ... fileN.vecto]
+[cycle1.vdri cycle2.vdri ... cycleN.vdri] </span><br>
+<div style="margin-left: 40px;"><br>
+Switches
+to BATCH mode and runs with the provided .vecto and .vdri files. If no
+files are defined the pre-loaded files* are used. If -close is used
+VECTO closes after calculations are done.<br>
+</div>
+<br>
+<br>
+<big><big><span style="font-weight: bold; text-decoration: underline;">Opening
+files:</span></big></big><br>
+<br>
+<span style="font-family: Consolas;">&nbsp;VECTO.exe
+file1.xxx </span><br>
+<div style="margin-left: 40px;"><br>If the file has one of the
+following extensions it is opened with the associated editor dialog:
+.vecto, .vgbx, .veng, .vveh.<br>
+Note: if more than one .vecto file is provided they will be loaded in
+the file list (replacing the pre-loaded list*) instead.<br>
+</div>
+<br>
+*pre-loaded files: When VECTO starts it loads the file lists (.vecto,
+.vdri) of the last session.<br>
+<br>
+<br>
+</div>
+<div style="text-align: left;">
+<div style="text-align: left;">
+<table style="text-align: left; width: 100%; height: 1200px;" border="0" cellpadding="2" cellspacing="2">
+<tbody>
+<tr>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div style="text-align: left;">
+<hr style="width: 100%; height: 2px;"><a href="../contact.html">Contact</a>
+</div>
+</div>
+</div>
+<ul style="text-align: left; font-family: Tahoma;">
+</ul>
+</div>
+</body></html>

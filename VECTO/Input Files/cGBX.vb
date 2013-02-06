@@ -26,6 +26,7 @@ Public Class cGBX
     Public gs_TorqueResvStart As Single
     Public gs_StartSpeed As Single
     Public gs_StartAcc As Single
+    Public gs_ShiftInside As Boolean
     'Public gs_Type As tGearbox 'not used yet
 
 
@@ -61,6 +62,7 @@ Public Class cGBX
         gs_TorqueResvStart = 0
         gs_StartSpeed = 0
         gs_StartAcc = 0
+        gs_ShiftInside = False
 
         'gs_Type = tGearbox.Manual
     End Sub
@@ -107,6 +109,8 @@ Public Class cGBX
         file.WriteLine(CStr(gs_StartSpeed))
         file.WriteLine("c Acceleration during start [m/s2]")
         file.WriteLine(CStr(gs_StartAcc))
+        file.WriteLine("c Shift inside polygons")
+        file.WriteLine(CStr(Math.Abs(CInt(gs_ShiftInside))))
         'file.WriteLine("c Gearbox Type")
         'file.WriteLine(CStr(CType(gs_Type, Integer)))
 
@@ -164,6 +168,7 @@ Public Class cGBX
                 gs_TorqueResvStart = CSng(file.ReadLine(0))
                 gs_StartSpeed = CSng(file.ReadLine(0))
                 gs_StartAcc = CSng(file.ReadLine(0))
+                gs_ShiftInside = CBool(CInt(file.ReadLine(0)))
                 'gs_Type = CType(CInt(file.ReadLine(0)), tGearbox)
             End If
 
@@ -188,9 +193,6 @@ Public Class cGBX
         Dim MsgSrc As String
 
         MsgSrc = "GBX/GSinit"
-
-        'Abort if Polygon Model is not activated
-        If Not DEV.UseGearShiftPolygon Then Return True
 
         'Check if file exists
         If Not IO.File.Exists(gs_file.FullPath) Then

@@ -51,6 +51,7 @@ Partial Class F_GBX
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.BtClearGear = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.ChShiftInside = New System.Windows.Forms.CheckBox()
         Me.TbShiftTime = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label13 = New System.Windows.Forms.Label()
@@ -180,7 +181,7 @@ Partial Class F_GBX
         Me.ButCancel.Location = New System.Drawing.Point(378, 603)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
-        Me.ButCancel.TabIndex = 39
+        Me.ButCancel.TabIndex = 7
         Me.ButCancel.Text = "Cancel"
         Me.ButCancel.UseVisualStyleBackColor = True
         '
@@ -190,7 +191,7 @@ Partial Class F_GBX
         Me.ButOK.Location = New System.Drawing.Point(297, 603)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
-        Me.ButOK.TabIndex = 38
+        Me.ButOK.TabIndex = 6
         Me.ButOK.Text = "OK"
         Me.ButOK.UseVisualStyleBackColor = True
         '
@@ -199,7 +200,7 @@ Partial Class F_GBX
         Me.TbTracInt.Location = New System.Drawing.Point(389, 115)
         Me.TbTracInt.Name = "TbTracInt"
         Me.TbTracInt.Size = New System.Drawing.Size(40, 20)
-        Me.TbTracInt.TabIndex = 1
+        Me.TbTracInt.TabIndex = 2
         '
         'LvGears
         '
@@ -211,7 +212,7 @@ Partial Class F_GBX
         Me.LvGears.MultiSelect = False
         Me.LvGears.Name = "LvGears"
         Me.LvGears.Size = New System.Drawing.Size(441, 170)
-        Me.LvGears.TabIndex = 2
+        Me.LvGears.TabIndex = 3
         Me.LvGears.TabStop = False
         Me.LvGears.UseCompatibleStateImageBehavior = False
         Me.LvGears.View = System.Windows.Forms.View.Details
@@ -236,7 +237,7 @@ Partial Class F_GBX
         Me.TBI_getr.Location = New System.Drawing.Point(64, 115)
         Me.TBI_getr.Name = "TBI_getr"
         Me.TBI_getr.Size = New System.Drawing.Size(57, 20)
-        Me.TBI_getr.TabIndex = 0
+        Me.TBI_getr.TabIndex = 1
         '
         'Label49
         '
@@ -288,7 +289,7 @@ Partial Class F_GBX
         Me.TbName.Location = New System.Drawing.Point(119, 82)
         Me.TbName.Name = "TbName"
         Me.TbName.Size = New System.Drawing.Size(334, 20)
-        Me.TbName.TabIndex = 41
+        Me.TbName.TabIndex = 0
         '
         'PictureBox1
         '
@@ -306,11 +307,12 @@ Partial Class F_GBX
         Me.BtClearGear.Location = New System.Drawing.Point(12, 317)
         Me.BtClearGear.Name = "BtClearGear"
         Me.BtClearGear.Size = New System.Drawing.Size(29, 23)
-        Me.BtClearGear.TabIndex = 3
+        Me.BtClearGear.TabIndex = 4
         Me.BtClearGear.UseVisualStyleBackColor = True
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.ChShiftInside)
         Me.GroupBox1.Controls.Add(Me.TbShiftTime)
         Me.GroupBox1.Controls.Add(Me.Label12)
         Me.GroupBox1.Controls.Add(Me.Label13)
@@ -325,21 +327,31 @@ Partial Class F_GBX
         Me.GroupBox1.Location = New System.Drawing.Point(12, 346)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(441, 251)
-        Me.GroupBox1.TabIndex = 44
+        Me.GroupBox1.TabIndex = 5
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Gear shift parameters"
         '
+        'ChShiftInside
+        '
+        Me.ChShiftInside.AutoSize = True
+        Me.ChShiftInside.Location = New System.Drawing.Point(6, 74)
+        Me.ChShiftInside.Name = "ChShiftInside"
+        Me.ChShiftInside.Size = New System.Drawing.Size(217, 17)
+        Me.ChShiftInside.TabIndex = 10
+        Me.ChShiftInside.Text = "Allow shift-up inside polygons (AMT only)"
+        Me.ChShiftInside.UseVisualStyleBackColor = True
+        '
         'TbShiftTime
         '
-        Me.TbShiftTime.Location = New System.Drawing.Point(215, 98)
+        Me.TbShiftTime.Location = New System.Drawing.Point(340, 98)
         Me.TbShiftTime.Name = "TbShiftTime"
         Me.TbShiftTime.Size = New System.Drawing.Size(57, 20)
-        Me.TbShiftTime.TabIndex = 10
+        Me.TbShiftTime.TabIndex = 4
         '
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(278, 101)
+        Me.Label12.Location = New System.Drawing.Point(403, 101)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(18, 13)
         Me.Label12.TabIndex = 9
@@ -348,7 +360,7 @@ Partial Class F_GBX
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(24, 101)
+        Me.Label13.Location = New System.Drawing.Point(149, 101)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(185, 13)
         Me.Label13.TabIndex = 8
@@ -357,10 +369,10 @@ Partial Class F_GBX
         'ChSkipGears
         '
         Me.ChSkipGears.AutoSize = True
-        Me.ChSkipGears.Location = New System.Drawing.Point(17, 74)
+        Me.ChSkipGears.Location = New System.Drawing.Point(6, 100)
         Me.ChSkipGears.Name = "ChSkipGears"
         Me.ChSkipGears.Size = New System.Drawing.Size(78, 17)
-        Me.ChSkipGears.TabIndex = 7
+        Me.ChSkipGears.TabIndex = 2
         Me.ChSkipGears.Text = "Skip Gears"
         Me.ChSkipGears.UseVisualStyleBackColor = True
         '
@@ -378,7 +390,7 @@ Partial Class F_GBX
         Me.GroupBox2.Location = New System.Drawing.Point(6, 135)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(429, 110)
-        Me.GroupBox2.TabIndex = 6
+        Me.GroupBox2.TabIndex = 5
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Start Gear"
         '
@@ -387,48 +399,48 @@ Partial Class F_GBX
         Me.TbStartAcc.Location = New System.Drawing.Point(209, 71)
         Me.TbStartAcc.Name = "TbStartAcc"
         Me.TbStartAcc.Size = New System.Drawing.Size(57, 20)
-        Me.TbStartAcc.TabIndex = 5
+        Me.TbStartAcc.TabIndex = 2
         '
         'Label11
         '
         Me.Label11.AutoSize = True
         Me.Label11.Location = New System.Drawing.Point(20, 74)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(121, 13)
+        Me.Label11.Size = New System.Drawing.Size(173, 13)
         Me.Label11.TabIndex = 0
-        Me.Label11.Text = "Acceleration during start"
+        Me.Label11.Text = "Reference acceleration at clutch-in"
         '
         'TbStartSpeed
         '
         Me.TbStartSpeed.Location = New System.Drawing.Point(209, 45)
         Me.TbStartSpeed.Name = "TbStartSpeed"
         Me.TbStartSpeed.Size = New System.Drawing.Size(57, 20)
-        Me.TbStartSpeed.TabIndex = 5
+        Me.TbStartSpeed.TabIndex = 1
         '
         'Label9
         '
         Me.Label9.AutoSize = True
         Me.Label9.Location = New System.Drawing.Point(20, 48)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(183, 13)
+        Me.Label9.Size = New System.Drawing.Size(181, 13)
         Me.Label9.TabIndex = 0
-        Me.Label9.Text = "Vehicle speed with clutch fully closed"
+        Me.Label9.Text = "Reference vehicle speed at clutch-in"
         '
         'Label10
         '
         Me.Label10.AutoSize = True
         Me.Label10.Location = New System.Drawing.Point(272, 74)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(37, 13)
+        Me.Label10.Size = New System.Drawing.Size(34, 13)
         Me.Label10.TabIndex = 0
-        Me.Label10.Text = "[m/s2]"
+        Me.Label10.Text = "[m/s²]"
         '
         'TbTqResvStart
         '
         Me.TbTqResvStart.Location = New System.Drawing.Point(209, 19)
         Me.TbTqResvStart.Name = "TbTqResvStart"
         Me.TbTqResvStart.Size = New System.Drawing.Size(57, 20)
-        Me.TbTqResvStart.TabIndex = 5
+        Me.TbTqResvStart.TabIndex = 0
         '
         'Label8
         '
@@ -459,31 +471,32 @@ Partial Class F_GBX
         '
         'TbTqResv
         '
-        Me.TbTqResv.Location = New System.Drawing.Point(215, 72)
+        Me.TbTqResv.Location = New System.Drawing.Point(340, 72)
         Me.TbTqResv.Name = "TbTqResv"
         Me.TbTqResv.Size = New System.Drawing.Size(57, 20)
-        Me.TbTqResv.TabIndex = 5
+        Me.TbTqResv.TabIndex = 3
         '
         'TbShiftPolyFile
         '
         Me.TbShiftPolyFile.Location = New System.Drawing.Point(6, 42)
         Me.TbShiftPolyFile.Name = "TbShiftPolyFile"
         Me.TbShiftPolyFile.Size = New System.Drawing.Size(391, 20)
-        Me.TbShiftPolyFile.TabIndex = 4
+        Me.TbShiftPolyFile.TabIndex = 0
         '
         'BtShiftPolyBrowse
         '
         Me.BtShiftPolyBrowse.Location = New System.Drawing.Point(403, 40)
         Me.BtShiftPolyBrowse.Name = "BtShiftPolyBrowse"
         Me.BtShiftPolyBrowse.Size = New System.Drawing.Size(32, 23)
-        Me.BtShiftPolyBrowse.TabIndex = 3
+        Me.BtShiftPolyBrowse.TabIndex = 1
+        Me.BtShiftPolyBrowse.TabStop = False
         Me.BtShiftPolyBrowse.Text = "..."
         Me.BtShiftPolyBrowse.UseVisualStyleBackColor = True
         '
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(278, 75)
+        Me.Label4.Location = New System.Drawing.Point(403, 75)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(21, 13)
         Me.Label4.TabIndex = 0
@@ -492,7 +505,7 @@ Partial Class F_GBX
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(130, 75)
+        Me.Label2.Location = New System.Drawing.Point(255, 75)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(79, 13)
         Me.Label2.TabIndex = 0
@@ -597,4 +610,5 @@ Partial Class F_GBX
     Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents ChSkipGears As System.Windows.Forms.CheckBox
+    Friend WithEvents ChShiftInside As System.Windows.Forms.CheckBox
 End Class

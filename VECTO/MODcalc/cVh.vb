@@ -252,7 +252,7 @@ Public Class cVh
         End If
     End Sub
 
-    Public Sub DistCorrection(ByVal t As Integer)
+    Public Sub DistCorrection(ByVal t As Integer, ByVal VehState As tVehState)
 
         'TODO: If veh faster than cycle ...
 
@@ -271,7 +271,7 @@ Public Class cVh
 
 
             'Falls Zeitschritt wiederholen näher an Wegvorgabe als aktueller Weg => Zeitschritt wiederholen |@@| If the repeating Time-step is closer to the Specified-route than the Actual-route => Repeat Time-step
-            If (Math.Abs(WegIst + Vsoll(t) - Weg(WegX)) < Math.Abs(WegIst - Weg(WegX))) And v > 0.1 Then
+            If (VehState = tVehState.Acc Or VehState = tVehState.Cruise) AndAlso (Math.Abs(WegIst + Vsoll(t) - Weg(WegX)) < Math.Abs(WegIst - Weg(WegX))) And v > 0.1 Then
 
                 Duplicate(t + 1)
                 MODdata.tDim += 1

@@ -295,6 +295,13 @@ lbADV:
                 '******************************************************************************************
                 '********************************** VECTO-Cycle-loop **********************************
                 jsubcyclecount = CycleFiles.Count
+
+                If jsubcyclecount = 0 Then
+                    WorkerMsg(tMsgID.Err, "No driving cycle defined!", MsgSrc)
+                    JobAbortedByErr = True
+                    GoTo lbNextJob
+                End If
+
                 jsubcycle = 0
                 For Each CurrentCycleFile In CycleFiles
                     jsubcycle += 1
@@ -341,7 +348,7 @@ lbADV:
                             GoTo lbAusg
                         End If
 
-                        'convert v(s) into v(t) (optional)
+                        'Convert v(s) into v(t) (optional)
                         If DRI.Scycle Then
                             If Not DRI.ConvStoT() Then
                                 CyclAbrtedByErr = True
@@ -349,7 +356,12 @@ lbADV:
                             End If
                         End If
 
-                        'Convert to 1Hz (optional)
+                        'If first time step is Zero then duplicate to start cycle with vehicle standing.
+                        If DRI.Vvorg AndAlso DRI.tDim > 1 AndAlso DRI.Values(tDriComp.V)(0) < 0.0001 And DRI.Values(tDriComp.V)(1) >= 0.0001 Then
+                            DRI.FirstZero()
+                        End If
+                     
+                        'Convert to 1Hz (optional) - does not apply to v(s) cycles because timestep is missing
                         If DRI.Tvorg Then
                             If MsgOut Then WorkerMsg(tMsgID.Normal, "Converting cycle to 1Hz", MsgSrc)
                             If Not DRI.ConvTo1Hz() Then
@@ -389,12 +401,10 @@ lbADV:
                             GoTo lbNextJob
                         End If
 
-                        If DEV.UseGearShiftPolygon Then
-                            If Not GBX.GSinit Then
-                                'Error-notification within GSinit()
-                                JobAbortedByErr = True
-                                GoTo lbNextJob
-                            End If
+                        If Not GBX.GSinit Then
+                            'Error-notification within GSinit()
+                            JobAbortedByErr = True
+                            GoTo lbNextJob
                         End If
 
                         If GEN.ModeHorEV Then

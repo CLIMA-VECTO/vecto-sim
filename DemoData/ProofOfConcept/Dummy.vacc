@@ -1,0 +1,4 @@
+c v,a_desmax,a_brake
+c [km/h],[m/s²],[m/s²]
+0,10,-10
+1000,10,-10

@@ -27,7 +27,6 @@
     Public FuelDens As Single
     Public CO2perFC As Single
 
-
     Public Sub New()
         SetDefault()
     End Sub

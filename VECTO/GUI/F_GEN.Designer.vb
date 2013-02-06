@@ -108,21 +108,6 @@ Partial Class F_GEN
         Me.ComboBoxGearShift = New System.Windows.Forms.ComboBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPgDriver = New System.Windows.Forms.TabPage()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.TBpfast = New System.Windows.Forms.TextBox()
-        Me.TBpspar = New System.Windows.Forms.TextBox()
-        Me.Label19 = New System.Windows.Forms.Label()
-        Me.Label18 = New System.Windows.Forms.Label()
-        Me.Label44 = New System.Windows.Forms.Label()
-        Me.Label43 = New System.Windows.Forms.Label()
-        Me.Label42 = New System.Windows.Forms.Label()
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.TBlhinunter = New System.Windows.Forms.TextBox()
-        Me.TBlhinauf = New System.Windows.Forms.TextBox()
-        Me.TBhinunter = New System.Windows.Forms.TextBox()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.TBhinauf = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.BtDesMaxBr = New System.Windows.Forms.Button()
         Me.TbDesMaxFile = New System.Windows.Forms.TextBox()
@@ -169,6 +154,21 @@ Partial Class F_GEN
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.GrGearShift = New System.Windows.Forms.GroupBox()
+        Me.TBpfast = New System.Windows.Forms.TextBox()
+        Me.TBpspar = New System.Windows.Forms.TextBox()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.Label44 = New System.Windows.Forms.Label()
+        Me.Label43 = New System.Windows.Forms.Label()
+        Me.Label42 = New System.Windows.Forms.Label()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.TBlhinunter = New System.Windows.Forms.TextBox()
+        Me.TBlhinauf = New System.Windows.Forms.TextBox()
+        Me.TBhinunter = New System.Windows.Forms.TextBox()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.TBhinauf = New System.Windows.Forms.TextBox()
         Me.TabPgHEV.SuspendLayout()
         Me.TabPgColdSt.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
@@ -177,7 +177,6 @@ Partial Class F_GEN
         Me.GroupBox4.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPgDriver.SuspendLayout()
-        Me.GroupBox1.SuspendLayout()
         Me.TabPgKF.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.TabPgStartStop.SuspendLayout()
@@ -186,6 +185,7 @@ Partial Class F_GEN
         Me.StatusStrip1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GrGearShift.SuspendLayout()
         Me.SuspendLayout()
         '
         'ButOpenEXS
@@ -622,7 +622,7 @@ Partial Class F_GEN
         Me.Label5.AutoSize = True
         Me.Label5.Location = New System.Drawing.Point(200, 22)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(96, 13)
+        Me.Label5.Size = New System.Drawing.Size(103, 13)
         Me.Label5.TabIndex = 1
         Me.Label5.Text = "Coolant Temp [Â°C]:"
         '
@@ -631,7 +631,7 @@ Partial Class F_GEN
         Me.Label4.AutoSize = True
         Me.Label4.Location = New System.Drawing.Point(9, 22)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(97, 13)
+        Me.Label4.Size = New System.Drawing.Size(104, 13)
         Me.Label4.TabIndex = 0
         Me.Label4.Text = "Catalyst Temp [Â°C]:"
         '
@@ -1082,7 +1082,6 @@ Partial Class F_GEN
         '
         'TabPgDriver
         '
-        Me.TabPgDriver.Controls.Add(Me.GroupBox1)
         Me.TabPgDriver.Controls.Add(Me.Label1)
         Me.TabPgDriver.Controls.Add(Me.BtDesMaxBr)
         Me.TabPgDriver.Controls.Add(Me.TbDesMaxFile)
@@ -1093,143 +1092,6 @@ Partial Class F_GEN
         Me.TabPgDriver.TabIndex = 7
         Me.TabPgDriver.Text = "Driver"
         Me.TabPgDriver.UseVisualStyleBackColor = True
-        '
-        'GroupBox1
-        '
-        Me.GroupBox1.Controls.Add(Me.TBpfast)
-        Me.GroupBox1.Controls.Add(Me.TBpspar)
-        Me.GroupBox1.Controls.Add(Me.Label19)
-        Me.GroupBox1.Controls.Add(Me.Label18)
-        Me.GroupBox1.Controls.Add(Me.Label44)
-        Me.GroupBox1.Controls.Add(Me.Label43)
-        Me.GroupBox1.Controls.Add(Me.Label42)
-        Me.GroupBox1.Controls.Add(Me.Label17)
-        Me.GroupBox1.Controls.Add(Me.TBlhinunter)
-        Me.GroupBox1.Controls.Add(Me.TBlhinauf)
-        Me.GroupBox1.Controls.Add(Me.TBhinunter)
-        Me.GroupBox1.Controls.Add(Me.Label16)
-        Me.GroupBox1.Controls.Add(Me.Label15)
-        Me.GroupBox1.Controls.Add(Me.TBhinauf)
-        Me.GroupBox1.Location = New System.Drawing.Point(9, 70)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(183, 128)
-        Me.GroupBox1.TabIndex = 33
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Gear Shift Parameters"
-        '
-        'TBpfast
-        '
-        Me.TBpfast.Location = New System.Drawing.Point(69, 90)
-        Me.TBpfast.Name = "TBpfast"
-        Me.TBpfast.Size = New System.Drawing.Size(40, 20)
-        Me.TBpfast.TabIndex = 4
-        '
-        'TBpspar
-        '
-        Me.TBpspar.Location = New System.Drawing.Point(115, 90)
-        Me.TBpspar.Name = "TBpspar"
-        Me.TBpspar.Size = New System.Drawing.Size(40, 20)
-        Me.TBpspar.TabIndex = 5
-        '
-        'Label19
-        '
-        Me.Label19.AutoSize = True
-        Me.Label19.Location = New System.Drawing.Point(28, 93)
-        Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(35, 13)
-        Me.Label19.TabIndex = 8
-        Me.Label19.Text = "Share"
-        '
-        'Label18
-        '
-        Me.Label18.AutoSize = True
-        Me.Label18.Location = New System.Drawing.Point(121, 18)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(25, 13)
-        Me.Label18.TabIndex = 7
-        Me.Label18.Text = "eco"
-        '
-        'Label44
-        '
-        Me.Label44.AutoSize = True
-        Me.Label44.Location = New System.Drawing.Point(161, 92)
-        Me.Label44.Name = "Label44"
-        Me.Label44.Size = New System.Drawing.Size(16, 13)
-        Me.Label44.TabIndex = 5
-        Me.Label44.Text = "[-]"
-        '
-        'Label43
-        '
-        Me.Label43.AutoSize = True
-        Me.Label43.Location = New System.Drawing.Point(161, 66)
-        Me.Label43.Name = "Label43"
-        Me.Label43.Size = New System.Drawing.Size(16, 13)
-        Me.Label43.TabIndex = 5
-        Me.Label43.Text = "[-]"
-        '
-        'Label42
-        '
-        Me.Label42.AutoSize = True
-        Me.Label42.Location = New System.Drawing.Point(161, 41)
-        Me.Label42.Name = "Label42"
-        Me.Label42.Size = New System.Drawing.Size(16, 13)
-        Me.Label42.TabIndex = 5
-        Me.Label42.Text = "[-]"
-        '
-        'Label17
-        '
-        Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(76, 18)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(24, 13)
-        Me.Label17.TabIndex = 6
-        Me.Label17.Text = "fast"
-        '
-        'TBlhinunter
-        '
-        Me.TBlhinunter.Location = New System.Drawing.Point(115, 64)
-        Me.TBlhinunter.Name = "TBlhinunter"
-        Me.TBlhinunter.Size = New System.Drawing.Size(40, 20)
-        Me.TBlhinunter.TabIndex = 3
-        '
-        'TBlhinauf
-        '
-        Me.TBlhinauf.Location = New System.Drawing.Point(115, 38)
-        Me.TBlhinauf.Name = "TBlhinauf"
-        Me.TBlhinauf.Size = New System.Drawing.Size(40, 20)
-        Me.TBlhinauf.TabIndex = 1
-        '
-        'TBhinunter
-        '
-        Me.TBhinunter.Location = New System.Drawing.Point(69, 64)
-        Me.TBhinunter.Name = "TBhinunter"
-        Me.TBhinunter.Size = New System.Drawing.Size(40, 20)
-        Me.TBhinunter.TabIndex = 2
-        '
-        'Label16
-        '
-        Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(4, 67)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(59, 13)
-        Me.Label16.TabIndex = 2
-        Me.Label16.Text = "Shift Down"
-        '
-        'Label15
-        '
-        Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(18, 41)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(45, 13)
-        Me.Label15.TabIndex = 1
-        Me.Label15.Text = "Shift Up"
-        '
-        'TBhinauf
-        '
-        Me.TBhinauf.Location = New System.Drawing.Point(69, 38)
-        Me.TBhinauf.Name = "TBhinauf"
-        Me.TBhinauf.Size = New System.Drawing.Size(40, 20)
-        Me.TBhinauf.TabIndex = 0
         '
         'Label1
         '
@@ -1463,6 +1325,7 @@ Partial Class F_GEN
         '
         'TabPgTEST
         '
+        Me.TabPgTEST.Controls.Add(Me.GrGearShift)
         Me.TabPgTEST.Controls.Add(Me.Label3)
         Me.TabPgTEST.Controls.Add(Me.ComboBoxGearShift)
         Me.TabPgTEST.Controls.Add(Me.ChbDesMax)
@@ -1699,6 +1562,143 @@ Partial Class F_GEN
         Me.PictureBox1.TabIndex = 21
         Me.PictureBox1.TabStop = False
         '
+        'GrGearShift
+        '
+        Me.GrGearShift.Controls.Add(Me.TBpfast)
+        Me.GrGearShift.Controls.Add(Me.TBpspar)
+        Me.GrGearShift.Controls.Add(Me.Label19)
+        Me.GrGearShift.Controls.Add(Me.Label18)
+        Me.GrGearShift.Controls.Add(Me.Label44)
+        Me.GrGearShift.Controls.Add(Me.Label43)
+        Me.GrGearShift.Controls.Add(Me.Label42)
+        Me.GrGearShift.Controls.Add(Me.Label17)
+        Me.GrGearShift.Controls.Add(Me.TBlhinunter)
+        Me.GrGearShift.Controls.Add(Me.TBlhinauf)
+        Me.GrGearShift.Controls.Add(Me.TBhinunter)
+        Me.GrGearShift.Controls.Add(Me.Label16)
+        Me.GrGearShift.Controls.Add(Me.Label15)
+        Me.GrGearShift.Controls.Add(Me.TBhinauf)
+        Me.GrGearShift.Location = New System.Drawing.Point(19, 277)
+        Me.GrGearShift.Name = "GrGearShift"
+        Me.GrGearShift.Size = New System.Drawing.Size(183, 128)
+        Me.GrGearShift.TabIndex = 34
+        Me.GrGearShift.TabStop = False
+        Me.GrGearShift.Text = "Gear Shift Parameters"
+        '
+        'TBpfast
+        '
+        Me.TBpfast.Location = New System.Drawing.Point(69, 90)
+        Me.TBpfast.Name = "TBpfast"
+        Me.TBpfast.Size = New System.Drawing.Size(40, 20)
+        Me.TBpfast.TabIndex = 4
+        '
+        'TBpspar
+        '
+        Me.TBpspar.Location = New System.Drawing.Point(115, 90)
+        Me.TBpspar.Name = "TBpspar"
+        Me.TBpspar.Size = New System.Drawing.Size(40, 20)
+        Me.TBpspar.TabIndex = 5
+        '
+        'Label19
+        '
+        Me.Label19.AutoSize = True
+        Me.Label19.Location = New System.Drawing.Point(28, 93)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(35, 13)
+        Me.Label19.TabIndex = 8
+        Me.Label19.Text = "Share"
+        '
+        'Label18
+        '
+        Me.Label18.AutoSize = True
+        Me.Label18.Location = New System.Drawing.Point(121, 18)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(25, 13)
+        Me.Label18.TabIndex = 7
+        Me.Label18.Text = "eco"
+        '
+        'Label44
+        '
+        Me.Label44.AutoSize = True
+        Me.Label44.Location = New System.Drawing.Point(161, 92)
+        Me.Label44.Name = "Label44"
+        Me.Label44.Size = New System.Drawing.Size(16, 13)
+        Me.Label44.TabIndex = 5
+        Me.Label44.Text = "[-]"
+        '
+        'Label43
+        '
+        Me.Label43.AutoSize = True
+        Me.Label43.Location = New System.Drawing.Point(161, 66)
+        Me.Label43.Name = "Label43"
+        Me.Label43.Size = New System.Drawing.Size(16, 13)
+        Me.Label43.TabIndex = 5
+        Me.Label43.Text = "[-]"
+        '
+        'Label42
+        '
+        Me.Label42.AutoSize = True
+        Me.Label42.Location = New System.Drawing.Point(161, 41)
+        Me.Label42.Name = "Label42"
+        Me.Label42.Size = New System.Drawing.Size(16, 13)
+        Me.Label42.TabIndex = 5
+        Me.Label42.Text = "[-]"
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(76, 18)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(24, 13)
+        Me.Label17.TabIndex = 6
+        Me.Label17.Text = "fast"
+        '
+        'TBlhinunter
+        '
+        Me.TBlhinunter.Location = New System.Drawing.Point(115, 64)
+        Me.TBlhinunter.Name = "TBlhinunter"
+        Me.TBlhinunter.Size = New System.Drawing.Size(40, 20)
+        Me.TBlhinunter.TabIndex = 3
+        '
+        'TBlhinauf
+        '
+        Me.TBlhinauf.Location = New System.Drawing.Point(115, 38)
+        Me.TBlhinauf.Name = "TBlhinauf"
+        Me.TBlhinauf.Size = New System.Drawing.Size(40, 20)
+        Me.TBlhinauf.TabIndex = 1
+        '
+        'TBhinunter
+        '
+        Me.TBhinunter.Location = New System.Drawing.Point(69, 64)
+        Me.TBhinunter.Name = "TBhinunter"
+        Me.TBhinunter.Size = New System.Drawing.Size(40, 20)
+        Me.TBhinunter.TabIndex = 2
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(4, 67)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(59, 13)
+        Me.Label16.TabIndex = 2
+        Me.Label16.Text = "Shift Down"
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Location = New System.Drawing.Point(18, 41)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(45, 13)
+        Me.Label15.TabIndex = 1
+        Me.Label15.Text = "Shift Up"
+        '
+        'TBhinauf
+        '
+        Me.TBhinauf.Location = New System.Drawing.Point(69, 38)
+        Me.TBhinauf.Name = "TBhinauf"
+        Me.TBhinauf.Size = New System.Drawing.Size(40, 20)
+        Me.TBhinauf.TabIndex = 0
+        '
         'F_GEN
         '
         Me.AcceptButton = Me.ButOK
@@ -1731,8 +1731,6 @@ Partial Class F_GEN
         Me.TabControl1.ResumeLayout(False)
         Me.TabPgDriver.ResumeLayout(False)
         Me.TabPgDriver.PerformLayout()
-        Me.GroupBox1.ResumeLayout(False)
-        Me.GroupBox1.PerformLayout()
         Me.TabPgKF.ResumeLayout(False)
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
@@ -1746,6 +1744,8 @@ Partial Class F_GEN
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GrGearShift.ResumeLayout(False)
+        Me.GrGearShift.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1874,7 +1874,14 @@ Partial Class F_GEN
     Friend WithEvents BtDesMaxBr As System.Windows.Forms.Button
     Friend WithEvents TbDesMaxFile As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+    Friend WithEvents GroupBox5 As System.Windows.Forms.GroupBox
+    Friend WithEvents LvCycles As System.Windows.Forms.ListView
+    Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents BtDRIrem As System.Windows.Forms.Button
+    Friend WithEvents BtDRIadd As System.Windows.Forms.Button
+    Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
+    Friend WithEvents GrGearShift As System.Windows.Forms.GroupBox
     Friend WithEvents TBpfast As System.Windows.Forms.TextBox
     Friend WithEvents TBpspar As System.Windows.Forms.TextBox
     Friend WithEvents Label19 As System.Windows.Forms.Label
@@ -1889,11 +1896,4 @@ Partial Class F_GEN
     Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents Label15 As System.Windows.Forms.Label
     Friend WithEvents TBhinauf As System.Windows.Forms.TextBox
-    Friend WithEvents GroupBox5 As System.Windows.Forms.GroupBox
-    Friend WithEvents LvCycles As System.Windows.Forms.ListView
-    Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents BtDRIrem As System.Windows.Forms.Button
-    Friend WithEvents BtDRIadd As System.Windows.Forms.Button
-    Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
 End Class

@@ -408,8 +408,8 @@ Public Class cMOD
 
         Else
 
-            s.Append(",engine speed,Pe,n_norm,Pe_norm,Pe_full,Pe_drag,Pe_clutch")
-            sU.Append(",[rpm],[kW],[-],[-],[kW],[kW],[kW]")
+            s.Append(",engine speed,torque,Pe,n_norm,Pe_norm,Pe_full,Pe_drag,Pe_clutch")
+            sU.Append(",[rpm],[Nm],[kW],[-],[-],[kW],[kW],[kW]")
 
         End If
 
@@ -568,6 +568,9 @@ Public Class cMOD
 
                     'Revolutions
                     s.Append(Sepp & .nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl)
+
+                    'Torque
+                    s.Append(Sepp & 1000 * .Pe(t) * VEH.Pnenn / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60))
 
                     'Power
                     s.Append(Sepp & .Pe(t) * VEH.Pnenn)

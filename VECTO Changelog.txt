@@ -1,13 +1,30 @@
-VECTO 1.1 (current source)
+VECTO ?.? (future release)
+- Automatic transmission & Torque converter
+- Eco-Roll & Over-/Under-Speed
+- Engine Only Mode
+
+VECTO 1.1 x (current source - next release)
+
+
+VECTO 1.1 beta - 06.02.2013
 - New independent licensing dll replaces TUG's version
 - Speed values below 0.09km/h are set to 0km/h
 - Gear shift polygon model
+	o Replaces old gear shift model!
+	o New parameters in .vgbx file including path to gear shift polygons file
+	o Old gear shift model parameters removed from .vecto file
 - Command Line Arguments processing:
 	o Changed prefix form "/" to "-"
 	o Bugfix: Argument "-run" was not processed
 	o Job files and driving cycles can be added via command line
+	o Files without path are expected in the Working Directory
 - Cleared out some "PHEM" remains in log and message output
-
+- User Manual update for command line arguments
+- Various fixes in GUI
+- Bugfix: Error in Cycle Conversion (distance- to time-based) when using Aux Power Input.
+- Distance Correction is now active only in acceleration and cruise phases.
+- Fixed cycles starting with vehicle speed = 0. Before, the first and second time step were averaged to speed values > 0.
+- Demo data updated for new gear shift model
 
 VECTO 1.0 - 09.11.2012
 - Bugfix: Error in Distance Correction

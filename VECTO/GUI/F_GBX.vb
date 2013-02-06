@@ -106,6 +106,7 @@
 
         Me.TbShiftPolyFile.Text = ""
         Me.ChSkipGears.Checked = False
+        Me.ChShiftInside.Checked = False
         Me.TbTqResv.Text = ""
         Me.TbShiftTime.Text = ""
         Me.TbTqResvStart.Text = ""
@@ -157,6 +158,7 @@
         Me.TbTqResvStart.Text = GBX0.gs_TorqueResvStart.ToString
         Me.TbStartSpeed.Text = GBX0.gs_StartSpeed.ToString
         Me.TbStartAcc.Text = GBX0.gs_StartAcc.ToString
+        Me.ChShiftInside.Checked = GBX0.gs_ShiftInside
 
 
         fbGBX.UpdateHistory(file)
@@ -199,13 +201,14 @@
             GBX0.GetrMap(i) = Me.LvGears.Items(i).SubItems(2).Text
         Next
 
-        GBX0.gsFile = fTextboxToNumString(Me.TbShiftPolyFile.Text)
+        GBX0.gsFile = Me.TbShiftPolyFile.Text
         GBX0.gs_TorqueResv = fTextboxToNumString(Me.TbTqResv.Text)
         GBX0.gs_SkipGears = Me.ChSkipGears.Checked
         GBX0.gs_ShiftTime = fTextboxToNumString(Me.TbShiftTime.Text)
         GBX0.gs_TorqueResvStart = fTextboxToNumString(Me.TbTqResvStart.Text)
         GBX0.gs_StartSpeed = fTextboxToNumString(Me.TbStartSpeed.Text)
         GBX0.gs_StartAcc = fTextboxToNumString(Me.TbStartAcc.Text)
+        GBX0.gs_ShiftInside = Me.ChShiftInside.Checked
 
 
         If Not GBX0.SaveFile Then
@@ -276,6 +279,10 @@
     End Sub
 
     Private Sub ChSkipGears_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles ChSkipGears.CheckedChanged
+        Change()
+    End Sub
+
+    Private Sub ChShiftInside_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles ChShiftInside.CheckedChanged
         Change()
     End Sub
 
@@ -400,4 +407,5 @@
     End Sub
 
   
+    
 End Class

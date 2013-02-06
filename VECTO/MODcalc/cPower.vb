@@ -703,11 +703,8 @@ lbGschw:
                         If PKWja Then
                             Gear = fGearPKW(jz)
                         Else
-                            If DEV.UseGearShiftPolygon Then
-                                Gear = fGearVECTO(jz)
-                            Else
-                                Gear = fGearLKW(jz)
-                            End If
+                            Gear = fGearVECTO(jz)
+                            'Gear = fGearLKW(jz)
                         End If
 
                         'Must be reset here because the Gear-shifting model may cause changes
@@ -720,7 +717,7 @@ lbGschw:
                 If Gear < 1 Then
                     Clutch = tEngClutch.Opened
                 Else
-                    If fnn(Vist, Gear, False) < Kuppln_norm And Pplus Then
+                    If fnn(Vist, Gear, False) < Kuppln_norm And Pplus And Not VehState0 = tVehState.Dec Then
                         Clutch = tEngClutch.Slipping
                     Else
                         Clutch = tEngClutch.Closed
@@ -1153,8 +1150,7 @@ lb_nOK:
             MODdata.VehState.Add(VehState0)
             MODdata.Gear.Add(Gear)
 
-
-            If Cfg.WegKorJa Then Vh.DistCorrection(jz)
+            If Cfg.WegKorJa Then Vh.DistCorrection(jz, VehState0)
 
             'Interruption of traction(Zugkraftunterbrechung)
             If TracIntrTurnOff Then
@@ -1883,7 +1879,7 @@ lb_nOK:
 
             If SOC(jz) <= BAT.SOC_MIN Then GoTo lbBatLeer
 
-            If Cfg.WegKorJa Then Vh.DistCorrection(jz)
+            If Cfg.WegKorJa Then Vh.DistCorrection(jz, VehState0)
 
 
             If Vh.Vsoll(jz) - Vist > 1.5 Then SecSpeedRed += 1
@@ -3150,7 +3146,7 @@ lbGschw:
             SOC0 = BAT.SOC
 
 
-            If Cfg.WegKorJa Then Vh.DistCorrection(jz)
+            If Cfg.WegKorJa Then Vh.DistCorrection(jz, VehState0)
 
 
             LastEngState = EngState0
@@ -3255,7 +3251,7 @@ lbGschw:
 
 #Region "Schaltmodelle"
 
-    Private Function fStartGear(ByVal FirstSec As Boolean) As Integer
+    Private Function fStartGear(ByVal t As Integer) As Integer
         Dim Gear As Integer
         Dim nn As Single
         Dim MsgSrc As String
@@ -3265,10 +3261,11 @@ lbGschw:
         Dim Md As Single
         Dim Pe As Single
         Dim MdMax As Single
+        Dim Pmax As Single
 
         MsgSrc = "StartGear"
 
-        If FirstSec AndAlso VehState0 <> tVehState.Stopped Then
+        If t = 0 AndAlso VehState0 <> tVehState.Stopped Then
 
             'Calculate gear when cycle starts with speed > 0
             For Gear = VEH.ganganz To 1 Step -1
@@ -3279,8 +3276,11 @@ lbGschw:
                 'normalized rpm
                 nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
 
-                'power demand - cut
-                Pe = Math.Min(fPeGearMod(Gear, 0) * VEH.Pnenn, FLD.Pfull(nn))
+                'full load
+                Pmax = FLD.Pfull(nn)
+
+                'power demand - cut at full load / drag so that fGSnnUp and fGSnnDown don't extrapolate
+                Pe = Math.Min(fPeGearMod(Gear, t) * VEH.Pnenn, Pmax)
                 Pe = Math.Max(Pe, FLD.Pdrag(nn))
 
                 'torque demand
@@ -3291,10 +3291,10 @@ lbGschw:
                 nnDown = GBX.fGSnnDown(Md)
 
                 'Max torque
-                MdMax = FLD.Pfull(nn) * 1000 / (nU * 2 * Math.PI / 60)
+                MdMax = Pmax * 1000 / (nU * 2 * Math.PI / 60)
 
                 'Find highest gear with rpm below Upshift-rpm and with enough torque reserve 
-                If nn < nnUp And 1 - Md / MdMax >= GBX.gs_TorqueResv / 100 Then
+                If nn < nnUp And nn > nnDown And 1 - Md / MdMax >= GBX.gs_TorqueResv / 100 Then
                     Exit For
                 ElseIf nn > nnUp And Gear < VEH.ganganz Then
                     MODdata.ModErrors.GSextrapol = ""
@@ -3306,22 +3306,22 @@ lbGschw:
         Else
 
             'Calculate Start Gear 
-
-            'TEST
-            'Return 1
-            'TEST
-
-
             For Gear = VEH.ganganz To 1 Step -1
 
-                'rpm at 1.8m/s
-                nU = 1.8 * 60.0 * VEH.AchsI * VEH.Igetr(Gear) / (VEH.Dreifen * Math.PI)
+                'rpm at StartSpeed  [m/s]
+                nU = GBX.gs_StartSpeed * 60.0 * VEH.AchsI * VEH.Igetr(Gear) / (VEH.Dreifen * Math.PI)
 
                 'normalized rpm
                 nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
 
+                'full load
+                Pmax = FLD.Pfull(nn)
+
+                'Max torque
+                MdMax = Pmax * 1000 / (nU * 2 * Math.PI / 60)
+
                 'power demand
-                Pe = Math.Min(fPeGearMod(Gear, 0) * VEH.Pnenn, FLD.Pfull(nn))
+                Pe = Math.Min(fPeGearMod(Gear, t, GBX.gs_StartSpeed, GBX.gs_StartAcc) * VEH.Pnenn, Pmax)
                 Pe = Math.Max(Pe, FLD.Pdrag(nn))
 
                 'torque demand
@@ -3331,7 +3331,10 @@ lbGschw:
                 nnUp = GBX.fGSnnUp(Md)
                 nnDown = GBX.fGSnnDown(Md)
 
-                If nn > nnDown And nU >= VEH.nLeerl Then Exit For
+                Debug.Print(CurrentCycleFile & "," & Gear & "," & Md & "," & MdMax & "," & nn & "," & nnDown & "," & nnUp)
+
+                If nn > nnDown And nU >= VEH.nLeerl And (1 - Md / MdMax >= GBX.gs_TorqueResvStart / 100 Or Md < 0) Then Exit For
+
             Next
 
         End If
@@ -3365,12 +3368,10 @@ lbGschw:
         Dim a As Single
         Dim b As Single
         Dim tx As Int16
+        Dim OutOfRpmRange As Boolean
 
-        'First time step: Starting gear 
-        If t = 0 Then Return fStartGear(True)
-
-        'First time step after stand still
-        If MODdata.VehState(t - 1) = tVehState.Stopped Then Return fStartGear(False)
+        'First time step OR first time step after stand still
+        If t = 0 OrElse MODdata.VehState(t - 1) = tVehState.Stopped Then Return fStartGear(t)
 
 
         '********* Gear Shift Polygon Model ********* 
@@ -3386,8 +3387,13 @@ lbGschw:
             tx += 1
         Loop
 
-        'No gear change 3s after last one
-        If t - LastGearChange <= 3 Then Return LastGear
+        nU = CSng(Vist * 60.0 * VEH.AchsI * VEH.Igetr(LastGear) / (VEH.Dreifen * Math.PI))
+        nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+
+        OutOfRpmRange = (nn >= 1.2 Or nU < VEH.nLeerl)
+
+        'No gear change 3s after last one -except rpm out of range
+        If Not OutOfRpmRange AndAlso t - LastGearChange <= GBX.gs_ShiftTime And t > GBX.gs_ShiftTime - 1 Then Return LastGear
 
         'During start (clutch slipping) no gear shift
         If LastClutch = tEngClutch.Slipping And VehState0 = tVehState.Acc Then Return LastGear
@@ -3418,44 +3424,169 @@ lbGschw:
 
         'Current torque demand with previous gear
         Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
+        MdMax = FLD.Pfull(nn) * 1000 / (nU * 2 * Math.PI / 60)
 
         'Up/Downshift rpms
         nnUp = GBX.fGSnnUp(Md)
         nnDown = GBX.fGSnnDown(Md)
 
         'Compare rpm with Up/Downshift rpms 
-        If nn > nnUp And LastGear < VEH.ganganz Then
+        If nn <= nnDown And LastGear > 1 Then
 
-            Gear = LastGear + 1
+            'Shift DOWN
+            Gear = LastGear - 1
 
-            If GBX.gs_SkipGears Then
-                nU = fnU(Vist, Gear, False)
+            'Skip Gears
+            If GBX.gs_SkipGears AndAlso Gear > 1 Then
+
+                'Calculate Shift-rpm for lower gear
+                nU = fnU(Vist, Gear - 1, False)
                 nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
-                Pe = fPeGearMod(Gear, t) * VEH.Pnenn
-                Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
-                MdMax = FLD.Pfull(nn, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
 
-                nnUp = GBX.fGSnnUp(Md)
-                nnDown = GBX.fGSnnDown(Md)
-
-                Do While 1 - Md / MdMax >= GBX.gs_TorqueResv / 100 AndAlso Gear < VEH.ganganz AndAlso fnn(Vist, Gear + 1, False) > nnDown + 0.1 * (nnUp - nnDown)
-                    Gear += 1
-                    nU = fnU(Vist, Gear, False)
-                    nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
-                    Pe = fPeGearMod(Gear, t) * VEH.Pnenn
+                'Continue only if rpm (for lower gear) is above idling
+                If nn >= 0 Then
+                    Pe = Math.Min(fPeGearMod(Gear - 1, t) * VEH.Pnenn, FLD.Pfull(nn))
+                    Pe = Math.Max(Pe, FLD.Pdrag(nn))
                     Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
-                    MdMax = FLD.Pfull(nn, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
-                Loop
+                    nnUp = GBX.fGSnnUp(Md)
+                    nnDown = GBX.fGSnnDown(Md)
+
+                    'Shift down as long as Gear > 1 and rpm is below UpShift-rpm
+                    Do While Gear > 1 AndAlso nn < nnUp
+
+                        'Shift DOWN
+                        Gear -= 1
+
+                        'Continue only if Gear > 1
+                        If Gear = 1 Then Exit Do
+
+                        'Calculate Shift-rpm for lower gear
+                        nU = fnU(Vist, Gear - 1, False)
+                        nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+
+                        'Continue only if rpm (for lower gear) is above idling
+                        If nn < 0 Then Exit Do
+
+                        Pe = Math.Min(fPeGearMod(Gear - 1, t) * VEH.Pnenn, FLD.Pfull(nn))
+                        Pe = Math.Max(Pe, FLD.Pdrag(nn))
+                        Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
+                        nnUp = GBX.fGSnnUp(Md)
+                        nnDown = GBX.fGSnnDown(Md)
+
+                    Loop
+
+                End If
 
             End If
 
-        ElseIf nn < nnDown And LastGear > 1 Then
+        ElseIf LastGear < VEH.ganganz And nn > nnUp Then
 
-            Gear = LastGear - 1
+            'Shift UP
+            Gear = LastGear + 1
+
+            'Skip Gears
+            If GBX.gs_SkipGears AndAlso Gear < VEH.ganganz Then
+
+                'Calculate Shift-rpm for higher gear
+                nU = fnU(Vist, Gear + 1, False)
+                nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+
+                'Continue only if rpm (for higher gear) is below rated rpm
+                If nn <= 1 Then
+                    Pe = Math.Min(fPeGearMod(Gear + 1, t) * VEH.Pnenn, FLD.Pfull(nn))
+                    Pe = Math.Max(Pe, FLD.Pdrag(nn))
+                    Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
+                    nnUp = GBX.fGSnnUp(Md)
+                    nnDown = GBX.fGSnnDown(Md)
+
+                    'Max Torque
+                    MdMax = FLD.Pfull(nn, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
+
+                    'Shift up as long as Torque reserve is okay and Gear < Max-Gear and rpm is above DownShift-rpm
+                    Do While Gear < VEH.ganganz AndAlso 1 - Md / MdMax >= GBX.gs_TorqueResv / 100 AndAlso nn > nnDown '+ 0.1 * (nnUp - nnDown)
+
+                        'Shift UP
+                        Gear += 1
+
+                        'Continue only if Gear < Max-Gear
+                        If Gear = VEH.ganganz Then Exit Do
+
+                        'Calculate Shift-rpm for higher gear
+                        nU = fnU(Vist, Gear + 1, False)
+                        nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+
+                        'Continue only if rpm (for higher gear) is below rated rpm
+                        If nn > 1 Then Exit Do
+
+                        Pe = Math.Min(fPeGearMod(Gear + 1, t) * VEH.Pnenn, FLD.Pfull(nn))
+                        Pe = Math.Max(Pe, FLD.Pdrag(nn))
+                        Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
+                        nnUp = GBX.fGSnnUp(Md)
+                        nnDown = GBX.fGSnnDown(Md)
+
+                        'Max Torque
+                        MdMax = FLD.Pfull(nn, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
+
+                    Loop
+
+                End If
+
+            End If
 
         Else
 
-            Return LastGear
+            'Keep last gear
+            Gear = LastGear
+
+            'Shift UP inside shift polygons
+            If GBX.gs_ShiftInside And LastGear < VEH.ganganz Then
+
+                'Calculate Shift-rpm for higher gear
+                nU = fnU(Vist, Gear + 1, False)
+                nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+
+                'Continue only if rpm (for higher gear) is below rated rpm
+                If nn <= 1 Then
+                    Pe = Math.Min(fPeGearMod(Gear + 1, t) * VEH.Pnenn, FLD.Pfull(nn))
+                    Pe = Math.Max(Pe, FLD.Pdrag(nn))
+                    Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
+                    nnUp = GBX.fGSnnUp(Md)
+                    nnDown = GBX.fGSnnDown(Md)
+
+                    'Max Torque
+                    MdMax = FLD.Pfull(nn, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
+
+                    'Shift up as long as Torque reserve is okay and Gear < Max-Gear and rpm is above DownShift-rpm
+                    Do While Gear < VEH.ganganz AndAlso 1 - Md / MdMax >= GBX.gs_TorqueResv / 100 AndAlso nn > nnDown '+ 0.1 * (nnUp - nnDown)
+
+                        'Shift UP
+                        Gear += 1
+
+                        'Continue only if Gear < Max-Gear
+                        If Gear = VEH.ganganz Then Exit Do
+
+                        'Calculate Shift-rpm for higher gear
+                        nU = fnU(Vist, Gear + 1, False)
+                        nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+
+                        'Continue only if rpm (for higher gear) is below rated rpm
+                        If nn > 1 Then Exit Do
+
+                        Pe = Math.Min(fPeGearMod(Gear + 1, t) * VEH.Pnenn, FLD.Pfull(nn))
+                        Pe = Math.Max(Pe, FLD.Pdrag(nn))
+                        Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
+                        nnUp = GBX.fGSnnUp(Md)
+                        nnDown = GBX.fGSnnDown(Md)
+
+                        'Max Torque
+                        MdMax = FLD.Pfull(nn, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
+
+                    Loop
+
+
+                End If
+
+            End If
 
         End If
 
@@ -3472,7 +3603,7 @@ lbGschw:
         Next
 
         'Maximum permissible Gear-shifts every 3 seconds:
-        If t - itgangw <= 3 And t > 2 Then
+        If t - itgangw <= GBX.gs_ShiftTime And t > GBX.gs_ShiftTime - 1 Then
             Return LastGear    '<<< no further checks!!!
         End If
 
@@ -4799,16 +4930,12 @@ lb20:
         Return fPvD(t) / VEH.Pnenn
     End Function
 
-    Private Function fPeGearMod(ByVal Gear As Integer, ByVal t As Integer) As Single
+    Private Function fPeGearMod(ByVal Gear As Integer, ByVal t As Integer, ByVal V As Single, ByVal a As Single) As Single
         Dim PaM As Single
         Dim nU As Single
         Dim PvD As Single
-        Dim V As Single
-        Dim a As Single
 
-        PvD = fPvD(t)
-        V = MODdata.Vh.V(t)
-        a = MODdata.Vh.a(t)
+        PvD = fPvD(t, V, a)
 
         nU = fnU(V, Gear, False)
 
@@ -4825,6 +4952,10 @@ lb20:
         End If
 
 
+    End Function
+
+    Private Function fPeGearMod(ByVal Gear As Integer, ByVal t As Integer) As Single
+        Return fPeGearMod(Gear, t, MODdata.Vh.V(t), MODdata.Vh.a(t))
     End Function
 
 
@@ -4892,7 +5023,7 @@ lb20:
 
 #Region "Leistungsberechnung"
 
-    '--------------Power in-front?(vor) of Diff = At Wheel -------------
+    '--------------Power before Diff = At Wheel -------------
     Private Function fPvD(ByVal t As Integer) As Single
         Return fPr(MODdata.Vh.V(t)) + fPair(MODdata.Vh.V(t), t) + fPaFZ(MODdata.Vh.V(t), MODdata.Vh.a(t)) + fPs(MODdata.Vh.V(t), t)
     End Function

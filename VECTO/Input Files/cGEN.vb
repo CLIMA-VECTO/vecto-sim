@@ -323,25 +323,25 @@ Public Class cGEN
         'DesMaxJa = CBool(file.ReadLine(0))
         stDesMaxFile.Init(MyPath, file.ReadLine(0))
 
-        hinauf = CSng(file.ReadLine(0))
-        hinunter = CSng(file.ReadLine(0))
-        lhinauf = CSng(file.ReadLine(0))
-        lhinunter = CSng(file.ReadLine(0))
-        pspar = CSng(file.ReadLine(0))
-        pmodell = CSng(file.ReadLine(0))
+        'hinauf = CSng(file.ReadLine(0))
+        'hinunter = CSng(file.ReadLine(0))
+        'lhinauf = CSng(file.ReadLine(0))
+        'lhinunter = CSng(file.ReadLine(0))
+        'pspar = CSng(file.ReadLine(0))
+        'pmodell = CSng(file.ReadLine(0))
 
-        'Schaltmodell-Verteilung |@@| Gear-shifting Model Distribution
-        If (pspar > 1) Then
-            pspar = 1
-        ElseIf (pspar < 0) Then
-            pspar = 0
-        End If
-        If (pmodell > 1) Then
-            pmodell = 1
-        ElseIf (pmodell < 0) Then
-            pmodell = 0
-        End If
-        If ((pspar + pmodell) > 1.0) Then pmodell = 1.0 - pspar
+        ''Schaltmodell-Verteilung |@@| Gear-shifting Model Distribution
+        'If (pspar > 1) Then
+        '    pspar = 1
+        'ElseIf (pspar < 0) Then
+        '    pspar = 0
+        'End If
+        'If (pmodell > 1) Then
+        '    pmodell = 1
+        'ElseIf (pmodell < 0) Then
+        '    pmodell = 0
+        'End If
+        'If ((pspar + pmodell) > 1.0) Then pmodell = 1.0 - pspar
 
 
 
@@ -689,21 +689,21 @@ lbClose:
         'fGEN.WriteLine(Math.Abs(CInt(DesMaxJa)))
         fGEN.WriteLine(stDesMaxFile.PathOrDummy)
 
-        fGEN.WriteLine("c Gear shift behaviour:")
-        fGEN.WriteLine("c Gearshift model (Version fast driver)")
-        fGEN.WriteLine("c shift up at ratio rpm/rated rpm in actual gear greater than")
-        fGEN.WriteLine(CStr(hinauf))
-        fGEN.WriteLine("c shift down when rpm/rated rpm in lower gear is higher than")
-        fGEN.WriteLine(CStr(hinunter))
-        fGEN.WriteLine("c Gearshift model (Version economic driver)")
-        fGEN.WriteLine("c shift up at ratio rpm/rated rpm in higher gear greater than")
-        fGEN.WriteLine(CStr(lhinauf))
-        fGEN.WriteLine("c Shift down when ratio rpm/rated rpm in actual gear is lower than")
-        fGEN.WriteLine(CStr(lhinunter))
-        fGEN.WriteLine("c Share of version economic driver (0 to 1)")
-        fGEN.WriteLine(CStr(pspar))
-        fGEN.WriteLine("c Share of version mixed model (0 to 1)")
-        fGEN.WriteLine(CStr(pmodell))
+        'fGEN.WriteLine("c Gear shift behaviour:")
+        'fGEN.WriteLine("c Gearshift model (Version fast driver)")
+        'fGEN.WriteLine("c shift up at ratio rpm/rated rpm in actual gear greater than")
+        'fGEN.WriteLine(CStr(hinauf))
+        'fGEN.WriteLine("c shift down when rpm/rated rpm in lower gear is higher than")
+        'fGEN.WriteLine(CStr(hinunter))
+        'fGEN.WriteLine("c Gearshift model (Version economic driver)")
+        'fGEN.WriteLine("c shift up at ratio rpm/rated rpm in higher gear greater than")
+        'fGEN.WriteLine(CStr(lhinauf))
+        'fGEN.WriteLine("c Shift down when ratio rpm/rated rpm in actual gear is lower than")
+        'fGEN.WriteLine(CStr(lhinunter))
+        'fGEN.WriteLine("c Share of version economic driver (0 to 1)")
+        'fGEN.WriteLine(CStr(pspar))
+        'fGEN.WriteLine("c Share of version mixed model (0 to 1)")
+        'fGEN.WriteLine(CStr(pmodell))
 
         fGEN.Close()
         fGEN = Nothing

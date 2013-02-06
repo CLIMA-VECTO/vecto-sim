@@ -932,13 +932,15 @@ lbEr:
                 If bExsCompDef Then
                     For Each ExsKV In ExsComponents
                         For Each ExsKVsub In ExsKV.Value
-                            hzExsValues(ExsKV.Key)(ExsKVsub.Key).Add(ExsKVsub.Value(i - 1))
+                            'WRONG!! =>   hzExsValues(ExsKV.Key)(ExsKVsub.Key).Add(ExsKVsub.Value(i - 1))
+                            hzExsValues(ExsKV.Key)(ExsKVsub.Key).Add(tExsValues(ExsKV.Key)(ExsKVsub.Key)(i - 1))
                         Next
                     Next
                 End If
                 If bAuxDef Then
                     For Each AuxKV In AuxComponents
-                        hzAuxValues(AuxKV.Key).Add(AuxKV.Value(i - 1))
+                        'WRONG!! => hzAuxValues(AuxKV.Key).Add(AuxKV.Value(i - 1))
+                        hzAuxValues(AuxKV.Key).Add(tAuxValues(AuxKV.Key)(i - 1))
                     Next
                 End If
 
@@ -971,7 +973,6 @@ lbEr:
         If bExsCompDef Then ExsComponents = hzExsValues
         If bAuxDef Then AuxComponents = hzAuxValues
         tDim = Values(tDriComp.V).Count - 1
-
 
         Return True
 
@@ -1308,6 +1309,44 @@ lb10:
         Return True
 
     End Function
+
+    Public Sub FirstZero()
+        Dim EmKV As KeyValuePair(Of String, cEmComp)
+        Dim ExsKV As KeyValuePair(Of tExsComp, Dictionary(Of Short, List(Of Single)))
+        Dim AuxKV As KeyValuePair(Of String, List(Of Single))
+        Dim ValKV As KeyValuePair(Of tDriComp, List(Of Double))
+        Dim ExsKVsub As KeyValuePair(Of Short, List(Of Single))
+
+        tDim += 1
+
+        For Each ValKV In Values
+            ValKV.Value.Insert(0, ValKV.Value(0))
+        Next
+
+        If Scycle Then VoglS.Insert(0, VoglS(0))
+
+        If bExsCompDef Then
+            For Each ExsKV In ExsComponents
+                For Each ExsKVsub In ExsKV.Value
+                    ExsKVsub.Value.Insert(0, ExsKVsub.Value(0))
+                Next
+            Next
+        End If
+
+        If bAuxDef Then
+            For Each AuxKV In AuxComponents
+                AuxKV.Value.Insert(0, AuxKV.Value(0))
+            Next
+        End If
+
+        If bEmCompDef Then
+            For Each EmKV In EmComponents
+                EmKV.Value.RawVals.Insert(0, EmKV.Value.RawVals(0))
+            Next
+        End If
+
+
+    End Sub
 
     Public Property FilePath() As String
         Get
