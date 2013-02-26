@@ -2,7 +2,7 @@
 
 Module VECTO_Global
 
-    Public Const VECTOvers As String = "1.1 beta"
+    Public Const VECTOvers As String = "1.1 beta 2"
     Public MyAppPath As String
     Public MyConfPath As String
     Public MyDeclPath As String
@@ -51,7 +51,6 @@ Module VECTO_Global
     Public ProgBarCtrl As cProgBarCtrl
 
     Public SetCulture As Boolean       'Damit der Backgroundworker das richtige Format verwendet
-    Public FirstTime As Boolean
 
     Public Function nMtoPe(ByVal nU As Double, ByVal M As Double) As Double
         Return ((nU * 2 * Math.PI / 60) * M / 1000)
@@ -67,7 +66,7 @@ Module VECTO_Global
         Return Pnorm * VEH.Pnenn * 1000 / (nU * 2 * Math.PI / 60)
     End Function
 
-    Public Function PToM(ByVal nU As Single, ByVal Pe As Double) As Single
+    Public Function nPeToM(ByVal nU As Single, ByVal Pe As Double) As Single
         Return Pe * 1000 / (nU * 2 * Math.PI / 60)
     End Function
 
@@ -130,7 +129,7 @@ Module VECTO_Global
 
         x = sK.IndexOf("_")
 
-        If x = -1 Then Return tExsComp.Undefined
+        If x = -1 Then Return tAuxComp.Undefined
 
         sK = Left(sK, x + 1)
 

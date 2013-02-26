@@ -9,6 +9,12 @@ Public Class cDEV
 
     Public GearCorrection As Boolean
 
+    Public ATmode As Boolean
+    Public TCiterPrec As Single
+    Public TCfile As String
+    Public TCnUstep As Single
+    Public TCnUstepMin As Single
+    Public TCnUref As Single
 
     '**************************************************************************************************************
     '**************************************************************************************************************
@@ -117,6 +123,31 @@ Public Class cDEV
         MyOptions.Add("GearCorrection", Conf0)
 
 
+        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Automatic Transmission. TC file required.", False)
+        Conf0.BoolVal = False
+        MyOptions.Add("ATmode", Conf0)
+
+        Conf0 = New cDEVoption(tDEVconfType.tStringVal, "TC file path")
+        Conf0.StringVal = ""
+        MyOptions.Add("TCfile", Conf0)
+
+        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "TC reference rpm for input torque [1/min]")
+        Conf0.SingleVal = 1000
+        MyOptions.Add("TCnUref", Conf0)
+
+        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "TC iteration: target precision for torque ratio")
+        Conf0.SingleVal = 0.001
+        MyOptions.Add("TCiterPrec", Conf0)
+
+        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "TC iteration: start value for nU-step [1/min]")
+        Conf0.SingleVal = 100
+        MyOptions.Add("TCnUstep", Conf0)
+
+        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "TC iteration: lowest value for nU-step [1/min]")
+        Conf0.SingleVal = 0.01
+        MyOptions.Add("TCnUstepMin", Conf0)
+
+
         '**************************** END: Parameters Configuration '*****************************
         '*****************************************************************************************
         '*****************************************************************************************
@@ -128,6 +159,12 @@ Public Class cDEV
     'Initialize the actual Config-Parameters from MyConfigs list
     Public Sub SetOptions()
         GearCorrection = MyOptions("GearCorrection").BoolVal
+        ATmode = MyOptions("ATmode").BoolVal
+        TCiterPrec = MyOptions("TCiterPrec").SingleVal
+        TCfile = MyOptions("TCfile").StringVal
+        TCnUstep = MyOptions("TCnUstep").SingleVal
+        TCnUstepMin = MyOptions("TCnUstepMin").SingleVal
+        TCnUref = MyOptions("TCnUref").SingleVal
     End Sub
 
     'Demo for Delegate Function

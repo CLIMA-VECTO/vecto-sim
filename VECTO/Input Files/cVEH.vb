@@ -352,7 +352,7 @@ lbError:
         file.WriteLine(CStr(siAquers))
         'file.WriteLine("c Engine rotational inertia [kg*m^2]")
         'file.WriteLine(CStr(siI_mot))
-        file.WriteLine("c Wheels equivalent rotational inertia [kg] (= I_wheel/rdyn^2)")
+        file.WriteLine("c Wheels inertia [kgm^2]")
         file.WriteLine(CStr(siI_wheels))
         'file.WriteLine("c Gearbox rotational inertia [kg*m^2]")
         'file.WriteLine(CStr(siI_Getriebe))
@@ -416,6 +416,7 @@ lbError:
 
         'Axle configuration - Update 16.10.2012
         file.WriteLine("c Axle configurations")
+        file.WriteLine("c Max. axle weight [kg], RRC [N/N]")
         For Each sl In RRCs
             file.WriteLine(CStr(sl(0)), CStr(sl(1)))
         Next
@@ -550,7 +551,8 @@ lbError:
                     Try
                         'PHEM:    n, PeIn, PeOut => x=n, y=PeOut, z=PeIn |@@| PHEM:    n, PeIn, PeOut => x=n, y=PeOut, z=PeIn
                         'PHEM: GBmap0.AddPoints(CDbl(line(0)) * n_norm, CDbl(line(2)) * Pe_norm, CDbl(line(1)) * Pe_norm) |@@| PHEM: GBmap0.AddPoints(CDbl(line(0)) * n_norm, CDbl(line(2)) * Pe_norm, CDbl(line(1)) * Pe_norm)
-                        'VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn |@@| VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn
+                        'old version: VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn |@@| VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn
+                        'VECTO: n, M_in, M_loss => x=n, y=M_out, z=M_in
                         nU = CDbl(line(0))
                         M_in = CDbl(line(1))
                         M_loss = CDbl(line(2))
@@ -561,7 +563,8 @@ lbError:
                             M_out = M_in + M_loss
                         End If
 
-                        GBmap0.AddPoints(nU, nMtoPe(nU, M_out), nMtoPe(nU, M_in))
+                        'old version: Power instead of torque: GBmap0.AddPoints(nU, nMtoPe(nU, M_out), nMtoPe(nU, M_in))
+                        GBmap0.AddPoints(nU, M_out, M_in)
                     Catch ex As Exception
                         WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & l & " (" & path & ")", MsgSrc)
                         file.Close()
@@ -596,7 +599,7 @@ lbError:
         Dim i As Integer
         Dim Ab As Double
         Dim AbMin As Double
-        Dim iMin As Double
+        Dim iMin As Integer
         Dim PeOutX As Double
 
         Dim MsgSrc As String
@@ -617,25 +620,25 @@ lbError:
 
             Try
                 'Interpolate with Original Values
-                PeIn = GBmap.Intpol(nU, PeOut)
+                PeIn = nMtoPe(nU, GBmap.Intpol(nU, nPeToM(nU, PeOut)))
 
             Catch ex As Exception
 
                 'If error: try extrapolation
 
                 'Search for the nearest Map point
-                AbMin = ((GBmap.ptList(0).X - nU) ^ 2 + (GBmap.ptList(0).Y - PeOut) ^ 2) ^ 0.5
+                AbMin = ((GBmap.ptList(0).X - nU) ^ 2 + (GBmap.ptList(0).Y - nPeToM(nU, PeOut)) ^ 2) ^ 0.5
                 iMin = 0
                 For i = 1 To GBmap.ptDim
-                    Ab = ((GBmap.ptList(i).X - nU) ^ 2 + (GBmap.ptList(i).Y - PeOut) ^ 2) ^ 0.5
+                    Ab = ((GBmap.ptList(i).X - nU) ^ 2 + (GBmap.ptList(i).Y - nPeToM(nU, PeOut)) ^ 2) ^ 0.5
                     If Ab < AbMin Then
                         AbMin = Ab
                         iMin = i
                     End If
                 Next
 
-                PeOutX = GBmap.ptList(iMin).Y
-                PeIn = GBmap.ptList(iMin).Z
+                PeOutX = nMtoPe(nU, GBmap.ptList(iMin).Y)
+                PeIn = nMtoPe(nU, GBmap.ptList(iMin).Z)
 
                 'Efficiency
                 If PeOutX > 0 Then
@@ -677,7 +680,7 @@ lbError:
                 'Calculate efficiency with PeIn for original PeOut
                 PeIn = PeOut / WG
 
-                MODdata.ModErrors.TrLossMapExtr = "Gear= " & Gear & ", nU= " & nU.ToString("0.00") & " [U/min], MeOut=" & PToM(nU, PeOut).ToString("0.00") & " [Nm]"
+                MODdata.ModErrors.TrLossMapExtr = "Gear= " & Gear & ", nU= " & nU.ToString("0.00") & " [U/min], MeOut=" & nPeToM(nU, PeOut).ToString("0.00") & " [Nm]"
 
             End Try
 
@@ -696,7 +699,7 @@ lbError:
         Dim i As Integer
         Dim Ab As Double
         Dim AbMin As Double
-        Dim iMin As Double
+        Dim iMin As Integer
         Dim PeInX As Double
 
         Dim MsgSrc As String
@@ -718,25 +721,25 @@ lbError:
 
             Try
                 'Interpolate with original values
-                PeOut = GBmap.IntpolXZ(nU, PeIn)
+                PeOut = nMtoPe(nU, GBmap.IntpolXZ(nU, nPeToM(nU, PeIn)))
 
             Catch ex As Exception
 
                 'If error: try extrapolation
 
                 'Search for the nearest Map-point
-                AbMin = ((GBmap.ptList(0).X - nU) ^ 2 + (GBmap.ptList(0).Z - PeIn) ^ 2) ^ 0.5
+                AbMin = ((GBmap.ptList(0).X - nU) ^ 2 + (GBmap.ptList(0).Z - nPeToM(nU, PeIn)) ^ 2) ^ 0.5
                 iMin = 0
                 For i = 1 To GBmap.ptDim
-                    Ab = ((GBmap.ptList(i).X - nU) ^ 2 + (GBmap.ptList(i).Z - PeIn) ^ 2) ^ 0.5
+                    Ab = ((GBmap.ptList(i).X - nU) ^ 2 + (GBmap.ptList(i).Z - nPeToM(nU, PeIn)) ^ 2) ^ 0.5
                     If Ab < AbMin Then
                         AbMin = Ab
                         iMin = i
                     End If
                 Next
 
-                PeInX = GBmap.ptList(iMin).Z
-                PeOut = GBmap.ptList(iMin).Y
+                PeInX = nMtoPe(nU, GBmap.ptList(iMin).Z)
+                PeOut = nMtoPe(nU, GBmap.ptList(iMin).Y)
 
                 'Efficiency
                 If PeOut > 0 Then
@@ -774,7 +777,7 @@ lbError:
                 'Calculate efficiency with PeIn for original PeOut
                 PeOut = PeIn * WG
 
-                MODdata.ModErrors.TrLossMapExtr = "Gear= " & Gear & ", nU= " & nU.ToString("0.00") & " [U/min], MeIn=" & PToM(nU, PeIn).ToString("0.00") & " [Nm] (fwd)"
+                MODdata.ModErrors.TrLossMapExtr = "Gear= " & Gear & ", nU= " & nU.ToString("0.00") & " [U/min], MeIn=" & nPeToM(nU, PeIn).ToString("0.00") & " [Nm] (fwd)"
 
             End Try
 

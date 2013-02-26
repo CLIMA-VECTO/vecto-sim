@@ -34,7 +34,6 @@ Module M_MAIN
 
         Dim i As Integer
         Dim path0 As String
-        Dim LicErrorFeat As Short
         Dim JobAbortedByErr As Boolean
         Dim CyclAbrtedByErr As Boolean
         Dim MsgOut As Boolean
@@ -68,16 +67,12 @@ Module M_MAIN
         MsgOut = (PHEMmode = tPHEMmode.ModeSTANDARD)
 
         'License check
-        LicErrorFeat = 0
-        If (PHEMmode = tPHEMmode.ModeBATCH) Then
-            If Not Lic.LicFeature(1) Then LicErrorFeat = 1
-        ElseIf (PHEMmode = tPHEMmode.ModeADVANCE) Then
-            If Not Lic.LicFeature(2) Then LicErrorFeat = 2
-        End If
 
-        If LicErrorFeat > 0 Then
-            WorkerMsg(tMsgID.Err, "Your license does not support the selected mode (" & LicErrorFeat & ")", MsgSrc)
-            GoTo lbErrBefore
+        If (PHEMmode = tPHEMmode.ModeBATCH) Then
+            If Not Lic.LicFeature(1) Then
+                WorkerMsg(tMsgID.Err, "Your license does not support BATCH mode!", MsgSrc)
+                GoTo lbErrBefore
+            End If
         End If
 
         If FilesDim = -1 Then
@@ -199,29 +194,6 @@ lbADV:
             '   BATCH: Cycle from DRI list
             '   ADVANCE: Cycle is not read
             If Not LESE() Then
-                JobAbortedByErr = True
-                GoTo lbNextJob
-            End If
-
-            'Check if all the modes are licensed in the GEN file
-            LicErrorFeat = 0
-
-            If GEN.VehMode = tVehMode.HEV Then
-                If Not Lic.LicFeature(5) Then LicErrorFeat = 5
-            ElseIf GEN.VehMode = tVehMode.EV Then
-                If Not Lic.LicFeature(6) Then LicErrorFeat = 6
-            End If
-
-            If GEN.CreateMap And Not Lic.LicFeature(3) Then LicErrorFeat = 3
-
-            If GEN.EngAnalysis And Not Lic.LicFeature(4) Then LicErrorFeat = 4
-
-            If (GEN.dynkorja And Not Lic.LicFeature(7)) Then LicErrorFeat = 7
-
-            If (GEN.EXSja And Not Lic.LicFeature(8)) Then LicErrorFeat = 8
-
-            If LicErrorFeat > 0 Then
-                WorkerMsg(tMsgID.Err, "Your license does not support the selected mode (" & LicErrorFeat & ")", MsgSrc)
                 JobAbortedByErr = True
                 GoTo lbNextJob
             End If
@@ -407,6 +379,14 @@ lbADV:
                             GoTo lbNextJob
                         End If
 
+                        If DEV.ATmode Then
+                            If Not GBX.TCinit Then
+                                'Error-notification within GSinit()
+                                JobAbortedByErr = True
+                                GoTo lbNextJob
+                            End If
+                        End If
+
                         If GEN.ModeHorEV Then
 
                             If GEN.VehMode = tVehMode.EV Then
@@ -421,10 +401,11 @@ lbADV:
 
                                 If MsgOut Then WorkerMsg(tMsgID.Normal, "EV Calc", MsgSrc)
 
-                                If Not MODdata.Px.EV_Calc() Then
-                                    CyclAbrtedByErr = True
-                                    GoTo lbAusg
-                                End If
+                                '!!!!!!!! EV disabled !!!!!!!!!
+                                'If Not MODdata.Px.EV_Calc() Then
+                                CyclAbrtedByErr = True
+                                GoTo lbAusg
+                                'End If
 
                             Else
 
@@ -439,10 +420,11 @@ lbADV:
 
                                 If MsgOut Then WorkerMsg(tMsgID.Normal, "HEV Calc", MsgSrc)
 
-                                If Not MODdata.Px.HEV_Calc() Then
-                                    CyclAbrtedByErr = True
-                                    GoTo lbAusg
-                                End If
+                                '!!!!!!!! HEV disabled !!!!!!!!!
+                                'If Not MODdata.Px.HEV_Calc() Then
+                                CyclAbrtedByErr = True
+                                GoTo lbAusg
+                                'End If
 
                             End If
 
@@ -455,12 +437,12 @@ lbADV:
                                 GoTo lbAusg
                             End If
 
-                        End If
+                    End If
 
-                        If PHEMworker.CancellationPending Then GoTo lbAbort
+                    If PHEMworker.CancellationPending Then GoTo lbAbort
 
-                        'Calculate CycleKin (for erg/sum, etc.)
-                        MODdata.CylceKin.Calc()
+                    'Calculate CycleKin (for erg/sum, etc.)
+                    MODdata.CylceKin.Calc()
 
                     End If
                     '----------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 ﻿Public Class cConfig
 
-    Private Const FormatVersion As Short = 1
-    Private FileVersion As Short
+    'Private Const FormatVersion As Short = 1
+    'Private FileVersion As Short
 
     Public GnVorgab As Boolean
     Private sWorkDPath As String
@@ -27,18 +27,20 @@
     Public FuelDens As Single
     Public CO2perFC As Single
 
+    Public FirstRun As Boolean
+
     Public Sub New()
         SetDefault()
     End Sub
 
     Public Function ConfigLOAD() As Boolean
         Dim c As New cFile_V3
-        Dim txt As String
+        'Dim txt As String
 
         SetDefault()
 
         If Not IO.File.Exists(MyConfPath & "settings.txt") Then
-            If Not FirstTime Then GUImsg(tMsgID.Err, "Config-file not found! Using default settings.")
+            If Not Cfg.FirstRun Then GUImsg(tMsgID.Err, "Config-file not found! Using default settings.")
             Return False
         End If
 
@@ -46,26 +48,26 @@
 
         '***
         '*** First line: Version
-        txt = Trim(UCase(c.ReadLine(0)))
-        If Microsoft.VisualBasic.Left(txt, 1) = "V" Then
-            ' "Remove V'' => It remains the number
-            txt = txt.Replace("V", "")
-            If Not IsNumeric(txt) Then
-                'If invalid version: Abort
-                GoTo lbEr
-            Else
-                'Version settled
-                FileVersion = CInt(txt)
-            End If
-        Else
-            c.Close()
-            Return ReadOldFormat()
-        End If
+        'txt = Trim(UCase(c.ReadLine(0)))
+        'If Microsoft.VisualBasic.Left(txt, 1) = "V" Then
+        '    ' "Remove V'' => It remains the number
+        '    txt = txt.Replace("V", "")
+        '    If Not IsNumeric(txt) Then
+        '        'If invalid version: Abort
+        '        GoTo lbEr
+        '    Else
+        '        'Version settled
+        '        FileVersion = CInt(txt)
+        '    End If
+        'Else
+        '    c.Close()
+        '    Return ReadOldFormat()
+        'End If
 
-        If FileVersion > FormatVersion Then
-            GUImsg(tMsgID.Err, "Config-file Version " & FileVersion & " incompatible with application version! Using default settings.")
-            Return False
-        End If
+        'If FileVersion > FormatVersion Then
+        '    GUImsg(tMsgID.Err, "Config-file Version " & FileVersion & " incompatible with application version! Using default settings.")
+        '    Return False
+        'End If
 
         sWorkDPath = Trim(c.ReadLine(0))
         If UCase(sWorkDPath) = sKey.HomePath Then
@@ -112,6 +114,13 @@
 
         FuelDens = CSng(c.ReadLine(0))
         CO2perFC = CSng(c.ReadLine(0))
+
+        If c.EndOfFile Then GoTo lbDone
+
+        FirstRun = CBool(c.ReadLine(0))
+
+
+lbDone:
 
         c.Close()
 
@@ -244,6 +253,8 @@ lbDone:
 
         WorkDirHome = False
 
+        FirstRun = True
+
     End Sub
 
     Public Sub ConfigSAVE()
@@ -251,7 +262,7 @@ lbDone:
         c.OpenWrite(MyConfPath & "settings.txt")
 
         'Version
-        c.WriteLine("V" & FormatVersion)
+        'c.WriteLine("V" & FormatVersion)
 
         c.WriteLine("c Working Directory Path")
         If WorkDirHome And UCase(Trim(sWorkDPath)) = UCase(Trim(MyAppPath)) Then
@@ -301,6 +312,10 @@ lbDone:
         c.WriteLine(FuelDens.ToString)
         c.WriteLine("c CO2 per FC [kgCO2/kgFC]")
         c.WriteLine(CO2perFC.ToString)
+
+        c.WriteLine("c First Run (Show Quick Start Guide Prompt)")
+        c.WriteLine(Math.Abs(CInt(FirstRun)))
+
 
         c.Close()
         c = Nothing

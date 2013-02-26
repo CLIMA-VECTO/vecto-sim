@@ -55,6 +55,8 @@ Partial Class F_VEH
         Me.ToolStripBtSaveAs = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripBtSendTo = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.GroupBox7 = New System.Windows.Forms.GroupBox()
         Me.PnRt = New System.Windows.Forms.Panel()
         Me.Label45 = New System.Windows.Forms.Label()
@@ -91,8 +93,6 @@ Partial Class F_VEH
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.GroupBox6.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
@@ -244,7 +244,7 @@ Partial Class F_VEH
         Me.Label32.AutoSize = True
         Me.Label32.Location = New System.Drawing.Point(206, 184)
         Me.Label32.Name = "Label32"
-        Me.Label32.Size = New System.Drawing.Size(36, 13)
+        Me.Label32.Size = New System.Drawing.Size(43, 13)
         Me.Label32.TabIndex = 24
         Me.Label32.Text = "[kgmÂ²]"
         '
@@ -271,7 +271,7 @@ Partial Class F_VEH
         Me.Label38.AutoSize = True
         Me.Label38.Location = New System.Drawing.Point(235, 48)
         Me.Label38.Name = "Label38"
-        Me.Label38.Size = New System.Drawing.Size(24, 13)
+        Me.Label38.Size = New System.Drawing.Size(31, 13)
         Me.Label38.TabIndex = 24
         Me.Label38.Text = "[mÂ²]"
         '
@@ -389,6 +389,20 @@ Partial Class F_VEH
         Me.ToolStripBtSendTo.Size = New System.Drawing.Size(23, 22)
         Me.ToolStripBtSendTo.Text = "Send to GEN Editor"
         Me.ToolStripBtSendTo.ToolTipText = "Send to GEN Editor"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        '
+        'ToolStripButton1
+        '
+        Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButton1.Image = Global.VECTO.My.Resources.Resources.Help_icon
+        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton1.Name = "ToolStripButton1"
+        Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton1.Text = "Help"
         '
         'GroupBox7
         '
@@ -562,7 +576,7 @@ Partial Class F_VEH
         '
         'ColumnHeader9
         '
-        Me.ColumnHeader9.Text = "RRC [-]"
+        Me.ColumnHeader9.Text = "RRC [N/N]"
         Me.ColumnHeader9.Width = 79
         '
         'ButAxlAdd
@@ -748,20 +762,6 @@ Partial Class F_VEH
         Me.PictureBox1.Size = New System.Drawing.Size(527, 40)
         Me.PictureBox1.TabIndex = 37
         Me.PictureBox1.TabStop = False
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
-        '
-        'ToolStripButton1
-        '
-        Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton1.Image = Global.VECTO.My.Resources.Resources.Help_icon
-        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton1.Text = "Help"
         '
         'F_VEH
         '

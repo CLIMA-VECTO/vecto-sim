@@ -572,7 +572,7 @@ Public Class F_MAINForm
         If Command() <> "" Then
             CmdLineCtrl(My.Application.CommandLineArgs)
         Else
-            If FirstTime Then
+            If Cfg.FirstRun Then
                 If MsgBox("Welcome to VECTO!" & vbCrLf & vbCrLf & "Start Quick Start Guide?", MsgBoxStyle.YesNo, "Welcome") = MsgBoxResult.Yes Then
                     If IO.File.Exists(MyAppPath & "User Manual\qsg\quickstartApp.html") Then
                         System.Diagnostics.Process.Start(MyAppPath & "User Manual\qsg\quickstartApp.html")
@@ -582,6 +582,8 @@ Public Class F_MAINForm
                 End If
             End If
         End If
+
+        Cfg.FirstRun = False
 
     End Sub
 

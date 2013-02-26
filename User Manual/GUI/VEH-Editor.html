@@ -114,7 +114,9 @@ Wind Correction</span> (see below).<br>
 / Wheels</span><br>
 <div style="margin-left: 40px;">Rolling Resistance
 Coefficients (RRC) are configured per axle. <span style="font-weight: bold;">Max. axle weight [kg]</span>
-is used to weighten each RRC value. Use the <img style="width: 16px; height: 16px;" alt="add" src="../pics/icons/plus-circle-icon.png"> and <img style="width: 16px; height: 16px;" alt="remove" src="../pics/icons/minus-circle-icon.png"> buttons to add or
+is used to weighten each RRC value. RRC is normalized (Resistance Force
+[N] / (m [kg] * g [m/s²]) with m being the sum of Curb Weight Vehicle,
+Curb Weight Extra Trailer/Body and Loading).<br>Use the <img style="width: 16px; height: 16px;" alt="add" src="../pics/icons/plus-circle-icon.png"> and <img style="width: 16px; height: 16px;" alt="remove" src="../pics/icons/minus-circle-icon.png"> buttons to add or
 remove axles form the vehicle. Doubleclick entries to edit existing
 axle configurations.<br>
 <span style="font-weight: bold;"></span></div>
@@ -186,7 +188,10 @@ with "<span style="font-weight: bold;">c</span> "</span><br>
 &amp; Beta:</span><br>
 <div style="margin-left: 40px;">This
 mode requires an input file which defines the Cd Scaling Factor
-depending on the Yaw Angle ("Beta", angle between vehicle longitudinal axis and direction of air&nbsp;velocity relative to the vehicle). Beta and the air&nbsp;velocity&nbsp;relative to the vehicle must be defined in the driving cycle
+depending on the Yaw Angle ("Beta", angle between vehicle longitudinal
+axis and direction of air&nbsp;velocity relative to the vehicle). Beta
+and the air&nbsp;velocity&nbsp;relative to the vehicle must be defined
+in the driving cycle
 (see below). <span style="color: rgb(51, 102, 255);"><span style="color: black;">The valid range for the Wind Angle
 (Beta)</span></span> goes from 0 (headwind) to 180
 (tailwind). VECTO assumes symmetrical vehicle shape (sign of beta is ignored).<br>

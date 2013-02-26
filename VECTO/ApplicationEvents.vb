@@ -20,8 +20,6 @@ Namespace My
             Dim i As Int16
             Dim file As cFile_V3
 
-            FirstTime = False
-
             'Paths
             MyAppPath = My.Application.Info.DirectoryPath & "\"
             MyConfPath = MyAppPath & "config\"
@@ -32,7 +30,6 @@ Namespace My
 
             'If folder does not exist: Create!
             If Not IO.Directory.Exists(MyConfPath) Then
-                FirstTime = True
                 Try
                     IO.Directory.CreateDirectory(MyConfPath)
                 Catch ex As Exception

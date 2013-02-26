@@ -726,6 +726,7 @@ Public Class cMOD
         Public RtExtrapol As String
         Public DesMaxExtr As String
         Public GSextrapol As String
+        Public TCextrapol As String
 
         Public Sub New()
             ResetAll()
@@ -754,6 +755,7 @@ Public Class cMOD
             CdExtrapol = ""
             RtExtrapol = ""
             GSextrapol = ""
+            TCextrapol = ""
             PxReset()
         End Sub
 
@@ -802,6 +804,10 @@ Public Class cMOD
 
             If GSextrapol <> "" Then
                 WorkerMsg(tMsgID.Warn, "Extrapolation in Gear Shift Polygon file (" & GSextrapol & ")!", MsgSrc & "/t= " & Second)
+            End If
+
+            If TCextrapol <> "" Then
+                WorkerMsg(tMsgID.Warn, "Extrapolation in Torque Converter file (" & TCextrapol & ")!", MsgSrc & "/t= " & Second)
             End If
 
             Return Abort

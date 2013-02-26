@@ -29,6 +29,16 @@ Public Class cGBX
     Public gs_ShiftInside As Boolean
     'Public gs_Type As tGearbox 'not used yet
 
+    'Torque Converter Input
+    Public TCnu As New List(Of Single)
+    Public TCmu As New List(Of Single)
+    Public TCtorque As New List(Of Single)
+    Public TCdim As Integer
+
+    'Torque Converter Iteration Results
+    Public TCMin As Single
+    Public TCnUin As Single
+
 
     Public Sub New()
         Dim i As Short
@@ -184,6 +194,171 @@ Public Class cGBX
 
 
     End Function
+
+    Public Function TCinit() As Boolean
+        Dim file As New cFile_V3
+        Dim MsgSrc As String
+        Dim line() As String
+
+        MsgSrc = "GBX/TCinit"
+
+        If Not file.OpenRead(DEV.TCfile) Then
+            WorkerMsg(tMsgID.Err, "Torque Converter file not found! (" & DEV.TCfile & ")", MsgSrc)
+            Return False
+        End If
+
+        TCnu.Clear()
+        TCmu.Clear()
+        TCtorque.Clear()
+        TCdim = -1
+
+        Try
+            Do While Not file.EndOfFile
+                line = file.ReadLine
+                TCnu.Add(CSng(line(0)))
+                TCmu.Add(CSng(line(1)))
+                TCtorque.Add(CSng(line(2)))
+                TCdim += 1
+            Loop
+        Catch ex As Exception
+            WorkerMsg(tMsgID.Err, "Error while reading Torque Converter file! (" & ex.Message & ")", MsgSrc)
+            Return False
+        End Try
+
+        file.Close()
+
+        'Check if more then one point
+        If TCdim < 1 Then
+            WorkerMsg(tMsgID.Err, "More points in Torque Converter file needed!", MsgSrc)
+            Return False
+        End If
+
+        Return True
+
+    End Function
+
+    Public Function TCiteration(ByVal nUout As Single, ByVal PeOut As Single) As Boolean
+        Dim nUin As Single
+        Dim Mout As Single
+        Dim VZ As Integer
+        Dim nUstep As Single
+        Dim lastErr As Single
+
+        Dim nu As Single
+        Dim mu As Single
+
+        Dim MoutCalc As Single
+
+        Dim nUmin As Single
+        Dim nUmax As Single
+
+        Dim Schub As Boolean
+
+        'Torque sign
+        If PeOut > 0 Then
+            Schub = False
+        Else
+            Schub = True
+            PeOut *= -1
+        End If
+
+        'Power to torque
+        Mout = nPeToM(nUout, PeOut)
+
+        'rpm-limits
+        nUmin = nnormTonU(GBX.fGSnnDown(Mout))
+        nUmax = nnormTonU(GBX.fGSnnUp(Mout))
+
+        'Start values: Estimate torque converter state
+        nUin = nUout
+
+        If nUin > nUmax Then nUin = nUmax
+        If nUin < nUmin Then nUin = nUmin
+
+        nUstep = DEV.TCnUstep
+        VZ = 1
+        lastErr = 99999
+
+        nu = nUout / nUin
+        mu = fTCmu(nu)
+        MoutCalc = fTCtorque(nu, nUin) * mu
+
+        'Iteration
+        Do While Math.Abs(MoutCalc - Mout) > DEV.TCiterPrec And nUstep > DEV.TCnUstepMin
+            nUin += VZ * nUstep
+            nu = nUout / nUin
+            mu = fTCmu(nu)
+            MoutCalc = fTCtorque(nu, nUin) * mu
+            If Math.Abs(MoutCalc - Mout) > lastErr Then
+                nUstep /= 2
+                VZ *= -1
+            End If
+            lastErr = Math.Abs(MoutCalc - Mout)
+        Loop
+
+        TCMin = MoutCalc / mu
+        TCnUin = nUin
+
+        Return True
+
+    End Function
+
+    Private Function fTCmu(ByVal nu As Single) As Single
+        Dim i As Int32
+
+        'Extrapolation for x < x(1)
+        If TCnu(0) >= nu Then
+            If TCnu(0) > nu Then MODdata.ModErrors.TCextrapol = "nu= " & nu & " [n_out/n_in]"
+            i = 1
+            GoTo lbInt
+        End If
+
+        i = 0
+        Do While TCnu(i) < nu And i < TCdim
+            i += 1
+        Loop
+
+        'Extrapolation for x > x(imax)
+        If TCnu(i) < nu Then
+            MODdata.ModErrors.TCextrapol = "nu= " & nu & " [n_out/n_in]"
+        End If
+
+lbInt:
+        'Interpolation
+        Return (nu - TCnu(i - 1)) * (TCmu(i) - TCmu(i - 1)) / (TCnu(i) - TCnu(i - 1)) + TCmu(i - 1)
+
+    End Function
+
+    Private Function fTCtorque(ByVal nu As Single, ByVal nUin As Single) As Single
+        Dim i As Int32
+        Dim M0 As Single
+
+        'Extrapolation for x < x(1)
+        If TCnu(0) >= nu Then
+            If TCnu(0) > nu Then MODdata.ModErrors.TCextrapol = "nu= " & nu & " [n_out/n_in]"
+            i = 1
+            GoTo lbInt
+        End If
+
+        i = 0
+        Do While TCnu(i) < nu And i < TCdim
+            i += 1
+        Loop
+
+        'Extrapolation for x > x(imax)
+        If TCnu(i) < nu Then
+            MODdata.ModErrors.TCextrapol = "nu= " & nu & " [n_out/n_in]"
+        End If
+
+lbInt:
+        'Interpolation
+        M0 = (nu - TCnu(i - 1)) * (TCtorque(i) - TCtorque(i - 1)) / (TCnu(i) - TCnu(i - 1)) + TCtorque(i - 1)
+
+        Return M0 * (nUin / DEV.TCnUref) ^ 2
+
+    End Function
+
+
 
     Public Function GSinit() As Boolean
         Dim file As cFile_V3
