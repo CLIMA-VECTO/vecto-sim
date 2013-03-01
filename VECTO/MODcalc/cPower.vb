@@ -1280,6 +1280,7 @@ lb_nOK:
         Dim StdMode As Boolean
         Dim NotAdvMode As Boolean
         Dim MsgSrc As String
+        Dim Padd As Single
 
         MsgSrc = "Power/Eng_Calc"
 
@@ -1299,8 +1300,6 @@ lb_nOK:
 
         'Drehzahlen vorher weil sonst scheitert die Pmr-Berechnung bei MODdata.nU(t + 1) |@@| Revolutions previously, otherwise Pmr-calculation fails at MODdata.nU(t + 1)
         For t = 0 To t1
-            'Write Modal value Fields
-            '   Allocate MODdata.Pe
             MODdata.nn.Add(nnDRI(t))
             MODdata.nU.Add(Math.Max(0, nnDRI(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl))
         Next
@@ -1314,15 +1313,17 @@ lb_nOK:
             'Reset the second-by-second Errors
             MODdata.ModErrors.ResetAll()
 
-            'OLD and wrong because not time shifted: P_mr(jz) = 0.001 * (I_mot * 0.0109662 * (n(jz) * nnrom) * nnrom * (n(jz) - n(jz - 1))) / Pnrom
+            'OLD and wrong because not time shifted: P_mr(jz) = 0.001 * (I_mot * 0.0109662 * (n(jz) * nnrom) * nnrom * (n(jz) - n(jz - 1))) 
             If t > 0 And t < t1 Then
-                Pmr = 0.001 * (VEH.I_mot * (2 * Math.PI / 60) ^ 2 * MODdata.nU(t) * 0.5 * (MODdata.nU(t + 1) - MODdata.nU(t - 1))) / VEH.Pnenn
+                Pmr = 0.001 * (VEH.I_mot * (2 * Math.PI / 60) ^ 2 * MODdata.nU(t) * 0.5 * (MODdata.nU(t + 1) - MODdata.nU(t - 1)))
             Else
                 Pmr = 0
             End If
 
-            'Power of the Cycle corrected by P_clutch
-            MODdata.Pe.Add(PeDRI(t) + Pmr)
+            Padd = MODdata.Vh.Padd(t)
+
+            'Power = P_clutch + + Pa_eng + Padd
+            MODdata.Pe.Add(PeDRI(t) + (Pmr + Padd) / VEH.Pnenn)
 
             'Revolutions of the Cycle => Determined in Cycle-init
             'If Revolutions under idle, assume Engine is stopped
@@ -1374,6 +1375,8 @@ lb_nOK:
             End If
 
             MODdata.EngState.Add(EngState0)
+            MODdata.PaEng.Add(Pmr)
+            MODdata.PauxSum.Add(Padd)
 
             'Notify
             If MODdata.ModErrors.MsgOutputAbort(t + 1, MsgSrc) Then Return False

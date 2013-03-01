@@ -210,7 +210,7 @@ Public Class cMOD
 
             'Angular acceleration
             For s = 0 To tDim
-                MODdata.dnUvorg.Add(L(s + 1) - L(s))
+                MODdata.dnUvorg.Add((L(s + 1) - L(s)) * (VEH.nNenn - VEH.nLeerl))
             Next
 
         End If
@@ -277,7 +277,7 @@ Public Class cMOD
             'Angular acceleration
             MODdata.dnUvorg.Add(L(1) - L(0))
             For s = 1 To MODdata.tDim - 1
-                MODdata.dnUvorg.Add((L(s + 1) - L(s - 1)) / 2)
+                MODdata.dnUvorg.Add((L(s + 1) - L(s - 1)) / 2 * (VEH.nNenn - VEH.nLeerl))
             Next
             MODdata.dnUvorg.Add(L(MODdata.tDim) - L(MODdata.tDim - 1))
 
@@ -408,15 +408,15 @@ Public Class cMOD
 
         Else
 
-            s.Append(",engine speed,torque,Pe,n_norm,Pe_norm,Pe_full,Pe_drag,Pe_clutch")
-            sU.Append(",[rpm],[Nm],[kW],[-],[-],[kW],[kW],[kW]")
+            s.Append(",engine speed,torque,Pe,n_norm,Pe_norm,Pe_full,Pe_drag,Pe_clutch,Pa Eng,Paux")
+            sU.Append(",[rpm],[Nm],[kW],[-],[-],[kW],[kW],[kW],[kW],[kW]")
 
         End If
 
         If Not GEN.VehMode = tVehMode.EngineOnly Then
 
-            s.Append(",Gear,Ploss GB,Ploss Diff,Ploss Retarder,Pa Eng,Pa GB,Pa Veh,Proll,Pair,Pgrad,Paux,Pwheel,Pbrake")
-            sU.Append(",[-],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW]")
+            s.Append(",Gear,Ploss GB,Ploss Diff,Ploss Retarder,Pa GB,Pa Veh,Proll,Pair,Pgrad,Pwheel,Pbrake")
+            sU.Append(",[-],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW]")
 
             'Auxiliaries
             For Each StrKey In AuxList
@@ -592,9 +592,14 @@ Public Class cMOD
                         End If
                     End If
 
-                    'Power to Clutch
+                    'Power at Clutch
                     s.Append(Sepp & .Pe(t) * VEH.Pnenn - .PaEng(t) - .PauxSum(t))
 
+                    'PaEng
+                    s.Append(Sepp & .PaEng(t))
+
+                    'Aux..
+                    s.Append(Sepp & .PauxSum(t))
 
                 End If
 
@@ -612,9 +617,6 @@ Public Class cMOD
                     'Retarder-losses
                     s.Append(Sepp & .PlossRt(t))
 
-                    'PaEng
-                    s.Append(Sepp & .PaEng(t))
-
                     'PaGB
                     s.Append(Sepp & .PaGB(t))
 
@@ -629,9 +631,6 @@ Public Class cMOD
 
                     'Slope ..
                     s.Append(Sepp & .Pstg(t))
-
-                    'Aux..
-                    s.Append(Sepp & .PauxSum(t))
 
                     'Wheel-power
                     s.Append(Sepp & .Psum(t))

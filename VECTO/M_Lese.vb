@@ -48,21 +48,23 @@ Module M_Lese
 
 
         '-----------------------------    ~VEH~    -----------------------------
-        'Einlesen der KFZ-Spezifikationen aus 'KFZspez' |@@| Read the Vehicle(KFZ)-specifications from 'KFZspez'
         VEH = New cVEH
-        VEH.FilePath = GEN.PathVEH
-        Try
-            If Not VEH.ReadFile Then Return False
-        Catch ex As Exception
-            WorkerMsg(tMsgID.Err, "File read error! (" & GEN.PathVEH & ")", MsgSrc)
-            Return False
-        End Try
 
-        VEH.hinauf = (VEH.nLeerl / VEH.nNenn) + VEH.hinauf * (1 - (VEH.nLeerl / VEH.nNenn))
-        VEH.hinunter = (VEH.nLeerl / VEH.nNenn) + VEH.hinunter * (1 - (VEH.nLeerl / VEH.nNenn))
-        VEH.lhinauf = (VEH.nLeerl / VEH.nNenn) + VEH.lhinauf * (1 - (VEH.nLeerl / VEH.nNenn))
-        VEH.lhinunter = (VEH.nLeerl / VEH.nNenn) + VEH.lhinunter * (1 - (VEH.nLeerl / VEH.nNenn))
+        'Read vehicle specifications
+        If Not GEN.EngOnly Then
+            VEH.FilePath = GEN.PathVEH
+            Try
+                If Not VEH.ReadFile Then Return False
+            Catch ex As Exception
+                WorkerMsg(tMsgID.Err, "File read error! (" & GEN.PathVEH & ")", MsgSrc)
+                Return False
+            End Try
 
+            VEH.hinauf = (VEH.nLeerl / VEH.nNenn) + VEH.hinauf * (1 - (VEH.nLeerl / VEH.nNenn))
+            VEH.hinunter = (VEH.nLeerl / VEH.nNenn) + VEH.hinunter * (1 - (VEH.nLeerl / VEH.nNenn))
+            VEH.lhinauf = (VEH.nLeerl / VEH.nNenn) + VEH.lhinauf * (1 - (VEH.nLeerl / VEH.nNenn))
+            VEH.lhinunter = (VEH.nLeerl / VEH.nNenn) + VEH.lhinunter * (1 - (VEH.nLeerl / VEH.nNenn))
+        End If
 
         '-----------------------------    ~ENG~    -----------------------------
         ENG = New cENG
@@ -77,14 +79,16 @@ Module M_Lese
 
         '-----------------------------    ~GBX~    -----------------------------
         GBX = New cGBX
-        GBX.FilePath = GEN.PathGBX
-        Try
-            If Not GBX.ReadFile Then Return False
-        Catch ex As Exception
-            WorkerMsg(tMsgID.Err, "File read error! (" & GEN.PathGBX & ")", MsgSrc)
-            Return False
-        End Try
 
+        If Not GEN.EngOnly Then
+            GBX.FilePath = GEN.PathGBX
+            Try
+                If Not GBX.ReadFile Then Return False
+            Catch ex As Exception
+                WorkerMsg(tMsgID.Err, "File read error! (" & GEN.PathGBX & ")", MsgSrc)
+                Return False
+            End Try
+        End If
 
         '-----------------------------    VECTO    -----------------------------
         'GEN => VEH
@@ -124,8 +128,6 @@ Module M_Lese
         Next
         VEH.I_Getriebe = GBX.I_Getriebe
         VEH.TracIntrSi = GBX.TracIntrSi
-
-
 
         '-----------------------------    ~FLD~    -----------------------------
         '   FLD muss jetzt vor MAP/MEP eingelesen werden falls dort <DRAG> Einträge sind! |@@| if there are <DRAG> entries, then read FLD before MAP/MEP!

@@ -98,6 +98,8 @@ Module VECTO_Global
                 Return tDriComp.s
             Case sKey.DRI.StopTime
                 Return tDriComp.StopTime
+            Case sKey.DRI.Torque
+                Return tDriComp.Torque
             Case Else
                 Return tDriComp.Undefined
 
@@ -422,6 +424,7 @@ Public Class csKey
         Public VairBeta As String = "<VAIR_BETA>"
         Public s As String = "<S>"
         Public StopTime As String = "<STOP>"
+        Public Torque As String = "<M>"
     End Class
 
     Public Class csKeyEXS

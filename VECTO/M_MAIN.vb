@@ -329,7 +329,7 @@ lbADV:
                         End If
 
                         'If first time step is Zero then duplicate to start cycle with vehicle standing.
-                        If DRI.Vvorg AndAlso DRI.tDim > 1 AndAlso DRI.Values(tDriComp.V)(0) < 0.0001 And DRI.Values(tDriComp.V)(1) >= 0.0001 Then
+                        If DRI.Vvorg AndAlso DRI.tDim > 1 AndAlso DRI.Values(tDriComp.V)(0) < 0.0001 AndAlso DRI.Values(tDriComp.V)(1) >= 0.0001 Then
                             DRI.FirstZero()
                         End If
                      
@@ -531,11 +531,12 @@ lbADV:
 
                     'VECTO Output
                     'TODO: Loadings umschalten... |@@| TODO: Loadings Gear-shift ...
-                    If Not VSUM.SetVals(tVSUM.UserDefLoaded) Then
-                        CyclAbrtedByErr = True
-                        GoTo lbAusg
+                    If Not GEN.EngOnly Then
+                        If Not VSUM.SetVals(tVSUM.UserDefLoaded) Then
+                            CyclAbrtedByErr = True
+                            GoTo lbAusg
+                        End If
                     End If
-
 
                     'Output for BATCH and ADVANCE
 lbAusg:
@@ -578,9 +579,11 @@ lbAusg:
                     '******************** END *** VECTO-loading loop *** END ************************
                     '**************************************************************************************
 
-                    If Not VSUM.Output() Then
-                        CyclAbrtedByErr = True
-                        GoTo lbAusg
+                    If Not GEN.EngOnly Then
+                        If Not VSUM.Output() Then
+                            CyclAbrtedByErr = True
+                            GoTo lbAusg
+                        End If
                     End If
 
                 Next

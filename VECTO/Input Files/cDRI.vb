@@ -45,7 +45,6 @@ Public Class cDRI
     Public Scycle As Boolean
     Public VoglS As List(Of Double)
 
-
     Public Sub New()
         EmComponents = New Dictionary(Of String, cEmComp)
         EmDefRef = New Dictionary(Of tMapComp, cEmComp)
@@ -114,6 +113,9 @@ Public Class cDRI
 
         Dim AuxSpalten As Dictionary(Of String, Integer) = Nothing
 
+
+        Dim Tvorg As Boolean = False
+
         Dim MsgSrc As String
 
         MsgSrc = "Main/ReadInp/DRI"
@@ -152,6 +154,7 @@ Public Class cDRI
         DRIcheck.Add(tDriComp.VairBeta, False)
         DRIcheck.Add(tDriComp.s, False)
         DRIcheck.Add(tDriComp.StopTime, False)
+        DRIcheck.Add(tDriComp.Torque, False)
 
         ''***
         ''*** First line: Version
@@ -328,6 +331,12 @@ Public Class cDRI
         PaddVorg = DRIcheck(tDriComp.Padd)
         GradVorg = DRIcheck(tDriComp.Grad)
         VairVorg = DRIcheck(tDriComp.VairVres) And DRIcheck(tDriComp.VairBeta)
+        Tvorg = DRIcheck(tDriComp.Torque)
+
+        If Tvorg And Pvorg Then
+            WorkerMsg(tMsgID.Warn, "Engine torque and power defined in cycle! Torque will be ignored!", MsgSrc)
+            Tvorg = False
+        End If
 
         '***
         '*** Third row: Units/Normalization
@@ -467,6 +476,14 @@ Public Class cDRI
         If Vvorg Then
             For s = 0 To tDim
                 If Values(tDriComp.V)(s) < 0.09 Then Values(tDriComp.V)(s) = 0
+            Next
+        End If
+
+        If Tvorg And Nvorg Then
+            Values.Add(tDriComp.Pe, New List(Of Double))
+            Pvorg = True
+            For s = 0 To tDim
+                Values(tDriComp.Pe).Add(nMtoPe(Values(tDriComp.nn)(s), Values(tDriComp.Torque)(s)))
             Next
         End If
 

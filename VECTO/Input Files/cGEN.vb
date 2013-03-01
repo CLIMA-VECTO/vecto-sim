@@ -85,6 +85,8 @@ Public Class cGEN
 
     Public CycleFiles As List(Of cSubPath)
 
+    Public EngOnly As Boolean
+
 
     Public Sub New()
 
@@ -344,7 +346,13 @@ Public Class cGEN
         'If ((pspar + pmodell) > 1.0) Then pmodell = 1.0 - pspar
 
 
+        If Not file.EndOfFile Then EngOnly = CBool(file.ReadLine(0))
 
+        If EngOnly Then
+            VehMode = tVehMode.EngineOnly
+        Else
+            VehMode = tVehMode.StandardMode
+        End If
 
 lbClose:
 
@@ -705,6 +713,9 @@ lbClose:
         'fGEN.WriteLine("c Share of version mixed model (0 to 1)")
         'fGEN.WriteLine(CStr(pmodell))
 
+        fGEN.WriteLine("c Engine Only Mode (1/0)")
+        fGEN.WriteLine(CStr(Math.Abs(CInt(EngOnly))))
+
         fGEN.Close()
         fGEN = Nothing
 
@@ -785,6 +796,8 @@ lbClose:
         pspar = 0
         pmodell = 0
 
+        EngOnly = False
+
     End Sub
 
     'This Sub reads those Input-files that do not have their own class, etc.
@@ -796,7 +809,7 @@ lbClose:
 
         MsgSrc = "GEN/Init"
 
-        If DesMaxJa Then
+        If DesMaxJa And Not EngOnly Then
 
             file = New cFile_V3
 

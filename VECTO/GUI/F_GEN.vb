@@ -11,12 +11,14 @@ Public Class F_GEN
     Private pgMapCr As TabPage
     Private pgStStop As TabPage
     Private pgTest As TabPage
+    Private pgDriver As TabPage
 
     Private pgColdStON As Boolean = True
     Private pgHevON As Boolean = True
     Private pgMapCrON As Boolean = True
     Private pgStStopON As Boolean = True
     Private pgTestON As Boolean = True
+    Private pgDriverON As Boolean = True
 
     Private MyVehMode As tVehMode
 
@@ -39,6 +41,7 @@ Public Class F_GEN
         pgMapCr = Me.TabPgKF
         pgStStop = Me.TabPgStartStop
         pgTest = Me.TabPgTEST
+        pgDriver = Me.TabPgDriver
 
         MyVehMode = tVehMode.StandardMode
 
@@ -273,6 +276,21 @@ Public Class F_GEN
             End If
         End If
     End Sub
+
+    Private Sub SetDrivertab(ByVal OnOff As Boolean)
+        If OnOff Then
+            If Not pgDriverON Then
+                pgDriverON = True
+                Me.TabControl1.TabPages.Insert(1, pgDriver)
+            End If
+        Else
+            If pgDriverON Then
+                pgDriverON = False
+                Me.TabControl1.Controls.Remove(pgDriver)
+            End If
+        End If
+    End Sub
+
 #End Region
 
 #Region "Browse Buttons"
@@ -285,7 +303,7 @@ Public Class F_GEN
         If fbENG.OpenDialog(fFileRepl(Me.TbENG.Text, fPATH(Genfile))) Then Me.TbENG.Text = fFileWoDir(fbENG.Files(0), fPATH(Genfile))
     End Sub
   
-    Private Sub ButtonFLD_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonFLD.Click
+    Private Sub ButtonFLD_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonGBX.Click
         If fbGBX.OpenDialog(fFileRepl(Me.TbGBX.Text, fPATH(Genfile))) Then Me.TbGBX.Text = fFileWoDir(fbGBX.Files(0), fPATH(Genfile))
     End Sub
     Private Sub ButtonTRS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonTRS.Click
@@ -680,6 +698,8 @@ Public Class F_GEN
             LvCycles.Items.Add(LV0)
         Next
 
+        Me.CbEngOnly.Checked = Gfile.EngOnly
+
         '-------------------------------------------------------------
 
         Gfile = Nothing
@@ -806,6 +826,8 @@ Public Class F_GEN
         g.pspar = CSng(fTextboxToNumString(Me.TBpspar.Text))
         g.pmodell = CSng(1 - CSng(fTextboxToNumString(Me.TBpfast.Text)) - CSng(fTextboxToNumString(Me.TBpspar.Text)))
 
+        g.EngOnly = Me.CbEngOnly.Checked
+
         '------------------------------------------------------------
 
         'SAVE
@@ -914,6 +936,8 @@ Public Class F_GEN
         Me.TBhinunter.Text = "0.51"
         Me.TBpspar.Text = "1"
         Me.TBpfast.Text = "0"
+
+        Me.CbEngOnly.Checked = False
 
         '---------------------------------------------------
 
@@ -1294,6 +1318,28 @@ lbDlog:
         End If
 
         Change()
+
+    End Sub
+
+    Private Sub CbEngOnly_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles CbEngOnly.CheckedChanged
+        CheckEngOnly()
+        Change()
+    End Sub
+
+    Private Sub CheckEngOnly()
+        Dim OnOff As Boolean
+
+        OnOff = Not CbEngOnly.Checked
+
+        SetDrivertab(OnOff)
+
+        ButOpenVEH.Enabled = OnOff
+        TextBoxVEH.Enabled = OnOff
+        ButtonVEH.Enabled = OnOff
+        ButOpenGBX.Enabled = OnOff
+        TbGBX.Enabled = OnOff
+        ButtonGBX.Enabled = OnOff
+        GrAux.Enabled = OnOff
 
     End Sub
 

@@ -111,6 +111,7 @@ Public Enum tDriComp
     Undefined
     s
     StopTime
+    Torque
 End Enum
 
 Public Enum tExsComp

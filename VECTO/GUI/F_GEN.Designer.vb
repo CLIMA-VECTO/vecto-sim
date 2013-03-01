@@ -79,7 +79,7 @@ Partial Class F_GEN
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.BtDRIrem = New System.Windows.Forms.Button()
         Me.BtDRIadd = New System.Windows.Forms.Button()
-        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.GrAux = New System.Windows.Forms.GroupBox()
         Me.LvAux = New System.Windows.Forms.ListView()
         Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -93,7 +93,7 @@ Partial Class F_GEN
         Me.ButOpenENG = New System.Windows.Forms.Button()
         Me.ButOpenVEH = New System.Windows.Forms.Button()
         Me.ButtonVEH = New System.Windows.Forms.Button()
-        Me.ButtonFLD = New System.Windows.Forms.Button()
+        Me.ButtonGBX = New System.Windows.Forms.Button()
         Me.ButtonMAP = New System.Windows.Forms.Button()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.CbTransLossModel = New System.Windows.Forms.ComboBox()
@@ -132,6 +132,21 @@ Partial Class F_GEN
         Me.TBSStime = New System.Windows.Forms.TextBox()
         Me.TBSSspeed = New System.Windows.Forms.TextBox()
         Me.TabPgTEST = New System.Windows.Forms.TabPage()
+        Me.GrGearShift = New System.Windows.Forms.GroupBox()
+        Me.TBpfast = New System.Windows.Forms.TextBox()
+        Me.TBpspar = New System.Windows.Forms.TextBox()
+        Me.Label19 = New System.Windows.Forms.Label()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.Label44 = New System.Windows.Forms.Label()
+        Me.Label43 = New System.Windows.Forms.Label()
+        Me.Label42 = New System.Windows.Forms.Label()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.TBlhinunter = New System.Windows.Forms.TextBox()
+        Me.TBlhinauf = New System.Windows.Forms.TextBox()
+        Me.TBhinunter = New System.Windows.Forms.TextBox()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.TBhinauf = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.ChbDesMax = New System.Windows.Forms.CheckBox()
         Me.CbVehMode = New System.Windows.Forms.ComboBox()
@@ -154,27 +169,13 @@ Partial Class F_GEN
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.GrGearShift = New System.Windows.Forms.GroupBox()
-        Me.TBpfast = New System.Windows.Forms.TextBox()
-        Me.TBpspar = New System.Windows.Forms.TextBox()
-        Me.Label19 = New System.Windows.Forms.Label()
-        Me.Label18 = New System.Windows.Forms.Label()
-        Me.Label44 = New System.Windows.Forms.Label()
-        Me.Label43 = New System.Windows.Forms.Label()
-        Me.Label42 = New System.Windows.Forms.Label()
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.TBlhinunter = New System.Windows.Forms.TextBox()
-        Me.TBlhinauf = New System.Windows.Forms.TextBox()
-        Me.TBhinunter = New System.Windows.Forms.TextBox()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.TBhinauf = New System.Windows.Forms.TextBox()
+        Me.CbEngOnly = New System.Windows.Forms.CheckBox()
         Me.TabPgHEV.SuspendLayout()
         Me.TabPgColdSt.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.TabPgGen.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
-        Me.GroupBox4.SuspendLayout()
+        Me.GrAux.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPgDriver.SuspendLayout()
         Me.TabPgKF.SuspendLayout()
@@ -182,10 +183,10 @@ Partial Class F_GEN
         Me.TabPgStartStop.SuspendLayout()
         Me.GroupBoxStartStop.SuspendLayout()
         Me.TabPgTEST.SuspendLayout()
+        Me.GrGearShift.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GrGearShift.SuspendLayout()
         Me.SuspendLayout()
         '
         'ButOpenEXS
@@ -724,7 +725,7 @@ Partial Class F_GEN
         'TabPgGen
         '
         Me.TabPgGen.Controls.Add(Me.GroupBox5)
-        Me.TabPgGen.Controls.Add(Me.GroupBox4)
+        Me.TabPgGen.Controls.Add(Me.GrAux)
         Me.TabPgGen.Controls.Add(Me.TbGBX)
         Me.TabPgGen.Controls.Add(Me.TbENG)
         Me.TabPgGen.Controls.Add(Me.TextBoxVEH)
@@ -732,12 +733,12 @@ Partial Class F_GEN
         Me.TabPgGen.Controls.Add(Me.ButOpenENG)
         Me.TabPgGen.Controls.Add(Me.ButOpenVEH)
         Me.TabPgGen.Controls.Add(Me.ButtonVEH)
-        Me.TabPgGen.Controls.Add(Me.ButtonFLD)
+        Me.TabPgGen.Controls.Add(Me.ButtonGBX)
         Me.TabPgGen.Controls.Add(Me.ButtonMAP)
         Me.TabPgGen.Location = New System.Drawing.Point(4, 22)
         Me.TabPgGen.Name = "TabPgGen"
         Me.TabPgGen.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgGen.Size = New System.Drawing.Size(646, 433)
+        Me.TabPgGen.Size = New System.Drawing.Size(646, 442)
         Me.TabPgGen.TabIndex = 0
         Me.TabPgGen.Text = "General"
         Me.TabPgGen.UseVisualStyleBackColor = True
@@ -747,7 +748,7 @@ Partial Class F_GEN
         Me.GroupBox5.Controls.Add(Me.LvCycles)
         Me.GroupBox5.Controls.Add(Me.BtDRIrem)
         Me.GroupBox5.Controls.Add(Me.BtDRIadd)
-        Me.GroupBox5.Location = New System.Drawing.Point(6, 250)
+        Me.GroupBox5.Location = New System.Drawing.Point(6, 247)
         Me.GroupBox5.Name = "GroupBox5"
         Me.GroupBox5.Size = New System.Drawing.Size(634, 177)
         Me.GroupBox5.TabIndex = 34
@@ -796,17 +797,17 @@ Partial Class F_GEN
         Me.BtDRIadd.TabIndex = 31
         Me.BtDRIadd.UseVisualStyleBackColor = True
         '
-        'GroupBox4
+        'GrAux
         '
-        Me.GroupBox4.Controls.Add(Me.LvAux)
-        Me.GroupBox4.Controls.Add(Me.ButAuxRem)
-        Me.GroupBox4.Controls.Add(Me.ButAuxAdd)
-        Me.GroupBox4.Location = New System.Drawing.Point(6, 90)
-        Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(634, 154)
-        Me.GroupBox4.TabIndex = 33
-        Me.GroupBox4.TabStop = False
-        Me.GroupBox4.Text = "Auxiliaries"
+        Me.GrAux.Controls.Add(Me.LvAux)
+        Me.GrAux.Controls.Add(Me.ButAuxRem)
+        Me.GrAux.Controls.Add(Me.ButAuxAdd)
+        Me.GrAux.Location = New System.Drawing.Point(6, 87)
+        Me.GrAux.Name = "GrAux"
+        Me.GrAux.Size = New System.Drawing.Size(634, 154)
+        Me.GrAux.TabIndex = 33
+        Me.GrAux.TabStop = False
+        Me.GrAux.Text = "Auxiliaries"
         '
         'LvAux
         '
@@ -864,7 +865,7 @@ Partial Class F_GEN
         '
         Me.TbGBX.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TbGBX.Location = New System.Drawing.Point(81, 63)
+        Me.TbGBX.Location = New System.Drawing.Point(84, 60)
         Me.TbGBX.Name = "TbGBX"
         Me.TbGBX.Size = New System.Drawing.Size(525, 20)
         Me.TbGBX.TabIndex = 3
@@ -873,7 +874,7 @@ Partial Class F_GEN
         '
         Me.TbENG.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TbENG.Location = New System.Drawing.Point(81, 36)
+        Me.TbENG.Location = New System.Drawing.Point(84, 33)
         Me.TbENG.Name = "TbENG"
         Me.TbENG.Size = New System.Drawing.Size(525, 20)
         Me.TbENG.TabIndex = 2
@@ -882,14 +883,14 @@ Partial Class F_GEN
         '
         Me.TextBoxVEH.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TextBoxVEH.Location = New System.Drawing.Point(81, 10)
+        Me.TextBoxVEH.Location = New System.Drawing.Point(84, 7)
         Me.TextBoxVEH.Name = "TextBoxVEH"
         Me.TextBoxVEH.Size = New System.Drawing.Size(525, 20)
         Me.TextBoxVEH.TabIndex = 1
         '
         'ButOpenGBX
         '
-        Me.ButOpenGBX.Location = New System.Drawing.Point(3, 63)
+        Me.ButOpenGBX.Location = New System.Drawing.Point(6, 60)
         Me.ButOpenGBX.Name = "ButOpenGBX"
         Me.ButOpenGBX.Size = New System.Drawing.Size(72, 21)
         Me.ButOpenGBX.TabIndex = 22
@@ -899,7 +900,7 @@ Partial Class F_GEN
         '
         'ButOpenENG
         '
-        Me.ButOpenENG.Location = New System.Drawing.Point(3, 36)
+        Me.ButOpenENG.Location = New System.Drawing.Point(6, 33)
         Me.ButOpenENG.Name = "ButOpenENG"
         Me.ButOpenENG.Size = New System.Drawing.Size(72, 21)
         Me.ButOpenENG.TabIndex = 21
@@ -909,7 +910,7 @@ Partial Class F_GEN
         '
         'ButOpenVEH
         '
-        Me.ButOpenVEH.Location = New System.Drawing.Point(3, 9)
+        Me.ButOpenVEH.Location = New System.Drawing.Point(6, 6)
         Me.ButOpenVEH.Name = "ButOpenVEH"
         Me.ButOpenVEH.Size = New System.Drawing.Size(72, 21)
         Me.ButOpenVEH.TabIndex = 20
@@ -920,7 +921,7 @@ Partial Class F_GEN
         'ButtonVEH
         '
         Me.ButtonVEH.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonVEH.Location = New System.Drawing.Point(612, 9)
+        Me.ButtonVEH.Location = New System.Drawing.Point(615, 6)
         Me.ButtonVEH.Name = "ButtonVEH"
         Me.ButtonVEH.Size = New System.Drawing.Size(28, 21)
         Me.ButtonVEH.TabIndex = 11
@@ -928,21 +929,21 @@ Partial Class F_GEN
         Me.ButtonVEH.Text = "..."
         Me.ButtonVEH.UseVisualStyleBackColor = True
         '
-        'ButtonFLD
+        'ButtonGBX
         '
-        Me.ButtonFLD.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonFLD.Location = New System.Drawing.Point(612, 63)
-        Me.ButtonFLD.Name = "ButtonFLD"
-        Me.ButtonFLD.Size = New System.Drawing.Size(28, 21)
-        Me.ButtonFLD.TabIndex = 13
-        Me.ButtonFLD.TabStop = False
-        Me.ButtonFLD.Text = "..."
-        Me.ButtonFLD.UseVisualStyleBackColor = True
+        Me.ButtonGBX.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButtonGBX.Location = New System.Drawing.Point(615, 60)
+        Me.ButtonGBX.Name = "ButtonGBX"
+        Me.ButtonGBX.Size = New System.Drawing.Size(28, 21)
+        Me.ButtonGBX.TabIndex = 13
+        Me.ButtonGBX.TabStop = False
+        Me.ButtonGBX.Text = "..."
+        Me.ButtonGBX.UseVisualStyleBackColor = True
         '
         'ButtonMAP
         '
         Me.ButtonMAP.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonMAP.Location = New System.Drawing.Point(612, 36)
+        Me.ButtonMAP.Location = New System.Drawing.Point(615, 33)
         Me.ButtonMAP.Name = "ButtonMAP"
         Me.ButtonMAP.Size = New System.Drawing.Size(28, 21)
         Me.ButtonMAP.TabIndex = 12
@@ -1073,10 +1074,10 @@ Partial Class F_GEN
         Me.TabControl1.Controls.Add(Me.TabPgKF)
         Me.TabControl1.Controls.Add(Me.TabPgStartStop)
         Me.TabControl1.Controls.Add(Me.TabPgTEST)
-        Me.TabControl1.Location = New System.Drawing.Point(4, 74)
+        Me.TabControl1.Location = New System.Drawing.Point(1, 107)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(654, 459)
+        Me.TabControl1.Size = New System.Drawing.Size(654, 468)
         Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.TabControl1.TabIndex = 1
         '
@@ -1088,7 +1089,7 @@ Partial Class F_GEN
         Me.TabPgDriver.Location = New System.Drawing.Point(4, 22)
         Me.TabPgDriver.Name = "TabPgDriver"
         Me.TabPgDriver.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgDriver.Size = New System.Drawing.Size(646, 433)
+        Me.TabPgDriver.Size = New System.Drawing.Size(646, 442)
         Me.TabPgDriver.TabIndex = 7
         Me.TabPgDriver.Text = "Driver"
         Me.TabPgDriver.UseVisualStyleBackColor = True
@@ -1355,213 +1356,6 @@ Partial Class F_GEN
         Me.TabPgTEST.Text = "TEST"
         Me.TabPgTEST.UseVisualStyleBackColor = True
         '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(427, 54)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(81, 13)
-        Me.Label3.TabIndex = 27
-        Me.Label3.Text = "Gear shift mode"
-        '
-        'ChbDesMax
-        '
-        Me.ChbDesMax.AutoSize = True
-        Me.ChbDesMax.Checked = True
-        Me.ChbDesMax.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.ChbDesMax.Location = New System.Drawing.Point(19, 53)
-        Me.ChbDesMax.Name = "ChbDesMax"
-        Me.ChbDesMax.Size = New System.Drawing.Size(108, 17)
-        Me.ChbDesMax.TabIndex = 26
-        Me.ChbDesMax.Text = "Limit acceleration"
-        Me.ChbDesMax.UseVisualStyleBackColor = True
-        '
-        'CbVehMode
-        '
-        Me.CbVehMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.CbVehMode.FormattingEnabled = True
-        Me.CbVehMode.Items.AddRange(New Object() {"Standard", "Engine Only", "HEV", "EV"})
-        Me.CbVehMode.Location = New System.Drawing.Point(300, 6)
-        Me.CbVehMode.Name = "CbVehMode"
-        Me.CbVehMode.Size = New System.Drawing.Size(96, 21)
-        Me.CbVehMode.TabIndex = 5
-        '
-        'ChCreateMap
-        '
-        Me.ChCreateMap.AutoSize = True
-        Me.ChCreateMap.Location = New System.Drawing.Point(33, 8)
-        Me.ChCreateMap.Name = "ChCreateMap"
-        Me.ChCreateMap.Size = New System.Drawing.Size(125, 17)
-        Me.ChCreateMap.TabIndex = 7
-        Me.ChCreateMap.Text = "Create Emission Map"
-        Me.ChCreateMap.UseVisualStyleBackColor = True
-        '
-        'ChEngAnalysis
-        '
-        Me.ChEngAnalysis.AutoSize = True
-        Me.ChEngAnalysis.Location = New System.Drawing.Point(164, 8)
-        Me.ChEngAnalysis.Name = "ChEngAnalysis"
-        Me.ChEngAnalysis.Size = New System.Drawing.Size(100, 17)
-        Me.ChEngAnalysis.TabIndex = 6
-        Me.ChEngAnalysis.Text = "Engine Analysis"
-        Me.ChEngAnalysis.UseVisualStyleBackColor = True
-        '
-        'ComboBoxEngType
-        '
-        Me.ComboBoxEngType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBoxEngType.FormattingEnabled = True
-        Me.ComboBoxEngType.Items.AddRange(New Object() {"Otto", "Diesel"})
-        Me.ComboBoxEngType.Location = New System.Drawing.Point(504, 6)
-        Me.ComboBoxEngType.Name = "ComboBoxEngType"
-        Me.ComboBoxEngType.Size = New System.Drawing.Size(61, 21)
-        Me.ComboBoxEngType.TabIndex = 4
-        '
-        'ComboBoxEclass
-        '
-        Me.ComboBoxEclass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBoxEclass.FormattingEnabled = True
-        Me.ComboBoxEclass.Items.AddRange(New Object() {"EURO 0", "EURO 1", "EURO 2", "EURO 3", "EURO 4", "EURO 5", "EURO 6", "EURO 7", "EURO 8", "EURO 9"})
-        Me.ComboBoxEclass.Location = New System.Drawing.Point(571, 6)
-        Me.ComboBoxEclass.Name = "ComboBoxEclass"
-        Me.ComboBoxEclass.Size = New System.Drawing.Size(69, 21)
-        Me.ComboBoxEclass.TabIndex = 4
-        '
-        'ComboBoxVehType
-        '
-        Me.ComboBoxVehType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBoxVehType.FormattingEnabled = True
-        Me.ComboBoxVehType.Items.AddRange(New Object() {"Heavy Duty", "Passenger Car"})
-        Me.ComboBoxVehType.Location = New System.Drawing.Point(402, 6)
-        Me.ComboBoxVehType.Name = "ComboBoxVehType"
-        Me.ComboBoxVehType.Size = New System.Drawing.Size(96, 21)
-        Me.ComboBoxVehType.TabIndex = 1
-        '
-        'StatusStrip1
-        '
-        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelGEN})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 565)
-        Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New System.Drawing.Size(667, 22)
-        Me.StatusStrip1.SizingGrip = False
-        Me.StatusStrip1.TabIndex = 6
-        Me.StatusStrip1.Text = "StatusStrip1"
-        '
-        'ToolStripStatusLabelGEN
-        '
-        Me.ToolStripStatusLabelGEN.Name = "ToolStripStatusLabelGEN"
-        Me.ToolStripStatusLabelGEN.Size = New System.Drawing.Size(121, 17)
-        Me.ToolStripStatusLabelGEN.Text = "ToolStripStatusLabel1"
-        '
-        'ButOK
-        '
-        Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(502, 539)
-        Me.ButOK.Name = "ButOK"
-        Me.ButOK.Size = New System.Drawing.Size(75, 23)
-        Me.ButOK.TabIndex = 11
-        Me.ButOK.Text = "OK"
-        Me.ButOK.UseVisualStyleBackColor = True
-        '
-        'ButCancel
-        '
-        Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(583, 539)
-        Me.ButCancel.Name = "ButCancel"
-        Me.ButCancel.Size = New System.Drawing.Size(75, 23)
-        Me.ButCancel.TabIndex = 19
-        Me.ButCancel.Text = "Cancel"
-        Me.ButCancel.UseVisualStyleBackColor = True
-        '
-        'ToolStrip1
-        '
-        Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator1, Me.ToolStripBtSendTo, Me.ToolStripSeparator2, Me.ToolStripButton1})
-        Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
-        Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(667, 25)
-        Me.ToolStrip1.TabIndex = 20
-        Me.ToolStrip1.Text = "ToolStrip1"
-        '
-        'ToolStripBtNew
-        '
-        Me.ToolStripBtNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripBtNew.Image = Global.VECTO.My.Resources.Resources.blue_document_icon
-        Me.ToolStripBtNew.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripBtNew.Name = "ToolStripBtNew"
-        Me.ToolStripBtNew.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripBtNew.Text = "New"
-        Me.ToolStripBtNew.ToolTipText = "New"
-        '
-        'ToolStripBtOpen
-        '
-        Me.ToolStripBtOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripBtOpen.Image = Global.VECTO.My.Resources.Resources.Open_icon
-        Me.ToolStripBtOpen.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripBtOpen.Name = "ToolStripBtOpen"
-        Me.ToolStripBtOpen.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripBtOpen.Text = "Open"
-        Me.ToolStripBtOpen.ToolTipText = "Open..."
-        '
-        'ToolStripBtSave
-        '
-        Me.ToolStripBtSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripBtSave.Image = Global.VECTO.My.Resources.Resources.Actions_document_save_icon
-        Me.ToolStripBtSave.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripBtSave.Name = "ToolStripBtSave"
-        Me.ToolStripBtSave.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripBtSave.Text = "Save"
-        Me.ToolStripBtSave.ToolTipText = "Save"
-        '
-        'ToolStripBtSaveAs
-        '
-        Me.ToolStripBtSaveAs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripBtSaveAs.Image = Global.VECTO.My.Resources.Resources.Actions_document_save_as_icon
-        Me.ToolStripBtSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripBtSaveAs.Name = "ToolStripBtSaveAs"
-        Me.ToolStripBtSaveAs.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripBtSaveAs.Text = "Save As"
-        Me.ToolStripBtSaveAs.ToolTipText = "Save As..."
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
-        '
-        'ToolStripBtSendTo
-        '
-        Me.ToolStripBtSendTo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripBtSendTo.Image = Global.VECTO.My.Resources.Resources.export_icon
-        Me.ToolStripBtSendTo.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripBtSendTo.Name = "ToolStripBtSendTo"
-        Me.ToolStripBtSendTo.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripBtSendTo.Text = "Send to GEN List"
-        Me.ToolStripBtSendTo.ToolTipText = "Send to GEN List"
-        '
-        'ToolStripSeparator2
-        '
-        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 25)
-        '
-        'ToolStripButton1
-        '
-        Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton1.Image = Global.VECTO.My.Resources.Resources.Help_icon
-        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton1.Text = "Help"
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.BackColor = System.Drawing.Color.White
-        Me.PictureBox1.Image = Global.VECTO.My.Resources.Resources.VECTO_VECTO
-        Me.PictureBox1.Location = New System.Drawing.Point(12, 28)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(643, 40)
-        Me.PictureBox1.TabIndex = 21
-        Me.PictureBox1.TabStop = False
-        '
         'GrGearShift
         '
         Me.GrGearShift.Controls.Add(Me.TBpfast)
@@ -1699,13 +1493,231 @@ Partial Class F_GEN
         Me.TBhinauf.Size = New System.Drawing.Size(40, 20)
         Me.TBhinauf.TabIndex = 0
         '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(427, 54)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(81, 13)
+        Me.Label3.TabIndex = 27
+        Me.Label3.Text = "Gear shift mode"
+        '
+        'ChbDesMax
+        '
+        Me.ChbDesMax.AutoSize = True
+        Me.ChbDesMax.Checked = True
+        Me.ChbDesMax.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.ChbDesMax.Location = New System.Drawing.Point(19, 53)
+        Me.ChbDesMax.Name = "ChbDesMax"
+        Me.ChbDesMax.Size = New System.Drawing.Size(108, 17)
+        Me.ChbDesMax.TabIndex = 26
+        Me.ChbDesMax.Text = "Limit acceleration"
+        Me.ChbDesMax.UseVisualStyleBackColor = True
+        '
+        'CbVehMode
+        '
+        Me.CbVehMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.CbVehMode.FormattingEnabled = True
+        Me.CbVehMode.Items.AddRange(New Object() {"Standard", "Engine Only", "HEV", "EV"})
+        Me.CbVehMode.Location = New System.Drawing.Point(300, 6)
+        Me.CbVehMode.Name = "CbVehMode"
+        Me.CbVehMode.Size = New System.Drawing.Size(96, 21)
+        Me.CbVehMode.TabIndex = 5
+        '
+        'ChCreateMap
+        '
+        Me.ChCreateMap.AutoSize = True
+        Me.ChCreateMap.Location = New System.Drawing.Point(33, 8)
+        Me.ChCreateMap.Name = "ChCreateMap"
+        Me.ChCreateMap.Size = New System.Drawing.Size(125, 17)
+        Me.ChCreateMap.TabIndex = 7
+        Me.ChCreateMap.Text = "Create Emission Map"
+        Me.ChCreateMap.UseVisualStyleBackColor = True
+        '
+        'ChEngAnalysis
+        '
+        Me.ChEngAnalysis.AutoSize = True
+        Me.ChEngAnalysis.Location = New System.Drawing.Point(164, 8)
+        Me.ChEngAnalysis.Name = "ChEngAnalysis"
+        Me.ChEngAnalysis.Size = New System.Drawing.Size(100, 17)
+        Me.ChEngAnalysis.TabIndex = 6
+        Me.ChEngAnalysis.Text = "Engine Analysis"
+        Me.ChEngAnalysis.UseVisualStyleBackColor = True
+        '
+        'ComboBoxEngType
+        '
+        Me.ComboBoxEngType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBoxEngType.FormattingEnabled = True
+        Me.ComboBoxEngType.Items.AddRange(New Object() {"Otto", "Diesel"})
+        Me.ComboBoxEngType.Location = New System.Drawing.Point(504, 6)
+        Me.ComboBoxEngType.Name = "ComboBoxEngType"
+        Me.ComboBoxEngType.Size = New System.Drawing.Size(61, 21)
+        Me.ComboBoxEngType.TabIndex = 4
+        '
+        'ComboBoxEclass
+        '
+        Me.ComboBoxEclass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBoxEclass.FormattingEnabled = True
+        Me.ComboBoxEclass.Items.AddRange(New Object() {"EURO 0", "EURO 1", "EURO 2", "EURO 3", "EURO 4", "EURO 5", "EURO 6", "EURO 7", "EURO 8", "EURO 9"})
+        Me.ComboBoxEclass.Location = New System.Drawing.Point(571, 6)
+        Me.ComboBoxEclass.Name = "ComboBoxEclass"
+        Me.ComboBoxEclass.Size = New System.Drawing.Size(69, 21)
+        Me.ComboBoxEclass.TabIndex = 4
+        '
+        'ComboBoxVehType
+        '
+        Me.ComboBoxVehType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBoxVehType.FormattingEnabled = True
+        Me.ComboBoxVehType.Items.AddRange(New Object() {"Heavy Duty", "Passenger Car"})
+        Me.ComboBoxVehType.Location = New System.Drawing.Point(402, 6)
+        Me.ComboBoxVehType.Name = "ComboBoxVehType"
+        Me.ComboBoxVehType.Size = New System.Drawing.Size(96, 21)
+        Me.ComboBoxVehType.TabIndex = 1
+        '
+        'StatusStrip1
+        '
+        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelGEN})
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 612)
+        Me.StatusStrip1.Name = "StatusStrip1"
+        Me.StatusStrip1.Size = New System.Drawing.Size(667, 22)
+        Me.StatusStrip1.SizingGrip = False
+        Me.StatusStrip1.TabIndex = 6
+        Me.StatusStrip1.Text = "StatusStrip1"
+        '
+        'ToolStripStatusLabelGEN
+        '
+        Me.ToolStripStatusLabelGEN.Name = "ToolStripStatusLabelGEN"
+        Me.ToolStripStatusLabelGEN.Size = New System.Drawing.Size(121, 17)
+        Me.ToolStripStatusLabelGEN.Text = "ToolStripStatusLabel1"
+        '
+        'ButOK
+        '
+        Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButOK.Location = New System.Drawing.Point(502, 586)
+        Me.ButOK.Name = "ButOK"
+        Me.ButOK.Size = New System.Drawing.Size(75, 23)
+        Me.ButOK.TabIndex = 11
+        Me.ButOK.Text = "OK"
+        Me.ButOK.UseVisualStyleBackColor = True
+        '
+        'ButCancel
+        '
+        Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.ButCancel.Location = New System.Drawing.Point(583, 586)
+        Me.ButCancel.Name = "ButCancel"
+        Me.ButCancel.Size = New System.Drawing.Size(75, 23)
+        Me.ButCancel.TabIndex = 19
+        Me.ButCancel.Text = "Cancel"
+        Me.ButCancel.UseVisualStyleBackColor = True
+        '
+        'ToolStrip1
+        '
+        Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator1, Me.ToolStripBtSendTo, Me.ToolStripSeparator2, Me.ToolStripButton1})
+        Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.ToolStrip1.Name = "ToolStrip1"
+        Me.ToolStrip1.Size = New System.Drawing.Size(667, 25)
+        Me.ToolStrip1.TabIndex = 20
+        Me.ToolStrip1.Text = "ToolStrip1"
+        '
+        'ToolStripBtNew
+        '
+        Me.ToolStripBtNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripBtNew.Image = Global.VECTO.My.Resources.Resources.blue_document_icon
+        Me.ToolStripBtNew.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripBtNew.Name = "ToolStripBtNew"
+        Me.ToolStripBtNew.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtNew.Text = "New"
+        Me.ToolStripBtNew.ToolTipText = "New"
+        '
+        'ToolStripBtOpen
+        '
+        Me.ToolStripBtOpen.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripBtOpen.Image = Global.VECTO.My.Resources.Resources.Open_icon
+        Me.ToolStripBtOpen.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripBtOpen.Name = "ToolStripBtOpen"
+        Me.ToolStripBtOpen.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtOpen.Text = "Open"
+        Me.ToolStripBtOpen.ToolTipText = "Open..."
+        '
+        'ToolStripBtSave
+        '
+        Me.ToolStripBtSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripBtSave.Image = Global.VECTO.My.Resources.Resources.Actions_document_save_icon
+        Me.ToolStripBtSave.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripBtSave.Name = "ToolStripBtSave"
+        Me.ToolStripBtSave.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtSave.Text = "Save"
+        Me.ToolStripBtSave.ToolTipText = "Save"
+        '
+        'ToolStripBtSaveAs
+        '
+        Me.ToolStripBtSaveAs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripBtSaveAs.Image = Global.VECTO.My.Resources.Resources.Actions_document_save_as_icon
+        Me.ToolStripBtSaveAs.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripBtSaveAs.Name = "ToolStripBtSaveAs"
+        Me.ToolStripBtSaveAs.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtSaveAs.Text = "Save As"
+        Me.ToolStripBtSaveAs.ToolTipText = "Save As..."
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        '
+        'ToolStripBtSendTo
+        '
+        Me.ToolStripBtSendTo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripBtSendTo.Image = Global.VECTO.My.Resources.Resources.export_icon
+        Me.ToolStripBtSendTo.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripBtSendTo.Name = "ToolStripBtSendTo"
+        Me.ToolStripBtSendTo.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripBtSendTo.Text = "Send to GEN List"
+        Me.ToolStripBtSendTo.ToolTipText = "Send to GEN List"
+        '
+        'ToolStripSeparator2
+        '
+        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 25)
+        '
+        'ToolStripButton1
+        '
+        Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButton1.Image = Global.VECTO.My.Resources.Resources.Help_icon
+        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton1.Name = "ToolStripButton1"
+        Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton1.Text = "Help"
+        '
+        'PictureBox1
+        '
+        Me.PictureBox1.BackColor = System.Drawing.Color.White
+        Me.PictureBox1.Image = Global.VECTO.My.Resources.Resources.VECTO_VECTO
+        Me.PictureBox1.Location = New System.Drawing.Point(12, 28)
+        Me.PictureBox1.Name = "PictureBox1"
+        Me.PictureBox1.Size = New System.Drawing.Size(643, 40)
+        Me.PictureBox1.TabIndex = 21
+        Me.PictureBox1.TabStop = False
+        '
+        'CbEngOnly
+        '
+        Me.CbEngOnly.AutoSize = True
+        Me.CbEngOnly.Location = New System.Drawing.Point(17, 84)
+        Me.CbEngOnly.Name = "CbEngOnly"
+        Me.CbEngOnly.Size = New System.Drawing.Size(113, 17)
+        Me.CbEngOnly.TabIndex = 35
+        Me.CbEngOnly.Text = "Engine Only Mode"
+        Me.CbEngOnly.UseVisualStyleBackColor = True
+        '
         'F_GEN
         '
         Me.AcceptButton = Me.ButOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(667, 587)
+        Me.ClientSize = New System.Drawing.Size(667, 634)
+        Me.Controls.Add(Me.CbEngOnly)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.ButCancel)
@@ -1727,7 +1739,7 @@ Partial Class F_GEN
         Me.TabPgGen.ResumeLayout(False)
         Me.TabPgGen.PerformLayout()
         Me.GroupBox5.ResumeLayout(False)
-        Me.GroupBox4.ResumeLayout(False)
+        Me.GrAux.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.TabPgDriver.ResumeLayout(False)
         Me.TabPgDriver.PerformLayout()
@@ -1739,13 +1751,13 @@ Partial Class F_GEN
         Me.GroupBoxStartStop.PerformLayout()
         Me.TabPgTEST.ResumeLayout(False)
         Me.TabPgTEST.PerformLayout()
+        Me.GrGearShift.ResumeLayout(False)
+        Me.GrGearShift.PerformLayout()
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GrGearShift.ResumeLayout(False)
-        Me.GrGearShift.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1779,7 +1791,7 @@ Partial Class F_GEN
     Friend WithEvents CheckBoxSCR As System.Windows.Forms.CheckBox
     Friend WithEvents ButtonVEH As System.Windows.Forms.Button
     Friend WithEvents ButtonMAP As System.Windows.Forms.Button
-    Friend WithEvents ButtonFLD As System.Windows.Forms.Button
+    Friend WithEvents ButtonGBX As System.Windows.Forms.Button
     Friend WithEvents ButtonTRS As System.Windows.Forms.Button
     Friend WithEvents ButtonMAA As System.Windows.Forms.Button
     Friend WithEvents ButtonCDW As System.Windows.Forms.Button
@@ -1862,7 +1874,7 @@ Partial Class F_GEN
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents TabPgTEST As System.Windows.Forms.TabPage
     Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
+    Friend WithEvents GrAux As System.Windows.Forms.GroupBox
     Friend WithEvents LvAux As System.Windows.Forms.ListView
     Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
@@ -1896,4 +1908,5 @@ Partial Class F_GEN
     Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents Label15 As System.Windows.Forms.Label
     Friend WithEvents TBhinauf As System.Windows.Forms.TextBox
+    Friend WithEvents CbEngOnly As System.Windows.Forms.CheckBox
 End Class

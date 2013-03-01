@@ -1,16 +1,20 @@
 VECTO ?.? (future release)
 - Automatic transmission & Torque converter
 - Eco-Roll & Over-/Under-Speed
-- Engine Only Mode
+
 
 VECTO 1.1 x (current source - next release)
+
+
+
+VECTO 1.1 beta 2 - 01.03.2013
 - Corrected comment line for wheels inertia and axle config in .vveh file
 - Changed RRC unit in GUI from [-] to [N/N]
 - User Manual updated
 	o Vehicle Editor: RRC
 - Tranmission Loss Maps are not converted to n,Pe-Maps anymore. Should fix non-linear interpolation effects.
 - Automatic Transmission / Torque Converter in development	
-	
+- Engine Only Mode	
 	
 VECTO 1.1 beta - 06.02.2013
 - New independent licensing dll replaces TUG's version
