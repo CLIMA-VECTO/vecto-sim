@@ -21,6 +21,7 @@
         Me.TbAirDensity.Text = CStr(Cfg.AirDensity)
         Me.TbnnormEngStop.Text = CStr(Cfg.nnormEngStop)
         Me.TbOpenCmd.Text = Cfg.OpenCmd
+        Me.TbOpenCmdName.Text = Cfg.OpenCmdName
         Me.TbFuelDens.Text = Cfg.FuelDens.ToString
         Me.TbCO2toFC.Text = Cfg.CO2perFC.ToString
     End Sub
@@ -43,6 +44,7 @@
         Cfg.AirDensity = CSng(Me.TbAirDensity.Text)
         Cfg.nnormEngStop = CSng(Me.TbnnormEngStop.Text)
         Cfg.OpenCmd = Me.TbOpenCmd.Text
+        Cfg.OpenCmdName = Me.TbOpenCmdName.Text
         Cfg.FuelDens = CSng(Me.TbFuelDens.Text)
         Cfg.CO2perFC = CSng(Me.TbCO2toFC.Text)
         '----------------------------------------------------

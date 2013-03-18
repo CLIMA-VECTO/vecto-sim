@@ -177,6 +177,7 @@ Public Enum tGearbox
     Manual = 0
     SemiAutomatic = 1
     Automatic = 2
+    Custom = 3
 End Enum
 
 

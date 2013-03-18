@@ -28,8 +28,6 @@ Public Class F_GEN
 
     Private AuxDlog As F_VEH_AuxDlog
 
-
-
     'Initialize form (Load Drives, Combo-lists, ...)
     Private Sub F02_GEN_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Dim x As Int16
@@ -358,6 +356,10 @@ Public Class F_GEN
         If fbACC.OpenDialog(fFileRepl(Me.TbDesMaxFile.Text, fPATH(Genfile))) Then Me.TbDesMaxFile.Text = fFileWoDir(fbACC.Files(0), fPATH(Genfile))
     End Sub
 
+    Private Sub BtAccOpen_Click(sender As System.Object, e As System.EventArgs) Handles BtAccOpen.Click
+        OpenFiles(fFileRepl(Me.TbDesMaxFile.Text, fPATH(Genfile)))
+    End Sub
+
 #End Region
 
 #Region "Open Buttons"
@@ -442,48 +444,48 @@ Public Class F_GEN
     End Sub
 
     Private Sub ButOpenTRS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOpenTRS.Click
-        FileOpen(fFileRepl(Me.TextBoxTRS.Text, fPATH(Genfile)))
+        FileOpenAlt(fFileRepl(Me.TextBoxTRS.Text, fPATH(Genfile)))
     End Sub
     Private Sub ButOpenEXS_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOpenEXS.Click
-        FileOpen(fFileRepl(Me.TextBoxEXS.Text, fPATH(Genfile)))
+        FileOpenAlt(fFileRepl(Me.TextBoxEXS.Text, fPATH(Genfile)))
     End Sub
     'Cold Start
     Private Sub ButOpenMAA_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOpenMAA.Click
-        FileOpen(fFileRepl(Me.TextBoxMAA.Text, fPATH(Genfile)))
+        FileOpenAlt(fFileRepl(Me.TextBoxMAA.Text, fPATH(Genfile)))
     End Sub
     Private Sub ButOpenMAC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOpenMAC.Click
-        FileOpen(fFileRepl(Me.TextBoxMAC.Text, fPATH(Genfile)))
+        FileOpenAlt(fFileRepl(Me.TextBoxMAC.Text, fPATH(Genfile)))
     End Sub
     Private Sub ButOpenWUA_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOpenWUA.Click
-        FileOpen(fFileRepl(Me.TextBoxWUA.Text, fPATH(Genfile)))
+        FileOpenAlt(fFileRepl(Me.TextBoxWUA.Text, fPATH(Genfile)))
     End Sub
     Private Sub ButOpenWUC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOpenWUC.Click
-        FileOpen(fFileRepl(Me.TextBoxWUC.Text, fPATH(Genfile)))
+        FileOpenAlt(fFileRepl(Me.TextBoxWUC.Text, fPATH(Genfile)))
     End Sub
     Private Sub ButOpenCDW_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOpenCDW.Click
-        FileOpen(fFileRepl(Me.TextBoxCDW.Text, fPATH(Genfile)))
+        FileOpenAlt(fFileRepl(Me.TextBoxCDW.Text, fPATH(Genfile)))
     End Sub
     Private Sub ButOpenATC_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOpenATC.Click
-        FileOpen(fFileRepl(Me.TextBoxATC.Text, fPATH(Genfile)))
+        FileOpenAlt(fFileRepl(Me.TextBoxATC.Text, fPATH(Genfile)))
     End Sub
     'HEV
     Private Sub ButOpenBAT_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOpenBAT.Click
-        FileOpen(fFileRepl(Me.TextBoxBAT.Text, fPATH(Genfile)))
+        FileOpenAlt(fFileRepl(Me.TextBoxBAT.Text, fPATH(Genfile)))
     End Sub
     Private Sub ButOpenEMO_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOpenEMO.Click
-        FileOpen(fFileRepl(Me.TextBoxEMO.Text, fPATH(Genfile)))
+        FileOpenAlt(fFileRepl(Me.TextBoxEMO.Text, fPATH(Genfile)))
     End Sub
     Private Sub ButOpenEAN_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOpenEAN.Click
-        FileOpen(fFileRepl(Me.TextBoxEAN.Text, fPATH(Genfile)))
+        FileOpenAlt(fFileRepl(Me.TextBoxEAN.Text, fPATH(Genfile)))
     End Sub
     Private Sub ButOpenGET_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOpenGET.Click
-        FileOpen(fFileRepl(Me.TextBoxGET.Text, fPATH(Genfile)))
+        FileOpenAlt(fFileRepl(Me.TextBoxGET.Text, fPATH(Genfile)))
     End Sub
     Private Sub ButOpenSTE_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOpenSTE.Click
-        FileOpen(fFileRepl(Me.TextBoxSTE.Text, fPATH(Genfile)))
+        FileOpenAlt(fFileRepl(Me.TextBoxSTE.Text, fPATH(Genfile)))
     End Sub
     Private Sub ButOpenEKF_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOpenEKF.Click
-        FileOpen(fFileRepl(Me.TextBoxEKF.Text, fPATH(Genfile)))
+        FileOpenAlt(fFileRepl(Me.TextBoxEKF.Text, fPATH(Genfile)))
     End Sub
 #End Region
 
@@ -572,7 +574,7 @@ Public Class F_GEN
             MsgBox("Failed to load " & fFILE(file, True) & "!")
             Exit Sub
         End Try
-      
+
 
         'Update Form
         If Gfile.PKWja Then
@@ -1257,7 +1259,7 @@ lbDlog:
     End Sub
 
     Private Sub LvCycles_DoubleClick(sender As Object, e As System.EventArgs) Handles LvCycles.DoubleClick
-        If Me.LvCycles.SelectedItems.Count > 0 Then FileOpen(fFileRepl(Me.LvCycles.SelectedItems(0).SubItems(0).Text, fPATH(Genfile)))
+        If Me.LvCycles.SelectedItems.Count > 0 Then OpenFiles(fFileRepl(Me.LvCycles.SelectedItems(0).SubItems(0).Text, fPATH(Genfile)))
     End Sub
 
     Private Sub LvCycles_KeyDown(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles LvCycles.KeyDown
@@ -1343,5 +1345,39 @@ lbDlog:
 
     End Sub
 
+#Region "Open File Context Menu"
 
+    Private CmFiles As String()
+
+    Private Sub OpenFiles(ParamArray files() As String)
+
+        If files.Length = 0 Then Exit Sub
+
+        CmFiles = files
+
+        OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
+
+        CmOpenFile.Show(Cursor.Position)
+
+    End Sub
+
+    Private Sub OpenWithGRAPHiToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithGRAPHiToolStripMenuItem.Click
+        If Not FileOpenGRAPHi(CmFiles) Then MsgBox("Failed to open file!")
+    End Sub
+
+    Private Sub OpenWithToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithToolStripMenuItem.Click
+        If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
+    End Sub
+
+    Private Sub ShowInFolderToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles ShowInFolderToolStripMenuItem.Click
+        Try
+            System.Diagnostics.Process.Start("explorer", "/select,""" & CmFiles(0) & "")
+        Catch ex As Exception
+            MsgBox("Failed to open link!", MsgBoxStyle.Critical)
+        End Try
+    End Sub
+
+#End Region
+
+    
 End Class

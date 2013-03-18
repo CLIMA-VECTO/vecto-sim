@@ -22,6 +22,7 @@ Partial Class F_GEN
     'Das Bearbeiten mit dem Code-Editor ist nicht mÃ¶glich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_GEN))
         Me.ButOpenEXS = New System.Windows.Forms.Button()
         Me.ButtonEXS = New System.Windows.Forms.Button()
@@ -75,6 +76,7 @@ Partial Class F_GEN
         Me.ButtonWUA = New System.Windows.Forms.Button()
         Me.TabPgGen = New System.Windows.Forms.TabPage()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.LvCycles = New System.Windows.Forms.ListView()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.BtDRIrem = New System.Windows.Forms.Button()
@@ -108,6 +110,7 @@ Partial Class F_GEN
         Me.ComboBoxGearShift = New System.Windows.Forms.ComboBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPgDriver = New System.Windows.Forms.TabPage()
+        Me.BtAccOpen = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.BtDesMaxBr = New System.Windows.Forms.Button()
         Me.TbDesMaxFile = New System.Windows.Forms.TextBox()
@@ -170,6 +173,10 @@ Partial Class F_GEN
         Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.CbEngOnly = New System.Windows.Forms.CheckBox()
+        Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TabPgHEV.SuspendLayout()
         Me.TabPgColdSt.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
@@ -187,6 +194,7 @@ Partial Class F_GEN
         Me.StatusStrip1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.CmOpenFile.SuspendLayout()
         Me.SuspendLayout()
         '
         'ButOpenEXS
@@ -235,7 +243,7 @@ Partial Class F_GEN
         Me.TabPgHEV.Location = New System.Drawing.Point(4, 22)
         Me.TabPgHEV.Name = "TabPgHEV"
         Me.TabPgHEV.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgHEV.Size = New System.Drawing.Size(646, 433)
+        Me.TabPgHEV.Size = New System.Drawing.Size(646, 442)
         Me.TabPgHEV.TabIndex = 2
         Me.TabPgHEV.Text = "HEV"
         Me.TabPgHEV.UseVisualStyleBackColor = True
@@ -471,7 +479,7 @@ Partial Class F_GEN
         Me.TabPgColdSt.Location = New System.Drawing.Point(4, 22)
         Me.TabPgColdSt.Name = "TabPgColdSt"
         Me.TabPgColdSt.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgColdSt.Size = New System.Drawing.Size(646, 433)
+        Me.TabPgColdSt.Size = New System.Drawing.Size(646, 442)
         Me.TabPgColdSt.TabIndex = 1
         Me.TabPgColdSt.Text = "Cold Start"
         Me.TabPgColdSt.UseVisualStyleBackColor = True
@@ -745,6 +753,7 @@ Partial Class F_GEN
         '
         'GroupBox5
         '
+        Me.GroupBox5.Controls.Add(Me.Label2)
         Me.GroupBox5.Controls.Add(Me.LvCycles)
         Me.GroupBox5.Controls.Add(Me.BtDRIrem)
         Me.GroupBox5.Controls.Add(Me.BtDRIadd)
@@ -754,6 +763,15 @@ Partial Class F_GEN
         Me.GroupBox5.TabIndex = 34
         Me.GroupBox5.TabStop = False
         Me.GroupBox5.Text = "Cycles"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(506, 153)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(122, 13)
+        Me.Label2.TabIndex = 33
+        Me.Label2.Text = "Double-Click to open file"
         '
         'LvCycles
         '
@@ -1083,6 +1101,7 @@ Partial Class F_GEN
         '
         'TabPgDriver
         '
+        Me.TabPgDriver.Controls.Add(Me.BtAccOpen)
         Me.TabPgDriver.Controls.Add(Me.Label1)
         Me.TabPgDriver.Controls.Add(Me.BtDesMaxBr)
         Me.TabPgDriver.Controls.Add(Me.TbDesMaxFile)
@@ -1093,6 +1112,16 @@ Partial Class F_GEN
         Me.TabPgDriver.TabIndex = 7
         Me.TabPgDriver.Text = "Driver"
         Me.TabPgDriver.UseVisualStyleBackColor = True
+        '
+        'BtAccOpen
+        '
+        Me.BtAccOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
+        Me.BtAccOpen.Location = New System.Drawing.Point(617, 28)
+        Me.BtAccOpen.Name = "BtAccOpen"
+        Me.BtAccOpen.Size = New System.Drawing.Size(23, 23)
+        Me.BtAccOpen.TabIndex = 33
+        Me.BtAccOpen.TabStop = False
+        Me.BtAccOpen.UseVisualStyleBackColor = True
         '
         'Label1
         '
@@ -1105,7 +1134,7 @@ Partial Class F_GEN
         '
         'BtDesMaxBr
         '
-        Me.BtDesMaxBr.Location = New System.Drawing.Point(612, 29)
+        Me.BtDesMaxBr.Location = New System.Drawing.Point(583, 29)
         Me.BtDesMaxBr.Name = "BtDesMaxBr"
         Me.BtDesMaxBr.Size = New System.Drawing.Size(28, 21)
         Me.BtDesMaxBr.TabIndex = 31
@@ -1116,7 +1145,7 @@ Partial Class F_GEN
         '
         Me.TbDesMaxFile.Location = New System.Drawing.Point(6, 30)
         Me.TbDesMaxFile.Name = "TbDesMaxFile"
-        Me.TbDesMaxFile.Size = New System.Drawing.Size(600, 20)
+        Me.TbDesMaxFile.Size = New System.Drawing.Size(571, 20)
         Me.TbDesMaxFile.TabIndex = 30
         '
         'TabPgKF
@@ -1125,7 +1154,7 @@ Partial Class F_GEN
         Me.TabPgKF.Location = New System.Drawing.Point(4, 22)
         Me.TabPgKF.Name = "TabPgKF"
         Me.TabPgKF.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgKF.Size = New System.Drawing.Size(646, 433)
+        Me.TabPgKF.Size = New System.Drawing.Size(646, 442)
         Me.TabPgKF.TabIndex = 3
         Me.TabPgKF.Text = "MAP Creation"
         Me.TabPgKF.UseVisualStyleBackColor = True
@@ -1271,7 +1300,7 @@ Partial Class F_GEN
         Me.TabPgStartStop.Location = New System.Drawing.Point(4, 22)
         Me.TabPgStartStop.Name = "TabPgStartStop"
         Me.TabPgStartStop.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgStartStop.Size = New System.Drawing.Size(646, 433)
+        Me.TabPgStartStop.Size = New System.Drawing.Size(646, 442)
         Me.TabPgStartStop.TabIndex = 4
         Me.TabPgStartStop.Text = "Start-Stop"
         Me.TabPgStartStop.UseVisualStyleBackColor = True
@@ -1351,7 +1380,7 @@ Partial Class F_GEN
         Me.TabPgTEST.Location = New System.Drawing.Point(4, 22)
         Me.TabPgTEST.Name = "TabPgTEST"
         Me.TabPgTEST.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgTEST.Size = New System.Drawing.Size(646, 433)
+        Me.TabPgTEST.Size = New System.Drawing.Size(646, 442)
         Me.TabPgTEST.TabIndex = 6
         Me.TabPgTEST.Text = "TEST"
         Me.TabPgTEST.UseVisualStyleBackColor = True
@@ -1710,6 +1739,30 @@ Partial Class F_GEN
         Me.CbEngOnly.Text = "Engine Only Mode"
         Me.CbEngOnly.UseVisualStyleBackColor = True
         '
+        'CmOpenFile
+        '
+        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithGRAPHiToolStripMenuItem, Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
+        Me.CmOpenFile.Name = "CmOpenFile"
+        Me.CmOpenFile.Size = New System.Drawing.Size(175, 70)
+        '
+        'OpenWithGRAPHiToolStripMenuItem
+        '
+        Me.OpenWithGRAPHiToolStripMenuItem.Name = "OpenWithGRAPHiToolStripMenuItem"
+        Me.OpenWithGRAPHiToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.OpenWithGRAPHiToolStripMenuItem.Text = "Open with GRAPHi"
+        '
+        'OpenWithToolStripMenuItem
+        '
+        Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.OpenWithToolStripMenuItem.Text = "Open with ..."
+        '
+        'ShowInFolderToolStripMenuItem
+        '
+        Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
+        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
+        '
         'F_GEN
         '
         Me.AcceptButton = Me.ButOK
@@ -1739,6 +1792,7 @@ Partial Class F_GEN
         Me.TabPgGen.ResumeLayout(False)
         Me.TabPgGen.PerformLayout()
         Me.GroupBox5.ResumeLayout(False)
+        Me.GroupBox5.PerformLayout()
         Me.GrAux.ResumeLayout(False)
         Me.TabControl1.ResumeLayout(False)
         Me.TabPgDriver.ResumeLayout(False)
@@ -1758,6 +1812,7 @@ Partial Class F_GEN
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.CmOpenFile.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1909,4 +1964,10 @@ Partial Class F_GEN
     Friend WithEvents Label15 As System.Windows.Forms.Label
     Friend WithEvents TBhinauf As System.Windows.Forms.TextBox
     Friend WithEvents CbEngOnly As System.Windows.Forms.CheckBox
+    Friend WithEvents BtAccOpen As System.Windows.Forms.Button
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
+    Friend WithEvents OpenWithGRAPHiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 End Class

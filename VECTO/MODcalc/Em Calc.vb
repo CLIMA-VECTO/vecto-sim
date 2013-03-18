@@ -16,11 +16,14 @@ Public Class cEm
         EmDefComp = Nothing
     End Sub
 
-    Public Sub Raw_Calc()
-
+    Public Function Raw_Calc() As Boolean
+        Dim v As Single
         Dim i As Integer
         Dim KV As KeyValuePair(Of String, cEmComp)
         Dim Em0 As cEmComp
+        Dim Result As Boolean
+
+        Result = True
 
         For Each KV In MAP.EmComponents
             Em0 = New cEmComp
@@ -49,7 +52,11 @@ Public Class cEm
 
                         If KV.Value.MapCompID = tMapComp.FC Then
                             'Delaunay
-                            EmComp(KV.Key).RawVals.Add(MAP.fFCdelaunay_Intp(MODdata.nn(i), MODdata.Pe(i)))
+                            v = MAP.fFCdelaunay_Intp(MODdata.nn(i), MODdata.Pe(i))
+                            If Result Then
+                                If v < -999 Then Result = False
+                            End If
+                            EmComp(KV.Key).RawVals.Add(v)
                         Else
                             'Normal interpolation
                             EmComp(KV.Key).RawVals.Add(MAP.fShep_Intp(KV.Value))
@@ -68,7 +75,9 @@ Public Class cEm
 
         KV = Nothing
 
-    End Sub
+        Return Result
+
+    End Function
 
     Public Sub TC_Calc()
         Dim dynkor As Double

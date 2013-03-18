@@ -22,6 +22,7 @@ Partial Class F_VEH
     'Das Bearbeiten mit dem Code-Editor ist nicht mÃ¶glich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_VEH))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TbMass = New System.Windows.Forms.TextBox()
@@ -47,6 +48,7 @@ Partial Class F_VEH
         Me.TbCdFile = New System.Windows.Forms.TextBox()
         Me.BtCdFileBrowse = New System.Windows.Forms.Button()
         Me.GroupBox6 = New System.Windows.Forms.GroupBox()
+        Me.BtCdFileOpen = New System.Windows.Forms.Button()
         Me.LbCdMode = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripBtNew = New System.Windows.Forms.ToolStripButton()
@@ -93,6 +95,10 @@ Partial Class F_VEH
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GroupBox6.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
@@ -102,6 +108,7 @@ Partial Class F_VEH
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.CmOpenFile.SuspendLayout()
         Me.SuspendLayout()
         '
         'Label1
@@ -290,13 +297,13 @@ Partial Class F_VEH
         Me.TbCdFile.Enabled = False
         Me.TbCdFile.Location = New System.Drawing.Point(6, 46)
         Me.TbCdFile.Name = "TbCdFile"
-        Me.TbCdFile.Size = New System.Drawing.Size(477, 20)
+        Me.TbCdFile.Size = New System.Drawing.Size(448, 20)
         Me.TbCdFile.TabIndex = 1
         '
         'BtCdFileBrowse
         '
         Me.BtCdFileBrowse.Enabled = False
-        Me.BtCdFileBrowse.Location = New System.Drawing.Point(489, 44)
+        Me.BtCdFileBrowse.Location = New System.Drawing.Point(460, 44)
         Me.BtCdFileBrowse.Name = "BtCdFileBrowse"
         Me.BtCdFileBrowse.Size = New System.Drawing.Size(32, 23)
         Me.BtCdFileBrowse.TabIndex = 2
@@ -305,6 +312,7 @@ Partial Class F_VEH
         '
         'GroupBox6
         '
+        Me.GroupBox6.Controls.Add(Me.BtCdFileOpen)
         Me.GroupBox6.Controls.Add(Me.LbCdMode)
         Me.GroupBox6.Controls.Add(Me.CbCdMode)
         Me.GroupBox6.Controls.Add(Me.BtCdFileBrowse)
@@ -315,6 +323,17 @@ Partial Class F_VEH
         Me.GroupBox6.TabIndex = 5
         Me.GroupBox6.TabStop = False
         Me.GroupBox6.Text = "Cross Wind Correction"
+        '
+        'BtCdFileOpen
+        '
+        Me.BtCdFileOpen.Enabled = False
+        Me.BtCdFileOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
+        Me.BtCdFileOpen.Location = New System.Drawing.Point(498, 44)
+        Me.BtCdFileOpen.Name = "BtCdFileOpen"
+        Me.BtCdFileOpen.Size = New System.Drawing.Size(23, 23)
+        Me.BtCdFileOpen.TabIndex = 41
+        Me.BtCdFileOpen.TabStop = False
+        Me.BtCdFileOpen.UseVisualStyleBackColor = True
         '
         'LbCdMode
         '
@@ -576,7 +595,7 @@ Partial Class F_VEH
         '
         'ColumnHeader9
         '
-        Me.ColumnHeader9.Text = "RRC [N/N]"
+        Me.ColumnHeader9.Text = "RRC [-]"
         Me.ColumnHeader9.Width = 79
         '
         'ButAxlAdd
@@ -763,6 +782,30 @@ Partial Class F_VEH
         Me.PictureBox1.TabIndex = 37
         Me.PictureBox1.TabStop = False
         '
+        'CmOpenFile
+        '
+        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithGRAPHiToolStripMenuItem, Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
+        Me.CmOpenFile.Name = "CmOpenFile"
+        Me.CmOpenFile.Size = New System.Drawing.Size(175, 70)
+        '
+        'OpenWithGRAPHiToolStripMenuItem
+        '
+        Me.OpenWithGRAPHiToolStripMenuItem.Name = "OpenWithGRAPHiToolStripMenuItem"
+        Me.OpenWithGRAPHiToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.OpenWithGRAPHiToolStripMenuItem.Text = "Open with GRAPHi"
+        '
+        'OpenWithToolStripMenuItem
+        '
+        Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.OpenWithToolStripMenuItem.Text = "Open with ..."
+        '
+        'ShowInFolderToolStripMenuItem
+        '
+        Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
+        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
+        '
         'F_VEH
         '
         Me.AcceptButton = Me.ButOK
@@ -809,6 +852,7 @@ Partial Class F_VEH
         Me.GroupBox4.ResumeLayout(False)
         Me.GroupBox4.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.CmOpenFile.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -883,4 +927,9 @@ Partial Class F_VEH
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
+    Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
+    Friend WithEvents OpenWithGRAPHiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents BtCdFileOpen As System.Windows.Forms.Button
 End Class

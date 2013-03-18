@@ -22,6 +22,7 @@ Partial Class F_GBX
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_GBX))
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripBtNew = New System.Windows.Forms.ToolStripButton()
@@ -51,6 +52,7 @@ Partial Class F_GBX
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.BtClearGear = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.BtShiftPolyOpen = New System.Windows.Forms.Button()
         Me.ChShiftInside = New System.Windows.Forms.CheckBox()
         Me.TbShiftTime = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
@@ -72,11 +74,32 @@ Partial Class F_GBX
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.PnTC = New System.Windows.Forms.Panel()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.BtTCfileBrowse = New System.Windows.Forms.Button()
+        Me.TbTCfile = New System.Windows.Forms.TextBox()
+        Me.BtTCfileOpen = New System.Windows.Forms.Button()
+        Me.TbTCrefrpm = New System.Windows.Forms.TextBox()
+        Me.ChTCon = New System.Windows.Forms.CheckBox()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.CbGStype = New System.Windows.Forms.ComboBox()
+        Me.PnTorqRes = New System.Windows.Forms.Panel()
         Me.ToolStrip1.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
+        Me.CmOpenFile.SuspendLayout()
+        Me.GroupBox3.SuspendLayout()
+        Me.PnTC.SuspendLayout()
+        Me.PnTorqRes.SuspendLayout()
         Me.SuspendLayout()
         '
         'ToolStrip1
@@ -161,7 +184,7 @@ Partial Class F_GBX
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 629)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 713)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(465, 22)
         Me.StatusStrip1.SizingGrip = False
@@ -178,7 +201,7 @@ Partial Class F_GBX
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(378, 603)
+        Me.ButCancel.Location = New System.Drawing.Point(378, 687)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 7
@@ -188,7 +211,7 @@ Partial Class F_GBX
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(297, 603)
+        Me.ButOK.Location = New System.Drawing.Point(297, 687)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 6
@@ -197,7 +220,7 @@ Partial Class F_GBX
         '
         'TbTracInt
         '
-        Me.TbTracInt.Location = New System.Drawing.Point(389, 115)
+        Me.TbTracInt.Location = New System.Drawing.Point(389, 299)
         Me.TbTracInt.Name = "TbTracInt"
         Me.TbTracInt.Size = New System.Drawing.Size(40, 20)
         Me.TbTracInt.TabIndex = 2
@@ -211,7 +234,7 @@ Partial Class F_GBX
         Me.LvGears.Location = New System.Drawing.Point(12, 141)
         Me.LvGears.MultiSelect = False
         Me.LvGears.Name = "LvGears"
-        Me.LvGears.Size = New System.Drawing.Size(441, 170)
+        Me.LvGears.Size = New System.Drawing.Size(441, 150)
         Me.LvGears.TabIndex = 3
         Me.LvGears.TabStop = False
         Me.LvGears.UseCompatibleStateImageBehavior = False
@@ -234,7 +257,7 @@ Partial Class F_GBX
         '
         'TBI_getr
         '
-        Me.TBI_getr.Location = New System.Drawing.Point(64, 115)
+        Me.TBI_getr.Location = New System.Drawing.Point(139, 299)
         Me.TBI_getr.Name = "TBI_getr"
         Me.TBI_getr.Size = New System.Drawing.Size(57, 20)
         Me.TBI_getr.TabIndex = 1
@@ -242,7 +265,7 @@ Partial Class F_GBX
         'Label49
         '
         Me.Label49.AutoSize = True
-        Me.Label49.Location = New System.Drawing.Point(435, 118)
+        Me.Label49.Location = New System.Drawing.Point(435, 302)
         Me.Label49.Name = "Label49"
         Me.Label49.Size = New System.Drawing.Size(18, 13)
         Me.Label49.TabIndex = 2
@@ -251,7 +274,7 @@ Partial Class F_GBX
         'Label33
         '
         Me.Label33.AutoSize = True
-        Me.Label33.Location = New System.Drawing.Point(127, 118)
+        Me.Label33.Location = New System.Drawing.Point(202, 302)
         Me.Label33.Name = "Label33"
         Me.Label33.Size = New System.Drawing.Size(36, 13)
         Me.Label33.TabIndex = 2
@@ -260,7 +283,7 @@ Partial Class F_GBX
         'Label48
         '
         Me.Label48.AutoSize = True
-        Me.Label48.Location = New System.Drawing.Point(281, 118)
+        Me.Label48.Location = New System.Drawing.Point(281, 302)
         Me.Label48.Name = "Label48"
         Me.Label48.Size = New System.Drawing.Size(102, 13)
         Me.Label48.TabIndex = 2
@@ -269,7 +292,7 @@ Partial Class F_GBX
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(22, 118)
+        Me.Label6.Location = New System.Drawing.Point(97, 302)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(36, 13)
         Me.Label6.TabIndex = 2
@@ -304,7 +327,7 @@ Partial Class F_GBX
         'BtClearGear
         '
         Me.BtClearGear.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.BtClearGear.Location = New System.Drawing.Point(12, 317)
+        Me.BtClearGear.Location = New System.Drawing.Point(12, 297)
         Me.BtClearGear.Name = "BtClearGear"
         Me.BtClearGear.Size = New System.Drawing.Size(29, 23)
         Me.BtClearGear.TabIndex = 4
@@ -312,33 +335,44 @@ Partial Class F_GBX
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.PnTorqRes)
+        Me.GroupBox1.Controls.Add(Me.BtShiftPolyOpen)
         Me.GroupBox1.Controls.Add(Me.ChShiftInside)
         Me.GroupBox1.Controls.Add(Me.TbShiftTime)
         Me.GroupBox1.Controls.Add(Me.Label12)
         Me.GroupBox1.Controls.Add(Me.Label13)
         Me.GroupBox1.Controls.Add(Me.ChSkipGears)
         Me.GroupBox1.Controls.Add(Me.GroupBox2)
-        Me.GroupBox1.Controls.Add(Me.TbTqResv)
         Me.GroupBox1.Controls.Add(Me.TbShiftPolyFile)
         Me.GroupBox1.Controls.Add(Me.BtShiftPolyBrowse)
-        Me.GroupBox1.Controls.Add(Me.Label4)
-        Me.GroupBox1.Controls.Add(Me.Label2)
         Me.GroupBox1.Controls.Add(Me.Label1)
-        Me.GroupBox1.Location = New System.Drawing.Point(12, 346)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 326)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(441, 251)
+        Me.GroupBox1.Size = New System.Drawing.Size(441, 230)
         Me.GroupBox1.TabIndex = 5
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Gear shift parameters"
         '
+        'BtShiftPolyOpen
+        '
+        Me.BtShiftPolyOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
+        Me.BtShiftPolyOpen.Location = New System.Drawing.Point(412, 39)
+        Me.BtShiftPolyOpen.Name = "BtShiftPolyOpen"
+        Me.BtShiftPolyOpen.Size = New System.Drawing.Size(23, 23)
+        Me.BtShiftPolyOpen.TabIndex = 34
+        Me.BtShiftPolyOpen.TabStop = False
+        Me.BtShiftPolyOpen.UseVisualStyleBackColor = True
+        '
         'ChShiftInside
         '
         Me.ChShiftInside.AutoSize = True
-        Me.ChShiftInside.Location = New System.Drawing.Point(6, 74)
+        Me.ChShiftInside.Checked = True
+        Me.ChShiftInside.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.ChShiftInside.Location = New System.Drawing.Point(9, 74)
         Me.ChShiftInside.Name = "ChShiftInside"
-        Me.ChShiftInside.Size = New System.Drawing.Size(217, 17)
+        Me.ChShiftInside.Size = New System.Drawing.Size(195, 17)
         Me.ChShiftInside.TabIndex = 10
-        Me.ChShiftInside.Text = "Allow shift-up inside polygons (AMT only)"
+        Me.ChShiftInside.Text = "Allow shift-up inside polygons (AMT)"
         Me.ChShiftInside.UseVisualStyleBackColor = True
         '
         'TbShiftTime
@@ -369,11 +403,11 @@ Partial Class F_GBX
         'ChSkipGears
         '
         Me.ChSkipGears.AutoSize = True
-        Me.ChSkipGears.Location = New System.Drawing.Point(6, 100)
+        Me.ChSkipGears.Location = New System.Drawing.Point(9, 100)
         Me.ChSkipGears.Name = "ChSkipGears"
-        Me.ChSkipGears.Size = New System.Drawing.Size(78, 17)
+        Me.ChSkipGears.Size = New System.Drawing.Size(132, 17)
         Me.ChSkipGears.TabIndex = 2
-        Me.ChSkipGears.Text = "Skip Gears"
+        Me.ChSkipGears.Text = "Skip Gears (MT, AMT)"
         Me.ChSkipGears.UseVisualStyleBackColor = True
         '
         'GroupBox2
@@ -387,9 +421,9 @@ Partial Class F_GBX
         Me.GroupBox2.Controls.Add(Me.Label8)
         Me.GroupBox2.Controls.Add(Me.Label5)
         Me.GroupBox2.Controls.Add(Me.Label7)
-        Me.GroupBox2.Location = New System.Drawing.Point(6, 135)
+        Me.GroupBox2.Location = New System.Drawing.Point(6, 124)
         Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(429, 110)
+        Me.GroupBox2.Size = New System.Drawing.Size(429, 99)
         Me.GroupBox2.TabIndex = 5
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Start Gear"
@@ -471,7 +505,7 @@ Partial Class F_GBX
         '
         'TbTqResv
         '
-        Me.TbTqResv.Location = New System.Drawing.Point(340, 72)
+        Me.TbTqResv.Location = New System.Drawing.Point(105, 6)
         Me.TbTqResv.Name = "TbTqResv"
         Me.TbTqResv.Size = New System.Drawing.Size(57, 20)
         Me.TbTqResv.TabIndex = 3
@@ -480,12 +514,12 @@ Partial Class F_GBX
         '
         Me.TbShiftPolyFile.Location = New System.Drawing.Point(6, 42)
         Me.TbShiftPolyFile.Name = "TbShiftPolyFile"
-        Me.TbShiftPolyFile.Size = New System.Drawing.Size(391, 20)
+        Me.TbShiftPolyFile.Size = New System.Drawing.Size(362, 20)
         Me.TbShiftPolyFile.TabIndex = 0
         '
         'BtShiftPolyBrowse
         '
-        Me.BtShiftPolyBrowse.Location = New System.Drawing.Point(403, 40)
+        Me.BtShiftPolyBrowse.Location = New System.Drawing.Point(374, 39)
         Me.BtShiftPolyBrowse.Name = "BtShiftPolyBrowse"
         Me.BtShiftPolyBrowse.Size = New System.Drawing.Size(32, 23)
         Me.BtShiftPolyBrowse.TabIndex = 1
@@ -496,7 +530,7 @@ Partial Class F_GBX
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(403, 75)
+        Me.Label4.Location = New System.Drawing.Point(168, 9)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(21, 13)
         Me.Label4.TabIndex = 0
@@ -505,7 +539,7 @@ Partial Class F_GBX
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(255, 75)
+        Me.Label2.Location = New System.Drawing.Point(20, 9)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(79, 13)
         Me.Label2.TabIndex = 0
@@ -520,29 +554,183 @@ Partial Class F_GBX
         Me.Label1.TabIndex = 0
         Me.Label1.Text = "Shift polygons file"
         '
+        'CmOpenFile
+        '
+        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithGRAPHiToolStripMenuItem, Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
+        Me.CmOpenFile.Name = "CmOpenFile"
+        Me.CmOpenFile.Size = New System.Drawing.Size(175, 70)
+        '
+        'OpenWithGRAPHiToolStripMenuItem
+        '
+        Me.OpenWithGRAPHiToolStripMenuItem.Name = "OpenWithGRAPHiToolStripMenuItem"
+        Me.OpenWithGRAPHiToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.OpenWithGRAPHiToolStripMenuItem.Text = "Open with GRAPHi"
+        '
+        'OpenWithToolStripMenuItem
+        '
+        Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.OpenWithToolStripMenuItem.Text = "Open with ..."
+        '
+        'ShowInFolderToolStripMenuItem
+        '
+        Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
+        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
+        '
+        'GroupBox3
+        '
+        Me.GroupBox3.Controls.Add(Me.PnTC)
+        Me.GroupBox3.Controls.Add(Me.ChTCon)
+        Me.GroupBox3.Location = New System.Drawing.Point(12, 562)
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.Size = New System.Drawing.Size(441, 119)
+        Me.GroupBox3.TabIndex = 44
+        Me.GroupBox3.TabStop = False
+        Me.GroupBox3.Text = "Torque Converter"
+        '
+        'PnTC
+        '
+        Me.PnTC.Controls.Add(Me.Label17)
+        Me.PnTC.Controls.Add(Me.Label15)
+        Me.PnTC.Controls.Add(Me.Label14)
+        Me.PnTC.Controls.Add(Me.BtTCfileBrowse)
+        Me.PnTC.Controls.Add(Me.TbTCfile)
+        Me.PnTC.Controls.Add(Me.BtTCfileOpen)
+        Me.PnTC.Controls.Add(Me.TbTCrefrpm)
+        Me.PnTC.Location = New System.Drawing.Point(6, 39)
+        Me.PnTC.Name = "PnTC"
+        Me.PnTC.Size = New System.Drawing.Size(429, 72)
+        Me.PnTC.TabIndex = 36
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Location = New System.Drawing.Point(0, 5)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(176, 13)
+        Me.Label17.TabIndex = 0
+        Me.Label17.Text = "Torque converter characteristics file"
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Location = New System.Drawing.Point(98, 50)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(191, 13)
+        Me.Label15.TabIndex = 0
+        Me.Label15.Text = "Reference rpm for torque characteristic"
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Location = New System.Drawing.Point(368, 50)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(40, 13)
+        Me.Label14.TabIndex = 0
+        Me.Label14.Text = "[1/min]"
+        '
+        'BtTCfileBrowse
+        '
+        Me.BtTCfileBrowse.Location = New System.Drawing.Point(368, 19)
+        Me.BtTCfileBrowse.Name = "BtTCfileBrowse"
+        Me.BtTCfileBrowse.Size = New System.Drawing.Size(32, 23)
+        Me.BtTCfileBrowse.TabIndex = 1
+        Me.BtTCfileBrowse.TabStop = False
+        Me.BtTCfileBrowse.Text = "..."
+        Me.BtTCfileBrowse.UseVisualStyleBackColor = True
+        '
+        'TbTCfile
+        '
+        Me.TbTCfile.Location = New System.Drawing.Point(0, 21)
+        Me.TbTCfile.Name = "TbTCfile"
+        Me.TbTCfile.Size = New System.Drawing.Size(362, 20)
+        Me.TbTCfile.TabIndex = 1
+        '
+        'BtTCfileOpen
+        '
+        Me.BtTCfileOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
+        Me.BtTCfileOpen.Location = New System.Drawing.Point(406, 19)
+        Me.BtTCfileOpen.Name = "BtTCfileOpen"
+        Me.BtTCfileOpen.Size = New System.Drawing.Size(23, 23)
+        Me.BtTCfileOpen.TabIndex = 34
+        Me.BtTCfileOpen.TabStop = False
+        Me.BtTCfileOpen.UseVisualStyleBackColor = True
+        '
+        'TbTCrefrpm
+        '
+        Me.TbTCrefrpm.Location = New System.Drawing.Point(295, 47)
+        Me.TbTCrefrpm.Name = "TbTCrefrpm"
+        Me.TbTCrefrpm.Size = New System.Drawing.Size(67, 20)
+        Me.TbTCrefrpm.TabIndex = 35
+        '
+        'ChTCon
+        '
+        Me.ChTCon.AutoSize = True
+        Me.ChTCon.Checked = True
+        Me.ChTCon.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.ChTCon.Location = New System.Drawing.Point(9, 19)
+        Me.ChTCon.Name = "ChTCon"
+        Me.ChTCon.Size = New System.Drawing.Size(88, 17)
+        Me.ChTCon.TabIndex = 0
+        Me.ChTCon.Text = "Installed (AT)"
+        Me.ChTCon.UseVisualStyleBackColor = True
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Location = New System.Drawing.Point(18, 111)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(95, 13)
+        Me.Label16.TabIndex = 45
+        Me.Label16.Text = "Transmission Type"
+        '
+        'CbGStype
+        '
+        Me.CbGStype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.CbGStype.FormattingEnabled = True
+        Me.CbGStype.Items.AddRange(New Object() {"Manual Transmission (MT)", "Automated Manual Transmission (AMT)", "Automatic Transmission (AT)", "Custom"})
+        Me.CbGStype.Location = New System.Drawing.Point(119, 108)
+        Me.CbGStype.Name = "CbGStype"
+        Me.CbGStype.Size = New System.Drawing.Size(227, 21)
+        Me.CbGStype.TabIndex = 46
+        '
+        'PnTorqRes
+        '
+        Me.PnTorqRes.Controls.Add(Me.Label2)
+        Me.PnTorqRes.Controls.Add(Me.Label4)
+        Me.PnTorqRes.Controls.Add(Me.TbTqResv)
+        Me.PnTorqRes.Location = New System.Drawing.Point(235, 66)
+        Me.PnTorqRes.Name = "PnTorqRes"
+        Me.PnTorqRes.Size = New System.Drawing.Size(200, 32)
+        Me.PnTorqRes.TabIndex = 35
+        '
         'F_GBX
         '
         Me.AcceptButton = Me.ButOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(465, 651)
+        Me.ClientSize = New System.Drawing.Size(465, 735)
+        Me.Controls.Add(Me.CbGStype)
+        Me.Controls.Add(Me.Label16)
         Me.Controls.Add(Me.GroupBox1)
+        Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.TbName)
         Me.Controls.Add(Me.BtClearGear)
-        Me.Controls.Add(Me.TbTracInt)
         Me.Controls.Add(Me.ButCancel)
         Me.Controls.Add(Me.LvGears)
+        Me.Controls.Add(Me.TbTracInt)
         Me.Controls.Add(Me.ButOK)
-        Me.Controls.Add(Me.TBI_getr)
         Me.Controls.Add(Me.StatusStrip1)
-        Me.Controls.Add(Me.Label49)
         Me.Controls.Add(Me.ToolStrip1)
+        Me.Controls.Add(Me.TBI_getr)
+        Me.Controls.Add(Me.Label49)
         Me.Controls.Add(Me.Label33)
-        Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.Label48)
+        Me.Controls.Add(Me.Label6)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
@@ -558,6 +746,13 @@ Partial Class F_GBX
         Me.GroupBox1.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
+        Me.CmOpenFile.ResumeLayout(False)
+        Me.GroupBox3.ResumeLayout(False)
+        Me.GroupBox3.PerformLayout()
+        Me.PnTC.ResumeLayout(False)
+        Me.PnTC.PerformLayout()
+        Me.PnTorqRes.ResumeLayout(False)
+        Me.PnTorqRes.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -611,4 +806,22 @@ Partial Class F_GBX
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents ChSkipGears As System.Windows.Forms.CheckBox
     Friend WithEvents ChShiftInside As System.Windows.Forms.CheckBox
+    Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
+    Friend WithEvents OpenWithGRAPHiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents BtShiftPolyOpen As System.Windows.Forms.Button
+    Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
+    Friend WithEvents TbTCfile As System.Windows.Forms.TextBox
+    Friend WithEvents ChTCon As System.Windows.Forms.CheckBox
+    Friend WithEvents BtTCfileBrowse As System.Windows.Forms.Button
+    Friend WithEvents BtTCfileOpen As System.Windows.Forms.Button
+    Friend WithEvents TbTCrefrpm As System.Windows.Forms.TextBox
+    Friend WithEvents Label14 As System.Windows.Forms.Label
+    Friend WithEvents Label15 As System.Windows.Forms.Label
+    Friend WithEvents Label16 As System.Windows.Forms.Label
+    Friend WithEvents CbGStype As System.Windows.Forms.ComboBox
+    Friend WithEvents Label17 As System.Windows.Forms.Label
+    Friend WithEvents PnTC As System.Windows.Forms.Panel
+    Friend WithEvents PnTorqRes As System.Windows.Forms.Panel
 End Class

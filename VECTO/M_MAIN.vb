@@ -20,13 +20,14 @@ Module M_MAIN
 
     Friend Function NrOfRunStr() As String
         If PHEMmode = tPHEMmode.ModeSTANDARD Then
-            Return CStr(jgen * (CyclesDim + 1) + jzkl + 1) & "-" & CStr(jsubcycle)
+            'Return CStr(jgen * (CyclesDim + 1) + jzkl + 1) & "-" & CStr(jsubcycle)
+            Return CStr(jgen * (CyclesDim + 1) + jzkl + 1) & "(" & CStr(jsubcycle) & ")"
         Else
             Return CStr(jgen * (CyclesDim + 1) + jzkl + 1)
         End If
     End Function
 
-    Public Function PHEM() As tCalcResult
+    Public Function VECTO() As tCalcResult
 
         'Main program for all modes
 
@@ -45,7 +46,7 @@ Module M_MAIN
         MsgStrBuilder = New System.Text.StringBuilder
 
         'If there are any "unplanned" Aborts
-        PHEM = tCalcResult.Err
+        VECTO = tCalcResult.Err
 
         'Reset the fault
         ''ClearErrors()
@@ -332,7 +333,7 @@ lbADV:
                         If DRI.Vvorg AndAlso DRI.tDim > 1 AndAlso DRI.Values(tDriComp.V)(0) < 0.0001 AndAlso DRI.Values(tDriComp.V)(1) >= 0.0001 Then
                             DRI.FirstZero()
                         End If
-                     
+
                         'Convert to 1Hz (optional) - does not apply to v(s) cycles because timestep is missing
                         If DRI.Tvorg Then
                             If MsgOut Then WorkerMsg(tMsgID.Normal, "Converting cycle to 1Hz", MsgSrc)
@@ -379,9 +380,9 @@ lbADV:
                             GoTo lbNextJob
                         End If
 
-                        If DEV.ATmode Then
+                        If GBX.TCon Then
                             If Not GBX.TCinit Then
-                                'Error-notification within GSinit()
+                                'Error-notification within TCinit()
                                 JobAbortedByErr = True
                                 GoTo lbNextJob
                             End If
@@ -437,12 +438,12 @@ lbADV:
                                 GoTo lbAusg
                             End If
 
-                    End If
+                        End If
 
-                    If PHEMworker.CancellationPending Then GoTo lbAbort
+                        If PHEMworker.CancellationPending Then GoTo lbAbort
 
-                    'Calculate CycleKin (for erg/sum, etc.)
-                    MODdata.CylceKin.Calc()
+                        'Calculate CycleKin (for erg/sum, etc.)
+                        MODdata.CylceKin.Calc()
 
                     End If
                     '----------------------------------------------------------------------------
@@ -452,10 +453,10 @@ lbADV:
                     'Emissionen und Nachbehandlung - wird bei EV-Modus nicht ausgeführt |@@| Emissions and After-treatment - it will not run in EV mode
                     If Not GEN.VehMode = tVehMode.EV Then
 
-                        If MsgOut Then WorkerMsg(tMsgID.Normal, "Calculating Transient Correction Factors", MsgSrc)
+                        'If MsgOut Then WorkerMsg(tMsgID.Normal, "Calculating Transient Correction Factors", MsgSrc)
 
-                        'Determine TC parameters per second
-                        MODdata.TC.Calc()
+                        ''Determine TC parameters per second
+                        'MODdata.TC.Calc()
 
                         'Map creation
                         If GEN.CreateMap Then
@@ -474,7 +475,11 @@ lbADV:
                         If MsgOut Then WorkerMsg(tMsgID.Normal, "Em Calc: Raw", MsgSrc)
 
                         'Calculate Raw emissions
-                        MODdata.Em.Raw_Calc()
+                        If Not MODdata.Em.Raw_Calc() Then
+                            CyclAbrtedByErr = True
+                            WorkerMsg(tMsgID.Normal, "Calculation aborted!", MsgSrc)
+                            GoTo lbAusg
+                        End If
 
                         'TC Parameter umrechnen in Differenz zu Kennfeld-TC-Parameter |@@| Convert TC parameters to differences with Map-TC-parameters
                         If MAP.TransMap Then MODdata.TC.CalcDiff()
@@ -591,7 +596,7 @@ lbAusg:
                 '************************* END *** VECTO Cycle-loop *** END *************************
                 '******************************************************************************************
 
-               
+
 
             Next
             '**********************************************************************************************
@@ -652,13 +657,13 @@ lbNextJob:
 
         WorkerMsg(tMsgID.Normal, "Summary Results written to: " & fFILE(ERG.ErgFile, True), MsgSrc, ERG.ErgFile)
         WorkerMsg(tMsgID.Normal, "done", MsgSrc)
-        PHEM = tCalcResult.Done
+        VECTO = tCalcResult.Done
         GoTo lbExit
 
 
 lbErrBefore:  '!!!!!!!!!! Abbruch bevor (!!!) der erste Job angefangen wurde !!!!!!!!!!!
         WorkerMsg(tMsgID.Normal, "aborted", MsgSrc)
-        PHEM = tCalcResult.Err
+        VECTO = tCalcResult.Err
 
         For i = 0 To FilesDim
             WorkerJobStatus(i, "", tJobStatus.Undef)
@@ -670,7 +675,7 @@ lbErrBefore:  '!!!!!!!!!! Abbruch bevor (!!!) der erste Job angefangen wurde !!!
 lbErrInJobLoop:
         WorkerMsg(tMsgID.Normal, "aborted", MsgSrc)
         WorkerJobStatus(jgen, "aborted", tJobStatus.Err)
-        PHEM = tCalcResult.Err
+        VECTO = tCalcResult.Err
 
         For i = jgen + 1 To FilesDim
             WorkerJobStatus(i, "", tJobStatus.Undef)
@@ -683,7 +688,7 @@ lbErrInJobLoop:
 lbAbort:
         WorkerMsg(tMsgID.Normal, "aborted", MsgSrc)
         WorkerJobStatus(jgen, "aborted", tJobStatus.Warn)
-        PHEM = tCalcResult.Abort
+        VECTO = tCalcResult.Abort
 
         For i = jgen + 1 To FilesDim
             WorkerJobStatus(i, "", tJobStatus.Undef)

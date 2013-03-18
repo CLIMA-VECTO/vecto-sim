@@ -47,6 +47,18 @@ Public Class cDelaunayMap
         Next
 
 
+
+        '#If DEBUG Then
+        '        Debug.Print("x,y,z,x,y,z")
+        '        For Each tr In lDT
+        '            Debug.Print(tr.P1.X & "," & tr.P1.Y & "," & tr.P1.Z & "," & tr.P2.X & "," & tr.P2.Y & "," & tr.P2.Z)
+        '            Debug.Print(tr.P3.X & "," & tr.P3.Y & "," & tr.P3.Z & "," & tr.P2.X & "," & tr.P2.Y & "," & tr.P2.Z)
+        '            Debug.Print(tr.P1.X & "," & tr.P1.Y & "," & tr.P1.Z & "," & tr.P3.X & "," & tr.P3.Y & "," & tr.P3.Z)
+        '        Next
+        '#End If
+
+
+
         'XZ-triangulation
         If DualMode Then
 

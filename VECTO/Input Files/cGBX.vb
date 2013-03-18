@@ -27,17 +27,26 @@ Public Class cGBX
     Public gs_StartSpeed As Single
     Public gs_StartAcc As Single
     Public gs_ShiftInside As Boolean
-    'Public gs_Type As tGearbox 'not used yet
+
+    Public gs_Type As tGearbox
 
     'Torque Converter Input
-    Public TCnu As New List(Of Single)
-    Public TCmu As New List(Of Single)
-    Public TCtorque As New List(Of Single)
-    Public TCdim As Integer
+    Public TCon As Boolean
+    Public TCrefrpm As Single
+    Private TC_file As New cSubPath
+
+
+    Private TCnu As New List(Of Single)
+    Private TCmu As New List(Of Single)
+    Private TCtorque As New List(Of Single)
+    Private TCdim As Integer
+
 
     'Torque Converter Iteration Results
     Public TCMin As Single
     Public TCnUin As Single
+    Public TC_Tbrake As Single
+
 
 
     Public Sub New()
@@ -53,6 +62,7 @@ Public Class cGBX
 
     Private Sub SetDefault()
         Dim i As Integer
+
         ModelName = ""
         I_Getriebe = 0
         TracIntrSi = 0
@@ -74,7 +84,12 @@ Public Class cGBX
         gs_StartAcc = 0
         gs_ShiftInside = False
 
-        'gs_Type = tGearbox.Manual
+        gs_Type = tGearbox.Manual
+
+        TCon = False
+        TCrefrpm = 0
+        TC_file.Clear()
+
     End Sub
 
     Public Function SaveFile() As Boolean
@@ -121,8 +136,16 @@ Public Class cGBX
         file.WriteLine(CStr(gs_StartAcc))
         file.WriteLine("c Shift inside polygons")
         file.WriteLine(CStr(Math.Abs(CInt(gs_ShiftInside))))
-        'file.WriteLine("c Gearbox Type")
-        'file.WriteLine(CStr(CType(gs_Type, Integer)))
+
+        file.WriteLine("c Gearbox Type")
+        file.WriteLine(CStr(CType(gs_Type, Integer)))
+
+        file.WriteLine("c TC On/Off")
+        file.WriteLine(CStr(Math.Abs(CInt(TCon))))
+        file.WriteLine("c TC characteristics file")
+        file.WriteLine(TC_file.PathOrDummy)
+        file.WriteLine("c TC reference rpm")
+        file.WriteLine(CStr(TCrefrpm))
 
 
         file.Close()
@@ -179,7 +202,15 @@ Public Class cGBX
                 gs_StartSpeed = CSng(file.ReadLine(0))
                 gs_StartAcc = CSng(file.ReadLine(0))
                 gs_ShiftInside = CBool(CInt(file.ReadLine(0)))
-                'gs_Type = CType(CInt(file.ReadLine(0)), tGearbox)
+            End If
+
+            If Not file.EndOfFile Then
+                gs_Type = CType(CInt(file.ReadLine(0)), tGearbox)
+                TCon = CBool(CInt(file.ReadLine(0)))
+                TC_file.Init(MyPath, file.ReadLine(0))
+                TCrefrpm = CSng(file.ReadLine(0))
+            Else
+                gs_Type = tGearbox.Custom
             End If
 
         Catch ex As Exception
@@ -202,8 +233,13 @@ Public Class cGBX
 
         MsgSrc = "GBX/TCinit"
 
-        If Not file.OpenRead(DEV.TCfile) Then
-            WorkerMsg(tMsgID.Err, "Torque Converter file not found! (" & DEV.TCfile & ")", MsgSrc)
+        If Not file.OpenRead(TC_file.FullPath) Then
+            WorkerMsg(tMsgID.Err, "Torque Converter file not found! (" & TC_file.FullPath & ")", MsgSrc)
+            Return False
+        End If
+
+        If TCrefrpm <= 0 Then
+            WorkerMsg(tMsgID.Err, "Torque converter reference torque invalid! (" & TCrefrpm & ")", MsgSrc)
             Return False
         End If
 
@@ -249,31 +285,23 @@ Public Class cGBX
 
         Dim MoutCalc As Single
 
-        Dim nUmin As Single
-        Dim nUmax As Single
+        TC_Tbrake = 0
 
-        Dim Schub As Boolean
-
-        'Torque sign
-        If PeOut > 0 Then
-            Schub = False
-        Else
-            Schub = True
-            PeOut *= -1
-        End If
+        'Dim nUmin As Single
+        'Dim nUmax As Single
 
         'Power to torque
         Mout = nPeToM(nUout, PeOut)
 
         'rpm-limits
-        nUmin = nnormTonU(GBX.fGSnnDown(Mout))
-        nUmax = nnormTonU(GBX.fGSnnUp(Mout))
+        'nUmin = nnormTonU(GBX.fGSnnDown(Mout))
+        'nUmax = nnormTonU(GBX.fGSnnUp(Mout))
 
         'Start values: Estimate torque converter state
         nUin = nUout
 
-        If nUin > nUmax Then nUin = nUmax
-        If nUin < nUmin Then nUin = nUmin
+        'If nUin > nUmax Then nUin = nUmax
+        'If nUin < nUmin Then nUin = nUmin
 
         nUstep = DEV.TCnUstep
         VZ = 1
@@ -284,17 +312,35 @@ Public Class cGBX
         MoutCalc = fTCtorque(nu, nUin) * mu
 
         'Iteration
-        Do While Math.Abs(MoutCalc - Mout) > DEV.TCiterPrec And nUstep > DEV.TCnUstepMin
+        Do While Math.Abs(1 - MoutCalc / Mout) > DEV.TCiterPrec And nUstep > DEV.TCnUstepMin
             nUin += VZ * nUstep
             nu = nUout / nUin
             mu = fTCmu(nu)
             MoutCalc = fTCtorque(nu, nUin) * mu
-            If Math.Abs(MoutCalc - Mout) > lastErr Then
+            If Math.Abs(1 - MoutCalc / Mout) > lastErr Then
                 nUstep /= 2
                 VZ *= -1
             End If
-            lastErr = Math.Abs(MoutCalc - Mout)
+            lastErr = Math.Abs(1 - MoutCalc / Mout)
         Loop
+
+        If nUin < VEH.nLeerl Then
+
+            MODdata.ModErrors.TCextrapol = ""
+
+            nUin = VEH.nLeerl
+            nu = nUout / nUin
+            mu = fTCmu(nu)
+            MoutCalc = fTCtorque(nu, nUin) * mu
+
+            If MoutCalc < Mout Then Stop
+
+            TC_Tbrake = Mout - MoutCalc
+
+        End If
+
+
+
 
         TCMin = MoutCalc / mu
         TCnUin = nUin
@@ -354,7 +400,7 @@ lbInt:
         'Interpolation
         M0 = (nu - TCnu(i - 1)) * (TCtorque(i) - TCtorque(i - 1)) / (TCnu(i) - TCnu(i - 1)) + TCtorque(i - 1)
 
-        Return M0 * (nUin / DEV.TCnUref) ^ 2
+        Return M0 * (nUin / TCrefrpm) ^ 2
 
     End Function
 
@@ -364,10 +410,53 @@ lbInt:
         Dim file As cFile_V3
         Dim line As String()
         Dim i As Integer
+        Dim gserror As Boolean
 
         Dim MsgSrc As String
 
         MsgSrc = "GBX/GSinit"
+
+        'Check if settings ok
+        If gs_Type <> tGearbox.Custom Then
+
+            gserror = False
+
+            Select Case gs_Type
+                Case tGearbox.Manual
+                    If gs_ShiftInside Then
+                        WorkerMsg(tMsgID.Err, "Option 'Shift-Up inside polygons' is not available for Manual Transmissions!", MsgSrc)
+                        gserror = True
+                    End If
+                    If TCon Then
+                        WorkerMsg(tMsgID.Err, "Torque Converter is not available for Manual Transmissions!", MsgSrc)
+                        gserror = True
+                    End If
+
+                Case tGearbox.SemiAutomatic
+                    If TCon Then
+                        WorkerMsg(tMsgID.Err, "Torque Converter is not available for Automated Manual Transmissions!", MsgSrc)
+                        gserror = True
+                    End If
+
+                Case tGearbox.Automatic
+                    If gs_ShiftInside Then
+                        WorkerMsg(tMsgID.Err, "Option 'Shift-Up inside polygons' is not available for Automatic Transmissions!", MsgSrc)
+                        gserror = True
+                    End If
+                    If gs_SkipGears Then
+                        WorkerMsg(tMsgID.Err, "Option 'Skip gears' is not available for Automatic Transmissions!", MsgSrc)
+                        gserror = True
+                    End If
+                    If Not TCon Then
+                        WorkerMsg(tMsgID.Err, "Torque Converter must be activated for Automatic Transmissions!", MsgSrc)
+                        gserror = True
+                    End If
+
+            End Select
+
+            If gserror Then Return False
+
+        End If
 
         'Check if file exists
         If Not IO.File.Exists(gs_file.FullPath) Then
@@ -409,7 +498,7 @@ lbInt:
             WorkerMsg(tMsgID.Err, "More points in Gear Shift Polygon File needed!", MsgSrc)
             Return False
         End If
-       
+
         'Normalize rpm
         For i = 0 To gs_Dim
             gs_nnDown(i) = (gs_nnDown(i) - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
@@ -505,6 +594,19 @@ lbInt:
         End Get
         Set(value As String)
             gs_file.Init(MyPath, value)
+        End Set
+    End Property
+
+    Public Property TCfile(Optional ByVal Original As Boolean = False) As String
+        Get
+            If Original Then
+                Return TC_file.OriginalPath
+            Else
+                Return TC_file.FullPath
+            End If
+        End Get
+        Set(value As String)
+            TC_file.Init(MyPath, value)
         End Set
     End Property
 

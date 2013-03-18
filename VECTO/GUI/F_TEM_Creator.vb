@@ -36,7 +36,7 @@
             F_ADV.WindowState = FormWindowState.Normal
             F_ADV.TEMfromCreator(f)
         End If
-        If Cfg.TEMexl Then FileOpen(f)
+        If Cfg.TEMexl Then FileOpenAlt(f)
     End Sub
 
     'Browse

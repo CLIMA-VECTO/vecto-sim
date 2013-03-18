@@ -352,7 +352,7 @@ Public Class F_MAINForm
 
         Select Case BGjob
             Case tBGjob.PHEM
-                e.Result = PHEM()
+                e.Result = VECTO()
             Case tBGjob.ModFilter
                 ADV = New cADVANCE_V3
                 ADV.AusgModCut(MODpath, MODVehList)
@@ -573,6 +573,7 @@ Public Class F_MAINForm
             CmdLineCtrl(My.Application.CommandLineArgs)
         Else
             If Cfg.FirstRun Then
+                Cfg.FirstRun = False
                 If MsgBox("Welcome to VECTO!" & vbCrLf & vbCrLf & "Start Quick Start Guide?", MsgBoxStyle.YesNo, "Welcome") = MsgBoxResult.Yes Then
                     If IO.File.Exists(MyAppPath & "User Manual\qsg\quickstartApp.html") Then
                         System.Diagnostics.Process.Start(MyAppPath & "User Manual\qsg\quickstartApp.html")
@@ -582,8 +583,6 @@ Public Class F_MAINForm
                 End If
             End If
         End If
-
-        Cfg.FirstRun = False
 
     End Sub
 
@@ -1197,7 +1196,7 @@ lbFound:
             End If
         End If
 
-        FileOpen(fFileRepl(Me.LvDRI.SelectedItems(0).SubItems(0).Text, Cfg.WorkDPath))
+        OpenFiles(fFileRepl(Me.LvDRI.SelectedItems(0).SubItems(0).Text, Cfg.WorkDPath))
     End Sub
 
     'DRI list: Add File
@@ -2150,11 +2149,7 @@ lbFound:
     Private Sub LvMsg_MouseClick(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvMsg.MouseClick
         If Me.LvMsg.SelectedIndices.Count > 0 Then
             If Not Me.LvMsg.SelectedItems(0).Tag Is Nothing Then
-                Try
-                    System.Diagnostics.Process.Start("explorer", "/select,""" & CStr(Me.LvMsg.SelectedItems(0).Tag) & "")
-                Catch ex As Exception
-                    MsgBox("Failed to open link!", MsgBoxStyle.Critical)
-                End Try
+                OpenFiles(CStr(Me.LvMsg.SelectedItems(0).Tag))
             End If
         End If
     End Sub
@@ -2170,5 +2165,38 @@ lbFound:
         End If
     End Sub
 
+#Region "Open File Context Menu"
 
+    Private CmFiles As String()
+
+    Private Sub OpenFiles(ParamArray files() As String)
+
+        If files.Length = 0 Then Exit Sub
+
+        CmFiles = files
+
+        OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
+
+        CmOpenFile.Show(Cursor.Position)
+
+    End Sub
+
+    Private Sub OpenWithGRAPHiToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithGRAPHiToolStripMenuItem.Click
+        If Not FileOpenGRAPHi(CmFiles) Then MsgBox("Failed to open file!")
+    End Sub
+
+    Private Sub OpenWithToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithToolStripMenuItem.Click
+        If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
+    End Sub
+
+    Private Sub ShowInFolderToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles ShowInFolderToolStripMenuItem.Click
+        Try
+            System.Diagnostics.Process.Start("explorer", "/select,""" & CmFiles(0) & "")
+        Catch ex As Exception
+            MsgBox("Failed to open link!", MsgBoxStyle.Critical)
+        End Try
+    End Sub
+
+#End Region
+   
 End Class

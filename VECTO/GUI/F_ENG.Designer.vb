@@ -22,6 +22,7 @@ Partial Class F_ENG
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_ENG))
         Me.TbNleerl = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
@@ -44,6 +45,8 @@ Partial Class F_ENG
         Me.ToolStripBtSaveAs = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripBtSendTo = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.LbStatus = New System.Windows.Forms.ToolStripStatusLabel()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -61,11 +64,16 @@ Partial Class F_ENG
         Me.Label7 = New System.Windows.Forms.Label()
         Me.BtWHTC = New System.Windows.Forms.Button()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
+        Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.BtFLDOpen = New System.Windows.Forms.Button()
+        Me.BtMAPopen = New System.Windows.Forms.Button()
         Me.ToolStrip1.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.CmOpenFile.SuspendLayout()
         Me.SuspendLayout()
         '
         'TbNleerl
@@ -254,6 +262,20 @@ Partial Class F_ENG
         Me.ToolStripBtSendTo.Text = "Send to GEN Editor"
         Me.ToolStripBtSendTo.ToolTipText = "Send to GEN Editor"
         '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        '
+        'ToolStripButton1
+        '
+        Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButton1.Image = Global.VECTO.My.Resources.Resources.Help_icon
+        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton1.Name = "ToolStripButton1"
+        Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton1.Text = "Help"
+        '
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
@@ -324,12 +346,12 @@ Partial Class F_ENG
         '
         Me.TbFLD.Location = New System.Drawing.Point(12, 221)
         Me.TbFLD.Name = "TbFLD"
-        Me.TbFLD.Size = New System.Drawing.Size(447, 20)
+        Me.TbFLD.Size = New System.Drawing.Size(418, 20)
         Me.TbFLD.TabIndex = 6
         '
         'BtFLD
         '
-        Me.BtFLD.Location = New System.Drawing.Point(465, 219)
+        Me.BtFLD.Location = New System.Drawing.Point(436, 219)
         Me.BtFLD.Name = "BtFLD"
         Me.BtFLD.Size = New System.Drawing.Size(28, 23)
         Me.BtFLD.TabIndex = 7
@@ -341,7 +363,7 @@ Partial Class F_ENG
         '
         Me.TbMAP.Location = New System.Drawing.Point(12, 271)
         Me.TbMAP.Name = "TbMAP"
-        Me.TbMAP.Size = New System.Drawing.Size(447, 20)
+        Me.TbMAP.Size = New System.Drawing.Size(418, 20)
         Me.TbMAP.TabIndex = 8
         '
         'Label6
@@ -355,7 +377,7 @@ Partial Class F_ENG
         '
         'BtMAP
         '
-        Me.BtMAP.Location = New System.Drawing.Point(465, 269)
+        Me.BtMAP.Location = New System.Drawing.Point(436, 269)
         Me.BtMAP.Name = "BtMAP"
         Me.BtMAP.Size = New System.Drawing.Size(28, 23)
         Me.BtMAP.TabIndex = 9
@@ -399,19 +421,49 @@ Partial Class F_ENG
         Me.PictureBox1.TabIndex = 39
         Me.PictureBox1.TabStop = False
         '
-        'ToolStripSeparator1
+        'CmOpenFile
         '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithGRAPHiToolStripMenuItem, Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
+        Me.CmOpenFile.Name = "CmOpenFile"
+        Me.CmOpenFile.Size = New System.Drawing.Size(175, 70)
         '
-        'ToolStripButton1
+        'OpenWithGRAPHiToolStripMenuItem
         '
-        Me.ToolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton1.Image = Global.VECTO.My.Resources.Resources.Help_icon
-        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton1.Text = "Help"
+        Me.OpenWithGRAPHiToolStripMenuItem.Name = "OpenWithGRAPHiToolStripMenuItem"
+        Me.OpenWithGRAPHiToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.OpenWithGRAPHiToolStripMenuItem.Text = "Open with GRAPHi"
+        '
+        'OpenWithToolStripMenuItem
+        '
+        Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.OpenWithToolStripMenuItem.Text = "Open with ..."
+        '
+        'ShowInFolderToolStripMenuItem
+        '
+        Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
+        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
+        '
+        'BtFLDOpen
+        '
+        Me.BtFLDOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
+        Me.BtFLDOpen.Location = New System.Drawing.Point(470, 219)
+        Me.BtFLDOpen.Name = "BtFLDOpen"
+        Me.BtFLDOpen.Size = New System.Drawing.Size(23, 23)
+        Me.BtFLDOpen.TabIndex = 40
+        Me.BtFLDOpen.TabStop = False
+        Me.BtFLDOpen.UseVisualStyleBackColor = True
+        '
+        'BtMAPopen
+        '
+        Me.BtMAPopen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
+        Me.BtMAPopen.Location = New System.Drawing.Point(470, 269)
+        Me.BtMAPopen.Name = "BtMAPopen"
+        Me.BtMAPopen.Size = New System.Drawing.Size(23, 23)
+        Me.BtMAPopen.TabIndex = 40
+        Me.BtMAPopen.TabStop = False
+        Me.BtMAPopen.UseVisualStyleBackColor = True
         '
         'F_ENG
         '
@@ -420,11 +472,13 @@ Partial Class F_ENG
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
         Me.ClientSize = New System.Drawing.Size(505, 408)
+        Me.Controls.Add(Me.BtMAPopen)
+        Me.Controls.Add(Me.BtFLDOpen)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.BtWHTC)
+        Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.BtMAP)
         Me.Controls.Add(Me.BtFLD)
-        Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.TbNleerl)
@@ -462,6 +516,7 @@ Partial Class F_ENG
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.CmOpenFile.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -506,4 +561,10 @@ Partial Class F_ENG
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
+    Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
+    Friend WithEvents OpenWithGRAPHiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents BtFLDOpen As System.Windows.Forms.Button
+    Friend WithEvents BtMAPopen As System.Windows.Forms.Button
 End Class

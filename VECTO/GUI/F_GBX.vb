@@ -5,6 +5,8 @@
     Public GenDir As String = ""
     Private GearDia As F_VEH_GearDlog
 
+    Private Init As Boolean = False
+
     Private Changed As Boolean = False
 
     Private Sub F_GBX_FormClosing(sender As Object, e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
@@ -17,6 +19,7 @@
         Dim lvi As ListViewItem
         Dim i As Short
 
+        Init = False
         GearDia = New F_VEH_GearDlog
 
         lvi = New ListViewItem("A")
@@ -30,6 +33,8 @@
             lvi.SubItems.Add("")
             Me.LvGears.Items.Add(lvi)
         Next
+
+        Init = True
 
         Changed = False
         newGBX()
@@ -94,6 +99,8 @@
 
         If ChangeCheckCancel() Then Exit Sub
 
+        Me.CbGStype.SelectedIndex = 0
+
         Me.TbName.Text = ""
         Me.TbTracInt.Text = ""
         Me.TBI_getr.Text = ""
@@ -112,6 +119,10 @@
         Me.TbTqResvStart.Text = ""
         Me.TbStartSpeed.Text = ""
         Me.TbStartAcc.Text = ""
+
+        Me.ChTCon.Checked = False
+        Me.TbTCfile.Text = ""
+        Me.TbTCrefrpm.Text = ""
 
 
         GbxFile = ""
@@ -159,6 +170,12 @@
         Me.TbStartSpeed.Text = GBX0.gs_StartSpeed.ToString
         Me.TbStartAcc.Text = GBX0.gs_StartAcc.ToString
         Me.ChShiftInside.Checked = GBX0.gs_ShiftInside
+
+        Me.ChTCon.Checked = GBX0.TCon
+        Me.TbTCfile.Text = GBX0.TCfile(True)
+        Me.TbTCrefrpm.Text = GBX0.TCrefrpm
+
+        Me.CbGStype.SelectedIndex = CType(GBX0.gs_Type, Integer)
 
 
         fbGBX.UpdateHistory(file)
@@ -209,6 +226,12 @@
         GBX0.gs_StartSpeed = fTextboxToNumString(Me.TbStartSpeed.Text)
         GBX0.gs_StartAcc = fTextboxToNumString(Me.TbStartAcc.Text)
         GBX0.gs_ShiftInside = Me.ChShiftInside.Checked
+
+        GBX0.gs_Type = CType(Me.CbGStype.SelectedIndex, tGearbox)
+
+        GBX0.TCon = Me.ChTCon.Checked
+        GBX0.TCfile = Me.TbTCfile.Text
+        GBX0.TCrefrpm = Me.TbTCrefrpm.Text
 
 
         If Not GBX0.SaveFile Then
@@ -279,10 +302,12 @@
     End Sub
 
     Private Sub ChSkipGears_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles ChSkipGears.CheckedChanged
+        CheckEnableTorqRes()
         Change()
     End Sub
 
     Private Sub ChShiftInside_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles ChShiftInside.CheckedChanged
+        CheckEnableTorqRes()
         Change()
     End Sub
 
@@ -306,6 +331,24 @@
         Change()
     End Sub
 
+    Private Sub TbTCfile_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbTCfile.TextChanged
+        Change()
+    End Sub
+
+    Private Sub TbTCrefrpm_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbTCrefrpm.TextChanged
+        Change()
+    End Sub
+
+
+    Private Sub CheckEnableTorqRes()
+        If Me.ChShiftInside.Checked Or Me.ChSkipGears.Checked Then
+            Me.PnTorqRes.Enabled = True
+        Else
+            Me.PnTorqRes.Enabled = False
+        End If
+    End Sub
+
+
 
 
 #End Region
@@ -317,6 +360,47 @@
     Private Sub ButCancel_Click(sender As System.Object, e As System.EventArgs) Handles ButCancel.Click
         Me.Close()
     End Sub
+
+
+    'Enable/Disable settings for specific transmission types
+    Private Sub CbGStype_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbGStype.SelectedIndexChanged
+        Dim GStype As tGearbox
+
+        Change()
+
+        GStype = CType(Me.CbGStype.SelectedIndex, tGearbox)
+
+        Select Case GStype
+            Case tGearbox.Manual
+                Me.ChShiftInside.Enabled = False
+                Me.ChShiftInside.Checked = False
+                Me.ChSkipGears.Enabled = True
+                Me.ChTCon.Enabled = False
+                Me.ChTCon.Checked = False
+
+            Case tGearbox.SemiAutomatic
+                Me.ChShiftInside.Enabled = True
+                Me.ChSkipGears.Enabled = True
+                Me.ChTCon.Enabled = False
+                Me.ChTCon.Checked = False
+
+            Case tGearbox.Automatic
+                Me.ChShiftInside.Enabled = False
+                Me.ChShiftInside.Checked = False
+                Me.ChSkipGears.Enabled = False
+                Me.ChSkipGears.Checked = False
+                Me.ChTCon.Enabled = False
+                Me.ChTCon.Checked = True
+
+            Case tGearbox.Custom
+                Me.ChShiftInside.Enabled = True
+                Me.ChSkipGears.Enabled = True
+                Me.ChTCon.Enabled = True
+
+        End Select
+
+    End Sub
+
 
 
 #Region "Gears"
@@ -401,11 +485,101 @@
     Private Sub BtShiftPolyBrowse_Click(sender As System.Object, e As System.EventArgs) Handles BtShiftPolyBrowse.Click
         Dim fb As cFileBrowser
         fb = New cFileBrowser("ShiftPolygon", False, True)
+        fb.Extensions = New String() {"vgbs"}
         If fb.OpenDialog(fFileRepl(Me.TbShiftPolyFile.Text, fPATH(GbxFile))) Then
             Me.TbShiftPolyFile.Text = fFileWoDir(fb.Files(0), fPATH(GbxFile))
         End If
     End Sub
 
-  
-    
+
+    Private Sub BtShiftPolyOpen_Click(sender As System.Object, e As System.EventArgs) Handles BtShiftPolyOpen.Click
+        OpenFiles(fFileRepl(Me.TbShiftPolyFile.Text, fPATH(GbxFile)))
+    End Sub
+
+
+#Region "Open File Context Menu"
+
+    Private CmFiles As String()
+
+    Private Sub OpenFiles(ParamArray files() As String)
+
+        If files.Length = 0 Then Exit Sub
+
+        CmFiles = files
+
+        OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
+
+        CmOpenFile.Show(Cursor.Position)
+
+    End Sub
+
+    Private Sub OpenWithGRAPHiToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithGRAPHiToolStripMenuItem.Click
+        If Not FileOpenGRAPHi(CmFiles) Then MsgBox("Failed to open file!")
+    End Sub
+
+    Private Sub OpenWithToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithToolStripMenuItem.Click
+        If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
+    End Sub
+
+    Private Sub ShowInFolderToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles ShowInFolderToolStripMenuItem.Click
+        Try
+            System.Diagnostics.Process.Start("explorer", "/select,""" & CmFiles(0) & "")
+        Catch ex As Exception
+            MsgBox("Failed to open link!", MsgBoxStyle.Critical)
+        End Try
+    End Sub
+
+#End Region
+
+#Region "Torque Converter"
+
+    'TC on/off
+    Private Sub ChTCon_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles ChTCon.CheckedChanged
+        Change()
+        CheckGearTC()
+        PnTC.Enabled = ChTCon.Checked
+    End Sub
+
+    'Browse TC file
+    Private Sub BtTCfileBrowse_Click(sender As System.Object, e As System.EventArgs) Handles BtTCfileBrowse.Click
+        Dim fb As cFileBrowser
+        fb = New cFileBrowser("TCfile", False, True)
+        fb.Extensions = New String() {"vtcc"}
+        If fb.OpenDialog(fFileRepl(Me.TbTCfile.Text, fPATH(GbxFile))) Then
+            Me.TbTCfile.Text = fFileWoDir(fb.Files(0), fPATH(GbxFile))
+        End If
+    End Sub
+
+    'Open TC file
+    Private Sub BtTCfileOpen_Click(sender As System.Object, e As System.EventArgs) Handles BtTCfileOpen.Click
+        OpenFiles(fFileRepl(Me.TbTCfile.Text, fPATH(GbxFile)))
+    End Sub
+
+    Private Sub CheckGearTC()
+        Dim i As Short
+
+        If Not Init Then Exit Sub
+
+        If Me.ChTCon.Checked Then
+
+            Me.LvGears.Items(1).SubItems(0).Text = "TC"
+
+            For i = 2 To 16
+                Me.LvGears.Items(i).SubItems(0).Text = (i - 1).ToString("00")
+            Next
+
+        Else
+            For i = 1 To 16
+                Me.LvGears.Items(i).SubItems(0).Text = i.ToString("00")
+            Next
+
+        End If
+
+    End Sub
+
+
+#End Region
+
+   
+
 End Class

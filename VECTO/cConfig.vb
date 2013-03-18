@@ -23,6 +23,7 @@
     Public FCcorrection As Boolean
     Public nnormEngStop As Single
     Public OpenCmd As String
+    Public OpenCmdName As String
 
     Public FuelDens As Single
     Public CO2perFC As Single
@@ -35,7 +36,7 @@
 
     Public Function ConfigLOAD() As Boolean
         Dim c As New cFile_V3
-        'Dim txt As String
+        Dim line As String()
 
         SetDefault()
 
@@ -44,7 +45,7 @@
             Return False
         End If
 
-        c.OpenRead(MyConfPath & "settings.txt", "+hugo+")
+        c.OpenRead(MyConfPath & "settings.txt", ";")
 
         '***
         '*** First line: Version
@@ -109,7 +110,9 @@
 
         FCcorrection = CBool(c.ReadLine(0))
 
-        OpenCmd = c.ReadLine(0)
+        line = c.ReadLine
+        OpenCmd = line(0)
+        If UBound(line) > 0 Then OpenCmdName = line(1)
 
 
         FuelDens = CSng(c.ReadLine(0))
@@ -246,7 +249,9 @@ lbDone:
         FinalEmOnly = True
         FCcorrection = False
         nnormEngStop = -0.05
-        OpenCmd = "excel"
+        OpenCmd = "notepad++"
+        OpenCmdName = "Notepad++"
+
 
         FuelDens = 0.835
         CO2perFC = 3.153
@@ -259,7 +264,7 @@ lbDone:
 
     Public Sub ConfigSAVE()
         Dim c As New cFile_V3
-        c.OpenWrite(MyConfPath & "settings.txt")
+        c.OpenWrite(MyConfPath & "settings.txt", ";")
 
         'Version
         'c.WriteLine("V" & FormatVersion)
@@ -306,7 +311,7 @@ lbDone:
         c.WriteLine("c HDV FC Correction 1/0")
         c.WriteLine(Math.Abs(CInt(FCcorrection)))
         c.WriteLine("c File Open CMD")
-        c.WriteLine(OpenCmd)
+        c.WriteLine(OpenCmd, OpenCmdName)
 
         c.WriteLine("c Fuel Density [kg/l]")
         c.WriteLine(FuelDens.ToString)

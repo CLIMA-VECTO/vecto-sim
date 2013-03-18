@@ -118,6 +118,10 @@ Partial Class F_MAINForm
         Me.AboutPHEMToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.CmDEV = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.TmProgSec = New System.Windows.Forms.Timer(Me.components)
+        Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.StatusBAR.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPageGEN.SuspendLayout()
@@ -135,6 +139,7 @@ Partial Class F_MAINForm
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
+        Me.CmOpenFile.SuspendLayout()
         Me.SuspendLayout()
         '
         'StatusBAR
@@ -995,6 +1000,30 @@ Partial Class F_MAINForm
         '
         Me.TmProgSec.Interval = 1000
         '
+        'CmOpenFile
+        '
+        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithGRAPHiToolStripMenuItem, Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
+        Me.CmOpenFile.Name = "CmOpenFile"
+        Me.CmOpenFile.Size = New System.Drawing.Size(175, 92)
+        '
+        'OpenWithGRAPHiToolStripMenuItem
+        '
+        Me.OpenWithGRAPHiToolStripMenuItem.Name = "OpenWithGRAPHiToolStripMenuItem"
+        Me.OpenWithGRAPHiToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.OpenWithGRAPHiToolStripMenuItem.Text = "Open with GRAPHi"
+        '
+        'OpenWithToolStripMenuItem
+        '
+        Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.OpenWithToolStripMenuItem.Text = "Open with ..."
+        '
+        'ShowInFolderToolStripMenuItem
+        '
+        Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
+        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
+        '
         'F_MAINForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1033,6 +1062,7 @@ Partial Class F_MAINForm
         Me.SplitContainer1.ResumeLayout(False)
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
+        Me.CmOpenFile.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1131,5 +1161,9 @@ Partial Class F_MAINForm
     Friend WithEvents UserManualToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents QuickStartGuideToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
+    Friend WithEvents OpenWithGRAPHiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

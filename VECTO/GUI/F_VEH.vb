@@ -340,6 +340,7 @@ Public Class F_VEH
 
         Me.TbCdFile.Enabled = bEnabled
         Me.BtCdFileBrowse.Enabled = bEnabled
+        Me.BtCdFileOpen.Enabled = bEnabled
 
         Change()
     End Sub
@@ -357,6 +358,10 @@ Public Class F_VEH
 
         If fb.OpenDialog(fFileRepl(Me.TbCdFile.Text, fPATH(VehFile))) Then TbCdFile.Text = fFileWoDir(fb.Files(0), fPATH(VehFile))
 
+    End Sub
+
+    Private Sub BtCdFileOpen_Click(sender As System.Object, e As System.EventArgs) Handles BtCdFileOpen.Click
+        OpenFiles(fFileRepl(Me.TbCdFile.Text, fPATH(VehFile)))
     End Sub
 
 #End Region
@@ -670,6 +675,39 @@ Public Class F_VEH
 
 #End Region
   
+#Region "Open File Context Menu"
 
+    Private CmFiles As String()
 
+    Private Sub OpenFiles(ParamArray files() As String)
+
+        If files.Length = 0 Then Exit Sub
+
+        CmFiles = files
+
+        OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
+
+        CmOpenFile.Show(Cursor.Position)
+
+    End Sub
+
+    Private Sub OpenWithGRAPHiToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithGRAPHiToolStripMenuItem.Click
+        If Not FileOpenGRAPHi(CmFiles) Then MsgBox("Failed to open file!")
+    End Sub
+
+    Private Sub OpenWithToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithToolStripMenuItem.Click
+        If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
+    End Sub
+
+    Private Sub ShowInFolderToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles ShowInFolderToolStripMenuItem.Click
+        Try
+            System.Diagnostics.Process.Start("explorer", "/select,""" & CmFiles(0) & "")
+        Catch ex As Exception
+            MsgBox("Failed to open link!", MsgBoxStyle.Critical)
+        End Try
+    End Sub
+
+#End Region
+
+   
 End Class

@@ -436,6 +436,10 @@ lb10:
 
         Dim StdMode As Boolean
         Dim NotAdvMode As Boolean
+
+        Dim LastPmax As Single
+
+
         Dim MsgSrc As String
 
         MsgSrc = "Power/Calc"
@@ -540,7 +544,7 @@ lb10:
         jz = -1
 
         '***********************************************************************************************
-        '***********************************    Time-loop ****************************************
+        '***********************************     Time-loop      ****************************************
         '***********************************************************************************************
 
         Do
@@ -648,10 +652,15 @@ lbGschw:
             End Select
 
             'Faster check if Power is too high
-            If PvorD > 2 * VEH.Pnenn Then
-                Vh.ReduceSpeed(jz, 0.98)
-                GoTo lbGschw
-            End If
+            'If PvorD > 1.2 * VEH.Pnenn Then
+            '    Vh.ReduceSpeed(jz, 0.9)
+            '    GoTo lbGschw
+            'End If
+
+            'If jz > 0 AndAlso PvorD > 1.2 * LastPmax Then
+            '    Vh.ReduceSpeed(jz, 0.95)
+            '    GoTo lbGschw
+            'End If
 
 
             '************************************ Gear selection ************************************
@@ -666,7 +675,7 @@ lbGschw:
                     '    Gear = fGearLKW(jz)
                     'End If
 
-                    If Not DEV.ATmode AndAlso fnn(Vist, Gear, False) < Kuppln_norm And Pplus Then
+                    If Not GBX.TCon AndAlso fnn(Vist, Gear, False) < Kuppln_norm And Pplus Then
                         Clutch = tEngClutch.Slipping
                     Else
                         Clutch = tEngClutch.Closed
@@ -680,7 +689,7 @@ lbGschw:
             Else
 
                 'Check whether Clutch will slip (important for Gear-shifting model):
-                If Not DEV.ATmode AndAlso fnn(Vist, 1, False) < Kuppln_norm And Pplus Then
+                If Not GBX.TCon AndAlso fnn(Vist, 1, False) < Kuppln_norm And Pplus Then
                     Clutch = tEngClutch.Slipping
                 Else
                     Clutch = tEngClutch.Closed
@@ -721,7 +730,7 @@ lbGschw:
 
                 Else
 
-                    If Not DEV.ATmode AndAlso fnn(Vist, Gear, False) < Kuppln_norm And Pplus And Not VehState0 = tVehState.Dec Then
+                    If Not GBX.TCon AndAlso fnn(Vist, Gear, False) < Kuppln_norm And Pplus And Not VehState0 = tVehState.Dec Then
                         Clutch = tEngClutch.Slipping
                     Else
                         Clutch = tEngClutch.Closed
@@ -750,7 +759,7 @@ lbCheck:
             ''bICEKupOffen = bKupplOffen <= i need nothing more
 
             'Falls vor Gangwahl festgestellt wurde, dass nicht KupplSchleif, dann bei zu niedriger Drehzahl runterschalten: |@@| If before?(vor) Gear-shift is detected that Clutch does not Lock, then Downshift at too low Revolutions:
-            If Not DEV.ATmode Then
+            If Not GBX.TCon Then
                 If Clutch = tEngClutch.Closed Then
                     If fnn(Vist, Gear, False) < Kuppln_norm And Not VehState0 = tVehState.Dec And Gear > 1 Then Gear -= 1
                 End If
@@ -769,7 +778,7 @@ lbCheck:
                     End If
 
 
-                    If Not DEV.ATmode AndAlso fnn(Vist, Gear, False) < Kuppln_norm Then
+                    If Not GBX.TCon AndAlso fnn(Vist, Gear, False) < Kuppln_norm Then
                         Clutch = tEngClutch.Slipping
                     Else
                         Clutch = tEngClutch.Closed
@@ -857,7 +866,7 @@ lbCheck:
 
             Else
 
-                If DEV.ATmode And Gear = 1 Then
+                If GBX.TCon And Gear = 1 Then
 
                     PlossGB = fPlossGB(PvorD, Vist, Gear)
                     PlossDiff = fPlossDiff(PvorD, Vist)
@@ -940,7 +949,7 @@ lb_nOK:
                     PaGetr = 0
                 Case tEngClutch.Closed
 
-                    If DEV.ATmode And Gear = 1 Then
+                    If GBX.TCon And Gear = 1 Then
 
                         P = nMtoPe(nU, GBX.TCMin) + Paux + PaMot
 
@@ -1084,12 +1093,12 @@ lb_nOK:
                 If EngState0 = tEngState.Load Or EngState0 = tEngState.FullLoad Then
                     If Vist > 0.01 Then
                         Select Case P / Pmax
-                            Case Is > 1.6
-                                Vh.ReduceSpeed(jz, 0.99)
-                            Case Is > 1.3
-                                Vh.ReduceSpeed(jz, 0.995)
+                            Case Is > 1.6   '1.6
+                                Vh.ReduceSpeed(jz, 0.99)   '0.99
+                            Case Is > 1.3   '1.3
+                                Vh.ReduceSpeed(jz, 0.999)  '0.995
                             Case Else
-                                Vh.ReduceSpeed(jz, 0.999)
+                                Vh.ReduceSpeed(jz, 0.9999)  '0.999
                         End Select
                         FirstSecItar = False
                         GoTo lbGschw
@@ -1242,6 +1251,7 @@ lb_nOK:
                 End If
             End If
 
+            LastPmax = Pmax
 
         Loop Until jz >= MODdata.tDim
 

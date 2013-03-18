@@ -199,10 +199,10 @@
         End If
     End Function
 
-    'Open File in Excel
-    Public Function FileOpen(ByVal file As String) As Boolean
+    'Open File
+    Public Function FileOpenAlt(ByVal file As String) As Boolean
         Dim PSI As New ProcessStartInfo
-        PSI.FileName = ChrW(34) & Cfg.OpenCmd & ChrW(34)
+        PSI.FileName = Cfg.OpenCmd
         PSI.Arguments = ChrW(34) & file & ChrW(34)
         Try
             Process.Start(PSI)
@@ -210,6 +210,28 @@
         Catch ex As Exception
             Return False
         End Try
+    End Function
+
+    'Open File with GRAPHi
+    Public Function FileOpenGRAPHi(ParamArray files() As String) As Boolean
+        Dim PSI As New ProcessStartInfo
+        Dim fileStr As String = ""
+        Dim str As String
+
+        For Each str In files
+            If Not IO.File.Exists(str) Then Return False
+            fileStr &= " " & ChrW(34) & str & ChrW(34)
+        Next
+
+        PSI.FileName = ChrW(34) & MyAppPath & "GRAPHi\GRAPHi.exe" & ChrW(34)
+        PSI.Arguments = fileStr & " -load -preconf"
+        Try
+            Process.Start(PSI)
+            Return True
+        Catch ex As Exception
+            Return False
+        End Try
+
     End Function
 
 #Region "Dateipfad Funktionen"

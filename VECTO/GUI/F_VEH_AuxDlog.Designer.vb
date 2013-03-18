@@ -134,9 +134,8 @@ Partial Class F_VEH_AuxDlog
         Me.LbIDhelp.AutoSize = True
         Me.LbIDhelp.Location = New System.Drawing.Point(242, 15)
         Me.LbIDhelp.Name = "LbIDhelp"
-        Me.LbIDhelp.Size = New System.Drawing.Size(50, 13)
+        Me.LbIDhelp.Size = New System.Drawing.Size(0, 13)
         Me.LbIDhelp.TabIndex = 26
-        Me.LbIDhelp.Text = "LbIDhelp"
         '
         'F_VEH_AuxDlog
         '

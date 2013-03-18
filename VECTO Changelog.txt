@@ -1,10 +1,14 @@
 VECTO ?.? (future release)
-- Automatic transmission & Torque converter
 - Eco-Roll & Over-/Under-Speed
 
 
 VECTO 1.1 x (current source - next release)
-
+- FC Extrapolation will abort the calculation
+- Transmission Type selection in Gearbox (.vgbx) file.
+	- Enables/Disables transmission type-specific options 
+	- In Proof-Of-Concept mode "Custom" type is available with all options enabled.
+- Automatic Transmission mode with Torque converter !!in development!!
+- Option to open files with GRAPHi or user-defined tool
 
 
 VECTO 1.1 beta 2 - 01.03.2013
@@ -13,7 +17,7 @@ VECTO 1.1 beta 2 - 01.03.2013
 - User Manual updated
 	o Vehicle Editor: RRC
 - Tranmission Loss Maps are not converted to n,Pe-Maps anymore. Should fix non-linear interpolation effects.
-- Automatic Transmission / Torque Converter in development	
+- Automatic Transmission / Torque Converter !!in development!!	
 - Engine Only Mode	
 	
 VECTO 1.1 beta - 06.02.2013

@@ -28,8 +28,11 @@ Partial Class F_Options
         Me.ButtonOK = New System.Windows.Forms.Button()
         Me.ButtonCancel = New System.Windows.Forms.Button()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
-        Me.TbOpenCmd = New System.Windows.Forms.TextBox()
+        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.TbOpenCmdName = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
+        Me.TbOpenCmd = New System.Windows.Forms.TextBox()
+        Me.Label12 = New System.Windows.Forms.Label()
         Me.TextBoxLogSize = New System.Windows.Forms.TextBox()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
@@ -61,6 +64,7 @@ Partial Class F_Options
         Me.BtHelp = New System.Windows.Forms.Button()
         Me.GroupBoxWorDir.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
+        Me.GroupBox5.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
@@ -100,7 +104,7 @@ Partial Class F_Options
         'ButtonOK
         '
         Me.ButtonOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonOK.Location = New System.Drawing.Point(347, 272)
+        Me.ButtonOK.Location = New System.Drawing.Point(347, 337)
         Me.ButtonOK.Name = "ButtonOK"
         Me.ButtonOK.Size = New System.Drawing.Size(75, 26)
         Me.ButtonOK.TabIndex = 0
@@ -111,7 +115,7 @@ Partial Class F_Options
         '
         Me.ButtonCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButtonCancel.Location = New System.Drawing.Point(428, 272)
+        Me.ButtonCancel.Location = New System.Drawing.Point(428, 337)
         Me.ButtonCancel.Name = "ButtonCancel"
         Me.ButtonCancel.Size = New System.Drawing.Size(75, 26)
         Me.ButtonCancel.TabIndex = 1
@@ -120,36 +124,64 @@ Partial Class F_Options
         '
         'GroupBox3
         '
-        Me.GroupBox3.Controls.Add(Me.TbOpenCmd)
-        Me.GroupBox3.Controls.Add(Me.Label7)
+        Me.GroupBox3.Controls.Add(Me.GroupBox5)
         Me.GroupBox3.Controls.Add(Me.TextBoxLogSize)
         Me.GroupBox3.Controls.Add(Me.Label16)
         Me.GroupBox3.Location = New System.Drawing.Point(5, 63)
         Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(489, 60)
+        Me.GroupBox3.Size = New System.Drawing.Size(489, 124)
         Me.GroupBox3.TabIndex = 11
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Interface"
         '
-        'TbOpenCmd
+        'GroupBox5
         '
-        Me.TbOpenCmd.Location = New System.Drawing.Point(348, 19)
-        Me.TbOpenCmd.Name = "TbOpenCmd"
-        Me.TbOpenCmd.Size = New System.Drawing.Size(135, 20)
-        Me.TbOpenCmd.TabIndex = 13
+        Me.GroupBox5.Controls.Add(Me.TbOpenCmdName)
+        Me.GroupBox5.Controls.Add(Me.Label7)
+        Me.GroupBox5.Controls.Add(Me.TbOpenCmd)
+        Me.GroupBox5.Controls.Add(Me.Label12)
+        Me.GroupBox5.Location = New System.Drawing.Point(230, 19)
+        Me.GroupBox5.Name = "GroupBox5"
+        Me.GroupBox5.Size = New System.Drawing.Size(253, 96)
+        Me.GroupBox5.TabIndex = 14
+        Me.GroupBox5.TabStop = False
+        Me.GroupBox5.Text = "File Open Command"
+        '
+        'TbOpenCmdName
+        '
+        Me.TbOpenCmdName.Location = New System.Drawing.Point(66, 19)
+        Me.TbOpenCmdName.Name = "TbOpenCmdName"
+        Me.TbOpenCmdName.Size = New System.Drawing.Size(174, 20)
+        Me.TbOpenCmdName.TabIndex = 13
         '
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(240, 22)
+        Me.Label7.Location = New System.Drawing.Point(6, 48)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(102, 13)
+        Me.Label7.Size = New System.Drawing.Size(54, 13)
         Me.Label7.TabIndex = 12
-        Me.Label7.Text = "File Open Command"
+        Me.Label7.Text = "Command"
+        '
+        'TbOpenCmd
+        '
+        Me.TbOpenCmd.Location = New System.Drawing.Point(66, 45)
+        Me.TbOpenCmd.Name = "TbOpenCmd"
+        Me.TbOpenCmd.Size = New System.Drawing.Size(174, 20)
+        Me.TbOpenCmd.TabIndex = 13
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Location = New System.Drawing.Point(25, 22)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(35, 13)
+        Me.Label12.TabIndex = 12
+        Me.Label12.Text = "Name"
         '
         'TextBoxLogSize
         '
-        Me.TextBoxLogSize.Location = New System.Drawing.Point(128, 19)
+        Me.TextBoxLogSize.Location = New System.Drawing.Point(134, 38)
         Me.TextBoxLogSize.Name = "TextBoxLogSize"
         Me.TextBoxLogSize.Size = New System.Drawing.Size(36, 20)
         Me.TextBoxLogSize.TabIndex = 11
@@ -157,7 +189,7 @@ Partial Class F_Options
         'Label16
         '
         Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(12, 22)
+        Me.Label16.Location = New System.Drawing.Point(18, 41)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(110, 13)
         Me.Label16.TabIndex = 10
@@ -173,7 +205,7 @@ Partial Class F_Options
         Me.TabControl1.Location = New System.Drawing.Point(3, 3)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(508, 263)
+        Me.TabControl1.Size = New System.Drawing.Size(508, 328)
         Me.TabControl1.TabIndex = 12
         '
         'TabPage2
@@ -184,7 +216,7 @@ Partial Class F_Options
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(500, 237)
+        Me.TabPage2.Size = New System.Drawing.Size(500, 302)
         Me.TabPage2.TabIndex = 0
         Me.TabPage2.Text = "VECTO"
         Me.TabPage2.UseVisualStyleBackColor = True
@@ -200,7 +232,7 @@ Partial Class F_Options
         Me.GroupBox4.Controls.Add(Me.Label8)
         Me.GroupBox4.Controls.Add(Me.TbAirDensity)
         Me.GroupBox4.Controls.Add(Me.Label2)
-        Me.GroupBox4.Location = New System.Drawing.Point(6, 129)
+        Me.GroupBox4.Location = New System.Drawing.Point(6, 193)
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Size = New System.Drawing.Size(488, 103)
         Me.GroupBox4.TabIndex = 12
@@ -230,7 +262,7 @@ Partial Class F_Options
         Me.Label3.AutoSize = True
         Me.Label3.Location = New System.Drawing.Point(130, 22)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(41, 13)
+        Me.Label3.Size = New System.Drawing.Size(48, 13)
         Me.Label3.TabIndex = 16
         Me.Label3.Text = "[kg/mÂ³]"
         '
@@ -293,7 +325,7 @@ Partial Class F_Options
         Me.TabPgTest.Location = New System.Drawing.Point(4, 22)
         Me.TabPgTest.Name = "TabPgTest"
         Me.TabPgTest.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgTest.Size = New System.Drawing.Size(500, 237)
+        Me.TabPgTest.Size = New System.Drawing.Size(500, 302)
         Me.TabPgTest.TabIndex = 2
         Me.TabPgTest.Text = "TEST"
         Me.TabPgTest.UseVisualStyleBackColor = True
@@ -409,7 +441,7 @@ Partial Class F_Options
         'ButReset
         '
         Me.ButReset.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.ButReset.Location = New System.Drawing.Point(35, 272)
+        Me.ButReset.Location = New System.Drawing.Point(35, 337)
         Me.ButReset.Name = "ButReset"
         Me.ButReset.Size = New System.Drawing.Size(108, 26)
         Me.ButReset.TabIndex = 13
@@ -420,7 +452,7 @@ Partial Class F_Options
         '
         Me.BtHelp.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.BtHelp.Image = Global.VECTO.My.Resources.Resources.Help_icon
-        Me.BtHelp.Location = New System.Drawing.Point(3, 272)
+        Me.BtHelp.Location = New System.Drawing.Point(3, 337)
         Me.BtHelp.Name = "BtHelp"
         Me.BtHelp.Size = New System.Drawing.Size(26, 26)
         Me.BtHelp.TabIndex = 14
@@ -432,7 +464,7 @@ Partial Class F_Options
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButtonCancel
-        Me.ClientSize = New System.Drawing.Size(515, 310)
+        Me.ClientSize = New System.Drawing.Size(515, 375)
         Me.Controls.Add(Me.BtHelp)
         Me.Controls.Add(Me.ButReset)
         Me.Controls.Add(Me.TabControl1)
@@ -447,6 +479,8 @@ Partial Class F_Options
         Me.GroupBoxWorDir.PerformLayout()
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
+        Me.GroupBox5.ResumeLayout(False)
+        Me.GroupBox5.PerformLayout()
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage2.ResumeLayout(False)
         Me.GroupBox4.ResumeLayout(False)
@@ -497,4 +531,7 @@ Partial Class F_Options
     Friend WithEvents TbCO2toFC As System.Windows.Forms.TextBox
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents BtHelp As System.Windows.Forms.Button
+    Friend WithEvents GroupBox5 As System.Windows.Forms.GroupBox
+    Friend WithEvents TbOpenCmdName As System.Windows.Forms.TextBox
+    Friend WithEvents Label12 As System.Windows.Forms.Label
 End Class

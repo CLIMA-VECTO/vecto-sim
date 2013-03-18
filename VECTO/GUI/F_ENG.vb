@@ -263,6 +263,23 @@
         If fbWHTC.OpenDialog(fFileRepl(Me.TbWHTC.Text, fPATH(EngFile))) Then Me.TbWHTC.Text = fFileWoDir(fbWHTC.Files(0), fPATH(EngFile))
     End Sub
 
+    Private Sub BtFLDOpen_Click(sender As System.Object, e As System.EventArgs) Handles BtFLDOpen.Click
+        OpenFiles(fFileRepl(Me.TbFLD.Text, fPATH(EngFile)))
+    End Sub
+
+    Private Sub BtMAPopen_Click(sender As System.Object, e As System.EventArgs) Handles BtMAPopen.Click
+        Dim fldfile As String
+
+        fldfile = fFileRepl(Me.TbFLD.Text, fPATH(EngFile))
+
+        If IO.File.Exists(fldfile) Then
+            OpenFiles(fFileRepl(Me.TbMAP.Text, fPATH(EngFile)), fldfile)
+        Else
+            OpenFiles(fFileRepl(Me.TbMAP.Text, fPATH(EngFile)))
+        End If
+
+    End Sub
+
 #End Region
 
 
@@ -274,5 +291,40 @@
         Me.Close()
     End Sub
 
+#Region "Open File Context Menu"
+
+    Private CmFiles As String()
+
+    Private Sub OpenFiles(ParamArray files() As String)
+
+        If files.Length = 0 Then Exit Sub
+
+        CmFiles = files
+
+        OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
+
+        CmOpenFile.Show(Cursor.Position)
+
+    End Sub
+
+    Private Sub OpenWithGRAPHiToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithGRAPHiToolStripMenuItem.Click
+        If Not FileOpenGRAPHi(CmFiles) Then MsgBox("Failed to open file!")
+    End Sub
+
+    Private Sub OpenWithToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithToolStripMenuItem.Click
+        If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
+    End Sub
+
+    Private Sub ShowInFolderToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles ShowInFolderToolStripMenuItem.Click
+        Try
+            System.Diagnostics.Process.Start("explorer", "/select,""" & CmFiles(0) & "")
+        Catch ex As Exception
+            MsgBox("Failed to open link!", MsgBoxStyle.Critical)
+        End Try
+    End Sub
+
+#End Region
+
     
+  
 End Class
