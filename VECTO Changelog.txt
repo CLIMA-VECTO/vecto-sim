@@ -3,13 +3,17 @@ VECTO ?.? (future release)
 
 
 VECTO 1.1 x (current source - next release)
+
+
+VECTO 1.1 beta 3
 - FC Extrapolation will abort the calculation
 - Transmission Type selection in Gearbox (.vgbx) file.
 	- Enables/Disables transmission type-specific options 
 	- In Proof-Of-Concept mode "Custom" type is available with all options enabled.
-- Automatic Transmission mode with Torque converter !!in development!!
+- Automatic Transmission mode with Torque converter: Input parameters in Gearbox file !!still being tested!!
 - Option to open files with GRAPHi or user-defined tool
-
+- User Manual updated
+- Bugfix: Files with relative paths were not located correctly
 
 VECTO 1.1 beta 2 - 01.03.2013
 - Corrected comment line for wheels inertia and axle config in .vveh file

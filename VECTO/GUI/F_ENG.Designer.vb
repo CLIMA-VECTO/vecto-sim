@@ -387,6 +387,7 @@ Partial Class F_ENG
         '
         'TbWHTC
         '
+        Me.TbWHTC.Enabled = False
         Me.TbWHTC.Location = New System.Drawing.Point(12, 321)
         Me.TbWHTC.Name = "TbWHTC"
         Me.TbWHTC.Size = New System.Drawing.Size(447, 20)
@@ -395,6 +396,7 @@ Partial Class F_ENG
         'Label7
         '
         Me.Label7.AutoSize = True
+        Me.Label7.Enabled = False
         Me.Label7.Location = New System.Drawing.Point(12, 305)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(109, 13)
@@ -403,6 +405,7 @@ Partial Class F_ENG
         '
         'BtWHTC
         '
+        Me.BtWHTC.Enabled = False
         Me.BtWHTC.Location = New System.Drawing.Point(465, 319)
         Me.BtWHTC.Name = "BtWHTC"
         Me.BtWHTC.Size = New System.Drawing.Size(28, 23)

@@ -251,9 +251,9 @@ Partial Class F_VEH
         Me.Label32.AutoSize = True
         Me.Label32.Location = New System.Drawing.Point(206, 184)
         Me.Label32.Name = "Label32"
-        Me.Label32.Size = New System.Drawing.Size(43, 13)
+        Me.Label32.Size = New System.Drawing.Size(36, 13)
         Me.Label32.TabIndex = 24
-        Me.Label32.Text = "[kgmÂ²]"
+        Me.Label32.Text = "[kgm²]"
         '
         'Label35
         '
@@ -278,9 +278,9 @@ Partial Class F_VEH
         Me.Label38.AutoSize = True
         Me.Label38.Location = New System.Drawing.Point(235, 48)
         Me.Label38.Name = "Label38"
-        Me.Label38.Size = New System.Drawing.Size(31, 13)
+        Me.Label38.Size = New System.Drawing.Size(24, 13)
         Me.Label38.TabIndex = 24
-        Me.Label38.Text = "[mÂ²]"
+        Me.Label38.Text = "[m²]"
         '
         'CbCdMode
         '

@@ -45,7 +45,9 @@ Public Class cGBX
     'Torque Converter Iteration Results
     Public TCMin As Single
     Public TCnUin As Single
-    Public TC_Tbrake As Single
+    Public TC_PeBrake As Single
+    Public TCMout As Single
+    Public TCnout As Single
 
 
 
@@ -285,7 +287,11 @@ Public Class cGBX
 
         Dim MoutCalc As Single
 
-        TC_Tbrake = 0
+        Dim MsgSrc As String
+
+        MsgSrc = "GBX/TCiteration"
+
+        TC_PeBrake = 0
 
         'Dim nUmin As Single
         'Dim nUmax As Single
@@ -333,17 +339,20 @@ Public Class cGBX
             mu = fTCmu(nu)
             MoutCalc = fTCtorque(nu, nUin) * mu
 
-            If MoutCalc < Mout Then Stop
+            If MoutCalc < Mout Then
+                WorkerMsg(tMsgID.Err, "MoutCalc < Mout while nUin = nIdle!", MsgSrc)
+                Return False
+            End If
 
-            TC_Tbrake = Mout - MoutCalc
+            TC_PeBrake = nMtoPe(nUout, Mout - MoutCalc)
 
         End If
 
-
-
-
         TCMin = MoutCalc / mu
         TCnUin = nUin
+
+        TCMout = MoutCalc
+        TCnout = nUout
 
         Return True
 
@@ -404,7 +413,21 @@ lbInt:
 
     End Function
 
+    Public Function fGearStr(ByVal Gear As Int16) As String
 
+        If Gear = 0 Then Return "0"
+
+        If TCon Then
+            If Gear = 1 Then
+                Return "0.5"
+            Else
+                Return CStr(Gear - 1)
+            End If
+        Else
+            Return CStr(Gear)
+        End If
+
+    End Function
 
     Public Function GSinit() As Boolean
         Dim file As cFile_V3

@@ -424,7 +424,7 @@ Public Class csKey
         Public VairBeta As String = "<VAIR_BETA>"
         Public s As String = "<S>"
         Public StopTime As String = "<STOP>"
-        Public Torque As String = "<M>"
+        Public Torque As String = "<ME>"
     End Class
 
     Public Class csKeyEXS

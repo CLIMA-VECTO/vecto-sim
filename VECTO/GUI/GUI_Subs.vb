@@ -202,6 +202,9 @@
     'Open File
     Public Function FileOpenAlt(ByVal file As String) As Boolean
         Dim PSI As New ProcessStartInfo
+
+        If Not IO.File.Exists(file) Then Return False
+
         PSI.FileName = Cfg.OpenCmd
         PSI.Arguments = ChrW(34) & file & ChrW(34)
         Try

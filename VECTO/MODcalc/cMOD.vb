@@ -37,6 +37,10 @@ Public Class cMOD
     Public Gear As List(Of Single)
     Public VehState As List(Of tVehState)
 
+    Public TCnu As List(Of Single)
+    Public TCmu As List(Of Single)
+    Public TCMout As List(Of Single)
+    Public TCnOut As List(Of Single)
 
 
     Private bInit As Boolean
@@ -73,6 +77,11 @@ Public Class cMOD
 
         Gear = New List(Of Single)
         VehState = New List(Of tVehState)
+
+        TCnu = New List(Of Single)
+        TCmu = New List(Of Single)
+        TCMout = New List(Of Single)
+        TCnOut = New List(Of Single)
 
         Em.Init()
         TC.Init()
@@ -114,6 +123,11 @@ Public Class cMOD
 
             Gear = Nothing
             VehState = Nothing
+
+            TCnu = Nothing
+            TCmu = Nothing
+            TCMout = Nothing
+            TCnOut = Nothing
 
             CylceKin = Nothing
             ModErrors = Nothing
@@ -418,6 +432,11 @@ Public Class cMOD
             s.Append(",Gear,Ploss GB,Ploss Diff,Ploss Retarder,Pa GB,Pa Veh,Proll,Pair,Pgrad,Pwheel,Pbrake")
             sU.Append(",[-],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW]")
 
+            If GBX.TCon Then
+                s.Append(",TCν,TCμ,TC_M_Out,TC_n_Out")
+                sU.Append(",[-],[-],[Nm],[1/min]")
+            End If
+
             'Auxiliaries
             For Each StrKey In AuxList
 
@@ -606,7 +625,7 @@ Public Class cMOD
                 If Not GEN.VehMode = tVehMode.EngineOnly Then
 
                     'Gear
-                    s.Append(Sepp & .Gear(t))
+                    s.Append(Sepp & GBX.fGearStr(.Gear(t)))
 
                     'Transmission-losses
                     s.Append(Sepp & .PlossGB(t))
@@ -637,6 +656,9 @@ Public Class cMOD
 
                     'Brake
                     s.Append(Sepp & .Pbrake(t))
+
+                    'Torque Converter output
+                    If GBX.TCon Then s.Append(Sepp & .TCnu(t) & Sepp & .TCmu(t) & Sepp & .TCMout(t) & Sepp & .TCnOut(t))
 
                     'Auxiliaries
                     For Each StrKey In AuxList

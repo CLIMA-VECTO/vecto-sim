@@ -17,6 +17,8 @@
     </FileUpgradeFlags>
     <OldToolsVersion>2.0</OldToolsVersion>
     <UpgradeBackupLocation />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,10 +31,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -378,24 +378,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\GRAPHi small.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\GRAPHi small.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\GRAPHi small.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\GRAPHi small1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\GRAPHi_small.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Open-icon-small.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\application-export-icon-small.png" />

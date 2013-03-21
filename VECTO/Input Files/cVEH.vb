@@ -38,7 +38,7 @@ Public Class cVEH
     Private CdDim As Integer
 
     Private siGetrI(16) As Single
-    Private sGetrMaps(16) As cSubPath
+    Public GetrMap(16) As cSubPath
     Private MyGBmaps As List(Of cDelaunayMap)
     Public GetrEffDef(16) As Boolean
     Public GetrEff(16) As Single
@@ -77,7 +77,7 @@ Public Class cVEH
         MyPath = ""
         sFilePath = ""
         For i = 0 To 16
-            sGetrMaps(i) = New cSubPath
+            GetrMap(i) = New cSubPath
         Next
         CdFile = New cSubPath
         CdX = New List(Of Single)
@@ -123,7 +123,7 @@ Public Class cVEH
         sipmodell = 0
         For i = 0 To 16
             siGetrI(i) = 0
-            sGetrMaps(i).Clear()
+            GetrMap(i).Clear()
             GetrEffDef(i) = False
             GetrEff(i) = 0
         Next
@@ -521,7 +521,7 @@ lbError:
 
             Else
 
-                path = sGetrMaps(i).FullPath
+                path = GetrMap(i).FullPath
 
                 If Not file.OpenRead(path) Then
                     WorkerMsg(tMsgID.Err, "Cannot read file '" & path & "'!", MsgSrc)
@@ -1138,19 +1138,6 @@ lbInt:
         End Set
     End Property
 
-    Public Property AchsMap(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return sGetrMaps(0).OriginalPath
-            Else
-                Return sGetrMaps(0).FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            sGetrMaps(0).Init(MyPath, value)
-        End Set
-    End Property
-
     Public Property ganganz As Short
         Get
             Return iganganz
@@ -1166,19 +1153,6 @@ lbInt:
         End Get
         Set(ByVal value As Single)
             siGetrI(x) = value
-        End Set
-    End Property
-
-    Public Property GetrMap(ByVal x As Short, Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return sGetrMaps(x).OriginalPath
-            Else
-                Return sGetrMaps(x).FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            sGetrMaps(x).Init(MyPath, value)
         End Set
     End Property
 

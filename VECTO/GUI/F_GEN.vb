@@ -1370,11 +1370,15 @@ lbDlog:
     End Sub
 
     Private Sub ShowInFolderToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles ShowInFolderToolStripMenuItem.Click
-        Try
-            System.Diagnostics.Process.Start("explorer", "/select,""" & CmFiles(0) & "")
-        Catch ex As Exception
-            MsgBox("Failed to open link!", MsgBoxStyle.Critical)
-        End Try
+        If IO.File.Exists(CmFiles(0)) Then
+            Try
+                System.Diagnostics.Process.Start("explorer", "/select,""" & CmFiles(0) & "")
+            Catch ex As Exception
+                MsgBox("Failed to open file!")
+            End Try
+        Else
+            MsgBox("File not found!")
+        End If
     End Sub
 
 #End Region

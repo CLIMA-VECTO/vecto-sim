@@ -1060,6 +1060,7 @@ lb_nOK:
             Else
                 If EngState0 = tEngState.Load Then
                     Pbrake = 0
+                    If GBX.TCon And Gear = 1 Then Pbrake = GBX.TC_PeBrake
                     If Math.Abs(P / Pmax - 1) < 0.02 Then EngState0 = tEngState.FullLoad
                 Else    ' tEngState.Drag (tEngState.Idle, tEngState.Stopped kann's hier nicht geben weil Clutch <> Closed)
                     If P < Pmin Then
@@ -1194,6 +1195,29 @@ lb_nOK:
 
             MODdata.VehState.Add(VehState0)
             MODdata.Gear.Add(Gear)
+
+            'Torque Converter output
+            If GBX.TCon Then
+                If Gear = 1 Then
+                    If nU = 0 Then
+                        MODdata.TCnu.Add(0)
+                    Else
+                        MODdata.TCnu.Add(GBX.TCnout / nU)
+                    End If
+                    If GBX.TCMin = 0 Then
+                        MODdata.TCmu.Add(0)
+                    Else
+                        MODdata.TCmu.Add(GBX.TCMout / GBX.TCMin)
+                    End If
+                    MODdata.TCMout.Add(GBX.TCMout)
+                    MODdata.TCnOut.Add(GBX.TCnout)
+                Else
+                    MODdata.TCnu.Add(1)
+                    MODdata.TCmu.Add(1)
+                    MODdata.TCMout.Add(nPeToM(nU, P - Paux - PaMot))
+                    MODdata.TCnOut.Add(nU)
+                End If
+            End If
 
             If Cfg.WegKorJa Then Vh.DistCorrection(jz, VehState0)
 

@@ -374,13 +374,16 @@
             Case tGearbox.Manual
                 Me.ChShiftInside.Enabled = False
                 Me.ChShiftInside.Checked = False
-                Me.ChSkipGears.Enabled = True
+                Me.ChSkipGears.Enabled = False
+                Me.ChSkipGears.Checked = True
                 Me.ChTCon.Enabled = False
                 Me.ChTCon.Checked = False
 
             Case tGearbox.SemiAutomatic
-                Me.ChShiftInside.Enabled = True
-                Me.ChSkipGears.Enabled = True
+                Me.ChShiftInside.Enabled = False
+                Me.ChShiftInside.Checked = True
+                Me.ChSkipGears.Enabled = False
+                Me.ChSkipGears.Checked = True
                 Me.ChTCon.Enabled = False
                 Me.ChTCon.Checked = False
 
@@ -522,11 +525,15 @@
     End Sub
 
     Private Sub ShowInFolderToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles ShowInFolderToolStripMenuItem.Click
-        Try
-            System.Diagnostics.Process.Start("explorer", "/select,""" & CmFiles(0) & "")
-        Catch ex As Exception
-            MsgBox("Failed to open link!", MsgBoxStyle.Critical)
-        End Try
+        If IO.File.Exists(CmFiles(0)) Then
+            Try
+                System.Diagnostics.Process.Start("explorer", "/select,""" & CmFiles(0) & "")
+            Catch ex As Exception
+                MsgBox("Failed to open file!")
+            End Try
+        Else
+            MsgBox("File not found!")
+        End If
     End Sub
 
 #End Region

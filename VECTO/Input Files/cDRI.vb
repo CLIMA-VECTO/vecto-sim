@@ -112,11 +112,12 @@ Public Class cDRI
         Dim ExsKV As KeyValuePair(Of Integer, List(Of Single))
 
         Dim AuxSpalten As Dictionary(Of String, Integer) = Nothing
+        Dim Mvorg As Boolean = False
 
-
-        Dim Tvorg As Boolean = False
 
         Dim MsgSrc As String
+
+
 
         MsgSrc = "Main/ReadInp/DRI"
 
@@ -331,11 +332,11 @@ Public Class cDRI
         PaddVorg = DRIcheck(tDriComp.Padd)
         GradVorg = DRIcheck(tDriComp.Grad)
         VairVorg = DRIcheck(tDriComp.VairVres) And DRIcheck(tDriComp.VairBeta)
-        Tvorg = DRIcheck(tDriComp.Torque)
+        Mvorg = DRIcheck(tDriComp.Torque)
 
-        If Tvorg And Pvorg Then
+        If Mvorg And Pvorg Then
             WorkerMsg(tMsgID.Warn, "Engine torque and power defined in cycle! Torque will be ignored!", MsgSrc)
-            Tvorg = False
+            Mvorg = False
         End If
 
         '***
@@ -479,7 +480,7 @@ Public Class cDRI
             Next
         End If
 
-        If Tvorg And Nvorg Then
+        If Mvorg And Nvorg Then
             Values.Add(tDriComp.Pe, New List(Of Double))
             Pvorg = True
             For s = 0 To tDim

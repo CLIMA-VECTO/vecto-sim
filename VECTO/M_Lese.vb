@@ -97,7 +97,7 @@ Module M_Lese
             For Each AuxKV In GEN.AuxPaths
                 AuxEntry = New cVEH.cAuxEntry
                 AuxEntry.Type = AuxKV.Value.Type
-                AuxEntry.Path.Init(fPATH(GEN.PathVEH), AuxKV.Value.Path.OriginalPath)
+                AuxEntry.Path.Init(fPATH(GEN.FilePath), AuxKV.Value.Path.OriginalPath)
                 VEH.AuxPaths.Add(UCase(Trim(AuxKV.Key)), AuxEntry)
             Next
         End If
@@ -122,7 +122,7 @@ Module M_Lese
                 VEH.GetrEffDef(i) = True
                 VEH.GetrEff(i) = CSng(GBX.GetrMap(i, True))
             Else
-                VEH.GetrMap(i) = GBX.GetrMap(i, True)
+                VEH.GetrMap(i).Init(fPATH(GEN.PathGBX), GBX.GetrMap(i, True))
             End If
             If VEH.Igetr(i) > 0.0001 Then VEH.ganganz = i
         Next
