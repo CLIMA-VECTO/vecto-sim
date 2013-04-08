@@ -103,13 +103,18 @@ Partial Class F_GEN
         Me.TextBoxTRS = New System.Windows.Forms.TextBox()
         Me.CheckBoxDynKor = New System.Windows.Forms.CheckBox()
         Me.CheckBoxSCR = New System.Windows.Forms.CheckBox()
-        Me.ChBStartStop = New System.Windows.Forms.CheckBox()
         Me.CheckBoxColdSt = New System.Windows.Forms.CheckBox()
         Me.ButOpenTRS = New System.Windows.Forms.Button()
         Me.ButtonTRS = New System.Windows.Forms.Button()
         Me.ComboBoxGearShift = New System.Windows.Forms.ComboBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPgDriver = New System.Windows.Forms.TabPage()
+        Me.ChBStartStop = New System.Windows.Forms.CheckBox()
+        Me.GrStartStop = New System.Windows.Forms.GroupBox()
+        Me.TBSSspeed = New System.Windows.Forms.TextBox()
+        Me.TBSStime = New System.Windows.Forms.TextBox()
+        Me.LabelSStime = New System.Windows.Forms.Label()
+        Me.LabelSSspeed = New System.Windows.Forms.Label()
         Me.BtAccOpen = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.BtDesMaxBr = New System.Windows.Forms.Button()
@@ -128,12 +133,6 @@ Partial Class F_GEN
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.TextBoxIncPe = New System.Windows.Forms.TextBox()
-        Me.TabPgStartStop = New System.Windows.Forms.TabPage()
-        Me.GroupBoxStartStop = New System.Windows.Forms.GroupBox()
-        Me.LabelSStime = New System.Windows.Forms.Label()
-        Me.LabelSSspeed = New System.Windows.Forms.Label()
-        Me.TBSStime = New System.Windows.Forms.TextBox()
-        Me.TBSSspeed = New System.Windows.Forms.TextBox()
         Me.TabPgTEST = New System.Windows.Forms.TabPage()
         Me.GrGearShift = New System.Windows.Forms.GroupBox()
         Me.TBpfast = New System.Windows.Forms.TextBox()
@@ -185,10 +184,9 @@ Partial Class F_GEN
         Me.GrAux.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPgDriver.SuspendLayout()
+        Me.GrStartStop.SuspendLayout()
         Me.TabPgKF.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
-        Me.TabPgStartStop.SuspendLayout()
-        Me.GroupBoxStartStop.SuspendLayout()
         Me.TabPgTEST.SuspendLayout()
         Me.GrGearShift.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
@@ -1026,18 +1024,6 @@ Partial Class F_GEN
         Me.CheckBoxSCR.Text = "Exhaust System Simulation"
         Me.CheckBoxSCR.UseVisualStyleBackColor = True
         '
-        'ChBStartStop
-        '
-        Me.ChBStartStop.AutoSize = True
-        Me.ChBStartStop.Checked = True
-        Me.ChBStartStop.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.ChBStartStop.Location = New System.Drawing.Point(282, 53)
-        Me.ChBStartStop.Name = "ChBStartStop"
-        Me.ChBStartStop.Size = New System.Drawing.Size(101, 17)
-        Me.ChBStartStop.TabIndex = 9
-        Me.ChBStartStop.Text = "ICE Start / Stop"
-        Me.ChBStartStop.UseVisualStyleBackColor = True
-        '
         'CheckBoxColdSt
         '
         Me.CheckBoxColdSt.AutoSize = True
@@ -1090,7 +1076,6 @@ Partial Class F_GEN
         Me.TabControl1.Controls.Add(Me.TabPgColdSt)
         Me.TabControl1.Controls.Add(Me.TabPgHEV)
         Me.TabControl1.Controls.Add(Me.TabPgKF)
-        Me.TabControl1.Controls.Add(Me.TabPgStartStop)
         Me.TabControl1.Controls.Add(Me.TabPgTEST)
         Me.TabControl1.Location = New System.Drawing.Point(1, 107)
         Me.TabControl1.Name = "TabControl1"
@@ -1101,6 +1086,8 @@ Partial Class F_GEN
         '
         'TabPgDriver
         '
+        Me.TabPgDriver.Controls.Add(Me.ChBStartStop)
+        Me.TabPgDriver.Controls.Add(Me.GrStartStop)
         Me.TabPgDriver.Controls.Add(Me.BtAccOpen)
         Me.TabPgDriver.Controls.Add(Me.Label1)
         Me.TabPgDriver.Controls.Add(Me.BtDesMaxBr)
@@ -1112,6 +1099,63 @@ Partial Class F_GEN
         Me.TabPgDriver.TabIndex = 7
         Me.TabPgDriver.Text = "Driver"
         Me.TabPgDriver.UseVisualStyleBackColor = True
+        '
+        'ChBStartStop
+        '
+        Me.ChBStartStop.AutoSize = True
+        Me.ChBStartStop.Checked = True
+        Me.ChBStartStop.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.ChBStartStop.Location = New System.Drawing.Point(9, 94)
+        Me.ChBStartStop.Name = "ChBStartStop"
+        Me.ChBStartStop.Size = New System.Drawing.Size(101, 17)
+        Me.ChBStartStop.TabIndex = 39
+        Me.ChBStartStop.Text = "ICE Start / Stop"
+        Me.ChBStartStop.UseVisualStyleBackColor = True
+        '
+        'GrStartStop
+        '
+        Me.GrStartStop.Controls.Add(Me.TBSSspeed)
+        Me.GrStartStop.Controls.Add(Me.TBSStime)
+        Me.GrStartStop.Controls.Add(Me.LabelSStime)
+        Me.GrStartStop.Controls.Add(Me.LabelSSspeed)
+        Me.GrStartStop.Location = New System.Drawing.Point(9, 117)
+        Me.GrStartStop.Name = "GrStartStop"
+        Me.GrStartStop.Size = New System.Drawing.Size(207, 87)
+        Me.GrStartStop.TabIndex = 38
+        Me.GrStartStop.TabStop = False
+        Me.GrStartStop.Text = "Engine Start Stop"
+        '
+        'TBSSspeed
+        '
+        Me.TBSSspeed.Location = New System.Drawing.Point(120, 19)
+        Me.TBSSspeed.Name = "TBSSspeed"
+        Me.TBSSspeed.Size = New System.Drawing.Size(64, 20)
+        Me.TBSSspeed.TabIndex = 34
+        '
+        'TBSStime
+        '
+        Me.TBSStime.Location = New System.Drawing.Point(120, 45)
+        Me.TBSStime.Name = "TBSStime"
+        Me.TBSStime.Size = New System.Drawing.Size(64, 20)
+        Me.TBSStime.TabIndex = 36
+        '
+        'LabelSStime
+        '
+        Me.LabelSStime.AutoSize = True
+        Me.LabelSStime.Location = New System.Drawing.Point(13, 48)
+        Me.LabelSStime.Name = "LabelSStime"
+        Me.LabelSStime.Size = New System.Drawing.Size(101, 13)
+        Me.LabelSStime.TabIndex = 35
+        Me.LabelSStime.Text = "Min ICE-On Time [s]"
+        '
+        'LabelSSspeed
+        '
+        Me.LabelSSspeed.AutoSize = True
+        Me.LabelSSspeed.Location = New System.Drawing.Point(19, 21)
+        Me.LabelSSspeed.Name = "LabelSSspeed"
+        Me.LabelSSspeed.Size = New System.Drawing.Size(95, 13)
+        Me.LabelSSspeed.TabIndex = 37
+        Me.LabelSSspeed.Text = "Max Speed [km/h]"
         '
         'BtAccOpen
         '
@@ -1294,65 +1338,6 @@ Partial Class F_GEN
         Me.TextBoxIncPe.Size = New System.Drawing.Size(61, 20)
         Me.TextBoxIncPe.TabIndex = 0
         '
-        'TabPgStartStop
-        '
-        Me.TabPgStartStop.Controls.Add(Me.GroupBoxStartStop)
-        Me.TabPgStartStop.Location = New System.Drawing.Point(4, 22)
-        Me.TabPgStartStop.Name = "TabPgStartStop"
-        Me.TabPgStartStop.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgStartStop.Size = New System.Drawing.Size(646, 442)
-        Me.TabPgStartStop.TabIndex = 4
-        Me.TabPgStartStop.Text = "Start-Stop"
-        Me.TabPgStartStop.UseVisualStyleBackColor = True
-        '
-        'GroupBoxStartStop
-        '
-        Me.GroupBoxStartStop.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupBoxStartStop.Controls.Add(Me.LabelSStime)
-        Me.GroupBoxStartStop.Controls.Add(Me.LabelSSspeed)
-        Me.GroupBoxStartStop.Controls.Add(Me.TBSStime)
-        Me.GroupBoxStartStop.Controls.Add(Me.TBSSspeed)
-        Me.GroupBoxStartStop.Location = New System.Drawing.Point(6, 6)
-        Me.GroupBoxStartStop.Name = "GroupBoxStartStop"
-        Me.GroupBoxStartStop.Size = New System.Drawing.Size(634, 319)
-        Me.GroupBoxStartStop.TabIndex = 12
-        Me.GroupBoxStartStop.TabStop = False
-        Me.GroupBoxStartStop.Text = "Parameters"
-        '
-        'LabelSStime
-        '
-        Me.LabelSStime.AutoSize = True
-        Me.LabelSStime.Location = New System.Drawing.Point(23, 55)
-        Me.LabelSStime.Name = "LabelSStime"
-        Me.LabelSStime.Size = New System.Drawing.Size(101, 13)
-        Me.LabelSStime.TabIndex = 2
-        Me.LabelSStime.Text = "Min ICE-On Time [s]"
-        '
-        'LabelSSspeed
-        '
-        Me.LabelSSspeed.AutoSize = True
-        Me.LabelSSspeed.Location = New System.Drawing.Point(29, 28)
-        Me.LabelSSspeed.Name = "LabelSSspeed"
-        Me.LabelSSspeed.Size = New System.Drawing.Size(95, 13)
-        Me.LabelSSspeed.TabIndex = 2
-        Me.LabelSSspeed.Text = "Max Speed [km/h]"
-        '
-        'TBSStime
-        '
-        Me.TBSStime.Location = New System.Drawing.Point(130, 52)
-        Me.TBSStime.Name = "TBSStime"
-        Me.TBSStime.Size = New System.Drawing.Size(64, 20)
-        Me.TBSStime.TabIndex = 2
-        '
-        'TBSSspeed
-        '
-        Me.TBSSspeed.Location = New System.Drawing.Point(130, 26)
-        Me.TBSSspeed.Name = "TBSSspeed"
-        Me.TBSSspeed.Size = New System.Drawing.Size(64, 20)
-        Me.TBSSspeed.TabIndex = 1
-        '
         'TabPgTEST
         '
         Me.TabPgTEST.Controls.Add(Me.GrGearShift)
@@ -1368,7 +1353,6 @@ Partial Class F_GEN
         Me.TabPgTEST.Controls.Add(Me.ComboBoxEngType)
         Me.TabPgTEST.Controls.Add(Me.CheckBoxDynKor)
         Me.TabPgTEST.Controls.Add(Me.ComboBoxEclass)
-        Me.TabPgTEST.Controls.Add(Me.ChBStartStop)
         Me.TabPgTEST.Controls.Add(Me.CheckBoxSCR)
         Me.TabPgTEST.Controls.Add(Me.ButOpenTRS)
         Me.TabPgTEST.Controls.Add(Me.ComboBoxVehType)
@@ -1797,12 +1781,11 @@ Partial Class F_GEN
         Me.TabControl1.ResumeLayout(False)
         Me.TabPgDriver.ResumeLayout(False)
         Me.TabPgDriver.PerformLayout()
+        Me.GrStartStop.ResumeLayout(False)
+        Me.GrStartStop.PerformLayout()
         Me.TabPgKF.ResumeLayout(False)
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
-        Me.TabPgStartStop.ResumeLayout(False)
-        Me.GroupBoxStartStop.ResumeLayout(False)
-        Me.GroupBoxStartStop.PerformLayout()
         Me.TabPgTEST.ResumeLayout(False)
         Me.TabPgTEST.PerformLayout()
         Me.GrGearShift.ResumeLayout(False)
@@ -1880,12 +1863,6 @@ Partial Class F_GEN
     Friend WithEvents ButOpenEMO As System.Windows.Forms.Button
     Friend WithEvents ButOpenEXS As System.Windows.Forms.Button
     Friend WithEvents ButOK As System.Windows.Forms.Button
-    Friend WithEvents GroupBoxStartStop As System.Windows.Forms.GroupBox
-    Friend WithEvents ChBStartStop As System.Windows.Forms.CheckBox
-    Friend WithEvents LabelSSspeed As System.Windows.Forms.Label
-    Friend WithEvents TBSSspeed As System.Windows.Forms.TextBox
-    Friend WithEvents LabelSStime As System.Windows.Forms.Label
-    Friend WithEvents TBSStime As System.Windows.Forms.TextBox
     Friend WithEvents TextBoxEXS As System.Windows.Forms.TextBox
     Friend WithEvents TextBoxTRS As System.Windows.Forms.TextBox
     Friend WithEvents TbGBX As System.Windows.Forms.TextBox
@@ -1904,7 +1881,6 @@ Partial Class F_GEN
     Friend WithEvents TextBoxMAC As System.Windows.Forms.TextBox
     Friend WithEvents TextBoxMAA As System.Windows.Forms.TextBox
     Friend WithEvents TabPgKF As System.Windows.Forms.TabPage
-    Friend WithEvents TabPgStartStop As System.Windows.Forms.TabPage
     Friend WithEvents CbSOCnIter As System.Windows.Forms.CheckBox
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents TbSOCstart As System.Windows.Forms.TextBox
@@ -1970,4 +1946,10 @@ Partial Class F_GEN
     Friend WithEvents OpenWithGRAPHiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ChBStartStop As System.Windows.Forms.CheckBox
+    Friend WithEvents GrStartStop As System.Windows.Forms.GroupBox
+    Friend WithEvents TBSSspeed As System.Windows.Forms.TextBox
+    Friend WithEvents TBSStime As System.Windows.Forms.TextBox
+    Friend WithEvents LabelSStime As System.Windows.Forms.Label
+    Friend WithEvents LabelSSspeed As System.Windows.Forms.Label
 End Class

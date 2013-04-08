@@ -858,6 +858,12 @@ lbEr:
         For i = 0 To tDim - 1
 
             vm = (Speed(i) + Speed(i + 1)) / 2
+
+            If vm = 0 Then
+                WorkerMsg(tMsgID.Err, "Speed can't be zero while distance changes! (line " & i.ToString & ")", MsgSrc)
+                Return False
+            End If
+
             ds = Dist(i + 1) - Dist(i)
             dt = ds / vm
 

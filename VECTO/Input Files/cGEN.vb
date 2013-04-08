@@ -276,12 +276,6 @@ Public Class cGEN
         'boEXSja = CBool(file.ReadLine(0))
         'stPathExs.Init(MyPath, file.ReadLine(0))
 
-        'If file.EndOfFile Then GoTo lbClose
-
-        'boStartStop = CBool(file.ReadLine(0))
-        'siStStV = CSng(file.ReadLine(0))
-        'siStStT = CSng(file.ReadLine(0))
-
         'boSOCnJa = CBool(file.ReadLine(0))
         'siSOCstart = CSng(file.ReadLine(0))
 
@@ -353,6 +347,12 @@ Public Class cGEN
         Else
             VehMode = tVehMode.StandardMode
         End If
+
+        If file.EndOfFile Then GoTo lbClose
+
+        boStartStop = CBool(file.ReadLine(0))
+        siStStV = CSng(file.ReadLine(0))
+        siStStT = CSng(file.ReadLine(0))
 
 lbClose:
 
@@ -660,14 +660,6 @@ lbClose:
         'fGEN.WriteLine("c Exhaust System Simulation Configuration File")
         'fGEN.WriteLine(stPathExs.PathOrDummy)
 
-        'Start/Stop
-        'fGEN.WriteLine("c ICE Auto-Start/Stop (1/0) - Non HEV only")
-        'fGEN.WriteLine(Math.Abs(CInt(boStartStop)))
-        'fGEN.WriteLine("c Start/Stop Max Speed [km/h]")
-        'fGEN.WriteLine(siStStV)
-        'fGEN.WriteLine("c Start/Stop Min ICE-On Time [s]")
-        'fGEN.WriteLine(siStStT)
-
         'SOC-Start Iteration
         'fGEN.WriteLine("c SOC Start Iteration (1/0) - HEV only")
         'fGEN.WriteLine(Math.Abs(CInt(boSOCnJa)))
@@ -715,6 +707,14 @@ lbClose:
 
         fGEN.WriteLine("c Engine Only Mode (1/0)")
         fGEN.WriteLine(CStr(Math.Abs(CInt(EngOnly))))
+
+        'Start/Stop
+        fGEN.WriteLine("c ICE Auto-Start/Stop (1/0) - Non HEV only")
+        fGEN.WriteLine(Math.Abs(CInt(boStartStop)))
+        fGEN.WriteLine("c Start/Stop Max Speed [km/h]")
+        fGEN.WriteLine(siStStV)
+        fGEN.WriteLine("c Start/Stop Min ICE-On Time [s]")
+        fGEN.WriteLine(siStStT)
 
         fGEN.Close()
         fGEN = Nothing

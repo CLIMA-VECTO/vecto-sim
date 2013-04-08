@@ -9,7 +9,6 @@ Public Class F_GEN
     Private pgColdSt As TabPage
     Private pgHEV As TabPage
     Private pgMapCr As TabPage
-    Private pgStStop As TabPage
     Private pgTest As TabPage
     Private pgDriver As TabPage
 
@@ -37,7 +36,6 @@ Public Class F_GEN
         pgColdSt = Me.TabPgColdSt
         pgHEV = Me.TabPgHEV
         pgMapCr = Me.TabPgKF
-        pgStStop = Me.TabPgStartStop
         pgTest = Me.TabPgTEST
         pgDriver = Me.TabPgDriver
 
@@ -257,20 +255,6 @@ Public Class F_GEN
             If pgMapCrON Then
                 pgMapCrON = False
                 Me.TabControl1.Controls.Remove(pgMapCr)
-            End If
-        End If
-    End Sub
-
-    Private Sub SetStStoptab(ByVal OnOff As Boolean)
-        If OnOff Then
-            If Not pgStStopON Then
-                pgStStopON = True
-                Me.TabControl1.TabPages.Insert(1, pgStStop)
-            End If
-        Else
-            If pgStStopON Then
-                pgStStopON = False
-                Me.TabControl1.Controls.Remove(pgStStop)
             End If
         End If
     End Sub
@@ -972,16 +956,6 @@ Public Class F_GEN
         Call Change()
     End Sub
 
-    'Start/Stop - checkbox change
-    Private Sub ChBStartStop_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ChBStartStop.CheckedChanged
-        SetStStoptab(Me.ChBStartStop.Checked)
-        Change()
-    End Sub
-
-    'Start / Stop - Textbox change
-    Private Sub TBSSspeed_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TBSSspeed.TextChanged, TBSStime.TextChanged
-        Change()
-    End Sub
 
     'TextBox.TextChanged Events => Change()
     Private Sub TextBoxVEH_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TextBoxVEH.TextChanged
@@ -1090,7 +1064,13 @@ Public Class F_GEN
         Change()
     End Sub
 
+    Private Sub TBSSspeed_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBSSspeed.TextChanged
+        Change()
+    End Sub
 
+    Private Sub TBSStime_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBSStime.TextChanged
+        Change()
+    End Sub
 
 
 #End Region
@@ -1345,6 +1325,11 @@ lbDlog:
 
     End Sub
 
+    Private Sub ChBStartStop_CheckedChanged_1(sender As System.Object, e As System.EventArgs) Handles ChBStartStop.CheckedChanged
+        Change()
+        Me.GrStartStop.Enabled = Me.ChBStartStop.Checked
+    End Sub
+
 #Region "Open File Context Menu"
 
     Private CmFiles As String()
@@ -1384,4 +1369,7 @@ lbDlog:
 #End Region
 
     
+   
+
+ 
 End Class

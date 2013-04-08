@@ -13,6 +13,11 @@ Public Class cDEV
     Public TCnUstep As Single
     Public TCnUstepMin As Single
 
+    Public OverSpeedOn As Boolean
+    Public OverSpeed As Single
+    Public UnderSpeed As Single
+    Public EcoRollOn As Boolean
+
     '**************************************************************************************************************
     '**************************************************************************************************************
     '********************************* Instructions for integrating new DEV-Options *********************************
@@ -115,9 +120,13 @@ Public Class cDEV
         Conf0.BoolVal = False
         MyOptions.Add("TestOptions", Conf0)
 
+
+
         Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Gear Correcion (gear shift polygons model only!)", False)
         Conf0.BoolVal = False
         MyOptions.Add("GearCorrection", Conf0)
+
+
 
         Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "TC iteration: target precision for torque ratio")
         Conf0.SingleVal = 0.001
@@ -130,6 +139,23 @@ Public Class cDEV
         Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "TC iteration: lowest value for nU-step [1/min]")
         Conf0.SingleVal = 0.01
         MyOptions.Add("TCnUstepMin", Conf0)
+
+
+        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "OverSpeed", False)
+        Conf0.BoolVal = False
+        MyOptions.Add("OverSpeedOn", Conf0)
+
+        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "EcoRoll", False)
+        Conf0.BoolVal = False
+        MyOptions.Add("EcoRollOn", Conf0)
+
+        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "OverSpeed [km/h]")
+        Conf0.SingleVal = 10
+        MyOptions.Add("OverSpeed", Conf0)
+
+        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "UnderSpeed [km/h]")
+        Conf0.SingleVal = 10
+        MyOptions.Add("UnderSpeed", Conf0)
 
 
         '**************************** END: Parameters Configuration '*****************************
@@ -146,6 +172,11 @@ Public Class cDEV
         TCiterPrec = MyOptions("TCiterPrec").SingleVal
         TCnUstep = MyOptions("TCnUstep").SingleVal
         TCnUstepMin = MyOptions("TCnUstepMin").SingleVal
+
+        OverSpeedOn = MyOptions("OverSpeedOn").BoolVal
+        OverSpeed = MyOptions("EcoRollOn").BoolVal
+        UnderSpeed = MyOptions("OverSpeed").SingleVal
+        EcoRollOn = MyOptions("UnderSpeed").SingleVal
     End Sub
 
     'Demo for Delegate Function

@@ -5,6 +5,11 @@ VECTO ?.? (future release)
 VECTO 1.1 x (current source - next release)
 
 
+
+VECTO 1.1 beta 4
+- Engine Start/Stop implemented
+- Fixed error in FC interpolation (invalid extrapolation errors)
+
 VECTO 1.1 beta 3
 - FC Extrapolation will abort the calculation
 - Transmission Type selection in Gearbox (.vgbx) file.

@@ -439,6 +439,9 @@ lb10:
 
         Dim LastPmax As Single
 
+        Dim Vcoasting As Single
+
+
 
         Dim MsgSrc As String
 
@@ -821,7 +824,7 @@ lbCheck:
                 Else
 
                     If MODdata.nn(jz - 1) <= 0.00001 Then
-                        nn = 0
+                        nn = MODdata.nn(jz - 1)
                         GoTo lb_nOK
                     End If
 
@@ -928,7 +931,6 @@ lb_nOK:
                 End If
             Else
                 If Nvorg Then
-                    'Revolutions-setting
                     PaMot = (VEH.I_mot * MODdata.dnUvorg(jz) * 0.01096 * MODdata.nUvorg(jz)) * 0.001
                 Else
                     PaMot = ((VEH.I_mot * (VEH.AchsI * VEH.Igetr(Gear) / (0.5 * VEH.Dreifen)) ^ 2) * aist * Vist) * 0.001
@@ -1064,6 +1066,18 @@ lb_nOK:
                     If Math.Abs(P / Pmax - 1) < 0.02 Then EngState0 = tEngState.FullLoad
                 Else    ' tEngState.Drag (tEngState.Idle, tEngState.Stopped kann's hier nicht geben weil Clutch <> Closed)
                     If P < Pmin Then
+
+                        'Overspeed
+                        If DEV.OverSpeedOn Then
+                            Vcoasting = fCoastingSpeed(jz, Gear, nU, Pmin)
+
+
+
+                        End If
+
+
+
+
 
                         MODdata.ModErrors.TrLossMapExtr = ""
 
@@ -1490,6 +1504,72 @@ lb_nOK:
     End Function
 
 
+
+
+    Private Function fCoastingSpeed(ByVal t As Integer, ByVal Gear As Integer, ByVal nU As Single, ByVal Pdrag As Single) As Single
+
+        Dim vstep As Double
+        Dim vVorz As Integer
+        Dim Pe As Single
+        Dim a As Single
+        Dim v As Single
+        Dim eps As Single
+        Dim PvD As Single
+        Dim LastDiff As Single
+        Dim Diff As Single
+
+        v = MODdata.Vh.V(t)
+
+        vstep = 0.1
+        eps = 0.001
+        a = MODdata.Vh.a(t)
+
+        'PlossGB = fPlossGBfwd(Pkup, v, Gear)
+        'Pe = fPvD(t, v, a) + PlossGB + fPlossDiffFwd(Pkup - PlossGB, Vist) + fPaG(v, a) + fPlossRt(v, Gear)
+
+        PvD = fPvD(t, v, a)
+        Pe = PvD + fPlossGB(PvD, v, Gear) + fPlossDiff(PvD, v) + fPaG(v, a) + fPlossRt(v, Gear) + fPaux(t, nU) + fPaMot(t, Gear)
+
+        Diff = Math.Abs(Pdrag - Pe) / VEH.Pnenn
+
+        If Diff > eps Then
+            vVorz = -1
+        ElseIf PvD < -eps Then
+            vVorz = 1
+        Else
+            Return v
+        End If
+
+        LastDiff = Math.Abs(Pdrag - Pe) / VEH.Pnenn
+
+        Do While Diff > eps And Math.Abs(LastDiff - Diff) > eps
+
+            If LastDiff < Diff Then
+                vVorz *= -1
+                vstep *= 0.5
+
+                If vstep = 0 Then Exit Do
+
+            End If
+
+            v += vVorz * vstep
+
+            a = 2 * (v - MODdata.Vh.V0(t)) / 1  'dt = 1[s]
+
+            LastDiff = Diff
+
+            PvD = fPvD(t, v, a)
+            Pe = PvD + fPlossGB(PvD, v, Gear) + fPlossDiff(PvD, v) + fPaG(v, a) + fPlossRt(v, Gear) + fPaux(t, nU) + fPaMot(t, Gear)
+
+            Diff = Math.Abs(Pdrag - Pe) / VEH.Pnenn
+
+        Loop
+
+        Return v
+
+    End Function
+
+
 #Region "Schaltmodelle"
 
     Private Function fStartGear(ByVal t As Integer) As Integer
@@ -1830,6 +1910,22 @@ lb_nOK:
             End If
 
         End If
+
+        '*** Error-Msg-Check ***
+        'Current rpm 
+        nU = fnU(Vist, Gear, Clutch = tEngClutch.Slipping)
+        nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+        'Current power demand
+        Pe = Math.Min(fPeGearMod(Gear, t) * VEH.Pnenn, FLD.Pfull(nn))
+        Pe = Math.Max(Pe, FLD.Pdrag(nn))
+        'Current torque demand
+        Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
+        'Clear old errors
+        MODdata.ModErrors.GSextrapol = ""
+        'Check for errors
+        GBX.fGSnnDown(Md)
+        GBX.fGSnnUp(Md)
+
 
         'If GearCorrection is OFF then return here
         If Not DEV.GearCorrection Then Return Gear
@@ -3313,6 +3409,14 @@ lb20:
         'Previously (PHEM 10.4.2 and older) the m_raeder was used for Massered instead, with Massered = m_raeder + I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2
         '   The missing part (I_Getriebe * (Iachs / (0.5 * Dreifen)) ^ 2) is now considered by fPaG(V,a)
         Return CSng(((VEH.Mass + VEH.MassExtra + VEH.m_raeder_red + VEH.Loading) * a * v) * 0.001)
+    End Function
+
+    Private Function fPaMot(ByVal t As Integer, ByVal Gear As Integer) As Single
+        If Nvorg Then
+            Return (VEH.I_mot * MODdata.dnUvorg(t) * 0.01096 * MODdata.nUvorg(t)) * 0.001
+        Else
+            Return ((VEH.I_mot * (VEH.AchsI * VEH.Igetr(Gear) / (0.5 * VEH.Dreifen)) ^ 2) * aist * Vist) * 0.001
+        End If
     End Function
 
     '----------------Slope resistance ----------------
