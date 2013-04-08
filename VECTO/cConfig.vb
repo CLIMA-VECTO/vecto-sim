@@ -249,8 +249,8 @@ lbDone:
         FinalEmOnly = True
         FCcorrection = False
         nnormEngStop = -0.05
-        OpenCmd = "notepad++"
-        OpenCmdName = "Notepad++"
+        OpenCmd = "notepad"
+        OpenCmdName = "Notepad"
 
 
         FuelDens = 0.835

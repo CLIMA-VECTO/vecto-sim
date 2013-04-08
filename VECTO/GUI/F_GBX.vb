@@ -112,15 +112,15 @@
         Next
 
         Me.TbShiftPolyFile.Text = ""
-        Me.ChSkipGears.Checked = False
-        Me.ChShiftInside.Checked = False
+        'Me.ChSkipGears.Checked = False         'set by CbGStype.SelectedIndexChanged
+        'Me.ChShiftInside.Checked = False       'set by CbGStype.SelectedIndexChanged
         Me.TbTqResv.Text = ""
         Me.TbShiftTime.Text = ""
         Me.TbTqResvStart.Text = ""
         Me.TbStartSpeed.Text = ""
         Me.TbStartAcc.Text = ""
 
-        Me.ChTCon.Checked = False
+        'Me.ChTCon.Checked = False              'set by CbGStype.SelectedIndexChanged
         Me.TbTCfile.Text = ""
         Me.TbTCrefrpm.Text = ""
 

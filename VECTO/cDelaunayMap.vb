@@ -218,9 +218,6 @@ Public Class cDelaunayMap
         ' Check if point is in triangle
         Return (u >= 0) And (v >= 0) And (u + v <= 1.00000000001)
 
-
-
-
     End Function
 
 End Class

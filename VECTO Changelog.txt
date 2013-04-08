@@ -1,9 +1,12 @@
 VECTO ?.? (future release)
 - Eco-Roll & Over-/Under-Speed
-
+- Gearbox Rules must be set when loading .gbx file to aviod invalid settings (e.g. AT with Skip Gears)
 
 VECTO 1.1 x (current source - next release)
 
+
+VECTO 1.2
+- Bugfix: When opening the Gearbox Editor the Gear Shift Settings (e.g. Skip Gears) were not valid for MT
 
 
 VECTO 1.1 beta 4
