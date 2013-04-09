@@ -270,7 +270,7 @@ Public Class cMOD
         Dim L As List(Of Double)
 
         'Zykluslänge definieren: Gleiche Länge wie Zyklus (nicht reduziert weil keine "Zwischensekunden") |@@| Define Cycle-length: Same length as Cycle (not reduced because no "interim seconds")
-        tDim = DRI.tDim - 1
+        tDim = DRI.tDim
 
         'Here the actual cycle is read:
         Vh.EngCylceInit()
