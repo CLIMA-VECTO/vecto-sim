@@ -300,7 +300,7 @@ Public Class cFLD
 
         Catch ex As Exception
 
-            WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & iDim + 1 & " (" & sFilePath & ")", MsgSrc)
+            WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & iDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
             GoTo lbEr
 
         End Try

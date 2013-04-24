@@ -109,12 +109,33 @@ Partial Class F_GEN
         Me.ComboBoxGearShift = New System.Windows.Forms.ComboBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPgDriver = New System.Windows.Forms.TabPage()
-        Me.ChBStartStop = New System.Windows.Forms.CheckBox()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.CbLookAhead = New System.Windows.Forms.CheckBox()
+        Me.TbAlookahead = New System.Windows.Forms.TextBox()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.TbVmin = New System.Windows.Forms.TextBox()
+        Me.TbUnderSpeed = New System.Windows.Forms.TextBox()
+        Me.TbOverspeed = New System.Windows.Forms.TextBox()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.RdEcoRoll = New System.Windows.Forms.RadioButton()
+        Me.RdOverspeed = New System.Windows.Forms.RadioButton()
+        Me.RdOff = New System.Windows.Forms.RadioButton()
         Me.GrStartStop = New System.Windows.Forms.GroupBox()
+        Me.PnStartStop = New System.Windows.Forms.Panel()
+        Me.Label27 = New System.Windows.Forms.Label()
         Me.TBSSspeed = New System.Windows.Forms.TextBox()
-        Me.TBSStime = New System.Windows.Forms.TextBox()
-        Me.LabelSStime = New System.Windows.Forms.Label()
         Me.LabelSSspeed = New System.Windows.Forms.Label()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.LabelSStime = New System.Windows.Forms.Label()
+        Me.TBSStime = New System.Windows.Forms.TextBox()
+        Me.ChBStartStop = New System.Windows.Forms.CheckBox()
         Me.BtAccOpen = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.BtDesMaxBr = New System.Windows.Forms.Button()
@@ -176,6 +197,10 @@ Partial Class F_GEN
         Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PnLookAhead = New System.Windows.Forms.Panel()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.TbVminLA = New System.Windows.Forms.TextBox()
+        Me.Label29 = New System.Windows.Forms.Label()
         Me.TabPgHEV.SuspendLayout()
         Me.TabPgColdSt.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
@@ -184,7 +209,10 @@ Partial Class F_GEN
         Me.GrAux.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPgDriver.SuspendLayout()
+        Me.GroupBox4.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.GrStartStop.SuspendLayout()
+        Me.PnStartStop.SuspendLayout()
         Me.TabPgKF.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.TabPgTEST.SuspendLayout()
@@ -193,6 +221,7 @@ Partial Class F_GEN
         Me.ToolStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CmOpenFile.SuspendLayout()
+        Me.PnLookAhead.SuspendLayout()
         Me.SuspendLayout()
         '
         'ButOpenEXS
@@ -1086,7 +1115,8 @@ Partial Class F_GEN
         '
         'TabPgDriver
         '
-        Me.TabPgDriver.Controls.Add(Me.ChBStartStop)
+        Me.TabPgDriver.Controls.Add(Me.GroupBox4)
+        Me.TabPgDriver.Controls.Add(Me.GroupBox1)
         Me.TabPgDriver.Controls.Add(Me.GrStartStop)
         Me.TabPgDriver.Controls.Add(Me.BtAccOpen)
         Me.TabPgDriver.Controls.Add(Me.Label1)
@@ -1100,62 +1130,267 @@ Partial Class F_GEN
         Me.TabPgDriver.Text = "Driver"
         Me.TabPgDriver.UseVisualStyleBackColor = True
         '
+        'GroupBox4
+        '
+        Me.GroupBox4.Controls.Add(Me.PnLookAhead)
+        Me.GroupBox4.Controls.Add(Me.CbLookAhead)
+        Me.GroupBox4.Location = New System.Drawing.Point(12, 331)
+        Me.GroupBox4.Name = "GroupBox4"
+        Me.GroupBox4.Size = New System.Drawing.Size(375, 87)
+        Me.GroupBox4.TabIndex = 41
+        Me.GroupBox4.TabStop = False
+        Me.GroupBox4.Text = "Look-Ahead Coasting"
+        '
+        'Label25
+        '
+        Me.Label25.AutoSize = True
+        Me.Label25.Location = New System.Drawing.Point(197, 12)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(34, 13)
+        Me.Label25.TabIndex = 3
+        Me.Label25.Text = "[m/s²]"
+        '
+        'CbLookAhead
+        '
+        Me.CbLookAhead.AutoSize = True
+        Me.CbLookAhead.Checked = True
+        Me.CbLookAhead.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.CbLookAhead.Location = New System.Drawing.Point(16, 21)
+        Me.CbLookAhead.Name = "CbLookAhead"
+        Me.CbLookAhead.Size = New System.Drawing.Size(65, 17)
+        Me.CbLookAhead.TabIndex = 0
+        Me.CbLookAhead.Text = "Enabled"
+        Me.CbLookAhead.UseVisualStyleBackColor = True
+        '
+        'TbAlookahead
+        '
+        Me.TbAlookahead.Location = New System.Drawing.Point(127, 9)
+        Me.TbAlookahead.Name = "TbAlookahead"
+        Me.TbAlookahead.Size = New System.Drawing.Size(64, 20)
+        Me.TbAlookahead.TabIndex = 2
+        '
+        'Label24
+        '
+        Me.Label24.AutoSize = True
+        Me.Label24.Location = New System.Drawing.Point(25, 12)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(96, 13)
+        Me.Label24.TabIndex = 1
+        Me.Label24.Text = "Target Retardation"
+        '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.Label21)
+        Me.GroupBox1.Controls.Add(Me.Label20)
+        Me.GroupBox1.Controls.Add(Me.Label14)
+        Me.GroupBox1.Controls.Add(Me.TbVmin)
+        Me.GroupBox1.Controls.Add(Me.TbUnderSpeed)
+        Me.GroupBox1.Controls.Add(Me.TbOverspeed)
+        Me.GroupBox1.Controls.Add(Me.Label23)
+        Me.GroupBox1.Controls.Add(Me.Label22)
+        Me.GroupBox1.Controls.Add(Me.Label13)
+        Me.GroupBox1.Controls.Add(Me.RdEcoRoll)
+        Me.GroupBox1.Controls.Add(Me.RdOverspeed)
+        Me.GroupBox1.Controls.Add(Me.RdOff)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 192)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(372, 109)
+        Me.GroupBox1.TabIndex = 40
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Overspeed / Eco-Roll"
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Location = New System.Drawing.Point(314, 76)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(38, 13)
+        Me.Label21.TabIndex = 3
+        Me.Label21.Text = "[km/h]"
+        '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Location = New System.Drawing.Point(314, 50)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(38, 13)
+        Me.Label20.TabIndex = 3
+        Me.Label20.Text = "[km/h]"
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Location = New System.Drawing.Point(314, 24)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(38, 13)
+        Me.Label14.TabIndex = 3
+        Me.Label14.Text = "[km/h]"
+        '
+        'TbVmin
+        '
+        Me.TbVmin.Location = New System.Drawing.Point(244, 73)
+        Me.TbVmin.Name = "TbVmin"
+        Me.TbVmin.Size = New System.Drawing.Size(64, 20)
+        Me.TbVmin.TabIndex = 2
+        '
+        'TbUnderSpeed
+        '
+        Me.TbUnderSpeed.Location = New System.Drawing.Point(244, 47)
+        Me.TbUnderSpeed.Name = "TbUnderSpeed"
+        Me.TbUnderSpeed.Size = New System.Drawing.Size(64, 20)
+        Me.TbUnderSpeed.TabIndex = 2
+        '
+        'TbOverspeed
+        '
+        Me.TbOverspeed.Location = New System.Drawing.Point(244, 21)
+        Me.TbOverspeed.Name = "TbOverspeed"
+        Me.TbOverspeed.Size = New System.Drawing.Size(64, 20)
+        Me.TbOverspeed.TabIndex = 2
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = True
+        Me.Label23.Location = New System.Drawing.Point(143, 76)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(95, 13)
+        Me.Label23.TabIndex = 1
+        Me.Label23.Text = "Min. Target Speed"
+        '
+        'Label22
+        '
+        Me.Label22.AutoSize = True
+        Me.Label22.Location = New System.Drawing.Point(147, 50)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(91, 13)
+        Me.Label22.TabIndex = 1
+        Me.Label22.Text = "Max. Underspeed"
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(153, 24)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(85, 13)
+        Me.Label13.TabIndex = 1
+        Me.Label13.Text = "Max. Overspeed"
+        '
+        'RdEcoRoll
+        '
+        Me.RdEcoRoll.AutoSize = True
+        Me.RdEcoRoll.Checked = True
+        Me.RdEcoRoll.Location = New System.Drawing.Point(13, 68)
+        Me.RdEcoRoll.Name = "RdEcoRoll"
+        Me.RdEcoRoll.Size = New System.Drawing.Size(65, 17)
+        Me.RdEcoRoll.TabIndex = 0
+        Me.RdEcoRoll.TabStop = True
+        Me.RdEcoRoll.Text = "Eco-Roll"
+        Me.RdEcoRoll.UseVisualStyleBackColor = True
+        '
+        'RdOverspeed
+        '
+        Me.RdOverspeed.AutoSize = True
+        Me.RdOverspeed.Location = New System.Drawing.Point(13, 45)
+        Me.RdOverspeed.Name = "RdOverspeed"
+        Me.RdOverspeed.Size = New System.Drawing.Size(77, 17)
+        Me.RdOverspeed.TabIndex = 0
+        Me.RdOverspeed.Text = "Overspeed"
+        Me.RdOverspeed.UseVisualStyleBackColor = True
+        '
+        'RdOff
+        '
+        Me.RdOff.AutoSize = True
+        Me.RdOff.Location = New System.Drawing.Point(13, 22)
+        Me.RdOff.Name = "RdOff"
+        Me.RdOff.Size = New System.Drawing.Size(39, 17)
+        Me.RdOff.TabIndex = 0
+        Me.RdOff.Text = "Off"
+        Me.RdOff.UseVisualStyleBackColor = True
+        '
+        'GrStartStop
+        '
+        Me.GrStartStop.Controls.Add(Me.PnStartStop)
+        Me.GrStartStop.Controls.Add(Me.ChBStartStop)
+        Me.GrStartStop.Location = New System.Drawing.Point(9, 83)
+        Me.GrStartStop.Name = "GrStartStop"
+        Me.GrStartStop.Size = New System.Drawing.Size(375, 87)
+        Me.GrStartStop.TabIndex = 38
+        Me.GrStartStop.TabStop = False
+        Me.GrStartStop.Text = "Engine Start Stop"
+        '
+        'PnStartStop
+        '
+        Me.PnStartStop.Controls.Add(Me.Label27)
+        Me.PnStartStop.Controls.Add(Me.TBSSspeed)
+        Me.PnStartStop.Controls.Add(Me.LabelSSspeed)
+        Me.PnStartStop.Controls.Add(Me.Label26)
+        Me.PnStartStop.Controls.Add(Me.LabelSStime)
+        Me.PnStartStop.Controls.Add(Me.TBSStime)
+        Me.PnStartStop.Location = New System.Drawing.Point(148, 10)
+        Me.PnStartStop.Name = "PnStartStop"
+        Me.PnStartStop.Size = New System.Drawing.Size(221, 71)
+        Me.PnStartStop.TabIndex = 0
+        '
+        'Label27
+        '
+        Me.Label27.AutoSize = True
+        Me.Label27.Location = New System.Drawing.Point(169, 38)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(18, 13)
+        Me.Label27.TabIndex = 38
+        Me.Label27.Text = "[s]"
+        '
+        'TBSSspeed
+        '
+        Me.TBSSspeed.Location = New System.Drawing.Point(99, 9)
+        Me.TBSSspeed.Name = "TBSSspeed"
+        Me.TBSSspeed.Size = New System.Drawing.Size(64, 20)
+        Me.TBSSspeed.TabIndex = 34
+        '
+        'LabelSSspeed
+        '
+        Me.LabelSSspeed.AutoSize = True
+        Me.LabelSSspeed.Location = New System.Drawing.Point(32, 12)
+        Me.LabelSSspeed.Name = "LabelSSspeed"
+        Me.LabelSSspeed.Size = New System.Drawing.Size(61, 13)
+        Me.LabelSSspeed.TabIndex = 37
+        Me.LabelSSspeed.Text = "Max Speed"
+        '
+        'Label26
+        '
+        Me.Label26.AutoSize = True
+        Me.Label26.Location = New System.Drawing.Point(169, 12)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(38, 13)
+        Me.Label26.TabIndex = 38
+        Me.Label26.Text = "[km/h]"
+        '
+        'LabelSStime
+        '
+        Me.LabelSStime.AutoSize = True
+        Me.LabelSStime.Location = New System.Drawing.Point(6, 38)
+        Me.LabelSStime.Name = "LabelSStime"
+        Me.LabelSStime.Size = New System.Drawing.Size(87, 13)
+        Me.LabelSStime.TabIndex = 35
+        Me.LabelSStime.Text = "Min ICE-On Time"
+        '
+        'TBSStime
+        '
+        Me.TBSStime.Location = New System.Drawing.Point(99, 35)
+        Me.TBSStime.Name = "TBSStime"
+        Me.TBSStime.Size = New System.Drawing.Size(64, 20)
+        Me.TBSStime.TabIndex = 36
+        '
         'ChBStartStop
         '
         Me.ChBStartStop.AutoSize = True
         Me.ChBStartStop.Checked = True
         Me.ChBStartStop.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.ChBStartStop.Location = New System.Drawing.Point(9, 94)
+        Me.ChBStartStop.Location = New System.Drawing.Point(16, 21)
         Me.ChBStartStop.Name = "ChBStartStop"
-        Me.ChBStartStop.Size = New System.Drawing.Size(101, 17)
+        Me.ChBStartStop.Size = New System.Drawing.Size(65, 17)
         Me.ChBStartStop.TabIndex = 39
-        Me.ChBStartStop.Text = "ICE Start / Stop"
+        Me.ChBStartStop.Text = "Enabled"
         Me.ChBStartStop.UseVisualStyleBackColor = True
-        '
-        'GrStartStop
-        '
-        Me.GrStartStop.Controls.Add(Me.TBSSspeed)
-        Me.GrStartStop.Controls.Add(Me.TBSStime)
-        Me.GrStartStop.Controls.Add(Me.LabelSStime)
-        Me.GrStartStop.Controls.Add(Me.LabelSSspeed)
-        Me.GrStartStop.Location = New System.Drawing.Point(9, 117)
-        Me.GrStartStop.Name = "GrStartStop"
-        Me.GrStartStop.Size = New System.Drawing.Size(207, 87)
-        Me.GrStartStop.TabIndex = 38
-        Me.GrStartStop.TabStop = False
-        Me.GrStartStop.Text = "Engine Start Stop"
-        '
-        'TBSSspeed
-        '
-        Me.TBSSspeed.Location = New System.Drawing.Point(120, 19)
-        Me.TBSSspeed.Name = "TBSSspeed"
-        Me.TBSSspeed.Size = New System.Drawing.Size(64, 20)
-        Me.TBSSspeed.TabIndex = 34
-        '
-        'TBSStime
-        '
-        Me.TBSStime.Location = New System.Drawing.Point(120, 45)
-        Me.TBSStime.Name = "TBSStime"
-        Me.TBSStime.Size = New System.Drawing.Size(64, 20)
-        Me.TBSStime.TabIndex = 36
-        '
-        'LabelSStime
-        '
-        Me.LabelSStime.AutoSize = True
-        Me.LabelSStime.Location = New System.Drawing.Point(13, 48)
-        Me.LabelSStime.Name = "LabelSStime"
-        Me.LabelSStime.Size = New System.Drawing.Size(101, 13)
-        Me.LabelSStime.TabIndex = 35
-        Me.LabelSStime.Text = "Min ICE-On Time [s]"
-        '
-        'LabelSSspeed
-        '
-        Me.LabelSSspeed.AutoSize = True
-        Me.LabelSSspeed.Location = New System.Drawing.Point(19, 21)
-        Me.LabelSSspeed.Name = "LabelSSspeed"
-        Me.LabelSSspeed.Size = New System.Drawing.Size(95, 13)
-        Me.LabelSSspeed.TabIndex = 37
-        Me.LabelSSspeed.Text = "Max Speed [km/h]"
         '
         'BtAccOpen
         '
@@ -1747,6 +1982,44 @@ Partial Class F_GEN
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
+        'PnLookAhead
+        '
+        Me.PnLookAhead.Controls.Add(Me.Label29)
+        Me.PnLookAhead.Controls.Add(Me.Label25)
+        Me.PnLookAhead.Controls.Add(Me.TbAlookahead)
+        Me.PnLookAhead.Controls.Add(Me.Label24)
+        Me.PnLookAhead.Controls.Add(Me.TbVminLA)
+        Me.PnLookAhead.Controls.Add(Me.Label28)
+        Me.PnLookAhead.Location = New System.Drawing.Point(117, 10)
+        Me.PnLookAhead.Name = "PnLookAhead"
+        Me.PnLookAhead.Size = New System.Drawing.Size(252, 71)
+        Me.PnLookAhead.TabIndex = 1
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = True
+        Me.Label28.Location = New System.Drawing.Point(26, 38)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(95, 13)
+        Me.Label28.TabIndex = 1
+        Me.Label28.Text = "Min. Target Speed"
+        '
+        'TbVminLA
+        '
+        Me.TbVminLA.Location = New System.Drawing.Point(127, 35)
+        Me.TbVminLA.Name = "TbVminLA"
+        Me.TbVminLA.Size = New System.Drawing.Size(64, 20)
+        Me.TbVminLA.TabIndex = 2
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.Location = New System.Drawing.Point(197, 38)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(38, 13)
+        Me.Label29.TabIndex = 3
+        Me.Label29.Text = "[km/h]"
+        '
         'F_GEN
         '
         Me.AcceptButton = Me.ButOK
@@ -1781,8 +2054,14 @@ Partial Class F_GEN
         Me.TabControl1.ResumeLayout(False)
         Me.TabPgDriver.ResumeLayout(False)
         Me.TabPgDriver.PerformLayout()
+        Me.GroupBox4.ResumeLayout(False)
+        Me.GroupBox4.PerformLayout()
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         Me.GrStartStop.ResumeLayout(False)
         Me.GrStartStop.PerformLayout()
+        Me.PnStartStop.ResumeLayout(False)
+        Me.PnStartStop.PerformLayout()
         Me.TabPgKF.ResumeLayout(False)
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
@@ -1796,6 +2075,8 @@ Partial Class F_GEN
         Me.ToolStrip1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CmOpenFile.ResumeLayout(False)
+        Me.PnLookAhead.ResumeLayout(False)
+        Me.PnLookAhead.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1952,4 +2233,29 @@ Partial Class F_GEN
     Friend WithEvents TBSStime As System.Windows.Forms.TextBox
     Friend WithEvents LabelSStime As System.Windows.Forms.Label
     Friend WithEvents LabelSSspeed As System.Windows.Forms.Label
+    Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
+    Friend WithEvents Label25 As System.Windows.Forms.Label
+    Friend WithEvents CbLookAhead As System.Windows.Forms.CheckBox
+    Friend WithEvents TbAlookahead As System.Windows.Forms.TextBox
+    Friend WithEvents Label24 As System.Windows.Forms.Label
+    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+    Friend WithEvents Label21 As System.Windows.Forms.Label
+    Friend WithEvents Label20 As System.Windows.Forms.Label
+    Friend WithEvents Label14 As System.Windows.Forms.Label
+    Friend WithEvents TbVmin As System.Windows.Forms.TextBox
+    Friend WithEvents TbUnderSpeed As System.Windows.Forms.TextBox
+    Friend WithEvents TbOverspeed As System.Windows.Forms.TextBox
+    Friend WithEvents Label23 As System.Windows.Forms.Label
+    Friend WithEvents Label22 As System.Windows.Forms.Label
+    Friend WithEvents Label13 As System.Windows.Forms.Label
+    Friend WithEvents RdEcoRoll As System.Windows.Forms.RadioButton
+    Friend WithEvents RdOverspeed As System.Windows.Forms.RadioButton
+    Friend WithEvents RdOff As System.Windows.Forms.RadioButton
+    Friend WithEvents PnStartStop As System.Windows.Forms.Panel
+    Friend WithEvents Label27 As System.Windows.Forms.Label
+    Friend WithEvents Label26 As System.Windows.Forms.Label
+    Friend WithEvents PnLookAhead As System.Windows.Forms.Panel
+    Friend WithEvents Label29 As System.Windows.Forms.Label
+    Friend WithEvents TbVminLA As System.Windows.Forms.TextBox
+    Friend WithEvents Label28 As System.Windows.Forms.Label
 End Class

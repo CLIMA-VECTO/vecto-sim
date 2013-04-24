@@ -2,7 +2,7 @@
 
 Module VECTO_Global
 
-    Public Const VECTOvers As String = "1.2"
+    Public Const VECTOvers As String = "1.3 beta"
     Public MyAppPath As String
     Public MyConfPath As String
     Public MyDeclPath As String

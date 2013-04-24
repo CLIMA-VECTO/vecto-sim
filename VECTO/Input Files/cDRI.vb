@@ -465,7 +465,7 @@ Public Class cDRI
             Loop
         Catch ex As Exception
 
-            WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & tDim + 1 & " (" & sFilePath & ")", MsgSrc)
+            WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & tDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
             GoTo lbEr
 
         End Try
@@ -564,7 +564,7 @@ lbEr:
                 If GNok Then GNlist.Add(CDbl(line(3)))
                 If PaddVorg Then Values(tDriComp.Padd).Add(CDbl(line(4)))
             Catch ex As Exception
-                WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & tDim + 1 & " (" & sFilePath & ")", MsgSrc)
+                WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & tDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
                 Return False
             End Try
 
@@ -807,6 +807,7 @@ lbEr:
 
         Next
 
+
         '*********************************** Create Time-sequence '***********************************
         t = 0
         s = Dist(0)
@@ -994,6 +995,7 @@ lbEr:
 
         Values = hzValues
         VoglS = hzSpeedOgl
+        MODdata.Vh.Weg = hzDist
         If bExsCompDef Then ExsComponents = hzExsValues
         If bAuxDef Then AuxComponents = hzAuxValues
         tDim = Values(tDriComp.V).Count - 1

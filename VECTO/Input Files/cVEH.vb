@@ -566,7 +566,7 @@ lbError:
                         'old version: Power instead of torque: GBmap0.AddPoints(nU, nMtoPe(nU, M_out), nMtoPe(nU, M_in))
                         GBmap0.AddPoints(nU, M_out, M_in)
                     Catch ex As Exception
-                        WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & l & " (" & path & ")", MsgSrc)
+                        WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & l & " (" & path & ")", MsgSrc, path)
                         file.Close()
                         MyGBmaps = Nothing
                         Return False
@@ -576,7 +576,7 @@ lbError:
                 file.Close()
 
                 If Not GBmap0.Triangulate Then
-                    WorkerMsg(tMsgID.Err, "Map triangulation failed! File: " & path, MsgSrc)
+                    WorkerMsg(tMsgID.Err, "Map triangulation failed! File: " & path, MsgSrc, path)
                     MyGBmaps = Nothing
                     Return False
                 End If
@@ -967,7 +967,7 @@ lbAuxError:
                 CdX.Add(CSng(line(0)))
                 CdY.Add(CSng(line(1)))
             Catch ex As Exception
-                WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & CdDim + 1 & " (" & CdFile.FullPath & ")", MsgSrc)
+                WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & CdDim + 1 & " (" & CdFile.FullPath & ")", MsgSrc, CdFile.FullPath)
                 file.Close()
                 Return False
             End Try
@@ -977,7 +977,7 @@ lbAuxError:
         file.Close()
 
         If CdDim < 1 Then
-            WorkerMsg(tMsgID.Err, "Cd input file invalid! Two or more lines required! (" & CdFile.FullPath & ")", MsgSrc)
+            WorkerMsg(tMsgID.Err, "Cd input file invalid! Two or more lines required! (" & CdFile.FullPath & ")", MsgSrc, CdFile.FullPath)
             Return False
         End If
 
@@ -1059,7 +1059,7 @@ lbInt:
                 RtnU.Add(CSng(line(0)))
                 RtM.Add(CSng(line(1)))
             Catch ex As Exception
-                WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & RtDim + 1 & " (" & RtFile.FullPath & ")", MsgSrc)
+                WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & RtDim + 1 & " (" & RtFile.FullPath & ")", MsgSrc, RtFile.FullPath)
                 file.Close()
                 Return False
             End Try
@@ -1069,7 +1069,7 @@ lbInt:
         file.Close()
 
         If RtDim < 1 Then
-            WorkerMsg(tMsgID.Err, "Retarder input file invalid! Two or more lines required! (" & RtFile.FullPath & ")", MsgSrc)
+            WorkerMsg(tMsgID.Err, "Retarder input file invalid! Two or more lines required! (" & RtFile.FullPath & ")", MsgSrc, RtFile.FullPath)
             Return False
         End If
 

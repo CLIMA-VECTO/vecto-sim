@@ -686,6 +686,22 @@ Public Class F_GEN
 
         Me.CbEngOnly.Checked = Gfile.EngOnly
 
+        If Gfile.EcoRollOn Then
+            Me.RdEcoRoll.Checked = True
+        ElseIf Gfile.OverSpeedOn Then
+            Me.RdOverspeed.Checked = True
+        Else
+            Me.RdOff.Checked = True
+        End If
+        Me.TbOverspeed.Text = CStr(Gfile.OverSpeed)
+        Me.TbUnderSpeed.Text = CStr(Gfile.UnderSpeed)
+        Me.TbVmin.Text = CStr(Gfile.vMin)
+        Me.CbLookAhead.Checked = Gfile.LookAheadOn
+        Me.TbAlookahead.Text = CStr(Gfile.a_lookahead)
+        Me.TbVminLA.Text = CStr(Gfile.vMinLA)
+
+
+
         '-------------------------------------------------------------
 
         Gfile = Nothing
@@ -814,6 +830,16 @@ Public Class F_GEN
 
         g.EngOnly = Me.CbEngOnly.Checked
 
+        g.EcoRollOn = RdEcoRoll.Checked
+        g.OverSpeedOn = RdOverspeed.Checked
+        g.OverSpeed = CSng(fTextboxToNumString(Me.TbOverspeed.Text))
+        g.UnderSpeed = CSng(fTextboxToNumString(Me.TbUnderSpeed.Text))
+        g.vMin = CSng(fTextboxToNumString(Me.TbVmin.Text))
+        g.LookAheadOn = Me.CbLookAhead.Checked
+        g.a_lookahead = CSng(fTextboxToNumString(Me.TbAlookahead.Text))
+        g.vMinLA = CSng(fTextboxToNumString(Me.TbVminLA.Text))
+
+
         '------------------------------------------------------------
 
         'SAVE
@@ -924,6 +950,14 @@ Public Class F_GEN
         Me.TBpfast.Text = "0"
 
         Me.CbEngOnly.Checked = False
+
+        Me.RdOff.Checked = True
+        Me.CbLookAhead.Checked = True
+        Me.TbAlookahead.Text = "-0.5"
+        Me.TbOverspeed.Text = ""
+        Me.TbUnderSpeed.Text = ""
+        Me.TbVmin.Text = ""
+        Me.TbVminLA.Text = "50"
 
         '---------------------------------------------------
 
@@ -1069,6 +1103,22 @@ Public Class F_GEN
     End Sub
 
     Private Sub TBSStime_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBSStime.TextChanged
+        Change()
+    End Sub
+
+    Private Sub TbOverspeed_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbOverspeed.TextChanged
+        Change()
+    End Sub
+
+    Private Sub TbUnderSpeed_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbUnderSpeed.TextChanged
+        Change()
+    End Sub
+
+    Private Sub TbVmin_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbVmin.TextChanged, TbVminLA.TextChanged
+        Change()
+    End Sub
+
+    Private Sub TbAlookahead_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbAlookahead.TextChanged
         Change()
     End Sub
 
@@ -1327,8 +1377,43 @@ lbDlog:
 
     Private Sub ChBStartStop_CheckedChanged_1(sender As System.Object, e As System.EventArgs) Handles ChBStartStop.CheckedChanged
         Change()
-        Me.GrStartStop.Enabled = Me.ChBStartStop.Checked
+        Me.PnStartStop.Enabled = Me.ChBStartStop.Checked
     End Sub
+
+
+#Region "Overspeed / Eco-Roll / Look Ahead"
+
+    Private Sub CbLookAhead_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles CbLookAhead.CheckedChanged
+        Change()
+        Me.PnLookAhead.Enabled = CbLookAhead.Checked
+
+    End Sub
+
+    Private Sub RdOff_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles RdOff.CheckedChanged, RdOverspeed.CheckedChanged, RdEcoRoll.CheckedChanged
+        Dim EcoR As Boolean
+        Dim Ovr As Boolean
+
+        Change()
+
+        EcoR = Me.RdEcoRoll.Checked
+        Ovr = Me.RdOverspeed.Checked
+
+        Me.TbOverspeed.Enabled = Ovr Or EcoR
+        Me.Label13.Enabled = Ovr Or EcoR
+        Me.Label14.Enabled = Ovr Or EcoR
+
+        Me.TbUnderSpeed.Enabled = EcoR
+        Me.Label22.Enabled = EcoR
+        Me.Label20.Enabled = EcoR
+
+        Me.TbVmin.Enabled = Ovr Or EcoR
+        Me.Label23.Enabled = Ovr Or EcoR
+        Me.Label21.Enabled = Ovr Or EcoR
+
+    End Sub
+
+#End Region
+
 
 #Region "Open File Context Menu"
 
@@ -1369,7 +1454,6 @@ lbDlog:
 #End Region
 
     
-   
 
- 
+
 End Class

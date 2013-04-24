@@ -87,6 +87,15 @@ Public Class cGEN
 
     Public EngOnly As Boolean
 
+    Public a_lookahead As Single
+    Public vMin As Single
+    Public vMinLA As Single
+    Public LookAheadOn As Boolean
+    Public OverSpeedOn As Boolean
+    Public OverSpeed As Single
+    Public UnderSpeed As Single
+    Public EcoRollOn As Boolean
+
 
     Public Sub New()
 
@@ -353,6 +362,17 @@ Public Class cGEN
         boStartStop = CBool(file.ReadLine(0))
         siStStV = CSng(file.ReadLine(0))
         siStStT = CSng(file.ReadLine(0))
+
+        If file.EndOfFile Then GoTo lbClose
+
+        a_lookahead = CSng(file.ReadLine(0))
+        vMin = CSng(file.ReadLine(0))
+        LookAheadOn = CBool(file.ReadLine(0))
+        OverSpeedOn = CBool(file.ReadLine(0))
+        EcoRollOn = CBool(file.ReadLine(0))
+        OverSpeed = CSng(file.ReadLine(0))
+        UnderSpeed = CSng(file.ReadLine(0))
+        vMinLA = CSng(file.ReadLine(0))
 
 lbClose:
 
@@ -716,6 +736,26 @@ lbClose:
         fGEN.WriteLine("c Start/Stop Min ICE-On Time [s]")
         fGEN.WriteLine(siStStT)
 
+
+        fGEN.WriteLine("c Look Ahead reference deceleration [m/2²]")
+        fGEN.WriteLine(CStr(a_lookahead))
+        fGEN.WriteLine("c Minimum target speed for Overspeed/Eco-Roll [km/h]")
+        fGEN.WriteLine(CStr(vMin))
+        fGEN.WriteLine("c Look-Ahead with Coasting 1/0")
+        fGEN.WriteLine(CStr(Math.Abs(CInt(LookAheadOn))))
+        fGEN.WriteLine("c Overspeed 1/0")
+        fGEN.WriteLine(CStr(Math.Abs(CInt(OverSpeedOn))))
+        fGEN.WriteLine("c Eco-Roll 1/0")
+        fGEN.WriteLine(CStr(Math.Abs(CInt(EcoRollOn))))
+        fGEN.WriteLine("c Allowed OverSpeed [km/h]")
+        fGEN.WriteLine(CStr(OverSpeed))
+        fGEN.WriteLine("c Allowed UnderSpeed [km/h]")
+        fGEN.WriteLine(CStr(UnderSpeed))
+        fGEN.WriteLine("c Minimum target speed for Look-Ahead with Coasting [km/h]")
+        fGEN.WriteLine(CStr(vMinLA))
+
+
+
         fGEN.Close()
         fGEN = Nothing
 
@@ -797,6 +837,15 @@ lbClose:
         pmodell = 0
 
         EngOnly = False
+
+        a_lookahead = 0
+        vMin = 0
+        LookAheadOn = True
+        OverSpeedOn = False
+        EcoRollOn = False
+        OverSpeed = 0
+        UnderSpeed = 0
+        vMinLA = 0
 
     End Sub
 
@@ -1339,7 +1388,7 @@ lbClose:
 
         'Extrapolation for x < x(1)
         If laDesV(0) >= v Then
-            If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v
+            If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
             i = 1
             GoTo lbInt
         End If
@@ -1351,7 +1400,7 @@ lbClose:
 
         'Extrapolation for x > x(imax)
         If laDesV(i) < v Then
-            MODdata.ModErrors.DesMaxExtr = "v= " & v
+            MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
         End If
 
 lbInt:
@@ -1365,7 +1414,7 @@ lbInt:
 
         'Extrapolation for x < x(1)
         If laDesV(0) >= v Then
-            If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v
+            If laDesV(0) > v Then MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
             i = 1
             GoTo lbInt
         End If
@@ -1377,7 +1426,7 @@ lbInt:
 
         'Extrapolation for x > x(imax)
         If laDesV(i) < v Then
-            MODdata.ModErrors.DesMaxExtr = "v= " & v
+            MODdata.ModErrors.DesMaxExtr = "v= " & v * 3.6 & "[km/h]"
         End If
 
 lbInt:

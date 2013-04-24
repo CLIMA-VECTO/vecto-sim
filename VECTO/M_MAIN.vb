@@ -431,7 +431,17 @@ lbADV:
 
                         Else
 
+                            If DEV.PreRun Then
+                                If MsgOut Then WorkerMsg(tMsgID.Normal, "Driving Cycle Preprocessing", MsgSrc)
+                                If Not MODdata.Px.PreRun Then
+                                    CyclAbrtedByErr = True
+                                    GoTo lbAusg
+                                End If
+                            End If
+
                             If MsgOut Then WorkerMsg(tMsgID.Normal, "Vehicle Calc", MsgSrc)
+
+                            MODdata.Vh.DistCorrInit()
 
                             If Not MODdata.Px.Calc() Then
                                 CyclAbrtedByErr = True
@@ -472,13 +482,15 @@ lbADV:
                             MAP.Norm()
                         End If
 
-                        If MsgOut Then WorkerMsg(tMsgID.Normal, "Em Calc: Raw", MsgSrc)
+                        If MsgOut Then WorkerMsg(tMsgID.Normal, "FC Interpolation", MsgSrc)
 
                         'Calculate Raw emissions
                         If Not MODdata.Em.Raw_Calc() Then
-                            CyclAbrtedByErr = True
-                            WorkerMsg(tMsgID.Normal, "Calculation aborted!", MsgSrc)
-                            GoTo lbAusg
+                            If Not DEV.IgnoreFCextrapol Then
+                                CyclAbrtedByErr = True
+                                WorkerMsg(tMsgID.Normal, "Calculation aborted!", MsgSrc)
+                                GoTo lbAusg
+                            End If
                         End If
 
                         'TC Parameter umrechnen in Differenz zu Kennfeld-TC-Parameter |@@| Convert TC parameters to differences with Map-TC-parameters

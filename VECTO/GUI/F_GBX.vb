@@ -461,18 +461,41 @@
     'Clear Gear
     Private Sub ClearGear()
         Dim lv0 As ListViewItem
+        Dim i0 As Int16
+        Dim i As Int16
 
         If Me.LvGears.SelectedItems.Count = 0 Then Exit Sub
 
-        lv0 = Me.LvGears.SelectedItems(0)
+        i0 = Me.LvGears.SelectedItems(0).Index
 
-        lv0.SubItems(1).Text = "0"
-        lv0.SubItems(2).Text = ""
+        If i0 = 0 Then Exit Sub 'Must not remove axle
+
+        Me.LvGears.SelectedItems(0).Remove()
+
+        lv0 = New ListViewItem("")
+        lv0.SubItems.Add("0")
+        lv0.SubItems.Add("")
         lv0.ForeColor = Color.Gray
+        Me.LvGears.Items.Add(lv0)
 
-        If lv0.Index < Me.LvGears.Items.Count - 1 Then
-            Me.LvGears.Items(lv0.Index + 1).Selected = True
-            Me.LvGears.Items(lv0.Index + 1).EnsureVisible()
+        If Me.ChTCon.Checked Then
+
+            Me.LvGears.Items(1).SubItems(0).Text = "TC"
+
+            For i = 2 To 16
+                Me.LvGears.Items(i).SubItems(0).Text = (i - 1).ToString("00")
+            Next
+
+        Else
+            For i = 1 To 16
+                Me.LvGears.Items(i).SubItems(0).Text = i.ToString("00")
+            Next
+
+        End If
+
+        If i0 < Me.LvGears.Items.Count Then
+            Me.LvGears.Items(i0).Selected = True
+            Me.LvGears.Items(i0).EnsureVisible()
         End If
 
         Me.LvGears.Focus()

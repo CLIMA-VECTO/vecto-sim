@@ -11,14 +11,16 @@ Public Class cVh
     Private lPadd As List(Of Single)
     Private lVairVres As List(Of Single)
     Private lVairBeta As List(Of Single)
+    Public EcoRoll As List(Of Boolean)
 
     'Calculated
     Private la As List(Of Single)
 
     'WegKor |@@| Route(Weg)Correct
-    Private WegIst As Single
-    Private Weg As List(Of Single)
+    Private WegIst As Double
+    Public Weg As List(Of Double)
     Private WegX As Integer
+    Private WegV As List(Of Single)
 
 
     Public Sub Init()
@@ -29,11 +31,10 @@ Public Class cVh
         lGears = New List(Of Short)
         lPadd = New List(Of Single)
         la = New List(Of Single)
-        Weg = New List(Of Single)
+        Weg = New List(Of Double)
         lVairVres = New List(Of Single)
         lVairBeta = New List(Of Single)
-        WegX = 0
-        WegIst = 0
+        EcoRoll = New List(Of Boolean)
     End Sub
 
     Public Sub CleanUp()
@@ -47,6 +48,7 @@ Public Class cVh
         Weg = Nothing
         lVairVres = Nothing
         lVairBeta = Nothing
+        EcoRoll = Nothing
     End Sub
 
     Public Sub VehCylceInit()
@@ -77,10 +79,12 @@ Public Class cVh
             End If
 
             'Strecke (aus Zwischensekunden sonst passiert Fehler) |@@| Segment (from Intermediate-seconds, otherwise Error)
-            Weg.Add(lV(0))
-            For s = 1 To MODdata.tDim
-                Weg.Add(Weg(s - 1) + lV(s))
-            Next
+            If Not DRI.Scycle Then
+                Weg.Add(lV(0))
+                For s = 1 To MODdata.tDim
+                    Weg.Add(Weg(s - 1) + lV(s))
+                Next
+            End If
 
         End If
 
@@ -146,6 +150,10 @@ Public Class cVh
 
         End If
 
+        For s = 0 To MODdata.tDim
+            EcoRoll.Add(False)
+        Next
+
 
     End Sub
 
@@ -166,7 +174,7 @@ Public Class cVh
                 If lV(s) < 0.001 Then lV(s) = 0 '<= aus Leistg
             Next
 
-            'Strecke  |@@| Segment
+            'Distance
             Weg.Add(lV(0))
             For s = 1 To MODdata.tDim
                 Weg.Add(Weg(s - 1) + lV(s))
@@ -233,6 +241,9 @@ Public Class cVh
     End Sub
 
     Public Sub SetSpeed(ByVal t As Integer, ByVal v As Single)
+
+        If 2 * v - lV0(t) < 0 Then v = lV0(t) / 2
+
         lV0(t + 1) = 2 * v - lV0(t)
         lV(t) = v
         la(t) = lV0(t + 1) - lV0(t)
@@ -252,53 +263,96 @@ Public Class cVh
         End If
     End Sub
 
-    Public Sub DistCorrection(ByVal t As Integer, ByVal VehState As tVehState)
+    Public Sub SetAcc(ByVal t As Integer, ByVal a As Single)
+        la(t) = a
+        lV0(t + 1) = lV0(t) + a
+        lV(t) = (lV0(t + 1) + lV0(t)) / 2
+        If t < MODdata.tDim Then
+            lV(t + 1) = (lV0(t + 2) + lV0(t + 1)) / 2
+            la(t + 1) = lV0(t + 2) - lV0(t + 1)
+        End If
+    End Sub
 
-        'TODO: If veh faster than cycle ...
 
+    Public Sub SetAccBackw(ByVal t As Integer, ByVal a As Single)
+        la(t) = a
+        lV0(t) = lV0(t + 1) - a
+        lV(t) = (lV0(t + 1) + lV0(t)) / 2
+        If t > 0 Then
+            lV(t - 1) = (lV0(t) + lV0(t - 1)) / 2
+            la(t - 1) = lV0(t) - lV0(t - 1)
+        End If
+    End Sub
+
+    Public Sub DistCorrInit()
+        Dim i As Int16
+
+        WegX = 0
+        WegIst = 0
+
+        WegV = New List(Of Single)
+
+        For i = 0 To MODdata.tDim + 1
+            WegV.Add(lV0(i))
+        Next
+
+    End Sub
+
+    Public Function DistCorrection(ByVal t As Integer, ByVal VehState As tVehState) As Boolean
         Dim v As Single
-        Dim a As Single
 
-        If t + 1 > MODdata.tDim Then Exit Sub
+        If t + 1 > MODdata.tDim Then Return False
 
         v = lV(t)
-        a = la(t)
 
         WegIst += v
 
         If WegX < MODdata.tDimOgl Then
 
-
-
-            'Falls Zeitschritt wiederholen näher an Wegvorgabe als aktueller Weg => Zeitschritt wiederholen |@@| If the repeating Time-step is closer to the Specified-route than the Actual-route => Repeat Time-step
-            If (VehState = tVehState.Acc Or VehState = tVehState.Cruise) AndAlso (Math.Abs(WegIst + Vsoll(t) - Weg(WegX)) < Math.Abs(WegIst - Weg(WegX))) And v > 0.1 Then
+            'If repeating of current time-step is closer to the target distance => Repeat time-step
+            If (Math.Abs(WegIst + Vsoll(t) - Weg(WegX)) < Math.Abs(WegIst - Weg(WegX))) And v > 1 Then
 
                 Duplicate(t + 1)
                 MODdata.tDim += 1
+                'Debug.Print("Duplicate," & t & "," & WegIst & "," & Weg(WegX))
+                Return True
 
-                'Falls nächsten Zeitschritt löschen näher an Wegvorgabe als aktueller Weg => Nächsten Zeitschritt löschen |@@| If the next Time-step to Delete closer to specified Route than the Actual-route => Delete Next Time-step
-                'ElseIf WegX < MODdata.tDimOgl - 1 AndAlso t < MODdata.tDim - 1 AndAlso WegIst > Weg(WegX + 1) AndAlso Math.Abs(WegIst - Weg(WegX + 1)) <= Math.Abs(WegIst - Weg(WegX)) Then
+                'If deleting the next time-step is closer to target distance => Delete Next Time-step
+            ElseIf WegX < MODdata.tDimOgl - 1 AndAlso t < MODdata.tDim - 1 AndAlso Math.Abs(WegIst - Weg(WegX + 1)) <= Math.Abs(WegIst - Weg(WegX)) AndAlso v > 1 Then
 
-                '    Do
-                '        Cut(t + 1)
-                '        MODdata.tDim -= 1
-                '        WegX += 1
-                '    Loop While WegX < MODdata.tDimOgl - 1 AndAlso t < MODdata.tDim - 1 AndAlso WegIst > Weg(WegX + 1) AndAlso Math.Abs(WegIst - Weg(WegX + 1)) <= Math.Abs(WegIst - Weg(WegX))
-                '    WegX += 1
+                Cut(t + 1)
+                MODdata.tDim -= 1
+                'Debug.Print("Cut," & t & "," & WegIst & "," & Weg(WegX))
+                WegX += 2
+                Return True
 
             Else
 
                 'No correction
                 WegX += 1
+                Return False
 
             End If
+
         End If
 
-    End Sub
+        Return False
+
+    End Function
 
     Private Sub Duplicate(ByVal t As Integer)
 
-        lV0.Insert(t + 1, lV0ogl(t + 1))
+        lV0.Insert(t + 1, (WegV(t + 1) + WegV(t)) / 2)
+        WegV.Insert(t + 1, (WegV(t + 1) + WegV(t)) / 2)
+
+        'If t + 1 < MODdata.tDim Then
+        '    lV0.Insert(t + 1, (WegV(t + 1) + WegV(t + 2)) / 2)
+        '    WegV.Insert(t + 1, (WegV(t + 1) + WegV(t + 2)) / 2)
+        'Else
+        '    lV0.Insert(t + 1, WegV(t + 1))
+        '    WegV.Insert(t + 1, WegV(t + 1))
+        'End If
+
         lV0ogl.Insert(t + 1, lV0ogl(t + 1))
         lV.Insert(t, (lV0(t + 1) + lV0(t)) / 2)
         la.Insert(t, lV0(t + 1) - lV0(t))
@@ -311,6 +365,41 @@ Public Class cVh
         lGrad.Insert(t, lGrad(t))
         lGears.Insert(t, lGears(t))
         lPadd.Insert(t, lPadd(t))
+        EcoRoll.Insert(t, EcoRoll(t))
+
+        If DRI.VairVorg Then
+            lVairVres.Insert(t, lVairVres(t))
+            lVairBeta.Insert(t, lVairBeta(t))
+        End If
+
+        MODdata.Duplicate(t)
+
+        If PHEMmode = tPHEMmode.ModeADVANCE Then
+            ADV.aWorldX.Insert(t, ADV.aWorldX(t))
+            ADV.aWorldY.Insert(t, ADV.aWorldY(t))
+            ADV.aStrId.Insert(t, ADV.aStrId(t))
+        End If
+
+
+    End Sub
+
+    Public Sub DuplicatePreRun(ByVal t As Integer)
+
+        lV0.Insert(t, lV0(t))
+
+        lV0ogl.Insert(t, lV0ogl(t))
+        lV.Insert(t, (lV0(t + 1) + lV0(t)) / 2)
+        la.Insert(t, lV0(t + 1) - lV0(t))
+
+        If t > 0 Then
+            lV(t - 1) = (lV0(t) + lV0(t - 1)) / 2
+            la(t - 1) = lV0(t) - lV0(t - 1)
+        End If
+
+        lGrad.Insert(t, lGrad(t))
+        lGears.Insert(t, lGears(t))
+        lPadd.Insert(t, lPadd(t))
+        EcoRoll.Insert(t, EcoRoll(t))
 
         If DRI.VairVorg Then
             lVairVres.Insert(t, lVairVres(t))
@@ -332,6 +421,7 @@ Public Class cVh
 
         lV0.RemoveAt(t + 1)
         lV0ogl.RemoveAt(t + 1)
+        WegV.RemoveAt(t + 1)
         lV.RemoveAt(t)
         la.RemoveAt(t)
 
@@ -348,6 +438,7 @@ Public Class cVh
         lGrad.RemoveAt(t)
         lGears.RemoveAt(t)
         lPadd.RemoveAt(t)
+        EcoRoll.RemoveAt(t)
 
         If DRI.VairVorg Then
             lVairVres.RemoveAt(t)

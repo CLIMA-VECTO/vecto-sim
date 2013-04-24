@@ -40,11 +40,15 @@ Public Class F_MAINForm
     Private Declare Function SetThreadExecutionState Lib "kernel32" (ByVal esFlags As Long) As Long
 
     Private Sub AllowSleepOFF()
+#If Not PLATFORM = "x86" Then
         SetThreadExecutionState(tEXECUTION_STATE.ES_CONTINUOUS Or tEXECUTION_STATE.ES_SYSTEM_REQUIRED)
+#End If
     End Sub
 
     Private Sub AllowSleepON()
-        SetThreadExecutionState(tEXECUTION_STATE.ES_CONTINUOUS)
+#If Not PLATFORM = "x86" Then
+         SetThreadExecutionState(tEXECUTION_STATE.ES_CONTINUOUS)
+#End If
     End Sub
 
     Private Enum tEXECUTION_STATE As Integer
@@ -1316,6 +1320,17 @@ lbFound:
         End If
     End Sub
 
+    Private Sub GRAPHiToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles GRAPHiToolStripMenuItem.Click
+        Dim PSI As New ProcessStartInfo
+        Dim fileStr As String = ""
+        PSI.FileName = ChrW(34) & MyAppPath & "GRAPHi\GRAPHi.exe" & ChrW(34)
+        Try
+            Process.Start(PSI)
+        Catch ex As Exception
+            MsgBox("Failed to open GRAPHi!", MsgBoxStyle.Critical)
+        End Try
+    End Sub
+
 
     Private Sub CreateTEMFileToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles CreateTEMFileToolStripMenuItem.Click
         F_TEM_Creator.Show()
@@ -2124,7 +2139,7 @@ lbFound:
 
         If Link <> "" Then
 
-            If ID = tMsgID.Normal Then lv0.ForeColor = Color.Blue
+            lv0.ForeColor = Color.Blue
             lv0.SubItems(0).Font = New Font(Me.LvMsg.Font, FontStyle.Underline)
             lv0.Tag = Link
 
@@ -2202,5 +2217,6 @@ lbFound:
     End Sub
 
 #End Region
+   
    
 End Class

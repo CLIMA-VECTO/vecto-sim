@@ -13,10 +13,11 @@ Public Class cDEV
     Public TCnUstep As Single
     Public TCnUstepMin As Single
 
-    Public OverSpeedOn As Boolean
-    Public OverSpeed As Single
-    Public UnderSpeed As Single
-    Public EcoRollOn As Boolean
+    Public SpeedPeEps As Single
+    Public PreRun As Boolean
+    Public IgnoreFCextrapol As Boolean
+
+
 
     '**************************************************************************************************************
     '**************************************************************************************************************
@@ -141,22 +142,17 @@ Public Class cDEV
         MyOptions.Add("TCnUstepMin", Conf0)
 
 
-        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "OverSpeed", False)
+        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "Epsilon for Iteration Abort Criterion: eps >= |Pdrag - Pe| / VEH.Pnenn [-]")
+        Conf0.SingleVal = 0.0001
+        MyOptions.Add("SpeedPeEps", Conf0)
+
+        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "PreRun", False)
+        Conf0.BoolVal = True
+        MyOptions.Add("PreRun", Conf0)
+
+        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Don't abort calculation if extrapolation in FC map. FC output is not valid!!", False)
         Conf0.BoolVal = False
-        MyOptions.Add("OverSpeedOn", Conf0)
-
-        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "EcoRoll", False)
-        Conf0.BoolVal = False
-        MyOptions.Add("EcoRollOn", Conf0)
-
-        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "OverSpeed [km/h]")
-        Conf0.SingleVal = 10
-        MyOptions.Add("OverSpeed", Conf0)
-
-        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "UnderSpeed [km/h]")
-        Conf0.SingleVal = 10
-        MyOptions.Add("UnderSpeed", Conf0)
-
+        MyOptions.Add("IgnoreFCextrapol", Conf0)
 
         '**************************** END: Parameters Configuration '*****************************
         '*****************************************************************************************
@@ -173,10 +169,11 @@ Public Class cDEV
         TCnUstep = MyOptions("TCnUstep").SingleVal
         TCnUstepMin = MyOptions("TCnUstepMin").SingleVal
 
-        OverSpeedOn = MyOptions("OverSpeedOn").BoolVal
-        OverSpeed = MyOptions("EcoRollOn").BoolVal
-        UnderSpeed = MyOptions("OverSpeed").SingleVal
-        EcoRollOn = MyOptions("UnderSpeed").SingleVal
+        SpeedPeEps = MyOptions("SpeedPeEps").SingleVal
+
+        PreRun = MyOptions("PreRun").BoolVal
+        IgnoreFCextrapol = MyOptions("IgnoreFCextrapol").BoolVal
+
     End Sub
 
     'Demo for Delegate Function

@@ -466,7 +466,7 @@ Public Class cMAP
             Loop
         Catch ex As Exception
 
-            WorkerMsg(tMsgID.Err, "Error during file input! Line number " & iMapDim + 1 & " (" & sFilePath & ")", MsgSrc)
+            WorkerMsg(tMsgID.Err, "Error during file input! Line number " & iMapDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
             GoTo lbEr
 
         End Try
@@ -951,7 +951,7 @@ lbEr:
             Return FuelMap.Intpol(nnorm, Pnorm)
         Catch ex As Exception
             WorkerMsg(tMsgID.Err, "Cannot extrapolate FC map! n= " & nnormTonU(nnorm).ToString("0") & " [U/min], Me= " & PnormToM(nnorm, Pnorm).ToString("0.0") & " [Nm]", "MAP/FC_Intp")
-            Return -1000
+            Return -10000
         End Try
     End Function
 

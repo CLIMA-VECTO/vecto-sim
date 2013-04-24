@@ -48,17 +48,17 @@ Public Class cDelaunayMap
 
 
 
-#If DEBUG Then
-        Dim i As Int16
-        Debug.Print("#,x1,y1,z1,x2,y2,z2")
-        i = -1
-        For Each tr In lDT
-            i += 1
-            Debug.Print(i & "," & tr.P1.X & "," & tr.P1.Y & "," & tr.P1.Z & "," & tr.P2.X & "," & tr.P2.Y & "," & tr.P2.Z)
-            Debug.Print(i & "," & tr.P3.X & "," & tr.P3.Y & "," & tr.P3.Z & "," & tr.P2.X & "," & tr.P2.Y & "," & tr.P2.Z)
-            Debug.Print(i & "," & tr.P1.X & "," & tr.P1.Y & "," & tr.P1.Z & "," & tr.P3.X & "," & tr.P3.Y & "," & tr.P3.Z)
-        Next
-#End If
+        '#If DEBUG Then
+        '        Dim i As Int16
+        '        Debug.Print("#,x1,y1,z1,x2,y2,z2")
+        '        i = -1
+        '        For Each tr In lDT
+        '            i += 1
+        '            Debug.Print(i & "," & tr.P1.X & "," & tr.P1.Y & "," & tr.P1.Z & "," & tr.P2.X & "," & tr.P2.Y & "," & tr.P2.Z)
+        '            Debug.Print(i & "," & tr.P3.X & "," & tr.P3.Y & "," & tr.P3.Z & "," & tr.P2.X & "," & tr.P2.Y & "," & tr.P2.Z)
+        '            Debug.Print(i & "," & tr.P1.X & "," & tr.P1.Y & "," & tr.P1.Z & "," & tr.P3.X & "," & tr.P3.Y & "," & tr.P3.Z)
+        '        Next
+        '#End If
 
 
 
@@ -104,9 +104,9 @@ Public Class cDelaunayMap
 
         'ERROR: Extrapolation
 
-#If DEBUG Then
-        Debug.Print(x & "," & y)
-#End If
+        '#If DEBUG Then
+        '        Debug.Print(x & "," & y)
+        '#End If
 
         Throw New ArgumentException("Extrapolation not possible!")
 

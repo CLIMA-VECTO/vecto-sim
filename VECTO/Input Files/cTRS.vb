@@ -124,7 +124,7 @@
 
         Catch ex As Exception
 
-            WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & l & " (" & sFilePath & ")", MsgSrc)
+            WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & l & " (" & sFilePath & ")", MsgSrc, sFilePath)
             GoTo lbEr
 
         End Try

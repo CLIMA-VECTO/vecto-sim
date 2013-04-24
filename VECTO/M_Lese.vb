@@ -28,7 +28,7 @@ Module M_Lese
                 Return False
             End If
         Catch ex As Exception
-            WorkerMsg(tMsgID.Err, "File read error! (" & GenFile & ")", MsgSrc)
+            WorkerMsg(tMsgID.Err, "File read error! (" & GenFile & ")", MsgSrc, GenFile)
             Return False
         End Try
 
@@ -56,7 +56,7 @@ Module M_Lese
             Try
                 If Not VEH.ReadFile Then Return False
             Catch ex As Exception
-                WorkerMsg(tMsgID.Err, "File read error! (" & GEN.PathVEH & ")", MsgSrc)
+                WorkerMsg(tMsgID.Err, "File read error! (" & GEN.PathVEH & ")", MsgSrc, GEN.PathVEH)
                 Return False
             End Try
 
@@ -72,7 +72,7 @@ Module M_Lese
         Try
             If Not ENG.ReadFile Then Return False
         Catch ex As Exception
-            WorkerMsg(tMsgID.Err, "File read error! (" & GEN.PathENG & ")", MsgSrc)
+            WorkerMsg(tMsgID.Err, "File read error! (" & GEN.PathENG & ")", MsgSrc, GEN.PathENG)
             Return False
         End Try
 
@@ -85,7 +85,7 @@ Module M_Lese
             Try
                 If Not GBX.ReadFile Then Return False
             Catch ex As Exception
-                WorkerMsg(tMsgID.Err, "File read error! (" & GEN.PathGBX & ")", MsgSrc)
+                WorkerMsg(tMsgID.Err, "File read error! (" & GEN.PathGBX & ")", MsgSrc, GEN.PathGBX)
                 Return False
             End Try
         End If
@@ -137,7 +137,7 @@ Module M_Lese
         Try
             If Not FLD.ReadFile Then Return False 'Fehlermeldung hier nicht notwendig weil schon von in ReadFile
         Catch ex As Exception
-            WorkerMsg(tMsgID.Err, "File read error! (" & ENG.PathFLD & ")", MsgSrc)
+            WorkerMsg(tMsgID.Err, "File read error! (" & ENG.PathFLD & ")", MsgSrc, ENG.PathFLD)
             Return False
         End Try
 
@@ -158,7 +158,7 @@ Module M_Lese
             Try
                 If Not MAP.ReadFile Then Return False 'Fehlermeldung hier nicht notwendig weil schon von in ReadFile
             Catch ex As Exception
-                WorkerMsg(tMsgID.Err, "File read error! (" & ENG.PathMAP & ")", MsgSrc)
+                WorkerMsg(tMsgID.Err, "File read error! (" & ENG.PathMAP & ")", MsgSrc, ENG.PathMAP)
                 Return False
             End Try
 
@@ -184,7 +184,7 @@ Module M_Lese
             Try
                 If Not TRS.ReadFile Then Return False
             Catch ex As Exception
-                WorkerMsg(tMsgID.Err, "File read error! (" & GEN.dynspez & ")", MsgSrc)
+                WorkerMsg(tMsgID.Err, "File read error! (" & GEN.dynspez & ")", MsgSrc, GEN.dynspez)
                 Return False
             End Try
 

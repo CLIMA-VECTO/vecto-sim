@@ -1,8 +1,11 @@
 VECTO ?.? (future release)
-- Eco-Roll & Over-/Under-Speed
 - Gearbox Rules must be set when loading .gbx file to aviod invalid settings (e.g. AT with Skip Gears)
 
-VECTO 1.2 x (current source - next release)
+VECTO 1.3 (current source - next release)
+- Some file-specific error messages link to files
+- Eco-Roll, Overspeed, Look Ahead Coasting
+
+
 
 VECTO 1.2
 - Bugfix: When opening the Gearbox Editor the Gear Shift Settings (e.g. Skip Gears) were not valid for MT
@@ -18,7 +21,7 @@ VECTO 1.1 beta 3
 - Transmission Type selection in Gearbox (.vgbx) file.
 	- Enables/Disables transmission type-specific options 
 	- In Proof-Of-Concept mode "Custom" type is available with all options enabled.
-- Automatic Transmission mode with Torque converter: Input parameters in Gearbox file !!still being tested!!
+- Automatic Transmission mode with Torque Converter: Input parameters in Gearbox file !!still being tested!!
 - Option to open files with GRAPHi or user-defined tool
 - User Manual updated
 - Bugfix: Files with relative paths were not located correctly
