@@ -110,10 +110,14 @@ Partial Class F_GEN
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPgDriver = New System.Windows.Forms.TabPage()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.PnLookAhead = New System.Windows.Forms.Panel()
+        Me.Label29 = New System.Windows.Forms.Label()
         Me.Label25 = New System.Windows.Forms.Label()
-        Me.CbLookAhead = New System.Windows.Forms.CheckBox()
         Me.TbAlookahead = New System.Windows.Forms.TextBox()
         Me.Label24 = New System.Windows.Forms.Label()
+        Me.TbVminLA = New System.Windows.Forms.TextBox()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.CbLookAhead = New System.Windows.Forms.CheckBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label20 = New System.Windows.Forms.Label()
@@ -197,10 +201,6 @@ Partial Class F_GEN
         Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PnLookAhead = New System.Windows.Forms.Panel()
-        Me.Label28 = New System.Windows.Forms.Label()
-        Me.TbVminLA = New System.Windows.Forms.TextBox()
-        Me.Label29 = New System.Windows.Forms.Label()
         Me.TabPgHEV.SuspendLayout()
         Me.TabPgColdSt.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
@@ -210,6 +210,7 @@ Partial Class F_GEN
         Me.TabControl1.SuspendLayout()
         Me.TabPgDriver.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
+        Me.PnLookAhead.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.GrStartStop.SuspendLayout()
         Me.PnStartStop.SuspendLayout()
@@ -221,7 +222,6 @@ Partial Class F_GEN
         Me.ToolStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CmOpenFile.SuspendLayout()
-        Me.PnLookAhead.SuspendLayout()
         Me.SuspendLayout()
         '
         'ButOpenEXS
@@ -1137,9 +1137,31 @@ Partial Class F_GEN
         Me.GroupBox4.Location = New System.Drawing.Point(12, 331)
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Size = New System.Drawing.Size(375, 87)
-        Me.GroupBox4.TabIndex = 41
+        Me.GroupBox4.TabIndex = 5
         Me.GroupBox4.TabStop = False
         Me.GroupBox4.Text = "Look-Ahead Coasting"
+        '
+        'PnLookAhead
+        '
+        Me.PnLookAhead.Controls.Add(Me.Label29)
+        Me.PnLookAhead.Controls.Add(Me.Label25)
+        Me.PnLookAhead.Controls.Add(Me.TbAlookahead)
+        Me.PnLookAhead.Controls.Add(Me.Label24)
+        Me.PnLookAhead.Controls.Add(Me.TbVminLA)
+        Me.PnLookAhead.Controls.Add(Me.Label28)
+        Me.PnLookAhead.Location = New System.Drawing.Point(117, 10)
+        Me.PnLookAhead.Name = "PnLookAhead"
+        Me.PnLookAhead.Size = New System.Drawing.Size(252, 71)
+        Me.PnLookAhead.TabIndex = 1
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.Location = New System.Drawing.Point(197, 38)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(38, 13)
+        Me.Label29.TabIndex = 3
+        Me.Label29.Text = "[km/h]"
         '
         'Label25
         '
@@ -1149,6 +1171,38 @@ Partial Class F_GEN
         Me.Label25.Size = New System.Drawing.Size(34, 13)
         Me.Label25.TabIndex = 3
         Me.Label25.Text = "[m/s²]"
+        '
+        'TbAlookahead
+        '
+        Me.TbAlookahead.Location = New System.Drawing.Point(127, 9)
+        Me.TbAlookahead.Name = "TbAlookahead"
+        Me.TbAlookahead.Size = New System.Drawing.Size(64, 20)
+        Me.TbAlookahead.TabIndex = 0
+        '
+        'Label24
+        '
+        Me.Label24.AutoSize = True
+        Me.Label24.Location = New System.Drawing.Point(25, 12)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(96, 13)
+        Me.Label24.TabIndex = 1
+        Me.Label24.Text = "Target Retardation"
+        '
+        'TbVminLA
+        '
+        Me.TbVminLA.Location = New System.Drawing.Point(127, 35)
+        Me.TbVminLA.Name = "TbVminLA"
+        Me.TbVminLA.Size = New System.Drawing.Size(64, 20)
+        Me.TbVminLA.TabIndex = 1
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = True
+        Me.Label28.Location = New System.Drawing.Point(26, 38)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(95, 13)
+        Me.Label28.TabIndex = 1
+        Me.Label28.Text = "Min. Target Speed"
         '
         'CbLookAhead
         '
@@ -1161,22 +1215,6 @@ Partial Class F_GEN
         Me.CbLookAhead.TabIndex = 0
         Me.CbLookAhead.Text = "Enabled"
         Me.CbLookAhead.UseVisualStyleBackColor = True
-        '
-        'TbAlookahead
-        '
-        Me.TbAlookahead.Location = New System.Drawing.Point(127, 9)
-        Me.TbAlookahead.Name = "TbAlookahead"
-        Me.TbAlookahead.Size = New System.Drawing.Size(64, 20)
-        Me.TbAlookahead.TabIndex = 2
-        '
-        'Label24
-        '
-        Me.Label24.AutoSize = True
-        Me.Label24.Location = New System.Drawing.Point(25, 12)
-        Me.Label24.Name = "Label24"
-        Me.Label24.Size = New System.Drawing.Size(96, 13)
-        Me.Label24.TabIndex = 1
-        Me.Label24.Text = "Target Retardation"
         '
         'GroupBox1
         '
@@ -1195,7 +1233,7 @@ Partial Class F_GEN
         Me.GroupBox1.Location = New System.Drawing.Point(12, 192)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(372, 109)
-        Me.GroupBox1.TabIndex = 40
+        Me.GroupBox1.TabIndex = 4
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Overspeed / Eco-Roll"
         '
@@ -1231,21 +1269,21 @@ Partial Class F_GEN
         Me.TbVmin.Location = New System.Drawing.Point(244, 73)
         Me.TbVmin.Name = "TbVmin"
         Me.TbVmin.Size = New System.Drawing.Size(64, 20)
-        Me.TbVmin.TabIndex = 2
+        Me.TbVmin.TabIndex = 5
         '
         'TbUnderSpeed
         '
         Me.TbUnderSpeed.Location = New System.Drawing.Point(244, 47)
         Me.TbUnderSpeed.Name = "TbUnderSpeed"
         Me.TbUnderSpeed.Size = New System.Drawing.Size(64, 20)
-        Me.TbUnderSpeed.TabIndex = 2
+        Me.TbUnderSpeed.TabIndex = 4
         '
         'TbOverspeed
         '
         Me.TbOverspeed.Location = New System.Drawing.Point(244, 21)
         Me.TbOverspeed.Name = "TbOverspeed"
         Me.TbOverspeed.Size = New System.Drawing.Size(64, 20)
-        Me.TbOverspeed.TabIndex = 2
+        Me.TbOverspeed.TabIndex = 3
         '
         'Label23
         '
@@ -1281,7 +1319,7 @@ Partial Class F_GEN
         Me.RdEcoRoll.Location = New System.Drawing.Point(13, 68)
         Me.RdEcoRoll.Name = "RdEcoRoll"
         Me.RdEcoRoll.Size = New System.Drawing.Size(65, 17)
-        Me.RdEcoRoll.TabIndex = 0
+        Me.RdEcoRoll.TabIndex = 2
         Me.RdEcoRoll.TabStop = True
         Me.RdEcoRoll.Text = "Eco-Roll"
         Me.RdEcoRoll.UseVisualStyleBackColor = True
@@ -1292,7 +1330,7 @@ Partial Class F_GEN
         Me.RdOverspeed.Location = New System.Drawing.Point(13, 45)
         Me.RdOverspeed.Name = "RdOverspeed"
         Me.RdOverspeed.Size = New System.Drawing.Size(77, 17)
-        Me.RdOverspeed.TabIndex = 0
+        Me.RdOverspeed.TabIndex = 1
         Me.RdOverspeed.Text = "Overspeed"
         Me.RdOverspeed.UseVisualStyleBackColor = True
         '
@@ -1313,7 +1351,7 @@ Partial Class F_GEN
         Me.GrStartStop.Location = New System.Drawing.Point(9, 83)
         Me.GrStartStop.Name = "GrStartStop"
         Me.GrStartStop.Size = New System.Drawing.Size(375, 87)
-        Me.GrStartStop.TabIndex = 38
+        Me.GrStartStop.TabIndex = 3
         Me.GrStartStop.TabStop = False
         Me.GrStartStop.Text = "Engine Start Stop"
         '
@@ -1328,7 +1366,7 @@ Partial Class F_GEN
         Me.PnStartStop.Location = New System.Drawing.Point(148, 10)
         Me.PnStartStop.Name = "PnStartStop"
         Me.PnStartStop.Size = New System.Drawing.Size(221, 71)
-        Me.PnStartStop.TabIndex = 0
+        Me.PnStartStop.TabIndex = 1
         '
         'Label27
         '
@@ -1344,7 +1382,7 @@ Partial Class F_GEN
         Me.TBSSspeed.Location = New System.Drawing.Point(99, 9)
         Me.TBSSspeed.Name = "TBSSspeed"
         Me.TBSSspeed.Size = New System.Drawing.Size(64, 20)
-        Me.TBSSspeed.TabIndex = 34
+        Me.TBSSspeed.TabIndex = 0
         '
         'LabelSSspeed
         '
@@ -1378,7 +1416,7 @@ Partial Class F_GEN
         Me.TBSStime.Location = New System.Drawing.Point(99, 35)
         Me.TBSStime.Name = "TBSStime"
         Me.TBSStime.Size = New System.Drawing.Size(64, 20)
-        Me.TBSStime.TabIndex = 36
+        Me.TBSStime.TabIndex = 1
         '
         'ChBStartStop
         '
@@ -1388,7 +1426,7 @@ Partial Class F_GEN
         Me.ChBStartStop.Location = New System.Drawing.Point(16, 21)
         Me.ChBStartStop.Name = "ChBStartStop"
         Me.ChBStartStop.Size = New System.Drawing.Size(65, 17)
-        Me.ChBStartStop.TabIndex = 39
+        Me.ChBStartStop.TabIndex = 0
         Me.ChBStartStop.Text = "Enabled"
         Me.ChBStartStop.UseVisualStyleBackColor = True
         '
@@ -1398,7 +1436,7 @@ Partial Class F_GEN
         Me.BtAccOpen.Location = New System.Drawing.Point(617, 28)
         Me.BtAccOpen.Name = "BtAccOpen"
         Me.BtAccOpen.Size = New System.Drawing.Size(23, 23)
-        Me.BtAccOpen.TabIndex = 33
+        Me.BtAccOpen.TabIndex = 2
         Me.BtAccOpen.TabStop = False
         Me.BtAccOpen.UseVisualStyleBackColor = True
         '
@@ -1416,7 +1454,7 @@ Partial Class F_GEN
         Me.BtDesMaxBr.Location = New System.Drawing.Point(583, 29)
         Me.BtDesMaxBr.Name = "BtDesMaxBr"
         Me.BtDesMaxBr.Size = New System.Drawing.Size(28, 21)
-        Me.BtDesMaxBr.TabIndex = 31
+        Me.BtDesMaxBr.TabIndex = 1
         Me.BtDesMaxBr.Text = "..."
         Me.BtDesMaxBr.UseVisualStyleBackColor = True
         '
@@ -1425,7 +1463,7 @@ Partial Class F_GEN
         Me.TbDesMaxFile.Location = New System.Drawing.Point(6, 30)
         Me.TbDesMaxFile.Name = "TbDesMaxFile"
         Me.TbDesMaxFile.Size = New System.Drawing.Size(571, 20)
-        Me.TbDesMaxFile.TabIndex = 30
+        Me.TbDesMaxFile.TabIndex = 0
         '
         'TabPgKF
         '
@@ -1982,44 +2020,6 @@ Partial Class F_GEN
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
-        'PnLookAhead
-        '
-        Me.PnLookAhead.Controls.Add(Me.Label29)
-        Me.PnLookAhead.Controls.Add(Me.Label25)
-        Me.PnLookAhead.Controls.Add(Me.TbAlookahead)
-        Me.PnLookAhead.Controls.Add(Me.Label24)
-        Me.PnLookAhead.Controls.Add(Me.TbVminLA)
-        Me.PnLookAhead.Controls.Add(Me.Label28)
-        Me.PnLookAhead.Location = New System.Drawing.Point(117, 10)
-        Me.PnLookAhead.Name = "PnLookAhead"
-        Me.PnLookAhead.Size = New System.Drawing.Size(252, 71)
-        Me.PnLookAhead.TabIndex = 1
-        '
-        'Label28
-        '
-        Me.Label28.AutoSize = True
-        Me.Label28.Location = New System.Drawing.Point(26, 38)
-        Me.Label28.Name = "Label28"
-        Me.Label28.Size = New System.Drawing.Size(95, 13)
-        Me.Label28.TabIndex = 1
-        Me.Label28.Text = "Min. Target Speed"
-        '
-        'TbVminLA
-        '
-        Me.TbVminLA.Location = New System.Drawing.Point(127, 35)
-        Me.TbVminLA.Name = "TbVminLA"
-        Me.TbVminLA.Size = New System.Drawing.Size(64, 20)
-        Me.TbVminLA.TabIndex = 2
-        '
-        'Label29
-        '
-        Me.Label29.AutoSize = True
-        Me.Label29.Location = New System.Drawing.Point(197, 38)
-        Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(38, 13)
-        Me.Label29.TabIndex = 3
-        Me.Label29.Text = "[km/h]"
-        '
         'F_GEN
         '
         Me.AcceptButton = Me.ButOK
@@ -2056,6 +2056,8 @@ Partial Class F_GEN
         Me.TabPgDriver.PerformLayout()
         Me.GroupBox4.ResumeLayout(False)
         Me.GroupBox4.PerformLayout()
+        Me.PnLookAhead.ResumeLayout(False)
+        Me.PnLookAhead.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         Me.GrStartStop.ResumeLayout(False)
@@ -2075,8 +2077,6 @@ Partial Class F_GEN
         Me.ToolStrip1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CmOpenFile.ResumeLayout(False)
-        Me.PnLookAhead.ResumeLayout(False)
-        Me.PnLookAhead.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

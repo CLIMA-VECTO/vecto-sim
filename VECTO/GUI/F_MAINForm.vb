@@ -2007,6 +2007,12 @@ lbFound:
             LV0.SubItems.Add(Config0.Value.Description)
             LV0.SubItems.Add(Config0.Value.TypeString)
             LV0.SubItems.Add("")
+            LV0.SubItems.Add(Config0.Value.ValTextDef)
+            If Config0.Value.SaveInFile Then
+                LV0.SubItems.Add("True")
+            Else
+                LV0.SubItems.Add("False")
+            End If
             LV0.Tag = Config0.Key
 
             If Not Config0.Value.Enabled Then
@@ -2162,9 +2168,22 @@ lbFound:
 
     'If it is a Link => Open it
     Private Sub LvMsg_MouseClick(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvMsg.MouseClick
+        Dim txt As String
         If Me.LvMsg.SelectedIndices.Count > 0 Then
             If Not Me.LvMsg.SelectedItems(0).Tag Is Nothing Then
-                OpenFiles(CStr(Me.LvMsg.SelectedItems(0).Tag))
+                If Len(CStr(Me.LvMsg.SelectedItems(0).Tag)) > 4 AndAlso Microsoft.VisualBasic.Left(CStr(Me.LvMsg.SelectedItems(0).Tag), 4) = "<UM>" Then
+                    txt = CStr(Me.LvMsg.SelectedItems(0).Tag).Replace("<UM>", MyAppPath & "User Manual")
+                    txt = txt.Replace(" ", "%20")
+                    txt = txt.Replace("\", "/")
+                    txt = "file:///" & txt
+                    Try
+                        System.Diagnostics.Process.Start(txt)
+                    Catch ex As Exception
+                        MsgBox("Cannot open link! (-_-;)")
+                    End Try
+                Else
+                    OpenFiles(CStr(Me.LvMsg.SelectedItems(0).Tag))
+                End If
             End If
         End If
     End Sub
@@ -2173,7 +2192,7 @@ lbFound:
     Private Sub LvMsg_MouseMove(sender As Object, e As System.Windows.Forms.MouseEventArgs) Handles LvMsg.MouseMove
         Dim lv0 As ListViewItem
         lv0 = Me.LvMsg.GetItemAt(e.Location.X, e.Location.Y)
-        If Not lv0 Is Nothing AndAlso lv0.Tag Is Nothing Then
+        If lv0 Is Nothing OrElse lv0.Tag Is Nothing Then
             LvMsg.Cursor = Cursors.Arrow
         Else
             LvMsg.Cursor = Cursors.Hand

@@ -2,7 +2,7 @@
 <html><head>
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>VECTO Editor Driver Tab - VECTO User Manual</title></head>
 <body>
-<map name="linkmap"><area shape="rect" coords="11,142,110,164&quot;" href="VECTO-Editor.html"><area shape="rect" coords="20,196,680,218&quot;" href="#vacc"></map>
+<map name="linkmap"><area shape="rect" coords="11,142,110,164&quot;" href="VECTO-Editor.html"><area shape="rect" coords="20,196,680,218&quot;" href="#vacc"><area shape="rect" coords="19,248,414,340&quot;" href="#startstop"><area shape="rect" coords="19,365,414,484&quot;" href="#eco"><area shape="rect" coords="19,505,415,602&quot;" href="#look"></map>
 <table style="width: 100%; height: 54px; text-align: left; margin-left: auto; margin-right: auto;" border="0" cellpadding="2" cellspacing="2">
 <tbody>
 <tr>
@@ -25,7 +25,7 @@ Manual</span></a><span style="color: rgb(0, 0, 0); font-family: 'Times New Roman
 <div style="text-align: left;"><span style="font-family: Verdana;"></span><span style="font-weight: bold;"><a name="vacc"></a>Max.
 acceleration and brake curves&nbsp;</span>(.vacc Input File)<br>
 <div style="margin-left: 40px;">Limits vehicle
-acceleration and deceleration depending on vehicle speed.<br>
+acceleration and deceleration depending on vehicle speed. If <a href="#look">Look-Ahead Coasting</a> is enabled then the deceleration is applied in the brake phase.<br>
 <span style="font-weight: bold;"><br>
 Input File Format</span>
 (comma-separated, dot = decimal-mark):<br>
@@ -60,10 +60,27 @@ deceleration</th>
 <div style="margin-left: 40px;"><span style="font-weight: bold; font-style: italic; color: rgb(51, 102, 255);">Note:</span><span style="font-style: italic; color: rgb(51, 102, 255);"> text
 lines (header, comments,
 etc.) </span><span style="text-decoration: underline; font-style: italic; color: rgb(51, 102, 255);">must</span><span style="font-style: italic; color: rgb(51, 102, 255);"> start
-with "<span style="font-weight: bold;">c</span> "</span><br><br><img style="width: 28px; height: 21px;" alt="" src="../pics/misc/browse.png"> <span style="font-weight: bold;">Open file browser</span>.<br><br><img style="width: 22px; height: 22px;" alt="" src="../pics/misc/OpenFile.PNG"> <span style="font-weight: bold;">Open file</span> with GRAPHi or an user-defined tool (see <a href="settings.html#opencmd">File Open Command)</a>.<br>
-</div>
+with "<span style="font-weight: bold;">c</span> "</span><br>
 <br>
-<span style="font-weight: bold;"><br></span><div style="margin-left: 40px;"><br>
+<img style="width: 28px; height: 21px;" alt="" src="../pics/misc/browse.png"> <span style="font-weight: bold;">Open file browser</span>.<br>
+<br>
+<img style="width: 22px; height: 22px;" alt="" src="../pics/misc/OpenFile.PNG"> <span style="font-weight: bold;">Open file</span> with
+<a href="../../GRAPHi/documentation/HTML%20Manual/mainwindow.html">GRAPHi</a> or an user-defined tool (see <a href="settings.html#opencmd">File
+Open Command)</a>.<br>
+</div>
+<br><br>
+<span style="font-weight: bold;"><a name="startstop"></a>Engine Start/Stop<br></span><div style="margin-left: 40px;">If enabled the engine will be turned off if:<br><ul><li>Power demand (without Aux) &#8804; 0</li><li>Vehicle speed is below <span style="font-weight: bold;">Max Speed [km/h] </span></li><li>Engine was running for at least <span style="font-weight: bold;">Min ICE-On Time [s]</span></li></ul><span style="font-weight: bold;"><span style="color: red;">Note:
+Currently there is not method defined to compensate invalid auxiliary
+cycle work when Engine Start/Stop is enabled, i.e. if enabled the total
+auxiliary work is less than without Start/Stop</span><br></span><br><span style="font-weight: bold;"></span></div><span style="font-weight: bold;"><br><br><a name="eco"></a>Overspeed / Eco-Roll</span><span style="font-weight: bold;"><br><br></span><div style="margin-left: 40px;"><span style="font-weight: bold;">Overspeed</span><br></div><div style="margin-left: 80px;">If Pwheel &lt; 0: Coasting with brakes not applied for speed &lt; target speed + allowed overspeed<br>Parameters:<br><ul><li><span style="font-weight: bold;">Minimum Target Speed</span></li><li><span style="font-weight: bold;">Allowed Overspeed</span></li></ul><span style="font-weight: bold;"><img style="width: 700px; height: 597px;" alt="" src="pics/Overspeed.png"><br></span><br><span style="font-weight: bold;"></span></div><div style="margin-left: 40px;"><span style="font-weight: bold;"></span><span style="font-weight: bold;"></span><br><span style="font-weight: bold;">Eco-Roll</span><br><span style="font-weight: bold;"></span></div><div style="margin-left: 80px;">If
+P<sub>wheel</sub> &lt; 0: Neutral gear, engine idling. Engine- and service- brake
+if target speed + allowed overspeed is reached. Normal driving if
+target speed + allowed underspeed is reached.<br>Parameters:<br></div><ul style="margin-left: 80px;"><li><span style="font-weight: bold;">Minimum Target Speed</span></li><li><span style="font-weight: bold;">Allowed Overspeed</span></li><li><span style="font-weight: bold;">Allowed Underspeed</span></li></ul><div style="margin-left: 40px;"><div style="margin-left: 40px;"><span style="font-weight: bold;"><img style="width: 700px; height: 657px;" alt="" src="pics/Eco-Roll.png"></span><br></div><span style="font-weight: bold;"></span></div><br><span style="font-weight: bold;"><br></span><span style="font-weight: bold;"><br><br><a name="look"></a>Look-Ahead Coasting<br></span><div style="margin-left: 40px;">Enables
+coasting before each braking phase. Coasting will begin at T seconds
+before new lower target speed (see picture below). Braking deceleration
+is defined by the <a href="#vacc">.vacc file</a>.<br>Parameters:<br><ul><li><span style="font-weight: bold;">Target Retardation</span> =&nbsp;<span style="font-size: 12pt; font-family: Arial; color: black;">a</span><sub><span style="font-size: 12pt; font-family: Arial; color: black; vertical-align: sub;">lookahead</span></sub></li><li><span style="font-weight: bold;">Minimum Target Speed</span></li></ul><span style="font-weight: bold;"><img style="width: 775px; height: 499px;" alt="" src="pics/Look-Ahead.png"><br></span><br><span style="font-weight: bold;"></span></div><span style="font-weight: bold;"><br><br><br><br><br>
+</span>
+<div style="margin-left: 40px;"><br>
 <br>
 <br>
 <table style="text-align: left; width: 100%; height: 1200px;" border="0" cellpadding="2" cellspacing="2">

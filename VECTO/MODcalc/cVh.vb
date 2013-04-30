@@ -17,10 +17,12 @@ Public Class cVh
     Private la As List(Of Single)
 
     'WegKor |@@| Route(Weg)Correct
-    Private WegIst As Double
+    Private dWegIst As Double
     Public Weg As List(Of Double)
     Private WegX As Integer
     Private WegV As List(Of Single)
+
+    Public NoDistCorr As List(Of Boolean)
 
 
     Public Sub Init()
@@ -35,6 +37,7 @@ Public Class cVh
         lVairVres = New List(Of Single)
         lVairBeta = New List(Of Single)
         EcoRoll = New List(Of Boolean)
+        NoDistCorr = New List(Of Boolean)
     End Sub
 
     Public Sub CleanUp()
@@ -49,6 +52,7 @@ Public Class cVh
         lVairVres = Nothing
         lVairBeta = Nothing
         EcoRoll = Nothing
+        NoDistCorr = Nothing
     End Sub
 
     Public Sub VehCylceInit()
@@ -152,6 +156,7 @@ Public Class cVh
 
         For s = 0 To MODdata.tDim
             EcoRoll.Add(False)
+            NoDistCorr.Add(False)
         Next
 
 
@@ -263,7 +268,33 @@ Public Class cVh
         End If
     End Sub
 
-    Public Sub SetAcc(ByVal t As Integer, ByVal a As Single)
+
+
+    Public Sub SetMaxAcc(ByVal t As Integer)
+        Dim a As Single
+        Dim v As Single
+        Dim v0plus As Single
+        Dim a0 As Single
+
+        v0plus = lV0(t + 1)
+
+        v = (v0plus + lV0(t)) / 2
+        a0 = GEN.aDesMax(v)
+
+        v0plus = lV0(t) + a
+        v = (v0plus + lV0(t)) / 2
+        a = GEN.aDesMax(v)
+
+        Do While Math.Abs(a - a0) > 0.0001
+
+            a0 = a
+
+            v0plus = lV0(t) + a
+            v = (v0plus + lV0(t)) / 2
+            a = GEN.aDesMax(v)
+
+        Loop
+
         la(t) = a
         lV0(t + 1) = lV0(t) + a
         lV(t) = (lV0(t + 1) + lV0(t)) / 2
@@ -274,7 +305,31 @@ Public Class cVh
     End Sub
 
 
-    Public Sub SetAccBackw(ByVal t As Integer, ByVal a As Single)
+    Public Sub SetMinAccBackw(ByVal t As Integer)
+        Dim a As Single
+        Dim v As Single
+        Dim v0 As Single
+        Dim a0 As Single
+
+        v0 = lV0(t)
+
+        v = (lV0(t + 1) + v0) / 2
+        a0 = GEN.aDesMin(v)
+
+        v0 = lV0(t + 1) - a
+        v = (lV0(t + 1) + v0) / 2
+        a = GEN.aDesMin(v)
+
+        Do While Math.Abs(a - a0) > 0.0001
+
+            a0 = a
+
+            v0 = lV0(t + 1) - a
+            v = (lV0(t + 1) + v0) / 2
+            a = GEN.aDesMin(v)
+
+        Loop
+
         la(t) = a
         lV0(t) = lV0(t + 1) - a
         lV(t) = (lV0(t + 1) + lV0(t)) / 2
@@ -288,7 +343,7 @@ Public Class cVh
         Dim i As Int16
 
         WegX = 0
-        WegIst = 0
+        dWegIst = 0
 
         WegV = New List(Of Single)
 
@@ -305,24 +360,26 @@ Public Class cVh
 
         v = lV(t)
 
-        WegIst += v
+        dWegIst += v
 
         If WegX < MODdata.tDimOgl Then
 
             'If repeating of current time-step is closer to the target distance => Repeat time-step
-            If (Math.Abs(WegIst + Vsoll(t) - Weg(WegX)) < Math.Abs(WegIst - Weg(WegX))) And v > 1 Then
+            If Not NoDistCorr(t) AndAlso (Math.Abs(dWegIst + Vsoll(t) - Weg(WegX)) < Math.Abs(dWegIst - Weg(WegX))) And v > 1 Then
 
                 Duplicate(t + 1)
                 MODdata.tDim += 1
                 'Debug.Print("Duplicate," & t & "," & WegIst & "," & Weg(WegX))
+                NoDistCorr(t + 1) = True
                 Return True
 
                 'If deleting the next time-step is closer to target distance => Delete Next Time-step
-            ElseIf WegX < MODdata.tDimOgl - 1 AndAlso t < MODdata.tDim - 1 AndAlso Math.Abs(WegIst - Weg(WegX + 1)) <= Math.Abs(WegIst - Weg(WegX)) AndAlso v > 1 Then
+            ElseIf Not NoDistCorr(t) AndAlso WegX < MODdata.tDimOgl - 1 AndAlso t < MODdata.tDim - 1 AndAlso Math.Abs(dWegIst - Weg(WegX + 1)) <= Math.Abs(dWegIst - Weg(WegX)) AndAlso v > 1 Then
 
                 Cut(t + 1)
                 MODdata.tDim -= 1
                 'Debug.Print("Cut," & t & "," & WegIst & "," & Weg(WegX))
+                NoDistCorr(t + 1) = True
                 WegX += 2
                 Return True
 
@@ -366,6 +423,7 @@ Public Class cVh
         lGears.Insert(t, lGears(t))
         lPadd.Insert(t, lPadd(t))
         EcoRoll.Insert(t, EcoRoll(t))
+        NoDistCorr.Insert(t, NoDistCorr(t))
 
         If DRI.VairVorg Then
             lVairVres.Insert(t, lVairVres(t))
@@ -400,6 +458,7 @@ Public Class cVh
         lGears.Insert(t, lGears(t))
         lPadd.Insert(t, lPadd(t))
         EcoRoll.Insert(t, EcoRoll(t))
+        NoDistCorr.Insert(t, NoDistCorr(t))
 
         If DRI.VairVorg Then
             lVairVres.Insert(t, lVairVres(t))
@@ -439,6 +498,7 @@ Public Class cVh
         lGears.RemoveAt(t)
         lPadd.RemoveAt(t)
         EcoRoll.RemoveAt(t)
+        NoDistCorr.RemoveAt(t)
 
         If DRI.VairVorg Then
             lVairVres.RemoveAt(t)
@@ -508,5 +568,18 @@ Public Class cVh
             Return lVairBeta(t)
         End Get
     End Property
+
+    Public ReadOnly Property WegIst As Double
+        Get
+            Return dWegIst
+        End Get
+    End Property
+
+    Public ReadOnly Property WegSoll As Double
+        Get
+            Return Weg(WegX)
+        End Get
+    End Property
+
 
 End Class

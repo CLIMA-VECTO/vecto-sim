@@ -94,13 +94,25 @@ Public Class cDelaunayMap
 
         j = -1
 
+        'Try exact solution for IsInside()
         For Each tr In lDT
             j += 1
-            If IsInside(tr, x, y) Then
+            If IsInside(tr, x, y, True) Then
                 l0 = planes(j)
                 Return (l0(3) - x * l0(0) - y * l0(1)) / l0(2)
             End If
         Next
+
+        'Try approx. solution (fixes rounding errors when points lies exactly on an edge of a triangle)
+        For Each tr In lDT
+            j += 1
+            If IsInside(tr, x, y, False) Then
+                l0 = planes(j)
+                Return (l0(3) - x * l0(0) - y * l0(1)) / l0(2)
+            End If
+        Next
+
+
 
         'ERROR: Extrapolation
 
@@ -125,9 +137,19 @@ Public Class cDelaunayMap
 
             j = -1
 
+            'Try exact solution for IsInside()
             For Each tr In lDTXZ
                 j += 1
-                If IsInside(tr, x, z) Then
+                If IsInside(tr, x, z, True) Then
+                    l0 = planesXZ(j)
+                    Return (l0(3) - x * l0(0) - z * l0(1)) / l0(2)
+                End If
+            Next
+
+            'Try approx. solution (fixes rounding errors when points lies exactly on an edge of a triangle)
+            For Each tr In lDTXZ
+                j += 1
+                If IsInside(tr, x, z, False) Then
                     l0 = planesXZ(j)
                     Return (l0(3) - x * l0(0) - z * l0(1)) / l0(2)
                 End If
@@ -174,7 +196,7 @@ Public Class cDelaunayMap
 
     End Function
 
-    Private Function IsInside(ByRef tr As dTriangle, ByVal xges As Double, ByVal yges As Double) As Boolean
+    Private Function IsInside(ByRef tr As dTriangle, ByVal xges As Double, ByVal yges As Double, ByVal Exact As Boolean) As Boolean
         Dim v0(1) As Double
         Dim v1(1) As Double
         Dim v2(1) As Double
@@ -219,7 +241,11 @@ Public Class cDelaunayMap
         v = (dot00 * dot12 - dot01 * dot02) * invDenom
 
         ' Check if point is in triangle
-        Return (u >= -0.000001) And (v >= -0.000001) And (u + v <= 1.000001)
+        If Exact Then
+            Return (u >= 0) And (v >= 0) And (u + v <= 1)
+        Else
+            Return (u >= -0.000001) And (v >= -0.000001) And (u + v <= 1.000001)
+        End If
 
     End Function
 

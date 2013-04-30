@@ -262,9 +262,9 @@ Partial Class F_Options
         Me.Label3.AutoSize = True
         Me.Label3.Location = New System.Drawing.Point(130, 22)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(48, 13)
+        Me.Label3.Size = New System.Drawing.Size(41, 13)
         Me.Label3.TabIndex = 16
-        Me.Label3.Text = "[kg/mÂ³]"
+        Me.Label3.Text = "[kg/m²]"
         '
         'TbCO2toFC
         '

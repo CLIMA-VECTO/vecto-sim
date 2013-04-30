@@ -647,7 +647,7 @@ lb10:
                 LookAheadDone = False
 
                 adec = GEN.aDesMin(Vist)
-                If Vh.a(i) < adec Then Vh.SetAccBackw(i, adec)
+                If Vh.a(i) < adec Then Vh.SetMinAccBackw(i)
 
                 i0 = i
 
@@ -658,7 +658,7 @@ lb10:
                     adec = GEN.aDesMin(Vist)
 
                     If aist < adec Then
-                        Vh.SetAccBackw(i, adec)
+                        Vh.SetMinAccBackw(i)
                         Positions(i) = 2
                     Else
                         'Coasting (Forward)
@@ -672,6 +672,7 @@ lb10:
                                     'If Vrollout < Vist Then
                                     Vh.SetSpeed(j, vCoasting)
                                     Positions(j) = 3
+                                    Vh.NoDistCorr(j) = True
                                 Else
                                     Exit For
                                 End If
@@ -784,6 +785,9 @@ lb10:
             WorkerMsg(tMsgID.Err, "Driving cycle is not valid! Vehicle Speed required.", MsgSrc)
             Return False
         End If
+
+        'Messages
+        If Not Cfg.WegKorJa Then WorkerMsg(tMsgID.Warn, "Distance Correction is disabled!", MsgSrc, "<UM>/GUI/mainform_options.html#CycleDistCor")
 
         '   Initialize
         Vh = MODdata.Vh
@@ -913,12 +917,7 @@ lbGschw:
             If GEN.DesMaxJa Then
 
                 'Check if Acceleration is too high
-
-                If jz = 0 Then
-                    amax = GEN.aDesMax(Vist)
-                Else
-                    amax = GEN.aDesMax(Vh.V(jz - 1))
-                End If
+                amax = GEN.aDesMax(Vist)
 
                 If amax < 0.0001 Then
                     WorkerMsg(tMsgID.Err, "aDesMax(acc) invalid! v= " & Vist & ", aDesMax(acc) =" & amax, MsgSrc)
@@ -927,7 +926,8 @@ lbGschw:
 
                 If aist > amax + 0.0001 Then
 
-                    Vh.SetSpeed0(jz, Vh.V0(jz) + amax)
+                    'Vh.SetSpeed0(jz, Vh.V0(jz) + amax)
+                    Vh.SetMaxAcc(jz)
 
                     GoTo lbGschw
 
@@ -1646,9 +1646,17 @@ lb_nOK:
 
             If Cfg.WegKorJa Then
                 If MODdata.tDim > MODdata.tDimOgl Then WorkerMsg(tMsgID.Normal, "Cycle extended by " & MODdata.tDim - MODdata.tDimOgl & " seconds to meet target distance.", MsgSrc)
+
+                If Math.Abs(Vh.WegIst - Vh.WegSoll) > 80 Then
+                    WorkerMsg(tMsgID.Warn, "Target distance= " & (Vh.WegSoll / 1000).ToString("#.000") & "[km], Actual distance= " & (Vh.WegIst / 1000).ToString("#.000") & "[km], Error= " & Math.Abs(Vh.WegIst - Vh.WegSoll).ToString("#.0") & "[m]", MsgSrc)
+                Else
+                    WorkerMsg(tMsgID.Normal, "Target distance= " & (Vh.WegSoll / 1000).ToString("#.000") & "[km], Actual distance= " & (Vh.WegIst / 1000).ToString("#.000") & "[km], Error= " & Math.Abs(Vh.WegIst - Vh.WegSoll).ToString("#.0") & "[m]", MsgSrc)
+                End If
             End If
 
             If SecSpeedRed > 0 Then WorkerMsg(tMsgID.Normal, "Speed reduction > 1.5 m/s in " & SecSpeedRed & " time steps.", MsgSrc)
+
+
 
         End If
 

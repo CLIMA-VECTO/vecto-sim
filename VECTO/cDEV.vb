@@ -16,6 +16,7 @@ Public Class cDEV
     Public SpeedPeEps As Single
     Public PreRun As Boolean
     Public IgnoreFCextrapol As Boolean
+    Public negFCerr As Single
 
 
 
@@ -150,9 +151,13 @@ Public Class cDEV
         Conf0.BoolVal = True
         MyOptions.Add("PreRun", Conf0)
 
-        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Don't abort calculation if extrapolation in FC map. FC output is not valid!!", False)
+        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Don't abort calculation if extrapolation or values < negFCerr in FC map. FC output is not valid!!", False)
         Conf0.BoolVal = False
         MyOptions.Add("IgnoreFCextrapol", Conf0)
+
+        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "FC values below negFCerr cause errors and abort calculation. Values between zero and negFCerr are set to zero.")
+        Conf0.SingleVal = -0.000001
+        MyOptions.Add("negFCerr", Conf0)
 
         '**************************** END: Parameters Configuration '*****************************
         '*****************************************************************************************
@@ -172,7 +177,9 @@ Public Class cDEV
         SpeedPeEps = MyOptions("SpeedPeEps").SingleVal
 
         PreRun = MyOptions("PreRun").BoolVal
+
         IgnoreFCextrapol = MyOptions("IgnoreFCextrapol").BoolVal
+        negFCerr = MyOptions("negFCerr").SingleVal
 
     End Sub
 
@@ -322,6 +329,9 @@ Public Class cDEVoption
     Private sStringVal As String
     Private iModeIndex As Integer
 
+    Private sValTextDef As String
+    Private sValTextDefdef As Boolean
+
     Public Delegate Function dActionDelegate() As String
     Public ActionDelegate As dActionDelegate
 
@@ -361,6 +371,14 @@ Public Class cDEVoption
             sValText = "<undefined>"
         End If
 
+        sValTextDef = ""
+        sValTextDefdef = False
+
+    End Sub
+
+    Private Sub DefValTextDef()
+        sValTextDefdef = True
+        sValTextDef = sValText
     End Sub
 
     Public Sub DoAction()
@@ -378,6 +396,7 @@ Public Class cDEVoption
             Select Case MyConfType
                 Case tDEVconfType.tAction
                     '??? Darf nicht sein |@@| May not be
+                    Return False
 
                 Case tDEVconfType.tBoolean
                     BoolVal = CBool(StrExpr)
@@ -437,6 +456,12 @@ Public Class cDEVoption
         End Get
     End Property
 
+    Public ReadOnly Property ValTextDef As String
+        Get
+            Return sValTextDef
+        End Get
+    End Property
+
     Public Property IntVal As Integer
         Get
             Return iIntVal
@@ -444,6 +469,7 @@ Public Class cDEVoption
         Set(value As Integer)
             iIntVal = value
             sValText = iIntVal.ToString
+            If Not sValTextDefdef Then DefValTextDef()
         End Set
     End Property
 
@@ -454,6 +480,7 @@ Public Class cDEVoption
         Set(value As Single)
             sSingleVal = value
             sValText = sSingleVal.ToString
+            If Not sValTextDefdef Then DefValTextDef()
         End Set
     End Property
 
@@ -468,6 +495,7 @@ Public Class cDEVoption
             Else
                 sValText = "False"
             End If
+            If Not sValTextDefdef Then DefValTextDef()
         End Set
     End Property
 
@@ -478,6 +506,7 @@ Public Class cDEVoption
         Set(value As String)
             sStringVal = value
             sValText = ChrW(34) & sStringVal & ChrW(34)
+            If Not sValTextDefdef Then DefValTextDef()
         End Set
     End Property
 
@@ -488,6 +517,7 @@ Public Class cDEVoption
         Set(value As Integer)
             iModeIndex = value
             sValText = "(" & iModeIndex & ") " & sModes(iModeIndex)
+            If Not sValTextDefdef Then DefValTextDef()
         End Set
     End Property
 

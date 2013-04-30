@@ -22,6 +22,9 @@ Public Class cEm
         Dim KV As KeyValuePair(Of String, cEmComp)
         Dim Em0 As cEmComp
         Dim Result As Boolean
+        Dim MsgSrc As String
+
+        MsgSrc = ""
 
         Result = True
 
@@ -53,6 +56,16 @@ Public Class cEm
                         If KV.Value.MapCompID = tMapComp.FC Then
                             'Delaunay
                             v = MAP.fFCdelaunay_Intp(MODdata.nn(i), MODdata.Pe(i))
+
+                            If v < 0 Then
+                                If v < DEV.negFCerr Then
+                                    WorkerMsg(tMsgID.Err, "FC= " & v & "!", "MAP/FC_Intp")
+                                    Result = False
+                                Else
+                                    v = 0
+                                End If
+                            End If
+
                             If Result Then
                                 If v < -999 Then Result = False
                             End If

@@ -790,7 +790,7 @@ lbEr:
 
             a = vm * dv / ds
 
-            am = GEN.aDesMin((Speed(i) + Speed(i - 1)) / 2)
+            am = GEN.aDesMin(vm)
 
             Do While a < am
 
@@ -801,7 +801,7 @@ lbEr:
 
                 a = vm * dv / ds
 
-                am = GEN.aDesMin((Speed(i) + Speed(i - 1)) / 2)
+                am = GEN.aDesMin(vm)
 
             Loop
 

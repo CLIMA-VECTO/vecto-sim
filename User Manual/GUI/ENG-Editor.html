@@ -1,8 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Engine Editor - VECTO User Manual</title></head>
-<body>
-<map name="linkmap"><area shape="rect" coords="12,33,31,50&quot;" href="#new"><area shape="rect" coords="34,33,52,52&quot;" href="#open"><area shape="rect" coords="57,33,76,50&quot;" href="#save"><area shape="rect" coords="79,32,99,51&quot;" href="#saveas"><area shape="rect" coords="108,33,132,51&quot;" href="#sendto"><area shape="rect" coords="130,113,504,133&quot;" href="#make"><area shape="rect" coords="132,149,190,170&quot;" href="#power"><area shape="rect" coords="132,176,194,196&quot;" href="#ccm"><area shape="rect" coords="133,203,192,222&quot;" href="#inertia"><area shape="rect" coords="410,149,471,170&quot;" href="#nidle"><area shape="rect" coords="411,177,471,199&quot;" href="#nrated"><area shape="rect" coords="16,251,504,272&quot;" href="#fld"><area shape="rect" coords="16,303,505,323&quot;" href="#map"><area shape="rect" coords="17,353,505,375&quot;" href="#cal"><area shape="rect" coords="348,394,420,412&quot;" href="#ok"><area shape="rect" coords="430,392,501,414&quot;" href="#cancel"></map>
+<body>&nbsp;<map name="linkmap"><area shape="rect" coords="12,33,31,50&quot;" href="#new"><area shape="rect" coords="34,33,52,52&quot;" href="#open"><area shape="rect" coords="57,33,76,50&quot;" href="#save"><area shape="rect" coords="79,32,99,51&quot;" href="#saveas"><area shape="rect" coords="108,33,132,51&quot;" href="#sendto"><area shape="rect" coords="130,113,504,133&quot;" href="#make"><area shape="rect" coords="132,149,190,170&quot;" href="#power"><area shape="rect" coords="132,176,194,196&quot;" href="#ccm"><area shape="rect" coords="133,203,192,222&quot;" href="#inertia"><area shape="rect" coords="410,149,471,170&quot;" href="#nidle"><area shape="rect" coords="411,177,471,199&quot;" href="#nrated"><area shape="rect" coords="16,251,504,272&quot;" href="#fld"><area shape="rect" coords="16,303,505,323&quot;" href="#map"><area shape="rect" coords="17,353,505,375&quot;" href="#cal"><area shape="rect" coords="348,394,420,412&quot;" href="#ok"><area shape="rect" coords="430,392,501,414&quot;" href="#cancel"></map>
 <table style="width: 100%; height: 54px; text-align: left; margin-left: auto; margin-right: auto;" border="0" cellpadding="2" cellspacing="2">
 <tbody>
 <tr>
@@ -31,8 +30,7 @@ file<br>
 <img src="../pics/icons/Open-icon.png" style="width: 16px; height: 16px;" alt="open"><span style="font-weight: bold;"><a name="open"></a>Open
 existing file</span><br>
 <div style="margin-left: 40px;">Open an existing .veng
-file (using the VECTO File
-Browser)<br>
+file<br>
 </div>
 <span style="font-family: Verdana;"></span><br><br>
 <span style="font-family: Verdana;"></span><img src="../pics/icons/Actions-document-save-icon.png" style="width: 16px; height: 16px;" alt="save"><a name="save"></a> <span style="font-weight: bold;">Save
@@ -40,9 +38,7 @@ current file</span><br>
 <span style="font-family: Verdana;"></span><br><br>
 <span style="font-family: Verdana;"></span><img src="../pics/icons/Actions-document-save-as-icon.png" style="width: 16px; height: 16px;" alt="SaveAs"><a name="saveas"></a> <span style="font-weight: bold;">Save
 file as...</span><br>
-<div style="margin-left: 40px;">Using the VECTO File
-Browser.<br>
-</div>
+
 <span style="font-family: Verdana;"></span><br><br>
 <span style="font-family: Verdana;"></span><img src="../pics/icons/export-icon.png" style="width: 16px; height: 16px;" alt="sendto"><a name="sendto"></a> <span style="font-weight: bold;">Send
 current file to the <a href="VECTO-Editor.html">VECTO
@@ -86,7 +82,7 @@ Engine Power</span> [kW]<br>
 <th style="text-align: center; width: 148px;"><span style="color: rgb(51, 102, 255);">c&nbsp;</span>Engine
 Speed</th>
 <th style="text-align: center; width: 156px;">Max.
-Torque</th>
+Torque<br>(Static full load)</th>
 <th style="text-align: center; width: 149px;">Motoring Torque</th>
 <td style="width: 149px; text-align: center;"><span style="font-weight: bold;">PT1 time constant</span></td>
 </tr>
@@ -116,10 +112,10 @@ lines (header, comments,
 etc.) </span><span style="text-decoration: underline; font-style: italic; color: rgb(51, 102, 255);">must</span><span style="font-style: italic; color: rgb(51, 102, 255);"> start
 with "<span style="font-weight: bold;">c</span> "</span><br>
 </div>
-<br><br>
+<br><div style="margin-left: 40px;">The PT1 approach to calculate the dynamic full load is applied using this formula:<br><img style="width: 555px; height: 65px;" alt="" src="pics/ENG-PT1.png"><br>with:<br><div style="margin-left: 40px;">n<sub>i</sub> = current engine speed<br>T(n<sub>i</sub>) = PT1 time constant&nbsp;at engine speed&nbsp;n<sub>i</sub> (col. 4 in .vfld file)<br>P_fld_stat(n<sub>i</sub>) = Static full load at engine speed&nbsp;n<sub>i</sub> (col. 2 in .vfld file)<br>P_act<sub>i-1</sub> = Engine power in previous time stet</div><br></div><br>
 <a name="map"></a><span style="font-weight: bold;">Fuel Consumption Map</span>
 (.vmap)<br>
-<div style="margin-left: 40px;">Fuel Consumption Map measued in stationary conditions.<br></div><br>
+<div style="margin-left: 40px;">Fuel Consumption Map measued in stationary conditions.<br>The following rules apply:<br><ul><li>The map must cover the full engine range between full load and motoring curve. <span style="font-weight: bold; color: red;">Extrapolation is not possible and will abort the calculation!</span></li><li>At least four points are required.</li></ul></div><br>
 <div style="margin-left: 40px;"><span style="font-weight: bold;">Format</span>
 (comma-separated, dot = decimal-mark):
 </div>
@@ -154,7 +150,7 @@ Consumption</th>
 <div style="margin-left: 40px;"><span style="font-weight: bold; font-style: italic; color: rgb(51, 102, 255);">Note:</span><span style="font-style: italic; color: rgb(51, 102, 255);"> text
 lines (header, comments,
 etc.) </span><span style="text-decoration: underline; font-style: italic; color: rgb(51, 102, 255);">must</span><span style="font-style: italic; color: rgb(51, 102, 255);"> start
-with "<span style="font-weight: bold;">c</span> "</span><br>
+with "<span style="font-weight: bold;">c</span> "</span><br><h2>Fuel Map Interpolation</h2>The interpolation is based on <a href="http://en.wikipedia.org/wiki/Delaunay_triangulation">Delaunay Triangulation&nbsp;</a><a href="http://en.wikipedia.org/wiki/Delaunay_triangulation"><img style="border: 0px solid ; width: 12px; height: 12px;" alt="" src="../pics/misc/external-icon%2012x12.png"></a> and works as follows:<br><ol><li>Triangulate the given rpm/torque/fuel&nbsp;points (= x,y,z)&nbsp; to create a network of triangles with each point of the map being part of at least one triangle.</li><li>Find the triangle where the to-be-interpolated load point (x,y) is inside. If no triangle meets the criterion the calculation will be aborted.</li><li>Calculate the z-value (= fuel) of the given x,y-point in the plane of the triangle</li></ol>
 </div>
 <br><br>
 <a name="cal"></a><span style="font-weight: bold;">Calibration Test Cycle</span><br>
@@ -162,7 +158,7 @@ with "<span style="font-weight: bold;">c</span> "</span><br>
 transient calibration test cycle and model internal calculation of
 correction factor(s) to be applied to stationary fuel consumption map.<br>
 </div>
-<br><img style="width: 28px; height: 21px;" alt="" src="../pics/misc/browse.png"> <span style="font-weight: bold;">Open file browser</span>.<br><br><img style="width: 22px; height: 22px;" alt="" src="../pics/misc/OpenFile.PNG"> <span style="font-weight: bold;">Open file</span> with GRAPHi or an user-defined tool (see <a href="settings.html#opencmd">File Open Command)</a>.<br><br>
+<br><img style="width: 28px; height: 21px;" alt="" src="../pics/misc/browse.png"> <span style="font-weight: bold;">Open file browser</span>.<br><br><img style="width: 22px; height: 22px;" alt="" src="../pics/misc/OpenFile.PNG"> <span style="font-weight: bold;">Open file</span> with <a href="../../GRAPHi/documentation/HTML%20Manual/mainwindow.html">GRAPHi</a> or an user-defined tool (see <a href="settings.html#opencmd">File Open Command)</a>.<br><br>
 <img src="../pics/misc/OK.png" style="width: 75px; height: 23px;" alt="OK"><a name="ok"></a><span style="font-weight: bold;">Save
 and close file</span><br>
 <div style="margin-left: 40px;">If necessary the file path

@@ -32,15 +32,15 @@ Selection</span><br>
 <li style="font-weight: bold;">STANDARD Mode</li>
 <ul>
 <li>Calculate all <span style="text-decoration: underline;">checked</span>
-jobs in the Job Files List</li>
+jobs (.vecto) in the Job Files List</li>
 </ul>
 <ul>
 </ul>
 <li style="font-weight: bold;">BATCH Mode</li>
 <ul>
 <li>Calculate all <span style="text-decoration: underline;">checked</span>
-jobs in the Job Files List with all <span style="text-decoration: underline;">checked</span>
-cycles in the Cycle Files. Cycles defined in the Job Files will be
+jobs&nbsp;(.vecto) in the Job Files List with all <span style="text-decoration: underline;">checked</span>
+cycles (.vdri) in the Cycle Files. Cycles defined in the Job Files will be
 ignored!</li>
 </ul>
 </ul>
@@ -49,7 +49,10 @@ ignored!</li>
 <div style="margin-left: 40px;"><img src="../pics/misc/checkbox.png" style="width: 15px; height: 15px;" alt="cb"><a name="CycleDistCor"></a> <span style="font-weight: bold;">Cycle Distance Correction</span><br>
 </div>
 <div style="margin-left: 80px;">Toggle Cycle Distance
-Correction. Always ON in Declaration Mode.<br>
+Correction. Always ON in Declaration Mode.<br>Cycle
+Distance Correction monitors the driven distance in each time step and,
+if necessary, adds or removes time steps in order to keep the original
+distance given in the driving cycle.<br><ul><li>If <span style="font-weight: bold;">enabled</span> the vehicle drives the same <span style="font-weight: bold;">distance</span> as given in the driving cycle</li><li>If <span style="font-weight: bold;">disabled</span> the vehicle&nbsp;travels the same <span style="font-weight: bold;">time</span> as given in the driving cycle (Note that distance-based cycles (see <a href="../fileformat/VDRI.html">here</a>) are always converted to time-based cycles internally)</li></ul>
 <br>
 </div>
 <div style="margin-left: 40px;"><img src="../pics/misc/checkbox.png" style="width: 15px; height: 15px;" alt="cb"><a name="UseGears"></a>
@@ -57,7 +60,7 @@ Correction. Always ON in Declaration Mode.<br>
 driving cycle</span><br>
 </div>
 <div style="margin-left: 80px;">If activated VECTO will
-use gear and/or engine speed defintions included in the driving cycle.<br>
+use gear and/or engine speed defintions included in the driving cycle  (see <a href="../fileformat/VDRI.html">here</a>).<br>
 <br>
 </div>
 <div style="margin-left: 40px;"><img src="../pics/misc/checkbox.png" style="width: 15px; height: 15px;" alt="cb"><a name="ModOut"></a>

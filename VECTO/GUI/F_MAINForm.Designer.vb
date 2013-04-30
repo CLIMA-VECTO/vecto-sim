@@ -79,6 +79,8 @@ Partial Class F_MAINForm
         Me.ColumnHeader7 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader8 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader9 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ConMenFilelist = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.SaveListToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoadListToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -703,7 +705,7 @@ Partial Class F_MAINForm
         Me.LvDEVoptions.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LvDEVoptions.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader4, Me.ColumnHeader7, Me.ColumnHeader5, Me.ColumnHeader6})
+        Me.LvDEVoptions.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader4, Me.ColumnHeader7, Me.ColumnHeader5, Me.ColumnHeader6, Me.ColumnHeader8, Me.ColumnHeader9})
         Me.LvDEVoptions.FullRowSelect = True
         Me.LvDEVoptions.GridLines = True
         Me.LvDEVoptions.Location = New System.Drawing.Point(6, 6)
@@ -717,12 +719,12 @@ Partial Class F_MAINForm
         'ColumnHeader4
         '
         Me.ColumnHeader4.Text = "Property"
-        Me.ColumnHeader4.Width = 73
+        Me.ColumnHeader4.Width = 89
         '
         'ColumnHeader7
         '
         Me.ColumnHeader7.Text = "Description"
-        Me.ColumnHeader7.Width = 563
+        Me.ColumnHeader7.Width = 527
         '
         'ColumnHeader5
         '
@@ -732,7 +734,17 @@ Partial Class F_MAINForm
         'ColumnHeader6
         '
         Me.ColumnHeader6.Text = "Value"
-        Me.ColumnHeader6.Width = 273
+        Me.ColumnHeader6.Width = 134
+        '
+        'ColumnHeader8
+        '
+        Me.ColumnHeader8.Text = "Default"
+        Me.ColumnHeader8.Width = 120
+        '
+        'ColumnHeader9
+        '
+        Me.ColumnHeader9.Text = "Saved In DEVconfig.txt"
+        Me.ColumnHeader9.Width = 129
         '
         'ConMenFilelist
         '
@@ -1173,5 +1185,7 @@ Partial Class F_MAINForm
     Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents GRAPHiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ColumnHeader8 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents ColumnHeader9 As System.Windows.Forms.ColumnHeader
 
 End Class
