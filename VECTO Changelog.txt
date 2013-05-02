@@ -5,6 +5,7 @@ VECTO 1.3 (current source - next release)
 - Some file-specific error messages link to files
 - Eco-Roll, Overspeed, Look Ahead Coasting
 - User Manual updated
+- Demo Data updated
 
 VECTO 1.2
 - Bugfix: When opening the Gearbox Editor the Gear Shift Settings (e.g. Skip Gears) were not valid for MT

@@ -563,7 +563,7 @@ Public Class F_MAINForm
 
     'Shown Event (Form-Load finished) ... here StartUp Forms are loaded (DEV, GEN/ADV- Editor ..)
     Private Sub F01_MAINForm_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
-
+        Dim fwelcome As F_Welcome
         'DEV Form
         If DEV.Enabled Then
             Me.TabControl1.TabPages.Insert(Me.TabControl1.TabPages.Count, DEVpage)
@@ -578,13 +578,8 @@ Public Class F_MAINForm
         Else
             If Cfg.FirstRun Then
                 Cfg.FirstRun = False
-                If MsgBox("Welcome to VECTO!" & vbCrLf & vbCrLf & "Start Quick Start Guide?", MsgBoxStyle.YesNo, "Welcome") = MsgBoxResult.Yes Then
-                    If IO.File.Exists(MyAppPath & "User Manual\qsg\quickstartApp.html") Then
-                        System.Diagnostics.Process.Start(MyAppPath & "User Manual\qsg\quickstartApp.html")
-                    Else
-                        MsgBox("Quick Start Guide not found!", MsgBoxStyle.Critical)
-                    End If
-                End If
+                fwelcome = New F_Welcome
+                fwelcome.ShowDialog()
             End If
         End If
 
@@ -1385,6 +1380,24 @@ lbFound:
         End If
     End Sub
 
+
+    Private Sub UpdateNotesToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles UpdateNotesToolStripMenuItem.Click
+        If IO.File.Exists(MyAppPath & "User Manual\Update Notes.pdf") Then
+            System.Diagnostics.Process.Start(MyAppPath & "User Manual\Update Notes.pdf")
+        Else
+            MsgBox("Update Notes not found!", MsgBoxStyle.Critical)
+        End If
+    End Sub
+
+    Private Sub SupportToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SupportToolStripMenuItem.Click
+        If IO.File.Exists(MyAppPath & "User Manual\contact.html") Then
+            System.Diagnostics.Process.Start(MyAppPath & "User Manual\contact.html")
+        Else
+            MsgBox("User Manual not found!", MsgBoxStyle.Critical)
+        End If
+    End Sub
+
+
     Private Sub CreateActivationFileToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles CreateActivationFileToolStripMenuItem.Click
         If MsgBox("Create Activation File ?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
             If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
@@ -2008,11 +2021,19 @@ lbFound:
             LV0.SubItems.Add(Config0.Value.TypeString)
             LV0.SubItems.Add("")
             LV0.SubItems.Add(Config0.Value.ValTextDef)
-            If Config0.Value.SaveInFile Then
-                LV0.SubItems.Add("True")
+
+            If Config0.Value.ConfigType = tDEVconfType.tAction Then
+                LV0.SubItems.Add("")
             Else
-                LV0.SubItems.Add("False")
+                If Config0.Value.SaveInFile Then
+                    LV0.SubItems.Add("True")
+                Else
+                    LV0.SubItems.Add("False")
+                End If
             End If
+
+
+
             LV0.Tag = Config0.Key
 
             If Not Config0.Value.Enabled Then

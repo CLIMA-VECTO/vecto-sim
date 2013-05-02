@@ -116,6 +116,8 @@ Partial Class F_MAINForm
         Me.ToolStripDrDnBtInfo = New System.Windows.Forms.ToolStripDropDownButton()
         Me.UserManualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.QuickStartGuideToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.UpdateNotesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SupportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.CreateActivationFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutPHEMToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
@@ -974,7 +976,7 @@ Partial Class F_MAINForm
         '
         'ToolStripDrDnBtInfo
         '
-        Me.ToolStripDrDnBtInfo.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserManualToolStripMenuItem, Me.QuickStartGuideToolStripMenuItem, Me.ToolStripSeparator3, Me.CreateActivationFileToolStripMenuItem, Me.AboutPHEMToolStripMenuItem1})
+        Me.ToolStripDrDnBtInfo.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserManualToolStripMenuItem, Me.QuickStartGuideToolStripMenuItem, Me.UpdateNotesToolStripMenuItem, Me.SupportToolStripMenuItem, Me.ToolStripSeparator3, Me.CreateActivationFileToolStripMenuItem, Me.AboutPHEMToolStripMenuItem1})
         Me.ToolStripDrDnBtInfo.Image = Global.VECTO.My.Resources.Resources.Help_icon
         Me.ToolStripDrDnBtInfo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDrDnBtInfo.Name = "ToolStripDrDnBtInfo"
@@ -992,6 +994,18 @@ Partial Class F_MAINForm
         Me.QuickStartGuideToolStripMenuItem.Name = "QuickStartGuideToolStripMenuItem"
         Me.QuickStartGuideToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
         Me.QuickStartGuideToolStripMenuItem.Text = "Quick Start Guide"
+        '
+        'UpdateNotesToolStripMenuItem
+        '
+        Me.UpdateNotesToolStripMenuItem.Name = "UpdateNotesToolStripMenuItem"
+        Me.UpdateNotesToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
+        Me.UpdateNotesToolStripMenuItem.Text = "Update Notes"
+        '
+        'SupportToolStripMenuItem
+        '
+        Me.SupportToolStripMenuItem.Name = "SupportToolStripMenuItem"
+        Me.SupportToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
+        Me.SupportToolStripMenuItem.Text = "Support"
         '
         'ToolStripSeparator3
         '
@@ -1187,5 +1201,7 @@ Partial Class F_MAINForm
     Friend WithEvents GRAPHiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ColumnHeader8 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader9 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents UpdateNotesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents SupportToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

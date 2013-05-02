@@ -396,7 +396,6 @@ lb10:
         Dim Vh As cVh
         Dim P As Single
         Dim Pmin As Single
-        Dim Pmax As Single
         Dim PlossGB As Single
         Dim PlossDiff As Single
         Dim PlossRt As Single
@@ -536,7 +535,6 @@ lb10:
             End If
 
             'Full load / motoring
-            Pmax = FLD.Pfull(nn)
             Pmin = FLD.Pdrag(nn)
 
             If Vh.Vsoll(i) >= GEN.vMin / 3.6 Then

@@ -1,0 +1,43 @@
+﻿c VECTO Input File
+c VECTO 1.3
+c 30.04.2013 16:49:03
+c Vehicle (.vveh):
+Demo_Vehicle_ChassisDyno.vveh
+c Engine (.veng):
+..\Demo_Engine.veng
+c Gearbox (*.vgbx):
+..\Demo_Gearbox.vgbx
+c Driving Cycles (.vdri):
+ChassisDyno_Motorway.vdri
+ChassisDyno_Rural.vdri
+ChassisDyno_Urban.vdri
+<//>
+c Auxiliaries (.vaux)
+ALT,Alternator,..\Demo_AuxAlternator.vaux
+<//>
+c Speed Dependent Desired Acceleration and Braking (.vacc)
+Dummy.vacc
+c Engine Only Mode (1/0)
+0
+c ICE Auto-Start/Stop (1/0) - Non HEV only
+0
+c Start/Stop Max Speed [km/h]
+5
+c Start/Stop Min ICE-On Time [s]
+5
+c Look Ahead reference deceleration [m/2²]
+-0.5
+c Minimum target speed for Overspeed/Eco-Roll [km/h]
+0
+c Look-Ahead with Coasting 1/0
+0
+c Overspeed 1/0
+0
+c Eco-Roll 1/0
+0
+c Allowed OverSpeed [km/h]
+0
+c Allowed UnderSpeed [km/h]
+0
+c Minimum target speed for Look-Ahead with Coasting [km/h]
+50
