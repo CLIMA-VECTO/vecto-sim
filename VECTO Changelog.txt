@@ -1,7 +1,16 @@
 VECTO ?.? (future release)
 - Gearbox Rules must be set when loading .gbx file to aviod invalid settings (e.g. AT with Skip Gears)
 
-VECTO 1.3 (current source - next release)
+
+
+VECTO x.x (current source - next release)
+
+
+
+VECTO 1.3.1
+- Fixed assembly information
+
+VECTO 1.3
 - Some file-specific error messages link to files
 - Eco-Roll, Overspeed, Look Ahead Coasting
 - User Manual updated

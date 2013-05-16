@@ -9,10 +9,10 @@ Imports System.Runtime.InteropServices
 ' Review the values of the Assembly Attributes
 
 <Assembly: AssemblyTitle("VECTO")> 
-<Assembly: AssemblyDescription("")> 
-<Assembly: AssemblyCompany("TUG")> 
+<Assembly: AssemblyDescription("Vehicle Energy Consumption Calculation Tool")> 
+<Assembly: AssemblyCompany("")> 
 <Assembly: AssemblyProduct("VECTO")> 
-<Assembly: AssemblyCopyright("Copyright © TUG 2012")> 
+<Assembly: AssemblyCopyright("© European Commission 2012-13")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by entering "*" in them:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.0.0")> 
-<Assembly: AssemblyFileVersion("1.0.0.0")> 
+<Assembly: AssemblyVersion("1.3.1.0")> 
+<Assembly: AssemblyFileVersion("1.3.1.0")> 
