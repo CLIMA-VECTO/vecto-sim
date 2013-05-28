@@ -115,7 +115,7 @@ with "<span style="font-weight: bold;">c</span> "</span><br>
 <br><div style="margin-left: 40px;">The PT1 approach to calculate the dynamic full load is applied using this formula:<br><img style="width: 555px; height: 65px;" alt="" src="pics/ENG-PT1.png"><br>with:<br><div style="margin-left: 40px;">n<sub>i</sub> = current engine speed<br>T(n<sub>i</sub>) = PT1 time constant&nbsp;at engine speed&nbsp;n<sub>i</sub> (col. 4 in .vfld file)<br>P_fld_stat(n<sub>i</sub>) = Static full load at engine speed&nbsp;n<sub>i</sub> (col. 2 in .vfld file)<br>P_act<sub>i-1</sub> = Engine power in previous time stet</div><br></div><br>
 <a name="map"></a><span style="font-weight: bold;">Fuel Consumption Map</span>
 (.vmap)<br>
-<div style="margin-left: 40px;">Fuel Consumption Map measued in stationary conditions.<br>The following rules apply:<br><ul><li>The map must cover the full engine range between full load and motoring curve. <span style="font-weight: bold; color: red;">Extrapolation is not possible and will abort the calculation!</span></li><li>At least four points are required.</li></ul></div><br>
+<div style="margin-left: 40px;">Fuel Consumption Map measured in stationary conditions.<br>The following rules apply:<br><ul><li>The map must cover the full engine range between full load and motoring curve. <span style="font-weight: bold; color: red;">Extrapolation is not possible and will abort the calculation!</span></li><li>At least four points are required.</li></ul></div><br>
 <div style="margin-left: 40px;"><span style="font-weight: bold;">Format</span>
 (comma-separated, dot = decimal-mark):
 </div>
@@ -150,7 +150,12 @@ Consumption</th>
 <div style="margin-left: 40px;"><span style="font-weight: bold; font-style: italic; color: rgb(51, 102, 255);">Note:</span><span style="font-style: italic; color: rgb(51, 102, 255);"> text
 lines (header, comments,
 etc.) </span><span style="text-decoration: underline; font-style: italic; color: rgb(51, 102, 255);">must</span><span style="font-style: italic; color: rgb(51, 102, 255);"> start
-with "<span style="font-weight: bold;">c</span> "</span><br><h2>Fuel Map Interpolation</h2>The interpolation is based on <a href="http://en.wikipedia.org/wiki/Delaunay_triangulation">Delaunay Triangulation&nbsp;</a><a href="http://en.wikipedia.org/wiki/Delaunay_triangulation"><img style="border: 0px solid ; width: 12px; height: 12px;" alt="" src="../pics/misc/external-icon%2012x12.png"></a> and works as follows:<br><ol><li>Triangulate the given rpm/torque/fuel&nbsp;points (= x,y,z)&nbsp; to create a network of triangles with each point of the map being part of at least one triangle.</li><li>Find the triangle where the to-be-interpolated load point (x,y) is inside. If no triangle meets the criterion the calculation will be aborted.</li><li>Calculate the z-value (= fuel) of the given x,y-point in the plane of the triangle</li></ol>
+with "<span style="font-weight: bold;">c</span> "</span><br><h2>Fuel Map Interpolation</h2>The interpolation is based on <a href="http://en.wikipedia.org/wiki/Delaunay_triangulation">Delaunay Triangulation&nbsp;</a><a href="http://en.wikipedia.org/wiki/Delaunay_triangulation"><img style="border: 0px solid ; width: 12px; height: 12px;" alt="" src="../pics/misc/external-icon%2012x12.png"></a> and works as follows:<br><ol><li>Triangulate
+the given rpm/torque/fuel&nbsp;points (= x,y,z)&nbsp; to create a
+network of triangles with each point of the map being part of at least
+one triangle.</li><li>Find the triangle where the to-be-interpolated
+load point (x,y) is inside. If no triangle meets the criterion the
+calculation will be aborted.</li><li>Calculate the z-value (= fuel) of the given x,y-point in the plane of the triangle</li></ol>
 </div>
 <br><br>
 <a name="cal"></a><span style="font-weight: bold;">Calibration Test Cycle</span><br>

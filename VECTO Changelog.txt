@@ -1,6 +1,7 @@
 VECTO ?.? (future release)
 - Gearbox Rules must be set when loading .gbx file to aviod invalid settings (e.g. AT with Skip Gears)
-
+- Eaux	[kWh] for all single auxiliaries.
+- User Manual: Don't use secondary retarder if retarder losses are already defined in transmission loss maps
 
 
 VECTO x.x (current source - next release)

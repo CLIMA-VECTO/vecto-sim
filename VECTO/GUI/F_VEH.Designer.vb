@@ -435,7 +435,7 @@ Partial Class F_VEH
         Me.GroupBox7.Size = New System.Drawing.Size(527, 81)
         Me.GroupBox7.TabIndex = 7
         Me.GroupBox7.TabStop = False
-        Me.GroupBox7.Text = "Retarder"
+        Me.GroupBox7.Text = "Retarder Losses"
         '
         'PnRt
         '
