@@ -1,12 +1,17 @@
 VECTO ?.? (future release)
-- Gearbox Rules must be set when loading .gbx file to aviod invalid settings (e.g. AT with Skip Gears)
+- Rollout Speed: PvD + PlossDiff must be Zero, not Pwheel?!
+- roll coefficient as function of relative axle load?
 - Eaux	[kWh] for all single auxiliaries.
 - User Manual: Don't use secondary retarder if retarder losses are already defined in transmission loss maps
-
+- Gearbox Rules must be set when loading .gbx file to aviod invalid settings (e.g. AT with Skip Gears)
+- Correct Pg and Proll calculation (Road gradient)??
+- Stop/Start not working if Paux>0 => correct User Manual or Code?
 
 VECTO x.x (current source - next release)
 
 
+VECTO 1.3.1.1
+- Fixed error in power calculation (rotatory part of acceleration force)
 
 VECTO 1.3.1
 - Fixed assembly information

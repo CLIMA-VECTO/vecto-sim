@@ -1206,7 +1206,7 @@ lbInt:
 
     Public ReadOnly Property m_raeder_red As Single
         Get
-            Return siI_wheels / (siDreifen ^ 2)
+            Return siI_wheels / ((siDreifen / 2) ^ 2)
         End Get    
     End Property
 
