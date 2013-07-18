@@ -950,7 +950,7 @@ lbEr:
         Try
             Return FuelMap.Intpol(nnorm, Pnorm)
         Catch ex As Exception
-            WorkerMsg(tMsgID.Err, "Cannot extrapolate FC map! n= " & nnormTonU(nnorm).ToString("0") & " [U/min], Me= " & PnormToM(nnorm, Pnorm).ToString("0.0") & " [Nm]", "MAP/FC_Intp")
+            WorkerMsg(tMsgID.Err, "Cannot extrapolate FC map! n= " & nnormTonU(nnorm).ToString("0") & " [1/min], Me= " & PnormToM(nnorm, Pnorm).ToString("0.0") & " [Nm]", "MAP/FC_Intp")
             Return -10000
         End Try
     End Function

@@ -557,11 +557,7 @@ lbError:
                         M_in = CDbl(line(1))
                         M_loss = CDbl(line(2))
 
-                        If M_in > 0 Then
-                            M_out = M_in - M_loss
-                        Else
-                            M_out = M_in + M_loss
-                        End If
+                        M_out = M_in - M_loss
 
                         'old version: Power instead of torque: GBmap0.AddPoints(nU, nMtoPe(nU, M_out), nMtoPe(nU, M_in))
                         GBmap0.AddPoints(nU, M_out, M_in)
@@ -601,10 +597,25 @@ lbError:
         Dim AbMin As Double
         Dim iMin As Integer
         Dim PeOutX As Double
+        Dim GrTxt As String
 
         Dim MsgSrc As String
 
         MsgSrc = "VEH/TrLossMapInterpol/G" & Gear
+
+        If Gear = 0 Then
+            GrTxt = "A"
+        Else
+            If GBX.TCon Then
+                If Gear = 1 Then
+                    GrTxt = "TC"
+                Else
+                    GrTxt = (Gear - 1).ToString
+                End If
+            Else
+                GrTxt = Gear.ToString
+            End If
+        End If
 
         If GetrEffDef(Gear) Then
 
@@ -652,7 +663,7 @@ lbError:
                     Else
 
                         'Drag => Drivetrain: ERROR!
-                        WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & Gear & ", nU= " & nU.ToString("0.00") & ", PeIn=" & PeIn.ToString("0.0") & ", PeOut=" & PeOutX.ToString("0.0"), MsgSrc)
+                        WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], PeIn=" & PeIn.ToString("0.0") & " [kW], PeOut=" & PeOutX.ToString("0.0") & " [kW]", MsgSrc)
                         WorkerAbort()
                         Return 0
 
@@ -661,10 +672,9 @@ lbError:
                 Else
                     If PeIn > 0 Then
 
-                        'Drivetrain => Drag: ERROR!
-                        WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & Gear & ", nU= " & nU.ToString("0.00") & ", PeIn=" & PeIn.ToString("0.00") & ", PeOut=" & PeOutX.ToString("0.00"), MsgSrc)
-                        WorkerAbort()
-                        Return 0
+                        'WorkerMsg(tMsgID.Warn, "Change of sign in Transmission Loss Map! Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], PeIn=" & PeIn.ToString("0.00") & " [kW], PeOut=" & PeOutX.ToString("0.00") & " [kW]", MsgSrc)
+                        'WorkerAbort()
+                        WG = (PeIn - (PeIn - PeOutX)) / PeIn
 
                     Else
 
@@ -680,7 +690,7 @@ lbError:
                 'Calculate efficiency with PeIn for original PeOut
                 PeIn = PeOut / WG
 
-                MODdata.ModErrors.TrLossMapExtr = "Gear= " & Gear & ", nU= " & nU.ToString("0.00") & " [U/min], MeOut=" & nPeToM(nU, PeOut).ToString("0.00") & " [Nm]"
+                MODdata.ModErrors.TrLossMapExtr = "Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], MeOut=" & nPeToM(nU, PeOut).ToString("0.00") & " [Nm]"
 
             End Try
 
@@ -701,11 +711,25 @@ lbError:
         Dim AbMin As Double
         Dim iMin As Integer
         Dim PeInX As Double
+        Dim GrTxt As String
 
         Dim MsgSrc As String
 
         MsgSrc = "VEH/TrLossMapInterpolFwd/G" & Gear
 
+        If Gear = 0 Then
+            GrTxt = "A"
+        Else
+            If GBX.TCon Then
+                If Gear = 1 Then
+                    GrTxt = "TC"
+                Else
+                    GrTxt = (Gear - 1).ToString
+                End If
+            Else
+                GrTxt = Gear.ToString
+            End If
+        End If
 
         If GetrEffDef(Gear) Then
 
@@ -751,7 +775,7 @@ lbError:
                     Else
 
                         'Drag => Drivetrain: ERROR!
-                        WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & Gear & ", nU= " & nU.ToString("0.00") & ", PeIn=" & PeInX.ToString("0.00") & ", PeOut=" & PeOut.ToString("0.00"), MsgSrc)
+                        WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], PeIn=" & PeInX.ToString("0.00") & " [kW], PeOut=" & PeOut.ToString("0.00") & " [kW] (fwd)", MsgSrc)
                         WorkerAbort()
                         Return 0
 
@@ -760,10 +784,9 @@ lbError:
                 Else
                     If PeInX > 0 Then
 
-                        'Drivetrain => Drag: ERROR!
-                        WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & Gear & ", nU= " & nU.ToString("0.00") & ", PeIn=" & PeInX.ToString("0.00") & ", PeOut=" & PeOut.ToString("0.00"), MsgSrc)
-                        WorkerAbort()
-                        Return 0
+                        WorkerMsg(tMsgID.Warn, "Change of sign in Transmission Loss Map! Set efficiency to 10%. Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], PeIn=" & PeInX.ToString("0.00") & " [kW], PeOut=" & PeOut.ToString("0.00") & " [kW] (fwd)", MsgSrc)
+                        'WorkerAbort()
+                        WG = 0.1
 
                     Else
 
@@ -777,7 +800,7 @@ lbError:
                 'Calculate efficiency with PeIn for original PeOut
                 PeOut = PeIn * WG
 
-                MODdata.ModErrors.TrLossMapExtr = "Gear= " & Gear & ", nU= " & nU.ToString("0.00") & " [U/min], MeIn=" & nPeToM(nU, PeIn).ToString("0.00") & " [Nm] (fwd)"
+                MODdata.ModErrors.TrLossMapExtr = "Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], MeIn=" & nPeToM(nU, PeIn).ToString("0.00") & " [Nm] (fwd)"
 
             End Try
 
@@ -1106,7 +1129,7 @@ lbInt:
 
         'Extrapolation for x < x(1)
         If RtnU(0) >= nU Then
-            If RtnU(0) > nU Then MODdata.ModErrors.RtExtrapol = "n= " & nU & " [U/min]"
+            If RtnU(0) > nU Then MODdata.ModErrors.RtExtrapol = "n= " & nU & " [1/min]"
             i = 1
             GoTo lbInt
         End If
@@ -1117,7 +1140,7 @@ lbInt:
         Loop
 
         'Extrapolation for x> x(imax)
-        If RtnU(i) < nU Then MODdata.ModErrors.RtExtrapol = "n= " & nU & " [U/min]"
+        If RtnU(i) < nU Then MODdata.ModErrors.RtExtrapol = "n= " & nU & " [1/min]"
 
 lbInt:
         'Interpolation

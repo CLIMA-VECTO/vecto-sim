@@ -18,6 +18,8 @@ Module M_MAIN
     Private jsubcycle As Integer
     Private jsubcyclecount As Integer
 
+    Public FCerror As Boolean
+
     Friend Function NrOfRunStr() As String
         If PHEMmode = tPHEMmode.ModeSTANDARD Then
             'Return CStr(jgen * (CyclesDim + 1) + jzkl + 1) & "-" & CStr(jsubcycle)
@@ -302,12 +304,13 @@ lbADV:
                     '***************************** VECTO-loading-loop *********************************
                     '**************************************************************************************
 
-
                     'Entry point for SOC-start iteration
                     If GEN.ModeHorEV And SOCnJa Then SOCfirst = True
 
                     'Clean up
                     MODdata.Init()
+
+                    FCerror = False
 
                     'Read cycle
                     If (Not (PHEMmode = tPHEMmode.ModeADVANCE)) Then
@@ -323,6 +326,7 @@ lbADV:
 
                         'Convert v(s) into v(t) (optional)
                         If DRI.Scycle Then
+                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Converting cycle (v(s) => v(t))", MsgSrc)
                             If Not DRI.ConvStoT() Then
                                 CyclAbrtedByErr = True
                                 GoTo lbAusg
@@ -486,11 +490,14 @@ lbADV:
 
                         'Calculate Raw emissions
                         If Not MODdata.Em.Raw_Calc() Then
-                            If Not DEV.IgnoreFCextrapol Then
-                                CyclAbrtedByErr = True
-                                WorkerMsg(tMsgID.Normal, "Calculation aborted!", MsgSrc)
-                                GoTo lbAusg
-                            End If
+                            'If Not DEV.IgnoreFCextrapol Then
+                            '    CyclAbrtedByErr = True
+                            '    WorkerMsg(tMsgID.Normal, "Calculation aborted!", MsgSrc)
+                            '    GoTo lbAusg
+                            'End If
+
+                            FCerror = True
+
                         End If
 
                         'TC Parameter umrechnen in Differenz zu Kennfeld-TC-Parameter |@@| Convert TC parameters to differences with Map-TC-parameters

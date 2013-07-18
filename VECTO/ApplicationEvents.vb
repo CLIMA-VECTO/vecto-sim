@@ -37,10 +37,9 @@ Namespace My
                     LOGfile.WriteLine("Failed to create directory '" & MyConfPath & "'!")
                     e.Cancel = True
                 End Try
-                IO.File.Create(MyConfPath & "stdGENlist.txt")
-                IO.File.Create(MyConfPath & "batchGENlist.txt")
-                IO.File.Create(MyConfPath & "DRIlist.txt")
-                IO.File.Create(MyConfPath & "ADVlist.txt")
+                IO.File.Create(MyConfPath & "joblist.txt")
+                IO.File.Create(MyConfPath & "cyclelist.txt")
+                'IO.File.Create(MyConfPath & "ADVlist.txt")
             End If
             If Not IO.Directory.Exists(FB_FilHisDir) Then
                 Try

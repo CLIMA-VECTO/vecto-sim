@@ -427,7 +427,7 @@ lb10:
         MsgSrc = "Power/PreRun"
 
         'Check Input
-        If GEN.a_lookahead >= 0 Then
+        If GEN.LookAheadOn AndAlso GEN.a_lookahead >= 0 Then
             WorkerMsg(tMsgID.Err, "Lookahead deceleration invalid! Value must be below zero.", MsgSrc)
             Return False
         End If
@@ -541,14 +541,18 @@ lb10:
 
                 If GEN.EcoRollOn Then
 
-                    If Vh.Grad(i) < 0 Then
+                    If PvorD < 0 Or (i > 0 AndAlso Vh.EcoRoll(i - 1)) Then
 
                         Vmax = MODdata.Vh.Vsoll(i) + GEN.OverSpeed / 3.6
                         Vmin = Math.Max(0, MODdata.Vh.Vsoll(i) - GEN.UnderSpeed / 3.6)
                         vRollout = fRolloutSpeed(i, 1)
                         aRollout = (2 * vRollout - Vh.V0(i)) - Vh.V0(i)
 
-                        If vRollout <= Vmax Then
+                        If vRollout < Vmin Then
+
+                            'Eco-Roll deactivated
+
+                        ElseIf vRollout <= Vmax Then
 
                             If 2 * vRollout - Vh.V0(i) > Vmax Then
                                 Vh.SetSpeed0(i, Vmax)
@@ -560,6 +564,8 @@ lb10:
                             End If
 
                             Positions(i) = 4
+
+                            'Mark position for Calc
                             Vh.EcoRoll(i) = True
 
                         Else
@@ -572,6 +578,9 @@ lb10:
 
                             Positions(i) = 1
 
+                            'Mark position for Calc
+                            Vh.EcoRoll(i) = True
+
                         End If
 
 
@@ -583,7 +592,7 @@ lb10:
 
                         If GEN.OverSpeedOn Then
 
-                            vCoasting = fCoastingSpeed(i, Gear, False)
+                            vCoasting = fCoastingSpeed(i, Gear)
                             Vmax = MODdata.Vh.Vsoll(i) + GEN.OverSpeed / 3.6
 
                             If vCoasting <= Vmax Then
@@ -639,15 +648,24 @@ lb10:
                     End If
                 Next
 
-                Tlookahead = CInt((vset2 - vset1) / GEN.a_lookahead)
+                If GEN.LookAheadOn Then
+                    Tlookahead = CInt((vset2 - vset1) / GEN.a_lookahead)
+                    t = Math.Max(0, i - Tlookahead)
+                End If
 
-                t = Math.Max(0, i - Tlookahead)
                 LookAheadDone = False
 
                 adec = GEN.aDesMin(Vist)
                 If Vh.a(i) < adec Then Vh.SetMinAccBackw(i)
 
                 i0 = i
+
+                If GEN.LookAheadOn Then
+                    Do While i0 > t AndAlso fCoastingSpeed(t, Gears(t), i0 - t) < Vh.V(i0)
+                        t += 1
+                    Loop
+                End If
+
 
                 Do
                     i -= 1
@@ -664,7 +682,7 @@ lb10:
 
                             For j = t To i0
                                 Vist = Vh.V(j)
-                                vCoasting = fCoastingSpeed(j, Gears(j), True)
+                                vCoasting = fCoastingSpeed(j, Gears(j))
                                 aCoasting = (2 * vCoasting - Vh.V0(j)) - Vh.V0(j)
                                 If vCoasting < Vist And aCoasting >= GEN.aDesMin(Vist) Then
                                     'If Vrollout < Vist Then
@@ -681,7 +699,7 @@ lb10:
                         LookAheadDone = True
                     End If
 
-                Loop Until LookAheadDone
+                Loop Until LookAheadDone Or i = 0
 
                 'Correct distance error
                 'If t - 1 > 0 Then
@@ -816,9 +834,11 @@ lb10:
         TracIntrTurnOff = False
 
         If GEN.izykwael = 4 Then
+            'never
             Kuppln_norm = 0.05
             KupplEta = 0.4
         Else
+            'always
             Kuppln_norm = 0.03
             KupplEta = 1
         End If
@@ -1044,7 +1064,11 @@ lbGschw:
                         If PKWja Then
                             Gear = fGearPKW(jz)
                         Else
-                            Gear = fGearVECTO(jz)
+                            If GBX.TCon Then
+                                Gear = fGearTC(jz)
+                            Else
+                                Gear = fGearVECTO(jz)
+                            End If
                             'Gear = fGearLKW(jz)
                         End If
 
@@ -1077,10 +1101,9 @@ lbGschw:
             End If
 
             'Eco-Roll
-            If Vh.EcoRoll(jz) AndAlso Math.Abs(PvorD) < 0.01 * VEH.Pnenn Then
+            If Vh.EcoRoll(jz) AndAlso PvorD < 0.01 * VEH.Pnenn Then
                 Clutch = tEngClutch.Opened
                 Gear = 0
-
             End If
 
             ' Important checks
@@ -1192,8 +1215,7 @@ lbCheck:
                         End If
                     Loop Until Math.Abs(Pmin - PminX) < 0.001 Or nU <= VEH.nLeerl Or i = 999
 
-                    'TODO: Switch off?
-                    If i = 999 Then WorkerMsg(tMsgID.Warn, "i=999", MsgSrc & "/t= " & jz + 1)
+                    'If i = 999 Then WorkerMsg(tMsgID.Warn, "i=999", MsgSrc & "/t= " & jz + 1)
 
                     nn = (Math.Max(VEH.nLeerl, nU) - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
 
@@ -1568,10 +1590,17 @@ lb_nOK:
                     MODdata.TCMout.Add(GBX.TCMout)
                     MODdata.TCnOut.Add(GBX.TCnout)
                 Else
-                    MODdata.TCnu.Add(1)
-                    MODdata.TCmu.Add(1)
-                    MODdata.TCMout.Add(nPeToM(nU, P - Paux - PaMot))
-                    MODdata.TCnOut.Add(nU)
+                    If Clutch = tEngClutch.Opened Then
+                        MODdata.TCnu.Add(0)
+                        MODdata.TCmu.Add(0)
+                        MODdata.TCMout.Add(0)
+                        MODdata.TCnOut.Add(0)
+                    Else
+                        MODdata.TCnu.Add(1)
+                        MODdata.TCmu.Add(1)
+                        MODdata.TCMout.Add(nPeToM(nU, P - Paux - PaMot))
+                        MODdata.TCnOut.Add(nU)
+                    End If
                 End If
             End If
 
@@ -1853,13 +1882,17 @@ lb_nOK:
 
     End Function
 
-    Private Function fCoastingSpeed(ByVal t As Integer, ByVal Gear As Integer, ByVal NoPosGrad As Boolean) As Single
+    Private Function fCoastingSpeed(ByVal t As Integer, ByVal Gear As Integer) As Single
+
+        Return fCoastingSpeed(t, Gear, MODdata.Vh.V(t), MODdata.Vh.a(t))
+
+    End Function
+
+    Private Function fCoastingSpeed(ByVal t As Integer, ByVal Gear As Integer, ByVal v As Single, ByVal a As Single, Optional ByVal v0 As Single? = Nothing) As Single
 
         Dim vstep As Double
         Dim vVorz As Integer
         Dim Pe As Single
-        Dim a As Single
-        Dim v As Single
         Dim PvD As Single
         Dim LastDiff As Single
         Dim Diff As Single
@@ -1867,19 +1900,14 @@ lb_nOK:
         Dim Pdrag As Single
         Dim Grad As Single
 
-        v = MODdata.Vh.V(t)
 
         vstep = 0.1
-        a = MODdata.Vh.a(t)
         nU = fnU(v, Gear, False)
         Pdrag = FLD.Pdrag((nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl))
 
-        'Do not allow positive road gradients
-        If NoPosGrad Then
-            Grad = Math.Min(MODdata.Vh.Grad(t), 0)
-        Else
-            Grad = MODdata.Vh.Grad(t)
-        End If
+        'Do not allow positive road gradients     
+        Grad = MODdata.Vh.Grad(t)
+
 
         PvD = fPvD(t, v, a, Grad)
         Pe = PvD + fPlossGB(PvD, v, Gear) + fPlossDiff(PvD, v) + fPaG(v, a) + fPlossRt(v, Gear) + fPaux(t, nU) + fPaMot(t, Gear, v, a)
@@ -1906,7 +1934,11 @@ lb_nOK:
 
             v += vVorz * vstep
 
-            a = 2 * (v - MODdata.Vh.V0(t)) / 1  'dt = 1[s]
+            If v0 Is Nothing Then
+                a = 2 * (v - MODdata.Vh.V0(t)) / 1  'dt = 1[s]
+            Else
+                a = 2 * (v - v0) / 1  'dt = 1[s]
+            End If
 
             nU = fnU(v, Gear, False)
             Pdrag = FLD.Pdrag((nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl))
@@ -1924,6 +1956,41 @@ lb_nOK:
 
     End Function
 
+
+    Private Function fCoastingSpeed(ByVal t As Integer, ByVal Gear As Integer, ByVal dt As Integer) As Single
+        Dim a As Single
+        Dim v As Single
+        Dim vtemp As Single
+        Dim t0 As Integer
+        Dim v0 As Single
+        Dim v0p As Single
+
+        v0 = MODdata.Vh.V0(t)
+        v = MODdata.Vh.V(t)
+        a = MODdata.Vh.a(t)
+
+        If t + dt > MODdata.tDim - 1 Then
+            dt = MODdata.tDim - 1 - t
+        End If
+
+        For t0 = t To t + dt
+            vtemp = fCoastingSpeed(t0, Gear, v, a, v0)
+
+            If 2 * vtemp - v0 < 0 Then vtemp = v0 / 2
+
+            v0p = 2 * vtemp - v0
+            a = v0p - v0
+
+            v = (MODdata.Vh.V0(t0 + 2) + v0p) / 2
+            a = MODdata.Vh.V0(t0 + 2) - v0p
+
+            v0 = v0p
+
+        Next
+
+        Return vtemp
+
+    End Function
 
 #Region "Schaltmodelle"
 
@@ -2051,6 +2118,65 @@ lb_nOK:
 
 
     End Function
+
+    Private Function fGearTC(ByVal t As Int16) As Integer
+        Dim LastGear As Int16
+        Dim tx As Int16
+        Dim nU As Single
+        Dim nn As Single
+        Dim nnUp As Single
+        Dim nnDown As Single
+        Dim Md As Single
+        Dim Pe As Single
+
+        'First time step OR first time step after stand still
+        If t = 0 OrElse MODdata.VehState(t - 1) = tVehState.Stopped Then Return 1
+
+        'Previous Gear
+        tx = 1
+        LastGear = 0
+        Do While LastGear = 0 And t - tx > -1
+            LastGear = MODdata.Gear(t - tx)
+            tx += 1
+        Loop
+
+        'If idling (but no vehicle stop...?) then
+        If LastGear = 0 Then Return 1
+
+        'If lockup-clutch already closed then goto normal shift model
+        If LastGear > 1 Then Return fGearVECTO(t)
+
+        'Rpm
+        nU = MODdata.nU(t - 1)
+        nn = MODdata.nn(t - 1)
+
+        'previous power demand
+        Pe = MODdata.Pe(t - 1) * VEH.Pnenn
+
+        'previous torque demand
+        Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
+
+        'Up/Downshift rpms
+        nnUp = GBX.fGSnnUp(Md)
+        nnDown = GBX.fGSnnDown(Md)
+
+        If nn > nnUp Then
+
+            If fnn(Vist, 2, False) > nnDown Then
+                Return 2
+            Else
+                Return 1
+            End If
+
+        ElseIf nn < nnDown Then
+            Return 0
+        Else
+            Return 1
+        End If
+
+
+    End Function
+
 
     Private Function fGearVECTO(ByVal t As Integer) As Integer
         Dim nU As Single

@@ -304,7 +304,7 @@ Public Class cGBX
         'nUmax = nnormTonU(GBX.fGSnnUp(Mout))
 
         'Start values: Estimate torque converter state
-        nUin = nUout
+        nUin = Math.Min(VEH.nNenn, nUout * 2)
 
         'If nUin > nUmax Then nUin = nUmax
         'If nUin < nUmin Then nUin = nUmin

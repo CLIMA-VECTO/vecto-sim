@@ -510,11 +510,21 @@ Class cERG
 
                 'Dump x/h if ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into x/km is not possible
                 If Em0.WriteOutput Then
-                    If Em0.NormID = tEmNorm.x Or GEN.VehMode = tVehMode.EngineOnly Or PHEMmode = tPHEMmode.ModeADVANCE Then
-                        ErgEntries(Em0.IDstring).ValueString = Em0.FinalAvg.ToString
+
+                    If FCerror Then
+                        If Em0.NormID = tEmNorm.x Or GEN.VehMode = tVehMode.EngineOnly Or PHEMmode = tPHEMmode.ModeADVANCE Then
+                            ErgEntries(Em0.IDstring).ValueString = "ERROR"
+                        Else
+                            ErgEntries(Em0.IDstring & "_km").ValueString = "ERROR"
+                        End If
                     Else
-                        ErgEntries(Em0.IDstring & "_km").ValueString = (Em0.FinalAvg / Vquer).ToString
+                        If Em0.NormID = tEmNorm.x Or GEN.VehMode = tVehMode.EngineOnly Or PHEMmode = tPHEMmode.ModeADVANCE Then
+                            ErgEntries(Em0.IDstring).ValueString = Em0.FinalAvg.ToString
+                        Else
+                            ErgEntries(Em0.IDstring & "_km").ValueString = (Em0.FinalAvg / Vquer).ToString
+                        End If
                     End If
+
                 End If
 
             Next

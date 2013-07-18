@@ -92,9 +92,9 @@ Public Class cDelaunayMap
         Dim l0 As Double()
         Dim tr As dTriangle
 
-        j = -1
 
         'Try exact solution for IsInside()
+        j = -1
         For Each tr In lDT
             j += 1
             If IsInside(tr, x, y, True) Then
@@ -104,6 +104,7 @@ Public Class cDelaunayMap
         Next
 
         'Try approx. solution (fixes rounding errors when points lies exactly on an edge of a triangle)
+        j = -1
         For Each tr In lDT
             j += 1
             If IsInside(tr, x, y, False) Then
@@ -239,6 +240,8 @@ Public Class cDelaunayMap
         invDenom = 1 / (dot00 * dot11 - dot01 * dot01)
         u = (dot11 * dot02 - dot01 * dot12) * invDenom
         v = (dot00 * dot12 - dot01 * dot02) * invDenom
+
+        'Debug.Print(u & ", " & v & ", " & u + v)
 
         ' Check if point is in triangle
         If Exact Then

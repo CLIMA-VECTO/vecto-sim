@@ -57,7 +57,7 @@ Public Class cEm
                             'Delaunay
                             v = MAP.fFCdelaunay_Intp(MODdata.nn(i), MODdata.Pe(i))
 
-                            If v < 0 Then
+                            If v < 0 And v > -999 Then
                                 If v < DEV.negFCerr Then
                                     WorkerMsg(tMsgID.Err, "FC= " & v & "!", "MAP/FC_Intp")
                                     Result = False

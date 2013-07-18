@@ -714,8 +714,6 @@ lbEr:
 
         MsgSrc = "Main/DRI/ConvStoT"
 
-        WorkerMsg(tMsgID.Normal, "Converting cycle (v(s) => v(t))", MsgSrc)
-
         If Not GEN.DesMaxJa Then
             WorkerMsg(tMsgID.Err, "No a(v) data defined!", MsgSrc)
             Return False

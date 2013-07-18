@@ -514,13 +514,13 @@ Public Class F_MAINForm
 
 
         'FileLists
-        GenList = New cFileListView(MyConfPath & "stdGENlist.txt")
+        GenList = New cFileListView(MyConfPath & "joblist.txt")
         GenList.LVbox = Me.LvGEN
         AdvList = New cFileListView(MyConfPath & "ADVlist.txt")
         AdvList.LVbox = Me.LvGEN
-        DriList = New cFileListView(MyConfPath & "DRIlist.txt")
+        DriList = New cFileListView(MyConfPath & "cyclelist.txt")
         DriList.LVbox = Me.LvDRI
-        BatchGenList = New cFileListView(MyConfPath & "batchGENlist.txt")
+        BatchGenList = New cFileListView(MyConfPath & "joblist.txt")
         BatchGenList.LVbox = Me.LvGEN
 
         'Load GUI Options (here, the GEN/ADV/DRI lists are loaded)

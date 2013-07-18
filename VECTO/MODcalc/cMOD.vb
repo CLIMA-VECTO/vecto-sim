@@ -414,16 +414,16 @@ Public Class cMOD
 
             If Not GEN.VehMode = tVehMode.EV Then
                 s.Append(",engine speed,Pe,n_norm,Pe_norm")
-                sU.Append(",[rpm],[kW],[-],[-]")
+                sU.Append(",[1/min],[kW],[-],[-]")
             End If
 
             s.Append(",engine speed,PeEM,PeBat,PiBat,Ubat,Ibat,SOC")
-            sU.Append(",[rpm],[kW],[kW],[kW],[V],[A],[-]")
+            sU.Append(",[1/min],[kW],[kW],[kW],[V],[A],[-]")
 
         Else
 
-            s.Append(",engine speed,torque,Pe,n_norm,Pe_norm,Pe_full,Pe_drag,Pe_clutch,Pa Eng,Paux")
-            sU.Append(",[rpm],[Nm],[kW],[-],[-],[kW],[kW],[kW],[kW],[kW]")
+            s.Append(",n,Tq_eng,Tq_clutch,Tq_full,Tq_drag,Pe,Pe_full,Pe_drag,Pe_clutch,Pa Eng,Paux")
+            sU.Append(",[1/min],[Nm],[Nm],[Nm],[Nm],[kW],[kW],[kW],[kW],[kW],[kW]")
 
         End If
 
@@ -433,7 +433,7 @@ Public Class cMOD
             sU.Append(",[-],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW]")
 
             If GBX.TCon Then
-                s.Append(",TCν,TCμ,TC_M_Out,TC_n_Out")
+                s.Append(",TCν,TCμ,TC_T_Out,TC_n_Out")
                 sU.Append(",[-],[-],[Nm],[1/min]")
             End If
 
@@ -588,17 +588,37 @@ Public Class cMOD
                     'Revolutions
                     s.Append(Sepp & .nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl)
 
-                    'Torque
-                    s.Append(Sepp & 1000 * .Pe(t) * VEH.Pnenn / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60))
+                    If Math.Abs(2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60) < 0.00001 Then
+                        s.Append(Sepp & "-" & Sepp & "-" & Sepp & "-" & Sepp & "-")
+                    Else
+
+                        'Torque
+                        s.Append(Sepp & 1000 * .Pe(t) * VEH.Pnenn / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60))
+
+                        'Torque at clutch
+                        s.Append(Sepp & 1000 * (.Pe(t) * VEH.Pnenn - .PaEng(t) - .PauxSum(t)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60))
+
+                        'Full-load and Drag torque
+                        If .EngState(t) = tEngState.Stopped Then
+                            s.Append(Sepp & "-" & Sepp & "-")
+                        Else
+                            If t = 0 Then
+                                s.Append(Sepp & 1000 * FLD.Pfull(.nn(t)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60) & Sepp & 1000 * FLD.Pdrag(.nn(t)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60))
+                            Else
+                                s.Append(Sepp & 1000 * FLD.Pfull(.nn(t), .Pe(t - 1)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60) & Sepp & 1000 * FLD.Pdrag(.nn(t)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60))
+                            End If
+                        End If
+
+                    End If
 
                     'Power
                     s.Append(Sepp & .Pe(t) * VEH.Pnenn)
 
                     'Revolutions normalized
-                    s.Append(Sepp & .nn(t))
+                    's.Append(Sepp & .nn(t))
 
                     'Power normalized
-                    s.Append(Sepp & .Pe(t))
+                    's.Append(Sepp & .Pe(t))
 
                     'Full-load and Drag
                     If .EngState(t) = tEngState.Stopped Then
@@ -689,7 +709,13 @@ Public Class cMOD
                         Em0 = .Em.EmComp(StrKey)
 
                         If Em0.WriteOutput Then
-                            s.Append(Sepp & Em0.FinalVals(t))
+
+                            If Em0.FinalVals(t) > -0.0001 Then
+                                s.Append(Sepp & Em0.FinalVals(t))
+                            Else
+                                s.Append(Sepp & "ERROR")
+                            End If
+
                         End If
 
                     Next
