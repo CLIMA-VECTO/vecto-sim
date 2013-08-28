@@ -154,6 +154,7 @@ Public Class cDEV
         Conf0.SingleVal = -0.000001
         MyOptions.Add("negFCerr", Conf0)
 
+
         '**************************** END: Parameters Configuration '*****************************
         '*****************************************************************************************
         '*****************************************************************************************
@@ -174,6 +175,7 @@ Public Class cDEV
         PreRun = MyOptions("PreRun").BoolVal
 
         negFCerr = MyOptions("negFCerr").SingleVal
+
 
     End Sub
 

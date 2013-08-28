@@ -48,7 +48,7 @@ Public Class cGBX
     Public TC_PeBrake As Single
     Public TCMout As Single
     Public TCnout As Single
-
+    Public TCmustReduce As Boolean
 
 
     Public Sub New()
@@ -275,7 +275,7 @@ Public Class cGBX
 
     End Function
 
-    Public Function TCiteration(ByVal nUout As Single, ByVal PeOut As Single) As Boolean
+    Public Function TCiteration(ByVal nUout As Single, ByVal PeOut As Single, ByVal t As Integer) As Boolean
         Dim nUin As Single
         Dim Mout As Single
         Dim VZ As Integer
@@ -289,9 +289,10 @@ Public Class cGBX
 
         Dim MsgSrc As String
 
-        MsgSrc = "GBX/TCiteration"
+        MsgSrc = "GBX/TCiteration/t= " & t
 
         TC_PeBrake = 0
+        TCmustReduce = False
 
         'Dim nUmin As Single
         'Dim nUmax As Single
@@ -304,23 +305,53 @@ Public Class cGBX
         'nUmax = nnormTonU(GBX.fGSnnUp(Mout))
 
         'Start values: Estimate torque converter state
-        nUin = Math.Min(VEH.nNenn, nUout * 2)
+        'nUin = Math.Min(VEH.nNenn, nUout * 2)
+        If t = 0 Then
+            nUin = nUout
+        Else
+            nUin = MODdata.nU(t - 1)
+        End If
 
         'If nUin > nUmax Then nUin = nUmax
         'If nUin < nUmin Then nUin = nUmin
 
-        nUstep = DEV.TCnUstep
-        VZ = 1
-        lastErr = 99999
-
         nu = nUout / nUin
+
+        If nu > TCnu(TCdim) Then
+            nu = TCnu(TCdim)
+            nUin = nUout / nu
+        ElseIf nu < TCnu(0) Then
+            nu = TCnu(0)
+            nUin = nUout / nu
+        End If
+
         mu = fTCmu(nu)
         MoutCalc = fTCtorque(nu, nUin) * mu
 
+        nUstep = DEV.TCnUstep
+
+        If MoutCalc > Mout Then
+            VZ = -1
+        Else
+            VZ = 1
+        End If
+
+        lastErr = 99999
+
         'Iteration
         Do While Math.Abs(1 - MoutCalc / Mout) > DEV.TCiterPrec And nUstep > DEV.TCnUstepMin
+lb10:
             nUin += VZ * nUstep
             nu = nUout / nUin
+
+            If nu > TCnu(TCdim) Or nu < TCnu(0) Then
+                nUin -= VZ * nUstep
+                nUstep /= 2
+                VZ *= -1
+                GoTo lb10
+            End If
+
+
             mu = fTCmu(nu)
             MoutCalc = fTCtorque(nu, nUin) * mu
             If Math.Abs(1 - MoutCalc / Mout) > lastErr Then
@@ -330,23 +361,48 @@ Public Class cGBX
             lastErr = Math.Abs(1 - MoutCalc / Mout)
         Loop
 
+
         If nUin < VEH.nLeerl Then
 
             MODdata.ModErrors.TCextrapol = ""
 
             nUin = VEH.nLeerl
             nu = nUout / nUin
+
+            If nu > TCnu(TCdim) Then
+                nu = TCnu(TCdim)
+                nUin = nUout / nu
+            ElseIf nu < TCnu(0) Then
+
+                WorkerMsg(tMsgID.Err, "Torque converter creeping not possible with current TC characteristics!", MsgSrc)
+                Return False
+
+                'nu = TCnu(0)
+                'nUin = nUout / nu
+            End If
+
             mu = fTCmu(nu)
             MoutCalc = fTCtorque(nu, nUin) * mu
 
+        End If
+
+
+        If Math.Abs(1 - MoutCalc / Mout) > DEV.TCiterPrec Then
+
             If MoutCalc < Mout Then
-                WorkerMsg(tMsgID.Err, "MoutCalc < Mout while nUin = nIdle!", MsgSrc)
-                Return False
+              
+
+                If MoutCalc > 0 Then TCmustReduce = True
+
+            Else
+
+                TC_PeBrake = nMtoPe(nUout, Mout - MoutCalc)
+
+
             End If
 
-            TC_PeBrake = nMtoPe(nUout, Mout - MoutCalc)
-
         End If
+
 
         TCMin = MoutCalc / mu
         TCnUin = nUin

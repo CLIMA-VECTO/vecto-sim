@@ -21,8 +21,8 @@ VECTO x.x (current source - next release)
 	o Engages if Pwheel < 0
 	o Disengages if Underspeed is reached.
 - Improved gear shift model for torque converter
-- Updates in torque converter IN DEVELOPMENT
-	
+- Updates in torque converter [IN DEVELOPMENT]
+- Look-Ahead Coasting now uses real coasting also if road gradient > 0 which means the coasting deceleration can be so high that no braking is necessary. In this case the braking phase will be ommitted and the total deceleration time can be shorter than expected by the given target coasting deceleration.
 	
 	
 	

@@ -269,7 +269,6 @@ Public Class cVh
     End Sub
 
 
-
     Public Sub SetMaxAcc(ByVal t As Integer)
         Dim a As Single
         Dim v As Single
@@ -430,6 +429,8 @@ Public Class cVh
             lVairBeta.Insert(t, lVairBeta(t))
         End If
 
+        MODdata.Px.Positions.Insert(t, MODdata.Px.Positions(t))
+
         MODdata.Duplicate(t)
 
         If PHEMmode = tPHEMmode.ModeADVANCE Then
@@ -504,6 +505,9 @@ Public Class cVh
             lVairVres.RemoveAt(t)
             lVairBeta.RemoveAt(t)
         End If
+
+        MODdata.Px.Positions.RemoveAt(t)
+
 
         MODdata.Cut(t)
 

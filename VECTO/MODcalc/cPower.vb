@@ -39,6 +39,9 @@ Public Class cPower
     Private LastGearChange As Integer
     Private LastClutch As tEngClutch
 
+    Public Positions As New List(Of Short)
+
+
     Public Sub New()
         bHEVinit = False
         bHorEVinit = False
@@ -407,7 +410,6 @@ lb10:
         Dim nU As Single
         Dim nn As Single
         Dim vCoasting As Single
-        Dim Positions As New List(Of Short)
         Dim Vmax As Single
         Dim Vmin As Single
         Dim Tlookahead As Integer
@@ -423,6 +425,7 @@ lb10:
         Dim vRollout As Single
 
         Dim MsgSrc As String
+
 
         MsgSrc = "Power/PreRun"
 
@@ -441,6 +444,8 @@ lb10:
         Vh = MODdata.Vh
         Gvorg = DRI.Gvorg
         Nvorg = DRI.Nvorg
+
+        Positions = New List(Of Short)
 
         'Generate Positions List
         For i = 0 To MODdata.tDim
@@ -634,7 +639,7 @@ lb10:
             If Vh.V(i - 1) - Vh.V(i) > 0.0001 And Not Positions(i) = 4 Then Positions(i) = 1
         Next
 
-        'Mark Look-Ahead Coasting Positions
+        'Look-Ahead Coasting
         i = MODdata.tDim + 1
         Do
             i -= 1
@@ -688,7 +693,7 @@ lb10:
                                     'If Vrollout < Vist Then
                                     Vh.SetSpeed(j, vCoasting)
                                     Positions(j) = 3
-                                    Vh.NoDistCorr(j) = True
+                                    '   Vh.NoDistCorr(j) = True
                                 Else
                                     Exit For
                                 End If
@@ -700,35 +705,6 @@ lb10:
                     End If
 
                 Loop Until LookAheadDone Or i = 0
-
-                'Correct distance error
-                'If t - 1 > 0 Then
-                '    DistError = 0
-                '    For i = t To i0
-                '        DistError += (Vh.Vsoll(i) - Vh.V(i))
-                '    Next
-
-                '    DistError0 = DistError
-
-                '    Do While DistError - Vh.V(t) > 0 'Math.Abs(DistError - Vh.V(t - 1)) < Math.Abs(DistError)
-                '        Vh.DuplicatePreRun(t - 1)
-                '        DistError -= Vh.V(t)
-                '        MODdata.tDim += 1
-                '    Loop
-
-
-
-                '    'Vh.Weg(i0) += DistError0
-
-                '    'For i = t To i0
-                '    '    Vh.NoDistCorr(i) = True
-                '    'Next
-
-                '    'For i = i0 To 0 Step -1
-                '    '    Vh.Weg(i) -= DistError0
-                '    'Next
-
-                'End If
 
                 i = i0
 
@@ -949,19 +925,20 @@ lbGschw:
 
                     GoTo lbGschw
 
-                    '- Deceleration limit ---------------------------
-                    'Else
-                    '    'Check whether Deceleration too high
-                    '    amax = GEN.aDesMin(Vist)
-                    '    If amax > -0.001 Then
-                    '        WorkerMsg(tMsgID.Err, "aDesMax(dec) invalid! v= " & Vist & ", aDesMax(dec) =" & amax, MsgSrc)
-                    '        Return False
-                    '    End If
-                    '    If aist < amax - 0.0001 Then
-                    '        Vh.SetSpeed0(jz, Vh.V0(jz) + amax)
-                    '        GoTo lbGschw
-                    '    End If
-                    '----------------------------------------------------
+
+                ElseIf FirstSecItar Then    'this is necessary to avoid speed reduction failure
+
+                    'Check whether Deceleration too high
+                    amax = GEN.aDesMin(Vist)
+                    If amax > -0.001 Then
+                        WorkerMsg(tMsgID.Err, "aDesMax(dec) invalid! v= " & Vist & ", aDesMax(dec) =" & amax, MsgSrc)
+                        Return False
+                    End If
+                    If aist < amax - 0.0001 Then
+                        Vh.SetSpeed0(jz, Vh.V0(jz) + amax)
+                        GoTo lbGschw
+                    End If
+
 
                 End If
 
@@ -1012,7 +989,6 @@ lbGschw:
             '    Vh.ReduceSpeed(jz, 0.95)
             '    GoTo lbGschw
             'End If
-
 
             '************************************ Gear selection ************************************
             If VehState0 = tVehState.Stopped Or TracIntrOn Then
@@ -1233,9 +1209,15 @@ lbCheck:
                     PaGetr = fPaG(Vist, aist)
                     Pkup = PvorD + PlossGB + PlossDiff + PaGetr + PlossRt
 
-                    If Not GBX.TCiteration(fnUout(Vist, Gear), Pkup) Then
+                    If Not GBX.TCiteration(fnUout(Vist, Gear), Pkup, jz) Then
                         WorkerMsg(tMsgID.Err, "TC Iteration failed!", MsgSrc & "/t= " & jz + 1)
                         Return False
+                    End If
+
+                    If GBX.TCmustReduce Then
+                        Vh.ReduceSpeed(jz, 0.999)
+                        FirstSecItar = False
+                        GoTo lbGschw
                     End If
 
                     nn = (GBX.TCnUin - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
@@ -1901,7 +1883,7 @@ lb_nOK:
         Dim Grad As Single
 
 
-        vstep = 0.1
+        vstep = 5
         nU = fnU(v, Gear, False)
         Pdrag = FLD.Pdrag((nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl))
 
