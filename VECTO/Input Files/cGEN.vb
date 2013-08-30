@@ -54,6 +54,7 @@ Public Class cGEN
     Private boStartStop As Boolean
     Private siStStV As Single
     Private siStStT As Single
+    Public StStDelay As Integer
     Private boSOCnJa As Boolean
     Private siSOCstart As Single
     Private GetrMod As tTransLossModel
@@ -374,6 +375,10 @@ Public Class cGEN
         UnderSpeed = CSng(file.ReadLine(0))
         vMinLA = CSng(file.ReadLine(0))
 
+        If file.EndOfFile Then GoTo lbClose
+
+        StStDelay = CSng(file.ReadLine(0))
+
 lbClose:
 
         file.Close()
@@ -388,145 +393,6 @@ lbEr:
         file = Nothing
 
         Return False
-
-
-    End Function
-
-    Private Function ReadOldFormat() As Boolean
-        Dim file As cFile_V3
-        Dim ialt As Short
-        Dim str As String
-
-        file = New cFile_V3
-
-        If Not file.OpenRead(sFilePath) Then
-            file = Nothing
-            Return False
-        End If
-
-
-        '**** Read GEN file ****
-
-        boPKWja = CBool(file.ReadLine(0))
-
-        bodynkorja = CBool(file.ReadLine(0))
-
-        ineklasse = CShort(file.ReadLine(0))
-        inizykwael = CShort(file.ReadLine(0))
-        ialt = CShort(file.ReadLine(0))
-
-        'Convert Old Calculation-mode into New-one
-        EngAnalysis = False
-        CreateMap = False
-        ModeHorEV = False
-        Select Case ialt
-            Case 0      '0 Standard (Gesamtes Fzg mit bestehendem Kennfeld)
-                VehMode = tVehMode.StandardMode
-            Case 1      '1 Motor alleine (mit bestehendem Kennfeld)
-                VehMode = tVehMode.EngineOnly
-            Case 2      '2 Kennfeld erstellen aus Rollenzyklus aus MES
-                VehMode = tVehMode.StandardMode
-                CreateMap = True
-            Case 3      '3 Motoranalyse (x-Sek. Mittelwerte Messung-Rechng) aus NPI
-                VehMode = tVehMode.EngineOnly
-                EngAnalysis = True
-            Case 4      '4 Kennfeld erstellen aus Motormessung aus NPI
-                VehMode = tVehMode.EngineOnly
-                CreateMap = True
-            Case 5      '5 Motoranalyse aus Fahrzeugmessung aus MES
-                VehMode = tVehMode.StandardMode
-                EngAnalysis = True
-            Case 6      '6 Hybridfahrzeug (VKM + Elektro)
-                VehMode = tVehMode.HEV
-                ModeHorEV = True
-            Case Else   '7 Elektrofahrzeug
-                VehMode = tVehMode.EV
-                ModeHorEV = True
-        End Select
-
-        inPschrit = CShort(file.ReadLine(0))
-        innschrit = CShort(file.ReadLine(0))
-
-        boMapSchaltja = CBool(file.ReadLine(0))
-
-        iniMsek = CShort(file.ReadLine(0))
-
-        boottoJa = (CInt(file.ReadLine(0)) = 1)
-
-        bokaltst1 = CBool(file.ReadLine(0))
-
-        sitkat1 = CSng(file.ReadLine(0))
-        sitkw1 = CSng(file.ReadLine(0))
-        sihsstart = CSng(file.ReadLine(0))
-
-        stPathVEH.Init(MyPath, file.ReadLine(0))
-
-        stPathENG.Init(MyPath, file.ReadLine(0))
-
-        'stCycleFile.Init(MyPath, file.ReadLine(0))
-
-        stPathGBX.Init(MyPath, file.ReadLine(0))
-
-        stdynspez.Init(MyPath, file.ReadLine(0))
-
-        stkatmap.Init(MyPath, file.ReadLine(0))
-
-        stkwmap.Init(MyPath, file.ReadLine(0))
-
-        stkatkurv.Init(MyPath, file.ReadLine(0))
-
-        stkwkurv.Init(MyPath, file.ReadLine(0))
-
-        stcooldown.Init(MyPath, file.ReadLine(0))
-
-        sttumgebung.Init(MyPath, file.ReadLine(0))
-
-        If file.EndOfFile Then GoTo lbClose
-
-        stBatfile.Init(MyPath, file.ReadLine(0))
-
-        stEmospez.Init(MyPath, file.ReadLine(0))
-
-        stEANfile.Init(MyPath, file.ReadLine(0))
-
-        stGetspez.Init(MyPath, file.ReadLine(0))
-
-        stSTEnam.Init(MyPath, file.ReadLine(0))
-
-        stEKFnam.Init(MyPath, file.ReadLine(0))
-
-        If file.EndOfFile Then GoTo lbClose
-
-        boEXSja = CBool(file.ReadLine(0))
-
-        stPathExs.Init(MyPath, file.ReadLine(0))
-
-        If file.EndOfFile Then GoTo lbClose
-
-
-        str = file.ReadLine(0)
-
-        If Not IsNumeric(str) Then GoTo lbClose
-
-        boStartStop = CBool(str)
-        siStStV = CSng(file.ReadLine(0))
-        siStStT = CSng(file.ReadLine(0))
-
-        boSOCnJa = CBool(file.ReadLine(0))
-        siSOCstart = CSng(file.ReadLine(0))
-
-        If file.EndOfFile Then GoTo lbClose
-
-        GetrMod = CShort(file.ReadLine(0))
-
-
-lbClose:
-
-        file.Close()
-        file = Nothing
-
-        Return True
-
 
 
     End Function
@@ -755,6 +621,9 @@ lbClose:
         fGEN.WriteLine(CStr(vMinLA))
 
 
+        fGEN.WriteLine("c Start/Stop activation delay time [s]")
+        fGEN.WriteLine(StStDelay)
+
 
         fGEN.Close()
         fGEN = Nothing
@@ -781,6 +650,7 @@ lbClose:
         boStartStop = False
         siStStV = 5
         siStStT = 5
+        StStDelay = 0
         boSOCnJa = False
         siSOCstart = 0.5
         GetrMod = tTransLossModel.Detailed

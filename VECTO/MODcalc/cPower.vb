@@ -312,7 +312,7 @@ Public Class cPower
             'Full load / motoring
             Pmin = FLD(Gear).Pdrag(nn)
 
-            If Vh.Vsoll(i) >= GEN.vMin / 3.6 Then
+            If Vist >= GEN.vMin / 3.6 Then
 
                 If GEN.EcoRollOn Then
 
@@ -453,7 +453,7 @@ Public Class cPower
                         Positions(i) = 2
                     Else
                         'Coasting (Forward)
-                        If GEN.LookAheadOn And Vh.Vsoll(i) >= GEN.vMinLA / 3.6 Then
+                        If GEN.LookAheadOn And Vist >= GEN.vMinLA / 3.6 Then
 
                             For j = t To i0
                                 Vist = Vh.V(j)
@@ -504,6 +504,8 @@ Public Class cPower
         'Start/Stop Control
         Dim StStAus As Boolean
         Dim StStTx As Single
+        Dim StStDelayTx As Integer
+        Dim StStPossible As Boolean
 
         Dim Vh As cVh
 
@@ -565,6 +567,7 @@ Public Class cPower
         End If
         StStAus = False
         StStTx = 0
+        StStDelayTx = 0
         SecSpeedRed = 0
 
         If VEH.TracIntrSi < 0.001 Then
@@ -619,6 +622,8 @@ lbGschw:
             'Now through DRI-class
             Vist = Vh.V(jz)
             aist = Vh.a(jz)
+
+            StStPossible = False
 
             'If Speed over Top theoretical Speed => Reduce
             If Vist > GVmax + 0.0001 And Not GVset Then
@@ -760,7 +765,7 @@ lbGschw:
                     End If
 
                     'Must be reset here because the Gear-shifting model may cause changes
-                        MODdata.ModErrors.PxReset()
+                    MODdata.ModErrors.PxReset()
 
                 End If
 
@@ -788,6 +793,11 @@ lbGschw:
 
             'Eco-Roll
             If Vh.EcoRoll(jz) AndAlso PvorD < 0.01 * VEH.Pnenn Then
+                Clutch = tEngClutch.Opened
+                Gear = 0
+            End If
+
+            If Gear = 1 And Pminus And Vist <= 5 / 3.6 Then
                 Clutch = tEngClutch.Opened
                 Gear = 0
             End If
@@ -1035,6 +1045,7 @@ lb_nOK:
                     Case Else           'Idle/Stop
                         If GEN.StartStop Then
                             If Vist <= GEN.StStV / 3.6 Then
+                                StStPossible = True
                                 If StStAus And jz > 0 Then
                                     If MODdata.EngState(jz - 1) = tEngState.Stopped Then
                                         EngState0 = tEngState.Stopped
@@ -1225,16 +1236,21 @@ lb_nOK:
 
             'Start / Stop - Activation-Speed Control
             If GEN.StartStop Then
+                If StStPossible Then
+                    StStDelayTx += 1
+                Else
+                    StStDelayTx = 0
+                End If
                 If StStAus Then
                     If Not EngState0 = tEngState.Stopped Then
                         StStTx += 1
-                        If StStTx > GEN.StStT Then
+                        If StStTx > GEN.StStT And StStDelayTx >= GEN.StStDelay Then
                             StStTx = 1
                             StStAus = False
                         End If
                     End If
                 Else
-                    If EngState0 = tEngState.Stopped Then StStAus = True
+                    If EngState0 = tEngState.Stopped Or StStDelayTx < GEN.StStDelay Then StStAus = True
                 End If
             End If
 

@@ -201,6 +201,9 @@ Partial Class F_GEN
         Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TbStStDelay = New System.Windows.Forms.TextBox()
+        Me.Label30 = New System.Windows.Forms.Label()
+        Me.Label31 = New System.Windows.Forms.Label()
         Me.TabPgHEV.SuspendLayout()
         Me.TabPgColdSt.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
@@ -1198,11 +1201,11 @@ Partial Class F_GEN
         'Label28
         '
         Me.Label28.AutoSize = True
-        Me.Label28.Location = New System.Drawing.Point(26, 38)
+        Me.Label28.Location = New System.Drawing.Point(41, 38)
         Me.Label28.Name = "Label28"
-        Me.Label28.Size = New System.Drawing.Size(95, 13)
+        Me.Label28.Size = New System.Drawing.Size(80, 13)
         Me.Label28.TabIndex = 1
-        Me.Label28.Text = "Min. Target Speed"
+        Me.Label28.Text = "Minimum speed"
         '
         'CbLookAhead
         '
@@ -1288,11 +1291,11 @@ Partial Class F_GEN
         'Label23
         '
         Me.Label23.AutoSize = True
-        Me.Label23.Location = New System.Drawing.Point(143, 76)
+        Me.Label23.Location = New System.Drawing.Point(158, 76)
         Me.Label23.Name = "Label23"
-        Me.Label23.Size = New System.Drawing.Size(95, 13)
+        Me.Label23.Size = New System.Drawing.Size(80, 13)
         Me.Label23.TabIndex = 1
-        Me.Label23.Text = "Min. Target Speed"
+        Me.Label23.Text = "Minimum speed"
         '
         'Label22
         '
@@ -1348,24 +1351,27 @@ Partial Class F_GEN
         '
         Me.GrStartStop.Controls.Add(Me.PnStartStop)
         Me.GrStartStop.Controls.Add(Me.ChBStartStop)
-        Me.GrStartStop.Location = New System.Drawing.Point(9, 83)
+        Me.GrStartStop.Location = New System.Drawing.Point(7, 56)
         Me.GrStartStop.Name = "GrStartStop"
-        Me.GrStartStop.Size = New System.Drawing.Size(375, 87)
+        Me.GrStartStop.Size = New System.Drawing.Size(375, 130)
         Me.GrStartStop.TabIndex = 3
         Me.GrStartStop.TabStop = False
         Me.GrStartStop.Text = "Engine Start Stop"
         '
         'PnStartStop
         '
+        Me.PnStartStop.Controls.Add(Me.Label31)
         Me.PnStartStop.Controls.Add(Me.Label27)
         Me.PnStartStop.Controls.Add(Me.TBSSspeed)
         Me.PnStartStop.Controls.Add(Me.LabelSSspeed)
         Me.PnStartStop.Controls.Add(Me.Label26)
+        Me.PnStartStop.Controls.Add(Me.Label30)
         Me.PnStartStop.Controls.Add(Me.LabelSStime)
+        Me.PnStartStop.Controls.Add(Me.TbStStDelay)
         Me.PnStartStop.Controls.Add(Me.TBSStime)
         Me.PnStartStop.Location = New System.Drawing.Point(148, 10)
         Me.PnStartStop.Name = "PnStartStop"
-        Me.PnStartStop.Size = New System.Drawing.Size(221, 71)
+        Me.PnStartStop.Size = New System.Drawing.Size(221, 106)
         Me.PnStartStop.TabIndex = 1
         '
         'Label27
@@ -2020,6 +2026,31 @@ Partial Class F_GEN
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
+        'TbStStDelay
+        '
+        Me.TbStStDelay.Location = New System.Drawing.Point(99, 61)
+        Me.TbStStDelay.Name = "TbStStDelay"
+        Me.TbStStDelay.Size = New System.Drawing.Size(64, 20)
+        Me.TbStStDelay.TabIndex = 1
+        '
+        'Label30
+        '
+        Me.Label30.AutoSize = True
+        Me.Label30.Location = New System.Drawing.Point(6, 64)
+        Me.Label30.Name = "Label30"
+        Me.Label30.Size = New System.Drawing.Size(87, 13)
+        Me.Label30.TabIndex = 35
+        Me.Label30.Text = "Min ICE-On Time"
+        '
+        'Label31
+        '
+        Me.Label31.AutoSize = True
+        Me.Label31.Location = New System.Drawing.Point(169, 64)
+        Me.Label31.Name = "Label31"
+        Me.Label31.Size = New System.Drawing.Size(18, 13)
+        Me.Label31.TabIndex = 38
+        Me.Label31.Text = "[s]"
+        '
         'F_GEN
         '
         Me.AcceptButton = Me.ButOK
@@ -2258,4 +2289,7 @@ Partial Class F_GEN
     Friend WithEvents Label29 As System.Windows.Forms.Label
     Friend WithEvents TbVminLA As System.Windows.Forms.TextBox
     Friend WithEvents Label28 As System.Windows.Forms.Label
+    Friend WithEvents Label31 As System.Windows.Forms.Label
+    Friend WithEvents Label30 As System.Windows.Forms.Label
+    Friend WithEvents TbStStDelay As System.Windows.Forms.TextBox
 End Class

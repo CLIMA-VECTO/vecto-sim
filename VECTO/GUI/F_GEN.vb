@@ -641,6 +641,7 @@ Public Class F_GEN
         Me.ChBStartStop.Checked = Gfile.StartStop
         Me.TBSSspeed.Text = Gfile.StStV
         Me.TBSStime.Text = Gfile.StStT
+        Me.TbStStDelay.Text = Gfile.StStDelay
 
         'SOC Start/Iteration
         Me.TbSOCstart.Text = Gfile.SOCstart
@@ -793,6 +794,7 @@ Public Class F_GEN
         g.StartStop = Me.ChBStartStop.Checked
         g.StStV = CSng(fTextboxToNumString(Me.TBSSspeed.Text))
         g.StStT = CSng(fTextboxToNumString(Me.TBSStime.Text))
+        g.StStDelay = CInt(fTextboxToNumString(Me.TbStStDelay.Text))
 
         'SOC
         g.SOCnJa = Me.CbSOCnIter.Checked
@@ -1102,7 +1104,7 @@ Public Class F_GEN
         Change()
     End Sub
 
-    Private Sub TBSStime_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBSStime.TextChanged
+    Private Sub TBSStime_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBSStime.TextChanged, TbStStDelay.TextChanged
         Change()
     End Sub
 

@@ -5,6 +5,7 @@ VECTO ?.? (future release) TODO
 	New Eco Roll
 	GBX
 	<DRAG>
+	StStDelay
 - Gearbox Rules must be set when loading .gbx file to aviod invalid settings (e.g. AT with Skip Gears)
 - Correct Pg and Proll calculation (Road gradient)??
 
@@ -27,6 +28,7 @@ VECTO x.x (current source - next release)
 	o Engages if Pwheel < 0
 	o Disengages if Underspeed is reached.
 - Look-Ahead Coasting now uses real coasting also if road gradient > 0 which means the coasting deceleration can be so high that no braking is necessary. In this case the braking phase will be ommitted and the total deceleration time can be shorter than expected by the given target coasting deceleration.
+- "Minimum (actual) speed" instead of "Min. Target Speed" for Eco-Roll, Overspeed and Look Ahead Coasting  => actual speed instead of target speed
 - Bugfix: Error if Look-Ahead Coasting was disabled.
 - Eco-Roll revised (see changelog)
 - Removed "IgnoreFCextrapol" form DEV-Options
@@ -39,6 +41,8 @@ VECTO x.x (current source - next release)
 	o Improved gear shift model for torque converter
 	o Driving Cycle Preprocessing and Gear Shift Model now use approximated efficiency values based in the transmission loss maps. Reduces calculation time significantly with little to no impact on fuel consumption.
 - Engine Only Mode: Engine motoring points can be defined explicitly in load cycle with "<DRAG>"
+- When speed is under 5km/h and engine in motoring operating then gearbox shifts to Neutral
+- Start-Stop activation delay time can be defined in job file
 - Updated some error messages (units)
 	
 	
