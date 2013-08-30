@@ -54,9 +54,6 @@ Partial Class F_ENG
         Me.TbDispl = New System.Windows.Forms.TextBox()
         Me.TbName = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.TbFLD = New System.Windows.Forms.TextBox()
-        Me.BtFLD = New System.Windows.Forms.Button()
         Me.TbMAP = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.BtMAP = New System.Windows.Forms.Button()
@@ -68,12 +65,18 @@ Partial Class F_ENG
         Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.BtFLDOpen = New System.Windows.Forms.Button()
         Me.BtMAPopen = New System.Windows.Forms.Button()
+        Me.BtAddFLD = New System.Windows.Forms.Button()
+        Me.BtRemFLD = New System.Windows.Forms.Button()
+        Me.LvFLDs = New System.Windows.Forms.ListView()
+        Me.ColumnHeader0 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.ToolStrip1.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CmOpenFile.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
         'TbNleerl
@@ -180,7 +183,7 @@ Partial Class F_ENG
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(418, 360)
+        Me.ButCancel.Location = New System.Drawing.Point(418, 473)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 13
@@ -190,7 +193,7 @@ Partial Class F_ENG
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(337, 360)
+        Me.ButOK.Location = New System.Drawing.Point(337, 473)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 12
@@ -279,7 +282,7 @@ Partial Class F_ENG
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 386)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 499)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(505, 22)
         Me.StatusStrip1.SizingGrip = False
@@ -333,35 +336,9 @@ Partial Class F_ENG
         Me.Label3.TabIndex = 11
         Me.Label3.Text = "Make and Model"
         '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(12, 205)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(128, 13)
-        Me.Label4.TabIndex = 38
-        Me.Label4.Text = "Full Load and Drag Curve"
-        '
-        'TbFLD
-        '
-        Me.TbFLD.Location = New System.Drawing.Point(12, 221)
-        Me.TbFLD.Name = "TbFLD"
-        Me.TbFLD.Size = New System.Drawing.Size(418, 20)
-        Me.TbFLD.TabIndex = 6
-        '
-        'BtFLD
-        '
-        Me.BtFLD.Location = New System.Drawing.Point(436, 219)
-        Me.BtFLD.Name = "BtFLD"
-        Me.BtFLD.Size = New System.Drawing.Size(28, 23)
-        Me.BtFLD.TabIndex = 7
-        Me.BtFLD.TabStop = False
-        Me.BtFLD.Text = "..."
-        Me.BtFLD.UseVisualStyleBackColor = True
-        '
         'TbMAP
         '
-        Me.TbMAP.Location = New System.Drawing.Point(12, 271)
+        Me.TbMAP.Location = New System.Drawing.Point(12, 388)
         Me.TbMAP.Name = "TbMAP"
         Me.TbMAP.Size = New System.Drawing.Size(418, 20)
         Me.TbMAP.TabIndex = 8
@@ -369,7 +346,7 @@ Partial Class F_ENG
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(12, 255)
+        Me.Label6.Location = New System.Drawing.Point(12, 372)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(115, 13)
         Me.Label6.TabIndex = 38
@@ -377,7 +354,7 @@ Partial Class F_ENG
         '
         'BtMAP
         '
-        Me.BtMAP.Location = New System.Drawing.Point(436, 269)
+        Me.BtMAP.Location = New System.Drawing.Point(436, 386)
         Me.BtMAP.Name = "BtMAP"
         Me.BtMAP.Size = New System.Drawing.Size(28, 23)
         Me.BtMAP.TabIndex = 9
@@ -388,7 +365,7 @@ Partial Class F_ENG
         'TbWHTC
         '
         Me.TbWHTC.Enabled = False
-        Me.TbWHTC.Location = New System.Drawing.Point(12, 321)
+        Me.TbWHTC.Location = New System.Drawing.Point(12, 438)
         Me.TbWHTC.Name = "TbWHTC"
         Me.TbWHTC.Size = New System.Drawing.Size(447, 20)
         Me.TbWHTC.TabIndex = 10
@@ -397,7 +374,7 @@ Partial Class F_ENG
         '
         Me.Label7.AutoSize = True
         Me.Label7.Enabled = False
-        Me.Label7.Location = New System.Drawing.Point(12, 305)
+        Me.Label7.Location = New System.Drawing.Point(12, 422)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(109, 13)
         Me.Label7.TabIndex = 38
@@ -406,7 +383,7 @@ Partial Class F_ENG
         'BtWHTC
         '
         Me.BtWHTC.Enabled = False
-        Me.BtWHTC.Location = New System.Drawing.Point(465, 319)
+        Me.BtWHTC.Location = New System.Drawing.Point(465, 436)
         Me.BtWHTC.Name = "BtWHTC"
         Me.BtWHTC.Size = New System.Drawing.Size(28, 23)
         Me.BtWHTC.TabIndex = 11
@@ -448,25 +425,70 @@ Partial Class F_ENG
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
-        'BtFLDOpen
-        '
-        Me.BtFLDOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.BtFLDOpen.Location = New System.Drawing.Point(470, 219)
-        Me.BtFLDOpen.Name = "BtFLDOpen"
-        Me.BtFLDOpen.Size = New System.Drawing.Size(23, 23)
-        Me.BtFLDOpen.TabIndex = 40
-        Me.BtFLDOpen.TabStop = False
-        Me.BtFLDOpen.UseVisualStyleBackColor = True
-        '
         'BtMAPopen
         '
         Me.BtMAPopen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.BtMAPopen.Location = New System.Drawing.Point(470, 269)
+        Me.BtMAPopen.Location = New System.Drawing.Point(470, 386)
         Me.BtMAPopen.Name = "BtMAPopen"
         Me.BtMAPopen.Size = New System.Drawing.Size(23, 23)
         Me.BtMAPopen.TabIndex = 40
         Me.BtMAPopen.TabStop = False
         Me.BtMAPopen.UseVisualStyleBackColor = True
+        '
+        'BtAddFLD
+        '
+        Me.BtAddFLD.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
+        Me.BtAddFLD.Location = New System.Drawing.Point(6, 133)
+        Me.BtAddFLD.Name = "BtAddFLD"
+        Me.BtAddFLD.Size = New System.Drawing.Size(29, 23)
+        Me.BtAddFLD.TabIndex = 42
+        Me.BtAddFLD.UseVisualStyleBackColor = True
+        '
+        'BtRemFLD
+        '
+        Me.BtRemFLD.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
+        Me.BtRemFLD.Location = New System.Drawing.Point(43, 133)
+        Me.BtRemFLD.Name = "BtRemFLD"
+        Me.BtRemFLD.Size = New System.Drawing.Size(29, 23)
+        Me.BtRemFLD.TabIndex = 43
+        Me.BtRemFLD.UseVisualStyleBackColor = True
+        '
+        'LvFLDs
+        '
+        Me.LvFLDs.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader0, Me.ColumnHeader1})
+        Me.LvFLDs.FullRowSelect = True
+        Me.LvFLDs.GridLines = True
+        Me.LvFLDs.HideSelection = False
+        Me.LvFLDs.Location = New System.Drawing.Point(6, 19)
+        Me.LvFLDs.MultiSelect = False
+        Me.LvFLDs.Name = "LvFLDs"
+        Me.LvFLDs.Size = New System.Drawing.Size(469, 108)
+        Me.LvFLDs.TabIndex = 41
+        Me.LvFLDs.TabStop = False
+        Me.LvFLDs.UseCompatibleStateImageBehavior = False
+        Me.LvFLDs.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader0
+        '
+        Me.ColumnHeader0.Text = "File"
+        Me.ColumnHeader0.Width = 365
+        '
+        'ColumnHeader1
+        '
+        Me.ColumnHeader1.Text = "Assigned Gears"
+        Me.ColumnHeader1.Width = 92
+        '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.LvFLDs)
+        Me.GroupBox1.Controls.Add(Me.BtRemFLD)
+        Me.GroupBox1.Controls.Add(Me.BtAddFLD)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 196)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(481, 162)
+        Me.GroupBox1.TabIndex = 44
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Full Load and Drag Curves"
         '
         'F_ENG
         '
@@ -474,16 +496,14 @@ Partial Class F_ENG
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(505, 408)
+        Me.ClientSize = New System.Drawing.Size(505, 521)
+        Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.BtMAPopen)
-        Me.Controls.Add(Me.BtFLDOpen)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.BtWHTC)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.BtMAP)
-        Me.Controls.Add(Me.BtFLD)
         Me.Controls.Add(Me.Label6)
-        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.TbNleerl)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.Label11)
@@ -493,10 +513,9 @@ Partial Class F_ENG
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.ButCancel)
         Me.Controls.Add(Me.Label10)
+        Me.Controls.Add(Me.ButOK)
         Me.Controls.Add(Me.TbWHTC)
         Me.Controls.Add(Me.TbMAP)
-        Me.Controls.Add(Me.ButOK)
-        Me.Controls.Add(Me.TbFLD)
         Me.Controls.Add(Me.TbInertia)
         Me.Controls.Add(Me.Label41)
         Me.Controls.Add(Me.Label3)
@@ -520,6 +539,7 @@ Partial Class F_ENG
         Me.StatusStrip1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CmOpenFile.ResumeLayout(False)
+        Me.GroupBox1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -552,9 +572,6 @@ Partial Class F_ENG
     Friend WithEvents TbDispl As System.Windows.Forms.TextBox
     Friend WithEvents TbName As System.Windows.Forms.TextBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents TbFLD As System.Windows.Forms.TextBox
-    Friend WithEvents BtFLD As System.Windows.Forms.Button
     Friend WithEvents TbMAP As System.Windows.Forms.TextBox
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents BtMAP As System.Windows.Forms.Button
@@ -568,6 +585,11 @@ Partial Class F_ENG
     Friend WithEvents OpenWithGRAPHiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents BtFLDOpen As System.Windows.Forms.Button
     Friend WithEvents BtMAPopen As System.Windows.Forms.Button
+    Friend WithEvents BtAddFLD As System.Windows.Forms.Button
+    Friend WithEvents BtRemFLD As System.Windows.Forms.Button
+    Friend WithEvents LvFLDs As System.Windows.Forms.ListView
+    Friend WithEvents ColumnHeader0 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
 End Class

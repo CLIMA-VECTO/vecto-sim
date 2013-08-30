@@ -324,6 +324,8 @@ Public Class cMOD
 
         Dim AuxList As New List(Of String)
 
+        Dim Gear As Integer
+
         MsgSrc = "MOD/Output"
 
         '*********** Initialization / Open File **************
@@ -519,6 +521,14 @@ Public Class cMOD
 
             For t = 0 To t1
 
+                'Predefine Gear for FLD assignment
+                If GEN.VehMode = tVehMode.EngineOnly Then
+                    Gear = 0
+                Else
+                    Gear = .Gear(t)
+                End If
+
+
                 s.Length = 0
 
                 'Time
@@ -603,9 +613,9 @@ Public Class cMOD
                             s.Append(Sepp & "-" & Sepp & "-")
                         Else
                             If t = 0 Then
-                                s.Append(Sepp & 1000 * FLD.Pfull(.nn(t)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60) & Sepp & 1000 * FLD.Pdrag(.nn(t)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60))
+                                s.Append(Sepp & 1000 * FLD(Gear).Pfull(.nn(t)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60) & Sepp & 1000 * FLD(Gear).Pdrag(.nn(t)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60))
                             Else
-                                s.Append(Sepp & 1000 * FLD.Pfull(.nn(t), .Pe(t - 1)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60) & Sepp & 1000 * FLD.Pdrag(.nn(t)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60))
+                                s.Append(Sepp & 1000 * FLD(Gear).Pfull(.nn(t), .Pe(t - 1)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60) & Sepp & 1000 * FLD(Gear).Pdrag(.nn(t)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60))
                             End If
                         End If
 
@@ -625,9 +635,9 @@ Public Class cMOD
                         s.Append(Sepp & "-" & Sepp & "-")
                     Else
                         If t = 0 Then
-                            s.Append(Sepp & FLD.Pfull(.nn(t)) & Sepp & FLD.Pdrag(.nn(t)))
+                            s.Append(Sepp & FLD(Gear).Pfull(.nn(t)) & Sepp & FLD(Gear).Pdrag(.nn(t)))
                         Else
-                            s.Append(Sepp & FLD.Pfull(.nn(t), .Pe(t - 1)) & Sepp & FLD.Pdrag(.nn(t)))
+                            s.Append(Sepp & FLD(Gear).Pfull(.nn(t), .Pe(t - 1)) & Sepp & FLD(Gear).Pdrag(.nn(t)))
                         End If
                     End If
 
@@ -645,7 +655,7 @@ Public Class cMOD
                 If Not GEN.VehMode = tVehMode.EngineOnly Then
 
                     'Gear
-                    s.Append(Sepp & GBX.fGearStr(.Gear(t)))
+                    s.Append(Sepp & .Gear(t))
 
                     'Transmission-losses
                     s.Append(Sepp & .PlossGB(t))

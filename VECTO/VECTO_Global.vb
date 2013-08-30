@@ -33,7 +33,7 @@ Module VECTO_Global
     Public VEH As cVEH
     Public MAP As cMAP
     Public DRI As cDRI
-    Public FLD As cFLD
+    Public FLD As List(Of cFLD)
     Public MODdata As cMOD
     Public TRS As cTRS
     Public EXS As cEXS

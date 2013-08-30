@@ -33,6 +33,7 @@ Partial Class F_VEH_GearDlog
         Me.Label3 = New System.Windows.Forms.Label()
         Me.BtBrowse = New System.Windows.Forms.Button()
         Me.BtNext = New System.Windows.Forms.Button()
+        Me.ChIsTCgear = New System.Windows.Forms.CheckBox()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -44,7 +45,7 @@ Partial Class F_VEH_GearDlog
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(287, 89)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(380, 89)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -91,7 +92,7 @@ Partial Class F_VEH_GearDlog
         'TbRatio
         '
         Me.TbRatio.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TbRatio.Location = New System.Drawing.Point(138, 6)
+        Me.TbRatio.Location = New System.Drawing.Point(149, 6)
         Me.TbRatio.Name = "TbRatio"
         Me.TbRatio.Size = New System.Drawing.Size(66, 20)
         Me.TbRatio.TabIndex = 3
@@ -100,7 +101,7 @@ Partial Class F_VEH_GearDlog
         '
         Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(100, 9)
+        Me.Label2.Location = New System.Drawing.Point(111, 9)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(32, 13)
         Me.Label2.TabIndex = 4
@@ -110,7 +111,7 @@ Partial Class F_VEH_GearDlog
         '
         Me.TbMapPath.Location = New System.Drawing.Point(12, 61)
         Me.TbMapPath.Name = "TbMapPath"
-        Me.TbMapPath.Size = New System.Drawing.Size(383, 20)
+        Me.TbMapPath.Size = New System.Drawing.Size(476, 20)
         Me.TbMapPath.TabIndex = 5
         '
         'Label3
@@ -124,7 +125,7 @@ Partial Class F_VEH_GearDlog
         '
         'BtBrowse
         '
-        Me.BtBrowse.Location = New System.Drawing.Point(401, 59)
+        Me.BtBrowse.Location = New System.Drawing.Point(494, 59)
         Me.BtBrowse.Name = "BtBrowse"
         Me.BtBrowse.Size = New System.Drawing.Size(32, 23)
         Me.BtBrowse.TabIndex = 8
@@ -134,12 +135,22 @@ Partial Class F_VEH_GearDlog
         'BtNext
         '
         Me.BtNext.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.BtNext.Location = New System.Drawing.Point(214, 92)
+        Me.BtNext.Location = New System.Drawing.Point(307, 92)
         Me.BtNext.Name = "BtNext"
         Me.BtNext.Size = New System.Drawing.Size(67, 23)
         Me.BtNext.TabIndex = 9
         Me.BtNext.Text = "&Next"
         Me.BtNext.UseVisualStyleBackColor = True
+        '
+        'ChIsTCgear
+        '
+        Me.ChIsTCgear.AutoSize = True
+        Me.ChIsTCgear.Location = New System.Drawing.Point(236, 8)
+        Me.ChIsTCgear.Name = "ChIsTCgear"
+        Me.ChIsTCgear.Size = New System.Drawing.Size(241, 17)
+        Me.ChIsTCgear.TabIndex = 10
+        Me.ChIsTCgear.Text = "Torque Conveter active (lock-up clutch open)"
+        Me.ChIsTCgear.UseVisualStyleBackColor = True
         '
         'F_VEH_GearDlog
         '
@@ -147,7 +158,8 @@ Partial Class F_VEH_GearDlog
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New System.Drawing.Size(445, 130)
+        Me.ClientSize = New System.Drawing.Size(538, 130)
+        Me.Controls.Add(Me.ChIsTCgear)
         Me.Controls.Add(Me.BtNext)
         Me.Controls.Add(Me.BtBrowse)
         Me.Controls.Add(Me.Label3)
@@ -180,5 +192,6 @@ Partial Class F_VEH_GearDlog
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents BtBrowse As System.Windows.Forms.Button
     Friend WithEvents BtNext As System.Windows.Forms.Button
+    Friend WithEvents ChIsTCgear As System.Windows.Forms.CheckBox
 
 End Class

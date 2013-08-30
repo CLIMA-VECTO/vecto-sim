@@ -40,6 +40,7 @@ Partial Class F_GBX
         Me.TbTracInt = New System.Windows.Forms.TextBox()
         Me.LvGears = New System.Windows.Forms.ListView()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TBI_getr = New System.Windows.Forms.TextBox()
@@ -50,7 +51,7 @@ Partial Class F_GBX
         Me.Label3 = New System.Windows.Forms.Label()
         Me.TbName = New System.Windows.Forms.TextBox()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.BtClearGear = New System.Windows.Forms.Button()
+        Me.BtRemGear = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.PnTorqRes = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -91,6 +92,7 @@ Partial Class F_GBX
         Me.ChTCon = New System.Windows.Forms.CheckBox()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.CbGStype = New System.Windows.Forms.ComboBox()
+        Me.BtAddGear = New System.Windows.Forms.Button()
         Me.ToolStrip1.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -227,7 +229,7 @@ Partial Class F_GBX
         '
         'LvGears
         '
-        Me.LvGears.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3})
+        Me.LvGears.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader4, Me.ColumnHeader2, Me.ColumnHeader3})
         Me.LvGears.FullRowSelect = True
         Me.LvGears.GridLines = True
         Me.LvGears.HideSelection = False
@@ -245,15 +247,20 @@ Partial Class F_GBX
         Me.ColumnHeader1.Text = "Gear"
         Me.ColumnHeader1.Width = 40
         '
+        'ColumnHeader4
+        '
+        Me.ColumnHeader4.Text = "TC"
+        Me.ColumnHeader4.Width = 31
+        '
         'ColumnHeader2
         '
         Me.ColumnHeader2.Text = "Ratio"
-        Me.ColumnHeader2.Width = 70
+        Me.ColumnHeader2.Width = 62
         '
         'ColumnHeader3
         '
         Me.ColumnHeader3.Text = "Loss Map or Efficiency [-]"
-        Me.ColumnHeader3.Width = 304
+        Me.ColumnHeader3.Width = 275
         '
         'TBI_getr
         '
@@ -324,14 +331,14 @@ Partial Class F_GBX
         Me.PictureBox1.TabIndex = 43
         Me.PictureBox1.TabStop = False
         '
-        'BtClearGear
+        'BtRemGear
         '
-        Me.BtClearGear.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.BtClearGear.Location = New System.Drawing.Point(12, 297)
-        Me.BtClearGear.Name = "BtClearGear"
-        Me.BtClearGear.Size = New System.Drawing.Size(29, 23)
-        Me.BtClearGear.TabIndex = 3
-        Me.BtClearGear.UseVisualStyleBackColor = True
+        Me.BtRemGear.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
+        Me.BtRemGear.Location = New System.Drawing.Point(47, 297)
+        Me.BtRemGear.Name = "BtRemGear"
+        Me.BtRemGear.Size = New System.Drawing.Size(29, 23)
+        Me.BtRemGear.TabIndex = 3
+        Me.BtRemGear.UseVisualStyleBackColor = True
         '
         'GroupBox1
         '
@@ -705,6 +712,15 @@ Partial Class F_GBX
         Me.CbGStype.Size = New System.Drawing.Size(227, 21)
         Me.CbGStype.TabIndex = 1
         '
+        'BtAddGear
+        '
+        Me.BtAddGear.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
+        Me.BtAddGear.Location = New System.Drawing.Point(12, 297)
+        Me.BtAddGear.Name = "BtAddGear"
+        Me.BtAddGear.Size = New System.Drawing.Size(29, 23)
+        Me.BtAddGear.TabIndex = 3
+        Me.BtAddGear.UseVisualStyleBackColor = True
+        '
         'F_GBX
         '
         Me.AcceptButton = Me.ButOK
@@ -719,11 +735,12 @@ Partial Class F_GBX
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.TbName)
-        Me.Controls.Add(Me.BtClearGear)
+        Me.Controls.Add(Me.BtAddGear)
         Me.Controls.Add(Me.ButCancel)
-        Me.Controls.Add(Me.LvGears)
+        Me.Controls.Add(Me.BtRemGear)
         Me.Controls.Add(Me.TbTracInt)
         Me.Controls.Add(Me.ButOK)
+        Me.Controls.Add(Me.LvGears)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.TBI_getr)
@@ -768,7 +785,7 @@ Partial Class F_GBX
     Friend WithEvents LbStatus As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents ButCancel As System.Windows.Forms.Button
     Friend WithEvents ButOK As System.Windows.Forms.Button
-    Friend WithEvents BtClearGear As System.Windows.Forms.Button
+    Friend WithEvents BtRemGear As System.Windows.Forms.Button
     Friend WithEvents TbTracInt As System.Windows.Forms.TextBox
     Friend WithEvents LvGears As System.Windows.Forms.ListView
     Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
@@ -824,4 +841,6 @@ Partial Class F_GBX
     Friend WithEvents Label17 As System.Windows.Forms.Label
     Friend WithEvents PnTC As System.Windows.Forms.Panel
     Friend WithEvents PnTorqRes As System.Windows.Forms.Panel
+    Friend WithEvents BtAddGear As System.Windows.Forms.Button
+    Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
 End Class

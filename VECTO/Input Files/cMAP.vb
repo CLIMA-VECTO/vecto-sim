@@ -933,10 +933,6 @@ lbEr:
 
     End Sub
 
-    Public Function GetSingleValue(ByRef EmComp As tMapComp, ByVal nnorm As Single, ByVal Pnorm As Single) As Single
-        MapIntp.ShepInit(nnorm, Pnorm)
-        Return MapIntp.fIntShepDef(EmDefRef(EmComp))
-    End Function
 
     Public Sub Intp_Init(ByVal Pnorm As Single, ByVal nnorm As Single)
         MapIntp.ShepInit(Pnorm, nnorm)
@@ -1362,8 +1358,8 @@ lbEr:
 
             nnx += dnn
 
-            pf = FLD.Pfull(nnx) / VEH.Pnenn
-            pm = FLD.Pdrag(nnx) / VEH.Pnenn
+            pf = FLD(0).Pfull(nnx) / VEH.Pnenn
+            pm = FLD(0).Pdrag(nnx) / VEH.Pnenn
 
             If GEN.KFcutDrag Then
 
@@ -1419,7 +1415,7 @@ lbEr:
         nnx = 0 - dnn / 2
         Do While nnx + dnn / 2 <= 1.20001
             nnx += dnn / 2
-            LPe.Add(FLD.Pdrag(nnx) / VEH.Pnenn)
+            LPe.Add(FLD(0).Pdrag(nnx) / VEH.Pnenn)
             Lnn.Add(nnx)
             IsDrag.Add(True)
             iMapDim += 1
@@ -1454,7 +1450,7 @@ lbEr:
             dp = dp0
 
             'Drag-Power
-            pm = FLD.Pdrag(Lnn(i)) / VEH.Pnenn
+            pm = FLD(0).Pdrag(Lnn(i)) / VEH.Pnenn
 
             'Loop until enough Values found in Radius
             Do
@@ -1554,8 +1550,8 @@ lbEr:
                 If Not GEN.KFDragIntp And LPe(i) <= pm + 0.0001 Then
 
                     'If Drag-Em exists in .FLD, then use it otherwise alocate with zero
-                    If FLD.EmDef(EmKV.Key) Then
-                        EmKV.Value.RawVals.Add(FLD.EmDrag(EmKV.Key, Lnn(i)))
+                    If FLD(0).EmDef(EmKV.Key) Then
+                        EmKV.Value.RawVals.Add(FLD(0).EmDrag(EmKV.Key, Lnn(i)))
                     Else
                         EmKV.Value.RawVals.Add(0)
                     End If
@@ -1908,7 +1904,7 @@ lbEr:
 
             Pe0 = Pnorm
             n0 = (nnorm * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / VEH.nNenn
-            PeDrag = FLD.Pdrag(nnorm) / VEH.Pnenn       'Schleppkurve für die geg. Drehzahl
+            PeDrag = FLD(0).Pdrag(nnorm) / VEH.Pnenn       'Schleppkurve für die geg. Drehzahl
 
             ReDim ab0(iMapDim)
 

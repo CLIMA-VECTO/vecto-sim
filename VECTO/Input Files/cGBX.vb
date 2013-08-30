@@ -9,8 +9,9 @@ Public Class cGBX
     Public I_Getriebe As Single
     Public TracIntrSi As Single
 
-    Public GetrI(16) As Single
-    Private GetrMaps(16) As cSubPath
+    Public GetrI As List(Of Single)
+    Public GetrMaps As List(Of cSubPath)
+    Public IsTCgear As List(Of Boolean)
 
     Private iganganz As Short
 
@@ -52,26 +53,21 @@ Public Class cGBX
 
 
     Public Sub New()
-        Dim i As Short
         MyPath = ""
         sFilePath = ""
-        For i = 0 To 16
-            GetrI(i) = 0
-            GetrMaps(i) = New cSubPath
-        Next
         SetDefault()
     End Sub
 
     Private Sub SetDefault()
-        Dim i As Integer
 
         ModelName = ""
         I_Getriebe = 0
         TracIntrSi = 0
-        For i = 0 To 16
-            GetrI(i) = 0
-            GetrMaps(i).Clear()
-        Next
+
+        GetrI = New List(Of Single)
+        GetrMaps = New List(Of cSubPath)
+        IsTCgear = New List(Of Boolean)
+
         iganganz = 0
         gs_M.Clear()
         gs_nnDown.Clear()
@@ -116,11 +112,13 @@ Public Class cGBX
         file.WriteLine("c Traction Interruption")
         file.WriteLine(CStr(TracIntrSi))
 
-        file.WriteLine("c Ratio [-], Loss Map or Efficiency")
-        For i = 0 To 16
+        file.WriteLine("c Gears (0=axle)")
+        file.WriteLine("c Ratio [-], Loss Map or Efficiency, Is TC gear")
+        For i = 0 To GetrI.Count - 1
             file.WriteLine("c Gear " & i)
-            file.WriteLine(CStr(GetrI(i)), GetrMaps(i).PathOrDummy)
+            file.WriteLine(CStr(GetrI(i)), GetrMaps(i).PathOrDummy, CStr(Math.Abs(CInt(IsTCgear(i)))))
         Next
+        file.WriteLine(sKey.Break)
 
         file.WriteLine("c Gear shift polygons file")
         file.WriteLine(gs_file.PathOrDummy)
@@ -162,6 +160,7 @@ Public Class cGBX
         Dim file As cFile_V3
         Dim i As Integer
         Dim MsgSrc As String
+        Dim OldFile As Boolean = False
 
         MsgSrc = "GBX/ReadFile"
 
@@ -186,13 +185,32 @@ Public Class cGBX
             I_Getriebe = CSng(file.ReadLine(0))
             TracIntrSi = CSng(file.ReadLine(0))
 
-            iganganz = 0
-            For i = 0 To 16
+
+            i = -1
+            Do While Not file.EndOfFile
+
                 line = file.ReadLine
-                GetrI(i) = CSng(line(0))
+                i += 1
+
+                If line(0) = sKey.Break Or (OldFile And i = 16) Then Exit Do
+
+                If i = 0 AndAlso UBound(line) < 2 Then OldFile = True
+
+                If CSng(line(0)) = 0 Then Continue Do
+
+                GetrI.Add(CSng(line(0)))
+                GetrMaps.Add(New cSubPath)
                 GetrMaps(i).Init(MyPath, line(1))
-                If GetrI(i) > 0.0001 Then iganganz = i
-            Next
+                If OldFile Then
+                    IsTCgear.Add(False)
+                Else
+                    IsTCgear.Add(CBool(CInt(line(2))))
+                End If
+
+            Loop
+
+            iganganz = GetrI.Count - 1
+
 
             'Allow file end here to keep compatibility to older versions
             If Not file.EndOfFile Then
@@ -214,6 +232,8 @@ Public Class cGBX
             Else
                 gs_Type = tGearbox.Custom
             End If
+
+            If OldFile And TCon Then IsTCgear(1) = True
 
         Catch ex As Exception
             WorkerMsg(tMsgID.Err, ex.Message, MsgSrc)
@@ -466,22 +486,6 @@ lbInt:
         M0 = (nu - TCnu(i - 1)) * (TCtorque(i) - TCtorque(i - 1)) / (TCnu(i) - TCnu(i - 1)) + TCtorque(i - 1)
 
         Return M0 * (nUin / TCrefrpm) ^ 2
-
-    End Function
-
-    Public Function fGearStr(ByVal Gear As Int16) As String
-
-        If Gear = 0 Then Return "0"
-
-        If TCon Then
-            If Gear = 1 Then
-                Return "0.5"
-            Else
-                Return CStr(Gear - 1)
-            End If
-        Else
-            Return CStr(Gear)
-        End If
 
     End Function
 

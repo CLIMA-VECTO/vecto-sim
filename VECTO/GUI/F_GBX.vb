@@ -16,23 +16,9 @@
     End Sub
 
     Private Sub F_GBX_Load(sender As Object, e As System.EventArgs) Handles Me.Load
-        Dim lvi As ListViewItem
-        Dim i As Short
 
         Init = False
         GearDia = New F_VEH_GearDlog
-
-        lvi = New ListViewItem("A")
-        lvi.SubItems.Add("")
-        lvi.SubItems.Add("")
-        Me.LvGears.Items.Add(lvi)
-
-        For i = 1 To 16
-            lvi = New ListViewItem(i.ToString("00"))
-            lvi.SubItems.Add("")
-            lvi.SubItems.Add("")
-            Me.LvGears.Items.Add(lvi)
-        Next
 
         Init = True
 
@@ -105,11 +91,13 @@
         Me.TbTracInt.Text = ""
         Me.TBI_getr.Text = ""
 
-        For Each lvi In LvGears.Items
-            lvi.SubItems(1).Text = "0"
-            lvi.SubItems(2).Text = ""
-            lvi.ForeColor = Color.Gray
-        Next
+        Me.LvGears.Items.Clear()
+
+        lvi = New ListViewItem("Axle")
+        lvi.SubItems.Add("-")
+        lvi.SubItems.Add("0")
+        lvi.SubItems.Add("0")
+        Me.LvGears.Items.Add(lvi)
 
         Me.TbShiftPolyFile.Text = ""
         'Me.ChSkipGears.Checked = False         'set by CbGStype.SelectedIndexChanged
@@ -136,6 +124,7 @@
     Public Sub openGBX(ByVal file As String)
         Dim GBX0 As cGBX
         Dim i As Integer
+        Dim lv0 As ListViewItem
 
         If ChangeCheckCancel() Then Exit Sub
 
@@ -152,14 +141,32 @@
         Me.TbTracInt.Text = GBX0.TracIntrSi.ToString
         Me.TBI_getr.Text = GBX0.I_Getriebe.ToString
 
-        For i = 0 To 16
-            Me.LvGears.Items(i).SubItems(1).Text = GBX0.GetrI(i)
-            Me.LvGears.Items(i).SubItems(2).Text = GBX0.GetrMap(i, True)
-            If GBX0.GetrI(i) = 0 Then
-                Me.LvGears.Items(i).ForeColor = Color.Gray
+        Me.ChTCon.Checked = GBX0.TCon
+
+        Me.LvGears.Items.Clear()
+
+        For i = 0 To GBX0.GetrI.Count - 1
+
+            If i = 0 Then
+                lv0 = New ListViewItem("Axle")
             Else
-                Me.LvGears.Items(i).ForeColor = Color.Black
+                lv0 = New ListViewItem(i.ToString("00"))
             End If
+
+            If Me.ChTCon.Checked And i > 0 Then
+                If GBX0.IsTCgear(i) Then
+                    lv0.SubItems.Add("on")
+                Else
+                    lv0.SubItems.Add("off")
+                End If
+            Else
+                lv0.SubItems.Add("-")
+            End If
+            lv0.SubItems.Add(GBX0.GetrI(i))
+            lv0.SubItems.Add(GBX0.GetrMap(i, True))
+
+
+            Me.LvGears.Items.Add(lv0)
         Next
 
         Me.TbShiftPolyFile.Text = GBX0.gsFile(True)
@@ -171,7 +178,6 @@
         Me.TbStartAcc.Text = GBX0.gs_StartAcc.ToString
         Me.ChShiftInside.Checked = GBX0.gs_ShiftInside
 
-        Me.ChTCon.Checked = GBX0.TCon
         Me.TbTCfile.Text = GBX0.TCfile(True)
         Me.TbTCrefrpm.Text = GBX0.TCrefrpm
 
@@ -213,9 +219,11 @@
         GBX0.TracIntrSi = fTextboxToNumString(Me.TbTracInt.Text)
         GBX0.I_Getriebe = fTextboxToNumString(Me.TBI_getr.Text)
 
-        For i = 0 To 16
-            GBX0.GetrI(i) = CSng(Me.LvGears.Items(i).SubItems(1).Text)
-            GBX0.GetrMap(i) = Me.LvGears.Items(i).SubItems(2).Text
+        For i = 0 To Me.LvGears.Items.Count - 1
+            GBX0.IsTCgear.Add(Me.LvGears.Items(i).SubItems(1).Text = "on" And i > 0)
+            GBX0.GetrI.Add(CSng(Me.LvGears.Items(i).SubItems(2).Text))
+            GBX0.GetrMaps.Add(New cSubPath)
+            GBX0.GetrMap(i) = Me.LvGears.Items(i).SubItems(3).Text
         Next
 
         GBX0.gsFile = Me.TbShiftPolyFile.Text
@@ -231,7 +239,7 @@
 
         GBX0.TCon = Me.ChTCon.Checked
         GBX0.TCfile = Me.TbTCfile.Text
-        GBX0.TCrefrpm = Me.TbTCrefrpm.Text
+        GBX0.TCrefrpm = fTextboxToNumString(Me.TbTCrefrpm.Text)
 
 
         If Not GBX0.SaveFile Then
@@ -417,54 +425,102 @@
     Private Sub LvGears_KeyDown(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles LvGears.KeyDown
         Select Case e.KeyCode
             Case Keys.Delete, Keys.Back
-                ClearGear()
+                RemoveGear(False)
             Case Keys.Enter
                 EditGear()
         End Select
     End Sub
 
-    'Clear Gear Button
-    Private Sub BtClearGear_Click(sender As System.Object, e As System.EventArgs) Handles BtClearGear.Click
-        ClearGear()
+    'Remove Gear Button
+    Private Sub BtClearGear_Click(sender As System.Object, e As System.EventArgs) Handles BtRemGear.Click
+        RemoveGear(False)
+    End Sub
+
+
+    Private Sub BtAddGear_Click(sender As System.Object, e As System.EventArgs) Handles BtAddGear.Click
+        AddGear()
+        Me.LvGears.Items(Me.LvGears.Items.Count - 1).Selected = True
+        EditGear()
     End Sub
 
     'Edit Gear
     Private Sub EditGear()
 
         Do
+
+            GearDia.ChIsTCgear.Enabled = (Me.ChTCon.Checked And Me.LvGears.SelectedIndices(0) > 0)
+
             GearDia.GbxPath = fPATH(GbxFile)
             GearDia.TbGear.Text = Me.LvGears.SelectedItems(0).SubItems(0).Text
-            GearDia.TbRatio.Text = Me.LvGears.SelectedItems(0).SubItems(1).Text
-            GearDia.TbMapPath.Text = Me.LvGears.SelectedItems(0).SubItems(2).Text
-
-            GearDia.BtNext.Enabled = (Me.LvGears.SelectedIndices(0) < Me.LvGears.Items.Count - 1)
+            GearDia.ChIsTCgear.Checked = (Me.ChTCon.Checked And Me.LvGears.SelectedItems(0).SubItems(1).Text = "on")
+            GearDia.TbRatio.Text = Me.LvGears.SelectedItems(0).SubItems(2).Text
+            GearDia.TbMapPath.Text = Me.LvGears.SelectedItems(0).SubItems(3).Text
 
             If GearDia.ShowDialog = Windows.Forms.DialogResult.OK Then
-                Me.LvGears.SelectedItems(0).SubItems(1).Text = GearDia.TbRatio.Text
-                Me.LvGears.SelectedItems(0).SubItems(2).Text = GearDia.TbMapPath.Text
-                If GearDia.TbRatio.Text = "0" Then
-                    Me.LvGears.SelectedItems(0).ForeColor = Color.Gray
+
+                If GearDia.ChIsTCgear.Checked Then
+                    Me.LvGears.SelectedItems(0).SubItems(1).Text = "on"
                 Else
-                    Me.LvGears.SelectedItems(0).ForeColor = Color.Black
+                    If Me.ChTCon.Checked Then
+                        Me.LvGears.SelectedItems(0).SubItems(1).Text = "off"
+                    Else
+                        Me.LvGears.SelectedItems(0).SubItems(1).Text = "-"
+                    End If
                 End If
+
+                Me.LvGears.SelectedItems(0).SubItems(2).Text = GearDia.TbRatio.Text
+                Me.LvGears.SelectedItems(0).SubItems(3).Text = GearDia.TbMapPath.Text
+             
 
                 Change()
 
+            Else
+
+                If Me.LvGears.SelectedItems(0).SubItems(2).Text = "" Then RemoveGear(True)
+
             End If
 
-            If GearDia.NextGear Then Me.LvGears.Items(Me.LvGears.SelectedIndices(0) + 1).Selected = True
+            If GearDia.NextGear Then
+                If Me.LvGears.Items.Count - 1 = Me.LvGears.SelectedIndices(0) Then AddGear()
+
+                Me.LvGears.Items(Me.LvGears.SelectedIndices(0) + 1).Selected = True
+            End If
 
         Loop Until Not GearDia.NextGear
 
     End Sub
 
-    'Clear Gear
-    Private Sub ClearGear()
-        Dim lv0 As ListViewItem
+    'Add Gear
+    Private Sub AddGear()
+        Dim lvi As ListViewItem
+
+        lvi = New ListViewItem(Me.LvGears.Items.Count.ToString("00"))
+        If Me.ChTCon.Checked Then
+            lvi.SubItems.Add("off")
+        Else
+            lvi.SubItems.Add("-")
+        End If
+        lvi.SubItems.Add("")
+        lvi.SubItems.Add("")
+        Me.LvGears.Items.Add(lvi)
+
+        lvi.EnsureVisible()
+
+        Me.LvGears.Focus()
+
+        'Change() => NO! Change() is already handled by EditGear
+
+    End Sub
+
+    'Remove Gear
+    Private Sub RemoveGear(ByVal NoChange As Boolean)
         Dim i0 As Int16
         Dim i As Int16
+        Dim lv0 As ListViewItem
 
-        If Me.LvGears.SelectedItems.Count = 0 Then Exit Sub
+        If Me.LvGears.Items.Count < 2 Then Exit Sub
+
+        If Me.LvGears.SelectedItems.Count = 0 Then Me.LvGears.Items(Me.LvGears.Items.Count - 1).Selected = True
 
         i0 = Me.LvGears.SelectedItems(0).Index
 
@@ -472,26 +528,12 @@
 
         Me.LvGears.SelectedItems(0).Remove()
 
-        lv0 = New ListViewItem("")
-        lv0.SubItems.Add("0")
-        lv0.SubItems.Add("")
-        lv0.ForeColor = Color.Gray
-        Me.LvGears.Items.Add(lv0)
-
-        If Me.ChTCon.Checked Then
-
-            Me.LvGears.Items(1).SubItems(0).Text = "TC"
-
-            For i = 2 To 16
-                Me.LvGears.Items(i).SubItems(0).Text = (i - 1).ToString("00")
-            Next
-
-        Else
-            For i = 1 To 16
-                Me.LvGears.Items(i).SubItems(0).Text = i.ToString("00")
-            Next
-
-        End If
+        i = 0
+        For Each lv0 In Me.LvGears.Items
+            If lv0.SubItems(0).Text = "Axle" Then Continue For
+            i += 1
+            lv0.SubItems(0).Text = i.ToString("00")
+        Next
 
         If i0 < Me.LvGears.Items.Count Then
             Me.LvGears.Items(i0).Selected = True
@@ -500,7 +542,7 @@
 
         Me.LvGears.Focus()
 
-        Change()
+        If Not NoChange Then Change()
 
     End Sub
 
@@ -586,24 +628,24 @@
     End Sub
 
     Private Sub CheckGearTC()
-        Dim i As Short
+        Dim lv0 As ListViewItem
 
         If Not Init Then Exit Sub
 
-        If Me.ChTCon.Checked Then
+        For Each lv0 In Me.LvGears.Items
 
-            Me.LvGears.Items(1).SubItems(0).Text = "TC"
+            If lv0.SubItems(0).Text = "Axle" Then Continue For
 
-            For i = 2 To 16
-                Me.LvGears.Items(i).SubItems(0).Text = (i - 1).ToString("00")
-            Next
-
-        Else
-            For i = 1 To 16
-                Me.LvGears.Items(i).SubItems(0).Text = i.ToString("00")
-            Next
-
-        End If
+            If Me.ChTCon.Checked Then
+                If lv0.Index = 1 Then
+                    lv0.SubItems(1).Text = "on"
+                Else
+                    lv0.SubItems(1).Text = "off"
+                End If
+            Else
+                lv0.SubItems(1).Text = "-"
+            End If
+        Next
 
     End Sub
 
@@ -611,5 +653,6 @@
 #End Region
 
    
+
 
 End Class

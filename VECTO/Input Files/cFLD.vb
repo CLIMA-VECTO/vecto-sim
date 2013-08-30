@@ -435,7 +435,6 @@ lbInt:
 
     End Function
 
-
     Public Function Pfull(ByVal nnorm As Single, ByVal LastPenorm As Single) As Single
         Dim i As Int32
         Dim PfullStat As Single

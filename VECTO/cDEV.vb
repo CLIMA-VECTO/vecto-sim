@@ -17,6 +17,8 @@ Public Class cDEV
     Public PreRun As Boolean
     Public negFCerr As Single
 
+    Public AllowAprxTrLoss As Boolean
+
 
 
     '**************************************************************************************************************
@@ -154,6 +156,10 @@ Public Class cDEV
         Conf0.SingleVal = -0.000001
         MyOptions.Add("negFCerr", Conf0)
 
+        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Allow approximate transmission loss calculation in Cycle Preprocessing and Gear Shift Model", False)
+        Conf0.BoolVal = True
+        MyOptions.Add("AllowAprxTrLoss", Conf0)
+
 
         '**************************** END: Parameters Configuration '*****************************
         '*****************************************************************************************
@@ -176,6 +182,7 @@ Public Class cDEV
 
         negFCerr = MyOptions("negFCerr").SingleVal
 
+        AllowAprxTrLoss = MyOptions("AllowAprxTrLoss").BoolVal
 
     End Sub
 

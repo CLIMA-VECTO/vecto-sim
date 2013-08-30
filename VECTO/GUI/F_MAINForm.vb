@@ -2202,6 +2202,9 @@ lbFound:
                     Catch ex As Exception
                         MsgBox("Cannot open link! (-_-;)")
                     End Try
+                ElseIf Len(CStr(Me.LvMsg.SelectedItems(0).Tag)) > 5 AndAlso Microsoft.VisualBasic.Left(CStr(Me.LvMsg.SelectedItems(0).Tag), 5) = "<GUI>" Then
+                    txt = CStr(Me.LvMsg.SelectedItems(0).Tag).Replace("<GUI>", "")
+                    OpenVectoFile(txt)
                 Else
                     OpenFiles(CStr(Me.LvMsg.SelectedItems(0).Tag))
                 End If

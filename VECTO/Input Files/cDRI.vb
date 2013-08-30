@@ -443,6 +443,11 @@ Public Class cDRI
                 line = file.ReadLine
 
                 For Each sKV In Spalten
+
+                    If sKV.Key = tDriComp.Pe Or sKV.Key = tDriComp.Torque Then
+                        If Trim(line(sKV.Value)) = sKey.MAP.Drag Then line(sKV.Value) = -999999
+                    End If
+
                     Values(sKV.Key).Add(CDbl(line(sKV.Value)))
                 Next
 

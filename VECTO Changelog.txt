@@ -1,7 +1,13 @@
-VECTO ?.? (future release)
-- User Manual: "Don't use secondary retarder if retarder losses are already defined in transmission loss maps"
+VECTO ?.? (future release) TODO
+- User Manual:
+	"Don't use secondary retarder if retarder losses are already defined in transmission loss maps"
+	Engine/FLD Editor
+	New Eco Roll
+	GBX
+	<DRAG>
 - Gearbox Rules must be set when loading .gbx file to aviod invalid settings (e.g. AT with Skip Gears)
 - Correct Pg and Proll calculation (Road gradient)??
+
 
 VECTO x.x (current source - next release)
 - Bugfix: FC interpolation failed when load points matched map points exactly.
@@ -16,13 +22,24 @@ VECTO x.x (current source - next release)
 	o New: Tq_drag = drag torque
 	o Removed: Pe_norm, n_norm	
 - No abortion if transmission output and input torque have different signs (In>0, Out<0). (Caused "Transmission Loss Map invalid" error messages)
-- Bugfix: Error if Look-Ahead Coasting was disabled.
+- Bugfix: Random crashes if Look-Ahead Coasting was disabled.
 - Eco-Roll revised:
 	o Engages if Pwheel < 0
 	o Disengages if Underspeed is reached.
-- Improved gear shift model for torque converter
-- Updates in torque converter [IN DEVELOPMENT]
 - Look-Ahead Coasting now uses real coasting also if road gradient > 0 which means the coasting deceleration can be so high that no braking is necessary. In this case the braking phase will be ommitted and the total deceleration time can be shorter than expected by the given target coasting deceleration.
+- Bugfix: Error if Look-Ahead Coasting was disabled.
+- Eco-Roll revised (see changelog)
+- Removed "IgnoreFCextrapol" form DEV-Options
+- Bugfix: Distance Correction didn't work right with Look Ahead Coasting. Now distance error is acceptable but at the cost of partly interrupted coasting phases. Should be revised in future updates.
+- Major update in Gearbox/Toque Converter:
+	o Torque converter can be defined in multiple gears
+	o Same gear numbers in output as in GBX file, i.e. first gear with TC is not "TC" or "0.5" but simply "1"
+	o "Minimum time between two gear shifts" now also limits torque converter shifts
+	o Unlimited number of gears and new gear list in GUI without fixed gear number
+	o Improved gear shift model for torque converter
+	o Driving Cycle Preprocessing and Gear Shift Model now use approximated efficiency values based in the transmission loss maps. Reduces calculation time significantly with little to no impact on fuel consumption.
+- Engine Only Mode: Engine motoring points can be defined explicitly in load cycle with "<DRAG>"
+- Updated some error messages (units)
 	
 	
 	

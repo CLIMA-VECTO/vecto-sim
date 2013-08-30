@@ -394,44 +394,9 @@ lbADV:
 
                         If GEN.ModeHorEV Then
 
-                            If GEN.VehMode = tVehMode.EV Then
-
-                                If MsgOut Then WorkerMsg(tMsgID.Normal, "EV Init", MsgSrc)
-
-                                If Not MODdata.Px.EVinit Then
-                                    WorkerMsg(tMsgID.Err, "ERROR in BAT-Init!", MsgSrc)
-                                    JobAbortedByErr = True
-                                    GoTo lbNextJob
-                                End If
-
-                                If MsgOut Then WorkerMsg(tMsgID.Normal, "EV Calc", MsgSrc)
-
-                                '!!!!!!!! EV disabled !!!!!!!!!
-                                'If Not MODdata.Px.EV_Calc() Then
-                                CyclAbrtedByErr = True
-                                GoTo lbAusg
-                                'End If
-
-                            Else
-
-                                If MsgOut Then WorkerMsg(tMsgID.Normal, "HEV Init", MsgSrc)
-
-                                If Not MODdata.Px.HEVinit Then
-                                    'TODO: notification...
-                                    WorkerMsg(tMsgID.Err, "ERROR in HEV Init!", MsgSrc)
-                                    JobAbortedByErr = True
-                                    GoTo lbNextJob
-                                End If
-
-                                If MsgOut Then WorkerMsg(tMsgID.Normal, "HEV Calc", MsgSrc)
-
-                                '!!!!!!!! HEV disabled !!!!!!!!!
-                                'If Not MODdata.Px.HEV_Calc() Then
-                                CyclAbrtedByErr = True
-                                GoTo lbAusg
-                                'End If
-
-                            End If
+                            WorkerMsg(tMsgID.Err, "(H)EV mode is not available!", MsgSrc)
+                            JobAbortedByErr = True
+                            GoTo lbNextJob
 
                         Else
 

@@ -37,11 +37,12 @@ Public Class cVEH
     Private CdY As List(Of Single)
     Private CdDim As Integer
 
-    Private siGetrI(16) As Single
-    Public GetrMap(16) As cSubPath
+    Public siGetrI As List(Of Single)
+    Public GetrMap As List(Of cSubPath)
     Private MyGBmaps As List(Of cDelaunayMap)
-    Public GetrEffDef(16) As Boolean
-    Public GetrEff(16) As Single
+    Public GetrEffDef As List(Of Boolean)
+    Public GetrEff As List(Of Single)
+    Public IsTCgear As List(Of Boolean)
 
     Private iganganz As Short
 
@@ -73,12 +74,8 @@ Public Class cVEH
     End Class
 
     Public Sub New()
-        Dim i As Short
         MyPath = ""
         sFilePath = ""
-        For i = 0 To 16
-            GetrMap(i) = New cSubPath
-        Next
         CdFile = New cSubPath
         CdX = New List(Of Single)
         CdY = New List(Of Single)
@@ -90,7 +87,6 @@ Public Class cVEH
     End Sub
 
     Private Sub SetDefault()
-        Dim i As Short
         siMass = 0
         MassExtra = 0
         siLoading = 0
@@ -121,12 +117,13 @@ Public Class cVEH
         silhinunter = 0
         sipspar = 0
         sipmodell = 0
-        For i = 0 To 16
-            siGetrI(i) = 0
-            GetrMap(i).Clear()
-            GetrEffDef(i) = False
-            GetrEff(i) = 0
-        Next
+
+        siGetrI = New List(Of Single)
+        GetrEffDef = New List(Of Boolean)
+        GetrEff = New List(Of Single)
+        GetrMap = New List(Of cSubPath)
+        IsTCgear = New List(Of Boolean)
+
         MyGBmaps = Nothing
         iganganz = 0
         AuxPaths = New Dictionary(Of String, cAuxEntry)
@@ -501,6 +498,16 @@ lbError:
         Dim M_loss As Double
         Dim M_out As Double
 
+        Dim dnU As Single
+        Dim nn As Single
+        Dim dM As Single
+        Dim P_In As Single
+        Dim P_Loss As Single
+        Dim EffSum As Single
+        Dim Anz As Integer
+        Dim EffDiffSum As Single = 0
+        Dim AnzDiff As Integer = 0
+
         Dim MsgSrc As String
 
         MyGBmaps = New List(Of cDelaunayMap)
@@ -579,15 +586,75 @@ lbError:
 
                 MyGBmaps.Add(GBmap0)
 
+                'Calculate average efficiency for fast approx. calculation
+          
+
+
+                If i > 0 Then
+
+                    EffSum = 0
+                    Anz = 0
+
+                    dnU = (2 / 3) * (VEH.nNenn - VEH.nLeerl) / 10
+                    nU = VEH.nLeerl + dnU
+
+                    Do While nU <= nNenn
+                        nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+
+                        dM = nPeToM(nU, (2 / 3) * FLD(i).Pfull(nn) / 10)
+                        M_in = nPeToM(nU, (1 / 3) * FLD(i).Pfull(nn))
+
+                        Do While M_in <= nPeToM(nU, FLD(i).Pfull(nn))
+
+                            P_In = nMtoPe(nU, M_in)
+
+                            P_Loss = IntpolPeLossFwd(i, nU, P_In, False)
+
+                            EffSum += (P_In - P_Loss) / P_In
+                            Anz += 1
+
+                            'Axle
+                            P_In -= P_Loss
+                            P_Loss = IntpolPeLossFwd(0, nU / VEH.Igetr(i), P_In, False)
+                            EffDiffSum += (P_In - P_Loss) / P_In
+                            AnzDiff += 1
+
+                            M_in += dM
+                        Loop
+
+
+                        nU += dnU
+                    Loop
+
+                    If MODdata.ModErrors.TrLossMapExtr <> "" Then
+                        WorkerMsg(tMsgID.Err, "Transmission loss map does not cover full engine range! File: " & path, MsgSrc, path)
+                        Return False
+                    End If
+
+                    If Anz = 0 Then
+                        WorkerMsg(tMsgID.Err, "Failed to calculate approx. transmission losses!", MsgSrc)
+                        Return False
+                    End If
+
+                    GetrEff(i) = EffSum / Anz
+
+                End If
+
+
             End If
 
         Next
+
+        If Not GetrEffDef(0) Then
+            GetrEff(0) = EffDiffSum / AnzDiff
+        End If
+
 
         Return True
 
     End Function
 
-    Public Function IntpolPeLoss(ByVal Gear As Integer, ByVal nU As Double, ByVal PeOut As Double) As Double
+    Public Function IntpolPeLoss(ByVal Gear As Integer, ByVal nU As Double, ByVal PeOut As Double, ByVal Approx As Boolean) As Double
 
         Dim PeIn As Double
         Dim WG As Double
@@ -606,18 +673,10 @@ lbError:
         If Gear = 0 Then
             GrTxt = "A"
         Else
-            If GBX.TCon Then
-                If Gear = 1 Then
-                    GrTxt = "TC"
-                Else
-                    GrTxt = (Gear - 1).ToString
-                End If
-            Else
-                GrTxt = Gear.ToString
-            End If
+            GrTxt = Gear.ToString
         End If
 
-        If GetrEffDef(Gear) Then
+        If GetrEffDef(Gear) Or (Approx And DEV.AllowAprxTrLoss) Then
 
             If PeOut > 0 Then
                 PeIn = PeOut / GetrEff(Gear)
@@ -701,7 +760,7 @@ lbError:
 
     End Function
 
-    Public Function IntpolPeLossFwd(ByVal Gear As Integer, ByVal nU As Double, ByVal PeIn As Double) As Double
+    Public Function IntpolPeLossFwd(ByVal Gear As Integer, ByVal nU As Double, ByVal PeIn As Double, ByVal Approx As Boolean) As Double
 
         Dim PeOut As Double
         Dim WG As Double
@@ -720,18 +779,10 @@ lbError:
         If Gear = 0 Then
             GrTxt = "A"
         Else
-            If GBX.TCon Then
-                If Gear = 1 Then
-                    GrTxt = "TC"
-                Else
-                    GrTxt = (Gear - 1).ToString
-                End If
-            Else
-                GrTxt = Gear.ToString
-            End If
+            GrTxt = Gear.ToString
         End If
 
-        If GetrEffDef(Gear) Then
+        If GetrEffDef(Gear) Or (Approx And DEV.AllowAprxTrLoss) Then
 
             If PeIn > 0 Then
                 PeOut = PeIn * GetrEff(Gear)
@@ -1170,13 +1221,10 @@ lbInt:
         End Set
     End Property
 
-    Public Property Igetr(ByVal x As Short) As Single
+    Public ReadOnly Property Igetr(ByVal x As Short) As Single
         Get
             Return siGetrI(x)
         End Get
-        Set(ByVal value As Single)
-            siGetrI(x) = value
-        End Set
     End Property
 
     Public Property Mass As Single
