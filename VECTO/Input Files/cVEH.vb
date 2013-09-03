@@ -65,6 +65,26 @@ Public Class cVEH
     Public MassMax As Single
     Public AxcleConf As tAxleConf
 
+    Private MyFileList As List(Of String)
+
+
+    Public Function CreateFileList() As Boolean
+
+        If Not Me.ReadFile Then Return False
+
+        MyFileList = New List(Of String)
+
+        '.vcdv  / .vcdb
+        If Me.CdMode <> tCdMode.ConstCd0 Then MyFileList.Add(Me.CdFile.FullPath)
+
+        'Retarder
+        If Me.RtType <> tRtType.None Then MyFileList.Add(Me.RtFile.FullPath)
+
+        Return True
+
+    End Function
+
+
     Public Class cAuxEntry
         Public Type As String
         Public Path As cSubPath
@@ -1203,6 +1223,12 @@ lbInt:
 
 #Region "Properties"
 
+    Public ReadOnly Property FileList As List(Of String)
+        Get
+            Return MyFileList
+        End Get
+    End Property
+
     Public Property AchsI As Single
         Get
             Return siGetrI(0)
@@ -1278,7 +1304,7 @@ lbInt:
     Public ReadOnly Property m_raeder_red As Single
         Get
             Return siI_wheels / ((siDreifen / 2) ^ 2)
-        End Get    
+        End Get
     End Property
 
     Public Property I_wheels As Single

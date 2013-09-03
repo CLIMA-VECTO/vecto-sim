@@ -97,6 +97,79 @@ Public Class cGEN
     Public UnderSpeed As Single
     Public EcoRollOn As Boolean
 
+    Private MyFileList As List(Of String)
+
+    Public Function CreateFileList() As Boolean
+        Dim Aux0 As cVEH.cAuxEntry
+        Dim sb As cSubPath
+        Dim VEH0 As cVEH
+        Dim ENG0 As cENG
+        Dim GBX0 As cGBX
+        Dim str As String
+
+        If Not Me.ReadFile Then Return False
+
+        MyFileList = New List(Of String)
+
+        '.vecto
+        MyFileList.Add(Me.sFilePath)
+
+        'Veh
+        If Not Me.EngOnly Then
+            MyFileList.Add(Me.PathVEH)
+
+            VEH0 = New cVEH
+            VEH0.FilePath = Me.PathVEH
+            If Not VEH0.CreateFileList Then Return False
+            For Each str In VEH0.FileList
+                MyFileList.Add(str)
+            Next
+        End If
+
+        'Eng
+        MyFileList.Add(Me.PathENG)
+
+        ENG0 = New cENG
+        ENG0.FilePath = Me.PathENG
+        If Not ENG0.CreateFileList Then Return False
+        For Each str In ENG0.FileList
+            MyFileList.Add(str)
+        Next
+
+        If Not Me.EngOnly Then
+
+            'Gbx
+            MyFileList.Add(Me.PathGBX)
+
+            GBX0 = New cGBX
+            GBX0.FilePath = Me.PathGBX
+            If Not GBX0.CreateFileList Then Return False
+            For Each str In GBX0.FileList
+                MyFileList.Add(str)
+            Next
+
+            'Aux
+            If AuxDef Then
+                For Each Aux0 In Me.AuxPaths.Values
+                    MyFileList.Add(Aux0.Path.FullPath)
+                Next
+            End If
+
+            '.vacc
+            MyFileList.Add(Me.stDesMaxFile.FullPath)
+
+        End If
+
+        'Cycles
+        For Each sb In Me.CycleFiles
+            MyFileList.Add(sb.FullPath)
+        Next
+
+
+        Return True
+
+    End Function
+
 
     Public Sub New()
 
@@ -775,6 +848,12 @@ lbEr:
 
 
 #Region "Properties"
+
+    Public ReadOnly Property FileList As List(Of String)
+        Get
+            Return MyFileList
+        End Get
+    End Property
 
     Public Property KFcutFull As Boolean
         Get

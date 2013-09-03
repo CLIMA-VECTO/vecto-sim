@@ -17,6 +17,28 @@ Public Class cENG
     Private MyPath As String
     Private sFilePath As String
 
+    Private MyFileList As List(Of String)
+
+
+    Public Function CreateFileList() As Boolean
+        Dim sb As cSubPath
+
+        If Not Me.ReadFile Then Return False
+
+        MyFileList = New List(Of String)
+
+        For Each sb In Me.fFLD
+            MyFileList.Add(sb.FullPath)
+        Next
+
+        MyFileList.Add(PathMAP)
+
+        'Not used!!! MyFileList.Add(PathWHTC)
+
+        Return True
+
+    End Function
+
     Public Sub New()
         MyPath = ""
         sFilePath = ""
@@ -157,6 +179,12 @@ Public Class cENG
         Return True
 
     End Function
+
+    Public ReadOnly Property FileList As List(Of String)
+        Get
+            Return MyFileList
+        End Get
+    End Property
 
     Public Property FilePath() As String
         Get

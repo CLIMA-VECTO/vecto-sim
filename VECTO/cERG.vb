@@ -124,10 +124,17 @@ Class cERG
 
                     AddToErg("\\S", "distance", "[km]")
                     AddToErg("\\V", "speed", "[km/h]")
-                    AddToErg("\\G", "road grad", "[%]")
+                    AddToErg("\\G", "∆altitude", "[m]")
 
                     NonEngOnly = True
 
+                End If
+
+                'Auxiliary energy consumption
+                If GEN0.AuxDef Then
+                    For Each str1 In GEN0.AuxPaths.Keys
+                        AddToErg("\\Eaux_" & UCase(str1), "Eaux_" & str1, "[kWh]")
+                    Next
                 End If
 
             End If
@@ -172,8 +179,8 @@ Class cERG
             If GEN0.VehMode <> tVehMode.EV Then
 
                 'Conventional vehicles ...
-                AddToErg("\\n_norm", "n_norm", "[-]")
-                AddToErg("\\Pe_norm", "Pe_norm", "[-]")
+                'AddToErg("\\n_norm", "n_norm", "[-]")
+                'AddToErg("\\Pe_norm", "Pe_norm", "[-]")
                 AddToErg("\\Ppos", "Ppos", "[-]")
                 AddToErg("\\Pneg", "Pneg", "[-]")
 
@@ -298,6 +305,21 @@ Class cERG
             Next
         Next
 
+        'Sort Aux
+        For i1 = 0 To iDim - 1
+            str = ErgEntries(ErgEntryList(i1)).Head
+            If str.Length > 4 AndAlso Left(str, 4) = "Eaux" Then
+                For i2 = i1 + 1 To iDim
+                    If ErgEntries(ErgEntryList(i2)).Head.Length > 4 AndAlso Left(ErgEntries(ErgEntryList(i2)).Head, 4) = "Eaux" Then
+                        ErgEntryList.Insert(i1 + 1, ErgEntryList(i2))
+                        ErgEntryList.RemoveAt(i2 + 1)
+                    End If
+                Next
+            End If
+        Next
+
+
+
         Return True
 
     End Function
@@ -371,13 +393,25 @@ Class cERG
             ErgEntries("\\S").ValueString = (Vquer * (t1 + 1) / 3600).ToString
             ErgEntries("\\V").ValueString = Vquer.ToString
 
-            'Average-Slope calculation
+            'altitude change
             sum = 0
             For t = 0 To t1
-                sum += MODdata.Vh.Grad(t)
+                sum += MODdata.Vh.V(t) * 1 * MODdata.Vh.Grad(t) / 100  'v[m/s] * t[s] * grad[-] = ∆h[m]
             Next
 
-            ErgEntries("\\G").ValueString = (sum / (t1 + 1)).ToString
+            ErgEntries("\\G").ValueString = (sum).ToString
+
+            'Auxiliary energy consumption
+            If GEN.AuxDef Then
+                For Each key In GEN.AuxPaths.Keys
+                    sum = 0
+                    For t = 0 To t1
+                        sum += MODdata.Paux(key)(t)
+                    Next
+                    ErgEntries("\\Eaux_" & UCase(key)).ValueString = sum / 3600
+                Next
+            End If
+
 
         End If
 
@@ -530,17 +564,17 @@ Class cERG
             Next
 
             'Power, Revolutions
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Pe(t)
-            Next
-            ErgEntries("\\Pe_norm").ValueString = (sum / (t1 + 1)).ToString
+            'sum = 0
+            'For t = 0 To t1
+            '    sum += MODdata.Pe(t)
+            'Next
+            'ErgEntries("\\Pe_norm").ValueString = (sum / (t1 + 1)).ToString
 
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.nn(t)
-            Next
-            ErgEntries("\\n_norm").ValueString = (sum / (t1 + 1)).ToString
+            'sum = 0
+            'For t = 0 To t1
+            '    sum += MODdata.nn(t)
+            'Next
+            'ErgEntries("\\n_norm").ValueString = (sum / (t1 + 1)).ToString
 
             'Ppos
             sum = 0
@@ -784,6 +818,10 @@ Class cERG
 
         'Close file (will open after each job)
         Ferg.Close()
+
+        'Add file to signing list
+        Lic.FileSigning.AddFile(ERGpath)
+
 
         Return True
 

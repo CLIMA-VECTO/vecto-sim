@@ -93,6 +93,8 @@ Partial Class F_GBX
         Me.Label16 = New System.Windows.Forms.Label()
         Me.CbGStype = New System.Windows.Forms.ComboBox()
         Me.BtAddGear = New System.Windows.Forms.Button()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.Label32 = New System.Windows.Forms.Label()
         Me.ToolStrip1.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -102,6 +104,7 @@ Partial Class F_GBX
         Me.CmOpenFile.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.PnTC.SuspendLayout()
+        Me.GroupBox4.SuspendLayout()
         Me.SuspendLayout()
         '
         'ToolStrip1
@@ -186,7 +189,7 @@ Partial Class F_GBX
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 713)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 764)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(465, 22)
         Me.StatusStrip1.SizingGrip = False
@@ -203,7 +206,7 @@ Partial Class F_GBX
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(378, 687)
+        Me.ButCancel.Location = New System.Drawing.Point(378, 738)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 9
@@ -213,7 +216,7 @@ Partial Class F_GBX
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(297, 687)
+        Me.ButOK.Location = New System.Drawing.Point(297, 738)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 8
@@ -222,7 +225,7 @@ Partial Class F_GBX
         '
         'TbTracInt
         '
-        Me.TbTracInt.Location = New System.Drawing.Point(389, 299)
+        Me.TbTracInt.Location = New System.Drawing.Point(352, 350)
         Me.TbTracInt.Name = "TbTracInt"
         Me.TbTracInt.Size = New System.Drawing.Size(40, 20)
         Me.TbTracInt.TabIndex = 5
@@ -233,10 +236,10 @@ Partial Class F_GBX
         Me.LvGears.FullRowSelect = True
         Me.LvGears.GridLines = True
         Me.LvGears.HideSelection = False
-        Me.LvGears.Location = New System.Drawing.Point(12, 141)
+        Me.LvGears.Location = New System.Drawing.Point(6, 18)
         Me.LvGears.MultiSelect = False
         Me.LvGears.Name = "LvGears"
-        Me.LvGears.Size = New System.Drawing.Size(441, 150)
+        Me.LvGears.Size = New System.Drawing.Size(429, 150)
         Me.LvGears.TabIndex = 2
         Me.LvGears.TabStop = False
         Me.LvGears.UseCompatibleStateImageBehavior = False
@@ -264,7 +267,7 @@ Partial Class F_GBX
         '
         'TBI_getr
         '
-        Me.TBI_getr.Location = New System.Drawing.Point(139, 299)
+        Me.TBI_getr.Location = New System.Drawing.Point(102, 350)
         Me.TBI_getr.Name = "TBI_getr"
         Me.TBI_getr.Size = New System.Drawing.Size(57, 20)
         Me.TBI_getr.TabIndex = 4
@@ -272,7 +275,7 @@ Partial Class F_GBX
         'Label49
         '
         Me.Label49.AutoSize = True
-        Me.Label49.Location = New System.Drawing.Point(435, 302)
+        Me.Label49.Location = New System.Drawing.Point(398, 353)
         Me.Label49.Name = "Label49"
         Me.Label49.Size = New System.Drawing.Size(18, 13)
         Me.Label49.TabIndex = 2
@@ -281,7 +284,7 @@ Partial Class F_GBX
         'Label33
         '
         Me.Label33.AutoSize = True
-        Me.Label33.Location = New System.Drawing.Point(202, 302)
+        Me.Label33.Location = New System.Drawing.Point(165, 353)
         Me.Label33.Name = "Label33"
         Me.Label33.Size = New System.Drawing.Size(36, 13)
         Me.Label33.TabIndex = 2
@@ -290,7 +293,7 @@ Partial Class F_GBX
         'Label48
         '
         Me.Label48.AutoSize = True
-        Me.Label48.Location = New System.Drawing.Point(281, 302)
+        Me.Label48.Location = New System.Drawing.Point(244, 353)
         Me.Label48.Name = "Label48"
         Me.Label48.Size = New System.Drawing.Size(102, 13)
         Me.Label48.TabIndex = 2
@@ -299,7 +302,7 @@ Partial Class F_GBX
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(97, 302)
+        Me.Label6.Location = New System.Drawing.Point(60, 353)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(36, 13)
         Me.Label6.TabIndex = 2
@@ -334,7 +337,7 @@ Partial Class F_GBX
         'BtRemGear
         '
         Me.BtRemGear.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.BtRemGear.Location = New System.Drawing.Point(47, 297)
+        Me.BtRemGear.Location = New System.Drawing.Point(41, 174)
         Me.BtRemGear.Name = "BtRemGear"
         Me.BtRemGear.Size = New System.Drawing.Size(29, 23)
         Me.BtRemGear.TabIndex = 3
@@ -353,7 +356,7 @@ Partial Class F_GBX
         Me.GroupBox1.Controls.Add(Me.TbShiftPolyFile)
         Me.GroupBox1.Controls.Add(Me.BtShiftPolyBrowse)
         Me.GroupBox1.Controls.Add(Me.Label1)
-        Me.GroupBox1.Location = New System.Drawing.Point(12, 326)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 377)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(441, 230)
         Me.GroupBox1.TabIndex = 6
@@ -599,7 +602,7 @@ Partial Class F_GBX
         '
         Me.GroupBox3.Controls.Add(Me.PnTC)
         Me.GroupBox3.Controls.Add(Me.ChTCon)
-        Me.GroupBox3.Location = New System.Drawing.Point(12, 562)
+        Me.GroupBox3.Location = New System.Drawing.Point(12, 613)
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Size = New System.Drawing.Size(441, 119)
         Me.GroupBox3.TabIndex = 7
@@ -715,11 +718,33 @@ Partial Class F_GBX
         'BtAddGear
         '
         Me.BtAddGear.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.BtAddGear.Location = New System.Drawing.Point(12, 297)
+        Me.BtAddGear.Location = New System.Drawing.Point(6, 174)
         Me.BtAddGear.Name = "BtAddGear"
         Me.BtAddGear.Size = New System.Drawing.Size(29, 23)
         Me.BtAddGear.TabIndex = 3
         Me.BtAddGear.UseVisualStyleBackColor = True
+        '
+        'GroupBox4
+        '
+        Me.GroupBox4.Controls.Add(Me.Label32)
+        Me.GroupBox4.Controls.Add(Me.LvGears)
+        Me.GroupBox4.Controls.Add(Me.BtRemGear)
+        Me.GroupBox4.Controls.Add(Me.BtAddGear)
+        Me.GroupBox4.Location = New System.Drawing.Point(12, 135)
+        Me.GroupBox4.Name = "GroupBox4"
+        Me.GroupBox4.Size = New System.Drawing.Size(441, 209)
+        Me.GroupBox4.TabIndex = 46
+        Me.GroupBox4.TabStop = False
+        Me.GroupBox4.Text = "Gears"
+        '
+        'Label32
+        '
+        Me.Label32.AutoSize = True
+        Me.Label32.Location = New System.Drawing.Point(312, 179)
+        Me.Label32.Name = "Label32"
+        Me.Label32.Size = New System.Drawing.Size(123, 13)
+        Me.Label32.TabIndex = 35
+        Me.Label32.Text = "Double-Click to edit gear"
         '
         'F_GBX
         '
@@ -727,27 +752,25 @@ Partial Class F_GBX
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(465, 735)
+        Me.ClientSize = New System.Drawing.Size(465, 786)
+        Me.Controls.Add(Me.GroupBox4)
         Me.Controls.Add(Me.CbGStype)
         Me.Controls.Add(Me.Label16)
+        Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.GroupBox3)
-        Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.TbName)
-        Me.Controls.Add(Me.BtAddGear)
         Me.Controls.Add(Me.ButCancel)
-        Me.Controls.Add(Me.BtRemGear)
-        Me.Controls.Add(Me.TbTracInt)
         Me.Controls.Add(Me.ButOK)
-        Me.Controls.Add(Me.LvGears)
+        Me.Controls.Add(Me.TbTracInt)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.ToolStrip1)
+        Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.TBI_getr)
         Me.Controls.Add(Me.Label49)
         Me.Controls.Add(Me.Label33)
         Me.Controls.Add(Me.Label48)
-        Me.Controls.Add(Me.Label6)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
@@ -770,6 +793,8 @@ Partial Class F_GBX
         Me.GroupBox3.PerformLayout()
         Me.PnTC.ResumeLayout(False)
         Me.PnTC.PerformLayout()
+        Me.GroupBox4.ResumeLayout(False)
+        Me.GroupBox4.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -843,4 +868,6 @@ Partial Class F_GBX
     Friend WithEvents PnTorqRes As System.Windows.Forms.Panel
     Friend WithEvents BtAddGear As System.Windows.Forms.Button
     Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
+    Friend WithEvents Label32 As System.Windows.Forms.Label
 End Class

@@ -13,26 +13,14 @@ VECTO ?.? (future release) TODO
 VECTO x.x (current source - next release)
 - Bugfix: FC interpolation failed when load points matched map points exactly.
 - Bugfix: Invalid "FC= -10000!" errors when outside of FC-Map
+- Bugfix: Vehicle stand-still at end of cycle was ignored (distance-based cycles only)
 - FC extrapolation will not abort calculation. Invalid FC values are marked in output as "ERROR".
-- Same job file list for BATCH and STANDARD (Job file list does not change when switching mode)
-- Changes in header and new parameters in modal results (.vmod):
-	o engine speed > n
-	o torque > Tq_eng
-	o New: Tq_clutch = torque before clutch
-	o New: Tq_full = full load torque
-	o New: Tq_drag = drag torque
-	o Removed: Pe_norm, n_norm	
 - No abortion if transmission output and input torque have different signs (In>0, Out<0). (Caused "Transmission Loss Map invalid" error messages)
-- Bugfix: Random crashes if Look-Ahead Coasting was disabled.
-- Eco-Roll revised:
+- Eco-Roll revised. New rules:
 	o Engages if Pwheel < 0
 	o Disengages if Underspeed is reached.
-- Look-Ahead Coasting now uses real coasting also if road gradient > 0 which means the coasting deceleration can be so high that no braking is necessary. In this case the braking phase will be ommitted and the total deceleration time can be shorter than expected by the given target coasting deceleration.
-- "Minimum (actual) speed" instead of "Min. Target Speed" for Eco-Roll, Overspeed and Look Ahead Coasting  => actual speed instead of target speed
-- Bugfix: Error if Look-Ahead Coasting was disabled.
-- Eco-Roll revised (see changelog)
-- Removed "IgnoreFCextrapol" form DEV-Options
-- Bugfix: Distance Correction didn't work right with Look Ahead Coasting. Now distance error is acceptable but at the cost of partly interrupted coasting phases. Should be revised in future updates.
+- Look-Ahead Coasting now uses real coasting also if road gradient > 0 which means the coasting deceleration can be so high that no braking is necessary. In this case the braking phase will be omitted and the total deceleration time can be shorter than expected by the given target coasting deceleration.
+- "Minimum (actual) speed" instead of "Min. Target Speed" for Eco-Roll, Overspeed and Look Ahead Coasting
 - Major update in Gearbox/Toque Converter:
 	o Torque converter can be defined in multiple gears
 	o Same gear numbers in output as in GBX file, i.e. first gear with TC is not "TC" or "0.5" but simply "1"
@@ -40,10 +28,29 @@ VECTO x.x (current source - next release)
 	o Unlimited number of gears and new gear list in GUI without fixed gear number
 	o Improved gear shift model for torque converter
 	o Driving Cycle Preprocessing and Gear Shift Model now use approximated efficiency values based in the transmission loss maps. Reduces calculation time significantly with little to no impact on fuel consumption.
+- Full load and drag curves (.vfld) can be defined for each gear separately.
+- Bugfix: Distance Correction didn't work right with Look Ahead Coasting. Now distance error is acceptable but at the cost of partly interrupted coasting phases. Should be revised in future updates.
 - Engine Only Mode: Engine motoring points can be defined explicitly in load cycle with "<DRAG>"
 - When speed is under 5km/h and engine in motoring operating then gearbox shifts to Neutral
 - Start-Stop activation delay time can be defined in job file
+- File signing features added:
+	o After each calculation a signature file (.vsig) is created which includes signatures for all input and result files. The file itself is also signed.
+	o Signature files can be verified or manually created under "Tools" > "Sign or Verify Files"
+- Changes in header and new parameters in modal results (.vmod):
+	o engine speed => n
+	o torque => Tq_eng
+	o Pe => Pe_eng
+	o New: Tq_clutch = torque at clutch (before clutch, engine-side)
+	o New: Tq_full = full load torque
+	o New: Tq_drag = drag torque
+	o Removed: Pe_norm, n_norm	
+- Changes in summary results (.vsum)
+	o total altitude change instead of average gradient
+	o Auxiliary energy consumption for each auxiliary 
+	o Removed: Pe_norm, n_norm	
+- Same job file list for BATCH and STANDARD (Job file list does not change when switching mode)
 - Updated some error messages (units)
+- Driving Cycle stop times corrected (No more zero stop times).
 	
 	
 	

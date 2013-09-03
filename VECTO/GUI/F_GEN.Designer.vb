@@ -82,6 +82,7 @@ Partial Class F_GEN
         Me.BtDRIrem = New System.Windows.Forms.Button()
         Me.BtDRIadd = New System.Windows.Forms.Button()
         Me.GrAux = New System.Windows.Forms.GroupBox()
+        Me.Label32 = New System.Windows.Forms.Label()
         Me.LvAux = New System.Windows.Forms.ListView()
         Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -133,11 +134,14 @@ Partial Class F_GEN
         Me.RdOff = New System.Windows.Forms.RadioButton()
         Me.GrStartStop = New System.Windows.Forms.GroupBox()
         Me.PnStartStop = New System.Windows.Forms.Panel()
+        Me.Label31 = New System.Windows.Forms.Label()
         Me.Label27 = New System.Windows.Forms.Label()
         Me.TBSSspeed = New System.Windows.Forms.TextBox()
         Me.LabelSSspeed = New System.Windows.Forms.Label()
         Me.Label26 = New System.Windows.Forms.Label()
+        Me.Label30 = New System.Windows.Forms.Label()
         Me.LabelSStime = New System.Windows.Forms.Label()
+        Me.TbStStDelay = New System.Windows.Forms.TextBox()
         Me.TBSStime = New System.Windows.Forms.TextBox()
         Me.ChBStartStop = New System.Windows.Forms.CheckBox()
         Me.BtAccOpen = New System.Windows.Forms.Button()
@@ -201,9 +205,6 @@ Partial Class F_GEN
         Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.TbStStDelay = New System.Windows.Forms.TextBox()
-        Me.Label30 = New System.Windows.Forms.Label()
-        Me.Label31 = New System.Windows.Forms.Label()
         Me.TabPgHEV.SuspendLayout()
         Me.TabPgColdSt.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
@@ -847,6 +848,7 @@ Partial Class F_GEN
         '
         'GrAux
         '
+        Me.GrAux.Controls.Add(Me.Label32)
         Me.GrAux.Controls.Add(Me.LvAux)
         Me.GrAux.Controls.Add(Me.ButAuxRem)
         Me.GrAux.Controls.Add(Me.ButAuxAdd)
@@ -856,6 +858,15 @@ Partial Class F_GEN
         Me.GrAux.TabIndex = 33
         Me.GrAux.TabStop = False
         Me.GrAux.Text = "Auxiliaries"
+        '
+        'Label32
+        '
+        Me.Label32.AutoSize = True
+        Me.Label32.Location = New System.Drawing.Point(489, 130)
+        Me.Label32.Name = "Label32"
+        Me.Label32.Size = New System.Drawing.Size(139, 13)
+        Me.Label32.TabIndex = 34
+        Me.Label32.Text = "Double-Click to edit auxiliary"
         '
         'LvAux
         '
@@ -1130,7 +1141,7 @@ Partial Class F_GEN
         Me.TabPgDriver.Padding = New System.Windows.Forms.Padding(3)
         Me.TabPgDriver.Size = New System.Drawing.Size(646, 442)
         Me.TabPgDriver.TabIndex = 7
-        Me.TabPgDriver.Text = "Driver"
+        Me.TabPgDriver.Text = "Driver Assist"
         Me.TabPgDriver.UseVisualStyleBackColor = True
         '
         'GroupBox4
@@ -1374,6 +1385,15 @@ Partial Class F_GEN
         Me.PnStartStop.Size = New System.Drawing.Size(221, 106)
         Me.PnStartStop.TabIndex = 1
         '
+        'Label31
+        '
+        Me.Label31.AutoSize = True
+        Me.Label31.Location = New System.Drawing.Point(169, 64)
+        Me.Label31.Name = "Label31"
+        Me.Label31.Size = New System.Drawing.Size(18, 13)
+        Me.Label31.TabIndex = 38
+        Me.Label31.Text = "[s]"
+        '
         'Label27
         '
         Me.Label27.AutoSize = True
@@ -1408,6 +1428,15 @@ Partial Class F_GEN
         Me.Label26.TabIndex = 38
         Me.Label26.Text = "[km/h]"
         '
+        'Label30
+        '
+        Me.Label30.AutoSize = True
+        Me.Label30.Location = New System.Drawing.Point(9, 64)
+        Me.Label30.Name = "Label30"
+        Me.Label30.Size = New System.Drawing.Size(84, 13)
+        Me.Label30.TabIndex = 35
+        Me.Label30.Text = "Activation Delay"
+        '
         'LabelSStime
         '
         Me.LabelSStime.AutoSize = True
@@ -1416,6 +1445,13 @@ Partial Class F_GEN
         Me.LabelSStime.Size = New System.Drawing.Size(87, 13)
         Me.LabelSStime.TabIndex = 35
         Me.LabelSStime.Text = "Min ICE-On Time"
+        '
+        'TbStStDelay
+        '
+        Me.TbStStDelay.Location = New System.Drawing.Point(99, 61)
+        Me.TbStStDelay.Name = "TbStStDelay"
+        Me.TbStStDelay.Size = New System.Drawing.Size(64, 20)
+        Me.TbStStDelay.TabIndex = 1
         '
         'TBSStime
         '
@@ -2026,31 +2062,6 @@ Partial Class F_GEN
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
-        'TbStStDelay
-        '
-        Me.TbStStDelay.Location = New System.Drawing.Point(99, 61)
-        Me.TbStStDelay.Name = "TbStStDelay"
-        Me.TbStStDelay.Size = New System.Drawing.Size(64, 20)
-        Me.TbStStDelay.TabIndex = 1
-        '
-        'Label30
-        '
-        Me.Label30.AutoSize = True
-        Me.Label30.Location = New System.Drawing.Point(6, 64)
-        Me.Label30.Name = "Label30"
-        Me.Label30.Size = New System.Drawing.Size(87, 13)
-        Me.Label30.TabIndex = 35
-        Me.Label30.Text = "Min ICE-On Time"
-        '
-        'Label31
-        '
-        Me.Label31.AutoSize = True
-        Me.Label31.Location = New System.Drawing.Point(169, 64)
-        Me.Label31.Name = "Label31"
-        Me.Label31.Size = New System.Drawing.Size(18, 13)
-        Me.Label31.TabIndex = 38
-        Me.Label31.Text = "[s]"
-        '
         'F_GEN
         '
         Me.AcceptButton = Me.ButOK
@@ -2082,6 +2093,7 @@ Partial Class F_GEN
         Me.GroupBox5.ResumeLayout(False)
         Me.GroupBox5.PerformLayout()
         Me.GrAux.ResumeLayout(False)
+        Me.GrAux.PerformLayout()
         Me.TabControl1.ResumeLayout(False)
         Me.TabPgDriver.ResumeLayout(False)
         Me.TabPgDriver.PerformLayout()
@@ -2292,4 +2304,5 @@ Partial Class F_GEN
     Friend WithEvents Label31 As System.Windows.Forms.Label
     Friend WithEvents Label30 As System.Windows.Forms.Label
     Friend WithEvents TbStStDelay As System.Windows.Forms.TextBox
+    Friend WithEvents Label32 As System.Windows.Forms.Label
 End Class

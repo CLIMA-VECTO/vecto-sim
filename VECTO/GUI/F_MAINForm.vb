@@ -719,6 +719,8 @@ Public Class F_MAINForm
                     F_ENG.openENG(File)
                 Case ".VECTO"
                     OpenGENEditor(File)
+                Case ".VSIG"
+                    OpenSigFile(File)
                 Case Else
                     MsgBox("Type '" & fEXT(File) & "' unknown!", MsgBoxStyle.Critical)
             End Select
@@ -1274,7 +1276,7 @@ lbFound:
         If LastModeIndex = 2 Then
             If fbADV.OpenDialog("") Then OpenADVEditor(fbADV.Files(0))
         Else
-            If fbGEN.OpenDialog("", False, "vecto,vveh,vgbx,veng") Then
+            If fbGEN.OpenDialog("", False, "vecto,vveh,vgbx,veng,vsig") Then
                 OpenVectoFile(fbGEN.Files(0))
             End If
         End If
@@ -1312,6 +1314,16 @@ lbFound:
         Else
             If F_GBX.WindowState = FormWindowState.Minimized Then F_GBX.WindowState = FormWindowState.Normal
             F_GBX.BringToFront()
+        End If
+    End Sub
+
+
+    Private Sub SignOrVerifyFilesToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SignOrVerifyFilesToolStripMenuItem.Click
+        If Not F_FileSign.Visible Then
+            F_FileSign.Show()
+        Else
+            If F_FileSign.WindowState = FormWindowState.Minimized Then F_FileSign.WindowState = FormWindowState.Normal
+            F_FileSign.BringToFront()
         End If
     End Sub
 
@@ -1826,6 +1838,17 @@ lbFound:
         F_ADV.WindowState = FormWindowState.Normal
         If x <> "<New>" Then Call F_ADV.ADVload2Form(x)
         F_ADV.Activate()
+    End Sub
+
+    Friend Sub OpenSigFile(ByVal file As String)
+        If Not F_FileSign.Visible Then
+            F_FileSign.Show()
+     
+        End If
+        F_FileSign.WindowState = FormWindowState.Normal
+        F_FileSign.TbSigFile.Text = file
+        F_FileSign.VerifySigFile()
+        F_FileSign.Activate()
     End Sub
 
     'Save File-Lists

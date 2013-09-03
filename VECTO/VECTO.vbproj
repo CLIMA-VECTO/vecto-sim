@@ -109,6 +109,12 @@
     <Compile Include="ADVANCE\cADV.vb" />
     <Compile Include="cVECTO.vb" />
     <Compile Include="cVSUM.vb" />
+    <Compile Include="GUI\F_FileSign.Designer.vb">
+      <DependentUpon>F_FileSign.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_FileSign.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GUI\F_FLD.Designer.vb">
       <DependentUpon>F_FLD.vb</DependentUpon>
     </Compile>
@@ -290,6 +296,9 @@
     <EmbeddedResource Include="File Browser\FB_FavDlog.resx">
       <DependentUpon>FB_FavDlog.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_FileSign.resx">
+      <DependentUpon>F_FileSign.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\F_FLD.resx">
       <DependentUpon>F_FLD.vb</DependentUpon>
     </EmbeddedResource>
@@ -425,6 +434,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\application-export-icon-small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Status-dialog-password-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Refresh-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

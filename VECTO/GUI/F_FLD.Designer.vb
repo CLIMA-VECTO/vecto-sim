@@ -35,11 +35,11 @@ Partial Class F_FLD
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.NumGearTo = New System.Windows.Forms.NumericUpDown()
         Me.NumGearFrom = New System.Windows.Forms.NumericUpDown()
-        Me.Label3 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.CmOpenFile.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -60,7 +60,7 @@ Partial Class F_FLD
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(146, 29)
-        Me.TableLayoutPanel1.TabIndex = 0
+        Me.TableLayoutPanel1.TabIndex = 4
         '
         'OK_Button
         '
@@ -87,7 +87,7 @@ Partial Class F_FLD
         Me.BtFLDOpen.Location = New System.Drawing.Point(470, 23)
         Me.BtFLDOpen.Name = "BtFLDOpen"
         Me.BtFLDOpen.Size = New System.Drawing.Size(23, 23)
-        Me.BtFLDOpen.TabIndex = 43
+        Me.BtFLDOpen.TabIndex = 2
         Me.BtFLDOpen.TabStop = False
         Me.BtFLDOpen.UseVisualStyleBackColor = True
         '
@@ -96,7 +96,7 @@ Partial Class F_FLD
         Me.BtFLD.Location = New System.Drawing.Point(436, 23)
         Me.BtFLD.Name = "BtFLD"
         Me.BtFLD.Size = New System.Drawing.Size(28, 23)
-        Me.BtFLD.TabIndex = 42
+        Me.BtFLD.TabIndex = 1
         Me.BtFLD.TabStop = False
         Me.BtFLD.Text = "..."
         Me.BtFLD.UseVisualStyleBackColor = True
@@ -106,7 +106,7 @@ Partial Class F_FLD
         Me.TbFLD.Location = New System.Drawing.Point(12, 25)
         Me.TbFLD.Name = "TbFLD"
         Me.TbFLD.Size = New System.Drawing.Size(418, 20)
-        Me.TbFLD.TabIndex = 41
+        Me.TbFLD.TabIndex = 0
         '
         'CmOpenFile
         '
@@ -151,9 +151,18 @@ Partial Class F_FLD
         Me.GroupBox1.Location = New System.Drawing.Point(12, 51)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(479, 64)
-        Me.GroupBox1.TabIndex = 46
+        Me.GroupBox1.TabIndex = 3
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Assigned Gears"
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(225, 31)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(229, 13)
+        Me.Label3.TabIndex = 2
+        Me.Label3.Text = "Gear 0 is used for Idling and Engine Only Mode"
         '
         'Label2
         '
@@ -179,7 +188,7 @@ Partial Class F_FLD
         Me.NumGearTo.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.NumGearTo.Name = "NumGearTo"
         Me.NumGearTo.Size = New System.Drawing.Size(51, 20)
-        Me.NumGearTo.TabIndex = 0
+        Me.NumGearTo.TabIndex = 1
         '
         'NumGearFrom
         '
@@ -188,15 +197,6 @@ Partial Class F_FLD
         Me.NumGearFrom.Name = "NumGearFrom"
         Me.NumGearFrom.Size = New System.Drawing.Size(51, 20)
         Me.NumGearFrom.TabIndex = 0
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(225, 31)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(245, 13)
-        Me.Label3.TabIndex = 2
-        Me.Label3.Text = "Gear 0 file is used for Idling and Engine Only Mode"
         '
         'F_FLD
         '

@@ -51,6 +51,34 @@ Public Class cGBX
     Public TCnout As Single
     Public TCmustReduce As Boolean
 
+    Private MyFileList As List(Of String)
+
+
+    Public Function CreateFileList() As Boolean
+        Dim i As Integer
+
+        If Not Me.ReadFile Then Return False
+
+
+        MyFileList = New List(Of String)
+
+        '.vgbs
+        MyFileList.Add(Me.gs_file.FullPath)
+
+        'Transm. Loss Maps
+        For i = 0 To GetrMaps.Count - 1
+            If Not IsNumeric(Me.GetrMap(i, True)) Then
+                MyFileList.Add(Me.GetrMap(i))
+            End If
+        Next
+
+        'Torque Converter
+        If Me.TCon Then MyFileList.Add(TCfile)
+
+
+        Return True
+    End Function
+
 
     Public Sub New()
         MyPath = ""
@@ -410,7 +438,7 @@ lb10:
         If Math.Abs(1 - MoutCalc / Mout) > DEV.TCiterPrec Then
 
             If MoutCalc < Mout Then
-              
+
 
                 If MoutCalc > 0 Then TCmustReduce = True
 
@@ -643,6 +671,12 @@ lbInt:
         Return (Md - gs_M(i - 1)) * (gs_nnUp(i) - gs_nnUp(i - 1)) / (gs_M(i) - gs_M(i - 1)) + gs_nnUp(i - 1)
 
     End Function
+
+    Public ReadOnly Property FileList As List(Of String)
+        Get
+            Return MyFileList
+        End Get
+    End Property
 
     Public Property FilePath() As String
         Get

@@ -424,7 +424,7 @@ Public Class cMOD
 
         Else
 
-            s.Append(",n,Tq_eng,Tq_clutch,Tq_full,Tq_drag,Pe,Pe_full,Pe_drag,Pe_clutch,Pa Eng,Paux")
+            s.Append(",n,Tq_eng,Tq_clutch,Tq_full,Tq_drag,Pe_eng,Pe_full,Pe_drag,Pe_clutch,Pa Eng,Paux")
             sU.Append(",[1/min],[Nm],[Nm],[Nm],[Nm],[kW],[kW],[kW],[kW],[kW],[kW]")
 
         End If
@@ -766,8 +766,10 @@ Public Class cMOD
 
         End With
 
-
         f.Close()
+
+        'Add file to signing list
+        Lic.FileSigning.AddFile(path)
 
         Return True
 

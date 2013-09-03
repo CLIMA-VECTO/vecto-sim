@@ -20,6 +20,8 @@ Module M_MAIN
 
     Public FCerror As Boolean
 
+    Private SigFile As String
+
     Friend Function NrOfRunStr() As String
         If PHEMmode = tPHEMmode.ModeSTANDARD Then
             'Return CStr(jgen * (CyclesDim + 1) + jzkl + 1) & "-" & CStr(jsubcycle)
@@ -111,7 +113,9 @@ lbSkip0:
 
         'MOD-Data class initialization
         MODdata = New cMOD
-        'TEST: Schaun ob's auch ohne dem geht: MODdata.Init() |@@| TEST: Just look whether it's even without the: MODdata.Init()
+
+        'New signature file
+        Lic.FileSigning.NewFile()
 
         'ERG-class initialization
         WorkerMsg(tMsgID.Normal, "Analyzing input files", MsgSrc)
@@ -123,6 +127,8 @@ lbSkip0:
             If Not ERG.ErgEntryInit() Then GoTo lbErrBefore
         End If
 
+        SigFile = Left(ERG.ErgFile, ERG.ErgFile.Length - 5) & ".vsig"
+
         'Warning on invalid/unrealistic settings
         If Cfg.AirDensity > 2 Then WorkerMsg(tMsgID.Err, "Air Density = " & Cfg.AirDensity & " ?!", MsgSrc)
 
@@ -131,7 +137,6 @@ lbSkip0:
 
         'Progbar-Init
         WorkerProgInit()
-
 
         '--------------------------------------------------------------------------------------------
         '       Calculation Loop for all Preset-cycles and Vehicles:
@@ -333,7 +338,7 @@ lbADV:
                             End If
                         End If
 
-                        'If first time step is Zero then duplicate to start cycle with vehicle standing.
+                        'If first time step is Zero then duplicate first values to start cycle with vehicle standing.
                         If DRI.Vvorg AndAlso DRI.tDim > 1 AndAlso DRI.Values(tDriComp.V)(0) < 0.0001 AndAlso DRI.Values(tDriComp.V)(1) >= 0.0001 Then
                             DRI.FirstZero()
                         End If
@@ -506,7 +511,7 @@ lbADV:
 
                     If PHEMworker.CancellationPending Then GoTo lbAbort
 
-                    '*** Output Every second ***
+                    '*** second-by-second output ***
                     If Cfg.ModOut Then
                         If MsgOut Then WorkerMsg(tMsgID.Normal, "Writing modal output", MsgSrc)
                         If Not MODdata.Output() Then
@@ -519,7 +524,7 @@ lbADV:
                     End If
 
                     'VECTO Output
-                    'TODO: Loadings umschalten... |@@| TODO: Loadings Gear-shift ...
+                    'TODO: Loadings...
                     If Not GEN.EngOnly Then
                         If Not VSUM.SetVals(tVSUM.UserDefLoaded) Then
                             CyclAbrtedByErr = True
@@ -612,6 +617,15 @@ lbNextJob:
                 MsgStrBuilder.Append("done")
                 'If GEN.irechwahl = tCalcMode.cmHEV Then MsgStrBuilder.Append(" (dSOC = " & SOC(MODdata.tDim) - SOC(0) & ")")
 
+                'Add input file list to signature list
+                If GEN.CreateFileList Then
+                    For i = 0 To GEN.FileList.Count - 1
+                        Lic.FileSigning.AddFile(GEN.FileList(i))
+                    Next
+                Else
+                    WorkerMsg(tMsgID.Err, "Could not create file list for signing!", MsgSrc)
+                End If
+
                 If MSGwarn > 0 Then
                     MsgStrBuilder.Append(". " & MSGwarn & " Warning")
                     If MSGwarn > 1 Then MsgStrBuilder.Append("s")
@@ -640,6 +654,17 @@ lbNextJob:
         '**********************************************************************************************
 
         WorkerMsg(tMsgID.Normal, "Summary Results written to: " & fFILE(ERG.ErgFile, True), MsgSrc, ERG.ErgFile)
+
+        'Write file signatures
+        WorkerMsg(tMsgID.Normal, "Signing files", MsgSrc)
+        Lic.FileSigning.Comment = "Created by VECTO"
+
+        If Lic.FileSigning.WriteSigFile(SigFile, LicSigAppCode) Then
+            WorkerMsg(tMsgID.Normal, "Files signed successfully: " & fFILE(SigFile, True), MsgSrc, SigFile)
+        Else
+            WorkerMsg(tMsgID.Err, "Failed to sign files! " & Lic.FileSigning.ErrorMsg, MsgSrc)
+        End If
+
         WorkerMsg(tMsgID.Normal, "done", MsgSrc)
         VECTO = tCalcResult.Done
         GoTo lbExit

@@ -725,7 +725,7 @@ lbEr:
         End If
 
         If Not Values.ContainsKey(tDriComp.StopTime) Then
-            WorkerMsg(tMsgID.Err, "Stopping time not defined in cycle (" & sKey.DRI.StopTime & ")!", MsgSrc)
+            WorkerMsg(tMsgID.Err, "Stop time not defined in cycle (" & sKey.DRI.StopTime & ")!", MsgSrc)
             Return False
         End If
 
@@ -837,6 +837,12 @@ lbEr:
 
 
         If Speed(0) < 0.0001 Then
+
+            If StopTime(0) = 0 Then
+                WorkerMsg(tMsgID.Err, "Stop time = 0 at cylce start!", MsgSrc)
+                Return False
+            End If
+
             t += StopTime(0)
             Time.Add(t)
             For Each ValKV In tValues
@@ -895,6 +901,11 @@ lbEr:
             End If
 
             If Speed(i + 1) < 0.0001 Then
+
+                If StopTime(i + 1) = 0 Then
+                    WorkerMsg(tMsgID.Err, "Stop time = 0 at distance= " & s & "[m]!", MsgSrc)
+                    Return False
+                End If
 
                 t += StopTime(i + 1)
 
@@ -994,7 +1005,7 @@ lbEr:
 
             End If
 
-        Loop Until i = tDim Or j + 1 > tmax
+        Loop Until i = tDim + 1 Or j + 1 > tmax
 
         Values = hzValues
         VoglS = hzSpeedOgl

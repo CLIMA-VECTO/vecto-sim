@@ -361,7 +361,7 @@ Public Class cVh
 
         dWegIst += v
 
-        If WegX < MODdata.tDimOgl Then
+        If WegX + 2 < MODdata.tDimOgl Then
 
             'If repeating of current time-step is closer to the target distance => Repeat time-step
             If Not NoDistCorr(t) AndAlso (Math.Abs(dWegIst + Vsoll(t) - Weg(WegX)) < Math.Abs(dWegIst - Weg(WegX))) And v > 1 Then

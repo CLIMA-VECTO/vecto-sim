@@ -2,7 +2,8 @@
 
 Module VECTO_Global
 
-    Public Const VECTOvers As String = "1.3.1.1+ beta 1 - 18.07.2013"
+    Public Const VECTOvers As String = "1.4 RC1"
+    Public Const LicSigAppCode As String = "VECTO-Release-0093C61E0A2E4BFA9A7ED7E729C56AE4"
     Public MyAppPath As String
     Public MyConfPath As String
     Public MyDeclPath As String

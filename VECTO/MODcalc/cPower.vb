@@ -1314,7 +1314,7 @@ lb_nOK:
 
             If Cfg.WegKorJa Then Vh.DistCorrection(jz, VehState0)
 
-            'Interruption of traction(Zugkraftunterbrechung)
+            'Traction Interruption
             If TracIntrTurnOff Then
 
                 TracIntrOn = False

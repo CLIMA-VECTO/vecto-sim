@@ -72,6 +72,7 @@ Partial Class F_ENG
         Me.ColumnHeader0 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.Label32 = New System.Windows.Forms.Label()
         Me.ToolStrip1.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -480,6 +481,7 @@ Partial Class F_ENG
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.Label32)
         Me.GroupBox1.Controls.Add(Me.LvFLDs)
         Me.GroupBox1.Controls.Add(Me.BtRemFLD)
         Me.GroupBox1.Controls.Add(Me.BtAddFLD)
@@ -489,6 +491,15 @@ Partial Class F_ENG
         Me.GroupBox1.TabIndex = 44
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Full Load and Drag Curves"
+        '
+        'Label32
+        '
+        Me.Label32.AutoSize = True
+        Me.Label32.Location = New System.Drawing.Point(354, 138)
+        Me.Label32.Name = "Label32"
+        Me.Label32.Size = New System.Drawing.Size(121, 13)
+        Me.Label32.TabIndex = 44
+        Me.Label32.Text = "Double-Click to edit item"
         '
         'F_ENG
         '
@@ -540,6 +551,7 @@ Partial Class F_ENG
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CmOpenFile.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -592,4 +604,5 @@ Partial Class F_ENG
     Friend WithEvents ColumnHeader0 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+    Friend WithEvents Label32 As System.Windows.Forms.Label
 End Class

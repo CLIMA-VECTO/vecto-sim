@@ -145,8 +145,11 @@ Public Class cVSUM
 
         Next
 
-
         file.Close()
+
+        'Add file to signing list
+        Lic.FileSigning.AddFile(FilePath)
+
 
         Return True
 
