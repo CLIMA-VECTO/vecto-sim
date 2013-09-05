@@ -5,4 +5,4 @@
 	User Manual\Update Notes.pdf (provided with the VECTO release)
 	GRAPHi (provided with the VECTO release)
 	vectolic.dll (should be placed there automatically when compiling)
-	license.dat (provided with the VECTO release or later by EC/JRC)
+	license.dat (provided by EC/JRC)
