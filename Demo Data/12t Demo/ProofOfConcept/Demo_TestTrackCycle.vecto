@@ -1,6 +1,6 @@
 ﻿c VECTO Input File
-c VECTO 1.3
-c 30.04.2013 14:52:04
+c VECTO 1.4 RC1
+c 04.09.2013 14:06:33
 c Vehicle (.vveh):
 Demo_Vehicle_TestTrack.vveh
 c Engine (.veng):
@@ -39,3 +39,5 @@ c Allowed UnderSpeed [km/h]
 0
 c Minimum target speed for Look-Ahead with Coasting [km/h]
 50
+c Start/Stop activation delay time [s]
+0

@@ -14,316 +14,6 @@ Class cERG
         ERGpath = ""
     End Sub
 
-    Public Function ErgEntryInit() As Boolean
-        Dim GENs As New List(Of String)
-        Dim str As String
-        Dim str1 As String
-        Dim iGEN As Integer
-        Dim ADV0 As cADV
-        Dim file As New cFile_V3
-        Dim path0 As String
-        Dim GEN0 As cGEN
-        Dim MAP0 As cMAP
-        Dim ENG0 As cENG
-        Dim Em0 As cEmComp
-        Dim HEVorEVdone As Boolean
-        Dim EVdone As Boolean
-        Dim EngOnly As Boolean
-        Dim NonEngOnly As Boolean
-        Dim ErgEntry As cErgEntry
-        Dim CylceKin As cCycleKin
-        Dim i1 As Integer
-        Dim i2 As Integer
-        Dim iDim As Integer
-        Dim DRI0 As cDRI
-        Dim MsgSrc As String
-
-        MsgSrc = "SUMALL/Init"
-
-        ErgEntries = New Dictionary(Of String, cErgEntry)
-        ErgEntryList = New List(Of String)
-
-
-        '********************** GEN-Liste raussuchen. Bei ADVANCE aus Flotte sonst aus Jobliste '********************** |@@| Select GEN-list for ADVANCE either from Fleet or from Job-list '**********************
-        If PHEMmode = tPHEMmode.ModeADVANCE Then
-
-            ADV0 = New cADV
-            ADV0.FilePath = JobFile
-
-            If Not ADV0.ReadFile Then
-                WorkerMsg(tMsgID.Err, "Can't read .adv file '" & JobFile & "' !", MsgSrc)
-                Return False
-            End If
-
-            If Not file.OpenRead(ADV0.FLTpath) Then
-                WorkerMsg(tMsgID.Err, "Can't read .flt file '" & ADV0.FLTpath & "' !", MsgSrc)
-                Return False
-            End If
-
-            path0 = fPATH(ADV0.FLTpath)
-
-            Do While Not file.EndOfFile
-                str = file.ReadLine(1)
-                GENs.Add(fFileRepl(str, path0))
-            Loop
-
-            file.Close()
-
-            iGEN = GENs.Count - 1
-
-        Else
-
-            For Each str In JobFileList
-                GENs.Add(fFileRepl(str))
-            Next
-            iGEN = GENs.Count - 1
-
-        End If
-
-
-        '********************** Create Erg-entries '**********************
-        EVdone = False
-        HEVorEVdone = False
-        EngOnly = False
-        NonEngOnly = False
-
-        'Vehicle type-independent
-        AddToErg("\\T", "time", "[s]")
-        AddToErg("\\Prated", "Prated", "[kW]")
-
-        'For each GEN-file check Mode and Map
-        For Each str In GENs
-
-            GEN0 = New cGEN
-
-            GEN0.FilePath = str
-
-            Try
-                If Not GEN0.ReadFile Then
-                    WorkerMsg(tMsgID.Err, "Can't read .gen file '" & str & "' !", MsgSrc)
-                    Return False
-                End If
-            Catch ex As Exception
-                WorkerMsg(tMsgID.Err, "File read error! (" & str & ")", MsgSrc)
-                Return False
-            End Try
-
-            If GEN0.VehMode = tVehMode.EngineOnly Then
-
-                If Not EngOnly Then
-
-                    'nothing...
-
-                    EngOnly = True
-
-                End If
-
-            Else
-
-                If Not NonEngOnly Then
-
-                    AddToErg("\\S", "distance", "[km]")
-                    AddToErg("\\V", "speed", "[km/h]")
-                    AddToErg("\\G", "∆altitude", "[m]")
-
-                    NonEngOnly = True
-
-                End If
-
-                'Auxiliary energy consumption
-                If GEN0.AuxDef Then
-                    For Each str1 In GEN0.AuxPaths.Keys
-                        AddToErg("\\Eaux_" & UCase(str1), "Eaux_" & str1, "[kWh]")
-                    Next
-                End If
-
-            End If
-
-
-            'Electric-Vehicle / Hybrid
-            If GEN0.VehMode = tVehMode.EV Or GEN0.VehMode = tVehMode.HEV Then
-
-                'EV & HEV
-                If Not HEVorEVdone Then
-
-                    AddToErg("\\PeEM+", "PeEM+", "[kW]")
-                    AddToErg("\\PeBat+", "PeBat+", "[kW]")
-                    AddToErg("\\PiBat+", "PiBat+", "[kW]")
-                    AddToErg("\\PeEM-", "PeEM-", "[kW]")
-                    AddToErg("\\PeBat-", "PeBat-", "[kW]")
-                    AddToErg("\\PiBat-", "PiBat-", "[kW]")
-                    AddToErg("\\EiBat+", "EiBat+", "[kWh]")
-                    AddToErg("\\EiBat-", "EiBat-", "[kWh]")
-                    AddToErg("\\EtaEM", "EtaEM", "[%]")
-                    AddToErg("\\EtaBat", "EtaBat", "[%]")
-                    AddToErg("\\∆SOC", "∆SOC", "[%]")
-
-                    HEVorEVdone = True
-
-                End If
-
-                'Only EV:
-                If GEN0.VehMode = tVehMode.EV And Not EVdone Then
-
-                    AddToErg("\\EC", "EC", "[kWh/km]")
-
-                    EVdone = True
-
-                End If
-
-
-            End If
-
-
-            'Conventional / Hybrid (Everything except EV)
-            If GEN0.VehMode <> tVehMode.EV Then
-
-                'Conventional vehicles ...
-                'AddToErg("\\n_norm", "n_norm", "[-]")
-                'AddToErg("\\Pe_norm", "Pe_norm", "[-]")
-                AddToErg("\\Ppos", "Ppos", "[-]")
-                AddToErg("\\Pneg", "Pneg", "[-]")
-
-                If GEN0.CreateMap Then
-
-                    'From the measured data
-                    DRI0 = New cDRI
-                    DRI0.FilePath = GEN0.CycleFiles(0).FullPath
-
-                    Try
-                        If Not DRI0.ReadFile Then Return False
-                    Catch ex As Exception
-                        WorkerMsg(tMsgID.Err, "File read error! (" & GEN0.CycleFiles(0).FullPath & ")", MsgSrc)
-                        Return False
-                    End Try
-
-                    For Each Em0 In DRI0.EmComponents.Values
-
-                        If Em0.WriteOutput Then
-
-                            'Dump x/h if in ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into  x/km is not possible
-                            If Em0.NormID = tEmNorm.x Or GEN0.VehMode = tVehMode.EngineOnly Or PHEMmode = tPHEMmode.ModeADVANCE Then
-                                AddToErg(Em0.IDstring, Em0.Name, Em0.Unit, False)
-                            Else
-                                AddToErg(Em0.IDstring, Em0.Name, "[" & Em0.RawUnit & "/km]", True)
-                            End If
-
-                        End If
-
-                    Next
-
-                    AddToErg(sKey.MAP.Extrapol, fMapCompName(tMapComp.Extrapol), "[-]")
-
-                Else
-
-                    'From the Engine-Map
-                    ENG0 = New cENG
-                    ENG0.FilePath = GEN0.PathENG
-
-                    Try
-                        If Not ENG0.ReadFile Then Return False
-                    Catch ex As Exception
-                        WorkerMsg(tMsgID.Err, "File read error! (" & GEN0.PathENG & ")", MsgSrc)
-                        Return False
-                    End Try
-
-                    MAP0 = New cMAP(GEN0.PKWja)
-                    MAP0.FilePath = ENG0.PathMAP
-
-                    Try
-                        If Not MAP0.ReadFile(False) Then Return False 'Fehlermeldungen werden auch bei "MsgOutput = False" ausgegeben
-                    Catch ex As Exception
-                        WorkerMsg(tMsgID.Err, "File read error! (" & ENG0.PathMAP & ")", MsgSrc)
-                        Return False
-                    End Try
-
-
-                    For Each str1 In MAP0.EmList
-
-                        Em0 = MAP0.EmComponents(str1)
-
-                        If Em0.WriteOutput Then
-
-                            'Dump x/h if ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into x/km is not possible
-                            If Em0.NormID = tEmNorm.x Or GEN0.VehMode = tVehMode.EngineOnly Or PHEMmode = tPHEMmode.ModeADVANCE Then
-                                AddToErg(Em0.IDstring, Em0.Name, Em0.Unit, False)
-                            Else
-                                AddToErg(Em0.IDstring, Em0.Name, "[" & Em0.RawUnit & "/km]", True)
-                            End If
-
-                        End If
-
-                    Next
-
-                End If
-
-            End If
-
-        Next
-
-
-        If EngOnly Then
-
-            'currently nothing
-
-        End If
-
-        If NonEngOnly Then
-
-            'Vehicle-related fields
-            AddToErg("\\Pbrake", "Pbrake", "[-]")
-            AddToErg("\\EposICE", "EposICE", "[kWh]")
-            AddToErg("\\EnegICE", "EnegICE", "[kWh]")
-            AddToErg("\\Eair", "Eair", "[kWh]")
-            AddToErg("\\Eroll", "Eroll", "[kWh]")
-            AddToErg("\\Egrad", "Egrad", "[kWh]")
-            AddToErg("\\Eacc", "Eacc", "[kWh]")
-            AddToErg("\\Eaux", "Eaux", "[kWh]")
-            AddToErg("\\Ebrake", "Ebrake", "[kWh]")
-            AddToErg("\\Etransm", "Etransm", "[kWh]")
-            AddToErg("\\Mass", "Mass", "[kg]")
-            AddToErg("\\Loading", "Loading", "[kg]")
-
-            'CylceKin
-            CylceKin = New cCycleKin
-            For Each ErgEntry In CylceKin.ErgEntries
-                AddToErg("\\" & ErgEntry.Head, ErgEntry.Head, ErgEntry.Unit)
-            Next
-
-        End If
-
-        'ErgListe sortieren damit g/km und g/h nebeneinander liegen |@@| Sort ErgListe so that g/km and g/h are side-by-side
-        iDim = ErgEntryList.Count - 1
-
-        For i1 = 0 To iDim - 1
-            str = ErgEntries(ErgEntryList(i1)).Head
-            For i2 = i1 + 1 To iDim
-                If ErgEntries(ErgEntryList(i2)).Head = str Then
-                    ErgEntryList.Insert(i1 + 1, ErgEntryList(i2))
-                    ErgEntryList.RemoveAt(i2 + 1)
-                End If
-            Next
-        Next
-
-        'Sort Aux
-        For i1 = 0 To iDim - 1
-            str = ErgEntries(ErgEntryList(i1)).Head
-            If str.Length > 4 AndAlso Left(str, 4) = "Eaux" Then
-                For i2 = i1 + 1 To iDim
-                    If ErgEntries(ErgEntryList(i2)).Head.Length > 4 AndAlso Left(ErgEntries(ErgEntryList(i2)).Head, 4) = "Eaux" Then
-                        ErgEntryList.Insert(i1 + 1, ErgEntryList(i2))
-                        ErgEntryList.RemoveAt(i2 + 1)
-                    End If
-                Next
-            End If
-        Next
-
-
-
-        Return True
-
-    End Function
-
     Public Function ErgHead() As String
         Dim s As New System.Text.StringBuilder
         Dim key As String
@@ -546,13 +236,13 @@ Class cERG
                 If Em0.WriteOutput Then
 
                     If FCerror Then
-                        If Em0.NormID = tEmNorm.x Or GEN.VehMode = tVehMode.EngineOnly Or PHEMmode = tPHEMmode.ModeADVANCE Then
+                        If Em0.NormID = tEmNorm.x Or GEN.VehMode = tVehMode.EngineOnly Then
                             ErgEntries(Em0.IDstring).ValueString = "ERROR"
                         Else
                             ErgEntries(Em0.IDstring & "_km").ValueString = "ERROR"
                         End If
                     Else
-                        If Em0.NormID = tEmNorm.x Or GEN.VehMode = tVehMode.EngineOnly Or PHEMmode = tPHEMmode.ModeADVANCE Then
+                        If Em0.NormID = tEmNorm.x Or GEN.VehMode = tVehMode.EngineOnly Then
                             ErgEntries(Em0.IDstring).ValueString = Em0.FinalAvg.ToString
                         Else
                             ErgEntries(Em0.IDstring & "_km").ValueString = (Em0.FinalAvg / Vquer).ToString
@@ -776,6 +466,26 @@ Class cERG
     End Sub
 
     Public Function Init(ByVal GenFile As String) As Boolean
+        Dim GENs As New List(Of String)
+        Dim str As String
+        Dim str1 As String
+        Dim iGEN As Integer
+        Dim file As New cFile_V3
+        Dim GEN0 As cGEN
+        Dim MAP0 As cMAP
+        Dim ENG0 As cENG
+        Dim Em0 As cEmComp
+        Dim HEVorEVdone As Boolean
+        Dim EVdone As Boolean
+        Dim EngOnly As Boolean
+        Dim NonEngOnly As Boolean
+        Dim ErgEntry As cErgEntry
+        Dim CylceKin As cCycleKin
+        Dim i1 As Integer
+        Dim i2 As Integer
+        Dim iDim As Integer
+        Dim DRI0 As cDRI
+
         Dim MsgSrc As String
 
         MsgSrc = "SUMALL/Init"
@@ -822,6 +532,254 @@ Class cERG
         'Add file to signing list
         Lic.FileSigning.AddFile(ERGpath)
 
+
+        ErgEntries = New Dictionary(Of String, cErgEntry)
+        ErgEntryList = New List(Of String)
+
+
+        '********************** GEN-Liste raussuchen. Bei ADVANCE aus Flotte sonst aus Jobliste '********************** |@@| Select GEN-list for ADVANCE either from Fleet or from Job-list '**********************
+        For Each str In JobFileList
+            GENs.Add(fFileRepl(str))
+        Next
+        iGEN = GENs.Count - 1
+
+
+        '********************** Create Erg-entries '**********************
+        EVdone = False
+        HEVorEVdone = False
+        EngOnly = False
+        NonEngOnly = False
+
+        'Vehicle type-independent
+        AddToErg("\\T", "time", "[s]")
+        AddToErg("\\Prated", "Prated", "[kW]")
+
+        'For each GEN-file check Mode and Map
+        For Each str In GENs
+
+            GEN0 = New cGEN
+
+            GEN0.FilePath = str
+
+            Try
+                If Not GEN0.ReadFile Then
+                    WorkerMsg(tMsgID.Err, "Can't read .gen file '" & str & "' !", MsgSrc)
+                    Return False
+                End If
+            Catch ex As Exception
+                WorkerMsg(tMsgID.Err, "File read error! (" & str & ")", MsgSrc)
+                Return False
+            End Try
+
+            If GEN0.VehMode = tVehMode.EngineOnly Then
+
+                If Not EngOnly Then
+
+                    'nothing...
+
+                    EngOnly = True
+
+                End If
+
+            Else
+
+                If Not NonEngOnly Then
+
+                    AddToErg("\\S", "distance", "[km]")
+                    AddToErg("\\V", "speed", "[km/h]")
+                    AddToErg("\\G", "∆altitude", "[m]")
+
+                    NonEngOnly = True
+
+                End If
+
+                'Auxiliary energy consumption
+                If GEN0.AuxDef Then
+                    For Each str1 In GEN0.AuxPaths.Keys
+                        AddToErg("\\Eaux_" & UCase(str1), "Eaux_" & str1, "[kWh]")
+                    Next
+                End If
+
+            End If
+
+
+            'Electric-Vehicle / Hybrid
+            If GEN0.VehMode = tVehMode.EV Or GEN0.VehMode = tVehMode.HEV Then
+
+                'EV & HEV
+                If Not HEVorEVdone Then
+
+                    AddToErg("\\PeEM+", "PeEM+", "[kW]")
+                    AddToErg("\\PeBat+", "PeBat+", "[kW]")
+                    AddToErg("\\PiBat+", "PiBat+", "[kW]")
+                    AddToErg("\\PeEM-", "PeEM-", "[kW]")
+                    AddToErg("\\PeBat-", "PeBat-", "[kW]")
+                    AddToErg("\\PiBat-", "PiBat-", "[kW]")
+                    AddToErg("\\EiBat+", "EiBat+", "[kWh]")
+                    AddToErg("\\EiBat-", "EiBat-", "[kWh]")
+                    AddToErg("\\EtaEM", "EtaEM", "[%]")
+                    AddToErg("\\EtaBat", "EtaBat", "[%]")
+                    AddToErg("\\∆SOC", "∆SOC", "[%]")
+
+                    HEVorEVdone = True
+
+                End If
+
+                'Only EV:
+                If GEN0.VehMode = tVehMode.EV And Not EVdone Then
+
+                    AddToErg("\\EC", "EC", "[kWh/km]")
+
+                    EVdone = True
+
+                End If
+
+
+            End If
+
+
+            'Conventional / Hybrid (Everything except EV)
+            If GEN0.VehMode <> tVehMode.EV Then
+
+                'Conventional vehicles ...
+                'AddToErg("\\n_norm", "n_norm", "[-]")
+                'AddToErg("\\Pe_norm", "Pe_norm", "[-]")
+                AddToErg("\\Ppos", "Ppos", "[-]")
+                AddToErg("\\Pneg", "Pneg", "[-]")
+
+                If GEN0.CreateMap Then
+
+                    'From the measured data
+                    DRI0 = New cDRI
+                    DRI0.FilePath = GEN0.CycleFiles(0).FullPath
+
+                    Try
+                        If Not DRI0.ReadFile Then Return False
+                    Catch ex As Exception
+                        WorkerMsg(tMsgID.Err, "File read error! (" & GEN0.CycleFiles(0).FullPath & ")", MsgSrc)
+                        Return False
+                    End Try
+
+                    For Each Em0 In DRI0.EmComponents.Values
+
+                        If Em0.WriteOutput Then
+
+                            'Dump x/h if in ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into  x/km is not possible
+                            If Em0.NormID = tEmNorm.x Or GEN0.VehMode = tVehMode.EngineOnly Then
+                                AddToErg(Em0.IDstring, Em0.Name, Em0.Unit, False)
+                            Else
+                                AddToErg(Em0.IDstring, Em0.Name, "[" & Em0.RawUnit & "/km]", True)
+                            End If
+
+                        End If
+
+                    Next
+
+                    AddToErg(sKey.MAP.Extrapol, fMapCompName(tMapComp.Extrapol), "[-]")
+
+                Else
+
+                    'From the Engine-Map
+                    ENG0 = New cENG
+                    ENG0.FilePath = GEN0.PathENG
+
+                    Try
+                        If Not ENG0.ReadFile Then Return False
+                    Catch ex As Exception
+                        WorkerMsg(tMsgID.Err, "File read error! (" & GEN0.PathENG & ")", MsgSrc)
+                        Return False
+                    End Try
+
+                    MAP0 = New cMAP(GEN0.PKWja)
+                    MAP0.FilePath = ENG0.PathMAP
+
+                    Try
+                        If Not MAP0.ReadFile(False) Then Return False 'Fehlermeldungen werden auch bei "MsgOutput = False" ausgegeben
+                    Catch ex As Exception
+                        WorkerMsg(tMsgID.Err, "File read error! (" & ENG0.PathMAP & ")", MsgSrc)
+                        Return False
+                    End Try
+
+
+                    For Each str1 In MAP0.EmList
+
+                        Em0 = MAP0.EmComponents(str1)
+
+                        If Em0.WriteOutput Then
+
+                            'Dump x/h if ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into x/km is not possible
+                            If Em0.NormID = tEmNorm.x Or GEN0.VehMode = tVehMode.EngineOnly Then
+                                AddToErg(Em0.IDstring, Em0.Name, Em0.Unit, False)
+                            Else
+                                AddToErg(Em0.IDstring, Em0.Name, "[" & Em0.RawUnit & "/km]", True)
+                            End If
+
+                        End If
+
+                    Next
+
+                End If
+
+            End If
+
+        Next
+
+
+        If EngOnly Then
+
+            'currently nothing
+
+        End If
+
+        If NonEngOnly Then
+
+            'Vehicle-related fields
+            AddToErg("\\Pbrake", "Pbrake", "[-]")
+            AddToErg("\\EposICE", "EposICE", "[kWh]")
+            AddToErg("\\EnegICE", "EnegICE", "[kWh]")
+            AddToErg("\\Eair", "Eair", "[kWh]")
+            AddToErg("\\Eroll", "Eroll", "[kWh]")
+            AddToErg("\\Egrad", "Egrad", "[kWh]")
+            AddToErg("\\Eacc", "Eacc", "[kWh]")
+            AddToErg("\\Eaux", "Eaux", "[kWh]")
+            AddToErg("\\Ebrake", "Ebrake", "[kWh]")
+            AddToErg("\\Etransm", "Etransm", "[kWh]")
+            AddToErg("\\Mass", "Mass", "[kg]")
+            AddToErg("\\Loading", "Loading", "[kg]")
+
+            'CylceKin
+            CylceKin = New cCycleKin
+            For Each ErgEntry In CylceKin.ErgEntries
+                AddToErg("\\" & ErgEntry.Head, ErgEntry.Head, ErgEntry.Unit)
+            Next
+
+        End If
+
+        'ErgListe sortieren damit g/km und g/h nebeneinander liegen |@@| Sort ErgListe so that g/km and g/h are side-by-side
+        iDim = ErgEntryList.Count - 1
+
+        For i1 = 0 To iDim - 1
+            str = ErgEntries(ErgEntryList(i1)).Head
+            For i2 = i1 + 1 To iDim
+                If ErgEntries(ErgEntryList(i2)).Head = str Then
+                    ErgEntryList.Insert(i1 + 1, ErgEntryList(i2))
+                    ErgEntryList.RemoveAt(i2 + 1)
+                End If
+            Next
+        Next
+
+        'Sort Aux
+        For i1 = 0 To iDim - 1
+            str = ErgEntries(ErgEntryList(i1)).Head
+            If str.Length > 4 AndAlso Left(str, 4) = "Eaux" Then
+                For i2 = i1 + 1 To iDim
+                    If ErgEntries(ErgEntryList(i2)).Head.Length > 4 AndAlso Left(ErgEntries(ErgEntryList(i2)).Head, 4) = "Eaux" Then
+                        ErgEntryList.Insert(i1 + 1, ErgEntryList(i2))
+                        ErgEntryList.RemoveAt(i2 + 1)
+                    End If
+                Next
+            End If
+        Next
 
         Return True
 

@@ -12,8 +12,6 @@ Public Class F_MAINForm
     Private ConMenTarget As ListView
     Private ConMenTarGEN As Boolean
 
-    Private BGjob As tBGjob
-
     Private MODpath As String
     Private MODVehList As Int32()
 
@@ -62,18 +60,12 @@ Public Class F_MAINForm
 
 #End Region
 
-    Private Enum tBGjob As Short
-        PHEM = 0
-        ModFilter = 1
-    End Enum
-
 #Region "FileBrowser Init/Close"
     Private Sub FB_Initialize()
         FB_Init = False
         fbWorkDir = New cFileBrowser("WorkDir", True)
         fbFileLists = New cFileBrowser("FileLists")
         fbGEN = New cFileBrowser("gen")
-        fbADV = New cFileBrowser("adv")
         fbVEH = New cFileBrowser("vveh")
         fbMAP = New cFileBrowser("vmap")
         fbDRI = New cFileBrowser("vdri")
@@ -107,7 +99,6 @@ Public Class F_MAINForm
         '-------------------------------------------------------
         fbFileLists.Extensions = New String() {"txt"}
         fbGEN.Extensions = New String() {"vecto"}
-        fbADV.Extensions = New String() {"adv"}
         fbVEH.Extensions = New String() {"vveh"}
         fbMAP.Extensions = New String() {"vmap"}
         fbDRI.Extensions = New String() {"vdri"}
@@ -142,7 +133,6 @@ Public Class F_MAINForm
         fbWorkDir.Close()
         fbFileLists.Close()
         fbGEN.Close()
-        fbADV.Close()
         fbVEH.Close()
         fbMAP.Close()
         fbDRI.Close()
@@ -180,6 +170,7 @@ Public Class F_MAINForm
     'PHEM-Launcher
     Public Sub PHEM_Launcher()
         Dim ProgOverall As Boolean
+        Dim GEN0 As cGEN
 
         'Called when PHEM already running
         If PHEMworker.IsBusy Then
@@ -196,8 +187,6 @@ Public Class F_MAINForm
                 PHEMmode = tPHEMmode.ModeSTANDARD
             Case 1
                 PHEMmode = tPHEMmode.ModeBATCH
-            Case 2
-                PHEMmode = tPHEMmode.ModeADVANCE
         End Select
 
         'Wenn mehr als 100 Kombinationen in Batch fragen ob sekündliche Ausgabe |@@| When Batch resulting in more than 100 combinations per second, ask whether to dump-output  per second
@@ -224,10 +213,19 @@ Public Class F_MAINForm
         SetCycleList()
 
         'Check whether Overall-progbar is needed
-        ProgOverall = PHEMmode <> tPHEMmode.ModeADVANCE  ' JobFileList.Count > 1 Or PHEMmode = tPHEMmode.ModeBATCH
+        If PHEMmode = tPHEMmode.ModeBATCH Or JobFileList.Count > 1 Then
+            ProgOverall = True
+        Else
+            GEN0 = New cGEN
+            GEN0.FilePath = JobFileList(0)
+            If Not GEN0.ReadFile Then
+                GUImsg(tMsgID.Err, "Failed to job file (" & fFILE(JobFileList(0), True) & ")!")
+                Exit Sub
+            End If
+            ProgOverall = (GEN0.CycleFiles.Count > 1)
+        End If
 
         'Launch through Job_Launcher
-        BGjob = tBGjob.PHEM
         Job_Launcher(ProgOverall)
 
     End Sub
@@ -354,14 +352,9 @@ Public Class F_MAINForm
             End Try
         End If
 
-        Select Case BGjob
-            Case tBGjob.PHEM
-                e.Result = VECTO()
-            Case tBGjob.ModFilter
-                ADV = New cADVANCE_V3
-                ADV.AusgModCut(MODpath, MODVehList)
-                ADV = Nothing
-        End Select
+        e.Result = VECTO()
+
+
     End Sub
 
     'Progress Report
@@ -421,21 +414,11 @@ Public Class F_MAINForm
 
         Result = e.Result
 
-        Select Case BGjob
-
-            Case tBGjob.PHEM
-
-                'Falls Optimierer aktiv werden hier die Zielfunktion ausgegeben und Signal an Interface |@@| If Optimizers(Optimierer ) are active here, then dump the Objective-function(Zielfunktion ) and Signal to interface
-                If bOptOn Then
-                    If Result = tCalcResult.Err Or Result = tCalcResult.Abort Then OptERstat = True
-                    OptEND()
-                End If
-
-            Case tBGjob.ModFilter
-
-                ReDim MODVehList(-1)
-
-        End Select
+        'Falls Optimierer aktiv werden hier die Zielfunktion ausgegeben und Signal an Interface |@@| If Optimizers(Optimierer ) are active here, then dump the Objective-function(Zielfunktion ) and Signal to interface
+        If bOptOn Then
+            If Result = tCalcResult.Err Or Result = tCalcResult.Abort Then OptERstat = True
+            OptEND()
+        End If
 
         'ShutDown when Unexpected Error
         If e.Error IsNot Nothing Then
@@ -877,20 +860,12 @@ Public Class F_MAINForm
 
         x = New String() {""}
 
-        If LastModeIndex = 2 Then
-            'ADVANCE
-            If fbADV.OpenDialog("", True) Then
-                Chck = True
-                x = fbADV.Files
-            End If
-        Else
-            'STANDARD/BATCH
-            If fbGEN.OpenDialog("", True, "vecto") Then
-                Chck = True
-                x = fbGEN.Files
-            End If
+        'STANDARD/BATCH
+        If fbGEN.OpenDialog("", True, "vecto") Then
+            Chck = True
+            x = fbGEN.Files
         End If
-
+   
         If Chck Then AddToListViewGEN(x)
 
     End Sub
@@ -912,11 +887,7 @@ Public Class F_MAINForm
         If Not IO.File.Exists(f) Then
             MsgBox(f & " not found!")
         Else
-            If UCase(Microsoft.VisualBasic.Right(f, 4)) = ".ADV" Then
-                OpenADVEditor(f)
-            Else
-                OpenGENEditor(f)
-            End If
+            OpenGENEditor(f)
         End If
     End Sub
 
@@ -1264,30 +1235,20 @@ lbFound:
 
     'New GEN/ADV
     Private Sub ToolStripBtNew_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtNew.Click
-        If LastModeIndex = 2 Then
-            OpenADVEditor("<New>")
-        Else
-            OpenGENEditor("<New>")
-        End If
+        OpenGENEditor("<New>")
     End Sub
 
     'Open GEN/ADV
     Private Sub ToolStripBtOpen_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtOpen.Click
-        If LastModeIndex = 2 Then
-            If fbADV.OpenDialog("") Then OpenADVEditor(fbADV.Files(0))
-        Else
-            If fbGEN.OpenDialog("", False, "vecto,vveh,vgbx,veng,vsig") Then
-                OpenVectoFile(fbGEN.Files(0))
-            End If
+     
+        If fbGEN.OpenDialog("", False, "vecto,vveh,vgbx,veng,vsig") Then
+            OpenVectoFile(fbGEN.Files(0))
         End If
+
     End Sub
 
     Private Sub GENEditorToolStripMenuItem1_Click(sender As System.Object, e As System.EventArgs) Handles GENEditorToolStripMenuItem1.Click
         OpenGENEditor("<New>")
-    End Sub
-
-    Private Sub ADVEditorToolStripMenuItem1_Click(sender As System.Object, e As System.EventArgs) Handles ADVEditorToolStripMenuItem1.Click
-        OpenADVEditor("<New>")
     End Sub
 
     Private Sub VEHEditorToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles VEHEditorToolStripMenuItem.Click
@@ -1338,26 +1299,6 @@ lbFound:
         End Try
     End Sub
 
-
-    Private Sub CreateTEMFileToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles CreateTEMFileToolStripMenuItem.Click
-        F_TEM_Creator.Show()
-        F_TEM_Creator.Focus()
-    End Sub
-
-    Private Sub SplitMODFilesToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SplitMODFilesToolStripMenuItem.Click
-        If PHEMworker.IsBusy Then Exit Sub
-
-        If F_ModSplit.ShowDialog = Windows.Forms.DialogResult.OK Then
-            MODpath = F_ModSplit.ModPath
-            MODVehList = F_ModSplit.VehList
-        Else
-            Exit Sub
-        End If
-
-        'Worker start
-        BGjob = tBGjob.ModFilter
-        Job_Launcher(False)
-    End Sub
 
     Private Sub OpenLogToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenLogToolStripMenuItem.Click
         System.Diagnostics.Process.Start(MyAppPath & "log.txt")
@@ -1618,8 +1559,6 @@ lbFound:
                 PHEMmode = tPHEMmode.ModeSTANDARD
             Case 1
                 PHEMmode = tPHEMmode.ModeBATCH
-            Case 2
-                PHEMmode = tPHEMmode.ModeADVANCE
         End Select
 
         'Load New List
@@ -1829,21 +1768,10 @@ lbFound:
 
     End Sub
 
-    'Open ADV-editor and load file
-    Friend Sub OpenADVEditor(ByVal x As String)
-        If Not F_ADV.Visible Then
-            F_ADV.Show()
-            If x = "<New>" Then F_ADV.ADVnew()
-        End If
-        F_ADV.WindowState = FormWindowState.Normal
-        If x <> "<New>" Then Call F_ADV.ADVload2Form(x)
-        F_ADV.Activate()
-    End Sub
-
     Friend Sub OpenSigFile(ByVal file As String)
         If Not F_FileSign.Visible Then
             F_FileSign.Show()
-     
+
         End If
         F_FileSign.WindowState = FormWindowState.Normal
         F_FileSign.TbSigFile.Text = file
@@ -1955,8 +1883,6 @@ lbFound:
                 PHEMmode = tPHEMmode.ModeSTANDARD
             Case 1
                 PHEMmode = tPHEMmode.ModeBATCH
-            Case 2
-                PHEMmode = tPHEMmode.ModeADVANCE
         End Select
 
     End Sub

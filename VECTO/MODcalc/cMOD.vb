@@ -308,7 +308,6 @@ Public Class cMOD
         Dim t1 As Integer
 
         Dim Sepp As String
-        Dim ADVmode As Boolean
         Dim path As String
         Dim dist As Double
         Dim MsgSrc As String
@@ -336,19 +335,9 @@ Public Class cMOD
 
         f = New cFile_V3
 
-        ADVmode = (PHEMmode = tPHEMmode.ModeADVANCE)
+        path = ModOutpName & ".vmod"
 
-        If ADVmode Then
-            path = ModOutpName & "_" & ADV.aVehType & ".mod"
-        Else
-            If GEN.dynkorja Then
-                path = ModOutpName & ".vmod"
-            Else
-                path = ModOutpName & ".vmod"
-            End If
-        End If
-
-        If Not f.OpenWrite(path, ",", False, ADVmode) Then
+        If Not f.OpenWrite(path, ",", False) Then
             WorkerMsg(tMsgID.Err, "Can't write to " & path, MsgSrc)
             Return False
         End If
@@ -383,17 +372,12 @@ Public Class cMOD
 
 
 
-        '*** ID line (Only ADVANCE)
-        If ADVmode Then
-            s.Append("VehNr: " & ADV.aVehNr)
-            s.Append(",Input File: " & fFILE(GenFile, True))
-            f.WriteLine(s.ToString)
-        Else
-            f.WriteLine("VECTO modal results")
-            f.WriteLine("VECTO " & VECTOvers)
-            f.WriteLine(Now.ToString)
-            f.WriteLine("Input File: " & JobFile)
-        End If
+
+        f.WriteLine("VECTO modal results")
+        f.WriteLine("VECTO " & VECTOvers)
+        f.WriteLine(Now.ToString)
+        f.WriteLine("Input File: " & JobFile)
+
 
         '***********************************************************************************************
         '***********************************************************************************************
@@ -449,13 +433,6 @@ Public Class cMOD
 
         End If
 
-        'ADVANCE-specific
-        If ADVmode Then
-
-            s.Append(",WorldX,WorldY,StrId")
-            sU.Append(",[m],[m],[-]")
-
-        End If
 
         If Cfg.FinalEmOnly Then
 
@@ -694,20 +671,6 @@ Public Class cMOD
                     For Each StrKey In AuxList
                         s.Append(Sepp & .Paux(StrKey)(t))
                     Next
-
-                End If
-
-                'ADVANCE-specific
-                If ADVmode Then
-
-                    'X
-                    s.Append(Sepp & ADV.aWorldX(t))
-
-                    'Y
-                    s.Append(Sepp & ADV.aWorldY(t))
-
-                    'StrId
-                    s.Append(Sepp & ADV.aStrId(t))
 
                 End If
 

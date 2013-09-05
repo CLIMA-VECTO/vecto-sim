@@ -1155,38 +1155,37 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
         'Calculation loop: Per Time-step / per Module: 1. Temperatures, 2. Conversions
         While True
             'Display per-second Results on each iteration Results
-            If Not (PHEMmode = tPHEMmode.ModeADVANCE) Then
-                If Not (PHEMmode = tPHEMmode.ModeBATCH) Or Cfg.ModOut Then
+            If Not (PHEMmode = tPHEMmode.ModeBATCH) Or Cfg.ModOut Then
 
-                    ' Write Header *.ter
-                    DatTer.OpenWrite(PathTer, ",")
-                    DatTer.WriteLine("result-file for temperatures in the exhaust system")
-                    DatTer.WriteLine("VECTO " & VECTOvers)
-                    line1 = "time,vehicle speed,nnorm,P_norm,rpm,fuel consumption,lambda,m_p exhaust,ta_41_qs"
-                    line2 = "[s],[km/h],[-],[-],[min-1],[g/h],[-],[kg/s],[°C]"
-                    For ii = 1 To ModAnz
-                        If TempMod(ii).TgasGegJa Then
-                            line1 = line1 & ",tm_" & ii & "_output" & ",ttc_" & ii & "_output" & ",tgas_" & ii & "_output"
-                        Else
-                            line1 = line1 & ",tm_" & ii & ",ttc_" & ii & ",tgas_" & ii
-                        End If
-                        line2 = line2 & ",[°C],[°C],[°C]"
-                    Next
-                    line1 = line1 & ",Q_p coolant"
-                    line2 = line2 & ",[W]"
+                ' Write Header *.ter
+                DatTer.OpenWrite(PathTer, ",")
+                DatTer.WriteLine("result-file for temperatures in the exhaust system")
+                DatTer.WriteLine("VECTO " & VECTOvers)
+                line1 = "time,vehicle speed,nnorm,P_norm,rpm,fuel consumption,lambda,m_p exhaust,ta_41_qs"
+                line2 = "[s],[km/h],[-],[-],[min-1],[g/h],[-],[kg/s],[°C]"
+                For ii = 1 To ModAnz
+                    If TempMod(ii).TgasGegJa Then
+                        line1 = line1 & ",tm_" & ii & "_output" & ",ttc_" & ii & "_output" & ",tgas_" & ii & "_output"
+                    Else
+                        line1 = line1 & ",tm_" & ii & ",ttc_" & ii & ",tgas_" & ii
+                    End If
+                    line2 = line2 & ",[°C],[°C],[°C]"
+                Next
+                line1 = line1 & ",Q_p coolant"
+                line2 = line2 & ",[W]"
 
-                    DatTer.WriteLine(line1)
-                    DatTer.WriteLine(line2)
+                DatTer.WriteLine(line1)
+                DatTer.WriteLine(line2)
 
-                    ' Write the Header for KonvMods
-                    For ii = 1 To ModAnz
-                        If TempMod(ii).ModTyp = 1 Or TempMod(ii).ModTyp = 2 Then
-                            TempMod(ii).KonvMod.Header()
-                        End If
-                    Next
+                ' Write the Header for KonvMods
+                For ii = 1 To ModAnz
+                    If TempMod(ii).ModTyp = 1 Or TempMod(ii).ModTyp = 2 Then
+                        TempMod(ii).KonvMod.Header()
+                    End If
+                Next
 
-                End If
             End If
+
 
             'Start-values ​​for Cooling-system simulation:
             t_mass1(0) = t_start_m1_m2
@@ -1303,11 +1302,11 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                             TempMod(iMod).eEmKomp(7, jz) = TempMod(iMod - 1).eEmKomp(7, jz) * (1 - TempMod(iMod).KonvMod.KonvRate(tMapComp.NO)(jz))
                         End If
 
-                        If Not (PHEMmode = tPHEMmode.ModeADVANCE) Then
-                            If Not (PHEMmode = tPHEMmode.ModeBATCH) Or Cfg.ModOut Then
-                                TempMod(iMod).KonvMod.Write(jz) 'Sekündliche Ausgabe
-                            End If
+
+                        If Not (PHEMmode = tPHEMmode.ModeBATCH) Or Cfg.ModOut Then
+                            TempMod(iMod).KonvMod.Write(jz) 'Sekündliche Ausgabe
                         End If
+
 
                     Else
                         'Falls Modul kein Konv-Element hat ändert sich nix (Anmerkung: Modul 1 hat immer ModTyp0) |@@| If Module has no Conv-element changes nothing (Note: Module 1 has always ModTyp0)
@@ -1324,17 +1323,15 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
                 Next
 
                 'Write Line in *.ter.
-                If Not (PHEMmode = tPHEMmode.ModeADVANCE) Then
-                    If Not (PHEMmode = tPHEMmode.ModeBATCH) Or Cfg.ModOut Then
-                        line1 = jz & "," & vehspe(jz) & "," & nnorm(jz) & "," & p_norm(jz) & "," & rpm(jz) & "," & fc(jz) & "," & lambda(jz) & "," & mpexh(jz) & "," & tqs(jz)
-                        For ij = 1 To ModAnz
-                            line1 = line1 & "," & TempMod(ij).t_m(jz) & "," & TempMod(ij).t_tc(jz) & "," & TempMod(ij).t_gas(jz)
-                        Next
-                        If GEN.CoolantsimJa Then
-                            line1 = line1 & "," & qp_loss(jz)
-                        End If
-                        DatTer.WriteLine(line1)
+                If Not (PHEMmode = tPHEMmode.ModeBATCH) Or Cfg.ModOut Then
+                    line1 = jz & "," & vehspe(jz) & "," & nnorm(jz) & "," & p_norm(jz) & "," & rpm(jz) & "," & fc(jz) & "," & lambda(jz) & "," & mpexh(jz) & "," & tqs(jz)
+                    For ij = 1 To ModAnz
+                        line1 = line1 & "," & TempMod(ij).t_m(jz) & "," & TempMod(ij).t_tc(jz) & "," & TempMod(ij).t_gas(jz)
+                    Next
+                    If GEN.CoolantsimJa Then
+                        line1 = line1 & "," & qp_loss(jz)
                     End If
+                    DatTer.WriteLine(line1)
                 End If
 
                 '------------------------------------------------------------------------------------------
@@ -1346,15 +1343,13 @@ lb100:  'Rücksprunglabel für iterativen Berechnungsmodus
             '----------------------------------------------------------------------------------------------
 
             'Close all second-by-second Result-files
-            If Not (PHEMmode = tPHEMmode.ModeADVANCE) Then
-                If Not (PHEMmode = tPHEMmode.ModeBATCH) Or Cfg.ModOut Then
-                    DatTer.Close()
-                    For ii = 1 To ModAnz
-                        If TempMod(ii).ModTyp = 1 Or TempMod(ii).ModTyp = 2 Then
-                            TempMod(ii).KonvMod.Close()
-                        End If
-                    Next
-                End If
+            If Not (PHEMmode = tPHEMmode.ModeBATCH) Or Cfg.ModOut Then
+                DatTer.Close()
+                For ii = 1 To ModAnz
+                    If TempMod(ii).ModTyp = 1 Or TempMod(ii).ModTyp = 2 Then
+                        TempMod(ii).KonvMod.Close()
+                    End If
+                Next
             End If
 
             '---------- Abfrage Rücksprung im iterativen Berechnungsmodus für Starttemp ------------------- |@@| Query return in the iterative Calculation-mode for Starttemp -------------------

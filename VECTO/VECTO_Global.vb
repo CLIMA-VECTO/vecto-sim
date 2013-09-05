@@ -38,7 +38,6 @@ Module VECTO_Global
     Public MODdata As cMOD
     Public TRS As cTRS
     Public EXS As cEXS
-    Public ADV As cADVANCE_V3
     Public Lic As vectolic.cLicense
     Public ERG As cERG
     Public DEV As cDEV

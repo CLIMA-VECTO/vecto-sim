@@ -433,12 +433,6 @@ Public Class cVh
 
         MODdata.Duplicate(t)
 
-        If PHEMmode = tPHEMmode.ModeADVANCE Then
-            ADV.aWorldX.Insert(t, ADV.aWorldX(t))
-            ADV.aWorldY.Insert(t, ADV.aWorldY(t))
-            ADV.aStrId.Insert(t, ADV.aStrId(t))
-        End If
-
 
     End Sub
 
@@ -467,13 +461,6 @@ Public Class cVh
         End If
 
         MODdata.Duplicate(t)
-
-        If PHEMmode = tPHEMmode.ModeADVANCE Then
-            ADV.aWorldX.Insert(t, ADV.aWorldX(t))
-            ADV.aWorldY.Insert(t, ADV.aWorldY(t))
-            ADV.aStrId.Insert(t, ADV.aStrId(t))
-        End If
-
 
     End Sub
 
@@ -510,12 +497,6 @@ Public Class cVh
 
 
         MODdata.Cut(t)
-
-        If PHEMmode = tPHEMmode.ModeADVANCE Then
-            ADV.aWorldX.RemoveAt(t)
-            ADV.aWorldY.RemoveAt(t)
-            ADV.aStrId.RemoveAt(t)
-        End If
 
     End Sub
 

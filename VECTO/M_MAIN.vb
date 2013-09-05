@@ -63,9 +63,6 @@ Module M_MAIN
             Case tPHEMmode.ModeBATCH
                 WorkerMsg(tMsgID.Normal, "Starting VECTO BATCH...", MsgSrc)
                 CyclesDim = JobCycleList.Count - 1
-            Case tPHEMmode.ModeADVANCE
-                WorkerMsg(tMsgID.Normal, "Starting PHEM ADVANCE...", MsgSrc)
-                CyclesDim = 0
         End Select
         FilesDim = JobFileList.Count - 1
 
@@ -123,10 +120,6 @@ lbSkip0:
         VSUM = New cVSUM
         If Not ERG.Init(JobFileList(0)) Then GoTo lbErrBefore
 
-        If Not PHEMmode = tPHEMmode.ModeADVANCE Then
-            If Not ERG.ErgEntryInit() Then GoTo lbErrBefore
-        End If
-
         SigFile = Left(ERG.ErgFile, ERG.ErgFile.Length - 5) & ".vsig"
 
         'Warning on invalid/unrealistic settings
@@ -150,47 +143,13 @@ lbSkip0:
 
             JobFile = fFileRepl(JobFileList(jgen))
 
-            If Not PHEMmode = tPHEMmode.ModeADVANCE Then GenFile = JobFile
+            GenFile = JobFile
 
             WorkerJobStatus(jgen, "running...", tJobStatus.Running)
 
             JobAbortedByErr = False
             MSGwarn = 0
             MSGerror = 0
-
-            If (PHEMmode = tPHEMmode.ModeADVANCE) Then
-
-                WorkerMsg(tMsgID.NewJob, "Job: " & NrOfRunStr() & " / " & ((FilesDim + 1) * (CyclesDim + 1)) & " | " & fFILE(JobFile, True), MsgSrc)
-                WorkerStatus("Current Job: " & NrOfRunStr() & " / " & ((FilesDim + 1) * (CyclesDim + 1)) & " | " & fFILE(JobFile, True))
-
-
-                If Not ERG.ErgEntryInit() Then GoTo lbNextJob
-
-                'Status
-                WorkerJobStatus(jgen, "processing input...", tJobStatus.Running)
-
-                ADV = New cADVANCE_V3
-                If Not ADV.ADVANCE_V2_Init() Then GoTo lbNextJob
-
-                If ADV.ADVANCEdone Or PHEMworker.CancellationPending Then GoTo lbAbort
-
-                'Status/ProgBar
-                WorkerJobStatus(jgen, "running...", tJobStatus.Running)
-                ProgBarCtrl.ProgOverallStartInt = 100 * (jgen) / (FilesDim + 1)
-                ProgBarCtrl.PgroOverallEndInt = 100 * (jgen + 1) / (FilesDim + 1)
-
-            End If
-lbADV:
-            If (PHEMmode = tPHEMmode.ModeADVANCE) Then
-                If Not ADV.ADVANCE_V2_Next() Then
-                    JobAbortedByErr = True
-                    GoTo lbNextJob
-                End If
-                If ADV.ADVANCEdone Then
-                    ADV.ADVANCE_V2_Close()
-                    GoTo lbNextJob
-                End If
-            End If
 
             'Check if Abort
             If PHEMworker.CancellationPending Then GoTo lbAbort
@@ -318,45 +277,41 @@ lbADV:
                     FCerror = False
 
                     'Read cycle
-                    If (Not (PHEMmode = tPHEMmode.ModeADVANCE)) Then
+                    DRI = New cDRI
+                    DRI.FilePath = CurrentCycleFile
 
-                        'Read in
-                        DRI = New cDRI
-                        DRI.FilePath = CurrentCycleFile
+                    If Not DRI.ReadFile Then
+                        CyclAbrtedByErr = True
+                        GoTo lbAusg
+                    End If
 
-                        If Not DRI.ReadFile Then
+                    'Convert v(s) into v(t) (optional)
+                    If DRI.Scycle Then
+                        If MsgOut Then WorkerMsg(tMsgID.Normal, "Converting cycle (v(s) => v(t))", MsgSrc)
+                        If Not DRI.ConvStoT() Then
                             CyclAbrtedByErr = True
                             GoTo lbAusg
                         End If
-
-                        'Convert v(s) into v(t) (optional)
-                        If DRI.Scycle Then
-                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Converting cycle (v(s) => v(t))", MsgSrc)
-                            If Not DRI.ConvStoT() Then
-                                CyclAbrtedByErr = True
-                                GoTo lbAusg
-                            End If
-                        End If
-
-                        'If first time step is Zero then duplicate first values to start cycle with vehicle standing.
-                        If DRI.Vvorg AndAlso DRI.tDim > 1 AndAlso DRI.Values(tDriComp.V)(0) < 0.0001 AndAlso DRI.Values(tDriComp.V)(1) >= 0.0001 Then
-                            DRI.FirstZero()
-                        End If
-
-                        'Convert to 1Hz (optional) - does not apply to v(s) cycles because timestep is missing
-                        If DRI.Tvorg Then
-                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Converting cycle to 1Hz", MsgSrc)
-                            If Not DRI.ConvTo1Hz() Then
-                                'Error-notification in DRI.Convert()
-                                CyclAbrtedByErr = True
-                                GoTo lbAusg
-                            End If
-                        End If
-
-                        'Unnormalised
-                        DRI.DeNorm()
-
                     End If
+
+                    'If first time step is Zero then duplicate first values to start cycle with vehicle standing.
+                    If DRI.Vvorg AndAlso DRI.tDim > 1 AndAlso DRI.Values(tDriComp.V)(0) < 0.0001 AndAlso DRI.Values(tDriComp.V)(1) >= 0.0001 Then
+                        DRI.FirstZero()
+                    End If
+
+                    'Convert to 1Hz (optional) - does not apply to v(s) cycles because timestep is missing
+                    If DRI.Tvorg Then
+                        If MsgOut Then WorkerMsg(tMsgID.Normal, "Converting cycle to 1Hz", MsgSrc)
+                        If Not DRI.ConvTo1Hz() Then
+                            'Error-notification in DRI.Convert()
+                            CyclAbrtedByErr = True
+                            GoTo lbAusg
+                        End If
+                    End If
+
+                    'De-normalize
+                    DRI.DeNorm()
+
 
                     '----------------------------------------------------------------------------
                     '----------------------------------------------------------------------------
@@ -534,30 +489,9 @@ lbADV:
 
                     'Output for BATCH and ADVANCE
 lbAusg:
-                    If (PHEMmode = tPHEMmode.ModeADVANCE) Then
-
-                        'In ADVANCE, Cycle-cancel = Job-cancel
-                        If CyclAbrtedByErr Then
-                            JobAbortedByErr = True
-                            GoTo lbNextJob
-                        End If
-
-                        ADV.STRcalc()
-                        If Not ADV.AusgVis_V3() Then
-                            JobAbortedByErr = True
-                            GoTo lbNextJob
-                        End If
-
-                        GoTo lbadv
-
-                    Else
-
-                        'Output in Erg (first Calculation - Initialization & Header)
-                        If Not ERG.AusgERG(NrOfRunStr, fFILE(GenFile, True), fFILE(CurrentCycleFile, True), CyclAbrtedByErr) Then GoTo lbErrInJobLoop
-
-
-
-                    End If
+             
+                    'Output in Erg (first Calculation - Initialization & Header)
+                    If Not ERG.AusgERG(NrOfRunStr, fFILE(GenFile, True), fFILE(CurrentCycleFile, True), CyclAbrtedByErr) Then GoTo lbErrInJobLoop
 
                     'Data Cleanup
                     MODdata.CleanUp()
@@ -592,12 +526,6 @@ lbAusg:
             '****************************** END *** Cycle-loop *** END ******************************
             '**********************************************************************************************
 lbNextJob:
-
-            If (PHEMmode = tPHEMmode.ModeADVANCE) Then
-                ProgBarCtrl.ProgOverallStartInt = -1
-                WorkerProg(100 * (jgen + 1) / (FilesDim + 1), 0)
-            End If
-
 
             If JobAbortedByErr Or (CyclAbrtedByErr And CyclesDim = 0) Then
 
@@ -712,7 +640,6 @@ lbExit:
         MAP = Nothing
         TRS = Nothing
         DRI = Nothing
-        ADV = Nothing
         MODdata = Nothing
         ERG = Nothing
 

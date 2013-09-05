@@ -193,11 +193,6 @@ Public Class cDEV
 
     Public Function ShowAddOptions() As String
         F_MAINForm.GrbxTest.Visible = True
-        F_MAINForm.ADVEditorToolStripMenuItem1.Visible = True
-        F_MAINForm.CreateTEMFileToolStripMenuItem.Visible = True
-        F_MAINForm.SplitMODFilesToolStripMenuItem.Visible = True
-        F_MAINForm.ToolStripSeparator4.Visible = True
-
 
         Return ("done")
     End Function

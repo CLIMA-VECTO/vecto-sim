@@ -858,7 +858,7 @@ Public Class F_GEN
 
         Me.ToolStripStatusLabelGEN.Text = ""
 
-        If PHEMmode <> tPHEMmode.ModeADVANCE Then F_MAINForm.AddToListViewGEN(Genfile)
+        F_MAINForm.AddToListViewGEN(Genfile)
 
         Changed = False
 

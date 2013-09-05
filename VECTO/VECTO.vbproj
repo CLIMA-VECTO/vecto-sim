@@ -106,7 +106,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
-    <Compile Include="ADVANCE\cADV.vb" />
     <Compile Include="cVECTO.vb" />
     <Compile Include="cVSUM.vb" />
     <Compile Include="GUI\F_FileSign.Designer.vb">
@@ -204,22 +203,10 @@
     <Compile Include="GUI\F_ShutDown.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\F_ADVfzp.Designer.vb">
-      <DependentUpon>F_ADVfzp.vb</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\F_ADVfzp.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="GUI\F_GEN.Designer.vb">
       <DependentUpon>F_GEN.vb</DependentUpon>
     </Compile>
     <Compile Include="GUI\F_GEN.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\F_ModSplit.Designer.vb">
-      <DependentUpon>F_ModSplit.vb</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\F_ModSplit.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="cFile V3.vb" />
@@ -227,7 +214,6 @@
     <Compile Include="VECTO_Types.vb" />
     <Compile Include="M_SOC_Iter.vb" />
     <Compile Include="cRegression.vb" />
-    <Compile Include="ADVANCE\cADVANCE.vb" />
     <Compile Include="GUI\GUI_Subs.vb" />
     <Compile Include="GUI\F_VEH.Designer.vb">
       <DependentUpon>F_VEH.vb</DependentUpon>
@@ -239,18 +225,6 @@
       <DependentUpon>F_Options.vb</DependentUpon>
     </Compile>
     <Compile Include="GUI\F_Options.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\F_TEM_Creator.Designer.vb">
-      <DependentUpon>F_TEM_Creator.vb</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\F_TEM_Creator.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\F_ADV.Designer.vb">
-      <DependentUpon>F_ADV.vb</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\F_ADV.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\F_AboutBox.Designer.vb">
@@ -305,10 +279,6 @@
     <EmbeddedResource Include="GUI\F_Welcome.resx">
       <DependentUpon>F_Welcome.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\F_ADVfzp.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>F_ADVfzp.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GUI\F_ENG.resx">
       <DependentUpon>F_ENG.vb</DependentUpon>
     </EmbeddedResource>
@@ -322,10 +292,6 @@
     <EmbeddedResource Include="GUI\F_GEN.resx">
       <SubType>Designer</SubType>
       <DependentUpon>F_GEN.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\F_ModSplit.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>F_ModSplit.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\F_ShutDown.resx">
       <SubType>Designer</SubType>
@@ -341,14 +307,6 @@
     <EmbeddedResource Include="GUI\F_Options.resx">
       <SubType>Designer</SubType>
       <DependentUpon>F_Options.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\F_TEM_Creator.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>F_TEM_Creator.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\F_ADV.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>F_ADV.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\F_AboutBox.resx">
       <SubType>Designer</SubType>

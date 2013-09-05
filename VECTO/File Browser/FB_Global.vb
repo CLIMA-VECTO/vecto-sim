@@ -7,7 +7,6 @@
     '-----------------------------
     Public fbWorkDir As cFileBrowser
     Public fbGEN As cFileBrowser
-    Public fbADV As cFileBrowser
     Public fbFileLists As cFileBrowser
     Public fbVEH As cFileBrowser
     Public fbDRI As cFileBrowser

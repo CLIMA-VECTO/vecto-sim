@@ -531,7 +531,7 @@ Public Class cPower
         Dim amax As Single
 
         Dim StdMode As Boolean
-        Dim NotAdvMode As Boolean
+
 
         Dim LastPmax As Single
 
@@ -540,7 +540,6 @@ Public Class cPower
         MsgSrc = "Power/Calc"
 
         StdMode = (PHEMmode = tPHEMmode.ModeSTANDARD)
-        NotAdvMode = Not (PHEMmode = tPHEMmode.ModeADVANCE)
 
         'Abort if no speed given
         If Not DRI.Vvorg Then
@@ -609,7 +608,7 @@ Public Class cPower
             FirstSecItar = True
 
             'Secondary Progressbar
-            If NotAdvMode Then ProgBarCtrl.ProgJobInt = CInt(100 * jz / MODdata.tDim)
+            ProgBarCtrl.ProgJobInt = CInt(100 * jz / MODdata.tDim)
 
 
             '   Determine State
@@ -1376,24 +1375,19 @@ lb_nOK:
         '***********************************    Time loop END ***********************************
         '***********************************************************************************************
 
-        'Notify (When not ADVANCE)
-        If NotAdvMode Then
+        'Notify
+        If Cfg.WegKorJa Then
+            If MODdata.tDim > MODdata.tDimOgl Then WorkerMsg(tMsgID.Normal, "Cycle extended by " & MODdata.tDim - MODdata.tDimOgl & " seconds to meet target distance.", MsgSrc)
 
-            If Cfg.WegKorJa Then
-                If MODdata.tDim > MODdata.tDimOgl Then WorkerMsg(tMsgID.Normal, "Cycle extended by " & MODdata.tDim - MODdata.tDimOgl & " seconds to meet target distance.", MsgSrc)
-
-                If Math.Abs(Vh.WegIst - Vh.WegSoll) > 80 Then
-                    WorkerMsg(tMsgID.Warn, "Target distance= " & (Vh.WegSoll / 1000).ToString("#.000") & "[km], Actual distance= " & (Vh.WegIst / 1000).ToString("#.000") & "[km], Error= " & Math.Abs(Vh.WegIst - Vh.WegSoll).ToString("#.0") & "[m]", MsgSrc)
-                Else
-                    WorkerMsg(tMsgID.Normal, "Target distance= " & (Vh.WegSoll / 1000).ToString("#.000") & "[km], Actual distance= " & (Vh.WegIst / 1000).ToString("#.000") & "[km], Error= " & Math.Abs(Vh.WegIst - Vh.WegSoll).ToString("#.0") & "[m]", MsgSrc)
-                End If
+            If Math.Abs(Vh.WegIst - Vh.WegSoll) > 80 Then
+                WorkerMsg(tMsgID.Warn, "Target distance= " & (Vh.WegSoll / 1000).ToString("#.000") & "[km], Actual distance= " & (Vh.WegIst / 1000).ToString("#.000") & "[km], Error= " & Math.Abs(Vh.WegIst - Vh.WegSoll).ToString("#.0") & "[m]", MsgSrc)
+            Else
+                WorkerMsg(tMsgID.Normal, "Target distance= " & (Vh.WegSoll / 1000).ToString("#.000") & "[km], Actual distance= " & (Vh.WegIst / 1000).ToString("#.000") & "[km], Error= " & Math.Abs(Vh.WegIst - Vh.WegSoll).ToString("#.0") & "[m]", MsgSrc)
             End If
-
-            If SecSpeedRed > 0 Then WorkerMsg(tMsgID.Normal, "Speed reduction > 1.5 m/s in " & SecSpeedRed & " time steps.", MsgSrc)
-
-
-
         End If
+
+        If SecSpeedRed > 0 Then WorkerMsg(tMsgID.Normal, "Speed reduction > 1.5 m/s in " & SecSpeedRed & " time steps.", MsgSrc)
+
 
         'CleanUp
         Vh = Nothing
@@ -1413,14 +1407,12 @@ lb_nOK:
         Dim PeDRI As List(Of Double)
         Dim PcorCount As Integer
         Dim StdMode As Boolean
-        Dim NotAdvMode As Boolean
         Dim MsgSrc As String
         Dim Padd As Single
 
         MsgSrc = "Power/Eng_Calc"
 
         StdMode = (PHEMmode = tPHEMmode.ModeSTANDARD)
-        NotAdvMode = Not (PHEMmode = tPHEMmode.ModeADVANCE)
 
         'Abort if Power/Revolutions not given
         If Not (DRI.Nvorg And DRI.Pvorg) Then
@@ -1443,7 +1435,7 @@ lb_nOK:
         For t = 0 To t1
 
             'Secondary Progressbar
-            If NotAdvMode Then ProgBarCtrl.ProgJobInt = CInt(100 * t / t1)
+            ProgBarCtrl.ProgJobInt = CInt(100 * t / t1)
 
             'Reset the second-by-second Errors
             MODdata.ModErrors.ResetAll()

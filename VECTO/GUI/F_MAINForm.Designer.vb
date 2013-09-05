@@ -104,13 +104,9 @@ Partial Class F_MAINForm
         Me.VEHEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EngineEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GearboxEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ADVEditorToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.GRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
         Me.SignOrVerifyFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.CreateTEMFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SplitMODFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
         Me.OpenLogToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ChangeWorkingDirectoryToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
@@ -889,7 +885,7 @@ Partial Class F_MAINForm
         '
         'ToolStripDrDnBtTools
         '
-        Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.ADVEditorToolStripMenuItem1, Me.GRAPHiToolStripMenuItem, Me.ToolStripSeparator6, Me.SignOrVerifyFilesToolStripMenuItem, Me.ToolStripSeparator1, Me.CreateTEMFileToolStripMenuItem, Me.SplitMODFilesToolStripMenuItem, Me.ToolStripSeparator4, Me.OpenLogToolStripMenuItem, Me.ChangeWorkingDirectoryToolStripMenuItem1, Me.SettingsToolStripMenuItem})
+        Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.GRAPHiToolStripMenuItem, Me.ToolStripSeparator6, Me.SignOrVerifyFilesToolStripMenuItem, Me.ToolStripSeparator4, Me.OpenLogToolStripMenuItem, Me.ChangeWorkingDirectoryToolStripMenuItem1, Me.SettingsToolStripMenuItem})
         Me.ToolStripDrDnBtTools.Image = Global.VECTO.My.Resources.Resources.Misc_Tools_icon
         Me.ToolStripDrDnBtTools.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDrDnBtTools.Name = "ToolStripDrDnBtTools"
@@ -920,13 +916,6 @@ Partial Class F_MAINForm
         Me.GearboxEditorToolStripMenuItem.Size = New System.Drawing.Size(214, 22)
         Me.GearboxEditorToolStripMenuItem.Text = "Gearbox Editor"
         '
-        'ADVEditorToolStripMenuItem1
-        '
-        Me.ADVEditorToolStripMenuItem1.Name = "ADVEditorToolStripMenuItem1"
-        Me.ADVEditorToolStripMenuItem1.Size = New System.Drawing.Size(214, 22)
-        Me.ADVEditorToolStripMenuItem1.Text = "ADV Editor"
-        Me.ADVEditorToolStripMenuItem1.Visible = False
-        '
         'GRAPHiToolStripMenuItem
         '
         Me.GRAPHiToolStripMenuItem.Name = "GRAPHiToolStripMenuItem"
@@ -944,25 +933,6 @@ Partial Class F_MAINForm
         Me.SignOrVerifyFilesToolStripMenuItem.Name = "SignOrVerifyFilesToolStripMenuItem"
         Me.SignOrVerifyFilesToolStripMenuItem.Size = New System.Drawing.Size(214, 22)
         Me.SignOrVerifyFilesToolStripMenuItem.Text = "Sign or Verify Files"
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(211, 6)
-        '
-        'CreateTEMFileToolStripMenuItem
-        '
-        Me.CreateTEMFileToolStripMenuItem.Name = "CreateTEMFileToolStripMenuItem"
-        Me.CreateTEMFileToolStripMenuItem.Size = New System.Drawing.Size(214, 22)
-        Me.CreateTEMFileToolStripMenuItem.Text = "Create TEM File"
-        Me.CreateTEMFileToolStripMenuItem.Visible = False
-        '
-        'SplitMODFilesToolStripMenuItem
-        '
-        Me.SplitMODFilesToolStripMenuItem.Name = "SplitMODFilesToolStripMenuItem"
-        Me.SplitMODFilesToolStripMenuItem.Size = New System.Drawing.Size(214, 22)
-        Me.SplitMODFilesToolStripMenuItem.Text = "Split MOD Files"
-        Me.SplitMODFilesToolStripMenuItem.Visible = False
         '
         'ToolStripSeparator4
         '
@@ -1186,11 +1156,7 @@ Partial Class F_MAINForm
     Friend WithEvents ToolStripBtOpen As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripDrDnBtTools As System.Windows.Forms.ToolStripDropDownButton
     Friend WithEvents GENEditorToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ADVEditorToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents VEHEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents CreateTEMFileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents SplitMODFilesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator4 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents OpenLogToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ChangeWorkingDirectoryToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
