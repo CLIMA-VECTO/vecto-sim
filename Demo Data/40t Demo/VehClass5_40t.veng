@@ -1,6 +1,6 @@
 ﻿c VECTO Engine Input File
-c VECTO 1.2
-c 23.04.2013 14:06:21
+c VECTO 1.4 RC1
+c 04.09.2013 14:06:37
 c Make & Model
 Demo engine
 c Rated power [kW]
@@ -13,8 +13,9 @@ c Idling speed [rpm]
 620
 c Inertia [kgm2]
 3.8
-c Full load curve
-VehClass5_40t.vfld
+c Full load curves
+VehClass5_40t.vfld,0 - 99
+<//>
 c Fuel map
 VehClass5_40t.vmap
 c WHTC test results

@@ -1,6 +1,6 @@
 ﻿c VECTO Vehicle Input File
-c VECTO 1.0 Beta 1
-c 23.10.2012 17:36:07
+c VECTO 1.4 RC1
+c 04.09.2013 14:05:37
 c Curb weight vehicle [kg]
 7750
 c Curb weight extra trailer/body [kg]
@@ -11,12 +11,12 @@ c Cd value [-]
 0.6
 c Cross sectional area [m^2]
 8.8
-c Wheels equivalent rotational inertia [kg] (= I_wheel/rdyn^2)
+c Wheels inertia [kgm^2]
 216
 c Wheel effective diameter [m]
 0.849
 c Cd Mode, Input File
-1,Demo_CrosswindCorrection.vcdv
+1,..\..\..\Default Data\VCDV\Truck.vcdv
 c Retarder Type (0=None, 1=Primary, 2=Secondary)
 0
 c Retarder Ratio
@@ -24,6 +24,7 @@ c Retarder Ratio
 c Retarder File
 <NOFILE>
 c Axle configurations
+c Max. axle weight [kg], RRC [N/N]
 6000,0.009
 6000,0.009
 <//>

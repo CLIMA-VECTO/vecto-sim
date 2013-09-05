@@ -37,11 +37,12 @@ Public Class cVEH
     Private CdY As List(Of Single)
     Private CdDim As Integer
 
-    Private siGetrI(16) As Single
-    Public GetrMap(16) As cSubPath
+    Public siGetrI As List(Of Single)
+    Public GetrMap As List(Of cSubPath)
     Private MyGBmaps As List(Of cDelaunayMap)
-    Public GetrEffDef(16) As Boolean
-    Public GetrEff(16) As Single
+    Public GetrEffDef As List(Of Boolean)
+    Public GetrEff As List(Of Single)
+    Public IsTCgear As List(Of Boolean)
 
     Private iganganz As Short
 
@@ -64,6 +65,26 @@ Public Class cVEH
     Public MassMax As Single
     Public AxcleConf As tAxleConf
 
+    Private MyFileList As List(Of String)
+
+
+    Public Function CreateFileList() As Boolean
+
+        If Not Me.ReadFile Then Return False
+
+        MyFileList = New List(Of String)
+
+        '.vcdv  / .vcdb
+        If Me.CdMode <> tCdMode.ConstCd0 Then MyFileList.Add(Me.CdFile.FullPath)
+
+        'Retarder
+        If Me.RtType <> tRtType.None Then MyFileList.Add(Me.RtFile.FullPath)
+
+        Return True
+
+    End Function
+
+
     Public Class cAuxEntry
         Public Type As String
         Public Path As cSubPath
@@ -73,12 +94,8 @@ Public Class cVEH
     End Class
 
     Public Sub New()
-        Dim i As Short
         MyPath = ""
         sFilePath = ""
-        For i = 0 To 16
-            GetrMap(i) = New cSubPath
-        Next
         CdFile = New cSubPath
         CdX = New List(Of Single)
         CdY = New List(Of Single)
@@ -90,7 +107,6 @@ Public Class cVEH
     End Sub
 
     Private Sub SetDefault()
-        Dim i As Short
         siMass = 0
         MassExtra = 0
         siLoading = 0
@@ -121,12 +137,13 @@ Public Class cVEH
         silhinunter = 0
         sipspar = 0
         sipmodell = 0
-        For i = 0 To 16
-            siGetrI(i) = 0
-            GetrMap(i).Clear()
-            GetrEffDef(i) = False
-            GetrEff(i) = 0
-        Next
+
+        siGetrI = New List(Of Single)
+        GetrEffDef = New List(Of Boolean)
+        GetrEff = New List(Of Single)
+        GetrMap = New List(Of cSubPath)
+        IsTCgear = New List(Of Boolean)
+
         MyGBmaps = Nothing
         iganganz = 0
         AuxPaths = New Dictionary(Of String, cAuxEntry)
@@ -501,6 +518,16 @@ lbError:
         Dim M_loss As Double
         Dim M_out As Double
 
+        Dim dnU As Single
+        Dim nn As Single
+        Dim dM As Single
+        Dim P_In As Single
+        Dim P_Loss As Single
+        Dim EffSum As Single
+        Dim Anz As Integer
+        Dim EffDiffSum As Single = 0
+        Dim AnzDiff As Integer = 0
+
         Dim MsgSrc As String
 
         MyGBmaps = New List(Of cDelaunayMap)
@@ -557,11 +584,7 @@ lbError:
                         M_in = CDbl(line(1))
                         M_loss = CDbl(line(2))
 
-                        If M_in > 0 Then
-                            M_out = M_in - M_loss
-                        Else
-                            M_out = M_in + M_loss
-                        End If
+                        M_out = M_in - M_loss
 
                         'old version: Power instead of torque: GBmap0.AddPoints(nU, nMtoPe(nU, M_out), nMtoPe(nU, M_in))
                         GBmap0.AddPoints(nU, M_out, M_in)
@@ -583,15 +606,75 @@ lbError:
 
                 MyGBmaps.Add(GBmap0)
 
+                'Calculate average efficiency for fast approx. calculation
+          
+
+
+                If i > 0 Then
+
+                    EffSum = 0
+                    Anz = 0
+
+                    dnU = (2 / 3) * (VEH.nNenn - VEH.nLeerl) / 10
+                    nU = VEH.nLeerl + dnU
+
+                    Do While nU <= nNenn
+                        nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+
+                        dM = nPeToM(nU, (2 / 3) * FLD(i).Pfull(nn) / 10)
+                        M_in = nPeToM(nU, (1 / 3) * FLD(i).Pfull(nn))
+
+                        Do While M_in <= nPeToM(nU, FLD(i).Pfull(nn))
+
+                            P_In = nMtoPe(nU, M_in)
+
+                            P_Loss = IntpolPeLossFwd(i, nU, P_In, False)
+
+                            EffSum += (P_In - P_Loss) / P_In
+                            Anz += 1
+
+                            'Axle
+                            P_In -= P_Loss
+                            P_Loss = IntpolPeLossFwd(0, nU / VEH.Igetr(i), P_In, False)
+                            EffDiffSum += (P_In - P_Loss) / P_In
+                            AnzDiff += 1
+
+                            M_in += dM
+                        Loop
+
+
+                        nU += dnU
+                    Loop
+
+                    If MODdata.ModErrors.TrLossMapExtr <> "" Then
+                        WorkerMsg(tMsgID.Err, "Transmission loss map does not cover full engine range! File: " & path, MsgSrc, path)
+                        Return False
+                    End If
+
+                    If Anz = 0 Then
+                        WorkerMsg(tMsgID.Err, "Failed to calculate approx. transmission losses!", MsgSrc)
+                        Return False
+                    End If
+
+                    GetrEff(i) = EffSum / Anz
+
+                End If
+
+
             End If
 
         Next
+
+        If Not GetrEffDef(0) Then
+            GetrEff(0) = EffDiffSum / AnzDiff
+        End If
+
 
         Return True
 
     End Function
 
-    Public Function IntpolPeLoss(ByVal Gear As Integer, ByVal nU As Double, ByVal PeOut As Double) As Double
+    Public Function IntpolPeLoss(ByVal Gear As Integer, ByVal nU As Double, ByVal PeOut As Double, ByVal Approx As Boolean) As Double
 
         Dim PeIn As Double
         Dim WG As Double
@@ -601,12 +684,19 @@ lbError:
         Dim AbMin As Double
         Dim iMin As Integer
         Dim PeOutX As Double
+        Dim GrTxt As String
 
         Dim MsgSrc As String
 
         MsgSrc = "VEH/TrLossMapInterpol/G" & Gear
 
-        If GetrEffDef(Gear) Then
+        If Gear = 0 Then
+            GrTxt = "A"
+        Else
+            GrTxt = Gear.ToString
+        End If
+
+        If GetrEffDef(Gear) Or (Approx And DEV.AllowAprxTrLoss) Then
 
             If PeOut > 0 Then
                 PeIn = PeOut / GetrEff(Gear)
@@ -652,7 +742,7 @@ lbError:
                     Else
 
                         'Drag => Drivetrain: ERROR!
-                        WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & Gear & ", nU= " & nU.ToString("0.00") & ", PeIn=" & PeIn.ToString("0.0") & ", PeOut=" & PeOutX.ToString("0.0"), MsgSrc)
+                        WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], PeIn=" & PeIn.ToString("0.0") & " [kW], PeOut=" & PeOutX.ToString("0.0") & " [kW]", MsgSrc)
                         WorkerAbort()
                         Return 0
 
@@ -661,10 +751,9 @@ lbError:
                 Else
                     If PeIn > 0 Then
 
-                        'Drivetrain => Drag: ERROR!
-                        WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & Gear & ", nU= " & nU.ToString("0.00") & ", PeIn=" & PeIn.ToString("0.00") & ", PeOut=" & PeOutX.ToString("0.00"), MsgSrc)
-                        WorkerAbort()
-                        Return 0
+                        'WorkerMsg(tMsgID.Warn, "Change of sign in Transmission Loss Map! Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], PeIn=" & PeIn.ToString("0.00") & " [kW], PeOut=" & PeOutX.ToString("0.00") & " [kW]", MsgSrc)
+                        'WorkerAbort()
+                        WG = (PeIn - (PeIn - PeOutX)) / PeIn
 
                     Else
 
@@ -680,7 +769,7 @@ lbError:
                 'Calculate efficiency with PeIn for original PeOut
                 PeIn = PeOut / WG
 
-                MODdata.ModErrors.TrLossMapExtr = "Gear= " & Gear & ", nU= " & nU.ToString("0.00") & " [U/min], MeOut=" & nPeToM(nU, PeOut).ToString("0.00") & " [Nm]"
+                MODdata.ModErrors.TrLossMapExtr = "Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], MeOut=" & nPeToM(nU, PeOut).ToString("0.00") & " [Nm]"
 
             End Try
 
@@ -691,7 +780,7 @@ lbError:
 
     End Function
 
-    Public Function IntpolPeLossFwd(ByVal Gear As Integer, ByVal nU As Double, ByVal PeIn As Double) As Double
+    Public Function IntpolPeLossFwd(ByVal Gear As Integer, ByVal nU As Double, ByVal PeIn As Double, ByVal Approx As Boolean) As Double
 
         Dim PeOut As Double
         Dim WG As Double
@@ -701,13 +790,19 @@ lbError:
         Dim AbMin As Double
         Dim iMin As Integer
         Dim PeInX As Double
+        Dim GrTxt As String
 
         Dim MsgSrc As String
 
         MsgSrc = "VEH/TrLossMapInterpolFwd/G" & Gear
 
+        If Gear = 0 Then
+            GrTxt = "A"
+        Else
+            GrTxt = Gear.ToString
+        End If
 
-        If GetrEffDef(Gear) Then
+        If GetrEffDef(Gear) Or (Approx And DEV.AllowAprxTrLoss) Then
 
             If PeIn > 0 Then
                 PeOut = PeIn * GetrEff(Gear)
@@ -751,7 +846,7 @@ lbError:
                     Else
 
                         'Drag => Drivetrain: ERROR!
-                        WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & Gear & ", nU= " & nU.ToString("0.00") & ", PeIn=" & PeInX.ToString("0.00") & ", PeOut=" & PeOut.ToString("0.00"), MsgSrc)
+                        WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], PeIn=" & PeInX.ToString("0.00") & " [kW], PeOut=" & PeOut.ToString("0.00") & " [kW] (fwd)", MsgSrc)
                         WorkerAbort()
                         Return 0
 
@@ -760,10 +855,9 @@ lbError:
                 Else
                     If PeInX > 0 Then
 
-                        'Drivetrain => Drag: ERROR!
-                        WorkerMsg(tMsgID.Err, "Transmission Loss Map invalid! Gear= " & Gear & ", nU= " & nU.ToString("0.00") & ", PeIn=" & PeInX.ToString("0.00") & ", PeOut=" & PeOut.ToString("0.00"), MsgSrc)
-                        WorkerAbort()
-                        Return 0
+                        WorkerMsg(tMsgID.Warn, "Change of sign in Transmission Loss Map! Set efficiency to 10%. Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], PeIn=" & PeInX.ToString("0.00") & " [kW], PeOut=" & PeOut.ToString("0.00") & " [kW] (fwd)", MsgSrc)
+                        'WorkerAbort()
+                        WG = 0.1
 
                     Else
 
@@ -777,7 +871,7 @@ lbError:
                 'Calculate efficiency with PeIn for original PeOut
                 PeOut = PeIn * WG
 
-                MODdata.ModErrors.TrLossMapExtr = "Gear= " & Gear & ", nU= " & nU.ToString("0.00") & " [U/min], MeIn=" & nPeToM(nU, PeIn).ToString("0.00") & " [Nm] (fwd)"
+                MODdata.ModErrors.TrLossMapExtr = "Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], MeIn=" & nPeToM(nU, PeIn).ToString("0.00") & " [Nm] (fwd)"
 
             End Try
 
@@ -1106,7 +1200,7 @@ lbInt:
 
         'Extrapolation for x < x(1)
         If RtnU(0) >= nU Then
-            If RtnU(0) > nU Then MODdata.ModErrors.RtExtrapol = "n= " & nU & " [U/min]"
+            If RtnU(0) > nU Then MODdata.ModErrors.RtExtrapol = "n= " & nU & " [1/min]"
             i = 1
             GoTo lbInt
         End If
@@ -1117,7 +1211,7 @@ lbInt:
         Loop
 
         'Extrapolation for x> x(imax)
-        If RtnU(i) < nU Then MODdata.ModErrors.RtExtrapol = "n= " & nU & " [U/min]"
+        If RtnU(i) < nU Then MODdata.ModErrors.RtExtrapol = "n= " & nU & " [1/min]"
 
 lbInt:
         'Interpolation
@@ -1128,6 +1222,12 @@ lbInt:
 #End Region
 
 #Region "Properties"
+
+    Public ReadOnly Property FileList As List(Of String)
+        Get
+            Return MyFileList
+        End Get
+    End Property
 
     Public Property AchsI As Single
         Get
@@ -1147,13 +1247,10 @@ lbInt:
         End Set
     End Property
 
-    Public Property Igetr(ByVal x As Short) As Single
+    Public ReadOnly Property Igetr(ByVal x As Short) As Single
         Get
             Return siGetrI(x)
         End Get
-        Set(ByVal value As Single)
-            siGetrI(x) = value
-        End Set
     End Property
 
     Public Property Mass As Single
@@ -1207,7 +1304,7 @@ lbInt:
     Public ReadOnly Property m_raeder_red As Single
         Get
             Return siI_wheels / ((siDreifen / 2) ^ 2)
-        End Get    
+        End Get
     End Property
 
     Public Property I_wheels As Single

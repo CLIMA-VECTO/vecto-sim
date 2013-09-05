@@ -414,7 +414,7 @@ lbEr:
 
         'Extrapolation for x < x(1)
         If Lnn(0) >= nnorm Then
-            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
+            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
             i = 1
             GoTo lbInt
         End If
@@ -426,7 +426,7 @@ lbEr:
 
         'Extrapolation for x > x(imax)
         If Lnn(i) < nnorm Then
-            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
+            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
         End If
 
 lbInt:
@@ -435,7 +435,6 @@ lbInt:
 
     End Function
 
-
     Public Function Pfull(ByVal nnorm As Single, ByVal LastPenorm As Single) As Single
         Dim i As Int32
         Dim PfullStat As Single
@@ -443,7 +442,7 @@ lbInt:
 
         'Extrapolation for x < x(1)
         If Lnn(0) >= nnorm Then
-            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
+            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
             i = 1
             GoTo lbInt
         End If
@@ -455,7 +454,7 @@ lbInt:
 
         'Extrapolation for x > x(imax)
         If Lnn(i) < nnorm Then
-            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
+            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
         End If
 
 lbInt:
@@ -474,7 +473,7 @@ lbInt:
 
         'Extrapolation for x < x(1)
         If Lnn(0) >= nnorm Then
-            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
+            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
             i = 1
             GoTo lbInt
         End If
@@ -486,7 +485,7 @@ lbInt:
 
         'Extrapolation for x > x(imax)
         If Lnn(i) < nnorm Then
-            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
+            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
         End If
 
 lbInt:
@@ -499,7 +498,7 @@ lbInt:
 
         'Extrapolation for x < x(1)
         If Lnn(0) >= nnorm Then
-            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
+            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
             i = 1
             GoTo lbInt
         End If
@@ -511,7 +510,7 @@ lbInt:
 
         'Extrapolation for x > x(imax)
         If Lnn(i) < nnorm Then
-            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
+            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
         End If
 
 lbInt:
@@ -529,7 +528,7 @@ lbInt:
 
         'Extrapolation for x <x(1)
         If Lnn(0) >= nnorm Then
-            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
+            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
             i = 1
             GoTo lbInt
         End If
@@ -541,7 +540,7 @@ lbInt:
 
         'Extrapolation for x > x(imax)
         If Lnn(i) < nnorm Then
-            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [U/min]"
+            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
         End If
 
 lbInt:

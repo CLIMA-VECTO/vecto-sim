@@ -1,4 +1,6 @@
-﻿Public Class cENG
+﻿Imports System.Collections.Generic
+
+Public Class cENG
 
     Public ModelName As String
     Public Pnenn As Single
@@ -7,17 +9,39 @@
     Public nleerl As Single
     Public I_mot As Single
 
-    Private fFLD As cSubPath
+    Public fFLD As List(Of cSubPath)
     Private fMAP As cSubPath
     Private fWHTC As cSubPath
+    Public FLDgears As List(Of String)
 
     Private MyPath As String
     Private sFilePath As String
 
+    Private MyFileList As List(Of String)
+
+
+    Public Function CreateFileList() As Boolean
+        Dim sb As cSubPath
+
+        If Not Me.ReadFile Then Return False
+
+        MyFileList = New List(Of String)
+
+        For Each sb In Me.fFLD
+            MyFileList.Add(sb.FullPath)
+        Next
+
+        MyFileList.Add(PathMAP)
+
+        'Not used!!! MyFileList.Add(PathWHTC)
+
+        Return True
+
+    End Function
+
     Public Sub New()
         MyPath = ""
         sFilePath = ""
-        fFLD = New cSubPath
         fMAP = New cSubPath
         fWHTC = New cSubPath
         SetDefault()
@@ -30,13 +54,17 @@
         nnenn = 0
         nleerl = 0
         I_mot = 0
-        fFLD.Clear()
+
+        fFLD = New List(Of cSubPath)
+        FLDgears = New List(Of String)
+
         fMAP.Clear()
         fWHTC.Clear()
     End Sub
 
     Public Function SaveFile() As Boolean
         Dim file As cFile_V3
+        Dim i As Integer
 
         If sFilePath = "" Then Return False
 
@@ -62,8 +90,14 @@
         file.WriteLine(nleerl.ToString)
         file.WriteLine("c Inertia [kgm2]")
         file.WriteLine(I_mot.ToString)
-        file.WriteLine("c Full load curve")
-        file.WriteLine(fFLD.PathOrDummy)
+
+        file.WriteLine("c Full load curves")
+        For i = 0 To fFLD.Count - 1
+            file.WriteLine(fFLD(i).PathOrDummy, FLDgears(i))
+        Next
+
+        file.WriteLine(sKey.Break)
+
         file.WriteLine("c Fuel map")
         file.WriteLine(fMAP.PathOrDummy)
         file.WriteLine("c WHTC test results")
@@ -78,10 +112,14 @@
     Public Function ReadFile() As Boolean
         Dim MsgSrc As String
         Dim file As cFile_V3
+        Dim line() As String
+        Dim OldFile As Boolean = False
+        Dim i As Integer
 
         MsgSrc = "ENG/ReadFile"
 
         SetDefault()
+
 
         If sFilePath = "" Or Not IO.File.Exists(sFilePath) Then
             WorkerMsg(tMsgID.Err, "Engine file not found (" & sFilePath & ") !", MsgSrc)
@@ -103,7 +141,31 @@
             nnenn = CSng(file.ReadLine(0))
             nleerl = CSng(file.ReadLine(0))
             I_mot = CSng(file.ReadLine(0))
-            fFLD.Init(MyPath, file.ReadLine(0))
+
+
+            i = -1
+            Do While Not file.EndOfFile
+
+                line = file.ReadLine
+                i += 1
+
+                If line(0) = sKey.Break Then Exit Do
+
+                If i = 0 AndAlso UBound(line) < 1 Then OldFile = True
+
+                fFLD.Add(New cSubPath)
+
+                fFLD(i).Init(MyPath, line(0))
+
+                If OldFile Then
+                    FLDgears.Add("0 - 99")
+                    Exit Do
+                Else
+                    FLDgears.Add(line(1))
+                End If
+
+            Loop
+
             fMAP.Init(MyPath, file.ReadLine(0))
             fWHTC.Init(MyPath, file.ReadLine(0))
         Catch ex As Exception
@@ -118,6 +180,12 @@
 
     End Function
 
+    Public ReadOnly Property FileList As List(Of String)
+        Get
+            Return MyFileList
+        End Get
+    End Property
+
     Public Property FilePath() As String
         Get
             Return sFilePath
@@ -128,16 +196,16 @@
         End Set
     End Property
 
-    Public Property PathFLD(Optional ByVal Original As Boolean = False) As String
+    Public Property PathFLD(ByVal x As Short, Optional ByVal Original As Boolean = False) As String
         Get
             If Original Then
-                Return fFLD.OriginalPath
+                Return fFLD(x).OriginalPath
             Else
-                Return fFLD.FullPath
+                Return fFLD(x).FullPath
             End If
         End Get
         Set(ByVal value As String)
-            fFLD.Init(MyPath, value)
+            fFLD(x).Init(MyPath, value)
         End Set
     End Property
 

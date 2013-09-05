@@ -15,8 +15,9 @@ Public Class cDEV
 
     Public SpeedPeEps As Single
     Public PreRun As Boolean
-    Public IgnoreFCextrapol As Boolean
     Public negFCerr As Single
+
+    Public AllowAprxTrLoss As Boolean
 
 
 
@@ -151,13 +152,14 @@ Public Class cDEV
         Conf0.BoolVal = True
         MyOptions.Add("PreRun", Conf0)
 
-        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Don't abort calculation if extrapolation or values < negFCerr in FC map. FC output is not valid!!", False)
-        Conf0.BoolVal = False
-        MyOptions.Add("IgnoreFCextrapol", Conf0)
-
         Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "FC values below negFCerr cause errors and abort calculation. Values between zero and negFCerr are set to zero.")
         Conf0.SingleVal = -0.000001
         MyOptions.Add("negFCerr", Conf0)
+
+        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Allow approximate transmission loss calculation in Cycle Preprocessing and Gear Shift Model", False)
+        Conf0.BoolVal = True
+        MyOptions.Add("AllowAprxTrLoss", Conf0)
+
 
         '**************************** END: Parameters Configuration '*****************************
         '*****************************************************************************************
@@ -178,8 +180,9 @@ Public Class cDEV
 
         PreRun = MyOptions("PreRun").BoolVal
 
-        IgnoreFCextrapol = MyOptions("IgnoreFCextrapol").BoolVal
         negFCerr = MyOptions("negFCerr").SingleVal
+
+        AllowAprxTrLoss = MyOptions("AllowAprxTrLoss").BoolVal
 
     End Sub
 
@@ -190,11 +193,6 @@ Public Class cDEV
 
     Public Function ShowAddOptions() As String
         F_MAINForm.GrbxTest.Visible = True
-        F_MAINForm.ADVEditorToolStripMenuItem1.Visible = True
-        F_MAINForm.CreateTEMFileToolStripMenuItem.Visible = True
-        F_MAINForm.SplitMODFilesToolStripMenuItem.Visible = True
-        F_MAINForm.ToolStripSeparator4.Visible = True
-
 
         Return ("done")
     End Function

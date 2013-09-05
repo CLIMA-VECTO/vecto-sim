@@ -109,7 +109,7 @@ lbErr:
         Try
             PauxEff = EffMap.Intpol(nUaux, PsplyAux)
         Catch ex As Exception
-            MODdata.ModErrors.AuxMapExtr = fFILE(Filepath, False) & ", U= " & nUaux & ", PsupplyAux= " & PsplyAux
+            MODdata.ModErrors.AuxMapExtr = fFILE(Filepath, False) & ", U= " & nUaux & " [1/min], PsupplyAux= " & PsplyAux & " [kW]"
             Return 0
         End Try
 

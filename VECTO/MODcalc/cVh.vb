@@ -269,7 +269,6 @@ Public Class cVh
     End Sub
 
 
-
     Public Sub SetMaxAcc(ByVal t As Integer)
         Dim a As Single
         Dim v As Single
@@ -362,7 +361,7 @@ Public Class cVh
 
         dWegIst += v
 
-        If WegX < MODdata.tDimOgl Then
+        If WegX + 2 < MODdata.tDimOgl Then
 
             'If repeating of current time-step is closer to the target distance => Repeat time-step
             If Not NoDistCorr(t) AndAlso (Math.Abs(dWegIst + Vsoll(t) - Weg(WegX)) < Math.Abs(dWegIst - Weg(WegX))) And v > 1 Then
@@ -430,13 +429,9 @@ Public Class cVh
             lVairBeta.Insert(t, lVairBeta(t))
         End If
 
-        MODdata.Duplicate(t)
+        MODdata.Px.Positions.Insert(t, MODdata.Px.Positions(t))
 
-        If PHEMmode = tPHEMmode.ModeADVANCE Then
-            ADV.aWorldX.Insert(t, ADV.aWorldX(t))
-            ADV.aWorldY.Insert(t, ADV.aWorldY(t))
-            ADV.aStrId.Insert(t, ADV.aStrId(t))
-        End If
+        MODdata.Duplicate(t)
 
 
     End Sub
@@ -466,13 +461,6 @@ Public Class cVh
         End If
 
         MODdata.Duplicate(t)
-
-        If PHEMmode = tPHEMmode.ModeADVANCE Then
-            ADV.aWorldX.Insert(t, ADV.aWorldX(t))
-            ADV.aWorldY.Insert(t, ADV.aWorldY(t))
-            ADV.aStrId.Insert(t, ADV.aStrId(t))
-        End If
-
 
     End Sub
 
@@ -505,13 +493,10 @@ Public Class cVh
             lVairBeta.RemoveAt(t)
         End If
 
-        MODdata.Cut(t)
+        MODdata.Px.Positions.RemoveAt(t)
 
-        If PHEMmode = tPHEMmode.ModeADVANCE Then
-            ADV.aWorldX.RemoveAt(t)
-            ADV.aWorldY.RemoveAt(t)
-            ADV.aStrId.RemoveAt(t)
-        End If
+
+        MODdata.Cut(t)
 
     End Sub
 

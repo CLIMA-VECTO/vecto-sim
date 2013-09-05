@@ -78,6 +78,8 @@ Public Class cVSUM
         If VSUMsingleRef.Loading > 0 Then VSUMsingleRef.CO2gtkm = VSUMsingleRef.CO2gkm / VSUMsingleRef.Loading
         VSUMsingleRef.AvgSpeed = Vquer
 
+        VSUMsingleRef.FCerror = FCerror
+
         SingleResults.Add(VSUMsingleRef)
 
         Return True
@@ -128,16 +130,26 @@ Public Class cVSUM
             file.WriteLine(vbTab & vbTab & "Loading: " & vbTab & VSUMsingleRef.Loading & vbTab & "[t]")
             file.WriteLine(vbTab & vbTab & "Average Speed: " & vbTab & VSUMsingleRef.AvgSpeed.ToString & vbTab & "[km/h]")
             file.WriteLine(vbTab & vbTab & "Fuel Consumption" & vbTab & vbTab & "CO2 Emissions")
-            file.WriteLine(vbTab & vbTab & VSUMsingleRef.FCl100km.ToString("#.0") & vbTab & "[l/100km]" & vbTab & VSUMsingleRef.CO2gkm.ToString("#.0") & vbTab & "[g/km]")
-            If VSUMsingleRef.Loading = 0 Then
-                file.WriteLine(vbTab & vbTab & "-" & vbTab & "[l/100tkm]" & vbTab & "-" & vbTab & "[g/tkm]")
+
+            If VSUMsingleRef.FCerror Then
+                file.WriteLine(vbTab & vbTab & "ERROR")
             Else
-                file.WriteLine(vbTab & vbTab & VSUMsingleRef.FCl100tkm.ToString("#.0") & vbTab & "[l/100tkm]" & vbTab & VSUMsingleRef.CO2gtkm.ToString("#.0") & vbTab & "[g/tkm]")
+                file.WriteLine(vbTab & vbTab & VSUMsingleRef.FCl100km.ToString("#.0") & vbTab & "[l/100km]" & vbTab & VSUMsingleRef.CO2gkm.ToString("#.0") & vbTab & "[g/km]")
+                If VSUMsingleRef.Loading = 0 Then
+                    file.WriteLine(vbTab & vbTab & "-" & vbTab & "[l/100tkm]" & vbTab & "-" & vbTab & "[g/tkm]")
+                Else
+                    file.WriteLine(vbTab & vbTab & VSUMsingleRef.FCl100tkm.ToString("#.0") & vbTab & "[l/100tkm]" & vbTab & VSUMsingleRef.CO2gtkm.ToString("#.0") & vbTab & "[g/tkm]")
+                End If
             End If
+
+
         Next
 
-
         file.Close()
+
+        'Add file to signing list
+        Lic.FileSigning.AddFile(FilePath)
+
 
         Return True
 
@@ -153,6 +165,7 @@ Public Class cVSUMsingle
     Public CO2gkm As Single
     Public CO2gtkm As Single
     Public DescStr As String
+    Public FCerror As Boolean
 
     Public Sub ResetMe()
         FCl100km = 0

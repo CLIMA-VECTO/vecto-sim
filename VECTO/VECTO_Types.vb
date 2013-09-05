@@ -1,7 +1,6 @@
 ﻿Public Enum tPHEMmode As Short
     ModeSTANDARD = 0
     ModeBATCH = 1
-    ModeADVANCE = 2
 End Enum
 
 Public Enum tCalcMode As Short

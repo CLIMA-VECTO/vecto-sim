@@ -30,9 +30,9 @@
 
     'Totals/Average Values
     Public FinalAvg As Single       'Durchschnittswert [g/h]
-    Public FinalSum As Single       'Summe [g]
-    Public FinalAvgPos As Single    'Durchschnittswert ohne negative Werte [g/h]
-    Public FinalSumPos As Single    'Summe ohne negative Werte [g]
+    Private FinalSum As Single       'Summe [g]
+    Private FinalAvgPos As Single    'Durchschnittswert ohne negative Werte [g/h]
+    Private FinalSumPos As Single    'Summe ohne negative Werte [g]
 
     Public Sub New()
         RawVals = New System.Collections.Generic.List(Of Single)
@@ -121,6 +121,8 @@
         End Select
 
     End Sub
+
+
 
 
 End Class

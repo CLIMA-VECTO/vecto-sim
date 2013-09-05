@@ -6,7 +6,11 @@ Module M_Lese
         Dim AuxEntry As cVEH.cAuxEntry
         Dim AuxKV As KeyValuePair(Of String, cVEH.cAuxEntry)
         Dim i As Integer
+        Dim j As Integer
         Dim sb As cSubPath
+        Dim fldgear As Dictionary(Of Integer, String)
+        Dim fldgFromTo As String()
+        Dim str As String
 
         Dim MsgSrc As String
 
@@ -115,34 +119,101 @@ Module M_Lese
         VEH.I_mot = ENG.I_mot
 
         'GBX => VEH
-        VEH.ganganz = 0
-        For i = 0 To 16
-            VEH.Igetr(i) = GBX.GetrI(i)
+        If GEN.EngOnly Then
+            VEH.ganganz = 0
+        Else
+            VEH.ganganz = GBX.GetrI.Count - 1
+        End If
+
+        For i = 0 To GBX.GetrI.Count - 1
+            VEH.siGetrI.Add(GBX.GetrI(i))
+            VEH.GetrMap.Add(New cSubPath)
             If IsNumeric(GBX.GetrMap(i, True)) Then
-                VEH.GetrEffDef(i) = True
-                VEH.GetrEff(i) = CSng(GBX.GetrMap(i, True))
+                VEH.GetrEffDef.Add(True)
+                VEH.GetrEff.Add(CSng(GBX.GetrMap(i, True)))
             Else
+                VEH.GetrEffDef.Add(False)
+                VEH.GetrEff.Add(0)
                 VEH.GetrMap(i).Init(fPATH(GEN.PathGBX), GBX.GetrMap(i, True))
             End If
-            If VEH.Igetr(i) > 0.0001 Then VEH.ganganz = i
         Next
         VEH.I_Getriebe = GBX.I_Getriebe
         VEH.TracIntrSi = GBX.TracIntrSi
 
         '-----------------------------    ~FLD~    -----------------------------
         '   FLD muss jetzt vor MAP/MEP eingelesen werden falls dort <DRAG> Einträge sind! |@@| if there are <DRAG> entries, then read FLD before MAP/MEP!
-        FLD = New cFLD
-        FLD.FilePath = ENG.PathFLD
+
+        FLD = New List(Of cFLD)
+
+        If ENG.FLDgears.Count = 0 Then
+            WorkerMsg(tMsgID.Err, "No .vfld file defined in Engine file!", MsgSrc, "<GUI>" & GEN.PathENG)
+            Return False
+        End If
+
+        fldgear = New Dictionary(Of Integer, String)
 
         Try
-            If Not FLD.ReadFile Then Return False 'Fehlermeldung hier nicht notwendig weil schon von in ReadFile
+            j = -1
+            For Each str In ENG.FLDgears
+
+                j += 1
+                If str.Contains("-") Then
+                    fldgFromTo = str.Replace(" ", "").Split("-")
+                Else
+                    fldgFromTo = New String() {str, str}
+                End If
+
+                For i = CInt(fldgFromTo(0)) To CInt(fldgFromTo(1))
+
+                    If i > VEH.ganganz Then Exit For
+
+                    If i < 0 Or i > 99 Then
+                        WorkerMsg(tMsgID.Err, "Cannot assign .vfld file to gear " & i & "!", MsgSrc, "<GUI>" & GEN.PathENG)
+                        Return False
+                    End If
+
+                    If fldgear.ContainsKey(i) Then
+                        WorkerMsg(tMsgID.Err, "Multiple .vfld files are assigned to gear " & i & "!", MsgSrc, "<GUI>" & GEN.PathENG)
+                        Return False
+                    End If
+
+                    fldgear.Add(i, ENG.PathFLD(j))
+
+                Next
+
+            Next
         Catch ex As Exception
-            WorkerMsg(tMsgID.Err, "File read error! (" & ENG.PathFLD & ")", MsgSrc, ENG.PathFLD)
+            WorkerMsg(tMsgID.Err, "Failed to process engine file '" & GEN.PathENG & "'!", MsgSrc)
             Return False
         End Try
 
-        'Normalize
-        FLD.Norm()
+       
+
+
+        For i = 0 To VEH.ganganz
+
+            If Not fldgear.ContainsKey(i) Then
+                WorkerMsg(tMsgID.Err, "No .vfld file assigned to gear " & i & "!", MsgSrc, "<GUI>" & GEN.PathENG)
+                Return False
+            End If
+
+            FLD.Add(New cFLD)
+            FLD(i).FilePath = fldgear(i)
+
+            Try
+                If Not FLD(i).ReadFile Then Return False 'Fehlermeldung hier nicht notwendig weil schon von in ReadFile
+            Catch ex As Exception
+                WorkerMsg(tMsgID.Err, "File read error! (" & fldgear(i) & ")", MsgSrc, fldgear(i))
+                Return False
+            End Try
+
+            'Normalize
+            FLD(i).Norm()
+
+
+        Next
+
+     
 
         '-----------------------------    ~MAP~    -----------------------------
         '    Map: Columns 1 and 2 are the x-and y-coordinates (Pe, n)

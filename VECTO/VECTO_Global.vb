@@ -2,7 +2,8 @@
 
 Module VECTO_Global
 
-    Public Const VECTOvers As String = "1.3.1.1"
+    Public Const VECTOvers As String = "1.4 RC1"
+    Public Const LicSigAppCode As String = "VECTO-Release-0093C61E0A2E4BFA9A7ED7E729C56AE4"
     Public MyAppPath As String
     Public MyConfPath As String
     Public MyDeclPath As String
@@ -33,11 +34,10 @@ Module VECTO_Global
     Public VEH As cVEH
     Public MAP As cMAP
     Public DRI As cDRI
-    Public FLD As cFLD
+    Public FLD As List(Of cFLD)
     Public MODdata As cMOD
     Public TRS As cTRS
     Public EXS As cEXS
-    Public ADV As cADVANCE_V3
     Public Lic As vectolic.cLicense
     Public ERG As cERG
     Public DEV As cDEV

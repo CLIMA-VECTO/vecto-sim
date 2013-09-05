@@ -9,8 +9,9 @@ Public Class cGBX
     Public I_Getriebe As Single
     Public TracIntrSi As Single
 
-    Public GetrI(16) As Single
-    Private GetrMaps(16) As cSubPath
+    Public GetrI As List(Of Single)
+    Public GetrMaps As List(Of cSubPath)
+    Public IsTCgear As List(Of Boolean)
 
     Private iganganz As Short
 
@@ -48,30 +49,53 @@ Public Class cGBX
     Public TC_PeBrake As Single
     Public TCMout As Single
     Public TCnout As Single
+    Public TCmustReduce As Boolean
 
+    Private MyFileList As List(Of String)
+
+
+    Public Function CreateFileList() As Boolean
+        Dim i As Integer
+
+        If Not Me.ReadFile Then Return False
+
+
+        MyFileList = New List(Of String)
+
+        '.vgbs
+        MyFileList.Add(Me.gs_file.FullPath)
+
+        'Transm. Loss Maps
+        For i = 0 To GetrMaps.Count - 1
+            If Not IsNumeric(Me.GetrMap(i, True)) Then
+                MyFileList.Add(Me.GetrMap(i))
+            End If
+        Next
+
+        'Torque Converter
+        If Me.TCon Then MyFileList.Add(TCfile)
+
+
+        Return True
+    End Function
 
 
     Public Sub New()
-        Dim i As Short
         MyPath = ""
         sFilePath = ""
-        For i = 0 To 16
-            GetrI(i) = 0
-            GetrMaps(i) = New cSubPath
-        Next
         SetDefault()
     End Sub
 
     Private Sub SetDefault()
-        Dim i As Integer
 
         ModelName = ""
         I_Getriebe = 0
         TracIntrSi = 0
-        For i = 0 To 16
-            GetrI(i) = 0
-            GetrMaps(i).Clear()
-        Next
+
+        GetrI = New List(Of Single)
+        GetrMaps = New List(Of cSubPath)
+        IsTCgear = New List(Of Boolean)
+
         iganganz = 0
         gs_M.Clear()
         gs_nnDown.Clear()
@@ -116,11 +140,13 @@ Public Class cGBX
         file.WriteLine("c Traction Interruption")
         file.WriteLine(CStr(TracIntrSi))
 
-        file.WriteLine("c Ratio [-], Loss Map or Efficiency")
-        For i = 0 To 16
+        file.WriteLine("c Gears (0=axle)")
+        file.WriteLine("c Ratio [-], Loss Map or Efficiency, Is TC gear")
+        For i = 0 To GetrI.Count - 1
             file.WriteLine("c Gear " & i)
-            file.WriteLine(CStr(GetrI(i)), GetrMaps(i).PathOrDummy)
+            file.WriteLine(CStr(GetrI(i)), GetrMaps(i).PathOrDummy, CStr(Math.Abs(CInt(IsTCgear(i)))))
         Next
+        file.WriteLine(sKey.Break)
 
         file.WriteLine("c Gear shift polygons file")
         file.WriteLine(gs_file.PathOrDummy)
@@ -162,6 +188,7 @@ Public Class cGBX
         Dim file As cFile_V3
         Dim i As Integer
         Dim MsgSrc As String
+        Dim OldFile As Boolean = False
 
         MsgSrc = "GBX/ReadFile"
 
@@ -186,13 +213,32 @@ Public Class cGBX
             I_Getriebe = CSng(file.ReadLine(0))
             TracIntrSi = CSng(file.ReadLine(0))
 
-            iganganz = 0
-            For i = 0 To 16
+
+            i = -1
+            Do While Not file.EndOfFile
+
                 line = file.ReadLine
-                GetrI(i) = CSng(line(0))
+                i += 1
+
+                If line(0) = sKey.Break Or (OldFile And i = 16) Then Exit Do
+
+                If i = 0 AndAlso UBound(line) < 2 Then OldFile = True
+
+                If CSng(line(0)) = 0 Then Continue Do
+
+                GetrI.Add(CSng(line(0)))
+                GetrMaps.Add(New cSubPath)
                 GetrMaps(i).Init(MyPath, line(1))
-                If GetrI(i) > 0.0001 Then iganganz = i
-            Next
+                If OldFile Then
+                    IsTCgear.Add(False)
+                Else
+                    IsTCgear.Add(CBool(CInt(line(2))))
+                End If
+
+            Loop
+
+            iganganz = GetrI.Count - 1
+
 
             'Allow file end here to keep compatibility to older versions
             If Not file.EndOfFile Then
@@ -214,6 +260,8 @@ Public Class cGBX
             Else
                 gs_Type = tGearbox.Custom
             End If
+
+            If OldFile And TCon Then IsTCgear(1) = True
 
         Catch ex As Exception
             WorkerMsg(tMsgID.Err, ex.Message, MsgSrc)
@@ -275,7 +323,7 @@ Public Class cGBX
 
     End Function
 
-    Public Function TCiteration(ByVal nUout As Single, ByVal PeOut As Single) As Boolean
+    Public Function TCiteration(ByVal nUout As Single, ByVal PeOut As Single, ByVal t As Integer) As Boolean
         Dim nUin As Single
         Dim Mout As Single
         Dim VZ As Integer
@@ -289,9 +337,10 @@ Public Class cGBX
 
         Dim MsgSrc As String
 
-        MsgSrc = "GBX/TCiteration"
+        MsgSrc = "GBX/TCiteration/t= " & t
 
         TC_PeBrake = 0
+        TCmustReduce = False
 
         'Dim nUmin As Single
         'Dim nUmax As Single
@@ -304,23 +353,53 @@ Public Class cGBX
         'nUmax = nnormTonU(GBX.fGSnnUp(Mout))
 
         'Start values: Estimate torque converter state
-        nUin = nUout
+        'nUin = Math.Min(VEH.nNenn, nUout * 2)
+        If t = 0 Then
+            nUin = nUout
+        Else
+            nUin = MODdata.nU(t - 1)
+        End If
 
         'If nUin > nUmax Then nUin = nUmax
         'If nUin < nUmin Then nUin = nUmin
 
-        nUstep = DEV.TCnUstep
-        VZ = 1
-        lastErr = 99999
-
         nu = nUout / nUin
+
+        If nu > TCnu(TCdim) Then
+            nu = TCnu(TCdim)
+            nUin = nUout / nu
+        ElseIf nu < TCnu(0) Then
+            nu = TCnu(0)
+            nUin = nUout / nu
+        End If
+
         mu = fTCmu(nu)
         MoutCalc = fTCtorque(nu, nUin) * mu
 
+        nUstep = DEV.TCnUstep
+
+        If MoutCalc > Mout Then
+            VZ = -1
+        Else
+            VZ = 1
+        End If
+
+        lastErr = 99999
+
         'Iteration
         Do While Math.Abs(1 - MoutCalc / Mout) > DEV.TCiterPrec And nUstep > DEV.TCnUstepMin
+lb10:
             nUin += VZ * nUstep
             nu = nUout / nUin
+
+            If nu > TCnu(TCdim) Or nu < TCnu(0) Then
+                nUin -= VZ * nUstep
+                nUstep /= 2
+                VZ *= -1
+                GoTo lb10
+            End If
+
+
             mu = fTCmu(nu)
             MoutCalc = fTCtorque(nu, nUin) * mu
             If Math.Abs(1 - MoutCalc / Mout) > lastErr Then
@@ -330,23 +409,48 @@ Public Class cGBX
             lastErr = Math.Abs(1 - MoutCalc / Mout)
         Loop
 
+
         If nUin < VEH.nLeerl Then
 
             MODdata.ModErrors.TCextrapol = ""
 
             nUin = VEH.nLeerl
             nu = nUout / nUin
+
+            If nu > TCnu(TCdim) Then
+                nu = TCnu(TCdim)
+                nUin = nUout / nu
+            ElseIf nu < TCnu(0) Then
+
+                WorkerMsg(tMsgID.Err, "Torque converter creeping not possible with current TC characteristics!", MsgSrc)
+                Return False
+
+                'nu = TCnu(0)
+                'nUin = nUout / nu
+            End If
+
             mu = fTCmu(nu)
             MoutCalc = fTCtorque(nu, nUin) * mu
 
+        End If
+
+
+        If Math.Abs(1 - MoutCalc / Mout) > DEV.TCiterPrec Then
+
             If MoutCalc < Mout Then
-                WorkerMsg(tMsgID.Err, "MoutCalc < Mout while nUin = nIdle!", MsgSrc)
-                Return False
+
+
+                If MoutCalc > 0 Then TCmustReduce = True
+
+            Else
+
+                TC_PeBrake = nMtoPe(nUout, Mout - MoutCalc)
+
+
             End If
 
-            TC_PeBrake = nMtoPe(nUout, Mout - MoutCalc)
-
         End If
+
 
         TCMin = MoutCalc / mu
         TCnUin = nUin
@@ -410,22 +514,6 @@ lbInt:
         M0 = (nu - TCnu(i - 1)) * (TCtorque(i) - TCtorque(i - 1)) / (TCnu(i) - TCnu(i - 1)) + TCtorque(i - 1)
 
         Return M0 * (nUin / TCrefrpm) ^ 2
-
-    End Function
-
-    Public Function fGearStr(ByVal Gear As Int16) As String
-
-        If Gear = 0 Then Return "0"
-
-        If TCon Then
-            If Gear = 1 Then
-                Return "0.5"
-            Else
-                Return CStr(Gear - 1)
-            End If
-        Else
-            Return CStr(Gear)
-        End If
 
     End Function
 
@@ -583,6 +671,12 @@ lbInt:
         Return (Md - gs_M(i - 1)) * (gs_nnUp(i) - gs_nnUp(i - 1)) / (gs_M(i) - gs_M(i - 1)) + gs_nnUp(i - 1)
 
     End Function
+
+    Public ReadOnly Property FileList As List(Of String)
+        Get
+            Return MyFileList
+        End Get
+    End Property
 
     Public Property FilePath() As String
         Get

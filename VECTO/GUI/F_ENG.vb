@@ -5,6 +5,10 @@
     Public GenDir As String = ""
     Private Changed As Boolean = False
 
+    Private FLDdia As F_FLD
+
+
+
     Private Sub F_ENG_FormClosing(sender As Object, e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
             e.Cancel = ChangeCheckCancel()
@@ -12,6 +16,9 @@
     End Sub
 
     Private Sub F_ENG_Load(sender As Object, e As System.EventArgs) Handles Me.Load
+
+        FLDdia = New F_FLD
+
         Changed = False
         newENG()
     End Sub
@@ -78,7 +85,7 @@
         Me.TbInertia.Text = ""
         Me.TbNleerl.Text = ""
         Me.TbNnenn.Text = ""
-        Me.TbFLD.Text = ""
+        Me.LvFLDs.Items.Clear()
         Me.TbMAP.Text = ""
         Me.TbWHTC.Text = ""
 
@@ -92,6 +99,8 @@
 
     Public Sub openENG(ByVal file As String)
         Dim ENG0 As cENG
+        Dim i As Integer
+        Dim lv0 As ListViewItem
 
         If ChangeCheckCancel() Then Exit Sub
 
@@ -110,7 +119,14 @@
         Me.TbInertia.Text = ENG0.I_mot.ToString
         Me.TbNleerl.Text = ENG0.nleerl.ToString
         Me.TbNnenn.Text = ENG0.nnenn.ToString
-        Me.TbFLD.Text = ENG0.PathFLD(True)
+
+        Me.LvFLDs.Items.Clear()
+        For i = 0 To ENG0.fFLD.Count - 1
+            lv0 = New ListViewItem(ENG0.PathFLD(i, True))
+            lv0.SubItems.Add(ENG0.FLDgears(i))
+            Me.LvFLDs.Items.Add(lv0)
+        Next
+
         Me.TbMAP.Text = ENG0.PathMAP(True)
         Me.TbWHTC.Text = ENG0.PathWHTC(True)
 
@@ -139,6 +155,7 @@
     'Save ENG
     Private Function saveENG(ByVal file As String) As Boolean
         Dim ENG0 As cENG
+        Dim i As Int16
 
         ENG0 = New cENG
         ENG0.FilePath = file
@@ -151,7 +168,12 @@
         ENG0.nleerl = CSng(fTextboxToNumString(Me.TbNleerl.Text))
         ENG0.nnenn = CSng(fTextboxToNumString(Me.TbNnenn.Text))
 
-        ENG0.PathFLD = Me.TbFLD.Text
+        For i = 0 To Me.LvFLDs.Items.Count - 1
+            ENG0.fFLD.Add(New cSubPath)
+            ENG0.PathFLD(i) = Me.LvFLDs.Items(i).SubItems(0).Text
+            ENG0.FLDgears.Add(Me.LvFLDs.Items(i).SubItems(1).Text)
+        Next
+
         ENG0.PathMAP = Me.TbMAP.Text
         ENG0.PathWHTC = Me.TbWHTC.Text
 
@@ -232,10 +254,6 @@
         Change()
     End Sub
 
-    Private Sub TbFLD_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbFLD.TextChanged
-        Change()
-    End Sub
-
     Private Sub TbMAP_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbMAP.TextChanged
         Change()
     End Sub
@@ -247,13 +265,109 @@
 #End Region
 
 
+    Private Sub LvFLDs_DoubleClick(sender As Object, e As System.EventArgs) Handles LvFLDs.DoubleClick
+        EditFLD()
+    End Sub
+
+    Private Sub LvFLDs_KeyDown(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles LvFLDs.KeyDown
+        Select Case e.KeyCode
+            Case Keys.Delete, Keys.Back
+                RemoveFLD(False)
+            Case Keys.Enter
+                EditFLD()
+        End Select
+    End Sub
+
+    Private Sub BtAddFLD_Click(sender As System.Object, e As System.EventArgs) Handles BtAddFLD.Click
+        AddFLD()
+        Me.LvFLDs.Items(Me.LvFLDs.Items.Count - 1).Selected = True
+        EditFLD()
+    End Sub
+
+    Private Sub BtRemFLD_Click(sender As System.Object, e As System.EventArgs) Handles BtRemFLD.Click
+        RemoveFLD(False)
+    End Sub
+
+    Private Sub EditFLD()
+        Dim nums As String()
+
+        FLDdia.EngFile = EngFile
+        FLDdia.TbFLD.Text = Me.LvFLDs.SelectedItems(0).SubItems(0).Text
+
+        If Me.LvFLDs.SelectedItems(0).SubItems(1).Text.Contains("-") Then
+            Try
+                nums = Me.LvFLDs.SelectedItems(0).SubItems(1).Text.Replace(" ", "").Split("-")
+                FLDdia.NumGearFrom.Value = Math.Max(CInt(nums(0)), 0)
+                FLDdia.NumGearTo.Value = Math.Min(CInt(nums(1)), 99)
+            Catch ex As Exception
+                FLDdia.NumGearFrom.Value = 0
+                FLDdia.NumGearTo.Value = 99
+                MsgBox(Me.LvFLDs.SelectedItems(0).SubItems(1).Text & " is no valid range!")
+            End Try
+        Else
+            FLDdia.NumGearFrom.Value = Math.Max(CInt(Me.LvFLDs.SelectedItems(0).SubItems(1).Text), 0)
+            FLDdia.NumGearTo.Value = Math.Min(CInt(Me.LvFLDs.SelectedItems(0).SubItems(1).Text), 99)
+        End If
+
+        If FLDdia.ShowDialog = Windows.Forms.DialogResult.OK Then
+
+            Me.LvFLDs.SelectedItems(0).SubItems(0).Text = FLDdia.TbFLD.Text
+
+            If FLDdia.NumGearFrom.Value = FLDdia.NumGearTo.Value Then
+                Me.LvFLDs.SelectedItems(0).SubItems(1).Text = FLDdia.NumGearFrom.Value
+            Else
+                Me.LvFLDs.SelectedItems(0).SubItems(1).Text = FLDdia.NumGearFrom.Value & "-" & FLDdia.NumGearTo.Value
+            End If
+
+            Change()
+
+        Else
+
+            If Me.LvFLDs.SelectedItems(0).SubItems(0).Text = "" Then RemoveFLD(True)
+
+        End If
+
+
+    End Sub
+
+    Private Sub AddFLD()
+        Dim lvi As ListViewItem
+
+        lvi = New ListViewItem("")
+        lvi.SubItems.Add("0 - 99")
+        Me.LvFLDs.Items.Add(lvi)
+
+        lvi.EnsureVisible()
+
+        Me.LvFLDs.Focus()
+
+        'Change() => NO! Change
+
+    End Sub
+
+    Private Sub RemoveFLD(ByVal NoChange As Boolean)
+        Dim i0 As Int16
+
+        If Me.LvFLDs.Items.Count = 0 Then Exit Sub
+
+        If Me.LvFLDs.SelectedItems.Count = 0 Then Me.LvFLDs.Items(Me.LvFLDs.Items.Count - 1).Selected = True
+
+        i0 = Me.LvFLDs.SelectedItems(0).Index
+
+        Me.LvFLDs.SelectedItems(0).Remove()
+
+        If i0 < Me.LvFLDs.Items.Count Then
+            Me.LvFLDs.Items(i0).Selected = True
+            Me.LvFLDs.Items(i0).EnsureVisible()
+        End If
+
+        Me.LvFLDs.Focus()
+
+        If Not NoChange Then Change()
+    End Sub
 
 
 #Region "Browse Buttons"
-
-    Private Sub BtFLD_Click(sender As System.Object, e As System.EventArgs) Handles BtFLD.Click
-        If fbFLD.OpenDialog(fFileRepl(Me.TbFLD.Text, fPATH(EngFile))) Then Me.TbFLD.Text = fFileWoDir(fbFLD.Files(0), fPATH(EngFile))
-    End Sub
 
     Private Sub BtMAP_Click(sender As System.Object, e As System.EventArgs) Handles BtMAP.Click
         If fbMAP.OpenDialog(fFileRepl(Me.TbMAP.Text, fPATH(EngFile))) Then Me.TbMAP.Text = fFileWoDir(fbMAP.Files(0), fPATH(EngFile))
@@ -263,16 +377,17 @@
         If fbWHTC.OpenDialog(fFileRepl(Me.TbWHTC.Text, fPATH(EngFile))) Then Me.TbWHTC.Text = fFileWoDir(fbWHTC.Files(0), fPATH(EngFile))
     End Sub
 
-    Private Sub BtFLDOpen_Click(sender As System.Object, e As System.EventArgs) Handles BtFLDOpen.Click
-        OpenFiles(fFileRepl(Me.TbFLD.Text, fPATH(EngFile)))
-    End Sub
-
     Private Sub BtMAPopen_Click(sender As System.Object, e As System.EventArgs) Handles BtMAPopen.Click
         Dim fldfile As String
 
-        fldfile = fFileRepl(Me.TbFLD.Text, fPATH(EngFile))
+        If Me.LvFLDs.Items.Count = 1 Then
+            fldfile = fFileRepl(Me.LvFLDs.Items(0).Text, fPATH(EngFile))
+        Else
+            fldfile = sKey.NoFile
+        End If
 
-        If IO.File.Exists(fldfile) Then
+
+        If fldfile <> sKey.NoFile AndAlso IO.File.Exists(fldfile) Then
             OpenFiles(fFileRepl(Me.TbMAP.Text, fPATH(EngFile)), fldfile)
         Else
             OpenFiles(fFileRepl(Me.TbMAP.Text, fPATH(EngFile)))
@@ -290,6 +405,8 @@
     Private Sub ButCancel_Click(sender As System.Object, e As System.EventArgs) Handles ButCancel.Click
         Me.Close()
     End Sub
+
+
 
 #Region "Open File Context Menu"
 
@@ -329,6 +446,8 @@
 
 #End Region
 
-    
-  
+
+
+
+
 End Class
