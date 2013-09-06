@@ -193,6 +193,8 @@ Public Class cPower
         Dim aRollout As Single
         Dim Gears As New List(Of Integer)
         Dim vRollout As Single
+        Dim ProgBarShare As Int16
+        Dim ProgBarLACpart As Int16
 
         Dim MsgSrc As String
 
@@ -215,6 +217,24 @@ Public Class cPower
         Gvorg = DRI.Gvorg
         Nvorg = DRI.Nvorg
 
+        If GEN.EcoRollOn Or GEN.OverSpeedOn Then
+            If GEN.LookAheadOn Then
+                ProgBarShare = 4
+                ProgBarLACpart = 2
+            Else
+                ProgBarShare = 2
+                ProgBarLACpart = 0
+            End If
+        Else
+            If GEN.LookAheadOn Then
+                ProgBarShare = 2
+                ProgBarLACpart = 1
+            Else
+                ProgBarShare = 0
+                ProgBarLACpart = 0
+            End If
+        End If
+
         Positions = New List(Of Short)
 
         'Generate Positions List
@@ -233,6 +253,9 @@ Public Class cPower
         i = -1
         Do
             i += 1
+
+            'Check if cancellation pending 
+            If PHEMworker.CancellationPending Then Return True
 
             Vist = Vh.V(i)
             aist = Vh.a(i)
@@ -316,6 +339,9 @@ Public Class cPower
 
                 If GEN.EcoRollOn Then
 
+                    'Secondary Progressbar
+                    ProgBarCtrl.ProgJobInt = CInt((100 / ProgBarShare) * i / MODdata.tDim)
+
                     If PvorD < 0 Or (i > 0 AndAlso Vh.EcoRoll(i - 1)) Then
 
                         Vmax = MODdata.Vh.Vsoll(i) + GEN.OverSpeed / 3.6
@@ -367,6 +393,9 @@ Public Class cPower
 
                         If GEN.OverSpeedOn Then
 
+                            'Secondary Progressbar
+                            ProgBarCtrl.ProgJobInt = CInt((100 / ProgBarShare) * i / MODdata.tDim)
+
                             vCoasting = fCoastingSpeed(i, Gear)
                             Vmax = MODdata.Vh.Vsoll(i) + GEN.OverSpeed / 3.6
 
@@ -413,6 +442,12 @@ Public Class cPower
         i = MODdata.tDim + 1
         Do
             i -= 1
+
+            'Secondary Progressbar
+            If ProgBarLACpart > 0 Then ProgBarCtrl.ProgJobInt = CInt((100 / ProgBarShare) * (MODdata.tDim - i) / MODdata.tDim + (ProgBarLACpart - 1) * (100 / ProgBarShare))
+
+            'Check if cancellation pending 
+            If PHEMworker.CancellationPending Then Return True
 
             If Positions(i) = 1 Then
                 vset2 = Vh.V(i)
@@ -531,6 +566,7 @@ Public Class cPower
         Dim amax As Single
 
         Dim StdMode As Boolean
+        Dim ProgBarShare As Int16
 
 
         Dim LastPmax As Single
@@ -552,6 +588,14 @@ Public Class cPower
 
         '   Initialize
         Vh = MODdata.Vh
+
+        If GEN.EcoRollOn Or GEN.OverSpeedOn Or GEN.LookAheadOn Then
+            ProgBarShare = 2
+        Else
+            ProgBarShare = 1
+        End If
+
+
         If Cfg.GnVorgab Then
             Gvorg = DRI.Gvorg
             Nvorg = DRI.Nvorg
@@ -608,7 +652,7 @@ Public Class cPower
             FirstSecItar = True
 
             'Secondary Progressbar
-            ProgBarCtrl.ProgJobInt = CInt(100 * jz / MODdata.tDim)
+            ProgBarCtrl.ProgJobInt = CInt((100 / ProgBarShare) * jz / MODdata.tDim + (100 / ProgBarShare))
 
 
             '   Determine State
@@ -1166,7 +1210,7 @@ lb_nOK:
                 End If
             End If
 
-            'Check or Abort (before Speed-reduce-iteration, otherwise it hangs)
+            'Check if cancellation pending (before Speed-reduce-iteration, otherwise it hangs)
             If PHEMworker.CancellationPending Then Return True
 
             'Check whether P above Full-load => Reduce Speed

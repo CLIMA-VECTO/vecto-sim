@@ -361,11 +361,15 @@ lbSkip0:
                         Else
 
                             If DEV.PreRun Then
+
                                 If MsgOut Then WorkerMsg(tMsgID.Normal, "Driving Cycle Preprocessing", MsgSrc)
                                 If Not MODdata.Px.PreRun Then
                                     CyclAbrtedByErr = True
                                     GoTo lbAusg
                                 End If
+
+                                If PHEMworker.CancellationPending Then GoTo lbAbort
+
                             End If
 
                             If MsgOut Then WorkerMsg(tMsgID.Normal, "Vehicle Calc", MsgSrc)
@@ -489,6 +493,8 @@ lbSkip0:
 
                     'Output for BATCH and ADVANCE
 lbAusg:
+
+                    If PHEMworker.CancellationPending Then GoTo lbAbort
              
                     'Output in Erg (first Calculation - Initialization & Header)
                     If Not ERG.AusgERG(NrOfRunStr, fFILE(GenFile, True), fFILE(CurrentCycleFile, True), CyclAbrtedByErr) Then GoTo lbErrInJobLoop

@@ -36,6 +36,9 @@ Module M_Lese
             Return False
         End Try
 
+        If GEN.NoJSON Then WorkerMsg(tMsgID.Warn, "VECTO file format is outdated! CLICK HERE to open and save file in Editor to update to current format!", MsgSrc, "<GUI>" & GenFile)
+
+
         'VECTO: Defaultwerte für Parameter die nicht mehr in der .GEN/.VECTO sind werden beim Einlesen über SetDefault belegt. |@@| VECTO: Default values for the parameters are no longer in GEN/.VECTO but are allocated when Read about SetDefault.
 
 

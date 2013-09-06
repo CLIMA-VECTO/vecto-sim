@@ -559,6 +559,8 @@ Public Class F_GEN
             Exit Sub
         End Try
 
+        If Gfile.NoJSON Then MsgBox("File format is outdated! Save file again to update to current format!")
+
 
         'Update Form
         If Gfile.PKWja Then

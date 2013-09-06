@@ -97,6 +97,8 @@ Public Class cGEN
     Public UnderSpeed As Single
     Public EcoRollOn As Boolean
 
+    Public NoJSON As Boolean
+
     Private MyFileList As List(Of String)
 
     Public Function CreateFileList() As Boolean
@@ -170,7 +172,6 @@ Public Class cGEN
 
     End Function
 
-
     Public Sub New()
 
         MyPath = ""
@@ -212,7 +213,7 @@ Public Class cGEN
 
     End Sub
 
-    Public Function ReadFile() As Boolean
+    Private Function ReadFileOld() As Boolean
         Dim file As cFile_V3
         Dim line As String()
         'Dim txt As String
@@ -471,239 +472,210 @@ lbEr:
     End Function
 
     Public Function SaveFile() As Boolean
-        Dim fGEN As New cFile_V3
         Dim AuxEntryKV As KeyValuePair(Of String, cVEH.cAuxEntry)
         'Dim s As String
         Dim sb As cSubPath
+        Dim JSON As New cJSON
+        Dim ls As List(Of Object)
+        Dim dic As Dictionary(Of String, Object)
 
-        If Not fGEN.OpenWrite(sFilePath) Then Return False
+        'Main Files
+        JSON.Content.Add("VehicleFile", stPathVEH.PathOrDummy)
+        JSON.Content.Add("EngineFile", stPathENG.PathOrDummy)
+        JSON.Content.Add("GearboxFile", stPathGBX.PathOrDummy)
 
-        'fGEN.WriteLine("V" & FormatVersion)
+        'Cycles
+        If CycleFiles.Count > 0 Then
+            ls = New List(Of Object)
+            For Each sb In CycleFiles
+                ls.Add(sb.PathOrDummy)
+            Next
+            JSON.Content.Add("Cycles", ls)
+        End If
 
-        fGEN.WriteLine("c VECTO Input File")
-        fGEN.WriteLine("c VECTO " & VECTOvers)
-        fGEN.WriteLine("c " & Now.ToString)
+        'Aux
+        If AuxPaths.Count > 0 Then
+            ls = New List(Of Object)
+            For Each AuxEntryKV In AuxPaths
+                dic = New Dictionary(Of String, Object)
+                dic.Add("ID", Trim(UCase(AuxEntryKV.Key)))
+                dic.Add("Type", AuxEntryKV.Value.Type)
+                dic.Add("Path", AuxEntryKV.Value.Path.PathOrDummy)
+                ls.Add(dic)
+            Next
+            JSON.Content.Add("Aux", ls)
+        End If
 
-        'fGEN.WriteLine("c Heavy Duty (0) or Passenger Car (1)")
-        'fGEN.WriteLine(Math.Abs(CInt(boPKWja)))
+        'VACC
+        JSON.Content.Add("VACC", stDesMaxFile.PathOrDummy)
 
-        'fGEN.WriteLine("c Transient emission correction (1/0)")
-        'fGEN.WriteLine(Math.Abs(CInt(bodynkorja)))
+        'EngineOnlyMode
+        JSON.Content.Add("EngineOnlyMode", EngOnly)
 
-        'fGEN.WriteLine("c Emission Class (EURO ..)")
-        'fGEN.WriteLine(ineklasse)
+        'Start Stop
+        dic = New Dictionary(Of String, Object)
+        dic.Add("Enabled", boStartStop)
+        dic.Add("MaxSpeed", siStStV)
+        dic.Add("MinTime", siStStT)
+        dic.Add("Delay", StStDelay)
+        JSON.Content.Add("StartStop", dic)
 
-        'fGEN.WriteLine("c Gear Shift Mode: NEDC (0), FTP (1), Model - MT (2)")
-        'fGEN.WriteLine(inizykwael)
+        'LAC
+        dic = New Dictionary(Of String, Object)
+        dic.Add("Enabled", LookAheadOn)
+        dic.Add("Dec", a_lookahead)
+        dic.Add("MinSpeed", vMinLA)
+        JSON.Content.Add("LAC", dic)
 
-        'fGEN.WriteLine("c Calculation Mode, EngAnalysis, CreateMap")
-        'Select Case VehMode
-        '    Case tVehMode.StandardMode
-        '        s = "0"
-        '    Case tVehMode.EngineOnly
-        '        s = "1"
-        '    Case tVehMode.HEV
-        '        s = "2"
-        '    Case Else   'tVehMode.EV
-        '        s = "3"
-        'End Select
-        's &= "," & Math.Abs(CInt(EngAnalysis))
-        's &= "," & Math.Abs(CInt(CreateMap))
-        'fGEN.WriteLine(s)
-
-        'Map creation ------------------------------------------------ ------
-        'fGEN.WriteLine("c Settings for Emission Map Creation Mode:")
-        'fGEN.WriteLine("c Increment Pe, n:")
-        'fGEN.WriteLine(inPschrit & "," & innschrit)
-
-        'fGEN.WriteLine("c CutFull,CutDrag,InsertDrag,DragIntp:")
-        'fGEN.WriteLine(Math.Abs(CInt(bKFcutFull)) & "," & Math.Abs(CInt(bKFcutDrag)) & "," & Math.Abs(CInt(bKFinsertDrag)) & "," & Math.Abs(CInt(bKFDragIntp)))
-
-        'fGEN.WriteLine("c Include Gear Shifts (1/0, Standard = 1)")
-        'fGEN.WriteLine(Math.Abs(CInt(boMapSchaltja)))
-
-        'fGEN.WriteLine("c Averageing Period for Modal Values")
-        'fGEN.WriteLine(iniMsek)
-
-        'fGEN.WriteLine("c ICE Type (Otto = 1, Diesel = 0")
-        'fGEN.WriteLine(Math.Abs(CInt(boottoJa)))
-
-        'Kalt Start---------------------------------------------------------------
-        'fGEN.WriteLine("c Cold Start (1/0)")
-        'fGEN.WriteLine(Math.Abs(CInt(bokaltst1)))
-
-        'fGEN.WriteLine("c t cat start [°C]")
-        'fGEN.WriteLine(sitkat1)
-
-        'fGEN.WriteLine("c t coolant start [°C]")
-        'fGEN.WriteLine(sitkw1)
-
-        'fGEN.WriteLine("c time of start [h.sec]")
-        'fGEN.WriteLine(sihsstart)
-
-        'Dateien------------------------------------------------------------------
-        fGEN.WriteLine("c Vehicle (.vveh):")
-        fGEN.WriteLine(stPathVEH.PathOrDummy)
-
-        fGEN.WriteLine("c Engine (.veng):")
-        fGEN.WriteLine(stPathENG.PathOrDummy)
-
-        fGEN.WriteLine("c Gearbox (*.vgbx):")
-        fGEN.WriteLine(stPathGBX.PathOrDummy)
-
-        fGEN.WriteLine("c Driving Cycles (.vdri):")
-        For Each sb In CycleFiles
-            fGEN.WriteLine(sb.PathOrDummy)
-        Next
-        fGEN.WriteLine(sKey.Break)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing transient correction parameters (*.trs):")
-        'fGEN.WriteLine(stdynspez.PathOrDummy)
-
-        'Kalt Start
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the catalyst map (*.maa):")
-        'fGEN.WriteLine(stkatmap.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the map of cooling water (*.mac):")
-        'fGEN.WriteLine(stkwmap.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the catalyst warm-up (*.wua):")
-        'fGEN.WriteLine(stkatkurv.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the engine coolant warm-up (*.wuc):")
-        'fGEN.WriteLine(stkwkurv.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the cooling parameters for catalyst and engine coolant (*.cdw):")
-        'fGEN.WriteLine(stcooldown.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the ambient parameters (*.atc)")
-        'fGEN.WriteLine(sttumgebung.PathOrDummy)
-
-        'HEV
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing battery specifications for HEV (*.bat)")
-        'fGEN.WriteLine(stBatfile.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing specifications of the E-motor for HEV (*emo)")
-        'fGEN.WriteLine(stEmospez.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the pattern of E-motor on/off for HEV  (*ean)")
-        'fGEN.WriteLine(stEANfile.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the efficiency of additional gearbox for HEV (*get)")
-        'fGEN.WriteLine(stGetspez.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the control efficiency-File for HEV (*.ste)")
-        'fGEN.WriteLine(stSTEnam.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the efficiency-maps for HEV-strategy control (*.ekf)")
-        'fGEN.WriteLine(stEKFnam.PathOrDummy)
-
-        'EXS
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c Exhaust System Simulation (1/0)")
-        'fGEN.WriteLine(Math.Abs(CInt(boEXSja)))
-
-        'fGEN.WriteLine("c Exhaust System Simulation Configuration File")
-        'fGEN.WriteLine(stPathExs.PathOrDummy)
-
-        'SOC-Start Iteration
-        'fGEN.WriteLine("c SOC Start Iteration (1/0) - HEV only")
-        'fGEN.WriteLine(Math.Abs(CInt(boSOCnJa)))
-
-        ''SOC-Start
-        'fGEN.WriteLine("c SOC Start - (H)EV only")
-        'fGEN.WriteLine(siSOCstart)
-
-        ''Getriebe-Verluste-Modell
-        'fGEN.WriteLine("c Transmission Loss Model")
-        'fGEN.WriteLine(CStr(GetrMod))
-
-        'Coolantsim
-        'fGEN.WriteLine("c Coolant System Simulation (1/0)")
-        'fGEN.WriteLine(Math.Abs(CInt(CoolantsimJa)))
-        'fGEN.WriteLine("c Coolant System Simulation Configuration File")
-        'fGEN.WriteLine(stCoolantSimPath.PathOrDummy)
-
-        fGEN.WriteLine("c Auxiliaries (.vaux)")
-        For Each AuxEntryKV In AuxPaths
-            fGEN.WriteLine(Trim(UCase(AuxEntryKV.Key)) & "," & AuxEntryKV.Value.Type & "," & AuxEntryKV.Value.Path.PathOrDummy)
-        Next
-        fGEN.WriteLine(sKey.Break)
-
-        'a_DesMax
-        fGEN.WriteLine("c Speed Dependent Desired Acceleration and Braking (.vacc)")
-        'fGEN.WriteLine(Math.Abs(CInt(DesMaxJa)))
-        fGEN.WriteLine(stDesMaxFile.PathOrDummy)
-
-        'fGEN.WriteLine("c Gear shift behaviour:")
-        'fGEN.WriteLine("c Gearshift model (Version fast driver)")
-        'fGEN.WriteLine("c shift up at ratio rpm/rated rpm in actual gear greater than")
-        'fGEN.WriteLine(CStr(hinauf))
-        'fGEN.WriteLine("c shift down when rpm/rated rpm in lower gear is higher than")
-        'fGEN.WriteLine(CStr(hinunter))
-        'fGEN.WriteLine("c Gearshift model (Version economic driver)")
-        'fGEN.WriteLine("c shift up at ratio rpm/rated rpm in higher gear greater than")
-        'fGEN.WriteLine(CStr(lhinauf))
-        'fGEN.WriteLine("c Shift down when ratio rpm/rated rpm in actual gear is lower than")
-        'fGEN.WriteLine(CStr(lhinunter))
-        'fGEN.WriteLine("c Share of version economic driver (0 to 1)")
-        'fGEN.WriteLine(CStr(pspar))
-        'fGEN.WriteLine("c Share of version mixed model (0 to 1)")
-        'fGEN.WriteLine(CStr(pmodell))
-
-        fGEN.WriteLine("c Engine Only Mode (1/0)")
-        fGEN.WriteLine(CStr(Math.Abs(CInt(EngOnly))))
-
-        'Start/Stop
-        fGEN.WriteLine("c ICE Auto-Start/Stop (1/0) - Non HEV only")
-        fGEN.WriteLine(Math.Abs(CInt(boStartStop)))
-        fGEN.WriteLine("c Start/Stop Max Speed [km/h]")
-        fGEN.WriteLine(siStStV)
-        fGEN.WriteLine("c Start/Stop Min ICE-On Time [s]")
-        fGEN.WriteLine(siStStT)
+        'Overspeed / EcoRoll
+        dic = New Dictionary(Of String, Object)
+        If EcoRollOn Then
+            dic.Add("Mode", "EcoRoll")
+        ElseIf OverSpeedOn Then
+            dic.Add("Mode", "OverSpeed")
+        Else
+            dic.Add("Mode", "Off")
+        End If
+        dic.Add("MinSpeed", vMin)
+        dic.Add("OverSpeed", OverSpeed)
+        dic.Add("UnderSpeed", UnderSpeed)
+        JSON.Content.Add("OverSpeedEcoRoll", dic)
 
 
-        fGEN.WriteLine("c Look Ahead reference deceleration [m/2²]")
-        fGEN.WriteLine(CStr(a_lookahead))
-        fGEN.WriteLine("c Minimum target speed for Overspeed/Eco-Roll [km/h]")
-        fGEN.WriteLine(CStr(vMin))
-        fGEN.WriteLine("c Look-Ahead with Coasting 1/0")
-        fGEN.WriteLine(CStr(Math.Abs(CInt(LookAheadOn))))
-        fGEN.WriteLine("c Overspeed 1/0")
-        fGEN.WriteLine(CStr(Math.Abs(CInt(OverSpeedOn))))
-        fGEN.WriteLine("c Eco-Roll 1/0")
-        fGEN.WriteLine(CStr(Math.Abs(CInt(EcoRollOn))))
-        fGEN.WriteLine("c Allowed OverSpeed [km/h]")
-        fGEN.WriteLine(CStr(OverSpeed))
-        fGEN.WriteLine("c Allowed UnderSpeed [km/h]")
-        fGEN.WriteLine(CStr(UnderSpeed))
-        fGEN.WriteLine("c Minimum target speed for Look-Ahead with Coasting [km/h]")
-        fGEN.WriteLine(CStr(vMinLA))
+        Return JSON.WriteFile(sFilePath)
 
+    End Function
 
-        fGEN.WriteLine("c Start/Stop activation delay time [s]")
-        fGEN.WriteLine(StStDelay)
+    Public Function ReadFile() As Boolean
+        Dim AuxEntry As cVEH.cAuxEntry
+        Dim AuxID As String
+        Dim MsgSrc As String
+        Dim SubPath As cSubPath
+        Dim JSON As New cJSON
+        Dim str As String
+        Dim dic As Dictionary(Of String, Object)
 
+        MsgSrc = "Main/ReadInp/GEN"
 
-        fGEN.Close()
-        fGEN = Nothing
+        NoJSON = False
+
+        If sFilePath = "" Then Return False
+        If Not IO.File.Exists(sFilePath) Then Return False
+
+        SetDefault()
+
+        If Not JSON.ReadFile(sFilePath) Then
+            NoJSON = True
+            Try
+                Return ReadFileOld()
+            Catch ex As Exception
+                Return False
+            End Try
+        End If
+
+        Try
+            stPathVEH.Init(MyPath, JSON.Content("VehicleFile"))
+
+            stPathENG.Init(MyPath, JSON.Content("EngineFile"))
+
+            stPathGBX.Init(MyPath, JSON.Content("GearboxFile"))
+
+            If JSON.Content.ContainsKey("Cycles") Then
+                For Each str In JSON.Content("Cycles")
+                    SubPath = New cSubPath
+                    SubPath.Init(MyPath, str)
+                    CycleFiles.Add(SubPath)
+                Next
+            End If
+
+            If JSON.Content.ContainsKey("Aux") Then
+                For Each dic In JSON.Content("Aux")
+
+                    AuxID = UCase(Trim(dic("ID")))
+
+                    If AuxPaths.ContainsKey(AuxID) Then
+                        WorkerMsg(tMsgID.Err, "Multiple definitions of the same auxiliary type (" & AuxID & ")!", MsgSrc)
+                        Return False
+                    End If
+
+                    AuxEntry = New cVEH.cAuxEntry
+
+                    AuxEntry.Type = dic("Type")
+                    AuxEntry.Path.Init(MyPath, dic("Path"))
+
+                    AuxPaths.Add(AuxID, AuxEntry)
+
+                    AuxDef = True
+
+                Next
+            End If
+
+            stDesMaxFile.Init(MyPath, JSON.Content("VACC"))
+
+            EngOnly = JSON.Content("EngineOnlyMode")
+
+            If EngOnly Then
+                VehMode = tVehMode.EngineOnly
+            Else
+                VehMode = tVehMode.StandardMode
+            End If
+
+            If JSON.Content.ContainsKey("StartStop") Then
+                boStartStop = JSON.Content("StartStop")("Enabled")
+                siStStV = JSON.Content("StartStop")("MaxSpeed")
+                siStStT = JSON.Content("StartStop")("MinTime")
+                StStDelay = JSON.Content("StartStop")("Delay")
+            Else
+                boStartStop = False
+            End If
+
+            If JSON.Content.ContainsKey("LAC") Then
+                LookAheadOn = JSON.Content("LAC")("Enabled")
+                a_lookahead = JSON.Content("LAC")("Dec")
+                vMinLA = JSON.Content("LAC")("MinSpeed")
+            Else
+                LookAheadOn = False
+            End If
+
+            If JSON.Content.ContainsKey("OverSpeedEcoRoll") Then
+                Select Case UCase(JSON.Content("OverSpeedEcoRoll")("Mode"))
+                    Case "ECOROLL"
+                        OverSpeedOn = False
+                        EcoRollOn = True
+
+                    Case "OVERSPEED"
+                        OverSpeedOn = True
+                        EcoRollOn = False
+
+                    Case "OFF"
+                        OverSpeedOn = False
+                        EcoRollOn = False
+
+                    Case Else
+                        WorkerMsg(tMsgID.Err, "Value '" & JSON.Content("OverSpeedEcoRoll")("Mode") & "' is not valid for OverSpeedEcoRoll/Mode!", MsgSrc)
+                        Return False
+                End Select
+
+                vMin = JSON.Content("OverSpeedEcoRoll")("MinSpeed")
+                OverSpeed = JSON.Content("OverSpeedEcoRoll")("OverSpeed")
+                UnderSpeed = JSON.Content("OverSpeedEcoRoll")("UnderSpeed")
+
+            Else
+                OverSpeedOn = False
+                EcoRollOn = False
+            End If
+
+        Catch ex As Exception
+            WorkerMsg(tMsgID.Err, "Failed to read VECTO file! " & ex.Message, MsgSrc)
+            Return False
+        End Try
+
 
         Return True
 
+
     End Function
+
 
     Private Sub SetDefault()
         boPKWja = False

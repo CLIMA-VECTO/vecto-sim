@@ -715,6 +715,8 @@ lbEr:
         Dim tSpeedOgl As New List(Of Double)
         Dim hzSpeedOgl As New List(Of Double)
 
+        Dim StopTimeError As Boolean = False
+
         Dim MsgSrc As String
 
         MsgSrc = "Main/DRI/ConvStoT"
@@ -840,7 +842,7 @@ lbEr:
 
             If StopTime(0) = 0 Then
                 WorkerMsg(tMsgID.Err, "Stop time = 0 at cylce start!", MsgSrc)
-                Return False
+                StopTimeError = True
             End If
 
             t += StopTime(0)
@@ -904,7 +906,7 @@ lbEr:
 
                 If StopTime(i + 1) = 0 Then
                     WorkerMsg(tMsgID.Err, "Stop time = 0 at distance= " & s & "[m]!", MsgSrc)
-                    Return False
+                    StopTimeError = True
                 End If
 
                 t += StopTime(i + 1)
@@ -932,6 +934,9 @@ lbEr:
             End If
 
         Next
+
+
+        If StopTimeError Then Return False
 
         '*********************************** Convert to 1Hz '***********************************
         i = 0

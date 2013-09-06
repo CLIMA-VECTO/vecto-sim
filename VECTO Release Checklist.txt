@@ -1,5 +1,4 @@
 ~ VECTO Release Checklist ~
-
 - vectolic.dll (check for right version!! Source is currently in beta for file signing features)
 - User Manual (dir)
 - User Manual\Update Notes.pdf
