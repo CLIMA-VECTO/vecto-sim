@@ -1,4 +1,4 @@
-*Before compiling you need to add a reference to vectolic.dll (provided with the VECTO release)
+*Before compiling you need to add a reference to vectolic.dll
 
 *The following directories/files must be provided in the application folder (e.g. ..\bin\Release):
 	User Manual

@@ -213,7 +213,242 @@ Public Class cGEN
 
     End Sub
 
-    Private Function ReadFileOld() As Boolean
+    Public Function SaveFile() As Boolean
+        Dim fGEN As New cFile_V3
+        Dim AuxEntryKV As KeyValuePair(Of String, cVEH.cAuxEntry)
+        'Dim s As String
+        Dim sb As cSubPath
+
+        If Not fGEN.OpenWrite(sFilePath) Then Return False
+
+        'fGEN.WriteLine("V" & FormatVersion)
+
+        fGEN.WriteLine("c VECTO Input File")
+        fGEN.WriteLine("c VECTO " & VECTOvers)
+        fGEN.WriteLine("c " & Now.ToString)
+
+        'fGEN.WriteLine("c Heavy Duty (0) or Passenger Car (1)")
+        'fGEN.WriteLine(Math.Abs(CInt(boPKWja)))
+
+        'fGEN.WriteLine("c Transient emission correction (1/0)")
+        'fGEN.WriteLine(Math.Abs(CInt(bodynkorja)))
+
+        'fGEN.WriteLine("c Emission Class (EURO ..)")
+        'fGEN.WriteLine(ineklasse)
+
+        'fGEN.WriteLine("c Gear Shift Mode: NEDC (0), FTP (1), Model - MT (2)")
+        'fGEN.WriteLine(inizykwael)
+
+        'fGEN.WriteLine("c Calculation Mode, EngAnalysis, CreateMap")
+        'Select Case VehMode
+        '    Case tVehMode.StandardMode
+        '        s = "0"
+        '    Case tVehMode.EngineOnly
+        '        s = "1"
+        '    Case tVehMode.HEV
+        '        s = "2"
+        '    Case Else   'tVehMode.EV
+        '        s = "3"
+        'End Select
+        's &= "," & Math.Abs(CInt(EngAnalysis))
+        's &= "," & Math.Abs(CInt(CreateMap))
+        'fGEN.WriteLine(s)
+
+        'Map creation ------------------------------------------------ ------
+        'fGEN.WriteLine("c Settings for Emission Map Creation Mode:")
+        'fGEN.WriteLine("c Increment Pe, n:")
+        'fGEN.WriteLine(inPschrit & "," & innschrit)
+
+        'fGEN.WriteLine("c CutFull,CutDrag,InsertDrag,DragIntp:")
+        'fGEN.WriteLine(Math.Abs(CInt(bKFcutFull)) & "," & Math.Abs(CInt(bKFcutDrag)) & "," & Math.Abs(CInt(bKFinsertDrag)) & "," & Math.Abs(CInt(bKFDragIntp)))
+
+        'fGEN.WriteLine("c Include Gear Shifts (1/0, Standard = 1)")
+        'fGEN.WriteLine(Math.Abs(CInt(boMapSchaltja)))
+
+        'fGEN.WriteLine("c Averageing Period for Modal Values")
+        'fGEN.WriteLine(iniMsek)
+
+        'fGEN.WriteLine("c ICE Type (Otto = 1, Diesel = 0")
+        'fGEN.WriteLine(Math.Abs(CInt(boottoJa)))
+
+        'Kalt Start---------------------------------------------------------------
+        'fGEN.WriteLine("c Cold Start (1/0)")
+        'fGEN.WriteLine(Math.Abs(CInt(bokaltst1)))
+
+        'fGEN.WriteLine("c t cat start [°C]")
+        'fGEN.WriteLine(sitkat1)
+
+        'fGEN.WriteLine("c t coolant start [°C]")
+        'fGEN.WriteLine(sitkw1)
+
+        'fGEN.WriteLine("c time of start [h.sec]")
+        'fGEN.WriteLine(sihsstart)
+
+        'Dateien------------------------------------------------------------------
+        fGEN.WriteLine("c Vehicle (.vveh):")
+        fGEN.WriteLine(stPathVEH.PathOrDummy)
+
+        fGEN.WriteLine("c Engine (.veng):")
+        fGEN.WriteLine(stPathENG.PathOrDummy)
+
+        fGEN.WriteLine("c Gearbox (*.vgbx):")
+        fGEN.WriteLine(stPathGBX.PathOrDummy)
+
+        fGEN.WriteLine("c Driving Cycles (.vdri):")
+        For Each sb In CycleFiles
+            fGEN.WriteLine(sb.PathOrDummy)
+        Next
+        fGEN.WriteLine(sKey.Break)
+
+        'fGEN.WriteLine("c ")
+        'fGEN.WriteLine("c File containing transient correction parameters (*.trs):")
+        'fGEN.WriteLine(stdynspez.PathOrDummy)
+
+        'Kalt Start
+        'fGEN.WriteLine("c ")
+        'fGEN.WriteLine("c File containing the catalyst map (*.maa):")
+        'fGEN.WriteLine(stkatmap.PathOrDummy)
+
+        'fGEN.WriteLine("c ")
+        'fGEN.WriteLine("c File containing the map of cooling water (*.mac):")
+        'fGEN.WriteLine(stkwmap.PathOrDummy)
+
+        'fGEN.WriteLine("c ")
+        'fGEN.WriteLine("c File containing the catalyst warm-up (*.wua):")
+        'fGEN.WriteLine(stkatkurv.PathOrDummy)
+
+        'fGEN.WriteLine("c ")
+        'fGEN.WriteLine("c File containing the engine coolant warm-up (*.wuc):")
+        'fGEN.WriteLine(stkwkurv.PathOrDummy)
+
+        'fGEN.WriteLine("c ")
+        'fGEN.WriteLine("c File containing the cooling parameters for catalyst and engine coolant (*.cdw):")
+        'fGEN.WriteLine(stcooldown.PathOrDummy)
+
+        'fGEN.WriteLine("c ")
+        'fGEN.WriteLine("c File containing the ambient parameters (*.atc)")
+        'fGEN.WriteLine(sttumgebung.PathOrDummy)
+
+        'HEV
+        'fGEN.WriteLine("c ")
+        'fGEN.WriteLine("c File containing battery specifications for HEV (*.bat)")
+        'fGEN.WriteLine(stBatfile.PathOrDummy)
+
+        'fGEN.WriteLine("c ")
+        'fGEN.WriteLine("c File containing specifications of the E-motor for HEV (*emo)")
+        'fGEN.WriteLine(stEmospez.PathOrDummy)
+
+        'fGEN.WriteLine("c ")
+        'fGEN.WriteLine("c File containing the pattern of E-motor on/off for HEV  (*ean)")
+        'fGEN.WriteLine(stEANfile.PathOrDummy)
+
+        'fGEN.WriteLine("c ")
+        'fGEN.WriteLine("c File containing the efficiency of additional gearbox for HEV (*get)")
+        'fGEN.WriteLine(stGetspez.PathOrDummy)
+
+        'fGEN.WriteLine("c ")
+        'fGEN.WriteLine("c File containing the control efficiency-File for HEV (*.ste)")
+        'fGEN.WriteLine(stSTEnam.PathOrDummy)
+
+        'fGEN.WriteLine("c ")
+        'fGEN.WriteLine("c File containing the efficiency-maps for HEV-strategy control (*.ekf)")
+        'fGEN.WriteLine(stEKFnam.PathOrDummy)
+
+        'EXS
+        'fGEN.WriteLine("c ")
+        'fGEN.WriteLine("c Exhaust System Simulation (1/0)")
+        'fGEN.WriteLine(Math.Abs(CInt(boEXSja)))
+
+        'fGEN.WriteLine("c Exhaust System Simulation Configuration File")
+        'fGEN.WriteLine(stPathExs.PathOrDummy)
+
+        'SOC-Start Iteration
+        'fGEN.WriteLine("c SOC Start Iteration (1/0) - HEV only")
+        'fGEN.WriteLine(Math.Abs(CInt(boSOCnJa)))
+
+        ''SOC-Start
+        'fGEN.WriteLine("c SOC Start - (H)EV only")
+        'fGEN.WriteLine(siSOCstart)
+
+        ''Getriebe-Verluste-Modell
+        'fGEN.WriteLine("c Transmission Loss Model")
+        'fGEN.WriteLine(CStr(GetrMod))
+
+        'Coolantsim
+        'fGEN.WriteLine("c Coolant System Simulation (1/0)")
+        'fGEN.WriteLine(Math.Abs(CInt(CoolantsimJa)))
+        'fGEN.WriteLine("c Coolant System Simulation Configuration File")
+        'fGEN.WriteLine(stCoolantSimPath.PathOrDummy)
+
+        fGEN.WriteLine("c Auxiliaries (.vaux)")
+        For Each AuxEntryKV In AuxPaths
+            fGEN.WriteLine(Trim(UCase(AuxEntryKV.Key)) & "," & AuxEntryKV.Value.Type & "," & AuxEntryKV.Value.Path.PathOrDummy)
+        Next
+        fGEN.WriteLine(sKey.Break)
+
+        'a_DesMax
+        fGEN.WriteLine("c Speed Dependent Desired Acceleration and Braking (.vacc)")
+        'fGEN.WriteLine(Math.Abs(CInt(DesMaxJa)))
+        fGEN.WriteLine(stDesMaxFile.PathOrDummy)
+
+        'fGEN.WriteLine("c Gear shift behaviour:")
+        'fGEN.WriteLine("c Gearshift model (Version fast driver)")
+        'fGEN.WriteLine("c shift up at ratio rpm/rated rpm in actual gear greater than")
+        'fGEN.WriteLine(CStr(hinauf))
+        'fGEN.WriteLine("c shift down when rpm/rated rpm in lower gear is higher than")
+        'fGEN.WriteLine(CStr(hinunter))
+        'fGEN.WriteLine("c Gearshift model (Version economic driver)")
+        'fGEN.WriteLine("c shift up at ratio rpm/rated rpm in higher gear greater than")
+        'fGEN.WriteLine(CStr(lhinauf))
+        'fGEN.WriteLine("c Shift down when ratio rpm/rated rpm in actual gear is lower than")
+        'fGEN.WriteLine(CStr(lhinunter))
+        'fGEN.WriteLine("c Share of version economic driver (0 to 1)")
+        'fGEN.WriteLine(CStr(pspar))
+        'fGEN.WriteLine("c Share of version mixed model (0 to 1)")
+        'fGEN.WriteLine(CStr(pmodell))
+
+        fGEN.WriteLine("c Engine Only Mode (1/0)")
+        fGEN.WriteLine(CStr(Math.Abs(CInt(EngOnly))))
+
+        'Start/Stop
+        fGEN.WriteLine("c ICE Auto-Start/Stop (1/0) - Non HEV only")
+        fGEN.WriteLine(Math.Abs(CInt(boStartStop)))
+        fGEN.WriteLine("c Start/Stop Max Speed [km/h]")
+        fGEN.WriteLine(siStStV)
+        fGEN.WriteLine("c Start/Stop Min ICE-On Time [s]")
+        fGEN.WriteLine(siStStT)
+
+
+        fGEN.WriteLine("c Look Ahead reference deceleration [m/2²]")
+        fGEN.WriteLine(CStr(a_lookahead))
+        fGEN.WriteLine("c Minimum target speed for Overspeed/Eco-Roll [km/h]")
+        fGEN.WriteLine(CStr(vMin))
+        fGEN.WriteLine("c Look-Ahead with Coasting 1/0")
+        fGEN.WriteLine(CStr(Math.Abs(CInt(LookAheadOn))))
+        fGEN.WriteLine("c Overspeed 1/0")
+        fGEN.WriteLine(CStr(Math.Abs(CInt(OverSpeedOn))))
+        fGEN.WriteLine("c Eco-Roll 1/0")
+        fGEN.WriteLine(CStr(Math.Abs(CInt(EcoRollOn))))
+        fGEN.WriteLine("c Allowed OverSpeed [km/h]")
+        fGEN.WriteLine(CStr(OverSpeed))
+        fGEN.WriteLine("c Allowed UnderSpeed [km/h]")
+        fGEN.WriteLine(CStr(UnderSpeed))
+        fGEN.WriteLine("c Minimum target speed for Look-Ahead with Coasting [km/h]")
+        fGEN.WriteLine(CStr(vMinLA))
+
+
+        fGEN.WriteLine("c Start/Stop activation delay time [s]")
+        fGEN.WriteLine(StStDelay)
+
+
+        fGEN.Close()
+        fGEN = Nothing
+
+        Return True
+
+    End Function
+
+    Public Function ReadFile() As Boolean
         Dim file As cFile_V3
         Dim line As String()
         'Dim txt As String
@@ -471,7 +706,7 @@ lbEr:
 
     End Function
 
-    Public Function SaveFile() As Boolean
+    Public Function SaveFileJSON() As Boolean
         Dim AuxEntryKV As KeyValuePair(Of String, cVEH.cAuxEntry)
         'Dim s As String
         Dim sb As cSubPath
@@ -546,7 +781,7 @@ lbEr:
 
     End Function
 
-    Public Function ReadFile() As Boolean
+    Public Function ReadFileJSON() As Boolean
         Dim AuxEntry As cVEH.cAuxEntry
         Dim AuxID As String
         Dim MsgSrc As String
@@ -567,7 +802,7 @@ lbEr:
         If Not JSON.ReadFile(sFilePath) Then
             NoJSON = True
             Try
-                Return ReadFileOld()
+                Return ReadFile()
             Catch ex As Exception
                 Return False
             End Try
