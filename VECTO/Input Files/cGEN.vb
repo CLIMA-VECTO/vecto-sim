@@ -557,6 +557,7 @@ lbEr:
 
         MsgSrc = "Main/ReadInp/GEN"
 
+        'Flag for "File is not JSON" Warnings        
         NoJSON = False
 
         If sFilePath = "" Then Return False
@@ -574,11 +575,11 @@ lbEr:
         End If
 
         Try
-            stPathVEH.Init(MyPath, JSON.Content("VehicleFile"))
+            If JSON.Content.ContainsKey("VehicleFile") Then stPathVEH.Init(MyPath, JSON.Content("VehicleFile"))
 
             stPathENG.Init(MyPath, JSON.Content("EngineFile"))
 
-            stPathGBX.Init(MyPath, JSON.Content("GearboxFile"))
+            If JSON.Content.ContainsKey("GearboxFile") Then stPathGBX.Init(MyPath, JSON.Content("GearboxFile"))
 
             If JSON.Content.ContainsKey("Cycles") Then
                 For Each str In JSON.Content("Cycles")
@@ -610,7 +611,7 @@ lbEr:
                 Next
             End If
 
-            stDesMaxFile.Init(MyPath, JSON.Content("VACC"))
+            If JSON.Content.ContainsKey("VACC") Then stDesMaxFile.Init(MyPath, JSON.Content("VACC"))
 
             EngOnly = JSON.Content("EngineOnlyMode")
 
@@ -621,24 +622,29 @@ lbEr:
             End If
 
             If JSON.Content.ContainsKey("StartStop") Then
-                boStartStop = JSON.Content("StartStop")("Enabled")
-                siStStV = JSON.Content("StartStop")("MaxSpeed")
-                siStStT = JSON.Content("StartStop")("MinTime")
-                StStDelay = JSON.Content("StartStop")("Delay")
+                dic = JSON.Content("StartStop")
+                boStartStop = dic("Enabled")
+                siStStV = dic("MaxSpeed")
+                siStStT = dic("MinTime")
+                StStDelay = dic("Delay")
             Else
                 boStartStop = False
             End If
 
             If JSON.Content.ContainsKey("LAC") Then
-                LookAheadOn = JSON.Content("LAC")("Enabled")
-                a_lookahead = JSON.Content("LAC")("Dec")
-                vMinLA = JSON.Content("LAC")("MinSpeed")
+                dic = JSON.Content("LAC")
+                LookAheadOn = dic("Enabled")
+                a_lookahead = dic("Dec")
+                vMinLA = dic("MinSpeed")
             Else
                 LookAheadOn = False
             End If
 
             If JSON.Content.ContainsKey("OverSpeedEcoRoll") Then
-                Select Case UCase(JSON.Content("OverSpeedEcoRoll")("Mode")).trim
+
+                dic = JSON.Content("OverSpeedEcoRoll")
+
+                Select Case UCase(dic("Mode")).Trim
                     Case "ECOROLL"
                         OverSpeedOn = False
                         EcoRollOn = True
@@ -652,13 +658,13 @@ lbEr:
                         EcoRollOn = False
 
                     Case Else
-                        WorkerMsg(tMsgID.Err, "Value '" & JSON.Content("OverSpeedEcoRoll")("Mode") & "' is not valid for OverSpeedEcoRoll/Mode!", MsgSrc)
+                        WorkerMsg(tMsgID.Err, "Value '" & dic("Mode") & "' is not valid for OverSpeedEcoRoll/Mode!", MsgSrc)
                         Return False
                 End Select
 
-                vMin = JSON.Content("OverSpeedEcoRoll")("MinSpeed")
-                OverSpeed = JSON.Content("OverSpeedEcoRoll")("OverSpeed")
-                UnderSpeed = JSON.Content("OverSpeedEcoRoll")("UnderSpeed")
+                vMin = dic("MinSpeed")
+                OverSpeed = dic("OverSpeed")
+                If dic.ContainsKey("UnderSpeed") Then UnderSpeed = dic("UnderSpeed")
 
             Else
                 OverSpeedOn = False
