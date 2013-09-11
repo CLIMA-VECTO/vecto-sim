@@ -479,6 +479,13 @@ lbEr:
         Dim ls As List(Of Object)
         Dim dic As Dictionary(Of String, Object)
 
+        'Meta
+        dic = New Dictionary(Of String, Object)
+        dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
+        dic.Add("Date", Now.ToString)
+        dic.Add("Version", VECTOvers)
+        JSON.Content.Add("Info", dic)
+
         'Main Files
         JSON.Content.Add("VehicleFile", stPathVEH.PathOrDummy)
         JSON.Content.Add("EngineFile", stPathENG.PathOrDummy)
@@ -553,7 +560,7 @@ lbEr:
         Dim SubPath As cSubPath
         Dim JSON As New cJSON
         Dim str As String
-        Dim dic As Dictionary(Of String, Object)
+        Dim dic As Object
 
         MsgSrc = "Main/ReadInp/GEN"
 
@@ -592,7 +599,7 @@ lbEr:
             If JSON.Content.ContainsKey("Aux") Then
                 For Each dic In JSON.Content("Aux")
 
-                    AuxID = UCase(Trim(dic("ID")))
+                    AuxID = UCase(Trim(dic("ID").ToString))
 
                     If AuxPaths.ContainsKey(AuxID) Then
                         WorkerMsg(tMsgID.Err, "Multiple definitions of the same auxiliary type (" & AuxID & ")!", MsgSrc)
@@ -644,7 +651,7 @@ lbEr:
 
                 dic = JSON.Content("OverSpeedEcoRoll")
 
-                Select Case UCase(dic("Mode")).Trim
+                Select Case UCase(dic("Mode").ToString).Trim
                     Case "ECOROLL"
                         OverSpeedOn = False
                         EcoRollOn = True
@@ -664,7 +671,7 @@ lbEr:
 
                 vMin = dic("MinSpeed")
                 OverSpeed = dic("OverSpeed")
-                If dic.ContainsKey("UnderSpeed") Then UnderSpeed = dic("UnderSpeed")
+                If Not dic("UnderSpeed") Is Nothing Then UnderSpeed = dic("UnderSpeed")
 
             Else
                 OverSpeedOn = False
