@@ -212,6 +212,7 @@ Public Class F_VEH
             lvi.SubItems(0).Text = i.ToString
             lvi.SubItems.Add(sl(0))
             lvi.SubItems.Add(sl(1))
+            lvi.SubItems.Add(sl(2))
             LvRRC.Items.Add(lvi)
         Next
 
@@ -283,9 +284,9 @@ Public Class F_VEH
         VEH0.RtFile.Init(fPATH(file), Me.TbRtPath.Text)
 
         VEH0.VehCat = CType(Me.CbCat.SelectedIndex, tVehCat)
-        VEH0.RRCs.Clear()
+
         For Each LV0 In LvRRC.Items
-            VEH0.RRCs.Add(New Single() {CSng(LV0.SubItems(1).Text), CSng(LV0.SubItems(2).Text)})
+            VEH0.RRCs.Add(New Single() {CSng(LV0.SubItems(1).Text), CSng(LV0.SubItems(2).Text), CSng(LV0.SubItems(3).Text)})
         Next
 
         VEH0.MassMax = CSng(fTextboxToNumString(Me.TbMassMax.Text))
@@ -592,6 +593,7 @@ Public Class F_VEH
             lv0.SubItems(0).Text = Me.LvRRC.Items.Count + 1
             lv0.SubItems.Add(Trim(dlog.TbWeight.Text))
             lv0.SubItems.Add(Trim(dlog.TbRRC.Text))
+            lv0.SubItems.Add(Trim(dlog.TbFzISO.Text))
 
             Me.LvRRC.Items.Add(lv0)
 
@@ -661,10 +663,12 @@ Public Class F_VEH
 
         dlog.TbWeight.Text = LV0.SubItems(1).Text
         dlog.TbRRC.Text = LV0.SubItems(2).Text
+        dlog.TbFzISO.Text = LV0.SubItems(3).Text
 
         If dlog.ShowDialog = Windows.Forms.DialogResult.OK Then
             LV0.SubItems(1).Text = dlog.TbWeight.Text
             LV0.SubItems(2).Text = dlog.TbRRC.Text
+            LV0.SubItems(3).Text = dlog.TbFzISO.Text
 
             Change()
 

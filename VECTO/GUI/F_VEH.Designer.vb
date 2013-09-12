@@ -77,6 +77,7 @@ Partial Class F_VEH
         Me.ColumnHeader7 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader8 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader9 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ButAxlAdd = New System.Windows.Forms.Button()
         Me.Label23 = New System.Windows.Forms.Label()
         Me.CbAxleConfig = New System.Windows.Forms.ComboBox()
@@ -570,7 +571,7 @@ Partial Class F_VEH
         Me.LvRRC.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LvRRC.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader7, Me.ColumnHeader8, Me.ColumnHeader9})
+        Me.LvRRC.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader7, Me.ColumnHeader8, Me.ColumnHeader9, Me.ColumnHeader1})
         Me.LvRRC.FullRowSelect = True
         Me.LvRRC.GridLines = True
         Me.LvRRC.HideSelection = False
@@ -585,18 +586,23 @@ Partial Class F_VEH
         '
         'ColumnHeader7
         '
-        Me.ColumnHeader7.Text = "Axle"
-        Me.ColumnHeader7.Width = 36
+        Me.ColumnHeader7.Text = "#"
+        Me.ColumnHeader7.Width = 22
         '
         'ColumnHeader8
         '
-        Me.ColumnHeader8.Text = "Max. axle weight [kg]"
-        Me.ColumnHeader8.Width = 120
+        Me.ColumnHeader8.Text = "Weight share [-]"
+        Me.ColumnHeader8.Width = 94
         '
         'ColumnHeader9
         '
         Me.ColumnHeader9.Text = "RRC [-]"
-        Me.ColumnHeader9.Width = 79
+        Me.ColumnHeader9.Width = 55
+        '
+        'ColumnHeader1
+        '
+        Me.ColumnHeader1.Text = "Fz ISO [N]"
+        Me.ColumnHeader1.Width = 65
         '
         'ButAxlAdd
         '
@@ -932,4 +938,5 @@ Partial Class F_VEH
     Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents BtCdFileOpen As System.Windows.Forms.Button
+    Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
 End Class

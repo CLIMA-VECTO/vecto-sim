@@ -306,7 +306,11 @@ Public Class cVEH
             If line(0) = sKey.Break Then Exit Do
 
             Try
-                RRCs.Add(New Single() {CSng(line(0)), CSng(line(1))})
+                If UBound(line) > 1 Then
+                    RRCs.Add(New Single() {CSng(line(0)), CSng(line(1)), CSng(line(2))})
+                Else
+                    RRCs.Add(New Single() {0.0, CSng(line(1)), 0.0})
+                End If
             Catch ex As Exception
                 WorkerMsg(tMsgID.Err, ex.Message, MsgSrc)
                 file.Close()
@@ -433,9 +437,9 @@ lbError:
 
         'Axle configuration - Update 16.10.2012
         file.WriteLine("c Axle configurations")
-        file.WriteLine("c Max. axle weight [kg], RRC [N/N]")
+        file.WriteLine("c Axle weight share [-], RRC [N/N],Fz ISO [N]")
         For Each sl In RRCs
-            file.WriteLine(CStr(sl(0)), CStr(sl(1)))
+            file.WriteLine(CStr(sl(0)), CStr(sl(1)), CStr(sl(2)))
         Next
 
         file.WriteLine(sKey.Break)
@@ -489,11 +493,20 @@ lbError:
             Return False
         End If
 
+        'Check if sum=100%
         sumW = 0
-        sumprod = 0
         For Each sl In RRCs
             sumW += sl(0)
-            sumprod += sl(0) * sl(1)
+        Next
+
+        If Math.Abs(sumW - 1) > 0.0001 Then
+            WorkerMsg(tMsgID.Err, "Sum of axle weight shares is not 100%!", MsgSrc, "<GUI>" & sFilePath)
+            Return False
+        End If
+
+        sumprod = 0
+        For Each sl In RRCs
+            sumprod += sl(0) * (sl(1) * 100 * ((siLoading + siMass + MassExtra) * 9.81 * sl(0) / sl(2)) ^ (0.9 - 1))     'Beta=0.9
         Next
 
         siFr0 = sumprod / sumW
@@ -607,9 +620,6 @@ lbError:
                 MyGBmaps.Add(GBmap0)
 
                 'Calculate average efficiency for fast approx. calculation
-          
-
-
                 If i > 0 Then
 
                     EffSum = 0

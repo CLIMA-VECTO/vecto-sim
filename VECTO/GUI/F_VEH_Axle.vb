@@ -14,6 +14,11 @@ Public Class F_VEH_Axle
             Exit Sub
         End If
 
+        If Not IsNumeric(Me.TbFzISO.Text) OrElse Trim(Me.TbFzISO.Text) = "" Then
+            MsgBox("Fz ISO input is not valid!")
+            Exit Sub
+        End If
+
         Me.DialogResult = System.Windows.Forms.DialogResult.OK
         Me.Close()
     End Sub

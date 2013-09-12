@@ -31,6 +31,9 @@ Partial Class F_VEH_Axle
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.TbRRC = New System.Windows.Forms.TextBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.TbFzISO = New System.Windows.Forms.TextBox()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -42,7 +45,7 @@ Partial Class F_VEH_Axle
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(83, 74)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(83, 98)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -71,11 +74,11 @@ Partial Class F_VEH_Axle
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(17, 15)
+        Me.Label1.Location = New System.Drawing.Point(33, 15)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(86, 13)
+        Me.Label1.Size = New System.Drawing.Size(72, 13)
         Me.Label1.TabIndex = 1
-        Me.Label1.Text = "Max. axle weight"
+        Me.Label1.Text = "Weight Share"
         '
         'TbWeight
         '
@@ -89,9 +92,9 @@ Partial Class F_VEH_Axle
         Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(199, 15)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(25, 13)
+        Me.Label2.Size = New System.Drawing.Size(16, 13)
         Me.Label2.TabIndex = 1
-        Me.Label2.Text = "[kg]"
+        Me.Label2.Text = "[-]"
         '
         'Label3
         '
@@ -118,15 +121,43 @@ Partial Class F_VEH_Axle
         Me.TbRRC.Size = New System.Drawing.Size(84, 20)
         Me.TbRRC.TabIndex = 5
         '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(27, 67)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(78, 13)
+        Me.Label5.TabIndex = 1
+        Me.Label5.Text = "Fz (ISO 28580)"
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(199, 67)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(21, 13)
+        Me.Label6.TabIndex = 1
+        Me.Label6.Text = "[N]"
+        '
+        'TbFzISO
+        '
+        Me.TbFzISO.Location = New System.Drawing.Point(109, 64)
+        Me.TbFzISO.Name = "TbFzISO"
+        Me.TbFzISO.Size = New System.Drawing.Size(84, 20)
+        Me.TbFzISO.TabIndex = 5
+        '
         'F_VEH_Axle
         '
         Me.AcceptButton = Me.OK_Button
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New System.Drawing.Size(241, 115)
+        Me.ClientSize = New System.Drawing.Size(241, 139)
+        Me.Controls.Add(Me.TbFzISO)
+        Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.TbRRC)
         Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.TbWeight)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
@@ -153,5 +184,8 @@ Partial Class F_VEH_Axle
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents TbRRC As System.Windows.Forms.TextBox
+    Friend WithEvents Label5 As System.Windows.Forms.Label
+    Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents TbFzISO As System.Windows.Forms.TextBox
 
 End Class
