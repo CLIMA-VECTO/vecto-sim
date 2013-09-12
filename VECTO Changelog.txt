@@ -1,6 +1,5 @@
 VECTO ?.? (future release) TODO
 - User Manual:
-	"Don't use secondary retarder if retarder losses are already defined in transmission loss maps"
 	Engine/FLD Editor
 	New Eco Roll
 	GBX

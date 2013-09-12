@@ -559,9 +559,6 @@ Public Class F_GEN
             Exit Sub
         End Try
 
-        If Gfile.NoJSON Then MsgBox("File format is outdated! Save file again to update to current format!")
-
-
         'Update Form
         If Gfile.PKWja Then
             Me.ComboBoxVehType.SelectedIndex = 1
@@ -703,6 +700,10 @@ Public Class F_GEN
         Me.TbAlookahead.Text = CStr(Gfile.a_lookahead)
         Me.TbVminLA.Text = CStr(Gfile.vMinLA)
 
+        '-------------------------------------------------------------
+
+
+        If Gfile.NoJSON Then MsgBox("File format is outdated! Save file again to update to current format!")
 
 
         '-------------------------------------------------------------

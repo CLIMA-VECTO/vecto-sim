@@ -591,7 +591,7 @@ lbNextJob:
 
         'Write file signatures
         WorkerMsg(tMsgID.Normal, "Signing files", MsgSrc)
-        Lic.FileSigning.Comment = "Created by VECTO"
+        Lic.FileSigning.Mode = vectolic.cFileSigning.tMode.Auto
 
         If Lic.FileSigning.WriteSigFile(SigFile, LicSigAppCode) Then
             WorkerMsg(tMsgID.Normal, "Files signed successfully: " & fFILE(SigFile, True), MsgSrc, SigFile)

@@ -27,7 +27,7 @@ Public Class F_FileSign
 
 
         Lic.FileSigning.NewFile()
-        Lic.FileSigning.Comment = "User-created"
+        Lic.FileSigning.Mode = vectolic.cFileSigning.tMode.Manual
 
 
         For Each lv0 In Me.lvFiles.Items
@@ -46,16 +46,8 @@ Public Class F_FileSign
 
         Me.TbLicStr.Text = Lic.FileSigning.CreatorLicStr
         Me.TbPubKey.Text = Lic.FileSigning.PubKey
-        Me.LbMode.Text = Lic.FileSigning.Comment
+        Me.LbMode.Text = Lic.FileSigning.ModeConv(Lic.FileSigning.Mode)
         Me.LbDateStr.Text = Lic.FileSigning.DateStr
-
-
-
-
-
-
-
-
 
         If Lic.FileSigning.FilesOK.Count > 0 Then
             For Each lv0 In Me.lvFiles.Items
@@ -93,8 +85,8 @@ Public Class F_FileSign
 
         Me.TbLicStr.Text = Lic.FileSigning.CreatorLicStr
         Me.TbPubKey.Text = Lic.FileSigning.PubKey
-        Me.LbMode.Text = Lic.FileSigning.Comment
-        If Lic.FileSigning.Comment = "Created by VECTO" Then
+        Me.LbMode.Text = Lic.FileSigning.ModeConv(Lic.FileSigning.Mode)
+        If Lic.FileSigning.Mode = vectolic.cFileSigning.tMode.Auto Then
             Me.LbMode.ForeColor = Color.DarkGreen
         Else
             Me.LbMode.ForeColor = Color.Red

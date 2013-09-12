@@ -1,8 +1,12 @@
 ﻿Imports System.Collections.Generic
+Imports Newtonsoft.Json
+
+
+'uses JSON.NET http://json.codeplex.com/
 
 Public Class cJSON
     Public Content As Dictionary(Of String, Object)
-    Private fullfile As String
+    Public ErrorMsg As String
 
     Public Sub New()
         Content = New Dictionary(Of String, Object)
@@ -10,6 +14,79 @@ Public Class cJSON
 
 
     Public Function ReadFile(ByVal path As String) As Boolean
+        Dim file As Microsoft.VisualBasic.FileIO.TextFieldParser
+        Dim str As String
+
+
+        Content.Clear()
+
+        'check if file exists
+        If Not IO.File.Exists(path) Then
+            ErrorMsg = "file not found"
+            Return False
+        End If
+
+        'open file
+        Try
+            file = New Microsoft.VisualBasic.FileIO.TextFieldParser(path)
+        Catch ex As Exception
+            ErrorMsg = ex.Message
+            Return False
+        End Try
+
+        'Check if file is empty
+        If file.EndOfData Then
+            file.Close()
+            ErrorMsg = "file is empty"
+            Return False
+        End If
+
+        'read file
+        str = file.ReadToEnd
+
+        'close file
+        file.Close()
+
+        'parse JSON to Dictionary
+        Try
+            'JSONobj = JsonConvert.DeserializeObject(str)
+            Content = JsonConvert.DeserializeObject(str, Content.GetType)
+        Catch ex As Exception
+            ErrorMsg = ex.Message
+            Return False
+        End Try
+
+        Return True
+
+    End Function
+
+    Public Function WriteFile(ByVal path As String) As Boolean
+        Dim file As System.IO.StreamWriter
+        Dim str As String
+        Dim First As Boolean = True
+
+        If Content.Count = 0 Then Return False
+
+        Try
+            str = Newtonsoft.Json.JsonConvert.SerializeObject(Content, Formatting.Indented)
+            file = My.Computer.FileSystem.OpenTextFileWriter(path, False)
+        Catch ex As Exception
+            Return False
+        End Try
+
+        file.Write(str)
+
+        file.Close()
+
+        Return True
+
+    End Function
+
+
+#Region "old self-made parser"
+    Private fullfile As String
+
+    Private Function ReadFileXXX(ByVal path As String) As Boolean
         Dim file As Microsoft.VisualBasic.FileIO.TextFieldParser
 
         Content.Clear()
@@ -56,7 +133,10 @@ Public Class cJSON
 
     End Function
 
-    Public Function WriteFile(ByVal path As String) As Boolean
+
+
+
+    Private Function WriteFileXXX(ByVal path As String) As Boolean
         Dim file As System.IO.StreamWriter
         Dim kv As KeyValuePair(Of String, Object)
         Dim str As New System.Text.StringBuilder
@@ -79,7 +159,7 @@ Public Class cJSON
         Catch ex As Exception
             Return False
         End Try
- 
+
         Try
             file = My.Computer.FileSystem.OpenTextFileWriter(path, False)
         Catch ex As Exception
@@ -212,11 +292,6 @@ Public Class cJSON
         Return str
     End Function
 
-   
-
-
-
-
     Private Function GetObject() As Dictionary(Of String, Object)
         Dim MyDic As Dictionary(Of String, Object)
         Dim key As String
@@ -337,6 +412,7 @@ lb20:
     End Function
 
 
+#End Region
 
 
 
