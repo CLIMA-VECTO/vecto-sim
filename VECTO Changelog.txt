@@ -5,8 +5,6 @@ VECTO ?.? (future release) TODO
 	GBX
 	<DRAG>
 	StStDelay
-- Gearbox Rules must be set when loading .gbx file to aviod invalid settings (e.g. AT with Skip Gears)
-- Correct Pg and Proll calculation (Road gradient)??
 
 
 VECTO x.x (current source - next release)

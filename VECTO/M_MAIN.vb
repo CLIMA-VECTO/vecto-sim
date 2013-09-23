@@ -589,6 +589,13 @@ lbNextJob:
 
         WorkerMsg(tMsgID.Normal, "Summary Results written to: " & fFILE(ERG.ErgFile, True), MsgSrc, ERG.ErgFile)
 
+        'JSON Erg Output
+        If ERG.WriteJSON() Then
+            WorkerMsg(tMsgID.Normal, "Summary Results (JSON) written to: " & fFILE(ERG.ErgFile & ".json", True), MsgSrc, ERG.ErgFile & ".json")
+        Else
+            WorkerMsg(tMsgID.Err, "Failed to write JSON Summary Results!", MsgSrc)
+        End If
+
         'Write file signatures
         WorkerMsg(tMsgID.Normal, "Signing files", MsgSrc)
         Lic.FileSigning.Mode = vectolic.cFileSigning.tMode.Auto

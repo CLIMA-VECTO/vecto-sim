@@ -2,6 +2,9 @@
 
 Public Class cENG
 
+    Private Const FormatVersion As String = "1.0"
+    Private FileVersion As String
+
     Public ModelName As String
     Public Pnenn As Single
     Public Displ As Single
@@ -16,6 +19,8 @@ Public Class cENG
 
     Private MyPath As String
     Private sFilePath As String
+
+    Public NoJSON As Boolean
 
     Private MyFileList As List(Of String)
 
@@ -62,7 +67,7 @@ Public Class cENG
         fWHTC.Clear()
     End Sub
 
-    Public Function SaveFile() As Boolean
+    Private Function SaveFileOld() As Boolean
         Dim file As cFile_V3
         Dim i As Integer
 
@@ -109,7 +114,7 @@ Public Class cENG
 
     End Function
 
-    Public Function ReadFile() As Boolean
+    Private Function ReadFileOld() As Boolean
         Dim MsgSrc As String
         Dim file As cFile_V3
         Dim line() As String
@@ -179,6 +184,117 @@ Public Class cENG
         Return True
 
     End Function
+
+    Public Function SaveFile() As Boolean
+        Dim i As Integer
+        Dim JSON As New cJSON
+        Dim dic As Dictionary(Of String, Object)
+        Dim dic0 As Dictionary(Of String, Object)
+        Dim ls As List(Of Object)
+
+        If Not Cfg.JSON Then Return SaveFileOld()
+
+        'Header
+        dic = New Dictionary(Of String, Object)
+        dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
+        dic.Add("Date", Now.ToString)
+        dic.Add("AppVersion", VECTOvers)
+        dic.Add("FileVersion", FormatVersion)
+        JSON.Content.Add("Header", dic)
+
+        'Body
+        dic = New Dictionary(Of String, Object)
+
+        dic.Add("ModelName", ModelName)
+
+        dic.Add("Displacement", Displ)
+        dic.Add("RatedPower", Pnenn)
+        dic.Add("RatedSpeed", nnenn)
+        dic.Add("IdlingSpeed", nleerl)
+        dic.Add("Inertia", I_mot)
+
+        ls = New List(Of Object)
+        For i = 0 To fFLD.Count - 1
+            dic0 = New Dictionary(Of String, Object)
+            dic0.Add("Path", fFLD(i).PathOrDummy)
+            dic0.Add("Gears", FLDgears(i))
+            ls.Add(dic0)
+        Next
+        dic.Add("FullLoadCurves", ls)
+
+        dic.Add("FuelMap", fMAP.PathOrDummy)
+        dic.Add("WHTCresults", fWHTC.PathOrDummy)
+
+        JSON.Content.Add("Body", dic)
+   
+        Return JSON.WriteFile(sFilePath)
+
+
+    End Function
+
+    Public Function ReadFile() As Boolean
+        Dim MsgSrc As String
+        Dim i As Integer
+        Dim JSON As New cJSON
+        Dim dic As Object
+
+        MsgSrc = "ENG/ReadFile"
+
+        'Flag for "File is not JSON" Warnings        
+        NoJSON = False
+
+        SetDefault()
+
+        If Cfg.JSON Then
+            If Not JSON.ReadFile(sFilePath) Then
+                NoJSON = True
+                Try
+                    Return ReadFileOld()
+                Catch ex As Exception
+                    Return False
+                End Try
+            End If
+        Else
+            Try
+                Return ReadFileOld()
+            Catch ex As Exception
+                Return False
+            End Try
+        End If
+
+        Try
+
+            FileVersion = JSON.Content("Header")("FileVersion")
+
+            ModelName = JSON.Content("Body")("ModelName")
+
+            Pnenn = JSON.Content("Body")("RatedPower")
+            Displ = JSON.Content("Body")("Displacement")
+            nnenn = JSON.Content("Body")("RatedSpeed")
+            nleerl = JSON.Content("Body")("IdlingSpeed")
+            I_mot = JSON.Content("Body")("Inertia")
+
+            i = -1
+            For Each dic In JSON.Content("Body")("FullLoadCurves")
+                i += 1
+                fFLD.Add(New cSubPath)
+                fFLD(i).Init(MyPath, dic("Path"))
+                FLDgears.Add(dic("Gears"))
+            Next
+
+            fMAP.Init(MyPath, JSON.Content("Body")("FuelMap"))
+            fWHTC.Init(MyPath, JSON.Content("Body")("WHTCresults"))
+
+        Catch ex As Exception
+            WorkerMsg(tMsgID.Err, "Failed to read VECTO file! " & ex.Message, MsgSrc)
+            Return False
+        End Try
+
+        Return True
+
+    End Function
+
+
 
     Public ReadOnly Property FileList As List(Of String)
         Get

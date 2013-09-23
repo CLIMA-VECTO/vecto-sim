@@ -192,6 +192,13 @@
 
         Changed = False
 
+        If GBX0.NoJSON Then
+            If MsgBox("File is not in JSON format!" & vbCrLf & vbCrLf & "Convert now?" & vbCrLf & "(Backup will be created with '.ORIG' extension)", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                IO.File.Copy(GbxFile, GbxFile & ".ORIG", True)
+                SaveOrSaveAs(False)
+            End If
+        End If
+
     End Sub
 
     'Save or Save As function = true if file is saved

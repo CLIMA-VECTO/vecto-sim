@@ -2,12 +2,18 @@
 
 Class cERG
 
+    Private Const FormatVersion As String = "1.0"
+
     Private ERGpath As String
     Private Ferg As System.IO.StreamWriter
     Private HeadInitialized As Boolean
 
     Private ErgEntries As Dictionary(Of String, cErgEntry)
     Private ErgEntryList As List(Of String)     'Wird benötigt weil Dictionary nicht sortiert ist
+
+    Private ergJSON As cJSON
+    Private ResList As List(Of Dictionary(Of String, Object))
+
 
     Public Sub New()
         HeadInitialized = False
@@ -61,13 +67,13 @@ Class cERG
         Dim First As Boolean
 
         For Each ErgEntry In ErgEntries.Values
-            ErgEntry.ValueString = "-"
+            ErgEntry.ValueString = Nothing
         Next
 
         t1 = MODdata.tDim
 
         'Vehicle type-independent
-        ErgEntries("\\T").ValueString = (t1 + 1).ToString
+        ErgEntries("\\T").ValueString = (t1 + 1)
         ErgEntries("\\Prated").ValueString = VEH.Pnenn
 
         'Length, Speed, Slope
@@ -80,8 +86,8 @@ Class cERG
             Next
             Vquer = 3.6 * sum / (t1 + 1)
 
-            ErgEntries("\\S").ValueString = (Vquer * (t1 + 1) / 3600).ToString
-            ErgEntries("\\V").ValueString = Vquer.ToString
+            ErgEntries("\\S").ValueString = (Vquer * (t1 + 1) / 3600)
+            ErgEntries("\\V").ValueString = Vquer
 
             'altitude change
             sum = 0
@@ -89,7 +95,7 @@ Class cERG
                 sum += MODdata.Vh.V(t) * 1 * MODdata.Vh.Grad(t) / 100  'v[m/s] * t[s] * grad[-] = ∆h[m]
             Next
 
-            ErgEntries("\\G").ValueString = (sum).ToString
+            ErgEntries("\\G").ValueString = (sum)
 
             'Auxiliary energy consumption
             If GEN.AuxDef Then
@@ -118,7 +124,7 @@ Class cERG
                     c += 1
                 End If
             Next
-            If c > 0 Then ErgEntries("\\PeEM+").ValueString = (sum / c).ToString
+            If c > 0 Then ErgEntries("\\PeEM+").ValueString = (sum / c)
 
             'Positive effective Battery-Power = internal EM-Power
             sum = 0
@@ -129,7 +135,7 @@ Class cERG
                     c += 1
                 End If
             Next
-            If c > 0 Then ErgEntries("\\PeBat+").ValueString = (sum / c).ToString
+            If c > 0 Then ErgEntries("\\PeBat+").ValueString = (sum / c)
 
             'Positive internal Battery-Power
             sum = 0
@@ -140,7 +146,7 @@ Class cERG
                     c += 1
                 End If
             Next
-            If c > 0 Then ErgEntries("\\PiBat+").ValueString = (sum / c).ToString
+            If c > 0 Then ErgEntries("\\PiBat+").ValueString = (sum / c)
 
             'Calculate Energy consumed
             EBatPlus = sum / 3600
@@ -154,7 +160,7 @@ Class cERG
                     c += 1
                 End If
             Next
-            If c > 0 Then ErgEntries("\\PeEM-").ValueString = (sum / c).ToString
+            If c > 0 Then ErgEntries("\\PeEM-").ValueString = (sum / c)
 
             'Negative effective Battery-Power = internal EM-Power
             sum = 0
@@ -165,7 +171,7 @@ Class cERG
                     c += 1
                 End If
             Next
-            If c > 0 Then ErgEntries("\\PeBat-").ValueString = (sum / c).ToString
+            If c > 0 Then ErgEntries("\\PeBat-").ValueString = (sum / c)
 
             'Negative internal Battery-Power
             sum = 0
@@ -176,14 +182,14 @@ Class cERG
                     c += 1
                 End If
             Next
-            If c > 0 Then ErgEntries("\\PiBat-").ValueString = (sum / c).ToString
+            If c > 0 Then ErgEntries("\\PiBat-").ValueString = (sum / c)
 
             'Charged-energy calculation
             EBatMinus = sum / 3600
 
             'Battery in/out Energy
-            ErgEntries("\\EiBat+").ValueString = EBatPlus.ToString
-            ErgEntries("\\EiBat-").ValueString = EBatMinus.ToString
+            ErgEntries("\\EiBat+").ValueString = EBatPlus
+            ErgEntries("\\EiBat-").ValueString = EBatMinus
 
             'EtaEM
             sum = 0
@@ -197,7 +203,7 @@ Class cERG
                     c += 1
                 End If
             Next
-            If c > 0 Then ErgEntries("\\EtaEM").ValueString = (sum / c).ToString
+            If c > 0 Then ErgEntries("\\EtaEM").ValueString = (sum / c)
 
             'EtaBat
             sum = 0
@@ -211,16 +217,16 @@ Class cERG
                     c += 1
                 End If
             Next
-            If c > 0 Then ErgEntries("\\EtaBat").ValueString = (sum / c).ToString
+            If c > 0 Then ErgEntries("\\EtaBat").ValueString = (sum / c)
 
             'Delta SOC
-            ErgEntries("\\∆SOC").ValueString = (MODdata.Px.SOC(t1) - MODdata.Px.SOC(0)).ToString
+            ErgEntries("\\∆SOC").ValueString = (MODdata.Px.SOC(t1) - MODdata.Px.SOC(0))
 
             'Only EV:
             If GEN.VehMode = tVehMode.EV Then
 
                 'Energy-consumption
-                ErgEntries("\\EC").ValueString = ((EBatPlus + EBatMinus) / (Vquer * (t1 + 1) / 3600)).ToString
+                ErgEntries("\\EC").ValueString = ((EBatPlus + EBatMinus) / (Vquer * (t1 + 1) / 3600))
 
             End If
 
@@ -243,9 +249,9 @@ Class cERG
                         End If
                     Else
                         If Em0.NormID = tEmNorm.x Or GEN.VehMode = tVehMode.EngineOnly Then
-                            ErgEntries(Em0.IDstring).ValueString = Em0.FinalAvg.ToString
+                            ErgEntries(Em0.IDstring).ValueString = Em0.FinalAvg
                         Else
-                            ErgEntries(Em0.IDstring & "_km").ValueString = (Em0.FinalAvg / Vquer).ToString
+                            ErgEntries(Em0.IDstring & "_km").ValueString = (Em0.FinalAvg / Vquer)
                         End If
                     End If
 
@@ -258,27 +264,27 @@ Class cERG
             'For t = 0 To t1
             '    sum += MODdata.Pe(t)
             'Next
-            'ErgEntries("\\Pe_norm").ValueString = (sum / (t1 + 1)).ToString
+            'ErgEntries("\\Pe_norm").ValueString = (sum / (t1 + 1))
 
             'sum = 0
             'For t = 0 To t1
             '    sum += MODdata.nn(t)
             'Next
-            'ErgEntries("\\n_norm").ValueString = (sum / (t1 + 1)).ToString
+            'ErgEntries("\\n_norm").ValueString = (sum / (t1 + 1))
 
             'Ppos
             sum = 0
             For t = 0 To t1
                 sum += Math.Max(0, MODdata.Pe(t))
             Next
-            ErgEntries("\\Ppos").ValueString = (sum / (t1 + 1)).ToString
+            ErgEntries("\\Ppos").ValueString = (sum / (t1 + 1))
 
             'Pneg
             sum = 0
             For t = 0 To t1
                 sum += Math.Min(0, MODdata.Pe(t))
             Next
-            ErgEntries("\\Pneg").ValueString = (sum / (t1 + 1)).ToString
+            ErgEntries("\\Pneg").ValueString = (sum / (t1 + 1))
 
         End If
 
@@ -290,60 +296,60 @@ Class cERG
             For t = 0 To t1
                 sum += MODdata.Pbrake(t) / VEH.Pnenn
             Next
-            ErgEntries("\\Pbrake").ValueString = (sum / (t1 + 1)).ToString
+            ErgEntries("\\Pbrake").ValueString = (sum / (t1 + 1))
 
             'Eair
             sum = 0
             For t = 0 To t1
                 sum += MODdata.Pluft(t)
             Next
-            ErgEntries("\\Eair").ValueString = (-sum / 3600).ToString
+            ErgEntries("\\Eair").ValueString = (-sum / 3600)
 
             'Eroll
             sum = 0
             For t = 0 To t1
                 sum += MODdata.Proll(t)
             Next
-            ErgEntries("\\Eroll").ValueString = (-sum / 3600).ToString
+            ErgEntries("\\Eroll").ValueString = (-sum / 3600)
 
             'Egrad
             sum = 0
             For t = 0 To t1
                 sum += MODdata.Pstg(t)
             Next
-            ErgEntries("\\Egrad").ValueString = (-sum / 3600).ToString
+            ErgEntries("\\Egrad").ValueString = (-sum / 3600)
 
             'Eacc
             sum = 0
             For t = 0 To t1
                 sum += MODdata.Pa(t) + MODdata.PaGB(t) + MODdata.PaEng(t)
             Next
-            ErgEntries("\\Eacc").ValueString = (-sum / 3600).ToString
+            ErgEntries("\\Eacc").ValueString = (-sum / 3600)
 
             'Eaux
             sum = 0
             For t = 0 To t1
                 sum += MODdata.PauxSum(t)
             Next
-            ErgEntries("\\Eaux").ValueString = (-sum / 3600).ToString
+            ErgEntries("\\Eaux").ValueString = (-sum / 3600)
 
             'Ebrake
             sum = 0
             For t = 0 To t1
                 sum += MODdata.Pbrake(t)
             Next
-            ErgEntries("\\Ebrake").ValueString = (sum / 3600).ToString
+            ErgEntries("\\Ebrake").ValueString = (sum / 3600)
 
             'Etransm
             sum = 0
             For t = 0 To t1
                 sum += MODdata.PlossDiff(t) + MODdata.PlossGB(t)
             Next
-            ErgEntries("\\Etransm").ValueString = (-sum / 3600).ToString
+            ErgEntries("\\Etransm").ValueString = (-sum / 3600)
 
             'Masse, Loading
-            ErgEntries("\\Mass").ValueString = (VEH.Mass + VEH.MassExtra).ToString
-            ErgEntries("\\Loading").ValueString = VEH.Loading.ToString
+            ErgEntries("\\Mass").ValueString = (VEH.Mass + VEH.MassExtra)
+            ErgEntries("\\Loading").ValueString = VEH.Loading
 
             'CylceKin
             For Each ErgEntry In MODdata.CylceKin.ErgEntries
@@ -356,14 +362,14 @@ Class cERG
                 For t = 0 To t1
                     sum += Math.Max(0, MODdata.Pe(t))
                 Next
-                ErgEntries("\\EposICE").ValueString = (VEH.Pnenn * sum / 3600).ToString
+                ErgEntries("\\EposICE").ValueString = (VEH.Pnenn * sum / 3600)
 
                 'EnegICE
                 sum = 0
                 For t = 0 To t1
                     sum += Math.Min(0, MODdata.Pe(t))
                 Next
-                ErgEntries("\\EnegICE").ValueString = (VEH.Pnenn * sum / 3600).ToString
+                ErgEntries("\\EnegICE").ValueString = (VEH.Pnenn * sum / 3600)
             End If
 
         End If
@@ -411,12 +417,19 @@ Class cERG
     Public Function AusgERG(ByVal NrOfRunStr As String, ByVal GenFilename As String, ByVal CycleFilename As String, ByVal AbortedByError As Boolean) As Boolean
         Dim str As String
         Dim MsgSrc As String
+        Dim dic As Dictionary(Of String, Object)
+        Dim dic0 As Dictionary(Of String, Object)
+        Dim dic1 As Dictionary(Of String, Object)
+        Dim key As String
 
         MsgSrc = "SUMALL/Output"
 
         If Not HeadInitialized Then
             If Not HeadInit() Then Return False
         End If
+
+        'JSON
+        dic = New Dictionary(Of String, Object)
 
         'Open file
         Try
@@ -428,18 +441,47 @@ Class cERG
         End Try
 
         str = NrOfRunStr & "," & GenFilename & "," & CycleFilename & ","
+        dic.Add("Job", GenFilename)
+        dic.Add("Cycle", CycleFilename)
 
         If AbortedByError Then
             Ferg.WriteLine(str & "Aborted due to Error!")
+            dic.Add("AbortedByError", True)
         Else
             Ferg.WriteLine(str & ErgLine())
+            dic.Add("AbortedByError", False)
+
+            dic1 = New Dictionary(Of String, Object)
+            For Each key In ErgEntryList
+                dic0 = New Dictionary(Of String, Object)
+                dic0.Add("Value", ErgEntries(key).ValueString)
+                dic0.Add("Unit", ErgEntries(key).Unit)
+                dic1.Add(ErgEntries(key).Head, dic0)
+            Next
+            dic.Add("Results", dic1)
+
         End If
+
+        ResList.Add(dic)
+
 
         'Close file
         Ferg.Close()
         Ferg = Nothing
 
         Return True
+
+    End Function
+
+    Public Function WriteJSON() As Boolean
+
+        ergJSON.Content("Body").add("Results", ResList)
+
+        Try
+            Return ergJSON.WriteFile(ERGpath & ".json")
+        Catch ex As Exception
+            Return False
+        End Try
 
     End Function
 
@@ -485,6 +527,8 @@ Class cERG
         Dim i2 As Integer
         Dim iDim As Integer
         Dim DRI0 As cDRI
+        Dim dic As Dictionary(Of String, Object)
+
 
         Dim MsgSrc As String
 
@@ -520,17 +564,40 @@ Class cERG
             Return False
         End Try
 
+        'JSON
+        ergJSON = New cJSON
+
+        dic = New Dictionary(Of String, Object)
+        dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
+        dic.Add("Date", Now.ToString)
+        dic.Add("AppVersion", VECTOvers)
+        dic.Add("FileVersion", FormatVersion)
+        ergJSON.Content.Add("Header", dic)
+        ergJSON.Content.Add("Body", New Dictionary(Of String, Object))
+        dic = New Dictionary(Of String, Object)
+        dic.Add("Air Density [kg/m3]", Cfg.AirDensity)
+        dic.Add("Distance Correction", Cfg.WegKorJa)
+        ergJSON.Content("Body").add("Settings", dic)
+
+        ResList = New List(Of Dictionary(Of String, Object))
+
         'Info
         Ferg.WriteLine("VECTO results")
         Ferg.WriteLine("VECTO " & VECTOvers)
         Ferg.WriteLine(Now.ToString)
-        Ferg.WriteLine(ERGinfo)
+        Ferg.WriteLine("air density [kg/m3]: " & Cfg.AirDensity)
+        If Cfg.WegKorJa Then
+            Ferg.WriteLine("Distance Correction ON")
+        Else
+            Ferg.WriteLine("Distance Correction OFF")
+        End If
 
         'Close file (will open after each job)
         Ferg.Close()
 
         'Add file to signing list
         Lic.FileSigning.AddFile(ERGpath)
+        Lic.FileSigning.AddFile(ERGpath & ".json")
 
 
         ErgEntries = New Dictionary(Of String, cErgEntry)
@@ -785,29 +852,6 @@ Class cERG
 
     End Function
 
-    Public Function ERGinfo() As String
-        Dim s As New System.Text.StringBuilder
-
-        s.AppendLine("air density [kg/m3]: " & Cfg.AirDensity)
-
-        If Cfg.WegKorJa Then
-            s.AppendLine("Distance Correction ON")
-        Else
-            s.AppendLine("Distance Correction OFF")
-        End If
-
-        'If Cfg.FCcorrection Then
-        '    s.AppendLine("HDV FC Correction ON")
-        'Else
-        '    s.AppendLine("HDV FC Correction OFF")
-        'End If
-
-        'If DEV.Enabled Then s.AppendLine(DEV.DEVinfo)
-
-        Return s.ToString
-
-    End Function
-
     Public ReadOnly Property ErgFile As String
         Get
             Return ERGpath
@@ -819,11 +863,27 @@ End Class
 Public Class cErgEntry
     Public Head As String
     Public Unit As String
-    Public ValueString As String
-
+    Public MyVal As Object
 
     Public Sub New(ByVal HeadStr As String, ByVal UnitStr As String)
         Head = HeadStr
         Unit = UnitStr
+        MyVal = Nothing
     End Sub
+
+    Public Property ValueString As Object
+        Get
+            If MyVal Is Nothing Then
+                Return "-"
+            Else
+                Return MyVal
+            End If
+        End Get
+        Set(value As Object)
+            MyVal = value
+        End Set
+    End Property
+
+
+
 End Class

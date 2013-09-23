@@ -62,6 +62,7 @@ Partial Class F_Options
         Me.TextBoxEAVal = New System.Windows.Forms.TextBox()
         Me.ButReset = New System.Windows.Forms.Button()
         Me.BtHelp = New System.Windows.Forms.Button()
+        Me.CbJSON = New System.Windows.Forms.CheckBox()
         Me.GroupBoxWorDir.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
@@ -124,6 +125,7 @@ Partial Class F_Options
         '
         'GroupBox3
         '
+        Me.GroupBox3.Controls.Add(Me.CbJSON)
         Me.GroupBox3.Controls.Add(Me.GroupBox5)
         Me.GroupBox3.Controls.Add(Me.TextBoxLogSize)
         Me.GroupBox3.Controls.Add(Me.Label16)
@@ -458,6 +460,16 @@ Partial Class F_Options
         Me.BtHelp.TabIndex = 14
         Me.BtHelp.UseVisualStyleBackColor = True
         '
+        'CbJSON
+        '
+        Me.CbJSON.AutoSize = True
+        Me.CbJSON.Location = New System.Drawing.Point(21, 80)
+        Me.CbJSON.Name = "CbJSON"
+        Me.CbJSON.Size = New System.Drawing.Size(168, 17)
+        Me.CbJSON.TabIndex = 15
+        Me.CbJSON.Text = "In- and Output in JSON format"
+        Me.CbJSON.UseVisualStyleBackColor = True
+        '
         'F_Options
         '
         Me.AcceptButton = Me.ButtonOK
@@ -534,4 +546,5 @@ Partial Class F_Options
     Friend WithEvents GroupBox5 As System.Windows.Forms.GroupBox
     Friend WithEvents TbOpenCmdName As System.Windows.Forms.TextBox
     Friend WithEvents Label12 As System.Windows.Forms.Label
+    Friend WithEvents CbJSON As System.Windows.Forms.CheckBox
 End Class

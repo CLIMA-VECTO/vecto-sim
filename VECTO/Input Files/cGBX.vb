@@ -2,6 +2,9 @@
 
 Public Class cGBX
 
+    Private Const FormatVersion As String = "1.0"
+    Private FileVersion As String
+
     Private MyPath As String
     Private sFilePath As String
 
@@ -50,6 +53,8 @@ Public Class cGBX
     Public TCMout As Single
     Public TCnout As Single
     Public TCmustReduce As Boolean
+
+    Public NoJSON As Boolean
 
     Private MyFileList As List(Of String)
 
@@ -118,7 +123,7 @@ Public Class cGBX
 
     End Sub
 
-    Public Function SaveFile() As Boolean
+    Private Function SaveFileOld() As Boolean
         Dim file As cFile_V3
         Dim i As Integer
         file = New cFile_V3
@@ -183,7 +188,7 @@ Public Class cGBX
 
     End Function
 
-    Public Function ReadFile() As Boolean
+    Private Function ReadFileOld() As Boolean
         Dim line() As String
         Dim file As cFile_V3
         Dim i As Integer
@@ -275,6 +280,158 @@ Public Class cGBX
 
 
     End Function
+
+    Public Function SaveFile() As Boolean
+        Dim i As Integer
+        Dim JSON As New cJSON
+        Dim dic As Dictionary(Of String, Object)
+        Dim dic0 As Dictionary(Of String, Object)
+        Dim ls As List(Of Object)
+
+        If Not Cfg.JSON Then Return SaveFileOld()
+
+        'Header
+        dic = New Dictionary(Of String, Object)
+        dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
+        dic.Add("Date", Now.ToString)
+        dic.Add("AppVersion", VECTOvers)
+        dic.Add("FileVersion", FormatVersion)
+        JSON.Content.Add("Header", dic)
+
+        'Body
+        dic = New Dictionary(Of String, Object)
+
+        dic.Add("ModelName", ModelName)
+
+        dic.Add("Inertia", I_Getriebe)
+        dic.Add("TracInt", TracIntrSi)
+
+        ls = New List(Of Object)
+        For i = 0 To GetrI.Count - 1
+            dic0 = New Dictionary(Of String, Object)
+            dic0.Add("Ratio", GetrI(i))
+            If IsNumeric(Me.GetrMap(i, True)) Then
+                dic0.Add("Efficiency", GetrMaps(i).PathOrDummy)
+            Else
+                dic0.Add("LossMap", GetrMaps(i).PathOrDummy)
+            End If
+            dic0.Add("TCactive", IsTCgear(i))
+            ls.Add(dic0)
+        Next
+        dic.Add("Gears", ls)
+
+        dic.Add("ShiftPolygons", gs_file.PathOrDummy)
+        dic.Add("TqReserve", gs_TorqueResv)
+        dic.Add("SkipGears", gs_SkipGears)
+        dic.Add("ShiftTime", gs_ShiftTime)
+        dic.Add("EaryShiftUp", gs_ShiftInside)
+
+        dic.Add("StartTqReserve", gs_TorqueResvStart)
+        dic.Add("StartSpeed", gs_StartSpeed)
+        dic.Add("StartAcc", gs_StartAcc)
+
+        dic.Add("GearboxType", GearboxConv(gs_Type))
+
+        dic0 = New Dictionary(Of String, Object)
+        dic0.Add("Enabled", TCon)
+        dic0.Add("File", TC_file.PathOrDummy)
+        dic0.Add("RefRPM", TCrefrpm)
+        dic.Add("TorqueConverter", dic0)
+
+        JSON.Content.Add("Body", dic)
+
+        Return JSON.WriteFile(sFilePath)
+
+    End Function
+
+    Public Function ReadFile() As Boolean
+        Dim i As Integer
+        Dim MsgSrc As String
+        Dim JSON As New cJSON
+        Dim dic As Object
+
+        MsgSrc = "GBX/ReadFile"
+
+        'Flag for "File is not JSON" Warnings        
+        NoJSON = False
+
+        SetDefault()
+
+        If Cfg.JSON Then
+            If Not JSON.ReadFile(sFilePath) Then
+                NoJSON = True
+                Try
+                    Return ReadFileOld()
+                Catch ex As Exception
+                    Return False
+                End Try
+            End If
+        Else
+            Try
+                Return ReadFileOld()
+            Catch ex As Exception
+                Return False
+            End Try
+        End If
+
+        Try
+
+            FileVersion = JSON.Content("Header")("FileVersion")
+
+            ModelName = JSON.Content("Body")("ModelName")
+            I_Getriebe = JSON.Content("Body")("Inertia")
+            TracIntrSi = JSON.Content("Body")("TracInt")
+
+            i = -1
+            For Each dic In JSON.Content("Body")("Gears")
+                i += 1
+
+                GetrI.Add(dic("Ratio"))
+                GetrMaps.Add(New cSubPath)
+
+                If dic("Efficiency") Is Nothing Then
+                    GetrMaps(i).Init(MyPath, dic("LossMap"))
+                Else
+                    GetrMaps(i).Init(MyPath, dic("Efficiency"))
+                End If
+
+                IsTCgear.Add(dic("TCactive"))
+
+            Next
+
+            iganganz = GetrI.Count - 1
+
+            gs_file.Init(MyPath, JSON.Content("Body")("ShiftPolygons"))
+            gs_TorqueResv = JSON.Content("Body")("TqReserve")
+            gs_SkipGears = JSON.Content("Body")("SkipGears")
+            gs_ShiftTime = JSON.Content("Body")("ShiftTime")
+            gs_TorqueResvStart = JSON.Content("Body")("StartTqReserve")
+            gs_StartSpeed = JSON.Content("Body")("StartSpeed")
+            gs_StartAcc = JSON.Content("Body")("StartAcc")
+            gs_ShiftInside = JSON.Content("Body")("EaryShiftUp")
+
+            gs_Type = GearboxConv(JSON.Content("Body")("GearboxType").ToString)
+
+            If JSON.Content("Body")("TorqueConverter") Is Nothing Then
+                TCon = False
+            Else
+                TCon = JSON.Content("Body")("TorqueConverter")("Enabled")
+                TC_file.Init(MyPath, JSON.Content("Body")("TorqueConverter")("File"))
+                TCrefrpm = JSON.Content("Body")("TorqueConverter")("RefRPM")
+            End If
+
+        Catch ex As Exception
+            WorkerMsg(tMsgID.Err, "Failed to read VECTO file! " & ex.Message, MsgSrc)
+            Return False
+        End Try
+
+        Return True
+
+
+    End Function
+
+
+
 
     Public Function TCinit() As Boolean
         Dim file As New cFile_V3
@@ -726,6 +883,32 @@ lbInt:
             TC_file.Init(MyPath, value)
         End Set
     End Property
+
+    Public Function GearboxConv(ByVal Gearbox As tGearbox) As String
+        Select Case Gearbox
+            Case tGearbox.Manual
+                Return "MT"
+            Case tGearbox.Automatic
+                Return "AT"
+            Case tGearbox.SemiAutomatic
+                Return "AMT"
+            Case Else 'tGearbox.Custom
+                Return "Custom"
+        End Select
+    End Function
+
+    Public Function GearboxConv(ByVal Gearbox As String) As tGearbox
+        Select Case UCase(Trim(Gearbox))
+            Case "MT"
+                Return tGearbox.Manual
+            Case "AT"
+                Return tGearbox.Automatic
+            Case "AMT"
+                Return tGearbox.SemiAutomatic
+            Case Else  '"Custom"
+                Return tGearbox.Custom
+        End Select
+    End Function
 
 
 End Class

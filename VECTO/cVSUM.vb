@@ -32,7 +32,7 @@ Public Class cVSUM
 
         MsgSrc = "SUM/SetVals"
 
-        VehConfig = fAxleConfName(VEH.AxcleConf)
+        VehConfig = fAxleConfName(VEH.AxleConf)
         EffIdx = 0
 
         If Not MODdata.Em.EmDefComp.ContainsKey(tMapComp.FC) Then

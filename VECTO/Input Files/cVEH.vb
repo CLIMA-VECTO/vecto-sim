@@ -2,6 +2,9 @@
 
 Public Class cVEH
 
+    Private Const FormatVersion As String = "1.0"
+    Private FileVersion As String
+
     Private sFilePath As String
     Private MyPath As String
 
@@ -63,7 +66,9 @@ Public Class cVEH
     Public VehCat As tVehCat
     Public MassExtra As Single
     Public MassMax As Single
-    Public AxcleConf As tAxleConf
+    Public AxleConf As tAxleConf
+
+    Public NoJSON As Boolean
 
     Private MyFileList As List(Of String)
 
@@ -157,12 +162,11 @@ Public Class cVEH
         RtFile.Clear()
         RRCs.Clear()
         VehCat = tVehCat.Rigid
-        MassExtra = 0
         MassMax = 0
-        AxcleConf = tAxleConf.a4x2
+        AxleConf = tAxleConf.a4x2
     End Sub
 
-    Public Function ReadFile() As Boolean
+    Private Function ReadFileOld() As Boolean
         Dim file As cFile_V3
         Dim line() As String
         Dim MsgSrc As String
@@ -326,7 +330,7 @@ Public Class cVEH
             VehCat = CType(CInt(file.ReadLine(0)), tVehCat)
             MassExtra = CSng(file.ReadLine(0))
             MassMax = CSng(file.ReadLine(0))
-            AxcleConf = CType(CInt(file.ReadLine(0)), tAxleConf)
+            AxleConf = CType(CInt(file.ReadLine(0)), tAxleConf)
         Catch ex As Exception
             WorkerMsg(tMsgID.Err, ex.Message, MsgSrc)
             file.Close()
@@ -347,7 +351,7 @@ lbError:
 
     End Function
 
-    Public Function SaveFile() As Boolean
+    Private Function SaveFileOld() As Boolean
         Dim file As cFile_V3
         Dim sl As Single()
 
@@ -451,7 +455,7 @@ lbError:
         file.WriteLine("c MassMax")
         file.WriteLine(CStr(MassMax))
         file.WriteLine("c Axle Configuration")
-        file.WriteLine(CStr(CType(AxcleConf, Integer)))
+        file.WriteLine(CStr(CType(AxleConf, Integer)))
 
         file.Close()
         file = Nothing
@@ -459,6 +463,147 @@ lbError:
         Return True
 
     End Function
+
+
+    Public Function ReadFile() As Boolean
+        Dim JSON As New cJSON
+        Dim dic As Object
+
+        Dim MsgSrc As String
+
+
+        MsgSrc = "VEH/ReadFile"
+
+        'Flag for "File is not JSON" Warnings        
+        NoJSON = False
+
+        SetDefault()
+
+        If Cfg.JSON Then
+            If Not JSON.ReadFile(sFilePath) Then
+                NoJSON = True
+                Try
+                    Return ReadFileOld()
+                Catch ex As Exception
+                    Return False
+                End Try
+            End If
+        Else
+            Try
+                Return ReadFileOld()
+            Catch ex As Exception
+                Return False
+            End Try
+        End If
+
+        Try
+
+            FileVersion = JSON.Content("Header")("FileVersion")
+
+            siMass = JSON.Content("Body")("CurbWeight")
+            MassExtra = JSON.Content("Body")("CurbWeightExtra")
+            siLoading = JSON.Content("Body")("Loading")
+            MassMax = JSON.Content("Body")("MassMax")
+
+            siCd0 = JSON.Content("Body")("Cd")
+            siAquers = JSON.Content("Body")("CrossSecArea")
+
+            siI_wheels = JSON.Content("Body")("WheelsInertia")
+            siDreifen = JSON.Content("Body")("WheelsDiaEff")
+
+            CdMode = CdModeConv(JSON.Content("Body")("CdCorrMode").ToString)
+            If Not JSON.Content("Body")("CdCorrFile") Is Nothing Then CdFile.Init(MyPath, JSON.Content("Body")("CdCorrFile"))
+
+            If JSON.Content("Body")("Retarder") Is Nothing Then
+                RtType = tRtType.None
+            Else
+                RtType = RtTypeConv(JSON.Content("Body")("Retarder")("Type").ToString)
+                If Not JSON.Content("Body")("Retarder")("Ratio") Is Nothing Then RtRatio = JSON.Content("Body")("Retarder")("Ratio")
+                If Not JSON.Content("Body")("Retarder")("File") Is Nothing Then RtFile.Init(MyPath, JSON.Content("Body")("Retarder")("File"))
+            End If
+
+            AxleConf = AxleConfConv(JSON.Content("Body")("AxleConfig")("Type").ToString)
+            For Each dic In JSON.Content("Body")("AxleConfig")("Axles")
+                RRCs.Add(New Single() {dic("AxleWeightShare"), dic("RRCISO"), dic("FzISO")})
+            Next
+
+            VehCat = VehCatConv(JSON.Content("Body")("VehCat").ToString)
+
+        Catch ex As Exception
+            WorkerMsg(tMsgID.Err, "Failed to read Vehicle file! " & ex.Message, MsgSrc)
+            Return False
+        End Try
+
+        Return True
+
+
+
+    End Function
+
+    Public Function SaveFile() As Boolean
+        Dim sl As Single()
+        Dim dic As Dictionary(Of String, Object)
+        Dim dic0 As Dictionary(Of String, Object)
+        Dim ls As List(Of Dictionary(Of String, Object))
+        Dim JSON As New cJSON
+
+
+        If Not Cfg.JSON Then Return SaveFileOld()
+
+        'Header
+        dic = New Dictionary(Of String, Object)
+        dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
+        dic.Add("Date", Now.ToString)
+        dic.Add("AppVersion", VECTOvers)
+        dic.Add("FileVersion", FormatVersion)
+        JSON.Content.Add("Header", dic)
+
+        'Body
+        dic = New Dictionary(Of String, Object)
+
+        dic.Add("VehCat", VehCatConv(VehCat))
+
+        dic.Add("CurbWeight", siMass)
+        dic.Add("CurbWeightExtra", MassExtra)
+        dic.Add("Loading", siLoading)
+        dic.Add("MassMax", MassMax)
+
+        dic.Add("Cd", siCd0)
+        dic.Add("CrossSecArea", siAquers)
+
+        dic.Add("WheelsInertia", siI_wheels)
+        dic.Add("WheelsDiaEff", siDreifen)
+
+        dic.Add("CdCorrMode", CdModeConv(CdMode))
+        dic.Add("CdCorrFile", CdFile.PathOrDummy)
+
+        dic0 = New Dictionary(Of String, Object)
+        dic0.Add("Type", RtTypeConv(RtType))
+        dic0.Add("Ratio", RtRatio)
+        dic0.Add("File", RtFile.PathOrDummy)
+        dic.Add("Retarder", dic0)
+
+        ls = New List(Of Dictionary(Of String, Object))
+        For Each sl In RRCs
+            dic0 = New Dictionary(Of String, Object)
+            dic0.Add("AxleWeightShare", sl(0))
+            dic0.Add("RRCISO", sl(1))
+            dic0.Add("FzISO", sl(2))
+            ls.Add(dic0)
+        Next
+
+        dic0 = New Dictionary(Of String, Object)
+        dic0.Add("Type", AxleConfConv(AxleConf))
+        dic0.Add("Axles", ls)
+        dic.Add("AxleConfig", dic0)
+
+        JSON.Content.Add("Body", dic)
+
+        Return JSON.WriteFile(sFilePath)
+
+
+    End Function
+
 
     Public Function VehmodeInit() As Boolean
 
@@ -506,7 +651,7 @@ lbError:
 
         sumprod = 0
         For Each sl In RRCs
-            sumprod += sl(0) * (sl(1) * 100 * ((siLoading + siMass + MassExtra) * 9.81 * sl(0) / sl(2)) ^ (0.9 - 1))     'Beta=0.9
+            sumprod += sl(0) * (sl(1) * ((siLoading + siMass + MassExtra) * 9.81 * sl(0) / sl(2)) ^ (0.9 - 1))     'Beta=0.9
         Next
 
         siFr0 = sumprod / sumW
@@ -1511,6 +1656,132 @@ lbInt:
             MyPath = IO.Path.GetDirectoryName(sFilePath) & "\"
         End Set
     End Property
+
+
+
+    Public Function VehCatConv(ByVal VehCat As tVehCat) As String
+        Select Case VehCat
+            Case tVehCat.Citybus
+                Return "Citybus"
+            Case tVehCat.Coach
+                Return "Coach"
+            Case tVehCat.InterurbanBus
+                Return "InterurbanBus"
+            Case tVehCat.Rigid
+                Return "Rigid"
+            Case Else  'tVehCat.Tractor
+                Return "Tractor"
+        End Select
+    End Function
+
+    Public Function VehCatConv(ByVal VehCat As String) As tVehCat
+        Select Case UCase(Trim(VehCat))
+            Case "CITYBUS"
+                Return tVehCat.Citybus
+            Case "COACH"
+                Return tVehCat.Coach
+            Case "INTERURBANBUS"
+                Return tVehCat.InterurbanBus
+            Case "RIGID"
+                Return tVehCat.Rigid
+            Case Else  '"TRACTOR"
+                Return tVehCat.Tractor
+        End Select
+    End Function
+
+
+    Public Function CdModeConv(ByVal CdMode As tCdMode) As String
+        Select Case CdMode
+            Case tCdMode.CdOfBeta
+                Return "CdOfBeta"
+            Case tCdMode.CdOfV
+                Return "CdOfV"
+            Case Else  'tCdMode.ConstCd0
+                Return "Off"
+        End Select
+    End Function
+
+    Public Function CdModeConv(ByVal CdMode As String) As tCdMode
+        Select Case UCase(Trim(CdMode))
+            Case "CDOFBETA"
+                Return tCdMode.CdOfBeta
+            Case "CDOFV"
+                Return tCdMode.CdOfV
+            Case Else  '"OFF"
+                Return tCdMode.ConstCd0
+        End Select
+    End Function
+
+    Public Function AxleConfConv(ByVal AxleConf As tAxleConf) As String
+        Select Case AxleConf
+            Case tAxleConf.a4x2
+                Return "4x2"
+            Case tAxleConf.a4x4
+                Return "4x4"
+            Case tAxleConf.a6x2
+                Return "6x2"
+            Case tAxleConf.a6x4
+                Return "6x4"
+            Case tAxleConf.a6x6
+                Return "6x6"
+            Case tAxleConf.a8x2
+                Return "8x2"
+            Case tAxleConf.a8x4
+                Return "8x4"
+            Case tAxleConf.a8x6
+                Return "8x6"
+            Case Else  'tAxleConf.a8x8
+                Return "8x8"
+        End Select
+    End Function
+
+    Public Function AxleConfConv(ByVal AxleConf As String) As tAxleConf
+        Select Case UCase(Trim(AxleConf))
+            Case "4X2"
+                Return tAxleConf.a4x2
+            Case "4X4"
+                Return tAxleConf.a4x4
+            Case "6X2"
+                Return tAxleConf.a6x2
+            Case "6X4"
+                Return tAxleConf.a6x4
+            Case "6X6"
+                Return tAxleConf.a6x6
+            Case "8X2"
+                Return tAxleConf.a8x2
+            Case "8X4"
+                Return tAxleConf.a8x4
+            Case "8X6"
+                Return tAxleConf.a8x6
+            Case Else '"8X8"
+                Return tAxleConf.a8x8
+        End Select
+    End Function
+
+    Public Function RtTypeConv(ByVal RtType As tRtType) As String
+        Select Case RtType
+            Case tRtType.Primary
+                Return "Primary"
+            Case tRtType.Secondary
+                Return "Secondary"
+            Case Else 'tRtType.None
+                Return "None"
+        End Select
+    End Function
+
+    Public Function RtTypeConv(ByVal RtType As String) As tRtType
+        Select Case UCase(Trim(RtType))
+            Case "PRIMARY"
+                Return tRtType.Primary
+            Case "SECONDARY"
+                Return tRtType.Secondary
+            Case Else  '"NONE"
+                Return tRtType.None
+        End Select
+    End Function
+
+
+
 
 
 

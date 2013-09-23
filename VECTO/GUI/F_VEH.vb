@@ -218,7 +218,7 @@ Public Class F_VEH
 
         Me.TbMassMax.Text = VEH0.MassMax
         Me.TbMassExtra.Text = VEH0.MassExtra
-        Me.CbAxleConfig.SelectedIndex = CType(VEH0.AxcleConf, Integer)
+        Me.CbAxleConfig.SelectedIndex = CType(VEH0.AxleConf, Integer)
         'TODO: AUTO: Me.TbHDVclass.Text
         'AUTO: Me.TbLoadingMax.Text
 
@@ -229,6 +229,13 @@ Public Class F_VEH
         Me.Activate()
 
         Changed = False
+
+        If VEH0.NoJSON Then
+            If MsgBox("File is not in JSON format!" & vbCrLf & vbCrLf & "Convert now?" & vbCrLf & "(Backup will be created with '.ORIG' extension)", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                IO.File.Copy(file, file & ".ORIG", True)
+                SaveOrSaveAs(False)
+            End If
+        End If
 
     End Sub
 
@@ -291,7 +298,7 @@ Public Class F_VEH
 
         VEH0.MassMax = CSng(fTextboxToNumString(Me.TbMassMax.Text))
         VEH0.MassExtra = CSng(fTextboxToNumString(Me.TbMassExtra.Text))
-        VEH0.AxcleConf = CType(Me.CbAxleConfig.SelectedIndex, tAxleConf)
+        VEH0.AxleConf = CType(Me.CbAxleConfig.SelectedIndex, tAxleConf)
 
         '---------------------------------------------------------------------------------
 

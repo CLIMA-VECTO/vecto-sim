@@ -28,6 +28,8 @@
     Public FuelDens As Single
     Public CO2perFC As Single
 
+    Public JSON As Boolean
+
     Public FirstRun As Boolean
 
     Public Sub New()
@@ -114,13 +116,17 @@
         OpenCmd = line(0)
         If UBound(line) > 0 Then OpenCmdName = line(1)
 
-
         FuelDens = CSng(c.ReadLine(0))
         CO2perFC = CSng(c.ReadLine(0))
 
         If c.EndOfFile Then GoTo lbDone
 
         FirstRun = CBool(c.ReadLine(0))
+
+        If c.EndOfFile Then GoTo lbDone
+
+        JSON = CBool(c.ReadLine(0))
+
 
 
 lbDone:
@@ -133,100 +139,6 @@ lbDone:
 lbEr:
         c.Close()
         Return False
-
-    End Function
-
-    Private Function ReadOldFormat() As Boolean
-        Dim c As New cFile_V3
-        Dim line As String = ""
-        Dim x As Short
-
-        'Config.txt
-        'Line      Variable        Type         Description
-        '(01)       WorkDPath       String      WorkDir
-        '(02)       LastMode        Short      Last used mode (equivalent CBoxMODE.SelectedIndex)
-        '(03)       IntpV2          Boolean     New interpolator to use
-        '(04)       nnormEngStop    Single      Stop engine if under this Revolutions
-        '(05)       TEMpath         String      TEM_Data path
-        '(06)       LastTEM         String      Last TEM file -not in Options Form!!!!
-        '(07)       TEMexl          Boolean     Open TEM in Excel  -not in Options Form!!!
-        '(08)       EAAvInt         Short       Analysis intervals in seconds. If 0: Ask for Value
-        '(09)       ModOut          Boolean     Dump Modal
-        '(10)       WegKorJa        Boolean     Wegkorrektur damit bei Geschw. Reduktion Zyklus nicht kürzer wird |@@| 10)       WegKorJa        Boolean     Path-correction in so speed. Reduction cycle is not shorter
-        '(11)       GnVorgab        Boolean     Gear-per- Revolutions
-        '(12)       LogSize         Int16       Maximum Log-size [MiB]
-        '(13)       FZPsort         Boolean     FZP sortieren (früher Standard da VISSIM die .fzp nach Sekunden sortiert ausgibt) |@@| 13)       FZPsort         Boolean     FZP sort (formerly standard since the VISSIM. Fzp sorted according seconds) outputs
-        '(14)       FZPsortExp      Boolean     Export FZP Sorted
-        '(15)       BATCHoutpath    Boolean     Output path for BATCH mode:   <WORKDIR>, <GENPATH> or path
-        '(16)       BATCHoutSubD    Boolean     Dump-BATCH in Subfolders (per .gen File)
-        '(17)       AirDensity      Single      Air-density
-        '(18)       FinalEmOnly     Boolean     Dump only Final Emission
-        '(19)       FCcorrection    Boolean     FC-Correction in BATCH-mode
-
-        If Not IO.File.Exists(MyConfPath & "settings.txt") Then
-            GUImsg(tMsgID.Err, "Config-file not found! Using default settings.")
-            Return False
-        End If
-
-        c.OpenRead(MyConfPath & "settings.txt", "+hugo+")
-
-        For x = 1 To 19
-            If c.EndOfFile Then GoTo lbEnd
-            line = c.ReadLine(0)
-            Select Case x
-                Case 1
-                    sWorkDPath = Trim(line)
-                    If UCase(sWorkDPath) = sKey.HomePath Then
-                        sWorkDPath = MyAppPath
-                        WorkDirHome = True
-                    End If
-                Case 2
-                    LastMode = line 'Früher GenLpath = line
-                Case 3
-                    'Previously: IntpV2 = CBool(line)
-                Case 4
-                    nnormEngStop = CSng(line)
-                Case 5
-                    TEMpath = line
-                Case 6
-                    LastTEM = line
-                Case 7
-                    TEMexl = CBool(line)
-                Case 8
-                    EAAvInt = Val(line)
-                Case 9
-                    ModOut = CBool(line)
-                Case 10
-                    WegKorJa = CBool(line)
-                Case 11
-                    GnVorgab = CBool(line)
-                Case 12
-                    If IsNumeric(line) Then LogSize = line
-                Case 13
-                    FZPsort = CBool(line)
-                Case 14
-                    FZPsortExp = CBool(line)
-                Case 15
-                    BATCHoutpath = Trim(line)
-                Case 16
-                    BATCHoutSubD = CBool(line)
-                Case 17
-                    AirDensity = CSng(line)
-                Case 18
-                    FinalEmOnly = CBool(line)
-                Case 19
-                    FCcorrection = CBool(line)
-            End Select
-        Next
-        '------------------------------------------------
-        GoTo lbDone
-lbEnd:
-        GUImsg(tMsgID.Warn, "Missing parameters in Configuration File! Using default settings.")
-lbDone:
-        c.Close()
-        c = Nothing
-
-        Return True
 
     End Function
 
@@ -252,13 +164,14 @@ lbDone:
         OpenCmd = "notepad"
         OpenCmdName = "Notepad"
 
-
         FuelDens = 0.835
         CO2perFC = 3.153
 
         WorkDirHome = False
 
         FirstRun = True
+
+        JSON = True
 
     End Sub
 
@@ -320,6 +233,9 @@ lbDone:
 
         c.WriteLine("c First Run (Show Quick Start Guide Prompt)")
         c.WriteLine(Math.Abs(CInt(FirstRun)))
+
+        c.WriteLine("c In- and Output in JSON format")
+        c.WriteLine(Math.Abs(CInt(JSON)))
 
 
         c.Close()

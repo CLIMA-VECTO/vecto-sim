@@ -36,7 +36,7 @@ Module M_Lese
             Return False
         End Try
 
-        If GEN.NoJSON Then WorkerMsg(tMsgID.Warn, "VECTO file format is outdated! CLICK HERE to open and save file in Editor to update to current format!", MsgSrc, "<GUI>" & GenFile)
+        If GEN.NoJSON Then WorkerMsg(tMsgID.Warn, "VECTO file format is outdated! CLICK HERE to convert to current format!", MsgSrc, "<GUI>" & GenFile)
 
 
         'VECTO: Defaultwerte für Parameter die nicht mehr in der .GEN/.VECTO sind werden beim Einlesen über SetDefault belegt. |@@| VECTO: Default values for the parameters are no longer in GEN/.VECTO but are allocated when Read about SetDefault.
@@ -73,6 +73,9 @@ Module M_Lese
             VEH.lhinunter = (VEH.nLeerl / VEH.nNenn) + VEH.lhinunter * (1 - (VEH.nLeerl / VEH.nNenn))
         End If
 
+        If VEH.NoJSON Then WorkerMsg(tMsgID.Warn, "Vehicle file format is outdated! CLICK HERE to convert to current format!", MsgSrc, "<GUI>" & GEN.PathVEH)
+
+
         '-----------------------------    ~ENG~    -----------------------------
         ENG = New cENG
         ENG.FilePath = GEN.PathENG
@@ -82,6 +85,8 @@ Module M_Lese
             WorkerMsg(tMsgID.Err, "File read error! (" & GEN.PathENG & ")", MsgSrc, GEN.PathENG)
             Return False
         End Try
+
+        If ENG.NoJSON Then WorkerMsg(tMsgID.Warn, "Engine file format is outdated! CLICK HERE to convert to current format!", MsgSrc, "<GUI>" & GEN.PathENG)
 
 
         '-----------------------------    ~GBX~    -----------------------------
@@ -96,6 +101,9 @@ Module M_Lese
                 Return False
             End Try
         End If
+
+        If GBX.NoJSON Then WorkerMsg(tMsgID.Warn, "Gearbox file format is outdated! CLICK HERE to convert to current format!", MsgSrc, "<GUI>" & GEN.PathGBX)
+
 
         '-----------------------------    VECTO    -----------------------------
         'GEN => VEH

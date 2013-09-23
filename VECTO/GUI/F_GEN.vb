@@ -700,15 +700,8 @@ Public Class F_GEN
         Me.TbAlookahead.Text = CStr(Gfile.a_lookahead)
         Me.TbVminLA.Text = CStr(Gfile.vMinLA)
 
-        '-------------------------------------------------------------
-
-
-        If Gfile.NoJSON Then MsgBox("File format is outdated! Save file again to update to current format!")
-
 
         '-------------------------------------------------------------
-
-        Gfile = Nothing
 
         Genfile = file
 
@@ -719,6 +712,16 @@ Public Class F_GEN
         Me.Text = Mid(file, x + 1, Len(file) - x)
         Changed = False
         Me.ToolStripStatusLabelGEN.Text = ""    'file & " opened."
+
+
+        '-------------------------------------------------------------
+
+        If Gfile.NoJSON Then
+            If MsgBox("File is not in JSON format!" & vbCrLf & vbCrLf & "Convert now?" & vbCrLf & "(Backup will be created with '.ORIG' extension)", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+                IO.File.Copy(Genfile, Genfile & ".ORIG", True)
+                Save()
+            End If
+        End If
 
     End Sub
 

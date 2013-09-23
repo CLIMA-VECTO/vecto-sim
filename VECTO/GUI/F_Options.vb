@@ -24,6 +24,7 @@
         Me.TbOpenCmdName.Text = Cfg.OpenCmdName
         Me.TbFuelDens.Text = Cfg.FuelDens.ToString
         Me.TbCO2toFC.Text = Cfg.CO2perFC.ToString
+        Me.CbJSON.Checked = Cfg.JSON
     End Sub
 
     'Reset Button
@@ -47,6 +48,7 @@
         Cfg.OpenCmdName = Me.TbOpenCmdName.Text
         Cfg.FuelDens = CSng(Me.TbFuelDens.Text)
         Cfg.CO2perFC = CSng(Me.TbCO2toFC.Text)
+        Cfg.JSON = Me.CbJSON.Checked
         '----------------------------------------------------
 
         Call Cfg.ConfigSAVE()
