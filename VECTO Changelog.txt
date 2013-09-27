@@ -1,10 +1,6 @@
 VECTO ?.? (future release) TODO
 - User Manual:
-	Engine/FLD Editor
-	New Eco Roll
-	GBX
-	<DRAG>
-	StStDelay
+	JSON
 
 
 VECTO x.x (current source - next release)
@@ -29,6 +25,7 @@ VECTO x.x (current source - next release)
 - Bugfix: Distance Correction didn't work right with Look Ahead Coasting. Now distance error is acceptable but at the cost of partly interrupted coasting phases. Should be revised in future updates.
 - Engine Only Mode: Engine motoring points can be defined explicitly in load cycle with "<DRAG>"
 - When speed is under 5km/h and engine in motoring operating then gearbox shifts to Neutral
+- Load-dependent rolling resistance coefficient
 - Start-Stop activation delay time can be defined in job file
 - File signing features added:
 	o After each calculation a signature file (.vsig) is created which includes signatures for all input and result files. The file itself is also signed.

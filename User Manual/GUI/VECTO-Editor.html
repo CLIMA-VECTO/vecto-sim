@@ -1,6 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>VECTO Editor - VECTO User Manual</title></head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>VECTO Editor - VECTO User Manual</title>
+
+</head>
 <body>
 <map name="linkmap"><area shape="rect" coords="10,34,30,53&quot;" href="#new" title="New File"><area shape="rect" coords="33,34,52,53&quot;" href="#open" title="Open File"><area shape="rect" coords="57,34,77,53&quot;" href="#save" title="Save"><area shape="rect" coords="85,34,102,53&quot;" href="#saveas" title="Save As..."><area shape="rect" coords="113,33,130,54&quot;" href="#sendto" title="Send current file to Job List in Main Form"><area shape="rect" coords="24,117,138,136&quot;" href="#engonly"><area shape="rect" coords="111,144,209,165&quot;" href="VECTO-Editor_Driver.html"><area shape="rect" coords="18,172,95,192&quot;" href="#veh"><area shape="rect" coords="19,201,94,220&quot;" href="#eng"><area shape="rect" coords="18,228,96,249&quot;" href="#gbx"><area shape="rect" coords="22,258,682,410&quot;" href="#aux"><area shape="rect" coords="531,640,607,663&quot;" href="#ok"><area shape="rect" coords="617,642,690,663&quot;" href="#cancel"><area shape="rect" coords="22,424,684,605&quot;" href="#cycles"><area shape="rect" coords="653,172,683,250&quot;" href="#browse"></map>
 <table style="width: 100%; height: 54px; text-align: left; margin-left: auto; margin-right: auto;" border="0" cellpadding="2" cellspacing="2">
@@ -59,10 +61,33 @@ be sent to the Job List automatically when saved.<br>
 </div>
 </div>
 <div style="margin-left: 40px;"><br>
-<a name="engonly"></a> <span style="font-weight: bold;">Engine Only Mode</span><br><div style="margin-left: 40px;">This
+<a name="engonly"></a> <span style="font-weight: bold;">Engine Only Mode</span><br>
+<div style="margin-left: 40px;">This
 mode is used to calculate fuel consumption from a given load cycle
 (engine speed and torque). Vehicle (.vveh), Gearbox (.vgbx) and
-Auxiliary (.vaux) files are not required. <br>The <a href="../fileformat/VDRI.html">driving cylce (.vdri)</a> must contain:<br><ul><li>Engine speed: header: &lt;n&gt;</li><li>Engine torque &lt;Me&gt; <span style="text-decoration: underline; font-weight: bold;">or</span> engine power &lt;Pe&gt; at clutch. <span style="font-weight: bold; color: red;">Note that VECTO adds engine inertia power demand!</span></li><li>[Optional] Additional power demand (aux) &lt;Padd&gt;</li></ul></div><span style="font-weight: bold;">Driver Tab</span><br>
+Auxiliary (.vaux) files are not required. <br>
+The <a href="../fileformat/VDRI.html">driving cylce
+(.vdri)</a> must contain:<br>
+<ul>
+<li>Engine speed: header: &lt;n&gt;</li>
+<li>Engine torque &lt;Me&gt; <span style="text-decoration: underline; font-weight: bold;">or</span>
+engine power &lt;Pe&gt; at clutch. To explicitly define <span style="text-decoration: underline;">motoring operation</span>
+use the&nbsp;<span style="font-weight: bold;">&lt;DRAG&gt;</span>
+keyword, see below. VECTO replaces the keyword with the motoring
+torque/power from the <a href="ENG-Editor.html#fld">.vfld
+file</a> during calculation.<span style="font-weight: bold; color: red;"></span></li>
+<li>[Optional] Additional power demand (aux)
+&lt;Padd&gt;</li>
+</ul>
+<span style="font-weight: bold; color: red;">Note that
+VECTO adds the engine's inertia to the given power demand!<br>
+<br>
+</span><span style="font-weight: bold;">Example
+.vdri cycle:</span><br>
+<img style="width: 541px; height: 319px;" alt="" src="pics/VECTO-EngOnlyCycle.PNG"><br>
+<br>
+</div>
+<span style="font-weight: bold;">Driver Tab</span><br>
 <div style="margin-left: 40px;">Open <a href="VECTO-Editor_Driver.html">Driver Tab</a></div>
 </div>
 <br>
@@ -77,7 +102,7 @@ Editor</a></span><br>
 <span style="font-weight: bold;">Open <a href="GBX-Editor.html">Gearbox Editor</a></span><br>
 <br>
 &nbsp;<a name="browse"></a>
-<span style="font-weight: bold;">Browse for
+<span style="font-weight: bold;"><img style="width: 28px; height: 21px;" alt="" src="../pics/misc/browse.png"> Browse for
 vehicle/engine/gearbox files</span><br>
 <div style="margin-left: 40px;"><br>
 <br>
@@ -99,7 +124,8 @@ The .vaux format is described <a href="VECTO-Editor_Aux.html#file">here</a>.<br>
 <div style="margin-left: 40px;"><span style="font-weight: bold;"><a name="cycles"></a>Cycles</span><br>
 <div style="margin-left: 40px;">List of cycles used for
 calculation.<br>
-<span style="font-weight: bold;">Double-click</span> an entry to open the file (see <a href="settings.html#opencmd">File
+<span style="font-weight: bold;">Double-click</span>
+an entry to open the file (see <a href="settings.html#opencmd">File
 Open Command</a>).<br>
 <span style="font-weight: bold;">Click</span>
 selected items to edit file paths.<br>

@@ -110,13 +110,13 @@ Wind Correction</span> (see below).<br>
 <br><br>
 <span style="font-weight: bold;"><a name="axl"></a>Axles
 / Wheels</span><br>
-<div style="margin-left: 40px;">Rolling Resistance
-Coefficients (RRC) are configured per axle. <span style="font-weight: bold;">Max. axle weight [kg]</span>
-is used to weighten each RRC value. RRC is normalized (Resistance Force
-[N] / (m [kg] * g [m/s²]) with m being the sum of Curb Weight Vehicle,
-Curb Weight Extra Trailer/Body and Loading).<br>Use the <img style="width: 16px; height: 16px;" alt="add" src="../pics/icons/plus-circle-icon.png"> and <img style="width: 16px; height: 16px;" alt="remove" src="../pics/icons/minus-circle-icon.png"> buttons to add or
+<div style="margin-left: 40px;">Use the <img style="width: 16px; height: 16px;" alt="add" src="../pics/icons/plus-circle-icon.png"> and <img style="width: 16px; height: 16px;" alt="remove" src="../pics/icons/minus-circle-icon.png"> buttons to add or
 remove axles form the vehicle. Doubleclick entries to edit existing
-axle configurations.<br>
+axle configurations.<br><br>Rolling Resistance
+Coefficients (RRC<sub>ISO</sub>) are configured per axle. <span style="font-weight: bold;">Relative axle load [-]</span>
+is used to weighten each RRC<sub>ISO</sub> value. RRC<sub>ISO</sub> is normalized (Resistance Force
+[N] / (m [kg] * g [m/s²]) with m being the sum of Curb Weight Vehicle,
+Curb Weight Extra Trailer/Body and Loading).<br>The total RRC value&nbsp;depends on the vehicle loading and is calculated using the following formula:<br><img style="width: 378px; height: 71px;" alt="" src="pics/VEH-RRC_formula.png"><br>with:<br><div style="margin-left: 40px;"><br><table style="text-align: left; width: 909px; height: 195px;" border="0" cellpadding="2" cellspacing="2"><tbody><tr><td style="width: 76px;">RRC</td><td style="width: 75px;">[-]</td><td style="width: 539px;">...Total rolling resistance coefficient used for calculation</td><td>[calculated]</td></tr><tr><td>s<sub>(i)</sub></td><td>[-]</td><td>...Relative axle load</td><td>[user input]</td></tr><tr><td style="width: 76px;">RRC<sub>ISO(i)</sub></td><td style="width: 75px;">[-]</td><td style="width: 539px;">...Tyre RRC according to ISO 28580</td><td>[user input]</td></tr><tr><td style="width: 76px;">m<sub></sub></td><td style="width: 75px;">[N]</td><td style="width: 539px;">...Vehicle mass plus loading (see <a href="#load">Weight / Loading</a>)</td><td>[calculated]</td></tr><tr><td>g</td><td>[m/s²]</td><td>...Earth gravity acceleration (constant = 9.81)</td><td>[constant model parameter]</td></tr><tr><td>w<sub>(i)</sub></td><td>[-]</td><td>...Number of tyres (4 if Twin Tyres, else 2)</td><td>[user input]</td></tr><tr><td style="width: 76px;">F<sub>zISO(i)</sub></td><td style="width: 75px;">[N]</td><td style="width: 539px;">...Tyre test load according to ISO 28580 (85% of max. load capacity)</td><td>[user input]</td></tr><tr><td style="width: 76px;"><span style="font-size: 12pt; font-family: &quot;Times New Roman&quot;,&quot;serif&quot;;" lang="DE-AT">&#946;</span></td><td style="width: 75px;">[-]</td><td style="width: 539px;">...Constant parameter = 0.9</td><td>[constant model parameter]</td></tr></tbody></table></div><br>For each axle the parameters <span style="font-weight: bold;">Relative axle load</span>, <span style="font-weight: bold;">RRC</span><sub style="font-weight: bold;">ISO</sub> and <span style="font-weight: bold;">F</span><sub style="font-weight: bold;">zISO</sub> have to be defined. Axles with twin tyres have to be marked using the respective checkbox.<br>
 <span style="font-weight: bold;"></span></div>
 <br><br>
 <span style="font-weight: bold;"><a name="inertia"></a>Wheels

@@ -38,7 +38,7 @@ Partial Class F_VEH_Axle
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.Label11 = New System.Windows.Forms.Label()
+        Me.CbTwinT = New System.Windows.Forms.CheckBox()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -79,17 +79,17 @@ Partial Class F_VEH_Axle
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(22, 15)
+        Me.Label1.Location = New System.Drawing.Point(27, 14)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(72, 13)
+        Me.Label1.Size = New System.Drawing.Size(96, 13)
         Me.Label1.TabIndex = 1
-        Me.Label1.Text = "Weight Share"
+        Me.Label1.Text = "Relative Axle Load"
         '
         'TbWeight
         '
-        Me.TbWeight.Location = New System.Drawing.Point(98, 12)
+        Me.TbWeight.Location = New System.Drawing.Point(129, 12)
         Me.TbWeight.Name = "TbWeight"
-        Me.TbWeight.Size = New System.Drawing.Size(84, 20)
+        Me.TbWeight.Size = New System.Drawing.Size(53, 20)
         Me.TbWeight.TabIndex = 0
         '
         'Label2
@@ -104,7 +104,7 @@ Partial Class F_VEH_Axle
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(41, 41)
+        Me.Label3.Location = New System.Drawing.Point(41, 57)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(51, 13)
         Me.Label3.TabIndex = 1
@@ -113,7 +113,7 @@ Partial Class F_VEH_Axle
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(188, 41)
+        Me.Label4.Location = New System.Drawing.Point(188, 57)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(16, 13)
         Me.Label4.TabIndex = 1
@@ -121,7 +121,7 @@ Partial Class F_VEH_Axle
         '
         'TbRRC
         '
-        Me.TbRRC.Location = New System.Drawing.Point(98, 38)
+        Me.TbRRC.Location = New System.Drawing.Point(98, 54)
         Me.TbRRC.Name = "TbRRC"
         Me.TbRRC.Size = New System.Drawing.Size(84, 20)
         Me.TbRRC.TabIndex = 5
@@ -129,7 +129,7 @@ Partial Class F_VEH_Axle
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(226, 41)
+        Me.Label5.Location = New System.Drawing.Point(226, 57)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(39, 13)
         Me.Label5.TabIndex = 1
@@ -138,7 +138,7 @@ Partial Class F_VEH_Axle
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(361, 41)
+        Me.Label6.Location = New System.Drawing.Point(361, 57)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(21, 13)
         Me.Label6.TabIndex = 1
@@ -146,7 +146,7 @@ Partial Class F_VEH_Axle
         '
         'TbFzISO
         '
-        Me.TbFzISO.Location = New System.Drawing.Point(271, 38)
+        Me.TbFzISO.Location = New System.Drawing.Point(271, 54)
         Me.TbFzISO.Name = "TbFzISO"
         Me.TbFzISO.Size = New System.Drawing.Size(84, 20)
         Me.TbFzISO.TabIndex = 5
@@ -155,7 +155,7 @@ Partial Class F_VEH_Axle
         '
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(25, 100)
+        Me.Label7.Location = New System.Drawing.Point(25, 120)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(49, 13)
         Me.Label7.TabIndex = 1
@@ -165,7 +165,7 @@ Partial Class F_VEH_Axle
         '
         Me.Label8.AutoSize = True
         Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(12, 77)
+        Me.Label8.Location = New System.Drawing.Point(12, 97)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(62, 13)
         Me.Label8.TabIndex = 1
@@ -174,7 +174,7 @@ Partial Class F_VEH_Axle
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(80, 77)
+        Me.Label9.Location = New System.Drawing.Point(80, 97)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(146, 13)
         Me.Label9.TabIndex = 1
@@ -183,21 +183,21 @@ Partial Class F_VEH_Axle
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(80, 100)
+        Me.Label10.Location = New System.Drawing.Point(80, 120)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(299, 13)
+        Me.Label10.Size = New System.Drawing.Size(167, 26)
         Me.Label10.TabIndex = 1
-        Me.Label10.Text = "Test load according to ISO 28580 (85% of max. load capacity)"
+        Me.Label10.Text = "Test load according to ISO 28580" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(85% of max. tyre load capacity)"
         '
-        'Label11
+        'CbTwinT
         '
-        Me.Label11.AutoSize = True
-        Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.Location = New System.Drawing.Point(12, 131)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(215, 13)
-        Me.Label11.TabIndex = 1
-        Me.Label11.Text = "All values are per axle, NOT per tire!"
+        Me.CbTwinT.AutoSize = True
+        Me.CbTwinT.Location = New System.Drawing.Point(271, 14)
+        Me.CbTwinT.Name = "CbTwinT"
+        Me.CbTwinT.Size = New System.Drawing.Size(78, 17)
+        Me.CbTwinT.TabIndex = 11
+        Me.CbTwinT.Text = "Twin Tyres"
+        Me.CbTwinT.UseVisualStyleBackColor = True
         '
         'F_VEH_Axle
         '
@@ -206,11 +206,11 @@ Partial Class F_VEH_Axle
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
         Me.ClientSize = New System.Drawing.Size(390, 205)
+        Me.Controls.Add(Me.CbTwinT)
         Me.Controls.Add(Me.TbFzISO)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.TbRRC)
         Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.Label5)
@@ -249,6 +249,6 @@ Partial Class F_VEH_Axle
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents Label10 As System.Windows.Forms.Label
-    Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents CbTwinT As System.Windows.Forms.CheckBox
 
 End Class

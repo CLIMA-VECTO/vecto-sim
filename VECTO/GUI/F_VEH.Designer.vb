@@ -100,6 +100,7 @@ Partial Class F_VEH
         Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.GroupBox6.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
@@ -571,7 +572,7 @@ Partial Class F_VEH
         Me.LvRRC.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LvRRC.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader7, Me.ColumnHeader8, Me.ColumnHeader9, Me.ColumnHeader1})
+        Me.LvRRC.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader7, Me.ColumnHeader8, Me.ColumnHeader2, Me.ColumnHeader9, Me.ColumnHeader1})
         Me.LvRRC.FullRowSelect = True
         Me.LvRRC.GridLines = True
         Me.LvRRC.HideSelection = False
@@ -591,18 +592,18 @@ Partial Class F_VEH
         '
         'ColumnHeader8
         '
-        Me.ColumnHeader8.Text = "Weight share [-]"
-        Me.ColumnHeader8.Width = 94
+        Me.ColumnHeader8.Text = "Rel. load"
+        Me.ColumnHeader8.Width = 62
         '
         'ColumnHeader9
         '
-        Me.ColumnHeader9.Text = "RRC [-]"
-        Me.ColumnHeader9.Width = 55
+        Me.ColumnHeader9.Text = "RRC"
+        Me.ColumnHeader9.Width = 56
         '
         'ColumnHeader1
         '
-        Me.ColumnHeader1.Text = "Fz ISO [N]"
-        Me.ColumnHeader1.Width = 65
+        Me.ColumnHeader1.Text = "Fz ISO"
+        Me.ColumnHeader1.Width = 47
         '
         'ButAxlAdd
         '
@@ -812,6 +813,11 @@ Partial Class F_VEH
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
+        'ColumnHeader2
+        '
+        Me.ColumnHeader2.Text = "Twin T."
+        Me.ColumnHeader2.Width = 51
+        '
         'F_VEH
         '
         Me.AcceptButton = Me.ButOK
@@ -939,4 +945,5 @@ Partial Class F_VEH
     Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents BtCdFileOpen As System.Windows.Forms.Button
     Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
 End Class

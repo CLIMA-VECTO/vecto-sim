@@ -211,8 +211,13 @@ Public Class F_VEH
             lvi = New ListViewItem
             lvi.SubItems(0).Text = i.ToString
             lvi.SubItems.Add(sl(0))
-            lvi.SubItems.Add(sl(1))
+            If CBool(sl(1)) Then
+                lvi.SubItems.Add("yes")
+            Else
+                lvi.SubItems.Add("no")
+            End If
             lvi.SubItems.Add(sl(2))
+            lvi.SubItems.Add(sl(3))
             LvRRC.Items.Add(lvi)
         Next
 
@@ -293,7 +298,7 @@ Public Class F_VEH
         VEH0.VehCat = CType(Me.CbCat.SelectedIndex, tVehCat)
 
         For Each LV0 In LvRRC.Items
-            VEH0.RRCs.Add(New Single() {CSng(LV0.SubItems(1).Text), CSng(LV0.SubItems(2).Text), CSng(LV0.SubItems(3).Text)})
+            VEH0.RRCs.Add(New Single() {CSng(LV0.SubItems(1).Text), CSng(LV0.SubItems(2).Text = "yes"), CSng(LV0.SubItems(3).Text), CSng(LV0.SubItems(4).Text)})
         Next
 
         VEH0.MassMax = CSng(fTextboxToNumString(Me.TbMassMax.Text))
@@ -599,6 +604,11 @@ Public Class F_VEH
 
             lv0.SubItems(0).Text = Me.LvRRC.Items.Count + 1
             lv0.SubItems.Add(Trim(dlog.TbWeight.Text))
+            If dlog.CbTwinT.Checked Then
+                lv0.SubItems.Add("yes")
+            Else
+                lv0.SubItems.Add("no")
+            End If
             lv0.SubItems.Add(Trim(dlog.TbRRC.Text))
             lv0.SubItems.Add(Trim(dlog.TbFzISO.Text))
 
@@ -669,13 +679,20 @@ Public Class F_VEH
         LV0 = LvRRC.SelectedItems(0)
 
         dlog.TbWeight.Text = LV0.SubItems(1).Text
-        dlog.TbRRC.Text = LV0.SubItems(2).Text
-        dlog.TbFzISO.Text = LV0.SubItems(3).Text
+        dlog.CbTwinT.Checked = (LV0.SubItems(2).Text = "yes")
+        dlog.TbRRC.Text = LV0.SubItems(3).Text
+        dlog.TbFzISO.Text = LV0.SubItems(4).Text
 
         If dlog.ShowDialog = Windows.Forms.DialogResult.OK Then
             LV0.SubItems(1).Text = dlog.TbWeight.Text
-            LV0.SubItems(2).Text = dlog.TbRRC.Text
-            LV0.SubItems(3).Text = dlog.TbFzISO.Text
+            If dlog.CbTwinT.Checked Then
+                LV0.SubItems(2).Text = "yes"
+            Else
+                LV0.SubItems(2).Text = "no"
+            End If
+            LV0.SubItems(3).Text = dlog.TbRRC.Text
+            LV0.SubItems(4).Text = dlog.TbFzISO.Text
+         
 
             Change()
 

@@ -310,10 +310,10 @@ Public Class cVEH
             If line(0) = sKey.Break Then Exit Do
 
             Try
-                If UBound(line) > 1 Then
-                    RRCs.Add(New Single() {CSng(line(0)), CSng(line(1)), CSng(line(2))})
+                If UBound(line) > 2 Then
+                    RRCs.Add(New Single() {CSng(line(0)), CSng(line(1)), CSng(line(2)), CSng(line(3))})
                 Else
-                    RRCs.Add(New Single() {0.0, CSng(line(1)), 0.0})
+                    RRCs.Add(New Single() {0.0, CSng(False), CSng(line(1)), 0.0})
                 End If
             Catch ex As Exception
                 WorkerMsg(tMsgID.Err, ex.Message, MsgSrc)
@@ -443,7 +443,7 @@ lbError:
         file.WriteLine("c Axle configurations")
         file.WriteLine("c Axle weight share [-], RRC [N/N],Fz ISO [N]")
         For Each sl In RRCs
-            file.WriteLine(CStr(sl(0)), CStr(sl(1)), CStr(sl(2)))
+            file.WriteLine(CStr(sl(0)), CStr(sl(1)), CStr(sl(2)), CStr(sl(3)))
         Next
 
         file.WriteLine(sKey.Break)
@@ -524,7 +524,7 @@ lbError:
 
             AxleConf = AxleConfConv(JSON.Content("Body")("AxleConfig")("Type").ToString)
             For Each dic In JSON.Content("Body")("AxleConfig")("Axles")
-                RRCs.Add(New Single() {dic("AxleWeightShare"), dic("RRCISO"), dic("FzISO")})
+                RRCs.Add(New Single() {dic("AxleWeightShare"), CSng(dic("TwinTyres")), dic("RRCISO"), dic("FzISO")})
             Next
 
             VehCat = VehCatConv(JSON.Content("Body")("VehCat").ToString)
@@ -587,8 +587,9 @@ lbError:
         For Each sl In RRCs
             dic0 = New Dictionary(Of String, Object)
             dic0.Add("AxleWeightShare", sl(0))
-            dic0.Add("RRCISO", sl(1))
-            dic0.Add("FzISO", sl(2))
+            dic0.Add("TwinTyres", CBool(sl(1)))
+            dic0.Add("RRCISO", sl(2))
+            dic0.Add("FzISO", sl(3))
             ls.Add(dic0)
         Next
 
@@ -609,8 +610,9 @@ lbError:
 
         Dim MsgSrc As String
         Dim sl As Single()
-        Dim sumW As Double
-        Dim sumprod As Double
+        Dim ShareSum As Double
+        Dim RRC As Double
+        Dim nrwheels As Single
 
 
         MsgSrc = "VEH/Init"
@@ -634,27 +636,32 @@ lbError:
 
         'Fr0
         If RRCs.Count < 2 Then
-            WorkerMsg(tMsgID.Err, "At least 2 axle configurations are required!", MsgSrc)
+            WorkerMsg(tMsgID.Err, "At least 2 axle configurations are required!", MsgSrc, "<GUI>" & sFilePath)
             Return False
         End If
 
         'Check if sum=100%
-        sumW = 0
+        ShareSum = 0
         For Each sl In RRCs
-            sumW += sl(0)
+            ShareSum += sl(0)
         Next
 
-        If Math.Abs(sumW - 1) > 0.0001 Then
-            WorkerMsg(tMsgID.Err, "Sum of axle weight shares is not 100%!", MsgSrc, "<GUI>" & sFilePath)
+        If Math.Abs(ShareSum - 1) > 0.0001 Then
+            WorkerMsg(tMsgID.Err, "Sum of relative axle shares is not 100%!", MsgSrc, "<GUI>" & sFilePath)
             Return False
         End If
 
-        sumprod = 0
+        RRC = 0
         For Each sl In RRCs
-            sumprod += sl(0) * (sl(1) * ((siLoading + siMass + MassExtra) * 9.81 * sl(0) / sl(2)) ^ (0.9 - 1))     'Beta=0.9
+            If CBool(sl(1)) Then
+                nrwheels = 4
+            Else
+                nrwheels = 2
+            End If
+            RRC += sl(0) * (sl(2) * ((siLoading + siMass + MassExtra) * sl(0) * 9.81 / (sl(3) * nrwheels)) ^ (0.9 - 1))     'Beta=0.9
         Next
 
-        siFr0 = sumprod / sumW
+        siFr0 = RRC
 
         Return True
 
