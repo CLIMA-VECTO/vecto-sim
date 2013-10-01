@@ -22,12 +22,17 @@
     End Sub
 
     Private Sub LinkJRC1_LinkClicked(sender As Object, e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkJRC1.LinkClicked
-        System.Diagnostics.Process.Start("mailto:georgios.fontaras@jrc.ec.europa.eu")
+        System.Diagnostics.Process.Start("mailto:georgios.fontaras@ftco.eu")
     End Sub
 
     Private Sub LinkJRC2_LinkClicked(sender As Object, e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkJRC2.LinkClicked
         System.Diagnostics.Process.Start("mailto:panagiota.dilara@jrc.ec.europa.eu")
     End Sub
+
+    Private Sub LinkLabel1_LinkClicked(sender As System.Object, e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
+        System.Diagnostics.Process.Start("mailto:konstantinos.anagnostopoulos@ext.jrc.ec.europa.eu")
+    End Sub
+
     '----------------------------------------------------------------------------
 
     'Picture Links------------------------------------------------------------------
@@ -42,5 +47,5 @@
         System.Diagnostics.Process.Start("http://ec.europa.eu/dgs/jrc/index.cfm")
     End Sub
 
-  
+
 End Class

@@ -49,7 +49,10 @@ Partial Class F_AboutBox
         Me.LinkJRC1 = New System.Windows.Forms.LinkLabel()
         Me.LinkJRC2 = New System.Windows.Forms.LinkLabel()
         Me.Label12 = New System.Windows.Forms.Label()
+        Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
         Me.Label13 = New System.Windows.Forms.Label()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.Label15 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         CType(Me.PictureBoxJRC, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -103,19 +106,19 @@ Partial Class F_AboutBox
         Me.Label7.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label7.Location = New System.Drawing.Point(12, 421)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(89, 13)
+        Me.Label7.Size = New System.Drawing.Size(229, 13)
         Me.Label7.TabIndex = 8
-        Me.Label7.Text = "Martin REXEIS"
+        Me.Label7.Text = "Martin REXEIS (Support: Methodology)"
         '
         'Label9
         '
         Me.Label9.AutoSize = True
         Me.Label9.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(236, 421)
+        Me.Label9.Location = New System.Drawing.Point(259, 421)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(79, 13)
+        Me.Label9.Size = New System.Drawing.Size(198, 13)
         Me.Label9.TabIndex = 8
-        Me.Label9.Text = "Raphael LUZ"
+        Me.Label9.Text = "Raphael LUZ (Support: Software)"
         '
         'LinkHAUS
         '
@@ -143,7 +146,7 @@ Partial Class F_AboutBox
         '
         Me.LinkLUZ.AutoSize = True
         Me.LinkLUZ.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkLUZ.Location = New System.Drawing.Point(251, 437)
+        Me.LinkLUZ.Location = New System.Drawing.Point(274, 437)
         Me.LinkLUZ.Name = "LinkLUZ"
         Me.LinkLUZ.Size = New System.Drawing.Size(102, 13)
         Me.LinkLUZ.TabIndex = 9
@@ -174,7 +177,7 @@ Partial Class F_AboutBox
         '
         Me.LabelTelLUZ.AutoSize = True
         Me.LabelTelLUZ.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LabelTelLUZ.Location = New System.Drawing.Point(251, 450)
+        Me.LabelTelLUZ.Location = New System.Drawing.Point(274, 450)
         Me.LabelTelLUZ.Name = "LabelTelLUZ"
         Me.LabelTelLUZ.Size = New System.Drawing.Size(149, 13)
         Me.LabelTelLUZ.TabIndex = 10
@@ -306,10 +309,10 @@ Partial Class F_AboutBox
         Me.LinkJRC1.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LinkJRC1.Location = New System.Drawing.Point(27, 579)
         Me.LinkJRC1.Name = "LinkJRC1"
-        Me.LinkJRC1.Size = New System.Drawing.Size(211, 13)
+        Me.LinkJRC1.Size = New System.Drawing.Size(156, 13)
         Me.LinkJRC1.TabIndex = 9
         Me.LinkJRC1.TabStop = True
-        Me.LinkJRC1.Text = "georgios.fontaras@jrc.ec.europa.eu"
+        Me.LinkJRC1.Text = "georgios.fontaras@ftco.eu"
         '
         'LinkJRC2
         '
@@ -326,44 +329,78 @@ Partial Class F_AboutBox
         '
         Me.Label12.AutoSize = True
         Me.Label12.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.Location = New System.Drawing.Point(27, 592)
+        Me.Label12.Location = New System.Drawing.Point(12, 625)
         Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(138, 13)
-        Me.Label12.TabIndex = 10
-        Me.Label12.Text = "Tel.: +39 0332 786425"
+        Me.Label12.Size = New System.Drawing.Size(419, 13)
+        Me.Label12.TabIndex = 8
+        Me.Label12.Text = "Konstantinos ANAGNOSTOPOULOS (Support: Licencing and Distribution)"
+        '
+        'LinkLabel1
+        '
+        Me.LinkLabel1.AutoSize = True
+        Me.LinkLabel1.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LinkLabel1.Location = New System.Drawing.Point(27, 641)
+        Me.LinkLabel1.Name = "LinkLabel1"
+        Me.LinkLabel1.Size = New System.Drawing.Size(305, 13)
+        Me.LinkLabel1.TabIndex = 9
+        Me.LinkLabel1.TabStop = True
+        Me.LinkLabel1.Text = "konstantinos.anagnostopoulos@ext.jrc.ec.europa.eu"
         '
         'Label13
         '
         Me.Label13.AutoSize = True
         Me.Label13.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(251, 592)
+        Me.Label13.Location = New System.Drawing.Point(27, 592)
         Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(138, 13)
+        Me.Label13.Size = New System.Drawing.Size(142, 13)
         Me.Label13.TabIndex = 10
-        Me.Label13.Text = "Tel.: +39 0332 789207"
+        Me.Label13.Text = "Tel.: +39 331 338 3644"
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label14.Location = New System.Drawing.Point(251, 592)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(142, 13)
+        Me.Label14.TabIndex = 10
+        Me.Label14.Text = "Tel.: +39 0332 78 9207"
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label15.Location = New System.Drawing.Point(27, 654)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(142, 13)
+        Me.Label15.TabIndex = 10
+        Me.Label15.Text = "Tel.: +39 0332 78 5935"
         '
         'F_AboutBox
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(491, 613)
+        Me.ClientSize = New System.Drawing.Size(491, 674)
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.PictureBoxJRC)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.Label10)
-        Me.Controls.Add(Me.Label13)
+        Me.Controls.Add(Me.Label14)
         Me.Controls.Add(Me.LabelTelLUZ)
-        Me.Controls.Add(Me.Label12)
+        Me.Controls.Add(Me.Label15)
+        Me.Controls.Add(Me.Label13)
         Me.Controls.Add(Me.LabelTelREX)
         Me.Controls.Add(Me.LabelTelHAUS)
         Me.Controls.Add(Me.LinkJRC2)
         Me.Controls.Add(Me.LinkLUZ)
+        Me.Controls.Add(Me.LinkLabel1)
         Me.Controls.Add(Me.LinkJRC1)
         Me.Controls.Add(Me.LinkREX)
         Me.Controls.Add(Me.LinkHAUS)
         Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.Label9)
+        Me.Controls.Add(Me.Label12)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.Label6)
@@ -415,5 +452,8 @@ Partial Class F_AboutBox
     Friend WithEvents LinkJRC1 As System.Windows.Forms.LinkLabel
     Friend WithEvents LinkJRC2 As System.Windows.Forms.LinkLabel
     Friend WithEvents Label12 As System.Windows.Forms.Label
+    Friend WithEvents LinkLabel1 As System.Windows.Forms.LinkLabel
     Friend WithEvents Label13 As System.Windows.Forms.Label
+    Friend WithEvents Label14 As System.Windows.Forms.Label
+    Friend WithEvents Label15 As System.Windows.Forms.Label
 End Class
