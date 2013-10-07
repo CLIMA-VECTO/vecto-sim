@@ -212,6 +212,11 @@ Public Class F_MAINForm
         'Zyklus-Liste definieren (falls nicht BATCH-Modus wird in SetCycleList nur die Liste gelöscht und nicht neu belegt) |@@| Define Cycle-list (if not BATCH mode in SetCycleList deleted only the list and not reassigned)
         SetCycleList()
 
+        If JobFileList.Count = 0 Then
+            GUImsg(tMsgID.Err, "No job file selected!")
+            Exit Sub
+        End If
+
         'Check whether Overall-progbar is needed
         If PHEMmode = tPHEMmode.ModeBATCH Or JobFileList.Count > 1 Then
             ProgOverall = True
@@ -320,6 +325,7 @@ Public Class F_MAINForm
             Me.ToolStripProgBarOverall.Visible = True
         End If
 
+        ProgBarCtrl.ProgJobInt = 0
         ProgSecStart()
 
         'BG-Worker start
@@ -1808,7 +1814,6 @@ lbFound:
 #Region "Sekundäre Progressbar (ToolStripProgBarSec) ...auch Update von ToolStripProgBarPrim möglich"
 
     Private Sub ProgSecStart()
-        ProgBarCtrl.ProgJobInt = 0
         Me.ToolStripProgBarJob.Value = 0
         Me.ToolStripProgBarJob.Style = ProgressBarStyle.Marquee
         Me.ToolStripProgBarJob.Visible = True

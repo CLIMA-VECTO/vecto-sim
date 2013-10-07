@@ -55,7 +55,7 @@ Partial Class F_VEH_Axle
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(146, 29)
-        Me.TableLayoutPanel1.TabIndex = 10
+        Me.TableLayoutPanel1.TabIndex = 4
         '
         'OK_Button
         '
@@ -124,7 +124,7 @@ Partial Class F_VEH_Axle
         Me.TbRRC.Location = New System.Drawing.Point(98, 54)
         Me.TbRRC.Name = "TbRRC"
         Me.TbRRC.Size = New System.Drawing.Size(84, 20)
-        Me.TbRRC.TabIndex = 5
+        Me.TbRRC.TabIndex = 2
         '
         'Label5
         '
@@ -149,7 +149,7 @@ Partial Class F_VEH_Axle
         Me.TbFzISO.Location = New System.Drawing.Point(271, 54)
         Me.TbFzISO.Name = "TbFzISO"
         Me.TbFzISO.Size = New System.Drawing.Size(84, 20)
-        Me.TbFzISO.TabIndex = 5
+        Me.TbFzISO.TabIndex = 3
         '
         'Label7
         '
@@ -195,7 +195,7 @@ Partial Class F_VEH_Axle
         Me.CbTwinT.Location = New System.Drawing.Point(271, 14)
         Me.CbTwinT.Name = "CbTwinT"
         Me.CbTwinT.Size = New System.Drawing.Size(78, 17)
-        Me.CbTwinT.TabIndex = 11
+        Me.CbTwinT.TabIndex = 1
         Me.CbTwinT.Text = "Twin Tyres"
         Me.CbTwinT.UseVisualStyleBackColor = True
         '

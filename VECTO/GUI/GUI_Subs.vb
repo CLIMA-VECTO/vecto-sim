@@ -1,5 +1,6 @@
 ﻿Module GUI_Subs
 
+    Public test As Integer = 0
 
 #Region "GUI Steuerung durch BG-Worker"
 

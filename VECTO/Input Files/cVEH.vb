@@ -441,7 +441,7 @@ lbError:
 
         'Axle configuration - Update 16.10.2012
         file.WriteLine("c Axle configurations")
-        file.WriteLine("c Axle weight share [-], RRC [N/N],Fz ISO [N]")
+        file.WriteLine("c Axle weight share [-], Twin Tyres [1/0], RRC [N/N], Fz ISO [N]")
         For Each sl In RRCs
             file.WriteLine(CStr(sl(0)), CStr(sl(1)), CStr(sl(2)), CStr(sl(3)))
         Next

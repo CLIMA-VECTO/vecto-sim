@@ -1,6 +1,6 @@
 ﻿c VECTO Vehicle Input File
-c VECTO 1.0 Beta 1
-c 23.10.2012 18:02:14
+c VECTO 1.4 RC3
+c 02.10.2013 17:34:50
 c Curb weight vehicle [kg]
 8862
 c Curb weight extra trailer/body [kg]
@@ -11,7 +11,7 @@ c Cd value [-]
 0.7005663
 c Cross sectional area [m^2]
 8.8
-c Wheels equivalent rotational inertia [kg] (= I_wheel/rdyn^2)
+c Wheels inertia [kgm^2]
 216.2271
 c Wheel effective diameter [m]
 0.848974
@@ -24,8 +24,9 @@ c Retarder Ratio
 c Retarder File
 <NOFILE>
 c Axle configurations
-6000,0.007706799
-6000,0.007706799
+c Axle weight share [-], RRC [N/N],Fz ISO [N]
+0.4,0,0.007144311,20800
+0.6,0,0.008081271,20800
 <//>
 c VehCat
 0

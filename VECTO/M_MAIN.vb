@@ -245,6 +245,8 @@ lbSkip0:
                 For Each CurrentCycleFile In CycleFiles
                     jsubcycle += 1
 
+                    ProgBarCtrl.ProgJobInt = 0
+
                     If PHEMmode = tPHEMmode.ModeSTANDARD Then
 
                         'ProgBar

@@ -597,7 +597,7 @@ Class cERG
 
         'Add file to signing list
         Lic.FileSigning.AddFile(ERGpath)
-        Lic.FileSigning.AddFile(ERGpath & ".json")
+        If Cfg.JSON Then Lic.FileSigning.AddFile(ERGpath & ".json")
 
 
         ErgEntries = New Dictionary(Of String, cErgEntry)

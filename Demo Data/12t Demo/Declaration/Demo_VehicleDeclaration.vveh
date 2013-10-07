@@ -1,6 +1,6 @@
 ﻿c VECTO Vehicle Input File
-c VECTO 1.4 RC1
-c 04.09.2013 14:05:37
+c VECTO 1.4 RC3
+c 02.10.2013 17:27:18
 c Curb weight vehicle [kg]
 7750
 c Curb weight extra trailer/body [kg]
@@ -24,9 +24,9 @@ c Retarder Ratio
 c Retarder File
 <NOFILE>
 c Axle configurations
-c Max. axle weight [kg], RRC [N/N]
-6000,0.009
-6000,0.009
+c Axle weight share [-], RRC [N/N],Fz ISO [N]
+0.4,0,0.008343465,20800
+0.6,0,0.00943769,20800
 <//>
 c VehCat
 0
