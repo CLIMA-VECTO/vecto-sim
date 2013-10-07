@@ -1,0 +1,64 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (eed25180-b54a-46f8-a51e-2182e6c955c5)",
+    "Date": "07.10.2013 16:38:57",
+    "AppVersion": "1.4",
+    "FileVersion": "1.0"
+  },
+  "Body": {
+    "ModelName": "Demo",
+    "Inertia": 0.0,
+    "TracInt": 1.0,
+    "Gears": [
+      {
+        "Ratio": 4.3,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 6.696,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 3.806,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 2.289,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 1.48,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 1.0,
+        "Efficiency": "0.98",
+        "TCactive": false
+      },
+      {
+        "Ratio": 0.728,
+        "Efficiency": "0.96",
+        "TCactive": false
+      }
+    ],
+    "ShiftPolygons": "ShiftPolygons.vgbs",
+    "TqReserve": 10.0,
+    "SkipGears": true,
+    "ShiftTime": 3,
+    "EaryShiftUp": false,
+    "StartTqReserve": 40.0,
+    "StartSpeed": 2.0,
+    "StartAcc": 0.6,
+    "GearboxType": "MT",
+    "TorqueConverter": {
+      "Enabled": false,
+      "File": "<NOFILE>",
+      "RefRPM": 0.0
+    }
+  }
+}

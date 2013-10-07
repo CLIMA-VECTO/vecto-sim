@@ -1,0 +1,44 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (eed25180-b54a-46f8-a51e-2182e6c955c5)",
+    "Date": "07.10.2013 16:39:00",
+    "AppVersion": "1.4",
+    "FileVersion": "1.0"
+  },
+  "Body": {
+    "VehicleFile": "Demo_Vehicle_ChassisDyno.vveh",
+    "EngineFile": "..\\Demo_Engine.veng",
+    "GearboxFile": "..\\Demo_Gearbox.vgbx",
+    "Cycles": [
+      "ChassisDyno_Motorway.vdri",
+      "ChassisDyno_Rural.vdri",
+      "ChassisDyno_Urban.vdri"
+    ],
+    "Aux": [
+      {
+        "ID": "ALT",
+        "Type": "Alternator",
+        "Path": "..\\Demo_AuxAlternator.vaux"
+      }
+    ],
+    "VACC": "Dummy.vacc",
+    "EngineOnlyMode": false,
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 5.0,
+      "Delay": 0
+    },
+    "LAC": {
+      "Enabled": false,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "Off",
+      "MinSpeed": 0.0,
+      "OverSpeed": 0.0,
+      "UnderSpeed": 0.0
+    }
+  }
+}

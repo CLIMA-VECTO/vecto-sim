@@ -1,0 +1,12 @@
+c Werte für Kastenwagen aus Mitschke BandI S33
+c beta,cd / cd0
+c [°],[-]
+0,1
+5,1.05
+10,1.1
+15,1.14
+20,1.165
+25,1.17
+30,1.16
+90,0
+180,-1.5

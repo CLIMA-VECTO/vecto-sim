@@ -1,0 +1,43 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (eed25180-b54a-46f8-a51e-2182e6c955c5)",
+    "Date": "07.10.2013 16:38:50",
+    "AppVersion": "1.4",
+    "FileVersion": "1.0"
+  },
+  "Body": {
+    "VehCat": "Rigid",
+    "CurbWeight": 7750.0,
+    "CurbWeightExtra": 0.0,
+    "Loading": 2120.0,
+    "MassMax": 11990.0,
+    "Cd": 0.6,
+    "CrossSecArea": 8.8,
+    "WheelsInertia": 216.0,
+    "WheelsDiaEff": 0.849,
+    "CdCorrMode": "CdOfV",
+    "CdCorrFile": "..\\..\\..\\Default Data\\VCDV\\Truck.vcdv",
+    "Retarder": {
+      "Type": "None",
+      "Ratio": 1.0,
+      "File": "<NOFILE>"
+    },
+    "AxleConfig": {
+      "Type": "4x2",
+      "Axles": [
+        {
+          "AxleWeightShare": 0.4,
+          "TwinTyres": false,
+          "RRCISO": 0.008343465,
+          "FzISO": 20800.0
+        },
+        {
+          "AxleWeightShare": 0.6,
+          "TwinTyres": false,
+          "RRCISO": 0.00943769,
+          "FzISO": 20800.0
+        }
+      ]
+    }
+  }
+}
