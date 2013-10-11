@@ -5,3 +5,9 @@
 - GRAPHi (dir)
 - GRAPHi\config\settings.cfg >>>> Set default separators to Comma/Point!!
 - GRAPHi\config\ColorScale.csv >>>>> New format since V5.1.3!!
+- Ensure zip-folder named with the correct varsion.
+- ZIP.
+- Upload into CITNet's svn and link from update https://webgate.ec.europa.eu/CITnet/confluence/display/VECTO/Releases
+- Make licenses and Update private pages.
+- Send announcment email.
+- Tag repos.
