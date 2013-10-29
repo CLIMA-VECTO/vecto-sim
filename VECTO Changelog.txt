@@ -4,131 +4,142 @@ VECTO ?.? (future release) TODO
 - Correct Pg (sin(arctan(Stg)) statt Stg) and Proll (cos) calculation (Road gradient)   
 
 
-VECTO x.x (current source - next release)
+VECTO 1.4.RC4 (current source - next release)
 - Bugfix: Gears using torque converter and transmission loss maps may cause invalid "out of engine operation range" errors
 - Null values for FzISO will abort calculation
 
 
 VECTO 1.4.RC4
-- Bugfix: FC interpolation failed when load points matched map points exactly.
-- Bugfix: Invalid "FC= -10000!" errors when outside of FC-Map
-- Bugfix: Vehicle stand-still at end of cycle was ignored (distance-based cycles only)
-- FC extrapolation will not abort calculation. Invalid FC values are marked in output as "ERROR".
-- No abortion if transmission output and input torque have different signs (In>0, Out<0). (Caused "Transmission Loss Map invalid" error messages)
-- Eco-Roll revised. New rules:
-	o Engages if Pwheel < 0
-	o Disengages if Underspeed is reached.
-- Look-Ahead Coasting now uses real coasting also if road gradient > 0 which means the coasting deceleration can be so high that no braking is necessary. In this case the braking phase will be omitted and the total deceleration time can be shorter than expected by the given target coasting deceleration.
-- "Minimum (actual) speed" instead of "Min. Target Speed" for Eco-Roll, Overspeed and Look Ahead Coasting
-- Major update in Gearbox/Toque Converter:
-	o Torque converter can be defined in multiple gears
-	o Same gear numbers in output as in GBX file, i.e. first gear with TC is not "TC" or "0.5" but simply "1"
-	o "Minimum time between two gear shifts" now also limits torque converter shifts
-	o Unlimited number of gears and new gear list in GUI without fixed gear number
-	o Improved gear shift model for torque converter
-	o Driving Cycle Preprocessing and Gear Shift Model now use approximated efficiency values based in the transmission loss maps. Reduces calculation time significantly with little to no impact on fuel consumption.
-- Full load and drag curves (.vfld) can be defined for each gear separately.
-- Bugfix: Distance Correction didn't work right with Look Ahead Coasting. Now distance error is acceptable but at the cost of partly interrupted coasting phases. Should be revised in future updates.
-- Engine Only Mode: Engine motoring points can be defined explicitly in load cycle with "<DRAG>"
-- When speed is under 5km/h and engine in motoring operating then gearbox shifts to Neutral
-- Load-dependent rolling resistance coefficient
-- Start-Stop activation delay time can be defined in job file
-- File signing features added:
-	o After each calculation a signature file (.vsig) is created which includes signatures for all input and result files. The file itself is also signed.
-	o Signature files can be verified or manually created under "Tools" > "Sign or Verify Files"
-- Changes in header and new parameters in modal results (.vmod):
-	o engine speed => n
-	o torque => Tq_eng
-	o Pe => Pe_eng
-	o New: Tq_clutch = torque at clutch (before clutch, engine-side)
-	o New: Tq_full = full load torque
-	o New: Tq_drag = drag torque
-	o Removed: Pe_norm, n_norm	
-- Changes in summary results (.vsum)
-	o total altitude change instead of average gradient
-	o Auxiliary energy consumption for each auxiliary 
-	o Removed: Pe_norm, n_norm	
-- Same job file list for BATCH and STANDARD (Job file list does not change when switching mode)
-- Updated some error messages (units)
-- Driving Cycle stop times corrected (No more zero stop times).
-	
-	
-	
+
+* Bugfix: FC interpolation failed when load points matched map points exactly.
+* Bugfix: Invalid "FC= -10000!" errors when outside of FC-Map
+* Bugfix: Vehicle stand-still at end of cycle was ignored (distance-based cycles only)
+* FC extrapolation will not abort calculation. Invalid FC values are marked in output as "ERROR".
+* No abortion if transmission output and input torque have different signs (In>0, Out<0). (Caused "Transmission Loss Map invalid" error messages)
+* Eco-Roll revised. New rules:
+** Engages if Pwheel < 0
+** Disengages if Underspeed is reached.
+* Look-Ahead Coasting now uses real coasting also if road gradient > 0 which means the coasting deceleration can be so high that no braking is necessary. In this case the braking phase will be omitted and the total deceleration time can be shorter than expected by the given target coasting deceleration.
+* "Minimum (actual) speed" instead of "Min. Target Speed" for Eco-Roll, Overspeed and Look Ahead Coasting
+* Major update in Gearbox/Toque Converter:
+** Torque converter can be defined in multiple gears
+** Same gear numbers in output as in GBX file, i.e. first gear with TC is not "TC" or "0.5" but simply "1"
+** "Minimum time between two gear shifts" now also limits torque converter shifts
+** Unlimited number of gears and new gear list in GUI without fixed gear number
+** Improved gear shift model for torque converter
+** Driving Cycle Preprocessing and Gear Shift Model now use approximated efficiency values based in the transmission loss maps. Reduces calculation time significantly with little to no impact on fuel consumption.
+* Full load and drag curves (.vfld) can be defined for each gear separately.
+* Bugfix: Distance Correction didn't work right with Look Ahead Coasting. Now distance error is acceptable but at the cost of partly interrupted coasting phases. Should be revised in future updates.
+* Engine Only Mode: Engine motoring points can be defined explicitly in load cycle with "<DRAG>"
+* When speed is under 5km/h and engine in motoring operating then gearbox shifts to Neutral
+* Load-dependent rolling resistance coefficient
+* Start-Stop activation delay time can be defined in job file
+* File signing features added:
+** After each calculation a signature file (.vsig) is created which includes signatures for all input and result files. The file itself is also signed.
+** Signature files can be verified or manually created under "Tools" > "Sign or Verify Files"
+* Changes in header and new parameters in modal results (.vmod):
+** engine speed => n
+** torque => Tq_eng
+** Pe => Pe_eng
+** New: Tq_clutch = torque at clutch (before clutch, engine-side)
+** New: Tq_full = full load torque
+** New: Tq_drag = drag torque
+** Removed: Pe_norm, n_norm 
+* Changes in summary results (.vsum)
+** total altitude change instead of average gradient
+** Auxiliary energy consumption for each auxiliary 
+* Removed: Pe_norm, n_norm 
+* Same job file list for BATCH and STANDARD (Job file list does not change when switching mode)
+* Updated some error messages (units)
+* Driving Cycle stop times corrected (No more zero stop times).
+
 
 VECTO 1.3.1.1
-- Fixed error in power calculation (rotatory part of acceleration force)
+
+* Fixed error in power calculation (rotatory part of acceleration force)
 
 VECTO 1.3.1
-- Fixed assembly information
+
+* Fixed assembly information
 
 VECTO 1.3
-- Some file-specific error messages link to files
-- Eco-Roll, Overspeed, Look Ahead Coasting
-- User Manual updated
-- Demo Data updated
+
+* Some file-specific error messages link to files
+* Eco-Roll, Overspeed, Look Ahead Coasting
+* User Manual updated
+* Demo Data updated
 
 VECTO 1.2
-- Bugfix: When opening the Gearbox Editor the Gear Shift Settings (e.g. Skip Gears) were not valid for MT
-- Fixed inaccuracy in FC interpolation (invalid extrapolation errors caused by rounding errors)
-- Bugfix: Cycle was cut by one second in Engine Only (as usual in Vehicle Mode)
+
+* Bugfix: When opening the Gearbox Editor the Gear Shift Settings (e.g. Skip Gears) were not valid for MT
+* Fixed inaccuracy in FC interpolation (invalid extrapolation errors caused by rounding errors)
+* Bugfix: Cycle was cut by one second in Engine Only (as usual in Vehicle Mode)
 
 VECTO 1.1 beta 4
-- Engine Start/Stop implemented
-- Fixed error in FC interpolation (invalid extrapolation errors)
+
+* Engine Start/Stop implemented
+* Fixed error in FC interpolation (invalid extrapolation errors)
 
 VECTO 1.1 beta 3
-- FC Extrapolation will abort the calculation
-- Transmission Type selection in Gearbox (.vgbx) file.
-	- Enables/Disables transmission type-specific options 
-	- In Proof-Of-Concept mode "Custom" type is available with all options enabled.
-- Automatic Transmission mode with Torque Converter: Input parameters in Gearbox file !!still being tested!!
-- Option to open files with GRAPHi or user-defined tool
-- User Manual updated
-- Bugfix: Files with relative paths were not located correctly
+
+* FC Extrapolation will abort the calculation
+* Transmission Type selection in Gearbox (.vgbx) file.
+* Enables/Disables transmission type-specific options 
+* In Proof-Of-Concept mode "Custom" type is available with all options enabled.
+* Automatic Transmission mode with Torque Converter: Input parameters in Gearbox file !!still being tested!!
+* Option to open files with GRAPHi or user-defined tool
+* User Manual updated
+* Bugfix: Files with relative paths were not located correctly
 
 VECTO 1.1 beta 2 - 01.03.2013
-- Corrected comment line for wheels inertia and axle config in .vveh file
-- Changed RRC unit in GUI from [-] to [N/N]
-- User Manual updated
-	o Vehicle Editor: RRC
-- Tranmission Loss Maps are not converted to n,Pe-Maps anymore. Should fix non-linear interpolation effects.
-- Automatic Transmission / Torque Converter !!in development!!	
-- Engine Only Mode	
-	
+
+* Corrected comment line for wheels inertia and axle config in .vveh file
+* Changed RRC unit in GUI from [-] to [N/N]
+* User Manual updated
+** Vehicle Editor: RRC
+* Tranmission Loss Maps are not converted to n,Pe-Maps anymore. Should fix non-linear interpolation effects.
+* Automatic Transmission / Torque Converter !!in development!! 
+* Engine Only Mode 
+
 VECTO 1.1 beta - 06.02.2013
-- New independent licensing dll replaces TUG's version
-- Speed values below 0.09km/h are set to 0km/h
-- Gear shift polygon model
-	o Replaces old gear shift model!
-	o New parameters in .vgbx file including path to gear shift polygons file
-	o Old gear shift model parameters removed from .vecto file
-- Command Line Arguments processing:
-	o Changed prefix form "/" to "-"
-	o Bugfix: Argument "-run" was not processed
-	o Job files and driving cycles can be added via command line
-	o Files without path are expected in the Working Directory
-- Cleared out some "PHEM" remains in log and message output
-- User Manual update for command line arguments
-- Various fixes in GUI
-- Bugfix: Error in Cycle Conversion (distance- to time-based) when using Aux Power Input.
-- Distance Correction is now active only in acceleration and cruise phases.
-- Fixed cycles starting with vehicle speed = 0. Before, the first and second time step were averaged to speed values > 0.
-- Demo data updated for new gear shift model
+
+* New independent licensing dll replaces TUG's version
+* Speed values below 0.09km/h are set to 0km/h
+* Gear shift polygon model
+** Replaces old gear shift model!
+** New parameters in .vgbx file including path to gear shift polygons file
+** Old gear shift model parameters removed from .vecto file
+* Command Line Arguments processing:
+** Changed prefix form "/" to "-"
+** Bugfix: Argument "-run" was not processed
+** Job files and driving cycles can be added via command line
+** Files without path are expected in the Working Directory
+* Cleared out some "PHEM" remains in log and message output
+* User Manual update for command line arguments
+* Various fixes in GUI
+* Bugfix: Error in Cycle Conversion (distance- to time-based) when using Aux Power Input.
+* Distance Correction is now active only in acceleration and cruise phases.
+* Fixed cycles starting with vehicle speed = 0. Before, the first and second time step were averaged to speed values > 0.
+* Demo data updated for new gear shift model
 
 VECTO 1.0 - 09.11.2012
-- Bugfix: Error in Distance Correction
+
+* Bugfix: Error in Distance Correction
 
 VECTO 1.0 RC1
-- Pe_full, Pe_drag output absolute (not normalized)
+
+* Pe_full, Pe_drag output absolute (not normalized)
 
 VECTO 1.0 Beta 3
-- User Manual implemented
-- Declaration files processing (open)
+
+* User Manual implemented
+* Declaration files processing (open)
 
 VECTO 1.0 Beta 2
-- "Open" Button in main form opens all editable files (.vecto, .vveh, .veng, .vgbx)
-- Editable files (.vecto, .vveh, .veng, .vgbx) can be opened via command line arguments (i.e. "Open with...") 
-- Bugfix: Torque below drag curve during traction interruption
-- Bugfix: Traction interruption failed in distance corrected time steps
-- Removed unused parameters from .vecto file. OLD FILES ARE NOT SUPPORTED!!!
-- Added JRC contact data in "About" form.
+
+* "Open" Button in main form opens all editable files (.vecto, .vveh, .veng, .vgbx)
+* Editable files (.vecto, .vveh, .veng, .vgbx) can be opened via command line arguments (i.e. "Open with...") 
+* Bugfix: Torque below drag curve during traction interruption
+* Bugfix: Traction interruption failed in distance corrected time steps
+* Removed unused parameters from .vecto file. OLD FILES ARE NOT SUPPORTED!!!
+* Added JRC contact data in "About" form.
