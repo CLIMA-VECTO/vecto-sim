@@ -39,7 +39,6 @@ Namespace My
                 End Try
                 IO.File.Create(MyConfPath & "joblist.txt")
                 IO.File.Create(MyConfPath & "cyclelist.txt")
-                'IO.File.Create(MyConfPath & "ADVlist.txt")
             End If
             If Not IO.Directory.Exists(FB_FilHisDir) Then
                 Try

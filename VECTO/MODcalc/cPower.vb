@@ -458,18 +458,30 @@ Public Class cPower
                     End If
                 Next
 
+                'Calc Coasting-Start time step
                 If GEN.LookAheadOn Then
                     Tlookahead = CInt((vset2 - vset1) / GEN.a_lookahead)
                     t = Math.Max(0, i - Tlookahead)
                 End If
 
+                'Check if target-speed change inside of Coasting Phase
+                For i0 = i To t Step -1
+                    If i0 = 0 Then Exit For
+                    If Vh.Vsoll(i0) - Vh.Vsoll(i0 - 1) > 0.0001 Then
+                        t = Math.Min(i0 + 1, i)
+                        Exit For
+                    End If
+                Next
+
                 LookAheadDone = False
 
+                'Limit deceleration
                 adec = GEN.aDesMin(Vist)
                 If Vh.a(i) < adec Then Vh.SetMinAccBackw(i)
 
                 i0 = i
 
+                'If vehicle stops too early reduce coasting time, i.e. set  Coasting-Start later
                 If GEN.LookAheadOn Then
                     Do While i0 > t AndAlso fCoastingSpeed(t, Gears(t), i0 - t) < Vh.V(i0)
                         t += 1
@@ -1875,7 +1887,9 @@ lb_nOK:
         Dim OutOfRpmRange As Boolean
 
         'First time step OR first time step after stand still
-        If t = 0 OrElse MODdata.VehState(t - 1) = tVehState.Stopped Then Return 1
+        If t = 0 Then Return fStartGear(0)
+
+        If MODdata.VehState(t - 1) = tVehState.Stopped Then Return 1
 
         'Previous Gear
         tx = 1

@@ -2,7 +2,6 @@
 
 Public Class F_MAINForm
 
-    Private AdvList As cFileListView
     Private GenList As cFileListView
     Private DriList As cFileListView
     Private BatchGenList As cFileListView
@@ -505,8 +504,6 @@ Public Class F_MAINForm
         'FileLists
         GenList = New cFileListView(MyConfPath & "joblist.txt")
         GenList.LVbox = Me.LvGEN
-        AdvList = New cFileListView(MyConfPath & "ADVlist.txt")
-        AdvList.LVbox = Me.LvGEN
         DriList = New cFileListView(MyConfPath & "cyclelist.txt")
         DriList.LVbox = Me.LvDRI
         BatchGenList = New cFileListView(MyConfPath & "joblist.txt")
@@ -911,14 +908,6 @@ Public Class F_MAINForm
 
         pDim = UBound(Path)
         ReDim fList(0)     'um Nullverweisausnahme-Warnung zu verhindern
-
-        'Mode-switch if necessary
-        Select Case UCase(fEXT(Path(0)))
-            Case ".GEN"
-                If (LastModeIndex = 2) Then Me.CBoxMODE.SelectedIndex = 0
-            Case ".ADV"
-                If (LastModeIndex <> 2) Then Me.CBoxMODE.SelectedIndex = 2
-        End Select
 
         '******************************************* Begin Update '*******************************************
         Me.LvGEN.BeginUpdate()
@@ -1476,8 +1465,6 @@ lbFound:
                     GenList.LoadList()
                 Case 1
                     BatchGenList.LoadList()
-                Case 2
-                    AdvList.LoadList()
             End Select
             GENchecked = Me.LvGEN.CheckedItems.Count
             UpdateGENTabText()
@@ -1554,8 +1541,6 @@ lbFound:
             Case 1  'Batch
                 BatchGenList.SaveList()
                 DriList.SaveList()
-            Case 2  'Advance
-                AdvList.SaveList()
         End Select
 
         LastModeIndex = Me.CBoxMODE.SelectedIndex
@@ -1601,20 +1586,7 @@ lbFound:
                     Me.TabControl1.TabPages.Insert(1, DRIpage)
                     DRIpageHere = True
                 End If
-            Case 2  'Advance
-                LastModeName = "ADVANCE"
-                AdvList.LoadList()
 
-                'Me.GrBoxADV.BringToFront()
-
-                Me.GrBoxSTD.Visible = False
-                Me.GrBoxBATCH.Visible = False
-                Me.GrBoxADV.Visible = True
-
-                If DRIpageHere Then
-                    Me.TabControl1.Controls.Remove(DRIpage)
-                    DRIpageHere = False
-                End If
         End Select
 
         GENchecked = Me.LvGEN.CheckedItems.Count
@@ -1793,8 +1765,6 @@ lbFound:
             Case 1
                 BatchGenList.SaveList()
                 DriList.SaveList()
-            Case 2
-                AdvList.SaveList()
         End Select
     End Sub
 
@@ -2119,11 +2089,9 @@ lbFound:
         End Select
 
         If Link <> "" Then
-
-            lv0.ForeColor = Color.Blue
+            If Not ID = tMsgID.Err Then lv0.ForeColor = Color.Blue
             lv0.SubItems(0).Font = New Font(Me.LvMsg.Font, FontStyle.Underline)
             lv0.Tag = Link
-
         End If
 
 

@@ -1,9 +1,15 @@
 VECTO ?.? (future release) TODO
 - User Manual:
 	JSON
+- Correct Pg (sin(arctan(Stg)) statt Stg) and Proll (cos) calculation (Road gradient)   
 
 
 VECTO x.x (current source - next release)
+- Bugfix: Gears using torque converter and transmission loss maps may cause invalid "out of engine operation range" errors
+- Null values for FzISO will abort calculation
+
+
+VECTO 1.4.RC4
 - Bugfix: FC interpolation failed when load points matched map points exactly.
 - Bugfix: Invalid "FC= -10000!" errors when outside of FC-Map
 - Bugfix: Vehicle stand-still at end of cycle was ignored (distance-based cycles only)

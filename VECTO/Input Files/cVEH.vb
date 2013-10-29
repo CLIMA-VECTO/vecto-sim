@@ -45,7 +45,6 @@ Public Class cVEH
     Private MyGBmaps As List(Of cDelaunayMap)
     Public GetrEffDef As List(Of Boolean)
     Public GetrEff As List(Of Single)
-    Public IsTCgear As List(Of Boolean)
 
     Private iganganz As Short
 
@@ -147,7 +146,6 @@ Public Class cVEH
         GetrEffDef = New List(Of Boolean)
         GetrEff = New List(Of Single)
         GetrMap = New List(Of cSubPath)
-        IsTCgear = New List(Of Boolean)
 
         MyGBmaps = Nothing
         iganganz = 0
@@ -653,6 +651,17 @@ lbError:
 
         RRC = 0
         For Each sl In RRCs
+
+            If sl(2) < -0.000001 Then
+                WorkerMsg(tMsgID.Err, "Invalid RRC value! (" & sl(2) & ")", MsgSrc, "<GUI>" & sFilePath)
+                Return False
+            End If
+
+            If sl(3) < 0.00001 Then
+                WorkerMsg(tMsgID.Err, "Invalid FzISO value! (" & sl(3) & ")", MsgSrc, "<GUI>" & sFilePath)
+                Return False
+            End If
+
             If CBool(sl(1)) Then
                 nrwheels = 4
             Else
@@ -692,6 +701,9 @@ lbError:
         Dim Anz As Integer
         Dim EffDiffSum As Single = 0
         Dim AnzDiff As Integer = 0
+
+        Dim MinG As Single
+        Dim plossG As Single
 
         Dim MsgSrc As String
 
@@ -774,51 +786,71 @@ lbError:
                 'Calculate average efficiency for fast approx. calculation
                 If i > 0 Then
 
-                    EffSum = 0
-                    Anz = 0
+                    If GBX.IsTCgear(i) Then
 
-                    dnU = (2 / 3) * (VEH.nNenn - VEH.nLeerl) / 10
-                    nU = VEH.nLeerl + dnU
+                        GetrEff(i) = -1
 
-                    Do While nU <= nNenn
-                        nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
+                    Else
 
-                        dM = nPeToM(nU, (2 / 3) * FLD(i).Pfull(nn) / 10)
-                        M_in = nPeToM(nU, (1 / 3) * FLD(i).Pfull(nn))
+                        EffSum = 0
+                        Anz = 0
 
-                        Do While M_in <= nPeToM(nU, FLD(i).Pfull(nn))
+                        dnU = (2 / 3) * (VEH.nNenn - VEH.nLeerl) / 10
+                        nU = VEH.nLeerl + dnU
 
-                            P_In = nMtoPe(nU, M_in)
+                        Do While nU <= nNenn
+                            nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
 
-                            P_Loss = IntpolPeLossFwd(i, nU, P_In, False)
+                            dM = nPeToM(nU, (2 / 3) * FLD(i).Pfull(nn) / 10)
+                            M_in = nPeToM(nU, (1 / 3) * FLD(i).Pfull(nn))
 
-                            EffSum += (P_In - P_Loss) / P_In
-                            Anz += 1
+                            Do While M_in <= nPeToM(nU, FLD(i).Pfull(nn))
 
-                            'Axle
-                            P_In -= P_Loss
-                            P_Loss = IntpolPeLossFwd(0, nU / VEH.Igetr(i), P_In, False)
-                            EffDiffSum += (P_In - P_Loss) / P_In
-                            AnzDiff += 1
+                                P_In = nMtoPe(nU, M_in)
 
-                            M_in += dM
+                                P_Loss = IntpolPeLossFwd(i, nU, P_In, False)
+
+                                EffSum += (P_In - P_Loss) / P_In
+                                Anz += 1
+
+
+                                plossG = P_Loss
+                                MinG = M_in
+
+
+                                'Axle
+                                P_In -= P_Loss
+                                P_Loss = IntpolPeLossFwd(0, nU / VEH.Igetr(i), P_In, False)
+                                EffDiffSum += (P_In - P_Loss) / P_In
+                                AnzDiff += 1
+
+                                If MODdata.ModErrors.TrLossMapExtr <> "" Then
+                                    WorkerMsg(tMsgID.Err, "Transmission loss map does not cover full engine operating range!", MsgSrc)
+                                    WorkerMsg(tMsgID.Err, MODdata.ModErrors.TrLossMapExtr, MsgSrc)
+                                    WorkerMsg(tMsgID.Err, "nU_In(GB)=" & nU & " [1/min]", MsgSrc)
+                                    WorkerMsg(tMsgID.Err, "M_In(GB)=" & MinG & " [Nm]", MsgSrc)
+                                    WorkerMsg(tMsgID.Err, "P_Loss(GB)=" & plossG & " [kW]", MsgSrc)
+                                    WorkerMsg(tMsgID.Err, "nU_In(axle)=" & CStr(nU / VEH.Igetr(i)) & " [1/min]", MsgSrc)
+                                    WorkerMsg(tMsgID.Err, "M_In(axle)=" & CStr(nPeToM(nU / VEH.Igetr(i), P_In)) & " [Nm]", MsgSrc)
+                                    WorkerMsg(tMsgID.Err, "P_Loss(axle)=" & P_Loss & " [kW]", MsgSrc)
+                                    Return False
+                                End If
+
+                                M_in += dM
+                            Loop
+
+
+                            nU += dnU
                         Loop
 
+                        If Anz = 0 Then
+                            WorkerMsg(tMsgID.Err, "Failed to calculate approx. transmission losses!", MsgSrc)
+                            Return False
+                        End If
 
-                        nU += dnU
-                    Loop
+                        GetrEff(i) = EffSum / Anz
 
-                    If MODdata.ModErrors.TrLossMapExtr <> "" Then
-                        WorkerMsg(tMsgID.Err, "Transmission loss map does not cover full engine range! File: " & path, MsgSrc, path)
-                        Return False
                     End If
-
-                    If Anz = 0 Then
-                        WorkerMsg(tMsgID.Err, "Failed to calculate approx. transmission losses!", MsgSrc)
-                        Return False
-                    End If
-
-                    GetrEff(i) = EffSum / Anz
 
                 End If
 
@@ -858,7 +890,7 @@ lbError:
             GrTxt = Gear.ToString
         End If
 
-        If GetrEffDef(Gear) Or (Approx And DEV.AllowAprxTrLoss) Then
+        If GetrEffDef(Gear) Or (Approx And DEV.AllowAprxTrLoss AndAlso GetrEff(Gear) > 0) Then
 
             If PeOut > 0 Then
                 PeIn = PeOut / GetrEff(Gear)
@@ -964,7 +996,7 @@ lbError:
             GrTxt = Gear.ToString
         End If
 
-        If GetrEffDef(Gear) Or (Approx And DEV.AllowAprxTrLoss) Then
+        If GetrEffDef(Gear) Or (Approx And DEV.AllowAprxTrLoss AndAlso GetrEff(Gear) > 0) Then
 
             If PeIn > 0 Then
                 PeOut = PeIn * GetrEff(Gear)
