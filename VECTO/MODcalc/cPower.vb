@@ -1318,7 +1318,7 @@ lb_nOK:
 
             MODdata.Pa.Add(fPaFZ(MODdata.Vh.V(jz), MODdata.Vh.a(jz)))
             MODdata.Pluft.Add(fPair(MODdata.Vh.V(jz), jz))
-            MODdata.Proll.Add(fPr(MODdata.Vh.V(jz)))
+            MODdata.Proll.Add(fPr(MODdata.Vh.V(jz), jz))
             MODdata.Pstg.Add(fPs(MODdata.Vh.V(jz), jz))
             MODdata.Pbrake.Add(Pbrake)
             MODdata.Psum.Add(PvorD)
@@ -1928,7 +1928,7 @@ lb_nOK:
 
         If nn > nnUp Then
 
-            If fnn(Vist, 2, False) > nnDown Then
+            If fnn(Vist, LastGear + 1, False) > nnDown Then
                 Return LastGear + 1
             Else
                 Return LastGear
@@ -2367,20 +2367,24 @@ lb_nOK:
 
     '--------------Power before Diff = At Wheel -------------
     Private Function fPvD(ByVal t As Integer) As Single
-        Return fPr(MODdata.Vh.V(t)) + fPair(MODdata.Vh.V(t), t) + fPaFZ(MODdata.Vh.V(t), MODdata.Vh.a(t)) + fPs(MODdata.Vh.V(t), t)
+        Return fPr(MODdata.Vh.V(t), t) + fPair(MODdata.Vh.V(t), t) + fPaFZ(MODdata.Vh.V(t), MODdata.Vh.a(t)) + fPs(MODdata.Vh.V(t), t)
     End Function
 
     Private Function fPvD(ByVal t As Integer, ByVal v As Single, ByVal a As Single) As Single
-        Return fPr(v) + fPair(v, t) + fPaFZ(v, a) + fPs(v, t)
+        Return fPr(v, t) + fPair(v, t) + fPaFZ(v, a) + fPs(v, t)
     End Function
 
     Private Function fPvD(ByVal t As Integer, ByVal v As Single, ByVal a As Single, ByVal Grad As Single) As Single
-        Return fPr(v) + fPair(v, t) + fPaFZ(v, a) + fPs(v, Grad)
+        Return fPr(v, Grad) + fPair(v, t) + fPaFZ(v, a) + fPs(v, Grad)
     End Function
 
     '----------------Rolling-resistance----------------
-    Private Function fPr(ByVal v As Single) As Single
-        Return CSng((VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * (VEH.Fr0 + VEH.Fr1 * v + VEH.Fr2 * v ^ 2 + VEH.Fr3 * v ^ 3 + VEH.Fr4 * v ^ 4) * v * 0.001)
+    Private Function fPr(ByVal v As Single, ByVal t As Integer) As Single
+        Return CSng(Math.Cos(Math.Atan(MODdata.Vh.Grad(t) * 0.01)) * (VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * (VEH.Fr0 + VEH.Fr1 * v + VEH.Fr2 * v ^ 2 + VEH.Fr3 * v ^ 3 + VEH.Fr4 * v ^ 4) * v * 0.001)
+    End Function
+
+    Private Function fPr(ByVal v As Single, ByVal Grad As Single) As Single
+        Return CSng(Math.Cos(Math.Atan(Grad * 0.01)) * (VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * (VEH.Fr0 + VEH.Fr1 * v + VEH.Fr2 * v ^ 2 + VEH.Fr3 * v ^ 3 + VEH.Fr4 * v ^ 4) * v * 0.001)
     End Function
 
     '----------------Drag-resistance----------------
@@ -2433,11 +2437,11 @@ lb_nOK:
 
     '----------------Slope resistance ----------------
     Private Function fPs(ByVal v As Single, ByVal t As Integer) As Single
-        Return CSng(((VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * MODdata.Vh.Grad(t) * 0.01 * v) * 0.001)
+        Return CSng(((VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * Math.Sin(Math.Atan(MODdata.Vh.Grad(t) * 0.01)) * v) * 0.001)
     End Function
 
     Private Function fPs(ByVal v As Single, ByVal Grad As Single) As Single
-        Return CSng(((VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * Grad * 0.01 * v) * 0.001)
+        Return CSng(((VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * Math.Sin(Math.Atan(Grad * 0.01)) * v) * 0.001)
     End Function
 
     '----------------Ancillaries(Nebenaggregate) ----------------

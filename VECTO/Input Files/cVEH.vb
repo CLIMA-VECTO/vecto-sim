@@ -753,9 +753,9 @@ lbError:
                     l += 1
                     line = file.ReadLine
                     Try
-                        'PHEM:    n, PeIn, PeOut => x=n, y=PeOut, z=PeIn |@@| PHEM:    n, PeIn, PeOut => x=n, y=PeOut, z=PeIn
-                        'PHEM: GBmap0.AddPoints(CDbl(line(0)) * n_norm, CDbl(line(2)) * Pe_norm, CDbl(line(1)) * Pe_norm) |@@| PHEM: GBmap0.AddPoints(CDbl(line(0)) * n_norm, CDbl(line(2)) * Pe_norm, CDbl(line(1)) * Pe_norm)
-                        'old version: VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn |@@| VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn
+                        'PHEM:    n, PeIn, PeOut => x=n, y=PeOut, z=PeIn
+                        'PHEM: GBmap0.AddPoints(CDbl(line(0)) * n_norm, CDbl(line(2)) * Pe_norm, CDbl(line(1)) * Pe_norm) 
+                        'old version: VECTO: n, M_in, M_loss => x=n, y=PeOut, z=PeIn 
                         'VECTO: n, M_in, M_loss => x=n, y=M_out, z=M_in
                         nU = CDbl(line(0))
                         M_in = CDbl(line(1))

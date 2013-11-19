@@ -1,12 +1,12 @@
 VECTO ?.? (future release) TODO
-- User Manual:
+* User Manual:
 	JSON
-- Correct Pg (sin(arctan(Stg)) statt Stg) and Proll (cos) calculation (Road gradient)   
 
 
-VECTO 1.4.RC4 (current source - next release)
-- Bugfix: Gears using torque converter and transmission loss maps may cause invalid "out of engine operation range" errors
-- Null values for FzISO will abort calculation
+VECTO x.x (current source - next release)
+* Bugfix: Gears using torque converter and transmission loss maps may cause invalid "out of engine operation range" errors
+* Null values for FzISO will abort calculation
+* Exact road gradient calculation (sin(arctan(grad)*m*g) instead of grad*m*g) and road gradient influence on roll resistance (cos(arctan(grad)*m*g instead of m*g)
 
 
 VECTO 1.4.RC4
@@ -84,8 +84,8 @@ VECTO 1.1 beta 3
 
 * FC Extrapolation will abort the calculation
 * Transmission Type selection in Gearbox (.vgbx) file.
-* Enables/Disables transmission type-specific options 
-* In Proof-Of-Concept mode "Custom" type is available with all options enabled.
+** Enables/Disables transmission type-specific options 
+** In Proof-Of-Concept mode "Custom" type is available with all options enabled.
 * Automatic Transmission mode with Torque Converter: Input parameters in Gearbox file !!still being tested!!
 * Option to open files with GRAPHi or user-defined tool
 * User Manual updated
