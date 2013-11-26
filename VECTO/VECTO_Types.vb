@@ -101,6 +101,7 @@ Public Enum tDriComp
     t
     V
     Grad
+    Alt
     nn
     Gears
     Padd

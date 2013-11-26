@@ -287,9 +287,17 @@ lbSkip0:
                         GoTo lbAusg
                     End If
 
+                    'Grad to Alt
+                    DRI.GradToAlt()
+
                     'Convert v(s) into v(t) (optional)
                     If DRI.Scycle Then
+
+                        MODdata.Vh.SetAlt()
+
+
                         If MsgOut Then WorkerMsg(tMsgID.Normal, "Converting cycle (v(s) => v(t))", MsgSrc)
+
                         If Not DRI.ConvStoT() Then
                             CyclAbrtedByErr = True
                             GoTo lbAusg
@@ -313,6 +321,7 @@ lbSkip0:
 
                     'De-normalize
                     DRI.DeNorm()
+
 
 
                     '----------------------------------------------------------------------------

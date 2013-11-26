@@ -1,0 +1,22 @@
+﻿c VECTO Engine Input File
+c VECTO 1.4 RC1
+c 04.09.2013 14:06:31
+c Make & Model
+Demo Engine
+c Rated power [kW]
+185
+c Displacement [ccm]
+6000
+c Rated speed [rpm]
+2200
+c Idling speed [rpm]
+600
+c Inertia [kgm2]
+2.8
+c Full load curves
+Demo_EngineFullload.vfld,0 - 99
+<//>
+c Fuel map
+Demo_EngineFcmap.vmap
+c WHTC test results
+<NOFILE>

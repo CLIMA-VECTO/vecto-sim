@@ -30,6 +30,7 @@ Public Class cMOD
     Public PaEng As List(Of Single)
     Public PaGB As List(Of Single)
     Public Paux As Dictionary(Of String, List(Of Single))
+    Public Grad As List(Of Single)
 
     Public EngState As List(Of tEngState)
 
@@ -72,6 +73,7 @@ Public Class cMOD
         PaEng = New List(Of Single)
         PaGB = New List(Of Single)
         Paux = New Dictionary(Of String, List(Of Single))
+        Grad = New List(Of Single)
 
         EngState = New List(Of tEngState)
 
@@ -118,6 +120,7 @@ Public Class cMOD
             PaEng = Nothing
             PaGB = Nothing
             Paux = Nothing
+            Grad = Nothing
 
             EngState = Nothing
 
@@ -527,7 +530,7 @@ Public Class cMOD
                     s.Append(Sepp & .Vh.a(t))
 
                     'Slope
-                    s.Append(Sepp & .Vh.Grad(t))
+                    s.Append(Sepp & .Grad(t))
 
                 End If
 

@@ -78,17 +78,6 @@ Public Class cDRI
         Scycle = False
     End Sub
 
-    Public Sub ADVinit()
-        ResetMe()
-        Tvorg = True
-        Vvorg = True
-        GradVorg = True
-        Values = New Dictionary(Of tDriComp, List(Of Double))
-        'Values.Add(tDriComp.t, New List (Of Single))             '<= Needed only if ADVANCE > 1 Hz supported
-        Values.Add(tDriComp.V, New List(Of Double))
-        Values.Add(tDriComp.Grad, New List(Of Double))
-    End Sub
-
     Public Function ReadFile() As Boolean
         Dim file As cFile_V3
         Dim line As String()
@@ -677,6 +666,48 @@ lbEr:
 
     End Sub
 
+    Public Sub GradToAlt()
+        Dim i As Integer
+        Dim v0 As New List(Of Double)
+        Dim vg As List(Of Double)
+        Dim vs As List(Of Double)
+
+        'Skip if altitude is defined already
+        If Values.ContainsKey(tDriComp.Alt) Then Exit Sub
+
+
+        If GradVorg Then
+
+            vg = Values(tDriComp.Grad)
+
+            v0.Add(0)
+
+            If Scycle Then
+
+                vs = Values(tDriComp.s)
+
+                For i = 1 To tDim
+
+                    v0.Add(v0(i - 1) + ((vg(i) + vg(i - 1)) / 200) * (vs(i) - vs(i - 1)))
+
+                Next
+            End If
+
+
+
+        Else
+
+            For i = 0 To tDim
+                v0.Add(0)
+            Next
+
+        End If
+
+        Values.Add(tDriComp.Alt, v0)
+        Values.Remove(tDriComp.Grad)
+
+    End Sub
+
     Public Function ConvStoT() As Boolean
         Dim i As Integer
         Dim j As Integer
@@ -691,7 +722,7 @@ lbEr:
         Dim vstep As Double
         Dim Dist As List(Of Double)
         Dim Speed As List(Of Double)
-        Dim Grad As List(Of Double)
+        Dim Alt As List(Of Double)
         Dim StopTime As List(Of Double)
         Dim Time As New List(Of Double)
         Dim tValues As New Dictionary(Of tDriComp, List(Of Double))
@@ -746,14 +777,14 @@ lbEr:
         StopTime = Values(tDriComp.StopTime)
         vstep = 0.001
 
-        If Values.ContainsKey(tDriComp.Grad) Then
-            Grad = Values(tDriComp.Grad)
+        If Values.ContainsKey(tDriComp.Alt) Then
+            Alt = Values(tDriComp.Alt)
         Else
-            Grad = New List(Of Double)
+            Alt = New List(Of Double)
             For i = 0 To tDim
-                Grad.Add(0)
+                Alt.Add(0)
             Next
-            Values.Add(tDriComp.Grad, Grad)
+            Values.Add(tDriComp.Alt, Alt)
         End If
 
         For Each ValKV In Values

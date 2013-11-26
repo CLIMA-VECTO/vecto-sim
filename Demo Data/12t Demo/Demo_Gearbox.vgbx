@@ -1,50 +1,64 @@
-﻿c VECTO Gearbox Input File
-c VECTO 1.4 RC1
-c 04.09.2013 14:06:29
-c Make & Model
-Demo
-c Gearbox rotational inertia [kgm2]
-0
-c Traction Interruption
-1
-c Gears (0=axle)
-c Ratio [-], Loss Map or Efficiency, Is TC gear
-c Gear 0
-4.3,0.96,0
-c Gear 1
-6.696,0.96,0
-c Gear 2
-3.806,0.96,0
-c Gear 3
-2.289,0.96,0
-c Gear 4
-1.48,0.96,0
-c Gear 5
-1,0.98,0
-c Gear 6
-0.728,0.96,0
-<//>
-c Gear shift polygons file
-ShiftPolygons.vgbs
-c Torque Reserve [%]
-10
-c Skip gears
-1
-c Minimum time between two gear shifts [s]
-3
-c Start Torque Reserve [%]
-40
-c Vehicle speed with clutch fully closed [m/s]
-2
-c Acceleration during start [m/s2]
-0.6
-c Shift inside polygons
-0
-c Gearbox Type
-0
-c TC On/Off
-0
-c TC characteristics file
-<NOFILE>
-c TC reference rpm
-0
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (eed25180-b54a-46f8-a51e-2182e6c955c5)",
+    "Date": "26.11.2013 11:18:21",
+    "AppVersion": "1.4.RC4 test3",
+    "FileVersion": "1.0"
+  },
+  "Body": {
+    "ModelName": "Demo",
+    "Inertia": 0.0,
+    "TracInt": 1.0,
+    "Gears": [
+      {
+        "Ratio": 4.3,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 6.696,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 3.806,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 2.289,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 1.48,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 1.0,
+        "Efficiency": "0.98",
+        "TCactive": false
+      },
+      {
+        "Ratio": 0.728,
+        "Efficiency": "0.96",
+        "TCactive": false
+      }
+    ],
+    "ShiftPolygons": "ShiftPolygons.vgbs",
+    "TqReserve": 10.0,
+    "SkipGears": true,
+    "ShiftTime": 3,
+    "EaryShiftUp": false,
+    "StartTqReserve": 40.0,
+    "StartSpeed": 2.0,
+    "StartAcc": 0.6,
+    "GearboxType": "MT",
+    "TorqueConverter": {
+      "Enabled": false,
+      "File": "<NOFILE>",
+      "RefRPM": 0.0
+    }
+  }
+}

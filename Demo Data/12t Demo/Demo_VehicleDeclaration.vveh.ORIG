@@ -1,22 +1,22 @@
 ﻿c VECTO Vehicle Input File
 c VECTO 1.4 RC3
-c 02.10.2013 17:34:50
+c 02.10.2013 17:27:18
 c Curb weight vehicle [kg]
-8862
+7750
 c Curb weight extra trailer/body [kg]
 0
 c Vehicle loading [kg]
-0
+2120
 c Cd value [-]
-0.7005663
+0.6
 c Cross sectional area [m^2]
 8.8
 c Wheels inertia [kgm^2]
-216.2271
+39
 c Wheel effective diameter [m]
-0.848974
+0.849
 c Cd Mode, Input File
-0,<NOFILE>
+1,..\..\..\Default Data\VCDV\Truck.vcdv
 c Retarder Type (0=None, 1=Primary, 2=Secondary)
 0
 c Retarder Ratio
@@ -25,8 +25,8 @@ c Retarder File
 <NOFILE>
 c Axle configurations
 c Axle weight share [-], RRC [N/N],Fz ISO [N]
-0.4,0,0.007144311,20800
-0.6,0,0.008081271,20800
+0.4,0,0.008343465,20800
+0.6,0,0.00943769,20800
 <//>
 c VehCat
 0

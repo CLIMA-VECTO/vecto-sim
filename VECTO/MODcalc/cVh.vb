@@ -6,7 +6,6 @@ Public Class cVh
     Private lV As List(Of Single)       'Ist-Geschw. in Zwischensekunden.
     Private lV0ogl As List(Of Single)   'Original DRI-Geschwindigkeit. Wird nicht geändert.
     Private lV0 As List(Of Single)      'DRI-Geschwindigkeit. Bei Geschw.-Reduktion in Zeitschritt t wird LV0(t+1) reduziert.
-    Private lGrad As List(Of Single)
     Private lGears As List(Of Short)
     Private lPadd As List(Of Single)
     Private lVairVres As List(Of Single)
@@ -24,12 +23,17 @@ Public Class cVh
 
     Public NoDistCorr As List(Of Boolean)
 
+    Private lAlt0 As List(Of Double)
+    Private ls0 As List(Of Single)
+    Private iAlt As Integer
+    Private iAltDim As Integer
 
     Public Sub Init()
         lV = New List(Of Single)
         lV0ogl = New List(Of Single)
         lV0 = New List(Of Single)
-        lGrad = New List(Of Single)
+        lAlt0 = New List(Of Double)
+        ls0 = New List(Of Single)
         lGears = New List(Of Short)
         lPadd = New List(Of Single)
         la = New List(Of Single)
@@ -38,13 +42,16 @@ Public Class cVh
         lVairBeta = New List(Of Single)
         EcoRoll = New List(Of Boolean)
         NoDistCorr = New List(Of Boolean)
+        iAlt = 1
+        iAltDim = 0
     End Sub
 
     Public Sub CleanUp()
         lV = Nothing
         lV0ogl = Nothing
         lV0 = Nothing
-        lGrad = Nothing
+        lAlt0 = Nothing
+        ls0 = Nothing
         lGears = Nothing
         lPadd = Nothing
         la = Nothing
@@ -58,6 +65,7 @@ Public Class cVh
     Public Sub VehCylceInit()
 
         Dim s As Integer
+        Dim sl As Integer
         Dim L As List(Of Double)
         Dim Val As Single
 
@@ -92,17 +100,23 @@ Public Class cVh
 
         End If
 
-        'Slope
-        If DRI.GradVorg Then
-            L = DRI.Values(tDriComp.Grad)
-            For s = 0 To MODdata.tDim
-                lGrad.Add((L(s + 1) + L(s)) / 2)
+        'Altitude / distance
+        If Not DRI.Scycle Then
+            L = DRI.Values(tDriComp.Alt)
+            lAlt0.Add(0)
+            ls0.Add(lV0(0))
+            sl = 0
+            For s = 1 To MODdata.tDim + 1
+                If lV0(s) > 0 Then
+                    sl += 1
+                    ls0.Add(ls0(sl - 1) + lV0(s))
+                    lAlt0.Add(L(s))
+                End If
             Next
-        Else
-            For s = 0 To MODdata.tDim
-                lGrad.Add(0)
-            Next
+            iAltDim = ls0.Count - 1
         End If
+
+
 
         'Gear - but not Averaged, rather Gang(t) = DRI.Gear(t)
         If DRI.Gvorg Then
@@ -187,17 +201,17 @@ Public Class cVh
 
         End If
 
-        'Slope
-        If DRI.GradVorg Then
-            L = DRI.Values(tDriComp.Grad)
-            For s = 0 To MODdata.tDim
-                lGrad.Add(L(s))
-            Next
-        Else
-            For s = 0 To MODdata.tDim
-                lGrad.Add(0)
-            Next
-        End If
+        'Altitude / distance
+        L = DRI.Values(tDriComp.Alt)
+        lAlt0.Add(0)
+        ls0.Add(lV0(0))
+        For s = 1 To MODdata.tDim
+            If lV0(s) > 0 Then
+                ls0.Add(ls0(s - 1) + lV0(s))
+                lAlt0.Add(L(s))
+            End If
+        Next
+        iAltDim = ls0.Count - 1
 
         'Gear - not Averaged, rather Gear(t) = DRI.Gear(t)
         If DRI.Gvorg Then
@@ -355,11 +369,13 @@ Public Class cVh
     Public Function DistCorrection(ByVal t As Integer, ByVal VehState As tVehState) As Boolean
         Dim v As Single
 
+        v = lV(t)
+        dWegIst += v
+
+        If Not Cfg.WegKorJa Then Return False
+
         If t + 1 > MODdata.tDim Then Return False
 
-        v = lV(t)
-
-        dWegIst += v
 
         If WegX + 2 < MODdata.tDimOgl Then
 
@@ -418,7 +434,6 @@ Public Class cVh
             la(t + 1) = lV0(t + 2) - lV0(t + 1)
         End If
 
-        lGrad.Insert(t, lGrad(t))
         lGears.Insert(t, lGears(t))
         lPadd.Insert(t, lPadd(t))
         EcoRoll.Insert(t, EcoRoll(t))
@@ -449,7 +464,6 @@ Public Class cVh
             la(t - 1) = lV0(t) - lV0(t - 1)
         End If
 
-        lGrad.Insert(t, lGrad(t))
         lGears.Insert(t, lGears(t))
         lPadd.Insert(t, lPadd(t))
         EcoRoll.Insert(t, EcoRoll(t))
@@ -482,7 +496,6 @@ Public Class cVh
             la(t + 1) = lV0(t + 2) - lV0(t + 1)
         End If
 
-        lGrad.RemoveAt(t)
         lGears.RemoveAt(t)
         lPadd.RemoveAt(t)
         EcoRoll.RemoveAt(t)
@@ -524,11 +537,103 @@ Public Class cVh
         End Get
     End Property
 
-    Public ReadOnly Property Grad(ByVal t As Integer) As Single
-        Get
-            Return lGrad(t)
-        End Get
-    End Property
+
+    Public Sub SetAlt()
+        Dim Ls As List(Of Double)
+        Dim Lalt As List(Of Double)
+        Dim sl As Integer
+        Dim s As Integer
+
+        'Altitude / distance
+        Ls = DRI.Values(tDriComp.s)
+        Lalt = DRI.Values(tDriComp.Alt)
+
+        lAlt0.Add(Lalt(0))
+        ls0.Add(Ls(0))
+
+        sl = 0
+        For s = 1 To DRI.tDim
+            If Ls(s) > ls0(sl) Then
+                sl += 1
+                ls0.Add(Ls(s))
+                lAlt0.Add(Lalt(s))
+            End If
+        Next
+        iAltDim = ls0.Count - 1
+
+    End Sub
+
+    Public Function fGrad(ByVal s As Double) As Single
+        Dim i As Int32
+        Dim dh As Single
+        Dim ds As Single
+
+        If ls0(0) >= s Then
+            i = 1
+            GoTo lbInt
+        End If
+
+        i = iAlt
+
+        If ls0(i - 1) > s Then
+
+            Do While ls0(i - 1) > s And i > 1
+                i -= 1
+            Loop
+
+        Else
+
+            Do While ls0(i) < s And i < iAltDim
+                i += 1
+            Loop
+
+        End If
+
+
+lbInt:
+        iAlt = i
+
+        ds = ls0(i) - ls0(i - 1)
+        dh = lAlt0(i) - lAlt0(i - 1)
+        Return (dh / ds) * 100
+
+    End Function
+
+    Public Function AltIntp(ByVal s As Single, Optional ByVal OverwiAlt As Boolean = False) As Single
+        Dim i As Int32
+
+        If ls0(0) >= s Then
+            i = 1
+            GoTo lbInt
+        End If
+
+        i = iAlt
+
+        If ls0(i - 1) > s Then
+
+            Do While ls0(i - 1) > s And i > 1
+                i -= 1
+            Loop
+
+        Else
+
+            Do While ls0(i) < s And i < iAltDim
+                i += 1
+            Loop
+
+        End If
+
+
+lbInt:
+
+        If OverwiAlt Then iAlt = i
+
+        Return (s - ls0(i - 1)) * (lAlt0(i) - lAlt0(i - 1)) / (ls0(i) - ls0(i - 1)) + lAlt0(i - 1)
+
+
+
+    End Function
+        
 
     Public ReadOnly Property Padd(ByVal t As Integer) As Single
         Get

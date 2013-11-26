@@ -1,0 +1,32 @@
+﻿{
+  "Header": {
+    "FileVersion": "1.1",
+    "LicenseOwner": "Raphael Luz IVT TU-Graz (eed25180-b54a-46f8-a51e-2182e6c955c5)",
+    "Mode": "auto",
+    "Date": "26.11.2013 10:17:04 (UTC)"
+  },
+  "Body": {
+    "FileList": [
+      {
+        "Path": "Demo_Declaration.vsum",
+        "SHA1-Hash": "beA2tLwR+7Df1itC4dgI/+GGp7w="
+      },
+      {
+        "Path": "Demo_Declaration.vsum.json",
+        "SHA1-Hash": "Zvr/TkE8RkPZamlGbxaNAHyFAJA="
+      }
+    ],
+    "PublicKey": {
+      "DSAKeyValue": {
+        "P": "sR1aoulbG5Ncluho9AYd/b12NOopPyQnQ3+w0NjVIaGskaSRGzQkIpTkrSzqEo60SAz2FYJhPF+jCjBBMcDwkDG/3T4E2g5v2EimOxkvAedUVUowmamYFZeEdKinZZRLweKLerJynzCiMT91UUgBRlnwQC1XcD1c97kH8BGdRCM=",
+        "Q": "urOX7Qwfz2PBrzcOn4t2OnTd43M=",
+        "G": "P2aPMfD/4xSsZtOnPcvqFky7No29Yyq1/frV1JGHvJ/HMw+hwFzMf10I3otlhjnoOq/Ochrcy4wxHoF5+I2IAHrIclRnYw9pCK6YlVlwwNxU4PnKzLT96jBcUJLnFQtRtg+9fm+RrY6G+OEqJ7h0s8mbbZIqkorGG07JQpg48Bo=",
+        "Y": "R/r/QAoEdaPMbYQHe39gH3b4PBhMJh3CBXmRwDsmazT8+tzs23cn5xWe+vAP8rvEWN44jj3SViLqCmgHBl2jvEvIGbXB3QyEjNEwfDpBmw+lvhtPOgjriuNEHQUbas7PEimwXUZGI4A191nqKbSNG+RJ1pUSZt0CGL8QeSUcd+s=",
+        "J": "8trQiHpJyZ7gYf3HVyAX0+Uf08Mo/6v8a2NlyOBVpesaxgizbrUmLDM/4JRzqd42hcMflFjJtNtT6bAT4eGHekPJOUbF9noLN+qoEjkcJk5B0wOOQ2RnpKt003PW0/xf7od8vUb49fmSRdbW",
+        "Seed": "I4D8rta71nAwKHFEd9tCWTt6O4M=",
+        "PgenCounter": "gg=="
+      }
+    },
+    "Signature": "pB5FtnwQlEdNEZ02D1zPzggT5kyGZgeJNkEFB9HbIJaflm7e3qwtFw=="
+  }
+}

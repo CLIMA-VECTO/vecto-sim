@@ -195,6 +195,8 @@ Public Class cPower
         Dim vRollout As Single
         Dim ProgBarShare As Int16
         Dim ProgBarLACpart As Int16
+        Dim dist As New List(Of Double)
+
 
         Dim MsgSrc As String
 
@@ -223,7 +225,7 @@ Public Class cPower
                 ProgBarLACpart = 2
             Else
                 ProgBarShare = 2
-                ProgBarLACpart = 0
+                ProgBarLACpart = 0  '0=OFF
             End If
         Else
             If GEN.LookAheadOn Then
@@ -231,11 +233,17 @@ Public Class cPower
                 ProgBarLACpart = 1
             Else
                 ProgBarShare = 0
-                ProgBarLACpart = 0
+                ProgBarLACpart = 0  '0=OFF
             End If
         End If
 
         Positions = New List(Of Short)
+
+        'Distance over time
+        dist.Add(0)
+        For i = 1 To MODdata.tDim
+            dist.Add(dist(i - 1) + Vh.V(i))
+        Next
 
         'Generate Positions List
         For i = 0 To MODdata.tDim
@@ -277,7 +285,7 @@ Public Class cPower
             End If
 
             'Wheel-Power
-            PvorD = fPvD(i)
+            PvorD = fPvD(i, Vh.fGrad(dist(i)))
 
             Select Case PvorD
                 Case Is > 0.0001
@@ -346,7 +354,7 @@ Public Class cPower
 
                         Vmax = MODdata.Vh.Vsoll(i) + GEN.OverSpeed / 3.6
                         Vmin = Math.Max(0, MODdata.Vh.Vsoll(i) - GEN.UnderSpeed / 3.6)
-                        vRollout = fRolloutSpeed(i, 1)
+                        vRollout = fRolloutSpeed(i, 1, Vh.fGrad(dist(i)))
                         aRollout = (2 * vRollout - Vh.V0(i)) - Vh.V0(i)
 
                         If vRollout < Vmin Then
@@ -396,7 +404,7 @@ Public Class cPower
                             'Secondary Progressbar
                             ProgBarCtrl.ProgJobInt = CInt((100 / ProgBarShare) * i / MODdata.tDim)
 
-                            vCoasting = fCoastingSpeed(i, Gear)
+                            vCoasting = fCoastingSpeed(i, dist(i), Gear)
                             Vmax = MODdata.Vh.Vsoll(i) + GEN.OverSpeed / 3.6
 
                             If vCoasting <= Vmax Then
@@ -483,7 +491,7 @@ Public Class cPower
 
                 'If vehicle stops too early reduce coasting time, i.e. set  Coasting-Start later
                 If GEN.LookAheadOn Then
-                    Do While i0 > t AndAlso fCoastingSpeed(t, Gears(t), i0 - t) < Vh.V(i0)
+                    Do While i0 > t AndAlso fCoastingSpeed(t, dist(t), Gears(t), i0 - t) < Vh.V(i0)
                         t += 1
                     Loop
                 End If
@@ -504,7 +512,7 @@ Public Class cPower
 
                             For j = t To i0
                                 Vist = Vh.V(j)
-                                vCoasting = fCoastingSpeed(j, Gears(j))
+                                vCoasting = fCoastingSpeed(j, dist(j), Gears(j))
                                 aCoasting = (2 * vCoasting - Vh.V0(j)) - Vh.V0(j)
                                 If vCoasting < Vist And aCoasting >= GEN.aDesMin(Vist) Then
                                     'If Vrollout < Vist Then
@@ -582,6 +590,8 @@ Public Class cPower
 
 
         Dim LastPmax As Single
+        Dim dist As Double
+        Dim dist0 As Double
 
         Dim MsgSrc As String
 
@@ -649,6 +659,9 @@ Public Class cPower
         'Theoretical maximum speed [m/s] - set to Speed ​​at 1.2 x Nominal-Revolutions in top-Gear
         GVmax = 1.2 * VEH.nNenn * VEH.Dreifen * Math.PI / (VEH.AchsI * VEH.Igetr(VEH.ganganz) * 60)
 
+        dist = 0
+        dist0 = 0
+
         jz = -1
 
         '***********************************************************************************************
@@ -664,7 +677,7 @@ Public Class cPower
             FirstSecItar = True
 
             'Secondary Progressbar
-            ProgBarCtrl.ProgJobInt = CInt((100 / ProgBarShare) * jz / MODdata.tDim + (100 / ProgBarShare))
+            ProgBarCtrl.ProgJobInt = CInt((100 / ProgBarShare) * jz / MODdata.tDim + (100 - 100 / ProgBarShare))
 
 
             '   Determine State
@@ -677,6 +690,9 @@ lbGschw:
             'Now through DRI-class
             Vist = Vh.V(jz)
             aist = Vh.a(jz)
+
+            'distance 
+            dist = dist0 + Vist
 
             StStPossible = False
 
@@ -750,7 +766,7 @@ lbGschw:
                 End If
             End If
 
-            PvorD = fPvD(jz)
+            PvorD = fPvD(jz, Vh.fGrad(dist))
 
             Select Case PvorD
                 Case Is > 0.0001
@@ -814,9 +830,9 @@ lbGschw:
 
                     'Gear-shifting Model
                     If GBX.TCon Then
-                        Gear = fGearTC(jz)
+                        Gear = fGearTC(jz, Vh.fGrad(dist))
                     Else
-                        Gear = fGearVECTO(jz)
+                        Gear = fGearVECTO(jz, Vh.fGrad(dist))
                     End If
 
                     'Must be reset here because the Gear-shifting model may cause changes
@@ -1272,7 +1288,7 @@ lb_nOK:
                             ZgkrDt = 1
                         End If
 
-                        Vrollout = fRolloutSpeed(jz, ZgkrDt)
+                        Vrollout = fRolloutSpeed(jz, ZgkrDt, Vh.fGrad(dist))
 
                         If Vrollout < Vist Or VehState0 <> tVehState.Dec Then Vh.SetSpeed(jz, Vrollout)
 
@@ -1288,6 +1304,9 @@ lb_nOK:
             '------------------------- PNR --------------------------------------------------------------------
             '--------------------------------------------------------------------------------------------------
             '   Finish Second
+
+            'distance 
+            dist0 += Vist
 
             'Start / Stop - Activation-Speed Control
             If GEN.StartStop Then
@@ -1318,11 +1337,12 @@ lb_nOK:
 
             MODdata.Pa.Add(fPaFZ(MODdata.Vh.V(jz), MODdata.Vh.a(jz)))
             MODdata.Pluft.Add(fPair(MODdata.Vh.V(jz), jz))
-            MODdata.Proll.Add(fPr(MODdata.Vh.V(jz), jz))
-            MODdata.Pstg.Add(fPs(MODdata.Vh.V(jz), jz))
+            MODdata.Proll.Add(fPr(MODdata.Vh.V(jz), Vh.fGrad(dist)))
+            MODdata.Pstg.Add(fPs(MODdata.Vh.V(jz), Vh.fGrad(dist)))
             MODdata.Pbrake.Add(Pbrake)
             MODdata.Psum.Add(PvorD)
             MODdata.PauxSum.Add(Paux)
+            MODdata.Grad.Add(Vh.fGrad(dist))
 
             For Each AuxID As String In VEH.AuxRefs.Keys
                 MODdata.Paux(AuxID).Add(VEH.Paux(AuxID, jz, nU))
@@ -1367,7 +1387,7 @@ lb_nOK:
                 End If
             End If
 
-            If Cfg.WegKorJa Then Vh.DistCorrection(jz, VehState0)
+            Vh.DistCorrection(jz, VehState0)
 
             'Traction Interruption
             If TracIntrTurnOff Then
@@ -1391,7 +1411,7 @@ lb_nOK:
                         ZgkrDt = 1
                     End If
 
-                    Vrollout = fRolloutSpeed(jz + 1, ZgkrDt)
+                    Vrollout = fRolloutSpeed(jz + 1, ZgkrDt, Vh.fGrad(dist))
                     If Vrollout < Vist Or VehState0 <> tVehState.Dec Then Vh.SetSpeed(jz + 1, Vrollout)
 
                 End If
@@ -1572,7 +1592,7 @@ lb_nOK:
 
     End Function
 
-    Private Function fRolloutSpeed(ByVal t As Integer, ByVal dt As Single) As Single
+    Private Function fRolloutSpeed(ByVal t As Integer, ByVal dt As Single, ByVal Grad As Single) As Single
 
         Dim vstep As Double
         Dim vVorz As Integer
@@ -1593,7 +1613,7 @@ lb_nOK:
         eps = 0.00005
         a = MODdata.Vh.a(t)
 
-        PvD = fPvD(t, v, a)
+        PvD = fPvD(t, v, a, Grad)
 
         If PvD > eps Then
             vVorz = -1
@@ -1628,7 +1648,7 @@ lb_nOK:
 
                 LastPvD = PvD
 
-                PvD = fPvD(t, v, a)
+                PvD = fPvD(t, v, a, Grad)
 
             End If
 
@@ -1638,13 +1658,13 @@ lb_nOK:
 
     End Function
 
-    Private Function fCoastingSpeed(ByVal t As Integer, ByVal Gear As Integer) As Single
+    Private Function fCoastingSpeed(ByVal t As Integer, ByVal s As Double, ByVal Gear As Integer) As Single
 
-        Return fCoastingSpeed(t, Gear, MODdata.Vh.V(t), MODdata.Vh.a(t))
+        Return fCoastingSpeed(t, s, Gear, MODdata.Vh.V(t), MODdata.Vh.a(t))
 
     End Function
 
-    Private Function fCoastingSpeed(ByVal t As Integer, ByVal Gear As Integer, ByVal v As Single, ByVal a As Single, Optional ByVal v0 As Single? = Nothing) As Single
+    Private Function fCoastingSpeed(ByVal t As Integer, ByVal s As Double, ByVal Gear As Integer, ByVal v As Single, ByVal a As Single, Optional ByVal v0 As Single? = Nothing) As Single
 
         Dim vstep As Double
         Dim vVorz As Integer
@@ -1662,7 +1682,7 @@ lb_nOK:
         Pdrag = FLD(Gear).Pdrag((nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl))
 
         'Do not allow positive road gradients     
-        Grad = MODdata.Vh.Grad(t)
+        Grad = MODdata.Vh.fGrad(s)
 
 
         PvD = fPvD(t, v, a, Grad)
@@ -1713,7 +1733,7 @@ lb_nOK:
     End Function
 
 
-    Private Function fCoastingSpeed(ByVal t As Integer, ByVal Gear As Integer, ByVal dt As Integer) As Single
+    Private Function fCoastingSpeed(ByVal t As Integer, ByVal s As Double, ByVal Gear As Integer, ByVal dt As Integer) As Single
         Dim a As Single
         Dim v As Single
         Dim vtemp As Single
@@ -1730,7 +1750,7 @@ lb_nOK:
         End If
 
         For t0 = t To t + dt
-            vtemp = fCoastingSpeed(t0, Gear, v, a, v0)
+            vtemp = fCoastingSpeed(t0, s, Gear, v, a, v0)
 
             If 2 * vtemp - v0 < 0 Then vtemp = v0 / 2
 
@@ -1780,7 +1800,7 @@ lb_nOK:
 
     End Function
 
-    Private Function fStartGear(ByVal t As Integer) As Integer
+    Private Function fStartGear(ByVal t As Integer, ByVal Grad As Single) As Integer
         Dim Gear As Integer
         Dim nn As Single
         Dim MsgSrc As String
@@ -1809,7 +1829,7 @@ lb_nOK:
                 Pmax = FLD(Gear).Pfull(nn)
 
                 'power demand - cut at full load / drag so that fGSnnUp and fGSnnDown don't extrapolate
-                Pe = Math.Min(fPeGearMod(Gear, t) * VEH.Pnenn, Pmax)
+                Pe = Math.Min(fPeGearMod(Gear, t, Grad) * VEH.Pnenn, Pmax)
                 Pe = Math.Max(Pe, FLD(Gear).Pdrag(nn))
 
                 'torque demand
@@ -1850,7 +1870,7 @@ lb_nOK:
                 MdMax = Pmax * 1000 / (nU * 2 * Math.PI / 60)
 
                 'power demand
-                Pe = Math.Min(fPeGearMod(Gear, t, GBX.gs_StartSpeed, GBX.gs_StartAcc) * VEH.Pnenn, Pmax)
+                Pe = Math.Min(fPeGearMod(Gear, t, GBX.gs_StartSpeed, GBX.gs_StartAcc, Grad) * VEH.Pnenn, Pmax)
                 Pe = Math.Max(Pe, FLD(Gear).Pdrag(nn))
 
                 'torque demand
@@ -1875,7 +1895,7 @@ lb_nOK:
 
     End Function
 
-    Private Function fGearTC(ByVal t As Int16) As Integer
+    Private Function fGearTC(ByVal t As Int16, ByVal Grad As Single) As Integer
         Dim LastGear As Int16
         Dim tx As Int16
         Dim nU As Single
@@ -1887,7 +1907,7 @@ lb_nOK:
         Dim OutOfRpmRange As Boolean
 
         'First time step OR first time step after stand still
-        If t = 0 Then Return fStartGear(0)
+        If t = 0 Then Return fStartGear(0, Grad)
 
         If MODdata.VehState(t - 1) = tVehState.Stopped Then Return 1
 
@@ -1903,7 +1923,7 @@ lb_nOK:
         If LastGear = 0 Then Return 1
 
         'If lockup-clutch already closed then goto normal shift model
-        If Not GBX.IsTCgear(LastGear) Then Return fGearVECTO(t)
+        If Not GBX.IsTCgear(LastGear) Then Return fGearVECTO(t, Grad)
 
         'Rpm
         nU = MODdata.nU(t - 1)
@@ -1943,7 +1963,7 @@ lb_nOK:
 
     End Function
 
-    Private Function fGearVECTO(ByVal t As Integer) As Integer
+    Private Function fGearVECTO(ByVal t As Integer, ByVal Grad As Single) As Integer
         Dim nU As Single
         Dim nn As Single
         Dim nnUp As Single
@@ -1968,7 +1988,7 @@ lb_nOK:
         Dim OutOfRpmRange As Boolean
 
         'First time step OR first time step after stand still
-        If t = 0 OrElse MODdata.VehState(t - 1) = tVehState.Stopped Then Return fStartGear(t)
+        If t = 0 OrElse MODdata.VehState(t - 1) = tVehState.Stopped Then Return fStartGear(t, Grad)
 
 
         '********* Gear Shift Polygon Model ********* 
@@ -2016,7 +2036,7 @@ lb_nOK:
         nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
 
         'Current power demand with previous gear
-        Pe = Math.Min(fPeGearMod(LastGear, t) * VEH.Pnenn, FLD(LastGear).Pfull(nn))
+        Pe = Math.Min(fPeGearMod(LastGear, t, grad) * VEH.Pnenn, FLD(LastGear).Pfull(nn))
         Pe = Math.Max(Pe, FLD(LastGear).Pdrag(nn))
 
         'Current torque demand with previous gear
@@ -2042,7 +2062,7 @@ lb_nOK:
 
                 'Continue only if rpm (for lower gear) is above idling
                 If nn >= 0 Then
-                    Pe = Math.Min(fPeGearMod(Gear - 1, t) * VEH.Pnenn, FLD(Gear - 1).Pfull(nn))
+                    Pe = Math.Min(fPeGearMod(Gear - 1, t, Grad) * VEH.Pnenn, FLD(Gear - 1).Pfull(nn))
                     Pe = Math.Max(Pe, FLD(Gear - 1).Pdrag(nn))
                     Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
                     nnUp = GBX.fGSnnUp(Md)
@@ -2064,7 +2084,7 @@ lb_nOK:
                         'Continue only if rpm (for lower gear) is above idling
                         If nn < 0 Then Exit Do
 
-                        Pe = Math.Min(fPeGearMod(Gear - 1, t) * VEH.Pnenn, FLD(Gear - 1).Pfull(nn))
+                        Pe = Math.Min(fPeGearMod(Gear - 1, t, Grad) * VEH.Pnenn, FLD(Gear - 1).Pfull(nn))
                         Pe = Math.Max(Pe, FLD(Gear - 1).Pdrag(nn))
                         Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
                         nnUp = GBX.fGSnnUp(Md)
@@ -2090,7 +2110,7 @@ lb_nOK:
 
                 'Continue only if rpm (for higher gear) is below rated rpm
                 If nn <= 1 Then
-                    Pe = Math.Min(fPeGearMod(Gear + 1, t) * VEH.Pnenn, FLD(Gear + 1).Pfull(nn))
+                    Pe = Math.Min(fPeGearMod(Gear + 1, t, Grad) * VEH.Pnenn, FLD(Gear + 1).Pfull(nn))
                     Pe = Math.Max(Pe, FLD(Gear + 1).Pdrag(nn))
                     Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
                     nnUp = GBX.fGSnnUp(Md)
@@ -2115,7 +2135,7 @@ lb_nOK:
                         'Continue only if rpm (for higher gear) is below rated rpm
                         If nn > 1 Then Exit Do
 
-                        Pe = Math.Min(fPeGearMod(Gear + 1, t) * VEH.Pnenn, FLD(Gear + 1).Pfull(nn))
+                        Pe = Math.Min(fPeGearMod(Gear + 1, t, Grad) * VEH.Pnenn, FLD(Gear + 1).Pfull(nn))
                         Pe = Math.Max(Pe, FLD(Gear + 1).Pdrag(nn))
                         Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
                         nnUp = GBX.fGSnnUp(Md)
@@ -2144,7 +2164,7 @@ lb_nOK:
 
                 'Continue only if rpm (for higher gear) is below rated rpm
                 If nn <= 1 Then
-                    Pe = Math.Min(fPeGearMod(Gear + 1, t) * VEH.Pnenn, FLD(Gear + 1).Pfull(nn))
+                    Pe = Math.Min(fPeGearMod(Gear + 1, t, Grad) * VEH.Pnenn, FLD(Gear + 1).Pfull(nn))
                     Pe = Math.Max(Pe, FLD(Gear + 1).Pdrag(nn))
                     Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
                     nnUp = GBX.fGSnnUp(Md)
@@ -2169,7 +2189,7 @@ lb_nOK:
                         'Continue only if rpm (for higher gear) is below rated rpm
                         If nn > 1 Then Exit Do
 
-                        Pe = Math.Min(fPeGearMod(Gear + 1, t) * VEH.Pnenn, FLD(Gear + 1).Pfull(nn))
+                        Pe = Math.Min(fPeGearMod(Gear + 1, t, Grad) * VEH.Pnenn, FLD(Gear + 1).Pfull(nn))
                         Pe = Math.Max(Pe, FLD(Gear + 1).Pdrag(nn))
                         Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
                         nnUp = GBX.fGSnnUp(Md)
@@ -2192,7 +2212,7 @@ lb_nOK:
         nU = fnU(Vist, Gear, Clutch = tEngClutch.Slipping)
         nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
         'Current power demand
-        Pe = Math.Min(fPeGearMod(Gear, t) * VEH.Pnenn, FLD(Gear).Pfull(nn))
+        Pe = Math.Min(fPeGearMod(Gear, t, Grad) * VEH.Pnenn, FLD(Gear).Pfull(nn))
         Pe = Math.Max(Pe, FLD(Gear).Pdrag(nn))
         'Current torque demand
         Md = Pe * 1000 / (nU * 2 * Math.PI / 60)
@@ -2251,7 +2271,7 @@ lb_nOK:
         'Deceleration-phases: Upshift suppressed
         'Acceleration phases: Downshift suppressed
         bCheck = False
-        Pjetzt = fPeGearModvD(t)
+        Pjetzt = fPeGearModvD(t, Grad)
         Pvorher = MODdata.Pe(itgangw)
         If MODdata.Vh.V(itgangw) = 0 Then
             a = Math.Abs(Vist / 0.0001 - 1)
@@ -2296,16 +2316,16 @@ lb_nOK:
     End Function
 
     'Function calculating the Power easily for Gear-shift-model
-    Private Function fPeGearModvD(ByVal t As Integer) As Single
-        Return fPvD(t) / VEH.Pnenn
+    Private Function fPeGearModvD(ByVal t As Integer, ByVal Grad As Single) As Single
+        Return fPvD(t, Grad) / VEH.Pnenn
     End Function
 
-    Private Function fPeGearMod(ByVal Gear As Integer, ByVal t As Integer, ByVal V As Single, ByVal a As Single) As Single
+    Private Function fPeGearMod(ByVal Gear As Integer, ByVal t As Integer, ByVal V As Single, ByVal a As Single, ByVal Grad As Single) As Single
         Dim PaM As Single
         Dim nU As Single
         Dim PvD As Single
 
-        PvD = fPvD(t, V, a)
+        PvD = fPvD(t, V, a, Grad)
 
         nU = fnU(V, Gear, False)
 
@@ -2324,8 +2344,8 @@ lb_nOK:
 
     End Function
 
-    Private Function fPeGearMod(ByVal Gear As Integer, ByVal t As Integer) As Single
-        Return fPeGearMod(Gear, t, MODdata.Vh.V(t), MODdata.Vh.a(t))
+    Private Function fPeGearMod(ByVal Gear As Integer, ByVal t As Integer, ByVal Grad As Single) As Single
+        Return fPeGearMod(Gear, t, MODdata.Vh.V(t), MODdata.Vh.a(t), Grad)
     End Function
 
 
@@ -2366,12 +2386,8 @@ lb_nOK:
 #Region "Leistungsberechnung"
 
     '--------------Power before Diff = At Wheel -------------
-    Private Function fPvD(ByVal t As Integer) As Single
-        Return fPr(MODdata.Vh.V(t), t) + fPair(MODdata.Vh.V(t), t) + fPaFZ(MODdata.Vh.V(t), MODdata.Vh.a(t)) + fPs(MODdata.Vh.V(t), t)
-    End Function
-
-    Private Function fPvD(ByVal t As Integer, ByVal v As Single, ByVal a As Single) As Single
-        Return fPr(v, t) + fPair(v, t) + fPaFZ(v, a) + fPs(v, t)
+    Private Function fPvD(ByVal t As Integer, ByVal Grad As Single) As Single
+        Return fPr(MODdata.Vh.V(t), Grad) + fPair(MODdata.Vh.V(t), t) + fPaFZ(MODdata.Vh.V(t), MODdata.Vh.a(t)) + fPs(MODdata.Vh.V(t), Grad)
     End Function
 
     Private Function fPvD(ByVal t As Integer, ByVal v As Single, ByVal a As Single, ByVal Grad As Single) As Single
@@ -2379,10 +2395,6 @@ lb_nOK:
     End Function
 
     '----------------Rolling-resistance----------------
-    Private Function fPr(ByVal v As Single, ByVal t As Integer) As Single
-        Return CSng(Math.Cos(Math.Atan(MODdata.Vh.Grad(t) * 0.01)) * (VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * (VEH.Fr0 + VEH.Fr1 * v + VEH.Fr2 * v ^ 2 + VEH.Fr3 * v ^ 3 + VEH.Fr4 * v ^ 4) * v * 0.001)
-    End Function
-
     Private Function fPr(ByVal v As Single, ByVal Grad As Single) As Single
         Return CSng(Math.Cos(Math.Atan(Grad * 0.01)) * (VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * (VEH.Fr0 + VEH.Fr1 * v + VEH.Fr2 * v ^ 2 + VEH.Fr3 * v ^ 3 + VEH.Fr4 * v ^ 4) * v * 0.001)
     End Function
@@ -2436,10 +2448,6 @@ lb_nOK:
     End Function
 
     '----------------Slope resistance ----------------
-    Private Function fPs(ByVal v As Single, ByVal t As Integer) As Single
-        Return CSng(((VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * Math.Sin(Math.Atan(MODdata.Vh.Grad(t) * 0.01)) * v) * 0.001)
-    End Function
-
     Private Function fPs(ByVal v As Single, ByVal Grad As Single) As Single
         Return CSng(((VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * Math.Sin(Math.Atan(Grad * 0.01)) * v) * 0.001)
     End Function

@@ -483,6 +483,7 @@ Public Class cGBX
     Public Function TCiteration(ByVal nUout As Single, ByVal PeOut As Single, ByVal t As Integer) As Boolean
         Dim nUin As Single
         Dim Mout As Single
+        Dim Min As Single
         Dim VZ As Integer
         Dim nUstep As Single
         Dim lastErr As Single
@@ -491,6 +492,9 @@ Public Class cGBX
         Dim mu As Single
 
         Dim MoutCalc As Single
+
+        Dim nUup As Single
+        Dim nUdown As Single
 
         Dim MsgSrc As String
 
@@ -541,11 +545,12 @@ Public Class cGBX
             VZ = 1
         End If
 
+
+
         lastErr = 99999
 
         'Iteration
         Do While Math.Abs(1 - MoutCalc / Mout) > DEV.TCiterPrec And nUstep > DEV.TCnUstepMin
-lb10:
             nUin += VZ * nUstep
             nu = nUout / nUin
 
@@ -553,11 +558,31 @@ lb10:
                 nUin -= VZ * nUstep
                 nUstep /= 2
                 VZ *= -1
-                GoTo lb10
+                Continue Do
+            End If
+
+            mu = fTCmu(nu)
+            Min = Mout / mu
+
+            'Up/Downshift rpms
+            nUup = GBX.fGSnnUup(Min)
+            nUdown = GBX.fGSnnUdown(Min)
+
+            'If nUin > 1.05 * nUup - 0.0001 Then
+            If nUin > VEH.nNenn - 0.0001 Then
+                'nUin = 1.05 * nUup
+                nUin = VEH.nNenn
+                nUstep /= 2
+                VZ *= -1
+                Continue Do
+            ElseIf nUin < 0.95 * nUdown + 0.0001 Then
+                nUin = 0.95 * nUdown
+                nUstep /= 2
+                VZ *= -1
+                Continue Do
             End If
 
 
-            mu = fTCmu(nu)
             MoutCalc = fTCtorque(nu, nUin) * mu
             If Math.Abs(1 - MoutCalc / Mout) > lastErr Then
                 nUstep /= 2
@@ -566,6 +591,10 @@ lb10:
             lastErr = Math.Abs(1 - MoutCalc / Mout)
         Loop
 
+        'Calc nu again because nUin might have changed
+        nu = nUout / nUin
+
+        MODdata.ModErrors.GSextrapol = ""
 
         If nUin < VEH.nLeerl Then
 
@@ -592,6 +621,8 @@ lb10:
         End If
 
 
+
+
         If Math.Abs(1 - MoutCalc / Mout) > DEV.TCiterPrec Then
 
             If MoutCalc < Mout Then
@@ -607,7 +638,6 @@ lb10:
             End If
 
         End If
-
 
         TCMin = MoutCalc / mu
         TCnUin = nUin
@@ -801,6 +831,14 @@ lbInt:
         'Interpolation
         Return (Md - gs_M(i - 1)) * (gs_nnDown(i) - gs_nnDown(i - 1)) / (gs_M(i) - gs_M(i - 1)) + gs_nnDown(i - 1)
 
+    End Function
+
+    Public Function fGSnnUup(ByVal Md As Single) As Single
+        Return fGSnnUp(Md) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl
+    End Function
+
+    Public Function fGSnnUdown(ByVal Md As Single) As Single
+        Return fGSnnDown(Md) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl
     End Function
 
     Public Function fGSnnUp(ByVal Md As Single) As Single

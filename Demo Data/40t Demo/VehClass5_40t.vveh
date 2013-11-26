@@ -12,7 +12,7 @@ c Cd value [-]
 c Cross sectional area [m^2]
 9.5
 c Wheels inertia [kgm^2]
-800
+204.6
 c Wheel effective diameter [m]
 0.975
 c Cd Mode, Input File

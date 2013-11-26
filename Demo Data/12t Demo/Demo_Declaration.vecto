@@ -1,0 +1,49 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (eed25180-b54a-46f8-a51e-2182e6c955c5)",
+    "Date": "26.11.2013 11:18:21",
+    "AppVersion": "1.4.RC4 test3",
+    "FileVersion": "1.0"
+  },
+  "Body": {
+    "VehicleFile": "Demo_VehicleDeclaration.vveh",
+    "EngineFile": "Demo_Engine.veng",
+    "GearboxFile": "Demo_Gearbox.vgbx",
+    "Cycles": [
+      "ACEA_LongHaul_AuxDemo.vdri",
+      "ACEA_RegionalDelivery_AuxDemo.vdri",
+      "ACEA_UrbanDelivery_AuxDemo.vdri"
+    ],
+    "Aux": [
+      {
+        "ID": "ALT",
+        "Type": "Alternator",
+        "Path": "..\\Demo_AuxAlternator.vaux"
+      },
+      {
+        "ID": "DEMO",
+        "Type": "Demo",
+        "Path": "..\\Demo_AuxDevice.vaux"
+      }
+    ],
+    "VACC": "..\\..\\Default Data\\VACC\\Truck.vacc",
+    "EngineOnlyMode": false,
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 5.0,
+      "Delay": 0
+    },
+    "LAC": {
+      "Enabled": true,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "EcoRoll",
+      "MinSpeed": 70.0,
+      "OverSpeed": 5.0,
+      "UnderSpeed": 5.0
+    }
+  }
+}

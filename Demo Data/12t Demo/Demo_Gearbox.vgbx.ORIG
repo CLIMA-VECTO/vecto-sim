@@ -1,0 +1,50 @@
+﻿c VECTO Gearbox Input File
+c VECTO 1.4 RC1
+c 04.09.2013 14:06:29
+c Make & Model
+Demo
+c Gearbox rotational inertia [kgm2]
+0
+c Traction Interruption
+1
+c Gears (0=axle)
+c Ratio [-], Loss Map or Efficiency, Is TC gear
+c Gear 0
+4.3,0.96,0
+c Gear 1
+6.696,0.96,0
+c Gear 2
+3.806,0.96,0
+c Gear 3
+2.289,0.96,0
+c Gear 4
+1.48,0.96,0
+c Gear 5
+1,0.98,0
+c Gear 6
+0.728,0.96,0
+<//>
+c Gear shift polygons file
+ShiftPolygons.vgbs
+c Torque Reserve [%]
+10
+c Skip gears
+1
+c Minimum time between two gear shifts [s]
+3
+c Start Torque Reserve [%]
+40
+c Vehicle speed with clutch fully closed [m/s]
+2
+c Acceleration during start [m/s2]
+0.6
+c Shift inside polygons
+0
+c Gearbox Type
+0
+c TC On/Off
+0
+c TC characteristics file
+<NOFILE>
+c TC reference rpm
+0

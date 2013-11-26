@@ -90,12 +90,7 @@ Class cERG
             ErgEntries("\\V").ValueString = Vquer
 
             'altitude change
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Vh.V(t) * 1 * MODdata.Vh.Grad(t) / 100  'v[m/s] * t[s] * grad[-] = ∆h[m]
-            Next
-
-            ErgEntries("\\G").ValueString = (sum)
+            ErgEntries("\\G").ValueString = MODdata.Vh.AltIntp(Vquer * (t1 + 1) / 3.6) - MODdata.Vh.AltIntp(0)
 
             'Auxiliary energy consumption
             If GEN.AuxDef Then

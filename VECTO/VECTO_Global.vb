@@ -2,7 +2,7 @@
 
 Module VECTO_Global
 
-    Public Const VECTOvers As String = "1.4.RC4 test3"
+    Public Const VECTOvers As String = "1.4.RC5"
     Public Const LicSigAppCode As String = "VECTO-Release-0093C61E0A2E4BFA9A7ED7E729C56AE4"
     Public MyAppPath As String
     Public MyConfPath As String
@@ -100,6 +100,8 @@ Module VECTO_Global
                 Return tDriComp.StopTime
             Case sKey.DRI.Torque
                 Return tDriComp.Torque
+            Case sKey.DRI.Alt
+                Return tDriComp.Alt
             Case Else
                 Return tDriComp.Undefined
 
@@ -416,6 +418,7 @@ Public Class csKey
         Public t As String = "<T>"
         Public V As String = "<V>"
         Public Grad As String = "<GRAD>"
+        Public Alt As String = "<ALT>"
         Public Gears As String = "<GEAR>"
         Public n As String = "<N>"
         Public Pe As String = "<PE>"
