@@ -1,22 +1,24 @@
-﻿c VECTO Engine Input File
-c VECTO 1.4 RC1
-c 04.09.2013 14:06:37
-c Make & Model
-Demo engine
-c Rated power [kW]
-350
-c Displacement [ccm]
-10000
-c Rated speed [rpm]
-1800
-c Idling speed [rpm]
-620
-c Inertia [kgm2]
-3.8
-c Full load curves
-VehClass5_40t.vfld,0 - 99
-<//>
-c Fuel map
-VehClass5_40t.vmap
-c WHTC test results
-<NOFILE>
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (eed25180-b54a-46f8-a51e-2182e6c955c5)",
+    "Date": "27.11.2013 10:08:02",
+    "AppVersion": "1.4.RC6",
+    "FileVersion": "1.0"
+  },
+  "Body": {
+    "ModelName": "Demo engine",
+    "Displacement": 10000.0,
+    "RatedPower": 350.0,
+    "RatedSpeed": 1800.0,
+    "IdlingSpeed": 620.0,
+    "Inertia": 3.8,
+    "FullLoadCurves": [
+      {
+        "Path": "VehClass5_40t.vfld",
+        "Gears": "0 - 99"
+      }
+    ],
+    "FuelMap": "VehClass5_40t.vmap",
+    "WHTCresults": "<NOFILE>"
+  }
+}

@@ -1,62 +1,94 @@
-﻿c VECTO Gearbox Input File
-c VECTO 1.4 RC1
-c 04.09.2013 14:06:39
-c Make & Model
-Demo Gearbox Long Haul
-c Gearbox rotational inertia [kgm2]
-0
-c Traction Interruption
-0.8
-c Gears (0=axle)
-c Ratio [-], Loss Map or Efficiency, Is TC gear
-c Gear 0
-3.066,0.97,0
-c Gear 1
-14.93,0.96,0
-c Gear 2
-11.64,0.96,0
-c Gear 3
-9.02,0.96,0
-c Gear 4
-7.04,0.96,0
-c Gear 5
-5.64,0.96,0
-c Gear 6
-4.4,0.96,0
-c Gear 7
-3.39,0.96,0
-c Gear 8
-2.65,0.96,0
-c Gear 9
-2.05,0.96,0
-c Gear 10
-1.6,0.96,0
-c Gear 11
-1.28,0.96,0
-c Gear 12
-1,0.98,0
-<//>
-c Gear shift polygons file
-VehClass5_40t.vgbs
-c Torque Reserve [%]
-20
-c Skip gears
-1
-c Minimum time between two gear shifts [s]
-2
-c Start Torque Reserve [%]
-20
-c Vehicle speed with clutch fully closed [m/s]
-2
-c Acceleration during start [m/s2]
-0.5
-c Shift inside polygons
-1
-c Gearbox Type
-1
-c TC On/Off
-0
-c TC characteristics file
-<NOFILE>
-c TC reference rpm
-0
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (eed25180-b54a-46f8-a51e-2182e6c955c5)",
+    "Date": "27.11.2013 10:08:04",
+    "AppVersion": "1.4.RC6",
+    "FileVersion": "1.0"
+  },
+  "Body": {
+    "ModelName": "Demo Gearbox Long Haul",
+    "Inertia": 0.0,
+    "TracInt": 0.8,
+    "Gears": [
+      {
+        "Ratio": 3.066,
+        "Efficiency": "0.97",
+        "TCactive": false
+      },
+      {
+        "Ratio": 14.93,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 11.64,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 9.02,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 7.04,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 5.64,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 4.4,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 3.39,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 2.65,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 2.05,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 1.6,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 1.28,
+        "Efficiency": "0.96",
+        "TCactive": false
+      },
+      {
+        "Ratio": 1.0,
+        "Efficiency": "0.98",
+        "TCactive": false
+      }
+    ],
+    "ShiftPolygons": "VehClass5_40t.vgbs",
+    "TqReserve": 20.0,
+    "SkipGears": true,
+    "ShiftTime": 2,
+    "EaryShiftUp": true,
+    "StartTqReserve": 20.0,
+    "StartSpeed": 2.0,
+    "StartAcc": 0.5,
+    "GearboxType": "AMT",
+    "TorqueConverter": {
+      "Enabled": false,
+      "File": "<NOFILE>",
+      "RefRPM": 0.0
+    }
+  }
+}

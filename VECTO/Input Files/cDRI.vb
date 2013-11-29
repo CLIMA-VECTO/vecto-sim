@@ -671,12 +671,14 @@ lbEr:
         Dim v0 As New List(Of Double)
         Dim vg As List(Of Double)
         Dim vs As List(Of Double)
+        Dim vv As List(Of Double)
+        Dim vt As List(Of Double)
 
         'Skip if altitude is defined already
         If Values.ContainsKey(tDriComp.Alt) Then Exit Sub
 
 
-        If GradVorg Then
+        If GradVorg And Vvorg Then
 
             vg = Values(tDriComp.Grad)
 
@@ -687,10 +689,29 @@ lbEr:
                 vs = Values(tDriComp.s)
 
                 For i = 1 To tDim
-
                     v0.Add(v0(i - 1) + ((vg(i) + vg(i - 1)) / 200) * (vs(i) - vs(i - 1)))
-
                 Next
+
+
+            Else
+
+                vv = Values(tDriComp.V)
+
+                If Tvorg Then
+
+                    vt = Values(tDriComp.t)
+
+                    For i = 1 To tDim
+                        v0.Add(v0(i - 1) + ((vg(i) + vg(i - 1)) / 200) * vv(i) * (vt(i) - vt(i - 1)))
+                    Next
+
+                Else
+
+                    For i = 1 To tDim
+                        v0.Add(v0(i - 1) + ((vg(i) + vg(i - 1)) / 200) * vv(i) * 1)
+                    Next
+
+                End If
             End If
 
 

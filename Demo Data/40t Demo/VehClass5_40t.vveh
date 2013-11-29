@@ -1,41 +1,61 @@
-﻿c VECTO Vehicle Input File
-c VECTO 1.4 RC1
-c 04.09.2013 14:13:21
-c Curb weight vehicle [kg]
-14000
-c Curb weight extra trailer/body [kg]
-0
-c Vehicle loading [kg]
-19300
-c Cd value [-]
-0.67
-c Cross sectional area [m^2]
-9.5
-c Wheels inertia [kgm^2]
-204.6
-c Wheel effective diameter [m]
-0.975
-c Cd Mode, Input File
-1,..\..\Default Data\VCDV\Truck.vcdv
-c Retarder Type (0=None, 1=Primary, 2=Secondary)
-0
-c Retarder Ratio
-1
-c Retarder File
-<NOFILE>
-c Axle configurations
-c Max. axle weight [kg], RRC [N/N]
-0.2,0,0.00555,31300
-0.25,1,0.00628,31300
-0.183333333,0,0.00495,35400
-0.183333333,0,0.00495,35400
-0.183333333,0,0.00495,35400
-<//>
-c VehCat
-1
-c MassExtra
-0
-c MassMax
-40000
-c Axle Configuration
-0
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (eed25180-b54a-46f8-a51e-2182e6c955c5)",
+    "Date": "27.11.2013 10:08:00",
+    "AppVersion": "1.4.RC6",
+    "FileVersion": "1.0"
+  },
+  "Body": {
+    "VehCat": "Tractor",
+    "CurbWeight": 14000.0,
+    "CurbWeightExtra": 0.0,
+    "Loading": 19300.0,
+    "MassMax": 40000.0,
+    "Cd": 0.67,
+    "CrossSecArea": 9.5,
+    "WheelsInertia": 204.6,
+    "WheelsDiaEff": 0.975,
+    "CdCorrMode": "CdOfV",
+    "CdCorrFile": "..\\..\\Default Data\\VCDV\\Truck.vcdv",
+    "Retarder": {
+      "Type": "None",
+      "Ratio": 1.0,
+      "File": "<NOFILE>"
+    },
+    "AxleConfig": {
+      "Type": "4x2",
+      "Axles": [
+        {
+          "AxleWeightShare": 0.2,
+          "TwinTyres": false,
+          "RRCISO": 0.00555,
+          "FzISO": 31300.0
+        },
+        {
+          "AxleWeightShare": 0.25,
+          "TwinTyres": true,
+          "RRCISO": 0.00628,
+          "FzISO": 31300.0
+        },
+        {
+          "AxleWeightShare": 0.1833333,
+          "TwinTyres": false,
+          "RRCISO": 0.00495,
+          "FzISO": 35400.0
+        },
+        {
+          "AxleWeightShare": 0.1833333,
+          "TwinTyres": false,
+          "RRCISO": 0.00495,
+          "FzISO": 35400.0
+        },
+        {
+          "AxleWeightShare": 0.1833333,
+          "TwinTyres": false,
+          "RRCISO": 0.00495,
+          "FzISO": 35400.0
+        }
+      ]
+    }
+  }
+}

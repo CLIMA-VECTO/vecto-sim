@@ -1,43 +1,42 @@
-﻿c VECTO Input File
-c VECTO 1.4 RC1
-c 04.09.2013 14:12:01
-c Vehicle (.vveh):
-VehClass5_40t.vveh
-c Engine (.veng):
-VehClass5_40t.veng
-c Gearbox (*.vgbx):
-VehClass5_40t.vgbx
-c Driving Cycles (.vdri):
-..\Cycles\20120815_acea_long_haul_1m_DemoAux.vdri
-<//>
-c Auxiliaries (.vaux)
-ALT,Alternator,Demo_AuxAlternator.vaux
-<//>
-c Speed Dependent Desired Acceleration and Braking (.vacc)
-..\..\Default Data\VACC\Truck.vacc
-c Engine Only Mode (1/0)
-0
-c ICE Auto-Start/Stop (1/0) - Non HEV only
-0
-c Start/Stop Max Speed [km/h]
-5
-c Start/Stop Min ICE-On Time [s]
-5
-c Look Ahead reference deceleration [m/2²]
--0.5
-c Minimum target speed for Overspeed/Eco-Roll [km/h]
-0
-c Look-Ahead with Coasting 1/0
-0
-c Overspeed 1/0
-0
-c Eco-Roll 1/0
-0
-c Allowed OverSpeed [km/h]
-0
-c Allowed UnderSpeed [km/h]
-0
-c Minimum target speed for Look-Ahead with Coasting [km/h]
-50
-c Start/Stop activation delay time [s]
-0
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (eed25180-b54a-46f8-a51e-2182e6c955c5)",
+    "Date": "27.11.2013 11:24:23",
+    "AppVersion": "1.4.RC6",
+    "FileVersion": "1.0"
+  },
+  "Body": {
+    "VehicleFile": "VehClass5_40t.vveh",
+    "EngineFile": "VehClass5_40t.veng",
+    "GearboxFile": "VehClass5_40t.vgbx",
+    "Cycles": [
+      "20120815_acea_long_haul_1m_DemoAux.vdri"
+    ],
+    "Aux": [
+      {
+        "ID": "ALT",
+        "Type": "Alternator",
+        "Path": "Demo_AuxAlternator.vaux"
+      }
+    ],
+    "VACC": "..\\..\\Default Data\\VACC\\Truck.vacc",
+    "EngineOnlyMode": false,
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 5.0,
+      "Delay": 0
+    },
+    "LAC": {
+      "Enabled": false,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "Off",
+      "MinSpeed": 0.0,
+      "OverSpeed": 0.0,
+      "UnderSpeed": 0.0
+    }
+  }
+}
