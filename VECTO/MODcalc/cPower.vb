@@ -387,8 +387,8 @@ Public Class cPower
 
                             Positions(i) = 1
 
-                            'Mark position for Calc
-                            Vh.EcoRoll(i) = True
+                            'Do NOT mark position for Calc => Motoring NOT Idling
+                            'Vh.EcoRoll(i) = True
 
                         End If
 

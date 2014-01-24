@@ -669,7 +669,7 @@ lbEr:
         fGEN.WriteLine(CStr(Math.Abs(CInt(EngOnly))))
 
         'Start/Stop
-        fGEN.WriteLine("c ICE Auto-Start/Stop (1/0) - Non HEV only")
+        fGEN.WriteLine("c ICE Auto-Start/Stop (1/0)")
         fGEN.WriteLine(Math.Abs(CInt(boStartStop)))
         fGEN.WriteLine("c Start/Stop Max Speed [km/h]")
         fGEN.WriteLine(siStStV)
@@ -677,11 +677,11 @@ lbEr:
         fGEN.WriteLine(siStStT)
 
 
-        fGEN.WriteLine("c Look Ahead reference deceleration [m/2²]")
+        fGEN.WriteLine("c Look Ahead reference deceleration [m/s²]")
         fGEN.WriteLine(CStr(a_lookahead))
         fGEN.WriteLine("c Minimum target speed for Overspeed/Eco-Roll [km/h]")
         fGEN.WriteLine(CStr(vMin))
-        fGEN.WriteLine("c Look-Ahead with Coasting 1/0")
+        fGEN.WriteLine("c Look-Ahead Coasting 1/0")
         fGEN.WriteLine(CStr(Math.Abs(CInt(LookAheadOn))))
         fGEN.WriteLine("c Overspeed 1/0")
         fGEN.WriteLine(CStr(Math.Abs(CInt(OverSpeedOn))))
