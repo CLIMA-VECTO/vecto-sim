@@ -138,13 +138,6 @@ Public Class F_VEH
         Me.CbCat.SelectedIndex = 0
 
         Me.LvRRC.Items.Clear()
-        For i = 1 To 2
-            lvi = New ListViewItem
-            lvi.SubItems(0).Text = i.ToString
-            lvi.SubItems.Add("0")
-            lvi.SubItems.Add("0")
-            LvRRC.Items.Add(lvi)
-        Next
 
         Me.TbMassMax.Text = ""
         Me.TbMassExtra.Text = ""
@@ -641,8 +634,6 @@ Public Class F_VEH
     Private Sub RemoveAxleItem()
         Dim lv0 As ListViewItem
         Dim i As Integer
-
-        If LvRRC.Items.Count = 2 Then Exit Sub
 
         If LvRRC.SelectedItems.Count = 0 Then
             If LvRRC.Items.Count = 0 Then

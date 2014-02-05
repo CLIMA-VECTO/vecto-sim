@@ -1372,8 +1372,8 @@ lbFound:
         Dim y As Int32
         Dim y1 As Int32
         Dim items() As String
-        Dim check() As String
-        Dim index() As String
+        Dim check() As Boolean
+        Dim index() As Integer
         Dim ListViewItem0 As ListViewItem
 
         If GUIlocked Then Exit Sub
@@ -1407,6 +1407,7 @@ lbFound:
         'Items select and Insert
         'For y = y1 To 0 Step -1
         For y = 0 To y1
+            If Not check(y) Then GENchecked += 1
             ListViewItem0 = ListV.Items.Insert(index(y), items(y))
             ListViewItem0.SubItems.Add(" ")
             ListViewItem0.Checked = check(y)

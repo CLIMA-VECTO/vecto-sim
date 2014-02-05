@@ -837,6 +837,14 @@ lbEr:
             Next
         End If
 
+        'Check if smallest distance step is smaller or equal 1m
+        For i = 1 To tDim
+            If Dist(i) - Dist(i - 1) > 1 Then
+                WorkerMsg(tMsgID.Err, "Distance-based cycles must not include larger distance-steps than 1[m]!", MsgSrc)
+                Return False
+            End If
+        Next
+
         '*********************************** Deceleration(Verzögerung) limit ********************************
         For i = tDim To 1 Step -1
 

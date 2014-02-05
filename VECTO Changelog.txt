@@ -3,11 +3,16 @@ VECTO ?.? (future release) TODO
 	JSON
 
 
-VECTO 1.4.RC8 (current source - next release)
+VECTO 1.4.xxx (current source - next release)
+
+
+VECTO 1.4.RC8 
+
 * Bugfix: Eco Roll didn't go into motoring operation when Overspeed-Limit was reached (could cause higher FC than Overspeed Mode)
 * Minor update in demo data (12t motoring curve)
 
 VECTO 1.4.RC7
+
 * Speed reduction in smaller steps to get closer to full load curve (before speed was sometimes reduced too much and caused problem with gear shifting)
 * Updates in demo data
 
