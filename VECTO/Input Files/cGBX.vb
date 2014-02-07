@@ -21,8 +21,8 @@ Public Class cGBX
     'Gear shift polygons
     Private gs_file As New cSubPath
     Private gs_M As New List(Of Single)
-    Private gs_nnUp As New List(Of Single)
-    Private gs_nnDown As New List(Of Single)
+    Private gs_nUup As New List(Of Single)
+    Private gs_nUdown As New List(Of Single)
     Private gs_Dim As Integer
     Public gs_TorqueResv As Single
     Public gs_SkipGears As Boolean
@@ -103,8 +103,8 @@ Public Class cGBX
 
         iganganz = 0
         gs_M.Clear()
-        gs_nnDown.Clear()
-        gs_nnUp.Clear()
+        gs_nUdown.Clear()
+        gs_nUup.Clear()
         gs_file.Clear()
         gs_Dim = -1
         gs_TorqueResv = 0
@@ -565,8 +565,8 @@ Public Class cGBX
             Min = Mout / mu
 
             'Up/Downshift rpms
-            nUup = GBX.fGSnnUup(Min)
-            nUdown = GBX.fGSnnUdown(Min)
+            nUup = GBX.fGSnUup(Min)
+            nUdown = GBX.fGSnUdown(Min)
 
             'If nUin > 1.05 * nUup - 0.0001 Then
             If nUin > VEH.nNenn - 0.0001 Then
@@ -707,7 +707,6 @@ lbInt:
     Public Function GSinit() As Boolean
         Dim file As cFile_V3
         Dim line As String()
-        Dim i As Integer
         Dim gserror As Boolean
 
         Dim MsgSrc As String
@@ -773,8 +772,8 @@ lbInt:
 
         'Clear lists
         gs_M.Clear()
-        gs_nnDown.Clear()
-        gs_nnUp.Clear()
+        gs_nUdown.Clear()
+        gs_nUup.Clear()
         gs_Dim = -1
 
         'Read file
@@ -783,8 +782,8 @@ lbInt:
                 line = file.ReadLine
                 gs_Dim += 1
                 gs_M.Add(CSng(line(0)))
-                gs_nnDown.Add(CSng(line(1)))
-                gs_nnUp.Add(CSng(line(2)))
+                gs_nUdown.Add(CSng(line(1)))
+                gs_nUup.Add(CSng(line(2)))
             Loop
         Catch ex As Exception
             WorkerMsg(tMsgID.Err, "Error while reading Gear Shift Polygon File! (" & ex.Message & ")", MsgSrc)
@@ -797,17 +796,11 @@ lbInt:
             Return False
         End If
 
-        'Normalize rpm
-        For i = 0 To gs_Dim
-            gs_nnDown(i) = (gs_nnDown(i) - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
-            gs_nnUp(i) = (gs_nnUp(i) - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
-        Next
-
         Return True
 
     End Function
 
-    Public Function fGSnnDown(ByVal Md As Single) As Single
+    Public Function fGSnUdown(ByVal Md As Single) As Single
         Dim i As Int32
 
         'Extrapolation for x < x(1)
@@ -829,19 +822,11 @@ lbInt:
 
 lbInt:
         'Interpolation
-        Return (Md - gs_M(i - 1)) * (gs_nnDown(i) - gs_nnDown(i - 1)) / (gs_M(i) - gs_M(i - 1)) + gs_nnDown(i - 1)
+        Return (Md - gs_M(i - 1)) * (gs_nUdown(i) - gs_nUdown(i - 1)) / (gs_M(i) - gs_M(i - 1)) + gs_nUdown(i - 1)
 
     End Function
 
-    Public Function fGSnnUup(ByVal Md As Single) As Single
-        Return fGSnnUp(Md) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl
-    End Function
-
-    Public Function fGSnnUdown(ByVal Md As Single) As Single
-        Return fGSnnDown(Md) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl
-    End Function
-
-    Public Function fGSnnUp(ByVal Md As Single) As Single
+    Public Function fGSnUup(ByVal Md As Single) As Single
         Dim i As Int32
 
         'Extrapolation for x < x(1)
@@ -863,7 +848,7 @@ lbInt:
 
 lbInt:
         'Interpolation
-        Return (Md - gs_M(i - 1)) * (gs_nnUp(i) - gs_nnUp(i - 1)) / (gs_M(i) - gs_M(i - 1)) + gs_nnUp(i - 1)
+        Return (Md - gs_M(i - 1)) * (gs_nUup(i) - gs_nUup(i - 1)) / (gs_M(i) - gs_M(i - 1)) + gs_nUup(i - 1)
 
     End Function
 

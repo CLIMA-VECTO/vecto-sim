@@ -26,16 +26,10 @@ Partial Class F_ENG
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_ENG))
         Me.TbNleerl = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
-        Me.TbNnenn = New System.Windows.Forms.TextBox()
-        Me.Label10 = New System.Windows.Forms.Label()
         Me.TbInertia = New System.Windows.Forms.TextBox()
         Me.Label41 = New System.Windows.Forms.Label()
         Me.Label40 = New System.Windows.Forms.Label()
-        Me.Label39 = New System.Windows.Forms.Label()
-        Me.Label36 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.TbPnenn = New System.Windows.Forms.TextBox()
-        Me.Label9 = New System.Windows.Forms.Label()
         Me.ButCancel = New System.Windows.Forms.Button()
         Me.ButOK = New System.Windows.Forms.Button()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
@@ -82,7 +76,7 @@ Partial Class F_ENG
         '
         'TbNleerl
         '
-        Me.TbNleerl.Location = New System.Drawing.Point(400, 118)
+        Me.TbNleerl.Location = New System.Drawing.Point(123, 108)
         Me.TbNleerl.Name = "TbNleerl"
         Me.TbNleerl.Size = New System.Drawing.Size(57, 20)
         Me.TbNleerl.TabIndex = 4
@@ -90,31 +84,15 @@ Partial Class F_ENG
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(292, 121)
+        Me.Label11.Location = New System.Drawing.Point(15, 111)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(102, 13)
         Me.Label11.TabIndex = 15
         Me.Label11.Text = "Idling Engine Speed"
         '
-        'TbNnenn
-        '
-        Me.TbNnenn.Location = New System.Drawing.Point(400, 144)
-        Me.TbNnenn.Name = "TbNnenn"
-        Me.TbNnenn.Size = New System.Drawing.Size(57, 20)
-        Me.TbNnenn.TabIndex = 5
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(288, 147)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(106, 13)
-        Me.Label10.TabIndex = 13
-        Me.Label10.Text = "Rated Engine Speed"
-        '
         'TbInertia
         '
-        Me.TbInertia.Location = New System.Drawing.Point(123, 170)
+        Me.TbInertia.Location = New System.Drawing.Point(388, 108)
         Me.TbInertia.Name = "TbInertia"
         Me.TbInertia.Size = New System.Drawing.Size(57, 20)
         Me.TbInertia.TabIndex = 3
@@ -122,7 +100,7 @@ Partial Class F_ENG
         'Label41
         '
         Me.Label41.AutoSize = True
-        Me.Label41.Location = New System.Drawing.Point(186, 173)
+        Me.Label41.Location = New System.Drawing.Point(451, 111)
         Me.Label41.Name = "Label41"
         Me.Label41.Size = New System.Drawing.Size(36, 13)
         Me.Label41.TabIndex = 24
@@ -131,60 +109,26 @@ Partial Class F_ENG
         'Label40
         '
         Me.Label40.AutoSize = True
-        Me.Label40.Location = New System.Drawing.Point(463, 121)
+        Me.Label40.Location = New System.Drawing.Point(186, 111)
         Me.Label40.Name = "Label40"
         Me.Label40.Size = New System.Drawing.Size(30, 13)
         Me.Label40.TabIndex = 24
         Me.Label40.Text = "[rpm]"
         '
-        'Label39
-        '
-        Me.Label39.AutoSize = True
-        Me.Label39.Location = New System.Drawing.Point(463, 147)
-        Me.Label39.Name = "Label39"
-        Me.Label39.Size = New System.Drawing.Size(30, 13)
-        Me.Label39.TabIndex = 24
-        Me.Label39.Text = "[rpm]"
-        '
-        'Label36
-        '
-        Me.Label36.AutoSize = True
-        Me.Label36.Location = New System.Drawing.Point(186, 121)
-        Me.Label36.Name = "Label36"
-        Me.Label36.Size = New System.Drawing.Size(30, 13)
-        Me.Label36.TabIndex = 24
-        Me.Label36.Text = "[kW]"
-        '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(15, 173)
+        Me.Label5.Location = New System.Drawing.Point(280, 111)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(102, 13)
         Me.Label5.TabIndex = 0
         Me.Label5.Text = "Inertia incl. Flywheel"
         '
-        'TbPnenn
-        '
-        Me.TbPnenn.Location = New System.Drawing.Point(123, 118)
-        Me.TbPnenn.Name = "TbPnenn"
-        Me.TbPnenn.Size = New System.Drawing.Size(57, 20)
-        Me.TbPnenn.TabIndex = 1
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(12, 121)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(105, 13)
-        Me.Label9.TabIndex = 11
-        Me.Label9.Text = "Rated Engine Power"
-        '
         'ButCancel
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(418, 473)
+        Me.ButCancel.Location = New System.Drawing.Point(418, 439)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 13
@@ -194,7 +138,7 @@ Partial Class F_ENG
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(337, 473)
+        Me.ButOK.Location = New System.Drawing.Point(337, 439)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 12
@@ -283,7 +227,7 @@ Partial Class F_ENG
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 499)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 465)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(505, 22)
         Me.StatusStrip1.SizingGrip = False
@@ -299,7 +243,7 @@ Partial Class F_ENG
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(186, 147)
+        Me.Label1.Location = New System.Drawing.Point(186, 137)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(33, 13)
         Me.Label1.TabIndex = 24
@@ -308,7 +252,7 @@ Partial Class F_ENG
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(46, 147)
+        Me.Label2.Location = New System.Drawing.Point(46, 137)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(71, 13)
         Me.Label2.TabIndex = 13
@@ -316,7 +260,7 @@ Partial Class F_ENG
         '
         'TbDispl
         '
-        Me.TbDispl.Location = New System.Drawing.Point(123, 144)
+        Me.TbDispl.Location = New System.Drawing.Point(123, 134)
         Me.TbDispl.Name = "TbDispl"
         Me.TbDispl.Size = New System.Drawing.Size(57, 20)
         Me.TbDispl.TabIndex = 2
@@ -339,7 +283,7 @@ Partial Class F_ENG
         '
         'TbMAP
         '
-        Me.TbMAP.Location = New System.Drawing.Point(12, 388)
+        Me.TbMAP.Location = New System.Drawing.Point(12, 351)
         Me.TbMAP.Name = "TbMAP"
         Me.TbMAP.Size = New System.Drawing.Size(418, 20)
         Me.TbMAP.TabIndex = 8
@@ -347,7 +291,7 @@ Partial Class F_ENG
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(12, 372)
+        Me.Label6.Location = New System.Drawing.Point(12, 335)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(115, 13)
         Me.Label6.TabIndex = 38
@@ -355,7 +299,7 @@ Partial Class F_ENG
         '
         'BtMAP
         '
-        Me.BtMAP.Location = New System.Drawing.Point(436, 386)
+        Me.BtMAP.Location = New System.Drawing.Point(436, 349)
         Me.BtMAP.Name = "BtMAP"
         Me.BtMAP.Size = New System.Drawing.Size(28, 23)
         Me.BtMAP.TabIndex = 9
@@ -366,7 +310,7 @@ Partial Class F_ENG
         'TbWHTC
         '
         Me.TbWHTC.Enabled = False
-        Me.TbWHTC.Location = New System.Drawing.Point(12, 438)
+        Me.TbWHTC.Location = New System.Drawing.Point(12, 401)
         Me.TbWHTC.Name = "TbWHTC"
         Me.TbWHTC.Size = New System.Drawing.Size(447, 20)
         Me.TbWHTC.TabIndex = 10
@@ -375,7 +319,7 @@ Partial Class F_ENG
         '
         Me.Label7.AutoSize = True
         Me.Label7.Enabled = False
-        Me.Label7.Location = New System.Drawing.Point(12, 422)
+        Me.Label7.Location = New System.Drawing.Point(12, 385)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(109, 13)
         Me.Label7.TabIndex = 38
@@ -384,7 +328,7 @@ Partial Class F_ENG
         'BtWHTC
         '
         Me.BtWHTC.Enabled = False
-        Me.BtWHTC.Location = New System.Drawing.Point(465, 436)
+        Me.BtWHTC.Location = New System.Drawing.Point(465, 399)
         Me.BtWHTC.Name = "BtWHTC"
         Me.BtWHTC.Size = New System.Drawing.Size(28, 23)
         Me.BtWHTC.TabIndex = 11
@@ -429,7 +373,7 @@ Partial Class F_ENG
         'BtMAPopen
         '
         Me.BtMAPopen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.BtMAPopen.Location = New System.Drawing.Point(470, 386)
+        Me.BtMAPopen.Location = New System.Drawing.Point(470, 349)
         Me.BtMAPopen.Name = "BtMAPopen"
         Me.BtMAPopen.Size = New System.Drawing.Size(23, 23)
         Me.BtMAPopen.TabIndex = 40
@@ -485,7 +429,7 @@ Partial Class F_ENG
         Me.GroupBox1.Controls.Add(Me.LvFLDs)
         Me.GroupBox1.Controls.Add(Me.BtRemFLD)
         Me.GroupBox1.Controls.Add(Me.BtAddFLD)
-        Me.GroupBox1.Location = New System.Drawing.Point(12, 196)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 160)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(481, 162)
         Me.GroupBox1.TabIndex = 44
@@ -507,7 +451,7 @@ Partial Class F_ENG
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(505, 521)
+        Me.ClientSize = New System.Drawing.Size(505, 487)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.BtMAPopen)
         Me.Controls.Add(Me.PictureBox1)
@@ -520,24 +464,18 @@ Partial Class F_ENG
         Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.TbDispl)
-        Me.Controls.Add(Me.TbNnenn)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.ButCancel)
-        Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.ButOK)
         Me.Controls.Add(Me.TbWHTC)
         Me.Controls.Add(Me.TbMAP)
         Me.Controls.Add(Me.TbInertia)
         Me.Controls.Add(Me.Label41)
         Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.Label40)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.TbName)
-        Me.Controls.Add(Me.TbPnenn)
-        Me.Controls.Add(Me.Label39)
         Me.Controls.Add(Me.Label5)
-        Me.Controls.Add(Me.Label36)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
@@ -558,16 +496,10 @@ Partial Class F_ENG
     End Sub
     Friend WithEvents TbNleerl As System.Windows.Forms.TextBox
     Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents TbNnenn As System.Windows.Forms.TextBox
-    Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents TbInertia As System.Windows.Forms.TextBox
     Friend WithEvents Label41 As System.Windows.Forms.Label
     Friend WithEvents Label40 As System.Windows.Forms.Label
-    Friend WithEvents Label39 As System.Windows.Forms.Label
-    Friend WithEvents Label36 As System.Windows.Forms.Label
     Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents TbPnenn As System.Windows.Forms.TextBox
-    Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents ButCancel As System.Windows.Forms.Button
     Friend WithEvents ButOK As System.Windows.Forms.Button
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip

@@ -7,19 +7,12 @@
         LoadConfig()
     End Sub
 
-    Private Sub F_Options_Shown(sender As Object, e As System.EventArgs) Handles Me.Shown
-        If Not DEV.Options("TestOptions").BoolVal Then Me.TabControl1.Controls.Remove(TabPgTest)
-    End Sub
-
     'Load Config
     Private Sub LoadConfig()
         Me.TextBoxWorDir.Text = Cfg.WorkDPath
         WD = Cfg.WorkDPath
-        Me.TextBoxTD.Text = Cfg.TEMpath
-        Me.TextBoxEAVal.Text = Cfg.EAAvInt
         Me.TextBoxLogSize.Text = Cfg.LogSize
         Me.TbAirDensity.Text = CStr(Cfg.AirDensity)
-        Me.TbnnormEngStop.Text = CStr(Cfg.nnormEngStop)
         Me.TbOpenCmd.Text = Cfg.OpenCmd
         Me.TbOpenCmdName.Text = Cfg.OpenCmdName
         Me.TbFuelDens.Text = Cfg.FuelDens.ToString
@@ -39,11 +32,8 @@
     'OK
     Private Sub ButtonOK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonOK.Click
         Cfg.SetWorkDir(Me.TextBoxWorDir.Text)
-        Cfg.TEMpath = Me.TextBoxTD.Text
-        Cfg.EAAvInt = CShort(Me.TextBoxEAVal.Text)
         Cfg.LogSize = CSng(Me.TextBoxLogSize.Text)
         Cfg.AirDensity = CSng(Me.TbAirDensity.Text)
-        Cfg.nnormEngStop = CSng(Me.TbnnormEngStop.Text)
         Cfg.OpenCmd = Me.TbOpenCmd.Text
         Cfg.OpenCmdName = Me.TbOpenCmdName.Text
         Cfg.FuelDens = CSng(Me.TbFuelDens.Text)
@@ -67,22 +57,6 @@
         If fbWorkDir.OpenDialog(Me.TextBoxWorDir.Text) Then
             Me.TextBoxWorDir.Text = fbWorkDir.Files(0)
         End If
-    End Sub
-
-    Private Sub ButtonTD_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Dim p0 As String
-        If UCase(Trim(Cfg.TEMpath)) = "<DEFAULT>" Then
-            p0 = ""
-        Else
-            p0 = Cfg.TEMpath
-        End If
-        If fbTEM.OpenDialog(p0, False, "csv") Then
-            Me.TextBoxTD.Text = fbTEM.Files(0)
-        End If
-    End Sub
-
-    Private Sub ButTDdefault_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
-        Me.TextBoxTD.Text = "<default>"
     End Sub
 
     Private Sub BtHelp_Click(sender As System.Object, e As System.EventArgs) Handles BtHelp.Click

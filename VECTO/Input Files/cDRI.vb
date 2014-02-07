@@ -19,10 +19,6 @@ Public Class cDRI
     Public Gvorg As Boolean
     Public GradVorg As Boolean
 
-    Public PeNormed As Boolean
-    Public nNormed As Boolean
-    Public PaddNormed As Boolean
-
     Private bEmCompDef As Boolean
     Public EmComponents As Dictionary(Of String, cEmComp)
     Public EmDefRef As Dictionary(Of tMapComp, cEmComp)
@@ -59,9 +55,6 @@ Public Class cDRI
         Nvorg = False
         Gvorg = False
         Pvorg = False
-        PeNormed = False
-        nNormed = False
-        PaddNormed = False
         tDim = -1
         t0 = 1  'Ist Standardwert falls Converter nicht verwendet wird
         EmComponents.Clear()
@@ -136,7 +129,7 @@ Public Class cDRI
         DRIcheck.Add(tDriComp.t, False)
         DRIcheck.Add(tDriComp.V, False)
         DRIcheck.Add(tDriComp.Grad, False)
-        DRIcheck.Add(tDriComp.nn, False)
+        DRIcheck.Add(tDriComp.nU, False)
         DRIcheck.Add(tDriComp.Gears, False)
         DRIcheck.Add(tDriComp.Padd, False)
         DRIcheck.Add(tDriComp.Pe, False)
@@ -316,7 +309,7 @@ Public Class cDRI
         Vvorg = DRIcheck(tDriComp.V)
         Svorg = DRIcheck(tDriComp.s)
         Gvorg = DRIcheck(tDriComp.Gears)
-        Nvorg = DRIcheck(tDriComp.nn)
+        Nvorg = DRIcheck(tDriComp.nU)
         Pvorg = DRIcheck(tDriComp.Pe)
         PaddVorg = DRIcheck(tDriComp.Padd)
         GradVorg = DRIcheck(tDriComp.Grad)
@@ -331,22 +324,6 @@ Public Class cDRI
         '***
         '*** Third row: Units/Normalization
         'VECTO: nothing read. Fixed Units (line = file.ReadLine)
-
-        'Normalization-compatible DRI-components
-        If DRIcheck(tDriComp.Pe) Then
-            'PeNormed = (UCase(Trim(line(Spalten(tDriComp.Pe)))) = sKey.Normed)
-            PeNormed = False
-        End If
-
-        If DRIcheck(tDriComp.nn) Then
-            'nNormed = (UCase(Trim(line(Spalten(tDriComp.nn)))) = sKey.Normed)
-            nNormed = False
-        End If
-
-        If DRIcheck(tDriComp.Padd) Then
-            'PaddNormed = (UCase(Trim(line(Spalten(tDriComp.Padd)))) = sKey.Normed)
-            PaddNormed = False
-        End If
 
         'VECTO MAP-components: Always [g/h]!
         For Each Em0 In EmComponents.Values
@@ -478,7 +455,7 @@ Public Class cDRI
             Values.Add(tDriComp.Pe, New List(Of Double))
             Pvorg = True
             For s = 0 To tDim
-                Values(tDriComp.Pe).Add(nMtoPe(Values(tDriComp.nn)(s), Values(tDriComp.Torque)(s)))
+                Values(tDriComp.Pe).Add(nMtoPe(Values(tDriComp.nU)(s), Values(tDriComp.Torque)(s)))
             Next
         End If
 
@@ -488,111 +465,6 @@ lbEr:
         file.Close()
 
         Return False
-
-    End Function
-
-    Private Function ReadOldFormat() As Boolean
-
-        Dim File As cFile_V3
-        Dim line As String()
-        Dim s1 As Integer
-        Dim t As Integer
-        Dim GNok As Boolean
-        Dim STGok As Boolean
-        Dim GNmax As Single
-        Dim GNlist As List(Of Double)
-        Dim MsgSrc As String
-
-        MsgSrc = "Main/ReadInp/DRI"
-
-        'Open file
-        File = New cFile_V3
-        If Not File.OpenRead(sFilePath, ",", True, True) Then
-            File = Nothing
-            Return False
-        End If
-
-        Values = New Dictionary(Of tDriComp, List(Of Double))
-        GNlist = New List(Of Double)
-
-        Do While Not File.EndOfFile
-            tDim += 1       'wird in ResetMe zurück gesetzt
-            line = File.ReadLine
-
-            If tDim = 0 Then
-
-                s1 = UBound(line)
-
-                GNok = (s1 > 2)
-                PaddVorg = (s1 > 3)
-
-                If s1 > 1 Then
-                    STGok = True
-                    GradVorg = True
-                    Values.Add(tDriComp.Grad, New List(Of Double))
-                Else
-                    If s1 < 1 Then
-                        'TODO...
-                        Return False
-                    End If
-                    STGok = False
-                End If
-
-                Tvorg = True
-                Values.Add(tDriComp.t, New List(Of Double))
-
-                Vvorg = True
-                Values.Add(tDriComp.V, New List(Of Double))
-
-                If PaddVorg Then
-                    PaddNormed = True
-                    Values.Add(tDriComp.Padd, New List(Of Double))
-                End If
-
-            End If
-
-            Try
-                Values(tDriComp.t).Add(CDbl(line(0)))
-                Values(tDriComp.V).Add(CDbl(line(1)))
-                If STGok Then Values(tDriComp.Grad).Add(CDbl(line(2)))
-                If GNok Then GNlist.Add(CDbl(line(3)))
-                If PaddVorg Then Values(tDriComp.Padd).Add(CDbl(line(4)))
-            Catch ex As Exception
-                WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & tDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
-                Return False
-            End Try
-
-
-        Loop
-
-        File.Close()
-
-        'ResetMe resets Nvorg / Gvorg
-
-        If GNok Then
-
-            GNmax = GNlist(0)
-            For t = 1 To tDim
-                If GNlist(t) > GNmax Then GNmax = GNlist(t)
-            Next
-
-            If GNmax > 50 Then
-                Nvorg = True
-                nNormed = False
-                Values.Add(tDriComp.nn, GNlist)
-
-            ElseIf GNmax > 0 Then
-                Gvorg = True
-                Values.Add(tDriComp.Gears, GNlist)
-
-            End If
-
-        End If
-
-        File = Nothing
-        GNlist = Nothing
-
-        Return True
 
     End Function
 
@@ -620,7 +492,6 @@ lbEr:
 
     Public Sub DeNorm()
         Dim s As Integer
-        Dim L As List(Of Double)
 
         'Convert Speed to m/s
         If Vvorg Then
@@ -630,37 +501,6 @@ lbEr:
             Next
         End If
 
-        'Normalize, if necessary
-        If Nvorg Then
-            If Not nNormed Then
-                L = Values(tDriComp.nn)
-                For s = 0 To tDim
-                    L(s) = (L(s) - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
-                Next
-            End If
-        End If
-
-        'Padd unnormalised, if neccesary
-        If PaddVorg Then
-            If PaddNormed Then
-                L = Values(tDriComp.Padd)
-                For s = 0 To tDim
-                    L(s) = L(s) * VEH.Pnenn
-                Next
-            End If
-        End If
-
-        'Pe normalize, if necessary
-        If Pvorg Then
-            If Not PeNormed Then
-                L = Values(tDriComp.Pe)
-                For s = 0 To tDim
-                    L(s) = L(s) / VEH.Pnenn
-                Next
-            End If
-        End If
-
-        L = Nothing
 
         '!!!!!!!! Emissions are only accepted in x/h or x (see ReadFile)!!!!!!!!
 
@@ -772,11 +612,6 @@ lbEr:
         Dim MsgSrc As String
 
         MsgSrc = "Main/DRI/ConvStoT"
-
-        If Not GEN.DesMaxJa Then
-            WorkerMsg(tMsgID.Err, "No a(v) data defined!", MsgSrc)
-            Return False
-        End If
 
         If Not Values.ContainsKey(tDriComp.StopTime) Then
             WorkerMsg(tMsgID.Err, "Stop time not defined in cycle (" & sKey.DRI.StopTime & ")!", MsgSrc)

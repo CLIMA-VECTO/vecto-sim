@@ -80,11 +80,9 @@
         If ChangeCheckCancel() Then Exit Sub
 
         Me.TbName.Text = ""
-        Me.TbPnenn.Text = ""
         Me.TbDispl.Text = ""
         Me.TbInertia.Text = ""
         Me.TbNleerl.Text = ""
-        Me.TbNnenn.Text = ""
         Me.LvFLDs.Items.Clear()
         Me.TbMAP.Text = ""
         Me.TbWHTC.Text = ""
@@ -114,11 +112,9 @@
         End If
 
         Me.TbName.Text = ENG0.ModelName
-        Me.TbPnenn.Text = ENG0.Pnenn.ToString
         Me.TbDispl.Text = ENG0.Displ.ToString
         Me.TbInertia.Text = ENG0.I_mot.ToString
         Me.TbNleerl.Text = ENG0.nleerl.ToString
-        Me.TbNnenn.Text = ENG0.nnenn.ToString
 
         Me.LvFLDs.Items.Clear()
         For i = 0 To ENG0.fFLD.Count - 1
@@ -169,11 +165,9 @@
 
         ENG0.ModelName = Me.TbName.Text
         If Trim(ENG0.ModelName) = "" Then ENG0.ModelName = "Undefined"
-        ENG0.Pnenn = CSng(fTextboxToNumString(Me.TbPnenn.Text))
         ENG0.Displ = CSng(fTextboxToNumString(Me.TbDispl.Text))
         ENG0.I_mot = CSng(fTextboxToNumString(Me.TbInertia.Text))
         ENG0.nleerl = CSng(fTextboxToNumString(Me.TbNleerl.Text))
-        ENG0.nnenn = CSng(fTextboxToNumString(Me.TbNnenn.Text))
 
         For i = 0 To Me.LvFLDs.Items.Count - 1
             ENG0.fFLD.Add(New cSubPath)
@@ -241,7 +235,7 @@
         Change()
     End Sub
 
-    Private Sub TbPnenn_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbPnenn.TextChanged
+    Private Sub TbPnenn_TextChanged(sender As System.Object, e As System.EventArgs)
         Change()
     End Sub
 
@@ -257,7 +251,7 @@
         Change()
     End Sub
 
-    Private Sub TbNnenn_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbNnenn.TextChanged
+    Private Sub TbNnenn_TextChanged(sender As System.Object, e As System.EventArgs)
         Change()
     End Sub
 

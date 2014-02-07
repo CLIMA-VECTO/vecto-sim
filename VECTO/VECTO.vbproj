@@ -163,14 +163,10 @@
     <Compile Include="Input Files\cAux.vb" />
     <Compile Include="Input Files\cENG.vb" />
     <Compile Include="Input Files\cGBX.vb" />
-    <Compile Include="MODcalc\cBatModel.vb" />
     <Compile Include="cConfig.vb" />
-    <Compile Include="cCustomMap.vb" />
     <Compile Include="cDelaunayMap.vb" />
     <Compile Include="cDEV.vb" />
     <Compile Include="cEmComp.vb" />
-    <Compile Include="Input Files\cEMO.vb" />
-    <Compile Include="cHEVctrl.vb" />
     <Compile Include="File Browser\cFileBrowser.vb" />
     <Compile Include="MODcalc\cVh.vb" />
     <Compile Include="MODcalc\Em Calc.vb" />
@@ -188,7 +184,6 @@
     </Compile>
     <Compile Include="MODcalc\cPower.vb" />
     <Compile Include="MODcalc\cMOD.vb" />
-    <Compile Include="Input Files\cTRS.vb" />
     <Compile Include="Input Files\cFLD.vb" />
     <Compile Include="Input Files\cMAP.vb" />
     <Compile Include="Input Files\cDRI.vb" />
@@ -216,7 +211,6 @@
     <Compile Include="cFile V3.vb" />
     <Compile Include="VECTO_Global.vb" />
     <Compile Include="VECTO_Types.vb" />
-    <Compile Include="M_SOC_Iter.vb" />
     <Compile Include="cRegression.vb" />
     <Compile Include="GUI\GUI_Subs.vb" />
     <Compile Include="GUI\F_VEH.Designer.vb">
@@ -248,8 +242,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="File Browser\FB_Global.vb" />
-    <Compile Include="M_FCCor.vb" />
-    <Compile Include="M_OptInterface.vb" />
     <Compile Include="cCycleKin.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

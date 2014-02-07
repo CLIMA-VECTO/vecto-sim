@@ -14,13 +14,6 @@ Public Enum tCalcMode As Short
     cmEV = 7            '7 Elektrofahrzeug
 End Enum
 
-Public Enum tVehMode
-    StandardMode
-    EngineOnly
-    HEV
-    EV
-End Enum
-
 Public Enum tWorkMsgType
     StatusBar
     StatusListBox
@@ -55,10 +48,7 @@ Public Enum tJobStatus
     Undef
 End Enum
 
-Public Enum tTransLossModel As Short
-    Basic = 0
-    Detailed = 1
-End Enum
+
 
 Public Enum tEmNorm
     x_h
@@ -102,7 +92,7 @@ Public Enum tDriComp
     V
     Grad
     Alt
-    nn
+    nU
     Gears
     Padd
     Pe

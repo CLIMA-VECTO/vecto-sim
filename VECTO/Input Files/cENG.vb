@@ -6,9 +6,7 @@ Public Class cENG
     Private FileVersion As String
 
     Public ModelName As String
-    Public Pnenn As Single
     Public Displ As Single
-    Public nnenn As Single
     Public nleerl As Single
     Public I_mot As Single
 
@@ -54,9 +52,7 @@ Public Class cENG
 
     Private Sub SetDefault()
         ModelName = "Undefined"
-        Pnenn = 0
         Displ = 0
-        nnenn = 0
         nleerl = 0
         I_mot = 0
 
@@ -85,12 +81,12 @@ Public Class cENG
 
         file.WriteLine("c Make & Model")
         file.WriteLine(ModelName.Replace(",", "\c\"))
-        file.WriteLine("c Rated power [kW]")
-        file.WriteLine(Pnenn.ToString)
+        file.WriteLine("c NOT USED")
+        file.WriteLine("0")
         file.WriteLine("c Displacement [ccm]")
         file.WriteLine(Displ.ToString)
-        file.WriteLine("c Rated speed [rpm]")
-        file.WriteLine(nnenn.ToString)
+        file.WriteLine("c NOT USED")
+        file.WriteLine("0")
         file.WriteLine("c Idling speed [rpm]")
         file.WriteLine(nleerl.ToString)
         file.WriteLine("c Inertia [kgm2]")
@@ -141,9 +137,9 @@ Public Class cENG
 
         Try
             ModelName = file.ReadLine(0).Replace("\c\", ",")
-            Pnenn = CSng(file.ReadLine(0))
+            file.ReadLine()  'NOT USED (Pnenn)
             Displ = CSng(file.ReadLine(0))
-            nnenn = CSng(file.ReadLine(0))
+            file.ReadLine()  'NOT USED (nnenn)
             nleerl = CSng(file.ReadLine(0))
             I_mot = CSng(file.ReadLine(0))
 
@@ -208,8 +204,6 @@ Public Class cENG
         dic.Add("ModelName", ModelName)
 
         dic.Add("Displacement", Displ)
-        dic.Add("RatedPower", Pnenn)
-        dic.Add("RatedSpeed", nnenn)
         dic.Add("IdlingSpeed", nleerl)
         dic.Add("Inertia", I_mot)
 
@@ -268,9 +262,7 @@ Public Class cENG
 
             ModelName = JSON.Content("Body")("ModelName")
 
-            Pnenn = JSON.Content("Body")("RatedPower")
             Displ = JSON.Content("Body")("Displacement")
-            nnenn = JSON.Content("Body")("RatedSpeed")
             nleerl = JSON.Content("Body")("IdlingSpeed")
             I_mot = JSON.Content("Body")("Inertia")
 

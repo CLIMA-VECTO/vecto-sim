@@ -125,9 +125,6 @@ lbSkip0:
         'Warning on invalid/unrealistic settings
         If Cfg.AirDensity > 2 Then WorkerMsg(tMsgID.Err, "Air Density = " & Cfg.AirDensity & " ?!", MsgSrc)
 
-        'Notify
-        If Cfg.FCcorrection Then WorkerMsg(tMsgID.Normal, "HDV FC Correction ON", MsgSrc)
-
         'Progbar-Init
         WorkerProgInit()
 
@@ -164,9 +161,6 @@ lbSkip0:
                 JobAbortedByErr = True
                 GoTo lbNextJob
             End If
-
-            'If optimizer is active, then read parameters here
-            If bOptOn Then OptInput()
 
             'BATCH: Create Output-sub-folder
             If (PHEMmode = tPHEMmode.ModeBATCH) And Cfg.ModOut And Cfg.BATCHoutSubD Then
@@ -270,9 +264,6 @@ lbSkip0:
                     '***************************** VECTO-loading-loop *********************************
                     '**************************************************************************************
 
-                    'Entry point for SOC-start iteration
-                    If GEN.ModeHorEV And SOCnJa Then SOCfirst = True
-
                     'Clean up
                     MODdata.Init()
 
@@ -330,7 +321,7 @@ lbSkip0:
                     'Initialize Cycle-specs (Speed, Accel, ...)
                     MODdata.CycleInit()
 
-                    If GEN.VehMode = tVehMode.EngineOnly Then
+                    If GEN.EngOnly Then
 
                         If MsgOut Then WorkerMsg(tMsgID.Normal, "Engine Only Calc", MsgSrc)
 
@@ -363,36 +354,27 @@ lbSkip0:
                             End If
                         End If
 
-                        If GEN.ModeHorEV Then
+                        If DEV.PreRun Then
 
-                            WorkerMsg(tMsgID.Err, "(H)EV mode is not available!", MsgSrc)
-                            JobAbortedByErr = True
-                            GoTo lbNextJob
-
-                        Else
-
-                            If DEV.PreRun Then
-
-                                If MsgOut Then WorkerMsg(tMsgID.Normal, "Driving Cycle Preprocessing", MsgSrc)
-                                If Not MODdata.Px.PreRun Then
-                                    CyclAbrtedByErr = True
-                                    GoTo lbAusg
-                                End If
-
-                                If PHEMworker.CancellationPending Then GoTo lbAbort
-
-                            End If
-
-                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Vehicle Calc", MsgSrc)
-
-                            MODdata.Vh.DistCorrInit()
-
-                            If Not MODdata.Px.Calc() Then
+                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Driving Cycle Preprocessing", MsgSrc)
+                            If Not MODdata.Px.PreRun Then
                                 CyclAbrtedByErr = True
                                 GoTo lbAusg
                             End If
 
+                            If PHEMworker.CancellationPending Then GoTo lbAbort
+
                         End If
+
+                        If MsgOut Then WorkerMsg(tMsgID.Normal, "Vehicle Calc", MsgSrc)
+
+                        MODdata.Vh.DistCorrInit()
+
+                        If Not MODdata.Px.Calc() Then
+                            CyclAbrtedByErr = True
+                            GoTo lbAusg
+                        End If
+
 
                         If PHEMworker.CancellationPending Then GoTo lbAbort
 
@@ -404,80 +386,23 @@ lbSkip0:
                     '----------------------------------------------------------------------------
 
 
-                    'Emissionen und Nachbehandlung - wird bei EV-Modus nicht ausgeführt |@@| Emissions and After-treatment - it will not run in EV mode
-                    If Not GEN.VehMode = tVehMode.EV Then
+                    If MsgOut Then WorkerMsg(tMsgID.Normal, "FC Interpolation", MsgSrc)
 
-                        'If MsgOut Then WorkerMsg(tMsgID.Normal, "Calculating Transient Correction Factors", MsgSrc)
+                    'Calculate Raw emissions
+                    If Not MODdata.Em.Raw_Calc() Then
+                        'If Not DEV.IgnoreFCextrapol Then
+                        '    CyclAbrtedByErr = True
+                        '    WorkerMsg(tMsgID.Normal, "Calculation aborted!", MsgSrc)
+                        '    GoTo lbAusg
+                        'End If
 
-                        ''Determine TC parameters per second
-                        'MODdata.TC.Calc()
-
-                        'Map creation
-                        If GEN.CreateMap Then
-
-                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Creating Emission Map", MsgSrc)
-
-                            MAP = New cMAP(GEN.PKWja)   'PKWja ist hier nicht relevant
-                            MAP.FilePath = fFileWoExt(JobFile) & ".v_map"
-                            If Not MAP.CreateMAP() Then
-                                CyclAbrtedByErr = True
-                                GoTo lbAusg
-                            End If
-                            MAP.Norm()
-                        End If
-
-                        If MsgOut Then WorkerMsg(tMsgID.Normal, "FC Interpolation", MsgSrc)
-
-                        'Calculate Raw emissions
-                        If Not MODdata.Em.Raw_Calc() Then
-                            'If Not DEV.IgnoreFCextrapol Then
-                            '    CyclAbrtedByErr = True
-                            '    WorkerMsg(tMsgID.Normal, "Calculation aborted!", MsgSrc)
-                            '    GoTo lbAusg
-                            'End If
-
-                            FCerror = True
-
-                        End If
-
-                        'TC Parameter umrechnen in Differenz zu Kennfeld-TC-Parameter |@@| Convert TC parameters to differences with Map-TC-parameters
-                        If MAP.TransMap Then MODdata.TC.CalcDiff()
-
-                        'Dynamic correction
-                        If GEN.dynkorja Then
-                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Em Calc: Transient Correction", MsgSrc)
-                            MODdata.Em.TC_Calc()
-                        End If
-
-                        'Korrektur der Verbrauchswerte kleiner LKW-Motoren bei HBEFA |@@| Correction of consumption values smaller HDV(LKW) engines by HBEFA
-                        If (Not GEN.PKWja) And Cfg.FCcorrection Then
-                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Em Calc: FC-Correction", MsgSrc)
-                            FcCorr()
-                        End If
-
-                        'Exhaust system simulation
-                        If GEN.EXSja Then
-                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Em Calc: EXS", MsgSrc)
-                            EXS = New cEXS
-                            If Not EXS.Exs_Main() Then
-                                CyclAbrtedByErr = True
-                                GoTo lbAusg
-                            End If
-                        End If
-
-                        'Totals / Averages form
-                        MODdata.Em.SumCalc()
-
-                        'Engine Analysis
-                        If GEN.EngAnalysis Then
-                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Engine Analysis", MsgSrc)
-                            If Not MODdata.Em.EngAnalysis() Then
-                                CyclAbrtedByErr = True
-                                GoTo lbAusg
-                            End If
-                        End If
+                        FCerror = True
 
                     End If
+
+                    'Totals / Averages form
+                    MODdata.Em.SumCalc()
+
 
                     If PHEMworker.CancellationPending Then GoTo lbAbort
 
@@ -506,7 +431,7 @@ lbSkip0:
 lbAusg:
 
                     If PHEMworker.CancellationPending Then GoTo lbAbort
-             
+
                     'Output in Erg (first Calculation - Initialization & Header)
                     If Not ERG.AusgERG(NrOfRunStr, fFILE(GenFile, True), fFILE(CurrentCycleFile, True), CyclAbrtedByErr) Then GoTo lbErrInJobLoop
 
@@ -664,7 +589,6 @@ lbExit:
         VEH = Nothing
         FLD = Nothing
         MAP = Nothing
-        TRS = Nothing
         DRI = Nothing
         MODdata = Nothing
         ERG = Nothing

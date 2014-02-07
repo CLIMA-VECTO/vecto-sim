@@ -2,7 +2,6 @@
 Public Class cMOD
 
     Public Pe As List(Of Single)
-    Public nn As List(Of Single)
     Public nU As List(Of Single)
     Public nUvorg As List(Of Single)
     Public dnUvorg As List(Of Single)
@@ -10,7 +9,6 @@ Public Class cMOD
     Public tDimOgl As Integer
     Public Em As cEm
     Public Px As cPower
-    Public TC As cTC
     Public Vh As cVh
     Public CylceKin As cCycleKin
     Public ModOutpName As String
@@ -52,11 +50,9 @@ Public Class cMOD
 
     Public Sub Init()
         Pe = New List(Of Single)
-        nn = New List(Of Single)
         nU = New List(Of Single)
         Em = New cEm
         Px = New cPower
-        TC = New cTC
         Vh = New cVh
         CylceKin = New cCycleKin
 
@@ -86,9 +82,7 @@ Public Class cMOD
         TCnOut = New List(Of Single)
 
         Em.Init()
-        TC.Init()
         Vh.Init()
-        Px.Init()
         ModErrors = New cModErrors
         bInit = True
     End Sub
@@ -96,15 +90,11 @@ Public Class cMOD
     Public Sub CleanUp()
         If bInit Then
             Em.CleanUp()
-            Px.CleanUp()
-            TC.CleanUp()
             Vh.CleanUp()
             Em = Nothing
             Px = Nothing
-            TC = Nothing
             Vh = Nothing
             Pe = Nothing
-            nn = Nothing
             nU = Nothing
 
             Proll = Nothing
@@ -188,7 +178,7 @@ Public Class cMOD
 
     Public Sub CycleInit()
 
-        If GEN.VehMode = tVehMode.EngineOnly Then
+        If GEN.EngOnly Then
             EngCycleInit()
         Else
             VehCycleInit()
@@ -218,16 +208,16 @@ Public Class cMOD
             MODdata.nUvorg = New List(Of Single)
             MODdata.dnUvorg = New List(Of Single)
 
-            L = DRI.Values(tDriComp.nn)
+            L = DRI.Values(tDriComp.nU)
 
             'Revolutions
             For s = 0 To tDim
-                MODdata.nUvorg.Add(((L(s + 1) + L(s)) / 2) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl)
+                MODdata.nUvorg.Add(((L(s + 1) + L(s)) / 2))
             Next
 
             'Angular acceleration
             For s = 0 To tDim
-                MODdata.dnUvorg.Add((L(s + 1) - L(s)) * (VEH.nNenn - VEH.nLeerl))
+                MODdata.dnUvorg.Add(L(s + 1) - L(s))
             Next
 
         End If
@@ -284,17 +274,17 @@ Public Class cMOD
             MODdata.nUvorg = New List(Of Single)
             MODdata.dnUvorg = New List(Of Single)
 
-            L = DRI.Values(tDriComp.nn)
+            L = DRI.Values(tDriComp.nU)
 
             'Revolutions
             For s = 0 To MODdata.tDim
-                MODdata.nUvorg.Add(L(s) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl)
+                MODdata.nUvorg.Add(L(s))
             Next
 
             'Angular acceleration
             MODdata.dnUvorg.Add(L(1) - L(0))
             For s = 1 To MODdata.tDim - 1
-                MODdata.dnUvorg.Add((L(s + 1) - L(s - 1)) / 2 * (VEH.nNenn - VEH.nLeerl))
+                MODdata.dnUvorg.Add((L(s + 1) - L(s - 1)) / 2)
             Next
             MODdata.dnUvorg.Add(L(MODdata.tDim) - L(MODdata.tDim - 1))
 
@@ -319,10 +309,6 @@ Public Class cMOD
         Dim EmList As New List(Of String)
         Dim Em0 As cEmComp
         Dim StrKey As String
-
-        Dim TcList As New List(Of tMapComp)
-        'Dim TC0 As List(Of Single)
-        Dim TcKey As tMapComp
 
         Dim AuxList As New List(Of String)
 
@@ -351,7 +337,7 @@ Public Class cMOD
         '*********** Settings **************
         Sepp = ","
         t1 = MODdata.tDim
-        If GEN.VehMode = tVehMode.EngineOnly Then
+        If GEN.EngOnly Then
             tdelta = 0
         Else
             tdelta = 0.5
@@ -363,17 +349,9 @@ Public Class cMOD
             EmList.Add(StrKey)
         Next
 
-        If TC.Calculated Then
-            For Each TcKey In MODdata.TC.TCcomponents.Keys
-                TcList.Add(TcKey)
-            Next
-        End If
-
         For Each StrKey In VEH.AuxRefs.Keys     'Wenn Engine Only dann wird das garnicht verwendet
             AuxList.Add(StrKey)
         Next
-
-
 
 
         f.WriteLine("VECTO modal results")
@@ -391,7 +369,7 @@ Public Class cMOD
         s.Append("time")
         sU.Append("[s]")
 
-        If Not GEN.VehMode = tVehMode.EngineOnly Then
+        If Not GEN.EngOnly Then
 
             s.Append(",dist,v_act,v_targ,acc,grad")
             sU.Append(",[km],[km/h],[km/h],[m/s^2],[%]")
@@ -399,24 +377,10 @@ Public Class cMOD
 
         End If
 
-        If GEN.ModeHorEV Then
+        s.Append(",n,Tq_eng,Tq_clutch,Tq_full,Tq_drag,Pe_eng,Pe_full,Pe_drag,Pe_clutch,Pa Eng,Paux")
+        sU.Append(",[1/min],[Nm],[Nm],[Nm],[Nm],[kW],[kW],[kW],[kW],[kW],[kW]")
 
-            If Not GEN.VehMode = tVehMode.EV Then
-                s.Append(",engine speed,Pe,n_norm,Pe_norm")
-                sU.Append(",[1/min],[kW],[-],[-]")
-            End If
-
-            s.Append(",engine speed,PeEM,PeBat,PiBat,Ubat,Ibat,SOC")
-            sU.Append(",[1/min],[kW],[kW],[kW],[V],[A],[-]")
-
-        Else
-
-            s.Append(",n,Tq_eng,Tq_clutch,Tq_full,Tq_drag,Pe_eng,Pe_full,Pe_drag,Pe_clutch,Pa Eng,Paux")
-            sU.Append(",[1/min],[Nm],[Nm],[Nm],[Nm],[kW],[kW],[kW],[kW],[kW],[kW]")
-
-        End If
-
-        If Not GEN.VehMode = tVehMode.EngineOnly Then
+        If Not GEN.EngOnly Then
 
             s.Append(",Gear,Ploss GB,Ploss Diff,Ploss Retarder,Pa GB,Pa Veh,Proll,Pair,Pgrad,Pwheel,Pbrake")
             sU.Append(",[-],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW]")
@@ -428,54 +392,24 @@ Public Class cMOD
 
             'Auxiliaries
             For Each StrKey In AuxList
-
                 s.Append(",Paux_" & StrKey)
                 sU.Append(",[kW]")
-
             Next
 
         End If
 
 
-        If Cfg.FinalEmOnly Then
+        For Each StrKey In EmList
 
-            For Each StrKey In EmList
+            Em0 = Em.EmComp(StrKey)
 
-                Em0 = Em.EmComp(StrKey)
+            If Em0.WriteOutput Then
+                s.Append(Sepp & Em0.Name)
+                sU.Append(Sepp & Em0.Unit)
+            End If
 
-                If Em0.WriteOutput Then
-                    s.Append(Sepp & Em0.Name)
-                    sU.Append(Sepp & Em0.Unit)
-                End If
+        Next
 
-            Next
-
-        Else
-
-            For Each StrKey In EmList
-
-                Em0 = Em.EmComp(StrKey)
-
-                If Em0.WriteOutput Then
-
-                    s.Append(Sepp & Em0.Name & "_Raw")
-                    sU.Append(Sepp & Em0.Unit)
-
-                    If Em0.TCdef Then
-                        s.Append(Sepp & Em0.Name & "_TC")
-                        sU.Append(Sepp & Em0.Unit)
-                    End If
-
-                    If Em0.ATdef Then
-                        s.Append(Sepp & Em0.Name & "_AT")
-                        sU.Append(Sepp & Em0.Unit)
-                    End If
-
-                End If
-
-            Next
-
-        End If
 
         'Berechnete Dynamikparameter (Diff zu Kennfeld) |@@| Calculated dynamics parameters (Diff to Map)
         'If TC.Calculated Then
@@ -502,7 +436,7 @@ Public Class cMOD
             For t = 0 To t1
 
                 'Predefine Gear for FLD assignment
-                If GEN.VehMode = tVehMode.EngineOnly Then
+                If GEN.EngOnly Then
                     Gear = 0
                 Else
                     Gear = .Gear(t)
@@ -514,7 +448,7 @@ Public Class cMOD
                 'Time
                 s.Append(t + DRI.t0 + tdelta)
 
-                If Not GEN.VehMode = tVehMode.EngineOnly Then
+                If Not GEN.EngOnly Then
 
                     'Strecke |@@| Route
                     dist += .Vh.V(t) / 1000
@@ -534,105 +468,64 @@ Public Class cMOD
 
                 End If
 
-                If GEN.ModeHorEV Then
+                'Revolutions
+                s.Append(Sepp & .nU(t))
 
-                    If Not GEN.VehMode = tVehMode.EV Then
-
-                        'Revolutions
-                        s.Append(Sepp & .nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl)
-
-                        'Power
-                        s.Append(Sepp & .Pe(t) * VEH.Pnenn)
-
-                        'Revolutions normalized
-                        s.Append(Sepp & .nn(t))
-
-                        'Power normalized
-                        s.Append(Sepp & .Pe(t))
-
-                    End If
-
-                    'Revolutions in U/min
-                    s.Append(Sepp & .nU(t))
-
-                    'EM-power in kW
-                    s.Append(Sepp & .Px.PeEMot(t))
-
-                    'Effective Battery-power
-                    s.Append(Sepp & .Px.PeBat(t))
-
-                    'Internal Battery-power
-                    s.Append(Sepp & .Px.PiBat(t))
-
-                    'Battery-voltage
-                    s.Append(Sepp & .Px.Ubat(t))
-
-                    'Battery-Power
-                    s.Append(Sepp & .Px.Ibat(t))
-
-                    'SOC
-                    s.Append(Sepp & .Px.SOC(t))
-
+                If Math.Abs(2 * Math.PI * .nU(t) / 60) < 0.00001 Then
+                    s.Append(Sepp & "-" & Sepp & "-" & Sepp & "-" & Sepp & "-")
                 Else
 
-                    'Revolutions
-                    s.Append(Sepp & .nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl)
+                    'Torque
+                    s.Append(Sepp & 1000 * .Pe(t) / (2 * Math.PI * .nU(t) / 60))
 
-                    If Math.Abs(2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60) < 0.00001 Then
-                        s.Append(Sepp & "-" & Sepp & "-" & Sepp & "-" & Sepp & "-")
-                    Else
+                    'Torque at clutch
+                    s.Append(Sepp & 1000 * (.Pe(t) - .PaEng(t) - .PauxSum(t)) / (2 * Math.PI * .nU(t) / 60))
 
-                        'Torque
-                        s.Append(Sepp & 1000 * .Pe(t) * VEH.Pnenn / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60))
-
-                        'Torque at clutch
-                        s.Append(Sepp & 1000 * (.Pe(t) * VEH.Pnenn - .PaEng(t) - .PauxSum(t)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60))
-
-                        'Full-load and Drag torque
-                        If .EngState(t) = tEngState.Stopped Then
-                            s.Append(Sepp & "-" & Sepp & "-")
-                        Else
-                            If t = 0 Then
-                                s.Append(Sepp & 1000 * FLD(Gear).Pfull(.nn(t)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60) & Sepp & 1000 * FLD(Gear).Pdrag(.nn(t)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60))
-                            Else
-                                s.Append(Sepp & 1000 * FLD(Gear).Pfull(.nn(t), .Pe(t - 1)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60) & Sepp & 1000 * FLD(Gear).Pdrag(.nn(t)) / (2 * Math.PI * (.nn(t) * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl) / 60))
-                            End If
-                        End If
-
-                    End If
-
-                    'Power
-                    s.Append(Sepp & .Pe(t) * VEH.Pnenn)
-
-                    'Revolutions normalized
-                    's.Append(Sepp & .nn(t))
-
-                    'Power normalized
-                    's.Append(Sepp & .Pe(t))
-
-                    'Full-load and Drag
+                    'Full-load and Drag torque
                     If .EngState(t) = tEngState.Stopped Then
                         s.Append(Sepp & "-" & Sepp & "-")
                     Else
                         If t = 0 Then
-                            s.Append(Sepp & FLD(Gear).Pfull(.nn(t)) & Sepp & FLD(Gear).Pdrag(.nn(t)))
+                            s.Append(Sepp & 1000 * FLD(Gear).Pfull(.nU(t)) / (2 * Math.PI * .nU(t) / 60) & Sepp & 1000 * FLD(Gear).Pdrag(.nU(t)) / (2 * Math.PI * .nU(t) / 60))
                         Else
-                            s.Append(Sepp & FLD(Gear).Pfull(.nn(t), .Pe(t - 1)) & Sepp & FLD(Gear).Pdrag(.nn(t)))
+                            s.Append(Sepp & 1000 * FLD(Gear).Pfull(.nU(t), .Pe(t - 1)) / (2 * Math.PI * .nU(t) / 60) & Sepp & 1000 * FLD(Gear).Pdrag(.nU(t)) / (2 * Math.PI * .nU(t) / 60))
                         End If
                     End If
 
-                    'Power at Clutch
-                    s.Append(Sepp & .Pe(t) * VEH.Pnenn - .PaEng(t) - .PauxSum(t))
-
-                    'PaEng
-                    s.Append(Sepp & .PaEng(t))
-
-                    'Aux..
-                    s.Append(Sepp & .PauxSum(t))
-
                 End If
 
-                If Not GEN.VehMode = tVehMode.EngineOnly Then
+                'Power
+                s.Append(Sepp & .Pe(t))
+
+                'Revolutions normalized
+                's.Append(Sepp & .nn(t))
+
+                'Power normalized
+                's.Append(Sepp & .Pe(t))
+
+                'Full-load and Drag
+                If .EngState(t) = tEngState.Stopped Then
+                    s.Append(Sepp & "-" & Sepp & "-")
+                Else
+                    If t = 0 Then
+                        s.Append(Sepp & FLD(Gear).Pfull(.nU(t)) & Sepp & FLD(Gear).Pdrag(.nU(t)))
+                    Else
+                        s.Append(Sepp & FLD(Gear).Pfull(.nU(t), .Pe(t - 1)) & Sepp & FLD(Gear).Pdrag(.nU(t)))
+                    End If
+                End If
+
+                'Power at Clutch
+                s.Append(Sepp & .Pe(t) - .PaEng(t) - .PauxSum(t))
+
+                'PaEng
+                s.Append(Sepp & .PaEng(t))
+
+                'Aux..
+                s.Append(Sepp & .PauxSum(t))
+
+
+
+                If Not GEN.EngOnly Then
 
                     'Gear
                     s.Append(Sepp & .Gear(t))
@@ -677,45 +570,23 @@ Public Class cMOD
 
                 End If
 
-                If Cfg.FinalEmOnly Then
+                'Final-emissions (tailpipe)
+                For Each StrKey In EmList
 
-                    'Final-emissions (tailpipe)
-                    For Each StrKey In EmList
+                    Em0 = .Em.EmComp(StrKey)
 
-                        Em0 = .Em.EmComp(StrKey)
+                    If Em0.WriteOutput Then
 
-                        If Em0.WriteOutput Then
-
-                            If Em0.FinalVals(t) > -0.0001 Then
-                                s.Append(Sepp & Em0.FinalVals(t))
-                            Else
-                                s.Append(Sepp & "ERROR")
-                            End If
-
+                        If Em0.FinalVals(t) > -0.0001 Then
+                            s.Append(Sepp & Em0.FinalVals(t))
+                        Else
+                            s.Append(Sepp & "ERROR")
                         End If
 
-                    Next
+                    End If
 
-                Else
+                Next
 
-                    For Each StrKey In EmList
-
-                        Em0 = .Em.EmComp(StrKey)
-
-                        If Em0.WriteOutput Then
-                            'Raw-emissions
-                            s.Append(Sepp & Em0.RawVals(t))
-
-                            'TC-Emissions
-                            If Em0.TCdef Then s.Append(Sepp & Em0.TCVals(t))
-
-                            'AT-Emissions (EXS)
-                            If Em0.ATdef Then s.Append(Sepp & Em0.ATVals(t))
-                        End If
-
-                    Next
-
-                End If
 
                 'Calculated Dynamics-parameters (Diff from(zu) Map)
                 'If TC.Calculated Then
@@ -841,7 +712,7 @@ Public Class cMOD
 
     End Class
 
-   
+
 
 
 

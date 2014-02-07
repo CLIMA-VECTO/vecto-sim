@@ -4,9 +4,15 @@ VECTO ?.? (future release) TODO
 
 
 VECTO 1.4.xxx (current source - next release)
+* Cleaned up source code
+* Removed rated power (not used anymore)
+* Removed rated engine speed form engine file. Now calculated form vfld file.
+* NOTE: These changes have inevitable influence on the calculation and results because several methods now use absolute instead of normalised values. Notable (but still negligible) differences may arise due to the following effects:
+** Different Shift times
+** Distance correction
+** Altitude to gradient conversion
 
-
-VECTO 1.4.RC8 
+VECTO 1.4.RC8
 
 * Bugfix: Eco Roll didn't go into motoring operation when Overspeed-Limit was reached (could cause higher FC than Overspeed Mode)
 * Minor update in demo data (12t motoring curve)
@@ -16,7 +22,7 @@ VECTO 1.4.RC7
 * Speed reduction in smaller steps to get closer to full load curve (before speed was sometimes reduced too much and caused problem with gear shifting)
 * Updates in demo data
 
-VECTO 1.4.RC6 (internal release)
+VECTO 1.4.RC6
 
 * Bugfix in torque converter calculation
 

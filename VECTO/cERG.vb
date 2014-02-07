@@ -59,9 +59,6 @@ Class cERG
         Dim Vquer As Single
         Dim sum As Double
         Dim t As Integer
-        Dim c As Integer
-        Dim EBatPlus As Single
-        Dim EBatMinus As Single
         Dim Em0 As cEmComp
         Dim key As String
         Dim First As Boolean
@@ -74,10 +71,9 @@ Class cERG
 
         'Vehicle type-independent
         ErgEntries("\\T").ValueString = (t1 + 1)
-        ErgEntries("\\Prated").ValueString = VEH.Pnenn
 
         'Length, Speed, Slope
-        If Not GEN.VehMode = tVehMode.EngineOnly Then
+        If Not GEN.EngOnly Then
 
             'Average-Speed. calculation
             sum = 0
@@ -106,190 +102,66 @@ Class cERG
 
         End If
 
+        'Emissions
+        For Each Em0 In MODdata.Em.EmComp.Values
 
-        'EV / Hybrid
-        If GEN.VehMode = tVehMode.EV Or GEN.VehMode = tVehMode.HEV Then
+            'Dump x/h if ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into x/km is not possible
+            If Em0.WriteOutput Then
 
-            'Positive effective EM-Power
-            sum = 0
-            c = 0
-            For t = 0 To t1
-                If MODdata.Px.PeEMot(t) > 0 Then
-                    sum += MODdata.Px.PeEMot(t)
-                    c += 1
+                If FCerror Then
+                    If Em0.NormID = tEmNorm.x Or GEN.EngOnly Then
+                        ErgEntries(Em0.IDstring).ValueString = "ERROR"
+                    Else
+                        ErgEntries(Em0.IDstring & "_km").ValueString = "ERROR"
+                    End If
+                Else
+                    If Em0.NormID = tEmNorm.x Or GEN.EngOnly Then
+                        ErgEntries(Em0.IDstring).ValueString = Em0.FinalAvg
+                    Else
+                        ErgEntries(Em0.IDstring & "_km").ValueString = (Em0.FinalAvg / Vquer)
+                    End If
                 End If
-            Next
-            If c > 0 Then ErgEntries("\\PeEM+").ValueString = (sum / c)
-
-            'Positive effective Battery-Power = internal EM-Power
-            sum = 0
-            c = 0
-            For t = 0 To t1
-                If MODdata.Px.PeBat(t) > 0 Then
-                    sum += MODdata.Px.PeBat(t)
-                    c += 1
-                End If
-            Next
-            If c > 0 Then ErgEntries("\\PeBat+").ValueString = (sum / c)
-
-            'Positive internal Battery-Power
-            sum = 0
-            c = 0
-            For t = 0 To t1
-                If MODdata.Px.PiBat(t) > 0 Then
-                    sum += MODdata.Px.PiBat(t)
-                    c += 1
-                End If
-            Next
-            If c > 0 Then ErgEntries("\\PiBat+").ValueString = (sum / c)
-
-            'Calculate Energy consumed
-            EBatPlus = sum / 3600
-
-            'Negative effective EM-Power
-            sum = 0
-            c = 0
-            For t = 0 To t1
-                If MODdata.Px.PeEMot(t) < 0 Then
-                    sum += MODdata.Px.PeEMot(t)
-                    c += 1
-                End If
-            Next
-            If c > 0 Then ErgEntries("\\PeEM-").ValueString = (sum / c)
-
-            'Negative effective Battery-Power = internal EM-Power
-            sum = 0
-            c = 0
-            For t = 0 To t1
-                If MODdata.Px.PeBat(t) < 0 Then
-                    sum += MODdata.Px.PeBat(t)
-                    c += 1
-                End If
-            Next
-            If c > 0 Then ErgEntries("\\PeBat-").ValueString = (sum / c)
-
-            'Negative internal Battery-Power
-            sum = 0
-            c = 0
-            For t = 0 To t1
-                If MODdata.Px.PiBat(t) < 0 Then
-                    sum += MODdata.Px.PiBat(t)
-                    c += 1
-                End If
-            Next
-            If c > 0 Then ErgEntries("\\PiBat-").ValueString = (sum / c)
-
-            'Charged-energy calculation
-            EBatMinus = sum / 3600
-
-            'Battery in/out Energy
-            ErgEntries("\\EiBat+").ValueString = EBatPlus
-            ErgEntries("\\EiBat-").ValueString = EBatMinus
-
-            'EtaEM
-            sum = 0
-            c = 0
-            For t = 0 To t1
-                If MODdata.Px.PeEMot(t) > 0 Then
-                    sum += (MODdata.Px.PeEMot(t)) / MODdata.Px.PiEMot(t)
-                    c += 1
-                ElseIf MODdata.Px.PeEMot(t) < 0 Then
-                    sum += MODdata.Px.PiEMot(t) / (MODdata.Px.PeEMot(t))
-                    c += 1
-                End If
-            Next
-            If c > 0 Then ErgEntries("\\EtaEM").ValueString = (sum / c)
-
-            'EtaBat
-            sum = 0
-            c = 0
-            For t = 0 To t1
-                If MODdata.Px.PeBat(t) > 0 Then
-                    sum += MODdata.Px.PeBat(t) / MODdata.Px.PiBat(t)
-                    c += 1
-                ElseIf MODdata.Px.PeBat(t) < 0 Then
-                    sum += MODdata.Px.PiBat(t) / MODdata.Px.PeBat(t)
-                    c += 1
-                End If
-            Next
-            If c > 0 Then ErgEntries("\\EtaBat").ValueString = (sum / c)
-
-            'Delta SOC
-            ErgEntries("\\∆SOC").ValueString = (MODdata.Px.SOC(t1) - MODdata.Px.SOC(0))
-
-            'Only EV:
-            If GEN.VehMode = tVehMode.EV Then
-
-                'Energy-consumption
-                ErgEntries("\\EC").ValueString = ((EBatPlus + EBatMinus) / (Vquer * (t1 + 1) / 3600))
 
             End If
 
-        End If
+        Next
 
-        'Conventional means everything with ICE (not EV)
-        If GEN.VehMode <> tVehMode.EV Then
+        'Power, Revolutions
+        'sum = 0
+        'For t = 0 To t1
+        '    sum += MODdata.Pe(t)
+        'Next
+        'ErgEntries("\\Pe_norm").ValueString = (sum / (t1 + 1))
 
-            'Emissions
-            For Each Em0 In MODdata.Em.EmComp.Values
+        'sum = 0
+        'For t = 0 To t1
+        '    sum += MODdata.nn(t)
+        'Next
+        'ErgEntries("\\n_norm").ValueString = (sum / (t1 + 1))
 
-                'Dump x/h if ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into x/km is not possible
-                If Em0.WriteOutput Then
+        'Ppos
+        sum = 0
+        For t = 0 To t1
+            sum += Math.Max(0, MODdata.Pe(t))
+        Next
+        ErgEntries("\\Ppos").ValueString = (sum / (t1 + 1))
 
-                    If FCerror Then
-                        If Em0.NormID = tEmNorm.x Or GEN.VehMode = tVehMode.EngineOnly Then
-                            ErgEntries(Em0.IDstring).ValueString = "ERROR"
-                        Else
-                            ErgEntries(Em0.IDstring & "_km").ValueString = "ERROR"
-                        End If
-                    Else
-                        If Em0.NormID = tEmNorm.x Or GEN.VehMode = tVehMode.EngineOnly Then
-                            ErgEntries(Em0.IDstring).ValueString = Em0.FinalAvg
-                        Else
-                            ErgEntries(Em0.IDstring & "_km").ValueString = (Em0.FinalAvg / Vquer)
-                        End If
-                    End If
+        'Pneg
+        sum = 0
+        For t = 0 To t1
+            sum += Math.Min(0, MODdata.Pe(t))
+        Next
+        ErgEntries("\\Pneg").ValueString = (sum / (t1 + 1))
 
-                End If
 
-            Next
 
-            'Power, Revolutions
-            'sum = 0
-            'For t = 0 To t1
-            '    sum += MODdata.Pe(t)
-            'Next
-            'ErgEntries("\\Pe_norm").ValueString = (sum / (t1 + 1))
-
-            'sum = 0
-            'For t = 0 To t1
-            '    sum += MODdata.nn(t)
-            'Next
-            'ErgEntries("\\n_norm").ValueString = (sum / (t1 + 1))
-
-            'Ppos
-            sum = 0
-            For t = 0 To t1
-                sum += Math.Max(0, MODdata.Pe(t))
-            Next
-            ErgEntries("\\Ppos").ValueString = (sum / (t1 + 1))
-
-            'Pneg
-            sum = 0
-            For t = 0 To t1
-                sum += Math.Min(0, MODdata.Pe(t))
-            Next
-            ErgEntries("\\Pneg").ValueString = (sum / (t1 + 1))
-
-        End If
-
-        'Nur Gesamtfahrzeug (nicht EngOnly) |@@| Only Entire-vehicle (not EngOnly)
-        If Not GEN.VehMode = tVehMode.EngineOnly Then
+        'Only Entire-vehicle (not EngOnly)
+        If Not GEN.EngOnly Then
 
             'Pbrake-norm
             sum = 0
             For t = 0 To t1
-                sum += MODdata.Pbrake(t) / VEH.Pnenn
+                sum += MODdata.Pbrake(t)
             Next
             ErgEntries("\\Pbrake").ValueString = (sum / (t1 + 1))
 
@@ -351,21 +223,19 @@ Class cERG
                 ErgEntries("\\" & ErgEntry.Head).ValueString = MODdata.CylceKin.GetValueString(ErgEntry.Head)
             Next
 
-            If GEN.VehMode <> tVehMode.EV Then
-                'EposICE
-                sum = 0
-                For t = 0 To t1
-                    sum += Math.Max(0, MODdata.Pe(t))
-                Next
-                ErgEntries("\\EposICE").ValueString = (VEH.Pnenn * sum / 3600)
+            'EposICE
+            sum = 0
+            For t = 0 To t1
+                sum += Math.Max(0, MODdata.Pe(t))
+            Next
+            ErgEntries("\\EposICE").ValueString = (sum / 3600)
 
-                'EnegICE
-                sum = 0
-                For t = 0 To t1
-                    sum += Math.Min(0, MODdata.Pe(t))
-                Next
-                ErgEntries("\\EnegICE").ValueString = (VEH.Pnenn * sum / 3600)
-            End If
+            'EnegICE
+            sum = 0
+            For t = 0 To t1
+                sum += Math.Min(0, MODdata.Pe(t))
+            Next
+            ErgEntries("\\EnegICE").ValueString = (sum / 3600)
 
         End If
 
@@ -521,7 +391,6 @@ Class cERG
         Dim i1 As Integer
         Dim i2 As Integer
         Dim iDim As Integer
-        Dim DRI0 As cDRI
         Dim dic As Dictionary(Of String, Object)
 
 
@@ -614,7 +483,6 @@ Class cERG
 
         'Vehicle type-independent
         AddToErg("\\T", "time", "[s]")
-        AddToErg("\\Prated", "Prated", "[kW]")
 
         'For each GEN-file check Mode and Map
         For Each str In GENs
@@ -633,7 +501,7 @@ Class cERG
                 Return False
             End Try
 
-            If GEN0.VehMode = tVehMode.EngineOnly Then
+            If GEN0.EngOnly Then
 
                 If Not EngOnly Then
 
@@ -664,125 +532,53 @@ Class cERG
 
             End If
 
+            'Conventional vehicles ...
+            'AddToErg("\\n_norm", "n_norm", "[-]")
+            'AddToErg("\\Pe_norm", "Pe_norm", "[-]")
+            AddToErg("\\Ppos", "Ppos", "[kW]")
+            AddToErg("\\Pneg", "Pneg", "[kW]")
 
-            'Electric-Vehicle / Hybrid
-            If GEN0.VehMode = tVehMode.EV Or GEN0.VehMode = tVehMode.HEV Then
+            'From the Engine-Map
+            ENG0 = New cENG
+            ENG0.FilePath = GEN0.PathENG
 
-                'EV & HEV
-                If Not HEVorEVdone Then
+            Try
+                If Not ENG0.ReadFile Then Return False
+            Catch ex As Exception
+                WorkerMsg(tMsgID.Err, "File read error! (" & GEN0.PathENG & ")", MsgSrc)
+                Return False
+            End Try
 
-                    AddToErg("\\PeEM+", "PeEM+", "[kW]")
-                    AddToErg("\\PeBat+", "PeBat+", "[kW]")
-                    AddToErg("\\PiBat+", "PiBat+", "[kW]")
-                    AddToErg("\\PeEM-", "PeEM-", "[kW]")
-                    AddToErg("\\PeBat-", "PeBat-", "[kW]")
-                    AddToErg("\\PiBat-", "PiBat-", "[kW]")
-                    AddToErg("\\EiBat+", "EiBat+", "[kWh]")
-                    AddToErg("\\EiBat-", "EiBat-", "[kWh]")
-                    AddToErg("\\EtaEM", "EtaEM", "[%]")
-                    AddToErg("\\EtaBat", "EtaBat", "[%]")
-                    AddToErg("\\∆SOC", "∆SOC", "[%]")
+            MAP0 = New cMAP
+            MAP0.FilePath = ENG0.PathMAP
 
-                    HEVorEVdone = True
-
-                End If
-
-                'Only EV:
-                If GEN0.VehMode = tVehMode.EV And Not EVdone Then
-
-                    AddToErg("\\EC", "EC", "[kWh/km]")
-
-                    EVdone = True
-
-                End If
+            Try
+                If Not MAP0.ReadFile(False) Then Return False 'Fehlermeldungen werden auch bei "MsgOutput = False" ausgegeben
+            Catch ex As Exception
+                WorkerMsg(tMsgID.Err, "File read error! (" & ENG0.PathMAP & ")", MsgSrc)
+                Return False
+            End Try
 
 
-            End If
+            For Each str1 In MAP0.EmList
 
+                Em0 = MAP0.EmComponents(str1)
 
-            'Conventional / Hybrid (Everything except EV)
-            If GEN0.VehMode <> tVehMode.EV Then
+                If Em0.WriteOutput Then
 
-                'Conventional vehicles ...
-                'AddToErg("\\n_norm", "n_norm", "[-]")
-                'AddToErg("\\Pe_norm", "Pe_norm", "[-]")
-                AddToErg("\\Ppos", "Ppos", "[-]")
-                AddToErg("\\Pneg", "Pneg", "[-]")
-
-                If GEN0.CreateMap Then
-
-                    'From the measured data
-                    DRI0 = New cDRI
-                    DRI0.FilePath = GEN0.CycleFiles(0).FullPath
-
-                    Try
-                        If Not DRI0.ReadFile Then Return False
-                    Catch ex As Exception
-                        WorkerMsg(tMsgID.Err, "File read error! (" & GEN0.CycleFiles(0).FullPath & ")", MsgSrc)
-                        Return False
-                    End Try
-
-                    For Each Em0 In DRI0.EmComponents.Values
-
-                        If Em0.WriteOutput Then
-
-                            'Dump x/h if in ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into  x/km is not possible
-                            If Em0.NormID = tEmNorm.x Or GEN0.VehMode = tVehMode.EngineOnly Then
-                                AddToErg(Em0.IDstring, Em0.Name, Em0.Unit, False)
-                            Else
-                                AddToErg(Em0.IDstring, Em0.Name, "[" & Em0.RawUnit & "/km]", True)
-                            End If
-
-                        End If
-
-                    Next
-
-                    AddToErg(sKey.MAP.Extrapol, fMapCompName(tMapComp.Extrapol), "[-]")
-
-                Else
-
-                    'From the Engine-Map
-                    ENG0 = New cENG
-                    ENG0.FilePath = GEN0.PathENG
-
-                    Try
-                        If Not ENG0.ReadFile Then Return False
-                    Catch ex As Exception
-                        WorkerMsg(tMsgID.Err, "File read error! (" & GEN0.PathENG & ")", MsgSrc)
-                        Return False
-                    End Try
-
-                    MAP0 = New cMAP(GEN0.PKWja)
-                    MAP0.FilePath = ENG0.PathMAP
-
-                    Try
-                        If Not MAP0.ReadFile(False) Then Return False 'Fehlermeldungen werden auch bei "MsgOutput = False" ausgegeben
-                    Catch ex As Exception
-                        WorkerMsg(tMsgID.Err, "File read error! (" & ENG0.PathMAP & ")", MsgSrc)
-                        Return False
-                    End Try
-
-
-                    For Each str1 In MAP0.EmList
-
-                        Em0 = MAP0.EmComponents(str1)
-
-                        If Em0.WriteOutput Then
-
-                            'Dump x/h if ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into x/km is not possible
-                            If Em0.NormID = tEmNorm.x Or GEN0.VehMode = tVehMode.EngineOnly Then
-                                AddToErg(Em0.IDstring, Em0.Name, Em0.Unit, False)
-                            Else
-                                AddToErg(Em0.IDstring, Em0.Name, "[" & Em0.RawUnit & "/km]", True)
-                            End If
-
-                        End If
-
-                    Next
+                    'Dump x/h if ADVANCE mode -or- EngineOnly -or- Units not in x/h and therefore Conversion into x/km is not possible
+                    If Em0.NormID = tEmNorm.x Or GEN0.EngOnly Then
+                        AddToErg(Em0.IDstring, Em0.Name, Em0.Unit, False)
+                    Else
+                        AddToErg(Em0.IDstring, Em0.Name, "[" & Em0.RawUnit & "/km]", True)
+                    End If
 
                 End If
 
-            End If
+            Next
+
+
+
 
         Next
 
@@ -796,7 +592,7 @@ Class cERG
         If NonEngOnly Then
 
             'Vehicle-related fields
-            AddToErg("\\Pbrake", "Pbrake", "[-]")
+            AddToErg("\\Pbrake", "Pbrake", "[kW]")
             AddToErg("\\EposICE", "EposICE", "[kWh]")
             AddToErg("\\EnegICE", "EnegICE", "[kWh]")
             AddToErg("\\Eair", "Eair", "[kWh]")

@@ -47,9 +47,6 @@ Module M_Lese
             CycleFiles.Add(sb.FullPath)
         Next
 
-        SOCnJa = GEN.SOCnJa And GEN.VehMode = tVehMode.HEV
-        SOCstart = GEN.SOCstart
-
         'Error message in init()
         If Not GEN.Init Then Return False
 
@@ -67,10 +64,6 @@ Module M_Lese
                 Return False
             End Try
 
-            VEH.hinauf = (VEH.nLeerl / VEH.nNenn) + VEH.hinauf * (1 - (VEH.nLeerl / VEH.nNenn))
-            VEH.hinunter = (VEH.nLeerl / VEH.nNenn) + VEH.hinunter * (1 - (VEH.nLeerl / VEH.nNenn))
-            VEH.lhinauf = (VEH.nLeerl / VEH.nNenn) + VEH.lhinauf * (1 - (VEH.nLeerl / VEH.nNenn))
-            VEH.lhinunter = (VEH.nLeerl / VEH.nNenn) + VEH.lhinunter * (1 - (VEH.nLeerl / VEH.nNenn))
         End If
 
         If VEH.NoJSON Then WorkerMsg(tMsgID.Warn, "Vehicle file format is outdated! CLICK HERE to convert to current format!", MsgSrc, "<GUI>" & GEN.PathVEH)
@@ -116,16 +109,8 @@ Module M_Lese
                 VEH.AuxPaths.Add(UCase(Trim(AuxKV.Key)), AuxEntry)
             Next
         End If
-        VEH.hinauf = GEN.hinauf
-        VEH.hinunter = GEN.hinunter
-        VEH.lhinauf = GEN.lhinauf
-        VEH.lhinunter = GEN.lhinunter
-        VEH.pspar = GEN.pspar
-        VEH.pmodell = GEN.pmodell
 
         'ENG => VEH
-        VEH.Pnenn = ENG.Pnenn
-        VEH.nNenn = ENG.nnenn
         VEH.nLeerl = ENG.nleerl
         VEH.I_mot = ENG.I_mot
 
@@ -199,8 +184,6 @@ Module M_Lese
         End Try
 
        
-
-
         For i = 0 To VEH.ganganz
 
             If Not fldgear.ContainsKey(i) Then
@@ -218,11 +201,9 @@ Module M_Lese
                 Return False
             End Try
 
-            'Normalize
-            FLD(i).Norm()
-
-
         Next
+
+        VEH.nRatedInit()
 
      
 
@@ -231,55 +212,20 @@ Module M_Lese
         '    the rest are Measurement-values
         '    Emissions and Consumption in (g/(h*kW_NominalPower) at HDV(SNF)
         '    Emissions (g/h) and consumption in (g/(h*kW_NominalPower) in cars(PKW) and LCV(LNF)
-        If Not GEN.CreateMap Then
+     
+        'Kennfeld read
+        MAP = New cMAP
+        MAP.FilePath = ENG.PathMAP
 
-            'Kennfeld read
-            MAP = New cMAP(GEN.PKWja)
-            MAP.FilePath = ENG.PathMAP
+        Try
+            If Not MAP.ReadFile Then Return False 'Fehlermeldung hier nicht notwendig weil schon von in ReadFile
+        Catch ex As Exception
+            WorkerMsg(tMsgID.Err, "File read error! (" & ENG.PathMAP & ")", MsgSrc, ENG.PathMAP)
+            Return False
+        End Try
 
-            Try
-                If Not MAP.ReadFile Then Return False 'Fehlermeldung hier nicht notwendig weil schon von in ReadFile
-            Catch ex As Exception
-                WorkerMsg(tMsgID.Err, "File read error! (" & ENG.PathMAP & ")", MsgSrc, ENG.PathMAP)
-                Return False
-            End Try
-
-            'Normalize
-            MAP.Norm()
-
-        End If
-
-
-        '-----------------------------    ~DRI~    -----------------------------
-        '    Reading the Vehicle Driving-cycle (Not in ADVANCE).
-        '       LUZ: 04.02.2011: From now outside of READING because of new BATCH structure
-
-        '-----------------------------    ~TRS~    -----------------------------
-        '    Dynamik-Korrekturparameter, falls dynamokkorrektur ausgewählt: |@@| Dynamic correction parameter, if exclusively Dynamic-correction(dynamokkorrektur):
-        '    Parameter aus multipler Regressionsanalyse, Differenz zu stationär in |@@| Parameters of multiple regression analysis, Difference with stationary
-        '      HDV(SNF): (g/h) / kW_Nominal-power for individual parameters
-        '      Cars(PKW) (g/h) for emissions (g/h)/kW for consumption
-        If GEN.dynkorja Then
-            TRS = New cTRS
-            TRS.FilePath = GEN.dynspez
-
-            Try
-                If Not TRS.ReadFile Then Return False
-            Catch ex As Exception
-                WorkerMsg(tMsgID.Err, "File read error! (" & GEN.dynspez & ")", MsgSrc, GEN.dynspez)
-                Return False
-            End Try
-
-        End If
-
-        '-----------------------------------------------------------------------
-        'Reading data for hybrid simulation:
-        If (GEN.ModeHorEV) Then
-
-            'TODO: Init EV/HEV here!
-
-        End If
-        '-----------------------------------------------------------------------
+        'Normalize
+        MAP.Norm()
 
 
         Return True

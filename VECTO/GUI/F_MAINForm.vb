@@ -419,12 +419,6 @@ Public Class F_MAINForm
 
         Result = e.Result
 
-        'Falls Optimierer aktiv werden hier die Zielfunktion ausgegeben und Signal an Interface |@@| If Optimizers(Optimierer ) are active here, then dump the Objective-function(Zielfunktion ) and Signal to interface
-        If bOptOn Then
-            If Result = tCalcResult.Err Or Result = tCalcResult.Abort Then OptERstat = True
-            OptEND()
-        End If
-
         'ShutDown when Unexpected Error
         If e.Error IsNot Nothing Then
             MsgBox("An Unexpected Error occurred!" & ChrW(10) & ChrW(10) & _
@@ -542,8 +536,6 @@ Public Class F_MAINForm
             DEV.LoadFromFile()
             LoadDEVconfigs()
         End If
-
-        Me.GrbxTest.Visible = False
 
     End Sub
 
@@ -1769,18 +1761,6 @@ lbFound:
         End Select
     End Sub
 
-    '*** ComMsgTimer_Tick Tick - Check whether new Message
-    Private Sub ComMsgTimer_Tick(ByVal sender As Object, ByVal e As System.EventArgs) Handles ComMsgTimer.Tick
-        If OptMsgTxt <> "" Then
-            If OptMsgTxt = "START" Then
-                OptSTART()
-            Else
-                GUImsg(tMsgID.Normal, "PHEM_Launcher: " & OptMsgTxt)
-            End If
-            OptMsgTxt = ""
-        End If
-    End Sub
-
 
 #Region "Sekundäre Progressbar (ToolStripProgBarSec) ...auch Update von ToolStripProgBarPrim möglich"
 
@@ -1836,7 +1816,6 @@ lbFound:
         Me.ChBoxUseGears.Checked = Cfg.GnVorgab
         Me.ChBoxModOut.Checked = Cfg.ModOut
         Me.ChBoxFzpExport.Checked = Cfg.FZPsortExp
-        Me.ChBoxFinalEm.Checked = Cfg.FinalEmOnly
         CbBOmode.SelectedIndex = -1
         Select Case UCase(Cfg.BATCHoutpath)
             Case sKey.WorkDir
@@ -1848,7 +1827,6 @@ lbFound:
                 Me.TbBOpath.Text = Cfg.BATCHoutpath
         End Select
         Me.ChBoxBatchSubD.Checked = Cfg.BATCHoutSubD
-        Me.ChBoxFCkor.Checked = Cfg.FCcorrection
 
         'Set Mode
         LastModeIndex = Cfg.LastMode
@@ -1870,7 +1848,6 @@ lbFound:
         'General(Allgemein)
         Cfg.WegKorJa = Me.ChBoxCyclDistCor.Checked
         Cfg.GnVorgab = Me.ChBoxUseGears.Checked
-        Cfg.FinalEmOnly = Me.ChBoxFinalEm.Checked
 
         'ADVANCE
         Cfg.FZPsortExp = Me.ChBoxFzpExport.Checked
@@ -1888,7 +1865,6 @@ lbFound:
                 If Microsoft.VisualBasic.Right(Cfg.BATCHoutpath, 1) <> "\" Then Cfg.BATCHoutpath &= "\"
         End Select
         Cfg.BATCHoutSubD = Me.ChBoxBatchSubD.Checked
-        Cfg.FCcorrection = Me.ChBoxFCkor.Checked
 
         DEV.SetOptions()
 

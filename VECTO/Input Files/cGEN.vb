@@ -9,65 +9,16 @@ Public Class cGEN
 
     Private MyPath As String
 
-    'Mode
-    Public VehMode As tVehMode
-    Public EngAnalysis As Boolean
-    Public CreateMap As Boolean
-    Public ModeHorEV As Boolean
-
-    Private boPKWja As Boolean
-    Private bodynkorja As Boolean
-    Private ineklasse As Int16
-    Private inizykwael As Int16
-    Private inPschrit As Int16
-    Private innschrit As Int16
-    Private boMapSchaltja As Boolean
-    Private iniMsek As Int16
-    Private boottoJa As Boolean
-    Private bokaltst1 As Boolean
-    Private sitkat1 As Single
-    Private sitkw1 As Single
-    Private sihsstart As Single
-
+    'Input parameters
     Private stPathVEH As cSubPath
     Private stPathENG As cSubPath
     Private stPathGBX As cSubPath
-    Private stdynspez As cSubPath
 
-    Private stkatmap As cSubPath
-    Private stkwmap As cSubPath
-    Private stkatkurv As cSubPath
-    Private stkwkurv As cSubPath
-    Private stcooldown As cSubPath
-    Private sttumgebung As cSubPath
-
-    Private stBatfile As cSubPath
-    Private stEmospez As cSubPath
-    Private stEANfile As cSubPath
-    Private stGetspez As cSubPath
-    Private stSTEnam As cSubPath
-    Private stEKFnam As cSubPath
-
-    Private stPathExs As cSubPath
-
-    Private boEXSja As Boolean
     Private boStartStop As Boolean
     Private siStStV As Single
     Private siStStT As Single
     Public StStDelay As Integer
-    Private boSOCnJa As Boolean
-    Private siSOCstart As Single
-    Private GetrMod As tTransLossModel
 
-    Private bKFcutFull As Boolean
-    Private bKFcutDrag As Boolean
-    Private bKFinsertDrag As Boolean
-    Private bKFDragIntp As Boolean
-
-    Public CoolantsimJa As Boolean
-    Private stCoolantSimPath As cSubPath
-
-    Public DesMaxJa As Boolean
     Private stDesMaxFile As cSubPath
     Private laDesV As List(Of Single)
     Private laDesMax As List(Of Single)
@@ -76,13 +27,6 @@ Public Class cGEN
 
     Public AuxPaths As Dictionary(Of String, cVEH.cAuxEntry)
     Public AuxDef As Boolean                               'True wenn ein oder mehrere Nebenverbraucher definiert sind
-
-    Public hinauf As Single
-    Public hinunter As Single
-    Public lhinauf As Single
-    Public lhinunter As Single
-    Public pspar As Single
-    Public pmodell As Single
 
     Public CycleFiles As List(Of cSubPath)
 
@@ -180,25 +124,6 @@ Public Class cGEN
         stPathVEH = New cSubPath
         stPathENG = New cSubPath
         stPathGBX = New cSubPath
-        stdynspez = New cSubPath
-
-        stkatmap = New cSubPath
-        stkwmap = New cSubPath
-        stkatkurv = New cSubPath
-        stkwkurv = New cSubPath
-        stcooldown = New cSubPath
-        sttumgebung = New cSubPath
-
-        stBatfile = New cSubPath
-        stEmospez = New cSubPath
-        stEANfile = New cSubPath
-        stGetspez = New cSubPath
-        stSTEnam = New cSubPath
-        stEKFnam = New cSubPath
-
-        stPathExs = New cSubPath
-
-        stCoolantSimPath = New cSubPath
 
         stDesMaxFile = New cSubPath
 
@@ -425,12 +350,6 @@ Public Class cGEN
 
 
         If Not file.EndOfFile Then EngOnly = CBool(file.ReadLine(0))
-
-        If EngOnly Then
-            VehMode = tVehMode.EngineOnly
-        Else
-            VehMode = tVehMode.StandardMode
-        End If
 
         If file.EndOfFile Then GoTo lbClose
 
@@ -874,12 +793,6 @@ lbEr:
 
             EngOnly = JSON.Content("Body")("EngineOnlyMode")
 
-            If EngOnly Then
-                VehMode = tVehMode.EngineOnly
-            Else
-                VehMode = tVehMode.StandardMode
-            End If
-
             If Not JSON.Content("Body")("StartStop") Is Nothing Then
                 dic = JSON.Content("Body")("StartStop")
                 boStartStop = dic("Enabled")
@@ -942,63 +855,17 @@ lbEr:
     End Function
 
     Private Sub SetDefault()
-        boPKWja = False
-        bodynkorja = False
-        ineklasse = 6
-        inizykwael = 2
-        inPschrit = 20
-        innschrit = 20
-        boMapSchaltja = True
-        iniMsek = 3
-        boottoJa = False
-        bokaltst1 = False
-        sitkat1 = 20
-        sitkw1 = 20
-        sihsstart = 1
-        boEXSja = False
         boStartStop = False
         siStStV = 5
         siStStT = 5
         StStDelay = 0
-        boSOCnJa = False
-        siSOCstart = 0.5
-        GetrMod = tTransLossModel.Detailed
-        bKFcutDrag = True
-        bKFcutFull = True
-        bKFinsertDrag = True
-        bKFDragIntp = True
-        'FileVersion = 0
-        VehMode = tVehMode.StandardMode
-        EngAnalysis = False
-        CreateMap = False
-        ModeHorEV = False
-        CoolantsimJa = False
+        FileVersion = 0
 
         stPathVEH.Clear()
         stPathENG.Clear()
         CycleFiles.Clear()
         stPathGBX.Clear()
-        stdynspez.Clear()
 
-        stkatmap.Clear()
-        stkwmap.Clear()
-        stkatkurv.Clear()
-        stkwkurv.Clear()
-        stcooldown.Clear()
-        sttumgebung.Clear()
-
-        stBatfile.Clear()
-        stEmospez.Clear()
-        stEANfile.Clear()
-        stGetspez.Clear()
-        stSTEnam.Clear()
-        stEKFnam.Clear()
-
-        stPathExs.Clear()
-
-        stCoolantSimPath.Clear()
-
-        DesMaxJa = True
         stDesMaxFile.Clear()
         laDesV.Clear()
         laDesMax.Clear()
@@ -1007,13 +874,6 @@ lbEr:
 
         AuxPaths.Clear()
         AuxDef = False
-
-        hinauf = 0
-        hinunter = 0
-        lhinauf = 0
-        lhinunter = 0
-        pspar = 0
-        pmodell = 0
 
         EngOnly = False
 
@@ -1037,7 +897,7 @@ lbEr:
 
         MsgSrc = "GEN/Init"
 
-        If DesMaxJa And Not EngOnly Then
+        If Not EngOnly Then
 
             file = New cFile_V3
 
@@ -1091,50 +951,6 @@ lbEr:
         End Get
     End Property
 
-    Public Property KFcutFull As Boolean
-        Get
-            Return bKFcutFull
-        End Get
-        Set(value As Boolean)
-            bKFcutFull = value
-        End Set
-    End Property
-
-    Public Property KFinsertDrag As Boolean
-        Get
-            Return bKFinsertDrag
-        End Get
-        Set(value As Boolean)
-            bKFinsertDrag = value
-        End Set
-    End Property
-
-    Public Property KFcutDrag As Boolean
-        Get
-            Return bKFcutDrag
-        End Get
-        Set(value As Boolean)
-            bKFcutDrag = value
-        End Set
-    End Property
-
-    Public Property KFDragIntp As Boolean
-        Get
-            Return bKFDragIntp
-        End Get
-        Set(value As Boolean)
-            bKFDragIntp = value
-        End Set
-    End Property
-
-    Public Property TransmModel() As tTransLossModel
-        Get
-            Return GetrMod
-        End Get
-        Set(ByVal value As tTransLossModel)
-            GetrMod = value
-        End Set
-    End Property
 
     Public Property FilePath() As String
         Get
@@ -1146,122 +962,6 @@ lbEr:
         End Set
     End Property
 
-    Public Property PKWja() As Boolean
-        Get
-            Return boPKWja
-        End Get
-        Set(ByVal value As Boolean)
-            boPKWja = value
-        End Set
-    End Property
-
-    Public Property dynkorja() As Boolean
-        Get
-            Return bodynkorja
-        End Get
-        Set(ByVal value As Boolean)
-            bodynkorja = value
-        End Set
-    End Property
-
-    Public Property eklasse() As Int16
-        Get
-            Return ineklasse
-        End Get
-        Set(ByVal value As Int16)
-            ineklasse = value
-        End Set
-    End Property
-
-    Public Property izykwael() As Int16
-        Get
-            Return inizykwael
-        End Get
-        Set(ByVal value As Int16)
-            inizykwael = value
-        End Set
-    End Property
-
-    Public Property Pschrit() As Int16
-        Get
-            Return inPschrit
-        End Get
-        Set(ByVal value As Int16)
-            inPschrit = value
-        End Set
-    End Property
-
-    Public Property nschrit() As Int16
-        Get
-            Return innschrit
-        End Get
-        Set(ByVal value As Int16)
-            innschrit = value
-        End Set
-    End Property
-
-    Public Property MapSchaltja() As Boolean
-        Get
-            Return boMapSchaltja
-        End Get
-        Set(ByVal value As Boolean)
-            boMapSchaltja = value
-        End Set
-    End Property
-
-    Public Property iMsek() As Int16
-        Get
-            Return iniMsek
-        End Get
-        Set(ByVal value As Int16)
-            iniMsek = value
-        End Set
-    End Property
-
-    Public Property ottoJa() As Boolean
-        Get
-            Return boottoJa
-        End Get
-        Set(ByVal value As Boolean)
-            boottoJa = value
-        End Set
-    End Property
-
-    Public Property kaltst1() As Boolean
-        Get
-            Return bokaltst1
-        End Get
-        Set(ByVal value As Boolean)
-            bokaltst1 = value
-        End Set
-    End Property
-
-    Public Property tkat1() As Single
-        Get
-            Return sitkat1
-        End Get
-        Set(ByVal value As Single)
-            sitkat1 = value
-        End Set
-    End Property
-
-    Public Property tkw1() As Single
-        Get
-            Return sitkw1
-        End Get
-        Set(ByVal value As Single)
-            sitkw1 = value
-        End Set
-    End Property
-
-    Public Property hsstart() As Single
-        Get
-            Return sihsstart
-        End Get
-        Set(ByVal value As Single)
-            sihsstart = value
-        End Set
-    End Property
 
     Public Property PathVEH(Optional ByVal Original As Boolean = False) As String
         Get
@@ -1302,198 +1002,6 @@ lbEr:
         End Set
     End Property
 
-    Public Property dynspez(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stdynspez.OriginalPath
-            Else
-                Return stdynspez.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stdynspez.Init(MyPath, value)
-        End Set
-    End Property
-
-    Public Property katmap(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stkatmap.OriginalPath
-            Else
-                Return stkatmap.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stkatmap.Init(MyPath, value)
-        End Set
-    End Property
-
-    Public Property kwmap(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stkwmap.OriginalPath
-            Else
-                Return stkwmap.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stkwmap.Init(MyPath, value)
-        End Set
-    End Property
-
-    Public Property katkurv(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stkatkurv.OriginalPath
-            Else
-                Return stkatkurv.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stkatkurv.Init(MyPath, value)
-        End Set
-    End Property
-
-    Public Property kwkurv(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stkwkurv.OriginalPath
-            Else
-                Return stkwkurv.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stkwkurv.Init(MyPath, value)
-        End Set
-    End Property
-
-    Public Property cooldown(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stcooldown.OriginalPath
-            Else
-                Return stcooldown.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stcooldown.Init(MyPath, value)
-        End Set
-    End Property
-
-    Public Property tumgebung(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return sttumgebung.OriginalPath
-            Else
-                Return sttumgebung.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            sttumgebung.Init(MyPath, value)
-        End Set
-    End Property
-
-    Public Property Batfile(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stBatfile.OriginalPath
-            Else
-                Return stBatfile.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stBatfile.Init(MyPath, value)
-        End Set
-    End Property
-
-    Public Property Emospez(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stEmospez.OriginalPath
-            Else
-                Return stEmospez.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stEmospez.Init(MyPath, value)
-        End Set
-    End Property
-
-    Public Property EANfile(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stEANfile.OriginalPath
-            Else
-                Return stEANfile.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stEANfile.Init(MyPath, value)
-        End Set
-    End Property
-
-    Public Property Getspez(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stGetspez.OriginalPath
-            Else
-                Return stGetspez.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stGetspez.Init(MyPath, value)
-        End Set
-    End Property
-
-    Public Property STEnam(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stSTEnam.OriginalPath
-            Else
-                Return stSTEnam.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stSTEnam.Init(MyPath, value)
-        End Set
-    End Property
-
-    Public Property EKFnam(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stEKFnam.OriginalPath
-            Else
-                Return stEKFnam.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stEKFnam.Init(MyPath, value)
-        End Set
-    End Property
-
-    Public Property PathExs(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stPathExs.OriginalPath
-            Else
-                Return stPathExs.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stPathExs.Init(MyPath, value)
-        End Set
-    End Property
-
-    Public Property EXSja() As Boolean
-        Get
-            Return boEXSja
-        End Get
-        Set(ByVal value As Boolean)
-            boEXSja = value
-        End Set
-    End Property
-
-
 
     Public Property StartStop() As Boolean
         Get
@@ -1519,37 +1027,6 @@ lbEr:
         End Get
         Set(ByVal value As Single)
             siStStT = value
-        End Set
-    End Property
-
-    Public Property SOCnJa() As Boolean
-        Get
-            Return boSOCnJa
-        End Get
-        Set(ByVal value As Boolean)
-            boSOCnJa = value
-        End Set
-    End Property
-
-    Public Property SOCstart() As Single
-        Get
-            Return siSOCstart
-        End Get
-        Set(ByVal value As Single)
-            siSOCstart = value
-        End Set
-    End Property
-
-    Public Property CoolantSimPath(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return stCoolantSimPath.OriginalPath
-            Else
-                Return stCoolantSimPath.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            stCoolantSimPath.Init(MyPath, value)
         End Set
     End Property
 

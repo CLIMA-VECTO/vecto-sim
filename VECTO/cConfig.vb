@@ -7,10 +7,6 @@
     Private sWorkDPath As String
     Private WorkDirHome As Boolean  'Nicht direkt in Configdatei
     Public LastMode As Int16
-    Public TEMpath As String
-    Public LastTEM As String
-    Public TEMexl As Boolean
-    Public EAAvInt As Short
     Public ModOut As Boolean
     Public BATCHoutpath As String   'Ausgabepfad für BATCH-Modus:   <WORKDIR>, <GENPATH> oder Pfad
     Public BATCHoutSubD As Boolean
@@ -19,9 +15,6 @@
     Public FZPsort As Boolean
     Public FZPsortExp As Boolean
     Public AirDensity As Single
-    Public FinalEmOnly As Boolean
-    Public FCcorrection As Boolean
-    Public nnormEngStop As Single
     Public OpenCmd As String
     Public OpenCmdName As String
 
@@ -80,15 +73,15 @@
 
         LastMode = CShort(c.ReadLine(0))
 
-        nnormEngStop = CSng(c.ReadLine(0))
+        c.ReadLine()
 
-        TEMpath = c.ReadLine(0)
+        c.ReadLine()
 
-        LastTEM = c.ReadLine(0)
+        c.ReadLine()
 
-        TEMexl = CBool(c.ReadLine(0))
+        c.ReadLine()
 
-        EAAvInt = CShort(c.ReadLine(0))
+        c.ReadLine()
 
         ModOut = CBool(c.ReadLine(0))
 
@@ -108,9 +101,9 @@
 
         AirDensity = CSng(c.ReadLine(0))
 
-        FinalEmOnly = CBool(c.ReadLine(0))
+        c.ReadLine()
 
-        FCcorrection = CBool(c.ReadLine(0))
+        c.ReadLine()
 
         line = c.ReadLine
         OpenCmd = line(0)
@@ -146,10 +139,6 @@ lbEr:
         GnVorgab = True
         sWorkDPath = "c:\"
         LastMode = 0
-        TEMpath = "<default>"
-        LastTEM = "New File.tem"
-        TEMexl = False
-        EAAvInt = 20
         ModOut = True
         BATCHoutpath = sKey.GenPath
         BATCHoutSubD = False
@@ -158,9 +147,6 @@ lbEr:
         FZPsort = True
         FZPsortExp = False
         AirDensity = 1.2
-        FinalEmOnly = True
-        FCcorrection = False
-        nnormEngStop = -0.05
         OpenCmd = "notepad"
         OpenCmdName = "Notepad"
 
@@ -191,16 +177,16 @@ lbEr:
         End If
         c.WriteLine("c LastMode 0/1/2")
         c.WriteLine(F_MAINForm.CBoxMODE.SelectedIndex)
-        c.WriteLine("c nnorm engine stop [-]")
-        c.WriteLine(nnormEngStop)
-        c.WriteLine("c TEM_Data Path for *.tem file creation")
-        c.WriteLine(TEMpath)
-        c.WriteLine("c Last TEM File")
-        c.WriteLine(LastTEM)
-        c.WriteLine("c Open TEM 1/0")
-        c.WriteLine(Math.Abs(CInt(TEMexl)))
-        c.WriteLine("c Engine Analysis: Analyse intervals of seconds")
-        c.WriteLine(EAAvInt)
+        c.WriteLine("c NOT USED")
+        c.WriteLine("0")
+        c.WriteLine("c NOT USED")
+        c.WriteLine("0")
+        c.WriteLine("c NOT USED")
+        c.WriteLine("0")
+        c.WriteLine("c NOT USED")
+        c.WriteLine("0")
+        c.WriteLine("c NOT USED")
+        c.WriteLine("0")
         c.WriteLine("c Modal output 1/0")
         c.WriteLine(Math.Abs(CInt(ModOut)))
         c.WriteLine("c Cycle Distance Correction 1/0")
@@ -219,10 +205,10 @@ lbEr:
         c.WriteLine(Math.Abs(CInt(BATCHoutSubD)))
         c.WriteLine("c Air Density [kg/m3]")
         c.WriteLine(CStr(AirDensity))
-        c.WriteLine("c Emissions Output: Tailpipe Only 1/0")
-        c.WriteLine(Math.Abs(CInt(FinalEmOnly)))
-        c.WriteLine("c HDV FC Correction 1/0")
-        c.WriteLine(Math.Abs(CInt(FCcorrection)))
+        c.WriteLine("c NOT USED")
+        c.WriteLine("0")
+        c.WriteLine("c NOT USED")
+        c.WriteLine("0")
         c.WriteLine("c File Open CMD")
         c.WriteLine(OpenCmd, OpenCmdName)
 

@@ -2,7 +2,7 @@
 
 Module VECTO_Global
 
-    Public Const VECTOvers As String = "1.4.RC8"
+    Public Const VECTOvers As String = "1.4.RC8+"
     Public Const LicSigAppCode As String = "VECTO-Release-0093C61E0A2E4BFA9A7ED7E729C56AE4"
     Public MyAppPath As String
     Public MyConfPath As String
@@ -18,9 +18,6 @@ Module VECTO_Global
     'Config-------------------------------------------------------
     Public Cfg As cConfig
 
-    'TODO: Get rid of it! SOC-iteration belongs either in the Power-loop or Em-calculation for LinReg
-    Public SOCstart As Single
-    Public SOC(izykt) As Single
     Public Const izykt As Integer = 40000
 
     Public sKey As csKey
@@ -36,8 +33,6 @@ Module VECTO_Global
     Public DRI As cDRI
     Public FLD As List(Of cFLD)
     Public MODdata As cMOD
-    Public TRS As cTRS
-    Public EXS As cEXS
     Public Lic As vectolic.cLicense
     Public ERG As cERG
     Public DEV As cDEV
@@ -56,16 +51,6 @@ Module VECTO_Global
         Return ((nU * 2 * Math.PI / 60) * M / 1000)
     End Function
 
-    Public Function nnormTonU(ByVal nnorm As Single) As Single
-        Return nnorm * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl
-    End Function
-
-    Public Function PnormToM(ByVal nnorm As Single, ByVal Pnorm As Double) As Single
-        Dim nU As Single
-        nU = nnorm * (VEH.nNenn - VEH.nLeerl) + VEH.nLeerl
-        Return Pnorm * VEH.Pnenn * 1000 / (nU * 2 * Math.PI / 60)
-    End Function
-
     Public Function nPeToM(ByVal nU As Single, ByVal Pe As Double) As Single
         Return Pe * 1000 / (nU * 2 * Math.PI / 60)
     End Function
@@ -82,8 +67,8 @@ Module VECTO_Global
                 Return tDriComp.V
             Case sKey.DRI.Grad
                 Return tDriComp.Grad
-            Case sKey.DRI.n
-                Return tDriComp.nn
+            Case sKey.DRI.nU
+                Return tDriComp.nU
             Case sKey.DRI.Gears
                 Return tDriComp.Gears
             Case sKey.DRI.Padd
@@ -420,7 +405,7 @@ Public Class csKey
         Public Grad As String = "<GRAD>"
         Public Alt As String = "<ALT>"
         Public Gears As String = "<GEAR>"
-        Public n As String = "<N>"
+        Public nU As String = "<N>"
         Public Pe As String = "<PE>"
         Public Padd As String = "<PADD>"
         Public VairVres As String = "<VAIR_RES>"

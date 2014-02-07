@@ -11,27 +11,13 @@ Public Class cVEH
     Private siMass As Single
     Private siLoading As Single
     Private siAquers As Single
-    'Private siDelta As Single
     Private siI_mot As Single
     Private siI_wheels As Single
     Private siI_Getriebe As Single
-    Private siPaux0 As Single
-    Private siPnenn As Single
     Private sinNenn As Single
     Private sinLeerl As Single
     Private siFr0 As Single      '<= wird aus Achs-RRC-Werten berechnet
-    Private siFr1 As Single
-    Private siFr2 As Single
-    Private siFr3 As Single
-    Private siFr4 As Single
-    Private sifGetr As Single
     Private siDreifen As Single
-    Private sihinauf As Single
-    Private sihinunter As Single
-    Private silhinauf As Single
-    Private silhinunter As Single
-    Private sipspar As Single
-    Private sipmodell As Single
 
     Private siCd0 As Single
     Public CdMode As tCdMode
@@ -124,23 +110,10 @@ Public Class cVEH
         siI_mot = 0
         siI_wheels = 0
         siI_Getriebe = 0
-        siPaux0 = 0
-        siPnenn = 0
         sinNenn = 0
         sinLeerl = 0
         siFr0 = 0
-        siFr1 = 0
-        siFr2 = 0
-        siFr3 = 0
-        siFr4 = 0
-        sifGetr = 0
         siDreifen = 0
-        sihinauf = 0
-        sihinunter = 0
-        silhinauf = 0
-        silhinunter = 0
-        sipspar = 0
-        sipmodell = 0
 
         siGetrI = New List(Of Single)
         GetrEffDef = New List(Of Boolean)
@@ -622,11 +595,9 @@ lbError:
         If Not CdInit() Then Return False
 
         'Transmission Loss Maps
-        If GEN.TransmModel = tTransLossModel.Detailed Then
-            If Not VEH.TrLossMapInit Then
-                WorkerMsg(tMsgID.Err, "Failed to initialize Transmission Loss Maps!", MsgSrc)
-                Return False
-            End If
+        If Not VEH.TrLossMapInit Then
+            WorkerMsg(tMsgID.Err, "Failed to initialize Transmission Loss Maps!", MsgSrc)
+            Return False
         End If
 
         'Retarder
@@ -676,6 +647,17 @@ lbError:
 
     End Function
 
+    Public Sub nRatedInit()
+        Dim fl As cFLD
+
+        nNenn = 0
+        For Each fl In FLD
+            If nNenn < fl.nRated Then nNenn = fl.nRated
+        Next
+
+    End Sub
+
+
 #Region "Transmission Loss Maps"
 
     Private Function TrLossMapInit() As Boolean
@@ -693,7 +675,6 @@ lbError:
         Dim M_out As Double
 
         Dim dnU As Single
-        Dim nn As Single
         Dim dM As Single
         Dim P_In As Single
         Dim P_Loss As Single
@@ -799,12 +780,11 @@ lbError:
                         nU = VEH.nLeerl + dnU
 
                         Do While nU <= nNenn
-                            nn = (nU - VEH.nLeerl) / (VEH.nNenn - VEH.nLeerl)
 
-                            dM = nPeToM(nU, (2 / 3) * FLD(i).Pfull(nn) / 10)
-                            M_in = nPeToM(nU, (1 / 3) * FLD(i).Pfull(nn))
+                            dM = nPeToM(nU, (2 / 3) * FLD(i).Pfull(nU) / 10)
+                            M_in = nPeToM(nU, (1 / 3) * FLD(i).Pfull(nU))
 
-                            Do While M_in <= nPeToM(nU, FLD(i).Pfull(nn))
+                            Do While M_in <= nPeToM(nU, FLD(i).Pfull(nU))
 
                                 P_In = nMtoPe(nU, M_in)
 
@@ -1520,27 +1500,6 @@ lbInt:
         End Set
     End Property
 
-
-    Public Property Paux0 As Single
-        Get
-            Return siPaux0
-        End Get
-        Set(ByVal value As Single)
-            siPaux0 = value
-        End Set
-    End Property
-
-
-    Public Property Pnenn As Single
-        Get
-            Return siPnenn
-        End Get
-        Set(ByVal value As Single)
-            siPnenn = value
-        End Set
-    End Property
-
-
     Public Property nNenn As Single
         Get
             Return sinNenn
@@ -1569,54 +1528,6 @@ lbInt:
         End Set
     End Property
 
-    Public Property Fr1 As Single
-        Get
-            Return siFr1
-        End Get
-        Set(ByVal value As Single)
-            siFr1 = value
-        End Set
-    End Property
-
-    Public Property Fr2 As Single
-        Get
-            Return siFr2
-        End Get
-        Set(ByVal value As Single)
-            siFr2 = value
-        End Set
-    End Property
-
-    Public Property Fr3 As Single
-        Get
-            Return siFr3
-        End Get
-        Set(ByVal value As Single)
-            siFr3 = value
-        End Set
-    End Property
-
-    Public Property Fr4 As Single
-        Get
-            Return siFr4
-        End Get
-        Set(ByVal value As Single)
-            siFr4 = value
-        End Set
-    End Property
-
-    Public Property fGetr As Single
-        Get
-            Return sifGetr
-        End Get
-        Set(ByVal value As Single)
-            sifGetr = value
-        End Set
-    End Property
-
-
-
-
     Public Property Dreifen As Single
         Get
             Return siDreifen
@@ -1626,65 +1537,6 @@ lbInt:
         End Set
     End Property
 
-
-    Public Property hinauf As Single
-        Get
-            Return sihinauf
-        End Get
-        Set(ByVal value As Single)
-            sihinauf = value
-        End Set
-    End Property
-
-
-    Public Property hinunter As Single
-        Get
-            Return sihinunter
-        End Get
-        Set(ByVal value As Single)
-            sihinunter = value
-        End Set
-    End Property
-
-
-    Public Property lhinauf As Single
-        Get
-            Return silhinauf
-        End Get
-        Set(ByVal value As Single)
-            silhinauf = value
-        End Set
-    End Property
-
-
-    Public Property lhinunter As Single
-        Get
-            Return silhinunter
-        End Get
-        Set(ByVal value As Single)
-            silhinunter = value
-        End Set
-    End Property
-
-
-    Public Property pspar As Single
-        Get
-            Return sipspar
-        End Get
-        Set(ByVal value As Single)
-            sipspar = value
-        End Set
-    End Property
-
-
-    Public Property pmodell As Single
-        Get
-            Return sipmodell
-        End Get
-        Set(ByVal value As Single)
-            sipmodell = value
-        End Set
-    End Property
 
     Public Property FilePath() As String
         Get

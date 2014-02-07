@@ -110,8 +110,6 @@ Public Class F_VEH
 
     'New VEH
     Private Sub newVEH()
-        Dim i As Integer
-        Dim lvi As ListViewItem
 
         If ChangeCheckCancel() Then Exit Sub
 

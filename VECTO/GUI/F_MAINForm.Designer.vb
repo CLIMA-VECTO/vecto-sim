@@ -53,9 +53,6 @@ Partial Class F_MAINForm
         Me.ButtonDRIremove = New System.Windows.Forms.Button()
         Me.ButtonDRIadd = New System.Windows.Forms.Button()
         Me.TabPgOptions = New System.Windows.Forms.TabPage()
-        Me.GrbxTest = New System.Windows.Forms.GroupBox()
-        Me.ChBoxFCkor = New System.Windows.Forms.CheckBox()
-        Me.ChBoxFinalEm = New System.Windows.Forms.CheckBox()
         Me.GrBoxADV = New System.Windows.Forms.GroupBox()
         Me.ChBoxFzpSort = New System.Windows.Forms.CheckBox()
         Me.ChBoxFzpExport = New System.Windows.Forms.CheckBox()
@@ -89,7 +86,6 @@ Partial Class F_MAINForm
         Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.RemovePathsToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
-        Me.ComMsgTimer = New System.Windows.Forms.Timer(Me.components)
         Me.LvMsg = New System.Windows.Forms.ListView()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -131,7 +127,6 @@ Partial Class F_MAINForm
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPageDRI.SuspendLayout()
         Me.TabPgOptions.SuspendLayout()
-        Me.GrbxTest.SuspendLayout()
         Me.GrBoxADV.SuspendLayout()
         Me.GrBoxBATCH.SuspendLayout()
         Me.PanelOptAllg.SuspendLayout()
@@ -455,7 +450,6 @@ Partial Class F_MAINForm
         '
         'TabPgOptions
         '
-        Me.TabPgOptions.Controls.Add(Me.GrbxTest)
         Me.TabPgOptions.Controls.Add(Me.GrBoxADV)
         Me.TabPgOptions.Controls.Add(Me.GrBoxSTD)
         Me.TabPgOptions.Controls.Add(Me.GrBoxBATCH)
@@ -468,39 +462,6 @@ Partial Class F_MAINForm
         Me.TabPgOptions.TabIndex = 2
         Me.TabPgOptions.Text = "Options"
         Me.TabPgOptions.UseVisualStyleBackColor = True
-        '
-        'GrbxTest
-        '
-        Me.GrbxTest.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GrbxTest.Controls.Add(Me.ChBoxFCkor)
-        Me.GrbxTest.Controls.Add(Me.ChBoxFinalEm)
-        Me.GrbxTest.Location = New System.Drawing.Point(575, 67)
-        Me.GrbxTest.Name = "GrbxTest"
-        Me.GrbxTest.Size = New System.Drawing.Size(537, 109)
-        Me.GrbxTest.TabIndex = 15
-        Me.GrbxTest.TabStop = False
-        Me.GrbxTest.Text = "Hidden Options"
-        '
-        'ChBoxFCkor
-        '
-        Me.ChBoxFCkor.AutoSize = True
-        Me.ChBoxFCkor.Location = New System.Drawing.Point(6, 19)
-        Me.ChBoxFCkor.Name = "ChBoxFCkor"
-        Me.ChBoxFCkor.Size = New System.Drawing.Size(116, 17)
-        Me.ChBoxFCkor.TabIndex = 5
-        Me.ChBoxFCkor.Text = "HDV FC Correction"
-        Me.ChBoxFCkor.UseVisualStyleBackColor = True
-        '
-        'ChBoxFinalEm
-        '
-        Me.ChBoxFinalEm.AutoSize = True
-        Me.ChBoxFinalEm.Location = New System.Drawing.Point(6, 42)
-        Me.ChBoxFinalEm.Name = "ChBoxFinalEm"
-        Me.ChBoxFinalEm.Size = New System.Drawing.Size(133, 17)
-        Me.ChBoxFinalEm.TabIndex = 0
-        Me.ChBoxFinalEm.Text = "Tailpipe emissions only"
-        Me.ChBoxFinalEm.UseVisualStyleBackColor = True
         '
         'GrBoxADV
         '
@@ -790,9 +751,6 @@ Partial Class F_MAINForm
         'BackgroundWorker1
         '
         '
-        'ComMsgTimer
-        '
-        '
         'LvMsg
         '
         Me.LvMsg.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -1063,8 +1021,6 @@ Partial Class F_MAINForm
         Me.TabPageDRI.PerformLayout()
         Me.TabPgOptions.ResumeLayout(False)
         Me.TabPgOptions.PerformLayout()
-        Me.GrbxTest.ResumeLayout(False)
-        Me.GrbxTest.PerformLayout()
         Me.GrBoxADV.ResumeLayout(False)
         Me.GrBoxADV.PerformLayout()
         Me.GrBoxBATCH.ResumeLayout(False)
@@ -1106,7 +1062,6 @@ Partial Class F_MAINForm
     Friend WithEvents ClearListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
     Friend WithEvents ToolStripProgBarOverall As System.Windows.Forms.ToolStripProgressBar
-    Friend WithEvents ComMsgTimer As System.Windows.Forms.Timer
     Friend WithEvents LvGEN As System.Windows.Forms.ListView
     Friend WithEvents ColGENpath As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColGENstatus As System.Windows.Forms.ColumnHeader
@@ -1130,8 +1085,6 @@ Partial Class F_MAINForm
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents ButBObrowse As System.Windows.Forms.Button
     Friend WithEvents ChBoxBatchSubD As System.Windows.Forms.CheckBox
-    Friend WithEvents ChBoxFinalEm As System.Windows.Forms.CheckBox
-    Friend WithEvents ChBoxFCkor As System.Windows.Forms.CheckBox
     Friend WithEvents LvMsg As System.Windows.Forms.ListView
     Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
     Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
@@ -1168,7 +1121,6 @@ Partial Class F_MAINForm
     Friend WithEvents ToolStripProgBarJob As System.Windows.Forms.ToolStripProgressBar
     Friend WithEvents TmProgSec As System.Windows.Forms.Timer
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
-    Friend WithEvents GrbxTest As System.Windows.Forms.GroupBox
     Friend WithEvents EngineEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents GearboxEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents UserManualToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem

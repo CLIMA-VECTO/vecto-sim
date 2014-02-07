@@ -15,7 +15,6 @@ Public Class cDEV
 
     Public SpeedPeEps As Single
     Public PreRun As Boolean
-    Public negFCerr As Single
 
     Public AllowAprxTrLoss As Boolean
 
@@ -115,15 +114,6 @@ Public Class cDEV
         'Conf0.ModeIndex = 3
         'MyOptions.Add("Menu_Test", Conf0)
 
-        Conf0 = New cDEVoption(tDEVconfType.tAction, "Show hidden options in main form")
-        Conf0.ActionDelegate = New cDEVoption.dActionDelegate(AddressOf Me.ShowAddOptions)
-        MyOptions.Add("OptTest", Conf0)
-
-        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Show hidden options in VECTO Editor and Settings", False)
-        Conf0.BoolVal = False
-        MyOptions.Add("TestOptions", Conf0)
-
-
 
         Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Gear Correcion (gear shift polygons model only!)", False)
         Conf0.BoolVal = False
@@ -152,10 +142,6 @@ Public Class cDEV
         Conf0.BoolVal = True
         MyOptions.Add("PreRun", Conf0)
 
-        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "FC values below negFCerr cause errors and abort calculation. Values between zero and negFCerr are set to zero.")
-        Conf0.SingleVal = -0.000001
-        MyOptions.Add("negFCerr", Conf0)
-
         Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Allow approximate transmission loss calculation in Cycle Preprocessing and Gear Shift Model", False)
         Conf0.BoolVal = True
         MyOptions.Add("AllowAprxTrLoss", Conf0)
@@ -180,8 +166,6 @@ Public Class cDEV
 
         PreRun = MyOptions("PreRun").BoolVal
 
-        negFCerr = MyOptions("negFCerr").SingleVal
-
         AllowAprxTrLoss = MyOptions("AllowAprxTrLoss").BoolVal
 
     End Sub
@@ -189,12 +173,6 @@ Public Class cDEV
     'Demo for Delegate Function
     Public Function TestFunction() As String
         Return "OK...?"
-    End Function
-
-    Public Function ShowAddOptions() As String
-        F_MAINForm.GrbxTest.Visible = True
-
-        Return ("done")
     End Function
 
     Public Function DEVinfo() As String

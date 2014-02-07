@@ -28,6 +28,7 @@ Partial Class F_Options
         Me.ButtonOK = New System.Windows.Forms.Button()
         Me.ButtonCancel = New System.Windows.Forms.Button()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.CbJSON = New System.Windows.Forms.CheckBox()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.TbOpenCmdName = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -47,31 +48,14 @@ Partial Class F_Options
         Me.Label8 = New System.Windows.Forms.Label()
         Me.TbAirDensity = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.TabPgTest = New System.Windows.Forms.TabPage()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.TbnnormEngStop = New System.Windows.Forms.TextBox()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.ButtonTD = New System.Windows.Forms.Button()
-        Me.ButTDdefault = New System.Windows.Forms.Button()
-        Me.TextBoxTD = New System.Windows.Forms.TextBox()
-        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.LabelEAVal = New System.Windows.Forms.Label()
-        Me.TextBoxEAVal = New System.Windows.Forms.TextBox()
         Me.ButReset = New System.Windows.Forms.Button()
         Me.BtHelp = New System.Windows.Forms.Button()
-        Me.CbJSON = New System.Windows.Forms.CheckBox()
         Me.GroupBoxWorDir.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
-        Me.TabPgTest.SuspendLayout()
-        Me.GroupBox1.SuspendLayout()
-        Me.GroupBox2.SuspendLayout()
         Me.SuspendLayout()
         '
         'TextBoxWorDir
@@ -135,6 +119,16 @@ Partial Class F_Options
         Me.GroupBox3.TabIndex = 11
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Interface"
+        '
+        'CbJSON
+        '
+        Me.CbJSON.AutoSize = True
+        Me.CbJSON.Location = New System.Drawing.Point(21, 80)
+        Me.CbJSON.Name = "CbJSON"
+        Me.CbJSON.Size = New System.Drawing.Size(168, 17)
+        Me.CbJSON.TabIndex = 15
+        Me.CbJSON.Text = "In- and Output in JSON format"
+        Me.CbJSON.UseVisualStyleBackColor = True
         '
         'GroupBox5
         '
@@ -203,7 +197,6 @@ Partial Class F_Options
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabControl1.Controls.Add(Me.TabPage2)
-        Me.TabControl1.Controls.Add(Me.TabPgTest)
         Me.TabControl1.Location = New System.Drawing.Point(3, 3)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
@@ -316,130 +309,6 @@ Partial Class F_Options
         Me.Label2.TabIndex = 14
         Me.Label2.Text = "Air Density"
         '
-        'TabPgTest
-        '
-        Me.TabPgTest.Controls.Add(Me.Label6)
-        Me.TabPgTest.Controls.Add(Me.TbnnormEngStop)
-        Me.TabPgTest.Controls.Add(Me.Label5)
-        Me.TabPgTest.Controls.Add(Me.Label4)
-        Me.TabPgTest.Controls.Add(Me.GroupBox1)
-        Me.TabPgTest.Controls.Add(Me.GroupBox2)
-        Me.TabPgTest.Location = New System.Drawing.Point(4, 22)
-        Me.TabPgTest.Name = "TabPgTest"
-        Me.TabPgTest.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgTest.Size = New System.Drawing.Size(500, 302)
-        Me.TabPgTest.TabIndex = 2
-        Me.TabPgTest.Text = "TEST"
-        Me.TabPgTest.UseVisualStyleBackColor = True
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(11, 160)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(169, 13)
-        Me.Label6.TabIndex = 22
-        Me.Label6.Text = "(ICE Start/Stop must be activated)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10)
-        '
-        'TbnnormEngStop
-        '
-        Me.TbnnormEngStop.Location = New System.Drawing.Point(217, 138)
-        Me.TbnnormEngStop.Name = "TbnnormEngStop"
-        Me.TbnnormEngStop.Size = New System.Drawing.Size(54, 20)
-        Me.TbnnormEngStop.TabIndex = 21
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(277, 141)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(16, 13)
-        Me.Label5.TabIndex = 17
-        Me.Label5.Text = "[-]"
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(11, 141)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(200, 13)
-        Me.Label4.TabIndex = 20
-        Me.Label4.Text = "Engine stop when input n_norm is below "
-        '
-        'GroupBox1
-        '
-        Me.GroupBox1.Controls.Add(Me.ButtonTD)
-        Me.GroupBox1.Controls.Add(Me.ButTDdefault)
-        Me.GroupBox1.Controls.Add(Me.TextBoxTD)
-        Me.GroupBox1.Location = New System.Drawing.Point(5, 16)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(490, 53)
-        Me.GroupBox1.TabIndex = 18
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Temperature-Table for TEM creation"
-        '
-        'ButtonTD
-        '
-        Me.ButtonTD.Location = New System.Drawing.Point(456, 19)
-        Me.ButtonTD.Name = "ButtonTD"
-        Me.ButtonTD.Size = New System.Drawing.Size(26, 20)
-        Me.ButtonTD.TabIndex = 2
-        Me.ButtonTD.Text = "..."
-        Me.ButtonTD.UseVisualStyleBackColor = True
-        '
-        'ButTDdefault
-        '
-        Me.ButTDdefault.Location = New System.Drawing.Point(9, 19)
-        Me.ButTDdefault.Name = "ButTDdefault"
-        Me.ButTDdefault.Size = New System.Drawing.Size(99, 20)
-        Me.ButTDdefault.TabIndex = 8
-        Me.ButTDdefault.Text = "Set To Default"
-        Me.ButTDdefault.UseVisualStyleBackColor = True
-        '
-        'TextBoxTD
-        '
-        Me.TextBoxTD.Location = New System.Drawing.Point(119, 19)
-        Me.TextBoxTD.Name = "TextBoxTD"
-        Me.TextBoxTD.Size = New System.Drawing.Size(331, 20)
-        Me.TextBoxTD.TabIndex = 6
-        '
-        'GroupBox2
-        '
-        Me.GroupBox2.Controls.Add(Me.Label1)
-        Me.GroupBox2.Controls.Add(Me.LabelEAVal)
-        Me.GroupBox2.Controls.Add(Me.TextBoxEAVal)
-        Me.GroupBox2.Location = New System.Drawing.Point(6, 75)
-        Me.GroupBox2.Name = "GroupBox2"
-        Me.GroupBox2.Size = New System.Drawing.Size(184, 50)
-        Me.GroupBox2.TabIndex = 19
-        Me.GroupBox2.TabStop = False
-        Me.GroupBox2.Text = "Engine Analysis"
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(6, 23)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(93, 13)
-        Me.Label1.TabIndex = 14
-        Me.Label1.Text = "Averaging Range:"
-        '
-        'LabelEAVal
-        '
-        Me.LabelEAVal.AutoSize = True
-        Me.LabelEAVal.Location = New System.Drawing.Point(155, 22)
-        Me.LabelEAVal.Name = "LabelEAVal"
-        Me.LabelEAVal.Size = New System.Drawing.Size(18, 13)
-        Me.LabelEAVal.TabIndex = 3
-        Me.LabelEAVal.Text = "[s]"
-        '
-        'TextBoxEAVal
-        '
-        Me.TextBoxEAVal.Location = New System.Drawing.Point(105, 19)
-        Me.TextBoxEAVal.Name = "TextBoxEAVal"
-        Me.TextBoxEAVal.Size = New System.Drawing.Size(44, 20)
-        Me.TextBoxEAVal.TabIndex = 2
-        '
         'ButReset
         '
         Me.ButReset.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
@@ -459,16 +328,6 @@ Partial Class F_Options
         Me.BtHelp.Size = New System.Drawing.Size(26, 26)
         Me.BtHelp.TabIndex = 14
         Me.BtHelp.UseVisualStyleBackColor = True
-        '
-        'CbJSON
-        '
-        Me.CbJSON.AutoSize = True
-        Me.CbJSON.Location = New System.Drawing.Point(21, 80)
-        Me.CbJSON.Name = "CbJSON"
-        Me.CbJSON.Size = New System.Drawing.Size(168, 17)
-        Me.CbJSON.TabIndex = 15
-        Me.CbJSON.Text = "In- and Output in JSON format"
-        Me.CbJSON.UseVisualStyleBackColor = True
         '
         'F_Options
         '
@@ -497,12 +356,6 @@ Partial Class F_Options
         Me.TabPage2.ResumeLayout(False)
         Me.GroupBox4.ResumeLayout(False)
         Me.GroupBox4.PerformLayout()
-        Me.TabPgTest.ResumeLayout(False)
-        Me.TabPgTest.PerformLayout()
-        Me.GroupBox1.ResumeLayout(False)
-        Me.GroupBox1.PerformLayout()
-        Me.GroupBox2.ResumeLayout(False)
-        Me.GroupBox2.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -523,19 +376,6 @@ Partial Class F_Options
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents TbAirDensity As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents TabPgTest As System.Windows.Forms.TabPage
-    Friend WithEvents Label6 As System.Windows.Forms.Label
-    Friend WithEvents TbnnormEngStop As System.Windows.Forms.TextBox
-    Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents ButtonTD As System.Windows.Forms.Button
-    Friend WithEvents ButTDdefault As System.Windows.Forms.Button
-    Friend WithEvents TextBoxTD As System.Windows.Forms.TextBox
-    Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents LabelEAVal As System.Windows.Forms.Label
-    Friend WithEvents TextBoxEAVal As System.Windows.Forms.TextBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents TbFuelDens As System.Windows.Forms.TextBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
