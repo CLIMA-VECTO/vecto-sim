@@ -5,9 +5,7 @@ Public Class cMAP
     'Private Const FormatVersion As Integer = 1
     'Private FileVersion As Integer
 
-    Public EmComponents As Dictionary(Of String, cEmComp)
-    Public EmDefRef As Dictionary(Of tMapComp, cEmComp)
-    Private MyEmList As List(Of String)
+    Public lFC As List(Of Single)
 
     Public LPe As List(Of Single)
     Public LnU As List(Of Single)
@@ -21,11 +19,9 @@ Public Class cMAP
 
     Private Sub ResetMe()
         MapIntp = Nothing
-        EmComponents = Nothing
-        MyEmList = Nothing
+        lFC = Nothing
         LPe = Nothing
         LnU = Nothing
-        EmDefRef = Nothing
         iMapDim = -1
         FuelMap = New cDelaunayMap
     End Sub
@@ -33,11 +29,6 @@ Public Class cMAP
     Public Function ReadFile(Optional ByVal MsgOutput As Boolean = True) As Boolean
         Dim file As cFile_V3
         Dim line As String()
-        Dim s1 As Integer
-        Dim s As Integer
-        'Dim txt As String
-        Dim Em0 As cEmComp
-        Dim EmKV As System.Collections.Generic.KeyValuePair(Of String, cEmComp)
         Dim nU As Double
         Dim MsgSrc As String
 
@@ -62,35 +53,10 @@ Public Class cMAP
         End If
 
         'Initi Lists (before version check so ReadOldFormat works)
-        MyEmList = New List(Of String)
-        EmComponents = New System.Collections.Generic.Dictionary(Of String, cEmComp)
-        EmDefRef = New System.Collections.Generic.Dictionary(Of tMapComp, cEmComp)
+        lFC = New System.Collections.Generic.List(Of Single)
         LPe = New System.Collections.Generic.List(Of Single)
         LnU = New System.Collections.Generic.List(Of Single)
 
-        s1 = 2
-
-        'Column 3: fuel consumption
-        s = 2
-        Em0 = New cEmComp
-        Em0.Col = s
-        Em0.Name = "FC"  'wird bei Default-Komponenten noch geändert
-        Em0.Unit = "[g/h]"
-        Em0.IDstring = "<FC>"
-        Em0.MapCompID = tMapComp.FC
-        Em0.NormID = tEmNorm.x_h
-        If EmComponents.ContainsKey(UCase(Em0.Name)) Then
-            'Abort if already defined
-            WorkerMsg(tMsgID.Err, "Component '" & Em0.Name & "' already defined! Col. " & s + 1, MsgSrc)
-            GoTo lbEr
-        Else
-            Em0.Name = fMapCompName(Em0.MapCompID)
-            EmComponents.Add(Em0.IDstring, Em0)
-            MyEmList.Add(Em0.IDstring)
-            EmDefRef.Add(Em0.MapCompID, Em0)
-        End If
-
-        'From line 4 (or  6): Values
         Try
             Do While Not file.EndOfFile
 
@@ -109,9 +75,16 @@ Public Class cMAP
                 LPe.Add(nMtoPe(nU, CDbl(line(1))))
 
                 'FC
-                For Each EmKV In EmComponents
-                    EmKV.Value.RawVals.Add(CSng(line(EmKV.Value.Col)))
-                Next
+                'Check sign
+                If CSng(line(2)) < 0 Then
+                    file.Close()
+                    WorkerMsg(tMsgID.Err, "FC < 0 in map at " & nU & " [1/min], " & line(1) & " [Nm]", MsgSrc)
+                    Return False
+                End If
+
+                lFC.Add(CSng(line(2)))
+
+
             Loop
         Catch ex As Exception
 
@@ -127,8 +100,6 @@ Public Class cMAP
         file.Close()
 
         file = Nothing
-        EmKV = Nothing
-        Em0 = Nothing
 
         Return True
 
@@ -137,8 +108,6 @@ Public Class cMAP
 lbEr:
         file.Close()
         file = Nothing
-        EmKV = Nothing
-        Em0 = Nothing
 
         Return False
 
@@ -146,22 +115,14 @@ lbEr:
 
     Public Sub Norm()
         Dim i As Integer
-        Dim Em0 As cEmComp
-
-        Dim nleerl As Single
-        Dim nnenn As Single
 
         Dim MsgSrc As String
 
         MsgSrc = "MAP/Norm"
 
-        nleerl = VEH.nLeerl
-        nnenn = VEH.nNenn
-
         'FC Delauney
-        Em0 = EmDefRef(tMapComp.FC)
         For i = 0 To iMapDim
-            FuelMap.AddPoints(LnU(i), LPe(i), Em0.RawVals(i))
+            FuelMap.AddPoints(LnU(i), LPe(i), lFC(i))
         Next
 
         FuelMap.Triangulate()
@@ -224,13 +185,6 @@ lbEr:
             sFilePath = value
         End Set
     End Property
-
-    Public ReadOnly Property EmList As List(Of String)
-        Get
-            Return MyEmList
-        End Get
-    End Property
-
 
 #End Region
 

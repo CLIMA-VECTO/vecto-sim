@@ -169,7 +169,7 @@ Public Class F_MAINForm
     'PHEM-Launcher
     Public Sub PHEM_Launcher()
         Dim ProgOverall As Boolean
-        Dim GEN0 As cGEN
+        Dim GEN0 As cVECTO
 
         'Called when PHEM already running
         If PHEMworker.IsBusy Then
@@ -217,10 +217,10 @@ Public Class F_MAINForm
         End If
 
         'Check whether Overall-progbar is needed
-        If PHEMmode = tPHEMmode.ModeBATCH Or JobFileList.Count > 1 Then
+        If PHEMmode = tPHEMmode.ModeBATCH Or JobFileList.Count > 1 Or Declaration.Active Then
             ProgOverall = True
         Else
-            GEN0 = New cGEN
+            GEN0 = New cVECTO
             GEN0.FilePath = JobFileList(0)
             If Not GEN0.ReadFile Then
                 GUImsg(tMsgID.Err, "Failed to job file (" & fFILE(JobFileList(0), True) & ")!")
@@ -240,7 +240,6 @@ Public Class F_MAINForm
         Me.PanelOptAllg.Enabled = Not Lock
         Me.GrBoxSTD.Enabled = Not Lock
         Me.GrBoxBATCH.Enabled = Not Lock
-        Me.GrBoxADV.Enabled = Not Lock
 
         Me.BtGENup.Enabled = Not Lock
         Me.BtGENdown.Enabled = Not Lock
@@ -537,6 +536,12 @@ Public Class F_MAINForm
             LoadDEVconfigs()
         End If
 
+        If Declaration.Active Then
+            Me.PnDeclOpt.Enabled = False
+            Me.CBoxMODE.SelectedIndex = 0
+            GUImsg(tMsgID.Warn, "VECTO is running in Declaration Mode")
+        End If
+
     End Sub
 
     'Shown Event (Form-Load finished) ... here StartUp Forms are loaded (DEV, GEN/ADV- Editor ..)
@@ -548,7 +553,7 @@ Public Class F_MAINForm
         End If
 
         'VECTO Init
-        'VEC.Init()
+        Declaration.Init()
 
         'Command Line Args
         If Command() <> "" Then
@@ -1555,7 +1560,6 @@ lbFound:
 
                 Me.GrBoxSTD.Visible = False  'weil GroupBox leer!!! sonst 'True
                 Me.GrBoxBATCH.Visible = False
-                Me.GrBoxADV.Visible = False
 
                 If DRIpageHere Then
                     Me.TabControl1.Controls.Remove(DRIpage)
@@ -1572,7 +1576,6 @@ lbFound:
 
                 Me.GrBoxSTD.Visible = False
                 Me.GrBoxBATCH.Visible = True
-                Me.GrBoxADV.Visible = False
 
                 If Not DRIpageHere Then
                     'Me.TabControl1.Controls.Add(DRIpage)
@@ -1722,20 +1725,20 @@ lbFound:
     'Open GEN-editor and load File
     Friend Sub OpenGENEditor(ByVal x As String)
 
-        If Not F_GEN.Visible Then
-            F_GEN.Show()
+        If Not F_VECTO.Visible Then
+            F_VECTO.Show()
         Else
-            If F_GEN.WindowState = FormWindowState.Minimized Then F_GEN.WindowState = FormWindowState.Normal
-            F_GEN.BringToFront()
+            If F_VECTO.WindowState = FormWindowState.Minimized Then F_VECTO.WindowState = FormWindowState.Normal
+            F_VECTO.BringToFront()
         End If
 
         If x = "<New>" Then
-            F_GEN.GENnew()
+            F_VECTO.GENnew()
         Else
-            F_GEN.GENload2Form(x)
+            F_VECTO.GENload2Form(x)
         End If
 
-        F_GEN.Activate()
+        F_VECTO.Activate()
 
     End Sub
 
@@ -1811,11 +1814,9 @@ lbFound:
 #Region "Options Tab"
 
     Public Sub LoadOptions()
-        Me.ChBoxFzpSort.Checked = Cfg.FZPsort
         Me.ChBoxCyclDistCor.Checked = Cfg.WegKorJa
         Me.ChBoxUseGears.Checked = Cfg.GnVorgab
         Me.ChBoxModOut.Checked = Cfg.ModOut
-        Me.ChBoxFzpExport.Checked = Cfg.FZPsortExp
         CbBOmode.SelectedIndex = -1
         Select Case UCase(Cfg.BATCHoutpath)
             Case sKey.WorkDir
@@ -1849,10 +1850,6 @@ lbFound:
         Cfg.WegKorJa = Me.ChBoxCyclDistCor.Checked
         Cfg.GnVorgab = Me.ChBoxUseGears.Checked
 
-        'ADVANCE
-        Cfg.FZPsortExp = Me.ChBoxFzpExport.Checked
-        Cfg.FZPsort = Me.ChBoxFzpSort.Checked
-
         'BATCH
         Cfg.ModOut = Me.ChBoxModOut.Checked
         Select Case CbBOmode.SelectedIndex
@@ -1875,9 +1872,6 @@ lbFound:
 
 #Region "Events"
 
-    Private Sub ChBoxAdvSort_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ChBoxFzpSort.CheckedChanged
-        Me.ChBoxFzpExport.Enabled = Me.ChBoxFzpSort.Checked
-    End Sub
 
     Private Sub ChBoxAutoSD_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ChBoxAutoSD.CheckedChanged
         Me.LbAutoShDown.Visible = Me.ChBoxAutoSD.Checked

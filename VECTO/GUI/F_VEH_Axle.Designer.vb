@@ -26,7 +26,7 @@ Partial Class F_VEH_Axle
         Me.OK_Button = New System.Windows.Forms.Button()
         Me.Cancel_Button = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.TbWeight = New System.Windows.Forms.TextBox()
+        Me.TbAxleShare = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -39,7 +39,9 @@ Partial Class F_VEH_Axle
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.CbTwinT = New System.Windows.Forms.CheckBox()
+        Me.PnAxle = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel1.SuspendLayout()
+        Me.PnAxle.SuspendLayout()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -79,23 +81,23 @@ Partial Class F_VEH_Axle
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(27, 14)
+        Me.Label1.Location = New System.Drawing.Point(18, 10)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(96, 13)
         Me.Label1.TabIndex = 1
         Me.Label1.Text = "Relative Axle Load"
         '
-        'TbWeight
+        'TbAxleShare
         '
-        Me.TbWeight.Location = New System.Drawing.Point(129, 12)
-        Me.TbWeight.Name = "TbWeight"
-        Me.TbWeight.Size = New System.Drawing.Size(53, 20)
-        Me.TbWeight.TabIndex = 0
+        Me.TbAxleShare.Location = New System.Drawing.Point(120, 8)
+        Me.TbAxleShare.Name = "TbAxleShare"
+        Me.TbAxleShare.Size = New System.Drawing.Size(53, 20)
+        Me.TbAxleShare.TabIndex = 0
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(188, 15)
+        Me.Label2.Location = New System.Drawing.Point(179, 11)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(16, 13)
         Me.Label2.TabIndex = 1
@@ -199,6 +201,16 @@ Partial Class F_VEH_Axle
         Me.CbTwinT.Text = "Twin Tyres"
         Me.CbTwinT.UseVisualStyleBackColor = True
         '
+        'PnAxle
+        '
+        Me.PnAxle.Controls.Add(Me.Label1)
+        Me.PnAxle.Controls.Add(Me.Label2)
+        Me.PnAxle.Controls.Add(Me.TbAxleShare)
+        Me.PnAxle.Location = New System.Drawing.Point(9, 4)
+        Me.PnAxle.Name = "PnAxle"
+        Me.PnAxle.Size = New System.Drawing.Size(204, 42)
+        Me.PnAxle.TabIndex = 5
+        '
         'F_VEH_Axle
         '
         Me.AcceptButton = Me.OK_Button
@@ -206,6 +218,7 @@ Partial Class F_VEH_Axle
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
         Me.ClientSize = New System.Drawing.Size(390, 205)
+        Me.Controls.Add(Me.PnAxle)
         Me.Controls.Add(Me.CbTwinT)
         Me.Controls.Add(Me.TbFzISO)
         Me.Controls.Add(Me.Label6)
@@ -214,12 +227,9 @@ Partial Class F_VEH_Axle
         Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.Label5)
-        Me.Controls.Add(Me.TbWeight)
         Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
@@ -229,6 +239,8 @@ Partial Class F_VEH_Axle
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Axle configuration"
         Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.PnAxle.ResumeLayout(False)
+        Me.PnAxle.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -237,7 +249,7 @@ Partial Class F_VEH_Axle
     Friend WithEvents OK_Button As System.Windows.Forms.Button
     Friend WithEvents Cancel_Button As System.Windows.Forms.Button
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents TbWeight As System.Windows.Forms.TextBox
+    Friend WithEvents TbAxleShare As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents Label4 As System.Windows.Forms.Label
@@ -250,5 +262,6 @@ Partial Class F_VEH_Axle
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents CbTwinT As System.Windows.Forms.CheckBox
+    Friend WithEvents PnAxle As System.Windows.Forms.Panel
 
 End Class

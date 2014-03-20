@@ -52,7 +52,7 @@ Partial Class F_GBX
         Me.TbName = New System.Windows.Forms.TextBox()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.BtRemGear = New System.Windows.Forms.Button()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.GrGearShift = New System.Windows.Forms.GroupBox()
         Me.PnTorqRes = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -95,16 +95,18 @@ Partial Class F_GBX
         Me.BtAddGear = New System.Windows.Forms.Button()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.Label32 = New System.Windows.Forms.Label()
+        Me.PnInertiaTI = New System.Windows.Forms.Panel()
         Me.ToolStrip1.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GroupBox1.SuspendLayout()
+        Me.GrGearShift.SuspendLayout()
         Me.PnTorqRes.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         Me.CmOpenFile.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.PnTC.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
+        Me.PnInertiaTI.SuspendLayout()
         Me.SuspendLayout()
         '
         'ToolStrip1
@@ -225,7 +227,7 @@ Partial Class F_GBX
         '
         'TbTracInt
         '
-        Me.TbTracInt.Location = New System.Drawing.Point(352, 350)
+        Me.TbTracInt.Location = New System.Drawing.Point(303, 3)
         Me.TbTracInt.Name = "TbTracInt"
         Me.TbTracInt.Size = New System.Drawing.Size(40, 20)
         Me.TbTracInt.TabIndex = 5
@@ -267,7 +269,7 @@ Partial Class F_GBX
         '
         'TBI_getr
         '
-        Me.TBI_getr.Location = New System.Drawing.Point(102, 350)
+        Me.TBI_getr.Location = New System.Drawing.Point(53, 3)
         Me.TBI_getr.Name = "TBI_getr"
         Me.TBI_getr.Size = New System.Drawing.Size(57, 20)
         Me.TBI_getr.TabIndex = 4
@@ -275,7 +277,7 @@ Partial Class F_GBX
         'Label49
         '
         Me.Label49.AutoSize = True
-        Me.Label49.Location = New System.Drawing.Point(398, 353)
+        Me.Label49.Location = New System.Drawing.Point(349, 6)
         Me.Label49.Name = "Label49"
         Me.Label49.Size = New System.Drawing.Size(18, 13)
         Me.Label49.TabIndex = 2
@@ -284,7 +286,7 @@ Partial Class F_GBX
         'Label33
         '
         Me.Label33.AutoSize = True
-        Me.Label33.Location = New System.Drawing.Point(165, 353)
+        Me.Label33.Location = New System.Drawing.Point(116, 6)
         Me.Label33.Name = "Label33"
         Me.Label33.Size = New System.Drawing.Size(36, 13)
         Me.Label33.TabIndex = 2
@@ -293,7 +295,7 @@ Partial Class F_GBX
         'Label48
         '
         Me.Label48.AutoSize = True
-        Me.Label48.Location = New System.Drawing.Point(244, 353)
+        Me.Label48.Location = New System.Drawing.Point(195, 6)
         Me.Label48.Name = "Label48"
         Me.Label48.Size = New System.Drawing.Size(102, 13)
         Me.Label48.TabIndex = 2
@@ -302,7 +304,7 @@ Partial Class F_GBX
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(60, 353)
+        Me.Label6.Location = New System.Drawing.Point(11, 6)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(36, 13)
         Me.Label6.TabIndex = 2
@@ -343,25 +345,25 @@ Partial Class F_GBX
         Me.BtRemGear.TabIndex = 3
         Me.BtRemGear.UseVisualStyleBackColor = True
         '
-        'GroupBox1
+        'GrGearShift
         '
-        Me.GroupBox1.Controls.Add(Me.PnTorqRes)
-        Me.GroupBox1.Controls.Add(Me.BtShiftPolyOpen)
-        Me.GroupBox1.Controls.Add(Me.ChShiftInside)
-        Me.GroupBox1.Controls.Add(Me.TbShiftTime)
-        Me.GroupBox1.Controls.Add(Me.Label12)
-        Me.GroupBox1.Controls.Add(Me.Label13)
-        Me.GroupBox1.Controls.Add(Me.ChSkipGears)
-        Me.GroupBox1.Controls.Add(Me.GroupBox2)
-        Me.GroupBox1.Controls.Add(Me.TbShiftPolyFile)
-        Me.GroupBox1.Controls.Add(Me.BtShiftPolyBrowse)
-        Me.GroupBox1.Controls.Add(Me.Label1)
-        Me.GroupBox1.Location = New System.Drawing.Point(12, 377)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(441, 230)
-        Me.GroupBox1.TabIndex = 6
-        Me.GroupBox1.TabStop = False
-        Me.GroupBox1.Text = "Gear shift parameters"
+        Me.GrGearShift.Controls.Add(Me.PnTorqRes)
+        Me.GrGearShift.Controls.Add(Me.BtShiftPolyOpen)
+        Me.GrGearShift.Controls.Add(Me.ChShiftInside)
+        Me.GrGearShift.Controls.Add(Me.TbShiftTime)
+        Me.GrGearShift.Controls.Add(Me.Label12)
+        Me.GrGearShift.Controls.Add(Me.Label13)
+        Me.GrGearShift.Controls.Add(Me.ChSkipGears)
+        Me.GrGearShift.Controls.Add(Me.GroupBox2)
+        Me.GrGearShift.Controls.Add(Me.TbShiftPolyFile)
+        Me.GrGearShift.Controls.Add(Me.BtShiftPolyBrowse)
+        Me.GrGearShift.Controls.Add(Me.Label1)
+        Me.GrGearShift.Location = New System.Drawing.Point(12, 377)
+        Me.GrGearShift.Name = "GrGearShift"
+        Me.GrGearShift.Size = New System.Drawing.Size(441, 230)
+        Me.GrGearShift.TabIndex = 6
+        Me.GrGearShift.TabStop = False
+        Me.GrGearShift.Text = "Gear shift parameters"
         '
         'PnTorqRes
         '
@@ -746,6 +748,19 @@ Partial Class F_GBX
         Me.Label32.TabIndex = 35
         Me.Label32.Text = "Double-Click to edit gear"
         '
+        'PnInertiaTI
+        '
+        Me.PnInertiaTI.Controls.Add(Me.Label6)
+        Me.PnInertiaTI.Controls.Add(Me.TBI_getr)
+        Me.PnInertiaTI.Controls.Add(Me.Label33)
+        Me.PnInertiaTI.Controls.Add(Me.Label48)
+        Me.PnInertiaTI.Controls.Add(Me.Label49)
+        Me.PnInertiaTI.Controls.Add(Me.TbTracInt)
+        Me.PnInertiaTI.Location = New System.Drawing.Point(49, 347)
+        Me.PnInertiaTI.Name = "PnInertiaTI"
+        Me.PnInertiaTI.Size = New System.Drawing.Size(398, 30)
+        Me.PnInertiaTI.TabIndex = 47
+        '
         'F_GBX
         '
         Me.AcceptButton = Me.ButOK
@@ -753,24 +768,19 @@ Partial Class F_GBX
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
         Me.ClientSize = New System.Drawing.Size(465, 786)
+        Me.Controls.Add(Me.PnInertiaTI)
         Me.Controls.Add(Me.GroupBox4)
         Me.Controls.Add(Me.CbGStype)
         Me.Controls.Add(Me.Label16)
         Me.Controls.Add(Me.PictureBox1)
-        Me.Controls.Add(Me.GroupBox1)
+        Me.Controls.Add(Me.GrGearShift)
         Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.TbName)
         Me.Controls.Add(Me.ButCancel)
         Me.Controls.Add(Me.ButOK)
-        Me.Controls.Add(Me.TbTracInt)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.ToolStrip1)
-        Me.Controls.Add(Me.Label6)
-        Me.Controls.Add(Me.TBI_getr)
-        Me.Controls.Add(Me.Label49)
-        Me.Controls.Add(Me.Label33)
-        Me.Controls.Add(Me.Label48)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
@@ -782,8 +792,8 @@ Partial Class F_GBX
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GroupBox1.ResumeLayout(False)
-        Me.GroupBox1.PerformLayout()
+        Me.GrGearShift.ResumeLayout(False)
+        Me.GrGearShift.PerformLayout()
         Me.PnTorqRes.ResumeLayout(False)
         Me.PnTorqRes.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
@@ -795,6 +805,8 @@ Partial Class F_GBX
         Me.PnTC.PerformLayout()
         Me.GroupBox4.ResumeLayout(False)
         Me.GroupBox4.PerformLayout()
+        Me.PnInertiaTI.ResumeLayout(False)
+        Me.PnInertiaTI.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -826,7 +838,7 @@ Partial Class F_GBX
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+    Friend WithEvents GrGearShift As System.Windows.Forms.GroupBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents BtShiftPolyBrowse As System.Windows.Forms.Button
     Friend WithEvents TbShiftPolyFile As System.Windows.Forms.TextBox
@@ -870,4 +882,5 @@ Partial Class F_GBX
     Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
     Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
     Friend WithEvents Label32 As System.Windows.Forms.Label
+    Friend WithEvents PnInertiaTI As System.Windows.Forms.Panel
 End Class

@@ -29,9 +29,9 @@ Partial Class F_VEH
         Me.Label2 = New System.Windows.Forms.Label()
         Me.TbLoad = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.TBcw = New System.Windows.Forms.TextBox()
+        Me.TBcdTrTr = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.TBAquers = New System.Windows.Forms.TextBox()
+        Me.TBAquersTrTr = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.TbI_wheels = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
@@ -76,6 +76,7 @@ Partial Class F_VEH
         Me.LvRRC = New System.Windows.Forms.ListView()
         Me.ColumnHeader7 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader8 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader9 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ButAxlAdd = New System.Windows.Forms.Button()
@@ -85,7 +86,7 @@ Partial Class F_VEH
         Me.CbCat = New System.Windows.Forms.ComboBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.TbMassMax = New System.Windows.Forms.TextBox()
+        Me.TbMassMass = New System.Windows.Forms.TextBox()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.LbStatus = New System.Windows.Forms.ToolStripStatusLabel()
@@ -94,13 +95,20 @@ Partial Class F_VEH
         Me.TbLoadingMax = New System.Windows.Forms.TextBox()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.PnLoad = New System.Windows.Forms.Panel()
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.PnCdATrTr = New System.Windows.Forms.Panel()
+        Me.LbCdATr = New System.Windows.Forms.Label()
+        Me.PnCdARig = New System.Windows.Forms.Panel()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.TBcwRig = New System.Windows.Forms.TextBox()
+        Me.TBAquersRig = New System.Windows.Forms.TextBox()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.PnAll = New System.Windows.Forms.Panel()
         Me.GroupBox6.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
@@ -108,9 +116,13 @@ Partial Class F_VEH
         Me.GroupBox8.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
+        Me.PnLoad.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
+        Me.PnCdATrTr.SuspendLayout()
+        Me.PnCdARig.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CmOpenFile.SuspendLayout()
+        Me.PnAll.SuspendLayout()
         Me.SuspendLayout()
         '
         'Label1
@@ -132,7 +144,7 @@ Partial Class F_VEH
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(121, 74)
+        Me.Label2.Location = New System.Drawing.Point(115, 31)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(45, 13)
         Me.Label2.TabIndex = 2
@@ -140,7 +152,7 @@ Partial Class F_VEH
         '
         'TbLoad
         '
-        Me.TbLoad.Location = New System.Drawing.Point(172, 71)
+        Me.TbLoad.Location = New System.Drawing.Point(166, 28)
         Me.TbLoad.Name = "TbLoad"
         Me.TbLoad.Size = New System.Drawing.Size(57, 20)
         Me.TbLoad.TabIndex = 2
@@ -148,39 +160,39 @@ Partial Class F_VEH
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(83, 22)
+        Me.Label3.Location = New System.Drawing.Point(37, 47)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(83, 13)
+        Me.Label3.Size = New System.Drawing.Size(58, 13)
         Me.Label3.TabIndex = 8
-        Me.Label3.Text = "Drag Coefficient"
+        Me.Label3.Text = "Drag Coef."
         '
-        'TBcw
+        'TBcdTrTr
         '
-        Me.TBcw.Location = New System.Drawing.Point(172, 19)
-        Me.TBcw.Name = "TBcw"
-        Me.TBcw.Size = New System.Drawing.Size(57, 20)
-        Me.TBcw.TabIndex = 0
+        Me.TBcdTrTr.Location = New System.Drawing.Point(2, 24)
+        Me.TBcdTrTr.Name = "TBcdTrTr"
+        Me.TBcdTrTr.Size = New System.Drawing.Size(57, 20)
+        Me.TBcdTrTr.TabIndex = 0
         '
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(61, 48)
+        Me.Label4.Location = New System.Drawing.Point(12, 73)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(105, 13)
+        Me.Label4.Size = New System.Drawing.Size(83, 13)
         Me.Label4.TabIndex = 10
-        Me.Label4.Text = "Cross Sectional Area"
+        Me.Label4.Text = "Cross Sec. Area"
         '
-        'TBAquers
+        'TBAquersTrTr
         '
-        Me.TBAquers.Location = New System.Drawing.Point(172, 45)
-        Me.TBAquers.Name = "TBAquers"
-        Me.TBAquers.Size = New System.Drawing.Size(57, 20)
-        Me.TBAquers.TabIndex = 1
+        Me.TBAquersTrTr.Location = New System.Drawing.Point(2, 50)
+        Me.TBAquersTrTr.Name = "TBAquersTrTr"
+        Me.TBAquersTrTr.Size = New System.Drawing.Size(57, 20)
+        Me.TBAquersTrTr.TabIndex = 1
         '
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(62, 184)
+        Me.Label7.Location = New System.Drawing.Point(62, 177)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(75, 13)
         Me.Label7.TabIndex = 4
@@ -188,7 +200,7 @@ Partial Class F_VEH
         '
         'TbI_wheels
         '
-        Me.TbI_wheels.Location = New System.Drawing.Point(143, 181)
+        Me.TbI_wheels.Location = New System.Drawing.Point(143, 174)
         Me.TbI_wheels.Name = "TbI_wheels"
         Me.TbI_wheels.Size = New System.Drawing.Size(57, 20)
         Me.TbI_wheels.TabIndex = 4
@@ -196,7 +208,7 @@ Partial Class F_VEH
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(28, 210)
+        Me.Label13.Location = New System.Drawing.Point(28, 203)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(109, 13)
         Me.Label13.TabIndex = 6
@@ -204,7 +216,7 @@ Partial Class F_VEH
         '
         'TBDreifen
         '
-        Me.TBDreifen.Location = New System.Drawing.Point(143, 207)
+        Me.TBDreifen.Location = New System.Drawing.Point(143, 200)
         Me.TBDreifen.Name = "TBDreifen"
         Me.TBDreifen.Size = New System.Drawing.Size(57, 20)
         Me.TBDreifen.TabIndex = 5
@@ -212,7 +224,7 @@ Partial Class F_VEH
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(383, 534)
+        Me.ButOK.Location = New System.Drawing.Point(383, 561)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 9
@@ -223,7 +235,7 @@ Partial Class F_VEH
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(464, 534)
+        Me.ButCancel.Location = New System.Drawing.Point(464, 561)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 10
@@ -242,7 +254,7 @@ Partial Class F_VEH
         'Label31
         '
         Me.Label31.AutoSize = True
-        Me.Label31.Location = New System.Drawing.Point(235, 74)
+        Me.Label31.Location = New System.Drawing.Point(229, 31)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(25, 13)
         Me.Label31.TabIndex = 24
@@ -251,7 +263,7 @@ Partial Class F_VEH
         'Label32
         '
         Me.Label32.AutoSize = True
-        Me.Label32.Location = New System.Drawing.Point(206, 184)
+        Me.Label32.Location = New System.Drawing.Point(206, 177)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(36, 13)
         Me.Label32.TabIndex = 24
@@ -260,7 +272,7 @@ Partial Class F_VEH
         'Label35
         '
         Me.Label35.AutoSize = True
-        Me.Label35.Location = New System.Drawing.Point(206, 210)
+        Me.Label35.Location = New System.Drawing.Point(206, 203)
         Me.Label35.Name = "Label35"
         Me.Label35.Size = New System.Drawing.Size(21, 13)
         Me.Label35.TabIndex = 24
@@ -269,7 +281,7 @@ Partial Class F_VEH
         'Label37
         '
         Me.Label37.AutoSize = True
-        Me.Label37.Location = New System.Drawing.Point(235, 22)
+        Me.Label37.Location = New System.Drawing.Point(223, 47)
         Me.Label37.Name = "Label37"
         Me.Label37.Size = New System.Drawing.Size(16, 13)
         Me.Label37.TabIndex = 24
@@ -278,7 +290,7 @@ Partial Class F_VEH
         'Label38
         '
         Me.Label38.AutoSize = True
-        Me.Label38.Location = New System.Drawing.Point(235, 48)
+        Me.Label38.Location = New System.Drawing.Point(223, 73)
         Me.Label38.Name = "Label38"
         Me.Label38.Size = New System.Drawing.Size(24, 13)
         Me.Label38.TabIndex = 24
@@ -319,7 +331,7 @@ Partial Class F_VEH
         Me.GroupBox6.Controls.Add(Me.CbCdMode)
         Me.GroupBox6.Controls.Add(Me.BtCdFileBrowse)
         Me.GroupBox6.Controls.Add(Me.TbCdFile)
-        Me.GroupBox6.Location = New System.Drawing.Point(12, 361)
+        Me.GroupBox6.Location = New System.Drawing.Point(6, 241)
         Me.GroupBox6.Name = "GroupBox6"
         Me.GroupBox6.Size = New System.Drawing.Size(527, 74)
         Me.GroupBox6.TabIndex = 5
@@ -432,7 +444,7 @@ Partial Class F_VEH
         Me.GroupBox7.Controls.Add(Me.TbRtPath)
         Me.GroupBox7.Controls.Add(Me.CbRtType)
         Me.GroupBox7.Controls.Add(Me.Label12)
-        Me.GroupBox7.Location = New System.Drawing.Point(12, 441)
+        Me.GroupBox7.Location = New System.Drawing.Point(6, 321)
         Me.GroupBox7.Name = "GroupBox7"
         Me.GroupBox7.Size = New System.Drawing.Size(527, 81)
         Me.GroupBox7.TabIndex = 7
@@ -517,7 +529,7 @@ Partial Class F_VEH
         'Label46
         '
         Me.Label46.AutoSize = True
-        Me.Label46.Location = New System.Drawing.Point(12, 48)
+        Me.Label46.Location = New System.Drawing.Point(6, 5)
         Me.Label46.Name = "Label46"
         Me.Label46.Size = New System.Drawing.Size(154, 13)
         Me.Label46.TabIndex = 31
@@ -526,7 +538,7 @@ Partial Class F_VEH
         'Label50
         '
         Me.Label50.AutoSize = True
-        Me.Label50.Location = New System.Drawing.Point(235, 48)
+        Me.Label50.Location = New System.Drawing.Point(229, 5)
         Me.Label50.Name = "Label50"
         Me.Label50.Size = New System.Drawing.Size(25, 13)
         Me.Label50.TabIndex = 24
@@ -534,7 +546,7 @@ Partial Class F_VEH
         '
         'TbMassExtra
         '
-        Me.TbMassExtra.Location = New System.Drawing.Point(172, 45)
+        Me.TbMassExtra.Location = New System.Drawing.Point(166, 2)
         Me.TbMassExtra.Name = "TbMassExtra"
         Me.TbMassExtra.Size = New System.Drawing.Size(57, 20)
         Me.TbMassExtra.TabIndex = 1
@@ -550,18 +562,17 @@ Partial Class F_VEH
         Me.GroupBox8.Controls.Add(Me.Label7)
         Me.GroupBox8.Controls.Add(Me.Label32)
         Me.GroupBox8.Controls.Add(Me.Label35)
-        Me.GroupBox8.Location = New System.Drawing.Point(284, 116)
+        Me.GroupBox8.Location = New System.Drawing.Point(278, 3)
         Me.GroupBox8.Name = "GroupBox8"
-        Me.GroupBox8.Size = New System.Drawing.Size(255, 239)
+        Me.GroupBox8.Size = New System.Drawing.Size(255, 232)
         Me.GroupBox8.TabIndex = 4
         Me.GroupBox8.TabStop = False
         Me.GroupBox8.Text = "Axles / Wheels"
         '
         'ButAxlRem
         '
-        Me.ButAxlRem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.ButAxlRem.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.ButAxlRem.Location = New System.Drawing.Point(41, 148)
+        Me.ButAxlRem.Location = New System.Drawing.Point(41, 127)
         Me.ButAxlRem.Name = "ButAxlRem"
         Me.ButAxlRem.Size = New System.Drawing.Size(29, 23)
         Me.ButAxlRem.TabIndex = 2
@@ -569,8 +580,7 @@ Partial Class F_VEH
         '
         'LvRRC
         '
-        Me.LvRRC.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.LvRRC.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.LvRRC.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader7, Me.ColumnHeader8, Me.ColumnHeader2, Me.ColumnHeader9, Me.ColumnHeader1})
         Me.LvRRC.FullRowSelect = True
@@ -579,7 +589,7 @@ Partial Class F_VEH
         Me.LvRRC.Location = New System.Drawing.Point(6, 19)
         Me.LvRRC.MultiSelect = False
         Me.LvRRC.Name = "LvRRC"
-        Me.LvRRC.Size = New System.Drawing.Size(243, 123)
+        Me.LvRRC.Size = New System.Drawing.Size(243, 102)
         Me.LvRRC.TabIndex = 0
         Me.LvRRC.TabStop = False
         Me.LvRRC.UseCompatibleStateImageBehavior = False
@@ -595,6 +605,11 @@ Partial Class F_VEH
         Me.ColumnHeader8.Text = "Rel. load"
         Me.ColumnHeader8.Width = 62
         '
+        'ColumnHeader2
+        '
+        Me.ColumnHeader2.Text = "Twin T."
+        Me.ColumnHeader2.Width = 51
+        '
         'ColumnHeader9
         '
         Me.ColumnHeader9.Text = "RRC"
@@ -607,9 +622,8 @@ Partial Class F_VEH
         '
         'ButAxlAdd
         '
-        Me.ButAxlAdd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.ButAxlAdd.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.ButAxlAdd.Location = New System.Drawing.Point(6, 148)
+        Me.ButAxlAdd.Location = New System.Drawing.Point(6, 127)
         Me.ButAxlAdd.Name = "ButAxlAdd"
         Me.ButAxlAdd.Size = New System.Drawing.Size(29, 23)
         Me.ButAxlAdd.TabIndex = 1
@@ -626,11 +640,10 @@ Partial Class F_VEH
         '
         'CbAxleConfig
         '
-        Me.CbAxleConfig.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CbAxleConfig.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CbAxleConfig.FormattingEnabled = True
         Me.CbAxleConfig.Items.AddRange(New Object() {"4x2", "4x4", "6x2", "6x4", "6x6", "8x2", "8x4", "8x6", "8x8"})
-        Me.CbAxleConfig.Location = New System.Drawing.Point(304, 82)
+        Me.CbAxleConfig.Location = New System.Drawing.Point(304, 83)
         Me.CbAxleConfig.Name = "CbAxleConfig"
         Me.CbAxleConfig.Size = New System.Drawing.Size(68, 21)
         Me.CbAxleConfig.TabIndex = 3
@@ -657,27 +670,27 @@ Partial Class F_VEH
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(31, 126)
+        Me.Label5.Location = New System.Drawing.Point(13, 119)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(135, 13)
+        Me.Label5.Size = New System.Drawing.Size(134, 13)
         Me.Label5.TabIndex = 31
-        Me.Label5.Text = "Max. Gross Vehicle Weight"
+        Me.Label5.Text = "Gross Vehicle Mass Rating"
         '
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(235, 126)
+        Me.Label9.Location = New System.Drawing.Point(201, 119)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(25, 13)
+        Me.Label9.Size = New System.Drawing.Size(16, 13)
         Me.Label9.TabIndex = 24
-        Me.Label9.Text = "[kg]"
+        Me.Label9.Text = "[t]"
         '
-        'TbMassMax
+        'TbMassMass
         '
-        Me.TbMassMax.Location = New System.Drawing.Point(172, 123)
-        Me.TbMassMax.Name = "TbMassMax"
-        Me.TbMassMax.Size = New System.Drawing.Size(57, 20)
-        Me.TbMassMax.TabIndex = 4
+        Me.TbMassMass.Location = New System.Drawing.Point(153, 116)
+        Me.TbMassMass.Name = "TbMassMass"
+        Me.TbMassMass.Size = New System.Drawing.Size(42, 20)
+        Me.TbMassMass.TabIndex = 4
         '
         'Label10
         '
@@ -691,7 +704,7 @@ Partial Class F_VEH
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 560)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 587)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(551, 22)
         Me.StatusStrip1.SizingGrip = False
@@ -716,7 +729,7 @@ Partial Class F_VEH
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(95, 100)
+        Me.Label11.Location = New System.Drawing.Point(89, 57)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(71, 13)
         Me.Label11.TabIndex = 31
@@ -724,7 +737,7 @@ Partial Class F_VEH
         '
         'TbLoadingMax
         '
-        Me.TbLoadingMax.Location = New System.Drawing.Point(172, 97)
+        Me.TbLoadingMax.Location = New System.Drawing.Point(166, 54)
         Me.TbLoadingMax.Name = "TbLoadingMax"
         Me.TbLoadingMax.ReadOnly = True
         Me.TbLoadingMax.Size = New System.Drawing.Size(57, 20)
@@ -734,7 +747,7 @@ Partial Class F_VEH
         'Label22
         '
         Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(235, 100)
+        Me.Label22.Location = New System.Drawing.Point(229, 57)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(25, 13)
         Me.Label22.TabIndex = 24
@@ -742,42 +755,99 @@ Partial Class F_VEH
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.PnLoad)
         Me.GroupBox1.Controls.Add(Me.TbMass)
         Me.GroupBox1.Controls.Add(Me.Label1)
-        Me.GroupBox1.Controls.Add(Me.Label2)
-        Me.GroupBox1.Controls.Add(Me.TbLoad)
         Me.GroupBox1.Controls.Add(Me.Label14)
-        Me.GroupBox1.Controls.Add(Me.Label31)
-        Me.GroupBox1.Controls.Add(Me.Label50)
-        Me.GroupBox1.Controls.Add(Me.TbLoadingMax)
-        Me.GroupBox1.Controls.Add(Me.Label9)
-        Me.GroupBox1.Controls.Add(Me.Label22)
-        Me.GroupBox1.Controls.Add(Me.Label46)
-        Me.GroupBox1.Controls.Add(Me.TbMassExtra)
-        Me.GroupBox1.Controls.Add(Me.TbMassMax)
-        Me.GroupBox1.Controls.Add(Me.Label11)
-        Me.GroupBox1.Controls.Add(Me.Label5)
-        Me.GroupBox1.Location = New System.Drawing.Point(12, 116)
+        Me.GroupBox1.Location = New System.Drawing.Point(6, 3)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(266, 156)
+        Me.GroupBox1.Size = New System.Drawing.Size(266, 124)
         Me.GroupBox1.TabIndex = 2
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Weight / Loading"
         '
+        'PnLoad
+        '
+        Me.PnLoad.Controls.Add(Me.Label2)
+        Me.PnLoad.Controls.Add(Me.Label31)
+        Me.PnLoad.Controls.Add(Me.TbLoad)
+        Me.PnLoad.Controls.Add(Me.TbMassExtra)
+        Me.PnLoad.Controls.Add(Me.TbLoadingMax)
+        Me.PnLoad.Controls.Add(Me.Label50)
+        Me.PnLoad.Controls.Add(Me.Label46)
+        Me.PnLoad.Controls.Add(Me.Label22)
+        Me.PnLoad.Controls.Add(Me.Label11)
+        Me.PnLoad.Location = New System.Drawing.Point(6, 43)
+        Me.PnLoad.Name = "PnLoad"
+        Me.PnLoad.Size = New System.Drawing.Size(256, 84)
+        Me.PnLoad.TabIndex = 25
+        '
         'GroupBox4
         '
-        Me.GroupBox4.Controls.Add(Me.TBcw)
+        Me.GroupBox4.Controls.Add(Me.PnCdATrTr)
+        Me.GroupBox4.Controls.Add(Me.PnCdARig)
         Me.GroupBox4.Controls.Add(Me.Label3)
         Me.GroupBox4.Controls.Add(Me.Label4)
-        Me.GroupBox4.Controls.Add(Me.TBAquers)
         Me.GroupBox4.Controls.Add(Me.Label37)
         Me.GroupBox4.Controls.Add(Me.Label38)
-        Me.GroupBox4.Location = New System.Drawing.Point(12, 278)
+        Me.GroupBox4.Location = New System.Drawing.Point(6, 133)
         Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(266, 77)
+        Me.GroupBox4.Size = New System.Drawing.Size(266, 102)
         Me.GroupBox4.TabIndex = 3
         Me.GroupBox4.TabStop = False
         Me.GroupBox4.Text = "Air Resistance"
+        '
+        'PnCdATrTr
+        '
+        Me.PnCdATrTr.Controls.Add(Me.LbCdATr)
+        Me.PnCdATrTr.Controls.Add(Me.TBcdTrTr)
+        Me.PnCdATrTr.Controls.Add(Me.TBAquersTrTr)
+        Me.PnCdATrTr.Location = New System.Drawing.Point(97, 20)
+        Me.PnCdATrTr.Name = "PnCdATrTr"
+        Me.PnCdATrTr.Size = New System.Drawing.Size(60, 76)
+        Me.PnCdATrTr.TabIndex = 27
+        '
+        'LbCdATr
+        '
+        Me.LbCdATr.AutoSize = True
+        Me.LbCdATr.Location = New System.Drawing.Point(2, 1)
+        Me.LbCdATr.Name = "LbCdATr"
+        Me.LbCdATr.Size = New System.Drawing.Size(58, 13)
+        Me.LbCdATr.TabIndex = 25
+        Me.LbCdATr.Text = "Tr && Trailer"
+        '
+        'PnCdARig
+        '
+        Me.PnCdARig.Controls.Add(Me.Label8)
+        Me.PnCdARig.Controls.Add(Me.TBcwRig)
+        Me.PnCdARig.Controls.Add(Me.TBAquersRig)
+        Me.PnCdARig.Location = New System.Drawing.Point(157, 18)
+        Me.PnCdARig.Name = "PnCdARig"
+        Me.PnCdARig.Size = New System.Drawing.Size(60, 78)
+        Me.PnCdARig.TabIndex = 26
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(10, 3)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(31, 13)
+        Me.Label8.TabIndex = 25
+        Me.Label8.Text = "Rigid"
+        '
+        'TBcwRig
+        '
+        Me.TBcwRig.Location = New System.Drawing.Point(3, 26)
+        Me.TBcwRig.Name = "TBcwRig"
+        Me.TBcwRig.Size = New System.Drawing.Size(57, 20)
+        Me.TBcwRig.TabIndex = 0
+        '
+        'TBAquersRig
+        '
+        Me.TBAquersRig.Location = New System.Drawing.Point(3, 52)
+        Me.TBAquersRig.Name = "TBAquersRig"
+        Me.TBAquersRig.Size = New System.Drawing.Size(57, 20)
+        Me.TBAquersRig.TabIndex = 1
         '
         'PictureBox1
         '
@@ -813,10 +883,17 @@ Partial Class F_VEH
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
-        'ColumnHeader2
+        'PnAll
         '
-        Me.ColumnHeader2.Text = "Twin T."
-        Me.ColumnHeader2.Width = 51
+        Me.PnAll.Controls.Add(Me.GroupBox4)
+        Me.PnAll.Controls.Add(Me.GroupBox1)
+        Me.PnAll.Controls.Add(Me.GroupBox8)
+        Me.PnAll.Controls.Add(Me.GroupBox7)
+        Me.PnAll.Controls.Add(Me.GroupBox6)
+        Me.PnAll.Location = New System.Drawing.Point(6, 148)
+        Me.PnAll.Name = "PnAll"
+        Me.PnAll.Size = New System.Drawing.Size(544, 407)
+        Me.PnAll.TabIndex = 38
         '
         'F_VEH
         '
@@ -824,21 +901,20 @@ Partial Class F_VEH
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(551, 582)
+        Me.ClientSize = New System.Drawing.Size(551, 609)
+        Me.Controls.Add(Me.PnAll)
         Me.Controls.Add(Me.PictureBox1)
-        Me.Controls.Add(Me.GroupBox4)
         Me.Controls.Add(Me.Label23)
-        Me.Controls.Add(Me.GroupBox1)
+        Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.CbAxleConfig)
+        Me.Controls.Add(Me.TbMassMass)
         Me.Controls.Add(Me.CbCat)
+        Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.Label21)
-        Me.Controls.Add(Me.GroupBox8)
         Me.Controls.Add(Me.TbHDVclass)
         Me.Controls.Add(Me.Label10)
-        Me.Controls.Add(Me.GroupBox7)
         Me.Controls.Add(Me.ToolStrip1)
-        Me.Controls.Add(Me.GroupBox6)
         Me.Controls.Add(Me.ButCancel)
         Me.Controls.Add(Me.ButOK)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
@@ -861,10 +937,17 @@ Partial Class F_VEH
         Me.StatusStrip1.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
+        Me.PnLoad.ResumeLayout(False)
+        Me.PnLoad.PerformLayout()
         Me.GroupBox4.ResumeLayout(False)
         Me.GroupBox4.PerformLayout()
+        Me.PnCdATrTr.ResumeLayout(False)
+        Me.PnCdATrTr.PerformLayout()
+        Me.PnCdARig.ResumeLayout(False)
+        Me.PnCdARig.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CmOpenFile.ResumeLayout(False)
+        Me.PnAll.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -874,9 +957,9 @@ Partial Class F_VEH
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents TbLoad As System.Windows.Forms.TextBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents TBcw As System.Windows.Forms.TextBox
+    Friend WithEvents TBcdTrTr As System.Windows.Forms.TextBox
     Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents TBAquers As System.Windows.Forms.TextBox
+    Friend WithEvents TBAquersTrTr As System.Windows.Forms.TextBox
     Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents TbI_wheels As System.Windows.Forms.TextBox
     Friend WithEvents Label13 As System.Windows.Forms.Label
@@ -923,7 +1006,7 @@ Partial Class F_VEH
     Friend WithEvents CbCat As System.Windows.Forms.ComboBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents Label9 As System.Windows.Forms.Label
-    Friend WithEvents TbMassMax As System.Windows.Forms.TextBox
+    Friend WithEvents TbMassMass As System.Windows.Forms.TextBox
     Friend WithEvents ColumnHeader9 As System.Windows.Forms.ColumnHeader
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents StatusStrip1 As System.Windows.Forms.StatusStrip
@@ -946,4 +1029,12 @@ Partial Class F_VEH
     Friend WithEvents BtCdFileOpen As System.Windows.Forms.Button
     Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents PnLoad As System.Windows.Forms.Panel
+    Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents LbCdATr As System.Windows.Forms.Label
+    Friend WithEvents TBcwRig As System.Windows.Forms.TextBox
+    Friend WithEvents TBAquersRig As System.Windows.Forms.TextBox
+    Friend WithEvents PnCdARig As System.Windows.Forms.Panel
+    Friend WithEvents PnCdATrTr As System.Windows.Forms.Panel
+    Friend WithEvents PnAll As System.Windows.Forms.Panel
 End Class

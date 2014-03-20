@@ -27,21 +27,21 @@ Module VECTO_Global
 
     Public LOGfile As System.IO.StreamWriter
 
-    Public GEN As cGEN
+    Public VEC As cVECTO
     Public VEH As cVEH
     Public MAP As cMAP
     Public DRI As cDRI
     Public FLD As List(Of cFLD)
     Public MODdata As cMOD
     Public Lic As vectolic.cLicense
-    Public ERG As cERG
+    Public VSUM As cVSUM
     Public DEV As cDEV
 
     Public ENG As cENG
     Public GBX As cGBX
-    Public VSUM As cVSUM
+    Public VRES As cVRES
 
-    Public VEC As cVECTO
+    Public Declaration As cDeclaration
 
     Public ProgBarCtrl As cProgBarCtrl
 
@@ -93,25 +93,6 @@ Module VECTO_Global
         End Select
     End Function
 
-    Public Function fExsComp(ByVal sK As String) As tExsComp
-        Dim x As Integer
-        sK = Trim(UCase(sK))
-
-        x = sK.IndexOf("_")
-
-        If x = -1 Then Return tExsComp.Undefined
-
-        sK = Left(sK, x + 1)
-
-        Select Case sK
-            Case sKey.EXS.Tgas
-                Return tExsComp.Tgas
-            Case Else
-                Return tExsComp.Undefined
-        End Select
-
-    End Function
-
     Public Function fAuxComp(ByVal sK As String) As tAuxComp
         Dim x As Integer
         sK = Trim(UCase(sK))
@@ -129,83 +110,6 @@ Module VECTO_Global
                 Return tAuxComp.Undefined
         End Select
 
-    End Function
-
-    Public Function fMapComp(ByVal sK As String) As tMapComp
-        sK = Trim(UCase(sK))
-        Select Case sK
-            Case sKey.MAP.FC
-                Return tMapComp.FC
-            Case sKey.MAP.NOx
-                Return tMapComp.NOx
-            Case sKey.MAP.HC
-                Return tMapComp.HC
-            Case sKey.MAP.CO
-                Return tMapComp.CO
-            Case sKey.MAP.PM
-                Return tMapComp.PM
-            Case sKey.MAP.PN
-                Return tMapComp.PN
-            Case sKey.MAP.NO
-                Return tMapComp.NO
-            Case sKey.MAP.MassF
-                Return tMapComp.MassFlow
-            Case sKey.MAP.Lambda
-                Return tMapComp.Lambda
-            Case sKey.MAP.Temp
-                Return tMapComp.ExhTemp
-            Case sKey.MAP.Qp_coolant
-                Return tMapComp.Qp_coolant
-            Case sKey.MAP.dP2s
-                Return tMapComp.TCdP2s
-            Case sKey.MAP.Pneg3s
-                Return tMapComp.TCPneg3s
-            Case sKey.MAP.Ppos3s
-                Return tMapComp.TCPpos3s
-            Case sKey.MAP.Ampl3s
-                Return tMapComp.TCAmpl3s
-            Case sKey.MAP.LW3p3s
-                Return tMapComp.TCLW3p3s
-            Case sKey.MAP.P40sABS
-                Return tMapComp.TCP40sABS
-            Case sKey.MAP.absdn2s
-                Return tMapComp.TCabsdn2s
-            Case sKey.MAP.P10sn10s3
-                Return tMapComp.TCP10sn10s3
-            Case sKey.MAP.dynV
-                Return tMapComp.TCdynV
-            Case sKey.MAP.dynAV
-                Return tMapComp.TCdynAV
-            Case sKey.MAP.dynDAV
-                Return tMapComp.TCdynDAV
-            Case sKey.MAP.Extrapol
-                Return tMapComp.Extrapol
-            Case sKey.MAP.Eta
-                Return tMapComp.Eta
-            Case Else
-                Return tMapComp.Undefined
-        End Select
-    End Function
-
-    Public Function fFldComp(ByVal sK As String) As tFldComp
-        sK = Trim(UCase(sK))
-        Select Case sK
-            Case sKey.FLD.PeTarget
-                Return tFldComp.PeTarget
-            Case sKey.FLD.PT1
-                Return tFldComp.PT1
-            Case Else
-                Return tMapComp.Undefined
-        End Select
-    End Function
-
-    Public Function fMapCompIsTC(ByVal ID As tMapComp) As Boolean
-        Select Case ID
-            Case tMapComp.TCPpos3s, tMapComp.TCPneg3s, tMapComp.TCAmpl3s, tMapComp.TCdP2s, tMapComp.TCP10sn10s3, tMapComp.TCP40sABS, tMapComp.TCabsdn2s, tMapComp.TCLW3p3s, tMapComp.TCdynV, tMapComp.TCdynAV, tMapComp.TCdynDAV
-                Return True
-            Case Else
-                Return False
-        End Select
     End Function
 
 
@@ -233,77 +137,62 @@ Module VECTO_Global
 
 #End Region
 
-#Region "Typ > Name Umwandlung"
+#Region "Typ > Name Conversion"
 
-    Public Function fMapCompName(ByVal ID As tMapComp) As String
-        Select Case ID
-            Case tMapComp.CO
-                Return "CO"
-            Case tMapComp.Eta
-                Return "Eta"
-            Case tMapComp.ExhTemp
-                Return "ExhTemp"
-            Case tMapComp.Extrapol
-                Return "Extrapolation"
-            Case tMapComp.FC
-                Return "FC"
-            Case tMapComp.HC
-                Return "HC"
-            Case tMapComp.Lambda
-                Return "Lambda"
-            Case tMapComp.MassFlow
-                Return "MassFlow"
-            Case tMapComp.NO
-                Return "NO"
-            Case tMapComp.NOx
-                Return "NOx"
-            Case tMapComp.PM
-                Return "PM"
-            Case tMapComp.PN
-                Return "PN"
-            Case tMapComp.TCPpos3s
-                Return "dyn_Ppos3s"
-            Case tMapComp.TCPneg3s
-                Return "dyn_Pneg3s"
-            Case tMapComp.TCAmpl3s
-                Return "Ampl3s"
-            Case tMapComp.TCdP2s
-                Return "dP_2s"
-            Case tMapComp.TCP10sn10s3
-                Return "P10s_n10s3"
-            Case tMapComp.TCP40sABS
-                Return "P40sABS"
-            Case tMapComp.TCabsdn2s
-                Return "abs_dn2s"
-            Case tMapComp.TCLW3p3s
-                Return "LW3p3s"
-            Case tMapComp.TCdynV
-                Return "dynV"
-            Case tMapComp.TCdynAV
-                Return "dynAV"
-            Case tMapComp.TCdynDAV
-                Return "dynDAV"
-            Case tMapComp.Qp_coolant
-                Return "Qp_coolant"
+    Public Function ConvLoading(ByVal load As tLoading) As String
+        Select Case load
+            Case tLoading.FullLoaded
+                Return "Full Loading"
+
+            Case tLoading.RefLoaded
+                Return "Reference Loading"
+
+            Case tLoading.EmptyLoaded
+                Return "Empty Loading"
+
+            Case Else ' tLoading.UserDefLoaded
+                Return "User-defined Loading"
+
+        End Select
+    End Function
+
+
+
+    Public Function ConvVehCat(ByVal VehCat As tVehCat) As String
+        Select Case VehCat
+            Case tVehCat.Citybus
+                Return "Citybus"
+            Case tVehCat.Coach
+                Return "Coach"
+            Case tVehCat.InterurbanBus
+                Return "InterurbanBus"
+            Case tVehCat.RigidTruck
+                Return "RigidTruck"
+            Case tVehCat.Tractor
+                Return "Tractor"
+            Case Else ' tVehCat.Undef
+                Return "not defined"
+        End Select
+    End Function
+
+    Public Function ConvVehCat(ByVal VehCat As String) As tVehCat
+        Select Case UCase(Trim(VehCat))
+            Case "CITYBUS"
+                Return tVehCat.Citybus
+            Case "COACH"
+                Return tVehCat.Coach
+            Case "INTERURBANBUS"
+                Return tVehCat.InterurbanBus
+            Case "RIGIDTRUCK"
+                Return tVehCat.RigidTruck
+            Case "TRACTOR"
+                Return tVehCat.Tractor
             Case Else
-                Return "fMapCompName() ERROR"
+                Return tVehCat.Undef
         End Select
     End Function
 
-    Public Function fPwCorName(ByVal PCmode As tIntpPeCorMode) As String
-        Select Case PCmode
-            Case tIntpPeCorMode.PeCorEmDrag
-                Return "PeCorEmDrag"
-            Case tIntpPeCorMode.PeCorNull
-                Return "PeCorNull"
-            Case tIntpPeCorMode.PeCorNullPmin
-                Return "PeCorNullPmin"
-            Case Else 'tIntpPeCorMode.PeCorOff
-                Return "Off"
-        End Select
-    End Function
-
-    Public Function fAxleConfName(ByVal AxleConf As tAxleConf) As String
+    Public Function ConvAxleConf(ByVal AxleConf As tAxleConf) As String
         Select Case AxleConf
             Case tAxleConf.a4x2
                 Return "4x2"
@@ -321,8 +210,133 @@ Module VECTO_Global
                 Return "8x4"
             Case tAxleConf.a8x6
                 Return "8x6"
-            Case Else ' tAxleConf.a8x8
+            Case Else  'tAxleConf.a8x8
                 Return "8x8"
+        End Select
+    End Function
+
+    Public Function ConvAxleConf(ByVal AxleConf As String) As tAxleConf
+        Select Case UCase(Trim(AxleConf))
+            Case "4X2"
+                Return tAxleConf.a4x2
+            Case "4X4"
+                Return tAxleConf.a4x4
+            Case "6X2"
+                Return tAxleConf.a6x2
+            Case "6X4"
+                Return tAxleConf.a6x4
+            Case "6X6"
+                Return tAxleConf.a6x6
+            Case "8X2"
+                Return tAxleConf.a8x2
+            Case "8X4"
+                Return tAxleConf.a8x4
+            Case "8X6"
+                Return tAxleConf.a8x6
+            Case Else '"8X8"
+                Return tAxleConf.a8x8
+        End Select
+    End Function
+
+    Public Function ConvMission(ByVal Mission As tMission) As String
+        Select Case Mission
+            Case tMission.LongHaul
+                Return "LongHaul"
+            Case tMission.RegionalDelivery
+                Return "RegionalDelivery"
+            Case tMission.UrbanDelivery
+                Return "UrbanDelivery"
+            Case tMission.MunicipalUtility
+                Return "MunicipalUtility"
+            Case tMission.Construction
+                Return "Construction"
+            Case tMission.HeavyUrban
+                Return "HeavyUrban"
+            Case tMission.Urban
+                Return "Urban"
+            Case tMission.Suburban
+                Return "Suburban"
+            Case tMission.Interurban
+                Return "Interurban"
+            Case tMission.Coach
+                Return "Coach"
+            Case Else
+                Return "not defined"
+        End Select
+    End Function
+
+    Public Function ConvMission(ByVal Mission As String) As tMission
+        Select Case Mission
+            Case "LongHaul"
+                Return tMission.LongHaul
+            Case "RegionalDelivery"
+                Return tMission.RegionalDelivery
+            Case "UrbanDelivery"
+                Return tMission.UrbanDelivery
+            Case "MunicipalUtility"
+                Return tMission.MunicipalUtility
+            Case "Construction"
+                Return tMission.Construction
+            Case "HeavyUrban"
+                Return tMission.HeavyUrban
+            Case "Urban"
+                Return tMission.Urban
+            Case "Suburban"
+                Return tMission.Suburban
+            Case "Interurban"
+                Return tMission.Interurban
+            Case "Coach"
+                Return tMission.Coach
+            Case Else
+                Return tMission.Undef
+        End Select
+    End Function
+
+
+
+    Public Function CdModeConv(ByVal CdMode As tCdMode) As String
+        Select Case CdMode
+            Case tCdMode.CdOfBeta
+                Return "CdOfBeta"
+            Case tCdMode.CdOfV
+                Return "CdOfV"
+            Case Else  'tCdMode.ConstCd0
+                Return "Off"
+        End Select
+    End Function
+
+    Public Function CdModeConv(ByVal CdMode As String) As tCdMode
+        Select Case UCase(Trim(CdMode))
+            Case "CDOFBETA"
+                Return tCdMode.CdOfBeta
+            Case "CDOFV"
+                Return tCdMode.CdOfV
+            Case Else  '"OFF"
+                Return tCdMode.ConstCd0
+        End Select
+    End Function
+
+
+
+    Public Function RtTypeConv(ByVal RtType As tRtType) As String
+        Select Case RtType
+            Case tRtType.Primary
+                Return "Primary"
+            Case tRtType.Secondary
+                Return "Secondary"
+            Case Else 'tRtType.None
+                Return "None"
+        End Select
+    End Function
+
+    Public Function RtTypeConv(ByVal RtType As String) As tRtType
+        Select Case UCase(Trim(RtType))
+            Case "PRIMARY"
+                Return tRtType.Primary
+            Case "SECONDARY"
+                Return tRtType.Secondary
+            Case Else  '"NONE"
+                Return tRtType.None
         End Select
     End Function
 
@@ -345,11 +359,7 @@ End Module
 
 
 Public Class csKey
-    Public MAP As csKeyMAP
     Public DRI As csKeyDRI
-    Public EXS As csKeyEXS
-    Public HEV As csKeyHEV
-    Public FLD As csKeyFLD
 
     Public WorkDir As String = "<WORKDIR>"
     Public HomePath As String = "<HOME>"
@@ -363,41 +373,11 @@ Public Class csKey
 
     Public PauxSply As String = "<AUX_"
 
-    Public Sub New()
-        MAP = New csKeyMAP
-        DRI = New csKeyDRI
-        EXS = New csKeyEXS
-        HEV = New csKeyHEV
-        FLD = New csKeyFLD
-    End Sub
+    Public EngDrag As String = "<DRAG>"
 
-    Public Class csKeyMAP
-        Public FC As String = "<FC>"
-        Public NOx As String = "<NOX>"
-        Public HC As String = "<HC>"
-        Public CO As String = "<CO>"
-        Public PM As String = "<PM>"
-        Public PN As String = "<PN>"
-        Public NO As String = "<NO>"
-        Public MassF As String = "<MASSFLOW>"
-        Public Lambda As String = "<LAMBDA>"
-        Public Temp As String = "<TEMP>"
-        Public Qp_coolant As String = "<QP_COOLANT>"
-        Public dP2s As String = "<DP2S>"
-        Public Pneg3s As String = "<PNEG3S>"
-        Public Ppos3s As String = "<PPOS3S>"
-        Public Ampl3s As String = "<AMPL3S>"
-        Public LW3p3s As String = "<LW3P3S>"
-        Public P40sABS As String = "<P40SABS>"
-        Public absdn2s As String = "<ABSDN2S>"
-        Public P10sn10s3 As String = "<P10SN10S3>"
-        Public dynV As String = "<DYNV>"
-        Public dynAV As String = "<DYNAV>"
-        Public dynDAV As String = "<DYNDAV>"
-        Public Extrapol As String = "<E>"
-        Public Drag As String = "<DRAG>"
-        Public Eta As String = "<ETA>"
-    End Class
+    Public Sub New()
+        DRI = New csKeyDRI
+    End Sub
 
     Public Class csKeyDRI
         Public t As String = "<T>"
@@ -414,20 +394,6 @@ Public Class csKey
         Public StopTime As String = "<STOP>"
         Public Torque As String = "<ME>"
     End Class
-
-    Public Class csKeyEXS
-        Public Tgas As String = "<TGAS_"
-    End Class
-
-    Public Class csKeyHEV
-        Public EtaMap As String = "<MAP>"
-    End Class
-
-    Public Class csKeyFLD
-        Public PT1 As String = "<PT1>"
-        Public PeTarget As String = "<PETARGET>"
-    End Class
-
 
 
 End Class

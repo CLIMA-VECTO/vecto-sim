@@ -82,6 +82,9 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="itextsharp">
+      <HintPath>..\Third Party Libraries\itextsharp\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\Third Party Libraries\JSON.Net\Bin\Net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -110,8 +113,8 @@
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="cJSONparser.vb" />
-    <Compile Include="cVECTO.vb" />
-    <Compile Include="cVSUM.vb" />
+    <Compile Include="cDeclaration.vb" />
+    <Compile Include="cVRES.vb" />
     <Compile Include="GUI\F_FileSign.Designer.vb">
       <DependentUpon>F_FileSign.vb</DependentUpon>
     </Compile>
@@ -166,10 +169,8 @@
     <Compile Include="cConfig.vb" />
     <Compile Include="cDelaunayMap.vb" />
     <Compile Include="cDEV.vb" />
-    <Compile Include="cEmComp.vb" />
     <Compile Include="File Browser\cFileBrowser.vb" />
     <Compile Include="MODcalc\cVh.vb" />
-    <Compile Include="MODcalc\Em Calc.vb" />
     <Compile Include="File Browser\FB_Dialog.designer.vb">
       <DependentUpon>FB_Dialog.vb</DependentUpon>
     </Compile>
@@ -187,7 +188,7 @@
     <Compile Include="Input Files\cFLD.vb" />
     <Compile Include="Input Files\cMAP.vb" />
     <Compile Include="Input Files\cDRI.vb" />
-    <Compile Include="Input Files\cGEN.vb" />
+    <Compile Include="Input Files\cVECTO.vb" />
     <Compile Include="Input Files\cVEH.vb" />
     <Compile Include="GUI\F_VEH_GearDlog.Designer.vb">
       <DependentUpon>F_VEH_GearDlog.vb</DependentUpon>
@@ -202,10 +203,10 @@
     <Compile Include="GUI\F_ShutDown.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\F_GEN.Designer.vb">
-      <DependentUpon>F_GEN.vb</DependentUpon>
+    <Compile Include="GUI\F_VECTO.Designer.vb">
+      <DependentUpon>F_VECTO.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\F_GEN.vb">
+    <Compile Include="GUI\F_VECTO.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="cFile V3.vb" />
@@ -231,9 +232,8 @@
     <Compile Include="GUI\F_AboutBox.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="M_Lese.vb" />
     <Compile Include="M_MAIN.vb" />
-    <Compile Include="cERG.vb" />
+    <Compile Include="cVSUM.vb" />
     <Compile Include="GUI\F_MAINForm.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -285,9 +285,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>F_MAINForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\F_GEN.resx">
+    <EmbeddedResource Include="GUI\F_VECTO.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>F_GEN.vb</DependentUpon>
+      <DependentUpon>F_VECTO.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\F_ShutDown.resx">
       <SubType>Designer</SubType>

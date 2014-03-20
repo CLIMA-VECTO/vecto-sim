@@ -19,11 +19,127 @@ Public Class F_VEH
     'Init
     Private Sub F05_VEH_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
 
+        'Declaration Mode
+        If Declaration.Active Then
+            Me.PnLoad.Enabled = False
+            Me.TbLoadingMax.Text = "-"
+            Me.ButAxlAdd.Enabled = False
+            Me.ButAxlRem.Enabled = False
+            Me.CbCdMode.Enabled = False
+        Else
+            Me.PnCdARig.Enabled = False
+            Me.LbCdATr.Visible = False
+        End If
+
         Changed = False
 
         newVEH()
 
     End Sub
+
+
+    Private Sub DeclInit()
+        Dim VehC As tVehCat
+        Dim AxlC As tAxleConf
+        Dim MaxMass As Single
+        Dim HDVclass As String
+        Dim s0 As cSegmentTableEntry = Nothing
+        Dim i As Int16
+        Dim i0 As Int16
+        Dim AxleCount As Int16
+        Dim lvi As ListViewItem
+        Dim RigEnabled As Boolean
+        Dim TrTrEnabled As Boolean
+
+        If Not Declaration.Active Then Exit Sub
+
+        VehC = CType(Me.CbCat.SelectedIndex, tVehCat)
+
+        AxlC = CType(Me.CbAxleConfig.SelectedIndex, tAxleConf)
+
+        MaxMass = CSng(fTextboxToNumString(Me.TbMassMass.Text))
+
+        If Declaration.SegmentTable.SetRef(s0, VehC, AxlC, MaxMass) Then
+            HDVclass = s0.HDVclass
+
+            AxleCount = s0.AxleShares(s0.Missions(0)).Count
+            i0 = LvRRC.Items.Count
+
+            If AxleCount > i0 Then
+                For i = 1 To AxleCount - LvRRC.Items.Count
+                    lvi = New ListViewItem
+                    lvi.SubItems(0).Text = (i + i0).ToString
+                    lvi.SubItems.Add("-")
+                    lvi.SubItems.Add("no")
+                    lvi.SubItems.Add("")
+                    lvi.SubItems.Add("")
+                    LvRRC.Items.Add(lvi)
+                Next
+
+            ElseIf AxleCount < LvRRC.Items.Count Then
+                For i = AxleCount To LvRRC.Items.Count - 1
+                    LvRRC.Items.RemoveAt(LvRRC.Items.Count - 1)
+                    'LvRRC.Items(i).ForeColor = Color.Red
+                Next
+            End If
+
+            If s0.LongHaulRigidTrailer Then
+               
+                RigEnabled = True
+                TrTrEnabled = True
+         
+            Else
+
+                If s0.VehCat = tVehCat.RigidTruck Then
+                    RigEnabled = True
+                    TrTrEnabled = False
+                Else
+                    RigEnabled = False
+                    TrTrEnabled = True
+                End If
+
+            End If
+
+            Me.PnAll.Enabled = True
+
+        Else
+            Me.PnAll.Enabled = False
+            HDVclass = "-"
+            RigEnabled = False
+            TrTrEnabled = False
+        End If
+
+
+        If RigEnabled Then
+            Me.PnCdARig.Enabled = True
+            If Me.TBcwRig.Text = "-" Then Me.TBcwRig.Text = ""
+            If Me.TBAquersRig.Text = "-" Then Me.TBAquersRig.Text = ""
+        Else
+            Me.PnCdARig.Enabled = False
+            Me.TBcwRig.Text = "-"
+            Me.TBAquersRig.Text = "-"
+        End If
+
+        If TrTrEnabled Then
+            Me.PnCdATrTr.Enabled = True
+            If Me.TBcdTrTr.Text = "-" Then Me.TBcdTrTr.Text = ""
+            If Me.TBAquersTrTr.Text = "-" Then Me.TBAquersTrTr.Text = ""
+        Else
+            Me.PnCdATrTr.Enabled = False
+            Me.TBcdTrTr.Text = "-"
+            Me.TBAquersTrTr.Text = "-"
+        End If
+
+        Me.TbHDVclass.Text = HDVclass
+        Me.TbMassExtra.Text = "-"
+        Me.TbLoad.Text = "-"
+        Me.CbCdMode.SelectedIndex = 1
+
+
+
+    End Sub
+
+
 
 #Region "Menü / Toolstrip"
 
@@ -61,15 +177,15 @@ Public Class F_VEH
         End If
 
 
-        If Not F_GEN.Visible Then
+        If Not F_VECTO.Visible Then
             GenDir = ""
-            F_GEN.Show()
-            F_GEN.GENnew()
+            F_VECTO.Show()
+            F_VECTO.GENnew()
         Else
-            F_GEN.WindowState = FormWindowState.Normal
+            F_VECTO.WindowState = FormWindowState.Normal
         End If
 
-        F_GEN.TextBoxVEH.Text = fFileWoDir(VehFile, GenDir)
+        F_VECTO.TextBoxVEH.Text = fFileWoDir(VehFile, GenDir)
 
     End Sub
 
@@ -117,14 +233,10 @@ Public Class F_VEH
         Me.TbLoad.Text = ""
         Me.TbI_wheels.Text = ""
         Me.TBDreifen.Text = ""
-        Me.TBcw.Text = ""
-        Me.TBAquers.Text = ""
-        'Me.TBlhinauf.Text = ""
-        'Me.TBlhinunter.Text = ""
-        'Me.TBhinauf.Text = ""
-        'Me.TBhinunter.Text = ""
-        'Me.TBpspar.Text = ""
-        'Me.TBpfast.Text = ""
+        Me.TBcdTrTr.Text = ""
+        Me.TBAquersTrTr.Text = ""
+        Me.TBcwRig.Text = ""
+        Me.TBAquersRig.Text = ""
 
         Me.CbCdMode.SelectedIndex = 0
         Me.TbCdFile.Text = ""
@@ -137,11 +249,13 @@ Public Class F_VEH
 
         Me.LvRRC.Items.Clear()
 
-        Me.TbMassMax.Text = ""
+        Me.TbMassMass.Text = ""
         Me.TbMassExtra.Text = ""
         Me.CbAxleConfig.SelectedIndex = 0
-        'TODO: AUTO: Me.TbHDVclass.Text
-        'AUTO: Me.TbLoadingMax.Text
+
+
+        DeclInit()
+
 
 
         VehFile = ""
@@ -176,14 +290,8 @@ Public Class F_VEH
         Me.TbLoad.Text = VEH0.Loading
         Me.TbI_wheels.Text = VEH0.I_wheels
         Me.TBDreifen.Text = VEH0.Dreifen
-        Me.TBcw.Text = VEH0.Cd0
-        Me.TBAquers.Text = VEH0.Aquers
-        'Me.TBhinauf.Text = VEH0.hinauf
-        'Me.TBhinunter.Text = VEH0.hinunter
-        'Me.TBlhinauf.Text = VEH0.lhinauf
-        'Me.TBlhinunter.Text = VEH0.lhinunter
-        'Me.TBpspar.Text = VEH0.pspar
-        'Me.TBpfast.Text = 1 - VEH0.pmodell - VEH0.pspar
+
+
 
         Me.CbCdMode.SelectedIndex = CType(VEH0.CdMode, Integer)
         Me.TbCdFile.Text = VEH0.CdFile.OriginalPath
@@ -192,8 +300,11 @@ Public Class F_VEH
         Me.TbRtRatio.Text = CStr(VEH0.RtRatio)
         Me.TbRtPath.Text = CStr(VEH0.RtFile.OriginalPath)
 
-
-        Me.CbCat.SelectedIndex = CType(VEH0.VehCat, Integer)
+        If VEH0.VehCat = tVehCat.Undef Then
+            Me.CbCat.SelectedIndex = 0
+        Else
+            Me.CbCat.SelectedIndex = CType(VEH0.VehCat, Integer)
+        End If
 
         Me.LvRRC.Items.Clear()
         i = 0
@@ -212,11 +323,26 @@ Public Class F_VEH
             LvRRC.Items.Add(lvi)
         Next
 
-        Me.TbMassMax.Text = VEH0.MassMax
+        Me.TbMassMass.Text = VEH0.MassMax
         Me.TbMassExtra.Text = VEH0.MassExtra
-        Me.CbAxleConfig.SelectedIndex = CType(VEH0.AxleConf, Integer)
-        'TODO: AUTO: Me.TbHDVclass.Text
-        'AUTO: Me.TbLoadingMax.Text
+
+
+        If VEH0.AxleConf = tAxleConf.Undef Then
+            Me.CbAxleConfig.SelectedIndex = 0
+        Else
+            Me.CbAxleConfig.SelectedIndex = CType(VEH0.AxleConf, Integer)
+        End If
+
+        Me.TBcdTrTr.Text = VEH0.Cd0Tr
+        Me.TBAquersTrTr.Text = VEH0.Aquers0Tr
+        Me.TBcwRig.Text = VEH0.Cd0Rig
+        Me.TBAquersRig.Text = VEH0.Aquers0Rig
+
+
+
+        DeclInit()
+
+
 
         fbVEH.UpdateHistory(file)
         Me.Text = fFILE(file, True)
@@ -247,37 +373,15 @@ Public Class F_VEH
         VEH0.Mass = CSng(fTextboxToNumString(Me.TbMass.Text))
         VEH0.MassExtra = CSng(fTextboxToNumString(Me.TbMassExtra.Text))
         VEH0.Loading = CSng(fTextboxToNumString(Me.TbLoad.Text))
-        VEH0.Cd0 = CSng(fTextboxToNumString(Me.TBcw.Text))
-        VEH0.Aquers = CSng(fTextboxToNumString(Me.TBAquers.Text))
+        VEH0.Cd0Tr = CSng(fTextboxToNumString(Me.TBcdTrTr.Text))
+        VEH0.Aquers0Tr = CSng(fTextboxToNumString(Me.TBAquersTrTr.Text))
+        VEH0.Cd0Rig = CSng(fTextboxToNumString(Me.TBcwRig.Text))
+        VEH0.Aquers0Rig = CSng(fTextboxToNumString(Me.TBAquersRig.Text))
 
-        'VEH0.I_mot = CSng(fTextboxToNumString(Me.TBI_mot.Text))
         VEH0.I_wheels = CSng(fTextboxToNumString(Me.TbI_wheels.Text))
-        'VEH0.I_Getriebe = CSng(fTextboxToNumString(Me.TBI_getr.Text))
-        'VEH0.Paux0 = CSng(fTextboxToNumString(Me.TbPaux0.Text))
-        'VEH0.Pnenn = CSng(fTextboxToNumString(Me.TBPnenn.Text))
-        'VEH0.nNenn = CSng(fTextboxToNumString(Me.TBnnenn.Text))
-        'VEH0.nLeerl = CSng(fTextboxToNumString(Me.TBnleerl.Text))
-
-        'VEH0.fGetr = CSng(fTextboxToNumString(Me.TBfGetr.Text))
-
-        'VEH0.AchsI = CSng(Me.LvGears.Items(0).SubItems(1).Text)
-        'VEH0.AchsMap = Me.LvGears.Items(0).SubItems(2).Text
 
         VEH0.Dreifen = CSng(fTextboxToNumString(Me.TBDreifen.Text))
 
-        'For i = 1 To 16
-        '    VEH0.Igetr(i) = CSng(Me.LvGears.Items(i).SubItems(1).Text)
-        '    VEH0.GetrMap(i) = Me.LvGears.Items(i).SubItems(2).Text
-        'Next
-
-        'VEH0.hinauf = CSng(fTextboxToNumString(Me.TBhinauf.Text))
-        'VEH0.hinunter = CSng(fTextboxToNumString(Me.TBhinunter.Text))
-        'VEH0.lhinauf = CSng(fTextboxToNumString(Me.TBlhinauf.Text))
-        'VEH0.lhinunter = CSng(fTextboxToNumString(Me.TBlhinunter.Text))
-        'VEH0.pspar = CSng(fTextboxToNumString(Me.TBpspar.Text))
-        'VEH0.pmodell = CSng(1 - CSng(fTextboxToNumString(Me.TBpfast.Text)) - CSng(fTextboxToNumString(Me.TBpspar.Text)))
-
-        'VEH0.TracIntrSi = fTextboxToNumString(Me.TbTracInt.Text)
 
         VEH0.CdMode = CType(Me.CbCdMode.SelectedIndex, tCdMode)
         VEH0.CdFile.Init(fPATH(file), Me.TbCdFile.Text)
@@ -292,7 +396,7 @@ Public Class F_VEH
             VEH0.RRCs.Add(New Single() {CSng(LV0.SubItems(1).Text), CSng(LV0.SubItems(2).Text = "yes"), CSng(LV0.SubItems(3).Text), CSng(LV0.SubItems(4).Text)})
         Next
 
-        VEH0.MassMax = CSng(fTextboxToNumString(Me.TbMassMax.Text))
+        VEH0.MassMax = CSng(fTextboxToNumString(Me.TbMassMass.Text))
         VEH0.MassExtra = CSng(fTextboxToNumString(Me.TbMassExtra.Text))
         VEH0.AxleConf = CType(Me.CbAxleConfig.SelectedIndex, tAxleConf)
 
@@ -304,7 +408,7 @@ Public Class F_VEH
         End If
 
         If Not GenDir = "" Or AutoSendTo Then
-            If F_GEN.Visible And UCase(fFileRepl(F_GEN.TextBoxVEH.Text, GenDir)) <> UCase(file) Then F_GEN.TextBoxVEH.Text = fFileWoDir(file, GenDir)
+            If F_VECTO.Visible And UCase(fFileRepl(F_VECTO.TextBoxVEH.Text, GenDir)) <> UCase(file) Then F_VECTO.TextBoxVEH.Text = fFileWoDir(file, GenDir)
         End If
 
         fbVEH.UpdateHistory(file)
@@ -342,9 +446,11 @@ Public Class F_VEH
 
         End Select
 
-        Me.TbCdFile.Enabled = bEnabled
-        Me.BtCdFileBrowse.Enabled = bEnabled
-        Me.BtCdFileOpen.Enabled = bEnabled
+        If Not Declaration.Active Then
+            Me.TbCdFile.Enabled = bEnabled
+            Me.BtCdFileBrowse.Enabled = bEnabled
+            Me.BtCdFileOpen.Enabled = bEnabled
+        End If
 
         Change()
     End Sub
@@ -459,11 +565,11 @@ Public Class F_VEH
         Change()
     End Sub
 
-    Private Sub TBcw_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBcw.TextChanged
+    Private Sub TBcw_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBcdTrTr.TextChanged, TBcwRig.TextChanged
         Change()
     End Sub
 
-    Private Sub TBAquers_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBAquers.TextChanged
+    Private Sub TBAquers_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBAquersTrTr.TextChanged, TBAquersRig.TextChanged
         Change()
     End Sub
 
@@ -557,6 +663,7 @@ Public Class F_VEH
 
     Private Sub CbCat_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbCat.SelectedIndexChanged
         Change()
+        DeclInit()
     End Sub
 
     Private Sub TbMassTrailer_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbMassExtra.TextChanged
@@ -564,22 +671,26 @@ Public Class F_VEH
         Change()
     End Sub
 
-    Private Sub TbMassMax_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbMassMax.TextChanged
+    Private Sub TbMassMax_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbMassMass.TextChanged
         SetMaxLoad()
         Change()
+        DeclInit()
     End Sub
 
     Private Sub CbAxleConfig_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbAxleConfig.SelectedIndexChanged
         Change()
+        DeclInit()
     End Sub
 
 #End Region
 
     Private Sub SetMaxLoad()
-        If IsNumeric(Me.TbMass.Text) And IsNumeric(Me.TbMassExtra.Text) And IsNumeric(Me.TbMassMax.Text) Then
-            Me.TbLoadingMax.Text = CStr(CSng(Me.TbMassMax.Text) - CSng(Me.TbMass.Text) - CSng(Me.TbMassExtra.Text))
-        Else
-            Me.TbLoadingMax.Text = ""
+        If Not Declaration.Active Then
+            If IsNumeric(Me.TbMass.Text) And IsNumeric(Me.TbMassExtra.Text) And IsNumeric(Me.TbMassMass.Text) Then
+                Me.TbLoadingMax.Text = CStr(CSng(Me.TbMassMass.Text) - CSng(Me.TbMass.Text) - CSng(Me.TbMassExtra.Text))
+            Else
+                Me.TbLoadingMax.Text = ""
+            End If
         End If
     End Sub
 
@@ -594,7 +705,7 @@ Public Class F_VEH
             lv0 = New ListViewItem
 
             lv0.SubItems(0).Text = Me.LvRRC.Items.Count + 1
-            lv0.SubItems.Add(Trim(dlog.TbWeight.Text))
+            lv0.SubItems.Add(Trim(dlog.TbAxleShare.Text))
             If dlog.CbTwinT.Checked Then
                 lv0.SubItems.Add("yes")
             Else
@@ -623,7 +734,7 @@ Public Class F_VEH
     Private Sub LvAxle_KeyDown(sender As Object, e As System.Windows.Forms.KeyEventArgs) Handles LvRRC.KeyDown
         Select Case e.KeyCode
             Case Keys.Delete, Keys.Back
-                RemoveAxleItem()
+                If Not Declaration.Active Then RemoveAxleItem()
             Case Keys.Enter
                 EditAxleItem()
         End Select
@@ -667,13 +778,13 @@ Public Class F_VEH
 
         LV0 = LvRRC.SelectedItems(0)
 
-        dlog.TbWeight.Text = LV0.SubItems(1).Text
+        dlog.TbAxleShare.Text = LV0.SubItems(1).Text
         dlog.CbTwinT.Checked = (LV0.SubItems(2).Text = "yes")
         dlog.TbRRC.Text = LV0.SubItems(3).Text
         dlog.TbFzISO.Text = LV0.SubItems(4).Text
 
         If dlog.ShowDialog = Windows.Forms.DialogResult.OK Then
-            LV0.SubItems(1).Text = dlog.TbWeight.Text
+            LV0.SubItems(1).Text = dlog.TbAxleShare.Text
             If dlog.CbTwinT.Checked Then
                 LV0.SubItems(2).Text = "yes"
             Else
@@ -681,7 +792,7 @@ Public Class F_VEH
             End If
             LV0.SubItems(3).Text = dlog.TbRRC.Text
             LV0.SubItems(4).Text = dlog.TbFzISO.Text
-         
+
 
             Change()
 
@@ -731,4 +842,5 @@ Public Class F_VEH
 #End Region
 
    
+  
 End Class

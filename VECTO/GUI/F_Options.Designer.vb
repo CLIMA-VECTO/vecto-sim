@@ -28,7 +28,6 @@ Partial Class F_Options
         Me.ButtonOK = New System.Windows.Forms.Button()
         Me.ButtonCancel = New System.Windows.Forms.Button()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
-        Me.CbJSON = New System.Windows.Forms.CheckBox()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.TbOpenCmdName = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -38,7 +37,7 @@ Partial Class F_Options
         Me.Label16 = New System.Windows.Forms.Label()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.GrCalc = New System.Windows.Forms.GroupBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -55,7 +54,7 @@ Partial Class F_Options
         Me.GroupBox5.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
-        Me.GroupBox4.SuspendLayout()
+        Me.GrCalc.SuspendLayout()
         Me.SuspendLayout()
         '
         'TextBoxWorDir
@@ -109,7 +108,6 @@ Partial Class F_Options
         '
         'GroupBox3
         '
-        Me.GroupBox3.Controls.Add(Me.CbJSON)
         Me.GroupBox3.Controls.Add(Me.GroupBox5)
         Me.GroupBox3.Controls.Add(Me.TextBoxLogSize)
         Me.GroupBox3.Controls.Add(Me.Label16)
@@ -119,16 +117,6 @@ Partial Class F_Options
         Me.GroupBox3.TabIndex = 11
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Interface"
-        '
-        'CbJSON
-        '
-        Me.CbJSON.AutoSize = True
-        Me.CbJSON.Location = New System.Drawing.Point(21, 80)
-        Me.CbJSON.Name = "CbJSON"
-        Me.CbJSON.Size = New System.Drawing.Size(168, 17)
-        Me.CbJSON.TabIndex = 15
-        Me.CbJSON.Text = "In- and Output in JSON format"
-        Me.CbJSON.UseVisualStyleBackColor = True
         '
         'GroupBox5
         '
@@ -205,7 +193,7 @@ Partial Class F_Options
         '
         'TabPage2
         '
-        Me.TabPage2.Controls.Add(Me.GroupBox4)
+        Me.TabPage2.Controls.Add(Me.GrCalc)
         Me.TabPage2.Controls.Add(Me.GroupBoxWorDir)
         Me.TabPage2.Controls.Add(Me.GroupBox3)
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
@@ -216,23 +204,23 @@ Partial Class F_Options
         Me.TabPage2.Text = "VECTO"
         Me.TabPage2.UseVisualStyleBackColor = True
         '
-        'GroupBox4
+        'GrCalc
         '
-        Me.GroupBox4.Controls.Add(Me.Label11)
-        Me.GroupBox4.Controls.Add(Me.Label9)
-        Me.GroupBox4.Controls.Add(Me.Label3)
-        Me.GroupBox4.Controls.Add(Me.TbCO2toFC)
-        Me.GroupBox4.Controls.Add(Me.Label10)
-        Me.GroupBox4.Controls.Add(Me.TbFuelDens)
-        Me.GroupBox4.Controls.Add(Me.Label8)
-        Me.GroupBox4.Controls.Add(Me.TbAirDensity)
-        Me.GroupBox4.Controls.Add(Me.Label2)
-        Me.GroupBox4.Location = New System.Drawing.Point(6, 193)
-        Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(488, 103)
-        Me.GroupBox4.TabIndex = 12
-        Me.GroupBox4.TabStop = False
-        Me.GroupBox4.Text = "Calculation"
+        Me.GrCalc.Controls.Add(Me.Label11)
+        Me.GrCalc.Controls.Add(Me.Label9)
+        Me.GrCalc.Controls.Add(Me.Label3)
+        Me.GrCalc.Controls.Add(Me.TbCO2toFC)
+        Me.GrCalc.Controls.Add(Me.Label10)
+        Me.GrCalc.Controls.Add(Me.TbFuelDens)
+        Me.GrCalc.Controls.Add(Me.Label8)
+        Me.GrCalc.Controls.Add(Me.TbAirDensity)
+        Me.GrCalc.Controls.Add(Me.Label2)
+        Me.GrCalc.Location = New System.Drawing.Point(6, 193)
+        Me.GrCalc.Name = "GrCalc"
+        Me.GrCalc.Size = New System.Drawing.Size(488, 103)
+        Me.GrCalc.TabIndex = 12
+        Me.GrCalc.TabStop = False
+        Me.GrCalc.Text = "Calculation"
         '
         'Label11
         '
@@ -354,8 +342,8 @@ Partial Class F_Options
         Me.GroupBox5.PerformLayout()
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage2.ResumeLayout(False)
-        Me.GroupBox4.ResumeLayout(False)
-        Me.GroupBox4.PerformLayout()
+        Me.GrCalc.ResumeLayout(False)
+        Me.GrCalc.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -372,7 +360,7 @@ Partial Class F_Options
     Friend WithEvents ButReset As System.Windows.Forms.Button
     Friend WithEvents TbOpenCmd As System.Windows.Forms.TextBox
     Friend WithEvents Label7 As System.Windows.Forms.Label
-    Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
+    Friend WithEvents GrCalc As System.Windows.Forms.GroupBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents TbAirDensity As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
@@ -386,5 +374,4 @@ Partial Class F_Options
     Friend WithEvents GroupBox5 As System.Windows.Forms.GroupBox
     Friend WithEvents TbOpenCmdName As System.Windows.Forms.TextBox
     Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents CbJSON As System.Windows.Forms.CheckBox
 End Class

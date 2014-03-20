@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class F_GEN
+Partial Class F_VECTO
     Inherits System.Windows.Forms.Form
 
     'Das Formular Ã¼berschreibt den LÃ¶schvorgang, um die Komponentenliste zu bereinigen.
@@ -23,9 +23,9 @@ Partial Class F_GEN
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_GEN))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_VECTO))
         Me.TabPgGen = New System.Windows.Forms.TabPage()
-        Me.GroupBox5 = New System.Windows.Forms.GroupBox()
+        Me.GrCycles = New System.Windows.Forms.GroupBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.LvCycles = New System.Windows.Forms.ListView()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -50,7 +50,12 @@ Partial Class F_GEN
         Me.ButtonMAP = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPgDriver = New System.Windows.Forms.TabPage()
-        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.PnVACC = New System.Windows.Forms.Panel()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.TbDesMaxFile = New System.Windows.Forms.TextBox()
+        Me.BtDesMaxBr = New System.Windows.Forms.Button()
+        Me.BtAccOpen = New System.Windows.Forms.Button()
+        Me.GrLAC = New System.Windows.Forms.GroupBox()
         Me.PnLookAhead = New System.Windows.Forms.Panel()
         Me.Label29 = New System.Windows.Forms.Label()
         Me.Label25 = New System.Windows.Forms.Label()
@@ -76,18 +81,14 @@ Partial Class F_GEN
         Me.PnStartStop = New System.Windows.Forms.Panel()
         Me.Label31 = New System.Windows.Forms.Label()
         Me.Label27 = New System.Windows.Forms.Label()
-        Me.TBSSspeed = New System.Windows.Forms.TextBox()
+        Me.TbSSspeed = New System.Windows.Forms.TextBox()
         Me.LabelSSspeed = New System.Windows.Forms.Label()
         Me.Label26 = New System.Windows.Forms.Label()
         Me.Label30 = New System.Windows.Forms.Label()
         Me.LabelSStime = New System.Windows.Forms.Label()
-        Me.TbStStDelay = New System.Windows.Forms.TextBox()
-        Me.TBSStime = New System.Windows.Forms.TextBox()
+        Me.TbSSdelay = New System.Windows.Forms.TextBox()
+        Me.TbSStime = New System.Windows.Forms.TextBox()
         Me.ChBStartStop = New System.Windows.Forms.CheckBox()
-        Me.BtAccOpen = New System.Windows.Forms.Button()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.BtDesMaxBr = New System.Windows.Forms.Button()
-        Me.TbDesMaxFile = New System.Windows.Forms.TextBox()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ToolStripStatusLabelGEN = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ButOK = New System.Windows.Forms.Button()
@@ -108,11 +109,12 @@ Partial Class F_GEN
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TabPgGen.SuspendLayout()
-        Me.GroupBox5.SuspendLayout()
+        Me.GrCycles.SuspendLayout()
         Me.GrAux.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPgDriver.SuspendLayout()
-        Me.GroupBox4.SuspendLayout()
+        Me.PnVACC.SuspendLayout()
+        Me.GrLAC.SuspendLayout()
         Me.PnLookAhead.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.GrStartStop.SuspendLayout()
@@ -125,7 +127,7 @@ Partial Class F_GEN
         '
         'TabPgGen
         '
-        Me.TabPgGen.Controls.Add(Me.GroupBox5)
+        Me.TabPgGen.Controls.Add(Me.GrCycles)
         Me.TabPgGen.Controls.Add(Me.GrAux)
         Me.TabPgGen.Controls.Add(Me.TbGBX)
         Me.TabPgGen.Controls.Add(Me.TbENG)
@@ -144,18 +146,18 @@ Partial Class F_GEN
         Me.TabPgGen.Text = "General"
         Me.TabPgGen.UseVisualStyleBackColor = True
         '
-        'GroupBox5
+        'GrCycles
         '
-        Me.GroupBox5.Controls.Add(Me.Label2)
-        Me.GroupBox5.Controls.Add(Me.LvCycles)
-        Me.GroupBox5.Controls.Add(Me.BtDRIrem)
-        Me.GroupBox5.Controls.Add(Me.BtDRIadd)
-        Me.GroupBox5.Location = New System.Drawing.Point(6, 247)
-        Me.GroupBox5.Name = "GroupBox5"
-        Me.GroupBox5.Size = New System.Drawing.Size(634, 177)
-        Me.GroupBox5.TabIndex = 34
-        Me.GroupBox5.TabStop = False
-        Me.GroupBox5.Text = "Cycles"
+        Me.GrCycles.Controls.Add(Me.Label2)
+        Me.GrCycles.Controls.Add(Me.LvCycles)
+        Me.GrCycles.Controls.Add(Me.BtDRIrem)
+        Me.GrCycles.Controls.Add(Me.BtDRIadd)
+        Me.GrCycles.Location = New System.Drawing.Point(6, 247)
+        Me.GrCycles.Name = "GrCycles"
+        Me.GrCycles.Size = New System.Drawing.Size(634, 177)
+        Me.GrCycles.TabIndex = 34
+        Me.GrCycles.TabStop = False
+        Me.GrCycles.Text = "Cycles"
         '
         'Label2
         '
@@ -387,13 +389,10 @@ Partial Class F_GEN
         '
         'TabPgDriver
         '
-        Me.TabPgDriver.Controls.Add(Me.GroupBox4)
+        Me.TabPgDriver.Controls.Add(Me.PnVACC)
+        Me.TabPgDriver.Controls.Add(Me.GrLAC)
         Me.TabPgDriver.Controls.Add(Me.GroupBox1)
         Me.TabPgDriver.Controls.Add(Me.GrStartStop)
-        Me.TabPgDriver.Controls.Add(Me.BtAccOpen)
-        Me.TabPgDriver.Controls.Add(Me.Label1)
-        Me.TabPgDriver.Controls.Add(Me.BtDesMaxBr)
-        Me.TabPgDriver.Controls.Add(Me.TbDesMaxFile)
         Me.TabPgDriver.Location = New System.Drawing.Point(4, 22)
         Me.TabPgDriver.Name = "TabPgDriver"
         Me.TabPgDriver.Padding = New System.Windows.Forms.Padding(3)
@@ -402,16 +401,62 @@ Partial Class F_GEN
         Me.TabPgDriver.Text = "Driver Assist"
         Me.TabPgDriver.UseVisualStyleBackColor = True
         '
-        'GroupBox4
+        'PnVACC
         '
-        Me.GroupBox4.Controls.Add(Me.PnLookAhead)
-        Me.GroupBox4.Controls.Add(Me.CbLookAhead)
-        Me.GroupBox4.Location = New System.Drawing.Point(12, 331)
-        Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(375, 87)
-        Me.GroupBox4.TabIndex = 5
-        Me.GroupBox4.TabStop = False
-        Me.GroupBox4.Text = "Look-Ahead Coasting"
+        Me.PnVACC.Controls.Add(Me.Label1)
+        Me.PnVACC.Controls.Add(Me.TbDesMaxFile)
+        Me.PnVACC.Controls.Add(Me.BtDesMaxBr)
+        Me.PnVACC.Controls.Add(Me.BtAccOpen)
+        Me.PnVACC.Location = New System.Drawing.Point(3, 6)
+        Me.PnVACC.Name = "PnVACC"
+        Me.PnVACC.Size = New System.Drawing.Size(640, 44)
+        Me.PnVACC.TabIndex = 33
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(3, 0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(177, 13)
+        Me.Label1.TabIndex = 32
+        Me.Label1.Text = "Max. acceleration and brake curves"
+        '
+        'TbDesMaxFile
+        '
+        Me.TbDesMaxFile.Location = New System.Drawing.Point(3, 16)
+        Me.TbDesMaxFile.Name = "TbDesMaxFile"
+        Me.TbDesMaxFile.Size = New System.Drawing.Size(571, 20)
+        Me.TbDesMaxFile.TabIndex = 0
+        '
+        'BtDesMaxBr
+        '
+        Me.BtDesMaxBr.Location = New System.Drawing.Point(580, 15)
+        Me.BtDesMaxBr.Name = "BtDesMaxBr"
+        Me.BtDesMaxBr.Size = New System.Drawing.Size(28, 21)
+        Me.BtDesMaxBr.TabIndex = 1
+        Me.BtDesMaxBr.Text = "..."
+        Me.BtDesMaxBr.UseVisualStyleBackColor = True
+        '
+        'BtAccOpen
+        '
+        Me.BtAccOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
+        Me.BtAccOpen.Location = New System.Drawing.Point(614, 14)
+        Me.BtAccOpen.Name = "BtAccOpen"
+        Me.BtAccOpen.Size = New System.Drawing.Size(23, 23)
+        Me.BtAccOpen.TabIndex = 2
+        Me.BtAccOpen.TabStop = False
+        Me.BtAccOpen.UseVisualStyleBackColor = True
+        '
+        'GrLAC
+        '
+        Me.GrLAC.Controls.Add(Me.PnLookAhead)
+        Me.GrLAC.Controls.Add(Me.CbLookAhead)
+        Me.GrLAC.Location = New System.Drawing.Point(12, 307)
+        Me.GrLAC.Name = "GrLAC"
+        Me.GrLAC.Size = New System.Drawing.Size(375, 87)
+        Me.GrLAC.TabIndex = 5
+        Me.GrLAC.TabStop = False
+        Me.GrLAC.Text = "Look-Ahead Coasting"
         '
         'PnLookAhead
         '
@@ -620,7 +665,7 @@ Partial Class F_GEN
         '
         Me.GrStartStop.Controls.Add(Me.PnStartStop)
         Me.GrStartStop.Controls.Add(Me.ChBStartStop)
-        Me.GrStartStop.Location = New System.Drawing.Point(7, 56)
+        Me.GrStartStop.Location = New System.Drawing.Point(12, 56)
         Me.GrStartStop.Name = "GrStartStop"
         Me.GrStartStop.Size = New System.Drawing.Size(375, 130)
         Me.GrStartStop.TabIndex = 3
@@ -631,13 +676,13 @@ Partial Class F_GEN
         '
         Me.PnStartStop.Controls.Add(Me.Label31)
         Me.PnStartStop.Controls.Add(Me.Label27)
-        Me.PnStartStop.Controls.Add(Me.TBSSspeed)
+        Me.PnStartStop.Controls.Add(Me.TbSSspeed)
         Me.PnStartStop.Controls.Add(Me.LabelSSspeed)
         Me.PnStartStop.Controls.Add(Me.Label26)
         Me.PnStartStop.Controls.Add(Me.Label30)
         Me.PnStartStop.Controls.Add(Me.LabelSStime)
-        Me.PnStartStop.Controls.Add(Me.TbStStDelay)
-        Me.PnStartStop.Controls.Add(Me.TBSStime)
+        Me.PnStartStop.Controls.Add(Me.TbSSdelay)
+        Me.PnStartStop.Controls.Add(Me.TbSStime)
         Me.PnStartStop.Location = New System.Drawing.Point(148, 10)
         Me.PnStartStop.Name = "PnStartStop"
         Me.PnStartStop.Size = New System.Drawing.Size(221, 106)
@@ -661,12 +706,12 @@ Partial Class F_GEN
         Me.Label27.TabIndex = 38
         Me.Label27.Text = "[s]"
         '
-        'TBSSspeed
+        'TbSSspeed
         '
-        Me.TBSSspeed.Location = New System.Drawing.Point(99, 9)
-        Me.TBSSspeed.Name = "TBSSspeed"
-        Me.TBSSspeed.Size = New System.Drawing.Size(64, 20)
-        Me.TBSSspeed.TabIndex = 0
+        Me.TbSSspeed.Location = New System.Drawing.Point(99, 9)
+        Me.TbSSspeed.Name = "TbSSspeed"
+        Me.TbSSspeed.Size = New System.Drawing.Size(64, 20)
+        Me.TbSSspeed.TabIndex = 0
         '
         'LabelSSspeed
         '
@@ -704,19 +749,19 @@ Partial Class F_GEN
         Me.LabelSStime.TabIndex = 35
         Me.LabelSStime.Text = "Min ICE-On Time"
         '
-        'TbStStDelay
+        'TbSSdelay
         '
-        Me.TbStStDelay.Location = New System.Drawing.Point(99, 61)
-        Me.TbStStDelay.Name = "TbStStDelay"
-        Me.TbStStDelay.Size = New System.Drawing.Size(64, 20)
-        Me.TbStStDelay.TabIndex = 1
+        Me.TbSSdelay.Location = New System.Drawing.Point(99, 61)
+        Me.TbSSdelay.Name = "TbSSdelay"
+        Me.TbSSdelay.Size = New System.Drawing.Size(64, 20)
+        Me.TbSSdelay.TabIndex = 1
         '
-        'TBSStime
+        'TbSStime
         '
-        Me.TBSStime.Location = New System.Drawing.Point(99, 35)
-        Me.TBSStime.Name = "TBSStime"
-        Me.TBSStime.Size = New System.Drawing.Size(64, 20)
-        Me.TBSStime.TabIndex = 1
+        Me.TbSStime.Location = New System.Drawing.Point(99, 35)
+        Me.TbSStime.Name = "TbSStime"
+        Me.TbSStime.Size = New System.Drawing.Size(64, 20)
+        Me.TbSStime.TabIndex = 1
         '
         'ChBStartStop
         '
@@ -729,41 +774,6 @@ Partial Class F_GEN
         Me.ChBStartStop.TabIndex = 0
         Me.ChBStartStop.Text = "Enabled"
         Me.ChBStartStop.UseVisualStyleBackColor = True
-        '
-        'BtAccOpen
-        '
-        Me.BtAccOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.BtAccOpen.Location = New System.Drawing.Point(617, 28)
-        Me.BtAccOpen.Name = "BtAccOpen"
-        Me.BtAccOpen.Size = New System.Drawing.Size(23, 23)
-        Me.BtAccOpen.TabIndex = 2
-        Me.BtAccOpen.TabStop = False
-        Me.BtAccOpen.UseVisualStyleBackColor = True
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(6, 14)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(177, 13)
-        Me.Label1.TabIndex = 32
-        Me.Label1.Text = "Max. acceleration and brake curves"
-        '
-        'BtDesMaxBr
-        '
-        Me.BtDesMaxBr.Location = New System.Drawing.Point(583, 29)
-        Me.BtDesMaxBr.Name = "BtDesMaxBr"
-        Me.BtDesMaxBr.Size = New System.Drawing.Size(28, 21)
-        Me.BtDesMaxBr.TabIndex = 1
-        Me.BtDesMaxBr.Text = "..."
-        Me.BtDesMaxBr.UseVisualStyleBackColor = True
-        '
-        'TbDesMaxFile
-        '
-        Me.TbDesMaxFile.Location = New System.Drawing.Point(6, 30)
-        Me.TbDesMaxFile.Name = "TbDesMaxFile"
-        Me.TbDesMaxFile.Size = New System.Drawing.Size(571, 20)
-        Me.TbDesMaxFile.TabIndex = 0
         '
         'StatusStrip1
         '
@@ -925,7 +935,7 @@ Partial Class F_GEN
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
-        'F_GEN
+        'F_VEC
         '
         Me.AcceptButton = Me.ButOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -942,20 +952,21 @@ Partial Class F_GEN
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
-        Me.Name = "F_GEN"
+        Me.Name = "F_VEC"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "GEN Editor"
+        Me.Text = "VECTO Editor"
         Me.TabPgGen.ResumeLayout(False)
         Me.TabPgGen.PerformLayout()
-        Me.GroupBox5.ResumeLayout(False)
-        Me.GroupBox5.PerformLayout()
+        Me.GrCycles.ResumeLayout(False)
+        Me.GrCycles.PerformLayout()
         Me.GrAux.ResumeLayout(False)
         Me.GrAux.PerformLayout()
         Me.TabControl1.ResumeLayout(False)
         Me.TabPgDriver.ResumeLayout(False)
-        Me.TabPgDriver.PerformLayout()
-        Me.GroupBox4.ResumeLayout(False)
-        Me.GroupBox4.PerformLayout()
+        Me.PnVACC.ResumeLayout(False)
+        Me.PnVACC.PerformLayout()
+        Me.GrLAC.ResumeLayout(False)
+        Me.GrLAC.PerformLayout()
         Me.PnLookAhead.ResumeLayout(False)
         Me.PnLookAhead.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
@@ -1008,7 +1019,7 @@ Partial Class F_GEN
     Friend WithEvents BtDesMaxBr As System.Windows.Forms.Button
     Friend WithEvents TbDesMaxFile As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents GroupBox5 As System.Windows.Forms.GroupBox
+    Friend WithEvents GrCycles As System.Windows.Forms.GroupBox
     Friend WithEvents LvCycles As System.Windows.Forms.ListView
     Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
     Friend WithEvents BtDRIrem As System.Windows.Forms.Button
@@ -1024,11 +1035,11 @@ Partial Class F_GEN
     Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ChBStartStop As System.Windows.Forms.CheckBox
     Friend WithEvents GrStartStop As System.Windows.Forms.GroupBox
-    Friend WithEvents TBSSspeed As System.Windows.Forms.TextBox
-    Friend WithEvents TBSStime As System.Windows.Forms.TextBox
+    Friend WithEvents TbSSspeed As System.Windows.Forms.TextBox
+    Friend WithEvents TbSStime As System.Windows.Forms.TextBox
     Friend WithEvents LabelSStime As System.Windows.Forms.Label
     Friend WithEvents LabelSSspeed As System.Windows.Forms.Label
-    Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
+    Friend WithEvents GrLAC As System.Windows.Forms.GroupBox
     Friend WithEvents Label25 As System.Windows.Forms.Label
     Friend WithEvents CbLookAhead As System.Windows.Forms.CheckBox
     Friend WithEvents TbAlookahead As System.Windows.Forms.TextBox
@@ -1055,6 +1066,7 @@ Partial Class F_GEN
     Friend WithEvents Label28 As System.Windows.Forms.Label
     Friend WithEvents Label31 As System.Windows.Forms.Label
     Friend WithEvents Label30 As System.Windows.Forms.Label
-    Friend WithEvents TbStStDelay As System.Windows.Forms.TextBox
+    Friend WithEvents TbSSdelay As System.Windows.Forms.TextBox
     Friend WithEvents Label32 As System.Windows.Forms.Label
+    Friend WithEvents PnVACC As System.Windows.Forms.Panel
 End Class

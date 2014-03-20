@@ -1,6 +1,6 @@
 ﻿Imports System.Collections.Generic
 
-Public Class F_GEN
+Public Class F_VECTO
 
     Private Genfile As String
     Private Changed As Boolean = False
@@ -26,6 +26,16 @@ Public Class F_GEN
 
         Me.LvAux.Columns(2).Width = -2
 
+        'Declaration Mode
+        If Declaration.Active Then
+            Me.CbEngOnly.Enabled = False
+            Me.GrCycles.Enabled = False
+            Me.PnVACC.Enabled = False
+            Me.PnStartStop.Enabled = False
+            Me.RdOff.Enabled = False
+            Me.GrLAC.Enabled = False
+        End If
+
         Changed = False
 
     End Sub
@@ -35,6 +45,23 @@ Public Class F_GEN
         If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
             e.Cancel = ChangeCheckCancel()
         End If
+    End Sub
+
+    Private Sub DeclInit()
+
+        If Not Declaration.Active Then Exit Sub
+
+        Me.LvCycles.Items.Clear()
+        Me.CbEngOnly.Checked = False
+        Me.TbDesMaxFile.Text = ""
+        If Not Me.RdEcoRoll.Checked Then Me.RdOverspeed.Checked = True
+        Me.CbLookAhead.Checked = True
+
+        Me.TbSSspeed.Text = cDeclaration.SSspeed
+        Me.TbSStime.Text = cDeclaration.SStime
+        Me.TbSSdelay.Text = cDeclaration.SSdelay
+        Me.TbAlookahead.Text = cDeclaration.LACa
+        Me.TbVminLA.Text = cDeclaration.LACvmin
     End Sub
 
 
@@ -66,11 +93,11 @@ Public Class F_GEN
     Private Sub ButtonMAP_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonMAP.Click
         If fbENG.OpenDialog(fFileRepl(Me.TbENG.Text, fPATH(Genfile))) Then Me.TbENG.Text = fFileWoDir(fbENG.Files(0), fPATH(Genfile))
     End Sub
-  
+
     Private Sub ButtonFLD_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonGBX.Click
         If fbGBX.OpenDialog(fFileRepl(Me.TbGBX.Text, fPATH(Genfile))) Then Me.TbGBX.Text = fFileWoDir(fbGBX.Files(0), fPATH(Genfile))
     End Sub
- 
+
     'a_DesMax
     Private Sub BtDesMaxBr_Click_1(sender As System.Object, e As System.EventArgs) Handles BtDesMaxBr.Click
         If fbACC.OpenDialog(fFileRepl(Me.TbDesMaxFile.Text, fPATH(Genfile))) Then Me.TbDesMaxFile.Text = fFileWoDir(fbACC.Files(0), fPATH(Genfile))
@@ -228,8 +255,8 @@ Public Class F_GEN
     'Load GEN in the form
     Public Sub GENload2Form(ByVal file As String)
         Dim x As Int16
-        Dim Gfile As cGEN
-        Dim AuxEntryKV As KeyValuePair(Of String, cVEH.cAuxEntry)
+        Dim Gfile As cVECTO
+        Dim AuxEntryKV As KeyValuePair(Of String, cVECTO.cAuxEntry)
         Dim LV0 As ListViewItem
         Dim sb As cSubPath
 
@@ -238,7 +265,7 @@ Public Class F_GEN
         GENnew()
 
         'Read GEN
-        Gfile = New cGEN
+        Gfile = New cVECTO
         Gfile.FilePath = file
         Try
             If Not Gfile.ReadFile() Then
@@ -260,9 +287,9 @@ Public Class F_GEN
 
         'Start/Stop
         Me.ChBStartStop.Checked = Gfile.StartStop
-        Me.TBSSspeed.Text = Gfile.StStV
-        Me.TBSStime.Text = Gfile.StStT
-        Me.TbStStDelay.Text = Gfile.StStDelay
+        Me.TbSSspeed.Text = Gfile.StStV
+        Me.TbSStime.Text = Gfile.StStT
+        Me.TbSSdelay.Text = Gfile.StStDelay
 
         'VACC
         Me.TbDesMaxFile.Text = Gfile.DesMaxFile(True)
@@ -301,6 +328,9 @@ Public Class F_GEN
 
         '-------------------------------------------------------------
 
+        DeclInit()
+
+
         Genfile = file
 
         x = Len(file)
@@ -326,12 +356,12 @@ Public Class F_GEN
     'GEN save from form
     Private Function GENsave(ByVal file As String) As Boolean
 
-        Dim g As cGEN
-        Dim AuxEntry As cVEH.cAuxEntry
+        Dim g As cVECTO
+        Dim AuxEntry As cVECTO.cAuxEntry
         Dim LV0 As ListViewItem
         Dim sb As cSubPath
 
-        g = New cGEN
+        g = New cVECTO
         g.FilePath = file
 
         'Files ------------------------------------------------- -----------------
@@ -350,15 +380,15 @@ Public Class F_GEN
 
         'Start/Stop
         g.StartStop = Me.ChBStartStop.Checked
-        g.StStV = CSng(fTextboxToNumString(Me.TBSSspeed.Text))
-        g.StStT = CSng(fTextboxToNumString(Me.TBSStime.Text))
-        g.StStDelay = CInt(fTextboxToNumString(Me.TbStStDelay.Text))
+        g.StStV = CSng(fTextboxToNumString(Me.TbSSspeed.Text))
+        g.StStT = CSng(fTextboxToNumString(Me.TbSStime.Text))
+        g.StStDelay = CInt(fTextboxToNumString(Me.TbSSdelay.Text))
 
         'a_DesMax
         g.DesMaxFile = Me.TbDesMaxFile.Text
 
         For Each LV0 In LvAux.Items
-            AuxEntry = New cVEH.cAuxEntry
+            AuxEntry = New cVECTO.cAuxEntry
             AuxEntry.Path.Init(fPATH(file), LV0.SubItems(2).Text)
             AuxEntry.Type = LV0.SubItems(1).Text
             g.AuxPaths.Add(LV0.SubItems(0).Text, AuxEntry)
@@ -400,7 +430,7 @@ Public Class F_GEN
 
     End Function
 
-    'New BlankGEN
+    'New VECTO file
     Public Sub GENnew()
 
         If ChangeCheckCancel() Then Exit Sub
@@ -413,8 +443,8 @@ Public Class F_GEN
         Me.TbDesMaxFile.Text = ""
 
         'Start/Stop
-        Me.TBSSspeed.Text = "5"
-        Me.TBSStime.Text = "5"
+        Me.TbSSspeed.Text = "5"
+        Me.TbSStime.Text = "5"
         Me.ChBStartStop.Checked = False
 
         Me.LvAux.Items.Clear()
@@ -430,6 +460,9 @@ Public Class F_GEN
         Me.TbVminLA.Text = "50"
 
         '---------------------------------------------------
+
+        DeclInit()
+
 
         Genfile = ""
         Me.Text = "VECTO Editor"
@@ -461,18 +494,18 @@ Public Class F_GEN
     Private Sub TextBoxFLD_TextChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles TbGBX.TextChanged
         Change()
     End Sub
-   
+
 
     Private Sub TbDesMaxFile_TextChanged_1(sender As System.Object, e As System.EventArgs) Handles TbDesMaxFile.TextChanged
         Change()
     End Sub
 
 
-    Private Sub TBSSspeed_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBSSspeed.TextChanged
+    Private Sub TBSSspeed_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbSSspeed.TextChanged
         Change()
     End Sub
 
-    Private Sub TBSStime_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBSStime.TextChanged, TbStStDelay.TextChanged
+    Private Sub TBSStime_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbSStime.TextChanged, TbSSdelay.TextChanged
         Change()
     End Sub
 
@@ -747,7 +780,7 @@ lbDlog:
 
     Private Sub ChBStartStop_CheckedChanged_1(sender As System.Object, e As System.EventArgs) Handles ChBStartStop.CheckedChanged
         Change()
-        Me.PnStartStop.Enabled = Me.ChBStartStop.Checked
+        If Not Declaration.Active Then Me.PnStartStop.Enabled = Me.ChBStartStop.Checked
     End Sub
 
 
@@ -823,7 +856,6 @@ lbDlog:
 
 #End Region
 
-    
 
 
 End Class

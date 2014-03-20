@@ -7,8 +7,8 @@ Public Class cFLD
 
     Private sFilePath As String
 
-    Private LPfull As List(Of Single)
-    Private LPdrag As List(Of Single)
+    Private LTq As List(Of Single)
+    Private LTqDrag As List(Of Single)
     Private LnU As List(Of Single)
     Private LPT1 As List(Of Single)
 
@@ -16,9 +16,11 @@ Public Class cFLD
 
     Private iDim As Integer
 
+
+
     Private Sub ResetMe()
-        LPfull = Nothing
-        LPdrag = Nothing
+        LTq = Nothing
+        LTqDrag = Nothing
         LnU = Nothing
         LPT1 = Nothing
         iDim = -1
@@ -56,8 +58,8 @@ Public Class cFLD
         End If
 
         'Initialize Lists
-        LPfull = New System.Collections.Generic.List(Of Single)
-        LPdrag = New System.Collections.Generic.List(Of Single)
+        LTq = New System.Collections.Generic.List(Of Single)
+        LTqDrag = New System.Collections.Generic.List(Of Single)
         LnU = New System.Collections.Generic.List(Of Single)
         LPT1 = New System.Collections.Generic.List(Of Single)
 
@@ -78,8 +80,8 @@ Public Class cFLD
                 nU = CDbl(line(0))
 
                 LnU.Add(nU)
-                LPfull.Add(nMtoPe(nU, CDbl(line(1))))
-                LPdrag.Add(nMtoPe(nU, CDbl(line(2))))
+                LTq.Add(CDbl(line(1)))
+                LTqDrag.Add(CDbl(line(2)))
 
                 'If PT1 not given, use default value (see above)
                 If sPT1 > -1 Then
@@ -145,7 +147,7 @@ lbEr:
 
 lbInt:
         'Interpolation
-        Return (nU - LnU(i - 1)) * (LPdrag(i) - LPdrag(i - 1)) / (LnU(i) - LnU(i - 1)) + LPdrag(i - 1)
+        Return nMtoPe(nU, (nU - LnU(i - 1)) * (LTqDrag(i) - LTqDrag(i - 1)) / (LnU(i) - LnU(i - 1)) + LTqDrag(i - 1))
 
     End Function
 
@@ -173,7 +175,7 @@ lbInt:
 
 lbInt:
         'Interpolation
-        PfullStat = (nU - LnU(i - 1)) * (LPfull(i) - LPfull(i - 1)) / (LnU(i) - LnU(i - 1)) + LPfull(i - 1)
+        PfullStat = nMtoPe(nU, (nU - LnU(i - 1)) * (LTq(i) - LTq(i - 1)) / (LnU(i) - LnU(i - 1)) + LTq(i - 1))
         PT1 = (nU - LnU(i - 1)) * (LPT1(i) - LPT1(i - 1)) / (LnU(i) - LnU(i - 1)) + LPT1(i - 1)
 
         'Dynamic Full-load
@@ -203,24 +205,221 @@ lbInt:
 
 lbInt:
         'Interpolation
-        Return (nU - LnU(i - 1)) * (LPfull(i) - LPfull(i - 1)) / (LnU(i) - LnU(i - 1)) + LPfull(i - 1)
+        Return nMtoPe(nU, (nU - LnU(i - 1)) * (LTq(i) - LTq(i - 1)) / (LnU(i) - LnU(i - 1)) + LTq(i - 1))
     End Function
 
-    Public Function nRated() As Single
-        Dim i As Int16
-        Dim PeMax As Single
-        Dim nU As Single
+    Public Function Tq(ByVal nU As Single) As Single
+        Dim i As Int32
 
-        PeMax = LPfull(0)
-        nU = LnU(0)
-        For i = 1 To iDim
-            If LPfull(i) >= PeMax Then
-                PeMax = LPfull(i)
-                nU = LnU(i)
+        'Extrapolation for x < x(1)
+        If LnU(0) >= nU Then
+            If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
+            i = 1
+            GoTo lbInt
+        End If
+
+        i = 0
+        Do While LnU(i) < nU And i < iDim
+            i += 1
+        Loop
+
+        'Extrapolation for x > x(imax)
+        If LnU(i) < nU Then
+            MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
+        End If
+
+lbInt:
+        'Interpolation
+        Return (nU - LnU(i - 1)) * (LTq(i) - LTq(i - 1)) / (LnU(i) - LnU(i - 1)) + LTq(i - 1)
+    End Function
+
+    Public Function Npref() As Single
+        Dim i As Integer
+        Dim Amax As Single
+        Dim N95h As Single
+        Dim n As Single
+        Dim T0 As Single
+        Dim dn As Single
+        Dim A As Single
+        Dim k As Single
+
+
+        dn = 0.001
+
+        N95h = fnUofPfull(0.95 * Pfull(fnUrated), False)
+
+        Amax = Area(ENG.Nidle, N95h)
+
+        For i = 0 To iDim - 1
+
+            If Area(ENG.Nidle, LnU(i + 1)) > 0.51 * Amax Then
+
+                n = LnU(i)
+                T0 = LTq(i)
+                A = Area(ENG.Nidle, n)
+
+                k = (LTq(i + 1) - LTq(i)) / (LnU(i + 1) - LnU(i))
+
+                Do While A < 0.51 * Amax
+                    n += dn
+                    A += dn * (2 * T0 + k * dn) / 2
+                Loop
+
+                Exit For
+
             End If
+
         Next
 
-        Return nU
+        Return n
+
+    End Function
+
+
+    Private Function Area(ByVal nFrom As Single, ByVal nTo As Single) As Single
+        Dim A As Single
+        Dim i As Integer
+
+
+        A = 0
+        For i = 1 To iDim
+
+            If LnU(i - 1) >= nTo Then Exit For
+
+            If LnU(i - 1) >= nFrom Then
+
+
+                If LnU(i) <= nTo Then
+
+                    'Add full segment
+                    A += (LnU(i) - LnU(i - 1)) * (LTq(i) + LTq(i - 1)) / 2
+
+                Else
+
+                    'Add segment till nTo
+                    A += (nTo - LnU(i - 1)) * (Tq(nTo) + LTq(i - 1)) / 2
+
+                End If
+
+            Else
+
+                If LnU(i) > nFrom Then
+
+                    'Add segment starting from nFrom
+                    A += (LnU(i) - nFrom) * (LTq(i) + Tq(nFrom)) / 2
+
+                End If
+
+            End If
+
+        Next
+
+        Return A
+
+
+    End Function
+
+
+    Public Function fnUrated() As Single
+        Dim PeMax As Single
+        Dim nU As Single
+        Dim nUmax As Single
+        Dim nUrated As Single
+        Dim dnU As Single
+        Dim P As Single
+
+        dnU = 1
+        PeMax = 0
+        nU = LnU(0)
+        nUmax = LnU(iDim)
+        nUrated = nU
+
+        Do
+            P = nMtoPe(nU, Tq(nU))
+            If P > PeMax Then
+                PeMax = P
+                nUrated = nU
+            End If
+            nU += dnU
+        Loop Until nU > nUmax
+
+        Return nUrated
+
+    End Function
+
+
+    Public Function fnUofPfull(ByVal PeTarget As Single, ByVal FromLeft As Boolean) As Single
+        Dim Pe As Single
+        Dim LastPe As Single
+        Dim nU As Single
+        Dim nUmin As Single
+        Dim nUmax As Single
+        Dim nUtarget As Single
+        Dim dnU As Single
+
+        dnU = 1
+        nUmin = LnU(0)
+        nUmax = LnU(iDim)
+
+        If FromLeft Then
+
+            nU = nUmin
+            LastPe = nMtoPe(nU, Tq(nU))
+            nUtarget = nU
+
+            Do
+                Pe = nMtoPe(nU, Tq(nU))
+
+                If Pe > PeTarget Then
+                    If Math.Abs(LastPe - PeTarget) < Math.Abs(Pe - PeTarget) Then
+                        Return nU - dnU
+                    Else
+                        Return nU
+                    End If
+                End If
+
+                LastPe = Pe
+                nU += dnU
+            Loop Until nU > nUmax
+
+        Else
+
+            nU = nUmax
+            LastPe = nMtoPe(nU, Tq(nU))
+            nUtarget = nU
+
+            Do
+                Pe = nMtoPe(nU, Tq(nU))
+
+                If Pe > PeTarget Then
+                    If Math.Abs(LastPe - PeTarget) < Math.Abs(Pe - PeTarget) Then
+                        Return nU + dnU
+                    Else
+                        Return nU
+                    End If
+                End If
+
+                LastPe = Pe
+                nU -= dnU
+            Loop Until nU < nUmin
+
+        End If
+
+        Return nUtarget
+
+    End Function
+
+
+    Public Function Tmax() As Single
+        Dim i As Int16
+        Dim Tm As Single
+
+        Tm = LTq(0)
+        For i = 1 To iDim
+            If LTq(i) > Tm Then Tm = LTq(i)
+        Next
+
+        Return Tm
 
     End Function
 
@@ -232,6 +431,8 @@ lbInt:
             sFilePath = value
         End Set
     End Property
+
+
 
 
 End Class

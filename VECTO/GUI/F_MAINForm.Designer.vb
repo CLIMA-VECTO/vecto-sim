@@ -53,9 +53,6 @@ Partial Class F_MAINForm
         Me.ButtonDRIremove = New System.Windows.Forms.Button()
         Me.ButtonDRIadd = New System.Windows.Forms.Button()
         Me.TabPgOptions = New System.Windows.Forms.TabPage()
-        Me.GrBoxADV = New System.Windows.Forms.GroupBox()
-        Me.ChBoxFzpSort = New System.Windows.Forms.CheckBox()
-        Me.ChBoxFzpExport = New System.Windows.Forms.CheckBox()
         Me.GrBoxSTD = New System.Windows.Forms.GroupBox()
         Me.GrBoxBATCH = New System.Windows.Forms.GroupBox()
         Me.ChBoxBatchSubD = New System.Windows.Forms.CheckBox()
@@ -121,13 +118,13 @@ Partial Class F_MAINForm
         Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PnDeclOpt = New System.Windows.Forms.Panel()
         Me.StatusBAR.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPageGEN.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabPageDRI.SuspendLayout()
         Me.TabPgOptions.SuspendLayout()
-        Me.GrBoxADV.SuspendLayout()
         Me.GrBoxBATCH.SuspendLayout()
         Me.PanelOptAllg.SuspendLayout()
         Me.TabPageDEV.SuspendLayout()
@@ -138,6 +135,7 @@ Partial Class F_MAINForm
         Me.SplitContainer1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.CmOpenFile.SuspendLayout()
+        Me.PnDeclOpt.SuspendLayout()
         Me.SuspendLayout()
         '
         'StatusBAR
@@ -450,7 +448,6 @@ Partial Class F_MAINForm
         '
         'TabPgOptions
         '
-        Me.TabPgOptions.Controls.Add(Me.GrBoxADV)
         Me.TabPgOptions.Controls.Add(Me.GrBoxSTD)
         Me.TabPgOptions.Controls.Add(Me.GrBoxBATCH)
         Me.TabPgOptions.Controls.Add(Me.ChBoxAutoSD)
@@ -462,42 +459,6 @@ Partial Class F_MAINForm
         Me.TabPgOptions.TabIndex = 2
         Me.TabPgOptions.Text = "Options"
         Me.TabPgOptions.UseVisualStyleBackColor = True
-        '
-        'GrBoxADV
-        '
-        Me.GrBoxADV.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GrBoxADV.Controls.Add(Me.ChBoxFzpSort)
-        Me.GrBoxADV.Controls.Add(Me.ChBoxFzpExport)
-        Me.GrBoxADV.Location = New System.Drawing.Point(6, 182)
-        Me.GrBoxADV.Name = "GrBoxADV"
-        Me.GrBoxADV.Size = New System.Drawing.Size(1106, 158)
-        Me.GrBoxADV.TabIndex = 0
-        Me.GrBoxADV.TabStop = False
-        Me.GrBoxADV.Text = "ADVANCE Options"
-        '
-        'ChBoxFzpSort
-        '
-        Me.ChBoxFzpSort.AutoSize = True
-        Me.ChBoxFzpSort.Checked = True
-        Me.ChBoxFzpSort.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.ChBoxFzpSort.Location = New System.Drawing.Point(14, 23)
-        Me.ChBoxFzpSort.Name = "ChBoxFzpSort"
-        Me.ChBoxFzpSort.Size = New System.Drawing.Size(98, 17)
-        Me.ChBoxFzpSort.TabIndex = 0
-        Me.ChBoxFzpSort.Text = "Sort traffic data"
-        Me.ChBoxFzpSort.UseVisualStyleBackColor = True
-        '
-        'ChBoxFzpExport
-        '
-        Me.ChBoxFzpExport.AutoSize = True
-        Me.ChBoxFzpExport.Location = New System.Drawing.Point(35, 46)
-        Me.ChBoxFzpExport.Name = "ChBoxFzpExport"
-        Me.ChBoxFzpExport.Size = New System.Drawing.Size(141, 17)
-        Me.ChBoxFzpExport.TabIndex = 1
-        Me.ChBoxFzpExport.Text = "Export sorted traffic data"
-        Me.ChBoxFzpExport.UseVisualStyleBackColor = True
         '
         'GrBoxSTD
         '
@@ -588,10 +549,7 @@ Partial Class F_MAINForm
         '
         'PanelOptAllg
         '
-        Me.PanelOptAllg.Controls.Add(Me.Label1)
-        Me.PanelOptAllg.Controls.Add(Me.ChBoxCyclDistCor)
-        Me.PanelOptAllg.Controls.Add(Me.ChBoxUseGears)
-        Me.PanelOptAllg.Controls.Add(Me.CBoxMODE)
+        Me.PanelOptAllg.Controls.Add(Me.PnDeclOpt)
         Me.PanelOptAllg.Controls.Add(Me.ChBoxModOut)
         Me.PanelOptAllg.Location = New System.Drawing.Point(6, 6)
         Me.PanelOptAllg.Name = "PanelOptAllg"
@@ -601,7 +559,7 @@ Partial Class F_MAINForm
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(13, 14)
+        Me.Label1.Location = New System.Drawing.Point(5, 7)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(34, 13)
         Me.Label1.TabIndex = 1
@@ -610,7 +568,7 @@ Partial Class F_MAINForm
         'ChBoxCyclDistCor
         '
         Me.ChBoxCyclDistCor.AutoSize = True
-        Me.ChBoxCyclDistCor.Location = New System.Drawing.Point(14, 48)
+        Me.ChBoxCyclDistCor.Location = New System.Drawing.Point(6, 41)
         Me.ChBoxCyclDistCor.Name = "ChBoxCyclDistCor"
         Me.ChBoxCyclDistCor.Size = New System.Drawing.Size(148, 17)
         Me.ChBoxCyclDistCor.TabIndex = 0
@@ -620,7 +578,7 @@ Partial Class F_MAINForm
         'ChBoxUseGears
         '
         Me.ChBoxUseGears.AutoSize = True
-        Me.ChBoxUseGears.Location = New System.Drawing.Point(14, 71)
+        Me.ChBoxUseGears.Location = New System.Drawing.Point(6, 64)
         Me.ChBoxUseGears.Name = "ChBoxUseGears"
         Me.ChBoxUseGears.Size = New System.Drawing.Size(188, 17)
         Me.ChBoxUseGears.TabIndex = 0
@@ -633,7 +591,7 @@ Partial Class F_MAINForm
         Me.CBoxMODE.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CBoxMODE.FormattingEnabled = True
         Me.CBoxMODE.Items.AddRange(New Object() {"  STANDARD", "  BATCH"})
-        Me.CBoxMODE.Location = New System.Drawing.Point(53, 11)
+        Me.CBoxMODE.Location = New System.Drawing.Point(45, 4)
         Me.CBoxMODE.Name = "CBoxMODE"
         Me.CBoxMODE.Size = New System.Drawing.Size(105, 21)
         Me.CBoxMODE.TabIndex = 12
@@ -999,6 +957,17 @@ Partial Class F_MAINForm
         Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
+        'PnDeclOpt
+        '
+        Me.PnDeclOpt.Controls.Add(Me.Label1)
+        Me.PnDeclOpt.Controls.Add(Me.ChBoxCyclDistCor)
+        Me.PnDeclOpt.Controls.Add(Me.ChBoxUseGears)
+        Me.PnDeclOpt.Controls.Add(Me.CBoxMODE)
+        Me.PnDeclOpt.Location = New System.Drawing.Point(8, 7)
+        Me.PnDeclOpt.Name = "PnDeclOpt"
+        Me.PnDeclOpt.Size = New System.Drawing.Size(202, 93)
+        Me.PnDeclOpt.TabIndex = 13
+        '
         'F_MAINForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1021,8 +990,6 @@ Partial Class F_MAINForm
         Me.TabPageDRI.PerformLayout()
         Me.TabPgOptions.ResumeLayout(False)
         Me.TabPgOptions.PerformLayout()
-        Me.GrBoxADV.ResumeLayout(False)
-        Me.GrBoxADV.PerformLayout()
         Me.GrBoxBATCH.ResumeLayout(False)
         Me.GrBoxBATCH.PerformLayout()
         Me.PanelOptAllg.ResumeLayout(False)
@@ -1036,6 +1003,8 @@ Partial Class F_MAINForm
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.CmOpenFile.ResumeLayout(False)
+        Me.PnDeclOpt.ResumeLayout(False)
+        Me.PnDeclOpt.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1075,8 +1044,6 @@ Partial Class F_MAINForm
     Friend WithEvents ChBoxUseGears As System.Windows.Forms.CheckBox
     Friend WithEvents ChBoxCyclDistCor As System.Windows.Forms.CheckBox
     Friend WithEvents PanelOptAllg As System.Windows.Forms.Panel
-    Friend WithEvents ChBoxFzpExport As System.Windows.Forms.CheckBox
-    Friend WithEvents ChBoxFzpSort As System.Windows.Forms.CheckBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents LbAutoShDown As System.Windows.Forms.Label
     Friend WithEvents ChBoxAutoSD As System.Windows.Forms.CheckBox
@@ -1091,8 +1058,6 @@ Partial Class F_MAINForm
     Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
     Friend WithEvents GrBoxBATCH As System.Windows.Forms.GroupBox
-    Friend WithEvents GrBoxADV As System.Windows.Forms.GroupBox
-    Friend WithEvents GrBoxSTD As System.Windows.Forms.GroupBox
     Friend WithEvents TabPageDEV As System.Windows.Forms.TabPage
     Friend WithEvents LvDEVoptions As System.Windows.Forms.ListView
     Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
@@ -1137,5 +1102,7 @@ Partial Class F_MAINForm
     Friend WithEvents SupportToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents SignOrVerifyFilesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator6 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents GrBoxSTD As System.Windows.Forms.GroupBox
+    Friend WithEvents PnDeclOpt As System.Windows.Forms.Panel
 
 End Class

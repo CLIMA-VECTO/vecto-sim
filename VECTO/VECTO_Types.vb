@@ -48,45 +48,6 @@ Public Enum tJobStatus
     Undef
 End Enum
 
-
-
-Public Enum tEmNorm
-    x_h
-    x_hPnenn
-    x_kWh
-    x
-End Enum
-
-#Region "Input File Components"
-
-Public Enum tMapComp
-    FC
-    NOx
-    HC
-    CO
-    PM
-    PN
-    NO
-    MassFlow
-    ExhTemp
-    Lambda
-    TCdP2s
-    TCPneg3s
-    TCPpos3s
-    TCAmpl3s
-    TCLW3p3s
-    TCP40sABS
-    TCabsdn2s
-    TCP10sn10s3
-    TCdynV
-    TCdynAV
-    TCdynDAV
-    Undefined
-    Extrapol
-    Eta
-    Qp_coolant
-End Enum
-
 Public Enum tDriComp
     t
     V
@@ -104,26 +65,6 @@ Public Enum tDriComp
     Torque
 End Enum
 
-Public Enum tExsComp
-    Tgas
-    Undefined
-End Enum
-
-Public Enum tFldComp
-    PeTarget
-    PT1
-    Undefined
-End Enum
-
-#End Region
-
-Public Enum tIntpPeCorMode
-    PeCorOff
-    PeCorNull
-    PeCorEmDrag
-    PeCorNullPmin
-End Enum
-
 Public Enum tVehState
     Cruise
     Acc
@@ -138,6 +79,7 @@ Public Enum tEngState
     Load
     FullLoad
     Stopped
+    Undef
 End Enum
 
 Public Enum tEngClutch
@@ -171,17 +113,13 @@ Public Enum tGearbox
 End Enum
 
 
-
-
-#Region "VECTO Classifications"
-
-
 Public Enum tVehCat As Integer
-    Rigid = 0
+    RigidTruck = 0
     Tractor = 1
     Citybus = 2
     InterurbanBus = 3
     Coach = 4
+    Undef = 99
 End Enum
 
 Public Enum tAxleConf As Integer
@@ -194,68 +132,38 @@ Public Enum tAxleConf As Integer
     a8x4 = 6
     a8x6 = 7
     a8x8 = 8
+    Undef = 99
 End Enum
 
-Public Enum tVSUM
+Public Enum tLoading
     FullLoaded
     EmptyLoaded
     RefLoaded
     UserDefLoaded
 End Enum
 
-Public Enum tVECTOmode
-    Declaration
-    ProofOfConcept
-End Enum
-
 Public Enum tMission
-    LongHaul = 0
-    RegionalDelivery = 1
-    UrbanDelivery = 2
-    MunicipalUtility = 3
-    Construction = 4
-    HeavyUrban = 5
-    Urban = 6
-    Suburban = 7
-    Interurban = 8
-    Coach = 9
+    LongHaul
+    RegionalDelivery
+    UrbanDelivery
+    MunicipalUtility
+    Construction
+    HeavyUrban
+    Urban
+    Suburban
+    Interurban
+    Coach
+    Undef
 End Enum
 
-#End Region
-
-
-
-
-
-
-
-#Region "HEV"
-
-Public Enum tBatLvl
-    OK
-    Low
-    High
-    Full
-    Empty
-End Enum
-
-Public Enum tICElock
-    OnLock
-    OffLock
-    NoLock
-End Enum
-
-Public Enum tHEVparMode
-    Assist
-    LPI
-    EV
-    ICEonly
-    Rekup
-    Undefined
+Public Enum tWHTCpart
+    Urban
+    Rural
+    Motorway
 End Enum
 
 
-#End Region
+
 
 
 

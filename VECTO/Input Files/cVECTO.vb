@@ -1,6 +1,6 @@
 ﻿Imports System.Collections.Generic
 
-Public Class cGEN
+Public Class cVECTO
 
     Private Const FormatVersion As String = "1.0"
     Private FileVersion As String
@@ -25,8 +25,10 @@ Public Class cGEN
     Private laDesMin As List(Of Single)
     Private DesMaxDim As Integer
 
-    Public AuxPaths As Dictionary(Of String, cVEH.cAuxEntry)
+    Public AuxPaths As Dictionary(Of String, cAuxEntry)
+    Public AuxRefs As Dictionary(Of String, cAux)          'Alle Nebenverbraucher die in der Veh-Datei UND im Zyklus definiert sind
     Public AuxDef As Boolean                               'True wenn ein oder mehrere Nebenverbraucher definiert sind
+
 
     Public CycleFiles As List(Of cSubPath)
 
@@ -45,15 +47,19 @@ Public Class cGEN
 
     Private MyFileList As List(Of String)
 
-    Public Function CreateFileList() As Boolean
-        Dim Aux0 As cVEH.cAuxEntry
-        Dim sb As cSubPath
-        Dim VEH0 As cVEH
-        Dim ENG0 As cENG
-        Dim GBX0 As cGBX
-        Dim str As String
 
-        If Not Me.ReadFile Then Return False
+    Public Class cAuxEntry
+        Public Type As String
+        Public Path As cSubPath
+        Public Sub New()
+            Path = New cSubPath
+        End Sub
+    End Class
+
+    Public Function CreateFileList() As Boolean
+        Dim Aux0 As cAuxEntry
+        Dim sb As cSubPath
+        Dim str As String
 
         MyFileList = New List(Of String)
 
@@ -64,10 +70,8 @@ Public Class cGEN
         If Not Me.EngOnly Then
             MyFileList.Add(Me.PathVEH)
 
-            VEH0 = New cVEH
-            VEH0.FilePath = Me.PathVEH
-            If Not VEH0.CreateFileList Then Return False
-            For Each str In VEH0.FileList
+            If Not VEH.CreateFileList Then Return False
+            For Each str In VEH.FileList
                 MyFileList.Add(str)
             Next
         End If
@@ -75,10 +79,8 @@ Public Class cGEN
         'Eng
         MyFileList.Add(Me.PathENG)
 
-        ENG0 = New cENG
-        ENG0.FilePath = Me.PathENG
-        If Not ENG0.CreateFileList Then Return False
-        For Each str In ENG0.FileList
+        If Not ENG.CreateFileList Then Return False
+        For Each str In ENG.FileList
             MyFileList.Add(str)
         Next
 
@@ -87,10 +89,8 @@ Public Class cGEN
             'Gbx
             MyFileList.Add(Me.PathGBX)
 
-            GBX0 = New cGBX
-            GBX0.FilePath = Me.PathGBX
-            If Not GBX0.CreateFileList Then Return False
-            For Each str In GBX0.FileList
+            If Not GBX.CreateFileList Then Return False
+            For Each str In GBX.FileList
                 MyFileList.Add(str)
             Next
 
@@ -131,7 +131,8 @@ Public Class cGEN
         laDesMax = New List(Of Single)
         laDesMin = New List(Of Single)
 
-        AuxPaths = New Dictionary(Of String, cVEH.cAuxEntry)
+        AuxPaths = New Dictionary(Of String, cAuxEntry)
+        AuxRefs = New Dictionary(Of String, cAux)
         AuxDef = False
 
         CycleFiles = New List(Of cSubPath)
@@ -142,7 +143,7 @@ Public Class cGEN
         Dim file As cFile_V3
         Dim line As String()
         'Dim txt As String
-        Dim AuxEntry As cVEH.cAuxEntry
+        Dim AuxEntry As cAuxEntry
         Dim AuxID As String
         Dim MsgSrc As String
         Dim SubPath As cSubPath
@@ -314,7 +315,7 @@ Public Class cGEN
                 Return False
             End If
 
-            AuxEntry = New cVEH.cAuxEntry
+            AuxEntry = New cAuxEntry
 
             AuxEntry.Type = line(1)
             AuxEntry.Path.Init(MyPath, line(2))
@@ -390,251 +391,14 @@ lbEr:
 
     End Function
 
-    Private Function SaveFileOld() As Boolean
-        Dim fGEN As New cFile_V3
-        Dim AuxEntryKV As KeyValuePair(Of String, cVEH.cAuxEntry)
-        'Dim s As String
-        Dim sb As cSubPath
-
-        If Not fGEN.OpenWrite(sFilePath) Then Return False
-
-        'fGEN.WriteLine("V" & FormatVersion)
-
-        fGEN.WriteLine("c VECTO Input File")
-        fGEN.WriteLine("c VECTO " & VECTOvers)
-        fGEN.WriteLine("c " & Now.ToString)
-
-        'fGEN.WriteLine("c Heavy Duty (0) or Passenger Car (1)")
-        'fGEN.WriteLine(Math.Abs(CInt(boPKWja)))
-
-        'fGEN.WriteLine("c Transient emission correction (1/0)")
-        'fGEN.WriteLine(Math.Abs(CInt(bodynkorja)))
-
-        'fGEN.WriteLine("c Emission Class (EURO ..)")
-        'fGEN.WriteLine(ineklasse)
-
-        'fGEN.WriteLine("c Gear Shift Mode: NEDC (0), FTP (1), Model - MT (2)")
-        'fGEN.WriteLine(inizykwael)
-
-        'fGEN.WriteLine("c Calculation Mode, EngAnalysis, CreateMap")
-        'Select Case VehMode
-        '    Case tVehMode.StandardMode
-        '        s = "0"
-        '    Case tVehMode.EngineOnly
-        '        s = "1"
-        '    Case tVehMode.HEV
-        '        s = "2"
-        '    Case Else   'tVehMode.EV
-        '        s = "3"
-        'End Select
-        's &= "," & Math.Abs(CInt(EngAnalysis))
-        's &= "," & Math.Abs(CInt(CreateMap))
-        'fGEN.WriteLine(s)
-
-        'Map creation ------------------------------------------------ ------
-        'fGEN.WriteLine("c Settings for Emission Map Creation Mode:")
-        'fGEN.WriteLine("c Increment Pe, n:")
-        'fGEN.WriteLine(inPschrit & "," & innschrit)
-
-        'fGEN.WriteLine("c CutFull,CutDrag,InsertDrag,DragIntp:")
-        'fGEN.WriteLine(Math.Abs(CInt(bKFcutFull)) & "," & Math.Abs(CInt(bKFcutDrag)) & "," & Math.Abs(CInt(bKFinsertDrag)) & "," & Math.Abs(CInt(bKFDragIntp)))
-
-        'fGEN.WriteLine("c Include Gear Shifts (1/0, Standard = 1)")
-        'fGEN.WriteLine(Math.Abs(CInt(boMapSchaltja)))
-
-        'fGEN.WriteLine("c Averageing Period for Modal Values")
-        'fGEN.WriteLine(iniMsek)
-
-        'fGEN.WriteLine("c ICE Type (Otto = 1, Diesel = 0")
-        'fGEN.WriteLine(Math.Abs(CInt(boottoJa)))
-
-        'Kalt Start---------------------------------------------------------------
-        'fGEN.WriteLine("c Cold Start (1/0)")
-        'fGEN.WriteLine(Math.Abs(CInt(bokaltst1)))
-
-        'fGEN.WriteLine("c t cat start [°C]")
-        'fGEN.WriteLine(sitkat1)
-
-        'fGEN.WriteLine("c t coolant start [°C]")
-        'fGEN.WriteLine(sitkw1)
-
-        'fGEN.WriteLine("c time of start [h.sec]")
-        'fGEN.WriteLine(sihsstart)
-
-        'Dateien------------------------------------------------------------------
-        fGEN.WriteLine("c Vehicle (.vveh):")
-        fGEN.WriteLine(stPathVEH.PathOrDummy)
-
-        fGEN.WriteLine("c Engine (.veng):")
-        fGEN.WriteLine(stPathENG.PathOrDummy)
-
-        fGEN.WriteLine("c Gearbox (*.vgbx):")
-        fGEN.WriteLine(stPathGBX.PathOrDummy)
-
-        fGEN.WriteLine("c Driving Cycles (.vdri):")
-        For Each sb In CycleFiles
-            fGEN.WriteLine(sb.PathOrDummy)
-        Next
-        fGEN.WriteLine(sKey.Break)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing transient correction parameters (*.trs):")
-        'fGEN.WriteLine(stdynspez.PathOrDummy)
-
-        'Kalt Start
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the catalyst map (*.maa):")
-        'fGEN.WriteLine(stkatmap.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the map of cooling water (*.mac):")
-        'fGEN.WriteLine(stkwmap.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the catalyst warm-up (*.wua):")
-        'fGEN.WriteLine(stkatkurv.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the engine coolant warm-up (*.wuc):")
-        'fGEN.WriteLine(stkwkurv.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the cooling parameters for catalyst and engine coolant (*.cdw):")
-        'fGEN.WriteLine(stcooldown.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the ambient parameters (*.atc)")
-        'fGEN.WriteLine(sttumgebung.PathOrDummy)
-
-        'HEV
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing battery specifications for HEV (*.bat)")
-        'fGEN.WriteLine(stBatfile.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing specifications of the E-motor for HEV (*emo)")
-        'fGEN.WriteLine(stEmospez.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the pattern of E-motor on/off for HEV  (*ean)")
-        'fGEN.WriteLine(stEANfile.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the efficiency of additional gearbox for HEV (*get)")
-        'fGEN.WriteLine(stGetspez.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the control efficiency-File for HEV (*.ste)")
-        'fGEN.WriteLine(stSTEnam.PathOrDummy)
-
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c File containing the efficiency-maps for HEV-strategy control (*.ekf)")
-        'fGEN.WriteLine(stEKFnam.PathOrDummy)
-
-        'EXS
-        'fGEN.WriteLine("c ")
-        'fGEN.WriteLine("c Exhaust System Simulation (1/0)")
-        'fGEN.WriteLine(Math.Abs(CInt(boEXSja)))
-
-        'fGEN.WriteLine("c Exhaust System Simulation Configuration File")
-        'fGEN.WriteLine(stPathExs.PathOrDummy)
-
-        'SOC-Start Iteration
-        'fGEN.WriteLine("c SOC Start Iteration (1/0) - HEV only")
-        'fGEN.WriteLine(Math.Abs(CInt(boSOCnJa)))
-
-        ''SOC-Start
-        'fGEN.WriteLine("c SOC Start - (H)EV only")
-        'fGEN.WriteLine(siSOCstart)
-
-        ''Getriebe-Verluste-Modell
-        'fGEN.WriteLine("c Transmission Loss Model")
-        'fGEN.WriteLine(CStr(GetrMod))
-
-        'Coolantsim
-        'fGEN.WriteLine("c Coolant System Simulation (1/0)")
-        'fGEN.WriteLine(Math.Abs(CInt(CoolantsimJa)))
-        'fGEN.WriteLine("c Coolant System Simulation Configuration File")
-        'fGEN.WriteLine(stCoolantSimPath.PathOrDummy)
-
-        fGEN.WriteLine("c Auxiliaries (.vaux)")
-        For Each AuxEntryKV In AuxPaths
-            fGEN.WriteLine(Trim(UCase(AuxEntryKV.Key)) & "," & AuxEntryKV.Value.Type & "," & AuxEntryKV.Value.Path.PathOrDummy)
-        Next
-        fGEN.WriteLine(sKey.Break)
-
-        'a_DesMax
-        fGEN.WriteLine("c Speed Dependent Desired Acceleration and Braking (.vacc)")
-        'fGEN.WriteLine(Math.Abs(CInt(DesMaxJa)))
-        fGEN.WriteLine(stDesMaxFile.PathOrDummy)
-
-        'fGEN.WriteLine("c Gear shift behaviour:")
-        'fGEN.WriteLine("c Gearshift model (Version fast driver)")
-        'fGEN.WriteLine("c shift up at ratio rpm/rated rpm in actual gear greater than")
-        'fGEN.WriteLine(CStr(hinauf))
-        'fGEN.WriteLine("c shift down when rpm/rated rpm in lower gear is higher than")
-        'fGEN.WriteLine(CStr(hinunter))
-        'fGEN.WriteLine("c Gearshift model (Version economic driver)")
-        'fGEN.WriteLine("c shift up at ratio rpm/rated rpm in higher gear greater than")
-        'fGEN.WriteLine(CStr(lhinauf))
-        'fGEN.WriteLine("c Shift down when ratio rpm/rated rpm in actual gear is lower than")
-        'fGEN.WriteLine(CStr(lhinunter))
-        'fGEN.WriteLine("c Share of version economic driver (0 to 1)")
-        'fGEN.WriteLine(CStr(pspar))
-        'fGEN.WriteLine("c Share of version mixed model (0 to 1)")
-        'fGEN.WriteLine(CStr(pmodell))
-
-        fGEN.WriteLine("c Engine Only Mode (1/0)")
-        fGEN.WriteLine(CStr(Math.Abs(CInt(EngOnly))))
-
-        'Start/Stop
-        fGEN.WriteLine("c ICE Auto-Start/Stop (1/0)")
-        fGEN.WriteLine(Math.Abs(CInt(boStartStop)))
-        fGEN.WriteLine("c Start/Stop Max Speed [km/h]")
-        fGEN.WriteLine(siStStV)
-        fGEN.WriteLine("c Start/Stop Min ICE-On Time [s]")
-        fGEN.WriteLine(siStStT)
-
-
-        fGEN.WriteLine("c Look Ahead reference deceleration [m/s²]")
-        fGEN.WriteLine(CStr(a_lookahead))
-        fGEN.WriteLine("c Minimum target speed for Overspeed/Eco-Roll [km/h]")
-        fGEN.WriteLine(CStr(vMin))
-        fGEN.WriteLine("c Look-Ahead Coasting 1/0")
-        fGEN.WriteLine(CStr(Math.Abs(CInt(LookAheadOn))))
-        fGEN.WriteLine("c Overspeed 1/0")
-        fGEN.WriteLine(CStr(Math.Abs(CInt(OverSpeedOn))))
-        fGEN.WriteLine("c Eco-Roll 1/0")
-        fGEN.WriteLine(CStr(Math.Abs(CInt(EcoRollOn))))
-        fGEN.WriteLine("c Allowed OverSpeed [km/h]")
-        fGEN.WriteLine(CStr(OverSpeed))
-        fGEN.WriteLine("c Allowed UnderSpeed [km/h]")
-        fGEN.WriteLine(CStr(UnderSpeed))
-        fGEN.WriteLine("c Minimum target speed for Look-Ahead with Coasting [km/h]")
-        fGEN.WriteLine(CStr(vMinLA))
-
-
-        fGEN.WriteLine("c Start/Stop activation delay time [s]")
-        fGEN.WriteLine(StStDelay)
-
-
-        fGEN.Close()
-        fGEN = Nothing
-
-        Return True
-
-    End Function
-
     Public Function SaveFile() As Boolean
-        Dim AuxEntryKV As KeyValuePair(Of String, cVEH.cAuxEntry)
+        Dim AuxEntryKV As KeyValuePair(Of String, cAuxEntry)
         'Dim s As String
         Dim sb As cSubPath
         Dim JSON As New cJSON
         Dim ls As List(Of Object)
         Dim dic As Dictionary(Of String, Object)
         Dim dic0 As Dictionary(Of String, Object)
-
-        If Not Cfg.JSON Then Return SaveFileOld()
 
         'Header
         dic = New Dictionary(Of String, Object)
@@ -717,7 +481,7 @@ lbEr:
     End Function
 
     Public Function ReadFile() As Boolean
-        Dim AuxEntry As cVEH.cAuxEntry
+        Dim AuxEntry As cAuxEntry
         Dim AuxID As String
         Dim MsgSrc As String
         Dim SubPath As cSubPath
@@ -732,16 +496,8 @@ lbEr:
 
         SetDefault()
 
-        If Cfg.JSON Then
-            If Not JSON.ReadFile(sFilePath) Then
-                NoJSON = True
-                Try
-                    Return ReadFileOld()
-                Catch ex As Exception
-                    Return False
-                End Try
-            End If
-        Else
+        If Not JSON.ReadFile(sFilePath) Then
+            NoJSON = True
             Try
                 Return ReadFileOld()
             Catch ex As Exception
@@ -777,7 +533,7 @@ lbEr:
                         Return False
                     End If
 
-                    AuxEntry = New cVEH.cAuxEntry
+                    AuxEntry = New cAuxEntry
 
                     AuxEntry.Type = dic("Type")
                     AuxEntry.Path.Init(MyPath, dic("Path"))
@@ -873,6 +629,7 @@ lbEr:
         DesMaxDim = -1
 
         AuxPaths.Clear()
+        AuxRefs.Clear()
         AuxDef = False
 
         EngOnly = False
@@ -885,6 +642,42 @@ lbEr:
         OverSpeed = 0
         UnderSpeed = 0
         vMinLA = 0
+
+    End Sub
+
+    Public Sub DeclInit()
+        Dim cl As List(Of String)
+        Dim s As String
+        Dim SubPath As cSubPath
+
+        EngOnly = False
+
+        CycleFiles.Clear()
+
+        cl = Declaration.SegRef.GetCycles
+
+        For Each s In cl
+            SubPath = New cSubPath
+            SubPath.Init(MyPath, s)
+            CycleFiles.Add(SubPath)
+        Next
+
+        stDesMaxFile.Init(MyPath, Declaration.SegRef.VACCfile)
+
+        siStStV = cDeclaration.SSspeed
+        siStStT = cDeclaration.SStime
+        StStDelay = cDeclaration.SSdelay
+
+        If Not EcoRollOn Then OverSpeedOn = True
+
+        LookAheadOn = True
+        a_lookahead = cDeclaration.LACa
+        vMinLA = cDeclaration.LACvmin
+
+        'TODO: Aux
+        AuxDef = False  'TEST ONLY!!!
+
+
 
     End Sub
 
@@ -936,11 +729,143 @@ lbEr:
 
         End If
 
+        Return True
 
+    End Function
+
+#Region "Aux"
+
+    Public Function AuxInit() As Boolean
+
+        Dim Aux0 As cAux
+        Dim AuxPathKV As KeyValuePair(Of String, cAuxEntry)
+        Dim DRIauxcheck As New Dictionary(Of String, Boolean)
+        Dim AuxID As String
+
+        Dim MsgSrc As String
+
+        MsgSrc = "VEH/AuxInit"
+
+        AuxRefs = New Dictionary(Of String, cAux)
+
+        If DRI.AuxDef Xor AuxDef Then
+
+            If AuxDef Then
+                WorkerMsg(tMsgID.Err, "No auxiliary input defined in driving cycle!", MsgSrc)
+                Return False
+            Else
+                WorkerMsg(tMsgID.Warn, "No auxiliary defined in vehicle file! Psupply input will be ignored!", MsgSrc)
+                Return True
+            End If
+
+        End If
+
+        If Not (DRI.AuxDef Or AuxDef) Then Return True
+
+
+        For Each AuxID In DRI.AuxComponents.Keys
+            DRIauxcheck.Add(AuxID, False)
+        Next
+
+        For Each AuxPathKV In AuxPaths
+
+            MsgSrc = "VEH/AuxInit/" & AuxPathKV.Key
+
+            If Not DRI.AuxComponents.ContainsKey(AuxPathKV.Key) Then
+                WorkerMsg(tMsgID.Err, "No Psupply input defined in driving cycle for auxiliary '" & AuxPathKV.Key & "'!", MsgSrc)
+                Return False
+            End If
+
+            Aux0 = New cAux
+            Aux0.Filepath = AuxPathKV.Value.Path.FullPath
+
+            If Not Aux0.Readfile Then
+                'Notificationin ReadFile()
+                Return False
+            End If
+
+            AuxRefs.Add(AuxPathKV.Key, Aux0)
+
+            DRIauxcheck(AuxPathKV.Key) = True
+
+        Next
+
+        MsgSrc = "VEH/AuxInit"
+
+        For Each AuxID In DRI.AuxComponents.Keys
+            If Not DRIauxcheck(AuxID) Then WorkerMsg(tMsgID.Warn, "Auxiliary '" & AuxID & "' not found! Psupply input will be ignored!", MsgSrc)
+        Next
 
         Return True
 
     End Function
+
+    Public Function Paux(ByVal AuxID As String, ByVal t As Integer, ByVal nU As Single) As Single
+        Dim Psupply As Single
+        Dim Px As Single
+        Dim Aux0 As cAux
+
+        Dim MsgSrc As String
+
+        MsgSrc = "VEH/Paux"
+
+        If AuxDef Then
+
+            Aux0 = AuxRefs(AuxID)
+
+            Psupply = DRI.AuxComponents(AuxID)(t)
+
+            If Psupply < 0 Then GoTo lbAuxError
+
+            Px = Aux0.Paux(nU, Psupply)
+
+            If Px < 0 Then GoTo lbAuxError
+
+            Return Px
+
+        Else
+
+            Return 0
+
+        End If
+
+
+lbAuxError:
+        MODdata.ModErrors.AuxNegative = AuxID
+        Return 0
+
+
+    End Function
+
+    Public Function PauxSum(ByVal t As Integer, ByVal nU As Single) As Single
+        Dim sum As Single
+        Dim AuxID As String
+
+        Dim MsgSrc As String
+
+        MsgSrc = "VEH/Paux"
+
+        If AuxDef Then
+
+            sum = 0
+
+            For Each AuxID In AuxRefs.Keys
+
+                sum += Paux(AuxID, t, nU)
+
+            Next
+
+            Return sum
+
+        Else
+
+            Return 0
+
+        End If
+
+    End Function
+
+#End Region
 
 
 #Region "Properties"

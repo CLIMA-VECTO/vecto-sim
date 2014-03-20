@@ -84,7 +84,7 @@ Public Class cVh
             lV0.Add(DRI.Values(tDriComp.V)(MODdata.tDim + 1))
             If DRI.Scycle Then
                 For s = 0 To MODdata.tDim + 1
-                    lV0ogl.Add(CSng(DRI.VoglS(s)) / 3.6)
+                    lV0ogl.Add(CSng(DRI.VoglS(s)))
                 Next
             Else
                 lV0ogl.Add(DRI.Values(tDriComp.V)(MODdata.tDim + 1))
@@ -201,18 +201,6 @@ Public Class cVh
 
         End If
 
-        'Altitude / distance
-        L = DRI.Values(tDriComp.Alt)
-        lAlt0.Add(0)
-        ls0.Add(lV0(0))
-        For s = 1 To MODdata.tDim
-            If lV0(s) > 0 Then
-                ls0.Add(ls0(s - 1) + lV0(s))
-                lAlt0.Add(L(s))
-            End If
-        Next
-        iAltDim = ls0.Count - 1
-
         'Gear - not Averaged, rather Gear(t) = DRI.Gear(t)
         If DRI.Gvorg Then
             L = DRI.Values(tDriComp.Gears)
@@ -292,11 +280,11 @@ Public Class cVh
         v0plus = lV0(t + 1)
 
         v = (v0plus + lV0(t)) / 2
-        a0 = GEN.aDesMax(v)
+        a0 = VEC.aDesMax(v)
 
         v0plus = lV0(t) + a
         v = (v0plus + lV0(t)) / 2
-        a = GEN.aDesMax(v)
+        a = VEC.aDesMax(v)
 
         Do While Math.Abs(a - a0) > 0.0001
 
@@ -304,7 +292,7 @@ Public Class cVh
 
             v0plus = lV0(t) + a
             v = (v0plus + lV0(t)) / 2
-            a = GEN.aDesMax(v)
+            a = VEC.aDesMax(v)
 
         Loop
 
@@ -327,11 +315,11 @@ Public Class cVh
         v0 = lV0(t)
 
         v = (lV0(t + 1) + v0) / 2
-        a0 = GEN.aDesMin(v)
+        a0 = VEC.aDesMin(v)
 
         v0 = lV0(t + 1) - a
         v = (lV0(t + 1) + v0) / 2
-        a = GEN.aDesMin(v)
+        a = VEC.aDesMin(v)
 
         Do While Math.Abs(a - a0) > 0.0001
 
@@ -339,7 +327,7 @@ Public Class cVh
 
             v0 = lV0(t + 1) - a
             v = (lV0(t + 1) + v0) / 2
-            a = GEN.aDesMin(v)
+            a = VEC.aDesMin(v)
 
         Loop
 

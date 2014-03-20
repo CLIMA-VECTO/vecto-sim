@@ -7,7 +7,6 @@ Public Class cMOD
     Public dnUvorg As List(Of Single)
     Public tDim As Integer
     Public tDimOgl As Integer
-    Public Em As cEm
     Public Px As cPower
     Public Vh As cVh
     Public CylceKin As cCycleKin
@@ -28,6 +27,7 @@ Public Class cMOD
     Public PaEng As List(Of Single)
     Public PaGB As List(Of Single)
     Public Paux As Dictionary(Of String, List(Of Single))
+    Public Pclutch As List(Of Single)
     Public Grad As List(Of Single)
 
     Public EngState As List(Of tEngState)
@@ -41,6 +41,14 @@ Public Class cMOD
     Public TCMout As List(Of Single)
     Public TCnOut As List(Of Single)
 
+    'FC
+    Public FCerror As Boolean
+    Public lFC As List(Of Single)
+    Public FCavg As Single
+
+    Public CorrFactor As Single
+
+
 
     Private bInit As Boolean
 
@@ -51,7 +59,6 @@ Public Class cMOD
     Public Sub Init()
         Pe = New List(Of Single)
         nU = New List(Of Single)
-        Em = New cEm
         Px = New cPower
         Vh = New cVh
         CylceKin = New cCycleKin
@@ -69,6 +76,7 @@ Public Class cMOD
         PaEng = New List(Of Single)
         PaGB = New List(Of Single)
         Paux = New Dictionary(Of String, List(Of Single))
+        Pclutch = New List(Of Single)
         Grad = New List(Of Single)
 
         EngState = New List(Of tEngState)
@@ -81,17 +89,23 @@ Public Class cMOD
         TCMout = New List(Of Single)
         TCnOut = New List(Of Single)
 
-        Em.Init()
+        lFC = New List(Of Single)
+
+        FCerror = False
+
+
         Vh.Init()
         ModErrors = New cModErrors
+
+
         bInit = True
     End Sub
 
     Public Sub CleanUp()
         If bInit Then
-            Em.CleanUp()
+            lFC = Nothing
+
             Vh.CleanUp()
-            Em = Nothing
             Px = Nothing
             Vh = Nothing
             Pe = Nothing
@@ -110,6 +124,7 @@ Public Class cMOD
             PaEng = Nothing
             PaGB = Nothing
             Paux = Nothing
+            Pclutch = Nothing
             Grad = Nothing
 
             EngState = Nothing
@@ -129,18 +144,11 @@ Public Class cMOD
     End Sub
 
     Public Sub Duplicate(ByVal t As Integer)
-        Dim EmKV As KeyValuePair(Of String, cEmComp)
         Dim AuxKV As KeyValuePair(Of String, List(Of Single))
 
         If DRI.Nvorg Then
             nUvorg.Insert(t, nUvorg(t))
             dnUvorg.Insert(t, dnUvorg(t))
-        End If
-
-        If DRI.EmCompDef Then
-            For Each EmKV In DRI.EmComponents
-                EmKV.Value.RawVals.Insert(t, EmKV.Value.RawVals(t))
-            Next
         End If
 
         If DRI.AuxDef Then
@@ -152,18 +160,11 @@ Public Class cMOD
     End Sub
 
     Public Sub Cut(ByVal t As Integer)
-        Dim EmKV As KeyValuePair(Of String, cEmComp)
         Dim AuxKV As KeyValuePair(Of String, List(Of Single))
 
         If DRI.Nvorg Then
             nUvorg.RemoveAt(t)
             dnUvorg.RemoveAt(t)
-        End If
-
-        If DRI.EmCompDef Then
-            For Each EmKV In DRI.EmComponents
-                EmKV.Value.RawVals.RemoveAt(t)
-            Next
         End If
 
         If DRI.AuxDef Then
@@ -178,7 +179,7 @@ Public Class cMOD
 
     Public Sub CycleInit()
 
-        If GEN.EngOnly Then
+        If VEC.EngOnly Then
             EngCycleInit()
         Else
             VehCycleInit()
@@ -191,9 +192,6 @@ Public Class cMOD
     Private Sub VehCycleInit()
         Dim s As Integer
         Dim L As List(Of Double)
-        Dim EmKV As KeyValuePair(Of String, cEmComp)
-        Dim ExsKV As KeyValuePair(Of tExsComp, Dictionary(Of Short, List(Of Single)))
-        Dim Exs0 As List(Of Single)
         Dim AuxKV As KeyValuePair(Of String, List(Of Single))
 
         'Define Cycle-length (shorter by 1sec than original because of Interim-seconds)
@@ -222,26 +220,6 @@ Public Class cMOD
 
         End If
 
-        'Average EM-components (between-seconds) for KF-creation or Eng-Analysis
-        If DRI.EmCompDef Then
-            For Each EmKV In DRI.EmComponents
-                For s = 0 To tDim
-                    EmKV.Value.RawVals(s) = (EmKV.Value.RawVals(s + 1) + EmKV.Value.RawVals(s)) / 2
-                Next
-            Next
-        End If
-
-        'Specify average EXS
-        If DRI.ExsCompDef Then
-            For Each ExsKV In DRI.ExsComponents
-                For Each Exs0 In ExsKV.Value.Values
-                    For s = 0 To tDim
-                        Exs0(s) = (Exs0(s + 1) + Exs0(s)) / 2
-                    Next
-                Next
-            Next
-        End If
-
         'Specify average Aux and Aux-lists, when Au8x present in DRI and VEH
         If DRI.AuxDef Then
             For Each AuxKV In DRI.AuxComponents
@@ -250,7 +228,7 @@ Public Class cMOD
                     AuxKV.Value(s) = (AuxKV.Value(s + 1) + AuxKV.Value(s)) / 2
                 Next
 
-                If VEH.AuxPaths.ContainsKey(AuxKV.Key) Then MODdata.Paux.Add(AuxKV.Key, New List(Of Single))
+                If VEC.AuxPaths.ContainsKey(AuxKV.Key) Then MODdata.Paux.Add(AuxKV.Key, New List(Of Single))
 
             Next
         End If
@@ -292,6 +270,143 @@ Public Class cMOD
 
     End Sub
 
+
+
+    Public Sub FCcalc(ByVal WHTCcorrection As Boolean)
+        Dim v As Single
+        Dim i As Integer
+        Dim Result As Boolean
+        Dim x As Single
+        Dim sum As Double
+        Dim LostEnergy As Double
+        Dim EngOnTime As Integer
+        Dim AddEngLoad As Single
+        Dim info As cRegression.RegressionProcessInfo
+        Dim reg As cRegression
+        Dim rx As List(Of Double)
+        Dim ry As List(Of Double)
+        Dim rR2 As Single
+        Dim rA As Double
+        Dim rB As Double
+        Dim rSE As Double
+        Dim FCadd As Double
+        Dim PeAdd As Double
+
+        Dim MsgSrc As String
+
+        MsgSrc = "MAP/FC_Intp"
+
+        FCerror = False
+        Result = True
+        LostEnergy = 0
+        EngOnTime = 0
+        rx = New List(Of Double)
+        ry = New List(Of Double)
+
+        For i = 0 To MODdata.tDim
+
+            Select Case MODdata.EngState(i)
+
+                Case tEngState.Stopped
+
+                    lFC.Add(0)
+                    LostEnergy += MODdata.PauxSum(i) / 3600
+
+                Case Else   '<= Idle / Drag / FullLoad-Unterscheidung...?
+
+
+                    'Delaunay
+                    v = MAP.fFCdelaunay_Intp(MODdata.nU(i), MODdata.Pe(i))
+
+                    If v < 0 And v > -999 Then v = 0
+
+                    If Result Then
+                        If v < -999 Then Result = False
+                    End If
+                    lFC.Add(v)
+
+                    EngOnTime += 1
+                    rx.Add(MODdata.Pe(i))
+                    ry.Add(v)
+
+            End Select
+
+        Next
+
+        'Calc average FC
+        sum = 0
+        For Each x In lFC
+            sum += x
+        Next
+        FCavg = CSng(sum / lFC.Count)
+
+
+        'WHTC Correction
+        If Declaration.Active AndAlso WHTCcorrection Then
+            CorrFactor = Declaration.SegRef.WHTCWF(Declaration.CurrentMission.MissionID)(tWHTCpart.Urban) * ENG.WHTCurban / Declaration.WHTCresults(tWHTCpart.Urban) _
+                + Declaration.SegRef.WHTCWF(Declaration.CurrentMission.MissionID)(tWHTCpart.Rural) * ENG.WHTCrural / Declaration.WHTCresults(tWHTCpart.Rural) _
+                + Declaration.SegRef.WHTCWF(Declaration.CurrentMission.MissionID)(tWHTCpart.Motorway) * ENG.WHTCmw / Declaration.WHTCresults(tWHTCpart.Motorway)
+        End If
+
+
+        'Start/Stop-Aux - Correction
+        If Result AndAlso LostEnergy > 0 Then
+
+            WorkerMsg(tMsgID.Normal, "Correcting FC due to wrong aux energy balance during engine stop times", MsgSrc)
+            WorkerMsg(tMsgID.Normal, " > Error in aux energy balance: " & LostEnergy.ToString("0.000") & " [kWh]", MsgSrc)
+
+            If EngOnTime < 1 Then
+                WorkerMsg(tMsgID.Err, " > ERROR: Engine-On Time = 0!", MsgSrc)
+                FCerror = True
+                Exit Sub
+            End If
+
+            'Linear regression of FC=f(Pe)
+            reg = New cRegression
+
+            info = reg.Regress(rx.ToArray, ry.ToArray)
+            rR2 = info.PearsonsR ^ 2
+            rA = info.a
+            rB = info.b
+            rSE = info.StandardError
+
+            If rB <= 0 Then
+                WorkerMsg(tMsgID.Err, " > ERROR in linear regression ( b=" & rB & ")!", MsgSrc)
+                FCerror = True
+                Exit Sub
+            End If
+
+            'Additional engine load due to lost Aux energy: [kW] = [kWh]/[h]
+            AddEngLoad = LostEnergy / (EngOnTime / 3600)
+
+            WorkerMsg(tMsgID.Normal, " > Additional engine load: " & AddEngLoad.ToString("0.000") & " [kW]", MsgSrc)
+
+            FCadd = 0
+            For i = 0 To MODdata.tDim
+                If MODdata.EngState(i) <> tEngState.Stopped Then
+                    PeAdd = AddEngLoad + MODdata.Pbrake(i)
+                    If PeAdd > 0 Then
+                        FCadd += rB * PeAdd
+                    End If
+                End If
+            Next
+
+            FCadd /= EngOnTime '[g/h]
+
+            WorkerMsg(tMsgID.Normal, " > FC corrected from: " & FCavg.ToString("0.0") & " [g/h] to " & (FCavg + FCadd).ToString("0.0") & " [g/h]", MsgSrc)
+
+            'Correct FC to higher load
+            FCavg += FCadd
+
+
+        End If
+
+        If Not Result Then FCerror = True
+
+    End Sub
+
+
+
     Public Function Output() As Boolean
 
         Dim f As cFile_V3
@@ -306,8 +421,6 @@ Public Class cMOD
         Dim MsgSrc As String
         Dim tdelta As Single
 
-        Dim EmList As New List(Of String)
-        Dim Em0 As cEmComp
         Dim StrKey As String
 
         Dim AuxList As New List(Of String)
@@ -337,19 +450,15 @@ Public Class cMOD
         '*********** Settings **************
         Sepp = ","
         t1 = MODdata.tDim
-        If GEN.EngOnly Then
+        If VEC.EngOnly Then
             tdelta = 0
         Else
             tdelta = 0.5
         End If
 
 
-        '********** Key-Listen ************
-        For Each StrKey In Em.EmComp.Keys
-            EmList.Add(StrKey)
-        Next
-
-        For Each StrKey In VEH.AuxRefs.Keys     'Wenn Engine Only dann wird das garnicht verwendet
+        '********** Aux-List ************
+        For Each StrKey In VEC.AuxRefs.Keys     'Wenn Engine Only dann wird das garnicht verwendet
             AuxList.Add(StrKey)
         Next
 
@@ -369,10 +478,10 @@ Public Class cMOD
         s.Append("time")
         sU.Append("[s]")
 
-        If Not GEN.EngOnly Then
+        If Not VEC.EngOnly Then
 
             s.Append(",dist,v_act,v_targ,acc,grad")
-            sU.Append(",[km],[km/h],[km/h],[m/s^2],[%]")
+            sU.Append(",[m],[km/h],[km/h],[m/s^2],[%]")
             dist = 0
 
         End If
@@ -380,7 +489,7 @@ Public Class cMOD
         s.Append(",n,Tq_eng,Tq_clutch,Tq_full,Tq_drag,Pe_eng,Pe_full,Pe_drag,Pe_clutch,Pa Eng,Paux")
         sU.Append(",[1/min],[Nm],[Nm],[Nm],[Nm],[kW],[kW],[kW],[kW],[kW],[kW]")
 
-        If Not GEN.EngOnly Then
+        If Not VEC.EngOnly Then
 
             s.Append(",Gear,Ploss GB,Ploss Diff,Ploss Retarder,Pa GB,Pa Veh,Proll,Pair,Pgrad,Pwheel,Pbrake")
             sU.Append(",[-],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW]")
@@ -399,25 +508,14 @@ Public Class cMOD
         End If
 
 
-        For Each StrKey In EmList
+        'FC
+        s.Append(Sepp & "FC")
+        sU.Append(Sepp & "[g/h]")
 
-            Em0 = Em.EmComp(StrKey)
-
-            If Em0.WriteOutput Then
-                s.Append(Sepp & Em0.Name)
-                sU.Append(Sepp & Em0.Unit)
-            End If
-
-        Next
-
-
-        'Berechnete Dynamikparameter (Diff zu Kennfeld) |@@| Calculated dynamics parameters (Diff to Map)
-        'If TC.Calculated Then
-        '    For Each TcKey In TcList
-        '        s.Append(Sepp & fMapCompName(TcKey))
-        '        sU.Append(Sepp & "-")
-        '    Next
-        'End If
+        If Declaration.Active Then
+            s.Append(Sepp & "FC corrected")
+            sU.Append(Sepp & "[g/h]")
+        End If
 
 
         'Write to File
@@ -436,7 +534,7 @@ Public Class cMOD
             For t = 0 To t1
 
                 'Predefine Gear for FLD assignment
-                If GEN.EngOnly Then
+                If VEC.EngOnly Then
                     Gear = 0
                 Else
                     Gear = .Gear(t)
@@ -448,10 +546,10 @@ Public Class cMOD
                 'Time
                 s.Append(t + DRI.t0 + tdelta)
 
-                If Not GEN.EngOnly Then
+                If Not VEC.EngOnly Then
 
-                    'Strecke |@@| Route
-                    dist += .Vh.V(t) / 1000
+                    'distance
+                    dist += .Vh.V(t)
                     s.Append(Sepp & dist)
 
                     'Actual-speed.
@@ -472,23 +570,23 @@ Public Class cMOD
                 s.Append(Sepp & .nU(t))
 
                 If Math.Abs(2 * Math.PI * .nU(t) / 60) < 0.00001 Then
-                    s.Append(Sepp & "-" & Sepp & "-" & Sepp & "-" & Sepp & "-")
+                    s.Append(Sepp & "0" & Sepp & "0" & Sepp & "0" & Sepp & "0")
                 Else
 
                     'Torque
-                    s.Append(Sepp & 1000 * .Pe(t) / (2 * Math.PI * .nU(t) / 60))
+                    s.Append(Sepp & nPeToM(.nU(t), .Pe(t)))
 
                     'Torque at clutch
-                    s.Append(Sepp & 1000 * (.Pe(t) - .PaEng(t) - .PauxSum(t)) / (2 * Math.PI * .nU(t) / 60))
+                    s.Append(Sepp & nPeToM(.nU(t), .Pclutch(t)))
 
                     'Full-load and Drag torque
                     If .EngState(t) = tEngState.Stopped Then
-                        s.Append(Sepp & "-" & Sepp & "-")
+                        s.Append(Sepp & "0" & Sepp & "0")
                     Else
                         If t = 0 Then
-                            s.Append(Sepp & 1000 * FLD(Gear).Pfull(.nU(t)) / (2 * Math.PI * .nU(t) / 60) & Sepp & 1000 * FLD(Gear).Pdrag(.nU(t)) / (2 * Math.PI * .nU(t) / 60))
+                            s.Append(Sepp & nPeToM(.nU(t), FLD(Gear).Pfull(.nU(t))) & Sepp & nPeToM(.nU(t), FLD(Gear).Pdrag(.nU(t))))
                         Else
-                            s.Append(Sepp & 1000 * FLD(Gear).Pfull(.nU(t), .Pe(t - 1)) / (2 * Math.PI * .nU(t) / 60) & Sepp & 1000 * FLD(Gear).Pdrag(.nU(t)) / (2 * Math.PI * .nU(t) / 60))
+                            s.Append(Sepp & nPeToM(.nU(t), FLD(Gear).Pfull(.nU(t), .Pe(t - 1))) & Sepp & nPeToM(.nU(t), FLD(Gear).Pdrag(.nU(t))))
                         End If
                     End If
 
@@ -515,7 +613,7 @@ Public Class cMOD
                 End If
 
                 'Power at Clutch
-                s.Append(Sepp & .Pe(t) - .PaEng(t) - .PauxSum(t))
+                s.Append(Sepp & .Pclutch(t))
 
                 'PaEng
                 s.Append(Sepp & .PaEng(t))
@@ -525,7 +623,7 @@ Public Class cMOD
 
 
 
-                If Not GEN.EngOnly Then
+                If Not VEC.EngOnly Then
 
                     'Gear
                     s.Append(Sepp & .Gear(t))
@@ -570,31 +668,20 @@ Public Class cMOD
 
                 End If
 
-                'Final-emissions (tailpipe)
-                For Each StrKey In EmList
+                'FC
+                If .lFC(t) > -0.0001 Then
+                    s.Append(Sepp & .lFC(t))
+                Else
+                    s.Append(Sepp & "ERROR")
+                End If
 
-                    Em0 = .Em.EmComp(StrKey)
-
-                    If Em0.WriteOutput Then
-
-                        If Em0.FinalVals(t) > -0.0001 Then
-                            s.Append(Sepp & Em0.FinalVals(t))
-                        Else
-                            s.Append(Sepp & "ERROR")
-                        End If
-
+                If Declaration.Active Then
+                    If .lFC(t) > -0.0001 Then
+                        s.Append(Sepp & .lFC(t) * .CorrFactor)
+                    Else
+                        s.Append(Sepp & "ERROR")
                     End If
-
-                Next
-
-
-                'Calculated Dynamics-parameters (Diff from(zu) Map)
-                'If TC.Calculated Then
-                '    For Each TcKey In TcList
-                '        TC0 = MODdata.TC.TCcomponents(TcKey)
-                '        s.Append(Sepp & TC0(t))
-                '    Next
-                'End If
+                End If
 
                 'Write to File
                 f.WriteLine(s.ToString)
@@ -621,7 +708,6 @@ Public Class cMOD
         Public CdExtrapol As String
         Public RtExtrapol As String
         Public DesMaxExtr As String
-        Public GSextrapol As String
         Public TCextrapol As String
 
         Public Sub New()
@@ -650,7 +736,6 @@ Public Class cMOD
         Public Sub GeschRedReset()
             CdExtrapol = ""
             RtExtrapol = ""
-            GSextrapol = ""
             TCextrapol = ""
             PxReset()
         End Sub
@@ -696,10 +781,6 @@ Public Class cMOD
 
             If RtExtrapol <> "" Then
                 WorkerMsg(tMsgID.Warn, "Extrapolation in Retarder input file (" & RtExtrapol & ")!", MsgSrc & "/t= " & Second)
-            End If
-
-            If GSextrapol <> "" Then
-                WorkerMsg(tMsgID.Warn, "Extrapolation in Gear Shift Polygon file (" & GSextrapol & ")!", MsgSrc & "/t= " & Second)
             End If
 
             If TCextrapol <> "" Then

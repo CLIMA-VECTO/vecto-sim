@@ -7,12 +7,11 @@ Public Class cENG
 
     Public ModelName As String
     Public Displ As Single
-    Public nleerl As Single
+    Public Nidle As Single
     Public I_mot As Single
 
     Public fFLD As List(Of cSubPath)
     Private fMAP As cSubPath
-    Private fWHTC As cSubPath
     Public FLDgears As List(Of String)
 
     Private MyPath As String
@@ -21,12 +20,19 @@ Public Class cENG
     Public NoJSON As Boolean
 
     Private MyFileList As List(Of String)
+    Public WHTCurban As Single
+    Public WHTCrural As Single
+    Public WHTCmw As Single
+
+    Public Nrated As Single
+    Public Nlo As Single
+    Public Npref As Single
+    Public N95h As Single
+    Public Nhi As Single
 
 
     Public Function CreateFileList() As Boolean
         Dim sb As cSubPath
-
-        If Not Me.ReadFile Then Return False
 
         MyFileList = New List(Of String)
 
@@ -46,69 +52,27 @@ Public Class cENG
         MyPath = ""
         sFilePath = ""
         fMAP = New cSubPath
-        fWHTC = New cSubPath
         SetDefault()
     End Sub
 
     Private Sub SetDefault()
         ModelName = "Undefined"
         Displ = 0
-        nleerl = 0
+        Nidle = 0
         I_mot = 0
+        Nrated = 0
 
         fFLD = New List(Of cSubPath)
         FLDgears = New List(Of String)
 
         fMAP.Clear()
-        fWHTC.Clear()
+
+        WHTCurban = 0
+        WHTCrural = 0
+        WHTCmw = 0
+
+
     End Sub
-
-    Private Function SaveFileOld() As Boolean
-        Dim file As cFile_V3
-        Dim i As Integer
-
-        If sFilePath = "" Then Return False
-
-        file = New cFile_V3
-
-        If Not file.OpenWrite(sFilePath) Then Return False
-
-        file.WriteLine("c VECTO Engine Input File")
-        file.WriteLine("c VECTO " & VECTOvers)
-        file.WriteLine("c " & Now.ToString)
-
-        If Trim(ModelName) = "" Then ModelName = "Undefined"
-
-        file.WriteLine("c Make & Model")
-        file.WriteLine(ModelName.Replace(",", "\c\"))
-        file.WriteLine("c NOT USED")
-        file.WriteLine("0")
-        file.WriteLine("c Displacement [ccm]")
-        file.WriteLine(Displ.ToString)
-        file.WriteLine("c NOT USED")
-        file.WriteLine("0")
-        file.WriteLine("c Idling speed [rpm]")
-        file.WriteLine(nleerl.ToString)
-        file.WriteLine("c Inertia [kgm2]")
-        file.WriteLine(I_mot.ToString)
-
-        file.WriteLine("c Full load curves")
-        For i = 0 To fFLD.Count - 1
-            file.WriteLine(fFLD(i).PathOrDummy, FLDgears(i))
-        Next
-
-        file.WriteLine(sKey.Break)
-
-        file.WriteLine("c Fuel map")
-        file.WriteLine(fMAP.PathOrDummy)
-        file.WriteLine("c WHTC test results")
-        file.WriteLine(fWHTC.PathOrDummy)
-
-        file.Close()
-
-        Return True
-
-    End Function
 
     Private Function ReadFileOld() As Boolean
         Dim MsgSrc As String
@@ -140,7 +104,7 @@ Public Class cENG
             file.ReadLine()  'NOT USED (Pnenn)
             Displ = CSng(file.ReadLine(0))
             file.ReadLine()  'NOT USED (nnenn)
-            nleerl = CSng(file.ReadLine(0))
+            Nidle = CSng(file.ReadLine(0))
             I_mot = CSng(file.ReadLine(0))
 
 
@@ -168,7 +132,6 @@ Public Class cENG
             Loop
 
             fMAP.Init(MyPath, file.ReadLine(0))
-            fWHTC.Init(MyPath, file.ReadLine(0))
         Catch ex As Exception
             WorkerMsg(tMsgID.Err, ex.Message, MsgSrc)
             file.Close()
@@ -188,8 +151,6 @@ Public Class cENG
         Dim dic0 As Dictionary(Of String, Object)
         Dim ls As List(Of Object)
 
-        If Not Cfg.JSON Then Return SaveFileOld()
-
         'Header
         dic = New Dictionary(Of String, Object)
         dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
@@ -204,7 +165,7 @@ Public Class cENG
         dic.Add("ModelName", ModelName)
 
         dic.Add("Displacement", Displ)
-        dic.Add("IdlingSpeed", nleerl)
+        dic.Add("IdlingSpeed", Nidle)
         dic.Add("Inertia", I_mot)
 
         ls = New List(Of Object)
@@ -217,10 +178,15 @@ Public Class cENG
         dic.Add("FullLoadCurves", ls)
 
         dic.Add("FuelMap", fMAP.PathOrDummy)
-        dic.Add("WHTCresults", fWHTC.PathOrDummy)
+
+        dic.Add("WHTC-Urban", WHTCurban)
+        dic.Add("WHTC-Rural", WHTCrural)
+        dic.Add("WHTC-Motorway", WHTCmw)
+
 
         JSON.Content.Add("Body", dic)
-   
+
+
         Return JSON.WriteFile(sFilePath)
 
 
@@ -239,16 +205,9 @@ Public Class cENG
 
         SetDefault()
 
-        If Cfg.JSON Then
-            If Not JSON.ReadFile(sFilePath) Then
-                NoJSON = True
-                Try
-                    Return ReadFileOld()
-                Catch ex As Exception
-                    Return False
-                End Try
-            End If
-        Else
+
+        If Not JSON.ReadFile(sFilePath) Then
+            NoJSON = True
             Try
                 Return ReadFileOld()
             Catch ex As Exception
@@ -263,7 +222,7 @@ Public Class cENG
             ModelName = JSON.Content("Body")("ModelName")
 
             Displ = JSON.Content("Body")("Displacement")
-            nleerl = JSON.Content("Body")("IdlingSpeed")
+            Nidle = JSON.Content("Body")("IdlingSpeed")
             I_mot = JSON.Content("Body")("Inertia")
 
             i = -1
@@ -275,7 +234,12 @@ Public Class cENG
             Next
 
             fMAP.Init(MyPath, JSON.Content("Body")("FuelMap"))
-            fWHTC.Init(MyPath, JSON.Content("Body")("WHTCresults"))
+
+            If Not JSON.Content("Body")("WHTC-Urban") Is Nothing Then
+                WHTCurban = CSng(JSON.Content("Body")("WHTC-Urban"))
+                WHTCrural = CSng(JSON.Content("Body")("WHTC-Rural"))
+                WHTCmw = CSng(JSON.Content("Body")("WHTC-Motorway"))
+            End If
 
         Catch ex As Exception
             WorkerMsg(tMsgID.Err, "Failed to read VECTO file! " & ex.Message, MsgSrc)
@@ -286,7 +250,127 @@ Public Class cENG
 
     End Function
 
+    Public Function Init() As Boolean
+        Dim Pmax As Single
+        Dim fl As cFLD
+        Dim fldgear As Dictionary(Of Integer, String)
+        Dim fldgFromTo As String()
+        Dim str As String
+        Dim i As Integer
+        Dim j As Integer
+        Dim nr As Single
 
+        Dim MsgSrc As String
+        MsgSrc = "ENG/Init"
+
+        'Read FLDs and MAP
+        FLD = New List(Of cFLD)
+
+        If FLDgears.Count = 0 Then
+            WorkerMsg(tMsgID.Err, "No .vfld file defined in Engine file!", MsgSrc, "<GUI>" & sFilePath)
+            Return False
+        End If
+
+        fldgear = New Dictionary(Of Integer, String)
+
+        Try
+            j = -1
+            For Each str In FLDgears
+
+                j += 1
+                If str.Contains("-") Then
+                    fldgFromTo = str.Replace(" ", "").Split("-")
+                Else
+                    fldgFromTo = New String() {str, str}
+                End If
+
+                For i = CInt(fldgFromTo(0)) To CInt(fldgFromTo(1))
+
+                    If i > GBX.GearCount Then Exit For
+
+                    If i < 0 Or i > 99 Then
+                        WorkerMsg(tMsgID.Err, "Cannot assign .vfld file to gear " & i & "!", MsgSrc, "<GUI>" & sFilePath)
+                        Return False
+                    End If
+
+                    If fldgear.ContainsKey(i) Then
+                        WorkerMsg(tMsgID.Err, "Multiple .vfld files are assigned to gear " & i & "!", MsgSrc, "<GUI>" & sFilePath)
+                        Return False
+                    End If
+
+                    fldgear.Add(i, PathFLD(j))
+
+                Next
+
+            Next
+        Catch ex As Exception
+            WorkerMsg(tMsgID.Err, "Failed to process engine file '" & sFilePath & "'!", MsgSrc)
+            Return False
+        End Try
+
+
+        For i = 0 To GBX.GearCount
+
+            If Not fldgear.ContainsKey(i) Then
+                WorkerMsg(tMsgID.Err, "No .vfld file assigned to gear " & i & "!", MsgSrc, "<GUI>" & sFilePath)
+                Return False
+            End If
+
+            FLD.Add(New cFLD)
+            FLD(i).FilePath = fldgear(i)
+
+            Try
+                If Not FLD(i).ReadFile Then Return False 'Fehlermeldung hier nicht notwendig weil schon von in ReadFile
+            Catch ex As Exception
+                WorkerMsg(tMsgID.Err, "File read error! (" & fldgear(i) & ")", MsgSrc, fldgear(i))
+                Return False
+            End Try
+
+        Next
+
+        'Kennfeld read
+        MAP = New cMAP
+        MAP.FilePath = PathMAP
+
+        Try
+            If Not MAP.ReadFile Then Return False 'Fehlermeldung hier nicht notwendig weil schon von in ReadFile
+        Catch ex As Exception
+            WorkerMsg(tMsgID.Err, "File read error! (" & PathMAP & ")", MsgSrc, PathMAP)
+            Return False
+        End Try
+
+        'Normalize
+        MAP.Norm()
+
+        Nrated = 0
+        For Each fl In FLD
+            nr = fl.fnUrated
+            If Nrated < nr Then Nrated = nr
+        Next
+
+        'Special rpms for Shift Model
+        fl = FLD(FLD.Count - 1)
+
+        Pmax = fl.Pfull(fl.fnUrated)
+
+        Nlo = fl.fnUofPfull(0.55 * Pmax, True)
+
+        N95h = fl.fnUofPfull(0.95 * Pmax, False)
+
+        Npref = fl.Npref
+
+        Nhi = fl.fnUofPfull(0.7 * Pmax, False)
+
+
+        Return True
+
+    End Function
+
+    Public Sub DeclInit()
+
+        I_mot = Declaration.GetEngInertia(Displ)
+
+    End Sub
 
     Public ReadOnly Property FileList As List(Of String)
         Get
@@ -329,19 +413,5 @@ Public Class cENG
             fMAP.Init(MyPath, value)
         End Set
     End Property
-
-    Public Property PathWHTC(Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return fWHTC.OriginalPath
-            Else
-                Return fWHTC.FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            fWHTC.Init(MyPath, value)
-        End Set
-    End Property
-
 
 End Class

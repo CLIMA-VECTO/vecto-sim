@@ -19,20 +19,7 @@ Public Class cDRI
     Public Gvorg As Boolean
     Public GradVorg As Boolean
 
-    Private bEmCompDef As Boolean
-    Public EmComponents As Dictionary(Of String, cEmComp)
-    Public EmDefRef As Dictionary(Of tMapComp, cEmComp)
-
-    'Defaults(Vorgabe) for EXS
-    Private bExsCompDef As Boolean
-    Public ExsComponents As Dictionary(Of tExsComp, Dictionary(Of Short, List(Of Single)))
-
-    'Parameters for KF-creation
-    Public MapUnitsNormed As Dictionary(Of String, Boolean)
-    Public MapPfak As Dictionary(Of String, tIntpPeCorMode)
-    Private bCreateMapParDef As Boolean
-
-    'Defaults(Vorgabe) for AUX
+    'Aux-Psupply
     Private bAuxDef As Boolean
     Public AuxComponents As Dictionary(Of String, List(Of Single))
 
@@ -40,11 +27,6 @@ Public Class cDRI
 
     Public Scycle As Boolean
     Public VoglS As List(Of Double)
-
-    Public Sub New()
-        EmComponents = New Dictionary(Of String, cEmComp)
-        EmDefRef = New Dictionary(Of tMapComp, cEmComp)
-    End Sub
 
     Private Sub ResetMe()
         Values = Nothing
@@ -57,14 +39,6 @@ Public Class cDRI
         Pvorg = False
         tDim = -1
         t0 = 1  'Ist Standardwert falls Converter nicht verwendet wird
-        EmComponents.Clear()
-        bEmCompDef = False
-        EmDefRef.Clear()
-        MapUnitsNormed = Nothing
-        MapPfak = Nothing
-        bExsCompDef = False
-        ExsComponents = Nothing
-        bCreateMapParDef = False
         bAuxDef = False
         AuxComponents = Nothing
         VairVorg = False
@@ -78,20 +52,13 @@ Public Class cDRI
         Dim s As Integer
         Dim txt As String
         Dim Comp As tDriComp
-        Dim ExsComp As tExsComp
         Dim AuxComp As tAuxComp
         Dim AuxID As String
-        Dim MapComp As tMapComp
-        Dim Em0 As cEmComp
-        Dim ModNr As Short
         Dim Svorg As Boolean = False
 
         Dim DRIcheck As Dictionary(Of tDriComp, Boolean)
         Dim Spalten As Dictionary(Of tDriComp, Integer)
         Dim sKV As KeyValuePair(Of tDriComp, Integer)
-
-        Dim ExsSpalten As Dictionary(Of Integer, List(Of Single)) = Nothing
-        Dim ExsKV As KeyValuePair(Of Integer, List(Of Single))
 
         Dim AuxSpalten As Dictionary(Of String, Integer) = Nothing
         Dim Mvorg As Boolean = False
@@ -100,10 +67,8 @@ Public Class cDRI
         Dim MsgSrc As String
 
 
-
         MsgSrc = "Main/ReadInp/DRI"
 
-        bCreateMapParDef = False
 
         'Reset
         ResetMe()
@@ -139,41 +104,6 @@ Public Class cDRI
         DRIcheck.Add(tDriComp.StopTime, False)
         DRIcheck.Add(tDriComp.Torque, False)
 
-        ''***
-        ''*** First line: Version
-        'line = file.ReadLine
-        'txt = Trim(UCase(line(0)))
-        'If Microsoft.VisualBasic.Left(txt, 1) = "V" Then
-        '    ' "V" entfernen => Zahl bleibt übrig
-        '    txt = txt.Replace("V", "")
-        '    If Not IsNumeric(txt) Then
-        '        'If invalid Version: Abort
-        '        WorkerMsg(tMsgID.Err, "File Version invalid!", MsgSrc)
-        '        GoTo lbEr
-        '    Else
-        '        'Version specified
-        '        FileVersion = CInt(txt)
-        '    End If
-        'Else
-        '    'If no version information: Old Format
-        '    file.Close()
-        '    Return ReadOldFormat()
-        'End If
-
-        ''Version Check: Abort if input file format is newer than PHEM-version
-        'If FileVersion > FormatVersion Then
-        '    WorkerMsg(tMsgID.Err, "File Version not supported!", MsgSrc)
-        '    GoTo lbEr
-        'End If
-
-        ''Column 2: added option "+" = parameter for KF-creation
-        'If UBound(line) > 0 Then
-        '    If Trim(line(1)) = "+" Then
-        '        bCreateMapParDef = True
-        '        WorkerMsg(tMsgID.Normal, "MAP-Creation settings found.", MsgSrc)
-        '    End If
-        'End If
-
         If file.EndOfFile Then
             WorkerMsg(tMsgID.Err, "Driving cycle invalid!", MsgSrc)
             Return False
@@ -196,98 +126,36 @@ Public Class cDRI
             'Falls DRIcomp = Undefined dann wirds als EXS-Comp oder als Emission für KF-Erstellung / Eng-Analysis verwendet |@@| If used DRIcomp = Undefined it will get as EXS-Comp or Emission for KF-Creation / Eng-Analysis
             If Comp = tDriComp.Undefined Then
 
-                ExsComp = fExsComp(line(s))
+                AuxComp = fAuxComp(line(s))
 
-                If ExsComp = tExsComp.Undefined Then
+                If AuxComp = tAuxComp.Undefined Then
 
-                    AuxComp = fAuxComp(line(s))
-
-                    If AuxComp = tAuxComp.Undefined Then
-
-                        MapComp = fMapComp(line(s))
-
-                        txt = UCase(Trim(line(s)))
-
-                        If EmComponents.ContainsKey(txt) Then
-                            WorkerMsg(tMsgID.Err, "Multiple definitions of '" & line(s) & "'! Column " & s + 1, MsgSrc)
-                            GoTo lbEr
-                        End If
-
-                        Em0 = New cEmComp
-                        Em0.Col = s
-                        Em0.Name = line(s)  'wird bei Def-Komp noch geändert
-                        Em0.IDstring = txt
-                        Em0.MapCompID = MapComp
-
-                        If MapComp <> tMapComp.Undefined Then
-                            Em0.Name = fMapCompName(MapComp)
-                            EmDefRef.Add(MapComp, Em0)
-                        End If
-
-                        EmComponents.Add(Em0.IDstring, Em0)
-
-                        bEmCompDef = True
-
-                        'ERROR when component in angle brackets is unknown
-                        If MapComp = tMapComp.Undefined And Em0.IDstring.Length > 1 Then
-                            If Left(Em0.IDstring, 1) = "<" And Right(Em0.IDstring, 1) = ">" Then
-                                WorkerMsg(tMsgID.Err, "'" & Em0.Name & "' is no valid Default Map, Cycle or EXS Component!", MsgSrc)
-                            End If
-                        End If
-
-                    Else
-
-                        txt = fCompSubStr(line(s))
-
-                        If Not bAuxDef Then
-                            AuxComponents = New Dictionary(Of String, List(Of Single))
-                            AuxSpalten = New Dictionary(Of String, Integer)
-                        End If
-
-                        If AuxComponents.ContainsKey(txt) Then
-                            WorkerMsg(tMsgID.Err, "Multiple definitions of auxiliary '" & txt & "' in driving cycle! Column " & s + 1, MsgSrc)
-                            GoTo lbEr
-                        End If
-
-                        AuxComponents.Add(txt, New List(Of Single))
-                        AuxSpalten.Add(txt, s)
-
-                        bAuxDef = True
-
-                    End If
+                    'ERROR when component is unknown
+                    WorkerMsg(tMsgID.Err, "'" & line(s) & "' is no valid cycle input parameter!", MsgSrc)
+                    GoTo lbEr
 
                 Else
 
-                    'if first EXS-column, then create Dictionary
-                    If Not bExsCompDef Then
-                        ExsSpalten = New Dictionary(Of Integer, List(Of Single))
-                        ExsComponents = New Dictionary(Of tExsComp, Dictionary(Of Short, List(Of Single)))
-                    End If
-
-                    'If EXS-Component not yet in Dictionary, create
-                    If Not ExsComponents.ContainsKey(ExsComp) Then ExsComponents.Add(ExsComp, New Dictionary(Of Short, List(Of Single)))
-
                     txt = fCompSubStr(line(s))
 
-                    If Not IsNumeric(txt) Then
-                        WorkerMsg(tMsgID.Err, "Component ID String '" & line(s) & "' is invalid! Column " & s + 1, MsgSrc)
-                        GoTo lbEr
-                    Else
-                        ModNr = CShort(txt)
+                    If Not bAuxDef Then
+                        AuxComponents = New Dictionary(Of String, List(Of Single))
+                        AuxSpalten = New Dictionary(Of String, Integer)
                     End If
 
-                    'Check whether ExsComp/Module-combination already exists => ERROR
-                    If ExsComponents(ExsComp).ContainsKey(ModNr) Then
-                        WorkerMsg(tMsgID.Err, "Component '" & line(s) & "' already defined! Column " & s + 1, MsgSrc)
+                    If AuxComponents.ContainsKey(txt) Then
+                        WorkerMsg(tMsgID.Err, "Multiple definitions of auxiliary '" & txt & "' in driving cycle! Column " & s + 1, MsgSrc)
                         GoTo lbEr
                     End If
 
-                    ExsComponents(ExsComp).Add(ModNr, New List(Of Single))
-                    ExsSpalten.Add(s, ExsComponents(ExsComp)(ModNr))
+                    AuxComponents.Add(txt, New List(Of Single))
+                    AuxSpalten.Add(txt, s)
 
-                    bExsCompDef = True
+                    bAuxDef = True
 
                 End If
+
+
 
             Else
 
@@ -321,88 +189,7 @@ Public Class cDRI
             Mvorg = False
         End If
 
-        '***
-        '*** Third row: Units/Normalization
-        'VECTO: nothing read. Fixed Units (line = file.ReadLine)
 
-        'VECTO MAP-components: Always [g/h]!
-        For Each Em0 In EmComponents.Values
-
-            ''Store Unit in String for further checks
-            'txt = Trim(line(Em0.Col))
-
-            ''Remove brackets
-            'txt = txt.Replace("[", "")
-            'txt = txt.Replace("]", "")
-
-            ''Set Scaling and Unit
-            'If txt.Contains("/") Then
-
-
-            '    Select Case UCase(Right(txt, txt.Length - txt.IndexOf("/") - 1))
-            '        Case "KWH", "H" & sKey.Normed
-            '            WorkerMsg(tMsgID.Warn, "Unit of component " & line(s) & " is not valid! Check Output!", MsgSrc)
-            '            Em0.NormID = tEmNorm.x
-            '            Em0.Unit = "Unit-ERROR!"
-
-            '        Case "H"
-            '            Em0.NormID = tEmNorm.x_h
-            '            Em0.Unit = "[" & Left(txt, txt.IndexOf("/")) & "/h]"
-
-            '        Case Else
-            '            Em0.NormID = tEmNorm.x
-            '            Em0.Unit = "[" & txt & "]"
-
-            '    End Select
-
-            'Else
-            '    Em0.NormID = tEmNorm.x
-            '    Em0.Unit = "[" & txt & "]"
-            'End If
-
-            Em0.NormID = tEmNorm.x_h
-            Em0.Unit = "[g/h]"
-
-        Next
-
-        '***
-        '*** Line 4, 5: (optional when "+"): Settings for KF-creation
-
-        'If "+" enabled
-        If bCreateMapParDef Then
-
-            'Creating instances
-            MapUnitsNormed = New Dictionary(Of String, Boolean)
-            MapPfak = New Dictionary(Of String, tIntpPeCorMode)
-
-            '1. Option "Map normalized by Pnom"
-            line = file.ReadLine
-            For Each Em0 In EmComponents.Values
-                MapUnitsNormed.Add(Em0.IDstring, CBool(line(Em0.Col)))
-            Next
-
-            '2. Option "PfAK apply"
-            line = file.ReadLine
-            For Each Em0 In EmComponents.Values
-
-                Select Case CShort(line(Em0.Col))
-                    Case 0
-                        MapPfak.Add(Em0.IDstring, tIntpPeCorMode.PeCorOff)
-                    Case 1
-                        MapPfak.Add(Em0.IDstring, tIntpPeCorMode.PeCorNull)
-                    Case 2
-                        MapPfak.Add(Em0.IDstring, tIntpPeCorMode.PeCorEmDrag)
-                    Case Else
-                        WorkerMsg(tMsgID.Err, "Power Correction Mode Nr. " & line(Em0.Col) & " is invalid!", MsgSrc)
-                        GoTo lbEr
-                End Select
-
-            Next
-
-        End If
-
-        '***
-        '*** Ab 4.Zeile bzw. Ab 6.Zeile: Werte (derzeit keine unterschiedlichen Einheiten/Normierungen unterstützt) |@@| From 4th line or From 6th line: values (no different units/normalizations support)
         Try
             Do While Not file.EndOfFile
                 tDim += 1       'wird in ResetMe zurück gesetzt
@@ -411,21 +198,11 @@ Public Class cDRI
                 For Each sKV In Spalten
 
                     If sKV.Key = tDriComp.Pe Or sKV.Key = tDriComp.Torque Then
-                        If Trim(line(sKV.Value)) = sKey.MAP.Drag Then line(sKV.Value) = -999999
+                        If Trim(line(sKV.Value)) = sKey.EngDrag Then line(sKV.Value) = -999999
                     End If
 
                     Values(sKV.Key).Add(CDbl(line(sKV.Value)))
                 Next
-
-                For Each Em0 In EmComponents.Values
-                    Em0.RawVals.Add(CSng(line(Em0.Col)))
-                Next
-
-                If bExsCompDef Then
-                    For Each ExsKV In ExsSpalten
-                        ExsKV.Value.Add(CSng(line(ExsKV.Key)))
-                    Next
-                End If
 
                 If bAuxDef Then
                     For Each AuxID In AuxSpalten.Keys
@@ -447,7 +224,8 @@ Public Class cDRI
 
         If Vvorg Then
             For s = 0 To tDim
-                If Values(tDriComp.V)(s) < 0.09 Then Values(tDriComp.V)(s) = 0
+                Values(tDriComp.V)(s) /= 3.6
+                If Values(tDriComp.V)(s) < 0.025 Then Values(tDriComp.V)(s) = 0
             Next
         End If
 
@@ -467,44 +245,6 @@ lbEr:
         Return False
 
     End Function
-
-    Public Function ExsCompDef() As Boolean
-        Return bExsCompDef
-    End Function
-
-    Public Function ExsCompDef(ByVal ExsComp As tExsComp, Optional ByVal ModNr As Short = -1) As Boolean
-
-        If bExsCompDef Then
-            If ExsComponents.ContainsKey(ExsComp) Then
-                If ModNr = -1 Then
-                    Return True
-                Else
-                    Return ExsComponents(ExsComp).ContainsKey(ModNr)
-                End If
-            Else
-                Return False
-            End If
-        Else
-            Return False
-        End If
-
-    End Function
-
-    Public Sub DeNorm()
-        Dim s As Integer
-
-        'Convert Speed to m/s
-        If Vvorg Then
-            For s = 0 To tDim
-                Values(tDriComp.V)(s) /= 3.6
-                If Values(tDriComp.V)(s) < 0 Then Values(tDriComp.V)(s) = 0
-            Next
-        End If
-
-
-        '!!!!!!!! Emissions are only accepted in x/h or x (see ReadFile)!!!!!!!!
-
-    End Sub
 
     Public Sub GradToAlt()
         Dim i As Integer
@@ -594,11 +334,6 @@ lbEr:
         Dim ValKV As KeyValuePair(Of tDriComp, List(Of Double))
         Dim tmax As Integer
 
-        Dim tExsValues As Dictionary(Of tExsComp, Dictionary(Of Short, List(Of Single))) = Nothing
-        Dim hzExsValues As Dictionary(Of tExsComp, Dictionary(Of Short, List(Of Single))) = Nothing
-        Dim ExsKV As KeyValuePair(Of tExsComp, Dictionary(Of Short, List(Of Single)))
-        Dim ExsKVsub As KeyValuePair(Of Short, List(Of Single))
-
         Dim tAuxValues As Dictionary(Of String, List(Of Single)) = Nothing
         Dim hzAuxValues As Dictionary(Of String, List(Of Single)) = Nothing
         Dim AuxKV As KeyValuePair(Of String, List(Of Single))
@@ -626,8 +361,8 @@ lbEr:
         Dist = Values(tDriComp.s)
         Speed = New List(Of Double)
         For i = 0 To tDim
-            Speed.Add(Values(tDriComp.V)(i) / 3.6)
-            SpeedOgl.Add(Values(tDriComp.V)(i) / 3.6)
+            Speed.Add(Values(tDriComp.V)(i))
+            SpeedOgl.Add(Values(tDriComp.V)(i))
         Next
 
         StopTime = Values(tDriComp.StopTime)
@@ -649,19 +384,6 @@ lbEr:
                 hzValues.Add(ValKV.Key, New List(Of Double))
             End If
         Next
-
-        If bExsCompDef Then
-            tExsValues = New Dictionary(Of tExsComp, Dictionary(Of Short, List(Of Single)))
-            hzExsValues = New Dictionary(Of tExsComp, Dictionary(Of Short, List(Of Single)))
-            For Each ExsKV In ExsComponents
-                tExsValues.Add(ExsKV.Key, New Dictionary(Of Short, List(Of Single)))
-                hzExsValues.Add(ExsKV.Key, New Dictionary(Of Short, List(Of Single)))
-                For Each ExsKVsub In ExsKV.Value
-                    tExsValues(ExsKV.Key).Add(ExsKVsub.Key, New List(Of Single))
-                    hzExsValues(ExsKV.Key).Add(ExsKVsub.Key, New List(Of Single))
-                Next
-            Next
-        End If
 
         If bAuxDef Then
             tAuxValues = New Dictionary(Of String, List(Of Single))
@@ -690,7 +412,7 @@ lbEr:
 
             a = vm * dv / ds
 
-            am = GEN.aDesMin(vm)
+            am = VEC.aDesMin(vm)
 
             Do While a < am
 
@@ -701,7 +423,7 @@ lbEr:
 
                 a = vm * dv / ds
 
-                am = GEN.aDesMin(vm)
+                am = VEC.aDesMin(vm)
 
             Loop
 
@@ -716,16 +438,9 @@ lbEr:
         For Each ValKV In tValues
             If ValKV.Key <> tDriComp.V Then tValues(ValKV.Key).Add(Values(ValKV.Key)(0))
         Next
-        tValues(tDriComp.V).Add(Speed(0) * 3.6)
-        tSpeedOgl.Add(SpeedOgl(0) * 3.6)
+        tValues(tDriComp.V).Add(Speed(0))
+        tSpeedOgl.Add(SpeedOgl(0))
         tDist.Add(s)
-        If bExsCompDef Then
-            For Each ExsKV In ExsComponents
-                For Each ExsKVsub In ExsKV.Value
-                    tExsValues(ExsKV.Key)(ExsKVsub.Key).Add(ExsKVsub.Value(0))
-                Next
-            Next
-        End If
         If bAuxDef Then
             For Each AuxKV In AuxComponents
                 tAuxValues(AuxKV.Key).Add(AuxKV.Value(0))
@@ -745,16 +460,9 @@ lbEr:
             For Each ValKV In tValues
                 If ValKV.Key <> tDriComp.V Then tValues(ValKV.Key).Add(Values(ValKV.Key)(0))
             Next
-            tValues(tDriComp.V).Add(Speed(0) * 3.6)
-            tSpeedOgl.Add(SpeedOgl(0) * 3.6)
+            tValues(tDriComp.V).Add(Speed(0))
+            tSpeedOgl.Add(SpeedOgl(0))
             tDist.Add(s)
-            If bExsCompDef Then
-                For Each ExsKV In ExsComponents
-                    For Each ExsKVsub In ExsKV.Value
-                        tExsValues(ExsKV.Key)(ExsKVsub.Key).Add(ExsKVsub.Value(0))
-                    Next
-                Next
-            End If
             If bAuxDef Then
                 For Each AuxKV In AuxComponents
                     tAuxValues(AuxKV.Key).Add(AuxKV.Value(0))
@@ -781,16 +489,9 @@ lbEr:
             For Each ValKV In tValues
                 If ValKV.Key <> tDriComp.V Then tValues(ValKV.Key).Add(Values(ValKV.Key)(i + 1))
             Next
-            tValues(tDriComp.V).Add(Speed(i + 1) * 3.6)
-            tSpeedOgl.Add(SpeedOgl(i + 1) * 3.6)
+            tValues(tDriComp.V).Add(Speed(i + 1))
+            tSpeedOgl.Add(SpeedOgl(i + 1))
             tDist.Add(s)
-            If bExsCompDef Then
-                For Each ExsKV In ExsComponents
-                    For Each ExsKVsub In ExsKV.Value
-                        tExsValues(ExsKV.Key)(ExsKVsub.Key).Add(ExsKVsub.Value(i + 1))
-                    Next
-                Next
-            End If
             If bAuxDef Then
                 For Each AuxKV In AuxComponents
                     tAuxValues(AuxKV.Key).Add(AuxKV.Value(i + 1))
@@ -810,16 +511,10 @@ lbEr:
                 For Each ValKV In tValues
                     If ValKV.Key <> tDriComp.V Then tValues(ValKV.Key).Add(Values(ValKV.Key)(i + 1))
                 Next
-                tValues(tDriComp.V).Add(Speed(i + 1) * 3.6)
-                tSpeedOgl.Add(SpeedOgl(i + 1) * 3.6)
+                tValues(tDriComp.V).Add(Speed(i + 1))
+                tSpeedOgl.Add(SpeedOgl(i + 1))
                 tDist.Add(s)
-                If bExsCompDef Then
-                    For Each ExsKV In ExsComponents
-                        For Each ExsKVsub In ExsKV.Value
-                            tExsValues(ExsKV.Key)(ExsKVsub.Key).Add(ExsKVsub.Value(i + 1))
-                        Next
-                    Next
-                End If
+
                 If bAuxDef Then
                     For Each AuxKV In AuxComponents
                         tAuxValues(AuxKV.Key).Add(AuxKV.Value(i + 1))
@@ -868,14 +563,6 @@ lbEr:
                 Next
                 hzSpeedOgl.Add(0)
 
-                If bExsCompDef Then
-                    For Each ExsKV In ExsComponents
-                        For Each ExsKVsub In ExsKV.Value
-                            'WRONG!! =>   hzExsValues(ExsKV.Key)(ExsKVsub.Key).Add(ExsKVsub.Value(i - 1))
-                            hzExsValues(ExsKV.Key)(ExsKVsub.Key).Add(tExsValues(ExsKV.Key)(ExsKVsub.Key)(i - 1))
-                        Next
-                    Next
-                End If
                 If bAuxDef Then
                     For Each AuxKV In AuxComponents
                         'WRONG!! => hzAuxValues(AuxKV.Key).Add(AuxKV.Value(i - 1))
@@ -890,13 +577,6 @@ lbEr:
                 Next
                 hzSpeedOgl.Add((hzDist(j) - tDist(i - 1)) * (tSpeedOgl(i) - tSpeedOgl(i - 1)) / (tDist(i) - tDist(i - 1)) + tSpeedOgl(i - 1))
 
-                If bExsCompDef Then
-                    For Each ExsKV In ExsComponents
-                        For Each ExsKVsub In ExsKV.Value
-                            hzExsValues(ExsKV.Key)(ExsKVsub.Key).Add((hzDist(j) - tDist(i - 1)) * (tExsValues(ExsKV.Key)(ExsKVsub.Key)(i) - tExsValues(ExsKV.Key)(ExsKVsub.Key)(i - 1)) / (tDist(i) - tDist(i - 1)) + tExsValues(ExsKV.Key)(ExsKVsub.Key)(i - 1))
-                        Next
-                    Next
-                End If
                 If bAuxDef Then
                     For Each AuxKV In AuxComponents
                         hzAuxValues(AuxKV.Key).Add((hzDist(j) - tDist(i - 1)) * (tAuxValues(AuxKV.Key)(i) - tAuxValues(AuxKV.Key)(i - 1)) / (tDist(i) - tDist(i - 1)) + tAuxValues(AuxKV.Key)(i - 1))
@@ -910,7 +590,6 @@ lbEr:
         Values = hzValues
         VoglS = hzSpeedOgl
         MODdata.Vh.Weg = hzDist
-        If bExsCompDef Then ExsComponents = hzExsValues
         If bAuxDef Then AuxComponents = hzAuxValues
         tDim = Values(tDriComp.V).Count - 1
 
@@ -933,15 +612,6 @@ lbEr:
         Dim KVd As KeyValuePair(Of tDriComp, Double)
         Dim fTime As List(Of Double)
         Dim Summe As Dictionary(Of tDriComp, Double)
-
-        Dim NewMapValues As Dictionary(Of String, List(Of Double))
-        Dim EmKV As KeyValuePair(Of String, cEmComp)
-        Dim MapSumme As Dictionary(Of String, Double)
-
-        Dim NewExsValues As Dictionary(Of tExsComp, Dictionary(Of Short, List(Of Single))) = Nothing
-        Dim ExsKV As KeyValuePair(Of tExsComp, Dictionary(Of Short, List(Of Single)))
-        Dim ExsKVsub As KeyValuePair(Of Short, List(Of Single))
-        Dim ExsSumme As Dictionary(Of tExsComp, Dictionary(Of Short, Single)) = Nothing
 
         Dim NewAuxValues As Dictionary(Of String, List(Of Single)) = Nothing
         Dim AuxKV As KeyValuePair(Of String, List(Of Single))
@@ -973,27 +643,6 @@ lbEr:
             NewValues.Add(KV.Key, New List(Of Double))
             If KV.Key <> tDriComp.t Then Summe.Add(KV.Key, 0)
         Next
-
-        NewMapValues = New Dictionary(Of String, List(Of Double))
-        MapSumme = New Dictionary(Of String, Double)
-
-        For Each EmKV In EmComponents
-            NewMapValues.Add(EmKV.Key, New List(Of Double))
-            MapSumme.Add(EmKV.Key, 0)
-        Next
-
-        If bExsCompDef Then
-            NewExsValues = New Dictionary(Of tExsComp, Dictionary(Of Short, List(Of Single)))
-            ExsSumme = New Dictionary(Of tExsComp, Dictionary(Of Short, Single))
-            For Each ExsKV In ExsComponents
-                NewExsValues.Add(ExsKV.Key, New Dictionary(Of Short, List(Of Single)))
-                ExsSumme.Add(ExsKV.Key, New Dictionary(Of Short, Single))
-                For Each ExsKVsub In ExsKV.Value
-                    NewExsValues(ExsKV.Key).Add(ExsKVsub.Key, New List(Of Single))
-                    ExsSumme(ExsKV.Key).Add(ExsKVsub.Key, 0)
-                Next
-            Next
-        End If
 
         If bAuxDef Then
             NewAuxValues = New Dictionary(Of String, List(Of Single))
@@ -1039,18 +688,6 @@ lb10:
                         NewValues(KVd.Key).Add((tMid - fTime(z - 1)) * (Values(KVd.Key)(z) - Values(KVd.Key)(z - 1)) / (fTime(z) - fTime(z - 1)) + Values(KVd.Key)(z - 1))
                     Next
 
-                    For Each EmKV In EmComponents
-                        NewMapValues(EmKV.Key).Add((tMid - fTime(z - 1)) * (EmKV.Value.RawVals(z) - EmKV.Value.RawVals(z - 1)) / (fTime(z) - fTime(z - 1)) + EmKV.Value.RawVals(z - 1))
-                    Next
-
-                    If bExsCompDef Then
-                        For Each ExsKV In ExsComponents
-                            For Each ExsKVsub In ExsKV.Value
-                                NewExsValues(ExsKV.Key)(ExsKVsub.Key).Add((tMid - fTime(z - 1)) * (ExsKVsub.Value(z) - ExsKVsub.Value(z - 1)) / (fTime(z) - fTime(z - 1)) + ExsKVsub.Value(z - 1))
-                            Next
-                        Next
-                    End If
-
                     If bAuxDef Then
                         For Each AuxKV In AuxComponents
                             NewAuxValues(AuxKV.Key).Add((tMid - fTime(z - 1)) * (AuxKV.Value(z) - AuxKV.Value(z - 1)) / (fTime(z) - fTime(z - 1)) + AuxKV.Value(z - 1))
@@ -1064,18 +701,6 @@ lb10:
                         For Each KVd In Summe
                             NewValues(KVd.Key).Add((Summe(KVd.Key) + Values(KVd.Key)(z)) / (Anz + 1))
                         Next
-
-                        For Each EmKV In EmComponents
-                            NewMapValues(EmKV.Key).Add((MapSumme(EmKV.Key) + EmKV.Value.RawVals(z)) / (Anz + 1))
-                        Next
-
-                        If bExsCompDef Then
-                            For Each ExsKV In ExsComponents
-                                For Each ExsKVsub In ExsKV.Value
-                                    NewExsValues(ExsKV.Key)(ExsKVsub.Key).Add((ExsSumme(ExsKV.Key)(ExsKVsub.Key) + ExsKVsub.Value(z)) / (Anz + 1))
-                                Next
-                            Next
-                        End If
 
                         If bAuxDef Then
                             For Each AuxKV In AuxComponents
@@ -1093,18 +718,6 @@ lb10:
                                     NewValues(KVd.Key).Add((tMid - fTime(z - 1)) * (Values(KVd.Key)(z) - Values(KVd.Key)(z - 1)) / (fTime(z) - fTime(z - 1)) + Values(KVd.Key)(z - 1))
                                 Next
 
-                                For Each EmKV In EmComponents
-                                    NewMapValues(EmKV.Key).Add((tMid - fTime(z - 1)) * (EmKV.Value.RawVals(z) - EmKV.Value.RawVals(z - 1)) / (fTime(z) - fTime(z - 1)) + EmKV.Value.RawVals(z - 1))
-                                Next
-
-                                If bExsCompDef Then
-                                    For Each ExsKV In ExsComponents
-                                        For Each ExsKVsub In ExsKV.Value
-                                            NewExsValues(ExsKV.Key)(ExsKVsub.Key).Add((tMid - fTime(z - 1)) * (ExsKVsub.Value(z) - ExsKVsub.Value(z - 1)) / (fTime(z) - fTime(z - 1)) + ExsKVsub.Value(z - 1))
-                                        Next
-                                    Next
-                                End If
-
                                 If bAuxDef Then
                                     For Each AuxKV In AuxComponents
                                         NewAuxValues(AuxKV.Key).Add((tMid - fTime(z - 1)) * (AuxKV.Value(z) - AuxKV.Value(z - 1)) / (fTime(z) - fTime(z - 1)) + AuxKV.Value(z - 1))
@@ -1116,18 +729,6 @@ lb10:
                                 For Each KVd In Summe
                                     NewValues(KVd.Key).Add((tMid - fTime(z - 2)) * (Values(KVd.Key)(z - 1) - Values(KVd.Key)(z - 2)) / (fTime(z - 1) - fTime(z - 2)) + Values(KVd.Key)(z - 2))
                                 Next
-
-                                For Each EmKV In EmComponents
-                                    NewMapValues(EmKV.Key).Add((tMid - fTime(z - 2)) * (EmKV.Value.RawVals(z - 1) - EmKV.Value.RawVals(z - 2)) / (fTime(z - 1) - fTime(z - 2)) + EmKV.Value.RawVals(z - 2))
-                                Next
-
-                                If bExsCompDef Then
-                                    For Each ExsKV In ExsComponents
-                                        For Each ExsKVsub In ExsKV.Value
-                                            NewExsValues(ExsKV.Key)(ExsKVsub.Key).Add((tMid - fTime(z - 2)) * (ExsKVsub.Value(z - 1) - ExsKVsub.Value(z - 2)) / (fTime(z - 1) - fTime(z - 2)) + ExsKVsub.Value(z - 2))
-                                        Next
-                                    Next
-                                End If
 
                                 If bAuxDef Then
                                     For Each AuxKV In AuxComponents
@@ -1142,18 +743,6 @@ lb10:
                             For Each KVd In Summe
                                 NewValues(KVd.Key).Add(Summe(KVd.Key) / Anz)
                             Next
-
-                            For Each EmKV In EmComponents
-                                NewMapValues(EmKV.Key).Add(MapSumme(EmKV.Key) / Anz)
-                            Next
-
-                            If bExsCompDef Then
-                                For Each ExsKV In ExsComponents
-                                    For Each ExsKVsub In ExsKV.Value
-                                        NewExsValues(ExsKV.Key)(ExsKVsub.Key).Add(ExsSumme(ExsKV.Key)(ExsKVsub.Key) / Anz)
-                                    Next
-                                Next
-                            End If
 
                             If bAuxDef Then
                                 For Each AuxKV In AuxComponents
@@ -1183,18 +772,6 @@ lb10:
                         If KV.Key <> tDriComp.t Then Summe(KV.Key) = 0
                     Next
 
-                    For Each EmKV In EmComponents
-                        MapSumme(EmKV.Key) = 0
-                    Next
-
-                    If bExsCompDef Then
-                        For Each ExsKV In ExsComponents
-                            For Each ExsKVsub In ExsKV.Value
-                                ExsSumme(ExsKV.Key)(ExsKVsub.Key) = 0
-                            Next
-                        Next
-                    End If
-
                     If bAuxDef Then
                         For Each AuxKV In AuxComponents
                             AuxSumme(AuxKV.Key) = 0
@@ -1213,18 +790,6 @@ lb10:
                 If KV.Key <> tDriComp.t Then Summe(KV.Key) += Values(KV.Key)(z)
             Next
 
-            For Each EmKV In EmComponents
-                MapSumme(EmKV.Key) += EmKV.Value.RawVals(z)
-            Next
-
-            If bExsCompDef Then
-                For Each ExsKV In ExsComponents
-                    For Each ExsKVsub In ExsKV.Value
-                        ExsSumme(ExsKV.Key)(ExsKVsub.Key) += ExsKVsub.Value(z)
-                    Next
-                Next
-            End If
-
             If bAuxDef Then
                 For Each AuxKV In AuxComponents
                     AuxSumme(AuxKV.Key) += AuxKV.Value(z)
@@ -1239,23 +804,13 @@ lb10:
         Values = NewValues
         tDim = Values(tDriComp.t).Count - 1
 
-        For Each EmKV In EmComponents
-            EmKV.Value.RawVals.Clear()
-            For z = 0 To tDim
-                EmKV.Value.RawVals.Add(NewMapValues(EmKV.Key)(z))
-            Next
-        Next
-
         Return True
 
     End Function
 
     Public Sub FirstZero()
-        Dim EmKV As KeyValuePair(Of String, cEmComp)
-        Dim ExsKV As KeyValuePair(Of tExsComp, Dictionary(Of Short, List(Of Single)))
         Dim AuxKV As KeyValuePair(Of String, List(Of Single))
         Dim ValKV As KeyValuePair(Of tDriComp, List(Of Double))
-        Dim ExsKVsub As KeyValuePair(Of Short, List(Of Single))
 
         tDim += 1
 
@@ -1265,26 +820,11 @@ lb10:
 
         If Scycle Then VoglS.Insert(0, VoglS(0))
 
-        If bExsCompDef Then
-            For Each ExsKV In ExsComponents
-                For Each ExsKVsub In ExsKV.Value
-                    ExsKVsub.Value.Insert(0, ExsKVsub.Value(0))
-                Next
-            Next
-        End If
-
         If bAuxDef Then
             For Each AuxKV In AuxComponents
                 AuxKV.Value.Insert(0, AuxKV.Value(0))
             Next
         End If
-
-        If bEmCompDef Then
-            For Each EmKV In EmComponents
-                EmKV.Value.RawVals.Insert(0, EmKV.Value.RawVals(0))
-            Next
-        End If
-
 
     End Sub
 
@@ -1295,18 +835,6 @@ lb10:
         Set(ByVal value As String)
             sFilePath = value
         End Set
-    End Property
-
-    Public ReadOnly Property EmCompDef As Boolean
-        Get
-            Return bEmCompDef
-        End Get
-    End Property
-
-    Public ReadOnly Property CreateMapParDef As Boolean
-        Get
-            Return bCreateMapParDef
-        End Get
     End Property
 
     Public ReadOnly Property AuxDef As Boolean

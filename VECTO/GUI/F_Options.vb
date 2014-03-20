@@ -5,6 +5,16 @@
     'Initialize - load config
     Private Sub F03_Options_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         LoadConfig()
+
+        If Declaration.Active Then
+            Me.GrCalc.Enabled = False
+            Me.TbAirDensity.Text = cDeclaration.AirDensity
+            Me.TbFuelDens.Text = cDeclaration.FuelDens
+            Me.TbCO2toFC.Text = cDeclaration.CO2perFC
+        End If
+
+
+
     End Sub
 
     'Load Config
@@ -17,13 +27,13 @@
         Me.TbOpenCmdName.Text = Cfg.OpenCmdName
         Me.TbFuelDens.Text = Cfg.FuelDens.ToString
         Me.TbCO2toFC.Text = Cfg.CO2perFC.ToString
-        Me.CbJSON.Checked = Cfg.JSON
     End Sub
 
     'Reset Button
     Private Sub ButReset_Click(sender As System.Object, e As System.EventArgs) Handles ButReset.Click
         If MsgBox("This will reset all application settings including the Options Tab. Filehistory will not be deleted." & vbCrLf & vbCrLf & "Continue ?", MsgBoxStyle.YesNo, "Reset Application Settings") = MsgBoxResult.Yes Then
             Cfg.SetDefault()
+            If Declaration.Active Then Cfg.DeclInit()
             LoadConfig()
             F_MAINForm.LoadOptions()
         End If
@@ -38,7 +48,6 @@
         Cfg.OpenCmdName = Me.TbOpenCmdName.Text
         Cfg.FuelDens = CSng(Me.TbFuelDens.Text)
         Cfg.CO2perFC = CSng(Me.TbCO2toFC.Text)
-        Cfg.JSON = Me.CbJSON.Checked
         '----------------------------------------------------
 
         Call Cfg.ConfigSAVE()

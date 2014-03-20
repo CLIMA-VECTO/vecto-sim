@@ -19,8 +19,23 @@
 
         FLDdia = New F_FLD
 
+        If Declaration.Active Then
+            Me.PnInertia.Enabled = False
+            Me.GrWHTC.Enabled = True
+        Else
+            Me.GrWHTC.Enabled = False
+        End If
+
+
         Changed = False
         newENG()
+    End Sub
+
+    Private Sub DeclInit()
+
+        If Not Declaration.Active Then Exit Sub
+
+        Me.TbInertia.Text = CStr(Declaration.GetEngInertia(fTextboxToNumString(Me.TbDispl.Text)))
     End Sub
 
 #Region "ToolStrip"
@@ -53,15 +68,15 @@
             End If
         End If
 
-        If Not F_GEN.Visible Then
+        If Not F_VECTO.Visible Then
             GenDir = ""
-            F_GEN.Show()
-            F_GEN.GENnew()
+            F_VECTO.Show()
+            F_VECTO.GENnew()
         Else
-            F_GEN.WindowState = FormWindowState.Normal
+            F_VECTO.WindowState = FormWindowState.Normal
         End If
 
-        F_GEN.TbENG.Text = fFileWoDir(EngFile, GenDir)
+        F_VECTO.TbENG.Text = fFileWoDir(EngFile, GenDir)
 
     End Sub
 
@@ -85,7 +100,13 @@
         Me.TbNleerl.Text = ""
         Me.LvFLDs.Items.Clear()
         Me.TbMAP.Text = ""
-        Me.TbWHTC.Text = ""
+        Me.TbWHTCurban.Text = ""
+        Me.TbWHTCrural.Text = ""
+        Me.TbWHTCmw.Text = ""
+
+
+        DeclInit()
+
 
         EngFile = ""
         Me.Text = "ENG Editor"
@@ -114,7 +135,7 @@
         Me.TbName.Text = ENG0.ModelName
         Me.TbDispl.Text = ENG0.Displ.ToString
         Me.TbInertia.Text = ENG0.I_mot.ToString
-        Me.TbNleerl.Text = ENG0.nleerl.ToString
+        Me.TbNleerl.Text = ENG0.Nidle.ToString
 
         Me.LvFLDs.Items.Clear()
         For i = 0 To ENG0.fFLD.Count - 1
@@ -124,7 +145,14 @@
         Next
 
         Me.TbMAP.Text = ENG0.PathMAP(True)
-        Me.TbWHTC.Text = ENG0.PathWHTC(True)
+        Me.TbWHTCurban.Text = ENG0.WHTCurban
+        Me.TbWHTCrural.Text = ENG0.WHTCrural
+        Me.TbWHTCmw.Text = ENG0.WHTCmw
+
+
+        DeclInit()
+
+
 
         fbENG.UpdateHistory(file)
         Me.Text = fFILE(file, True)
@@ -167,7 +195,7 @@
         If Trim(ENG0.ModelName) = "" Then ENG0.ModelName = "Undefined"
         ENG0.Displ = CSng(fTextboxToNumString(Me.TbDispl.Text))
         ENG0.I_mot = CSng(fTextboxToNumString(Me.TbInertia.Text))
-        ENG0.nleerl = CSng(fTextboxToNumString(Me.TbNleerl.Text))
+        ENG0.Nidle = CSng(fTextboxToNumString(Me.TbNleerl.Text))
 
         For i = 0 To Me.LvFLDs.Items.Count - 1
             ENG0.fFLD.Add(New cSubPath)
@@ -176,7 +204,14 @@
         Next
 
         ENG0.PathMAP = Me.TbMAP.Text
-        ENG0.PathWHTC = Me.TbWHTC.Text
+
+
+        ENG0.WHTCurban = CSng(fTextboxToNumString(Me.TbWHTCurban.Text))
+        ENG0.WHTCrural = CSng(fTextboxToNumString(Me.TbWHTCrural.Text))
+        ENG0.WHTCmw = CSng(fTextboxToNumString(Me.TbWHTCmw.Text))
+
+
+
 
         If Not ENG0.SaveFile Then
             MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
@@ -184,7 +219,7 @@
         End If
 
         If Not GenDir = "" Or AutoSendTo Then
-            If F_GEN.Visible And UCase(fFileRepl(F_GEN.TbENG.Text, GenDir)) <> UCase(file) Then F_GEN.TbENG.Text = fFileWoDir(file, GenDir)
+            If F_VECTO.Visible And UCase(fFileRepl(F_VECTO.TbENG.Text, GenDir)) <> UCase(file) Then F_VECTO.TbENG.Text = fFileWoDir(file, GenDir)
         End If
 
         fbENG.UpdateHistory(file)
@@ -241,6 +276,7 @@
 
     Private Sub TbDispl_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbDispl.TextChanged
         Change()
+        DeclInit()
     End Sub
 
     Private Sub TbInertia_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbInertia.TextChanged
@@ -259,9 +295,19 @@
         Change()
     End Sub
 
-    Private Sub TbWHTC_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbWHTC.TextChanged
+    Private Sub TbWHTCurban_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbWHTCurban.TextChanged
         Change()
     End Sub
+
+    Private Sub TbWHTCrural_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbWHTCrural.TextChanged
+        Change()
+    End Sub
+
+    Private Sub TbWHTCmw_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbWHTCmw.TextChanged
+        Change()
+    End Sub
+
+
 
 #End Region
 
@@ -374,9 +420,6 @@
         If fbMAP.OpenDialog(fFileRepl(Me.TbMAP.Text, fPATH(EngFile))) Then Me.TbMAP.Text = fFileWoDir(fbMAP.Files(0), fPATH(EngFile))
     End Sub
 
-    Private Sub BtWHTC_Click(sender As System.Object, e As System.EventArgs) Handles BtWHTC.Click
-        If fbWHTC.OpenDialog(fFileRepl(Me.TbWHTC.Text, fPATH(EngFile))) Then Me.TbWHTC.Text = fFileWoDir(fbWHTC.Files(0), fPATH(EngFile))
-    End Sub
 
     Private Sub BtMAPopen_Click(sender As System.Object, e As System.EventArgs) Handles BtMAPopen.Click
         Dim fldfile As String
@@ -447,8 +490,5 @@
 
 #End Region
 
-
-
-
-
+   
 End Class

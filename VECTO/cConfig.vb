@@ -12,8 +12,6 @@
     Public BATCHoutSubD As Boolean
     Public WegKorJa As Boolean
     Public LogSize As Single
-    Public FZPsort As Boolean
-    Public FZPsortExp As Boolean
     Public AirDensity As Single
     Public OpenCmd As String
     Public OpenCmdName As String
@@ -21,12 +19,16 @@
     Public FuelDens As Single
     Public CO2perFC As Single
 
-    Public JSON As Boolean
-
     Public FirstRun As Boolean
 
     Public Sub New()
         SetDefault()
+    End Sub
+
+    Public Sub DeclInit()
+        AirDensity = cDeclaration.AirDensity
+        FuelDens = cDeclaration.FuelDens
+        CO2perFC = cDeclaration.CO2perFC
     End Sub
 
     Public Function ConfigLOAD() As Boolean
@@ -89,11 +91,11 @@
 
         GnVorgab = CBool(c.ReadLine(0))
 
+        c.ReadLine()
+
+        c.ReadLine()
+
         LogSize = CSng(c.ReadLine(0))
-
-        FZPsort = CBool(c.ReadLine(0))
-
-        FZPsortExp = CBool(c.ReadLine(0))
 
         BATCHoutpath = Trim(c.ReadLine(0))
 
@@ -115,10 +117,6 @@
         If c.EndOfFile Then GoTo lbDone
 
         FirstRun = CBool(c.ReadLine(0))
-
-        If c.EndOfFile Then GoTo lbDone
-
-        JSON = CBool(c.ReadLine(0))
 
 
 
@@ -144,8 +142,6 @@ lbEr:
         BATCHoutSubD = False
         WegKorJa = True
         LogSize = 2
-        FZPsort = True
-        FZPsortExp = False
         AirDensity = 1.2
         OpenCmd = "notepad"
         OpenCmdName = "Notepad"
@@ -156,8 +152,6 @@ lbEr:
         WorkDirHome = False
 
         FirstRun = True
-
-        JSON = True
 
     End Sub
 
@@ -195,10 +189,10 @@ lbEr:
         c.WriteLine(Math.Abs(CInt(GnVorgab)))
         c.WriteLine("c Log file size limit [MB]")
         c.WriteLine(LogSize)
-        c.WriteLine("c ADVANCE Sort .fzp file 1/0")
-        c.WriteLine(Math.Abs(CInt(FZPsort)))
-        c.WriteLine("c ADVANCE Export sorted .fzp file 1/0")
-        c.WriteLine(Math.Abs(CInt(FZPsortExp)))
+        c.WriteLine("c NOT USED")
+        c.WriteLine("0")
+        c.WriteLine("c NOT USED")
+        c.WriteLine("0")
         c.WriteLine("c BATCH Output Path")
         c.WriteLine(BATCHoutpath)
         c.WriteLine("c BATCH Sub Dir Output 1/0")
@@ -219,10 +213,6 @@ lbEr:
 
         c.WriteLine("c First Run (Show Quick Start Guide Prompt)")
         c.WriteLine(Math.Abs(CInt(FirstRun)))
-
-        c.WriteLine("c In- and Output in JSON format")
-        c.WriteLine(Math.Abs(CInt(JSON)))
-
 
         c.Close()
         c = Nothing

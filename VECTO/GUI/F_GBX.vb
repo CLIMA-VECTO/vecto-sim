@@ -20,10 +20,40 @@
         Init = False
         GearDia = New F_VEH_GearDlog
 
+        If Declaration.Active Then
+            Me.PnInertiaTI.Enabled = False
+            Me.GrGearShift.Enabled = False
+            Me.ChTCon.Enabled = False
+        End If
+
         Init = True
+
+        DeclInit()
 
         Changed = False
         newGBX()
+
+    End Sub
+
+    Private Sub DeclInit()
+        Dim GStype As tGearbox
+
+        If Not Declaration.Active Then Exit Sub
+
+        Me.TBI_getr.Text = cDeclaration.GbInertia
+        Me.TbShiftPolyFile.Text = ""
+
+        GStype = CType(Me.CbGStype.SelectedIndex, tGearbox)
+
+        Me.TbTracInt.Text = Declaration.TracInt(GStype)
+        Me.TbShiftTime.Text = Declaration.ShiftTime(GStype)
+
+        Me.TbTqResv.Text = cDeclaration.TqResv
+        Me.TbTqResvStart.Text = cDeclaration.TqResvStart
+        Me.TbStartSpeed.Text = cDeclaration.StartSpeed
+        Me.TbStartAcc.Text = cDeclaration.StartAcc
+
+
 
     End Sub
 
@@ -57,15 +87,15 @@
             End If
         End If
 
-        If Not F_GEN.Visible Then
+        If Not F_VECTO.Visible Then
             GenDir = ""
-            F_GEN.Show()
-            F_GEN.GENnew()
+            F_VECTO.Show()
+            F_VECTO.GENnew()
         Else
-            F_GEN.WindowState = FormWindowState.Normal
+            F_VECTO.WindowState = FormWindowState.Normal
         End If
 
-        F_GEN.TbGBX.Text = fFileWoDir(GbxFile, GenDir)
+        F_VECTO.TbGBX.Text = fFileWoDir(GbxFile, GenDir)
 
     End Sub
 
@@ -112,6 +142,7 @@
         Me.TbTCfile.Text = ""
         Me.TbTCrefrpm.Text = ""
 
+        DeclInit()
 
         GbxFile = ""
         Me.Text = "GBX Editor"
@@ -182,6 +213,9 @@
         Me.TbTCrefrpm.Text = GBX0.TCrefrpm
 
         Me.CbGStype.SelectedIndex = CType(GBX0.gs_Type, Integer)
+
+
+        DeclInit()
 
 
         fbGBX.UpdateHistory(file)
@@ -255,7 +289,7 @@
         End If
 
         If Not GenDir = "" Or AutoSendTo Then
-            If F_GEN.Visible And UCase(fFileRepl(F_GEN.TbGBX.Text, GenDir)) <> UCase(file) Then F_GEN.TbGBX.Text = fFileWoDir(file, GenDir)
+            If F_VECTO.Visible And UCase(fFileRepl(F_VECTO.TbGBX.Text, GenDir)) <> UCase(file) Then F_VECTO.TbGBX.Text = fFileWoDir(file, GenDir)
         End If
 
         fbGBX.UpdateHistory(file)
@@ -380,6 +414,8 @@
     'Enable/Disable settings for specific transmission types
     Private Sub CbGStype_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbGStype.SelectedIndexChanged
         Dim GStype As tGearbox
+
+        If Me.CbGStype.SelectedIndex = 3 Then Me.CbGStype.SelectedIndex = 0
 
         Change()
 

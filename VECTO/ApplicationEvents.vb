@@ -88,7 +88,7 @@ Namespace My
             JobFileList = New List(Of String)
             JobCycleList = New List(Of String)
             DEV = New cDEV
-            VEC = New cVECTO
+            Declaration = New cDeclaration
 
             Cfg = New cConfig   'ACHTUNG: cConfig.New löst cConfig.SetDefault aus welches sKey benötigt dehalb muss sKey schon vorher initialisiert werden!!
 

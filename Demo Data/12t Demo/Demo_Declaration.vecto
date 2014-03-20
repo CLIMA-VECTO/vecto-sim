@@ -18,12 +18,12 @@
       {
         "ID": "ALT",
         "Type": "Alternator",
-        "Path": "..\\Demo_AuxAlternator.vaux"
+        "Path": "Demo_AuxAlternator.vaux"
       },
       {
         "ID": "DEMO",
         "Type": "Demo",
-        "Path": "..\\Demo_AuxDevice.vaux"
+        "Path": "Demo_AuxDevice.vaux"
       }
     ],
     "VACC": "..\\..\\Default Data\\VACC\\Truck.vacc",
