@@ -1,4 +1,8 @@
-﻿Public Class FB_Dialog
+﻿''' <summary>
+''' File Browser dialog. Entirely controlled by cFilebrowser class.
+''' </summary>
+''' <remarks></remarks>
+Public Class FB_Dialog
 
     Private MyFolder As String
     Private MyFiles() As String
@@ -22,10 +26,6 @@
     Private Const FavText As String = "Edit Favorites..."
     Private Const EmptyText As String = " "
     Private Const NoFavString As String = "<undefined>"
-
-	
-    ''<SORTER>
-    ''Private lvwColumnSorter As ListViewColumnSorter
 
     'New
     Public Sub New(ByVal LightMode As Boolean)
@@ -167,7 +167,7 @@
     End Sub
 
     'Browse - Custom Dialog
-    Public Function Browse(ByVal path As String, ByVal FileMustExist As Boolean, ByVal OverwriteCheck As Boolean, ByVal ExtMode As eExtMode, ByVal MultiFile As Boolean, ByVal Ext As String, ByVal Title As String) As Boolean
+    Public Function Browse(ByVal path As String, ByVal FileMustExist As Boolean, ByVal OverwriteCheck As Boolean, ByVal ExtMode As tFbExtMode, ByVal MultiFile As Boolean, ByVal Ext As String, ByVal Title As String) As Boolean
         Dim x As Int16
 
         If Not Initialized Then Init()
@@ -183,7 +183,7 @@
         'Options
         bOverwriteCheck = OverwriteCheck
         bFileMustExist = FileMustExist
-        bForceExt = (ExtMode = eExtMode.ForceExt)
+        bForceExt = (ExtMode = tFbExtMode.ForceExt)
 
         'Form Config
         Me.ListViewFiles.MultiSelect = MultiFile
@@ -197,13 +197,13 @@
             Me.ComboBoxExt.SelectedIndex = 0
         Else
             Select Case ExtMode
-                Case eExtMode.ForceExt
+                Case tFbExtMode.ForceExt
                     If Ext = "" Then Ext = ExtListSingle(0).ToString
                     Me.ComboBoxExt.Items.AddRange(ExtListSingle.ToArray)
                     Me.ComboBoxExt.Text = Ext
                     Me.ComboBoxExt.Enabled = False
-                Case eExtMode.MultiExt, eExtMode.SingleExt
-                    If ExtMode = eExtMode.MultiExt Then
+                Case tFbExtMode.MultiExt, tFbExtMode.SingleExt
+                    If ExtMode = tFbExtMode.MultiExt Then
                         Me.ComboBoxExt.Items.AddRange(ExtListMulti.ToArray)
                     Else
                         Me.ComboBoxExt.Items.AddRange(ExtListSingle.ToArray)
@@ -425,7 +425,7 @@
         If Not UpdateLock Then SetFolder(Me.ComboBoxDrive.SelectedItem.ToString)
     End Sub
 
-   
+
     'ButtonFolderBack_Click
     Private Sub ButtonFolderBack_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonFolderBack.Click
         FolderUp()
@@ -708,11 +708,6 @@
             x1 = path.Length
         Loop
         SetFolder(newpath)
-    End Sub
-
-    'ButtonWorkDir_Click
-    Private Sub ButtonWorkDir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonWorkDir.Click
-        SetFolder(Cfg.WorkDPath)
     End Sub
 
     'ButtonDesktop_Click
@@ -998,5 +993,5 @@ lb10:
         End Set
     End Property
 
-  
+
 End Class

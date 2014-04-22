@@ -2,7 +2,7 @@
 
 Class cVSUM
 
-    Private Const FormatVersion As String = "1.0"
+    Private Const FormatVersion As Short = 1
 
     Private VSUMpath As String
     Private Fvsum As System.IO.StreamWriter
@@ -85,7 +85,7 @@ Class cVSUM
             VSUMentries("\\V").ValueString = Vquer
 
             'altitude change
-            VSUMentries("\\G").ValueString = MODdata.Vh.AltIntp(Vquer * (t1 + 1) / 3.6) - MODdata.Vh.AltIntp(0)
+            VSUMentries("\\G").ValueString = MODdata.Vh.AltIntp(Vquer * (t1 + 1) / 3.6, False) - MODdata.Vh.AltIntp(0, False)
 
             'Auxiliary energy consumption
             If VEC.AuxDef Then
@@ -103,32 +103,50 @@ Class cVSUM
 
         'FC
         If MODdata.FCerror Then
+
             If VEC.EngOnly Then
                 VSUMentries("FC_h").ValueString = "ERROR"
             Else
                 VSUMentries("FC_km").ValueString = "ERROR"
             End If
 
-            If Declaration.Active Then
+            If MODdata.FCAUXcSet Then
                 If VEC.EngOnly Then
-                    VSUMentries("FCc_h").ValueString = "ERROR"
+                    VSUMentries("FC-AUXc_h").ValueString = "ERROR"
                 Else
-                    VSUMentries("FCc_km").ValueString = "ERROR"
+                    VSUMentries("FC-AUXc_km").ValueString = "ERROR"
+                End If
+            End If
+
+            If Cfg.DeclMode Then
+                If VEC.EngOnly Then
+                    VSUMentries("FC-WHTCc_h").ValueString = "ERROR"
+                Else
+                    VSUMentries("FC-WHTCc_km").ValueString = "ERROR"
                 End If
             End If
 
         Else
+
             If VEC.EngOnly Then
                 VSUMentries("FC_h").ValueString = MODdata.FCavg
             Else
                 VSUMentries("FC_km").ValueString = (MODdata.FCavg / Vquer)
             End If
 
-            If Declaration.Active Then
+            If MODdata.FCAUXcSet Then
                 If VEC.EngOnly Then
-                    VSUMentries("FCc_h").ValueString = MODdata.FCavg * MODdata.CorrFactor
+                    VSUMentries("FC-AUXc_h").ValueString = MODdata.FCavgAUXc
                 Else
-                    VSUMentries("FCc_km").ValueString = (MODdata.FCavg * MODdata.CorrFactor / Vquer)
+                    VSUMentries("FC-AUXc_km").ValueString = (MODdata.FCavgAUXc / Vquer)
+                End If
+            End If
+
+            If Cfg.DeclMode Then
+                If VEC.EngOnly Then
+                    VSUMentries("FC-WHTCc_h").ValueString = MODdata.FCavgWHTCc
+                Else
+                    VSUMentries("FC-WHTCc_km").ValueString = (MODdata.FCavgWHTCc / Vquer)
                 End If
             End If
 
@@ -211,6 +229,13 @@ Class cVSUM
             Next
             VSUMentries("\\Etransm").ValueString = (-sum / 3600)
 
+            'Retarder
+            sum = 0
+            For t = 0 To t1
+                sum += MODdata.PlossRt(t)
+            Next
+            VSUMentries("\\Eretarder").ValueString = (-sum / 3600)
+
             'Masse, Loading
             VSUMentries("\\Mass").ValueString = (VEH.Mass + VEH.MassExtra)
             VSUMentries("\\Loading").ValueString = VEH.Loading
@@ -276,7 +301,7 @@ Class cVSUM
 
     End Function
 
-    Public Function AusgVSUM(ByVal NrOfRunStr As String, ByVal GenFilename As String, ByVal CycleFilename As String, ByVal AbortedByError As Boolean) As Boolean
+    Public Function AusgVSUM(ByVal NrOfRunStr As String, ByVal JobFilename As String, ByVal CycleFilename As String, ByVal AbortedByError As Boolean) As Boolean
         Dim str As String
         Dim MsgSrc As String
         Dim dic As Dictionary(Of String, Object)
@@ -302,8 +327,8 @@ Class cVSUM
             Return False
         End Try
 
-        str = NrOfRunStr & "," & GenFilename & "," & CycleFilename & ","
-        dic.Add("Job", GenFilename)
+        str = NrOfRunStr & "," & JobFilename & "," & CycleFilename & ","
+        dic.Add("Job", JobFilename)
         dic.Add("Cycle", CycleFilename)
 
         If AbortedByError Then
@@ -354,13 +379,12 @@ Class cVSUM
         End If
     End Sub
 
-    Public Function Init(ByVal GenFile As String) As Boolean
-        Dim GENs As New List(Of String)
+    Public Function Init(ByVal JobFile As String) As Boolean
+        Dim JobFiles As New List(Of String)
         Dim str As String
         Dim str1 As String
-        Dim iGEN As Integer
         Dim file As New cFile_V3
-        Dim GEN0 As cVECTO
+        Dim VEC0 As cVECTO
         Dim MAP0 As cMAP
         Dim ENG0 As cENG
         Dim HEVorEVdone As Boolean
@@ -380,23 +404,21 @@ Class cVSUM
         MsgSrc = "SUMALL/Init"
 
         'Check if file exists
-        If Not IO.File.Exists(GenFile) Then
-            WorkerMsg(tMsgID.Err, "Job file not found! (" & GenFile & ")", MsgSrc)
+        If Not IO.File.Exists(JobFile) Then
+            WorkerMsg(tMsgID.Err, "Job file not found! (" & JobFile & ")", MsgSrc)
             Return False
         End If
 
         'Define Output-path
-        If (PHEMmode = tPHEMmode.ModeBATCH) Then
+        If (CalcMode = tCalcMode.ModeBATCH) Then
             Select Case UCase(Cfg.BATCHoutpath)
-                Case sKey.WorkDir
-                    VSUMpath = Cfg.WorkDPath & fFILE(GenFile, False) & "_BATCH.vsum"
-                Case sKey.GenPath
-                    VSUMpath = fFileWoExt(GenFile) & "_BATCH.vsum"
+                Case sKey.JobPath
+                    VSUMpath = fFileWoExt(JobFile) & "_BATCH.vsum"
                 Case Else
-                    VSUMpath = Cfg.BATCHoutpath & fFILE(GenFile, False) & "_BATCH.vsum"
+                    VSUMpath = Cfg.BATCHoutpath & fFILE(JobFile, False) & "_BATCH.vsum"
             End Select
         Else
-            VSUMpath = fFileWoExt(GenFile) & ".vsum"
+            VSUMpath = fFileWoExt(JobFile) & ".vsum"
         End If
 
         'Open file
@@ -421,7 +443,7 @@ Class cVSUM
         vsumJSON.Content.Add("Body", New Dictionary(Of String, Object))
         dic = New Dictionary(Of String, Object)
         dic.Add("Air Density [kg/m3]", Cfg.AirDensity)
-        dic.Add("Distance Correction", Cfg.WegKorJa)
+        dic.Add("Distance Correction", Cfg.DistCorr)
         vsumJSON.Content("Body").add("Settings", dic)
 
         ResList = New List(Of Dictionary(Of String, Object))
@@ -431,7 +453,7 @@ Class cVSUM
         Fvsum.WriteLine("VECTO " & VECTOvers)
         Fvsum.WriteLine(Now.ToString)
         Fvsum.WriteLine("air density [kg/m3]: " & Cfg.AirDensity)
-        If Cfg.WegKorJa Then
+        If Cfg.DistCorr Then
             Fvsum.WriteLine("Distance Correction ON")
         Else
             Fvsum.WriteLine("Distance Correction OFF")
@@ -449,11 +471,9 @@ Class cVSUM
         VSUMentryList = New List(Of String)
 
 
-        '********************** GEN-Liste raussuchen. Bei ADVANCE aus Flotte sonst aus Jobliste '********************** |@@| Select GEN-list for ADVANCE either from Fleet or from Job-list '**********************
         For Each str In JobFileList
-            GENs.Add(fFileRepl(str))
+            JobFiles.Add(fFileRepl(str))
         Next
-        iGEN = GENs.Count - 1
 
 
         '********************** Create VSUM-Entries '**********************
@@ -465,16 +485,15 @@ Class cVSUM
         'Vehicle type-independent
         AddToVSUM("\\T", "time", "[s]")
 
-        'For each GEN-file check Mode and Map
-        For Each str In GENs
+        For Each str In JobFiles
 
-            GEN0 = New cVECTO
+            VEC0 = New cVECTO
 
-            GEN0.FilePath = str
+            VEC0.FilePath = str
 
             Try
-                If Not GEN0.ReadFile Then
-                    WorkerMsg(tMsgID.Err, "Can't read .gen file '" & str & "' !", MsgSrc)
+                If Not VEC0.ReadFile Then
+                    WorkerMsg(tMsgID.Err, "Can't read .vecto file '" & str & "' !", MsgSrc)
                     Return False
                 End If
             Catch ex As Exception
@@ -482,7 +501,7 @@ Class cVSUM
                 Return False
             End Try
 
-            If GEN0.EngOnly Then
+            If VEC0.EngOnly Then
 
                 If Not EngOnly Then
 
@@ -505,8 +524,8 @@ Class cVSUM
                 End If
 
                 'Auxiliary energy consumption
-                If GEN0.AuxDef Then
-                    For Each str1 In GEN0.AuxPaths.Keys
+                If VEC0.AuxDef Then
+                    For Each str1 In VEC0.AuxPaths.Keys
                         AddToVSUM("\\Eaux_" & UCase(str1), "Eaux_" & str1, "[kWh]")
                     Next
                 End If
@@ -519,12 +538,12 @@ Class cVSUM
 
             'From the Engine-Map
             ENG0 = New cENG
-            ENG0.FilePath = GEN0.PathENG
+            ENG0.FilePath = VEC0.PathENG
 
             Try
                 If Not ENG0.ReadFile Then Return False
             Catch ex As Exception
-                WorkerMsg(tMsgID.Err, "File read error! (" & GEN0.PathENG & ")", MsgSrc)
+                WorkerMsg(tMsgID.Err, "File read error! (" & VEC0.PathENG & ")", MsgSrc)
                 Return False
             End Try
 
@@ -538,18 +557,14 @@ Class cVSUM
                 Return False
             End Try
 
-            If GEN0.EngOnly Then
+            If VEC0.EngOnly Then
                 AddToVSUM("FC_h", "FC", "[g/h]")
+                AddToVSUM("FC-AUXc_h", "FC-AUXc", "[g/h]")
+                AddToVSUM("FC-WHTCc_h", "FC-WHTCc", "[g/h]")
             Else
                 AddToVSUM("FC_km", "FC", "[g/km]")
-            End If
-
-            If Declaration.Active Then
-                If GEN0.EngOnly Then
-                    AddToVSUM("FCc_h", "FC corrected", "[g/h]")
-                Else
-                    AddToVSUM("FCc_km", "FC corrected", "[g/km]")
-                End If
+                AddToVSUM("FC-AUXc_km", "FC-AUXc", "[g/km]")
+                AddToVSUM("FC-WHTCc_km", "FC-WHTCc", "[g/km]")
             End If
 
         Next
@@ -574,6 +589,7 @@ Class cVSUM
             AddToVSUM("\\Eaux", "Eaux", "[kWh]")
             AddToVSUM("\\Ebrake", "Ebrake", "[kWh]")
             AddToVSUM("\\Etransm", "Etransm", "[kWh]")
+            AddToVSUM("\\Eretarder", "Eretarder", "[kWh]")
             AddToVSUM("\\Mass", "Mass", "[kg]")
             AddToVSUM("\\Loading", "Loading", "[kg]")
 
@@ -585,7 +601,7 @@ Class cVSUM
 
         End If
 
-        'ErgListe sortieren damit g/km und g/h nebeneinander liegen |@@| Sort ErgListe so that g/km and g/h are side-by-side
+        'Sort
         iDim = VSUMentryList.Count - 1
 
         For i1 = 0 To iDim - 1

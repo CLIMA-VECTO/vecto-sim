@@ -30,6 +30,7 @@ Partial Class F_MAINForm
         Me.ToolStripProgBarOverall = New System.Windows.Forms.ToolStripProgressBar()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPageGEN = New System.Windows.Forms.TabPage()
+        Me.LbDecl = New System.Windows.Forms.Label()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.BtGENdown = New System.Windows.Forms.Button()
         Me.BtGENup = New System.Windows.Forms.Button()
@@ -62,6 +63,8 @@ Partial Class F_MAINForm
         Me.TbBOpath = New System.Windows.Forms.TextBox()
         Me.ChBoxAutoSD = New System.Windows.Forms.CheckBox()
         Me.PanelOptAllg = New System.Windows.Forms.Panel()
+        Me.CbDecl = New System.Windows.Forms.CheckBox()
+        Me.PnDeclOpt = New System.Windows.Forms.Panel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.ChBoxCyclDistCor = New System.Windows.Forms.CheckBox()
         Me.ChBoxUseGears = New System.Windows.Forms.CheckBox()
@@ -80,8 +83,6 @@ Partial Class F_MAINForm
         Me.LoadListToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoadDefaultListToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClearListToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
-        Me.RemovePathsToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
         Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.LvMsg = New System.Windows.Forms.ListView()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -97,12 +98,10 @@ Partial Class F_MAINForm
         Me.VEHEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EngineEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GearboxEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.GRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
         Me.SignOrVerifyFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
         Me.OpenLogToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ChangeWorkingDirectoryToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.SettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripDrDnBtInfo = New System.Windows.Forms.ToolStripDropDownButton()
         Me.UserManualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -111,14 +110,13 @@ Partial Class F_MAINForm
         Me.SupportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.CreateActivationFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AboutPHEMToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AboutVECTOToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.CmDEV = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.TmProgSec = New System.Windows.Forms.Timer(Me.components)
         Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PnDeclOpt = New System.Windows.Forms.Panel()
+        Me.GraphToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.StatusBAR.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPageGEN.SuspendLayout()
@@ -127,6 +125,7 @@ Partial Class F_MAINForm
         Me.TabPgOptions.SuspendLayout()
         Me.GrBoxBATCH.SuspendLayout()
         Me.PanelOptAllg.SuspendLayout()
+        Me.PnDeclOpt.SuspendLayout()
         Me.TabPageDEV.SuspendLayout()
         Me.ConMenFilelist.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -135,7 +134,6 @@ Partial Class F_MAINForm
         Me.SplitContainer1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.CmOpenFile.SuspendLayout()
-        Me.PnDeclOpt.SuspendLayout()
         Me.SuspendLayout()
         '
         'StatusBAR
@@ -192,6 +190,7 @@ Partial Class F_MAINForm
         '
         'TabPageGEN
         '
+        Me.TabPageGEN.Controls.Add(Me.LbDecl)
         Me.TabPageGEN.Controls.Add(Me.PictureBox1)
         Me.TabPageGEN.Controls.Add(Me.BtGENdown)
         Me.TabPageGEN.Controls.Add(Me.BtGENup)
@@ -209,6 +208,17 @@ Partial Class F_MAINForm
         Me.TabPageGEN.TabIndex = 0
         Me.TabPageGEN.Text = "Job Files"
         Me.TabPageGEN.UseVisualStyleBackColor = True
+        '
+        'LbDecl
+        '
+        Me.LbDecl.AutoSize = True
+        Me.LbDecl.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LbDecl.Location = New System.Drawing.Point(6, 97)
+        Me.LbDecl.Name = "LbDecl"
+        Me.LbDecl.Size = New System.Drawing.Size(107, 13)
+        Me.LbDecl.TabIndex = 19
+        Me.LbDecl.Text = "Declaration Mode"
+        Me.LbDecl.Visible = False
         '
         'PictureBox1
         '
@@ -522,7 +532,7 @@ Partial Class F_MAINForm
         '
         Me.CbBOmode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CbBOmode.FormattingEnabled = True
-        Me.CbBOmode.Items.AddRange(New Object() {"Working Directory", "Directory of .vecto File", "Custom Directory"})
+        Me.CbBOmode.Items.AddRange(New Object() {"Directory of .vecto File", "Custom Directory"})
         Me.CbBOmode.Location = New System.Drawing.Point(81, 19)
         Me.CbBOmode.Name = "CbBOmode"
         Me.CbBOmode.Size = New System.Drawing.Size(140, 21)
@@ -540,7 +550,7 @@ Partial Class F_MAINForm
         'ChBoxAutoSD
         '
         Me.ChBoxAutoSD.AutoSize = True
-        Me.ChBoxAutoSD.Location = New System.Drawing.Point(575, 19)
+        Me.ChBoxAutoSD.Location = New System.Drawing.Point(246, 16)
         Me.ChBoxAutoSD.Name = "ChBoxAutoSD"
         Me.ChBoxAutoSD.Size = New System.Drawing.Size(169, 17)
         Me.ChBoxAutoSD.TabIndex = 13
@@ -549,12 +559,34 @@ Partial Class F_MAINForm
         '
         'PanelOptAllg
         '
+        Me.PanelOptAllg.Controls.Add(Me.CbDecl)
         Me.PanelOptAllg.Controls.Add(Me.PnDeclOpt)
         Me.PanelOptAllg.Controls.Add(Me.ChBoxModOut)
         Me.PanelOptAllg.Location = New System.Drawing.Point(6, 6)
         Me.PanelOptAllg.Name = "PanelOptAllg"
-        Me.PanelOptAllg.Size = New System.Drawing.Size(563, 170)
+        Me.PanelOptAllg.Size = New System.Drawing.Size(220, 170)
         Me.PanelOptAllg.TabIndex = 0
+        '
+        'CbDecl
+        '
+        Me.CbDecl.AutoSize = True
+        Me.CbDecl.Location = New System.Drawing.Point(14, 10)
+        Me.CbDecl.Name = "CbDecl"
+        Me.CbDecl.Size = New System.Drawing.Size(110, 17)
+        Me.CbDecl.TabIndex = 15
+        Me.CbDecl.Text = "Declaration Mode"
+        Me.CbDecl.UseVisualStyleBackColor = True
+        '
+        'PnDeclOpt
+        '
+        Me.PnDeclOpt.Controls.Add(Me.Label1)
+        Me.PnDeclOpt.Controls.Add(Me.ChBoxCyclDistCor)
+        Me.PnDeclOpt.Controls.Add(Me.ChBoxUseGears)
+        Me.PnDeclOpt.Controls.Add(Me.CBoxMODE)
+        Me.PnDeclOpt.Location = New System.Drawing.Point(8, 38)
+        Me.PnDeclOpt.Name = "PnDeclOpt"
+        Me.PnDeclOpt.Size = New System.Drawing.Size(202, 93)
+        Me.PnDeclOpt.TabIndex = 13
         '
         'Label1
         '
@@ -601,7 +633,7 @@ Partial Class F_MAINForm
         Me.ChBoxModOut.AutoSize = True
         Me.ChBoxModOut.Checked = True
         Me.ChBoxModOut.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.ChBoxModOut.Location = New System.Drawing.Point(252, 48)
+        Me.ChBoxModOut.Location = New System.Drawing.Point(14, 137)
         Me.ChBoxModOut.Name = "ChBoxModOut"
         Me.ChBoxModOut.Size = New System.Drawing.Size(115, 17)
         Me.ChBoxModOut.TabIndex = 0
@@ -667,9 +699,9 @@ Partial Class F_MAINForm
         '
         'ConMenFilelist
         '
-        Me.ConMenFilelist.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SaveListToolStripMenuItem, Me.LoadListToolStripMenuItem, Me.LoadDefaultListToolStripMenuItem, Me.ClearListToolStripMenuItem, Me.ToolStripSeparator5, Me.RemovePathsToolStripMenuItem2})
+        Me.ConMenFilelist.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SaveListToolStripMenuItem, Me.LoadListToolStripMenuItem, Me.LoadDefaultListToolStripMenuItem, Me.ClearListToolStripMenuItem})
         Me.ConMenFilelist.Name = "ConMenFilelist"
-        Me.ConMenFilelist.Size = New System.Drawing.Size(176, 120)
+        Me.ConMenFilelist.Size = New System.Drawing.Size(176, 92)
         '
         'SaveListToolStripMenuItem
         '
@@ -694,17 +726,6 @@ Partial Class F_MAINForm
         Me.ClearListToolStripMenuItem.Name = "ClearListToolStripMenuItem"
         Me.ClearListToolStripMenuItem.Size = New System.Drawing.Size(175, 22)
         Me.ClearListToolStripMenuItem.Text = "Clear List"
-        '
-        'ToolStripSeparator5
-        '
-        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-        Me.ToolStripSeparator5.Size = New System.Drawing.Size(172, 6)
-        '
-        'RemovePathsToolStripMenuItem2
-        '
-        Me.RemovePathsToolStripMenuItem2.Name = "RemovePathsToolStripMenuItem2"
-        Me.RemovePathsToolStripMenuItem2.Size = New System.Drawing.Size(175, 22)
-        Me.RemovePathsToolStripMenuItem2.Text = "Remove Paths"
         '
         'BackgroundWorker1
         '
@@ -801,7 +822,7 @@ Partial Class F_MAINForm
         '
         'ToolStripDrDnBtTools
         '
-        Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.GRAPHiToolStripMenuItem, Me.ToolStripSeparator6, Me.SignOrVerifyFilesToolStripMenuItem, Me.ToolStripSeparator4, Me.OpenLogToolStripMenuItem, Me.ChangeWorkingDirectoryToolStripMenuItem1, Me.SettingsToolStripMenuItem})
+        Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.ToolStripSeparator6, Me.GraphToolStripMenuItem, Me.SignOrVerifyFilesToolStripMenuItem, Me.ToolStripSeparator4, Me.OpenLogToolStripMenuItem, Me.SettingsToolStripMenuItem})
         Me.ToolStripDrDnBtTools.Image = Global.VECTO.My.Resources.Resources.Misc_Tools_icon
         Me.ToolStripDrDnBtTools.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDrDnBtTools.Name = "ToolStripDrDnBtTools"
@@ -811,72 +832,60 @@ Partial Class F_MAINForm
         'GENEditorToolStripMenuItem1
         '
         Me.GENEditorToolStripMenuItem1.Name = "GENEditorToolStripMenuItem1"
-        Me.GENEditorToolStripMenuItem1.Size = New System.Drawing.Size(214, 22)
+        Me.GENEditorToolStripMenuItem1.Size = New System.Drawing.Size(170, 22)
         Me.GENEditorToolStripMenuItem1.Text = "VECTO Editor"
         '
         'VEHEditorToolStripMenuItem
         '
         Me.VEHEditorToolStripMenuItem.Name = "VEHEditorToolStripMenuItem"
-        Me.VEHEditorToolStripMenuItem.Size = New System.Drawing.Size(214, 22)
+        Me.VEHEditorToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
         Me.VEHEditorToolStripMenuItem.Text = "Vehicle Editor"
         '
         'EngineEditorToolStripMenuItem
         '
         Me.EngineEditorToolStripMenuItem.Name = "EngineEditorToolStripMenuItem"
-        Me.EngineEditorToolStripMenuItem.Size = New System.Drawing.Size(214, 22)
+        Me.EngineEditorToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
         Me.EngineEditorToolStripMenuItem.Text = "Engine Editor"
         '
         'GearboxEditorToolStripMenuItem
         '
         Me.GearboxEditorToolStripMenuItem.Name = "GearboxEditorToolStripMenuItem"
-        Me.GearboxEditorToolStripMenuItem.Size = New System.Drawing.Size(214, 22)
+        Me.GearboxEditorToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
         Me.GearboxEditorToolStripMenuItem.Text = "Gearbox Editor"
-        '
-        'GRAPHiToolStripMenuItem
-        '
-        Me.GRAPHiToolStripMenuItem.Name = "GRAPHiToolStripMenuItem"
-        Me.GRAPHiToolStripMenuItem.Size = New System.Drawing.Size(214, 22)
-        Me.GRAPHiToolStripMenuItem.Text = "GRAPHi"
         '
         'ToolStripSeparator6
         '
         Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
-        Me.ToolStripSeparator6.Size = New System.Drawing.Size(211, 6)
+        Me.ToolStripSeparator6.Size = New System.Drawing.Size(167, 6)
         '
         'SignOrVerifyFilesToolStripMenuItem
         '
         Me.SignOrVerifyFilesToolStripMenuItem.Image = Global.VECTO.My.Resources.Resources.Status_dialog_password_icon
         Me.SignOrVerifyFilesToolStripMenuItem.Name = "SignOrVerifyFilesToolStripMenuItem"
-        Me.SignOrVerifyFilesToolStripMenuItem.Size = New System.Drawing.Size(214, 22)
+        Me.SignOrVerifyFilesToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
         Me.SignOrVerifyFilesToolStripMenuItem.Text = "Sign or Verify Files"
         '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
-        Me.ToolStripSeparator4.Size = New System.Drawing.Size(211, 6)
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(167, 6)
         Me.ToolStripSeparator4.Visible = False
         '
         'OpenLogToolStripMenuItem
         '
         Me.OpenLogToolStripMenuItem.Name = "OpenLogToolStripMenuItem"
-        Me.OpenLogToolStripMenuItem.Size = New System.Drawing.Size(214, 22)
+        Me.OpenLogToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
         Me.OpenLogToolStripMenuItem.Text = "Open Log"
-        '
-        'ChangeWorkingDirectoryToolStripMenuItem1
-        '
-        Me.ChangeWorkingDirectoryToolStripMenuItem1.Name = "ChangeWorkingDirectoryToolStripMenuItem1"
-        Me.ChangeWorkingDirectoryToolStripMenuItem1.Size = New System.Drawing.Size(214, 22)
-        Me.ChangeWorkingDirectoryToolStripMenuItem1.Text = "Change Working Directory"
         '
         'SettingsToolStripMenuItem
         '
         Me.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem"
-        Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(214, 22)
+        Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
         Me.SettingsToolStripMenuItem.Text = "Settings"
         '
         'ToolStripDrDnBtInfo
         '
-        Me.ToolStripDrDnBtInfo.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserManualToolStripMenuItem, Me.QuickStartGuideToolStripMenuItem, Me.UpdateNotesToolStripMenuItem, Me.SupportToolStripMenuItem, Me.ToolStripSeparator3, Me.CreateActivationFileToolStripMenuItem, Me.AboutPHEMToolStripMenuItem1})
+        Me.ToolStripDrDnBtInfo.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserManualToolStripMenuItem, Me.QuickStartGuideToolStripMenuItem, Me.UpdateNotesToolStripMenuItem, Me.SupportToolStripMenuItem, Me.ToolStripSeparator3, Me.CreateActivationFileToolStripMenuItem, Me.AboutVECTOToolStripMenuItem1})
         Me.ToolStripDrDnBtInfo.Image = Global.VECTO.My.Resources.Resources.Help_icon
         Me.ToolStripDrDnBtInfo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDrDnBtInfo.Name = "ToolStripDrDnBtInfo"
@@ -918,11 +927,11 @@ Partial Class F_MAINForm
         Me.CreateActivationFileToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
         Me.CreateActivationFileToolStripMenuItem.Text = "Create Activation File"
         '
-        'AboutPHEMToolStripMenuItem1
+        'AboutVECTOToolStripMenuItem1
         '
-        Me.AboutPHEMToolStripMenuItem1.Name = "AboutPHEMToolStripMenuItem1"
-        Me.AboutPHEMToolStripMenuItem1.Size = New System.Drawing.Size(186, 22)
-        Me.AboutPHEMToolStripMenuItem1.Text = "About VECTO"
+        Me.AboutVECTOToolStripMenuItem1.Name = "AboutVECTOToolStripMenuItem1"
+        Me.AboutVECTOToolStripMenuItem1.Size = New System.Drawing.Size(186, 22)
+        Me.AboutVECTOToolStripMenuItem1.Text = "About VECTO"
         '
         'CmDEV
         '
@@ -935,38 +944,27 @@ Partial Class F_MAINForm
         '
         'CmOpenFile
         '
-        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithGRAPHiToolStripMenuItem, Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
+        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
         Me.CmOpenFile.Name = "CmOpenFile"
-        Me.CmOpenFile.Size = New System.Drawing.Size(175, 70)
-        '
-        'OpenWithGRAPHiToolStripMenuItem
-        '
-        Me.OpenWithGRAPHiToolStripMenuItem.Name = "OpenWithGRAPHiToolStripMenuItem"
-        Me.OpenWithGRAPHiToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
-        Me.OpenWithGRAPHiToolStripMenuItem.Text = "Open with GRAPHi"
+        Me.CmOpenFile.Size = New System.Drawing.Size(153, 48)
         '
         'OpenWithToolStripMenuItem
         '
         Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.OpenWithToolStripMenuItem.Text = "Open with ..."
         '
         'ShowInFolderToolStripMenuItem
         '
         Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
-        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
-        'PnDeclOpt
+        'GraphToolStripMenuItem
         '
-        Me.PnDeclOpt.Controls.Add(Me.Label1)
-        Me.PnDeclOpt.Controls.Add(Me.ChBoxCyclDistCor)
-        Me.PnDeclOpt.Controls.Add(Me.ChBoxUseGears)
-        Me.PnDeclOpt.Controls.Add(Me.CBoxMODE)
-        Me.PnDeclOpt.Location = New System.Drawing.Point(8, 7)
-        Me.PnDeclOpt.Name = "PnDeclOpt"
-        Me.PnDeclOpt.Size = New System.Drawing.Size(202, 93)
-        Me.PnDeclOpt.TabIndex = 13
+        Me.GraphToolStripMenuItem.Name = "GraphToolStripMenuItem"
+        Me.GraphToolStripMenuItem.Size = New System.Drawing.Size(210, 22)
+        Me.GraphToolStripMenuItem.Text = "Open new Graph Window"
         '
         'F_MAINForm
         '
@@ -994,6 +992,8 @@ Partial Class F_MAINForm
         Me.GrBoxBATCH.PerformLayout()
         Me.PanelOptAllg.ResumeLayout(False)
         Me.PanelOptAllg.PerformLayout()
+        Me.PnDeclOpt.ResumeLayout(False)
+        Me.PnDeclOpt.PerformLayout()
         Me.TabPageDEV.ResumeLayout(False)
         Me.ConMenFilelist.ResumeLayout(False)
         Me.SplitContainer1.Panel1.ResumeLayout(False)
@@ -1003,8 +1003,6 @@ Partial Class F_MAINForm
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.CmOpenFile.ResumeLayout(False)
-        Me.PnDeclOpt.ResumeLayout(False)
-        Me.PnDeclOpt.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1026,8 +1024,6 @@ Partial Class F_MAINForm
     Friend WithEvents SaveListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents LoadListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents LoadDefaultListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator5 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents RemovePathsToolStripMenuItem2 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ClearListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
     Friend WithEvents ToolStripProgBarOverall As System.Windows.Forms.ToolStripProgressBar
@@ -1077,11 +1073,10 @@ Partial Class F_MAINForm
     Friend WithEvents VEHEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator4 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents OpenLogToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ChangeWorkingDirectoryToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents SettingsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripDrDnBtInfo As System.Windows.Forms.ToolStripDropDownButton
     Friend WithEvents CreateActivationFileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents AboutPHEMToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents AboutVECTOToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripProgBarJob As System.Windows.Forms.ToolStripProgressBar
     Friend WithEvents TmProgSec As System.Windows.Forms.Timer
@@ -1092,10 +1087,8 @@ Partial Class F_MAINForm
     Friend WithEvents QuickStartGuideToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
-    Friend WithEvents OpenWithGRAPHiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents GRAPHiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ColumnHeader8 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader9 As System.Windows.Forms.ColumnHeader
     Friend WithEvents UpdateNotesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
@@ -1104,5 +1097,8 @@ Partial Class F_MAINForm
     Friend WithEvents ToolStripSeparator6 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents GrBoxSTD As System.Windows.Forms.GroupBox
     Friend WithEvents PnDeclOpt As System.Windows.Forms.Panel
+    Friend WithEvents LbDecl As System.Windows.Forms.Label
+    Friend WithEvents CbDecl As System.Windows.Forms.CheckBox
+    Friend WithEvents GraphToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

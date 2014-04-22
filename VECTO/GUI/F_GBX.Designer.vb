@@ -43,6 +43,7 @@ Partial Class F_GBX
         Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TBI_getr = New System.Windows.Forms.TextBox()
         Me.Label49 = New System.Windows.Forms.Label()
         Me.Label33 = New System.Windows.Forms.Label()
@@ -57,7 +58,6 @@ Partial Class F_GBX
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.TbTqResv = New System.Windows.Forms.TextBox()
-        Me.BtShiftPolyOpen = New System.Windows.Forms.Button()
         Me.ChShiftInside = New System.Windows.Forms.CheckBox()
         Me.TbShiftTime = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
@@ -73,11 +73,7 @@ Partial Class F_GBX
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
-        Me.TbShiftPolyFile = New System.Windows.Forms.TextBox()
-        Me.BtShiftPolyBrowse = New System.Windows.Forms.Button()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
@@ -96,6 +92,7 @@ Partial Class F_GBX
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.PnInertiaTI = New System.Windows.Forms.Panel()
+        Me.PicBox = New System.Windows.Forms.PictureBox()
         Me.ToolStrip1.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -107,6 +104,7 @@ Partial Class F_GBX
         Me.PnTC.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
         Me.PnInertiaTI.SuspendLayout()
+        CType(Me.PicBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'ToolStrip1
@@ -115,7 +113,7 @@ Partial Class F_GBX
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator3, Me.ToolStripBtSendTo, Me.ToolStripSeparator1, Me.ToolStripButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(465, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(877, 25)
         Me.ToolStrip1.TabIndex = 30
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -171,8 +169,8 @@ Partial Class F_GBX
         Me.ToolStripBtSendTo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSendTo.Name = "ToolStripBtSendTo"
         Me.ToolStripBtSendTo.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripBtSendTo.Text = "Send to GEN Editor"
-        Me.ToolStripBtSendTo.ToolTipText = "Send to GEN Editor"
+        Me.ToolStripBtSendTo.Text = "Send to Job Editor"
+        Me.ToolStripBtSendTo.ToolTipText = "Send to Job Editor"
         '
         'ToolStripSeparator1
         '
@@ -191,9 +189,9 @@ Partial Class F_GBX
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 764)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 595)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New System.Drawing.Size(465, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(877, 22)
         Me.StatusStrip1.SizingGrip = False
         Me.StatusStrip1.TabIndex = 37
         Me.StatusStrip1.Text = "StatusStrip1"
@@ -208,7 +206,7 @@ Partial Class F_GBX
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(378, 738)
+        Me.ButCancel.Location = New System.Drawing.Point(790, 569)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 9
@@ -218,7 +216,7 @@ Partial Class F_GBX
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(297, 738)
+        Me.ButOK.Location = New System.Drawing.Point(709, 569)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 8
@@ -234,14 +232,14 @@ Partial Class F_GBX
         '
         'LvGears
         '
-        Me.LvGears.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader4, Me.ColumnHeader2, Me.ColumnHeader3})
+        Me.LvGears.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader4, Me.ColumnHeader2, Me.ColumnHeader3, Me.ColumnHeader5})
         Me.LvGears.FullRowSelect = True
         Me.LvGears.GridLines = True
         Me.LvGears.HideSelection = False
         Me.LvGears.Location = New System.Drawing.Point(6, 18)
         Me.LvGears.MultiSelect = False
         Me.LvGears.Name = "LvGears"
-        Me.LvGears.Size = New System.Drawing.Size(429, 150)
+        Me.LvGears.Size = New System.Drawing.Size(429, 183)
         Me.LvGears.TabIndex = 2
         Me.LvGears.TabStop = False
         Me.LvGears.UseCompatibleStateImageBehavior = False
@@ -260,12 +258,17 @@ Partial Class F_GBX
         'ColumnHeader2
         '
         Me.ColumnHeader2.Text = "Ratio"
-        Me.ColumnHeader2.Width = 62
+        Me.ColumnHeader2.Width = 55
         '
         'ColumnHeader3
         '
         Me.ColumnHeader3.Text = "Loss Map or Efficiency [-]"
-        Me.ColumnHeader3.Width = 275
+        Me.ColumnHeader3.Width = 137
+        '
+        'ColumnHeader5
+        '
+        Me.ColumnHeader5.Text = "Shift polygons"
+        Me.ColumnHeader5.Width = 97
         '
         'TBI_getr
         '
@@ -339,7 +342,7 @@ Partial Class F_GBX
         'BtRemGear
         '
         Me.BtRemGear.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.BtRemGear.Location = New System.Drawing.Point(41, 174)
+        Me.BtRemGear.Location = New System.Drawing.Point(41, 207)
         Me.BtRemGear.Name = "BtRemGear"
         Me.BtRemGear.Size = New System.Drawing.Size(29, 23)
         Me.BtRemGear.TabIndex = 3
@@ -348,19 +351,15 @@ Partial Class F_GBX
         'GrGearShift
         '
         Me.GrGearShift.Controls.Add(Me.PnTorqRes)
-        Me.GrGearShift.Controls.Add(Me.BtShiftPolyOpen)
         Me.GrGearShift.Controls.Add(Me.ChShiftInside)
         Me.GrGearShift.Controls.Add(Me.TbShiftTime)
         Me.GrGearShift.Controls.Add(Me.Label12)
         Me.GrGearShift.Controls.Add(Me.Label13)
         Me.GrGearShift.Controls.Add(Me.ChSkipGears)
         Me.GrGearShift.Controls.Add(Me.GroupBox2)
-        Me.GrGearShift.Controls.Add(Me.TbShiftPolyFile)
-        Me.GrGearShift.Controls.Add(Me.BtShiftPolyBrowse)
-        Me.GrGearShift.Controls.Add(Me.Label1)
         Me.GrGearShift.Location = New System.Drawing.Point(12, 377)
         Me.GrGearShift.Name = "GrGearShift"
-        Me.GrGearShift.Size = New System.Drawing.Size(441, 230)
+        Me.GrGearShift.Size = New System.Drawing.Size(441, 182)
         Me.GrGearShift.TabIndex = 6
         Me.GrGearShift.TabStop = False
         Me.GrGearShift.Text = "Gear shift parameters"
@@ -370,15 +369,16 @@ Partial Class F_GBX
         Me.PnTorqRes.Controls.Add(Me.Label2)
         Me.PnTorqRes.Controls.Add(Me.Label4)
         Me.PnTorqRes.Controls.Add(Me.TbTqResv)
-        Me.PnTorqRes.Location = New System.Drawing.Point(235, 66)
+        Me.PnTorqRes.Location = New System.Drawing.Point(230, 19)
         Me.PnTorqRes.Name = "PnTorqRes"
-        Me.PnTorqRes.Size = New System.Drawing.Size(200, 32)
+        Me.PnTorqRes.Size = New System.Drawing.Size(190, 32)
         Me.PnTorqRes.TabIndex = 5
         '
         'Label2
         '
+        Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(20, 9)
+        Me.Label2.Location = New System.Drawing.Point(10, 9)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(79, 13)
         Me.Label2.TabIndex = 0
@@ -386,8 +386,9 @@ Partial Class F_GBX
         '
         'Label4
         '
+        Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(168, 9)
+        Me.Label4.Location = New System.Drawing.Point(158, 9)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(21, 13)
         Me.Label4.TabIndex = 0
@@ -395,27 +396,18 @@ Partial Class F_GBX
         '
         'TbTqResv
         '
-        Me.TbTqResv.Location = New System.Drawing.Point(105, 6)
+        Me.TbTqResv.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TbTqResv.Location = New System.Drawing.Point(95, 6)
         Me.TbTqResv.Name = "TbTqResv"
         Me.TbTqResv.Size = New System.Drawing.Size(57, 20)
         Me.TbTqResv.TabIndex = 3
-        '
-        'BtShiftPolyOpen
-        '
-        Me.BtShiftPolyOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.BtShiftPolyOpen.Location = New System.Drawing.Point(412, 40)
-        Me.BtShiftPolyOpen.Name = "BtShiftPolyOpen"
-        Me.BtShiftPolyOpen.Size = New System.Drawing.Size(23, 23)
-        Me.BtShiftPolyOpen.TabIndex = 2
-        Me.BtShiftPolyOpen.TabStop = False
-        Me.BtShiftPolyOpen.UseVisualStyleBackColor = True
         '
         'ChShiftInside
         '
         Me.ChShiftInside.AutoSize = True
         Me.ChShiftInside.Checked = True
         Me.ChShiftInside.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.ChShiftInside.Location = New System.Drawing.Point(9, 74)
+        Me.ChShiftInside.Location = New System.Drawing.Point(9, 27)
         Me.ChShiftInside.Name = "ChShiftInside"
         Me.ChShiftInside.Size = New System.Drawing.Size(195, 17)
         Me.ChShiftInside.TabIndex = 3
@@ -424,7 +416,7 @@ Partial Class F_GBX
         '
         'TbShiftTime
         '
-        Me.TbShiftTime.Location = New System.Drawing.Point(340, 98)
+        Me.TbShiftTime.Location = New System.Drawing.Point(325, 51)
         Me.TbShiftTime.Name = "TbShiftTime"
         Me.TbShiftTime.Size = New System.Drawing.Size(57, 20)
         Me.TbShiftTime.TabIndex = 6
@@ -432,7 +424,7 @@ Partial Class F_GBX
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(403, 101)
+        Me.Label12.Location = New System.Drawing.Point(388, 54)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(18, 13)
         Me.Label12.TabIndex = 9
@@ -441,16 +433,16 @@ Partial Class F_GBX
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(149, 101)
+        Me.Label13.Location = New System.Drawing.Point(227, 54)
         Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(185, 13)
+        Me.Label13.Size = New System.Drawing.Size(92, 13)
         Me.Label13.TabIndex = 8
-        Me.Label13.Text = "Minimum time between two gear shifts"
+        Me.Label13.Text = "Minimum shift time"
         '
         'ChSkipGears
         '
         Me.ChSkipGears.AutoSize = True
-        Me.ChSkipGears.Location = New System.Drawing.Point(9, 100)
+        Me.ChSkipGears.Location = New System.Drawing.Point(9, 53)
         Me.ChSkipGears.Name = "ChSkipGears"
         Me.ChSkipGears.Size = New System.Drawing.Size(132, 17)
         Me.ChSkipGears.TabIndex = 4
@@ -468,7 +460,7 @@ Partial Class F_GBX
         Me.GroupBox2.Controls.Add(Me.Label8)
         Me.GroupBox2.Controls.Add(Me.Label5)
         Me.GroupBox2.Controls.Add(Me.Label7)
-        Me.GroupBox2.Location = New System.Drawing.Point(6, 124)
+        Me.GroupBox2.Location = New System.Drawing.Point(6, 77)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Size = New System.Drawing.Size(429, 99)
         Me.GroupBox2.TabIndex = 7
@@ -550,63 +542,31 @@ Partial Class F_GBX
         Me.Label7.TabIndex = 0
         Me.Label7.Text = "[%]"
         '
-        'TbShiftPolyFile
-        '
-        Me.TbShiftPolyFile.Location = New System.Drawing.Point(6, 42)
-        Me.TbShiftPolyFile.Name = "TbShiftPolyFile"
-        Me.TbShiftPolyFile.Size = New System.Drawing.Size(362, 20)
-        Me.TbShiftPolyFile.TabIndex = 0
-        '
-        'BtShiftPolyBrowse
-        '
-        Me.BtShiftPolyBrowse.Location = New System.Drawing.Point(374, 40)
-        Me.BtShiftPolyBrowse.Name = "BtShiftPolyBrowse"
-        Me.BtShiftPolyBrowse.Size = New System.Drawing.Size(32, 23)
-        Me.BtShiftPolyBrowse.TabIndex = 1
-        Me.BtShiftPolyBrowse.TabStop = False
-        Me.BtShiftPolyBrowse.Text = "..."
-        Me.BtShiftPolyBrowse.UseVisualStyleBackColor = True
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(6, 26)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(89, 13)
-        Me.Label1.TabIndex = 0
-        Me.Label1.Text = "Shift polygons file"
-        '
         'CmOpenFile
         '
-        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithGRAPHiToolStripMenuItem, Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
+        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
         Me.CmOpenFile.Name = "CmOpenFile"
-        Me.CmOpenFile.Size = New System.Drawing.Size(175, 70)
-        '
-        'OpenWithGRAPHiToolStripMenuItem
-        '
-        Me.OpenWithGRAPHiToolStripMenuItem.Name = "OpenWithGRAPHiToolStripMenuItem"
-        Me.OpenWithGRAPHiToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
-        Me.OpenWithGRAPHiToolStripMenuItem.Text = "Open with GRAPHi"
+        Me.CmOpenFile.Size = New System.Drawing.Size(153, 48)
         '
         'OpenWithToolStripMenuItem
         '
         Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.OpenWithToolStripMenuItem.Text = "Open with ..."
         '
         'ShowInFolderToolStripMenuItem
         '
         Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
-        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
         'GroupBox3
         '
         Me.GroupBox3.Controls.Add(Me.PnTC)
         Me.GroupBox3.Controls.Add(Me.ChTCon)
-        Me.GroupBox3.Location = New System.Drawing.Point(12, 613)
+        Me.GroupBox3.Location = New System.Drawing.Point(459, 440)
         Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Size = New System.Drawing.Size(441, 119)
+        Me.GroupBox3.Size = New System.Drawing.Size(414, 119)
         Me.GroupBox3.TabIndex = 7
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Torque Converter"
@@ -622,7 +582,7 @@ Partial Class F_GBX
         Me.PnTC.Controls.Add(Me.TbTCrefrpm)
         Me.PnTC.Location = New System.Drawing.Point(6, 39)
         Me.PnTC.Name = "PnTC"
-        Me.PnTC.Size = New System.Drawing.Size(429, 72)
+        Me.PnTC.Size = New System.Drawing.Size(402, 72)
         Me.PnTC.TabIndex = 36
         '
         'Label17
@@ -636,8 +596,9 @@ Partial Class F_GBX
         '
         'Label15
         '
+        Me.Label15.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(98, 50)
+        Me.Label15.Location = New System.Drawing.Point(71, 50)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(191, 13)
         Me.Label15.TabIndex = 0
@@ -645,8 +606,9 @@ Partial Class F_GBX
         '
         'Label14
         '
+        Me.Label14.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(368, 50)
+        Me.Label14.Location = New System.Drawing.Point(341, 50)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(40, 13)
         Me.Label14.TabIndex = 0
@@ -654,7 +616,8 @@ Partial Class F_GBX
         '
         'BtTCfileBrowse
         '
-        Me.BtTCfileBrowse.Location = New System.Drawing.Point(368, 19)
+        Me.BtTCfileBrowse.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtTCfileBrowse.Location = New System.Drawing.Point(341, 19)
         Me.BtTCfileBrowse.Name = "BtTCfileBrowse"
         Me.BtTCfileBrowse.Size = New System.Drawing.Size(32, 23)
         Me.BtTCfileBrowse.TabIndex = 1
@@ -664,15 +627,18 @@ Partial Class F_GBX
         '
         'TbTCfile
         '
+        Me.TbTCfile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TbTCfile.Location = New System.Drawing.Point(0, 21)
         Me.TbTCfile.Name = "TbTCfile"
-        Me.TbTCfile.Size = New System.Drawing.Size(362, 20)
+        Me.TbTCfile.Size = New System.Drawing.Size(335, 20)
         Me.TbTCfile.TabIndex = 0
         '
         'BtTCfileOpen
         '
+        Me.BtTCfileOpen.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BtTCfileOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.BtTCfileOpen.Location = New System.Drawing.Point(406, 19)
+        Me.BtTCfileOpen.Location = New System.Drawing.Point(379, 19)
         Me.BtTCfileOpen.Name = "BtTCfileOpen"
         Me.BtTCfileOpen.Size = New System.Drawing.Size(23, 23)
         Me.BtTCfileOpen.TabIndex = 2
@@ -681,7 +647,8 @@ Partial Class F_GBX
         '
         'TbTCrefrpm
         '
-        Me.TbTCrefrpm.Location = New System.Drawing.Point(295, 47)
+        Me.TbTCrefrpm.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TbTCrefrpm.Location = New System.Drawing.Point(268, 47)
         Me.TbTCrefrpm.Name = "TbTCrefrpm"
         Me.TbTCrefrpm.Size = New System.Drawing.Size(67, 20)
         Me.TbTCrefrpm.TabIndex = 3
@@ -711,7 +678,6 @@ Partial Class F_GBX
         '
         Me.CbGStype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CbGStype.FormattingEnabled = True
-        Me.CbGStype.Items.AddRange(New Object() {"Manual Transmission (MT)", "Automated Manual Transmission (AMT)", "Automatic Transmission (AT)", "Custom"})
         Me.CbGStype.Location = New System.Drawing.Point(119, 108)
         Me.CbGStype.Name = "CbGStype"
         Me.CbGStype.Size = New System.Drawing.Size(227, 21)
@@ -720,7 +686,7 @@ Partial Class F_GBX
         'BtAddGear
         '
         Me.BtAddGear.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.BtAddGear.Location = New System.Drawing.Point(6, 174)
+        Me.BtAddGear.Location = New System.Drawing.Point(6, 207)
         Me.BtAddGear.Name = "BtAddGear"
         Me.BtAddGear.Size = New System.Drawing.Size(29, 23)
         Me.BtAddGear.TabIndex = 3
@@ -734,7 +700,7 @@ Partial Class F_GBX
         Me.GroupBox4.Controls.Add(Me.BtAddGear)
         Me.GroupBox4.Location = New System.Drawing.Point(12, 135)
         Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(441, 209)
+        Me.GroupBox4.Size = New System.Drawing.Size(441, 236)
         Me.GroupBox4.TabIndex = 46
         Me.GroupBox4.TabStop = False
         Me.GroupBox4.Text = "Gears"
@@ -742,7 +708,7 @@ Partial Class F_GBX
         'Label32
         '
         Me.Label32.AutoSize = True
-        Me.Label32.Location = New System.Drawing.Point(312, 179)
+        Me.Label32.Location = New System.Drawing.Point(312, 212)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(123, 13)
         Me.Label32.TabIndex = 35
@@ -756,10 +722,19 @@ Partial Class F_GBX
         Me.PnInertiaTI.Controls.Add(Me.Label48)
         Me.PnInertiaTI.Controls.Add(Me.Label49)
         Me.PnInertiaTI.Controls.Add(Me.TbTracInt)
-        Me.PnInertiaTI.Location = New System.Drawing.Point(49, 347)
+        Me.PnInertiaTI.Location = New System.Drawing.Point(469, 406)
         Me.PnInertiaTI.Name = "PnInertiaTI"
         Me.PnInertiaTI.Size = New System.Drawing.Size(398, 30)
         Me.PnInertiaTI.TabIndex = 47
+        '
+        'PicBox
+        '
+        Me.PicBox.BackColor = System.Drawing.Color.LightGray
+        Me.PicBox.Location = New System.Drawing.Point(459, 28)
+        Me.PicBox.Name = "PicBox"
+        Me.PicBox.Size = New System.Drawing.Size(406, 372)
+        Me.PicBox.TabIndex = 48
+        Me.PicBox.TabStop = False
         '
         'F_GBX
         '
@@ -767,7 +742,8 @@ Partial Class F_GBX
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(465, 786)
+        Me.ClientSize = New System.Drawing.Size(877, 617)
+        Me.Controls.Add(Me.PicBox)
         Me.Controls.Add(Me.PnInertiaTI)
         Me.Controls.Add(Me.GroupBox4)
         Me.Controls.Add(Me.CbGStype)
@@ -807,6 +783,7 @@ Partial Class F_GBX
         Me.GroupBox4.PerformLayout()
         Me.PnInertiaTI.ResumeLayout(False)
         Me.PnInertiaTI.PerformLayout()
+        CType(Me.PicBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -839,9 +816,6 @@ Partial Class F_GBX
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
     Friend WithEvents GrGearShift As System.Windows.Forms.GroupBox
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents BtShiftPolyBrowse As System.Windows.Forms.Button
-    Friend WithEvents TbShiftPolyFile As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents TbTqResvStart As System.Windows.Forms.TextBox
     Friend WithEvents TbTqResv As System.Windows.Forms.TextBox
@@ -861,10 +835,8 @@ Partial Class F_GBX
     Friend WithEvents ChSkipGears As System.Windows.Forms.CheckBox
     Friend WithEvents ChShiftInside As System.Windows.Forms.CheckBox
     Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
-    Friend WithEvents OpenWithGRAPHiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents BtShiftPolyOpen As System.Windows.Forms.Button
     Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
     Friend WithEvents TbTCfile As System.Windows.Forms.TextBox
     Friend WithEvents ChTCon As System.Windows.Forms.CheckBox
@@ -883,4 +855,6 @@ Partial Class F_GBX
     Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
     Friend WithEvents Label32 As System.Windows.Forms.Label
     Friend WithEvents PnInertiaTI As System.Windows.Forms.Panel
+    Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents PicBox As System.Windows.Forms.PictureBox
 End Class

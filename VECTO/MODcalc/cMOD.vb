@@ -44,11 +44,13 @@ Public Class cMOD
     'FC
     Public FCerror As Boolean
     Public lFC As List(Of Single)
+    Public lFCAUXc As List(Of Single)
+    Public lFCWHTCc As List(Of Single)
     Public FCavg As Single
+    Public FCavgAUXc As Single
+    Public FCavgWHTCc As Single
 
-    Public CorrFactor As Single
-
-
+    Public FCAUXcSet As Boolean
 
     Private bInit As Boolean
 
@@ -90,6 +92,9 @@ Public Class cMOD
         TCnOut = New List(Of Single)
 
         lFC = New List(Of Single)
+        lFCAUXc = New List(Of Single)
+        lFCWHTCc = New List(Of Single)
+        FCAUXcSet = False
 
         FCerror = False
 
@@ -104,6 +109,8 @@ Public Class cMOD
     Public Sub CleanUp()
         If bInit Then
             lFC = Nothing
+            lFCAUXc = Nothing
+            lFCWHTCc = Nothing
 
             Vh.CleanUp()
             Px = Nothing
@@ -193,6 +200,7 @@ Public Class cMOD
         Dim s As Integer
         Dim L As List(Of Double)
         Dim AuxKV As KeyValuePair(Of String, List(Of Single))
+        Dim st As String
 
         'Define Cycle-length (shorter by 1sec than original because of Interim-seconds)
         tDim = DRI.tDim - 1
@@ -220,18 +228,30 @@ Public Class cMOD
 
         End If
 
-        'Specify average Aux and Aux-lists, when Au8x present in DRI and VEH
-        If DRI.AuxDef Then
-            For Each AuxKV In DRI.AuxComponents
+        'Specify average Aux and Aux-lists, when Aux present in DRI and VEH
+        If Cfg.DeclMode Then
 
-                For s = 0 To tDim
-                    AuxKV.Value(s) = (AuxKV.Value(s + 1) + AuxKV.Value(s)) / 2
-                Next
-
-                If VEC.AuxPaths.ContainsKey(AuxKV.Key) Then MODdata.Paux.Add(AuxKV.Key, New List(Of Single))
-
+            For Each st In VEC.AuxPaths.Keys
+                MODdata.Paux.Add(st, New List(Of Single))
             Next
+
+        Else
+
+            If DRI.AuxDef Then
+                For Each AuxKV In DRI.AuxComponents
+
+                    For s = 0 To tDim
+                        AuxKV.Value(s) = (AuxKV.Value(s + 1) + AuxKV.Value(s)) / 2
+                    Next
+
+                    If VEC.AuxPaths.ContainsKey(AuxKV.Key) Then MODdata.Paux.Add(AuxKV.Key, New List(Of Single))
+
+                Next
+            End If
+
         End If
+
+
 
 
     End Sub
@@ -289,7 +309,6 @@ Public Class cMOD
         Dim rA As Double
         Dim rB As Double
         Dim rSE As Double
-        Dim FCadd As Double
         Dim PeAdd As Double
 
         Dim MsgSrc As String
@@ -316,7 +335,7 @@ Public Class cMOD
 
 
                     'Delaunay
-                    v = MAP.fFCdelaunay_Intp(MODdata.nU(i), MODdata.Pe(i))
+                    v = MAP.fFCdelaunay_Intp(MODdata.nU(i), nPeToM(MODdata.nU(i), MODdata.Pe(i)))
 
                     If v < 0 And v > -999 Then v = 0
 
@@ -339,15 +358,6 @@ Public Class cMOD
             sum += x
         Next
         FCavg = CSng(sum / lFC.Count)
-
-
-        'WHTC Correction
-        If Declaration.Active AndAlso WHTCcorrection Then
-            CorrFactor = Declaration.SegRef.WHTCWF(Declaration.CurrentMission.MissionID)(tWHTCpart.Urban) * ENG.WHTCurban / Declaration.WHTCresults(tWHTCpart.Urban) _
-                + Declaration.SegRef.WHTCWF(Declaration.CurrentMission.MissionID)(tWHTCpart.Rural) * ENG.WHTCrural / Declaration.WHTCresults(tWHTCpart.Rural) _
-                + Declaration.SegRef.WHTCWF(Declaration.CurrentMission.MissionID)(tWHTCpart.Motorway) * ENG.WHTCmw / Declaration.WHTCresults(tWHTCpart.Motorway)
-        End If
-
 
         'Start/Stop-Aux - Correction
         If Result AndAlso LostEnergy > 0 Then
@@ -381,23 +391,39 @@ Public Class cMOD
 
             WorkerMsg(tMsgID.Normal, " > Additional engine load: " & AddEngLoad.ToString("0.000") & " [kW]", MsgSrc)
 
-            FCadd = 0
             For i = 0 To MODdata.tDim
+                lFCAUXc.Add(lFC(i))
                 If MODdata.EngState(i) <> tEngState.Stopped Then
                     PeAdd = AddEngLoad + MODdata.Pbrake(i)
                     If PeAdd > 0 Then
-                        FCadd += rB * PeAdd
+                        lFCAUXc(i) += rB * PeAdd
                     End If
                 End If
             Next
 
-            FCadd /= EngOnTime '[g/h]
+            'average
+            sum = 0
+            For Each x In lFCAUXc
+                sum += x
+            Next
+            FCavgAUXc = CSng(sum / lFC.Count)
 
-            WorkerMsg(tMsgID.Normal, " > FC corrected from: " & FCavg.ToString("0.0") & " [g/h] to " & (FCavg + FCadd).ToString("0.0") & " [g/h]", MsgSrc)
+            FCAUXcSet = True
 
-            'Correct FC to higher load
-            FCavg += FCadd
+        End If
 
+        'WHTC Correction
+        If Cfg.DeclMode Then
+
+            For i = 0 To MODdata.tDim
+                lFCWHTCc.Add(lFC(i) * Declaration.WHTCcorrFactor)
+            Next
+
+            sum = 0
+            For Each x In lFCWHTCc
+                sum += x
+            Next
+            FCavgWHTCc = CSng(sum / lFC.Count)
 
         End If
 
@@ -512,10 +538,11 @@ Public Class cMOD
         s.Append(Sepp & "FC")
         sU.Append(Sepp & "[g/h]")
 
-        If Declaration.Active Then
-            s.Append(Sepp & "FC corrected")
-            sU.Append(Sepp & "[g/h]")
-        End If
+        s.Append(Sepp & "FC-AUXc")
+        sU.Append(Sepp & "[g/h]")
+
+        s.Append(Sepp & "FC-WHTCc")
+        sU.Append(Sepp & "[g/h]")
 
 
         'Write to File
@@ -675,12 +702,25 @@ Public Class cMOD
                     s.Append(Sepp & "ERROR")
                 End If
 
-                If Declaration.Active Then
-                    If .lFC(t) > -0.0001 Then
-                        s.Append(Sepp & .lFC(t) * .CorrFactor)
+                If FCAUXcSet Then
+                    If .lFCAUXc(t) > -0.0001 Then
+                        s.Append(Sepp & .lFCAUXc(t))
                     Else
                         s.Append(Sepp & "ERROR")
                     End If
+                Else
+                    s.Append(Sepp & "-")
+                End If
+
+
+                If Cfg.DeclMode Then
+                    If .lFCWHTCc(t) > -0.0001 Then
+                        s.Append(Sepp & .lFCWHTCc(t))
+                    Else
+                        s.Append(Sepp & "ERROR")
+                    End If
+                Else
+                    s.Append(Sepp & "-")
                 End If
 
                 'Write to File

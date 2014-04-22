@@ -1,16 +1,18 @@
-﻿Public Class cConfig
+﻿Imports System.Collections.Generic
 
-    'Private Const FormatVersion As Short = 1
-    'Private FileVersion As Short
+Public Class cConfig
 
-    Public GnVorgab As Boolean
-    Private sWorkDPath As String
-    Private WorkDirHome As Boolean  'Nicht direkt in Configdatei
+    Public FilePath As String
+
+    Private Const FormatVersion As Short = 1
+    Private FileVersion As Short
+
+    Public GnUfromCycle As Boolean
     Public LastMode As Int16
     Public ModOut As Boolean
     Public BATCHoutpath As String   'Ausgabepfad für BATCH-Modus:   <WORKDIR>, <GENPATH> oder Pfad
     Public BATCHoutSubD As Boolean
-    Public WegKorJa As Boolean
+    Public DistCorr As Boolean
     Public LogSize As Single
     Public AirDensity As Single
     Public OpenCmd As String
@@ -21,6 +23,8 @@
 
     Public FirstRun As Boolean
 
+    Public DeclMode As Boolean
+
     Public Sub New()
         SetDefault()
     End Sub
@@ -29,118 +33,17 @@
         AirDensity = cDeclaration.AirDensity
         FuelDens = cDeclaration.FuelDens
         CO2perFC = cDeclaration.CO2perFC
+        DistCorr = True
+        GnUfromCycle = False
     End Sub
 
-    Public Function ConfigLOAD() As Boolean
-        Dim c As New cFile_V3
-        Dim line As String()
-
-        SetDefault()
-
-        If Not IO.File.Exists(MyConfPath & "settings.txt") Then
-            If Not Cfg.FirstRun Then GUImsg(tMsgID.Err, "Config-file not found! Using default settings.")
-            Return False
-        End If
-
-        c.OpenRead(MyConfPath & "settings.txt", ";")
-
-        '***
-        '*** First line: Version
-        'txt = Trim(UCase(c.ReadLine(0)))
-        'If Microsoft.VisualBasic.Left(txt, 1) = "V" Then
-        '    ' "Remove V'' => It remains the number
-        '    txt = txt.Replace("V", "")
-        '    If Not IsNumeric(txt) Then
-        '        'If invalid version: Abort
-        '        GoTo lbEr
-        '    Else
-        '        'Version settled
-        '        FileVersion = CInt(txt)
-        '    End If
-        'Else
-        '    c.Close()
-        '    Return ReadOldFormat()
-        'End If
-
-        'If FileVersion > FormatVersion Then
-        '    GUImsg(tMsgID.Err, "Config-file Version " & FileVersion & " incompatible with application version! Using default settings.")
-        '    Return False
-        'End If
-
-        sWorkDPath = Trim(c.ReadLine(0))
-        If UCase(sWorkDPath) = sKey.HomePath Then
-            WorkDirHome = True
-            sWorkDPath = MyAppPath
-        End If
-
-        LastMode = CShort(c.ReadLine(0))
-
-        c.ReadLine()
-
-        c.ReadLine()
-
-        c.ReadLine()
-
-        c.ReadLine()
-
-        c.ReadLine()
-
-        ModOut = CBool(c.ReadLine(0))
-
-        WegKorJa = CBool(c.ReadLine(0))
-
-        GnVorgab = CBool(c.ReadLine(0))
-
-        c.ReadLine()
-
-        c.ReadLine()
-
-        LogSize = CSng(c.ReadLine(0))
-
-        BATCHoutpath = Trim(c.ReadLine(0))
-
-        BATCHoutSubD = CBool(c.ReadLine(0))
-
-        AirDensity = CSng(c.ReadLine(0))
-
-        c.ReadLine()
-
-        c.ReadLine()
-
-        line = c.ReadLine
-        OpenCmd = line(0)
-        If UBound(line) > 0 Then OpenCmdName = line(1)
-
-        FuelDens = CSng(c.ReadLine(0))
-        CO2perFC = CSng(c.ReadLine(0))
-
-        If c.EndOfFile Then GoTo lbDone
-
-        FirstRun = CBool(c.ReadLine(0))
-
-
-
-lbDone:
-
-        c.Close()
-
-        Return True
-
-
-lbEr:
-        c.Close()
-        Return False
-
-    End Function
-
     Public Sub SetDefault()
-        GnVorgab = True
-        sWorkDPath = "c:\"
+        GnUfromCycle = True
         LastMode = 0
         ModOut = True
-        BATCHoutpath = sKey.GenPath
+        BATCHoutpath = sKey.JobPath
         BATCHoutSubD = False
-        WegKorJa = True
+        DistCorr = True
         LogSize = 2
         AirDensity = 1.2
         OpenCmd = "notepad"
@@ -149,102 +52,89 @@ lbEr:
         FuelDens = 0.835
         CO2perFC = 3.153
 
-        WorkDirHome = False
-
         FirstRun = True
+
+        DeclMode = True
+
+    End Sub
+
+    Public Sub ConfigLOAD()
+
+        Dim JSON As New cJSON
+
+        SetDefault()
+
+        If Not IO.File.Exists(FilePath) Then Exit Sub
+
+
+        If Not JSON.ReadFile(FilePath) Then GUImsg(tMsgID.Err, "Failed to load settings! Using default settings.")
+
+        Try
+
+            FileVersion = JSON.Content("Header")("FileVersion")
+
+            LastMode = JSON.Content("Body")("LastMode")
+            ModOut = JSON.Content("Body")("ModOut")
+            DistCorr = JSON.Content("Body")("DistCorrection")
+            GnUfromCycle = JSON.Content("Body")("UseGnUfromCycle")
+            LogSize = JSON.Content("Body")("LogSize")
+            BATCHoutpath = JSON.Content("Body")("BATCHoutpath")
+            BATCHoutSubD = JSON.Content("Body")("BATCHoutSubD")
+            AirDensity = JSON.Content("Body")("AirDensity")
+            FuelDens = JSON.Content("Body")("FuelDensity")
+            CO2perFC = JSON.Content("Body")("CO2perFC")
+            OpenCmd = JSON.Content("Body")("OpenCmd")
+            OpenCmdName = JSON.Content("Body")("OpenCmdName")
+            FirstRun = JSON.Content("Body")("FirstRun")
+            DeclMode = JSON.Content("Body")("DeclMode")
+
+
+
+        Catch ex As Exception
+
+            GUImsg(tMsgID.Err, "Error while loading settings!")
+
+        End Try
+
 
     End Sub
 
     Public Sub ConfigSAVE()
-        Dim c As New cFile_V3
-        c.OpenWrite(MyConfPath & "settings.txt", ";")
+        Dim JSON As New cJSON
+        Dim dic As Dictionary(Of String, Object)
 
-        'Version
-        'c.WriteLine("V" & FormatVersion)
+        'Header
+        dic = New Dictionary(Of String, Object)
+        dic.Add("CreatedBy", Lic.LicString & " (" & Lic.GUID & ")")
+        dic.Add("Date", Now.ToString)
+        dic.Add("AppVersion", VECTOvers)
+        dic.Add("FileVersion", FormatVersion)
+        JSON.Content.Add("Header", dic)
 
-        c.WriteLine("c Working Directory Path")
-        If WorkDirHome And UCase(Trim(sWorkDPath)) = UCase(Trim(MyAppPath)) Then
-            c.WriteLine(sKey.HomePath)
-        Else
-            c.WriteLine(sWorkDPath)
-            WorkDirHome = False
-        End If
-        c.WriteLine("c LastMode 0/1/2")
-        c.WriteLine(F_MAINForm.CBoxMODE.SelectedIndex)
-        c.WriteLine("c NOT USED")
-        c.WriteLine("0")
-        c.WriteLine("c NOT USED")
-        c.WriteLine("0")
-        c.WriteLine("c NOT USED")
-        c.WriteLine("0")
-        c.WriteLine("c NOT USED")
-        c.WriteLine("0")
-        c.WriteLine("c NOT USED")
-        c.WriteLine("0")
-        c.WriteLine("c Modal output 1/0")
-        c.WriteLine(Math.Abs(CInt(ModOut)))
-        c.WriteLine("c Cycle Distance Correction 1/0")
-        c.WriteLine(Math.Abs(CInt(WegKorJa)))
-        c.WriteLine("c Use gears/rpm's form driving cycle 1/0")
-        c.WriteLine(Math.Abs(CInt(GnVorgab)))
-        c.WriteLine("c Log file size limit [MB]")
-        c.WriteLine(LogSize)
-        c.WriteLine("c NOT USED")
-        c.WriteLine("0")
-        c.WriteLine("c NOT USED")
-        c.WriteLine("0")
-        c.WriteLine("c BATCH Output Path")
-        c.WriteLine(BATCHoutpath)
-        c.WriteLine("c BATCH Sub Dir Output 1/0")
-        c.WriteLine(Math.Abs(CInt(BATCHoutSubD)))
-        c.WriteLine("c Air Density [kg/m3]")
-        c.WriteLine(CStr(AirDensity))
-        c.WriteLine("c NOT USED")
-        c.WriteLine("0")
-        c.WriteLine("c NOT USED")
-        c.WriteLine("0")
-        c.WriteLine("c File Open CMD")
-        c.WriteLine(OpenCmd, OpenCmdName)
+        'Body
+        dic = New Dictionary(Of String, Object)
 
-        c.WriteLine("c Fuel Density [kg/l]")
-        c.WriteLine(FuelDens.ToString)
-        c.WriteLine("c CO2 per FC [kgCO2/kgFC]")
-        c.WriteLine(CO2perFC.ToString)
+        dic.Add("LastMode", F_MAINForm.CBoxMODE.SelectedIndex)
+        dic.Add("ModOut", ModOut)
+        dic.Add("DistCorrection", DistCorr)
+        dic.Add("UseGnUfromCycle", GnUfromCycle)
+        dic.Add("LogSize", LogSize)
+        dic.Add("BATCHoutpath", BATCHoutpath)
+        dic.Add("BATCHoutSubD", BATCHoutSubD)
+        dic.Add("AirDensity", AirDensity)
+        dic.Add("FuelDensity", FuelDens)
+        dic.Add("CO2perFC", CO2perFC)
+        dic.Add("OpenCmd", OpenCmd)
+        dic.Add("OpenCmdName", OpenCmdName)
+        dic.Add("FirstRun", FirstRun)
+        dic.Add("DeclMode", DeclMode)
 
-        c.WriteLine("c First Run (Show Quick Start Guide Prompt)")
-        c.WriteLine(Math.Abs(CInt(FirstRun)))
+        JSON.Content.Add("Body", dic)
 
-        c.Close()
-        c = Nothing
-    End Sub
-
-    Public Sub SetWorkDir(ByVal Path As String)
-
-        Path = Trim(Path)
-
-        If Path = "" Then Exit Sub
-
-        If Right(Path, 1) <> "\" Then Path &= "\"
-
-        If UCase(Path) <> UCase(sWorkDPath) Then
-
-            If UCase(Path) = sKey.HomePath Then
-                WorkDirHome = True
-                sWorkDPath = MyAppPath
-            Else
-                WorkDirHome = False
-                sWorkDPath = Path
-            End If
-
-        End If
+        JSON.WriteFile(FilePath)
 
     End Sub
 
-    Public ReadOnly Property WorkDPath As String
-        Get
-            Return sWorkDPath
-        End Get
-    End Property
 
 End Class
 

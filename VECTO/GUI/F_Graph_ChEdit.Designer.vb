@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class F_StrInpBox
+Partial Class F_Graph_ChEdit
     Inherits System.Windows.Forms.Form
 
     'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
@@ -25,9 +25,12 @@ Partial Class F_StrInpBox
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.OK_Button = New System.Windows.Forms.Button()
         Me.Cancel_Button = New System.Windows.Forms.Button()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.RbLeft = New System.Windows.Forms.RadioButton()
+        Me.RbRight = New System.Windows.Forms.RadioButton()
         Me.TableLayoutPanel1.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -38,12 +41,12 @@ Partial Class F_StrInpBox
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(277, 82)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(58, 110)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(146, 29)
-        Me.TableLayoutPanel1.TabIndex = 5
+        Me.TableLayoutPanel1.TabIndex = 0
         '
         'OK_Button
         '
@@ -62,50 +65,79 @@ Partial Class F_StrInpBox
         Me.Cancel_Button.Name = "Cancel_Button"
         Me.Cancel_Button.Size = New System.Drawing.Size(67, 23)
         Me.Cancel_Button.TabIndex = 1
-        Me.Cancel_Button.Text = "Cancel"
+        Me.Cancel_Button.Text = "Abbrechen"
         '
-        'Label1
+        'ComboBox1
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(12, 9)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(39, 13)
-        Me.Label1.TabIndex = 1
-        Me.Label1.Text = "Label1"
+        Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Location = New System.Drawing.Point(12, 12)
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Size = New System.Drawing.Size(188, 21)
+        Me.ComboBox1.TabIndex = 1
         '
-        'TextBox1
+        'GroupBox1
         '
-        Me.TextBox1.Location = New System.Drawing.Point(12, 35)
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(411, 20)
-        Me.TextBox1.TabIndex = 2
+        Me.GroupBox1.Controls.Add(Me.RbRight)
+        Me.GroupBox1.Controls.Add(Me.RbLeft)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 39)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(188, 55)
+        Me.GroupBox1.TabIndex = 2
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Y Axis"
         '
-        'F_StrInpBox
+        'RbLeft
+        '
+        Me.RbLeft.AutoSize = True
+        Me.RbLeft.Location = New System.Drawing.Point(16, 19)
+        Me.RbLeft.Name = "RbLeft"
+        Me.RbLeft.Size = New System.Drawing.Size(43, 17)
+        Me.RbLeft.TabIndex = 3
+        Me.RbLeft.TabStop = True
+        Me.RbLeft.Text = "Left"
+        Me.RbLeft.UseVisualStyleBackColor = True
+        '
+        'RbRight
+        '
+        Me.RbRight.AutoSize = True
+        Me.RbRight.Location = New System.Drawing.Point(80, 19)
+        Me.RbRight.Name = "RbRight"
+        Me.RbRight.Size = New System.Drawing.Size(50, 17)
+        Me.RbRight.TabIndex = 3
+        Me.RbRight.TabStop = True
+        Me.RbRight.Text = "Right"
+        Me.RbRight.UseVisualStyleBackColor = True
+        '
+        'F_Graph_ChEdit
         '
         Me.AcceptButton = Me.OK_Button
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New System.Drawing.Size(435, 123)
-        Me.Controls.Add(Me.TextBox1)
-        Me.Controls.Add(Me.Label1)
+        Me.ClientSize = New System.Drawing.Size(216, 151)
+        Me.Controls.Add(Me.GroupBox1)
+        Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "F_StrInpBox"
+        Me.Name = "F_Graph_ChEdit"
         Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "VECTO"
+        Me.Text = "Edit Channel"
         Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
     Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents OK_Button As System.Windows.Forms.Button
     Friend WithEvents Cancel_Button As System.Windows.Forms.Button
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
+    Friend WithEvents ComboBox1 As System.Windows.Forms.ComboBox
+    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+    Friend WithEvents RbRight As System.Windows.Forms.RadioButton
+    Friend WithEvents RbLeft As System.Windows.Forms.RadioButton
 
 End Class

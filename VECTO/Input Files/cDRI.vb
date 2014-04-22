@@ -1,33 +1,111 @@
 ﻿Imports System.Collections.Generic
 
+''' <summary>
+''' Driving cycle input file
+''' </summary>
+''' <remarks></remarks>
 Public Class cDRI
 
-    'Private Const FormatVersion As Integer = 1
-    'Private FileVersion As Integer
+    ''' <summary>
+    ''' Last index of driving cycle columns
+    ''' </summary>
+    ''' <remarks></remarks>
     Public tDim As Integer
 
+    ''' <summary>
+    ''' Dictionary holding all driving cycle columns. Key= Parameter-ID (enum), Value= parameter value per time step
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Values As Dictionary(Of tDriComp, List(Of Double))
+
+    ''' <summary>
+    ''' First time stamp in driving cycle
+    ''' </summary>
+    ''' <remarks></remarks>
     Public t0 As Integer
 
-    Private sFilePath As String
+    ''' <summary>
+    ''' Full filepath. Needs to be defined before calling ReadFile. 
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public FilePath As String
 
+    ''' <summary>
+    ''' True= Cycle includes time stamps. Defined in ReadFile.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Tvorg As Boolean
+
+    ''' <summary>
+    ''' True= Cycle includes time vehicle speed. Defined in ReadFile.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Vvorg As Boolean
+
+    ''' <summary>
+    ''' True= Cycle includes engine power. Defined in ReadFile.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Pvorg As Boolean
+
+    ''' <summary>
+    ''' True= Cycle includes additional auxiliary power demand (not to be confused with auxiliary supply power). Defined in ReadFile.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public PaddVorg As Boolean
+
+    ''' <summary>
+    ''' True= Cycle includes engine speed. Defined in ReadFile.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Nvorg As Boolean
+
+    ''' <summary>
+    ''' True= Cycle includes gear input. Defined in ReadFile.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Gvorg As Boolean
+
+    ''' <summary>
+    ''' True= Cycle includes slope. Defined in ReadFile.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public GradVorg As Boolean
 
-    'Aux-Psupply
-    Private bAuxDef As Boolean
+    ''' <summary>
+    ''' True= Cycle includes auxiliary supply power for at least one auxiliary. Defined in ReadFile.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public AuxDef As Boolean
+
+    ''' <summary>
+    ''' Auxiliary supply power input. Key= Aux-ID, Value= Supply power [kW] per time step
+    ''' </summary>
+    ''' <remarks></remarks>
     Public AuxComponents As Dictionary(Of String, List(Of Single))
 
+    ''' <summary>
+    ''' True= Cycle includes VairRes and VairBeta for side wind correction. Defined in ReadFile.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public VairVorg As Boolean
 
+    ''' <summary>
+    ''' True= Cycle includes distance. Defined in ReadFile.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Scycle As Boolean
+
+    ''' <summary>
+    ''' True= Cycle includes slope. Defined in ReadFile.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public VoglS As List(Of Double)
 
+    ''' <summary>
+    ''' Reset all fields, etc. berfore loading new file. Called by ReadFile.
+    ''' </summary>
+    ''' <remarks></remarks>
     Private Sub ResetMe()
         Values = Nothing
         PaddVorg = False
@@ -38,13 +116,18 @@ Public Class cDRI
         Gvorg = False
         Pvorg = False
         tDim = -1
-        t0 = 1  'Ist Standardwert falls Converter nicht verwendet wird
-        bAuxDef = False
+        t0 = 1  'Default if no time steps are defined in driving cycle
+        AuxDef = False
         AuxComponents = Nothing
         VairVorg = False
         Scycle = False
     End Sub
 
+    ''' <summary>
+    ''' Read driving cycle. FilePath must be defined before calling.
+    ''' </summary>
+    ''' <returns>True= File loaded successfully.</returns>
+    ''' <remarks></remarks>
     Public Function ReadFile() As Boolean
         Dim file As cFile_V3
         Dim line As String()
@@ -74,8 +157,8 @@ Public Class cDRI
         ResetMe()
 
         'Abort if there's no file
-        If sFilePath = "" OrElse Not IO.File.Exists(sFilePath) Then
-            WorkerMsg(tMsgID.Err, "Cycle file not found (" & sFilePath & ") !", MsgSrc)
+        If FilePath = "" OrElse Not IO.File.Exists(FilePath) Then
+            WorkerMsg(tMsgID.Err, "Cycle file not found (" & FilePath & ") !", MsgSrc)
             Return False
         End If
 
@@ -84,8 +167,8 @@ Public Class cDRI
 
         'Open file
         file = New cFile_V3
-        If Not file.OpenRead(sFilePath) Then
-            WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
+        If Not file.OpenRead(FilePath) Then
+            WorkerMsg(tMsgID.Err, "Failed to open file (" & FilePath & ") !", MsgSrc)
             file = Nothing
             Return False
         End If
@@ -138,7 +221,7 @@ Public Class cDRI
 
                     txt = fCompSubStr(line(s))
 
-                    If Not bAuxDef Then
+                    If Not AuxDef Then
                         AuxComponents = New Dictionary(Of String, List(Of Single))
                         AuxSpalten = New Dictionary(Of String, Integer)
                     End If
@@ -151,7 +234,7 @@ Public Class cDRI
                     AuxComponents.Add(txt, New List(Of Single))
                     AuxSpalten.Add(txt, s)
 
-                    bAuxDef = True
+                    AuxDef = True
 
                 End If
 
@@ -204,7 +287,7 @@ Public Class cDRI
                     Values(sKV.Key).Add(CDbl(line(sKV.Value)))
                 Next
 
-                If bAuxDef Then
+                If AuxDef Then
                     For Each AuxID In AuxSpalten.Keys
                         AuxComponents(AuxID).Add(CSng(line(AuxSpalten(AuxID))))
                     Next
@@ -213,7 +296,7 @@ Public Class cDRI
             Loop
         Catch ex As Exception
 
-            WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & tDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
+            WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & tDim + 1 & " (" & FilePath & ")", MsgSrc, FilePath)
             GoTo lbEr
 
         End Try
@@ -246,6 +329,10 @@ lbEr:
 
     End Function
 
+    ''' <summary>
+    ''' Calculates altitude for each time step if driving cycle includes slope.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub GradToAlt()
         Dim i As Integer
         Dim v0 As New List(Of Double)
@@ -256,7 +343,6 @@ lbEr:
 
         'Skip if altitude is defined already
         If Values.ContainsKey(tDriComp.Alt) Then Exit Sub
-
 
         If GradVorg And Vvorg Then
 
@@ -309,6 +395,11 @@ lbEr:
 
     End Sub
 
+    ''' <summary>
+    ''' Convert distance-based cycle to time-based cycle.
+    ''' </summary>
+    ''' <returns>True= Convertion successful.</returns>
+    ''' <remarks></remarks>
     Public Function ConvStoT() As Boolean
         Dim i As Integer
         Dim j As Integer
@@ -385,7 +476,7 @@ lbEr:
             End If
         Next
 
-        If bAuxDef Then
+        If AuxDef Then
             tAuxValues = New Dictionary(Of String, List(Of Single))
             hzAuxValues = New Dictionary(Of String, List(Of Single))
             For Each AuxKV In AuxComponents
@@ -441,7 +532,7 @@ lbEr:
         tValues(tDriComp.V).Add(Speed(0))
         tSpeedOgl.Add(SpeedOgl(0))
         tDist.Add(s)
-        If bAuxDef Then
+        If AuxDef Then
             For Each AuxKV In AuxComponents
                 tAuxValues(AuxKV.Key).Add(AuxKV.Value(0))
             Next
@@ -463,7 +554,7 @@ lbEr:
             tValues(tDriComp.V).Add(Speed(0))
             tSpeedOgl.Add(SpeedOgl(0))
             tDist.Add(s)
-            If bAuxDef Then
+            If AuxDef Then
                 For Each AuxKV In AuxComponents
                     tAuxValues(AuxKV.Key).Add(AuxKV.Value(0))
                 Next
@@ -492,7 +583,7 @@ lbEr:
             tValues(tDriComp.V).Add(Speed(i + 1))
             tSpeedOgl.Add(SpeedOgl(i + 1))
             tDist.Add(s)
-            If bAuxDef Then
+            If AuxDef Then
                 For Each AuxKV In AuxComponents
                     tAuxValues(AuxKV.Key).Add(AuxKV.Value(i + 1))
                 Next
@@ -515,7 +606,7 @@ lbEr:
                 tSpeedOgl.Add(SpeedOgl(i + 1))
                 tDist.Add(s)
 
-                If bAuxDef Then
+                If AuxDef Then
                     For Each AuxKV In AuxComponents
                         tAuxValues(AuxKV.Key).Add(AuxKV.Value(i + 1))
                     Next
@@ -563,7 +654,7 @@ lbEr:
                 Next
                 hzSpeedOgl.Add(0)
 
-                If bAuxDef Then
+                If AuxDef Then
                     For Each AuxKV In AuxComponents
                         'WRONG!! => hzAuxValues(AuxKV.Key).Add(AuxKV.Value(i - 1))
                         hzAuxValues(AuxKV.Key).Add(tAuxValues(AuxKV.Key)(i - 1))
@@ -577,7 +668,7 @@ lbEr:
                 Next
                 hzSpeedOgl.Add((hzDist(j) - tDist(i - 1)) * (tSpeedOgl(i) - tSpeedOgl(i - 1)) / (tDist(i) - tDist(i - 1)) + tSpeedOgl(i - 1))
 
-                If bAuxDef Then
+                If AuxDef Then
                     For Each AuxKV In AuxComponents
                         hzAuxValues(AuxKV.Key).Add((hzDist(j) - tDist(i - 1)) * (tAuxValues(AuxKV.Key)(i) - tAuxValues(AuxKV.Key)(i - 1)) / (tDist(i) - tDist(i - 1)) + tAuxValues(AuxKV.Key)(i - 1))
                     Next
@@ -590,13 +681,18 @@ lbEr:
         Values = hzValues
         VoglS = hzSpeedOgl
         MODdata.Vh.Weg = hzDist
-        If bAuxDef Then AuxComponents = hzAuxValues
+        If AuxDef Then AuxComponents = hzAuxValues
         tDim = Values(tDriComp.V).Count - 1
 
         Return True
 
     End Function
 
+    ''' <summary>
+    ''' Convert cycle to 1Hz.
+    ''' </summary>
+    ''' <returns>True= Convertion successful.</returns>
+    ''' <remarks></remarks>
     Public Function ConvTo1Hz() As Boolean
 
         Dim tMin As Double
@@ -644,7 +740,7 @@ lbEr:
             If KV.Key <> tDriComp.t Then Summe.Add(KV.Key, 0)
         Next
 
-        If bAuxDef Then
+        If AuxDef Then
             NewAuxValues = New Dictionary(Of String, List(Of Single))
             AuxSumme = New Dictionary(Of String, Single)
             For Each AuxKV In AuxComponents
@@ -688,7 +784,7 @@ lb10:
                         NewValues(KVd.Key).Add((tMid - fTime(z - 1)) * (Values(KVd.Key)(z) - Values(KVd.Key)(z - 1)) / (fTime(z) - fTime(z - 1)) + Values(KVd.Key)(z - 1))
                     Next
 
-                    If bAuxDef Then
+                    If AuxDef Then
                         For Each AuxKV In AuxComponents
                             NewAuxValues(AuxKV.Key).Add((tMid - fTime(z - 1)) * (AuxKV.Value(z) - AuxKV.Value(z - 1)) / (fTime(z) - fTime(z - 1)) + AuxKV.Value(z - 1))
                         Next
@@ -702,7 +798,7 @@ lb10:
                             NewValues(KVd.Key).Add((Summe(KVd.Key) + Values(KVd.Key)(z)) / (Anz + 1))
                         Next
 
-                        If bAuxDef Then
+                        If AuxDef Then
                             For Each AuxKV In AuxComponents
                                 NewAuxValues(AuxKV.Key).Add((AuxSumme(AuxKV.Key) + AuxKV.Value(z)) / (Anz + 1))
                             Next
@@ -718,7 +814,7 @@ lb10:
                                     NewValues(KVd.Key).Add((tMid - fTime(z - 1)) * (Values(KVd.Key)(z) - Values(KVd.Key)(z - 1)) / (fTime(z) - fTime(z - 1)) + Values(KVd.Key)(z - 1))
                                 Next
 
-                                If bAuxDef Then
+                                If AuxDef Then
                                     For Each AuxKV In AuxComponents
                                         NewAuxValues(AuxKV.Key).Add((tMid - fTime(z - 1)) * (AuxKV.Value(z) - AuxKV.Value(z - 1)) / (fTime(z) - fTime(z - 1)) + AuxKV.Value(z - 1))
                                     Next
@@ -730,7 +826,7 @@ lb10:
                                     NewValues(KVd.Key).Add((tMid - fTime(z - 2)) * (Values(KVd.Key)(z - 1) - Values(KVd.Key)(z - 2)) / (fTime(z - 1) - fTime(z - 2)) + Values(KVd.Key)(z - 2))
                                 Next
 
-                                If bAuxDef Then
+                                If AuxDef Then
                                     For Each AuxKV In AuxComponents
                                         NewAuxValues(AuxKV.Key).Add((tMid - fTime(z - 2)) * (AuxKV.Value(z - 1) - AuxKV.Value(z - 2)) / (fTime(z - 1) - fTime(z - 2)) + AuxKV.Value(z - 2))
                                     Next
@@ -744,7 +840,7 @@ lb10:
                                 NewValues(KVd.Key).Add(Summe(KVd.Key) / Anz)
                             Next
 
-                            If bAuxDef Then
+                            If AuxDef Then
                                 For Each AuxKV In AuxComponents
                                     NewAuxValues(AuxKV.Key).Add(AuxSumme(AuxKV.Key) / Anz)
                                 Next
@@ -772,7 +868,7 @@ lb10:
                         If KV.Key <> tDriComp.t Then Summe(KV.Key) = 0
                     Next
 
-                    If bAuxDef Then
+                    If AuxDef Then
                         For Each AuxKV In AuxComponents
                             AuxSumme(AuxKV.Key) = 0
                         Next
@@ -790,7 +886,7 @@ lb10:
                 If KV.Key <> tDriComp.t Then Summe(KV.Key) += Values(KV.Key)(z)
             Next
 
-            If bAuxDef Then
+            If AuxDef Then
                 For Each AuxKV In AuxComponents
                     AuxSumme(AuxKV.Key) += AuxKV.Value(z)
                 Next
@@ -808,6 +904,10 @@ lb10:
 
     End Function
 
+    ''' <summary>
+    ''' Duplicates first time step. Needed for distance-based cycles to ensure vehicle stop at cycle start.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub FirstZero()
         Dim AuxKV As KeyValuePair(Of String, List(Of Single))
         Dim ValKV As KeyValuePair(Of tDriComp, List(Of Double))
@@ -820,7 +920,7 @@ lb10:
 
         If Scycle Then VoglS.Insert(0, VoglS(0))
 
-        If bAuxDef Then
+        If AuxDef Then
             For Each AuxKV In AuxComponents
                 AuxKV.Value.Insert(0, AuxKV.Value(0))
             Next
@@ -828,22 +928,5 @@ lb10:
 
     End Sub
 
-    Public Property FilePath() As String
-        Get
-            Return sFilePath
-        End Get
-        Set(ByVal value As String)
-            sFilePath = value
-        End Set
-    End Property
-
-    Public ReadOnly Property AuxDef As Boolean
-        Get
-            Return bAuxDef
-        End Get
-    End Property
-
-
-   
 End Class
 

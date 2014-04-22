@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class F_VEH_GearDlog
+Partial Class F_GBX_GearDlog
     Inherits System.Windows.Forms.Form
 
     'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
@@ -34,7 +34,12 @@ Partial Class F_VEH_GearDlog
         Me.BtBrowse = New System.Windows.Forms.Button()
         Me.BtNext = New System.Windows.Forms.Button()
         Me.ChIsTCgear = New System.Windows.Forms.CheckBox()
+        Me.TbShiftPolyFile = New System.Windows.Forms.TextBox()
+        Me.BtShiftPolyBrowse = New System.Windows.Forms.Button()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.PnShiftPoly = New System.Windows.Forms.Panel()
         Me.TableLayoutPanel1.SuspendLayout()
+        Me.PnShiftPoly.SuspendLayout()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -45,7 +50,7 @@ Partial Class F_VEH_GearDlog
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(380, 89)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(380, 146)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -135,7 +140,7 @@ Partial Class F_VEH_GearDlog
         'BtNext
         '
         Me.BtNext.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.BtNext.Location = New System.Drawing.Point(307, 92)
+        Me.BtNext.Location = New System.Drawing.Point(307, 149)
         Me.BtNext.Name = "BtNext"
         Me.BtNext.Size = New System.Drawing.Size(67, 23)
         Me.BtNext.TabIndex = 9
@@ -152,13 +157,50 @@ Partial Class F_VEH_GearDlog
         Me.ChIsTCgear.Text = "Torque Conveter active (lock-up clutch open)"
         Me.ChIsTCgear.UseVisualStyleBackColor = True
         '
-        'F_VEH_GearDlog
+        'TbShiftPolyFile
+        '
+        Me.TbShiftPolyFile.Location = New System.Drawing.Point(2, 17)
+        Me.TbShiftPolyFile.Name = "TbShiftPolyFile"
+        Me.TbShiftPolyFile.Size = New System.Drawing.Size(476, 20)
+        Me.TbShiftPolyFile.TabIndex = 12
+        '
+        'BtShiftPolyBrowse
+        '
+        Me.BtShiftPolyBrowse.Location = New System.Drawing.Point(484, 15)
+        Me.BtShiftPolyBrowse.Name = "BtShiftPolyBrowse"
+        Me.BtShiftPolyBrowse.Size = New System.Drawing.Size(32, 23)
+        Me.BtShiftPolyBrowse.TabIndex = 13
+        Me.BtShiftPolyBrowse.TabStop = False
+        Me.BtShiftPolyBrowse.Text = "..."
+        Me.BtShiftPolyBrowse.UseVisualStyleBackColor = True
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(2, 1)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(89, 13)
+        Me.Label4.TabIndex = 11
+        Me.Label4.Text = "Shift polygons file"
+        '
+        'PnShiftPoly
+        '
+        Me.PnShiftPoly.Controls.Add(Me.TbShiftPolyFile)
+        Me.PnShiftPoly.Controls.Add(Me.BtShiftPolyBrowse)
+        Me.PnShiftPoly.Controls.Add(Me.Label4)
+        Me.PnShiftPoly.Location = New System.Drawing.Point(10, 90)
+        Me.PnShiftPoly.Name = "PnShiftPoly"
+        Me.PnShiftPoly.Size = New System.Drawing.Size(525, 46)
+        Me.PnShiftPoly.TabIndex = 14
+        '
+        'F_GBX_GearDlog
         '
         Me.AcceptButton = Me.OK_Button
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New System.Drawing.Size(538, 130)
+        Me.ClientSize = New System.Drawing.Size(538, 187)
+        Me.Controls.Add(Me.PnShiftPoly)
         Me.Controls.Add(Me.ChIsTCgear)
         Me.Controls.Add(Me.BtNext)
         Me.Controls.Add(Me.BtBrowse)
@@ -172,11 +214,13 @@ Partial Class F_VEH_GearDlog
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "F_VEH_GearDlog"
+        Me.Name = "F_GBX_GearDlog"
         Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Edit Gears"
         Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.PnShiftPoly.ResumeLayout(False)
+        Me.PnShiftPoly.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -193,5 +237,9 @@ Partial Class F_VEH_GearDlog
     Friend WithEvents BtBrowse As System.Windows.Forms.Button
     Friend WithEvents BtNext As System.Windows.Forms.Button
     Friend WithEvents ChIsTCgear As System.Windows.Forms.CheckBox
+    Friend WithEvents TbShiftPolyFile As System.Windows.Forms.TextBox
+    Friend WithEvents BtShiftPolyBrowse As System.Windows.Forms.Button
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents PnShiftPoly As System.Windows.Forms.Panel
 
 End Class

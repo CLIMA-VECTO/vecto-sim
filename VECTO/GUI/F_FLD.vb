@@ -1,9 +1,15 @@
 ﻿Imports System.Windows.Forms
 
+''' <summary>
+''' Dialog for selecting VFLD files and assign Gears.
+''' </summary>
+''' <remarks></remarks>
 Public Class F_FLD
 
+    'Parent Engine file
     Public EngFile As String = ""
 
+    'Save and close
     Private Sub OK_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OK_Button.Click
 
         If Trim(Me.TbFLD.Text) = "" Then
@@ -22,15 +28,18 @@ Public Class F_FLD
         Me.Close()
     End Sub
 
+    'Cancel
     Private Sub Cancel_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel_Button.Click
         Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.Close()
     End Sub
 
+    'Browse for VFLD file
     Private Sub BtFLD_Click(sender As System.Object, e As System.EventArgs) Handles BtFLD.Click
         If fbFLD.OpenDialog(fFileRepl(Me.TbFLD.Text, fPATH(EngFile))) Then Me.TbFLD.Text = fFileWoDir(fbFLD.Files(0), fPATH(EngFile))
     End Sub
 
+    'Open VFLD file
     Private Sub BtFLDOpen_Click(sender As System.Object, e As System.EventArgs) Handles BtFLDOpen.Click
         OpenFiles(fFileRepl(Me.TbFLD.Text, fPATH(EngFile)))
     End Sub
@@ -49,10 +58,6 @@ Public Class F_FLD
 
         CmOpenFile.Show(Cursor.Position)
 
-    End Sub
-
-    Private Sub OpenWithGRAPHiToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithGRAPHiToolStripMenuItem.Click
-        If Not FileOpenGRAPHi(CmFiles) Then MsgBox("Failed to open file!")
     End Sub
 
     Private Sub OpenWithToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithToolStripMenuItem.Click

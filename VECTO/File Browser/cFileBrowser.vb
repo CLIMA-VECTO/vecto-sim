@@ -1,41 +1,18 @@
 ﻿Imports System.Collections
-'Imports System.Windows.Forms
-
-'V1.0 10.12.2010
-'V1.1 12.01.2011
-'V1.2 08.03.2011
-'V1.3 17.03.2011
-'V1.4 30.03.2011
-'V1.5 10.06.2011
-'V2.0 23.11.2011
-'   - Dir-Favorites
-'V2.0.1 01.12.2011
-'   - Fav-Dlog: "Abbrechen" => "Cancel"
-'   - Fav-Dlog: Statt leeren Items in Fav-Liste "<undefined>" |@@| Fav-Dlog: Empty Items in Fav list Instead "<undefined>"
 
 
 
-'**Application
-'Dim fbTXT As cFileBrowser
-'fbTXT = New cFileBrowser("TXT")
-'fbTXT.Extensions = New String() {"txt,log", "csv"}
-'...
-'fbTXT.Close()
-
-'**Required Global variables (default):
-'Public FB_Drives() As String
-'Public FB_Init As Boolean = False
-'Public FB_FilHisDir As String
-'Public FB_FolderHistory(9) As String
-'Public FB_WorkDir As String
-
-Public Enum eExtMode As Integer
-    ForceExt = 0
-    MultiExt = 1
-    SingleExt = 2
-End Enum
-
-
+''' <summary>
+''' File Browser for Open/Save File dialogs and Folder Browser. Features File History and Favorite Folders.
+''' </summary>
+''' <remarks>
+''' Usage:
+'''  1. Create new instance, preferably in FB_Global, e.g. fbTXT = New cFileBrowser("txt")
+'''  2. Define extensions, e.g.  fbTXT.Extensions = New String() {"txt","log"}
+'''  3. Use OpenDialog, SaveDialog, etc.
+'''  4. Call Close method when closing application to write file history, e.g. fbTXT.Close 
+''' File history is unique for each ID. Folder history is global.
+''' </remarks>
 Public Class cFileBrowser
 
     Private Initialized As Boolean
@@ -46,7 +23,13 @@ Public Class cFileBrowser
     Private bFolderBrowser As Boolean
     Private bLightMode As Boolean
 
-    'New Instance - define ID, switch to FolderBrowser
+    ''' <summary>
+    ''' New cFileBrowser instance
+    ''' </summary>
+    ''' <param name="ID">Needed to save the file history when not using LightMode.</param>
+    ''' <param name="FolderBrowser">Browse folders instead of files.</param>
+    ''' <param name="LightMode">If enabled file history is not saved.</param>
+    ''' <remarks></remarks>
     Public Sub New(ByVal ID As String, Optional ByVal FolderBrowser As Boolean = False, Optional ByVal LightMode As Boolean = False)
         Initialized = False
         MyID = ID
@@ -55,35 +38,68 @@ Public Class cFileBrowser
         bLightMode = LightMode
     End Sub
 
-    'OpenDialog Return True when Dialog ended with OK
+    ''' <summary>
+    ''' Opens dialog for OPENING files. Selected file must exist. Returns False if cancelled by user, else True.
+    ''' </summary>
+    ''' <param name="path">Initial selected file. If empty the last selected file is used. If file without directoy the last directory will be used.</param>
+    ''' <param name="MultiFile">Allow selecting multiple files.</param>
+    ''' <param name="Ext">Set extension. If not defined the first predefined extension is used.</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function OpenDialog(ByVal path As String, Optional ByVal MultiFile As Boolean = False, Optional ByVal Ext As String = "") As Boolean
-        Return CustomDialog(path, True, False, eExtMode.MultiExt, MultiFile, Ext, "Open")
+        Return CustomDialog(path, True, False, tFbExtMode.MultiExt, MultiFile, Ext, "Open")
     End Function
 
-    'SaveDialog - Returns True when Dialog ended with OK
+    ''' <summary>
+    ''' Opens dialog for SAVING files. If file already exists user will be asked to overwrite. Returns False if cancelled by user, else True.
+    ''' </summary>
+    ''' <param name="path">Initial selected file. If empty the last selected file is used. If file without directoy the last directory will be used.</param>
+    ''' <param name="ForceExt">Force predefined file extension.</param>
+    ''' <param name="Ext">Set extension. If not defined the first predefined extension is used.</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function SaveDialog(ByVal path As String, Optional ByVal ForceExt As Boolean = True, Optional ByVal Ext As String = "") As Boolean
-        Dim x As eExtMode
+        Dim x As tFbExtMode
         If ForceExt Then
-            x = eExtMode.ForceExt
+            x = tFbExtMode.ForceExt
         Else
-            x = eExtMode.SingleExt
+            x = tFbExtMode.SingleExt
         End If
         Return CustomDialog(path, False, True, x, False, Ext, "Save As")
     End Function
 
-    'Open dialogue - Return True if Dialogue ended with OK
-    Public Function CustomDialog(ByVal path As String, ByVal FileMustExist As Boolean, ByVal OverwriteCheck As Boolean, ByVal ExtMode As eExtMode, ByVal MultiFile As Boolean, ByVal Ext As String, Optional Title As String = "File Browser") As Boolean
+    ''' <summary>
+    ''' Custom open/save dialog. Returns False if cancelled by user, else True.
+    ''' </summary>
+    ''' <param name="path">Initial selected file. If empty the last selected file is used. If file without directoy the last directory will be used.</param>
+    ''' <param name="FileMustExist">Selected file must exist.</param>
+    ''' <param name="OverwriteCheck">If file already exists user will be asked to overwrite.</param>
+    ''' <param name="ExtMode">ForceExt= First predefined extension (or Ext parameter) will be forced (Default for SaveDialog), MultiExt= All files with predefined extensions are shown (Default for OpenDialog), SingleExt= All files with the first predefined extension will be shown.</param>
+    ''' <param name="MultiFile">Allow to select multiple files.</param>       
+    ''' <param name="Ext">Set extension. If not defined the first predefined extension is used.</param>            
+    ''' <param name="Title">Dialog title.</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Function CustomDialog(ByVal path As String, ByVal FileMustExist As Boolean, ByVal OverwriteCheck As Boolean, ByVal ExtMode As tFbExtMode, ByVal MultiFile As Boolean, ByVal Ext As String, Optional Title As String = "File Browser") As Boolean
         If Not Initialized Then Init()
         Return Dlog.Browse(path, FileMustExist, OverwriteCheck, ExtMode, MultiFile, Ext, Title)
     End Function
 
     'Manually update File History
+    ''' <summary>
+    ''' Add file to file history.
+    ''' </summary>
+    ''' <param name="Path">File to be added to file history.</param>
+    ''' <remarks></remarks>
     Public Sub UpdateHistory(ByVal Path As String)
         If Not Initialized Then Init()
         Dlog.UpdateHistory(Path)
     End Sub
 
-    'File / Folder History speichen und Speicher freigeben |@@| File / Folder History spokes and Release memory
+    ''' <summary>
+    ''' Save file history (if not LightMode) and global folder history.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub Close()
         If Initialized Then
             Dlog.SaveAndClose()
@@ -91,7 +107,6 @@ Public Class cFileBrowser
         End If
         Dlog = Nothing
     End Sub
-
 
     Private Sub Init()
         Dlog = New FB_Dialog(bLightMode)
@@ -101,7 +116,12 @@ Public Class cFileBrowser
         Initialized = True
     End Sub
 
-    'Define File-Extensions
+    ''' <summary>
+    ''' Predefined file extensions. Must be set before Open/Save dialog is used for the first time.
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Property Extensions() As String()
         Get
             Return MyExt
@@ -112,7 +132,12 @@ Public Class cFileBrowser
         End Set
     End Property
 
-    'Ask for Files
+    ''' <summary>
+    ''' Selected file(s) oder folder (if FolderBrowser)
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public ReadOnly Property Files() As String()
         Get
             If Initialized Then

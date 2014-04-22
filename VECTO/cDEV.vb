@@ -7,16 +7,10 @@ Public Class cDEV
     Private MyOptions As Dictionary(Of String, cDEVoption)
     Private iOptionsDim As Integer
 
-    Public GearCorrection As Boolean
-
     Public TCiterPrec As Single
     Public TCnUstep As Single
     Public TCnUstepMin As Single
 
-    Public SpeedPeEps As Single
-    Public PreRun As Boolean
-
-    Public AllowAprxTrLoss As Boolean
 
 
 
@@ -30,7 +24,7 @@ Public Class cDEV
     '
     '       ConfigType      <tDEVconfType>  ...Type definition: Boolean, Integer, Single, String, menu selection (Integer) or Reference to Function
     '       Description     <String>        ...Description of the parameters
-    '       SaveInConfg     <Boolean>       ...Whether you want to save settings for next PHEM-startup
+    '       SaveInConfg     <Boolean>       ...Whether you want to save settings for next VECTO-startup
     '       Enabled         <Boolean>       ...Whether settings in the DEV-tab can be changed
     '
     '   II) default value definition. Distinguish which ConfigType to use:
@@ -115,11 +109,6 @@ Public Class cDEV
         'MyOptions.Add("Menu_Test", Conf0)
 
 
-        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Gear Correcion (gear shift polygons model only!)", False)
-        Conf0.BoolVal = False
-        MyOptions.Add("GearCorrection", Conf0)
-
-
 
         Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "TC iteration: target precision for torque ratio")
         Conf0.SingleVal = 0.001
@@ -133,20 +122,6 @@ Public Class cDEV
         Conf0.SingleVal = 0.01
         MyOptions.Add("TCnUstepMin", Conf0)
 
-
-        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "Epsilon for Iteration Abort Criterion: eps >= |Pdrag - Pe| / VEH.Pnenn [-]")
-        Conf0.SingleVal = 0.0001
-        MyOptions.Add("SpeedPeEps", Conf0)
-
-        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "PreRun", False)
-        Conf0.BoolVal = True
-        MyOptions.Add("PreRun", Conf0)
-
-        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Allow approximate transmission loss calculation in Cycle Preprocessing and Gear Shift Model", False)
-        Conf0.BoolVal = True
-        MyOptions.Add("AllowAprxTrLoss", Conf0)
-
-
         '**************************** END: Parameters Configuration '*****************************
         '*****************************************************************************************
         '*****************************************************************************************
@@ -157,17 +132,9 @@ Public Class cDEV
 
     'Initialize the actual Config-Parameters from MyConfigs list
     Public Sub SetOptions()
-        GearCorrection = MyOptions("GearCorrection").BoolVal
         TCiterPrec = MyOptions("TCiterPrec").SingleVal
         TCnUstep = MyOptions("TCnUstep").SingleVal
         TCnUstepMin = MyOptions("TCnUstepMin").SingleVal
-
-        SpeedPeEps = MyOptions("SpeedPeEps").SingleVal
-
-        PreRun = MyOptions("PreRun").BoolVal
-
-        AllowAprxTrLoss = MyOptions("AllowAprxTrLoss").BoolVal
-
     End Sub
 
     'Demo for Delegate Function

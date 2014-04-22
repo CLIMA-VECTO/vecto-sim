@@ -1,47 +1,36 @@
-﻿Public Class F_Options
-
-    Dim WD As String = " "
+﻿''' <summary>
+''' Settings form
+''' </summary>
+''' <remarks></remarks>
+Public Class F_Settings
 
     'Initialize - load config
     Private Sub F03_Options_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        LoadConfig()
 
-        If Declaration.Active Then
-            Me.GrCalc.Enabled = False
-            Me.TbAirDensity.Text = cDeclaration.AirDensity
-            Me.TbFuelDens.Text = cDeclaration.FuelDens
-            Me.TbCO2toFC.Text = cDeclaration.CO2perFC
-        End If
-
-
-
-    End Sub
-
-    'Load Config
-    Private Sub LoadConfig()
-        Me.TextBoxWorDir.Text = Cfg.WorkDPath
-        WD = Cfg.WorkDPath
+        'Load Config
         Me.TextBoxLogSize.Text = Cfg.LogSize
         Me.TbAirDensity.Text = CStr(Cfg.AirDensity)
         Me.TbOpenCmd.Text = Cfg.OpenCmd
         Me.TbOpenCmdName.Text = Cfg.OpenCmdName
         Me.TbFuelDens.Text = Cfg.FuelDens.ToString
         Me.TbCO2toFC.Text = Cfg.CO2perFC.ToString
+
+        Me.GrCalc.Enabled = Not Cfg.DeclMode
+
     End Sub
 
     'Reset Button
     Private Sub ButReset_Click(sender As System.Object, e As System.EventArgs) Handles ButReset.Click
         If MsgBox("This will reset all application settings including the Options Tab. Filehistory will not be deleted." & vbCrLf & vbCrLf & "Continue ?", MsgBoxStyle.YesNo, "Reset Application Settings") = MsgBoxResult.Yes Then
             Cfg.SetDefault()
-            If Declaration.Active Then Cfg.DeclInit()
-            LoadConfig()
+            If Cfg.DeclMode Then Cfg.DeclInit()
             F_MAINForm.LoadOptions()
+            Me.Close()
         End If
     End Sub
 
-    'OK
+    'Save and close
     Private Sub ButtonOK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonOK.Click
-        Cfg.SetWorkDir(Me.TextBoxWorDir.Text)
         Cfg.LogSize = CSng(Me.TextBoxLogSize.Text)
         Cfg.AirDensity = CSng(Me.TbAirDensity.Text)
         Cfg.OpenCmd = Me.TbOpenCmd.Text
@@ -50,9 +39,8 @@
         Cfg.CO2perFC = CSng(Me.TbCO2toFC.Text)
         '----------------------------------------------------
 
-        Call Cfg.ConfigSAVE()
+        Cfg.ConfigSAVE()
 
-        If WD <> Cfg.WorkDPath Then GUImsg(tMsgID.Normal, "Working Directory changed to " & Cfg.WorkDPath)
         Me.Close()
     End Sub
 
@@ -61,13 +49,7 @@
         Me.Close()
     End Sub
 
-    'Options-----------------------------------
-    Private Sub ButtonWorDir_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButtonWorDir.Click
-        If fbWorkDir.OpenDialog(Me.TextBoxWorDir.Text) Then
-            Me.TextBoxWorDir.Text = fbWorkDir.Files(0)
-        End If
-    End Sub
-
+    'Help button
     Private Sub BtHelp_Click(sender As System.Object, e As System.EventArgs) Handles BtHelp.Click
         If IO.File.Exists(MyAppPath & "User Manual\GUI\settings.html") Then
             System.Diagnostics.Process.Start(MyAppPath & "User Manual\GUI\settings.html")

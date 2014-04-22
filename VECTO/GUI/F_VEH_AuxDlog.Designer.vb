@@ -33,7 +33,15 @@ Partial Class F_VEH_AuxDlog
         Me.BtBrowse = New System.Windows.Forms.Button()
         Me.CbType = New System.Windows.Forms.ComboBox()
         Me.LbIDhelp = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.CbTech = New System.Windows.Forms.ComboBox()
+        Me.PnTech = New System.Windows.Forms.Panel()
+        Me.PnFile = New System.Windows.Forms.Panel()
+        Me.LVTech = New System.Windows.Forms.ListView()
+        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TableLayoutPanel1.SuspendLayout()
+        Me.PnTech.SuspendLayout()
+        Me.PnFile.SuspendLayout()
         Me.SuspendLayout()
         '
         'TableLayoutPanel1
@@ -44,7 +52,7 @@ Partial Class F_VEH_AuxDlog
         Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
         Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(287, 89)
+        Me.TableLayoutPanel1.Location = New System.Drawing.Point(301, 388)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -73,7 +81,7 @@ Partial Class F_VEH_AuxDlog
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(173, 15)
+        Me.Label1.Location = New System.Drawing.Point(171, 10)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(18, 13)
         Me.Label1.TabIndex = 1
@@ -82,7 +90,7 @@ Partial Class F_VEH_AuxDlog
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(12, 15)
+        Me.Label2.Location = New System.Drawing.Point(9, 10)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(31, 13)
         Me.Label2.TabIndex = 1
@@ -91,7 +99,7 @@ Partial Class F_VEH_AuxDlog
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(12, 46)
+        Me.Label3.Location = New System.Drawing.Point(7, 39)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(50, 13)
         Me.Label3.TabIndex = 1
@@ -99,21 +107,21 @@ Partial Class F_VEH_AuxDlog
         '
         'TbID
         '
-        Me.TbID.Location = New System.Drawing.Point(197, 12)
+        Me.TbID.Location = New System.Drawing.Point(195, 7)
         Me.TbID.Name = "TbID"
         Me.TbID.Size = New System.Drawing.Size(39, 20)
         Me.TbID.TabIndex = 5
         '
         'TbPath
         '
-        Me.TbPath.Location = New System.Drawing.Point(12, 62)
+        Me.TbPath.Location = New System.Drawing.Point(7, 55)
         Me.TbPath.Name = "TbPath"
         Me.TbPath.Size = New System.Drawing.Size(383, 20)
         Me.TbPath.TabIndex = 10
         '
         'BtBrowse
         '
-        Me.BtBrowse.Location = New System.Drawing.Point(401, 60)
+        Me.BtBrowse.Location = New System.Drawing.Point(396, 53)
         Me.BtBrowse.Name = "BtBrowse"
         Me.BtBrowse.Size = New System.Drawing.Size(32, 23)
         Me.BtBrowse.TabIndex = 15
@@ -123,8 +131,7 @@ Partial Class F_VEH_AuxDlog
         'CbType
         '
         Me.CbType.FormattingEnabled = True
-        Me.CbType.Items.AddRange(New Object() {"Alternator", "Air compressor", "Steering pump"})
-        Me.CbType.Location = New System.Drawing.Point(49, 12)
+        Me.CbType.Location = New System.Drawing.Point(46, 7)
         Me.CbType.Name = "CbType"
         Me.CbType.Size = New System.Drawing.Size(109, 21)
         Me.CbType.TabIndex = 0
@@ -132,10 +139,71 @@ Partial Class F_VEH_AuxDlog
         'LbIDhelp
         '
         Me.LbIDhelp.AutoSize = True
-        Me.LbIDhelp.Location = New System.Drawing.Point(242, 15)
+        Me.LbIDhelp.Location = New System.Drawing.Point(240, 10)
         Me.LbIDhelp.Name = "LbIDhelp"
         Me.LbIDhelp.Size = New System.Drawing.Size(0, 13)
         Me.LbIDhelp.TabIndex = 26
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(6, 9)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(63, 13)
+        Me.Label4.TabIndex = 1
+        Me.Label4.Text = "Technology"
+        '
+        'CbTech
+        '
+        Me.CbTech.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.CbTech.FormattingEnabled = True
+        Me.CbTech.Location = New System.Drawing.Point(75, 6)
+        Me.CbTech.Name = "CbTech"
+        Me.CbTech.Size = New System.Drawing.Size(352, 21)
+        Me.CbTech.TabIndex = 27
+        '
+        'PnTech
+        '
+        Me.PnTech.Controls.Add(Me.CbTech)
+        Me.PnTech.Controls.Add(Me.Label4)
+        Me.PnTech.Location = New System.Drawing.Point(12, 12)
+        Me.PnTech.Name = "PnTech"
+        Me.PnTech.Size = New System.Drawing.Size(435, 34)
+        Me.PnTech.TabIndex = 28
+        '
+        'PnFile
+        '
+        Me.PnFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.PnFile.Controls.Add(Me.LbIDhelp)
+        Me.PnFile.Controls.Add(Me.BtBrowse)
+        Me.PnFile.Controls.Add(Me.CbType)
+        Me.PnFile.Controls.Add(Me.TbID)
+        Me.PnFile.Controls.Add(Me.TbPath)
+        Me.PnFile.Controls.Add(Me.Label2)
+        Me.PnFile.Controls.Add(Me.Label3)
+        Me.PnFile.Controls.Add(Me.Label1)
+        Me.PnFile.Location = New System.Drawing.Point(12, 293)
+        Me.PnFile.Name = "PnFile"
+        Me.PnFile.Size = New System.Drawing.Size(435, 89)
+        Me.PnFile.TabIndex = 29
+        '
+        'LVTech
+        '
+        Me.LVTech.CheckBoxes = True
+        Me.LVTech.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1})
+        Me.LVTech.FullRowSelect = True
+        Me.LVTech.GridLines = True
+        Me.LVTech.Location = New System.Drawing.Point(12, 52)
+        Me.LVTech.Name = "LVTech"
+        Me.LVTech.Size = New System.Drawing.Size(435, 235)
+        Me.LVTech.TabIndex = 30
+        Me.LVTech.UseCompatibleStateImageBehavior = False
+        Me.LVTech.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader1
+        '
+        Me.ColumnHeader1.Text = "Technologies"
+        Me.ColumnHeader1.Width = 420
         '
         'F_VEH_AuxDlog
         '
@@ -143,15 +211,10 @@ Partial Class F_VEH_AuxDlog
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.Cancel_Button
-        Me.ClientSize = New System.Drawing.Size(445, 130)
-        Me.Controls.Add(Me.LbIDhelp)
-        Me.Controls.Add(Me.CbType)
-        Me.Controls.Add(Me.BtBrowse)
-        Me.Controls.Add(Me.TbPath)
-        Me.Controls.Add(Me.TbID)
-        Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Label1)
+        Me.ClientSize = New System.Drawing.Size(459, 429)
+        Me.Controls.Add(Me.LVTech)
+        Me.Controls.Add(Me.PnFile)
+        Me.Controls.Add(Me.PnTech)
         Me.Controls.Add(Me.TableLayoutPanel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
@@ -161,8 +224,11 @@ Partial Class F_VEH_AuxDlog
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Auxiliary"
         Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.PnTech.ResumeLayout(False)
+        Me.PnTech.PerformLayout()
+        Me.PnFile.ResumeLayout(False)
+        Me.PnFile.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
     Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
@@ -176,5 +242,11 @@ Partial Class F_VEH_AuxDlog
     Friend WithEvents BtBrowse As System.Windows.Forms.Button
     Friend WithEvents CbType As System.Windows.Forms.ComboBox
     Friend WithEvents LbIDhelp As System.Windows.Forms.Label
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents CbTech As System.Windows.Forms.ComboBox
+    Friend WithEvents PnTech As System.Windows.Forms.Panel
+    Friend WithEvents PnFile As System.Windows.Forms.Panel
+    Friend WithEvents LVTech As System.Windows.Forms.ListView
+    Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
 
 End Class

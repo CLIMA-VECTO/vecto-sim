@@ -95,6 +95,7 @@
     <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml" />
     <Reference Include="vectolic, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -114,7 +115,6 @@
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="cJSONparser.vb" />
     <Compile Include="cDeclaration.vb" />
-    <Compile Include="cVRES.vb" />
     <Compile Include="GUI\F_FileSign.Designer.vb">
       <DependentUpon>F_FileSign.vb</DependentUpon>
     </Compile>
@@ -125,6 +125,18 @@
       <DependentUpon>F_FLD.vb</DependentUpon>
     </Compile>
     <Compile Include="GUI\F_FLD.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\F_Graph.Designer.vb">
+      <DependentUpon>F_Graph.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_Graph.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\F_Graph_ChEdit.Designer.vb">
+      <DependentUpon>F_Graph_ChEdit.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_Graph_ChEdit.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\F_Welcome.Designer.vb">
@@ -190,10 +202,10 @@
     <Compile Include="Input Files\cDRI.vb" />
     <Compile Include="Input Files\cVECTO.vb" />
     <Compile Include="Input Files\cVEH.vb" />
-    <Compile Include="GUI\F_VEH_GearDlog.Designer.vb">
-      <DependentUpon>F_VEH_GearDlog.vb</DependentUpon>
+    <Compile Include="GUI\F_GBX_GearDlog.Designer.vb">
+      <DependentUpon>F_GBX_GearDlog.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\F_VEH_GearDlog.vb">
+    <Compile Include="GUI\F_GBX_GearDlog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Input Files\cSubPath.vb" />
@@ -220,10 +232,10 @@
     <Compile Include="GUI\F_VEH.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GUI\F_Options.Designer.vb">
-      <DependentUpon>F_Options.vb</DependentUpon>
+    <Compile Include="GUI\F_Settings.Designer.vb">
+      <DependentUpon>F_Settings.vb</DependentUpon>
     </Compile>
-    <Compile Include="GUI\F_Options.vb">
+    <Compile Include="GUI\F_Settings.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\F_AboutBox.Designer.vb">
@@ -262,6 +274,7 @@
   <ItemGroup>
     <EmbeddedResource Include="File Browser\FB_Dialog.resx">
       <DependentUpon>FB_Dialog.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="File Browser\FB_FavDlog.resx">
       <DependentUpon>FB_FavDlog.vb</DependentUpon>
@@ -271,6 +284,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\F_FLD.resx">
       <DependentUpon>F_FLD.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_Graph.resx">
+      <DependentUpon>F_Graph.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_Graph_ChEdit.resx">
+      <DependentUpon>F_Graph_ChEdit.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\F_Welcome.resx">
       <DependentUpon>F_Welcome.vb</DependentUpon>
@@ -300,9 +319,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>F_VEH.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\F_Options.resx">
+    <EmbeddedResource Include="GUI\F_Settings.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>F_Options.vb</DependentUpon>
+      <DependentUpon>F_Settings.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\F_AboutBox.resx">
       <SubType>Designer</SubType>
@@ -314,8 +333,8 @@
     <EmbeddedResource Include="GUI\F_VEH_Axle.resx">
       <DependentUpon>F_VEH_Axle.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\F_VEH_GearDlog.resx">
-      <DependentUpon>F_VEH_GearDlog.vb</DependentUpon>
+    <EmbeddedResource Include="GUI\F_GBX_GearDlog.resx">
+      <DependentUpon>F_GBX_GearDlog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

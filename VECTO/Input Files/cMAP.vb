@@ -2,31 +2,24 @@
 
 Public Class cMAP
 
-    'Private Const FormatVersion As Integer = 1
-    'Private FileVersion As Integer
-
-    Public lFC As List(Of Single)
-
-    Public LPe As List(Of Single)
-    Public LnU As List(Of Single)
+    Private LnU As List(Of Single)
+    Private LTq As List(Of Single)
+    Private lFC As List(Of Single)
 
     Private sFilePath As String
     Private iMapDim As Integer
 
-    Private MapIntp As cMapInterpol
-
     Private FuelMap As cDelaunayMap
 
     Private Sub ResetMe()
-        MapIntp = Nothing
         lFC = Nothing
-        LPe = Nothing
+        LTq = Nothing
         LnU = Nothing
         iMapDim = -1
         FuelMap = New cDelaunayMap
     End Sub
 
-    Public Function ReadFile(Optional ByVal MsgOutput As Boolean = True) As Boolean
+    Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
         Dim file As cFile_V3
         Dim line As String()
         Dim nU As Double
@@ -40,7 +33,7 @@ Public Class cMAP
 
         'Stop if there's no file
         If sFilePath = "" OrElse Not IO.File.Exists(sFilePath) Then
-            WorkerMsg(tMsgID.Err, "Map file not found! (" & sFilePath & ")", MsgSrc)
+            If ShowMsg Then WorkerMsg(tMsgID.Err, "Map file not found! (" & sFilePath & ")", MsgSrc)
             Return False
         End If
 
@@ -48,13 +41,13 @@ Public Class cMAP
         file = New cFile_V3
         If Not file.OpenRead(sFilePath) Then
             file = Nothing
-            WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
+            If ShowMsg Then WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
             Return False
         End If
 
         'Initi Lists (before version check so ReadOldFormat works)
         lFC = New System.Collections.Generic.List(Of Single)
-        LPe = New System.Collections.Generic.List(Of Single)
+        LTq = New System.Collections.Generic.List(Of Single)
         LnU = New System.Collections.Generic.List(Of Single)
 
         Try
@@ -72,13 +65,13 @@ Public Class cMAP
                 LnU.Add(nU)
 
                 'Power
-                LPe.Add(nMtoPe(nU, CDbl(line(1))))
+                LTq.Add(line(1))
 
                 'FC
                 'Check sign
                 If CSng(line(2)) < 0 Then
                     file.Close()
-                    WorkerMsg(tMsgID.Err, "FC < 0 in map at " & nU & " [1/min], " & line(1) & " [Nm]", MsgSrc)
+                    If ShowMsg Then WorkerMsg(tMsgID.Err, "FC < 0 in map at " & nU & " [1/min], " & line(1) & " [Nm]", MsgSrc)
                     Return False
                 End If
 
@@ -88,13 +81,10 @@ Public Class cMAP
             Loop
         Catch ex As Exception
 
-            WorkerMsg(tMsgID.Err, "Error during file input! Line number " & iMapDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
+            If ShowMsg Then WorkerMsg(tMsgID.Err, "Error during file input! Line number " & iMapDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
             GoTo lbEr
 
         End Try
-
-        'Shep-Init
-        MapIntp = New cMapInterpol(Me)
 
         'Close file
         file.Close()
@@ -113,7 +103,7 @@ lbEr:
 
     End Function
 
-    Public Sub Norm()
+    Public Function Triangulate() As Boolean
         Dim i As Integer
 
         Dim MsgSrc As String
@@ -122,58 +112,22 @@ lbEr:
 
         'FC Delauney
         For i = 0 To iMapDim
-            FuelMap.AddPoints(LnU(i), LPe(i), lFC(i))
+            FuelMap.AddPoints(LnU(i), LTq(i), lFC(i))
         Next
 
-        FuelMap.Triangulate()
+        Return FuelMap.Triangulate()
 
-    End Sub
+    End Function
 
 
-    Public Function fFCdelaunay_Intp(ByVal nU As Single, ByVal Pe As Single) As Single
+    Public Function fFCdelaunay_Intp(ByVal nU As Single, ByVal Tq As Single) As Single
         Try
-            Return FuelMap.Intpol(nU, Pe)
+            Return FuelMap.Intpol(nU, Tq)
         Catch ex As Exception
-            WorkerMsg(tMsgID.Err, "Cannot extrapolate FC map! n= " & nU.ToString("0") & " [1/min], Me= " & nPeToM(nU, Pe).ToString("0.0") & " [Nm]", "MAP/FC_Intp")
+            WorkerMsg(tMsgID.Err, "Cannot extrapolate FC map! n= " & nU.ToString("0.0") & " [1/min], Me= " & Tq.ToString("0.0") & " [Nm]", "MAP/FC_Intp")
             Return -10000
         End Try
     End Function
-
-   'Default Shepard in intpshep ()
-    Private Class cMapInterpol
-
-        Private iMapDim As Integer
-        Private Pe0 As Single
-        Private n0 As Single
-        Private myMap As cMAP
-        Private PeDrag As Single
-
-        'Interpolator V1
-        Private abOK As Boolean()                                   'Array für alle Punkte (iMapDim)
-        Private ab As Double()                                      'Array für ausgewählte Punkte (inim)
-        Private wisum As Double
-        Private PeIntp As Single
-
-        'Interpolator V2
-        Private abOKV2 As Boolean()                                   'Array für alle Punkte (iMapDim)
-        Private abV2 As Double()                                      'Array für ausgewählte Punkte (inim)
-        Private wisumV2 As Double
-        Private PeIntpV2 As Single
-
-        Public Sub New(ByRef MapClass As cMAP)
-            myMap = MapClass
-            iMapDim = MapClass.iMapDim
-        End Sub
-
-        Public Sub CleanUp()
-            myMap = Nothing
-        End Sub
-
-    
-    End Class
-
-
-
 
 #Region "Properties"
 
@@ -184,6 +138,30 @@ lbEr:
         Set(ByVal value As String)
             sFilePath = value
         End Set
+    End Property
+
+    Public ReadOnly Property MapDim As Integer
+        Get
+            Return iMapDim
+        End Get
+    End Property
+
+    Public ReadOnly Property Tq As List(Of Single)
+        Get
+            Return LTq
+        End Get
+    End Property
+
+    Public ReadOnly Property FC As List(Of Single)
+        Get
+            Return lFC
+        End Get
+    End Property
+
+    Public ReadOnly Property nU As List(Of Single)
+        Get
+            Return LnU
+        End Get
     End Property
 
 #End Region

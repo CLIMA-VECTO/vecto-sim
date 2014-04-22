@@ -26,7 +26,6 @@ Partial Class FB_Dialog
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.ButtonNewDir = New System.Windows.Forms.Button()
         Me.ButtonDesktop = New System.Windows.Forms.Button()
-        Me.ButtonWorkDir = New System.Windows.Forms.Button()
         Me.ButtonHisFolder = New System.Windows.Forms.Button()
         Me.ButtonFolderBack = New System.Windows.Forms.Button()
         Me.TextBoxSearchFolder = New System.Windows.Forms.TextBox()
@@ -49,6 +48,7 @@ Partial Class FB_Dialog
         Me.ButtonOK = New System.Windows.Forms.Button()
         Me.ButtonCancel = New System.Windows.Forms.Button()
         Me.TextBoxCurrent = New System.Windows.Forms.TextBox()
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
@@ -68,7 +68,6 @@ Partial Class FB_Dialog
         '
         Me.SplitContainer1.Panel1.Controls.Add(Me.ButtonNewDir)
         Me.SplitContainer1.Panel1.Controls.Add(Me.ButtonDesktop)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.ButtonWorkDir)
         Me.SplitContainer1.Panel1.Controls.Add(Me.ButtonHisFolder)
         Me.SplitContainer1.Panel1.Controls.Add(Me.ButtonFolderBack)
         Me.SplitContainer1.Panel1.Controls.Add(Me.TextBoxSearchFolder)
@@ -91,7 +90,7 @@ Partial Class FB_Dialog
         'ButtonNewDir
         '
         Me.ButtonNewDir.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonNewDir.Location = New System.Drawing.Point(139, 3)
+        Me.ButtonNewDir.Location = New System.Drawing.Point(202, 3)
         Me.ButtonNewDir.Name = "ButtonNewDir"
         Me.ButtonNewDir.Size = New System.Drawing.Size(38, 21)
         Me.ButtonNewDir.TabIndex = 21
@@ -102,24 +101,13 @@ Partial Class FB_Dialog
         'ButtonDesktop
         '
         Me.ButtonDesktop.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonDesktop.Location = New System.Drawing.Point(183, 3)
+        Me.ButtonDesktop.Location = New System.Drawing.Point(246, 3)
         Me.ButtonDesktop.Name = "ButtonDesktop"
         Me.ButtonDesktop.Size = New System.Drawing.Size(57, 21)
         Me.ButtonDesktop.TabIndex = 22
         Me.ButtonDesktop.TabStop = False
         Me.ButtonDesktop.Text = "Desktop"
         Me.ButtonDesktop.UseVisualStyleBackColor = True
-        '
-        'ButtonWorkDir
-        '
-        Me.ButtonWorkDir.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonWorkDir.Location = New System.Drawing.Point(246, 3)
-        Me.ButtonWorkDir.Name = "ButtonWorkDir"
-        Me.ButtonWorkDir.Size = New System.Drawing.Size(57, 21)
-        Me.ButtonWorkDir.TabIndex = 23
-        Me.ButtonWorkDir.TabStop = False
-        Me.ButtonWorkDir.Text = "Work-Dir"
-        Me.ButtonWorkDir.UseVisualStyleBackColor = True
         '
         'ButtonHisFolder
         '
@@ -255,18 +243,18 @@ Partial Class FB_Dialog
         '
         Me.ContextMenuFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.RenameFileToolStripMenuItem, Me.DeleteFileToolStripMenuItem})
         Me.ContextMenuFile.Name = "ContextMenuFile"
-        Me.ContextMenuFile.Size = New System.Drawing.Size(156, 48)
+        Me.ContextMenuFile.Size = New System.Drawing.Size(148, 48)
         '
         'RenameFileToolStripMenuItem
         '
         Me.RenameFileToolStripMenuItem.Name = "RenameFileToolStripMenuItem"
-        Me.RenameFileToolStripMenuItem.Size = New System.Drawing.Size(155, 22)
+        Me.RenameFileToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
         Me.RenameFileToolStripMenuItem.Text = "Rename File..."
         '
         'DeleteFileToolStripMenuItem
         '
         Me.DeleteFileToolStripMenuItem.Name = "DeleteFileToolStripMenuItem"
-        Me.DeleteFileToolStripMenuItem.Size = New System.Drawing.Size(155, 22)
+        Me.DeleteFileToolStripMenuItem.Size = New System.Drawing.Size(147, 22)
         Me.DeleteFileToolStripMenuItem.Text = "Delete File..."
         '
         'TextBoxPath
@@ -345,6 +333,7 @@ Partial Class FB_Dialog
         Me.SplitContainer1.Panel1.PerformLayout()
         Me.SplitContainer1.Panel2.ResumeLayout(False)
         Me.SplitContainer1.Panel2.PerformLayout()
+        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
         Me.ContextMenuFile.ResumeLayout(False)
         Me.ResumeLayout(False)
@@ -368,7 +357,6 @@ Partial Class FB_Dialog
     Friend WithEvents ButtonCancel As System.Windows.Forms.Button
     Friend WithEvents ComboBoxExt As System.Windows.Forms.ComboBox
     Friend WithEvents TextBoxCurrent As System.Windows.Forms.TextBox
-    Friend WithEvents ButtonWorkDir As System.Windows.Forms.Button
     Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
     Friend WithEvents LabelFileAnz As System.Windows.Forms.Label
     Friend WithEvents ButtonDesktop As System.Windows.Forms.Button

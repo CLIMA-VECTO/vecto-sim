@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class F_Options
+Partial Class F_Settings
     Inherits System.Windows.Forms.Form
 
     'Das Formular Ã¼berschreibt den LÃ¶schvorgang, um die Komponentenliste zu bereinigen.
@@ -22,9 +22,6 @@ Partial Class F_Options
     'Das Bearbeiten mit dem Code-Editor ist nicht mÃ¶glich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.TextBoxWorDir = New System.Windows.Forms.TextBox()
-        Me.ButtonWorDir = New System.Windows.Forms.Button()
-        Me.GroupBoxWorDir = New System.Windows.Forms.GroupBox()
         Me.ButtonOK = New System.Windows.Forms.Button()
         Me.ButtonCancel = New System.Windows.Forms.Button()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
@@ -49,7 +46,6 @@ Partial Class F_Options
         Me.Label2 = New System.Windows.Forms.Label()
         Me.ButReset = New System.Windows.Forms.Button()
         Me.BtHelp = New System.Windows.Forms.Button()
-        Me.GroupBoxWorDir.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
         Me.TabControl1.SuspendLayout()
@@ -57,38 +53,10 @@ Partial Class F_Options
         Me.GrCalc.SuspendLayout()
         Me.SuspendLayout()
         '
-        'TextBoxWorDir
-        '
-        Me.TextBoxWorDir.Location = New System.Drawing.Point(6, 19)
-        Me.TextBoxWorDir.Name = "TextBoxWorDir"
-        Me.TextBoxWorDir.Size = New System.Drawing.Size(444, 20)
-        Me.TextBoxWorDir.TabIndex = 1
-        '
-        'ButtonWorDir
-        '
-        Me.ButtonWorDir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ButtonWorDir.Location = New System.Drawing.Point(456, 19)
-        Me.ButtonWorDir.Name = "ButtonWorDir"
-        Me.ButtonWorDir.Size = New System.Drawing.Size(26, 20)
-        Me.ButtonWorDir.TabIndex = 2
-        Me.ButtonWorDir.Text = "..."
-        Me.ButtonWorDir.UseVisualStyleBackColor = True
-        '
-        'GroupBoxWorDir
-        '
-        Me.GroupBoxWorDir.Controls.Add(Me.ButtonWorDir)
-        Me.GroupBoxWorDir.Controls.Add(Me.TextBoxWorDir)
-        Me.GroupBoxWorDir.Location = New System.Drawing.Point(5, 6)
-        Me.GroupBoxWorDir.Name = "GroupBoxWorDir"
-        Me.GroupBoxWorDir.Size = New System.Drawing.Size(490, 51)
-        Me.GroupBoxWorDir.TabIndex = 2
-        Me.GroupBoxWorDir.TabStop = False
-        Me.GroupBoxWorDir.Text = "Working Directory"
-        '
         'ButtonOK
         '
         Me.ButtonOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonOK.Location = New System.Drawing.Point(347, 337)
+        Me.ButtonOK.Location = New System.Drawing.Point(347, 287)
         Me.ButtonOK.Name = "ButtonOK"
         Me.ButtonOK.Size = New System.Drawing.Size(75, 26)
         Me.ButtonOK.TabIndex = 0
@@ -99,7 +67,7 @@ Partial Class F_Options
         '
         Me.ButtonCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButtonCancel.Location = New System.Drawing.Point(428, 337)
+        Me.ButtonCancel.Location = New System.Drawing.Point(428, 287)
         Me.ButtonCancel.Name = "ButtonCancel"
         Me.ButtonCancel.Size = New System.Drawing.Size(75, 26)
         Me.ButtonCancel.TabIndex = 1
@@ -111,7 +79,7 @@ Partial Class F_Options
         Me.GroupBox3.Controls.Add(Me.GroupBox5)
         Me.GroupBox3.Controls.Add(Me.TextBoxLogSize)
         Me.GroupBox3.Controls.Add(Me.Label16)
-        Me.GroupBox3.Location = New System.Drawing.Point(5, 63)
+        Me.GroupBox3.Location = New System.Drawing.Point(5, 6)
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Size = New System.Drawing.Size(489, 124)
         Me.GroupBox3.TabIndex = 11
@@ -188,18 +156,17 @@ Partial Class F_Options
         Me.TabControl1.Location = New System.Drawing.Point(3, 3)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(508, 328)
+        Me.TabControl1.Size = New System.Drawing.Size(508, 278)
         Me.TabControl1.TabIndex = 12
         '
         'TabPage2
         '
         Me.TabPage2.Controls.Add(Me.GrCalc)
-        Me.TabPage2.Controls.Add(Me.GroupBoxWorDir)
         Me.TabPage2.Controls.Add(Me.GroupBox3)
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(500, 302)
+        Me.TabPage2.Size = New System.Drawing.Size(500, 252)
         Me.TabPage2.TabIndex = 0
         Me.TabPage2.Text = "VECTO"
         Me.TabPage2.UseVisualStyleBackColor = True
@@ -215,7 +182,7 @@ Partial Class F_Options
         Me.GrCalc.Controls.Add(Me.Label8)
         Me.GrCalc.Controls.Add(Me.TbAirDensity)
         Me.GrCalc.Controls.Add(Me.Label2)
-        Me.GrCalc.Location = New System.Drawing.Point(6, 193)
+        Me.GrCalc.Location = New System.Drawing.Point(6, 136)
         Me.GrCalc.Name = "GrCalc"
         Me.GrCalc.Size = New System.Drawing.Size(488, 103)
         Me.GrCalc.TabIndex = 12
@@ -300,7 +267,7 @@ Partial Class F_Options
         'ButReset
         '
         Me.ButReset.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.ButReset.Location = New System.Drawing.Point(35, 337)
+        Me.ButReset.Location = New System.Drawing.Point(35, 287)
         Me.ButReset.Name = "ButReset"
         Me.ButReset.Size = New System.Drawing.Size(108, 26)
         Me.ButReset.TabIndex = 13
@@ -311,19 +278,19 @@ Partial Class F_Options
         '
         Me.BtHelp.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.BtHelp.Image = Global.VECTO.My.Resources.Resources.Help_icon
-        Me.BtHelp.Location = New System.Drawing.Point(3, 337)
+        Me.BtHelp.Location = New System.Drawing.Point(3, 287)
         Me.BtHelp.Name = "BtHelp"
         Me.BtHelp.Size = New System.Drawing.Size(26, 26)
         Me.BtHelp.TabIndex = 14
         Me.BtHelp.UseVisualStyleBackColor = True
         '
-        'F_Options
+        'F_Settings
         '
         Me.AcceptButton = Me.ButtonOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButtonCancel
-        Me.ClientSize = New System.Drawing.Size(515, 375)
+        Me.ClientSize = New System.Drawing.Size(515, 325)
         Me.Controls.Add(Me.BtHelp)
         Me.Controls.Add(Me.ButReset)
         Me.Controls.Add(Me.TabControl1)
@@ -332,10 +299,8 @@ Partial Class F_Options
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.MaximizeBox = False
         Me.MinimizeBox = False
-        Me.Name = "F_Options"
+        Me.Name = "F_Settings"
         Me.Text = "Settings"
-        Me.GroupBoxWorDir.ResumeLayout(False)
-        Me.GroupBoxWorDir.PerformLayout()
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
         Me.GroupBox5.ResumeLayout(False)
@@ -347,9 +312,6 @@ Partial Class F_Options
         Me.ResumeLayout(False)
 
     End Sub
-    Friend WithEvents TextBoxWorDir As System.Windows.Forms.TextBox
-    Friend WithEvents ButtonWorDir As System.Windows.Forms.Button
-    Friend WithEvents GroupBoxWorDir As System.Windows.Forms.GroupBox
     Friend WithEvents ButtonOK As System.Windows.Forms.Button
     Friend WithEvents ButtonCancel As System.Windows.Forms.Button
     Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox

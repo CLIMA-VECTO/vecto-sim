@@ -41,7 +41,7 @@ Partial Class F_VECTO
         Me.ButAuxAdd = New System.Windows.Forms.Button()
         Me.TbGBX = New System.Windows.Forms.TextBox()
         Me.TbENG = New System.Windows.Forms.TextBox()
-        Me.TextBoxVEH = New System.Windows.Forms.TextBox()
+        Me.TbVEH = New System.Windows.Forms.TextBox()
         Me.ButOpenGBX = New System.Windows.Forms.Button()
         Me.ButOpenENG = New System.Windows.Forms.Button()
         Me.ButOpenVEH = New System.Windows.Forms.Button()
@@ -50,8 +50,7 @@ Partial Class F_VECTO
         Me.ButtonMAP = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPgDriver = New System.Windows.Forms.TabPage()
-        Me.PnVACC = New System.Windows.Forms.Panel()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.GrVACC = New System.Windows.Forms.GroupBox()
         Me.TbDesMaxFile = New System.Windows.Forms.TextBox()
         Me.BtDesMaxBr = New System.Windows.Forms.Button()
         Me.BtAccOpen = New System.Windows.Forms.Button()
@@ -65,6 +64,7 @@ Partial Class F_VECTO
         Me.Label28 = New System.Windows.Forms.Label()
         Me.CbLookAhead = New System.Windows.Forms.CheckBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.PnEcoRoll = New System.Windows.Forms.Panel()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
@@ -105,24 +105,34 @@ Partial Class F_VECTO
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.CbEngOnly = New System.Windows.Forms.CheckBox()
         Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PicVehicle = New System.Windows.Forms.PictureBox()
+        Me.PicBox = New System.Windows.Forms.PictureBox()
+        Me.TbEngTxt = New System.Windows.Forms.TextBox()
+        Me.TbVehCat = New System.Windows.Forms.TextBox()
+        Me.TbAxleConf = New System.Windows.Forms.TextBox()
+        Me.TbHVCclass = New System.Windows.Forms.TextBox()
+        Me.TbGbxTxt = New System.Windows.Forms.TextBox()
+        Me.TbMass = New System.Windows.Forms.TextBox()
         Me.TabPgGen.SuspendLayout()
         Me.GrCycles.SuspendLayout()
         Me.GrAux.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPgDriver.SuspendLayout()
-        Me.PnVACC.SuspendLayout()
+        Me.GrVACC.SuspendLayout()
         Me.GrLAC.SuspendLayout()
         Me.PnLookAhead.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
+        Me.PnEcoRoll.SuspendLayout()
         Me.GrStartStop.SuspendLayout()
         Me.PnStartStop.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CmOpenFile.SuspendLayout()
+        CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PicBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TabPgGen
@@ -131,7 +141,7 @@ Partial Class F_VECTO
         Me.TabPgGen.Controls.Add(Me.GrAux)
         Me.TabPgGen.Controls.Add(Me.TbGBX)
         Me.TabPgGen.Controls.Add(Me.TbENG)
-        Me.TabPgGen.Controls.Add(Me.TextBoxVEH)
+        Me.TabPgGen.Controls.Add(Me.TbVEH)
         Me.TabPgGen.Controls.Add(Me.ButOpenGBX)
         Me.TabPgGen.Controls.Add(Me.ButOpenENG)
         Me.TabPgGen.Controls.Add(Me.ButOpenVEH)
@@ -141,28 +151,32 @@ Partial Class F_VECTO
         Me.TabPgGen.Location = New System.Drawing.Point(4, 22)
         Me.TabPgGen.Name = "TabPgGen"
         Me.TabPgGen.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgGen.Size = New System.Drawing.Size(646, 442)
+        Me.TabPgGen.Size = New System.Drawing.Size(527, 491)
         Me.TabPgGen.TabIndex = 0
         Me.TabPgGen.Text = "General"
         Me.TabPgGen.UseVisualStyleBackColor = True
         '
         'GrCycles
         '
+        Me.GrCycles.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GrCycles.Controls.Add(Me.Label2)
         Me.GrCycles.Controls.Add(Me.LvCycles)
         Me.GrCycles.Controls.Add(Me.BtDRIrem)
         Me.GrCycles.Controls.Add(Me.BtDRIadd)
-        Me.GrCycles.Location = New System.Drawing.Point(6, 247)
+        Me.GrCycles.Location = New System.Drawing.Point(7, 271)
         Me.GrCycles.Name = "GrCycles"
-        Me.GrCycles.Size = New System.Drawing.Size(634, 177)
+        Me.GrCycles.Size = New System.Drawing.Size(515, 208)
         Me.GrCycles.TabIndex = 34
         Me.GrCycles.TabStop = False
         Me.GrCycles.Text = "Cycles"
         '
         'Label2
         '
+        Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(506, 153)
+        Me.Label2.Location = New System.Drawing.Point(387, 153)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(122, 13)
         Me.Label2.TabIndex = 33
@@ -170,6 +184,8 @@ Partial Class F_VECTO
         '
         'LvCycles
         '
+        Me.LvCycles.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.LvCycles.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1})
         Me.LvCycles.FullRowSelect = True
         Me.LvCycles.GridLines = True
@@ -179,7 +195,7 @@ Partial Class F_VECTO
         Me.LvCycles.Location = New System.Drawing.Point(6, 19)
         Me.LvCycles.MultiSelect = False
         Me.LvCycles.Name = "LvCycles"
-        Me.LvCycles.Size = New System.Drawing.Size(622, 123)
+        Me.LvCycles.Size = New System.Drawing.Size(503, 123)
         Me.LvCycles.TabIndex = 0
         Me.LvCycles.TabStop = False
         Me.LvCycles.UseCompatibleStateImageBehavior = False
@@ -188,13 +204,13 @@ Partial Class F_VECTO
         'ColumnHeader1
         '
         Me.ColumnHeader1.Text = "Cycle path"
-        Me.ColumnHeader1.Width = 615
+        Me.ColumnHeader1.Width = 470
         '
         'BtDRIrem
         '
         Me.BtDRIrem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.BtDRIrem.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.BtDRIrem.Location = New System.Drawing.Point(41, 148)
+        Me.BtDRIrem.Location = New System.Drawing.Point(41, 179)
         Me.BtDRIrem.Name = "BtDRIrem"
         Me.BtDRIrem.Size = New System.Drawing.Size(29, 23)
         Me.BtDRIrem.TabIndex = 32
@@ -204,7 +220,7 @@ Partial Class F_VECTO
         '
         Me.BtDRIadd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.BtDRIadd.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.BtDRIadd.Location = New System.Drawing.Point(6, 148)
+        Me.BtDRIadd.Location = New System.Drawing.Point(6, 179)
         Me.BtDRIadd.Name = "BtDRIadd"
         Me.BtDRIadd.Size = New System.Drawing.Size(29, 23)
         Me.BtDRIadd.TabIndex = 31
@@ -212,21 +228,25 @@ Partial Class F_VECTO
         '
         'GrAux
         '
+        Me.GrAux.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GrAux.Controls.Add(Me.Label32)
         Me.GrAux.Controls.Add(Me.LvAux)
         Me.GrAux.Controls.Add(Me.ButAuxRem)
         Me.GrAux.Controls.Add(Me.ButAuxAdd)
         Me.GrAux.Location = New System.Drawing.Point(6, 87)
         Me.GrAux.Name = "GrAux"
-        Me.GrAux.Size = New System.Drawing.Size(634, 154)
+        Me.GrAux.Size = New System.Drawing.Size(515, 209)
         Me.GrAux.TabIndex = 33
         Me.GrAux.TabStop = False
         Me.GrAux.Text = "Auxiliaries"
         '
         'Label32
         '
+        Me.Label32.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label32.AutoSize = True
-        Me.Label32.Location = New System.Drawing.Point(489, 130)
+        Me.Label32.Location = New System.Drawing.Point(369, 147)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(139, 13)
         Me.Label32.TabIndex = 34
@@ -243,7 +263,7 @@ Partial Class F_VECTO
         Me.LvAux.Location = New System.Drawing.Point(6, 19)
         Me.LvAux.MultiSelect = False
         Me.LvAux.Name = "LvAux"
-        Me.LvAux.Size = New System.Drawing.Size(622, 100)
+        Me.LvAux.Size = New System.Drawing.Size(503, 117)
         Me.LvAux.TabIndex = 30
         Me.LvAux.TabStop = False
         Me.LvAux.UseCompatibleStateImageBehavior = False
@@ -252,23 +272,22 @@ Partial Class F_VECTO
         'ColumnHeader4
         '
         Me.ColumnHeader4.Text = "ID"
-        Me.ColumnHeader4.Width = 40
+        Me.ColumnHeader4.Width = 45
         '
         'ColumnHeader5
         '
         Me.ColumnHeader5.Text = "Type"
-        Me.ColumnHeader5.Width = 118
+        Me.ColumnHeader5.Width = 108
         '
         'ColumnHeader6
         '
         Me.ColumnHeader6.Text = "Input File"
-        Me.ColumnHeader6.Width = 457
+        Me.ColumnHeader6.Width = 331
         '
         'ButAuxRem
         '
-        Me.ButAuxRem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.ButAuxRem.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.ButAuxRem.Location = New System.Drawing.Point(41, 125)
+        Me.ButAuxRem.Location = New System.Drawing.Point(42, 142)
         Me.ButAuxRem.Name = "ButAuxRem"
         Me.ButAuxRem.Size = New System.Drawing.Size(29, 23)
         Me.ButAuxRem.TabIndex = 32
@@ -276,9 +295,8 @@ Partial Class F_VECTO
         '
         'ButAuxAdd
         '
-        Me.ButAuxAdd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.ButAuxAdd.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.ButAuxAdd.Location = New System.Drawing.Point(6, 125)
+        Me.ButAuxAdd.Location = New System.Drawing.Point(7, 142)
         Me.ButAuxAdd.Name = "ButAuxAdd"
         Me.ButAuxAdd.Size = New System.Drawing.Size(29, 23)
         Me.ButAuxAdd.TabIndex = 31
@@ -290,7 +308,7 @@ Partial Class F_VECTO
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TbGBX.Location = New System.Drawing.Point(84, 60)
         Me.TbGBX.Name = "TbGBX"
-        Me.TbGBX.Size = New System.Drawing.Size(525, 20)
+        Me.TbGBX.Size = New System.Drawing.Size(406, 20)
         Me.TbGBX.TabIndex = 3
         '
         'TbENG
@@ -299,17 +317,17 @@ Partial Class F_VECTO
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TbENG.Location = New System.Drawing.Point(84, 33)
         Me.TbENG.Name = "TbENG"
-        Me.TbENG.Size = New System.Drawing.Size(525, 20)
+        Me.TbENG.Size = New System.Drawing.Size(406, 20)
         Me.TbENG.TabIndex = 2
         '
-        'TextBoxVEH
+        'TbVEH
         '
-        Me.TextBoxVEH.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.TbVEH.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TextBoxVEH.Location = New System.Drawing.Point(84, 7)
-        Me.TextBoxVEH.Name = "TextBoxVEH"
-        Me.TextBoxVEH.Size = New System.Drawing.Size(525, 20)
-        Me.TextBoxVEH.TabIndex = 1
+        Me.TbVEH.Location = New System.Drawing.Point(84, 7)
+        Me.TbVEH.Name = "TbVEH"
+        Me.TbVEH.Size = New System.Drawing.Size(406, 20)
+        Me.TbVEH.TabIndex = 1
         '
         'ButOpenGBX
         '
@@ -344,7 +362,7 @@ Partial Class F_VECTO
         'ButtonVEH
         '
         Me.ButtonVEH.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonVEH.Location = New System.Drawing.Point(615, 6)
+        Me.ButtonVEH.Location = New System.Drawing.Point(496, 6)
         Me.ButtonVEH.Name = "ButtonVEH"
         Me.ButtonVEH.Size = New System.Drawing.Size(28, 21)
         Me.ButtonVEH.TabIndex = 11
@@ -355,7 +373,7 @@ Partial Class F_VECTO
         'ButtonGBX
         '
         Me.ButtonGBX.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonGBX.Location = New System.Drawing.Point(615, 60)
+        Me.ButtonGBX.Location = New System.Drawing.Point(496, 60)
         Me.ButtonGBX.Name = "ButtonGBX"
         Me.ButtonGBX.Size = New System.Drawing.Size(28, 21)
         Me.ButtonGBX.TabIndex = 13
@@ -366,7 +384,7 @@ Partial Class F_VECTO
         'ButtonMAP
         '
         Me.ButtonMAP.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButtonMAP.Location = New System.Drawing.Point(615, 33)
+        Me.ButtonMAP.Location = New System.Drawing.Point(496, 33)
         Me.ButtonMAP.Name = "ButtonMAP"
         Me.ButtonMAP.Size = New System.Drawing.Size(28, 21)
         Me.ButtonMAP.TabIndex = 12
@@ -383,54 +401,49 @@ Partial Class F_VECTO
         Me.TabControl1.Location = New System.Drawing.Point(1, 107)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(654, 468)
+        Me.TabControl1.Size = New System.Drawing.Size(535, 517)
         Me.TabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed
         Me.TabControl1.TabIndex = 1
         '
         'TabPgDriver
         '
-        Me.TabPgDriver.Controls.Add(Me.PnVACC)
+        Me.TabPgDriver.Controls.Add(Me.GrVACC)
         Me.TabPgDriver.Controls.Add(Me.GrLAC)
         Me.TabPgDriver.Controls.Add(Me.GroupBox1)
         Me.TabPgDriver.Controls.Add(Me.GrStartStop)
         Me.TabPgDriver.Location = New System.Drawing.Point(4, 22)
         Me.TabPgDriver.Name = "TabPgDriver"
         Me.TabPgDriver.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPgDriver.Size = New System.Drawing.Size(646, 442)
+        Me.TabPgDriver.Size = New System.Drawing.Size(527, 491)
         Me.TabPgDriver.TabIndex = 7
         Me.TabPgDriver.Text = "Driver Assist"
         Me.TabPgDriver.UseVisualStyleBackColor = True
         '
-        'PnVACC
+        'GrVACC
         '
-        Me.PnVACC.Controls.Add(Me.Label1)
-        Me.PnVACC.Controls.Add(Me.TbDesMaxFile)
-        Me.PnVACC.Controls.Add(Me.BtDesMaxBr)
-        Me.PnVACC.Controls.Add(Me.BtAccOpen)
-        Me.PnVACC.Location = New System.Drawing.Point(3, 6)
-        Me.PnVACC.Name = "PnVACC"
-        Me.PnVACC.Size = New System.Drawing.Size(640, 44)
-        Me.PnVACC.TabIndex = 33
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(3, 0)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(177, 13)
-        Me.Label1.TabIndex = 32
-        Me.Label1.Text = "Max. acceleration and brake curves"
+        Me.GrVACC.Controls.Add(Me.TbDesMaxFile)
+        Me.GrVACC.Controls.Add(Me.BtDesMaxBr)
+        Me.GrVACC.Controls.Add(Me.BtAccOpen)
+        Me.GrVACC.Location = New System.Drawing.Point(6, 401)
+        Me.GrVACC.Name = "GrVACC"
+        Me.GrVACC.Size = New System.Drawing.Size(515, 84)
+        Me.GrVACC.TabIndex = 34
+        Me.GrVACC.TabStop = False
+        Me.GrVACC.Text = "Max. acceleration and brake curves"
         '
         'TbDesMaxFile
         '
-        Me.TbDesMaxFile.Location = New System.Drawing.Point(3, 16)
+        Me.TbDesMaxFile.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TbDesMaxFile.Location = New System.Drawing.Point(6, 29)
         Me.TbDesMaxFile.Name = "TbDesMaxFile"
-        Me.TbDesMaxFile.Size = New System.Drawing.Size(571, 20)
+        Me.TbDesMaxFile.Size = New System.Drawing.Size(440, 20)
         Me.TbDesMaxFile.TabIndex = 0
         '
         'BtDesMaxBr
         '
-        Me.BtDesMaxBr.Location = New System.Drawing.Point(580, 15)
+        Me.BtDesMaxBr.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtDesMaxBr.Location = New System.Drawing.Point(452, 28)
         Me.BtDesMaxBr.Name = "BtDesMaxBr"
         Me.BtDesMaxBr.Size = New System.Drawing.Size(28, 21)
         Me.BtDesMaxBr.TabIndex = 1
@@ -439,8 +452,9 @@ Partial Class F_VECTO
         '
         'BtAccOpen
         '
+        Me.BtAccOpen.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BtAccOpen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.BtAccOpen.Location = New System.Drawing.Point(614, 14)
+        Me.BtAccOpen.Location = New System.Drawing.Point(486, 27)
         Me.BtAccOpen.Name = "BtAccOpen"
         Me.BtAccOpen.Size = New System.Drawing.Size(23, 23)
         Me.BtAccOpen.TabIndex = 2
@@ -451,9 +465,9 @@ Partial Class F_VECTO
         '
         Me.GrLAC.Controls.Add(Me.PnLookAhead)
         Me.GrLAC.Controls.Add(Me.CbLookAhead)
-        Me.GrLAC.Location = New System.Drawing.Point(12, 307)
+        Me.GrLAC.Location = New System.Drawing.Point(7, 290)
         Me.GrLAC.Name = "GrLAC"
-        Me.GrLAC.Size = New System.Drawing.Size(375, 87)
+        Me.GrLAC.Size = New System.Drawing.Size(514, 105)
         Me.GrLAC.TabIndex = 5
         Me.GrLAC.TabStop = False
         Me.GrLAC.Text = "Look-Ahead Coasting"
@@ -535,29 +549,37 @@ Partial Class F_VECTO
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.Label21)
-        Me.GroupBox1.Controls.Add(Me.Label20)
-        Me.GroupBox1.Controls.Add(Me.Label14)
-        Me.GroupBox1.Controls.Add(Me.TbVmin)
-        Me.GroupBox1.Controls.Add(Me.TbUnderSpeed)
-        Me.GroupBox1.Controls.Add(Me.TbOverspeed)
-        Me.GroupBox1.Controls.Add(Me.Label23)
-        Me.GroupBox1.Controls.Add(Me.Label22)
-        Me.GroupBox1.Controls.Add(Me.Label13)
+        Me.GroupBox1.Controls.Add(Me.PnEcoRoll)
         Me.GroupBox1.Controls.Add(Me.RdEcoRoll)
         Me.GroupBox1.Controls.Add(Me.RdOverspeed)
         Me.GroupBox1.Controls.Add(Me.RdOff)
-        Me.GroupBox1.Location = New System.Drawing.Point(12, 192)
+        Me.GroupBox1.Location = New System.Drawing.Point(6, 149)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(372, 109)
+        Me.GroupBox1.Size = New System.Drawing.Size(515, 135)
         Me.GroupBox1.TabIndex = 4
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Overspeed / Eco-Roll"
         '
+        'PnEcoRoll
+        '
+        Me.PnEcoRoll.Controls.Add(Me.Label21)
+        Me.PnEcoRoll.Controls.Add(Me.Label20)
+        Me.PnEcoRoll.Controls.Add(Me.Label14)
+        Me.PnEcoRoll.Controls.Add(Me.TbVmin)
+        Me.PnEcoRoll.Controls.Add(Me.TbUnderSpeed)
+        Me.PnEcoRoll.Controls.Add(Me.TbOverspeed)
+        Me.PnEcoRoll.Controls.Add(Me.Label23)
+        Me.PnEcoRoll.Controls.Add(Me.Label22)
+        Me.PnEcoRoll.Controls.Add(Me.Label13)
+        Me.PnEcoRoll.Location = New System.Drawing.Point(137, 16)
+        Me.PnEcoRoll.Name = "PnEcoRoll"
+        Me.PnEcoRoll.Size = New System.Drawing.Size(232, 102)
+        Me.PnEcoRoll.TabIndex = 6
+        '
         'Label21
         '
         Me.Label21.AutoSize = True
-        Me.Label21.Location = New System.Drawing.Point(314, 76)
+        Me.Label21.Location = New System.Drawing.Point(178, 61)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(38, 13)
         Me.Label21.TabIndex = 3
@@ -566,7 +588,7 @@ Partial Class F_VECTO
         'Label20
         '
         Me.Label20.AutoSize = True
-        Me.Label20.Location = New System.Drawing.Point(314, 50)
+        Me.Label20.Location = New System.Drawing.Point(178, 35)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(38, 13)
         Me.Label20.TabIndex = 3
@@ -575,7 +597,7 @@ Partial Class F_VECTO
         'Label14
         '
         Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(314, 24)
+        Me.Label14.Location = New System.Drawing.Point(178, 9)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(38, 13)
         Me.Label14.TabIndex = 3
@@ -583,21 +605,21 @@ Partial Class F_VECTO
         '
         'TbVmin
         '
-        Me.TbVmin.Location = New System.Drawing.Point(244, 73)
+        Me.TbVmin.Location = New System.Drawing.Point(108, 58)
         Me.TbVmin.Name = "TbVmin"
         Me.TbVmin.Size = New System.Drawing.Size(64, 20)
         Me.TbVmin.TabIndex = 5
         '
         'TbUnderSpeed
         '
-        Me.TbUnderSpeed.Location = New System.Drawing.Point(244, 47)
+        Me.TbUnderSpeed.Location = New System.Drawing.Point(108, 32)
         Me.TbUnderSpeed.Name = "TbUnderSpeed"
         Me.TbUnderSpeed.Size = New System.Drawing.Size(64, 20)
         Me.TbUnderSpeed.TabIndex = 4
         '
         'TbOverspeed
         '
-        Me.TbOverspeed.Location = New System.Drawing.Point(244, 21)
+        Me.TbOverspeed.Location = New System.Drawing.Point(108, 6)
         Me.TbOverspeed.Name = "TbOverspeed"
         Me.TbOverspeed.Size = New System.Drawing.Size(64, 20)
         Me.TbOverspeed.TabIndex = 3
@@ -605,7 +627,7 @@ Partial Class F_VECTO
         'Label23
         '
         Me.Label23.AutoSize = True
-        Me.Label23.Location = New System.Drawing.Point(158, 76)
+        Me.Label23.Location = New System.Drawing.Point(22, 61)
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(80, 13)
         Me.Label23.TabIndex = 1
@@ -614,7 +636,7 @@ Partial Class F_VECTO
         'Label22
         '
         Me.Label22.AutoSize = True
-        Me.Label22.Location = New System.Drawing.Point(147, 50)
+        Me.Label22.Location = New System.Drawing.Point(11, 35)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(91, 13)
         Me.Label22.TabIndex = 1
@@ -623,7 +645,7 @@ Partial Class F_VECTO
         'Label13
         '
         Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(153, 24)
+        Me.Label13.Location = New System.Drawing.Point(17, 9)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(85, 13)
         Me.Label13.TabIndex = 1
@@ -665,9 +687,9 @@ Partial Class F_VECTO
         '
         Me.GrStartStop.Controls.Add(Me.PnStartStop)
         Me.GrStartStop.Controls.Add(Me.ChBStartStop)
-        Me.GrStartStop.Location = New System.Drawing.Point(12, 56)
+        Me.GrStartStop.Location = New System.Drawing.Point(6, 6)
         Me.GrStartStop.Name = "GrStartStop"
-        Me.GrStartStop.Size = New System.Drawing.Size(375, 130)
+        Me.GrStartStop.Size = New System.Drawing.Size(515, 137)
         Me.GrStartStop.TabIndex = 3
         Me.GrStartStop.TabStop = False
         Me.GrStartStop.Text = "Engine Start Stop"
@@ -683,15 +705,15 @@ Partial Class F_VECTO
         Me.PnStartStop.Controls.Add(Me.LabelSStime)
         Me.PnStartStop.Controls.Add(Me.TbSSdelay)
         Me.PnStartStop.Controls.Add(Me.TbSStime)
-        Me.PnStartStop.Location = New System.Drawing.Point(148, 10)
+        Me.PnStartStop.Location = New System.Drawing.Point(87, 21)
         Me.PnStartStop.Name = "PnStartStop"
-        Me.PnStartStop.Size = New System.Drawing.Size(221, 106)
+        Me.PnStartStop.Size = New System.Drawing.Size(422, 95)
         Me.PnStartStop.TabIndex = 1
         '
         'Label31
         '
         Me.Label31.AutoSize = True
-        Me.Label31.Location = New System.Drawing.Point(169, 64)
+        Me.Label31.Location = New System.Drawing.Point(228, 58)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(18, 13)
         Me.Label31.TabIndex = 38
@@ -700,7 +722,7 @@ Partial Class F_VECTO
         'Label27
         '
         Me.Label27.AutoSize = True
-        Me.Label27.Location = New System.Drawing.Point(169, 38)
+        Me.Label27.Location = New System.Drawing.Point(228, 32)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(18, 13)
         Me.Label27.TabIndex = 38
@@ -708,7 +730,7 @@ Partial Class F_VECTO
         '
         'TbSSspeed
         '
-        Me.TbSSspeed.Location = New System.Drawing.Point(99, 9)
+        Me.TbSSspeed.Location = New System.Drawing.Point(158, 3)
         Me.TbSSspeed.Name = "TbSSspeed"
         Me.TbSSspeed.Size = New System.Drawing.Size(64, 20)
         Me.TbSSspeed.TabIndex = 0
@@ -716,7 +738,7 @@ Partial Class F_VECTO
         'LabelSSspeed
         '
         Me.LabelSSspeed.AutoSize = True
-        Me.LabelSSspeed.Location = New System.Drawing.Point(32, 12)
+        Me.LabelSSspeed.Location = New System.Drawing.Point(91, 6)
         Me.LabelSSspeed.Name = "LabelSSspeed"
         Me.LabelSSspeed.Size = New System.Drawing.Size(61, 13)
         Me.LabelSSspeed.TabIndex = 37
@@ -725,7 +747,7 @@ Partial Class F_VECTO
         'Label26
         '
         Me.Label26.AutoSize = True
-        Me.Label26.Location = New System.Drawing.Point(169, 12)
+        Me.Label26.Location = New System.Drawing.Point(228, 6)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(38, 13)
         Me.Label26.TabIndex = 38
@@ -734,7 +756,7 @@ Partial Class F_VECTO
         'Label30
         '
         Me.Label30.AutoSize = True
-        Me.Label30.Location = New System.Drawing.Point(9, 64)
+        Me.Label30.Location = New System.Drawing.Point(68, 58)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(84, 13)
         Me.Label30.TabIndex = 35
@@ -743,7 +765,7 @@ Partial Class F_VECTO
         'LabelSStime
         '
         Me.LabelSStime.AutoSize = True
-        Me.LabelSStime.Location = New System.Drawing.Point(6, 38)
+        Me.LabelSStime.Location = New System.Drawing.Point(65, 32)
         Me.LabelSStime.Name = "LabelSStime"
         Me.LabelSStime.Size = New System.Drawing.Size(87, 13)
         Me.LabelSStime.TabIndex = 35
@@ -751,14 +773,14 @@ Partial Class F_VECTO
         '
         'TbSSdelay
         '
-        Me.TbSSdelay.Location = New System.Drawing.Point(99, 61)
+        Me.TbSSdelay.Location = New System.Drawing.Point(158, 55)
         Me.TbSSdelay.Name = "TbSSdelay"
         Me.TbSSdelay.Size = New System.Drawing.Size(64, 20)
         Me.TbSSdelay.TabIndex = 1
         '
         'TbSStime
         '
-        Me.TbSStime.Location = New System.Drawing.Point(99, 35)
+        Me.TbSStime.Location = New System.Drawing.Point(158, 29)
         Me.TbSStime.Name = "TbSStime"
         Me.TbSStime.Size = New System.Drawing.Size(64, 20)
         Me.TbSStime.TabIndex = 1
@@ -778,9 +800,9 @@ Partial Class F_VECTO
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripStatusLabelGEN})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 612)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 627)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New System.Drawing.Size(667, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(944, 22)
         Me.StatusStrip1.SizingGrip = False
         Me.StatusStrip1.TabIndex = 6
         Me.StatusStrip1.Text = "StatusStrip1"
@@ -794,7 +816,7 @@ Partial Class F_VECTO
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(502, 586)
+        Me.ButOK.Location = New System.Drawing.Point(779, 601)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 11
@@ -805,7 +827,7 @@ Partial Class F_VECTO
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(583, 586)
+        Me.ButCancel.Location = New System.Drawing.Point(860, 601)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 19
@@ -818,7 +840,7 @@ Partial Class F_VECTO
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator1, Me.ToolStripBtSendTo, Me.ToolStripSeparator2, Me.ToolStripButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(667, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(944, 25)
         Me.ToolStrip1.TabIndex = 20
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -874,8 +896,8 @@ Partial Class F_VECTO
         Me.ToolStripBtSendTo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSendTo.Name = "ToolStripBtSendTo"
         Me.ToolStripBtSendTo.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripBtSendTo.Text = "Send to GEN List"
-        Me.ToolStripBtSendTo.ToolTipText = "Send to GEN List"
+        Me.ToolStripBtSendTo.Text = "Send to Job List"
+        Me.ToolStripBtSendTo.ToolTipText = "Send to Job List"
         '
         'ToolStripSeparator2
         '
@@ -897,7 +919,7 @@ Partial Class F_VECTO
         Me.PictureBox1.Image = Global.VECTO.My.Resources.Resources.VECTO_VECTO
         Me.PictureBox1.Location = New System.Drawing.Point(12, 28)
         Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(643, 40)
+        Me.PictureBox1.Size = New System.Drawing.Size(920, 40)
         Me.PictureBox1.TabIndex = 21
         Me.PictureBox1.TabStop = False
         '
@@ -913,35 +935,104 @@ Partial Class F_VECTO
         '
         'CmOpenFile
         '
-        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithGRAPHiToolStripMenuItem, Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
+        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
         Me.CmOpenFile.Name = "CmOpenFile"
-        Me.CmOpenFile.Size = New System.Drawing.Size(175, 70)
-        '
-        'OpenWithGRAPHiToolStripMenuItem
-        '
-        Me.OpenWithGRAPHiToolStripMenuItem.Name = "OpenWithGRAPHiToolStripMenuItem"
-        Me.OpenWithGRAPHiToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
-        Me.OpenWithGRAPHiToolStripMenuItem.Text = "Open with GRAPHi"
+        Me.CmOpenFile.Size = New System.Drawing.Size(153, 48)
         '
         'OpenWithToolStripMenuItem
         '
         Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.OpenWithToolStripMenuItem.Text = "Open with ..."
         '
         'ShowInFolderToolStripMenuItem
         '
         Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
-        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
-        'F_VEC
+        'PicVehicle
+        '
+        Me.PicVehicle.BackColor = System.Drawing.Color.LightGray
+        Me.PicVehicle.Location = New System.Drawing.Point(542, 122)
+        Me.PicVehicle.Name = "PicVehicle"
+        Me.PicVehicle.Size = New System.Drawing.Size(300, 88)
+        Me.PicVehicle.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.PicVehicle.TabIndex = 36
+        Me.PicVehicle.TabStop = False
+        '
+        'PicBox
+        '
+        Me.PicBox.BackColor = System.Drawing.Color.LightGray
+        Me.PicBox.Location = New System.Drawing.Point(542, 268)
+        Me.PicBox.Name = "PicBox"
+        Me.PicBox.Size = New System.Drawing.Size(390, 327)
+        Me.PicBox.TabIndex = 36
+        Me.PicBox.TabStop = False
+        '
+        'TbEngTxt
+        '
+        Me.TbEngTxt.Location = New System.Drawing.Point(542, 216)
+        Me.TbEngTxt.Name = "TbEngTxt"
+        Me.TbEngTxt.ReadOnly = True
+        Me.TbEngTxt.Size = New System.Drawing.Size(390, 20)
+        Me.TbEngTxt.TabIndex = 37
+        '
+        'TbVehCat
+        '
+        Me.TbVehCat.Location = New System.Drawing.Point(848, 126)
+        Me.TbVehCat.Name = "TbVehCat"
+        Me.TbVehCat.ReadOnly = True
+        Me.TbVehCat.Size = New System.Drawing.Size(87, 20)
+        Me.TbVehCat.TabIndex = 37
+        '
+        'TbAxleConf
+        '
+        Me.TbAxleConf.Location = New System.Drawing.Point(894, 155)
+        Me.TbAxleConf.Name = "TbAxleConf"
+        Me.TbAxleConf.ReadOnly = True
+        Me.TbAxleConf.Size = New System.Drawing.Size(41, 20)
+        Me.TbAxleConf.TabIndex = 37
+        '
+        'TbHVCclass
+        '
+        Me.TbHVCclass.Location = New System.Drawing.Point(848, 184)
+        Me.TbHVCclass.Name = "TbHVCclass"
+        Me.TbHVCclass.ReadOnly = True
+        Me.TbHVCclass.Size = New System.Drawing.Size(87, 20)
+        Me.TbHVCclass.TabIndex = 37
+        '
+        'TbGbxTxt
+        '
+        Me.TbGbxTxt.Location = New System.Drawing.Point(542, 242)
+        Me.TbGbxTxt.Name = "TbGbxTxt"
+        Me.TbGbxTxt.ReadOnly = True
+        Me.TbGbxTxt.Size = New System.Drawing.Size(390, 20)
+        Me.TbGbxTxt.TabIndex = 37
+        '
+        'TbMass
+        '
+        Me.TbMass.Location = New System.Drawing.Point(848, 155)
+        Me.TbMass.Name = "TbMass"
+        Me.TbMass.ReadOnly = True
+        Me.TbMass.Size = New System.Drawing.Size(40, 20)
+        Me.TbMass.TabIndex = 37
+        '
+        'F_VECTO
         '
         Me.AcceptButton = Me.ButOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(667, 634)
+        Me.ClientSize = New System.Drawing.Size(944, 649)
+        Me.Controls.Add(Me.TbHVCclass)
+        Me.Controls.Add(Me.TbMass)
+        Me.Controls.Add(Me.TbAxleConf)
+        Me.Controls.Add(Me.TbVehCat)
+        Me.Controls.Add(Me.TbGbxTxt)
+        Me.Controls.Add(Me.TbEngTxt)
+        Me.Controls.Add(Me.PicBox)
+        Me.Controls.Add(Me.PicVehicle)
         Me.Controls.Add(Me.CbEngOnly)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.ToolStrip1)
@@ -952,7 +1043,7 @@ Partial Class F_VECTO
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
-        Me.Name = "F_VEC"
+        Me.Name = "F_VECTO"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "VECTO Editor"
         Me.TabPgGen.ResumeLayout(False)
@@ -963,14 +1054,16 @@ Partial Class F_VECTO
         Me.GrAux.PerformLayout()
         Me.TabControl1.ResumeLayout(False)
         Me.TabPgDriver.ResumeLayout(False)
-        Me.PnVACC.ResumeLayout(False)
-        Me.PnVACC.PerformLayout()
+        Me.GrVACC.ResumeLayout(False)
+        Me.GrVACC.PerformLayout()
         Me.GrLAC.ResumeLayout(False)
         Me.GrLAC.PerformLayout()
         Me.PnLookAhead.ResumeLayout(False)
         Me.PnLookAhead.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
+        Me.PnEcoRoll.ResumeLayout(False)
+        Me.PnEcoRoll.PerformLayout()
         Me.GrStartStop.ResumeLayout(False)
         Me.GrStartStop.PerformLayout()
         Me.PnStartStop.ResumeLayout(False)
@@ -981,6 +1074,8 @@ Partial Class F_VECTO
         Me.ToolStrip1.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CmOpenFile.ResumeLayout(False)
+        CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PicBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -998,7 +1093,7 @@ Partial Class F_VECTO
     Friend WithEvents ButOK As System.Windows.Forms.Button
     Friend WithEvents TbGBX As System.Windows.Forms.TextBox
     Friend WithEvents TbENG As System.Windows.Forms.TextBox
-    Friend WithEvents TextBoxVEH As System.Windows.Forms.TextBox
+    Friend WithEvents TbVEH As System.Windows.Forms.TextBox
     Friend WithEvents ButCancel As System.Windows.Forms.Button
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
     Friend WithEvents ToolStripBtNew As System.Windows.Forms.ToolStripButton
@@ -1018,7 +1113,6 @@ Partial Class F_VECTO
     Friend WithEvents TabPgDriver As System.Windows.Forms.TabPage
     Friend WithEvents BtDesMaxBr As System.Windows.Forms.Button
     Friend WithEvents TbDesMaxFile As System.Windows.Forms.TextBox
-    Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents GrCycles As System.Windows.Forms.GroupBox
     Friend WithEvents LvCycles As System.Windows.Forms.ListView
     Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
@@ -1030,7 +1124,6 @@ Partial Class F_VECTO
     Friend WithEvents BtAccOpen As System.Windows.Forms.Button
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
-    Friend WithEvents OpenWithGRAPHiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ChBStartStop As System.Windows.Forms.CheckBox
@@ -1068,5 +1161,14 @@ Partial Class F_VECTO
     Friend WithEvents Label30 As System.Windows.Forms.Label
     Friend WithEvents TbSSdelay As System.Windows.Forms.TextBox
     Friend WithEvents Label32 As System.Windows.Forms.Label
-    Friend WithEvents PnVACC As System.Windows.Forms.Panel
+    Friend WithEvents PnEcoRoll As System.Windows.Forms.Panel
+    Friend WithEvents PicVehicle As System.Windows.Forms.PictureBox
+    Friend WithEvents PicBox As System.Windows.Forms.PictureBox
+    Friend WithEvents TbEngTxt As System.Windows.Forms.TextBox
+    Friend WithEvents TbVehCat As System.Windows.Forms.TextBox
+    Friend WithEvents TbAxleConf As System.Windows.Forms.TextBox
+    Friend WithEvents TbHVCclass As System.Windows.Forms.TextBox
+    Friend WithEvents TbGbxTxt As System.Windows.Forms.TextBox
+    Friend WithEvents TbMass As System.Windows.Forms.TextBox
+    Friend WithEvents GrVACC As System.Windows.Forms.GroupBox
 End Class

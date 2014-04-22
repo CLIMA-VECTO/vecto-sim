@@ -360,7 +360,7 @@ Public Class cVh
         v = lV(t)
         dWegIst += v
 
-        If Not Cfg.WegKorJa Then Return False
+        If Not Cfg.DistCorr Then Return False
 
         If t + 1 > MODdata.tDim Then Return False
 
@@ -587,13 +587,18 @@ lbInt:
 
     End Function
 
-    Public Function AltIntp(ByVal s As Single, Optional ByVal OverwiAlt As Boolean = False) As Single
+    'IndexInit = 0    ...Set iAlt to 1
+    'IndexInit = 0    ...Set iAlt
+    'IndexInit > 0    ...Use IndexStart
+    Public Function AltIntp(ByVal s As Single, ByVal iAltReset As Boolean) As Single
         Dim i As Int32
 
         If ls0(0) >= s Then
             i = 1
             GoTo lbInt
         End If
+
+        If iAltReset Then iAlt = 1
 
         i = iAlt
 
@@ -611,14 +616,10 @@ lbInt:
 
         End If
 
-
 lbInt:
-
-        If OverwiAlt Then iAlt = i
+        iAlt = i
 
         Return (s - ls0(i - 1)) * (lAlt0(i) - lAlt0(i - 1)) / (ls0(i) - ls0(i - 1)) + lAlt0(i - 1)
-
-
 
     End Function
         

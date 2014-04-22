@@ -1,5 +1,9 @@
 ﻿Imports System.Windows.Forms
 
+''' <summary>
+''' Sub-dialog for File Browser. Entirely controlled by cFilebrowser class (via FB_Dialog).
+''' </summary>
+''' <remarks></remarks>
 Public Class FB_FavDlog
 
     Private Const NoFavString As String = "<undefined>"

@@ -2,8 +2,8 @@
 
 Public Class cVECTO
 
-    Private Const FormatVersion As String = "1.0"
-    Private FileVersion As String
+    Private Const FormatVersion As Short = 1
+    Private FileVersion As Short
 
     Private sFilePath As String
 
@@ -28,7 +28,7 @@ Public Class cVECTO
     Public AuxPaths As Dictionary(Of String, cAuxEntry)
     Public AuxRefs As Dictionary(Of String, cAux)          'Alle Nebenverbraucher die in der Veh-Datei UND im Zyklus definiert sind
     Public AuxDef As Boolean                               'True wenn ein oder mehrere Nebenverbraucher definiert sind
-
+    Public EStechs As List(Of String)
 
     Public CycleFiles As List(Of cSubPath)
 
@@ -51,6 +51,7 @@ Public Class cVECTO
     Public Class cAuxEntry
         Public Type As String
         Public Path As cSubPath
+        Public TechStr As String = ""
         Public Sub New()
             Path = New cSubPath
         End Sub
@@ -95,7 +96,7 @@ Public Class cVECTO
             Next
 
             'Aux
-            If AuxDef Then
+            If AuxDef And Not Cfg.DeclMode Then
                 For Each Aux0 In Me.AuxPaths.Values
                     MyFileList.Add(Aux0.Path.FullPath)
                 Next
@@ -134,6 +135,7 @@ Public Class cVECTO
         AuxPaths = New Dictionary(Of String, cAuxEntry)
         AuxRefs = New Dictionary(Of String, cAux)
         AuxDef = False
+        EStechs = New List(Of String)
 
         CycleFiles = New List(Of cSubPath)
 
@@ -161,84 +163,6 @@ Public Class cVECTO
             file = Nothing
             Return False
         End If
-
-        ''***
-        ''*** First line: Version
-        'line = file.ReadLine
-        'txt = Trim(UCase(line(0)))
-        'If Microsoft.VisualBasic.Left(txt, 1) = "V" Then
-        '    ' "V" entfernen => Zahl bleibt übrig
-        '    txt = txt.Replace("V", "")
-        '    If Not IsNumeric(txt) Then
-        '        'Falls Version ungültig: Abbruch
-        '        GoTo lbEr
-        '    Else
-        '        'Version festgelegt
-        '        FileVersion = CInt(txt)
-        '    End If
-        'Else
-        '    file.Close()
-        '    Return ReadOldFormat()
-        'End If
-
-        ''Version Check: abort if Input-file's format is newer than PHEM-version
-        'If FileVersion > FormatVersion Then
-        '    WorkerMsg(tMsgID.Err, "File Version not supported!", MsgSrc)
-        '    GoTo lbEr
-        'End If
-
-        '**** GEN Datei einlesen **** |@@| Read GEN file ****
-
-        'Allgemein |@@| Common
-        'boPKWja = CBool(file.ReadLine(0))
-        'bodynkorja = CBool(file.ReadLine(0))
-        'ineklasse = CShort(file.ReadLine(0))
-        'inizykwael = CShort(file.ReadLine(0))
-
-        'line = file.ReadLine
-        'If UBound(line) < 2 Then
-        '    WorkerMsg(tMsgID.Err, "File Format invalid (" & sFilePath & ")!", MsgSrc)
-        '    GoTo lbEr
-        'End If
-
-        'Select Case CShort(line(0))
-        '    Case 0
-        '        VehMode = tVehMode.StandardMode
-        '    Case 1
-        '        VehMode = tVehMode.EngineOnly
-        '    Case 2
-        '        VehMode = tVehMode.HEV
-        '    Case Else '3    
-        '        VehMode = tVehMode.EV
-        'End Select
-
-        'EngAnalysis = CBool(line(1))
-        'CreateMap = CBool(line(2))
-        'ModeHorEV = (VehMode = tVehMode.HEV Or VehMode = tVehMode.EV)
-
-
-        'KF creation
-        'line = file.ReadLine
-        'inPschrit = CShort(line(0))
-        'innschrit = CShort(line(1))
-
-        'line = file.ReadLine
-        'bKFcutFull = CBool(line(0))
-        'bKFcutDrag = CBool(line(1))
-        'bKFinsertDrag = CBool(line(2))
-        'bKFDragIntp = CBool(line(3))
-
-        'boMapSchaltja = CBool(file.ReadLine(0))
-
-        'iniMsek = CShort(file.ReadLine(0))
-
-        'boottoJa = CBool(file.ReadLine(0))
-
-        'bokaltst1 = CBool(file.ReadLine(0))
-
-        'sitkat1 = CSng(file.ReadLine(0))
-        'sitkw1 = CSng(file.ReadLine(0))
-        'sihsstart = CSng(file.ReadLine(0))
 
         stPathVEH.Init(MyPath, file.ReadLine(0))
 
@@ -433,6 +357,12 @@ lbEr:
                 dic.Add("ID", Trim(UCase(AuxEntryKV.Key)))
                 dic.Add("Type", AuxEntryKV.Value.Type)
                 dic.Add("Path", AuxEntryKV.Value.Path.PathOrDummy)
+                dic.Add("Technology", AuxEntryKV.Value.TechStr)
+
+                If AuxEntryKV.Key = sKey.AUX.ElecSys Then
+                    dic.Add("TechList", EStechs)
+                End If
+
                 ls.Add(dic)
             Next
             dic0.Add("Aux", ls)
@@ -538,9 +468,19 @@ lbEr:
                     AuxEntry.Type = dic("Type")
                     AuxEntry.Path.Init(MyPath, dic("Path"))
 
+                    If Not dic("Technology") Is Nothing Then AuxEntry.TechStr = dic("Technology")
+
                     AuxPaths.Add(AuxID, AuxEntry)
 
                     AuxDef = True
+
+                    If AuxID = sKey.AUX.ElecSys Then
+                        If Not dic("TechList") Is Nothing Then
+                            For Each str In dic("TechList")
+                                EStechs.Add(str)
+                            Next
+                        End If
+                    End If
 
                 Next
             End If
@@ -631,6 +571,7 @@ lbEr:
         AuxPaths.Clear()
         AuxRefs.Clear()
         AuxDef = False
+        EStechs.Clear()
 
         EngOnly = False
 
@@ -645,10 +586,14 @@ lbEr:
 
     End Sub
 
-    Public Sub DeclInit()
+    Public Function DeclInit() As Boolean
+
         Dim cl As List(Of String)
         Dim s As String
         Dim SubPath As cSubPath
+        Dim MsgSrc As String
+
+        MsgSrc = "VECTO/DeclInit"
 
         EngOnly = False
 
@@ -670,16 +615,19 @@ lbEr:
 
         If Not EcoRollOn Then OverSpeedOn = True
 
+        OverSpeed = cDeclaration.Overspeed
+        UnderSpeed = cDeclaration.Underspeed
+        vMin = cDeclaration.ECvmin
+
         LookAheadOn = True
         a_lookahead = cDeclaration.LACa
         vMinLA = cDeclaration.LACvmin
 
-        'TODO: Aux
-        AuxDef = False  'TEST ONLY!!!
+        'No need to check Aux (AuxDef). Will be checked in cDeclaration.CalcInitLoad
 
+        Return True
 
-
-    End Sub
+    End Function
 
     'This Sub reads those Input-files that do not have their own class, etc.
     Public Function Init() As Boolean
@@ -688,7 +636,7 @@ lbEr:
 
         Dim MsgSrc As String
 
-        MsgSrc = "GEN/Init"
+        MsgSrc = "VECTO/Init"
 
         If Not EngOnly Then
 
@@ -747,6 +695,17 @@ lbEr:
         MsgSrc = "VEH/AuxInit"
 
         AuxRefs = New Dictionary(Of String, cAux)
+
+        If Cfg.DeclMode Then
+
+            For Each AuxPathKV In AuxPaths
+                AuxRefs.Add(AuxPathKV.Key, Nothing)
+            Next
+
+            Return True
+
+        End If
+
 
         If DRI.AuxDef Xor AuxDef Then
 
@@ -808,6 +767,8 @@ lbEr:
         Dim MsgSrc As String
 
         MsgSrc = "VEH/Paux"
+
+        If Cfg.DeclMode Then Return Declaration.AuxPower(AuxID)
 
         If AuxDef Then
 
@@ -883,7 +844,11 @@ lbAuxError:
         End Get
         Set(ByVal value As String)
             sFilePath = value
-            MyPath = IO.Path.GetDirectoryName(sFilePath) & "\"
+            If sFilePath = "" Then
+                MyPath = ""
+            Else
+                MyPath = IO.Path.GetDirectoryName(sFilePath) & "\"
+            End If
         End Set
     End Property
 

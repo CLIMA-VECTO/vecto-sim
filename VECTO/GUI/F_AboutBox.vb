@@ -1,4 +1,8 @@
-﻿Public Class F_AboutBox
+﻿''' <summary>
+''' About Dialog. Shows Licence and contact/support information
+''' </summary>
+''' <remarks></remarks>
+Public Class F_AboutBox
 
 
     'Initialize
