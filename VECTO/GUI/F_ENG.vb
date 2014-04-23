@@ -8,7 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-﻿
+
 ''' <summary>
 ''' Engine Editor. Open and save .VENG files.
 ''' </summary>

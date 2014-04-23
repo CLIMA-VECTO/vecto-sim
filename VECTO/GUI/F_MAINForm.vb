@@ -8,11 +8,13 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+
+Imports System.Collections.Generic
+
 ''' <summary>
 ''' Main application form. Loads at application start. Closing form ends application.
 ''' </summary>
 ''' <remarks></remarks>
-Imports System.Collections.Generic
 
 Public Class F_MAINForm
 
@@ -2082,7 +2084,7 @@ lbFound:
     Private Sub OpenInGraphWindowToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenInGraphWindowToolStripMenuItem.Click
         Dim FGraph As New F_Graph
         FGraph.Show()
-        FGraph.LoadFile(CmFiles(0))
+        FGraph.LoadNewFile(CmFiles(0))
     End Sub
 
     'Show in folder

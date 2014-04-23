@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Vehicle Energy Consumption Calculation Tool")> 
 <Assembly: AssemblyCompany("")> 
 <Assembly: AssemblyProduct("VECTO")> 
-<Assembly: AssemblyCopyright("© European Commission 2012-13")> 
+<Assembly: AssemblyCopyright("© European Commission 2014")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by entering "*" in them:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.4.0.0")> 
-<Assembly: AssemblyFileVersion("1.4.0.0")> 
+<Assembly: AssemblyVersion("1.5.0.0")> 
+<Assembly: AssemblyFileVersion("1.5.0.0")> 

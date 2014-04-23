@@ -1,0 +1,12 @@
+﻿Technology,Long haul,Regional delivery,Urban delivery,Municipal utility,Construction,Heavy Urban,Urban,Suburban,Interurban,Coach
+Crankshaft mounted - Electronically controlled visco clutch (Default),618,671,516,566,1037,0,0,0,0,0
+Crankshaft mounted - Bimetallic controlled visco clutch,818,871,676,766,1277,0,0,0,0,0
+Crankshaft mounted - Discrete step clutch,668,721,616,616,1157,0,0,0,0,0
+Crankshaft mounted - On/Off clutch,718,771,666,666,1237,0,0,0,0,0
+Belt driven or driven via transm. - Electronically controlled visco clutch,889,944,733,833,1378,0,0,0,0,0
+Belt driven or driven via transm. - Bimetallic controlled visco clutch,1089,1144,893,1033,1618,0,0,0,0,0
+Belt driven or driven via transm. - Discrete step clutch,939,994,883,883,1498,0,0,0,0,0
+Belt driven or driven via transm. - On/Off clutch,989,1044,933,933,1578,0,0,0,0,0
+Hydraulic driven - Variable displacement pump,738,955,632,717,1672,0,0,0,0,0
+Hydraulic driven - Constant displacement pump,1000,1200,800,900,2100,0,0,0,0,0
+Hydraulic driven - Electronically controlled,700,800,600,600,1400,0,0,0,0,0

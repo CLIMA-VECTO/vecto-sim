@@ -14,7 +14,7 @@ Imports System.Collections.Generic
 ''' Gearbox Editor
 ''' </summary>
 ''' <remarks></remarks>
-﻿Public Class F_GBX
+Public Class F_GBX
 
     Private GbxFile As String = ""
     Public AutoSendTo As Boolean = False

@@ -9,7 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
-﻿''' <summary>
+''' <summary>
 ''' Global File Brower properties and cFilebrowser instances.
 ''' </summary>
 ''' <remarks></remarks>

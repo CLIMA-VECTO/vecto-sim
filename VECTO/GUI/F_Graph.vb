@@ -1,4 +1,15 @@
-﻿Imports System.Collections.Generic
+﻿' Copyright 2014 European Union.
+' Licensed under the EUPL (the 'Licence');
+'
+' * You may not use this work except in compliance with the Licence.
+' * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
+' * Unless required by applicable law or agreed to in writing,
+'   software distributed under the Licence is distributed on an "AS IS" basis,
+'   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+'
+' See the LICENSE.txt for the specific language governing permissions and limitations.
+
+Imports System.Collections.Generic
 
 Public Class F_Graph
 
@@ -29,26 +40,10 @@ Public Class F_Graph
     End Sub
 
     Private Sub ToolStripBtOpen_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtOpen.Click
-        Dim lv0 As ListViewItem
-        Dim i As Integer
-
+       
         If fbVMOD.OpenDialog(Filepath) Then
 
-            Clear()
-
-            Filepath = fbVMOD.Files(0)
-
-            LoadFile()
-
-            For i = 2 To 3
-                lv0 = New ListViewItem
-                lv0.Text = Channels(i).Name
-                lv0.SubItems.Add(Channels(i).Unit)
-                lv0.SubItems.Add("Left")
-                lv0.Tag = i
-                lv0.Checked = True
-                Me.ListView1.Items.Add(lv0)
-            Next
+            LoadNewFile(fbVMOD.Files(0))
 
         End If
 
@@ -59,7 +54,29 @@ Public Class F_Graph
         LoadFile()
     End Sub
 
-    Public Sub LoadFile(Optional ByVal Path As String = "")
+    Public Sub LoadNewFile(ByVal Path As String)
+        Dim lv0 As ListViewItem
+        Dim i As Integer
+
+        Clear()
+
+        Filepath = Path
+
+        LoadFile()
+
+        For i = 2 To 3
+            lv0 = New ListViewItem
+            lv0.Text = Channels(i).Name
+            lv0.SubItems.Add(Channels(i).Unit)
+            lv0.SubItems.Add("Left")
+            lv0.Tag = i
+            lv0.Checked = True
+            Me.ListView1.Items.Add(lv0)
+        Next
+
+    End Sub
+
+    Private Sub LoadFile()
         Dim file As cFile_V3
         Dim i As Integer
         Dim sDim As Integer
@@ -69,9 +86,6 @@ Public Class F_Graph
 
 
         file = New cFile_V3
-
-        If Path <> "" Then Filepath = Path
-
 
         If file.OpenRead(Filepath) Then
 

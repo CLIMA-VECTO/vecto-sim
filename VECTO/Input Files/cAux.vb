@@ -9,7 +9,7 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
-﻿''' <summary>
+''' <summary>
 ''' Auxiliary
 ''' </summary>
 ''' <remarks></remarks>
