@@ -1,18 +1,30 @@
+# Copyright 2014 European Union.
+# Licensed under the EUPL (the 'Licence');
+#
+# * You may not use this work except in compliance with the Licence.
+# * You may obtain a copy of the Licence at: http://ec.europa.eu/idabc/eupl
+# * Unless required by applicable law or agreed to in writing,
+#   software distributed under the Licence is distributed on an "AS IS" basis,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#
+# See the LICENSE.txt for the specific language governing permissions and limitations.
+
+
 ﻿## 0. Transform all ACII files to UTF
 $basepath = '../../VECTO';
-ls "*/*/*/*.vb","*/*/*.vb","*/*.vb","*.vb" | 
+ls "*/*/*/*.vb","*/*/*.vb","*/*.vb","*.vb" |
     %{
-        $f=$_; 
+        $f=$_;
         if ((Get-FileEncoding $f) -ne UTF8) {
             echo "Re-encoding $f";
-            (cat $f) | 
+            (cat $f) |
             Out-File -FilePath $f -Encoding UTF8
         } else {
             echo "Skipping $f";
         }
     }
-    
-    
+
+
 
 ## 1. Gather all single-line comments.
 ##
@@ -27,7 +39,7 @@ filter extract-comments {
     $last = $_
 }
 Select-String -Path *.vb,*/*vb -Pattern "^\s*'.*[a-z]" -Encoding UTF8 |
-    extract-comments | 
+    extract-comments |
     Out-File -Encoding UTF8 ../comments.txt
 
 
@@ -43,7 +55,7 @@ filter isolate-text() {
         echo "";
     }
 }
-cat comments2.txt | 
+cat comments2.txt |
     isolate-text |
     Out-File -Encoding UTF8  ../translate_from.txt
 
@@ -63,7 +75,7 @@ function isolate-untranslated($coms, $from, $to) {
         } elseif ($tline -and !($tline.startsWith('@'))) {
             echo "$fline" | Out-File -Encoding UTF8  comments_untrans.txt -Append;
         }
-    } 
+    }
 }
 
 ## 5.a. Merge translated comment-lines with original ones.
@@ -92,12 +104,12 @@ $r=for($i=0; $i -lt $coms.length; $i++) {
             $ocom = "";
             $ln = "<?>"
         }
-        
+
         if ($ocom -ne $fline) {
             echo "Unmtached with Original(parsed) line ${ln}:`n  Parsed: ${ocom}`n  TrFrom: $fline";
             return;
         }
-        
+
         if (!$tline) {
             #echo "$nline"; ## UNCOMMENT HERE and delete the rest else-case for producing original.txt
             continue;
@@ -109,23 +121,23 @@ $r=for($i=0; $i -lt $coms.length; $i++) {
         }
         echo "$nline"
     }
-} 
+}
 
 Set-Content -Path comments2-trans.txt -Value $r -Encoding UTF8
- 
+
 ## 5.b Manually remove empty filepaths (those without translated lines)
 
 
 ## 6.a comments2-orig.txt: Created by runing the above code slightly modified
-##   so as to remove those non-translated lines from the verbatim-comments, and then 
+##   so as to remove those non-translated lines from the verbatim-comments, and then
 ## 6.b  Manually remove empty filepaths (those without translated lines)
-        
+
 
 
 ## 7. PATCH files
 function matchTransLine($line) {
     [hashtable]$res = @{};
-    
+
     $m = [regex]::Matches($line, "^(\d+):(.*)");
     if ($m[0]) {
         $mm = $m[0];
@@ -158,7 +170,7 @@ PROCESS {
             }
         }
         $isFileOK = $true;
-        
+
         $fname = "$basepath/" + $_.Substring(4);
         echo "Merging: ${fname}";
         $file = cat "$fname";
@@ -184,7 +196,7 @@ PROCESS {
             echo "Mismatch in line-nums:`n  EXP($explnum):$expline`n  TRN($trnlnum):$trnline"
         } else {
             $orgline = $file[($trnlnum - 1)];
-            
+
             if ($orgline -ne $expline) {
                 $isFileOK = $false;
                 echo "Unexpected line $lnum:`n  ORG:$orgline`n  EXP:$expline`n  TRN:$trnline"
@@ -250,8 +262,8 @@ filter ec {
 Select-String -Encoding Default -Path ../../*.vb,../../*/*vb -Pattern "^\s*'"|
     select Path,LineNumber,Line|
     Export-Clixml -Path ../comments.xml
-    
-    
+
+
 ## Invocted from with from within 'VectoSource/Vecto' folder.
 Select-String -Encoding Default -Path ../../*.vb,../../*/*vb -Pattern "^\s*'.*[a-z]"|
     select -Property LineNumber,Line |
