@@ -1240,6 +1240,10 @@ lbFound:
         End If
     End Sub
 
+    Private Sub GraphToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles GraphToolStripMenuItem.Click
+        Dim FGraph As New F_Graph
+        FGraph.Show()
+    End Sub
 
     Private Sub SignOrVerifyFilesToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SignOrVerifyFilesToolStripMenuItem.Click
         If Not F_FileSign.Visible Then
@@ -2015,7 +2019,6 @@ lbFound:
                 ElseIf Len(CStr(Me.LvMsg.SelectedItems(0).Tag)) > 5 AndAlso Microsoft.VisualBasic.Left(CStr(Me.LvMsg.SelectedItems(0).Tag), 5) = "<GUI>" Then
                     txt = CStr(Me.LvMsg.SelectedItems(0).Tag).Replace("<GUI>", "")
                     OpenVectoFile(txt)
-
                 ElseIf Len(CStr(Me.LvMsg.SelectedItems(0).Tag)) > 5 AndAlso Microsoft.VisualBasic.Left(CStr(Me.LvMsg.SelectedItems(0).Tag), 5) = "<RUN>" Then
                     txt = CStr(Me.LvMsg.SelectedItems(0).Tag).Replace("<RUN>", "")
                     Try
@@ -2052,6 +2055,9 @@ lbFound:
 
         CmFiles = files
 
+        Me.OpenInGraphWindowToolStripMenuItem.Enabled = (UCase(fEXT(CmFiles(0))) = ".VMOD")
+
+
         OpenWithToolStripMenuItem.Text = "Open with " & Cfg.OpenCmdName
 
         CmOpenFile.Show(Cursor.Position)
@@ -2061,6 +2067,12 @@ lbFound:
     'Open with tool defined in Settings
     Private Sub OpenWithToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithToolStripMenuItem.Click
         If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
+    End Sub
+
+    Private Sub OpenInGraphWindowToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenInGraphWindowToolStripMenuItem.Click
+        Dim FGraph As New F_Graph
+        FGraph.Show()
+        FGraph.LoadFile(CmFiles(0))
     End Sub
 
     'Show in folder
@@ -2455,11 +2467,6 @@ Lb1:
 
 #End Region
 
-    Private Sub GraphToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles GraphToolStripMenuItem.Click
-
-        Dim FGraph As New F_Graph
-
-        FGraph.Show()
-
-    End Sub
+  
+   
 End Class

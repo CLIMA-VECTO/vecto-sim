@@ -7,8 +7,8 @@ Public Class F_Graph
     Private DistList As List(Of Single)
     Private TimeList As List(Of Single)
 
-    Private xMin As Single?
-    Private xMax As Single?
+    Private xMin As Single
+    Private xMax As Single
 
     Private xMax0 As Single
 
@@ -29,7 +29,9 @@ Public Class F_Graph
     End Sub
 
     Private Sub ToolStripBtOpen_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtOpen.Click
-       
+        Dim lv0 As ListViewItem
+        Dim i As Integer
+
         If fbVMOD.OpenDialog(Filepath) Then
 
             Clear()
@@ -38,11 +40,26 @@ Public Class F_Graph
 
             LoadFile()
 
+            For i = 2 To 3
+                lv0 = New ListViewItem
+                lv0.Text = Channels(i).Name
+                lv0.SubItems.Add(Channels(i).Unit)
+                lv0.SubItems.Add("Left")
+                lv0.Tag = i
+                lv0.Checked = True
+                Me.ListView1.Items.Add(lv0)
+            Next
+
         End If
 
     End Sub
 
-    Private Sub LoadFile()
+
+    Private Sub ToolStripButton2_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton2.Click
+        LoadFile()
+    End Sub
+
+    Public Sub LoadFile(Optional ByVal Path As String = "")
         Dim file As cFile_V3
         Dim i As Integer
         Dim sDim As Integer
@@ -53,9 +70,14 @@ Public Class F_Graph
 
         file = New cFile_V3
 
+        If Path <> "" Then Filepath = Path
+
+
         If file.OpenRead(Filepath) Then
 
             Try
+
+                Channels.Clear()
 
                 For i = 1 To 4
                     file.ReadLine()
@@ -102,11 +124,12 @@ Public Class F_Graph
                     DistList.Add(CSng(l0(i)))
                 Next
 
-                If Me.CbXaxis.SelectedIndex = 0 Then
-                    xMax0 = DistList(DistList.Count - 1)
-                Else
-                    xMax0 = TimeList(TimeList.Count - 1)
-                End If
+                SetxMax0()
+
+                Me.TbXmin.Text = 0
+                Me.TbXmax.Text = xMax0
+
+                Me.Text = fFILE(Filepath, True)
 
             Catch ex As Exception
                 file.Close()
@@ -119,6 +142,17 @@ Public Class F_Graph
 
     End Sub
 
+    Private Sub SetxMax0()
+
+        If Channels.Count = 0 Then Exit Sub
+
+        If Me.CbXaxis.SelectedIndex = 0 Then
+            xMax0 = DistList(DistList.Count - 1)
+        Else
+            xMax0 = TimeList(TimeList.Count - 1)
+        End If
+
+    End Sub
 
     Private Sub UpdateGraph()
         Dim lv0 As ListViewItem
@@ -135,18 +169,12 @@ Public Class F_Graph
 
         If Me.ListView1.CheckedItems.Count = 0 Then
             Me.PictureBox1.Image = Nothing
-            xMin = Nothing
-            xMax = Nothing
             Exit Sub
         End If
 
         OverDist = (Me.CbXaxis.SelectedIndex = 0)
 
-        If OverDist Then
-            xMax0 = DistList(DistList.Count - 1)
-        Else
-            xMax0 = TimeList(TimeList.Count - 1)
-        End If
+        SetxMax0()
 
 
         MyChart = New System.Windows.Forms.DataVisualization.Charting.Chart
@@ -196,17 +224,16 @@ Public Class F_Graph
         a.AxisX.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
         a.AxisX.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
 
-        If xMin Is Nothing Or xMax Is Nothing Then
-            xMin = 0
-            If OverDist Then
-                xMax = DistList(DistList.Count - 1)
-            Else
-                xMax = TimeList(TimeList.Count - 1)
-            End If
+        If xMax > xMin Then
+            a.AxisX.Minimum = xMin
+            a.AxisX.Maximum = xMax
+            a.AxisX.Interval = xAutoInt()
+        Else
+            a.AxisX.Minimum = 0
+            a.AxisX.Maximum = xMax0
         End If
 
-        a.AxisX.Minimum = xMin
-        a.AxisX.Maximum = xMax
+
 
         If leftaxis.Count > 0 Then
 
@@ -256,9 +283,9 @@ Public Class F_Graph
         MyChart.Legends(0).Font = New Font("Helvetica", 8)
         MyChart.Legends(0).BorderColor = Color.Black
         MyChart.Legends(0).BorderWidth = 1
-        MyChart.Legends(0).Position.X = 87
+        MyChart.Legends(0).Position.X = 86
         MyChart.Legends(0).Position.Y = 3
-        MyChart.Legends(0).Position.Width = 10
+        MyChart.Legends(0).Position.Width = 13
         MyChart.Legends(0).Position.Height = 40
 
         MyChart.Update()
@@ -270,6 +297,43 @@ Public Class F_Graph
 
     End Sub
 
+    Private Function xAutoInt() As Single
+        Dim Interv0 As Single
+        Dim Grx As Long
+        Dim xyd(3) As Single
+        Dim xydmin As Single
+        Dim xyamin As Single
+        Dim xya(3) As Single
+        Dim i As Int16
+
+        Interv0 = (xMax - xMin) / 10
+
+        Grx = 20
+        Do While 10 ^ Grx > Interv0
+            Grx = Grx - 1
+        Loop
+
+        xyd(0) = 1 * 10 ^ Grx
+        xyd(1) = 2.5 * 10 ^ Grx
+        xyd(2) = 5 * 10 ^ Grx
+        xyd(3) = 10 * 10 ^ Grx
+        For i = 0 To 3
+            xya(i) = Math.Abs(Interv0 - xyd(i))
+        Next
+
+        xyamin = xya(0)
+        xydmin = xyd(0)
+        For i = 1 To 3
+            If xya(i) < xyamin Then
+                xyamin = xya(i)
+                xydmin = xyd(i)
+            End If
+        Next
+
+        'Intervall speichern
+        Return xydmin
+
+    End Function
 
     Private Sub Clear()
 
@@ -277,10 +341,8 @@ Public Class F_Graph
 
         Me.ListView1.Items.Clear()
 
-        Channels.Clear()
-
-        xMin = Nothing
-        xMax = Nothing
+        Me.TbXmin.Text = ""
+        Me.TbXmax.Text = ""
 
         Me.PictureBox1.Image = Nothing
     End Sub
@@ -412,74 +474,36 @@ Public Class F_Graph
     End Sub
 
     Private Sub CbXaxis_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbXaxis.SelectedIndexChanged
+        SetxMax0()
+        Me.TbXmin.Text = 0
+        Me.TbXmax.Text = xMax0
         UpdateGraph()
     End Sub
 
-
-    Private Sub BtZoomIn_Click(sender As System.Object, e As System.EventArgs) Handles BtZoomIn.Click
-        Dim d As Single
-
-        If Channels.Count = 0 OrElse Me.ListView1.CheckedItems.Count = 0 Then Exit Sub
-
-        d = (xMax - xMin) / 10
-
-        xMin += 2 * 0.5 * d
-        xMax -= 2 * (1 - 0.5) * d
-
-        UpdateGraph()
-
+    Private Sub BtReset_Click(sender As System.Object, e As System.EventArgs) Handles BtReset.Click
+        xMin = 0
+        xMax = xMax0
+        Me.TbXmin.Text = 0
+        Me.TbXmax.Text = xMax0
     End Sub
 
-    Private Sub BtZoomOut_Click(sender As System.Object, e As System.EventArgs) Handles BtZoomOut.Click
-        Dim d As Single
-
-        If Channels.Count = 0 OrElse Me.ListView1.CheckedItems.Count = 0 Then Exit Sub
-
-        d = (xMax - xMin) / 10
-
-        xMin -= 2 * 0.5 * d
-        xMax += 2 * (1 - 0.5) * d
-
-        If Me.CbXaxis.SelectedIndex = 0 Then
-            xMax = Math.Min(CSng(xMax), DistList(DistList.Count - 1))
-        Else
-            xMax = Math.Min(CSng(xMax), TimeList(TimeList.Count - 1))
-        End If
-
-        xMin = Math.Max(0, CSng(xMin))
-
+    Private Sub TbXmin_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbXmin.TextChanged
+        If IsNumeric(Me.TbXmin.Text) Then xMin = Me.TbXmin.Text
         UpdateGraph()
-
     End Sub
 
-    
-    Private Sub BtLeft_Click(sender As System.Object, e As System.EventArgs) Handles BtLeft.Click
-        Dim d As Single
-
-        d = (xMax - xMin) / 10
-
-        If xMin - d < 0 Then d = xMin
-
-        xMin -= d
-        xMax -= d
-
+    Private Sub TbXmax_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbXmax.TextChanged
+        If IsNumeric(Me.TbXmax.Text) Then xMax = Me.TbXmax.Text
         UpdateGraph()
-
-
     End Sub
 
-    Private Sub BtRight_Click(sender As System.Object, e As System.EventArgs) Handles BtRight.Click
-        Dim d As Single
-
-        d = (xMax - xMin) / 10
-
-        If xMax + d > xMax0 Then d = xMax0 - xMax
-
-        xMin += d
-        xMax += d
-
-        UpdateGraph()
-
-
+    Private Sub ToolStripButton3_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton3.Click
+        Dim FGraph As New F_Graph
+        FGraph.Show()
     End Sub
+
+    Private Sub F_Graph_SizeChanged(sender As Object, e As System.EventArgs) Handles Me.SizeChanged
+        UpdateGraph()
+    End Sub
+
 End Class

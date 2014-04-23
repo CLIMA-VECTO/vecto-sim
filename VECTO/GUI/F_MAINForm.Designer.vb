@@ -98,6 +98,7 @@ Partial Class F_MAINForm
         Me.VEHEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EngineEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.GearboxEditorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GraphToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
         Me.SignOrVerifyFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
@@ -115,8 +116,8 @@ Partial Class F_MAINForm
         Me.TmProgSec = New System.Windows.Forms.Timer(Me.components)
         Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.GraphToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.StatusBAR.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.TabPageGEN.SuspendLayout()
@@ -232,7 +233,6 @@ Partial Class F_MAINForm
         'BtGENdown
         '
         Me.BtGENdown.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.BtGENdown.Image = Global.VECTO.My.Resources.Resources.Actions_arrow_down_icon
         Me.BtGENdown.Location = New System.Drawing.Point(996, 317)
         Me.BtGENdown.Name = "BtGENdown"
         Me.BtGENdown.Size = New System.Drawing.Size(30, 23)
@@ -822,7 +822,7 @@ Partial Class F_MAINForm
         '
         'ToolStripDrDnBtTools
         '
-        Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.ToolStripSeparator6, Me.GraphToolStripMenuItem, Me.SignOrVerifyFilesToolStripMenuItem, Me.ToolStripSeparator4, Me.OpenLogToolStripMenuItem, Me.SettingsToolStripMenuItem})
+        Me.ToolStripDrDnBtTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GENEditorToolStripMenuItem1, Me.VEHEditorToolStripMenuItem, Me.EngineEditorToolStripMenuItem, Me.GearboxEditorToolStripMenuItem, Me.GraphToolStripMenuItem, Me.ToolStripSeparator6, Me.SignOrVerifyFilesToolStripMenuItem, Me.ToolStripSeparator4, Me.OpenLogToolStripMenuItem, Me.SettingsToolStripMenuItem})
         Me.ToolStripDrDnBtTools.Image = Global.VECTO.My.Resources.Resources.Misc_Tools_icon
         Me.ToolStripDrDnBtTools.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDrDnBtTools.Name = "ToolStripDrDnBtTools"
@@ -837,21 +837,31 @@ Partial Class F_MAINForm
         '
         'VEHEditorToolStripMenuItem
         '
+        Me.VEHEditorToolStripMenuItem.Image = Global.VECTO.My.Resources.Resources.F_VEH
         Me.VEHEditorToolStripMenuItem.Name = "VEHEditorToolStripMenuItem"
         Me.VEHEditorToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
         Me.VEHEditorToolStripMenuItem.Text = "Vehicle Editor"
         '
         'EngineEditorToolStripMenuItem
         '
+        Me.EngineEditorToolStripMenuItem.Image = Global.VECTO.My.Resources.Resources.F_ENG
         Me.EngineEditorToolStripMenuItem.Name = "EngineEditorToolStripMenuItem"
         Me.EngineEditorToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
         Me.EngineEditorToolStripMenuItem.Text = "Engine Editor"
         '
         'GearboxEditorToolStripMenuItem
         '
+        Me.GearboxEditorToolStripMenuItem.Image = Global.VECTO.My.Resources.Resources.F_GBX
         Me.GearboxEditorToolStripMenuItem.Name = "GearboxEditorToolStripMenuItem"
         Me.GearboxEditorToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
         Me.GearboxEditorToolStripMenuItem.Text = "Gearbox Editor"
+        '
+        'GraphToolStripMenuItem
+        '
+        Me.GraphToolStripMenuItem.Image = Global.VECTO.My.Resources.Resources.F_Graph
+        Me.GraphToolStripMenuItem.Name = "GraphToolStripMenuItem"
+        Me.GraphToolStripMenuItem.Size = New System.Drawing.Size(170, 22)
+        Me.GraphToolStripMenuItem.Text = "Graph"
         '
         'ToolStripSeparator6
         '
@@ -944,27 +954,27 @@ Partial Class F_MAINForm
         '
         'CmOpenFile
         '
-        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
+        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.OpenInGraphWindowToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
         Me.CmOpenFile.Name = "CmOpenFile"
-        Me.CmOpenFile.Size = New System.Drawing.Size(153, 48)
+        Me.CmOpenFile.Size = New System.Drawing.Size(199, 70)
         '
         'OpenWithToolStripMenuItem
         '
         Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
         Me.OpenWithToolStripMenuItem.Text = "Open with ..."
+        '
+        'OpenInGraphWindowToolStripMenuItem
+        '
+        Me.OpenInGraphWindowToolStripMenuItem.Name = "OpenInGraphWindowToolStripMenuItem"
+        Me.OpenInGraphWindowToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
+        Me.OpenInGraphWindowToolStripMenuItem.Text = "Open in Graph Window"
         '
         'ShowInFolderToolStripMenuItem
         '
         Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
-        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
-        '
-        'GraphToolStripMenuItem
-        '
-        Me.GraphToolStripMenuItem.Name = "GraphToolStripMenuItem"
-        Me.GraphToolStripMenuItem.Size = New System.Drawing.Size(210, 22)
-        Me.GraphToolStripMenuItem.Text = "Open new Graph Window"
         '
         'F_MAINForm
         '
@@ -1100,5 +1110,6 @@ Partial Class F_MAINForm
     Friend WithEvents LbDecl As System.Windows.Forms.Label
     Friend WithEvents CbDecl As System.Windows.Forms.CheckBox
     Friend WithEvents GraphToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents OpenInGraphWindowToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

@@ -527,7 +527,7 @@ lbAusg:
             If Cfg.DeclMode Then
                 WorkerMsg(tMsgID.Normal, "Writing report file", MsgSrc)
                 If Declaration.WriteReport() Then
-                    WorkerMsg(tMsgID.Normal, "Click here to open report " & fFILE(Declaration.Report.Filepath, True), MsgSrc, "<RUN>" & Declaration.Report.Filepath)
+                    WorkerMsg(tMsgID.Normal, "Report written to: " & fFILE(Declaration.Report.Filepath, True), MsgSrc, "<RUN>" & Declaration.Report.Filepath)
                 Else
                     WorkerMsg(tMsgID.Err, "Failed to write pdf report!", MsgSrc)
                     JobAbortedByErr = True
@@ -606,7 +606,7 @@ lbNextJob:
         Lic.FileSigning.Mode = vectolic.cFileSigning.tMode.Auto
 
         If Lic.FileSigning.WriteSigFile(SigFile, LicSigAppCode) Then
-            WorkerMsg(tMsgID.Normal, "Files signed successfully: " & fFILE(SigFile, True), MsgSrc, SigFile)
+            WorkerMsg(tMsgID.Normal, "Files signed successfully: " & fFILE(SigFile, True), MsgSrc, "<GUI>" & SigFile)
         Else
             WorkerMsg(tMsgID.Err, "Failed to sign files! " & Lic.FileSigning.ErrorMsg, MsgSrc)
         End If

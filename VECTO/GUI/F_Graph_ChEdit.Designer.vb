@@ -27,8 +27,8 @@ Partial Class F_Graph_ChEdit
         Me.Cancel_Button = New System.Windows.Forms.Button()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.RbLeft = New System.Windows.Forms.RadioButton()
         Me.RbRight = New System.Windows.Forms.RadioButton()
+        Me.RbLeft = New System.Windows.Forms.RadioButton()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -65,7 +65,7 @@ Partial Class F_Graph_ChEdit
         Me.Cancel_Button.Name = "Cancel_Button"
         Me.Cancel_Button.Size = New System.Drawing.Size(67, 23)
         Me.Cancel_Button.TabIndex = 1
-        Me.Cancel_Button.Text = "Abbrechen"
+        Me.Cancel_Button.Text = "Cancel"
         '
         'ComboBox1
         '
@@ -87,17 +87,6 @@ Partial Class F_Graph_ChEdit
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Y Axis"
         '
-        'RbLeft
-        '
-        Me.RbLeft.AutoSize = True
-        Me.RbLeft.Location = New System.Drawing.Point(16, 19)
-        Me.RbLeft.Name = "RbLeft"
-        Me.RbLeft.Size = New System.Drawing.Size(43, 17)
-        Me.RbLeft.TabIndex = 3
-        Me.RbLeft.TabStop = True
-        Me.RbLeft.Text = "Left"
-        Me.RbLeft.UseVisualStyleBackColor = True
-        '
         'RbRight
         '
         Me.RbRight.AutoSize = True
@@ -108,6 +97,17 @@ Partial Class F_Graph_ChEdit
         Me.RbRight.TabStop = True
         Me.RbRight.Text = "Right"
         Me.RbRight.UseVisualStyleBackColor = True
+        '
+        'RbLeft
+        '
+        Me.RbLeft.AutoSize = True
+        Me.RbLeft.Location = New System.Drawing.Point(16, 19)
+        Me.RbLeft.Name = "RbLeft"
+        Me.RbLeft.Size = New System.Drawing.Size(43, 17)
+        Me.RbLeft.TabIndex = 3
+        Me.RbLeft.TabStop = True
+        Me.RbLeft.Text = "Left"
+        Me.RbLeft.UseVisualStyleBackColor = True
         '
         'F_Graph_ChEdit
         '

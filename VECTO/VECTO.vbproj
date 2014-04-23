@@ -414,6 +414,21 @@
   <ItemGroup>
     <None Include="Resources\Refresh-icon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\application-add-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\F_Graph.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\F_ENG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\F_GBX.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\F_VEH.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
