@@ -8,6 +8,11 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+﻿
+''' <summary>
+''' About Dialog. Shows Licence and contact/support information
+''' </summary>
+''' <remarks></remarks>
 Public Class F_AboutBox
 
 

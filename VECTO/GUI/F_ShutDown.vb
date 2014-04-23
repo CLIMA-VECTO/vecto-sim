@@ -11,6 +11,10 @@
 Imports System.Windows.Forms
 Imports System.Runtime.InteropServices
 
+''' <summary>
+''' Automatic shutdown dialog. Allows to abort automatic shutdown within 100 seconds.
+''' </summary>
+''' <remarks></remarks>
 Public Class F_ShutDown
 
     Private iTime As Int16

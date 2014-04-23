@@ -10,9 +10,13 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
 
+''' <summary>
+''' Main calculation routines.
+''' </summary>
+''' <remarks></remarks>
 Module M_MAIN
 
-    Public PHEMmode As tPHEMmode
+    Public CalcMode As tCalcMode
     Public JobFileList As List(Of String)
     Public JobCycleList As List(Of String)
 
@@ -21,29 +25,21 @@ Module M_MAIN
     Public CycleFiles As New List(Of String)
     Public CurrentCycleFile As String
 
-    Private jgen As Integer
-    Private jzkl As Integer
+    Private iJob As Integer
+    Private iCycle As Integer
     Private CyclesDim As Integer
     Private FilesDim As Integer
     Private jsubcycle As Integer
-    Private jsubcyclecount As Integer
-
-    Public FCerror As Boolean
+    Private jsubcycleDim As Integer
 
     Private SigFile As String
 
-    Friend Function NrOfRunStr() As String
-        If PHEMmode = tPHEMmode.ModeSTANDARD Then
-            'Return CStr(jgen * (CyclesDim + 1) + jzkl + 1) & "-" & CStr(jsubcycle)
-            Return CStr(jgen * (CyclesDim + 1) + jzkl + 1) & "(" & CStr(jsubcycle) & ")"
-        Else
-            Return CStr(jgen * (CyclesDim + 1) + jzkl + 1)
-        End If
-    End Function
-
+    ''' <summary>
+    ''' Main calculation routine. Launched by VECTOworker via Mainform's Start button or command line
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Function VECTO() As tCalcResult
-
-        'Main program for all modes
 
         Dim MsgStrBuilder As System.Text.StringBuilder
 
@@ -53,6 +49,11 @@ Module M_MAIN
         Dim CyclAbrtedByErr As Boolean
         Dim MsgOut As Boolean
         Dim MsgSrc As String
+        Dim loading As tLoading
+        Dim LoadList As New List(Of tLoading)
+        Dim iLoad As Integer
+        Dim iLoadDim As Integer
+
 
 
         MsgSrc = "Main"
@@ -66,21 +67,21 @@ Module M_MAIN
         ''ClearErrors()
 
         'Specify Mode and Notification-msg
-        Select Case PHEMmode
-            Case tPHEMmode.ModeSTANDARD
+        Select Case CalcMode
+            Case tCalcMode.ModeSTANDARD
                 WorkerMsg(tMsgID.Normal, "Starting VECTO STANDARD...", MsgSrc)
                 CyclesDim = 0
-            Case tPHEMmode.ModeBATCH
+            Case tCalcMode.ModeBATCH
                 WorkerMsg(tMsgID.Normal, "Starting VECTO BATCH...", MsgSrc)
                 CyclesDim = JobCycleList.Count - 1
         End Select
         FilesDim = JobFileList.Count - 1
 
-        MsgOut = (PHEMmode = tPHEMmode.ModeSTANDARD)
+        MsgOut = (CalcMode = tCalcMode.ModeSTANDARD)
 
         'License check
 
-        If (PHEMmode = tPHEMmode.ModeBATCH) Then
+        If (CalcMode = tCalcMode.ModeBATCH) Then
             If Not Lic.LicFeature(1) Then
                 WorkerMsg(tMsgID.Err, "Your license does not support BATCH mode!", MsgSrc)
                 GoTo lbErrBefore
@@ -92,17 +93,15 @@ Module M_MAIN
             GoTo lbErrBefore
         End If
 
-        If CyclesDim = -1 And (PHEMmode = tPHEMmode.ModeBATCH) Then
+        If CyclesDim = -1 And (CalcMode = tCalcMode.ModeBATCH) Then
             WorkerMsg(tMsgID.Err, "No Driving Cycles defined.", MsgSrc)
             GoTo lbErrBefore
         End If
 
         'Create BATCH Output-folder if necessary
-        If (PHEMmode = tPHEMmode.ModeBATCH) Then
+        If (CalcMode = tCalcMode.ModeBATCH) Then
             Select Case UCase(Cfg.BATCHoutpath)
-                Case sKey.WorkDir
-                    path0 = Cfg.WorkDPath
-                Case sKey.GenPath
+                Case sKey.JobPath
                     GoTo lbSkip0
                 Case Else
                     path0 = Cfg.BATCHoutpath
@@ -126,17 +125,23 @@ lbSkip0:
 
         'ERG-class initialization
         WorkerMsg(tMsgID.Normal, "Analyzing input files", MsgSrc)
-        ERG = New cERG
         VSUM = New cVSUM
-        If Not ERG.Init(JobFileList(0)) Then GoTo lbErrBefore
+        If Not VSUM.Init(JobFileList(0)) Then GoTo lbErrBefore
 
-        SigFile = Left(ERG.ErgFile, ERG.ErgFile.Length - 5) & ".vsig"
+        SigFile = Left(VSUM.VSUMfile, VSUM.VSUMfile.Length - 5) & ".vsig"
 
         'Warning on invalid/unrealistic settings
         If Cfg.AirDensity > 2 Then WorkerMsg(tMsgID.Err, "Air Density = " & Cfg.AirDensity & " ?!", MsgSrc)
 
-        'Notify
-        If Cfg.FCcorrection Then WorkerMsg(tMsgID.Normal, "HDV FC Correction ON", MsgSrc)
+        If Cfg.DeclMode Then
+            LoadList.Add(tLoading.EmptyLoaded)
+            LoadList.Add(tLoading.RefLoaded)
+            LoadList.Add(tLoading.FullLoaded)
+            iLoadDim = 2
+        Else
+            LoadList.Add(tLoading.UserDefLoaded)
+            iLoadDim = 0
+        End If
 
         'Progbar-Init
         WorkerProgInit()
@@ -147,43 +152,77 @@ lbSkip0:
         '**********************************************************************************************
         '**************************************** Job loop ****************************************
         '**********************************************************************************************
-        For jgen = 0 To FilesDim
+        For iJob = 0 To FilesDim
 
-            jzkl = 0    '<= Damit NrOfRun stimmt
+            iCycle = 0    '<= Damit NrOfRun stimmt
 
-            JobFile = fFileRepl(JobFileList(jgen))
+
+            JobFile = fFileRepl(JobFileList(iJob))
 
             GenFile = JobFile
 
-            WorkerJobStatus(jgen, "running...", tJobStatus.Running)
+            WorkerMsg(tMsgID.NewJob, "Job: " & (iJob * (CyclesDim + 1) + iCycle + 1) & " / " & ((FilesDim + 1) * (CyclesDim + 1)) & " | " & fFILE(JobFile, True), MsgSrc)
+            WorkerStatus("Current Job: " & (iJob * (CyclesDim + 1) + iCycle + 1) & " / " & ((FilesDim + 1) * (CyclesDim + 1)) & " | " & fFILE(JobFile, True))
+            WorkerJobStatus(iJob, "initialising... ", tJobStatus.Running)
 
             JobAbortedByErr = False
             MSGwarn = 0
             MSGerror = 0
 
             'Check if Abort
-            If PHEMworker.CancellationPending Then GoTo lbAbort
+            If VECTOworker.CancellationPending Then GoTo lbAbort
 
             'If error when read GEN
             CurrentCycleFile = ""
 
             'Reading the input files
-            '   BATCH: Cycle from DRI list
-            '   ADVANCE: Cycle is not read
-            If Not LESE() Then
+            WorkerMsg(tMsgID.Normal, "Reading input files", MsgSrc)
+            If Not ReadFiles() Then
                 JobAbortedByErr = True
                 GoTo lbNextJob
             End If
 
-            'If optimizer is active, then read parameters here
-            If bOptOn Then OptInput()
+            'WHTC Correction
+            If Cfg.DeclMode Then
+
+                'Initialise Report
+                Declaration.ReportInit()
+
+                WorkerMsg(tMsgID.Normal, "WHTC Correction", MsgSrc)
+
+                VEC.EngOnly = True
+
+                MODdata.Init()
+
+                If Not Declaration.WHTCinit Then
+                    JobAbortedByErr = True
+                    GoTo lbNextJob
+                End If
+
+                MODdata.CycleInit()
+
+                If Not MODdata.Px.Eng_Calc(True) Then
+                    JobAbortedByErr = True
+                    GoTo lbNextJob
+                End If
+
+                MODdata.FCcalc(False)
+                If MODdata.FCerror Then
+                    WorkerMsg(tMsgID.Err, "WHTC FC calculcation failed!", MsgSrc)
+                    JobAbortedByErr = True
+                    GoTo lbNextJob
+                End If
+
+                Declaration.WHTCcorrCalc()
+
+                VEC.EngOnly = False
+
+            End If
 
             'BATCH: Create Output-sub-folder
-            If (PHEMmode = tPHEMmode.ModeBATCH) And Cfg.ModOut And Cfg.BATCHoutSubD Then
+            If (CalcMode = tCalcMode.ModeBATCH) And Cfg.ModOut And Cfg.BATCHoutSubD Then
                 Select Case UCase(Cfg.BATCHoutpath)
-                    Case sKey.WorkDir
-                        path0 = Cfg.WorkDPath
-                    Case sKey.GenPath
+                    Case sKey.JobPath
                         path0 = fPATH(JobFile)
                     Case Else
                         path0 = Cfg.BATCHoutpath
@@ -203,31 +242,33 @@ lbSkip0:
             '**********************************************************************************************
             '************************************** Cycle-loop ****************************************
             '**********************************************************************************************
-            For jzkl = 0 To CyclesDim
+            For iCycle = 0 To CyclesDim
 
 
                 CyclAbrtedByErr = False
 
-                If PHEMmode = tPHEMmode.ModeBATCH Then
+                If CalcMode = tCalcMode.ModeBATCH Then
 
                     'ProgBar
-                    ProgBarCtrl.ProgOverallStartInt = 100 * (jgen * (CyclesDim + 1) + jzkl) / ((FilesDim + 1) * (CyclesDim + 1))
-                    ProgBarCtrl.PgroOverallEndInt = 100 * (jgen * (CyclesDim + 1) + jzkl + 1) / ((FilesDim + 1) * (CyclesDim + 1))
+                    ProgBarCtrl.ProgLock = True
+                    ProgBarCtrl.ProgJobInt = 0
+                    ProgBarCtrl.ProgOverallStartInt = 100 * (iJob * (CyclesDim + 1) + iCycle) / ((FilesDim + 1) * (CyclesDim + 1))
+                    ProgBarCtrl.PgroOverallEndInt = 100 * (iJob * (CyclesDim + 1) + iCycle + 1) / ((FilesDim + 1) * (CyclesDim + 1))
+                    ProgBarCtrl.ProgLock = False
 
-                    'BATCH mode: Cycle from GEN-file but not from DRI list
+
+                    'BATCH mode: Cycles from DRI list
                     CycleFiles.Clear()
-                    CycleFiles.Add(fFileRepl(JobCycleList(jzkl)))
+                    CycleFiles.Add(fFileRepl(JobCycleList(iCycle)))
 
                     'Status
-                    WorkerMsg(tMsgID.NewJob, "Job: " & (NrOfRunStr()) & " / " & ((FilesDim + 1) * (CyclesDim + 1)) & " | " & fFILE(JobFile, True) & " | " & fFILE(CycleFiles(0), True), MsgSrc)
-                    WorkerStatus("Current Job: " & (NrOfRunStr()) & " / " & ((FilesDim + 1) * (CyclesDim + 1)) & " | " & fFILE(JobFile, True) & " | " & fFILE(CycleFiles(0), True))
-                    WorkerJobStatus(jgen, "running... " & jzkl + 1 & "/" & (CyclesDim + 1), tJobStatus.Running)
+                    WorkerMsg(tMsgID.NewJob, "Cycle: " & (iJob * (CyclesDim + 1) + iCycle + 1) & " / " & ((FilesDim + 1) * (CyclesDim + 1)) & " | " & fFILE(JobFile, True) & " | " & fFILE(CycleFiles(0), True), MsgSrc)
+                    WorkerStatus("Current Job: " & (iJob * (CyclesDim + 1) + iCycle + 1) & " / " & ((FilesDim + 1) * (CyclesDim + 1)) & " | " & fFILE(JobFile, True) & " | " & fFILE(CycleFiles(0), True))
+                    WorkerJobStatus(iJob, "running... " & iCycle + 1 & "/" & (CyclesDim + 1), tJobStatus.Running)
 
                     'Output name definition
                     Select Case UCase(Cfg.BATCHoutpath)
-                        Case sKey.WorkDir
-                            path0 = Cfg.WorkDPath
-                        Case sKey.GenPath
+                        Case sKey.JobPath
                             path0 = fPATH(JobFile)
                         Case Else
                             path0 = Cfg.BATCHoutpath
@@ -242,156 +283,175 @@ lbSkip0:
                 End If
 
                 '******************************************************************************************
-                '********************************** VECTO-Cycle-loop **********************************
-                jsubcyclecount = CycleFiles.Count
+                '********************************** VECTO-Cycle-loop START **********************************
+                '******************************************************************************************
+                jsubcycleDim = CycleFiles.Count - 1
 
-                If jsubcyclecount = 0 Then
+                If jsubcycleDim = -1 Then
                     WorkerMsg(tMsgID.Err, "No driving cycle defined!", MsgSrc)
                     JobAbortedByErr = True
                     GoTo lbNextJob
                 End If
 
-                jsubcycle = 0
+                jsubcycle = -1
                 For Each CurrentCycleFile In CycleFiles
                     jsubcycle += 1
 
                     ProgBarCtrl.ProgJobInt = 0
 
-                    If PHEMmode = tPHEMmode.ModeSTANDARD Then
+
+                    If CalcMode = tCalcMode.ModeSTANDARD Then
+                        MODdata.ModOutpName = fFileWoExt(JobFile) & "_" & fFILE(CurrentCycleFile, False)
+                        WorkerMsg(tMsgID.NewJob, "Cycle: " & (jsubcycle + 1) & " / " & (jsubcycleDim + 1) & " | " & fFILE(CurrentCycleFile, True), MsgSrc)
+                    End If
+
+                    If Cfg.DeclMode Then
+
+                        If Not Declaration.CalcInitCycle(jsubcycle) Then
+                            JobAbortedByErr = True
+                            GoTo lbNextJob
+                        End If
+
+                        WorkerMsg(tMsgID.Normal, "WHTC Correction Factor: " & Declaration.WHTCcorrFactor, MsgSrc)
+
+                        Declaration.ReportAddCycle()
+
+                    End If
+
+
+                    '**************************************************************************************
+                    '***************************** VECTO-loading-loop START *******************************
+                    '**************************************************************************************
+                    iLoad = -1
+                    For Each loading In LoadList
+
+                        iLoad += 1
 
                         'ProgBar
-                        ProgBarCtrl.ProgOverallStartInt = 100 * (jgen) / (FilesDim + 1) + 100 * (jsubcycle - 1) / jsubcyclecount * 1 / (FilesDim + 1)
-                        ProgBarCtrl.PgroOverallEndInt = 100 * (jgen) / (FilesDim + 1) + 100 * jsubcycle / jsubcyclecount * 1 / (FilesDim + 1)
-
-                        MODdata.ModOutpName = fFileWoExt(JobFile) & "_" & fFILE(CurrentCycleFile, False)
-
-                        WorkerMsg(tMsgID.NewJob, "Job: " & NrOfRunStr() & " / " & ((FilesDim + 1) * (CyclesDim + 1)) & " | " & fFILE(JobFile, True) & " | " & fFILE(CurrentCycleFile, True), MsgSrc)
-                        WorkerStatus("Current Job: " & NrOfRunStr() & " / " & ((FilesDim + 1) * (CyclesDim + 1)) & " | " & fFILE(JobFile, True) & " | " & fFILE(CurrentCycleFile, True))
-
-                        WorkerJobStatus(jgen, "running... " & jsubcycle & "/" & jsubcyclecount, tJobStatus.Running)
-
-                    End If
-
-                    VSUM.ResetMe()
-                    VSUM.FilePath = MODdata.ModOutpName & ".vres"
-
-
-                    'TODO: Loading-loop
-                    '***************************** VECTO-loading-loop *********************************
-                    '**************************************************************************************
-
-                    'Entry point for SOC-start iteration
-                    If GEN.ModeHorEV And SOCnJa Then SOCfirst = True
-
-                    'Clean up
-                    MODdata.Init()
-
-                    FCerror = False
-
-                    'Read cycle
-                    DRI = New cDRI
-                    DRI.FilePath = CurrentCycleFile
-
-                    If Not DRI.ReadFile Then
-                        CyclAbrtedByErr = True
-                        GoTo lbAusg
-                    End If
-
-                    'Grad to Alt
-                    DRI.GradToAlt()
-
-                    'Convert v(s) into v(t) (optional)
-                    If DRI.Scycle Then
-
-                        MODdata.Vh.SetAlt()
-
-
-                        If MsgOut Then WorkerMsg(tMsgID.Normal, "Converting cycle (v(s) => v(t))", MsgSrc)
-
-                        If Not DRI.ConvStoT() Then
-                            CyclAbrtedByErr = True
-                            GoTo lbAusg
-                        End If
-                    End If
-
-                    'If first time step is Zero then duplicate first values to start cycle with vehicle standing.
-                    If DRI.Vvorg AndAlso DRI.tDim > 1 AndAlso DRI.Values(tDriComp.V)(0) < 0.0001 AndAlso DRI.Values(tDriComp.V)(1) >= 0.0001 Then
-                        DRI.FirstZero()
-                    End If
-
-                    'Convert to 1Hz (optional) - does not apply to v(s) cycles because timestep is missing
-                    If DRI.Tvorg Then
-                        If MsgOut Then WorkerMsg(tMsgID.Normal, "Converting cycle to 1Hz", MsgSrc)
-                        If Not DRI.ConvTo1Hz() Then
-                            'Error-notification in DRI.Convert()
-                            CyclAbrtedByErr = True
-                            GoTo lbAusg
-                        End If
-                    End If
-
-                    'De-normalize
-                    DRI.DeNorm()
-
-
-
-                    '----------------------------------------------------------------------------
-                    '----------------------------------------------------------------------------
-
-                    'Initialize Cycle-specs (Speed, Accel, ...)
-                    MODdata.CycleInit()
-
-                    If GEN.VehMode = tVehMode.EngineOnly Then
-
-                        If MsgOut Then WorkerMsg(tMsgID.Normal, "Engine Only Calc", MsgSrc)
-
-                        'Rechne .npi-Leistung in Pe und P_clutch um |@@| Expect Npi-Power into Pe and P_clutch
-                        If Not MODdata.Px.Eng_Calc() Then
-                            CyclAbrtedByErr = True
-                            GoTo lbAusg
+                        If CalcMode = tCalcMode.ModeSTANDARD Then
+                            ProgBarCtrl.ProgLock = True
+                            ProgBarCtrl.ProgJobInt = 0
+                            ProgBarCtrl.ProgOverallStartInt = 100 * iJob / (FilesDim + 1) + 100 * jsubcycle / (jsubcycleDim + 1) * 1 / (FilesDim + 1) + 100 * iLoad / (iLoadDim + 1) * 1 / ((FilesDim + 1) * (jsubcycleDim + 1))
+                            ProgBarCtrl.PgroOverallEndInt = 100 * iJob / (FilesDim + 1) + 100 * jsubcycle / (jsubcycleDim + 1) * 1 / (FilesDim + 1) + 100 * (iLoad + 1) / (iLoadDim + 1) * 1 / ((FilesDim + 1) * (jsubcycleDim + 1))
+                            ProgBarCtrl.ProgLock = False
+                            WorkerJobStatus(iJob, "running... " & (iLoad + 1) + jsubcycle * (iLoadDim + 1) & "/" & (jsubcycleDim + 1) * (iLoadDim + 1), tJobStatus.Running)
                         End If
 
-                    Else
 
-                        'CAUTION: VehmodeInit() requires information from GEN and DRI!
-                        If Not VEH.VehmodeInit() Then
-                            'Error-notification within VehmodeInit()
-                            JobAbortedByErr = True
-                            GoTo lbNextJob
-                        End If
+                        If Cfg.DeclMode Then
 
-                        If Not GBX.GSinit Then
-                            'Error-notification within GSinit()
-                            JobAbortedByErr = True
-                            GoTo lbNextJob
-                        End If
+                            'Results filename with loading
+                            MODdata.ModOutpName = fFileWoExt(JobFile) & "_" & fFILE(CurrentCycleFile, False) & "_" & ConvLoading(loading)
 
-                        If GBX.TCon Then
-                            If Not GBX.TCinit Then
-                                'Error-notification within TCinit()
+                            WorkerMsg(tMsgID.NewJob, "Loading: " & (iLoad + 1) & " / " & (iLoadDim + 1) & " | " & ConvLoading(loading), MsgSrc)
+
+                            If Not Declaration.CalcInitLoad(loading) Then
                                 JobAbortedByErr = True
                                 GoTo lbNextJob
                             End If
-                        End If
 
-                        If GEN.ModeHorEV Then
-
-                            WorkerMsg(tMsgID.Err, "(H)EV mode is not available!", MsgSrc)
-                            JobAbortedByErr = True
-                            GoTo lbNextJob
+                            WorkerStatus("Current Job: " & (iJob * (CyclesDim + 1) + iCycle + 1) & " / " & (FilesDim + 1) & " | " & fFILE(JobFile, True) & " | " & Declaration.CurrentMission.NameStr & " | " & ConvLoading(loading))
 
                         Else
 
-                            If DEV.PreRun Then
+                            If CalcMode = tCalcMode.ModeSTANDARD Then WorkerStatus("Current Job: " & (iJob * (CyclesDim + 1) + iCycle + 1) & " / " & (FilesDim + 1) & " | " & fFILE(JobFile, True) & " | " & fFILE(CurrentCycleFile, True))
 
-                                If MsgOut Then WorkerMsg(tMsgID.Normal, "Driving Cycle Preprocessing", MsgSrc)
-                                If Not MODdata.Px.PreRun Then
-                                    CyclAbrtedByErr = True
-                                    GoTo lbAusg
-                                End If
+                        End If
 
-                                If PHEMworker.CancellationPending Then GoTo lbAbort
+                        'Clean up
+                        MODdata.Init()
 
+                        'Read cycle
+                        DRI = New cDRI
+                        DRI.FilePath = CurrentCycleFile
+                        If Not DRI.ReadFile Then
+                            CyclAbrtedByErr = True
+                            GoTo lbAusg
+                        End If
+
+                        'Grad to Alt
+                        DRI.GradToAlt()
+
+                        'Convert v(s) into v(t) (optional)
+                        If DRI.Scycle Then
+
+                            MODdata.Vh.SetAlt()
+
+
+                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Converting cycle (v(s) => v(t))", MsgSrc)
+
+                            If Not DRI.ConvStoT() Then
+                                CyclAbrtedByErr = True
+                                GoTo lbAusg
                             End If
+                        End If
+
+                        'If first time step is Zero then duplicate first values to start cycle with vehicle standing.
+                        If DRI.Vvorg AndAlso DRI.tDim > 1 AndAlso DRI.Values(tDriComp.V)(0) < 0.0001 AndAlso DRI.Values(tDriComp.V)(1) >= 0.0001 Then
+                            DRI.FirstZero()
+                        End If
+
+                        'Convert to 1Hz (optional) - does not apply to v(s) cycles because timestep is missing
+                        If DRI.Tvorg Then
+                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Converting cycle to 1Hz", MsgSrc)
+                            If Not DRI.ConvTo1Hz() Then
+                                'Error-notification in DRI.Convert()
+                                CyclAbrtedByErr = True
+                                GoTo lbAusg
+                            End If
+                        End If
+
+
+                        '----------------------------------------------------------------------------
+                        '----------------------------------------------------------------------------
+
+                        'Initialize Cycle-specs (Speed, Accel, ...)
+                        MODdata.CycleInit()
+
+                        If VEC.EngOnly Then
+
+                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Engine Only Calc", MsgSrc)
+
+                            'Rechne .npi-Leistung in Pe und P_clutch um |@@| Expect Npi-Power into Pe and P_clutch
+                            If Not MODdata.Px.Eng_Calc(False) Then
+                                CyclAbrtedByErr = True
+                                GoTo lbAusg
+                            End If
+
+                        Else
+
+                            'Init auxiliaries
+                            If Not VEC.AuxInit() Then
+                                'Error-notification within AuxInit()
+                                JobAbortedByErr = True
+                                GoTo lbNextJob
+                            End If
+
+                            'CAUTION: VehmodeInit() requires information from VECTO and DRI!
+                            If Not VEH.VehmodeInit() Then
+                                'Error-notification within VehmodeInit()
+                                JobAbortedByErr = True
+                                GoTo lbNextJob
+                            End If
+
+                            If GBX.TCon Then
+                                If Not GBX.TCinit Then
+                                    'Error-notification within TCinit()
+                                    JobAbortedByErr = True
+                                    GoTo lbNextJob
+                                End If
+                            End If
+
+                       
+                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Driving Cycle Preprocessing", MsgSrc)
+                            If Not MODdata.Px.PreRun Then
+                                CyclAbrtedByErr = True
+                                GoTo lbAusg
+                            End If
+
+                            If VECTOworker.CancellationPending Then GoTo lbAbort
+
+
 
                             If MsgOut Then WorkerMsg(tMsgID.Normal, "Vehicle Calc", MsgSrc)
 
@@ -402,169 +462,102 @@ lbSkip0:
                                 GoTo lbAusg
                             End If
 
+
+                            If VECTOworker.CancellationPending Then GoTo lbAbort
+
+                            'Calculate CycleKin (for erg/sum, etc.)
+                            MODdata.CylceKin.Calc()
+
                         End If
+                        '----------------------------------------------------------------------------
+                        '----------------------------------------------------------------------------
 
-                        If PHEMworker.CancellationPending Then GoTo lbAbort
-
-                        'Calculate CycleKin (for erg/sum, etc.)
-                        MODdata.CylceKin.Calc()
-
-                    End If
-                    '----------------------------------------------------------------------------
-                    '----------------------------------------------------------------------------
-
-
-                    'Emissionen und Nachbehandlung - wird bei EV-Modus nicht ausgeführt |@@| Emissions and After-treatment - it will not run in EV mode
-                    If Not GEN.VehMode = tVehMode.EV Then
-
-                        'If MsgOut Then WorkerMsg(tMsgID.Normal, "Calculating Transient Correction Factors", MsgSrc)
-
-                        ''Determine TC parameters per second
-                        'MODdata.TC.Calc()
-
-                        'Map creation
-                        If GEN.CreateMap Then
-
-                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Creating Emission Map", MsgSrc)
-
-                            MAP = New cMAP(GEN.PKWja)   'PKWja ist hier nicht relevant
-                            MAP.FilePath = fFileWoExt(JobFile) & ".v_map"
-                            If Not MAP.CreateMAP() Then
-                                CyclAbrtedByErr = True
-                                GoTo lbAusg
-                            End If
-                            MAP.Norm()
-                        End If
 
                         If MsgOut Then WorkerMsg(tMsgID.Normal, "FC Interpolation", MsgSrc)
 
-                        'Calculate Raw emissions
-                        If Not MODdata.Em.Raw_Calc() Then
-                            'If Not DEV.IgnoreFCextrapol Then
-                            '    CyclAbrtedByErr = True
-                            '    WorkerMsg(tMsgID.Normal, "Calculation aborted!", MsgSrc)
-                            '    GoTo lbAusg
-                            'End If
+                        'Calculate FC
+                        MODdata.FCcalc(True)
 
-                            FCerror = True
+                        If VECTOworker.CancellationPending Then GoTo lbAbort
 
-                        End If
-
-                        'TC Parameter umrechnen in Differenz zu Kennfeld-TC-Parameter |@@| Convert TC parameters to differences with Map-TC-parameters
-                        If MAP.TransMap Then MODdata.TC.CalcDiff()
-
-                        'Dynamic correction
-                        If GEN.dynkorja Then
-                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Em Calc: Transient Correction", MsgSrc)
-                            MODdata.Em.TC_Calc()
-                        End If
-
-                        'Korrektur der Verbrauchswerte kleiner LKW-Motoren bei HBEFA |@@| Correction of consumption values smaller HDV(LKW) engines by HBEFA
-                        If (Not GEN.PKWja) And Cfg.FCcorrection Then
-                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Em Calc: FC-Correction", MsgSrc)
-                            FcCorr()
-                        End If
-
-                        'Exhaust system simulation
-                        If GEN.EXSja Then
-                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Em Calc: EXS", MsgSrc)
-                            EXS = New cEXS
-                            If Not EXS.Exs_Main() Then
+                        '*** second-by-second output ***
+                        If Cfg.ModOut Then
+                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Writing modal output", MsgSrc)
+                            If Not MODdata.Output() Then
                                 CyclAbrtedByErr = True
                                 GoTo lbAusg
                             End If
+
+                            WorkerMsg(tMsgID.Normal, "Modal Results written to: " & fFILE(MODdata.ModOutpName & ".vmod", True), MsgSrc, MODdata.ModOutpName & ".vmod")
+
                         End If
 
-                        'Totals / Averages form
-                        MODdata.Em.SumCalc()
 
-                        'Engine Analysis
-                        If GEN.EngAnalysis Then
-                            If MsgOut Then WorkerMsg(tMsgID.Normal, "Engine Analysis", MsgSrc)
-                            If Not MODdata.Em.EngAnalysis() Then
-                                CyclAbrtedByErr = True
-                                GoTo lbAusg
-                            End If
-                        End If
-
-                    End If
-
-                    If PHEMworker.CancellationPending Then GoTo lbAbort
-
-                    '*** second-by-second output ***
-                    If Cfg.ModOut Then
-                        If MsgOut Then WorkerMsg(tMsgID.Normal, "Writing modal output", MsgSrc)
-                        If Not MODdata.Output() Then
-                            CyclAbrtedByErr = True
-                            GoTo lbAusg
-                        End If
-
-                        WorkerMsg(tMsgID.Normal, "Modal Results written to: " & fFILE(MODdata.ModOutpName & ".vmod", True), MsgSrc, MODdata.ModOutpName & ".vmod")
-
-                    End If
-
-                    'VECTO Output
-                    'TODO: Loadings...
-                    If Not GEN.EngOnly Then
-                        If Not VSUM.SetVals(tVSUM.UserDefLoaded) Then
-                            CyclAbrtedByErr = True
-                            GoTo lbAusg
-                        End If
-                    End If
-
-                    'Output for BATCH and ADVANCE
 lbAusg:
 
-                    If PHEMworker.CancellationPending Then GoTo lbAbort
-             
-                    'Output in Erg (first Calculation - Initialization & Header)
-                    If Not ERG.AusgERG(NrOfRunStr, fFILE(GenFile, True), fFILE(CurrentCycleFile, True), CyclAbrtedByErr) Then GoTo lbErrInJobLoop
+                        If VECTOworker.CancellationPending Then GoTo lbAbort
 
-                    'Data Cleanup
-                    MODdata.CleanUp()
-
-                    'Status-Update
-                    If PHEMmode = tPHEMmode.ModeSTANDARD Then
-                        WorkerProg(100 * (jgen) / (FilesDim + 1) + 100 * jsubcycle / jsubcyclecount * 1 / (FilesDim + 1), 0)
-                    ElseIf PHEMmode = tPHEMmode.ModeBATCH Then
-                        WorkerProg(100 * (jgen * (CyclesDim + 1) + jzkl + 1) / ((FilesDim + 1) * (CyclesDim + 1)), 0)
-                    End If
-
-                    'TODO: Loading Loop
-                    '******************** END *** VECTO-loading loop *** END ************************
-                    '**************************************************************************************
-
-                    If Not GEN.EngOnly Then
-                        If Not VSUM.Output() Then
-                            CyclAbrtedByErr = True
-                            GoTo lbAusg
+                        'Status-Update
+                        ProgBarCtrl.ProgLock = True
+                        If CalcMode = tCalcMode.ModeSTANDARD Then
+                            WorkerProgJobEnd(100 * iJob / (FilesDim + 1) + 100 * jsubcycle / (jsubcycleDim + 1) * 1 / (FilesDim + 1) + 100 * (iLoad + 1) / (iLoadDim + 1) * 1 / ((FilesDim + 1) * (jsubcycleDim + 1)))
+                        ElseIf CalcMode = tCalcMode.ModeBATCH Then
+                            WorkerProgJobEnd(100 * (iJob * (CyclesDim + 1) + iCycle + 1) / ((FilesDim + 1) * (CyclesDim + 1)))
                         End If
-                    End If
+
+                        If Cfg.DeclMode Then
+                            Declaration.ReportAddResults()
+                        End If
+
+                        'VSUM Output (first Calculation - Initialization & Header)
+                        If Not VSUM.AusgVSUM(iJob * (CyclesDim + 1) + iCycle + 1, fFILE(GenFile, True), fFILE(CurrentCycleFile, True), CyclAbrtedByErr) Then GoTo lbErrInJobLoop
+
+                        'Data Cleanup
+                        MODdata.CleanUp()
+
+                    Next
+
+                    '********************************************************************************
+                    '******************** END *** VECTO-loading loop *** END ************************
+                    '********************************************************************************
+
 
                 Next
 
+                '******************************************************************************************
                 '************************* END *** VECTO Cycle-loop *** END *************************
                 '******************************************************************************************
-
 
 
             Next
             '**********************************************************************************************
             '****************************** END *** Cycle-loop *** END ******************************
             '**********************************************************************************************
+
+            If Cfg.DeclMode Then
+                WorkerMsg(tMsgID.Normal, "Writing report file", MsgSrc)
+                If Declaration.WriteReport() Then
+                    WorkerMsg(tMsgID.Normal, "Click here to open report " & fFILE(Declaration.Report.Filepath, True), MsgSrc, "<RUN>" & Declaration.Report.Filepath)
+                Else
+                    WorkerMsg(tMsgID.Err, "Failed to write pdf report!", MsgSrc)
+                    JobAbortedByErr = True
+                    GoTo lbNextJob
+                End If
+            End If
+
 lbNextJob:
 
             If JobAbortedByErr Or (CyclAbrtedByErr And CyclesDim = 0) Then
 
                 If JobAbortedByErr Then
-                    If CInt(jgen * (CyclesDim + 1) + 1) = CInt((jgen + 1) * (CyclesDim + 1)) Then
-                        ERG.AusgERG(((jgen + 1) * (CyclesDim + 1)).ToString, fFILE(GenFile, True), "-", True)
+                    If CInt(iJob * (CyclesDim + 1) + 1) = CInt((iJob + 1) * (CyclesDim + 1)) Then
+                        VSUM.AusgVSUM(((iJob + 1) * (CyclesDim + 1)).ToString, fFILE(GenFile, True), "-", True)
                     Else
-                        ERG.AusgERG((jgen * (CyclesDim + 1) + 1).ToString & ".." & ((jgen + 1) * (CyclesDim + 1)).ToString, fFILE(GenFile, True), "-", True)
+                        VSUM.AusgVSUM((iJob * (CyclesDim + 1) + 1).ToString & ".." & ((iJob + 1) * (CyclesDim + 1)).ToString, fFILE(GenFile, True), "-", True)
                     End If
                 End If
 
-                WorkerJobStatus(jgen, "Aborted due to error!", tJobStatus.Err)
+                WorkerJobStatus(iJob, "Aborted due to error!", tJobStatus.Err)
 
             Else
 
@@ -573,9 +566,9 @@ lbNextJob:
                 'If GEN.irechwahl = tCalcMode.cmHEV Then MsgStrBuilder.Append(" (dSOC = " & SOC(MODdata.tDim) - SOC(0) & ")")
 
                 'Add input file list to signature list
-                If GEN.CreateFileList Then
-                    For i = 0 To GEN.FileList.Count - 1
-                        Lic.FileSigning.AddFile(GEN.FileList(i))
+                If VEC.CreateFileList Then
+                    For i = 0 To VEC.FileList.Count - 1
+                        Lic.FileSigning.AddFile(VEC.FileList(i))
                     Next
                 Else
                     WorkerMsg(tMsgID.Err, "Could not create file list for signing!", MsgSrc)
@@ -592,15 +585,15 @@ lbNextJob:
                 End If
 
                 If MSGerror > 0 Then
-                    WorkerJobStatus(jgen, MsgStrBuilder.ToString & ".", tJobStatus.Warn)
+                    WorkerJobStatus(iJob, MsgStrBuilder.ToString & ".", tJobStatus.Warn)
                 Else
-                    WorkerJobStatus(jgen, MsgStrBuilder.ToString & ".", tJobStatus.OK)
+                    WorkerJobStatus(iJob, MsgStrBuilder.ToString & ".", tJobStatus.OK)
                 End If
 
             End If
 
             'Check whether Abort
-            If PHEMworker.CancellationPending Then GoTo lbAbort
+            If VECTOworker.CancellationPending Then GoTo lbAbort
 
         Next
 
@@ -608,16 +601,15 @@ lbNextJob:
         '******************************* END *** Job loop *** END *******************************
         '**********************************************************************************************
 
-        WorkerMsg(tMsgID.Normal, "Summary Results written to: " & fFILE(ERG.ErgFile, True), MsgSrc, ERG.ErgFile)
+        WorkerMsg(tMsgID.Normal, "Summary Results written to: " & fFILE(VSUM.VSUMfile, True), MsgSrc, VSUM.VSUMfile)
 
         'JSON Erg Output
-        If Cfg.JSON Then
-            If ERG.WriteJSON() Then
-                WorkerMsg(tMsgID.Normal, "Summary Results (JSON) written to: " & fFILE(ERG.ErgFile & ".json", True), MsgSrc, ERG.ErgFile & ".json")
-            Else
-                WorkerMsg(tMsgID.Err, "Failed to write JSON Summary Results!", MsgSrc)
-            End If
+        If VSUM.WriteJSON() Then
+            WorkerMsg(tMsgID.Normal, "Summary Results (JSON) written to: " & fFILE(VSUM.VSUMfile & ".json", True), MsgSrc, VSUM.VSUMfile & ".json")
+        Else
+            WorkerMsg(tMsgID.Err, "Failed to write JSON Summary Results!", MsgSrc)
         End If
+
 
         'Write file signatures
         WorkerMsg(tMsgID.Normal, "Signing files", MsgSrc)
@@ -647,10 +639,10 @@ lbErrBefore:  '!!!!!!!!!! Abbruch bevor (!!!) der erste Job angefangen wurde !!!
 
 lbErrInJobLoop:
         WorkerMsg(tMsgID.Normal, "aborted", MsgSrc)
-        WorkerJobStatus(jgen, "aborted", tJobStatus.Err)
+        WorkerJobStatus(iJob, "aborted", tJobStatus.Err)
         VECTO = tCalcResult.Err
 
-        For i = jgen + 1 To FilesDim
+        For i = iJob + 1 To FilesDim
             WorkerJobStatus(i, "", tJobStatus.Undef)
         Next
 
@@ -660,29 +652,153 @@ lbErrInJobLoop:
 
 lbAbort:
         WorkerMsg(tMsgID.Normal, "aborted", MsgSrc)
-        WorkerJobStatus(jgen, "aborted", tJobStatus.Warn)
+        WorkerJobStatus(iJob, "aborted", tJobStatus.Warn)
         VECTO = tCalcResult.Abort
 
-        For i = jgen + 1 To FilesDim
+        For i = iJob + 1 To FilesDim
             WorkerJobStatus(i, "", tJobStatus.Undef)
         Next
 
         MODdata.CleanUp()
 
 lbExit:
-        GEN = Nothing
+        VEC = Nothing
         VEH = Nothing
         FLD = Nothing
         MAP = Nothing
-        TRS = Nothing
         DRI = Nothing
         MODdata = Nothing
-        ERG = Nothing
+        VSUM = Nothing
 
         ENG = Nothing
         GBX = Nothing
 
     End Function
+
+    Public Function ReadFiles() As Boolean
+        Dim sb As cSubPath
+
+
+        Dim MsgSrc As String
+
+        MsgSrc = "Main/ReadInp"
+
+        '-----------------------------    ~GEN~    -----------------------------
+        'Read GEN
+        If UCase(fEXT(GenFile)) <> ".VECTO" Then
+            WorkerMsg(tMsgID.Err, "Only .VECTO files are supported in this mode", MsgSrc)
+            Return False
+        End If
+
+        VEC = New cVECTO
+        VEC.FilePath = GenFile
+
+        Try
+            If Not VEC.ReadFile() Then
+                WorkerMsg(tMsgID.Err, "Cannot read .vecto file (" & GenFile & ")", MsgSrc)
+                Return False
+            End If
+        Catch ex As Exception
+            WorkerMsg(tMsgID.Err, "File read error! (" & GenFile & ")", MsgSrc, GenFile)
+            Return False
+        End Try
+
+        If VEC.NoJSON Then WorkerMsg(tMsgID.Warn, "VECTO file format is outdated! CLICK HERE to convert to current format!", MsgSrc, "<GUI>" & GenFile)
+
+
+        '-----------------------------    ~VEH~    -----------------------------
+        VEH = New cVEH
+
+        'Read vehicle specifications
+        If Not VEC.EngOnly Then
+            VEH.FilePath = VEC.PathVEH
+            Try
+                If Not VEH.ReadFile Then Return False
+            Catch ex As Exception
+                WorkerMsg(tMsgID.Err, "File read error! (" & VEC.PathVEH & ")", MsgSrc, VEC.PathVEH)
+                Return False
+            End Try
+
+        End If
+
+        If VEH.NoJSON Then WorkerMsg(tMsgID.Warn, "Vehicle file format is outdated! CLICK HERE to convert to current format!", MsgSrc, "<GUI>" & VEC.PathVEH)
+
+        If Cfg.DeclMode Then
+            If Not Declaration.SetRef() Then
+                WorkerMsg(tMsgID.Err, "Vehicle Configuration not found in Segment Table!", MsgSrc)
+                Return False
+            End If
+        End If
+
+
+        If Cfg.DeclMode Then
+            If Not VEC.DeclInit() Then Return False
+        End If
+
+
+        CycleFiles.Clear()
+        For Each sb In VEC.CycleFiles
+            CycleFiles.Add(sb.FullPath)
+        Next
+
+        'Error message in init()
+        If Not VEC.Init Then Return False
+
+
+
+        '----------------------   ~ENG~  (incl. FLD, MAP)  ----------------------
+        ENG = New cENG
+        ENG.FilePath = VEC.PathENG
+        Try
+            If Not ENG.ReadFile Then Return False
+        Catch ex As Exception
+            WorkerMsg(tMsgID.Err, "File read error! (" & VEC.PathENG & ")", MsgSrc, VEC.PathENG)
+            Return False
+        End Try
+
+        If ENG.NoJSON Then WorkerMsg(tMsgID.Warn, "Engine file format is outdated! CLICK HERE to convert to current format!", MsgSrc, "<GUI>" & VEC.PathENG)
+
+
+
+
+        '-----------------------------    ~GBX~    -----------------------------
+        GBX = New cGBX
+
+        If Not VEC.EngOnly Then
+            GBX.FilePath = VEC.PathGBX
+            Try
+                If Not GBX.ReadFile Then Return False
+                If Not GBX.GSinit Then Return False
+            Catch ex As Exception
+                WorkerMsg(tMsgID.Err, "File read error! (" & VEC.PathGBX & ")", MsgSrc, VEC.PathGBX)
+                Return False
+            End Try
+
+        End If
+
+        If GBX.NoJSON Then WorkerMsg(tMsgID.Warn, "Gearbox file format is outdated! CLICK HERE to convert to current format!", MsgSrc, "<GUI>" & VEC.PathGBX)
+
+        'Must be called after cGBX.ReadFile because cGBX.GearCount is needed
+        ENG.Init()
+
+        'Must be called after cENG.Init because FLD must be loaded
+        If Cfg.DeclMode Then
+            If Not ENG.DeclInit() Then Return False
+        End If
+
+
+        'Must be after ENG.Init()
+        If Cfg.DeclMode Then
+            If Not GBX.DeclInit() Then Return False
+        End If
+
+
+
+
+        Return True
+
+    End Function
+
 
     '---------------------------------------------------------------------------
 

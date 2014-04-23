@@ -8,19 +8,56 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+
+﻿''' <summary>
+''' Auxiliary
+''' </summary>
+''' <remarks></remarks>
 Public Class cAux
 
+    ''' <summary>
+    ''' Input file path (.vaux)
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Filepath As String
 
+    ''' <summary>
+    ''' Transmission ratio to engine speed [-]
+    ''' </summary>
+    ''' <remarks></remarks>
     Public TransRatio As Single
+
+    ''' <summary>
+    ''' Efficiency to engine [-]
+    ''' </summary>
+    ''' <remarks></remarks>
     Public EffToEng As Single
+
+    ''' <summary>
+    ''' Efficiency auxiliary to supply [-]
+    ''' </summary>
+    ''' <remarks></remarks>
     Public EffToSply As Single
+
+    ''' <summary>
+    ''' Efficiency map
+    ''' </summary>
+    ''' <remarks>x= Auxiliary speed [rpm]; y= Supply power [kW]; z= Mechanical power [kW]. Note that the columns in the input file are different!</remarks>
     Private EffMap As cDelaunayMap
 
+    ''' <summary>
+    ''' New instance. Creates new efficiency map
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub New()
         EffMap = New cDelaunayMap
     End Sub
 
+    ''' <summary>
+    ''' Read input file (.vaux)
+    ''' </summary>
+    ''' <returns>True if successful, else False.</returns>
+    ''' <remarks></remarks>
     Public Function Readfile() As Boolean
         Dim MsgSrc As String
         Dim file As cFile_V3
@@ -28,13 +65,7 @@ Public Class cAux
 
         MsgSrc = "Main/ReadInp/Aux"
 
-        'Abort if there's no file
-        If Filepath = "" OrElse Not IO.File.Exists(Filepath) Then
-            WorkerMsg(tMsgID.Err, "Aux file not found (" & Filepath & ") !", MsgSrc)
-            Return False
-        End If
-
-        'Open file
+        'Open file - Abort if file not accessible
         file = New cFile_V3
         If Not file.OpenRead(Filepath) Then
             file = Nothing
@@ -45,8 +76,10 @@ Public Class cAux
         'Map reset
         EffMap = New cDelaunayMap
 
+        'Abort if file is empty
         If file.EndOfFile Then GoTo lbFileEndErr
 
+        'Read file
         Try
 
             'Transmission ration to engine rpm [-]
@@ -76,6 +109,7 @@ Public Class cAux
                 EffMap.AddPoints(CDbl(line(0)), CDbl(line(2)), CDbl(line(1)))
             Loop
 
+            'Triangulate map
             If Not EffMap.Triangulate Then
                 WorkerMsg(tMsgID.Err, "Aux Map is invalid! (Triangulation Error)", MsgSrc)
                 GoTo lbErr
@@ -106,7 +140,13 @@ lbErr:
 
     End Function
 
-
+    ''' <summary>
+    ''' Returns power demand for given engine speed and supply power
+    ''' </summary>
+    ''' <param name="nU">Engine speed [1/min]</param>
+    ''' <param name="Psupply">Supply power [kW] from driving cycle</param>
+    ''' <returns>Power demand [kW]</returns>
+    ''' <remarks></remarks>
     Public Function Paux(ByVal nU As Single, ByVal Psupply As Single) As Single
 
         Dim nUaux As Single

@@ -34,18 +34,18 @@ Public Class cCycleKin
     Private aNeg0 As Single
     Private AccNoise0 As Single
 
-    Private MyErgEntries As List(Of cErgEntry)
+    Private MyVSUMentries As List(Of cVSUMentry)
 
     Public Sub New()
-        MyErgEntries = New List(Of cErgEntry)
-        MyErgEntries.Add(New cErgEntry("a", "[m/s^2]"))
-        MyErgEntries.Add(New cErgEntry("a_pos", "[m/s^2]"))
-        MyErgEntries.Add(New cErgEntry("a_neg", "[m/s^2]"))
-        MyErgEntries.Add(New cErgEntry("Acc.Noise", "[m/s^2]"))
-        MyErgEntries.Add(New cErgEntry("pAcc", "[%]"))
-        MyErgEntries.Add(New cErgEntry("pDec", "[%]"))
-        MyErgEntries.Add(New cErgEntry("pCruise", "[%]"))
-        MyErgEntries.Add(New cErgEntry("pStop", "[%]"))
+        MyVSUMentries = New List(Of cVSUMentry)
+        MyVSUMentries.Add(New cVSUMentry("a", "[m/s^2]"))
+        MyVSUMentries.Add(New cVSUMentry("a_pos", "[m/s^2]"))
+        MyVSUMentries.Add(New cVSUMentry("a_neg", "[m/s^2]"))
+        MyVSUMentries.Add(New cVSUMentry("Acc.Noise", "[m/s^2]"))
+        MyVSUMentries.Add(New cVSUMentry("pAcc", "[%]"))
+        MyVSUMentries.Add(New cVSUMentry("pDec", "[%]"))
+        MyVSUMentries.Add(New cVSUMentry("pCruise", "[%]"))
+        MyVSUMentries.Add(New cVSUMentry("pStop", "[%]"))
     End Sub
 
     Public Function ValLine() As String
@@ -139,9 +139,9 @@ Public Class cCycleKin
 
     End Sub
 
-    Public ReadOnly Property ErgEntries As List(Of cErgEntry)
+    Public ReadOnly Property VSUMentries As List(Of cVSUMentry)
         Get
-            Return MyErgEntries
+            Return MyVSUMentries
         End Get
     End Property
 

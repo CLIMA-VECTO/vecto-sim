@@ -10,6 +10,10 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Windows.Forms
 
+''' <summary>
+''' String input dialog for changing DEV option values. Default input box cannot process empty strings (emtpy string = Cancel). 
+''' </summary>
+''' <remarks></remarks>
 Public Class F_StrInpBox
 
     Public Function ShowDlog(ByVal Prompt As String, ByVal DefaultRespone As String) As String

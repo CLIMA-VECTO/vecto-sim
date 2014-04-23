@@ -36,16 +36,10 @@ Partial Class F_ENG
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_ENG))
         Me.TbNleerl = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
-        Me.TbNnenn = New System.Windows.Forms.TextBox()
-        Me.Label10 = New System.Windows.Forms.Label()
         Me.TbInertia = New System.Windows.Forms.TextBox()
         Me.Label41 = New System.Windows.Forms.Label()
         Me.Label40 = New System.Windows.Forms.Label()
-        Me.Label39 = New System.Windows.Forms.Label()
-        Me.Label36 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.TbPnenn = New System.Windows.Forms.TextBox()
-        Me.Label9 = New System.Windows.Forms.Label()
         Me.ButCancel = New System.Windows.Forms.Button()
         Me.ButOK = New System.Windows.Forms.Button()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
@@ -67,12 +61,8 @@ Partial Class F_ENG
         Me.TbMAP = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.BtMAP = New System.Windows.Forms.Button()
-        Me.TbWHTC = New System.Windows.Forms.TextBox()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.BtWHTC = New System.Windows.Forms.Button()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.OpenWithGRAPHiToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BtMAPopen = New System.Windows.Forms.Button()
@@ -83,48 +73,47 @@ Partial Class F_ENG
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label32 = New System.Windows.Forms.Label()
+        Me.PnInertia = New System.Windows.Forms.Panel()
+        Me.GrWHTC = New System.Windows.Forms.GroupBox()
+        Me.TbWHTCmw = New System.Windows.Forms.TextBox()
+        Me.TbWHTCrural = New System.Windows.Forms.TextBox()
+        Me.TbWHTCurban = New System.Windows.Forms.TextBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.PicBox = New System.Windows.Forms.PictureBox()
         Me.ToolStrip1.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CmOpenFile.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
+        Me.PnInertia.SuspendLayout()
+        Me.GrWHTC.SuspendLayout()
+        CType(Me.PicBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'TbNleerl
         '
-        Me.TbNleerl.Location = New System.Drawing.Point(400, 118)
+        Me.TbNleerl.Location = New System.Drawing.Point(123, 108)
         Me.TbNleerl.Name = "TbNleerl"
         Me.TbNleerl.Size = New System.Drawing.Size(57, 20)
-        Me.TbNleerl.TabIndex = 4
+        Me.TbNleerl.TabIndex = 1
         '
         'Label11
         '
         Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(292, 121)
+        Me.Label11.Location = New System.Drawing.Point(15, 111)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(102, 13)
         Me.Label11.TabIndex = 15
         Me.Label11.Text = "Idling Engine Speed"
         '
-        'TbNnenn
-        '
-        Me.TbNnenn.Location = New System.Drawing.Point(400, 144)
-        Me.TbNnenn.Name = "TbNnenn"
-        Me.TbNnenn.Size = New System.Drawing.Size(57, 20)
-        Me.TbNnenn.TabIndex = 5
-        '
-        'Label10
-        '
-        Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(288, 147)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(106, 13)
-        Me.Label10.TabIndex = 13
-        Me.Label10.Text = "Rated Engine Speed"
-        '
         'TbInertia
         '
-        Me.TbInertia.Location = New System.Drawing.Point(123, 170)
+        Me.TbInertia.Location = New System.Drawing.Point(120, 2)
         Me.TbInertia.Name = "TbInertia"
         Me.TbInertia.Size = New System.Drawing.Size(57, 20)
         Me.TbInertia.TabIndex = 3
@@ -132,7 +121,7 @@ Partial Class F_ENG
         'Label41
         '
         Me.Label41.AutoSize = True
-        Me.Label41.Location = New System.Drawing.Point(186, 173)
+        Me.Label41.Location = New System.Drawing.Point(183, 5)
         Me.Label41.Name = "Label41"
         Me.Label41.Size = New System.Drawing.Size(36, 13)
         Me.Label41.TabIndex = 24
@@ -141,60 +130,26 @@ Partial Class F_ENG
         'Label40
         '
         Me.Label40.AutoSize = True
-        Me.Label40.Location = New System.Drawing.Point(463, 121)
+        Me.Label40.Location = New System.Drawing.Point(186, 111)
         Me.Label40.Name = "Label40"
         Me.Label40.Size = New System.Drawing.Size(30, 13)
         Me.Label40.TabIndex = 24
         Me.Label40.Text = "[rpm]"
         '
-        'Label39
-        '
-        Me.Label39.AutoSize = True
-        Me.Label39.Location = New System.Drawing.Point(463, 147)
-        Me.Label39.Name = "Label39"
-        Me.Label39.Size = New System.Drawing.Size(30, 13)
-        Me.Label39.TabIndex = 24
-        Me.Label39.Text = "[rpm]"
-        '
-        'Label36
-        '
-        Me.Label36.AutoSize = True
-        Me.Label36.Location = New System.Drawing.Point(186, 121)
-        Me.Label36.Name = "Label36"
-        Me.Label36.Size = New System.Drawing.Size(30, 13)
-        Me.Label36.TabIndex = 24
-        Me.Label36.Text = "[kW]"
-        '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(15, 173)
+        Me.Label5.Location = New System.Drawing.Point(12, 5)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(102, 13)
         Me.Label5.TabIndex = 0
         Me.Label5.Text = "Inertia incl. Flywheel"
         '
-        'TbPnenn
-        '
-        Me.TbPnenn.Location = New System.Drawing.Point(123, 118)
-        Me.TbPnenn.Name = "TbPnenn"
-        Me.TbPnenn.Size = New System.Drawing.Size(57, 20)
-        Me.TbPnenn.TabIndex = 1
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(12, 121)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(105, 13)
-        Me.Label9.TabIndex = 11
-        Me.Label9.Text = "Rated Engine Power"
-        '
         'ButCancel
         '
         Me.ButCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ButCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.ButCancel.Location = New System.Drawing.Point(418, 473)
+        Me.ButCancel.Location = New System.Drawing.Point(898, 469)
         Me.ButCancel.Name = "ButCancel"
         Me.ButCancel.Size = New System.Drawing.Size(75, 23)
         Me.ButCancel.TabIndex = 13
@@ -204,7 +159,7 @@ Partial Class F_ENG
         'ButOK
         '
         Me.ButOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ButOK.Location = New System.Drawing.Point(337, 473)
+        Me.ButOK.Location = New System.Drawing.Point(817, 469)
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 12
@@ -217,7 +172,7 @@ Partial Class F_ENG
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripBtNew, Me.ToolStripBtOpen, Me.ToolStripBtSave, Me.ToolStripBtSaveAs, Me.ToolStripSeparator3, Me.ToolStripBtSendTo, Me.ToolStripSeparator1, Me.ToolStripButton1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(505, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(985, 25)
         Me.ToolStrip1.TabIndex = 30
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -273,8 +228,8 @@ Partial Class F_ENG
         Me.ToolStripBtSendTo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripBtSendTo.Name = "ToolStripBtSendTo"
         Me.ToolStripBtSendTo.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripBtSendTo.Text = "Send to GEN Editor"
-        Me.ToolStripBtSendTo.ToolTipText = "Send to GEN Editor"
+        Me.ToolStripBtSendTo.Text = "Send to Job Editor"
+        Me.ToolStripBtSendTo.ToolTipText = "Send to Job Editor"
         '
         'ToolStripSeparator1
         '
@@ -293,9 +248,9 @@ Partial Class F_ENG
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LbStatus})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 499)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 495)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New System.Drawing.Size(505, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(985, 22)
         Me.StatusStrip1.SizingGrip = False
         Me.StatusStrip1.TabIndex = 37
         Me.StatusStrip1.Text = "StatusStrip1"
@@ -309,7 +264,7 @@ Partial Class F_ENG
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(186, 147)
+        Me.Label1.Location = New System.Drawing.Point(186, 137)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(33, 13)
         Me.Label1.TabIndex = 24
@@ -318,7 +273,7 @@ Partial Class F_ENG
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(46, 147)
+        Me.Label2.Location = New System.Drawing.Point(46, 137)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(71, 13)
         Me.Label2.TabIndex = 13
@@ -326,7 +281,7 @@ Partial Class F_ENG
         '
         'TbDispl
         '
-        Me.TbDispl.Location = New System.Drawing.Point(123, 144)
+        Me.TbDispl.Location = New System.Drawing.Point(123, 134)
         Me.TbDispl.Name = "TbDispl"
         Me.TbDispl.Size = New System.Drawing.Size(57, 20)
         Me.TbDispl.TabIndex = 2
@@ -349,15 +304,15 @@ Partial Class F_ENG
         '
         'TbMAP
         '
-        Me.TbMAP.Location = New System.Drawing.Point(12, 388)
+        Me.TbMAP.Location = New System.Drawing.Point(12, 351)
         Me.TbMAP.Name = "TbMAP"
         Me.TbMAP.Size = New System.Drawing.Size(418, 20)
-        Me.TbMAP.TabIndex = 8
+        Me.TbMAP.TabIndex = 5
         '
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(12, 372)
+        Me.Label6.Location = New System.Drawing.Point(12, 335)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(115, 13)
         Me.Label6.TabIndex = 38
@@ -365,42 +320,13 @@ Partial Class F_ENG
         '
         'BtMAP
         '
-        Me.BtMAP.Location = New System.Drawing.Point(436, 386)
+        Me.BtMAP.Location = New System.Drawing.Point(436, 349)
         Me.BtMAP.Name = "BtMAP"
         Me.BtMAP.Size = New System.Drawing.Size(28, 23)
-        Me.BtMAP.TabIndex = 9
+        Me.BtMAP.TabIndex = 6
         Me.BtMAP.TabStop = False
         Me.BtMAP.Text = "..."
         Me.BtMAP.UseVisualStyleBackColor = True
-        '
-        'TbWHTC
-        '
-        Me.TbWHTC.Enabled = False
-        Me.TbWHTC.Location = New System.Drawing.Point(12, 438)
-        Me.TbWHTC.Name = "TbWHTC"
-        Me.TbWHTC.Size = New System.Drawing.Size(447, 20)
-        Me.TbWHTC.TabIndex = 10
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Enabled = False
-        Me.Label7.Location = New System.Drawing.Point(12, 422)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(109, 13)
-        Me.Label7.TabIndex = 38
-        Me.Label7.Text = "Calibration Test Cycle"
-        '
-        'BtWHTC
-        '
-        Me.BtWHTC.Enabled = False
-        Me.BtWHTC.Location = New System.Drawing.Point(465, 436)
-        Me.BtWHTC.Name = "BtWHTC"
-        Me.BtWHTC.Size = New System.Drawing.Size(28, 23)
-        Me.BtWHTC.TabIndex = 11
-        Me.BtWHTC.TabStop = False
-        Me.BtWHTC.Text = "..."
-        Me.BtWHTC.UseVisualStyleBackColor = True
         '
         'PictureBox1
         '
@@ -414,35 +340,29 @@ Partial Class F_ENG
         '
         'CmOpenFile
         '
-        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithGRAPHiToolStripMenuItem, Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
+        Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
         Me.CmOpenFile.Name = "CmOpenFile"
-        Me.CmOpenFile.Size = New System.Drawing.Size(175, 70)
-        '
-        'OpenWithGRAPHiToolStripMenuItem
-        '
-        Me.OpenWithGRAPHiToolStripMenuItem.Name = "OpenWithGRAPHiToolStripMenuItem"
-        Me.OpenWithGRAPHiToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
-        Me.OpenWithGRAPHiToolStripMenuItem.Text = "Open with GRAPHi"
+        Me.CmOpenFile.Size = New System.Drawing.Size(153, 48)
         '
         'OpenWithToolStripMenuItem
         '
         Me.OpenWithToolStripMenuItem.Name = "OpenWithToolStripMenuItem"
-        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.OpenWithToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.OpenWithToolStripMenuItem.Text = "Open with ..."
         '
         'ShowInFolderToolStripMenuItem
         '
         Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
-        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(174, 22)
+        Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
         '
         'BtMAPopen
         '
         Me.BtMAPopen.Image = Global.VECTO.My.Resources.Resources.application_export_icon_small
-        Me.BtMAPopen.Location = New System.Drawing.Point(470, 386)
+        Me.BtMAPopen.Location = New System.Drawing.Point(470, 349)
         Me.BtMAPopen.Name = "BtMAPopen"
         Me.BtMAPopen.Size = New System.Drawing.Size(23, 23)
-        Me.BtMAPopen.TabIndex = 40
+        Me.BtMAPopen.TabIndex = 7
         Me.BtMAPopen.TabStop = False
         Me.BtMAPopen.UseVisualStyleBackColor = True
         '
@@ -452,7 +372,7 @@ Partial Class F_ENG
         Me.BtAddFLD.Location = New System.Drawing.Point(6, 133)
         Me.BtAddFLD.Name = "BtAddFLD"
         Me.BtAddFLD.Size = New System.Drawing.Size(29, 23)
-        Me.BtAddFLD.TabIndex = 42
+        Me.BtAddFLD.TabIndex = 1
         Me.BtAddFLD.UseVisualStyleBackColor = True
         '
         'BtRemFLD
@@ -461,7 +381,7 @@ Partial Class F_ENG
         Me.BtRemFLD.Location = New System.Drawing.Point(43, 133)
         Me.BtRemFLD.Name = "BtRemFLD"
         Me.BtRemFLD.Size = New System.Drawing.Size(29, 23)
-        Me.BtRemFLD.TabIndex = 43
+        Me.BtRemFLD.TabIndex = 2
         Me.BtRemFLD.UseVisualStyleBackColor = True
         '
         'LvFLDs
@@ -474,7 +394,7 @@ Partial Class F_ENG
         Me.LvFLDs.MultiSelect = False
         Me.LvFLDs.Name = "LvFLDs"
         Me.LvFLDs.Size = New System.Drawing.Size(469, 108)
-        Me.LvFLDs.TabIndex = 41
+        Me.LvFLDs.TabIndex = 0
         Me.LvFLDs.TabStop = False
         Me.LvFLDs.UseCompatibleStateImageBehavior = False
         Me.LvFLDs.View = System.Windows.Forms.View.Details
@@ -495,10 +415,10 @@ Partial Class F_ENG
         Me.GroupBox1.Controls.Add(Me.LvFLDs)
         Me.GroupBox1.Controls.Add(Me.BtRemFLD)
         Me.GroupBox1.Controls.Add(Me.BtAddFLD)
-        Me.GroupBox1.Location = New System.Drawing.Point(12, 196)
+        Me.GroupBox1.Location = New System.Drawing.Point(12, 160)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(481, 162)
-        Me.GroupBox1.TabIndex = 44
+        Me.GroupBox1.TabIndex = 4
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Full Load and Drag Curves"
         '
@@ -511,18 +431,132 @@ Partial Class F_ENG
         Me.Label32.TabIndex = 44
         Me.Label32.Text = "Double-Click to edit item"
         '
+        'PnInertia
+        '
+        Me.PnInertia.Controls.Add(Me.Label5)
+        Me.PnInertia.Controls.Add(Me.Label41)
+        Me.PnInertia.Controls.Add(Me.TbInertia)
+        Me.PnInertia.Location = New System.Drawing.Point(264, 106)
+        Me.PnInertia.Name = "PnInertia"
+        Me.PnInertia.Size = New System.Drawing.Size(229, 32)
+        Me.PnInertia.TabIndex = 3
+        '
+        'GrWHTC
+        '
+        Me.GrWHTC.Controls.Add(Me.TbWHTCmw)
+        Me.GrWHTC.Controls.Add(Me.TbWHTCrural)
+        Me.GrWHTC.Controls.Add(Me.TbWHTCurban)
+        Me.GrWHTC.Controls.Add(Me.Label8)
+        Me.GrWHTC.Controls.Add(Me.Label12)
+        Me.GrWHTC.Controls.Add(Me.Label10)
+        Me.GrWHTC.Controls.Add(Me.Label9)
+        Me.GrWHTC.Controls.Add(Me.Label7)
+        Me.GrWHTC.Controls.Add(Me.Label4)
+        Me.GrWHTC.Enabled = False
+        Me.GrWHTC.Location = New System.Drawing.Point(12, 392)
+        Me.GrWHTC.Name = "GrWHTC"
+        Me.GrWHTC.Size = New System.Drawing.Size(481, 61)
+        Me.GrWHTC.TabIndex = 9
+        Me.GrWHTC.TabStop = False
+        Me.GrWHTC.Text = "WHTC Test Results"
+        '
+        'TbWHTCmw
+        '
+        Me.TbWHTCmw.Location = New System.Drawing.Point(348, 28)
+        Me.TbWHTCmw.Name = "TbWHTCmw"
+        Me.TbWHTCmw.Size = New System.Drawing.Size(57, 20)
+        Me.TbWHTCmw.TabIndex = 2
+        '
+        'TbWHTCrural
+        '
+        Me.TbWHTCrural.Location = New System.Drawing.Point(192, 28)
+        Me.TbWHTCrural.Name = "TbWHTCrural"
+        Me.TbWHTCrural.Size = New System.Drawing.Size(57, 20)
+        Me.TbWHTCrural.TabIndex = 1
+        '
+        'TbWHTCurban
+        '
+        Me.TbWHTCurban.Location = New System.Drawing.Point(36, 28)
+        Me.TbWHTCurban.Name = "TbWHTCurban"
+        Me.TbWHTCurban.Size = New System.Drawing.Size(57, 20)
+        Me.TbWHTCurban.TabIndex = 0
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Location = New System.Drawing.Point(317, 31)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(25, 13)
+        Me.Label8.TabIndex = 0
+        Me.Label8.Text = "Mot"
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Location = New System.Drawing.Point(411, 31)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(47, 13)
+        Me.Label12.TabIndex = 0
+        Me.Label12.Text = "[g/kWh]"
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Location = New System.Drawing.Point(255, 31)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(47, 13)
+        Me.Label10.TabIndex = 0
+        Me.Label10.Text = "[g/kWh]"
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(99, 31)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(47, 13)
+        Me.Label9.TabIndex = 0
+        Me.Label9.Text = "[g/kWh]"
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Location = New System.Drawing.Point(162, 31)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(24, 13)
+        Me.Label7.TabIndex = 0
+        Me.Label7.Text = "Rur"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(6, 31)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(24, 13)
+        Me.Label4.TabIndex = 0
+        Me.Label4.Text = "Urb"
+        '
+        'PicBox
+        '
+        Me.PicBox.BackColor = System.Drawing.Color.LightGray
+        Me.PicBox.Location = New System.Drawing.Point(499, 28)
+        Me.PicBox.Name = "PicBox"
+        Me.PicBox.Size = New System.Drawing.Size(474, 425)
+        Me.PicBox.TabIndex = 40
+        Me.PicBox.TabStop = False
+        '
         'F_ENG
         '
         Me.AcceptButton = Me.ButOK
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.ButCancel
-        Me.ClientSize = New System.Drawing.Size(505, 521)
+        Me.ClientSize = New System.Drawing.Size(985, 517)
+        Me.Controls.Add(Me.PicBox)
+        Me.Controls.Add(Me.GrWHTC)
+        Me.Controls.Add(Me.PnInertia)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.BtMAPopen)
         Me.Controls.Add(Me.PictureBox1)
-        Me.Controls.Add(Me.BtWHTC)
-        Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.BtMAP)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.TbNleerl)
@@ -530,24 +564,14 @@ Partial Class F_ENG
         Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.TbDispl)
-        Me.Controls.Add(Me.TbNnenn)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.ButCancel)
-        Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.ButOK)
-        Me.Controls.Add(Me.TbWHTC)
         Me.Controls.Add(Me.TbMAP)
-        Me.Controls.Add(Me.TbInertia)
-        Me.Controls.Add(Me.Label41)
         Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.Label40)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.TbName)
-        Me.Controls.Add(Me.TbPnenn)
-        Me.Controls.Add(Me.Label39)
-        Me.Controls.Add(Me.Label5)
-        Me.Controls.Add(Me.Label36)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
@@ -562,22 +586,21 @@ Partial Class F_ENG
         Me.CmOpenFile.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
+        Me.PnInertia.ResumeLayout(False)
+        Me.PnInertia.PerformLayout()
+        Me.GrWHTC.ResumeLayout(False)
+        Me.GrWHTC.PerformLayout()
+        CType(Me.PicBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
     Friend WithEvents TbNleerl As System.Windows.Forms.TextBox
     Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents TbNnenn As System.Windows.Forms.TextBox
-    Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents TbInertia As System.Windows.Forms.TextBox
     Friend WithEvents Label41 As System.Windows.Forms.Label
     Friend WithEvents Label40 As System.Windows.Forms.Label
-    Friend WithEvents Label39 As System.Windows.Forms.Label
-    Friend WithEvents Label36 As System.Windows.Forms.Label
     Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents TbPnenn As System.Windows.Forms.TextBox
-    Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents ButCancel As System.Windows.Forms.Button
     Friend WithEvents ButOK As System.Windows.Forms.Button
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
@@ -597,14 +620,10 @@ Partial Class F_ENG
     Friend WithEvents TbMAP As System.Windows.Forms.TextBox
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents BtMAP As System.Windows.Forms.Button
-    Friend WithEvents TbWHTC As System.Windows.Forms.TextBox
-    Friend WithEvents Label7 As System.Windows.Forms.Label
-    Friend WithEvents BtWHTC As System.Windows.Forms.Button
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
     Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
-    Friend WithEvents OpenWithGRAPHiToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents BtMAPopen As System.Windows.Forms.Button
@@ -615,4 +634,16 @@ Partial Class F_ENG
     Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents Label32 As System.Windows.Forms.Label
+    Friend WithEvents PnInertia As System.Windows.Forms.Panel
+    Friend WithEvents GrWHTC As System.Windows.Forms.GroupBox
+    Friend WithEvents TbWHTCmw As System.Windows.Forms.TextBox
+    Friend WithEvents TbWHTCrural As System.Windows.Forms.TextBox
+    Friend WithEvents TbWHTCurban As System.Windows.Forms.TextBox
+    Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents Label12 As System.Windows.Forms.Label
+    Friend WithEvents Label10 As System.Windows.Forms.Label
+    Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents Label7 As System.Windows.Forms.Label
+    Friend WithEvents Label4 As System.Windows.Forms.Label
+    Friend WithEvents PicBox As System.Windows.Forms.PictureBox
 End Class

@@ -10,8 +10,13 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Windows.Forms
 
+''' <summary>
+''' Create/Verify signature files (.vsig).
+''' </summary>
+''' <remarks></remarks>
 Public Class F_FileSign
 
+    'Create signature file
     Private Sub BtSign_Click(sender As System.Object, e As System.EventArgs) Handles BtSign.Click
         Dim lv0 As ListViewItem
         Dim MainDir As String
@@ -74,6 +79,7 @@ Public Class F_FileSign
 
     End Sub
 
+    'Verify existing signature file
     Public Sub VerifySigFile()
         Dim lv0 As ListViewItem
         Dim i As Integer
@@ -116,6 +122,7 @@ Public Class F_FileSign
 
     End Sub
 
+    'Clear form
     Private Sub ClearForm(ByVal ClearFileList As Boolean)
         If ClearFileList Then lvFiles.Items.Clear()
         Me.TbLicStr.Text = ""
@@ -130,17 +137,13 @@ Public Class F_FileSign
     End Sub
 
 
-
-
-
-
 #Region "GUI Controls"
 
     Private Sub BtBrowse_Click(sender As System.Object, e As System.EventArgs) Handles BtBrowse.Click
         Dim fb As New cFileBrowser("sig", False, True)
         fb.Extensions = New String() {"vsig"}
 
-        If fb.CustomDialog(Me.TbSigFile.Text, False, False, eExtMode.ForceExt, False, "vsig") Then
+        If fb.CustomDialog(Me.TbSigFile.Text, False, False, tFbExtMode.ForceExt, False, "vsig") Then
             Me.TbSigFile.Text = fb.Files(0)
         End If
 

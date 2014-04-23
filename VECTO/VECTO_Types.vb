@@ -8,27 +8,20 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Public Enum tPHEMmode As Short
-    ModeSTANDARD = 0
-    ModeBATCH = 1
+
+﻿''' <summary>
+''' Determines how file extensions are set in the File Browser
+''' </summary>
+''' <remarks></remarks>
+Public Enum tFbExtMode As Integer
+    ForceExt = 0
+    MultiExt = 1
+    SingleExt = 2
 End Enum
 
 Public Enum tCalcMode As Short
-    cmStandard = 0      '0 Standard (Gesamtes Fzg mit bestehendem Kennfeld)
-    cmEngineOnly = 1    '1 Motor alleine (mit bestehendem Kennfeld)
-    cmKEmes = 2         '2 Kennfeld erstellen aus Rollenzyklus
-    cmEAnpi = 3         '3 Motoranalyse (x-Sek. Mittelwerte Messung-Rechng)
-    cmKEnpi = 4         '4 Kennfeld erstellen aus Motormessung
-    cmEAmes = 5         '5 Motoranalyse aus Fahrzeugmessung
-    cmHEV = 6           '6 Hybridfahrzeug (VKM + Elektro)
-    cmEV = 7            '7 Elektrofahrzeug
-End Enum
-
-Public Enum tVehMode
-    StandardMode
-    EngineOnly
-    HEV
-    EV
+    ModeSTANDARD = 0
+    ModeBATCH = 1
 End Enum
 
 Public Enum tWorkMsgType
@@ -65,54 +58,12 @@ Public Enum tJobStatus
     Undef
 End Enum
 
-Public Enum tTransLossModel As Short
-    Basic = 0
-    Detailed = 1
-End Enum
-
-Public Enum tEmNorm
-    x_h
-    x_hPnenn
-    x_kWh
-    x
-End Enum
-
-#Region "Input File Components"
-
-Public Enum tMapComp
-    FC
-    NOx
-    HC
-    CO
-    PM
-    PN
-    NO
-    MassFlow
-    ExhTemp
-    Lambda
-    TCdP2s
-    TCPneg3s
-    TCPpos3s
-    TCAmpl3s
-    TCLW3p3s
-    TCP40sABS
-    TCabsdn2s
-    TCP10sn10s3
-    TCdynV
-    TCdynAV
-    TCdynDAV
-    Undefined
-    Extrapol
-    Eta
-    Qp_coolant
-End Enum
-
 Public Enum tDriComp
     t
     V
     Grad
     Alt
-    nn
+    nU
     Gears
     Padd
     Pe
@@ -122,26 +73,6 @@ Public Enum tDriComp
     s
     StopTime
     Torque
-End Enum
-
-Public Enum tExsComp
-    Tgas
-    Undefined
-End Enum
-
-Public Enum tFldComp
-    PeTarget
-    PT1
-    Undefined
-End Enum
-
-#End Region
-
-Public Enum tIntpPeCorMode
-    PeCorOff
-    PeCorNull
-    PeCorEmDrag
-    PeCorNullPmin
 End Enum
 
 Public Enum tVehState
@@ -158,6 +89,7 @@ Public Enum tEngState
     Load
     FullLoad
     Stopped
+    Undef
 End Enum
 
 Public Enum tEngClutch
@@ -190,92 +122,65 @@ Public Enum tGearbox
     Custom = 3
 End Enum
 
-
-
-
-#Region "VECTO Classifications"
-
-
 Public Enum tVehCat As Integer
-    Rigid = 0
-    Tractor = 1
-    Citybus = 2
-    InterurbanBus = 3
-    Coach = 4
+    Undef = 0
+    RigidTruck = 1
+    Tractor = 2
+    Citybus = 3
+    InterurbanBus = 4
+    Coach = 5
 End Enum
 
 Public Enum tAxleConf As Integer
-    a4x2 = 0
-    a4x4 = 1
-    a6x2 = 2
-    a6x4 = 3
-    a6x6 = 4
-    a8x2 = 5
-    a8x4 = 6
-    a8x6 = 7
-    a8x8 = 8
+    Undef = 0
+    a4x2 = 1
+    a4x4 = 2
+    a6x2 = 3
+    a6x4 = 4
+    a6x6 = 5
+    a8x2 = 6
+    a8x4 = 7
+    a8x6 = 8
+    a8x8 = 9
 End Enum
 
-Public Enum tVSUM
+Public Enum tLoading
     FullLoaded
     EmptyLoaded
     RefLoaded
     UserDefLoaded
 End Enum
 
-Public Enum tVECTOmode
-    Declaration
-    ProofOfConcept
-End Enum
-
 Public Enum tMission
-    LongHaul = 0
-    RegionalDelivery = 1
-    UrbanDelivery = 2
-    MunicipalUtility = 3
-    Construction = 4
-    HeavyUrban = 5
-    Urban = 6
-    Suburban = 7
-    Interurban = 8
-    Coach = 9
+    LongHaul
+    RegionalDelivery
+    UrbanDelivery
+    MunicipalUtility
+    Construction
+    HeavyUrban
+    Urban
+    Suburban
+    Interurban
+    Coach
+    Undef
 End Enum
 
-#End Region
-
-
-
-
-
-
-
-#Region "HEV"
-
-Public Enum tBatLvl
-    OK
-    Low
-    High
-    Full
-    Empty
+Public Enum tWHTCpart
+    Urban
+    Rural
+    Motorway
 End Enum
 
-Public Enum tICElock
-    OnLock
-    OffLock
-    NoLock
-End Enum
-
-Public Enum tHEVparMode
-    Assist
-    LPI
-    EV
-    ICEonly
-    Rekup
-    Undefined
+Public Enum tAux
+    Fan
+    SteerPump
+    HVAC
+    ElectricSys
+    PneumSys
 End Enum
 
 
-#End Region
+
 
 
 

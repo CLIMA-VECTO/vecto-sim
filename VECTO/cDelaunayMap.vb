@@ -8,8 +8,7 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
-Imports System.Collections.Generic
-Imports VECTO.DelaunayTrigSimple     '<<<< Verweis auf Namespace ersetzen!
+﻿Imports System.Collections.Generic
 
 Public Class cDelaunayMap
 
@@ -257,15 +256,10 @@ Public Class cDelaunayMap
         If Exact Then
             Return (u >= 0) And (v >= 0) And (u + v <= 1)
         Else
-            Return (u >= -0.000001) And (v >= -0.000001) And (u + v <= 1.000001)
+            Return (u >= -0.001) And (v >= -0.001) And (u + v <= 1.001)
         End If
 
     End Function
-
-End Class
-
-
-Namespace DelaunayTrigSimple
 
     Public Class dPoint
         Public X As Double
@@ -495,4 +489,6 @@ Namespace DelaunayTrigSimple
 
     End Class
 
-End Namespace
+
+End Class
+

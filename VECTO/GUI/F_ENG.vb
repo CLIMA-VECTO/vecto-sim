@@ -8,32 +8,50 @@
 '   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
+﻿
+''' <summary>
+''' Engine Editor. Open and save .VENG files.
+''' </summary>
+''' <remarks></remarks>
 Public Class F_ENG
 
     Private EngFile As String = ""
     Public AutoSendTo As Boolean = False
-    Public GenDir As String = ""
+    Public JobDir As String = ""
     Private Changed As Boolean = False
-
     Private FLDdia As F_FLD
 
 
-
+    'Before closing Editor: Check if file was changed and ask to save.
     Private Sub F_ENG_FormClosing(sender As Object, e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
         If e.CloseReason <> CloseReason.ApplicationExitCall And e.CloseReason <> CloseReason.WindowsShutDown Then
             e.Cancel = ChangeCheckCancel()
         End If
     End Sub
 
+    'Initialise.
     Private Sub F_ENG_Load(sender As Object, e As System.EventArgs) Handles Me.Load
 
         FLDdia = New F_FLD
+
+        Me.PnInertia.Enabled = Not Cfg.DeclMode
+        Me.GrWHTC.Enabled = Cfg.DeclMode
+
 
         Changed = False
         newENG()
     End Sub
 
-#Region "ToolStrip"
+    'Set generic values for Declaration mode.
+    Private Sub DeclInit()
+
+        If Not Cfg.DeclMode Then Exit Sub
+
+        Me.TbInertia.Text = CStr(Declaration.EngInertia(fTextboxToNumString(Me.TbDispl.Text)))
+    End Sub
+
+
+#Region "Toolbar"
 
     Private Sub ToolStripBtNew_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtNew.Click
         newENG()
@@ -63,15 +81,15 @@ Public Class F_ENG
             End If
         End If
 
-        If Not F_GEN.Visible Then
-            GenDir = ""
-            F_GEN.Show()
-            F_GEN.GENnew()
+        If Not F_VECTO.Visible Then
+            JobDir = ""
+            F_VECTO.Show()
+            F_VECTO.VECTOnew()
         Else
-            F_GEN.WindowState = FormWindowState.Normal
+            F_VECTO.WindowState = FormWindowState.Normal
         End If
 
-        F_GEN.TbENG.Text = fFileWoDir(EngFile, GenDir)
+        F_VECTO.TbENG.Text = fFileWoDir(EngFile, JobDir)
 
     End Sub
 
@@ -85,19 +103,24 @@ Public Class F_ENG
 
 #End Region
 
+    'Create new empty Engine file.
     Private Sub newENG()
 
         If ChangeCheckCancel() Then Exit Sub
 
         Me.TbName.Text = ""
-        Me.TbPnenn.Text = ""
         Me.TbDispl.Text = ""
         Me.TbInertia.Text = ""
         Me.TbNleerl.Text = ""
-        Me.TbNnenn.Text = ""
         Me.LvFLDs.Items.Clear()
         Me.TbMAP.Text = ""
-        Me.TbWHTC.Text = ""
+        Me.TbWHTCurban.Text = ""
+        Me.TbWHTCrural.Text = ""
+        Me.TbWHTCmw.Text = ""
+
+
+        DeclInit()
+
 
         EngFile = ""
         Me.Text = "ENG Editor"
@@ -105,8 +128,11 @@ Public Class F_ENG
 
         Changed = False
 
+        UpdatePic()
+
     End Sub
 
+    'Open VENG file
     Public Sub openENG(ByVal file As String)
         Dim ENG0 As cENG
         Dim i As Integer
@@ -124,11 +150,9 @@ Public Class F_ENG
         End If
 
         Me.TbName.Text = ENG0.ModelName
-        Me.TbPnenn.Text = ENG0.Pnenn.ToString
         Me.TbDispl.Text = ENG0.Displ.ToString
         Me.TbInertia.Text = ENG0.I_mot.ToString
-        Me.TbNleerl.Text = ENG0.nleerl.ToString
-        Me.TbNnenn.Text = ENG0.nnenn.ToString
+        Me.TbNleerl.Text = ENG0.Nidle.ToString
 
         Me.LvFLDs.Items.Clear()
         For i = 0 To ENG0.fFLD.Count - 1
@@ -138,7 +162,13 @@ Public Class F_ENG
         Next
 
         Me.TbMAP.Text = ENG0.PathMAP(True)
-        Me.TbWHTC.Text = ENG0.PathWHTC(True)
+        Me.TbWHTCurban.Text = ENG0.WHTCurban
+        Me.TbWHTCrural.Text = ENG0.WHTCrural
+        Me.TbWHTCmw.Text = ENG0.WHTCmw
+
+
+        DeclInit()
+
 
         fbENG.UpdateHistory(file)
         Me.Text = fFILE(file, True)
@@ -147,6 +177,7 @@ Public Class F_ENG
         Me.Activate()
 
         Changed = False
+        UpdatePic()
 
         If ENG0.NoJSON Then
             If MsgBox("File is not in JSON format!" & vbCrLf & vbCrLf & "Convert now?" & vbCrLf & "(Backup will be created with '.ORIG' extension)", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
@@ -169,7 +200,7 @@ Public Class F_ENG
         Return saveENG(EngFile)
     End Function
 
-    'Save ENG
+    'Save VENG file to given filepath. Called by SaveOrSaveAs. 
     Private Function saveENG(ByVal file As String) As Boolean
         Dim ENG0 As cENG
         Dim i As Int16
@@ -179,11 +210,9 @@ Public Class F_ENG
 
         ENG0.ModelName = Me.TbName.Text
         If Trim(ENG0.ModelName) = "" Then ENG0.ModelName = "Undefined"
-        ENG0.Pnenn = CSng(fTextboxToNumString(Me.TbPnenn.Text))
         ENG0.Displ = CSng(fTextboxToNumString(Me.TbDispl.Text))
         ENG0.I_mot = CSng(fTextboxToNumString(Me.TbInertia.Text))
-        ENG0.nleerl = CSng(fTextboxToNumString(Me.TbNleerl.Text))
-        ENG0.nnenn = CSng(fTextboxToNumString(Me.TbNnenn.Text))
+        ENG0.Nidle = CSng(fTextboxToNumString(Me.TbNleerl.Text))
 
         For i = 0 To Me.LvFLDs.Items.Count - 1
             ENG0.fFLD.Add(New cSubPath)
@@ -192,15 +221,25 @@ Public Class F_ENG
         Next
 
         ENG0.PathMAP = Me.TbMAP.Text
-        ENG0.PathWHTC = Me.TbWHTC.Text
+
+
+        ENG0.WHTCurban = CSng(fTextboxToNumString(Me.TbWHTCurban.Text))
+        ENG0.WHTCrural = CSng(fTextboxToNumString(Me.TbWHTCrural.Text))
+        ENG0.WHTCmw = CSng(fTextboxToNumString(Me.TbWHTCmw.Text))
+
+
+
 
         If Not ENG0.SaveFile Then
             MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
             Return False
         End If
 
-        If Not GenDir = "" Or AutoSendTo Then
-            If F_GEN.Visible And UCase(fFileRepl(F_GEN.TbENG.Text, GenDir)) <> UCase(file) Then F_GEN.TbENG.Text = fFileWoDir(file, GenDir)
+        If AutoSendTo Then
+            If F_VECTO.Visible Then
+                If UCase(fFileRepl(F_VECTO.TbENG.Text, JobDir)) <> UCase(file) Then F_VECTO.TbENG.Text = fFileWoDir(file, JobDir)
+                F_VECTO.UpdatePic()
+            End If
         End If
 
         fbENG.UpdateHistory(file)
@@ -214,9 +253,9 @@ Public Class F_ENG
     End Function
 
 
-#Region "Change Events"
+#Region "Track changes"
 
-    'Change Status ändern |@@| Change Status change
+    'Flags current file as modified.
     Private Sub Change()
         If Not Changed Then
             Me.LbStatus.Text = "Unsaved changes in current file"
@@ -224,7 +263,7 @@ Public Class F_ENG
         End If
     End Sub
 
-    ' "Save changes ?" ...liefert True wenn User Vorgang abbricht |@@| Save changes? "... Return True if User aborts
+    ' "Save changes ?" .... Returns True if User aborts
     Private Function ChangeCheckCancel() As Boolean
 
         If Changed Then
@@ -251,12 +290,13 @@ Public Class F_ENG
         Change()
     End Sub
 
-    Private Sub TbPnenn_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbPnenn.TextChanged
+    Private Sub TbPnenn_TextChanged(sender As System.Object, e As System.EventArgs)
         Change()
     End Sub
 
     Private Sub TbDispl_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbDispl.TextChanged
         Change()
+        DeclInit()
     End Sub
 
     Private Sub TbInertia_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbInertia.TextChanged
@@ -264,23 +304,40 @@ Public Class F_ENG
     End Sub
 
     Private Sub TbNleerl_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbNleerl.TextChanged
+        UpdatePic()
         Change()
     End Sub
 
-    Private Sub TbNnenn_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbNnenn.TextChanged
+    Private Sub TbNnenn_TextChanged(sender As System.Object, e As System.EventArgs)
         Change()
     End Sub
 
     Private Sub TbMAP_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbMAP.TextChanged
+        UpdatePic()
         Change()
     End Sub
 
-    Private Sub TbWHTC_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbWHTC.TextChanged
+    Private Sub TbWHTCurban_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbWHTCurban.TextChanged
         Change()
     End Sub
+
+    Private Sub TbWHTCrural_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbWHTCrural.TextChanged
+        Change()
+    End Sub
+
+    Private Sub TbWHTCmw_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbWHTCmw.TextChanged
+        Change()
+    End Sub
+
+    Private Sub LvFLDs_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles LvFLDs.SelectedIndexChanged
+        UpdatePic()
+    End Sub
+
+
 
 #End Region
 
+#Region "Add/Remove/Edit VFLD entries"
 
     Private Sub LvFLDs_DoubleClick(sender As Object, e As System.EventArgs) Handles LvFLDs.DoubleClick
         EditFLD()
@@ -336,6 +393,8 @@ Public Class F_ENG
                 Me.LvFLDs.SelectedItems(0).SubItems(1).Text = FLDdia.NumGearFrom.Value & "-" & FLDdia.NumGearTo.Value
             End If
 
+            UpdatePic()
+
             Change()
 
         Else
@@ -358,7 +417,7 @@ Public Class F_ENG
 
         Me.LvFLDs.Focus()
 
-        'Change() => NO! Change
+        'Change() => NO! Already in EditFLD
 
     End Sub
 
@@ -379,21 +438,23 @@ Public Class F_ENG
         End If
 
         Me.LvFLDs.Focus()
+        UpdatePic()
+
 
         If Not NoChange Then Change()
+
     End Sub
 
+#End Region
 
-#Region "Browse Buttons"
 
+    'Browse for VMAP file
     Private Sub BtMAP_Click(sender As System.Object, e As System.EventArgs) Handles BtMAP.Click
         If fbMAP.OpenDialog(fFileRepl(Me.TbMAP.Text, fPATH(EngFile))) Then Me.TbMAP.Text = fFileWoDir(fbMAP.Files(0), fPATH(EngFile))
     End Sub
 
-    Private Sub BtWHTC_Click(sender As System.Object, e As System.EventArgs) Handles BtWHTC.Click
-        If fbWHTC.OpenDialog(fFileRepl(Me.TbWHTC.Text, fPATH(EngFile))) Then Me.TbWHTC.Text = fFileWoDir(fbWHTC.Files(0), fPATH(EngFile))
-    End Sub
 
+    'Open VMAP file
     Private Sub BtMAPopen_Click(sender As System.Object, e As System.EventArgs) Handles BtMAPopen.Click
         Dim fldfile As String
 
@@ -412,15 +473,148 @@ Public Class F_ENG
 
     End Sub
 
-#End Region
 
-
+    'Save and close
     Private Sub ButOK_Click(sender As System.Object, e As System.EventArgs) Handles ButOK.Click
         If SaveOrSaveAs(False) Then Me.Close()
     End Sub
 
+    'Close without saving (see FormClosing Event)
     Private Sub ButCancel_Click(sender As System.Object, e As System.EventArgs) Handles ButCancel.Click
         Me.Close()
+    End Sub
+
+    Private Sub UpdatePic()
+
+        Dim fldOK As Boolean = False
+        Dim mapOK As Boolean = False
+        Dim fp As String
+        Dim FLD0 As New cFLD
+        Dim MAP0 As New cMAP
+        Dim Shiftpoly As cGBX.cShiftPolygon
+        Dim MyChart As System.Windows.Forms.DataVisualization.Charting.Chart
+        Dim s As System.Windows.Forms.DataVisualization.Charting.Series
+        Dim a As System.Windows.Forms.DataVisualization.Charting.ChartArea
+        Dim img As Image
+
+        Me.PicBox.Image = Nothing
+
+        Try
+
+            'Read Files
+            If Me.LvFLDs.Items.Count > 0 Then
+                If Me.LvFLDs.SelectedItems.Count > 0 Then
+                    fp = fFileRepl(Me.LvFLDs.SelectedItems(0).Text, fPATH(EngFile))
+                Else
+                    fp = fFileRepl(Me.LvFLDs.Items(0).Text, fPATH(EngFile))
+                End If
+                FLD0.FilePath = fp
+                fldOK = FLD0.ReadFile(False)
+            End If
+
+            MAP0.FilePath = fFileRepl(Me.TbMAP.Text, fPATH(EngFile))
+            mapOK = MAP0.ReadFile(False)
+
+        Catch ex As Exception
+
+        End Try
+
+        If Not fldOK And Not mapOK Then Exit Sub
+
+
+        'Create plot
+        MyChart = New System.Windows.Forms.DataVisualization.Charting.Chart
+        MyChart.Width = Me.PicBox.Width
+        MyChart.Height = Me.PicBox.Height
+
+        a = New System.Windows.Forms.DataVisualization.Charting.ChartArea
+
+        If fldOK Then
+
+            s = New System.Windows.Forms.DataVisualization.Charting.Series
+            s.Points.DataBindXY(FLD0.LnU, FLD0.LTq)
+            s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+            s.BorderWidth = 2
+            s.Color = Color.DarkBlue
+            s.Name = "Full load (" & fFILE(FLD0.FilePath, True) & ")"
+            MyChart.Series.Add(s)
+
+            s = New System.Windows.Forms.DataVisualization.Charting.Series
+            s.Points.DataBindXY(FLD0.LnU, FLD0.LTqDrag)
+            s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+            s.BorderWidth = 2
+            s.Color = Color.Blue
+            s.Name = "Motoring (" & fFILE(FLD0.FilePath, True) & ")"
+            MyChart.Series.Add(s)
+
+            If IsNumeric(Me.TbNleerl.Text) AndAlso Me.TbNleerl.Text > 0 Then
+
+                FLD0.Init(CSng(Me.TbNleerl.Text))
+
+                Shiftpoly = New cGBX.cShiftPolygon("", 0)
+                Shiftpoly.SetGenericShiftPoly(FLD0, Me.TbNleerl.Text)
+
+                s = New System.Windows.Forms.DataVisualization.Charting.Series
+                s.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_Mup)
+                s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+                s.BorderWidth = 2
+                s.Color = Color.DarkRed
+                s.Name = "Upshift curve"
+                MyChart.Series.Add(s)
+
+                s = New System.Windows.Forms.DataVisualization.Charting.Series
+                s.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_Mdown)
+                s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+                s.BorderWidth = 2
+                s.Color = Color.DarkRed
+                s.Name = "Downshift curve"
+                MyChart.Series.Add(s)
+
+            End If
+
+        End If
+
+        If mapOK Then
+            s = New System.Windows.Forms.DataVisualization.Charting.Series
+            s.Points.DataBindXY(MAP0.nU, MAP0.Tq)
+            s.ChartType = DataVisualization.Charting.SeriesChartType.Point
+            s.MarkerSize = 3
+            s.Color = Color.Red
+            s.Name = "Map"
+            MyChart.Series.Add(s)
+        End If
+
+        a.Name = "main"
+
+        a.AxisX.Title = "engine speed [1/min]"
+        a.AxisX.TitleFont = New Font("Helvetica", 10)
+        a.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
+        a.AxisX.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
+        a.AxisX.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
+
+        a.AxisY.Title = "engine torque [Nm]"
+        a.AxisY.TitleFont = New Font("Helvetica", 10)
+        a.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
+        a.AxisY.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
+        a.AxisY.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
+
+        a.AxisX.Minimum = 300
+        a.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Solid
+        a.BorderWidth = 1
+
+        a.BackColor = Color.GhostWhite
+
+        MyChart.ChartAreas.Add(a)
+
+        MyChart.Update()
+
+        img = New Bitmap(MyChart.Width, MyChart.Height, Imaging.PixelFormat.Format32bppArgb)
+        MyChart.DrawToBitmap(img, New Rectangle(0, 0, Me.PicBox.Width, Me.PicBox.Height))
+
+
+        Me.PicBox.Image = img
+
+
     End Sub
 
 
@@ -441,10 +635,6 @@ Public Class F_ENG
 
     End Sub
 
-    Private Sub OpenWithGRAPHiToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithGRAPHiToolStripMenuItem.Click
-        If Not FileOpenGRAPHi(CmFiles) Then MsgBox("Failed to open file!")
-    End Sub
-
     Private Sub OpenWithToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles OpenWithToolStripMenuItem.Click
         If Not FileOpenAlt(CmFiles(0)) Then MsgBox("Failed to open file!")
     End Sub
@@ -462,8 +652,6 @@ Public Class F_ENG
     End Sub
 
 #End Region
-
-
 
 
 

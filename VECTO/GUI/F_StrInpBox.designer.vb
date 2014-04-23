@@ -106,7 +106,7 @@ Partial Class F_StrInpBox
         Me.Name = "F_StrInpBox"
         Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "PHEM"
+        Me.Text = "VECTO"
         Me.TableLayoutPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()

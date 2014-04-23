@@ -10,264 +10,115 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
 
+''' <summary>
+''' Full load/motoring curve input file
+''' </summary>
+''' <remarks></remarks>
 Public Class cFLD
 
-    'Private Const FormatVersion As Integer = 1
-    'Private FileVersion As Integer
-
+    ''' <summary>
+    ''' Full file path. Needs to be defined via FilePath property before calling ReadFile or SaveFile.
+    ''' </summary>
+    ''' <remarks></remarks>
     Private sFilePath As String
 
-    Private LPfull As List(Of Single)
-    Private LPdrag As List(Of Single)
-    Private Lnn As List(Of Single)
+    ''' <summary>
+    ''' List of full load torque values [Nm]
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public LTq As List(Of Single)
+
+    ''' <summary>
+    ''' List of motoring torque values [Nm]
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public LTqDrag As List(Of Single)
+
+    ''' <summary>
+    ''' List of engine speed values [1/min]
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public LnU As List(Of Single)
+
+    ''' <summary>
+    ''' List of PT1 values [s]
+    ''' </summary>
+    ''' <remarks></remarks>
     Private LPT1 As List(Of Single)
 
-    Private LPtarget As List(Of Single)
-    Private PtargetDef As Boolean = False
-    Private PtargetNormed As Boolean
-
-    Private PfullNormed As Boolean
-    Private PdragNormed As Boolean
-    Private nNormed As Boolean
+    ''' <summary>
+    ''' Last index of lists (items count - 1)
+    ''' </summary>
+    ''' <remarks></remarks>
     Private iDim As Integer
 
-    Private bEmDef As Boolean
-    Private EmDragD As Dictionary(Of String, List(Of Single))
-    Private EmDragNormed As Dictionary(Of String, Boolean)
+    ''' <summary>
+    ''' Nlo [1/min]. Lowest enging speed with 55% of max. power. Defined in Init.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Nlo As Single
 
-    Private Sub ResetMe()
-        LPfull = Nothing
-        LPdrag = Nothing
-        Lnn = Nothing
-        LPT1 = Nothing
-        iDim = -1
-        PfullNormed = False
-        PdragNormed = False
-        PtargetDef = False
-        PtargetNormed = False
-        bEmDef = False
-        EmDragD = Nothing
-        EmDragNormed = Nothing
-    End Sub
+    ''' <summary>
+    ''' Nhi [1/min]. Highest engine speed with 70% of max. power. Defined in Init.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Nhi As Single
 
-    Public Function ReadFile() As Boolean
+    ''' <summary>
+    ''' Npref [1/min]. Speed at 51% torque/speed-integral between idling and N95h. Defined in Init.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Npref As Single
+
+    ''' <summary>
+    ''' N95h [1/min]. Highest engine speed with 95% of max. power. Defined in Init.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public N95h As Single
+
+    ''' <summary>
+    ''' Read file. FilePath must be set before calling. 
+    ''' </summary>
+    ''' <returns>True if successful.</returns>
+    ''' <remarks></remarks>   
+    Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
         Dim file As cFile_V3
         Dim line As String()
-        'Dim txt As String
-        Dim s1 As Integer
-        'Dim s As Integer
-        'Dim ID As tFldComp
-        Dim sTarget As Integer
-        Dim sPT1 As Integer
-        Dim PT1 As Single
-        Dim sEmDrag As Dictionary(Of String, Integer)
-        Dim EmKV As KeyValuePair(Of String, Integer)
+        Dim PT1set As Boolean
+        Dim FirstLine As Boolean
         Dim nU As Double
         Dim MsgSrc As String
 
         MsgSrc = "Main/ReadInp/FLD"
 
-        sTarget = -1
-        sPT1 = -1
-        PT1 = 0       '=> Defaultwert falls nicht in FLD vorgegeben
-
         'Reset
-        ResetMe()
+        LTq = Nothing
+        LTqDrag = Nothing
+        LnU = Nothing
+        LPT1 = Nothing
+        iDim = -1
 
         'Stop if there's no file
         If sFilePath = "" OrElse Not IO.File.Exists(sFilePath) Then
-            WorkerMsg(tMsgID.Err, "FLD file '" & sFilePath & "' not found!", MsgSrc)
+            If ShowMsg Then WorkerMsg(tMsgID.Err, "FLD file '" & sFilePath & "' not found!", MsgSrc)
             Return False
         End If
 
         'Open file
         file = New cFile_V3
         If Not file.OpenRead(sFilePath) Then
-            WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
+            If ShowMsg Then WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
             file = Nothing
             Return False
         End If
 
         'Initialize Lists
-        LPfull = New System.Collections.Generic.List(Of Single)
-        LPdrag = New System.Collections.Generic.List(Of Single)
-        Lnn = New System.Collections.Generic.List(Of Single)
+        LTq = New System.Collections.Generic.List(Of Single)
+        LTqDrag = New System.Collections.Generic.List(Of Single)
+        LnU = New System.Collections.Generic.List(Of Single)
         LPT1 = New System.Collections.Generic.List(Of Single)
-        EmDragD = New Dictionary(Of String, List(Of Single))
-        EmDragNormed = New Dictionary(Of String, Boolean)
-        sEmDrag = New Dictionary(Of String, Integer)
 
-        ''***
-        ''*** First line: Version
-        'line = file.ReadLine
-        'txt = Trim(UCase(line(0)))
-        'If Microsoft.VisualBasic.Left(txt, 1) = "V" Then
-        '    ' "V" entfernen => Zahl bleibt übrig
-        '    txt = txt.Replace("V", "")
-        '    If Not IsNumeric(txt) Then
-        '        'If invalid version: Abort
-        '        WorkerMsg(tMsgID.Err, "File Version invalid!", MsgSrc)
-        '        GoTo lbEr
-        '    Else
-        '        'Set Version
-        '        FileVersion = CInt(txt)
-        '    End If
-
-        'Else
-        '    'If no version information: Old format
-        '    file.Close()
-        '    Return ReadOldFormat()
-        'End If
-
-        ''Version Check: Abort if input file format is newer than PHEM-version
-        'If FileVersion > FormatVersion Then
-        '    WorkerMsg(tMsgID.Err, "File Version not supported!", MsgSrc)
-        '    GoTo lbEr
-        'End If
-
-
-
-        '***
-        '*** Second Line: Name/Identification of components (Drag-Emissions  create-KF)
-        'line = file.ReadLine
-
-        ''Column count check,
-        's1 = UBound(line)
-
-        ''Abort if less than 3 columns
-        'If s1 < 3 Then
-        '    WorkerMsg(tMsgID.Err, "Format invalid!", MsgSrc)
-        '    GoTo lbEr
-        'End If
-
-        'If s1 > 3 Then
-        '    For s = 4 To s1
-
-        '        txt = Trim(UCase(line(s)))
-        '        ID = fFldComp(txt)
-
-        '        Select Case ID
-
-        '            Case tFldComp.PeTarget
-
-        '                sTarget = s
-        '                PtargetDef = True
-
-        '                'Case tFldComp.PT1
-
-        '                '    sPT1 = s
-
-        '            Case Else 'tFldComp.Undefined
-
-        '                bEmDef = True
-
-        '                If EmDragD.ContainsKey(txt) Then
-        '                    WorkerMsg(tMsgID.Err, "Em-Component '" & txt & "' already defined!", MsgSrc)
-        '                    GoTo lbEr
-        '                Else
-        '                    EmDragD.Add(txt, New List(Of Single))
-        '                    EmDragNormed.Add(txt, False)
-        '                    sEmDrag.Add(txt, s)
-        '                End If
-
-        '        End Select
-
-        '    Next
-        'End If
-
-        'VECTO: No Header/Unit column. Always PT1!
-        s1 = 3
-        sPT1 = 3
-        bEmDef = False
-
-        '***
-        '*** Third Line: Normalized/Measured
-        'line = file.ReadLine
-
-        ''Abort when fewer Columns than in the second Line
-        'If UBound(line) < s1 Then
-        '    WorkerMsg(tMsgID.Err, "Format invalid!", MsgSrc)
-        '    GoTo lbEr
-        'End If
-
-        'nNormed = (Trim(UCase(line(0))) = sKey.Normed)
-        nNormed = False
-
-        'If Not nNormed Then
-        '    Select Case Trim(UCase(line(0)))
-        '        Case "[U/MIN]", "RPM", "[1/MIN]", "[MIN^-1]"
-        '            'Everything is okay
-        '        Case Else
-        '            WorkerMsg(tMsgID.Err, "Engine Speed Unit '" & line(0) & "' unknown! '[U/min]' expected.", MsgSrc)
-        '    End Select
-        'Else
-        '    WorkerMsg(tMsgID.Err, "Engine Speed Unit '" & line(0) & "' unknown! '[U/min]' expected.", MsgSrc)
-        'End If
-
-        'PfullNormed = (Trim(UCase(line(1))) = sKey.Normed)
-        PfullNormed = False
-
-        'If Not PfullNormed Then
-        '    If Trim(UCase(line(1))) <> "[NM]" Then
-        '        WorkerMsg(tMsgID.Err, "Engine Torque Unit '" & line(1) & "' unknown! '[Nm]' expected.", MsgSrc)
-        '    End If
-        'Else
-        '    WorkerMsg(tMsgID.Err, "Engine Torque Unit '" & line(1) & "' unknown! '[Nm]' expected.", MsgSrc)
-        'End If
-
-        'PdragNormed = (Trim(UCase(line(2))) = sKey.Normed)
-        PdragNormed = False
-
-        'If Not PdragNormed Then
-        '    If Trim(UCase(line(1))) <> "[NM]" Then
-        '        WorkerMsg(tMsgID.Err, "Engine Torque Unit '" & line(2) & "' unknown! '[Nm]' expected.", MsgSrc)
-        '    End If
-        'Else
-        '    WorkerMsg(tMsgID.Err, "Engine Torque Unit '" & line(2) & "' unknown! '[Nm]' expected.", MsgSrc)
-        'End If
-
-        'If PtargetDef Then
-        '    LPtarget = New System.Collections.Generic.List(Of Single)
-        '    PtargetNormed = (Trim(UCase(line(sTarget))) = sKey.Normed)
-
-        '    If Not PtargetNormed Then
-        '        If Trim(UCase(line(1))) <> "[KW]" Then
-        '            WorkerMsg(tMsgID.Err, "Engine Power Unit '" & line(sTarget) & "' unknown! '[kW]' or '" & sKey.Normed & "' expected.", MsgSrc)
-        '        End If
-        '    End If
-
-        'End If
-
-        ''Additional Components
-        'If bEmDef Then
-        '    For Each EmKV In sEmDrag
-
-        '        txt = line(EmKV.Value)
-
-        '        'Remove brackets
-        '        txt = txt.Replace("[", "")
-        '        txt = txt.Replace("]", "")
-
-        '        'Set Scaling and Unit
-        '        If txt.Contains("/") Then
-        '            Select Case UCase(Right(txt, txt.Length - txt.IndexOf("/") - 1))
-        '                Case "H"
-        '                    EmDragNormed(EmKV.Key) = False
-        '                Case "KWH"
-        '                    WorkerMsg(tMsgID.Err, "Unit '" & line(EmKV.Value) & "' is not supported in this file!", MsgSrc)
-        '                    GoTo lbEr
-        '                Case "H" & sKey.Normed
-        '                    EmDragNormed(EmKV.Key) = True
-        '            End Select
-        '        Else
-        '            EmDragNormed(EmKV.Key) = False
-        '        End If
-
-        '    Next
-        'End If
-
-
-        'From Line 4: Values
+        FirstLine = True
         Try
 
             Do While Not file.EndOfFile
@@ -278,39 +129,31 @@ Public Class cFLD
                 'VECTO: M => Pe
                 nU = CDbl(line(0))
 
-                Lnn.Add(nU)
-                LPfull.Add(nMtoPe(nU, CDbl(line(1))))
-                LPdrag.Add(nMtoPe(nU, CDbl(line(2))))
-                If PtargetDef Then LPtarget.Add(CSng(line(sTarget)))
+                LnU.Add(nU)
+                LTq.Add(CDbl(line(1)))
+                LTqDrag.Add(CDbl(line(2)))
 
-                'If PT1 not given, use default value (see above)
-                If sPT1 > -1 Then
-
-                    PT1 = CSng(line(sPT1))
-
-                    If PT1 < 0 Then
-                        WorkerMsg(tMsgID.Err, "PT1 value invalid! line " & iDim + 1, MsgSrc)
-                        PT1 = 0
-                    End If
-
+                If FirstLine Then
+                    PT1set = (UBound(line) > 2)
+                    FirstLine = False
                 End If
 
-                LPT1.Add(PT1)
-
-                If bEmDef Then
-                    For Each EmKV In sEmDrag
-                        EmDragD(EmKV.Key).Add(line(sEmDrag(EmKV.Key)))
-                    Next
+                'If PT1 not defined, use default value (0)
+                If PT1set Then
+                    LPT1.Add(CSng(line(3)))
+                Else
+                    LPT1.Add(0)
                 End If
 
                 'Line-counter up (was reset in ResetMe)
                 iDim += 1
 
+
             Loop
 
         Catch ex As Exception
 
-            WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & iDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
+            If ShowMsg Then WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & iDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
             GoTo lbEr
 
         End Try
@@ -331,234 +174,384 @@ lbEr:
 
     End Function
 
-    Private Function ReadOldFormat() As Boolean
-        Dim File As cFile_V3
-        Dim line As String()
-
-        'Open file
-        File = New cFile_V3
-        If Not File.OpenRead(sFilePath, ",", True, True) Then
-            File = Nothing
-            Return False
-        End If
-
-        nNormed = True
-        PfullNormed = True
-        PdragNormed = True
-
-        Do While Not File.EndOfFile
-            line = File.ReadLine
-
-            Lnn.Add(CSng(line(0)))
-            LPfull.Add(CSng(line(1)))
-            LPdrag.Add(CSng(line(2)))
-
-            LPT1.Add(0)
-
-            'Line counter up (was reset in ResetMe)
-            iDim += 1
-
-        Loop
-
-        'Close file
-        File.Close()
-
-        Return True
-
-    End Function
-
-    Public Sub Norm()
-        Dim i As Integer
-        Dim Pnenn As Single
-        Dim nleerl As Single
-        Dim nnenn As Single
-        Dim EmKV As KeyValuePair(Of String, Boolean)
-
-        Pnenn = VEH.Pnenn
-        nleerl = VEH.nLeerl
-        nnenn = VEH.nNenn
-
-        'Normalized Revolutions
-        If Not nNormed Then
-            For i = 0 To iDim
-                Lnn(i) = (Lnn(i) - nleerl) / (nnenn - nleerl)
-            Next
-        End If
-
-        'Normalized Power
-        If Not PfullNormed Then
-            For i = 0 To iDim
-                LPfull(i) /= Pnenn
-            Next
-        End If
-
-        'Normalized Power
-        If Not PdragNormed Then
-            For i = 0 To iDim
-                LPdrag(i) /= Pnenn
-            Next
-        End If
-
-        'Normalized Pe-Target
-        If PtargetDef AndAlso Not PtargetNormed Then
-            For i = 0 To iDim
-                LPtarget(i) /= Pnenn
-            Next
-        End If
-
-        'Em ent-normalize
-        If bEmDef Then
-            For Each EmKV In EmDragNormed
-                If EmKV.Value Then
-                    For i = 0 To iDim
-                        EmDragD(EmKV.Key)(i) *= Pnenn
-                    Next
-                End If
-            Next
-        End If
-
-    End Sub
-
-    Public Function Pdrag(ByVal nnorm As Single) As Single
+    ''' <summary>
+    ''' Returns motoring power [kW] for given engine speed
+    ''' </summary>
+    ''' <param name="nU">engine speed [1/min]</param>
+    ''' <returns>motoring power [kW]</returns>
+    ''' <remarks></remarks>
+    Public Function Pdrag(ByVal nU As Single) As Single
         Dim i As Int32
 
         'Extrapolation for x < x(1)
-        If Lnn(0) >= nnorm Then
-            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
+        If LnU(0) >= nU Then
+            If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
             i = 1
             GoTo lbInt
         End If
 
         i = 0
-        Do While Lnn(i) < nnorm And i < iDim
+        Do While LnU(i) < nU And i < iDim
             i += 1
         Loop
 
         'Extrapolation for x > x(imax)
-        If Lnn(i) < nnorm Then
-            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
+        If LnU(i) < nU Then
+            MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
         End If
 
 lbInt:
         'Interpolation
-        Return VEH.Pnenn * ((nnorm - Lnn(i - 1)) * (LPdrag(i) - LPdrag(i - 1)) / (Lnn(i) - Lnn(i - 1)) + LPdrag(i - 1))
+        Return nMtoPe(nU, (nU - LnU(i - 1)) * (LTqDrag(i) - LTqDrag(i - 1)) / (LnU(i) - LnU(i - 1)) + LTqDrag(i - 1))
 
     End Function
 
-    Public Function Pfull(ByVal nnorm As Single, ByVal LastPenorm As Single) As Single
+    ''' <summary>
+    ''' Returns full load power [kW] at given engine speed considering transient torque build-up via PT1.
+    ''' </summary>
+    ''' <param name="nU">engine speed [1/min]</param>
+    ''' <param name="LastPe">engine power at previous time step</param>
+    ''' <returns>full load power [kW]</returns>
+    ''' <remarks></remarks>
+    Public Function Pfull(ByVal nU As Single, ByVal LastPe As Single) As Single
         Dim i As Int32
         Dim PfullStat As Single
         Dim PT1 As Single
 
         'Extrapolation for x < x(1)
-        If Lnn(0) >= nnorm Then
-            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
+        If LnU(0) >= nU Then
+            If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
             i = 1
             GoTo lbInt
         End If
 
         i = 0
-        Do While Lnn(i) < nnorm And i < iDim
+        Do While LnU(i) < nU And i < iDim
             i += 1
         Loop
 
         'Extrapolation for x > x(imax)
-        If Lnn(i) < nnorm Then
-            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
+        If LnU(i) < nU Then
+            MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
         End If
 
 lbInt:
         'Interpolation
-        PfullStat = (nnorm - Lnn(i - 1)) * (LPfull(i) - LPfull(i - 1)) / (Lnn(i) - Lnn(i - 1)) + LPfull(i - 1)
-        PT1 = (nnorm - Lnn(i - 1)) * (LPT1(i) - LPT1(i - 1)) / (Lnn(i) - Lnn(i - 1)) + LPT1(i - 1)
+        PfullStat = nMtoPe(nU, (nU - LnU(i - 1)) * (LTq(i) - LTq(i - 1)) / (LnU(i) - LnU(i - 1)) + LTq(i - 1))
+        PT1 = (nU - LnU(i - 1)) * (LPT1(i) - LPT1(i - 1)) / (LnU(i) - LnU(i - 1)) + LPT1(i - 1)
 
         'Dynamic Full-load
-        Return Math.Min(VEH.Pnenn * (1 / (PT1 + 1)) * (PfullStat + PT1 * LastPenorm), PfullStat * VEH.Pnenn)
+        Return Math.Min((1 / (PT1 + 1)) * (PfullStat + PT1 * LastPe), PfullStat)
 
     End Function
 
-
-    Public Function Pfull(ByVal nnorm As Single) As Single
+    ''' <summary>
+    ''' Returns stationary full load power [kW] at given engine speed.
+    ''' </summary>
+    ''' <param name="nU">engine speed [1/min]</param>
+    ''' <returns>stationary full load power [kW]</returns>
+    ''' <remarks></remarks>
+    Public Function Pfull(ByVal nU As Single) As Single
         Dim i As Int32
 
         'Extrapolation for x < x(1)
-        If Lnn(0) >= nnorm Then
-            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
+        If LnU(0) >= nU Then
+            If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
             i = 1
             GoTo lbInt
         End If
 
         i = 0
-        Do While Lnn(i) < nnorm And i < iDim
+        Do While LnU(i) < nU And i < iDim
             i += 1
         Loop
 
         'Extrapolation for x > x(imax)
-        If Lnn(i) < nnorm Then
-            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
+        If LnU(i) < nU Then
+            MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
         End If
 
 lbInt:
         'Interpolation
-        Return VEH.Pnenn * ((nnorm - Lnn(i - 1)) * (LPfull(i) - LPfull(i - 1)) / (Lnn(i) - Lnn(i - 1)) + LPfull(i - 1))
+        Return nMtoPe(nU, (nU - LnU(i - 1)) * (LTq(i) - LTq(i - 1)) / (LnU(i) - LnU(i - 1)) + LTq(i - 1))
     End Function
 
-    Public Function Ptarget(ByVal nnorm As Single) As Single
+    ''' <summary>
+    ''' Returns stationary full load torque [Nm] at given engine speed.
+    ''' </summary>
+    ''' <param name="nU">engine speed [1/min]</param>
+    ''' <returns>stationary full load torque [Nm]</returns>
+    ''' <remarks></remarks>
+    Public Function Tq(ByVal nU As Single) As Single
         Dim i As Int32
 
         'Extrapolation for x < x(1)
-        If Lnn(0) >= nnorm Then
-            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
+        If LnU(0) >= nU Then
+            If LnU(0) > nU Then MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
             i = 1
             GoTo lbInt
         End If
 
         i = 0
-        Do While Lnn(i) < nnorm And i < iDim
+        Do While LnU(i) < nU And i < iDim
             i += 1
         Loop
 
         'Extrapolation for x > x(imax)
-        If Lnn(i) < nnorm Then
-            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
+        If LnU(i) < nU Then
+            MODdata.ModErrors.FLDextrapol = "n= " & nU & " [1/min]"
         End If
 
 lbInt:
         'Interpolation
-        Return VEH.Pnenn * ((nnorm - Lnn(i - 1)) * (LPtarget(i) - LPtarget(i - 1)) / (Lnn(i) - Lnn(i - 1)) + LPtarget(i - 1))
+        Return (nU - LnU(i - 1)) * (LTq(i) - LTq(i - 1)) / (LnU(i) - LnU(i - 1)) + LTq(i - 1)
     End Function
 
-    Public Function EmDrag(ByVal EmComp As String, ByVal nnorm As Single) As Single
-        Dim i As Int32
-        Dim EmL As List(Of Single)
+    ''' <summary>
+    ''' Calculates and returns Npref [1/min]. Speed at 51% torque/speed-integral between idling and N95h. Defined in Init.
+    ''' </summary>
+    ''' <returns>Npref [1/min]</returns>
+    ''' <remarks></remarks>
+    Public Function fNpref(ByVal Nidle As Single) As Single
+        Dim i As Integer
+        Dim Amax As Single
+        Dim N95h As Single
+        Dim n As Single
+        Dim T0 As Single
+        Dim dn As Single
+        Dim A As Single
+        Dim k As Single
 
-        If Not EmDragD.ContainsKey(EmComp) Then Return -1
 
-        EmL = EmDragD(EmComp)
+        dn = 0.001
 
-        'Extrapolation for x <x(1)
-        If Lnn(0) >= nnorm Then
-            If Lnn(0) > nnorm Then MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
-            i = 1
-            GoTo lbInt
-        End If
+        N95h = fnUofPfull(0.95 * Pfull(fnUrated), False)
 
-        i = 0
-        Do While Lnn(i) < nnorm And i < iDim
-            i += 1
-        Loop
+        Amax = Area(Nidle, N95h)
 
-        'Extrapolation for x > x(imax)
-        If Lnn(i) < nnorm Then
-            MODdata.ModErrors.FLDextrapol = "n= " & nnormTonU(nnorm) & " [1/min]"
-        End If
+        For i = 0 To iDim - 1
 
-lbInt:
-        'Interpolation
-        Return ((nnorm - Lnn(i - 1)) * (EmL(i) - EmL(i - 1)) / (Lnn(i) - Lnn(i - 1)) + EmL(i - 1))
+            If Area(Nidle, LnU(i + 1)) > 0.51 * Amax Then
+
+                n = LnU(i)
+                T0 = LTq(i)
+                A = Area(Nidle, n)
+
+                k = (LTq(i + 1) - LTq(i)) / (LnU(i + 1) - LnU(i))
+
+                Do While A < 0.51 * Amax
+                    n += dn
+                    A += dn * (2 * T0 + k * dn) / 2
+                Loop
+
+                Exit For
+
+            End If
+
+        Next
+
+        Return n
+
     End Function
 
+    ''' <summary>
+    ''' Calculates torque/speed-integral between two engine speed limits. Used for Npref.
+    ''' </summary>
+    ''' <param name="nFrom">lower engine speed limit [1/min]</param>
+    ''' <param name="nTo">upper engine speed limit [1/min]</param>
+    ''' <returns>torque/speed-integral between nFrom and nTo [Nm/min]</returns>
+    ''' <remarks></remarks>
+    Private Function Area(ByVal nFrom As Single, ByVal nTo As Single) As Single
+        Dim A As Single
+        Dim i As Integer
 
+
+        A = 0
+        For i = 1 To iDim
+
+            If LnU(i - 1) >= nTo Then Exit For
+
+            If LnU(i - 1) >= nFrom Then
+
+
+                If LnU(i) <= nTo Then
+
+                    'Add full segment
+                    A += (LnU(i) - LnU(i - 1)) * (LTq(i) + LTq(i - 1)) / 2
+
+                Else
+
+                    'Add segment till nTo
+                    A += (nTo - LnU(i - 1)) * (Tq(nTo) + LTq(i - 1)) / 2
+
+                End If
+
+            Else
+
+                If LnU(i) > nFrom Then
+
+                    'Add segment starting from nFrom
+                    A += (LnU(i) - nFrom) * (LTq(i) + Tq(nFrom)) / 2
+
+                End If
+
+            End If
+
+        Next
+
+        Return A
+
+
+    End Function
+
+    ''' <summary>
+    ''' Calculates and returns engine speed at maximum power [1/min]. 
+    ''' </summary>
+    ''' <returns>engine speed at maximum power [1/min]</returns>
+    ''' <remarks></remarks>
+    Public Function fnUrated() As Single
+        Dim PeMax As Single
+        Dim nU As Single
+        Dim nUmax As Single
+        Dim nUrated As Single
+        Dim dnU As Single
+        Dim P As Single
+
+        dnU = 1
+        PeMax = 0
+        nU = LnU(0)
+        nUmax = LnU(iDim)
+        nUrated = nU
+
+        Do
+            P = nMtoPe(nU, Tq(nU))
+            If P > PeMax Then
+                PeMax = P
+                nUrated = nU
+            End If
+            nU += dnU
+        Loop Until nU > nUmax
+
+        Return nUrated
+
+    End Function
+
+    ''' <summary>
+    ''' Calculates and returns lowest or highest engine speed at given full load power [1/min]. 
+    ''' </summary>
+    ''' <param name="PeTarget">full load power [kW]</param>
+    ''' <param name="FromLeft">True= lowest engine speed; False= highest engine speed</param>
+    ''' <returns>lowest or highest engine speed at given full load power [1/min]</returns>
+    ''' <remarks></remarks>
+    Public Function fnUofPfull(ByVal PeTarget As Single, ByVal FromLeft As Boolean) As Single
+        Dim Pe As Single
+        Dim LastPe As Single
+        Dim nU As Single
+        Dim nUmin As Single
+        Dim nUmax As Single
+        Dim nUtarget As Single
+        Dim dnU As Single
+
+        dnU = 1
+        nUmin = LnU(0)
+        nUmax = LnU(iDim)
+
+        If FromLeft Then
+
+            nU = nUmin
+            LastPe = nMtoPe(nU, Tq(nU))
+            nUtarget = nU
+
+            Do
+                Pe = nMtoPe(nU, Tq(nU))
+
+                If Pe > PeTarget Then
+                    If Math.Abs(LastPe - PeTarget) < Math.Abs(Pe - PeTarget) Then
+                        Return nU - dnU
+                    Else
+                        Return nU
+                    End If
+                End If
+
+                LastPe = Pe
+                nU += dnU
+            Loop Until nU > nUmax
+
+        Else
+
+            nU = nUmax
+            LastPe = nMtoPe(nU, Tq(nU))
+            nUtarget = nU
+
+            Do
+                Pe = nMtoPe(nU, Tq(nU))
+
+                If Pe > PeTarget Then
+                    If Math.Abs(LastPe - PeTarget) < Math.Abs(Pe - PeTarget) Then
+                        Return nU + dnU
+                    Else
+                        Return nU
+                    End If
+                End If
+
+                LastPe = Pe
+                nU -= dnU
+            Loop Until nU < nUmin
+
+        End If
+
+        Return nUtarget
+
+    End Function
+
+    ''' <summary>
+    ''' Calculates and returns maximum torque [Nm]. 
+    ''' </summary>
+    ''' <returns>maximum torque [Nm]</returns>
+    ''' <remarks></remarks>
+    Public Function Tmax() As Single
+        Dim i As Int16
+        Dim Tm As Single
+
+        Tm = LTq(0)
+        For i = 1 To iDim
+            If LTq(i) > Tm Then Tm = LTq(i)
+        Next
+
+        Return Tm
+
+    End Function
+
+    Public Sub Init(ByVal Nidle As Single)
+        Dim Pmax As Single
+
+        Pmax = Pfull(fnUrated)
+
+        Nlo = fnUofPfull(0.55 * Pmax, True)
+
+        N95h = fnUofPfull(0.95 * Pmax, False)
+
+        Npref = fNpref(Nidle)
+
+        Nhi = fnUofPfull(0.7 * Pmax, False)
+
+    End Sub
+
+    Public Sub DeclInit()
+        Dim i As Integer
+
+        For i = 0 To iDim
+            LPT1(i) = Declaration.PT1(LnU(i))
+        Next
+
+    End Sub
+
+    ''' <summary>
+    ''' Get or set Filepath before calling ReadFile
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns>Full filepath</returns>
+    ''' <remarks></remarks>
     Public Property FilePath() As String
         Get
             Return sFilePath
@@ -568,14 +561,7 @@ lbInt:
         End Set
     End Property
 
-    Public ReadOnly Property EmDef(ByVal EmComp As String) As Boolean
-        Get
-            If Not bEmDef Then
-                Return False
-            Else
-                Return EmDragD.ContainsKey(EmComp)
-            End If
-        End Get
-    End Property
+
+
 
 End Class

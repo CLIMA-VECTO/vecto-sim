@@ -24,19 +24,22 @@ Namespace My
         'Initialization
         Private Sub MyApplication_Startup(ByVal sender As Object, ByVal e As Microsoft.VisualBasic.ApplicationServices.StartupEventArgs) Handles Me.Startup
 
-            Dim logfDetail As IO.FileInfo
-            Dim BackUpError As Boolean
             Dim s As String
             Dim i As Int16
             Dim file As cFile_V3
 
             'Paths
             MyAppPath = My.Application.Info.DirectoryPath & "\"
-            MyConfPath = MyAppPath & "config\"
+            MyConfPath = MyAppPath & "Config\"
             MyDeclPath = MyAppPath & "Declaration\"
-            FB_FilHisDir = MyAppPath & "FileHistory\"
+            FB_FilHisDir = MyConfPath & "FileHistory\"
 
-            StartLogfile()
+            'Log
+            LogFile = New cLogFile
+            If Not LogFile.StartLog() Then
+                MsgBox("Error! Can't access log file. Application folder needs read/write permissions!")
+                e.Cancel = True
+            End If
 
             'If folder does not exist: Create!
             If Not IO.Directory.Exists(MyConfPath) Then
@@ -44,7 +47,7 @@ Namespace My
                     IO.Directory.CreateDirectory(MyConfPath)
                 Catch ex As Exception
                     MsgBox("Failed to create directory '" & MyConfPath & "'!", MsgBoxStyle.Critical)
-                    LOGfile.WriteLine("Failed to create directory '" & MyConfPath & "'!")
+                    LogFile.WriteToLog(tMsgID.Err, "Failed to create directory '" & MyConfPath & "'!")
                     e.Cancel = True
                 End Try
                 IO.File.Create(MyConfPath & "joblist.txt")
@@ -75,7 +78,7 @@ Namespace My
 
                 Catch ex As Exception
                     MsgBox("Failed to create directory '" & FB_FilHisDir & "'!", MsgBoxStyle.Critical)
-                    LOGfile.WriteLine("Failed to create directory '" & FB_FilHisDir & "'!")
+                    LogFile.WriteToLog(tMsgID.Err, "Failed to create directory '" & FB_FilHisDir & "'!")
                     e.Cancel = True
                 End Try
             End If
@@ -93,53 +96,24 @@ Namespace My
                 End Try
             End If
 
-            'Initialize Classes
+            'Initialise Classes
             sKey = New csKey
             JobFileList = New List(Of String)
             JobCycleList = New List(Of String)
             DEV = New cDEV
-            VEC = New cVECTO
+            Declaration = New cDeclaration
 
             Cfg = New cConfig   'ACHTUNG: cConfig.New löst cConfig.SetDefault aus welches sKey benötigt dehalb muss sKey schon vorher initialisiert werden!!
+            Cfg.FilePath = MyConfPath & "settings.json"
 
             ProgBarCtrl = New cProgBarCtrl
 
             'Config
             Cfg.ConfigLOAD()
 
-
-            'Start Log
-            If IO.File.Exists(MyAppPath & "LOG.txt") Then
-
-                'File size check
-                logfDetail = My.Computer.FileSystem.GetFileInfo(MyAppPath & "LOG.txt")
-
-                'If Log too large: Delete
-                If logfDetail.Length / (2 ^ 20) > Cfg.LogSize Then
-
-                    LOGfile.WriteLine("Starting new logfile")
-                    LOGfile.Close()
-
-                    BackUpError = False
-
-                    Try
-                        If IO.File.Exists(MyAppPath & "LOG_backup.txt") Then IO.File.Delete(MyAppPath & "LOG_backup.txt")
-                        IO.File.Move(MyAppPath & "LOG.txt", MyAppPath & "LOG_backup.txt")
-                    Catch ex As Exception
-                        BackUpError = True
-                    End Try
-
-                    StartLogfile()
-
-                    If BackUpError Then
-                        MsgBox("Failed to backup logfile! (" & MyAppPath & "LOG_backup.txt)")
-                    Else
-                        LOGfile.WriteLine("Logfile restarted. Old log saved to LOG_backup.txt")
-                    End If
-
-                End If
-
-            End If
+            'Restart log if log file too large
+            LogFile.SizeCheck()
+      
 
             'License initialization
             Lic = New vectolic.cLicense
@@ -151,7 +125,7 @@ Namespace My
         Private Sub MyApplication_UnhandledException(ByVal sender As Object, ByVal e As Microsoft.VisualBasic.ApplicationServices.UnhandledExceptionEventArgs) Handles Me.UnhandledException
             e.ExitApplication = True
             MsgBox("ERROR!" & ChrW(10) & ChrW(10) & e.Exception.Message.ToString, MsgBoxStyle.Critical, "Unexpected Error")
-            LOGfile.WriteLine(">>>Unexpected Error:" & e.Exception.ToString())
+            LogFile.WriteToLog(tMsgID.Err, ">>>Unexpected Error:" & e.Exception.ToString())
         End Sub
 
     End Class
