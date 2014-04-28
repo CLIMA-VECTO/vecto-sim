@@ -106,8 +106,7 @@ Partial Class F_VEH
         Me.Label22 = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.PnLoad = New System.Windows.Forms.Panel()
-        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
-        Me.PnCdATrTr = New System.Windows.Forms.Panel()
+        Me.GrAirRes = New System.Windows.Forms.GroupBox()
         Me.LbCdATr = New System.Windows.Forms.Label()
         Me.PnCdARig = New System.Windows.Forms.Panel()
         Me.LbCdARig = New System.Windows.Forms.Label()
@@ -120,6 +119,7 @@ Partial Class F_VEH
         Me.PnAll = New System.Windows.Forms.Panel()
         Me.PicVehicle = New System.Windows.Forms.PictureBox()
         Me.Label8 = New System.Windows.Forms.Label()
+        Me.PnCdATrTr = New System.Windows.Forms.Panel()
         Me.GroupBox6.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
@@ -129,13 +129,13 @@ Partial Class F_VEH
         Me.StatusStrip1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         Me.PnLoad.SuspendLayout()
-        Me.GroupBox4.SuspendLayout()
-        Me.PnCdATrTr.SuspendLayout()
+        Me.GrAirRes.SuspendLayout()
         Me.PnCdARig.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CmOpenFile.SuspendLayout()
         Me.PnAll.SuspendLayout()
         CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.PnCdATrTr.SuspendLayout()
         Me.SuspendLayout()
         '
         'Label1
@@ -791,30 +791,20 @@ Partial Class F_VEH
         Me.PnLoad.Size = New System.Drawing.Size(256, 75)
         Me.PnLoad.TabIndex = 25
         '
-        'GroupBox4
+        'GrAirRes
         '
-        Me.GroupBox4.Controls.Add(Me.PnCdATrTr)
-        Me.GroupBox4.Controls.Add(Me.PnCdARig)
-        Me.GroupBox4.Controls.Add(Me.Label3)
-        Me.GroupBox4.Controls.Add(Me.Label4)
-        Me.GroupBox4.Controls.Add(Me.Label37)
-        Me.GroupBox4.Controls.Add(Me.Label38)
-        Me.GroupBox4.Location = New System.Drawing.Point(278, 3)
-        Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Size = New System.Drawing.Size(266, 124)
-        Me.GroupBox4.TabIndex = 3
-        Me.GroupBox4.TabStop = False
-        Me.GroupBox4.Text = "Air Resistance"
-        '
-        'PnCdATrTr
-        '
-        Me.PnCdATrTr.Controls.Add(Me.LbCdATr)
-        Me.PnCdATrTr.Controls.Add(Me.TBcdTrTr)
-        Me.PnCdATrTr.Controls.Add(Me.TBAquersTrTr)
-        Me.PnCdATrTr.Location = New System.Drawing.Point(97, 26)
-        Me.PnCdATrTr.Name = "PnCdATrTr"
-        Me.PnCdATrTr.Size = New System.Drawing.Size(64, 78)
-        Me.PnCdATrTr.TabIndex = 27
+        Me.GrAirRes.Controls.Add(Me.PnCdATrTr)
+        Me.GrAirRes.Controls.Add(Me.PnCdARig)
+        Me.GrAirRes.Controls.Add(Me.Label3)
+        Me.GrAirRes.Controls.Add(Me.Label4)
+        Me.GrAirRes.Controls.Add(Me.Label37)
+        Me.GrAirRes.Controls.Add(Me.Label38)
+        Me.GrAirRes.Location = New System.Drawing.Point(278, 3)
+        Me.GrAirRes.Name = "GrAirRes"
+        Me.GrAirRes.Size = New System.Drawing.Size(266, 124)
+        Me.GrAirRes.TabIndex = 3
+        Me.GrAirRes.TabStop = False
+        Me.GrAirRes.Text = "Air Resistance"
         '
         'LbCdATr
         '
@@ -888,7 +878,7 @@ Partial Class F_VEH
         '
         'PnAll
         '
-        Me.PnAll.Controls.Add(Me.GroupBox4)
+        Me.PnAll.Controls.Add(Me.GrAirRes)
         Me.PnAll.Controls.Add(Me.GroupBox1)
         Me.PnAll.Controls.Add(Me.GroupBox8)
         Me.PnAll.Controls.Add(Me.GroupBox7)
@@ -916,6 +906,16 @@ Partial Class F_VEH
         Me.Label8.Size = New System.Drawing.Size(58, 13)
         Me.Label8.TabIndex = 40
         Me.Label8.Text = "HDV Class"
+        '
+        'PnCdATrTr
+        '
+        Me.PnCdATrTr.Controls.Add(Me.LbCdATr)
+        Me.PnCdATrTr.Controls.Add(Me.TBcdTrTr)
+        Me.PnCdATrTr.Controls.Add(Me.TBAquersTrTr)
+        Me.PnCdATrTr.Location = New System.Drawing.Point(97, 26)
+        Me.PnCdATrTr.Name = "PnCdATrTr"
+        Me.PnCdATrTr.Size = New System.Drawing.Size(64, 78)
+        Me.PnCdATrTr.TabIndex = 27
         '
         'F_VEH
         '
@@ -962,16 +962,16 @@ Partial Class F_VEH
         Me.GroupBox1.PerformLayout()
         Me.PnLoad.ResumeLayout(False)
         Me.PnLoad.PerformLayout()
-        Me.GroupBox4.ResumeLayout(False)
-        Me.GroupBox4.PerformLayout()
-        Me.PnCdATrTr.ResumeLayout(False)
-        Me.PnCdATrTr.PerformLayout()
+        Me.GrAirRes.ResumeLayout(False)
+        Me.GrAirRes.PerformLayout()
         Me.PnCdARig.ResumeLayout(False)
         Me.PnCdARig.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CmOpenFile.ResumeLayout(False)
         Me.PnAll.ResumeLayout(False)
         CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.PnCdATrTr.ResumeLayout(False)
+        Me.PnCdATrTr.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1036,7 +1036,7 @@ Partial Class F_VEH
     Friend WithEvents TbLoadingMax As System.Windows.Forms.TextBox
     Friend WithEvents Label22 As System.Windows.Forms.Label
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents GroupBox4 As System.Windows.Forms.GroupBox
+    Friend WithEvents GrAirRes As System.Windows.Forms.GroupBox
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
@@ -1052,7 +1052,6 @@ Partial Class F_VEH
     Friend WithEvents TBcwRig As System.Windows.Forms.TextBox
     Friend WithEvents TBAquersRig As System.Windows.Forms.TextBox
     Friend WithEvents PnCdARig As System.Windows.Forms.Panel
-    Friend WithEvents PnCdATrTr As System.Windows.Forms.Panel
     Friend WithEvents PnAll As System.Windows.Forms.Panel
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
@@ -1062,4 +1061,5 @@ Partial Class F_VEH
     Friend WithEvents PnWheelDiam As System.Windows.Forms.Panel
     Friend WithEvents PicVehicle As System.Windows.Forms.PictureBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents PnCdATrTr As System.Windows.Forms.Panel
 End Class

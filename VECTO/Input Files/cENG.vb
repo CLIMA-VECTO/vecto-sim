@@ -384,9 +384,12 @@ Public Class cENG
         Dim str As String
         Dim i As Integer
         Dim j As Integer
+        Dim G As Integer
 
         Dim MsgSrc As String
         MsgSrc = "ENG/Init"
+
+        G = Math.Max(GBX.GearCount, 0)
 
         'Create cFLD instance for each gear (list with gear as index)
         FLD = New List(Of cFLD)
@@ -411,7 +414,7 @@ Public Class cENG
 
                 For i = CInt(fldgFromTo(0)) To CInt(fldgFromTo(1))
 
-                    If i > GBX.GearCount Then Exit For
+                    If i > G Then Exit For
 
                     If i < 0 Or i > 99 Then
                         WorkerMsg(tMsgID.Err, "Cannot assign .vfld file to gear " & i & "!", MsgSrc, "<GUI>" & sFilePath)
@@ -434,7 +437,7 @@ Public Class cENG
         End Try
 
         'read .vfld files
-        For i = 0 To GBX.GearCount
+        For i = 0 To G
 
             If Not fldgear.ContainsKey(i) Then
                 WorkerMsg(tMsgID.Err, "No .vfld file assigned to gear " & i & "!", MsgSrc, "<GUI>" & sFilePath)

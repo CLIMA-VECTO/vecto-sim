@@ -156,12 +156,12 @@ lbErr:
         nUaux = nU * TransRatio
         PsplyAux = Psupply / EffToSply
 
-        Try
-            PauxEff = EffMap.Intpol(nUaux, PsplyAux)
-        Catch ex As Exception
+        PauxEff = EffMap.Intpol(nUaux, PsplyAux)
+
+        If EffMap.ExtrapolError Then
             MODdata.ModErrors.AuxMapExtr = fFILE(Filepath, False) & ", U= " & nUaux & " [1/min], PsupplyAux= " & PsplyAux & " [kW]"
             Return 0
-        End Try
+        End If
 
         Return PauxEff / EffToEng
 

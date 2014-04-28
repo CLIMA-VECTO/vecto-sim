@@ -85,6 +85,7 @@ Partial Class F_ENG
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.PicBox = New System.Windows.Forms.PictureBox()
+        Me.Label13 = New System.Windows.Forms.Label()
         Me.ToolStrip1.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -443,6 +444,7 @@ Partial Class F_ENG
         '
         'GrWHTC
         '
+        Me.GrWHTC.Controls.Add(Me.Label13)
         Me.GrWHTC.Controls.Add(Me.TbWHTCmw)
         Me.GrWHTC.Controls.Add(Me.TbWHTCrural)
         Me.GrWHTC.Controls.Add(Me.TbWHTCurban)
@@ -455,28 +457,28 @@ Partial Class F_ENG
         Me.GrWHTC.Enabled = False
         Me.GrWHTC.Location = New System.Drawing.Point(12, 392)
         Me.GrWHTC.Name = "GrWHTC"
-        Me.GrWHTC.Size = New System.Drawing.Size(481, 61)
+        Me.GrWHTC.Size = New System.Drawing.Size(481, 91)
         Me.GrWHTC.TabIndex = 9
         Me.GrWHTC.TabStop = False
         Me.GrWHTC.Text = "WHTC Test Results"
         '
         'TbWHTCmw
         '
-        Me.TbWHTCmw.Location = New System.Drawing.Point(348, 28)
+        Me.TbWHTCmw.Location = New System.Drawing.Point(348, 56)
         Me.TbWHTCmw.Name = "TbWHTCmw"
         Me.TbWHTCmw.Size = New System.Drawing.Size(57, 20)
         Me.TbWHTCmw.TabIndex = 2
         '
         'TbWHTCrural
         '
-        Me.TbWHTCrural.Location = New System.Drawing.Point(192, 28)
+        Me.TbWHTCrural.Location = New System.Drawing.Point(192, 56)
         Me.TbWHTCrural.Name = "TbWHTCrural"
         Me.TbWHTCrural.Size = New System.Drawing.Size(57, 20)
         Me.TbWHTCrural.TabIndex = 1
         '
         'TbWHTCurban
         '
-        Me.TbWHTCurban.Location = New System.Drawing.Point(36, 28)
+        Me.TbWHTCurban.Location = New System.Drawing.Point(36, 56)
         Me.TbWHTCurban.Name = "TbWHTCurban"
         Me.TbWHTCurban.Size = New System.Drawing.Size(57, 20)
         Me.TbWHTCurban.TabIndex = 0
@@ -484,7 +486,7 @@ Partial Class F_ENG
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(317, 31)
+        Me.Label8.Location = New System.Drawing.Point(317, 59)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(25, 13)
         Me.Label8.TabIndex = 0
@@ -493,7 +495,7 @@ Partial Class F_ENG
         'Label12
         '
         Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(411, 31)
+        Me.Label12.Location = New System.Drawing.Point(411, 59)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(47, 13)
         Me.Label12.TabIndex = 0
@@ -502,7 +504,7 @@ Partial Class F_ENG
         'Label10
         '
         Me.Label10.AutoSize = True
-        Me.Label10.Location = New System.Drawing.Point(255, 31)
+        Me.Label10.Location = New System.Drawing.Point(255, 59)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(47, 13)
         Me.Label10.TabIndex = 0
@@ -511,7 +513,7 @@ Partial Class F_ENG
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(99, 31)
+        Me.Label9.Location = New System.Drawing.Point(99, 59)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(47, 13)
         Me.Label9.TabIndex = 0
@@ -520,7 +522,7 @@ Partial Class F_ENG
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(162, 31)
+        Me.Label7.Location = New System.Drawing.Point(162, 59)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(24, 13)
         Me.Label7.TabIndex = 0
@@ -529,7 +531,7 @@ Partial Class F_ENG
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(6, 31)
+        Me.Label4.Location = New System.Drawing.Point(6, 59)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(24, 13)
         Me.Label4.TabIndex = 0
@@ -543,6 +545,15 @@ Partial Class F_ENG
         Me.PicBox.Size = New System.Drawing.Size(474, 425)
         Me.PicBox.TabIndex = 40
         Me.PicBox.TabStop = False
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(6, 27)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(91, 13)
+        Me.Label13.TabIndex = 3
+        Me.Label13.Text = "Fuel Consumption"
         '
         'F_ENG
         '
@@ -646,4 +657,5 @@ Partial Class F_ENG
     Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents PicBox As System.Windows.Forms.PictureBox
+    Friend WithEvents Label13 As System.Windows.Forms.Label
 End Class

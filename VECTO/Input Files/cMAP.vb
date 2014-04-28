@@ -131,12 +131,17 @@ lbEr:
 
 
     Public Function fFCdelaunay_Intp(ByVal nU As Single, ByVal Tq As Single) As Single
-        Try
-            Return FuelMap.Intpol(nU, Tq)
-        Catch ex As Exception
+        Dim val As Single
+
+        val = FuelMap.Intpol(nU, Tq)
+
+        If FuelMap.ExtrapolError Then
             WorkerMsg(tMsgID.Err, "Cannot extrapolate FC map! n= " & nU.ToString("0.0") & " [1/min], Me= " & Tq.ToString("0.0") & " [Nm]", "MAP/FC_Intp")
             Return -10000
-        End Try
+        Else
+            Return val
+        End If
+
     End Function
 
 #Region "Properties"

@@ -243,6 +243,7 @@ Partial Class F_MAINForm
         'BtGENdown
         '
         Me.BtGENdown.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtGENdown.Image = Global.VECTO.My.Resources.Resources.Actions_arrow_down_icon
         Me.BtGENdown.Location = New System.Drawing.Point(996, 317)
         Me.BtGENdown.Name = "BtGENdown"
         Me.BtGENdown.Size = New System.Drawing.Size(30, 23)

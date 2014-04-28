@@ -664,14 +664,9 @@ lbGschw:
             '************************************ Gear selection ************************************
             If VehState0 = tVehState.Stopped Or TracIntrOn Then
 
-                If TracIntrTurnOff Then
+                If TracIntrTurnOff And Not VehState0 = tVehState.Stopped Then
 
                     Gear = TracIntrGear
-                    'If DEV.UseGearShiftPolygon Then
-                    '    Gear = fGearVECTO(jz)
-                    'Else
-                    '    Gear = fGearLKW(jz)
-                    'End If
 
                     If Not GBX.TCon AndAlso fnn(Vist, Gear, False) < Kuppln_norm And Pplus Then
                         Clutch = tEngClutch.Slipping
@@ -2195,7 +2190,7 @@ lb10:
 
         End Select
 
-        Return CSng((Cd * VEH.Aquers * Cfg.AirDensity / 2 * ((vair) ^ 2)) * v * 0.001)
+        Return CSng((Cd * VEH.CrossSecArea * Cfg.AirDensity / 2 * ((vair) ^ 2)) * v * 0.001)
 
     End Function
 

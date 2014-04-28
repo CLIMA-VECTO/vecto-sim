@@ -927,12 +927,11 @@ lbInt:
 
             GBmap = MyGBmaps(Gear)
 
-            Try
-                'Interpolate with Original Values
-                PeIn = nMtoPe(nU, GBmap.Intpol(nU, nPeToM(nU, PeOut)))
-                Ploss = PeIn - PeOut
 
-            Catch ex As Exception
+            'Interpolate with Original Values
+            PeIn = nMtoPe(nU, GBmap.Intpol(nU, nPeToM(nU, PeOut)))
+
+            If GBmap.ExtrapolError Then
 
                 'If error: try extrapolation
 
@@ -1010,7 +1009,12 @@ lbInt:
 
                 MODdata.ModErrors.TrLossMapExtr = "Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], MeOut=" & nPeToM(nU, PeOut).ToString("0.00") & " [Nm]"
 
-            End Try
+            Else
+
+                Ploss = PeIn - PeOut
+
+
+            End If
 
         End If
 
@@ -1053,11 +1057,11 @@ lbInt:
 
             GBmap = MyGBmaps(Gear)
 
-            Try
-                'Interpolate with original values
-                PeOut = nMtoPe(nU, GBmap.IntpolXZ(nU, nPeToM(nU, PeIn)))
 
-            Catch ex As Exception
+            'Interpolate with original values
+            PeOut = nMtoPe(nU, GBmap.IntpolXZ(nU, nPeToM(nU, PeIn)))
+
+            If GBmap.ExtrapolError Then
 
                 'If error: try extrapolation
 
@@ -1112,7 +1116,7 @@ lbInt:
 
                 MODdata.ModErrors.TrLossMapExtr = "Gear= " & GrTxt & ", nU= " & nU.ToString("0.00") & " [1/min], MeIn=" & nPeToM(nU, PeIn).ToString("0.00") & " [Nm] (fwd)"
 
-            End Try
+            End If
 
         End If
 
