@@ -101,8 +101,6 @@ Public Class F_VEH
         Dim i0 As Int16
         Dim AxleCount As Int16
         Dim lvi As ListViewItem
-        Dim RigEnabled As Boolean
-        Dim TrTrEnabled As Boolean
         Dim rdyn As Single
 
         If Not Cfg.DeclMode Then Exit Sub
@@ -139,21 +137,14 @@ Public Class F_VEH
                 Next
             End If
 
-            If s0.LongHaulRigidTrailer Then
-
-                RigEnabled = True
-                TrTrEnabled = True
-
+            If s0.TrailerOnlyInLongHaul Then
+                Me.PnCdATrTr.Width = 64
+                Me.PnCdARig.Visible = True
+                Me.LbCdATr.Visible = True
             Else
-
-                If s0.VehCat = tVehCat.RigidTruck Then
-                    RigEnabled = True
-                    TrTrEnabled = False
-                Else
-                    RigEnabled = False
-                    TrTrEnabled = True
-                End If
-
+                Me.PnCdATrTr.Width = 132
+                Me.PnCdARig.Visible = False
+                Me.LbCdATr.Visible = False
             End If
 
             Me.PnAll.Enabled = True
@@ -161,29 +152,6 @@ Public Class F_VEH
         Else
             Me.PnAll.Enabled = False
             HDVclass = "-"
-            RigEnabled = False
-            TrTrEnabled = False
-        End If
-
-
-        If RigEnabled Then
-            Me.PnCdARig.Enabled = True
-            If Me.TBcwRig.Text = "-" Then Me.TBcwRig.Text = ""
-            If Me.TBAquersRig.Text = "-" Then Me.TBAquersRig.Text = ""
-        Else
-            Me.PnCdARig.Enabled = False
-            Me.TBcwRig.Text = "-"
-            Me.TBAquersRig.Text = "-"
-        End If
-
-        If TrTrEnabled Then
-            Me.PnCdATrTr.Enabled = True
-            If Me.TBcdTrTr.Text = "-" Then Me.TBcdTrTr.Text = ""
-            If Me.TBAquersTrTr.Text = "-" Then Me.TBAquersTrTr.Text = ""
-        Else
-            Me.PnCdATrTr.Enabled = False
-            Me.TBcdTrTr.Text = "-"
-            Me.TBAquersTrTr.Text = "-"
         End If
 
         Me.TbMassExtra.Text = "-"
@@ -409,10 +377,10 @@ Public Class F_VEH
 
         Me.CbAxleConfig.SelectedIndex = CType(VEH0.AxleConf, Integer)
 
-        Me.TBcdTrTr.Text = VEH0.Cd0Tr
-        Me.TBAquersTrTr.Text = VEH0.Aquers0Tr
-        Me.TBcwRig.Text = VEH0.Cd0Rig
-        Me.TBAquersRig.Text = VEH0.Aquers0Rig
+        Me.TBcdTrTr.Text = VEH0.Cd0
+        Me.TBAquersTrTr.Text = VEH0.Aquers
+        Me.TBcwRig.Text = VEH0.Cd02
+        Me.TBAquersRig.Text = VEH0.Aquers2
 
         DeclInit()
 
@@ -445,10 +413,14 @@ Public Class F_VEH
         VEH0.Mass = CSng(fTextboxToNumString(Me.TbMass.Text))
         VEH0.MassExtra = CSng(fTextboxToNumString(Me.TbMassExtra.Text))
         VEH0.Loading = CSng(fTextboxToNumString(Me.TbLoad.Text))
-        VEH0.Cd0Tr = CSng(fTextboxToNumString(Me.TBcdTrTr.Text))
-        VEH0.Aquers0Tr = CSng(fTextboxToNumString(Me.TBAquersTrTr.Text))
-        VEH0.Cd0Rig = CSng(fTextboxToNumString(Me.TBcwRig.Text))
-        VEH0.Aquers0Rig = CSng(fTextboxToNumString(Me.TBAquersRig.Text))
+
+        VEH0.Cd0 = CSng(fTextboxToNumString(Me.TBcdTrTr.Text))
+        VEH0.Aquers = CSng(fTextboxToNumString(Me.TBAquersTrTr.Text))
+
+        If Me.PnCdARig.Visible Then
+            VEH0.Cd02 = CSng(fTextboxToNumString(Me.TBcwRig.Text))
+            VEH0.Aquers2 = CSng(fTextboxToNumString(Me.TBAquersRig.Text))
+        End If
 
         VEH0.Rim = Me.CbRim.Text
 

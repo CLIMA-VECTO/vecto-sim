@@ -966,6 +966,7 @@ lbDlog:
 
         Dim s0 As cSegmentTableEntry = Nothing
         Dim HDVclass As String
+        Dim m0 As tMission
 
         Dim MyChart As System.Windows.Forms.DataVisualization.Charting.Chart
         Dim s As System.Windows.Forms.DataVisualization.Charting.Series
@@ -987,6 +988,12 @@ lbDlog:
 
             If Declaration.SegmentTable.SetRef(s0, VEH0.VehCat, VEH0.AxleConf, VEH0.MassMax) Then
                 HDVclass = s0.HDVclass
+
+                Me.LvCycles.Items.Clear()
+                For Each m0 In s0.Missions
+                    Me.LvCycles.Items.Add(Declaration.Missions(m0).NameStr)
+                Next
+
             Else
                 HDVclass = "-"
             End If
@@ -995,7 +1002,7 @@ lbDlog:
 
             Me.TbHVCclass.Text = "HDV Class " & HDVclass
             Me.TbVehCat.Text = ConvVehCat(VEH0.VehCat, True)
-            Me.TbMass.Text = VEH0.MassMax.ToString("0") & " t"
+            Me.TbMass.Text = VEH0.MassMax & " t"
             Me.TbAxleConf.Text = ConvAxleConf(VEH0.AxleConf)
 
         End If

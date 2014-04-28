@@ -241,7 +241,7 @@ Public Class cDeclaration
                         If mt0 <> tMission.LongHaul Then AxleSharesTr.Add(line(11))
                     Next
 
-                    ste0.LongHaulRigidTrailer = (Trim(line(10)) <> "0/0" And Trim(line(11)) = "0/0" And ste0.VehCat = tVehCat.RigidTruck)
+                    ste0.TrailerOnlyInLongHaul = (Trim(line(10)) <> "0/0" And Trim(line(11)) = "0/0" And ste0.VehCat = tVehCat.RigidTruck)
 
                     i = 11
                     For Each mt0 In SegmentTable.MissionList
@@ -1182,7 +1182,7 @@ Public Class cSegmentTableEntry
     Public AxleShares As New Dictionary(Of tMission, List(Of Single))
     Public AxleSharesTr As New Dictionary(Of tMission, List(Of Single))
     Public WHTCWF As New Dictionary(Of tMission, Dictionary(Of tWHTCpart, Single))
-    Public LongHaulRigidTrailer As Boolean
+    Public TrailerOnlyInLongHaul As Boolean
 
     Public Function GetCycles() As List(Of String)
         Dim l As New List(Of String)
@@ -1221,9 +1221,9 @@ Public Class cSegmentTableEntry
         'Return Loading
         If HDVclass < 4 Then
             If Mission = tMission.LongHaul Then
-                Return 588.2 * MassMax * 1000 - 2511.8
+                Return 588.2 * MassMax - 2511.8
             Else
-                Return 394.1 * MassMax * 1000 - 1705.9
+                Return 394.1 * MassMax - 1705.9
             End If
         Else
             Return CSng(Loading(Mission))

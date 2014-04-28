@@ -988,10 +988,10 @@ Partial Class F_VECTO
         '
         'TbAxleConf
         '
-        Me.TbAxleConf.Location = New System.Drawing.Point(894, 155)
+        Me.TbAxleConf.Location = New System.Drawing.Point(904, 155)
         Me.TbAxleConf.Name = "TbAxleConf"
         Me.TbAxleConf.ReadOnly = True
-        Me.TbAxleConf.Size = New System.Drawing.Size(41, 20)
+        Me.TbAxleConf.Size = New System.Drawing.Size(31, 20)
         Me.TbAxleConf.TabIndex = 37
         '
         'TbHVCclass
@@ -1015,7 +1015,7 @@ Partial Class F_VECTO
         Me.TbMass.Location = New System.Drawing.Point(848, 155)
         Me.TbMass.Name = "TbMass"
         Me.TbMass.ReadOnly = True
-        Me.TbMass.Size = New System.Drawing.Size(40, 20)
+        Me.TbMass.Size = New System.Drawing.Size(50, 20)
         Me.TbMass.TabIndex = 37
         '
         'F_VECTO

@@ -44,6 +44,10 @@ Partial Class F_Graph
         Me.BtReset = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.BtZoomIn = New System.Windows.Forms.Button()
+        Me.BtZoomOut = New System.Windows.Forms.Button()
+        Me.BtMoveL = New System.Windows.Forms.Button()
+        Me.BtMoveR = New System.Windows.Forms.Button()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
@@ -207,21 +211,21 @@ Partial Class F_Graph
         Me.TbXmin.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.TbXmin.Location = New System.Drawing.Point(497, 369)
         Me.TbXmin.Name = "TbXmin"
-        Me.TbXmin.Size = New System.Drawing.Size(100, 20)
+        Me.TbXmin.Size = New System.Drawing.Size(71, 20)
         Me.TbXmin.TabIndex = 2
         '
         'TbXmax
         '
         Me.TbXmax.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.TbXmax.Location = New System.Drawing.Point(642, 369)
+        Me.TbXmax.Location = New System.Drawing.Point(609, 369)
         Me.TbXmax.Name = "TbXmax"
-        Me.TbXmax.Size = New System.Drawing.Size(100, 20)
+        Me.TbXmax.Size = New System.Drawing.Size(71, 20)
         Me.TbXmax.TabIndex = 3
         '
         'BtReset
         '
         Me.BtReset.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.BtReset.Location = New System.Drawing.Point(748, 367)
+        Me.BtReset.Location = New System.Drawing.Point(691, 367)
         Me.BtReset.Name = "BtReset"
         Me.BtReset.Size = New System.Drawing.Size(75, 23)
         Me.BtReset.TabIndex = 4
@@ -242,17 +246,61 @@ Partial Class F_Graph
         '
         Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(609, 372)
+        Me.Label3.Location = New System.Drawing.Point(576, 372)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(27, 13)
         Me.Label3.TabIndex = 35
         Me.Label3.Text = "Max"
+        '
+        'BtZoomIn
+        '
+        Me.BtZoomIn.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtZoomIn.Location = New System.Drawing.Point(1103, 366)
+        Me.BtZoomIn.Name = "BtZoomIn"
+        Me.BtZoomIn.Size = New System.Drawing.Size(28, 23)
+        Me.BtZoomIn.TabIndex = 36
+        Me.BtZoomIn.Text = "+"
+        Me.BtZoomIn.UseVisualStyleBackColor = True
+        '
+        'BtZoomOut
+        '
+        Me.BtZoomOut.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtZoomOut.Location = New System.Drawing.Point(1137, 366)
+        Me.BtZoomOut.Name = "BtZoomOut"
+        Me.BtZoomOut.Size = New System.Drawing.Size(28, 23)
+        Me.BtZoomOut.TabIndex = 36
+        Me.BtZoomOut.Text = "-"
+        Me.BtZoomOut.UseVisualStyleBackColor = True
+        '
+        'BtMoveL
+        '
+        Me.BtMoveL.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtMoveL.Location = New System.Drawing.Point(1184, 366)
+        Me.BtMoveL.Name = "BtMoveL"
+        Me.BtMoveL.Size = New System.Drawing.Size(28, 23)
+        Me.BtMoveL.TabIndex = 36
+        Me.BtMoveL.Text = "<"
+        Me.BtMoveL.UseVisualStyleBackColor = True
+        '
+        'BtMoveR
+        '
+        Me.BtMoveR.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtMoveR.Location = New System.Drawing.Point(1218, 366)
+        Me.BtMoveR.Name = "BtMoveR"
+        Me.BtMoveR.Size = New System.Drawing.Size(28, 23)
+        Me.BtMoveR.TabIndex = 36
+        Me.BtMoveR.Text = ">"
+        Me.BtMoveR.UseVisualStyleBackColor = True
         '
         'F_Graph
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1258, 400)
+        Me.Controls.Add(Me.BtZoomOut)
+        Me.Controls.Add(Me.BtMoveR)
+        Me.Controls.Add(Me.BtMoveL)
+        Me.Controls.Add(Me.BtZoomIn)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.BtReset)
@@ -297,4 +345,8 @@ Partial Class F_Graph
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents ToolStripButton3 As System.Windows.Forms.ToolStripButton
+    Friend WithEvents BtZoomIn As System.Windows.Forms.Button
+    Friend WithEvents BtZoomOut As System.Windows.Forms.Button
+    Friend WithEvents BtMoveL As System.Windows.Forms.Button
+    Friend WithEvents BtMoveR As System.Windows.Forms.Button
 End Class

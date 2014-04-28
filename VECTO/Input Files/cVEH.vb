@@ -13,7 +13,7 @@ Imports System.Collections.Generic
 Public Class cVEH
 
     'V2 MassMax is now saved in [t] instead of [kg]
-    Private Const FormatVersion As Short = 3
+    Private Const FormatVersion As Short = 4
     Private FileVersion As Short
 
     Private sFilePath As String
@@ -23,11 +23,11 @@ Public Class cVEH
     Public Loading As Single
     Private siFr0 As Single
 
-    Public Cd0Tr As Single
-    Public Aquers0Tr As Single
+    Public Cd0 As Single
+    Public Aquers As Single
 
-    Public Cd0Rig As Single
-    Public Aquers0Rig As Single
+    Public Cd02 As Single
+    Public Aquers2 As Single
 
     Private Cd0Act As Single
     Private AquersAct As Single
@@ -103,12 +103,12 @@ Public Class cVEH
         Mass = 0
         MassExtra = 0
         Loading = 0
-        Cd0Tr = 0
-        Aquers0Tr = 0
-        Cd0Act = Cd0Tr
-        AquersAct = Aquers0Tr
-        Cd0Rig = 0
-        Aquers0Rig = 0
+        Cd0 = 0
+        Aquers = 0
+        Cd0Act = Cd0
+        AquersAct = Aquers
+        Cd02 = 0
+        Aquers2 = 0
         CdFile.Clear()
         CdMode = tCdMode.ConstCd0
         CdX.Clear()
@@ -159,11 +159,14 @@ Public Class cVEH
         MassExtra = CSng(file.ReadLine(0))
         Loading = CSng(file.ReadLine(0))
 
-        Cd0Tr = CSng(file.ReadLine(0))
-        Aquers0Tr = CSng(file.ReadLine(0))
+        Cd0 = CSng(file.ReadLine(0))
+        Aquers = CSng(file.ReadLine(0))
 
-        Cd0Act = Cd0Tr
-        AquersAct = Aquers0Tr
+        Cd02 = Cd0
+        Aquers2 = Aquers
+
+        Cd0Act = Cd0
+        AquersAct = Aquers
 
         Itemp = CSng(file.ReadLine(0))
         rdyn = 1000 * CSng(file.ReadLine(0)) / 2
@@ -297,14 +300,22 @@ lbError:
             MassMax = JSON.Content("Body")("MassMax")
             If FileVersion < 2 Then MassMax /= 1000
 
-            Cd0Tr = JSON.Content("Body")("Cd")
-            Aquers0Tr = JSON.Content("Body")("CrossSecArea")
+            Cd0 = JSON.Content("Body")("Cd")
+            Aquers = JSON.Content("Body")("CrossSecArea")
 
-            If Not JSON.Content("Body")("CdRigid") Is Nothing Then Cd0Rig = JSON.Content("Body")("CdRigid")
-            If Not JSON.Content("Body")("CrossSecAreaRigid") Is Nothing Then Aquers0Rig = JSON.Content("Body")("CrossSecAreaRigid")
+            Cd02 = Cd0
+            Aquers2 = Aquers
 
-            Cd0Act = Cd0Tr
-            AquersAct = Aquers0Tr
+            If FileVersion < 4 Then
+                If Not JSON.Content("Body")("CdRigid") Is Nothing Then Cd02 = JSON.Content("Body")("CdRigid")
+                If Not JSON.Content("Body")("CrossSecAreaRigid") Is Nothing Then Aquers2 = JSON.Content("Body")("CrossSecAreaRigid")
+            Else
+                If Not JSON.Content("Body")("Cd2") Is Nothing Then Cd02 = JSON.Content("Body")("Cd2")
+                If Not JSON.Content("Body")("CrossSecArea2") Is Nothing Then Aquers2 = JSON.Content("Body")("CrossSecArea2")
+            End If
+
+            Cd0Act = Cd0
+            AquersAct = Aquers
 
             If FileVersion < 3 Then
                 Itemp = JSON.Content("Body")("WheelsInertia")
@@ -398,11 +409,13 @@ lbError:
         dic.Add("Loading", Loading)
         dic.Add("MassMax", MassMax)
 
-        dic.Add("Cd", Cd0Tr)
-        dic.Add("CrossSecArea", Aquers0Tr)
+        dic.Add("Cd", Cd0)
+        dic.Add("CrossSecArea", Aquers)
 
-        dic.Add("CdRigid", Cd0Rig)
-        dic.Add("CrossSecAreaRigid", Aquers0Rig)
+        If Cd02 > 0 And Aquers2 > 0 Then
+            dic.Add("Cd2", Cd02)
+            dic.Add("CrossSecArea2", Aquers2)
+        End If
 
         dic.Add("rdyn", rdyn)
         dic.Add("Rim", Rim)
@@ -478,7 +491,7 @@ lbError:
 
 
         '(Semi-) Trailer
-        If Not Declaration.SegRef.LongHaulRigidTrailer OrElse MissionID = tMission.LongHaul Then
+        If Not Declaration.SegRef.TrailerOnlyInLongHaul OrElse MissionID = tMission.LongHaul Then
             al = Declaration.SegRef.AxleSharesTr(MissionID)
             For Each a In al
 
@@ -514,25 +527,20 @@ lbError:
 
         CdFile.Init(MyPath, Declaration.SegRef.VCDVfile)
 
-        If Declaration.SegRef.LongHaulRigidTrailer Then
+        If Declaration.SegRef.TrailerOnlyInLongHaul Then
 
             If MissionID = tMission.LongHaul Then
-                Cd0Act = Cd0Tr
-                AquersAct = Aquers0Tr
+                Cd0Act = Cd0
+                AquersAct = Aquers
             Else
-                Cd0Act = Cd0Rig
-                AquersAct = Aquers0Rig
+                Cd0Act = Cd02
+                AquersAct = Aquers2
             End If
 
         Else
 
-            If Declaration.SegRef.VehCat = tVehCat.RigidTruck Then
-                Cd0Act = Cd0Rig
-                AquersAct = Aquers0Rig
-            Else
-                Cd0Act = Cd0Tr
-                AquersAct = Aquers0Tr
-            End If
+            Cd0Act = Cd0
+            AquersAct = Aquers
 
         End If
 
@@ -737,7 +745,7 @@ lbError:
         Return Cd0Act
     End Function
 
-    Public Function Aquers() As Single
+    Public Function CrossSecArea() As Single
         Return AquersAct
     End Function
 

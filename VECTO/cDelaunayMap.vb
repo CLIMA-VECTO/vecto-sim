@@ -23,6 +23,8 @@ Public Class cDelaunayMap
     Private planesXZ As List(Of Double())
     Private lDTXZ As List(Of dTriangle)
 
+    Public ExtrapolError As Boolean
+
 
     Public Sub New()
         ptList = New List(Of dPoint)
@@ -101,6 +103,7 @@ Public Class cDelaunayMap
         Dim l0 As Double()
         Dim tr As dTriangle
 
+        ExtrapolError = False
 
         'Try exact solution for IsInside()
         j = -1
@@ -125,13 +128,7 @@ Public Class cDelaunayMap
 
 
         'ERROR: Extrapolation
-
-        '#If DEBUG Then
-        '        Debug.Print(x & "," & y)
-        '#End If
-
-        Throw New ArgumentException("Extrapolation not possible!")
-
+        ExtrapolError = True
 
         Return Nothing
 
@@ -142,6 +139,8 @@ Public Class cDelaunayMap
         Dim j As Integer
         Dim l0 As Double()
         Dim tr As dTriangle
+
+        ExtrapolError = False
 
         If DualMode Then
 
@@ -166,13 +165,13 @@ Public Class cDelaunayMap
             Next
 
             'ERROR: Extrapolation
-            Throw New ArgumentException("Extrapolation not possible!")
+            ExtrapolError = True
             Return Nothing
 
         Else
 
             'ERROR: Extrapolation
-            Throw New ArgumentException("XZ Interpolation not configured")
+            ExtrapolError = True
             Return Nothing
 
         End If

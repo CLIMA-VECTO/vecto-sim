@@ -520,4 +520,82 @@ Public Class F_Graph
         UpdateGraph()
     End Sub
 
+    Private Sub BtZoomIn_Click(sender As System.Object, e As System.EventArgs) Handles BtZoomIn.Click
+        Dim d As Single
+
+        d = (xMax - xMin) / 10
+
+        xMin += 2 * 0.5 * d
+        xMax -= 2 * (1 - 0.5) * d
+
+        If xMin > 1000 Then
+            xMin = Math.Round(xMin / 100, 0) * 100
+        Else
+            xMin = Math.Round(xMin, 0)
+        End If
+
+        Me.TbXmin.Text = xMin
+        Me.TbXmax.Text = xMax
+      
+    End Sub
+
+    Private Sub BtZoomOut_Click(sender As System.Object, e As System.EventArgs) Handles BtZoomOut.Click
+        Dim d As Single
+
+        d = (xMax - xMin) / 10
+
+        xMin -= 2 * 0.5 * d
+        xMax += 2 * (1 - 0.5) * d
+
+        If xMin > 1000 Then
+            xMin = Math.Round(xMin / 100, 0) * 100
+        Else
+            xMin = Math.Round(xMin, 0)
+        End If
+
+        Me.TbXmin.Text = xMin
+        Me.TbXmax.Text = xMax
+
+    End Sub
+
+    Private Sub BtMoveL_Click(sender As System.Object, e As System.EventArgs) Handles BtMoveL.Click
+        Dim d As Single
+
+        If xMin <= 0 Then Exit Sub
+
+        d = (xMax - xMin) / 3
+        xMin -= d
+        xMax -= d
+
+        If xMin > 1000 Then
+            xMin = Math.Round(xMin / 100, 0) * 100
+        Else
+            xMin = Math.Round(xMin, 0)
+        End If
+
+        Me.TbXmin.Text = xMin
+        Me.TbXmax.Text = xMax
+
+
+    End Sub
+
+    Private Sub BtMoveR_Click(sender As System.Object, e As System.EventArgs) Handles BtMoveR.Click
+        Dim d As Single
+
+        If xMax >= xMax0 Then Exit Sub
+
+        d = (xMax - xMin) / 3
+        xMin += d
+        xMax += d
+
+        If xMin > 1000 Then
+            xMin = Math.Round(xMin / 100, 0) * 100
+        Else
+            xMin = Math.Round(xMin, 0)
+        End If
+
+        Me.TbXmin.Text = xMin
+        Me.TbXmax.Text = xMax
+
+    End Sub
 End Class

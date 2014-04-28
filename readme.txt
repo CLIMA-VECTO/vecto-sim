@@ -1,4 +1,7 @@
-*Before compiling you need to add a reference to vectolic.dll
+*Before compiling you need to add references to:
+	- vectolic.dll
+	- itextsharp.dll
+	- Newtonsoft.Json.dll
 
 *The following directories/files must be provided in the application folder (e.g. ..\bin\Release):
 	User Manual

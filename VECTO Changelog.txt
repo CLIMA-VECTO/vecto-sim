@@ -3,8 +3,12 @@ VECTO ?.? (future release) TODO
 	JSON
 
 
-VECTO 1.4.xxx (current source - next release)
-* Cleaned up source code
+VECTO x.x (current source)
+
+* Declaration Mode
+* Updated GUI including Charts
+* New internal Graph for VMOD files (replaces GRAPHi)
+* Shift polygons can be set separately for each gear
 * Removed rated power (not used anymore)
 * Removed rated engine speed form engine file. Now calculated form vfld file.
 * NOTE: These changes have inevitable influence on the calculation and results because several methods now use absolute instead of normalised values. Notable (but still negligible) differences may arise due to the following effects:
