@@ -93,9 +93,9 @@ Public Class F_Graph
 
                 Channels.Clear()
 
-                For i = 1 To 4
-                    file.ReadLine()
-                Next
+                'For i = 1 To 4
+                '    file.ReadLine()
+                'Next
 
                 'Header
                 line = file.ReadLine

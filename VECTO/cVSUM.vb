@@ -459,15 +459,15 @@ Class cVSUM
         ResList = New List(Of Dictionary(Of String, Object))
 
         'Info
-        Fvsum.WriteLine("VECTO results")
-        Fvsum.WriteLine("VECTO " & VECTOvers)
-        Fvsum.WriteLine(Now.ToString)
-        Fvsum.WriteLine("air density [kg/m3]: " & Cfg.AirDensity)
-        If Cfg.DistCorr Then
-            Fvsum.WriteLine("Distance Correction ON")
-        Else
-            Fvsum.WriteLine("Distance Correction OFF")
-        End If
+        'Fvsum.WriteLine("VECTO results")
+        'Fvsum.WriteLine("VECTO " & VECTOvers)
+        'Fvsum.WriteLine(Now.ToString)
+        'Fvsum.WriteLine("air density [kg/m3]: " & Cfg.AirDensity)
+        'If Cfg.DistCorr Then
+        '    Fvsum.WriteLine("Distance Correction ON")
+        'Else
+        '    Fvsum.WriteLine("Distance Correction OFF")
+        'End If
 
         'Close file (will open after each job)
         Fvsum.Close()

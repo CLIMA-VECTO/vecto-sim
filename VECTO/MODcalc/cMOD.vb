@@ -500,10 +500,10 @@ Public Class cMOD
         Next
 
 
-        f.WriteLine("VECTO modal results")
-        f.WriteLine("VECTO " & VECTOvers)
-        f.WriteLine(Now.ToString)
-        f.WriteLine("Input File: " & JobFile)
+        'f.WriteLine("VECTO modal results")
+        'f.WriteLine("VECTO " & VECTOvers)
+        'f.WriteLine(Now.ToString)
+        'f.WriteLine("Input File: " & JobFile)
 
 
         '***********************************************************************************************
