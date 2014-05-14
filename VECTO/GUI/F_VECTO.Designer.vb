@@ -210,7 +210,7 @@ Partial Class F_VECTO
         '
         Me.BtDRIrem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.BtDRIrem.Image = Global.VECTO.My.Resources.Resources.minus_circle_icon
-        Me.BtDRIrem.Location = New System.Drawing.Point(41, 179)
+        Me.BtDRIrem.Location = New System.Drawing.Point(41, 148)
         Me.BtDRIrem.Name = "BtDRIrem"
         Me.BtDRIrem.Size = New System.Drawing.Size(29, 23)
         Me.BtDRIrem.TabIndex = 32
@@ -220,7 +220,7 @@ Partial Class F_VECTO
         '
         Me.BtDRIadd.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.BtDRIadd.Image = Global.VECTO.My.Resources.Resources.plus_circle_icon
-        Me.BtDRIadd.Location = New System.Drawing.Point(6, 179)
+        Me.BtDRIadd.Location = New System.Drawing.Point(6, 148)
         Me.BtDRIadd.Name = "BtDRIadd"
         Me.BtDRIadd.Size = New System.Drawing.Size(29, 23)
         Me.BtDRIadd.TabIndex = 31
@@ -1045,7 +1045,7 @@ Partial Class F_VECTO
         Me.MaximizeBox = False
         Me.Name = "F_VECTO"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "VECTO Editor"
+        Me.Text = "Job Editor"
         Me.TabPgGen.ResumeLayout(False)
         Me.TabPgGen.PerformLayout()
         Me.GrCycles.ResumeLayout(False)

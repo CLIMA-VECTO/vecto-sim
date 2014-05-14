@@ -1,124 +1,61 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>VECTO Editor Aux Dialog - VECTO User Manual</title></head>
+
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Auxiliary Dialog</title></head>
 <body>
-<map name="linkmap"><area shape="rect" coords="26,48,191,73&quot;" href="#type"><area shape="rect" coords="208,47,284,74&quot;" href="#id"><area shape="rect" coords="22,104,506,128&quot;" href="#file"><area shape="rect" coords="341,139,416,164&quot;" href="#ok"><area shape="rect" coords="424,139,500,164&quot;" href="#cancel"></map>
-<table style="width: 100%; height: 54px; text-align: left; margin-left: auto; margin-right: auto;" border="0" cellpadding="2" cellspacing="2">
-<tbody>
-<tr>
-<td style="width: 110px;"><a href="../usermanual.html"><img src="../pics/VECTO-small.PNG" style="border: 0px solid ; width: 106px; height: 36px;" alt="VECTO-Logo"></a></td>
-<td><a href="../usermanual.html"><span style="color: rgb(0, 0, 0); font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; font-family: Verdana;">User
-Manual</span></a><span style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; display: inline ! important; float: none;"></span></td>
-<td style="text-align: right; width: 405px;"><a href="http://ec.europa.eu/dgs/jrc/index.cfm" target="_blank"><img src="../pics/JRC.png" style="border: 0px solid ; width: 173px; height: 36px;" alt="JRC-Logo" hspace="5"></a><a href="http://www.ivt.tugraz.at/" target="_blank"><img src="../pics/IVT.png" alt="IVT-Logo" style="border: 0px solid ; width: 74px; height: 36px;" hspace="5"></a><a href="http://portal.tugraz.at/pls/portal/url/page/TU_Graz" target="_blank"><img src="../pics/TUG.png" alt="TUG-Logo" style="border: 0px solid ; width: 96px; height: 36px;" hspace="5"></a></td>
-</tr>
-</tbody>
-</table>
-<hr style="width: 100%; height: 2px;"><a href="usermanual.html"><span style="font-family: Verdana;"></span></a><span style="font-family: Verdana;"></span>
+
+<div style="text-align: left;">
+
+
+<span style="font-family: Verdana;"><big><big><big><span style="font-weight: bold;">Auxiliary Dialog</span></big></big></big></span><br>
+<hr style="width: 100%; height: 0px;"><br>
+
 <div style="text-align: center;">
-<div style="text-align: left; font-family: Verdana;">
-<h2><a href="VECTO-Editor.html">VECTO Editor</a>
-/ Auxiliary Dialog</h2>
-</div>
-<img src="pics/VECTO-Editor_Aux.PNG" usemap="#linkmap" style="width: 527px; height: 193px;" alt="aux"><br>
-<span style="font-family: Verdana;"><br>
-</span>
-<br>
-<div style="text-align: left;"><span style="font-family: Verdana;"></span><span style="font-weight: bold;"><a name="type"></a>Type</span><br>
+<img src="pics/VECTO-Editor_Aux.PNG" style="width: 475px; height: 230px;" alt="aux"><br>
+</div><br>
+
+<div style="text-align: left; margin-left: 40px;">
+
+<big><big style="font-weight: bold;">Description</big></big><br><hr style="height: 1px; width: 100%;">
+The Auxiliary Dialog is used to configure auxiliaries. Auxiliary efficieny is defined using an <a href="../fileformat/VAUX.html">Auxiliary Input File (.vaux)</a>.<br>See <a href="../general/Auxiliaries.html">Auxiliaries</a> for details on how the power demand for each auxiliary is calculated.<br><br>
+In <a href="../general/calc_Declaration.html">Declaration Mode</a> only the Technology for each auxiliary has to be selected.<br>
+<br><br>
+<big><big style="font-weight: bold;">Settings</big></big><br>
+<hr style="height: 1px; width: 100%;">
+<span style="font-weight: bold;">Type</span><br>
 <div style="margin-left: 40px;">String defining type of
-auxiliary. Click arrow to load from a predefined list.<br>
+auxiliary. Click the arrow to load from a predefined list, however It is not required to use a type from the list.<br>
 </div>
 <br>
-<span style="font-weight: bold;"><a name="id"></a>ID</span><br>
+<span style="font-weight: bold;">ID</span><br>
 <div style="margin-left: 40px;">The ID string is required
 to link the auxiliary to the corresponding supply power definition in
 the driving cycle. The ID must not contain space or special characters
 (text and numbers only). The ID is not case sensitive (e.g. "ALT" will link
 to "Alt" or "alt", etc.)<br>
+<br>
 <span style="font-weight: bold; font-style: italic;">Example</span><span style="font-style: italic;">: Auxiliary "ALT" is linked to
 the column "&lt;AUX_ALT&gt;" in the driving cylce.</span><br>
+<br>
+See <a href="../general/Auxiliaries.html">Auxiliaries</a> for details.
 </div>
 <br>
-<span style="font-weight: bold;"><a name="file"></a>Input File</span>
-(.vaux)<br>
-<div style="margin-left: 40px;">Path to Auxiliary File.<br>
-<span style="font-weight: bold;"><br>
-Format</span> (comma-separated, dot = decimal-mark):<br>
-</div>
-<table style="text-align: left; width: 510px; height: 247px; margin-left: 40px;" border="1" cellpadding="2" cellspacing="1">
-<tbody>
-<tr>
-<td><span style="color: rgb(51, 102, 255); font-weight: bold;">c </span><span style="font-weight: bold;">Transmission ratio to engine
-speed</span><span style="font-weight: bold;"> [-]</span></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>...</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><span style="color: rgb(51, 102, 255); font-weight: bold;">c </span><span style="font-weight: bold;">Efficiency to engine&nbsp;</span><span style="font-weight: bold;">[-]</span></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>...</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><span style="color: rgb(51, 102, 255); font-weight: bold;">c </span><span style="font-weight: bold;">Efficiency auxiliary to supply [-]</span></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>...</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td style="text-align: center; font-weight: bold;"><span style="color: rgb(51, 102, 255);">c </span>Auxiliary
-speed</td>
-<td style="text-align: center; font-weight: bold;">Mechanical
-power</td>
-<td style="text-align: center; font-weight: bold;">Supply
-power </td>
-</tr>
-<tr>
-<td style="text-align: center;"><span style="color: rgb(51, 102, 255); font-weight: bold;">c </span>[rpm]</td>
-<td style="text-align: center;">[kW]</td>
-<td style="text-align: center;">[kW]</td>
-</tr>
-<tr>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-<tr>
-<td>...</td>
-<td>...</td>
-<td>...</td>
-</tr>
-</tbody>
-</table>
-<div style="margin-left: 40px;"><span style="font-weight: bold; font-style: italic; color: rgb(51, 102, 255);">Note:</span><span style="font-style: italic; color: rgb(51, 102, 255);"> text
-lines (header, comments,
-etc.) </span><span style="text-decoration: underline; font-style: italic; color: rgb(51, 102, 255);">must</span><span style="font-style: italic; color: rgb(51, 102, 255);"> start
-with "c "</span><br>
-</div>
-<br><div style="margin-left: 40px;"><span style="font-weight: bold;">Example:</span><br><img style="width: 370px; height: 288px;" alt="" src="pics/VECTO-Editor_Aux0.PNG"></div><br><br><h2>Calculation of auxiliary power consumption</h2><div style="margin-left: 40px;"><img style="width: 850px; height: 444px;" alt="" src="pics/VECTO-Editor_Aux1.PNG"><br><ol><li>Auxiliary speed: <span style="font-weight: bold;">n</span><sub style="font-weight: bold;">Aux</sub> = n<sub>Eng</sub> * <span style="color: rgb(51, 204, 0); font-weight: bold;"><span style="color: rgb(43, 174, 0);">TransRatio</span> </span>(with: n<sub>Eng</sub> = engine speed)</li><li>Auxiliary output power: <span style="font-weight: bold;">P</span><sub style="font-weight: bold;">AuxOut</sub> = <span style="font-weight: bold; color: rgb(35, 71, 179);">P</span><sub style="font-weight: bold; color: rgb(35, 71, 179);">supply</sub> / <span style="font-weight: bold; color: rgb(102, 0, 204);">EffToSply</span></li><li>Auxiliary input power: <span style="font-weight: bold;">P</span><sub style="font-weight: bold;">AuxIn</sub> = <span style="color: red; font-weight: bold;">AuxMap(</span>n<sub>Aux</sub>, P<sub>AuxOut</sub><span style="color: red; font-weight: bold;">)</span></li><li>Auxiliary power consumption: <span style="font-weight: bold;">P</span><sub style="font-weight: bold;">AuxDemand</sub> = P<sub>AuxIn</sub> / <span style="font-weight: bold; color: rgb(214, 128, 0);">EffToEng</span></li><li><span style="font-weight: bold;">P</span><sub style="font-weight: bold;">AuxDemand</sub><span style="font-weight: bold;"> is&nbsp;added to the engine's power demand</span></li></ol></div><br><br><br><br>
-<img style="width: 75px; height: 23px;" alt="ok" src="../pics/misc/OK.png"><a name="ok"></a> <span style="font-weight: bold;">Save and close</span><br>
+<span style="font-weight: bold;">Input File</span>
 <br>
-<img style="width: 75px; height: 23px;" alt="cancel" src="../pics/misc/Cancel.png"><a name="cancel"></a> <span style="font-weight: bold;">Close without saving<br></span><table style="text-align: left; width: 100%; height: 1200px;" border="0" cellpadding="2" cellspacing="2"><tbody><tr><td></td></tr></tbody></table></div>
-<div style="text-align: left;">
-<div style="text-align: left;">
-<div style="text-align: left;">
-<hr style="width: 100%; height: 2px;"><a href="../contact.html">Contact</a>
+<div style="margin-left: 40px;">Path to the <a href="../fileformat/VAUX.html">Auxiliary File (.vaux)</a>.<span style="font-weight: bold;"><br>
+</span></div><br><br><big><big style="font-weight: bold;">Controls</big></big><br>
+
+<hr style="height: 1px; width: 100%;">
+<span style="font-weight: bold;"></span><img style="width: 75px; height: 23px;" alt="ok" src="../pics/misc/OK.png"> <span style="font-weight: bold;">Save and close</span><br>
+<br>
+<img style="width: 75px; height: 23px;" alt="cancel" src="../pics/misc/Cancel.png"> <span style="font-weight: bold;">Close without saving<br></span>
+
+
 </div>
+
+
 </div>
-</div>
-<ul style="text-align: left; font-family: Tahoma;">
-</ul>
-</div>
+
 </body></html>

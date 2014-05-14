@@ -1,270 +1,101 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Engine Editor - VECTO User Manual</title>
 
-</head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Engine Editor - VECTO User Manual</title></head>
 <body>
-&nbsp;<map name="linkmap"><area shape="rect" coords="12,33,31,50&quot;" href="#new"><area shape="rect" coords="34,33,52,52&quot;" href="#open"><area shape="rect" coords="57,33,76,50&quot;" href="#save"><area shape="rect" coords="79,32,99,51&quot;" href="#saveas"><area shape="rect" coords="108,33,132,51&quot;" href="#sendto"><area shape="rect" coords="130,113,504,133&quot;" href="#make"><area shape="rect" coords="132,149,190,170&quot;" href="#power"><area shape="rect" coords="132,176,194,196&quot;" href="#ccm"><area shape="rect" coords="133,203,192,222&quot;" href="#inertia"><area shape="rect" coords="410,149,471,170&quot;" href="#nidle"><area shape="rect" coords="411,177,471,199&quot;" href="#nrated"><area shape="rect" coords="19,227,503,387&quot;" href="#fld"><area shape="rect" coords="20,420,503,442&quot;" href="#map"><area shape="rect" coords="19,469,502,491&quot;" href="#cal"><area shape="rect" coords="346,506,421,528&quot;" href="#ok"><area shape="rect" coords="429,506,502,529&quot;" href="#cancel"></map>
-<table style="width: 100%; height: 54px; text-align: left; margin-left: auto; margin-right: auto;" border="0" cellpadding="2" cellspacing="2">
-<tbody>
-<tr>
-<td style="width: 110px;"><a href="../usermanual.html"><img src="../pics/VECTO-small.PNG" style="border: 0px solid ; width: 106px; height: 36px;" alt="VECTO-Logo"></a></td>
-<td><a href="../usermanual.html"><span style="color: rgb(0, 0, 0); font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; font-family: Verdana;">User
-Manual</span></a><span style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; display: inline ! important; float: none;"></span></td>
-<td style="text-align: right; width: 405px;"><a href="http://ec.europa.eu/dgs/jrc/index.cfm" target="_blank"><img src="../pics/JRC.png" style="border: 0px solid ; width: 173px; height: 36px;" alt="JRC-Logo" hspace="5"></a><a href="http://www.ivt.tugraz.at/" target="_blank"><img src="../pics/IVT.png" alt="IVT-Logo" style="border: 0px solid ; width: 74px; height: 36px;" hspace="5"></a><a href="http://portal.tugraz.at/pls/portal/url/page/TU_Graz" target="_blank"><img src="../pics/TUG.png" alt="TUG-Logo" style="border: 0px solid ; width: 96px; height: 36px;" hspace="5"></a></td>
-</tr>
-</tbody>
-</table>
-<hr style="width: 100%; height: 2px;"><a href="usermanual.html"><span style="font-family: Verdana;"></span></a><span style="font-family: Verdana;"></span>
-<div style="text-align: center;">
-<div style="text-align: left; font-family: Verdana;">
-<h2>Engine Editor</h2>
-</div>
-<img src="pics/ENG-Editor.PNG" style="width: 524px; height: 563px;" alt="eng" usemap="#linkmap"><br>
-<span style="font-family: Verdana;"><br>
+<div style="text-align: left;">
+
+
+<span style="font-family: Verdana;"><big><big><big><span style="font-weight: bold;">Engine Editor</span></big></big></big></span><br>
+<hr style="width: 100%; height: 0px;"><br>
+
+
+
+<div style="text-align: center;"><img src="pics/ENG-Editor.PNg" style="width: 800px; height: 444px;" alt="eng" usemap="#linkmap"><br></div>
+<span style="font-family: Verdana;"><br></span><div style="margin-left: 40px;"><big><big style="font-weight: bold;">Description</big></big><br><hr style="height: 1px; width: 100%;">
+
+The Engine File (.veng) defines all engine-related parameters and input files like Fuel Consumption Map and Full Load Curves.<br><br>
 <br>
-</span>
-<div style="text-align: left;"><img src="../pics/icons/blue-document-icon.png" style="width: 16px; height: 16px;" alt="new"><span style="font-weight: bold;"><a name="new"></a>New
-file</span><br>
-<div style="margin-left: 40px;">Create a new empty .veng
-file<br>
-</div>
+<big><big style="font-weight: bold;">Relatve File Paths</big></big><br>
+
+<hr style="height: 1px; width: 100%;">It is recommended to define
+relative filepaths. This way the Job File and all input files can be
+moved without having to update the paths.<br>
+
+Example: "Demo\FLD1.vfld" points to the "Demo" subdirectory of the Engine File's directoy.<br>
+
 <br>
-<br>
-<img src="../pics/icons/Open-icon.png" style="width: 16px; height: 16px;" alt="open"><span style="font-weight: bold;"><a name="open"></a>Open
-existing file</span><br>
-<div style="margin-left: 40px;">Open an existing .veng
-file<br>
-</div>
-<span style="font-family: Verdana;"></span><br>
-<br>
-<span style="font-family: Verdana;"></span><img src="../pics/icons/Actions-document-save-icon.png" style="width: 16px; height: 16px;" alt="save"><a name="save"></a> <span style="font-weight: bold;">Save
-current file</span><br>
-<span style="font-family: Verdana;"></span><br>
-<br>
-<span style="font-family: Verdana;"></span><img src="../pics/icons/Actions-document-save-as-icon.png" style="width: 16px; height: 16px;" alt="SaveAs"><a name="saveas"></a> <span style="font-weight: bold;">Save
-file as...</span><br>
-<span style="font-family: Verdana;"></span><br>
-<br>
-<span style="font-family: Verdana;"></span><img src="../pics/icons/export-icon.png" style="width: 16px; height: 16px;" alt="sendto"><a name="sendto"></a> <span style="font-weight: bold;">Send
-current file to the <a href="VECTO-Editor.html">VECTO
-Editor</a></span><br>
-<div style="margin-left: 40px;"><span style="font-weight: bold;">Note:</span> If the current
-file was opened via the <a href="VECTO-Editor.html">VECTO
-Editor</a> the file will be sent automatically when saved.<br>
-</div>
-<span style="font-family: Verdana;"></span><br>
-<br>
-<span style="font-family: Verdana;"></span><span style="font-weight: bold;"><a name="make"></a>Make
+VECTO automatically uses relative paths if the input file (e.g. FC Map)
+is in the same directory as the Engine File. (The Engine File must be
+saved before browsing for input files.)<br><br>
+<br><big><big style="font-weight: bold;">Main Engine Parameters</big></big><br><hr style="height: 1px; width: 100%;">
+
+<br><span style="font-weight: bold;">Make
 and Model</span><br>
 <div style="margin-left: 40px;">Free text defining the
 engine model, type, etc.<br>
 </div>
 <span style="font-family: Verdana;"></span><br>
-<br>
-<span style="font-family: Verdana;"></span><a name="power"></a><span style="font-weight: bold;">Rated
-Engine Power</span> [kW]<br>
-<br>
-<br>
-<a name="ccm"></a><span style="font-weight: bold;">Displacement</span>
+<span style="font-weight: bold;">Idling
+Engine Speed</span> [rpm]<br><div style="margin-left: 40px;">
+Low idle, applied in
+simulation for vehicle standstill in neutral gear position.<br></div><br>
+<span style="font-weight: bold;">Displacement</span>
 [ccm]<br>
-<div style="margin-left: 40px;"><span style="font-family: Verdana;"></span>Not used in the
-current version (in future planned to be used for calculation of
-rotational inertia)</div>
+<div style="margin-left: 40px;"><span style="font-family: Verdana;"></span>Used in <a href="../general/calc_Declaration.html">Declaration Mode</a> to calculate inertia.</div>
 <br>
-<span style="font-family: Verdana;"></span><a name="inertia"></a><span style="font-weight: bold;">Inertia
+<span style="font-family: Verdana;"></span><span style="font-weight: bold;">Inertia
 including Flywheel</span> [kgm<sup>2</sup>]<br>
 <div style="margin-left: 40px;">Inertia for rotating parts
-including engine flywheel<span style="font-family: Verdana;"></span><br>
+including engine flywheel<span style="font-family: Verdana;"></span>. In <a href="../general/calc_Declaration.html">Declaration Mode</a> the inertia is calculated automatically.
 </div>
 <br>
-<span style="font-family: Verdana;"></span><a name="nidle"></a><span style="font-weight: bold;">Idling
-Engine Speed</span> [rpm]<br>
-<div style="margin-left: 40px;">Low idle, applied in
-simulation for vehicle standstill in neutral gear position.<br>
+<span style="font-family: Verdana;"></span><br><big><big style="font-weight: bold;">Full Load and Drag Curves</big></big><br><hr style="height: 1px; width: 100%;">
+
+Multiple <a href="../fileformat/VFLD.html">Full Load and Drag Curves (.vfld)</a> can be defined and assigned
+to different gears. Gear "0" must be assigned for idling and <a href="../general/EngOnlyMode.html">Engine Only Mode</a>.<br>Use the <img style="width: 16px; height: 16px;" alt="add" src="../pics/icons/plus-circle-icon.png"> and <img style="width: 16px; height: 16px;" alt="remove" src="../pics/icons/minus-circle-icon.png"> buttons to add or
+remove&nbsp;.vfld files. Doubleclick entries to edit existing configurations.<br><br>The input file (.vfld) file format is described <a href="../fileformat/VFLD.html">here</a>. <br><br><br><big><big style="font-weight: bold;">Fuel Consumption Map</big></big><br><hr style="height: 1px; width: 100%;">
+
+The <a href="../fileformat/VMAP.html">Fuel Consumption Map</a> is used to calculate the base FC value. See <a href="../general/FC.html">Fuel Consumption Calculation</a> for details.<br><br>The input file (.vmap) file format is described <a href="../fileformat/VMAP.html">here</a>. <br><br><br><big><big style="font-weight: bold;">WHTC Test Results</big></big><br><hr style="height: 1px; width: 100%;">The WHTC test results are required in <a href="../general/calc_Declaration.html">Declaration Mode</a> for the <a href="../general/FC.html">WHTC FC Correction</a>. The fuel consumption must be defined in [g/kWh] for each test part (Urban, Rural, Motorway) separately.<br><br><br><big><big style="font-weight: bold;">Chart Area</big></big><br><hr style="height: 1px; width: 100%;">The Chart Area shows the fuel consumption map and the selected full load curve.<br><br><br><big><big style="font-weight: bold;">Controls</big></big><br><hr style="height: 1px; width: 100%;"><img src="../pics/icons/blue-document-icon.png" style="width: 16px; height: 16px;" alt="new"><span style="font-weight: bold;">New
+file</span><br>
+<div style="margin-left: 40px;">Create a new empty .veng
+file<br>
 </div>
 <br>
-<a name="nrated"></a><span style="font-weight: bold;">Rated Engine Speed</span>
-[rpm]<br>
-<br>
-<br>
-<a name="fld"></a><span style="font-weight: bold;">Full
-Load and Drag Curves</span>
-(.vfld)<br>
-<div style="margin-left: 40px;">Multiple Full Load and Drag Curves can be defined and assigned to different gears. Gear "0" must be assigned for idling and <a href="VECTO-Editor.html#engonly">Engine Only Mode</a>.<br>Use the <img style="width: 16px; height: 16px;" alt="add" src="../pics/icons/plus-circle-icon.png"> and <img style="width: 16px; height: 16px;" alt="remove" src="../pics/icons/minus-circle-icon.png"> buttons to add or
-remove&nbsp;.vfld files. Doubleclick entries to edit existing configurations.<br><br>The .vfld file contains the stationary full load curve&nbsp;as a function of engine speed: <span style="font-weight: bold;">Max. Torque</span> (column
-2). Engine <span style="font-weight: bold;">Motoring
-Torque</span> is defined in column 3.<br><br>Transient effects on
-full-load torque built up are considered by a PT1 approach. The related
-<span style="font-weight: bold;">PT1 time constant</span>
-is considered in the model as a function of engine speed and has to be
-specified in column 4.<br>
+<img src="../pics/icons/Open-icon.png" style="width: 16px; height: 16px;" alt="open"><span style="font-weight: bold;">Open
+existing file</span><br>
+<div style="margin-left: 40px;">Open an existing .veng
+file<br>
 </div>
-<br>
-<div style="margin-left: 40px;"><span style="font-weight: bold;">Format</span>
-(comma-separated, dot = decimal-mark):
-</div>
-</div>
-<table style="background-color: white; height: 115px; width: 637px; text-align: left; margin-right: auto; margin-left: 40px;" border="1" cellpadding="2" cellspacing="1">
-<tbody>
-<tr>
-<th style="text-align: center; width: 148px;"><span style="color: rgb(51, 102, 255);">c&nbsp;</span>Engine
-Speed</th>
-<th style="text-align: center; width: 156px;">Max.
-Torque<br>
-(Static full load)</th>
-<th style="text-align: center; width: 149px;">Motoring
-Torque</th>
-<td style="width: 149px; text-align: center;"><span style="font-weight: bold;">PT1 time constant</span></td>
-</tr>
-<tr>
-<td style="text-align: center; width: 148px;"><span style="color: rgb(51, 102, 255);"><span style="font-weight: bold;">c</span> </span>[rpm]</td>
-<td style="text-align: center; width: 156px;">[Nm]</td>
-<td style="text-align: center; width: 149px;">[Nm]</td>
-<td style="width: 149px; text-align: center;">[s]</td>
-</tr>
-<tr>
-<td style="width: 148px;">...</td>
-<td style="width: 156px;">...</td>
-<td style="width: 149px;">...</td>
-<td style="width: 149px;">...</td>
-</tr>
-<tr>
-<td style="width: 148px;">...</td>
-<td style="width: 156px;">...</td>
-<td style="width: 149px;">...</td>
-<td style="width: 149px;">...</td>
-</tr>
-</tbody>
-</table>
-<div style="text-align: left;">
-<div style="margin-left: 40px;"><span style="font-weight: bold; font-style: italic; color: rgb(51, 102, 255);">Note:</span><span style="font-style: italic; color: rgb(51, 102, 255);"> text
-lines (header, comments,
-etc.) </span><span style="text-decoration: underline; font-style: italic; color: rgb(51, 102, 255);">must</span><span style="font-style: italic; color: rgb(51, 102, 255);"> start
-with "<span style="font-weight: bold;">c</span> "</span><br>
-</div>
-<br>
-<div style="margin-left: 40px;">The PT1 approach to
-calculate the dynamic full load is applied using this formula:<br>
-<img style="width: 555px; height: 65px;" alt="" src="pics/ENG-PT1.png"><br>
-with:<br>
-<div style="margin-left: 40px;">n<sub>i</sub>
-= current engine speed<br>
-T(n<sub>i</sub>) = PT1 time constant&nbsp;at engine
-speed&nbsp;n<sub>i</sub> (col. 4 in .vfld file)<br>
-P_fld_stat(n<sub>i</sub>) = Static full load at engine
-speed&nbsp;n<sub>i</sub> (col. 2 in .vfld file)<br>
-P_act<sub>i-1</sub> = Engine power in previous time stet</div>
-<br>
-</div>
-<br>
-<a name="map"></a><span style="font-weight: bold;">Fuel
-Consumption Map</span>
-(.vmap)<br>
-<div style="margin-left: 40px;">Fuel Consumption Map
-measured in stationary conditions.<br>
-The following rules apply:<br>
-<ul>
-<li>The map must cover the full engine range between full load
-and motoring curve. <span style="font-weight: bold; color: red;">Extrapolation
-is not possible and will abort the calculation!</span></li>
-<li>At least four points are required.</li>
-</ul>
-</div>
-<br>
-<div style="margin-left: 40px;"><span style="font-weight: bold;">Format</span>
-(comma-separated, dot = decimal-mark):
-</div>
-</div>
-<table style="background-color: white; height: 115px; width: 523px; text-align: left; margin-right: auto; margin-left: 40px;" border="1" cellpadding="2" cellspacing="1">
-<tbody>
-<tr>
-<th style="text-align: center; width: 158px;"><span style="color: rgb(51, 102, 255);">c&nbsp;</span>Engine
-Speed</th>
-<th style="text-align: center; width: 150px;">Torque</th>
-<th style="text-align: center; width: 151px;">Fuel
-Consumption</th>
-</tr>
-<tr>
-<td style="text-align: center; width: 158px;"><span style="color: rgb(51, 102, 255);"><span style="font-weight: bold;">c</span> </span>[rpm]</td>
-<td style="text-align: center; width: 150px;">[Nm]</td>
-<td style="text-align: center; width: 151px;">[g/h]</td>
-</tr>
-<tr>
-<td style="width: 158px;">...</td>
-<td style="width: 150px;">...</td>
-<td style="width: 151px;">...</td>
-</tr>
-<tr>
-<td style="width: 158px;">...</td>
-<td style="width: 150px;">...</td>
-<td style="width: 151px;">...</td>
-</tr>
-</tbody>
-</table>
-<div style="text-align: left;">
-<div style="margin-left: 40px;"><span style="font-weight: bold; font-style: italic; color: rgb(51, 102, 255);">Note:</span><span style="font-style: italic; color: rgb(51, 102, 255);"> text
-lines (header, comments,
-etc.) </span><span style="text-decoration: underline; font-style: italic; color: rgb(51, 102, 255);">must</span><span style="font-style: italic; color: rgb(51, 102, 255);"> start
-with "<span style="font-weight: bold;">c</span> "</span><br>
-<h2>Fuel Map Interpolation</h2>
-The interpolation is based on <a href="http://en.wikipedia.org/wiki/Delaunay_triangulation">Delaunay
-Triangulation&nbsp;</a><a href="http://en.wikipedia.org/wiki/Delaunay_triangulation"><img style="border: 0px solid ; width: 12px; height: 12px;" alt="" src="../pics/misc/external-icon%2012x12.png"></a> and
-works as follows:<br>
-<ol>
-<li>Triangulate
-the given rpm/torque/fuel&nbsp;points (= x,y,z)&nbsp; to create
-a
-network of triangles with each point of the map being part of at least
-one triangle.</li>
-<li>Find the triangle where the to-be-interpolated
-load point (x,y) is inside. If no triangle meets the criterion the
-calculation will be aborted.</li>
-<li>Calculate the z-value (= fuel) of the given x,y-point in
-the plane of the triangle</li>
-</ol>
-</div>
-<br>
-<br>
-<a name="cal"></a><span style="font-weight: bold;">Calibration
-Test Cycle</span><br>
-<div style="margin-left: 40px;">Not implemented yet
-(planned: import of
-transient calibration test cycle and model internal calculation of
-correction factor(s) to be applied to stationary fuel consumption map.<br>
-</div>
-<br>
+<span style="font-family: Verdana;"></span><br>
+<span style="font-family: Verdana;"></span><img src="../pics/icons/Actions-document-save-icon.png" style="width: 16px; height: 16px;" alt="save"> <span style="font-weight: bold;">Save
+current file</span><br>
+<span style="font-family: Verdana;"></span><br>
+<span style="font-family: Verdana;"></span><img src="../pics/icons/Actions-document-save-as-icon.png" style="width: 16px; height: 16px;" alt="SaveAs"> <span style="font-weight: bold;">Save
+file as...</span><br>
+<span style="font-family: Verdana;"></span><br>
+<span style="font-family: Verdana;"></span><img src="../pics/icons/export-icon.png" style="width: 16px; height: 16px;" alt="sendto"> <span style="font-weight: bold;">Send
+current file to the <a href="VECTO-Editor.html">VECTO
+Editor</a></span><br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">Note:</span> If the current
+file was opened via the <a href="VECTO-Editor.html">VECTO
+Editor</a> the file will be sent automatically when saved.<br></div><br>
 <img style="width: 28px; height: 21px;" alt="" src="../pics/misc/browse.png"> <span style="font-weight: bold;">Open file browser</span>.<br>
 <br>
-<img style="width: 22px; height: 22px;" alt="" src="../pics/misc/OpenFile.PNG"> <span style="font-weight: bold;">Open file</span> with <a href="../../GRAPHi/documentation/HTML%20Manual/mainwindow.html">GRAPHi</a>
-or an user-defined tool (see <a href="settings.html#opencmd">File
-Open Command)</a>.<br>
-<br>
-<img src="../pics/misc/OK.png" style="width: 75px; height: 23px;" alt="OK"><a name="ok"></a><span style="font-weight: bold;">Save
+<img style="width: 22px; height: 22px;" alt="" src="../pics/misc/OpenFile.PNG"> <span style="font-weight: bold;">Open file</span> (see <a href="settings.html#opencmd">File
+Open Command)</a>.<br><br><img src="../pics/misc/OK.png" style="width: 75px; height: 23px;" alt="OK"><span style="font-weight: bold;">Save
 and close file</span><br>
 <div style="margin-left: 40px;">If necessary the file path
 in the <a href="VECTO-Editor.html">VECTO Editor</a>
 will be updated.<br>
 </div>
 <br>
+<img src="../pics/misc/Cancel.png" style="width: 75px; height: 23px;" alt="Cancel"><span style="font-weight: bold;">
+Cancel without saving</span><br><br></div><span style="font-family: Verdana;">
+
+</span>
 <br>
-<img src="../pics/misc/Cancel.png" style="width: 75px; height: 23px;" alt="Cancel"><a name="cancel"></a><span style="font-weight: bold;">
-Cancel without saving</span><br>
-<span style="font-weight: bold;"></span></div>
-<table style="text-align: left; width: 100%; height: 1100px;" border="0" cellpadding="2" cellspacing="2">
-<tbody>
-<tr>
-<td></td>
-</tr>
-</tbody>
-</table>
-<div style="text-align: left;">
-<div style="text-align: left;">
-<div style="text-align: left;">
-<hr style="width: 100%; height: 2px;"><a href="../contact.html">Contact</a>
-</div>
-</div>
-</div>
+
 <ul style="text-align: left; font-family: Tahoma;">
 </ul>
 </div>

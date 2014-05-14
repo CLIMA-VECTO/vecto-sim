@@ -29,7 +29,6 @@ Partial Class F_Graph
         Me.BtAddCh = New System.Windows.Forms.Button()
         Me.ListView1 = New System.Windows.Forms.ListView()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.CbXaxis = New System.Windows.Forms.ComboBox()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
@@ -106,7 +105,7 @@ Partial Class F_Graph
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ListView1.BackColor = System.Drawing.Color.GhostWhite
         Me.ListView1.CheckBoxes = True
-        Me.ListView1.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3})
+        Me.ListView1.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader3})
         Me.ListView1.FullRowSelect = True
         Me.ListView1.GridLines = True
         Me.ListView1.Location = New System.Drawing.Point(6, 19)
@@ -119,12 +118,7 @@ Partial Class F_Graph
         'ColumnHeader1
         '
         Me.ColumnHeader1.Text = "Channel"
-        Me.ColumnHeader1.Width = 121
-        '
-        'ColumnHeader2
-        '
-        Me.ColumnHeader2.Text = "Unit"
-        Me.ColumnHeader2.Width = 45
+        Me.ColumnHeader1.Width = 184
         '
         'ColumnHeader3
         '
@@ -330,7 +324,6 @@ Partial Class F_Graph
     Friend WithEvents BtRemCh As System.Windows.Forms.Button
     Friend WithEvents BtAddCh As System.Windows.Forms.Button
     Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
     Friend WithEvents ToolStripBtOpen As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator

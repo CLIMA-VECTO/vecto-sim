@@ -448,7 +448,6 @@ Public Class cMOD
 
         Dim f As cFile_V3
         Dim s As System.Text.StringBuilder
-        Dim sU As System.Text.StringBuilder
         Dim t As Integer
         Dim t1 As Integer
 
@@ -482,7 +481,6 @@ Public Class cMOD
         End If
 
         s = New System.Text.StringBuilder
-        sU = New System.Text.StringBuilder
 
         '*********** Settings **************
         Sepp = ","
@@ -512,55 +510,45 @@ Public Class cMOD
         '*** Header & Units ****************************************************************************
         s.Length = 0
 
-        s.Append("time")
-        sU.Append("[s]")
+        s.Append("time [s]")
 
         If Not VEC.EngOnly Then
 
-            s.Append(",dist,v_act,v_targ,acc,grad")
-            sU.Append(",[m],[km/h],[km/h],[m/s^2],[%]")
+            s.Append(",dist [m],v_act [km/h],v_targ [km/h],acc [m/s^2],grad [%]")
             dist = 0
 
         End If
 
-        s.Append(",n,Tq_eng,Tq_clutch,Tq_full,Tq_drag,Pe_eng,Pe_full,Pe_drag,Pe_clutch,Pa Eng,Paux")
-        sU.Append(",[1/min],[Nm],[Nm],[Nm],[Nm],[kW],[kW],[kW],[kW],[kW],[kW]")
+        s.Append(",n [1/min],Tq_eng [Nm],Tq_clutch [Nm],Tq_full [Nm],Tq_drag [Nm],Pe_eng [kW],Pe_full [kW],Pe_drag [kW],Pe_clutch [kW],Pa Eng [kW],Paux [kW]")
 
         If Not VEC.EngOnly Then
 
-            s.Append(",Gear,Ploss GB,Ploss Diff,Ploss Retarder,Pa GB,Pa Veh,Proll,Pair,Pgrad,Pwheel,Pbrake")
-            sU.Append(",[-],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW],[kW]")
+            s.Append(",Gear [-],Ploss GB [kW],Ploss Diff [kW],Ploss Retarder [kW],Pa GB [kW],Pa Veh [kW],Proll [kW],Pair [kW],Pgrad [kW],Pwheel [kW],Pbrake [kW]")
 
             If GBX.TCon Then
-                s.Append(",TCν,TCμ,TC_T_Out,TC_n_Out")
-                sU.Append(",[-],[-],[Nm],[1/min]")
+                s.Append(",TCν [-],TCμ [-],TC_T_Out [Nm],TC_n_Out [1/min]")
             End If
 
             'Auxiliaries
             For Each StrKey In AuxList
-                s.Append(",Paux_" & StrKey)
-                sU.Append(",[kW]")
+                s.Append(",Paux_" & StrKey & " [kW]")
             Next
 
         End If
 
 
         'FC
-        s.Append(Sepp & "FC")
-        sU.Append(Sepp & "[g/h]")
+        s.Append(Sepp & "FC [g/h]")
 
-        s.Append(Sepp & "FC-AUXc")
-        sU.Append(Sepp & "[g/h]")
+        s.Append(Sepp & "FC-AUXc [g/h]")
 
-        s.Append(Sepp & "FC-WHTCc")
-        sU.Append(Sepp & "[g/h]")
+        s.Append(Sepp & "FC-WHTCc [g/h]")
 
 
         'Write to File
         '   Header
         f.WriteLine(s.ToString)
-        '   Units
-        f.WriteLine(sU.ToString)
+
 
         '***********************************************************************************************
         '***********************************************************************************************

@@ -75,10 +75,9 @@ Partial Class F_MAINForm
         Me.PanelOptAllg = New System.Windows.Forms.Panel()
         Me.CbDecl = New System.Windows.Forms.CheckBox()
         Me.PnDeclOpt = New System.Windows.Forms.Panel()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.CbBatch = New System.Windows.Forms.CheckBox()
         Me.ChBoxCyclDistCor = New System.Windows.Forms.CheckBox()
         Me.ChBoxUseGears = New System.Windows.Forms.CheckBox()
-        Me.CBoxMODE = New System.Windows.Forms.ComboBox()
         Me.ChBoxModOut = New System.Windows.Forms.CheckBox()
         Me.TabPageDEV = New System.Windows.Forms.TabPage()
         Me.LvDEVoptions = New System.Windows.Forms.ListView()
@@ -116,9 +115,7 @@ Partial Class F_MAINForm
         Me.SettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripDrDnBtInfo = New System.Windows.Forms.ToolStripDropDownButton()
         Me.UserManualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.QuickStartGuideToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.UpdateNotesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SupportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.CreateActivationFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutVECTOToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
@@ -491,7 +488,7 @@ Partial Class F_MAINForm
         Me.GrBoxSTD.Size = New System.Drawing.Size(1106, 158)
         Me.GrBoxSTD.TabIndex = 14
         Me.GrBoxSTD.TabStop = False
-        Me.GrBoxSTD.Text = "STANDARD Options"
+        Me.GrBoxSTD.Text = "Standard Options"
         '
         'GrBoxBATCH
         '
@@ -508,7 +505,7 @@ Partial Class F_MAINForm
         Me.GrBoxBATCH.Size = New System.Drawing.Size(1106, 158)
         Me.GrBoxBATCH.TabIndex = 5
         Me.GrBoxBATCH.TabStop = False
-        Me.GrBoxBATCH.Text = "BATCH Options"
+        Me.GrBoxBATCH.Text = "Batch Options"
         '
         'ChBoxBatchSubD
         '
@@ -590,23 +587,23 @@ Partial Class F_MAINForm
         '
         'PnDeclOpt
         '
-        Me.PnDeclOpt.Controls.Add(Me.Label1)
+        Me.PnDeclOpt.Controls.Add(Me.CbBatch)
         Me.PnDeclOpt.Controls.Add(Me.ChBoxCyclDistCor)
         Me.PnDeclOpt.Controls.Add(Me.ChBoxUseGears)
-        Me.PnDeclOpt.Controls.Add(Me.CBoxMODE)
         Me.PnDeclOpt.Location = New System.Drawing.Point(8, 38)
         Me.PnDeclOpt.Name = "PnDeclOpt"
         Me.PnDeclOpt.Size = New System.Drawing.Size(202, 93)
         Me.PnDeclOpt.TabIndex = 13
         '
-        'Label1
+        'CbBatch
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(5, 7)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(34, 13)
-        Me.Label1.TabIndex = 1
-        Me.Label1.Text = "Mode"
+        Me.CbBatch.AutoSize = True
+        Me.CbBatch.Location = New System.Drawing.Point(6, 3)
+        Me.CbBatch.Name = "CbBatch"
+        Me.CbBatch.Size = New System.Drawing.Size(84, 17)
+        Me.CbBatch.TabIndex = 15
+        Me.CbBatch.Text = "Batch Mode"
+        Me.CbBatch.UseVisualStyleBackColor = True
         '
         'ChBoxCyclDistCor
         '
@@ -627,17 +624,6 @@ Partial Class F_MAINForm
         Me.ChBoxUseGears.TabIndex = 0
         Me.ChBoxUseGears.Text = "Use gears/rpm's form driving cycle"
         Me.ChBoxUseGears.UseVisualStyleBackColor = True
-        '
-        'CBoxMODE
-        '
-        Me.CBoxMODE.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.CBoxMODE.Font = New System.Drawing.Font("Tahoma", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CBoxMODE.FormattingEnabled = True
-        Me.CBoxMODE.Items.AddRange(New Object() {"  STANDARD", "  BATCH"})
-        Me.CBoxMODE.Location = New System.Drawing.Point(45, 4)
-        Me.CBoxMODE.Name = "CBoxMODE"
-        Me.CBoxMODE.Size = New System.Drawing.Size(105, 21)
-        Me.CBoxMODE.TabIndex = 12
         '
         'ChBoxModOut
         '
@@ -842,9 +828,10 @@ Partial Class F_MAINForm
         '
         'GENEditorToolStripMenuItem1
         '
+        Me.GENEditorToolStripMenuItem1.Image = Global.VECTO.My.Resources.Resources.F_VECTO
         Me.GENEditorToolStripMenuItem1.Name = "GENEditorToolStripMenuItem1"
         Me.GENEditorToolStripMenuItem1.Size = New System.Drawing.Size(170, 22)
-        Me.GENEditorToolStripMenuItem1.Text = "VECTO Editor"
+        Me.GENEditorToolStripMenuItem1.Text = "Job Editor"
         '
         'VEHEditorToolStripMenuItem
         '
@@ -906,7 +893,7 @@ Partial Class F_MAINForm
         '
         'ToolStripDrDnBtInfo
         '
-        Me.ToolStripDrDnBtInfo.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserManualToolStripMenuItem, Me.QuickStartGuideToolStripMenuItem, Me.UpdateNotesToolStripMenuItem, Me.SupportToolStripMenuItem, Me.ToolStripSeparator3, Me.CreateActivationFileToolStripMenuItem, Me.AboutVECTOToolStripMenuItem1})
+        Me.ToolStripDrDnBtInfo.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserManualToolStripMenuItem, Me.UpdateNotesToolStripMenuItem, Me.ToolStripSeparator3, Me.CreateActivationFileToolStripMenuItem, Me.AboutVECTOToolStripMenuItem1})
         Me.ToolStripDrDnBtInfo.Image = Global.VECTO.My.Resources.Resources.Help_icon
         Me.ToolStripDrDnBtInfo.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ToolStripDrDnBtInfo.Name = "ToolStripDrDnBtInfo"
@@ -919,23 +906,11 @@ Partial Class F_MAINForm
         Me.UserManualToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
         Me.UserManualToolStripMenuItem.Text = "User Manual"
         '
-        'QuickStartGuideToolStripMenuItem
-        '
-        Me.QuickStartGuideToolStripMenuItem.Name = "QuickStartGuideToolStripMenuItem"
-        Me.QuickStartGuideToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
-        Me.QuickStartGuideToolStripMenuItem.Text = "Quick Start Guide"
-        '
         'UpdateNotesToolStripMenuItem
         '
         Me.UpdateNotesToolStripMenuItem.Name = "UpdateNotesToolStripMenuItem"
         Me.UpdateNotesToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
         Me.UpdateNotesToolStripMenuItem.Text = "Update Notes"
-        '
-        'SupportToolStripMenuItem
-        '
-        Me.SupportToolStripMenuItem.Name = "SupportToolStripMenuItem"
-        Me.SupportToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
-        Me.SupportToolStripMenuItem.Text = "Support"
         '
         'ToolStripSeparator3
         '
@@ -1040,7 +1015,6 @@ Partial Class F_MAINForm
     Friend WithEvents ButtonDRIadd As System.Windows.Forms.Button
     Friend WithEvents ButtonGENopt As System.Windows.Forms.Button
     Friend WithEvents ButtonDRIedit As System.Windows.Forms.Button
-    Friend WithEvents CBoxMODE As System.Windows.Forms.ComboBox
     Friend WithEvents ConMenFilelist As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents SaveListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents LoadListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
@@ -1061,7 +1035,6 @@ Partial Class F_MAINForm
     Friend WithEvents ChBoxUseGears As System.Windows.Forms.CheckBox
     Friend WithEvents ChBoxCyclDistCor As System.Windows.Forms.CheckBox
     Friend WithEvents PanelOptAllg As System.Windows.Forms.Panel
-    Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents LbAutoShDown As System.Windows.Forms.Label
     Friend WithEvents ChBoxAutoSD As System.Windows.Forms.CheckBox
     Friend WithEvents TbBOpath As System.Windows.Forms.TextBox
@@ -1105,7 +1078,6 @@ Partial Class F_MAINForm
     Friend WithEvents EngineEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents GearboxEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents UserManualToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents QuickStartGuideToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
@@ -1113,7 +1085,6 @@ Partial Class F_MAINForm
     Friend WithEvents ColumnHeader8 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader9 As System.Windows.Forms.ColumnHeader
     Friend WithEvents UpdateNotesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents SupportToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents SignOrVerifyFilesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripSeparator6 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents GrBoxSTD As System.Windows.Forms.GroupBox
@@ -1122,5 +1093,6 @@ Partial Class F_MAINForm
     Friend WithEvents CbDecl As System.Windows.Forms.CheckBox
     Friend WithEvents GraphToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents OpenInGraphWindowToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents CbBatch As System.Windows.Forms.CheckBox
 
 End Class

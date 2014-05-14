@@ -38,8 +38,8 @@ Public Class F_Welcome
 
     'Open Quick Start Guide
     Private Sub Button2_Click(sender As System.Object, e As System.EventArgs) Handles Button2.Click
-        If IO.File.Exists(MyAppPath & "User Manual\qsg\quickstartApp.html") Then
-            System.Diagnostics.Process.Start(MyAppPath & "User Manual\qsg\quickstartApp.html")
+        If IO.File.Exists(MyAppPath & "User Manual\usermanual.html") Then
+            System.Diagnostics.Process.Start(MyAppPath & "User Manual\usermanual.html")
         Else
             MsgBox("Quick Start Guide not found!", MsgBoxStyle.Critical)
         End If

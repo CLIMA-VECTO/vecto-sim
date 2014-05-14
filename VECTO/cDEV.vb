@@ -230,9 +230,9 @@ Public Class cDEV
             If Conf0.Value.SaveInFile And Conf0.Value.ConfigType <> tDEVconfType.tAction Then
 
                 If Conf0.Value.ConfigType = tDEVconfType.tSelection Then
-                    file.WriteLine("c " & Conf0.Value.Description & " <" & Conf0.Value.TypeString & "> (" & Conf0.Value.Mode & ")")
+                    file.WriteLine("# " & Conf0.Value.Description & " <" & Conf0.Value.TypeString & "> (" & Conf0.Value.Mode & ")")
                 Else
-                    file.WriteLine("c " & Conf0.Value.Description & " <" & Conf0.Value.TypeString & ">")
+                    file.WriteLine("# " & Conf0.Value.Description & " <" & Conf0.Value.TypeString & ">")
                 End If
 
                 file.WriteLine(Conf0.Key)

@@ -12,7 +12,7 @@
 Imports System.Collections.Generic
 
 ''' <summary>
-''' VECTO Editor. Create/Edit VECTO job files (.vecto)
+''' Job Editor. Create/Edit VECTO job files (.vecto)
 ''' </summary>
 ''' <remarks></remarks>
 Public Class F_VECTO
@@ -305,8 +305,8 @@ Public Class F_VECTO
 
     'Help
     Private Sub ToolStripButton1_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton1.Click
-        If IO.File.Exists(MyAppPath & "User Manual\GUI\VECTO-Editor.html") Then
-            System.Diagnostics.Process.Start(MyAppPath & "User Manual\GUI\VECTO-Editor.html")
+        If IO.File.Exists(MyAppPath & "User Manual\GUI\GUI_Calls\VECTO.html") Then
+            System.Diagnostics.Process.Start(MyAppPath & "User Manual\GUI\GUI_Calls\VECTO.html")
         Else
             MsgBox("User Manual not found!", MsgBoxStyle.Critical)
         End If
@@ -430,13 +430,6 @@ Public Class F_VECTO
         UpdatePic()
 
         '-------------------------------------------------------------
-
-        If VEC0.NoJSON Then
-            If MsgBox("File is not in JSON format!" & vbCrLf & vbCrLf & "Convert now?" & vbCrLf & "(Backup will be created with '.ORIG' extension)", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-                IO.File.Copy(VECTOfile, VECTOfile & ".ORIG", True)
-                Save()
-            End If
-        End If
 
     End Sub
 
@@ -562,7 +555,7 @@ Public Class F_VECTO
         F_ENG.AutoSendTo = False
 
         VECTOfile = ""
-        Me.Text = "VECTO Editor"
+        Me.Text = "Job Editor"
         Me.ToolStripStatusLabelGEN.Text = ""
         Changed = False
         UpdatePic()
@@ -1086,7 +1079,7 @@ lbDlog:
             MAP0 = New cMAP
             MAP0.FilePath = ENG0.PathMAP
 
-            If MAP0.ReadFile Then
+            If MAP0.ReadFile(False) Then
 
                 s = New System.Windows.Forms.DataVisualization.Charting.Series
                 s.Points.DataBindXY(MAP0.nU, MAP0.Tq)
@@ -1118,6 +1111,8 @@ lbDlog:
                     ldown = New List(Of Single)
 
                     If f.OpenRead(GBX0.gsFile(i)) Then
+
+                        f.ReadLine()
 
                         Try
 

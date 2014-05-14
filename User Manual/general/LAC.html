@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+
+
+
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Look-Ahead Coasting</title></head><body>
+<big><big><big><span style="font-family: Verdana; font-weight: bold;">Look-Ahead
+Coasting</span></big></big></big><br>
+
+<hr style="width: 100%; height: 0px;">
+<div style="margin-left: 40px;">Like Overspeed, Look-Ahead Coasting is
+a function that aims on modelling real-life driver behaviour. It is a
+forward-looking function that detects forthcoming reductions in target
+speed in the mission profile (e.g. change of road type / speed limit,
+etc.) and induces an early deceleration using engine braking before
+applying mechanical brakes according to the <a href="AccLimit.html">deceleration limit</a>.<br>
+<br>
+The implemented approach uses a predefined target deceleration
+(a<sub>lookahead</sub>) to calculate the deceleration time for each particular
+target speed change.<br>
+<img style="width: 600px; height: 380px;" alt="" src="pics/LAC.png"><br>
+At the resulting deceleration start point the model calculates the
+coasting trajectory until it meets the brake deceleration trajectory.
+The resulting deceleration consists of a coasting phase followed by
+combined mechanical/engine braking. If Look-Ahead Coasting is disabled only the braking phase according to the <a href="AccLimit.html">deceleration limit</a> will be applied.<br>
+<br>
+<span style="font-weight: bold;">Parameters in </span><a style="font-weight: bold;" href="../GUI/VECTO-Editor.html">Job File</a><span style="font-weight: bold;">:</span><br style="font-weight: bold;">
+
+<ul>
+  <li><span style="font-weight: bold;">Target
+Retardation</span> = a<sub>lookahead</sub></li>
+  <li><span style="font-weight: bold;">Minimum speed</span>. Below this speed the function is disabled.<br>
+</li>
+</ul>
+<br>
+</div>
+
+<div style="margin-left: 40px;">
+</div>
+
+<span style="font-family: Calibri;"></span>
+</body></html>

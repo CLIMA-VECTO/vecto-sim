@@ -21,7 +21,6 @@ Public Class F_MAINForm
     Private JobListView As cFileListView
     Private CycleListView As cFileListView
 
-    Private LastModeIndex As Int16
     Private LastModeName As String
     Private ConMenTarget As ListView
     Private ConMenTarJob As Boolean
@@ -159,17 +158,9 @@ Public Class F_MAINForm
         'Delete GENlist-Selection
         Me.LvGEN.SelectedItems.Clear()
 
-        'Set Mode
-        Select Case LastModeIndex
-            Case 0
-                CalcMode = tCalcMode.ModeSTANDARD
-            Case 1
-                CalcMode = tCalcMode.ModeBATCH
-        End Select
-
         'If more than 100 calculations, ask whether to write by-second results
-        If (CalcMode = tCalcMode.ModeBATCH) And ((Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) > 100) And Me.ChBoxModOut.Checked Then
-            Select Case MsgBox("You are about to run BATCH Mode with " & (Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) & " calculations!" & ChrW(10) & "Do you still want to write modal results?", MsgBoxStyle.YesNoCancel)
+        If Cfg.BatchMode And ((Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) > 100) And Me.ChBoxModOut.Checked Then
+            Select Case MsgBox("You are about to run Batch Mode with " & (Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) & " calculations!" & ChrW(10) & "Do you still want to write modal results?", MsgBoxStyle.YesNoCancel)
                 Case MsgBoxResult.No
                     Me.ChBoxModOut.Checked = False
                 Case MsgBoxResult.Cancel
@@ -196,7 +187,7 @@ Public Class F_MAINForm
         End If
 
         'Check whether Overall-progbar is needed
-        If CalcMode = tCalcMode.ModeBATCH Or JobFileList.Count > 1 Or Cfg.DeclMode Then
+        If Cfg.BatchMode Or JobFileList.Count > 1 Or Cfg.DeclMode Then
             ProgOverall = True
         Else
             GEN0 = New cVECTO
@@ -266,7 +257,7 @@ Public Class F_MAINForm
 
         JobCycleList.Clear()
 
-        If CalcMode = tCalcMode.ModeBATCH Then
+        If Cfg.BatchMode Then
             For Each LV0 In Me.LvDRI.CheckedItems
                 JobCycleList.Add(fFileRepl(LV0.SubItems(0).Text))
             Next
@@ -457,7 +448,6 @@ Public Class F_MAINForm
         DEVpage = Me.TabPageDEV
         Me.TabControl1.Controls.Remove(DEVpage)
 
-        LastModeIndex = 3
         LastModeName = ""
 
         ComLineShutDown = False
@@ -487,6 +477,9 @@ Public Class F_MAINForm
         VECTOworker = Me.BackgroundWorker1
         VECTOworker.WorkerReportsProgress = True
         VECTOworker.WorkerSupportsCancellation = True
+
+        'Set mode (Batch/Standard)
+        ModeUpdate()
 
         'License check
         If Not Lic.LICcheck() Then
@@ -518,7 +511,7 @@ Public Class F_MAINForm
 
         If Cfg.DeclMode Then
             Me.Text = "VECTO " & VECTOvers & " - Declaration Mode"
-            Me.CBoxMODE.SelectedIndex = 0
+            Me.CbBatch.Checked = False
             Cfg.DeclInit()
         Else
             Me.Text = "VECTO " & VECTOvers
@@ -527,12 +520,11 @@ Public Class F_MAINForm
         If Cfg.DeclMode Then
             LastModeName = "Declaration"
         Else
-            Select Case LastModeIndex
-                Case 0  'Standard
-                    LastModeName = "STANDARD"
-                Case 1  'Batch
-                    LastModeName = "BATCH"
-            End Select
+            If Cfg.BatchMode Then
+                LastModeName = "Batch"
+            Else
+                LastModeName = "Standard"
+            End If
         End If
 
         Status(LastModeName & " Mode")
@@ -548,6 +540,7 @@ Public Class F_MAINForm
     'Shown Event (Form-Load finished) ... here StartUp Forms are loaded (DEV, GEN/ADV- Editor ..)
     Private Sub F01_MAINForm_Shown(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Shown
         Dim fwelcome As F_Welcome
+
         'DEV Form
         If DEV.Enabled Then
             Me.TabControl1.TabPages.Insert(Me.TabControl1.TabPages.Count, DEVpage)
@@ -607,7 +600,7 @@ Public Class F_MAINForm
 
         'Mode switch and load Driving Cycles
         If bBATCH Then
-            Me.CBoxMODE.SelectedIndex = 1
+            Me.CbBatch.Checked = True
 
             If driFiles.Count > 0 Then
                 LvDRI.Items.Clear()
@@ -615,7 +608,7 @@ Public Class F_MAINForm
             End If
 
         Else
-            Me.CBoxMODE.SelectedIndex = 0
+            Me.CbBatch.Checked = False
         End If
 
         'Load Vecto files or open editor (if only one file)
@@ -1155,7 +1148,7 @@ lbFound:
         CheckLock = True
 
         'Mode switch if necessary
-        If (LastModeIndex <> 1) Then Me.CBoxMODE.SelectedIndex = 1
+        If Not Me.CbBatch.Checked Then Me.CbBatch.Checked = True
 
         For p = 0 To pDim
             ListViewItem0 = New ListViewItem(Path(p))   'fFileWD(Path(p)))
@@ -1282,15 +1275,6 @@ lbFound:
         End If
     End Sub
 
-    Private Sub QuickStartGuideToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles QuickStartGuideToolStripMenuItem.Click
-        If IO.File.Exists(MyAppPath & "User Manual\qsg\quickstartApp.html") Then
-            System.Diagnostics.Process.Start(MyAppPath & "User Manual\qsg\quickstartApp.html")
-        Else
-            MsgBox("Quick Start Guide not found!", MsgBoxStyle.Critical)
-        End If
-    End Sub
-
-
     Private Sub UpdateNotesToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles UpdateNotesToolStripMenuItem.Click
         If IO.File.Exists(MyAppPath & "User Manual\Update Notes.pdf") Then
             System.Diagnostics.Process.Start(MyAppPath & "User Manual\Update Notes.pdf")
@@ -1298,15 +1282,6 @@ lbFound:
             MsgBox("Update Notes not found!", MsgBoxStyle.Critical)
         End If
     End Sub
-
-    Private Sub SupportToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles SupportToolStripMenuItem.Click
-        If IO.File.Exists(MyAppPath & "User Manual\contact.html") Then
-            System.Diagnostics.Process.Start(MyAppPath & "User Manual\contact.html")
-        Else
-            MsgBox("User Manual not found!", MsgBoxStyle.Critical)
-        End If
-    End Sub
-
 
     Private Sub CreateActivationFileToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles CreateActivationFileToolStripMenuItem.Click
         If MsgBox("Create Activation File ?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
@@ -1406,8 +1381,8 @@ lbFound:
                 GENchecked = Me.LvGEN.CheckedItems.Count
                 UpdateJobTabText()
             Else                    'DRI
-                'Mode toggle (from(auf) BATCH)
-                If (LastModeIndex <> 1) Then Me.CBoxMODE.SelectedIndex = 1
+                'Mode toggle 
+                If Not Me.CbBatch.Checked Then Me.CbBatch.Checked = True
                 CycleListView.LoadList(fbFileLists.Files(0))
                 DRIchecked = Me.LvDRI.CheckedItems.Count
                 UpdateCycleTabText()
@@ -1480,64 +1455,61 @@ lbFound:
     End Sub
 
     'Mode Change (STANDARD/BATCH)
-    Private Sub CBoxMODE_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CBoxMODE.SelectedIndexChanged
+    Private Sub CbBatch_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles CbBatch.CheckedChanged
+        ModeUpdate()
+    End Sub
+
+    Private Sub ModeUpdate()
 
         'Save lists
         JobListView.SaveList()
-        If LastModeIndex = 1 Then CycleListView.SaveList()
+        If Cfg.BatchMode Then CycleListView.SaveList()
 
         'New mode
-        LastModeIndex = Me.CBoxMODE.SelectedIndex
-
-        Select Case LastModeIndex
-            Case 0
-                CalcMode = tCalcMode.ModeSTANDARD
-            Case 1
-                CalcMode = tCalcMode.ModeBATCH
-        End Select
+        Cfg.BatchMode = Me.CbBatch.Checked
 
         'GUI changes according to current mode
-        Select Case LastModeIndex
-            Case 0  'Standard
 
-                If Cfg.DeclMode Then
-                    LastModeName = "Declaration"
-                Else
-                    LastModeName = "STANDARD"
-                End If
+        If Cfg.BatchMode Then
 
-                'Show mode-specific settings
-                Me.GrBoxSTD.Visible = False  'Currently no specific settings for STANDARD mode, therefore always 'False'
-                Me.GrBoxBATCH.Visible = False
+            LastModeName = "Batch"
 
-                'Hide Cycle Tab Page
-                If CycleTabPageVisible Then
-                    Me.TabControl1.Controls.Remove(CycleTabPage)
-                    CycleTabPageVisible = False
-                End If
+            'Load cycle list
+            CycleListView.LoadList()
 
-            Case 1  'Batch
+            'Update cycle counter
+            DRIchecked = Me.LvDRI.CheckedItems.Count
+            UpdateCycleTabText()
 
-                LastModeName = "BATCH"
+            'Show mode-specific settings
+            Me.GrBoxSTD.Visible = False
+            Me.GrBoxBATCH.Visible = True
 
-                'Load cycle list
-                CycleListView.LoadList()
+            'Show Cycle Tab Page
+            If Not CycleTabPageVisible Then
+                Me.TabControl1.TabPages.Insert(1, CycleTabPage)
+                CycleTabPageVisible = True
+            End If
 
-                'Update cycle counter
-                DRIchecked = Me.LvDRI.CheckedItems.Count
-                UpdateCycleTabText()
+        Else
 
-                'Show mode-specific settings
-                Me.GrBoxSTD.Visible = False
-                Me.GrBoxBATCH.Visible = True
+            If Cfg.DeclMode Then
+                LastModeName = "Declaration"
+            Else
+                LastModeName = "STANDARD"
+            End If
 
-                'Show Cycle Tab Page
-                If Not CycleTabPageVisible Then
-                    Me.TabControl1.TabPages.Insert(1, CycleTabPage)
-                    CycleTabPageVisible = True
-                End If
+            'Show mode-specific settings
+            Me.GrBoxSTD.Visible = False  'Currently no specific settings for STANDARD mode, therefore always 'False'
+            Me.GrBoxBATCH.Visible = False
 
-        End Select
+            'Hide Cycle Tab Page
+            If CycleTabPageVisible Then
+                Me.TabControl1.Controls.Remove(CycleTabPage)
+                CycleTabPageVisible = False
+            End If
+
+        End If
 
         'Update job counter
         GENchecked = Me.LvGEN.CheckedItems.Count
@@ -1547,7 +1519,6 @@ lbFound:
         Status(LastModeName & " Mode")
 
     End Sub
-
 
     'Class for ListView control - Job and cycle lists
     Private Class cFileListView
@@ -1665,7 +1636,7 @@ lbFound:
 
     End Sub
 
-    'Open VECTO Editor and open file (or new file)
+    'Open Job Editor and open file (or new file)
     Friend Sub OpenVECTOeditor(ByVal x As String)
 
         If Not F_VECTO.Visible Then
@@ -1700,7 +1671,7 @@ lbFound:
     'Save job and cycle file lists
     Private Sub SaveFileLists()
         JobListView.SaveList()
-        If LastModeIndex = 1 Then CycleListView.SaveList()
+        If Cfg.BatchMode Then CycleListView.SaveList()
     End Sub
 
 
@@ -1777,15 +1748,7 @@ lbFound:
         Me.ChBoxBatchSubD.Checked = Cfg.BATCHoutSubD
 
         'Set Mode
-        LastModeIndex = Cfg.LastMode
-        Me.CBoxMODE.SelectedIndex = Cfg.LastMode
-
-        Select Case LastModeIndex
-            Case 0
-                CalcMode = tCalcMode.ModeSTANDARD
-            Case 1
-                CalcMode = tCalcMode.ModeBATCH
-        End Select
+        If Not Cfg.DeclMode Then Me.CbBatch.Checked = Cfg.BatchMode
 
         Me.CbDecl.Checked = Cfg.DeclMode
 
@@ -2107,11 +2070,11 @@ lbFound:
 
         If CbDeclLock Then Exit Sub
 
-        If F_VECTO.Visible Or F_VEH.Visible Or F_GBX.Visible Or F_ENG.Visible Or F_Settings.Visible Then
+        If F_VECTO.Visible Or F_VEH.Visible Or F_GBX.Visible Or F_ENG.Visible Then
             CbDeclLock = True
             Me.CbDecl.Checked = Not Me.CbDecl.Checked
             CbDeclLock = False
-            MsgBox("Please close all dialog windows (e.g. VECTO Editor) before changing mode!")
+            MsgBox("Please close all dialog windows (e.g. Job Editor) before changing mode!")
         Else
             Cfg.DeclMode = Me.CbDecl.Checked
             DeclOnOff()
@@ -2479,6 +2442,5 @@ Lb1:
 
 #End Region
 
-  
-   
+
 End Class

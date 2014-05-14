@@ -1,0 +1,24 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (50e1b2d7-43a7-42d0-97c3-d8d48709e28c)",
+    "Date": "24.04.2014 11:35:13",
+    "AppVersion": "1.5.0-pre1",
+    "FileVersion": 1
+  },
+  "Body": {
+    "ModelName": "Generic 24t Coach",
+    "Displacement": 12730.0,
+    "IdlingSpeed": 560.0,
+    "Inertia": 3.8,
+    "FullLoadCurves": [
+      {
+        "Path": "24t Coach.vfld",
+        "Gears": "0 - 99"
+      }
+    ],
+    "FuelMap": "24t Coach.vmap",
+    "WHTC-Urban": 0.0,
+    "WHTC-Rural": 0.0,
+    "WHTC-Motorway": 0.0
+  }
+}

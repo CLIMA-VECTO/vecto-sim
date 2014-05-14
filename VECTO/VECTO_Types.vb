@@ -19,11 +19,6 @@ Public Enum tFbExtMode As Integer
     SingleExt = 2
 End Enum
 
-Public Enum tCalcMode As Short
-    ModeSTANDARD = 0
-    ModeBATCH = 1
-End Enum
-
 Public Enum tWorkMsgType
     StatusBar
     StatusListBox

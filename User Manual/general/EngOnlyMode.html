@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Engine Only Mode</title></head>
+<body>
+<big><big><big><span style="font-family: Verdana; font-weight: bold;">Engine Only Mode</span></big></big></big><br>
+<hr style="width: 100%; height: 0px;">
+
+<div style="margin-left: 40px;">When this mode is enabled in the Job File then VECTO only calculates the fuel consumption based on a&nbsp;load cycle
+(engine speed and torque).<br>In the <a href="../GUI/VECTO-Editor.html">Job File</a> only the following parameters are needed:<br><ul><li>Filepath to the Engine File (.veng)</li><li>Driving Cycles including engine torque (or power) and engine speed</li></ul>
+The <a href="../fileformat/VDRI.html">driving cylce
+(.vdri)</a> must contain:<br>
+<ul><li>Engine speed: header: &lt;n&gt;</li><li>Engine torque &lt;Me&gt; <span style="text-decoration: underline; font-weight: bold;">or</span>
+engine power &lt;Pe&gt; at clutch. To explicitly define <span style="text-decoration: underline;">motoring operation</span>
+use the&nbsp;<span style="font-weight: bold;">&lt;DRAG&gt;</span>
+keyword, see below. VECTO replaces the keyword with the motoring
+torque/power from the <a href="../GUI/ENG-Editor.html#fld">.vfld
+file</a> during calculation.<span style="font-weight: bold; color: red;"></span></li><li>[Optional] Additional power demand (aux)
+&lt;Padd&gt;</li></ul>
+<span style="font-weight: bold; color: red;">Note that
+VECTO adds the engine's inertia to the given power demand!<br>
+<br>
+</span><span style="font-weight: bold;">Example
+.vdri cycle:</span><br>
+<img style="width: 541px; height: 319px;" alt="" src="../GUI/pics/VECTO-EngOnlyCycle.PNG"><br><br><br></div><span style="font-family: Calibri;"></span>
+
+
+
+
+
+
+
+
+
+
+</body></html>

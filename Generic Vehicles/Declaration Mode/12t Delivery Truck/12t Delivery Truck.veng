@@ -1,0 +1,24 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (50e1b2d7-43a7-42d0-97c3-d8d48709e28c)",
+    "Date": "23.04.2014 17:02:49",
+    "AppVersion": "1.5.0-pre0",
+    "FileVersion": 1
+  },
+  "Body": {
+    "ModelName": "Generic 12t Delivery Truck",
+    "Displacement": 7700.0,
+    "IdlingSpeed": 600.0,
+    "Inertia": 3.789,
+    "FullLoadCurves": [
+      {
+        "Path": "12t Delivery Truck.vfld",
+        "Gears": "0 - 99"
+      }
+    ],
+    "FuelMap": "12t Delivery Truck.vmap",
+    "WHTC-Urban": 215.0,
+    "WHTC-Rural": 202.0,
+    "WHTC-Motorway": 204.0
+  }
+}

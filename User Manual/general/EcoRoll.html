@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+
+
+
+
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Overspeed / Eco-Roll</title></head><body>
+<big><big><big><span style="font-family: Verdana; font-weight: bold;">Overspeed / Eco-Roll</span></big></big></big><br>
+<hr style="width: 100%; height: 0px;">
+<div style="margin-left: 40px;">Both functions control the vehicle's
+behaviour on uneven road sections (slope &#8800; 0) and can be configured in
+the <a href="../GUI/VECTO-Editor.html">Job File</a>'s Driver Assist Tab.<br>
+Overspeed is designed to model an
+average driver's behaviour without the aid of driver assistance
+systems. Eco-Roll&nbsp; represents an optional driver assistance feature. For this
+reason vehicles without Eco-Roll should always have the Overspeed function
+enabled.<br>
+<br>
+<big><big style="font-weight: bold;">Overspeed</big></big><br>
+<hr style="height: 1px; width: 100%;">Overspeed activates as soon as the total power demand at the wheels
+(Pwheel) falls below zero, i.e. the vehicle accelerates on a negative
+slope. The clutch remains closed, engine in motoring operation, and the
+vehicle accelerates beyond the cycle's target speed. When the speed
+limit (target speed plus <span style="font-weight: bold;">Max. Overspeed [km/h]</span>) is reached the mechanical brakes are engaged to prevent further acceleration. <br>
+<img style="width: 550px; height: 527px;" alt="" src="pics/Overspeed.png"><br>
+<span style="font-style: italic;">Example
+with target (purple) and actual speed (orange) on the top left axis,
+slope (brown) on the top right axis. The bottom graph shows engine
+power (blue), motoring curve (orange) and mechanical brake power
+(green). In this example Overspeed is allowed until the vehicle's speed
+exceeds target speed by 5 [km/h].</span><br>
+<br>
+<span style="font-weight: bold;">Parameters in </span><a style="font-weight: bold;" href="../GUI/VECTO-Editor.html">Job File</a><span style="font-weight: bold;">:</span><br style="font-weight: bold;">
+<ul>
+<li><span style="font-weight: bold;">Minimum speed [km/h]</span>. Below this speed the function is disabled.<br>
+</li><li><span style="font-weight: bold;">Max. Overspeed [km/h]</span> (relative to target speed)<br>
+</li>
+</ul>
+<br>
+<big><big style="font-weight: bold;">Eco-Roll</big></big><br>
+
+<hr style="height: 1px; width: 100%;">Instead of using the engine
+brake (with no fuel consumption) Eco-Roll shifts to Neutral, engine
+idling, to minimize deceleration and maximize the vehicle's roll out
+distance. During this phase the engine has to overcome its own idling
+losses and the power demand from the auxiliaries. The engine is engaged
+again if the speed exceeds the speed limits defined by Max. Over-/Underspeed.<br>
+<br>
+<img style="width: 550px; height: 527px;" alt="" src="pics/EcoRoll.png"><br>
+<span style="font-style: italic;">Example of Eco-Roll. Target (purple) and actual speed (orange) on the top left axis,
+slope (brown) on the top right axis. The bottom graph shows engine
+power (blue), motoring curve (orange) and mechanical brake power
+(green). The engine is idling while the vehicle rolls freely and
+braking when the upper speed limit is reached.</span><br>
+<br>
+<span style="font-weight: bold;">Parameters in </span><a style="font-weight: bold;" href="../GUI/VECTO-Editor.html">Job File</a><span style="font-weight: bold;">:</span><br style="font-weight: bold;">
+
+<ul>
+<li><span style="font-weight: bold;">Minimum speed [km/h]</span>. Below this speed the function is disabled.<br>
+</li><li><span style="font-weight: bold;">Max. Overspeed [km/h]</span> (relative to target speed)</li>
+  <li><span style="font-weight: bold;">Max. Underspeed [km/h]</span> (relative to target speed)</li>
+</ul>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</div>
+<div style="margin-left: 40px;">
+</div>
+<span style="font-family: Calibri;"></span>
+
+
+
+
+
+
+
+
+
+
+</body></html>

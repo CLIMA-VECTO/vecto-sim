@@ -83,21 +83,25 @@ Public Class cAux
         Try
 
             'Transmission ration to engine rpm [-]
+            file.ReadLine()
             If file.EndOfFile Then GoTo lbFileEndErr
             line = file.ReadLine
             TransRatio = CSng(line(0))
 
             'Efficiency to engine [-]
+            file.ReadLine()
             If file.EndOfFile Then GoTo lbFileEndErr
             line = file.ReadLine
             EffToEng = CSng(line(0))
 
             'Efficiency auxiliary to supply [-]
+            file.ReadLine()
             If file.EndOfFile Then GoTo lbFileEndErr
             line = file.ReadLine
             EffToSply = CSng(line(0))
 
             'Efficiency Map
+            file.ReadLine()
             If file.EndOfFile Then GoTo lbFileEndErr
 
             'Column 1 = Auxiliary speed [rpm] => X-axis

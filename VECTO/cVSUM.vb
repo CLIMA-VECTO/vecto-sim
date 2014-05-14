@@ -38,23 +38,7 @@ Class cVSUM
         First = True
         For Each key In VSUMentryList
             If Not First Then s.Append(",")
-            s.Append(VSUMentries(key).Head)
-            First = False
-        Next
-
-        Return s.ToString
-
-    End Function
-
-    Public Function VSUMunits() As String
-        Dim s As New System.Text.StringBuilder
-        Dim First As Boolean
-        Dim key As String
-
-        First = True
-        For Each key In VSUMentryList
-            If Not First Then s.Append(",")
-            s.Append(VSUMentries(key).Unit)
+            s.Append(VSUMentries(key).Head & " " & VSUMentries(key).Unit)
             First = False
         Next
 
@@ -299,8 +283,7 @@ Class cVSUM
         End Try
 
         '*** Header / Units
-        Fvsum.WriteLine("Job,Input File,Cycle," & VSUMhead())
-        Fvsum.WriteLine("[-],[-],[-]," & VSUMunits())
+        Fvsum.WriteLine("Job [-],Input File [-],Cycle [-]," & VSUMhead())
 
         'Close file (will open after each job)
         Fvsum.Close()
@@ -420,7 +403,7 @@ Class cVSUM
         End If
 
         'Define Output-path
-        If (CalcMode = tCalcMode.ModeBATCH) Then
+        If Cfg.BatchMode Then
             Select Case UCase(Cfg.BATCHoutpath)
                 Case sKey.JobPath
                     VSUMpath = fFileWoExt(JobFile) & "_BATCH.vsum"

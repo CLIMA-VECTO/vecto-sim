@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+
+
+
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Application Files</title></head>
+<body>
+<big><big><big><span style="font-family: Verdana; font-weight: bold;">Application Files</span></big></big></big><br>
+<hr style="width: 100%; height: 0px;">
+
+<div style="margin-left: 40px;"><br>VECTO uses a numbers of files to save GUI settings and file lists. All files are text-based and can be changed outside of VECTO <span style="text-decoration: underline; font-weight: bold;">if VECTO is not running</span>.<br>
+<br><br><big><big style="font-weight: bold;">settings.json</big></big><br>
+<hr style="height: 1px; width: 100%;">This file is located in VECTO's <span style="font-weight: bold;">config</span> folder. Here all parameters of the <a href="../GUI/settings.html">Settings Dialog</a> are saved. The file uses the <a href="http://en.wikipedia.org/wiki/JSON" target="_blank">JSON format</a> <img style="width: 12px; height: 12px;" alt="" src="../pics/misc/external-icon%2012x12.png">.<br><br><br><big><big style="font-weight: bold;">Job / Cycle lists</big></big><br>
+<hr style="height: 1px; width: 100%;">The job and cycle lists in the <a href="../GUI/mainform.html">Main Form</a> are saved in the <span style="font-weight: bold;">joblist.txt</span> / <span style="font-weight: bold;">cyclelist.txt</span> files of the <span style="font-weight: bold;">config</span> folder.<br><br>Both
+files save the full&nbsp;file paths separated by line breaks.
+Additionally it is saved whether each file's checkbox is checked or
+not. "?1" after a file path means the file is&nbsp;checked (otherwise
+"?0"). However, this information can be omitted in which case the file
+will be loaded in checked state.<br><br><br><big><big style="font-weight: bold;">LOG.txt</big></big><br>
+<hr style="height: 1px; width: 100%;">The tabulator-separated log file saves all messages of the <a href="../GUI/mainform.html">Main Form's Message List</a> and is located in VECTO's program directory.<br>The file is restarted whenever the <a href="../GUI/settings.html">Logfile
+Size Limit</a> is reached.One backup is always stored as LOG_backup.txt.<br><br><br><big><big style="font-weight: bold;">License file</big></big><br>
+<hr style="height: 1px; width: 100%;">The license file license.dat is located in VECTO's program directory. Without a valid lisence file VECTO won't run.<br><br>It no valid license file is provided with your VECTO version please contact <a href="mailto:vecto@jrc.ec.europa.eu">vecto@jrc.ec.europa.eu</a>.<br><br>
+<br></div><span style="font-family: Calibri;"></span>
+
+
+
+
+
+
+
+
+
+
+</body></html>

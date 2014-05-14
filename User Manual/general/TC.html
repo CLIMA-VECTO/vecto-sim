@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+
+
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Torque Converter Model</title></head>
+<body>
+<big><big><big><span style="font-family: Verdana; font-weight: bold;">Torque Converter Model</span></big></big></big><br>
+<hr style="width: 100%; height: 0px;">
+
+<div style="margin-left: 40px;"><span style="font-weight: bold;">!!! The Torque Converter Model is still in development&nbsp;!!!</span><br><br><br><br>The torque converter is
+defined as (virtual) separate gear.<br>
+While TC active: Iterative calculation of engine torque and speed based
+on TC characteristic.<br>
+Creeping: Engine speed set to idling. Brakes engaged to absorb surplus
+torque.<br>
+<img style="width: 900px; height: 293px;" alt="" src="../GUI/pics/GBX-TC.png"><br><br><br><big><big style="font-weight: bold;">Torque converter characteristics file (.vtcc) </big></big><br><hr style="height: 1px; width: 100%;">The file is described <a href="../fileformat/VTCC.html">here</a>.<br><br><br><big><big style="font-weight: bold;">Setup for Conventional AT gearboxes&nbsp;</big></big><br><hr style="height: 1px; width: 100%;">Torque converter file is defined for <span style="text-decoration: underline;">torque converter only</span><br><img style="width: 700px; height: 171px;" alt="" src="../GUI/pics/GBX-TC-Setup-1-1.png"><br><ul><li>Define TC gear with ratio of first (mechanical) gear</li><li>Set transmission losses of first gear (map or constant efficiency)</li></ul><img style="width: 400px; height: 141px;" alt="" src="../GUI/pics/GBX-TC-Setup-1-2.png"><br><br><br><br><big><big style="font-weight: bold;">Setup for Power-distributed AT gearboxes</big></big><br><hr style="height: 1px; width: 100%;">Torque converter file is defined for the <span style="text-decoration: underline;">whole gearbox</span><br><big><big><span style="font-weight: bold;"></span></big></big><img style="width: 700px; height: 176px;" alt="" src="../GUI/pics/GBX-TC-Setup-2-1.png"><br><ul><li>Define TC gear with ratio = 1</li><li>Set transmission efficiency to 1 (= 100%) because losses are covered by the .vtcc file.</li></ul><img style="width: 400px; height: 142px;" alt="" src="../GUI/pics/GBX-TC-Setup-2-2.png"><br><br></div><span style="font-family: Calibri;"></span>
+
+
+
+
+
+
+
+
+
+
+</body></html>
