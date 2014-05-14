@@ -1,129 +1,87 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>VECTO Editor - VECTO User Manual</title>
 
-</head>
+
+
+
+
+
+
+
+
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Job Editor - VECTO User Manual</title></head>
 <body>
-<map name="linkmap"><area shape="rect" coords="10,34,30,53&quot;" href="#new" title="New File"><area shape="rect" coords="33,34,52,53&quot;" href="#open" title="Open File"><area shape="rect" coords="57,34,77,53&quot;" href="#save" title="Save"><area shape="rect" coords="85,34,102,53&quot;" href="#saveas" title="Save As..."><area shape="rect" coords="113,33,130,54&quot;" href="#sendto" title="Send current file to Job List in Main Form"><area shape="rect" coords="24,117,138,136&quot;" href="#engonly"><area shape="rect" coords="111,144,209,165&quot;" href="VECTO-Editor_Driver.html"><area shape="rect" coords="18,172,95,192&quot;" href="#veh"><area shape="rect" coords="19,201,94,220&quot;" href="#eng"><area shape="rect" coords="18,228,96,249&quot;" href="#gbx"><area shape="rect" coords="22,258,682,410&quot;" href="#aux"><area shape="rect" coords="531,640,607,663&quot;" href="#ok"><area shape="rect" coords="617,642,690,663&quot;" href="#cancel"><area shape="rect" coords="22,424,684,605&quot;" href="#cycles"><area shape="rect" coords="653,172,683,250&quot;" href="#browse"></map>
-<table style="width: 100%; height: 54px; text-align: left; margin-left: auto; margin-right: auto;" border="0" cellpadding="2" cellspacing="2">
-<tbody>
-<tr>
-<td style="width: 110px;"><a href="../usermanual.html"><img src="../pics/VECTO-small.PNG" style="border: 0px solid ; width: 106px; height: 36px;" alt="VECTO-Logo"></a></td>
-<td><a href="../usermanual.html"><span style="color: rgb(0, 0, 0); font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; font-family: Verdana;">User
-Manual</span></a><span style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; display: inline ! important; float: none;"></span></td>
-<td style="text-align: right; width: 405px;"><a href="http://ec.europa.eu/dgs/jrc/index.cfm" target="_blank"><img src="../pics/JRC.png" style="border: 0px solid ; width: 173px; height: 36px;" alt="JRC-Logo" hspace="5"></a><a href="http://www.ivt.tugraz.at/" target="_blank"><img src="../pics/IVT.png" alt="IVT-Logo" style="border: 0px solid ; width: 74px; height: 36px;" hspace="5"></a><a href="http://portal.tugraz.at/pls/portal/url/page/TU_Graz" target="_blank"><img src="../pics/TUG.png" alt="TUG-Logo" style="border: 0px solid ; width: 96px; height: 36px;" hspace="5"></a></td>
-</tr>
-</tbody>
-</table>
-<hr style="width: 100%; height: 2px;"><a href="usermanual.html"><span style="font-family: Verdana;"></span></a><span style="font-family: Verdana;"></span>
-<div style="text-align: center;">
-<div style="text-align: left; font-family: Verdana;">
-<h2>VECTO Editor</h2>
-</div>
-<img src="pics/VECTO-Editor.PNG" usemap="#linkmap" style="width: 710px; height: 699px;" alt="VECTO Editor"><br>
+
+
+
+<div style="text-align: center;"><div style="text-align: left;"><span style="font-family: Verdana;"><big><big><big><span style="font-weight: bold;">Job Editor</span></big></big></big></span><br><hr style="width: 100%; height: 0px;"><br><span style="font-family: Verdana;"></span></div><span style="font-family: Verdana;"></span>
+
+
+<img src="pics/VECTO-Editor.PNG" usemap="#linkmap" style="width: 800px; height: 572px;" alt="VECTO Editor"><br>
 <span style="font-family: Verdana;"><br>
 </span>
 <div style="text-align: left;">
-<div style="margin-left: 40px;"><img src="../pics/icons/blue-document-icon.png" style="width: 16px; height: 16px;" alt="new"><span style="font-weight: bold;"><a name="new"></a>New
-Job File</span><br>
-</div>
-<div style="margin-left: 80px;">Create a new empty .vecto
-file<br>
-</div>
-<div style="margin-left: 40px;"><br>
+<div style="margin-left: 40px;"><big><big style="font-weight: bold;">Description</big></big><br><hr style="height: 1px; width: 100%;">The
+job file (.vecto) includes all informations to run a VECTO calculation.
+It defines the&nbsp;vehicle and the driving cycle(s) to be used for
+calculation. In summary it defines:<br><ul><li>Filepath to the <a href="VEH-Editor.html">Vehicle File (.vveh)</a> which defines the not-engine/gearbox-related vehicle parameters</li><li>Filepath to the <a href="ENG-Editor.html">Engine File (.veng)</a> which includes full load curve(s) and the fuel consumption map</li><li>Filepath ot the <a href="GBX-Editor.html">Gearbox File (.vgbx)</a> which defines gear ratios and transmission losses</li><li>Auxiliaries</li><li>Driver Assist parameters</li><li>Driving Cycles (not used in Batch Mode)</li></ul><br>
+<big><big style="font-weight: bold;">Relatve File Paths</big></big><br>
+<hr style="height: 1px; width: 100%;">It is recommended to define
+relative filepaths. This way the Job File and all input files can be
+moved without having to update the paths.<br>
+Example: "Vehicles\Vehicle1.vveh" points to the "Vehicles" subdirectory of the Job File's directoy.<br>
 <br>
-<img src="../pics/icons/Open-icon.png" style="width: 16px; height: 16px;" alt="open"><span style="font-weight: bold;"><a name="open"></a>
-Open
-existing Job File</span><br>
-</div>
-<div style="text-align: left;">
-<div style="margin-left: 80px;">Open an existing .vecto
-file<br>
+VECTO automatically uses relative paths if the input file (e.g. Vehicle
+File) is in the same directory as the Job File. (The Job File must be
+saved before browsing for input files.)<br>
 <br>
 <br>
+<big><big style="font-weight: bold;">General Settings</big></big><br>
+
+<hr style="height: 1px; width: 100%;"><img style="width: 15px; height: 15px;" alt="" src="../pics/misc/checkbox.png">
+<span style="font-weight: bold;">Engine Only Mode</span><br>
+
+<div style="margin-left: 40px;">Enables <a href="../general/EngOnlyMode.html">Engine Only Mode</a>. Only the following parameters are needed for this mode:<br><ul><li>Filepath to the <a href="ENG-Editor.html">Engine File (.veng)</a></li><li><a href="../fileformat/VDRI.html">Driving Cycles</a> including engine torque (or power) and engine speed</li></ul><br>
 </div>
-<div style="margin-left: 40px;"><img src="../pics/icons/Actions-document-save-icon.png" style="width: 16px; height: 16px;" alt="save"><a name="save"></a> <span style="font-weight: bold;">Save
-current Job File</span></div>
-<div style="margin-left: 80px;"><br>
-<br>
+
+<span style="font-weight: bold;">Filepath to the Vehicle File (.vveh)</span><br>
+<div style="margin-left: 40px;">Files can be created and edited using the <a href="VEH-Editor.html">Vehicle Editor</a>.<br>
 </div>
-<div style="margin-left: 40px;"><img src="../pics/icons/Actions-document-save-as-icon.png" style="width: 16px; height: 16px;" alt="SaveAs"><a name="saveas"></a> <span style="font-weight: bold;">Save
-Job File as...</span><br>
-<div style="margin-left: 40px;"><br>
-<br>
-</div>
-</div>
-<div style="margin-left: 40px;"><img src="../pics/icons/export-icon.png" style="width: 16px; height: 16px;" alt="sendto"><a name="sendto"></a> <span style="font-weight: bold;">Send
-current file to Job List in <a href="mainform.html">Main
-Form</a></span><br>
-<div style="margin-left: 40px;"><span style="font-weight: bold;">Note:</span> The file will
-be sent to the Job List automatically when saved.<br>
-</div>
-</div>
-<div style="margin-left: 40px;"><br>
-<a name="engonly"></a> <span style="font-weight: bold;">Engine Only Mode</span><br>
-<div style="margin-left: 40px;">This
-mode is used to calculate fuel consumption from a given load cycle
-(engine speed and torque). Vehicle (.vveh), Gearbox (.vgbx) and
-Auxiliary (.vaux) files are not required. <br>
-The <a href="../fileformat/VDRI.html">driving cylce
-(.vdri)</a> must contain:<br>
-<ul>
-<li>Engine speed: header: &lt;n&gt;</li>
-<li>Engine torque &lt;Me&gt; <span style="text-decoration: underline; font-weight: bold;">or</span>
-engine power &lt;Pe&gt; at clutch. To explicitly define <span style="text-decoration: underline;">motoring operation</span>
-use the&nbsp;<span style="font-weight: bold;">&lt;DRAG&gt;</span>
-keyword, see below. VECTO replaces the keyword with the motoring
-torque/power from the <a href="ENG-Editor.html#fld">.vfld
-file</a> during calculation.<span style="font-weight: bold; color: red;"></span></li>
-<li>[Optional] Additional power demand (aux)
-&lt;Padd&gt;</li>
-</ul>
-<span style="font-weight: bold; color: red;">Note that
-VECTO adds the engine's inertia to the given power demand!<br>
-<br>
-</span><span style="font-weight: bold;">Example
-.vdri cycle:</span><br>
-<img style="width: 541px; height: 319px;" alt="" src="pics/VECTO-EngOnlyCycle.PNG"><br>
-<br>
-</div>
-<span style="font-weight: bold;">Driver Tab</span><br>
-<div style="margin-left: 40px;">Open <a href="VECTO-Editor_Driver.html">Driver Tab</a></div>
+<br style="font-weight: bold;">
+<span style="font-weight: bold;">Filepath to the Engine File (.veng)</span><br>
+<div style="margin-left: 40px;">Files can be created and edited using the <a href="ENG-Editor.html">Engine Editor</a>.<br>
 </div>
 <br>
-<br>
-<div style="margin-left: 40px;"><img src="pics/VECTO/Veh.png" style="width: 72px; height: 21px;" alt="veh"><a name="veh"></a> <span style="font-weight: bold;">Open <a href="VEH-Editor.html">Vehicle
-Editor</a></span><br>
-<br>
-<img style="width: 72px; height: 21px;" alt="eng" src="pics/VECTO/Eng.png"><a name="eng"></a>
-<span style="font-weight: bold;">Open <a href="ENG-Editor.html">Engine Editor</a></span><br>
-<br>
-<img style="width: 72px; height: 21px;" alt="gbx" src="pics/VECTO/Gbx.png"><a name="gbx"></a>
-<span style="font-weight: bold;">Open <a href="GBX-Editor.html">Gearbox Editor</a></span><br>
-<br>
-&nbsp;<a name="browse"></a>
-<span style="font-weight: bold;"><img style="width: 28px; height: 21px;" alt="" src="../pics/misc/browse.png"> Browse for
-vehicle/engine/gearbox files</span><br>
-<div style="margin-left: 40px;"><br>
-<br>
+<span style="font-weight: bold;">Filepath ot the Gearbox File (.vgbx)</span><br>
+<div style="margin-left: 40px;">Files can be created and edited using the <a href="GBX-Editor.html">Gearbox Editor</a>.<br>
 </div>
-</div>
-<div style="margin-left: 40px;"><span style="font-weight: bold;"><a name="aux"></a>Auxiliaries</span><br>
+<br>
+<span style="font-weight: bold;">Auxiliaries</span><br>
+
 <div style="margin-left: 40px;">This list contains all
-auxiliaries (.vaux files) used for calculation.<br>
+auxiliaries used for calculation. The auxiliaries are configured using the <a href="VECTO-Editor_Aux.html">Auxiliary
+Dialog</a>. For each auxiliary an <a href="../fileformat/VAUX.html">Auxiliary Input File (.vaux)</a> must be provided and the <a href="../fileformat/VDRI.html">driving cycle</a> must include the corresponding supply power.<br>
+<br>
 <span style="font-weight: bold;">Double-click</span>
-entries to edit with the <a href="VECTO-Editor_Aux.html">Aux
+entries to edit with the <a href="VECTO-Editor_Aux.html">Auxiliary
 Dialog</a>.<br>
 <img style="width: 16px; height: 16px;" alt="addaux" src="../pics/icons/plus-circle-icon.png"> Add new Auxiliary<br>
 <img style="width: 16px; height: 16px;" alt="remaux" src="../pics/icons/minus-circle-icon.png"> Remove the
-selected Auxiliary from the list<br>
-The .vaux format is described <a href="VECTO-Editor_Aux.html#file">here</a>.<br>
+selected Auxiliary from the list<br><br>See <a href="../general/Auxiliaries.html">Auxiliaries</a> for details.<br>
+</div>
+
+
+
+
 <br>
-</div>
-</div>
-<div style="margin-left: 40px;"><span style="font-weight: bold;"><a name="cycles"></a>Cycles</span><br>
+<span style="font-weight: bold;">Cycles</span><br>
+
 <div style="margin-left: 40px;">List of cycles used for
-calculation.<br>
+calculation. 
+The .vdri format is described <a href="../fileformat/VDRI.html">here</a>.<br>
+<br>
 <span style="font-weight: bold;">Double-click</span>
 an entry to open the file (see <a href="settings.html#opencmd">File
 Open Command</a>).<br>
@@ -132,34 +90,117 @@ selected items to edit file paths.<br>
 <img style="width: 16px; height: 16px;" alt="addcycle" src="../pics/icons/plus-circle-icon.png"> Add cycle (.vdri)<br>
 <img style="width: 16px; height: 16px;" alt="remcycle" src="../pics/icons/minus-circle-icon.png"> Remove the
 selected cycle from the list<br>
-The .vdri format is described <a href="../fileformat/VDRI.html">here</a>.<br>
+</div>
+
+
+
+
+<span style="font-weight: bold;">
+</span><big><big style="font-weight: bold;"><br><br>
+Driver Assist Tab</big></big><br>
+
+<hr style="height: 1px; width: 100%;">In this tab the driver assistance functions are enabled and parameterised.<br>
+
 <br>
+<span style="font-weight: bold;">
+Engine Start/Stop</span><br>
+
+<div style="margin-left: 40px;">See <a href="../general/StartStop.html">Engine Start/Stop</a> for details.<br>
+ </div>
+
+<br>
+
+<span style="font-weight: bold;">Overspeed / Eco-Roll</span><span style="font-weight: bold;"><br>
+</span>
+<div style="margin-left: 40px;">See <a href="../general/EcoRoll.html">Overspeed / Eco-Roll</a> for details.<br>
 </div>
+
+
+<br style="font-weight: bold;">
+
+<span style="font-weight: bold;">Look-Ahead Coasting</span><br>
+<div style="margin-left: 40px;">See <a href="../general/LAC.html">Look-Ahead Coasting</a> for details.<br>
 </div>
-<div style="margin-left: 40px;"><img style="width: 75px; height: 23px;" alt="OK" src="../pics/misc/OK.png"><a name="ok"></a>
+
+<br>
+<span style="font-weight: bold;">Acceleration Limiting</span><br>
+<div style="margin-left: 40px;">See <a href="../general/AccLimit.html">Acceleration Limiting</a> for details.<br>
+</div>
+
+<br><br>
+<big><big style="font-weight: bold;">Chart Area</big></big><br>
+
+
+<hr style="height: 1px; width: 100%;">If a valid <a href="VEH-Editor.html">Vehicle File</a>, <a href="ENG-Editor.html">Engine File</a> and <a href="GBX-Editor.html">Gearbox File</a> is loaded into the Editor the main vehicle parameters like HDV class and axle configuration are shown here.<br>
+The plot shows the full load curve(s) and shift polygons. In <a href="../general/calc_Declaration.html">Declaration Mode</a> the <span style="text-decoration: underline;">generic</span> shift polygons are shown, not the ones from the Gearbox File.<br>
+<br><br>
+<big><big style="font-weight: bold;">Controls</big></big><br>
+<hr style="height: 1px; width: 100%;">
+<img src="../pics/icons/blue-document-icon.png" style="width: 16px; height: 16px;" alt="new"><span style="font-weight: bold;">New
+Job File</span><br>
+<div style="margin-left: 40px;">
+
+Create a new empty .vecto
+file<br>
+</div>
+
+
+
+
+<br>
+<img src="../pics/icons/Open-icon.png" style="width: 16px; height: 16px;" alt="open"><span style="font-weight: bold;">
+Open existing Job File</span><br>
+<div style="margin-left: 40px;">
+
+Open an existing .vecto
+file<br>
+</div>
+
+<br>
+
+<img src="../pics/icons/Actions-document-save-icon.png" style="width: 16px; height: 16px;" alt="save"> <span style="font-weight: bold;">Save
+current Job File</span><br><br>
+
+
+<img src="../pics/icons/Actions-document-save-as-icon.png" style="width: 16px; height: 16px;" alt="SaveAs"> <span style="font-weight: bold;">Save
+Job File as...</span><br><br>
+
+<img src="../pics/icons/export-icon.png" style="width: 16px; height: 16px;" alt="sendto"> <span style="font-weight: bold;">Send
+current file to Job List in <a href="mainform.html">Main
+Form</a></span><br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">Note:</span> The file will
+be sent to the Job List automatically when saved.<br>
+</div>
+<br>
+
+<span style="font-weight: bold;"></span><span style="font-weight: bold;"></span><img src="pics/VECTO/Veh.png" style="width: 72px; height: 21px;" alt="veh"> <span style="font-weight: bold;">Open <a href="VEH-Editor.html">Vehicle
+Editor</a></span><br>
+<br>
+<img style="width: 72px; height: 21px;" alt="eng" src="pics/VECTO/Eng.png">
+<span style="font-weight: bold;">Open <a href="ENG-Editor.html">Engine Editor</a></span><br>
+<br>
+<img style="width: 72px; height: 21px;" alt="gbx" src="pics/VECTO/Gbx.png">
+<span style="font-weight: bold;">Open <a href="GBX-Editor.html">Gearbox Editor</a></span><br>
+<br>
+
+
+&nbsp;<span style="font-weight: bold;"><img style="width: 28px; height: 21px;" alt="" src="../pics/misc/browse.png"> Browse for
+vehicle/engine/gearbox files</span><br>
+<span style="font-weight: bold;"></span><br>
+<span style="font-weight: bold;">
+</span><img style="width: 75px; height: 23px;" alt="OK" src="../pics/misc/OK.png">
 <span style="font-weight: bold;">Save and close file</span><br>
-<div style="margin-left: 40px;">File will be added to Job
+<div style="margin-left: 40px;">
+
+
+File will be added to Job
 List in the <a href="mainform.html">Main Form</a><br>
-<br>
 </div>
-</div>
-<div style="margin-left: 40px;"><img style="width: 75px; height: 23px;" alt="Cancel" src="../pics/misc/Cancel.png"><a name="cancel"></a><span style="font-weight: bold;"> Cancel without saving</span></div>
-<br>
-<table style="text-align: left; width: 100%; height: 1200px;" border="0" cellpadding="2" cellspacing="2">
-<tbody>
-<tr>
-<td></td>
-</tr>
-</tbody>
-</table>
-<br>
-<br>
-<div style="text-align: left;">
-<hr style="width: 100%; height: 2px;"><a href="../contact.html">Contact</a>
-</div>
-</div>
-</div>
-<ul style="text-align: left; font-family: Tahoma;">
-</ul>
-</div>
-</body></html>
+
+<span style="font-weight: bold;"></span><br>
+<span style="font-weight: bold;">
+</span>
+
+
+<img style="width: 75px; height: 23px;" alt="Cancel" src="../pics/misc/Cancel.png"> <span style="font-weight: bold;">Cancel without saving</span>
+</div></div></div></body></html>

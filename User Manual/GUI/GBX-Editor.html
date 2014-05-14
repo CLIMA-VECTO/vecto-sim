@@ -2,251 +2,72 @@
 <html><head>
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Gearbox Editor - VECTO User Manual</title></head>
 <body>
-<map name="linkmap"><area shape="rect" coords="11,34,30,52&quot;" href="#new"><area shape="rect" coords="33,33,51,53&quot;" href="#open"><area shape="rect" coords="59,34,76,53&quot;" href="#save"><area shape="rect" coords="85,33,102,52&quot;" href="#saveas"><area shape="rect" coords="112,32,131,54&quot;" href="#sendto"><area shape="rect" coords="36,117,401,134&quot;" href="#make"><area shape="rect" coords="129,140,357,161&quot;" href="#type"><area shape="rect" coords="21,168,466,372&quot;" href="#gears"><area shape="rect" coords="108,382,171,401&quot;" href="#inertia"><area shape="rect" coords="362,383,404,401&quot;" href="#trint"><area shape="rect" coords="25,454,459,473&quot;" href="#polyfile"><area shape="rect" coords="25,483,223,501&quot;" href="#shiftinside"><area shape="rect" coords="24,508,161,528&quot;" href="#skipgear"><area shape="rect" coords="365,483,423,504&quot;" href="#torqres"><area shape="rect" coords="25,537,456,632&quot;" href="#startgear"><area shape="rect" coords="364,510,423,531&quot;" href="#mintime"><area shape="rect" coords="25,665,117,689&quot;" href="#tcon"><area shape="rect" coords="26,706,459,731&quot;" href="#tcfile"><area shape="rect" coords="324,735,392,758&quot;" href="#tcrefspeed"><area shape="rect" coords="311,775,382,797&quot;" href="#ok"><area shape="rect" coords="388,775,463,797&quot;" href="#cancel"></map>
-<table style="width: 100%; height: 54px; text-align: left; margin-left: auto; margin-right: auto;" border="0" cellpadding="2" cellspacing="2">
-<tbody>
-<tr>
-<td style="width: 110px;"><a href="../usermanual.html"><img src="../pics/VECTO-small.PNG" style="border: 0px solid ; width: 106px; height: 36px;" alt="VECTO-Logo"></a></td>
-<td><a href="../usermanual.html"><span style="color: rgb(0, 0, 0); font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; font-family: Verdana;">User
-Manual</span></a><span style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; display: inline ! important; float: none;"></span></td>
-<td style="text-align: right; width: 405px;"><a href="http://ec.europa.eu/dgs/jrc/index.cfm" target="_blank"><img src="../pics/JRC.png" style="border: 0px solid ; width: 173px; height: 36px;" alt="JRC-Logo" hspace="5"></a><a href="http://www.ivt.tugraz.at/" target="_blank"><img src="../pics/IVT.png" alt="IVT-Logo" style="border: 0px solid ; width: 74px; height: 36px;" hspace="5"></a><a href="http://portal.tugraz.at/pls/portal/url/page/TU_Graz" target="_blank"><img src="../pics/TUG.png" alt="TUG-Logo" style="border: 0px solid ; width: 96px; height: 36px;" hspace="5"></a></td>
-</tr>
-</tbody>
-</table>
-<hr style="width: 100%; height: 2px;"><a href="usermanual.html"><span style="font-family: Verdana;"></span></a><span style="font-family: Verdana;"></span>
-<div style="text-align: center;">
-<div style="text-align: left; font-family: Verdana;">
-<h2>Gearbox Editor</h2>
-<big><big><big><span style="font-weight: bold; color: red;">
-</span></big></big></big></div>
-<img style="width: 486px; height: 832px;" alt="gbx" usemap="#linkmap" src="pics/GBX-Editor.PNG"><br>
+
+
+
+<div style="text-align: left;">
+
+<span style="font-family: Verdana;"><big><big><big><span style="font-weight: bold;">Gearbox Editor</span></big></big></big></span><br>
+<hr style="width: 100%; height: 0px;"><br>
+
+
+<div style="text-align: center;"><img src="pics/GBX-Editor.PNG" usemap="#linkmap" alt="gbx" style="width: 750px; height: 550px;"><br></div>
 <span style="font-family: Verdana;"><br>
 </span>
-<div style="text-align: left;">
-<div style="margin-left: 40px;"><img src="../pics/icons/blue-document-icon.png" style="width: 16px; height: 16px;" alt="new"><span style="font-weight: bold;"><a name="new"></a>New
-file</span><br>
-</div>
-<div style="margin-left: 80px;">Create a new empty .vgbx
-file<br>
-</div>
-<div style="margin-left: 40px;"><br>
+
+<div style="margin-left: 40px;"><big><big style="font-weight: bold;">Description</big></big><br><hr style="height: 1px; width: 100%;">
+
+The Gearbox File (.vgbx) defines alls gearbox-related input parameters like gear ratios and transmission loss maps.<br>See <a href="../general/Shift.html">Gear Shift Model</a> for details.<br><br><br><big><big style="font-weight: bold;">Relatve File Paths</big></big><br>
+<hr style="height: 1px; width: 100%;">It is recommended to define
+relative filepaths. This way the Job File and all input files can be
+moved without having to update the paths.<br>
+Example: "Gears\Gear1.vtlm" points to the "Gears" subdirectory of the Gearbox File's directoy.<br>
 <br>
-<img src="../pics/icons/Open-icon.png" style="width: 16px; height: 16px;" alt="open"><span style="font-weight: bold;"><a name="open"></a>
-Open
-existing file</span><br>
-</div>
-<div style="text-align: left;">
-<div style="margin-left: 80px;">Open an existing .vgbx
-file<br>
-<br>
-<br>
-</div>
-<div style="margin-left: 40px;"><img src="../pics/icons/Actions-document-save-icon.png" style="width: 16px; height: 16px;" alt="save"><a name="save"></a> <span style="font-weight: bold;">Save
-current file</span></div>
-<div style="margin-left: 80px;"><br>
-<br>
-</div>
-<div style="margin-left: 40px;"><img src="../pics/icons/Actions-document-save-as-icon.png" style="width: 16px; height: 16px;" alt="SaveAs"><a name="saveas"></a> <span style="font-weight: bold;">Save
-file as...</span><br>
-<div style="margin-left: 40px;"><br>
-<br>
-</div>
-</div>
-<div style="margin-left: 40px;"><img src="../pics/icons/export-icon.png" style="width: 16px; height: 16px;" alt="sendto"><a name="sendto"></a> <span style="font-weight: bold;">Send
-current file to the <a href="VECTO-Editor.html">VECTO
-Editor</a></span><br>
-<div style="margin-left: 40px;"><span style="font-weight: bold;">Note:</span> If the current
-file was opened via the <a href="VECTO-Editor.html">VECTO
-Editor</a> the file will be sent automatically when saved.<br>
-</div>
-</div>
-<div style="margin-left: 40px;"><br>
-<br>
-<span style="font-weight: bold;"><a name="make"></a>
-Make and Model</span><br>
+VECTO automatically uses relative paths if the input file (e.g. Shift Polygons
+File) is in the same directory as the&nbsp;Gearbox File. (The&nbsp;Gearbox File must be
+saved before browsing for input files.)<br><br><br><big><big style="font-weight: bold;">Main Gearbox Parameters</big></big><br><hr style="height: 1px; width: 100%;">
+<span style="font-weight: bold;">Make and Model</span><br>
 <div style="margin-left: 40px;">Free text defining the
 gearbox model, type, etc.<br>
 </div>
 <br>
-<br>
-<a name="type"></a><span style="font-weight: bold;"> Transmission Type</span><br>
+<span style="font-weight: bold;">Transmission Type</span><br>
 <div style="margin-left: 40px;">Depending on the
 transmission type some options below are not available. The following
 types are available:
-<ul>
-<li><span style="font-weight: bold;">Manual
-Transmission</span> (MT)</li>
-<ul>
-<li>Activates the "<span style="font-weight: bold;">Skip
-Gears</span>" option. No torque converter.</li>
-</ul>
-<li><span style="font-weight: bold;">Automated
-Manual Transmission</span> (AMT)</li>
-<ul>
-<li>Activates&nbsp;the <span style="font-weight: bold;">"Allow shift-up inside polygons"</span>
-and "<span style="font-weight: bold;">Skip Gears</span>"
-option. No torque converter.</li>
-</ul>
-<li><span style="font-weight: bold;">Automatic
-Transmission</span> (AT)</li>
-<ul>
-<li>Torque converter ist set and must be parameterized.<span style="font-weight: bold;"></span></li>
-</ul>
-<li style="font-weight: bold;">Custom</li>
-<ul>
-<li style="font-weight: bold;"><span style="font-weight: normal;">Enables all options for
-user-defined settings.</span></li>
-</ul>
-</ul>
-</div>
-<a name="inertia"></a><span style="font-weight: bold;">Inertia</span> [kgm<sup>2</sup>]
+<ul><li><span style="font-weight: bold;">Manual
+Transmission</span> (MT)</li><li><span style="font-weight: bold;">Automated
+Manual Transmission</span> (AMT)</li><li><span style="font-weight: bold;">Automatic
+Transmission</span> (AT)</li><li style="font-weight: bold;">Custom</li></ul>Note: The types AT and Custom are not available in <a href="../general/calc_Declaration.html">Declaration Mode</a>.
+</div><br><span style="font-weight: bold;">Inertia</span> [kgm<sup>2</sup>]
 <div style="margin-left: 40px;">Rotational inertia of the
 gearbox (constant for all gears).<br>
-<br>
-<br>
 </div>
-<a name="trint"></a> <span style="font-weight: bold;">Traction Interruption</span>
-[s]
-<div style="margin-left: 40px;">Interruption&nbsp;during
-gear shift event.<br>
-<br>
-<br>
-</div>
-<a name="gears"></a> <span style="font-weight: bold;">Gears</span><br>
-<div style="margin-left: 40px;">
-<ul>
-</ul>Use the <img style="width: 16px; height: 16px;" alt="add" src="../pics/icons/plus-circle-icon.png"> and <img style="width: 16px; height: 16px;" alt="remove" src="../pics/icons/minus-circle-icon.png"> buttons to add or
-remove gears form the vehicle. Doubleclick entries to edit existing gears.<br><ul>
-<li>Gear "A" defines the ratio of the axle transmission /
-differential.</li><li>Column "TC" (AT only) defines which gears are using the torque converter (lock-up clutch open). Details <a href="#tcon">below</a>.</li><li>Column
+<br><span style="font-weight: bold;">Traction Interruption</span>
+[s]<br><div style="margin-left: 40px;">Interruption&nbsp;during
+gear shift event.<br></div>
+<br><br>
+<big><big style="font-weight: bold;">Gears</big></big><br><hr style="height: 1px; width: 100%;">
+<span style="font-weight: bold;"></span>Use the <img style="width: 16px; height: 16px;" alt="add" src="../pics/icons/plus-circle-icon.png"> and <img style="width: 16px; height: 16px;" alt="remove" src="../pics/icons/minus-circle-icon.png"> buttons to add or
+remove gears form the vehicle. Doubleclick entries to edit existing gears.<br><ul><li>Gear "A" defines the ratio of the axle transmission /
+differential.</li><li>Column "TC" (AT only) defines which gears are using the torque converter (lock-up clutch open).</li><li>Column
 "Loss Map or Efficiency" allows to define either a constant efficiency
-value or a loss map (.vtlm) in the following format:</li></ul>
-<div style="margin-left: 40px;"><span style="font-weight: bold;">.vtlm Format</span> (comma-separated, dot = decimal-mark):</div></div>
-<table style="background-color: white; text-align: left; height: 115px; width: 481px; margin-left: 80px;" border="1" cellpadding="2" cellspacing="1">
-<tbody>
-<tr>
-<th style="text-align: center; width: 150px;"><span style="color: rgb(51, 102, 255);">c </span>Input
-Speed*</th>
-<th style="text-align: center; width: 155px;">Input
-Torque*</th>
-<th style="text-align: center; width: 154px;">Torque
-Loss</th>
-</tr>
-<tr>
-<td style="text-align: center; width: 150px;"><span style="color: rgb(51, 102, 255);"><span style="font-weight: bold;">c</span> </span>[rpm]</td>
-<td style="text-align: center; width: 155px;">[Nm]</td>
-<td style="text-align: center; width: 154px;">[Nm]</td>
-</tr>
-<tr>
-<td style="width: 150px;">...</td>
-<td style="width: 155px;">...</td>
-<td style="width: 154px;">...</td>
-</tr>
-<tr>
-<td style="width: 150px;">...</td>
-<td style="width: 155px;">...</td>
-<td style="width: 154px;">...</td>
-</tr>
-</tbody>
-</table>
-<div style="margin-left: 40px;"><div style="margin-left: 40px;"><span style="font-weight: bold; font-style: italic; color: rgb(51, 102, 255);">Note:</span><span style="font-style: italic; color: rgb(51, 102, 255);"> text
-lines (header, comments,
-etc.) </span><span style="text-decoration: underline; font-style: italic; color: rgb(51, 102, 255);">must</span><span style="font-style: italic; color: rgb(51, 102, 255);"> start
-with "<span style="font-weight: bold;">c</span> "</span><br></div>
-<br>
-<div style="margin-left: 40px;"><span style="font-weight: bold;">*Input Speed &amp;
-Torque always
-means <span style="text-decoration: underline;">engine-side</span>.</span><br><br><span style="font-weight: bold;">Sign of torque values:</span><br><ul><li>Input Torque &gt; 0 for normal driving operation</li><li>Input Torque &lt; 0 for motoring operation.&nbsp;<span style="font-weight: bold;"><span style="color: red;">The Torque Loss Map must include negative torque
-values for engine motoring operation!</span></span></li><li>Torque Loss is always positive!</li></ul><span style="font-weight: bold;">Calculation of Output Torque</span>:<br><div style="margin-left: 40px;">VECTO calculates the output torque using this formula, independent from the current operation mode (driving/braking).<br><img style="width: 600px; height: 39px;" alt="" src="pics/GBX-Editor_Tout.PNG"></div></div><br></div><br>
-<br>
-<big><big><span style="font-weight: bold;">Gear
-shift parameters</span></big></big><br>
-<div style="margin-left: 40px;"><span style="font-weight: bold;"><br>
-<a name="polyfile"></a>Shift polygons file</span>
-(.vgbs)<br>
-<div style="margin-left: 40px;">This
-file contains the up- and down- shift curves that control the gear
-shift behaviour. Whenever the actual engine speed crosses the up- or
-down-shift line a gear-shift is initiated.<br>
-<img style="width: 485px; height: 341px;" alt="" src="pics/GBX-Editor-shift1.PNG"><br>
-<br>
-<br>
-<span style="font-weight: bold;">Shift Polygons File Format</span>
-(comma-separated, dot = decimal-mark):
-<table style="background-color: white; text-align: left; height: 115px; margin-left: 0px; width: 541px;" border="1" cellpadding="2" cellspacing="1">
-<tbody>
-<tr>
-<th style="text-align: center; width: 163px;"><span style="color: rgb(51, 102, 255);">c&nbsp;</span>Engine
-Torque</th>
-<th style="text-align: center; width: 180px;">Downshift
-rpm</th>
-<th style="text-align: center; width: 176px;">Upshift
-rpm</th>
-</tr>
-<tr>
-<td style="text-align: center; width: 163px;"><span style="color: rgb(51, 102, 255);"><span style="font-weight: bold;">c</span> </span>[Nm]</td>
-<td style="text-align: center; width: 180px;">[1/min]</td>
-<td style="text-align: center; width: 176px;">[1/min]</td>
-</tr>
-<tr>
-<td style="width: 163px;">...</td>
-<td style="width: 180px;">...</td>
-<td style="width: 176px;">...</td>
-</tr>
-<tr>
-<td style="width: 163px;">...</td>
-<td style="width: 180px;">...</td>
-<td style="width: 176px;">...</td>
-</tr>
-</tbody>
-</table>
-<span style="font-weight: bold; font-style: italic; color: rgb(51, 102, 255);">Note:</span><span style="font-style: italic; color: rgb(51, 102, 255);"> text
-lines (header, comments,
-etc.) </span><span style="text-decoration: underline; font-style: italic; color: rgb(51, 102, 255);">must</span><span style="font-style: italic; color: rgb(51, 102, 255);"> start
-with "<span style="font-weight: bold;">c</span> "</span><br>
-<br>
-<img style="width: 28px; height: 21px;" alt="" src="../pics/misc/browse.png"> <span style="font-weight: bold;">Open file browser</span>.<br>
-<br>
-<img style="width: 22px; height: 22px;" alt="" src="../pics/misc/OpenFile.PNG"> <span style="font-weight: bold;">Open file</span> with
-<a href="../../GRAPHi/documentation/HTML%20Manual/mainwindow.html">GRAPHi</a>
-or an user-defined tool (see <a href="settings.html#opencmd">File
-Open Command)</a>.<br>
-<br>
-<br>
-</div>
-</div>
-<div style="margin-left: 40px;"><a name="shiftinside"></a><span style="font-weight: bold;"><img alt="" src="../pics/misc/checkbox.png"> Allow shift-up inside
-polygons</span><br>
-<div style="margin-left: 40px;">If the next higher gear
-provides the required <a href="#torqres">torque reserve</a>
-and it's rpm is still above down-shift-rpm VECTO will shift up.<br>
-<img style="width: 567px; height: 341px;" alt="" src="pics/GBX-Editor-shift2.PNG"></div>
-<br>
-<br>
-<a name="skipgear"></a><span style="font-weight: bold;"><img style="width: 15px; height: 15px;" alt="" src="../pics/misc/checkbox.png"> Skip Gears</span><br>
-<div style="margin-left: 40px;">Whenever
-a gear change is initiated (by crossing the up- or down-shift line)
-VECTO may skip one or several gears as long as the required <a href="#torqres">torque reserve</a> is provided.<br>
-<img style="width: 568px; height: 341px;" alt="" src="pics/GBX-Editor-shift3.PNG"></div>
-<br>
-<br>
-<a name="torqres"></a><span style="font-weight: bold;">Torque Reserve</span> [%]<br>
+value or a <a href="../fileformat/VTLM.html">loss map (.vtlm)</a>.</li><li>Column "Shift polygons" defines the <a href="../fileformat/VGBS.html">Shift Polygons Input File (.vgbs)</a> for each gear. Not required in <a href="../general/calc_Declaration.html">Declaration Mode</a>. See <a href="../general/Shift.html">Gear Shift Model</a> for details.</li></ul><br><br><big><big style="font-weight: bold;">Gear shift parameters</big></big><br><hr style="height: 1px; width: 100%;">
+<span style="font-weight: bold;"><img alt="" src="../pics/misc/checkbox.png"> Allow shift-up inside
+polygons</span><br><div style="margin-left: 40px;">See <a href="../general/Shift.html">Gear Shift Model</a>.<br></div><br><span style="font-weight: bold;"><img style="width: 15px; height: 15px;" alt="" src="../pics/misc/checkbox.png"> Skip Gears</span><br><div style="margin-left: 40px;">See <a href="../general/Shift.html">Gear Shift Model</a>.<br></div><br><span style="font-weight: bold;">Torque Reserve</span> [%]<br>
 <div style="margin-left: 40px;">This parameter is required
 for the "<span style="font-weight: bold;">Allow shift-up
 inside polygons</span>" and "<span style="font-weight: bold;">Skip
 Gears</span>" options.</div>
 <br>
-<br>
-<a style="font-weight: bold;" name="mintime"></a><span style="font-weight: bold;">Minimum time between two gear
-shifts</span> [s]<br>
+<span style="font-weight: bold;">Minimum shift time</span> [s]<br>
 <div style="margin-left: 40px;">Limits
 the time between two gear shifts in whole seconds. This rule will be
 ignored if rpms are too high or too low. Note that high values may
 cause high rpms during acceleration.<br>
 </div>
 <br>
-<br>
-<a name="startgear"></a><span style="font-weight: bold;">Start Gear</span><br>
+<span style="font-weight: bold;">Start Gear</span><br>
 <div style="margin-left: 40px;">In order to calculate an
 appropriate
 gear for vehicle start (first gear after vehicle standstill) a
@@ -256,136 +77,32 @@ acceleration</span>
 together with the actual road gradient, transmission losses and
 auxiliary power demand. This way the start gear is independent from the
 target speed. VECTO uses the highest possible gear which provides the
-defined <span style="font-weight: bold;">torque reserve</span>.</div>
+defined <span style="font-weight: bold;">torque reserve</span>.</div><br><br><big><big style="font-weight: bold;">Chart Area</big></big><br><hr style="height: 1px; width: 100%;">
+
+The Chart Area displays the <a href="../fileformat/VGBS.html">Shift Polygons Input File (.vgbs)</a> for the selected gear.<br><br><br><big><big style="font-weight: bold;">Torque Converter </big></big><br><hr style="height: 1px; width: 100%;">
+
+The <a href="../general/TC.html">Torque Converter Model</a> is still in development.<br><br><br><big><big style="font-weight: bold;">Controls</big></big><br><hr style="height: 1px; width: 100%;"><span style="font-weight: bold;"><img style="width: 16px; height: 16px;" alt="" src="../pics/icons/blue-document-icon.png"> New
+file</span><br>
+
+Create a new empty .vgbx
+file<br><br><img src="../pics/icons/Open-icon.png" style="width: 16px; height: 16px;" alt="open"><span style="font-weight: bold;">
+Open
+existing file</span><br>
+
+
+<div style="margin-left: 40px;">Open an existing .vgbx
+file<br></div><br><img src="../pics/icons/Actions-document-save-icon.png" style="width: 16px; height: 16px;" alt="save"> <span style="font-weight: bold;">Save
+current file</span><br><br><img src="../pics/icons/Actions-document-save-as-icon.png" style="width: 16px; height: 16px;" alt="SaveAs"> <span style="font-weight: bold;">Save
+file as...</span><br><br><img src="../pics/icons/export-icon.png" style="width: 16px; height: 16px;" alt="sendto"> <span style="font-weight: bold;">Send
+current file to the <a href="VECTO-Editor.html">VECTO
+Editor</a></span><br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">Note:</span> If the current
+file was opened via the <a href="VECTO-Editor.html">VECTO
+Editor</a> the file will be sent automatically when saved.<br></div><br><img style="width: 28px; height: 21px;" alt="" src="../pics/misc/browse.png"> <span style="font-weight: bold;">Open file browser</span>.<br>
 <br>
-</div>
-<br>
-<a name="tcon"></a><big><big><span style="font-weight: bold;">Torque
-Converter</span></big></big><br>
-<br>
-<div style="margin-left: 40px;">The torque converter is
-defined as (virtual) separate gear.<br>
-While TC active: Iterative calculation of engine torque and speed based
-on TC characteristic.<br>
-Creeping: Engine speed set to idling. Brakes engaged to absorb surplus
-torque.<br>
-<img style="width: 900px; height: 293px;" alt="" src="pics/GBX-TC.png"><br>
-</div>
-<br>
-<br>
-<div style="margin-left: 40px;"><span style="font-weight: bold;"><img style="width: 15px; height: 15px;" alt="" src="../pics/misc/checkbox.png"> Installed</span><br>
-<div style="margin-left: 40px;">This option is only
-available if <a href="#type">transmission type</a>
-is set to <span style="font-weight: bold;">Custom</span>.
-For AT this option is always On, for MT and AMT always Off.</div>
-</div>
-<br>
-<div style="margin-left: 40px;"><a name="tcfile"></a><span style="font-weight: bold;">Torque converter characteristics
-file</span> (.vtcc)<br>
-<div style="margin-left: 40px;">This file defines the
-torque converter characteristics as described in VDI 2153:<br>
-<span style="font-weight: bold;">Speed Ratio (</span>&#957;)
-= Output Speed / Input Speed<br>
-<span style="font-weight: bold;">Torque Ratio</span>
-(&#956;) = Output Torque / Input&nbsp;Torque<br>
-<span style="font-weight: bold;">Input Torque</span>
-(T<sub>ref(&#957;)</sub>) is the input torque (over &#957;) for a
-specific reference engine speed (see
-below).<br>
-<br>
-The Input Torque at &nbsp;reference engine speed is needed to
-calculate the actual engine torque using this formula:<br>
-<img style="width: 300px; height: 72px;" alt="" src="pics/GBX-TC2.png"><br>
-with:<br>
-<div style="margin-left: 40px;">T<sub>in</sub>
-= engine torque [Nm]<br>
-T<sub>ref(&#957;)</sub> = reference torque at reference rpm
-(form .vtcc file) [Nm]<br>
-n<sub>in</sub> = engine speed [1/min]<br>
-n<sub>ref</sub> = reference rpm [1/min] (see below)<br>
-</div>
-<br>
-The torque converter characteristics must also be defined for speed
-ratios of more than one (<span style="font-weight: bold;"></span>&#957;&gt;1)
-in order to calculate overrun conditions (torque&lt;0).<br>
-<br>
-<span style="font-weight: bold;">Torque Converter </span><span style="font-weight: bold;">Characteristics File </span><span style="font-weight: bold;">Format</span> (comma-separated, dot = decimal-mark):
-<table style="background-color: white; text-align: left; height: 115px; width: 560px; margin-left: 0px;" border="1" cellpadding="2" cellspacing="1">
-<tbody>
-<tr>
-<th style="text-align: center; width: 179px;"><span style="color: rgb(51, 102, 255);">c&nbsp;</span>Speed
-Ratio &#957;</th>
-<th style="text-align: center; width: 187px;">Torque
-Ratio &#956;</th>
-<th style="text-align: center; width: 170px;">Input
-Torque at reference rpm</th>
-</tr>
-<tr>
-<td style="text-align: center; width: 179px;"><span style="color: rgb(51, 102, 255);"><span style="font-weight: bold;">c</span> </span>[-]</td>
-<td style="text-align: center; width: 187px;">[-]</td>
-<td style="text-align: center; width: 170px;">[Nm]</td>
-</tr>
-<tr>
-<td style="width: 179px;">...</td>
-<td style="width: 187px;">...</td>
-<td style="width: 170px;">...</td>
-</tr>
-<tr>
-<td style="width: 179px;">...</td>
-<td style="width: 187px;">...</td>
-<td style="width: 170px;">...</td>
-</tr>
-</tbody>
-</table>
-<span style="font-weight: bold; font-style: italic; color: rgb(51, 102, 255);">Note:</span><span style="font-style: italic; color: rgb(51, 102, 255);"> text
-lines (header, comments,
-etc.) </span><span style="text-decoration: underline; font-style: italic; color: rgb(51, 102, 255);">must</span><span style="font-style: italic; color: rgb(51, 102, 255);"> start
-with "<span style="font-weight: bold;">c</span> "</span><br>
-<br>
-<img style="width: 28px; height: 21px;" alt="" src="../pics/misc/browse.png"> <span style="font-weight: bold;">Open file browser</span>.<br>
-<br>
-<img style="width: 22px; height: 22px;" alt="" src="../pics/misc/OpenFile.PNG"> <span style="font-weight: bold;">Open file</span> with
-<a href="../../GRAPHi/documentation/HTML%20Manual/mainwindow.html">GRAPHi</a>
-or an user-defined tool (see <a href="settings.html#opencmd">File
+<img style="width: 22px; height: 22px;" alt="" src="../pics/misc/OpenFile.PNG"> <span style="font-weight: bold;">Open file</span>&nbsp;(see <a href="settings.html#opencmd">File
 Open Command)</a>.<br>
-</div>
-<br>
-<br>
-<a name="tcrefspeed"></a><span style="font-weight: bold;">Reference rpm for torque
-characteristic</span><br>
-<div style="margin-left: 40px;">Reference engine speed
-associated with the&nbsp;<span style="font-weight: bold;">Input
-Torque</span> curve in the .vtcc file.<br><br></div></div><div style="margin-left: 40px;"><br><big><big><span style="font-weight: bold;">Setup for <span style="text-decoration: underline;">Conventional AT gearboxes</span>:</span></big></big><br><div style="margin-left: 40px;">Torque converter file is defined for <span style="text-decoration: underline;">torque converter only</span><br></div><div style="margin-left: 40px;"><img style="width: 700px; height: 171px;" alt="" src="pics/GBX-TC-Setup-1-1.png"><br></div><br><ul><li>Define TC gear with ratio of first (mechanical) gear</li><li>Set transmission losses of first gear (map or constant efficiency)</li></ul><div style="margin-left: 40px;"><img style="width: 400px; height: 141px;" alt="" src="pics/GBX-TC-Setup-1-2.png"><br></div><br><big><big><span style="font-weight: bold;">Setup for <span style="text-decoration: underline;">Power-distributed AT gearboxes</span></span></big></big>:<br><div style="margin-left: 40px;">Torque converter file is defined for the <span style="text-decoration: underline;">whole gearbox</span><br></div><div style="margin-left: 40px;"><img style="width: 700px; height: 176px;" alt="" src="pics/GBX-TC-Setup-2-1.png"><br></div><br><ul><li>Define TC gear with ratio = 1</li><li>Set transmission efficiency to 1 (= 100%) because losses are covered by the .vtcc file.</li></ul><div style="margin-left: 40px;"><img style="width: 400px; height: 142px;" alt="" src="pics/GBX-TC-Setup-2-2.png"><br></div><br><br><br><br></div>
-<br>
-<img style="width: 28px; height: 21px;" alt="" src="../pics/misc/browse.png"> <span style="font-weight: bold;">Open file browser</span>.<br>
-<br>
-<img style="width: 22px; height: 22px;" alt="" src="../pics/misc/OpenFile.PNG"> <span style="font-weight: bold;">Open file</span> with
-<a href="../../GRAPHi/documentation/HTML%20Manual/mainwindow.html">GRAPHi</a>
-or an user-defined tool (see <a href="settings.html#opencmd">File
-Open Command)</a>.<br>
-<br>
-</div>
-<div style="margin-left: 40px;"><img style="width: 75px; height: 23px;" alt="OK" src="../pics/misc/OK.png"><a name="ok"></a><span style="font-weight: bold;">Save and close file</span><br>
-<div style="margin-left: 40px;">If necessary the file path
+<br><img style="width: 75px; height: 23px;" alt="OK" src="../pics/misc/OK.png"><span style="font-weight: bold;">Save and close file</span><br><div style="margin-left: 40px;">If necessary the file path
 in the <a href="VECTO-Editor.html">VECTO Editor</a>
-will be updated.<br>
-<br>
-</div>
-</div>
-<div style="margin-left: 40px;"><img style="width: 75px; height: 23px;" alt="Cancel" src="../pics/misc/Cancel.png"><a name="cancel"></a><span style="font-weight: bold;"> Cancel without saving</span></div>
-<table style="text-align: left; width: 100%; height: 1200px;" border="0" cellpadding="2" cellspacing="2">
-<tbody>
-<tr>
-<td></td>
-</tr>
-</tbody>
-</table>
-<div style="text-align: left;">
-<hr style="width: 100%; height: 2px;"><a href="../contact.html">Contact</a>
-</div>
-</div>
-</div>
-<ul style="text-align: left; font-family: Tahoma;">
-</ul>
-</div>
+will be updated.<br></div><br><img style="width: 75px; height: 23px;" alt="Cancel" src="../pics/misc/Cancel.png"><span style="font-weight: bold;"> Cancel without saving</span><span style="font-weight: bold;"></span><br></div></div>
 </body></html>

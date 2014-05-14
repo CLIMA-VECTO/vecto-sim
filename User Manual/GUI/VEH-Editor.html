@@ -1,307 +1,192 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
+
+
+
+
+
+
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Vehicle Editor - VECTO User Manual</title></head>
 <body>
-<map name="linkmap"><area shape="rect" coords="13,34,30,51&quot;" href="#new"><area shape="rect" coords="34,35,51,52&quot;" href="#open"><area shape="rect" coords="58,33,77,53&quot;" href="#save"><area shape="rect" coords="83,34,102,51&quot;" href="#saveas"><area shape="rect" coords="114,35,132,52&quot;" href="#sendto"><area shape="rect" coords="79,116,190,139&quot;" href="#cat"><area shape="rect" coords="324,116,392,136&quot;" href="#axlc"><area shape="rect" coords="500,116,536,139&quot;" href="#class"><area shape="rect" coords="200,168,261,299&quot;" href="#load"><area shape="rect" coords="307,168,564,330&quot;" href="#axl"><area shape="rect" coords="199,339,258,384&quot;" href="#air"><area shape="rect" coords="453,340,512,361&quot;" href="#inertia"><area shape="rect" coords="452,366,512,384&quot;" href="#diam"><area shape="rect" coords="26,425,563,474&quot;" href="#wind"><area shape="rect" coords="27,506,563,565&quot;" href="#retard"><area shape="rect" coords="407,585,481,604&quot;" href="#ok"><area shape="rect" coords="490,584,565,604&quot;" href="#cancel"></map>
-<table style="width: 100%; height: 54px; text-align: left; margin-left: auto; margin-right: auto;" border="0" cellpadding="2" cellspacing="2">
-<tbody>
-<tr>
-<td style="width: 110px;"><a href="../usermanual.html"><img src="../pics/VECTO-small.PNG" style="border: 0px solid ; width: 106px; height: 36px;" alt="VECTO-Logo"></a></td>
-<td><a href="../usermanual.html"><span style="color: rgb(0, 0, 0); font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; font-family: Verdana;">User
-Manual</span></a><span style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; display: inline ! important; float: none;"></span></td>
-<td style="text-align: right; width: 405px;"><a href="http://ec.europa.eu/dgs/jrc/index.cfm" target="_blank"><img src="../pics/JRC.png" style="border: 0px solid ; width: 173px; height: 36px;" alt="JRC-Logo" hspace="5"></a><a href="http://www.ivt.tugraz.at/" target="_blank"><img src="../pics/IVT.png" alt="IVT-Logo" style="border: 0px solid ; width: 74px; height: 36px;" hspace="5"></a><a href="http://portal.tugraz.at/pls/portal/url/page/TU_Graz" target="_blank"><img src="../pics/TUG.png" alt="TUG-Logo" style="border: 0px solid ; width: 96px; height: 36px;" hspace="5"></a></td>
-</tr>
-</tbody>
-</table>
-<hr style="width: 100%; height: 2px;"><a href="usermanual.html"><span style="font-family: Verdana;"></span></a><span style="font-family: Verdana;"></span>
+
+<div style="text-align: left;">
+
+
+<span style="font-family: Verdana;"><big><big><big><span style="font-weight: bold;">Vehicle Editor</span></big></big></big></span><br>
+<hr style="width: 100%; height: 0px;"><br>
+
+
 <div style="text-align: center;">
-<div style="text-align: left; font-family: Verdana;">
-<h2>Vehicle Editor</h2>
-</div>
-<img src="pics/VEH-Editor.PNG" style="width: 589px; height: 644px;" alt="eng" usemap="#linkmap"><br>
-<span style="font-family: Verdana;"><br>
+<img src="pics/VEH-Editor.PNG" style="width: 578px; height: 779px;" alt="eng" usemap="#linkmap"><br>
+</div><br>
+
+
+<div style="text-align: left; margin-left: 40px;">
+
+<big><big style="font-weight: bold;">Description</big></big><br><hr style="height: 1px; width: 100%;">The Vehicle File (.vveh) defines the main vehicle/chassis parameters like axles including <a href="../general/RRC.html">RRC</a>s, air resistance and weight.<br>
 <br>
-</span>
-<div style="text-align: left;"><img src="../pics/icons/blue-document-icon.png" style="width: 16px; height: 16px;" alt="new"><span style="font-weight: bold;"><a name="new"></a>New
+<br>
+<big><big style="font-weight: bold;">Relatve File Paths</big></big><br>
+
+
+<hr style="height: 1px; width: 100%;">It is recommended to define
+relative filepaths. This way the Job File and all input files can be
+moved without having to update the paths.<br>
+
+
+Example: "Demo\RT1.vrlm" points to the "Demo" subdirectory of the Vehicle File's directoy.<br>
+
+
+<br>
+
+VECTO automatically uses relative paths if the input file (e.g. Retarder Losses File)
+is in the same directory as the Vehicle File. (The Vehicle File must be
+saved before browsing for input files.)<br>
+<br>
+<br>
+<big><big style="font-weight: bold;">General vehicle parameters</big></big><br>
+
+<hr style="height: 1px; width: 100%;"><span style="font-weight: bold;"></span><span style="font-weight: bold;">Vehicle Category</span><br>
+ 
+<div style="margin-left: 40px;">Needed for <a href="../general/calc_Declaration.html">Declaration Mode</a> to identify the HDV Class.<br>
+<br>
+</div>
+
+<span style="font-family: Verdana;"></span><span style="font-weight: bold;"></span><span style="font-weight: bold;">Axle
+Configuration</span><span style="font-weight: bold;"></span><br>
+ 
+<div style="margin-left: 40px;">Needed for <a href="../general/calc_Declaration.html">Declaration Mode</a> to identify the HDV Class.<br>
+<br>
+</div>
+
+<span style="font-weight: bold;">Gross Vehicle Mass Rating [t]</span><br>
+<div style="margin-left: 40px;">Needed for <a href="../general/calc_Declaration.html">Declaration Mode</a> to identify the HDV Class.<br>
+</div>
+<span style="font-weight: bold;"><br>
+HDV
+Class</span><span style="font-weight: bold;"></span><br>
+
+ 
+<div style="margin-left: 40px;">Displays the
+automatically selected HDV Class depending on the settings above.</div>
+
+
+<br>
+<br>
+<big><big style="font-weight: bold;">Weight/Loading</big></big><br>
+<hr style="height: 1px; width: 100%;">These fields define the
+weight and loading of the vehicle. <span style="font-weight: bold;">Max.
+Loading</span> displayes the maximum possible loading for the
+selected vehicle depending on curb weight and GVW values.<span style="font-weight: bold;"><br>
+</span><span style="font-weight: bold; color: rgb(253, 0, 0);">Note: </span><span style="color: rgb(253, 0, 0);">VECTO uses the sum of </span><span style="font-weight: bold; color: rgb(253, 0, 0);">Curb
+Weight Vehicle</span><span style="color: rgb(253, 0, 0);">,
+</span><span style="font-weight: bold; color: rgb(253, 0, 0);">Curb
+Weight Extra Trailer/Body</span><span style="color: rgb(253, 0, 0);"> and </span><span style="font-weight: bold; color: rgb(253, 0, 0);">Loading</span><span style="color: rgb(253, 0, 0);"> for calculation!</span><br>
+<br>
+<br><big><big style="font-weight: bold;">Air Resistance</big></big><br>
+
+<hr style="height: 1px; width: 100%;">The product of <span style="font-weight: bold;">Drag Coefficient</span>
+[-], <span style="font-weight: bold;">Cross Sectional Area</span>
+[m<sup>2</sup>] and <span style="font-weight: bold;">Air
+Density</span> [kg/m<sup>3</sup>]
+(see <a href="settings.html">Settings</a>) together with the vehicle speed defines the Air Resistance. Note that the Drag Coefficient may
+be altered when using <a href="../general/cd.html"><span style="font-weight: bold;">Cross
+Wind Correction</span></a>.<br>
+<br>
+<br>
+<big><big style="font-weight: bold;">Axles/Wheels</big></big><br>
+
+
+<hr style="height: 1px; width: 100%;">For each axle the parameters <span style="font-weight: bold;">Relative axle load</span>, <span style="font-weight: bold;">RRC</span><sub style="font-weight: bold;">ISO</sub> and <span style="font-weight: bold;">F</span><sub style="font-weight: bold;">zISO</sub> have to be defined in order to calculate the total <a href="../general/RRC.html">Rolling Resistance Coefficient</a>.<br>
+Furthermore the <span style="font-weight: bold;">Wheels Inertia [kgm²]</span> has to be set <span style="text-decoration: underline;">per wheel</span> for each axle. In <a href="../general/calc_Declaration.html">Declaration Mode</a> the inertia is defined automatically according to the selected tires.<br>
+Use the <img style="width: 16px; height: 16px;" alt="add" src="../pics/icons/plus-circle-icon.png"> and <img style="width: 16px; height: 16px;" alt="remove" src="../pics/icons/minus-circle-icon.png"> buttons to add or
+remove axles form the vehicle. Doubleclick entries to edit existing
+axle configurations.<br>
+<br>
+<span style="font-weight: bold;">Dynamic Tire Radius [mm]</span><br>
+<div style="margin-left: 40px;">Effective (dynamic) wheel radius used to calculate engine speed. In <a href="../general/calc_Declaration.html">Declaration Mode</a> the radius calculated automatically using tires/rims of the powered axle.<br>
+</div>
+<br>
+<span style="font-weight: bold;">Powered axle tyres/rims</span><br>
+<div style="margin-left: 40px;">Needed for <a href="../general/calc_Declaration.html">Declaration Mode</a> to calculate the dynamic tire radius.</div>
+<br>
+<br>
+<big><big style="font-weight: bold;">Retarder Losses</big></big><br>
+
+
+
+
+<hr style="height: 1px; width: 100%;">If available a <span style="font-weight: bold;">Retarder Torque Loss Map</span> can be defined here to consider idling losses caused by the retarder. <br>
+<span style="font-weight: bold; color: red;">Note: Do not use this function if the retarder's losses are already included in the Transmission Loss Maps!</span><br>
+<br>
+Three options are available:<br>
+
+<ul>
+<li>None</li><li>Primary (before gearbox): The rpm ratio is relative to the
+engine speed</li><li>Secondary (after gearbox): The rpm ratio is relative to the
+cardan shaft speed</li>
+</ul>
+
+Both, primary and secondary retarders, require an <a href="../fileformat/VRLM.html">Retarder Loss Torque Input File (.vrlm)</a>.<br>
+
+<br>
+<br>
+<big><big style="font-weight: bold;">Cross Wind Correction</big></big><br>
+
+
+<hr style="height: 1px; width: 100%;">Three different options
+are available:<br>
+
+
+<ul>
+<li>No Correction</li><li>Speed dependent</li><li>Vair &amp; Beta Input</li>
+</ul>
+
+
+Depending on the chosen mode either a <a href="../fileformat/VCDV.html">Speed Dependent Cross Wind Correction Input File (.vcdv)</a> or a <a href="../fileformat/VCDB.html">Vair &amp; Beta Cross Wind Correction Input File (.vcdb)</a> must be defined. For details see <a href="../general/cd.html">Cross
+Wind Correction</a>.<br>
+
+
+<span style="font-weight: bold;"></span><br>
+<br>
+<big><big style="font-weight: bold;">Controls</big></big><br>
+<hr style="height: 1px; width: 100%;"><img src="../pics/icons/blue-document-icon.png" style="width: 16px; height: 16px;" alt="new"> <span style="font-weight: bold;">New
 file</span><br>
 <div style="margin-left: 40px;">Create a new empty .vveh
 file<br>
 </div>
-<br><br>
-<img src="../pics/icons/Open-icon.png" style="width: 16px; height: 16px;" alt="open"><span style="font-weight: bold;"><a name="open"></a>Open
+<br>
+<img src="../pics/icons/Open-icon.png" style="width: 16px; height: 16px;" alt="open"><span style="font-weight: bold;"> Open
 existing file</span><br>
 <div style="margin-left: 40px;">Open an existing .vveh
 file<br>
 </div>
-<span style="font-family: Verdana;"></span><br><br>
-<span style="font-family: Verdana;"></span><img src="../pics/icons/Actions-document-save-icon.png" style="width: 16px; height: 16px;" alt="save"><a name="save"></a> <span style="font-weight: bold;">Save
+<span style="font-family: Verdana;"></span><br><span style="font-family: Verdana;"></span><img src="../pics/icons/Actions-document-save-icon.png" style="width: 16px; height: 16px;" alt="save"> <span style="font-weight: bold;">Save
 current file</span><br>
-<span style="font-family: Verdana;"></span><br><br>
-<span style="font-family: Verdana;"></span><img src="../pics/icons/Actions-document-save-as-icon.png" style="width: 16px; height: 16px;" alt="SaveAs"><a name="saveas"></a> <span style="font-weight: bold;">Save
+<span style="font-family: Verdana;"></span><br><span style="font-family: Verdana;"></span><img src="../pics/icons/Actions-document-save-as-icon.png" style="width: 16px; height: 16px;" alt="SaveAs"> <span style="font-weight: bold;">Save
 file as...</span><br>
 <div style="margin-left: 40px;"><br>
 </div>
-<span style="font-family: Verdana;"></span><br>
-<span style="font-family: Verdana;"></span><img src="../pics/icons/export-icon.png" style="width: 16px; height: 16px;" alt="sendto"><a name="sendto"></a> <span style="font-weight: bold;">Send
+<span style="font-family: Verdana;"></span><img src="../pics/icons/export-icon.png" style="width: 16px; height: 16px;" alt="sendto"> <span style="font-weight: bold;">Send
 current file to the <a href="VECTO-Editor.html">VECTO
 Editor</a></span><br>
 <div style="margin-left: 40px;"><span style="font-weight: bold;">Note:</span> If the current
 file was opened via the <a href="VECTO-Editor.html">VECTO
 Editor</a> the file will be sent automatically when saved.<br>
 </div>
-<span style="font-family: Verdana;"></span><br><br>
-<span style="font-weight: bold;"><a name="cat"></a>Category</span> (Not used in current version!)
-<div style="margin-left: 40px;">The HDV category is needed
-in Declaration Mode to assign the correct driving cycles. Available
-categories:<br>
-<ul>
-<li>Rigid Truck</li>
-<li>Tractor</li>
-<li>City Bus</li>
-<li>Interurban Bus</li>
-<li>Coach</li>
-</ul>
-</div>
-<span style="font-family: Verdana;"></span><span style="font-weight: bold;"></span><span style="font-weight: bold;"><a name="axlc"></a>Axle
-Configuration</span><span style="font-weight: bold;"></span> (Not used in current version!)
-<div style="margin-left: 40px;">The Axle Configuration is
-needed in Declaration Mode to assign the&nbsp;correct driving
-cycles. Available configurations:<br>
-<ul>
-<li>4x2</li>
-<li>4x4</li>
-<li>6x2</li>
-<li>6x4</li>
-<li>6x6</li>
-<li>8x2</li>
-<li>8x4</li>
-<li>8x6</li>
-<li>8x8</li>
-</ul>
-</div>
-<span style="font-weight: bold;"><a name="class"></a>HDV
-Class</span><span style="font-weight: bold;"></span> (Not used in current version!)
-<div style="margin-left: 40px;">Displayes the
-automatically selected HDV Class depending on Category, Axle
-Configuration and GVW.</div>
-<br><br>
-<span style="font-weight: bold;"><a name="load"></a>Weight
-/ Loading</span> [kg]<br>
-<div style="margin-left: 40px;">These fields define the
-weight and loading of the vehicle. <span style="font-weight: bold;">Max.
-Loading</span> displayes the maximum possible loading for the
-selected vehicle depending on curb weight and GVW values. <span style="font-weight: bold; color: rgb(253, 0, 0);">Note: </span><span style="color: rgb(253, 0, 0);">VECTO uses the sum of </span><span style="font-weight: bold; color: rgb(253, 0, 0);">Curb
-Weight Vehicle</span><span style="color: rgb(253, 0, 0);">,
-</span><span style="font-weight: bold; color: rgb(253, 0, 0);">Curb
-Weight Extra Trailer/Body</span><span style="color: rgb(253, 0, 0);"> and </span><span style="font-weight: bold; color: rgb(253, 0, 0);">Loading</span><span style="color: rgb(253, 0, 0);"> for calculation!</span><br>
-</div>
-<br><br>
-<a name="air"></a><span style="font-weight: bold;">Air
-Resistance</span><br>
-<div style="margin-left: 40px;">The product of <span style="font-weight: bold;">Drag Coefficient</span>
-[-], <span style="font-weight: bold;">Cross Sectional Area</span>
-[m<sup>2</sup>] and <span style="font-weight: bold;">Air
-Density</span> [kg/m<sup>3</sup>]
-(see <a href="settings.html">Settings</a>) together with the&nbsp;air speed (relative to the
-vehicle) defines the Air Resistance. Note that the Drag Coefficient may
-be altered when using <span style="font-weight: bold;">Cross
-Wind Correction</span> (see below).<br>
-</div>
-<br><br>
-<span style="font-weight: bold;"><a name="axl"></a>Axles
-/ Wheels</span><br>
-<div style="margin-left: 40px;">Use the <img style="width: 16px; height: 16px;" alt="add" src="../pics/icons/plus-circle-icon.png"> and <img style="width: 16px; height: 16px;" alt="remove" src="../pics/icons/minus-circle-icon.png"> buttons to add or
-remove axles form the vehicle. Doubleclick entries to edit existing
-axle configurations.<br><br>Rolling Resistance
-Coefficients (RRC<sub>ISO</sub>) are configured per axle. <span style="font-weight: bold;">Relative axle load [-]</span>
-is used to weighten each RRC<sub>ISO</sub> value. RRC<sub>ISO</sub> is normalized (Resistance Force
-[N] / (m [kg] * g [m/s²]) with m being the sum of Curb Weight Vehicle,
-Curb Weight Extra Trailer/Body and Loading).<br>The total RRC value&nbsp;depends on the vehicle loading and is calculated using the following formula:<br><img style="width: 378px; height: 71px;" alt="" src="pics/VEH-RRC_formula.png"><br>with:<br><div style="margin-left: 40px;"><br><table style="text-align: left; width: 909px; height: 195px;" border="0" cellpadding="2" cellspacing="2"><tbody><tr><td style="width: 76px;">RRC</td><td style="width: 75px;">[-]</td><td style="width: 539px;">...Total rolling resistance coefficient used for calculation</td><td>[calculated]</td></tr><tr><td>s<sub>(i)</sub></td><td>[-]</td><td>...Relative axle load</td><td>[user input]</td></tr><tr><td style="width: 76px;">RRC<sub>ISO(i)</sub></td><td style="width: 75px;">[-]</td><td style="width: 539px;">...Tyre RRC according to ISO 28580</td><td>[user input]</td></tr><tr><td style="width: 76px;">m<sub></sub></td><td style="width: 75px;">[kg]</td><td style="width: 539px;">...Vehicle mass plus loading (see <a href="#load">Weight / Loading</a>)</td><td>[calculated]</td></tr><tr><td>g</td><td>[m/s²]</td><td>...Earth gravity acceleration (constant = 9.81)</td><td>[constant model parameter]</td></tr><tr><td>w<sub>(i)</sub></td><td>[-]</td><td>...Number of tyres (4 if Twin Tyres, else 2)</td><td>[user input]</td></tr><tr><td style="width: 76px;">F<sub>zISO(i)</sub></td><td style="width: 75px;">[N]</td><td style="width: 539px;">...Tyre test load according to ISO 28580 (85% of max. load capacity)</td><td>[user input]</td></tr><tr><td style="width: 76px;"><span style="font-size: 12pt; font-family: &quot;Times New Roman&quot;,&quot;serif&quot;;" lang="DE-AT">&#946;</span></td><td style="width: 75px;">[-]</td><td style="width: 539px;">...Constant parameter = 0.9</td><td>[constant model parameter]</td></tr></tbody></table></div><br>For each axle the parameters <span style="font-weight: bold;">Relative axle load</span>, <span style="font-weight: bold;">RRC</span><sub style="font-weight: bold;">ISO</sub> and <span style="font-weight: bold;">F</span><sub style="font-weight: bold;">zISO</sub> have to be defined. Axles with twin tyres have to be marked using the respective checkbox.<br>
-<span style="font-weight: bold;"></span></div>
-<br><br>
-<span style="font-weight: bold;"><a name="inertia"></a>Wheels
-Inertia</span><span style="font-weight: bold;"></span>
-[kgm<sup>2</sup>]<br>
-<div style="margin-left: 40px;">Rotational inertia of all
-wheels combined.<br>
-</div>
-<br><br>
-<span style="font-weight: bold;"><a name="diam"></a>Wheel
-Diameter (dyn)</span> [m]<br>
-<div style="margin-left: 40px;">Effective (dynamic) wheel
-diameter used to calculate engine speed.<br>
-</div>
-<br><br>
-<span style="font-weight: bold;"><a name="wind"></a>Cross
-Wind Correction</span><br>
-<div style="margin-left: 40px;">Three different options
-are available:<br>
-<ul>
-<li>No Correction</li>
-<li>Speed dependent</li>
-<li>Vair &amp; Beta Input</li>
-</ul>
-<span style="font-weight: bold;"><a name="cdv"></a>Speed dependent
-correction:</span><br>
-<div style="margin-left: 40px;">This
-mode requires an input file which defines the Cd Scaling Factor over
-Vehicle Speed (.vcdv). The Scaling Factor is applied on the base Drag
-Coefficient (see above) depending on the actual vehicle speed. The
-.vcdv file must cover the the full speed range of the vehicle.<br>
-<br>
-</div>
-</div>
-<div style="margin-left: 80px;"><span style="font-weight: bold;">.vcdv</span> <span style="font-weight: bold;">Format</span>
-(comma-separated, dot = decimal-mark):
-</div>
-<table style="background-color: white; height: 115px; width: 637px; text-align: left; margin-right: auto; margin-left: 80px;" border="1" cellpadding="2" cellspacing="1">
-<tbody>
-<tr>
-<th style="text-align: center; width: 148px;"><span style="color: rgb(51, 102, 255);">c<span style="color: black;"> Vehicle</span></span>
-Speed</th>
-<th style="text-align: center; width: 156px;">Cd
-Scaling Factor</th>
-</tr>
-<tr>
-<td style="text-align: center; width: 148px;"><span style="color: rgb(51, 102, 255);"><span style="font-weight: bold;">c</span> </span>[km/h]</td>
-<td style="text-align: center; width: 156px;">[-]</td>
-</tr>
-<tr>
-<td style="width: 148px;">...</td>
-<td style="width: 156px;">...</td>
-</tr>
-<tr>
-<td style="width: 148px;">...</td>
-<td style="width: 156px;">...</td>
-</tr>
-</tbody>
-</table>
-<div style="margin-left: 80px;"><span style="font-weight: bold; font-style: italic; color: rgb(51, 102, 255);">Note:</span><span style="font-style: italic; color: rgb(51, 102, 255);"> text
-lines (header, comments,
-etc.) </span><span style="text-decoration: underline; font-style: italic; color: rgb(51, 102, 255);">must</span><span style="font-style: italic; color: rgb(51, 102, 255);"> start
-with "<span style="font-weight: bold;">c</span> "</span><br>
-</div>
-<div style="margin-left: 40px;"><br>
-<span style="font-weight: bold;"><a name="cdb"></a>Correction via Vair
-&amp; Beta:</span><br>
-<div style="margin-left: 40px;">This
-mode requires an input file which defines the Cd Scaling Factor
-depending on the Yaw Angle ("Beta", angle between vehicle longitudinal
-axis and direction of air&nbsp;velocity relative to the vehicle). Beta
-and the air&nbsp;velocity&nbsp;relative to the vehicle must be defined
-in the driving cycle
-(see below). <span style="color: rgb(51, 102, 255);"><span style="color: black;">The valid range for the Wind Angle
-(Beta)</span></span> goes from 0 (headwind) to 180
-(tailwind). VECTO assumes symmetrical vehicle shape (sign of beta is ignored).<br>
-</div>
-<br>
-</div>
-<div style="margin-left: 80px;"><span style="font-weight: bold;">.vcdb</span> <span style="font-weight: bold;">Format</span>
-(comma-separated, dot = decimal-mark):
-</div>
-<table style="background-color: white; height: 115px; width: 637px; text-align: left; margin-right: auto; margin-left: 80px;" border="1" cellpadding="2" cellspacing="1">
-<tbody>
-<tr>
-<th style="text-align: center; width: 148px;"><span style="color: rgb(51, 102, 255);">c<span style="color: black;"> Yaw Angle (Beta)</span></span></th>
-<th style="text-align: center; width: 156px;">Cd
-Scaling Factor</th>
-</tr>
-<tr>
-<td style="text-align: center; width: 148px;"><span style="color: rgb(51, 102, 255);"><span style="font-weight: bold;">c</span> </span>[°]</td>
-<td style="text-align: center; width: 156px;">[-]</td>
-</tr>
-<tr>
-<td style="width: 148px;">...</td>
-<td style="width: 156px;">...</td>
-</tr>
-<tr>
-<td style="width: 148px;">...</td>
-<td style="width: 156px;">...</td>
-</tr>
-</tbody>
-</table>
-<div style="margin-left: 80px;"><span style="font-weight: bold; font-style: italic; color: rgb(51, 102, 255);">Note:</span><span style="font-style: italic; color: rgb(51, 102, 255);"> text
-lines (header, comments,
-etc.) </span><span style="text-decoration: underline; font-style: italic; color: rgb(51, 102, 255);">must</span><span style="font-style: italic; color: rgb(51, 102, 255);"> start
-with "<span style="font-weight: bold;">c</span> "</span><br>
-</div>
-<div style="margin-left: 40px;"><br>
-<div style="margin-left: 40px;"><span style="color: rgb(51, 102, 255);"><span style="color: black;"></span></span><span style="font-weight: bold; color: red;">The driving cycle must include
-input for Air Speed and Yaw Angle, see <a href="../fileformat/VDRI.html">.vdri format</a>!</span><br>
-</div>
-</div>
-<br>
-<div style="margin-left: 40px;"><img src="../pics/misc/browse.png" style="width: 28px; height: 21px;" alt="browse"> <span style="font-weight: bold;">Browse
-for .vcdv/.vcdb files</span><br>
-</div>
-<br><br><div style="margin-left: 40px;"><img style="width: 22px; height: 22px;" alt="" src="../pics/misc/OpenFile.PNG"> <span style="font-weight: bold;">Open file</span> with <a href="../../GRAPHi/documentation/HTML%20Manual/mainwindow.html">GRAPHi</a> or an user-defined tool (see <a href="settings.html#opencmd">File Open Command)</a>.<br></div><br><br>
-<a name="retard"></a><span style="font-weight: bold;">Retarder Losses</span><br>
-<div style="margin-left: 40px;">If available a <span style="font-weight: bold;">Retarder Torque Loss Map</span> can be defined here to consider losses caused by the retarder (even if not actively in use). <br><span style="font-weight: bold; color: red;">Note: Do not use this function if the retarder's losses are already included in the <a href="GBX-Editor.html#gears">Transmission Loss Maps</a>!</span><br><br>Three options are available:<br>
-<ul>
-<li>None</li>
-<li>Primary (before gearbox): The rpm ratio is relative to the
-engine speed</li>
-<li>Secondary (after gearbox): The rpm ratio is relative to the
-cardan shaft speed</li>
-</ul>
-Both, primary and secondary retarders, require an input file (.vrlm) defining
-the Retarder Loss Torque:<br>
-<span style="font-weight: bold;"><br>
-.vrlm Format</span>
-(comma-separated, dot = decimal-mark):
-</div>
-<table style="background-color: white; text-align: left; margin-right: auto; height: 116px; width: 542px; margin-left: 40px;" border="1" cellpadding="2" cellspacing="1">
-<tbody>
-<tr>
-<th style="text-align: center; width: 260px;"><span style="color: rgb(51, 102, 255);">c<span style="color: black;"> Retarder Speed</span></span></th>
-<th style="text-align: center; width: 265px;">Loss
-Torque</th>
-</tr>
-<tr>
-<td style="text-align: center; width: 260px;"><span style="color: rgb(51, 102, 255);"><span style="font-weight: bold;">c</span> </span>[rpm]</td>
-<td style="text-align: center; width: 265px;">[Nm]</td>
-</tr>
-<tr>
-<td style="width: 260px;">...</td>
-<td style="width: 265px;">...</td>
-</tr>
-<tr>
-<td style="width: 260px;">...</td>
-<td style="width: 265px;">...</td>
-</tr>
-</tbody>
-</table>
-<div style="margin-left: 40px;"><span style="font-weight: bold; font-style: italic; color: rgb(51, 102, 255);">Note:</span><span style="font-style: italic; color: rgb(51, 102, 255);"> text
-lines (header, comments,
-etc.) </span><span style="text-decoration: underline; font-style: italic; color: rgb(51, 102, 255);">must</span><span style="font-style: italic; color: rgb(51, 102, 255);"> start
-with "<span style="font-weight: bold;">c</span> "</span><br>
-</div>
-<br>
-<div style="margin-left: 40px;"><img src="../pics/misc/browse.png" style="width: 28px; height: 21px;" alt="browse"> <span style="font-weight: bold;">Browse
-for Retarder Input Files</span>
-</div>
-<br><br>
-<img src="../pics/misc/OK.png" style="width: 75px; height: 23px;" alt="OK"><a name="ok"></a><span style="font-weight: bold;">Save
+<span style="font-family: Verdana;"></span><span style="font-weight: bold;"></span><br><img src="../pics/misc/OK.png" style="width: 75px; height: 23px;" alt="OK"><span style="font-weight: bold;">Save
 and close file</span><br>
 <div style="margin-left: 40px;">If necessary the file path
 in the <a href="VECTO-Editor.html">VECTO Editor</a>
 will be updated.<br>
 </div>
 <br><br>
-<img src="../pics/misc/Cancel.png" style="width: 75px; height: 23px;" alt="Cancel"><a name="cancel"></a><span style="font-weight: bold;">
+<img src="../pics/misc/Cancel.png" style="width: 75px; height: 23px;" alt="Cancel"><span style="font-weight: bold;">
 Cancel without saving</span><br>
-<span style="font-weight: bold;"></span></div>
-<br>
-<table style="text-align: left; width: 100%; height: 1200px;" border="0" cellpadding="2" cellspacing="2"><tbody><tr><td></td></tr></tbody></table><br>
-<br>
-<div style="text-align: left;">
-<div style="text-align: left;">
-<div style="text-align: left;">
-<hr style="width: 100%; height: 2px;"><a href="../contact.html">Contact</a>
+<span style="font-weight: bold;"></span>
+
 </div>
-</div>
-</div>
-<ul style="text-align: left; font-family: Tahoma;">
-</ul>
+
+
 </div>
 </body></html>

@@ -55,6 +55,9 @@ Public Class cMAP
             Return False
         End If
 
+        'Skip Header
+        file.ReadLine()
+
         'Initi Lists (before version check so ReadOldFormat works)
         lFC = New System.Collections.Generic.List(Of Single)
         LTq = New System.Collections.Generic.List(Of Single)
@@ -91,7 +94,7 @@ Public Class cMAP
             Loop
         Catch ex As Exception
 
-            If ShowMsg Then WorkerMsg(tMsgID.Err, "Error during file input! Line number " & iMapDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
+            If ShowMsg Then WorkerMsg(tMsgID.Err, "Error during file read! Line number " & iMapDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
             GoTo lbEr
 
         End Try

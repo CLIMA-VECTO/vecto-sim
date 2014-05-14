@@ -1053,6 +1053,9 @@ lbInt:
         DRI.Nvorg = True
         DRI.Pvorg = True
 
+        'Skip header
+        file.ReadLine()
+
         Do While Not file.EndOfFile
             line = file.ReadLine
 

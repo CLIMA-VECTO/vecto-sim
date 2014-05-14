@@ -4,17 +4,16 @@ VECTO ?.? (future release) TODO
 
 
 VECTO x.x (current source)
-
+* Updated CSV file format. Now only one header with units included.
+* Changed input file comment symbol form "c" to "#".
+* Replaced old Demo/Default Data with "Demo Vehicles"
+* Updated User Manual
 * Declaration Mode
 * Updated GUI including Charts
 * New internal Graph for VMOD files (replaces GRAPHi)
 * Shift polygons can be set separately for each gear
 * Removed rated power (not used anymore)
 * Removed rated engine speed form engine file. Now calculated form vfld file.
-* NOTE: These changes have inevitable influence on the calculation and results because several methods now use absolute instead of normalised values. Notable (but still negligible) differences may arise due to the following effects:
-** Different Shift times
-** Distance correction
-** Altitude to gradient conversion
 
 VECTO 1.4.RC8
 
@@ -23,6 +22,7 @@ VECTO 1.4.RC8
 
 VECTO 1.4.RC7
 
+* Bugfix: Error in road gradient resulted in altitude error
 * Speed reduction in smaller steps to get closer to full load curve (before speed was sometimes reduced too much and caused problem with gear shifting)
 * Updates in demo data
 

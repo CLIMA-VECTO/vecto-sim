@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Fuel Consumption Calculation</title></head>
+<body>
+<big><big><big><span style="font-family: Verdana; font-weight: bold;">Fuel
+Consumption Calculation</span></big></big></big><br>
+<hr style="width: 100%; height: 0px;">
+<div style="margin-left: 40px;">The base FC value is
+interpolated from the stationary <a href="../fileformat/VMAP.html">FC
+map</a>.
+If necessary the base value is corrected to compensate for unconsidered
+auxiliary energy consumption for vehicles with Start/Stop. In
+Declaration Mode additionally the WHTC correction is applied, see below.<br><br>
+The CO<sub>2</sub> result for the actual mission profile is directly derived from the fuel consumption using a gravimetric <a href="../GUI/settings.html">CO<sub>2</sub>/FC factor</a>.<br>
+<span style="font-size: 11pt; line-height: 115%; font-family: &quot;Arial&quot;,&quot;sans-serif&quot;;" lang="DE-AT"><br></span><big><big style="font-weight: bold;">Fuel Map Interpolation</big></big><br>
+<hr style="height: 1px; width: 100%;"><span style="font-size: 11pt; line-height: 115%; font-family: &quot;Arial&quot;,&quot;sans-serif&quot;;" lang="DE-AT"></span>The interpolation is based on <a href="http://en.wikipedia.org/wiki/Delaunay_triangulation" target="_blank">Delaunay
+Triangulation&nbsp;<img style="border: 0px solid ; width: 12px; height: 12px;" alt="" src="../pics/misc/external-icon%2012x12.png"></a> and
+works as follows:<br>
+<ol><li>Triangulate
+the given rpm/torque/fuel&nbsp;points (= x,y,z)&nbsp; to create
+a
+network of triangles with each point of the map being part of at least
+one triangle.</li><li>Find the triangle where the to-be-interpolated
+load point (x,y) is inside. If no triangle meets the criterion the
+calculation will be aborted.</li><li>Calculate the z-value (= fuel) of the given x,y-point in
+the plane of the triangle</li></ol><img style="width: 600px; height: 420px;" alt="" src="pics/FCmap.png"><br><span style="font-style: italic;">Delaunay Triangulation Example </span><span style="font-size: 11pt; line-height: 115%; font-family: &quot;Arial&quot;,&quot;sans-serif&quot;;" lang="DE-AT"><br>
+</span><big><big style="font-weight: bold;"><br><br>Auxiliary - Start/Stop
+Correction</big></big><br>
+<hr style="height: 1px; width: 100%;">For vehicles with <a href="StartStop.html">Start/Stop</a> the fuel
+consumption needs to be corrected to consider the wrong auxiliary
+energy balance caused by engine stops because VECTO uses a constant
+power demand for auxiliaries for the whole mission profile. The
+correction consists of the following steps:<br>
+<ol>
+<li>From all 1Hz data points of the VECTO simulation, a linear
+regression curve (y=k*x+d) for fuel consumption (unit: grams per hour)
+over engine power (unit: kilo-watt) is calculated (see figure below).</li>
+<li>From the difference between the energy consumed by the
+auxiliaries in the simulation with Start/Stop function and the target
+value (unit kilowatt-hours), a cycle average change in mechanical power
+&#8220;&#916;Pe&#8221; (unit kilowatt) of the internal combustion engine is calculated
+(using an average alternator efficiency and the cycle time with running
+engine).</li>
+<li>The correction of the fuel consumption is performed for all
+1Hz time steps using:&nbsp;&#916;FC (unit: grams per hour) = &#916;Pe * k
+where&nbsp;k = gradient in the regression. If the engine is running
+in motoring conditions &#916;FC is set to zero.</li>
+</ol>
+<img style="width: 600px; height: 380px;" alt="" src="pics/StartStopCorrection.png"><br><span style="font-style: italic;">
+Example of a linear regression between engine power and fuel consumption</span><br>
+<br>
+<br>
+<big><big style="font-weight: bold;">WHTC Correction</big></big><br>
+<hr style="height: 1px; width: 100%;">The WHTC correction
+aims to counter the disadvantages of using a stationary FC map. The
+following steps are applied in VECTO for the WHTC correction method:<br>
+<ol>
+<li>VECTO interpolates the fuel consumption for the WHTC load
+cycle from the engine fuel map based on the target speed and target
+torque as determined based on the engine full-load curve. The results
+are FC values for the Urban, Rural and Motorway part.</li>
+<li>The correction factor CF<sub>WHTC</sub> is calculated using the equation below considering the current mission profile's weighting factors for each
+part.</li>
+<li>The factor is multiplied to the FC values for each time
+step and the total FC result.</li>
+</ol>
+<img style="width: 354px; height: 95px;" alt="" src="pics/WHTC_Corr.PNG"><br>
+<div style="margin-left: 40px;">where:<br><div style="margin-left: 40px;">&nbsp;CF<sub>WHTC</sub>&nbsp;&nbsp;&nbsp; = WHTC Correction Factor [-]<br>&nbsp;i&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = index for each part (Urban, Rural, Motorway)<br>&nbsp;f<sub>i</sub>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = Weighting factor per part [-]<br>&nbsp;FC<sub>meas_i</sub>&nbsp;&nbsp;&nbsp; = WHTC measurement result per part (input parameter) [g/kWh]<br>&nbsp;FC<sub>calc_i</sub>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; = Calculated FC per part [g/kWh]<br></div></div><br>
+<br>
+</div>
+<span style="font-family: Calibri;"></span>
+</body></html>

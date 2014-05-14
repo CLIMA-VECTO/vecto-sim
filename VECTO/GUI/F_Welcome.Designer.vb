@@ -73,7 +73,7 @@ Partial Class F_Welcome
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(294, 37)
         Me.Button2.TabIndex = 2
-        Me.Button2.Text = "Start Quick Start Guide (html)"
+        Me.Button2.Text = "Open User Manual (html)"
         Me.Button2.UseVisualStyleBackColor = True
         '
         'F_Welcome

@@ -59,7 +59,7 @@ Partial Class F_Settings
         Me.ButtonOK.Location = New System.Drawing.Point(347, 287)
         Me.ButtonOK.Name = "ButtonOK"
         Me.ButtonOK.Size = New System.Drawing.Size(75, 26)
-        Me.ButtonOK.TabIndex = 0
+        Me.ButtonOK.TabIndex = 2
         Me.ButtonOK.Text = "OK"
         Me.ButtonOK.UseVisualStyleBackColor = True
         '
@@ -70,7 +70,7 @@ Partial Class F_Settings
         Me.ButtonCancel.Location = New System.Drawing.Point(428, 287)
         Me.ButtonCancel.Name = "ButtonCancel"
         Me.ButtonCancel.Size = New System.Drawing.Size(75, 26)
-        Me.ButtonCancel.TabIndex = 1
+        Me.ButtonCancel.TabIndex = 3
         Me.ButtonCancel.Text = "Cancel"
         Me.ButtonCancel.UseVisualStyleBackColor = True
         '
@@ -82,7 +82,7 @@ Partial Class F_Settings
         Me.GroupBox3.Location = New System.Drawing.Point(5, 6)
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Size = New System.Drawing.Size(489, 124)
-        Me.GroupBox3.TabIndex = 11
+        Me.GroupBox3.TabIndex = 0
         Me.GroupBox3.TabStop = False
         Me.GroupBox3.Text = "Interface"
         '
@@ -95,7 +95,7 @@ Partial Class F_Settings
         Me.GroupBox5.Location = New System.Drawing.Point(230, 19)
         Me.GroupBox5.Name = "GroupBox5"
         Me.GroupBox5.Size = New System.Drawing.Size(253, 96)
-        Me.GroupBox5.TabIndex = 14
+        Me.GroupBox5.TabIndex = 1
         Me.GroupBox5.TabStop = False
         Me.GroupBox5.Text = "File Open Command"
         '
@@ -104,7 +104,7 @@ Partial Class F_Settings
         Me.TbOpenCmdName.Location = New System.Drawing.Point(66, 19)
         Me.TbOpenCmdName.Name = "TbOpenCmdName"
         Me.TbOpenCmdName.Size = New System.Drawing.Size(174, 20)
-        Me.TbOpenCmdName.TabIndex = 13
+        Me.TbOpenCmdName.TabIndex = 0
         '
         'Label7
         '
@@ -120,7 +120,7 @@ Partial Class F_Settings
         Me.TbOpenCmd.Location = New System.Drawing.Point(66, 45)
         Me.TbOpenCmd.Name = "TbOpenCmd"
         Me.TbOpenCmd.Size = New System.Drawing.Size(174, 20)
-        Me.TbOpenCmd.TabIndex = 13
+        Me.TbOpenCmd.TabIndex = 1
         '
         'Label12
         '
@@ -136,7 +136,7 @@ Partial Class F_Settings
         Me.TextBoxLogSize.Location = New System.Drawing.Point(134, 38)
         Me.TextBoxLogSize.Name = "TextBoxLogSize"
         Me.TextBoxLogSize.Size = New System.Drawing.Size(36, 20)
-        Me.TextBoxLogSize.TabIndex = 11
+        Me.TextBoxLogSize.TabIndex = 0
         '
         'Label16
         '
@@ -185,7 +185,7 @@ Partial Class F_Settings
         Me.GrCalc.Location = New System.Drawing.Point(6, 136)
         Me.GrCalc.Name = "GrCalc"
         Me.GrCalc.Size = New System.Drawing.Size(488, 103)
-        Me.GrCalc.TabIndex = 12
+        Me.GrCalc.TabIndex = 1
         Me.GrCalc.TabStop = False
         Me.GrCalc.Text = "Calculation"
         '
@@ -221,7 +221,7 @@ Partial Class F_Settings
         Me.TbCO2toFC.Location = New System.Drawing.Point(108, 63)
         Me.TbCO2toFC.Name = "TbCO2toFC"
         Me.TbCO2toFC.Size = New System.Drawing.Size(50, 20)
-        Me.TbCO2toFC.TabIndex = 15
+        Me.TbCO2toFC.TabIndex = 2
         '
         'Label10
         '
@@ -237,7 +237,7 @@ Partial Class F_Settings
         Me.TbFuelDens.Location = New System.Drawing.Point(253, 19)
         Me.TbFuelDens.Name = "TbFuelDens"
         Me.TbFuelDens.Size = New System.Drawing.Size(50, 20)
-        Me.TbFuelDens.TabIndex = 15
+        Me.TbFuelDens.TabIndex = 1
         '
         'Label8
         '
@@ -253,7 +253,7 @@ Partial Class F_Settings
         Me.TbAirDensity.Location = New System.Drawing.Point(74, 19)
         Me.TbAirDensity.Name = "TbAirDensity"
         Me.TbAirDensity.Size = New System.Drawing.Size(50, 20)
-        Me.TbAirDensity.TabIndex = 15
+        Me.TbAirDensity.TabIndex = 0
         '
         'Label2
         '
@@ -270,7 +270,7 @@ Partial Class F_Settings
         Me.ButReset.Location = New System.Drawing.Point(35, 287)
         Me.ButReset.Name = "ButReset"
         Me.ButReset.Size = New System.Drawing.Size(108, 26)
-        Me.ButReset.TabIndex = 13
+        Me.ButReset.TabIndex = 1
         Me.ButReset.Text = "Reset All Settings"
         Me.ButReset.UseVisualStyleBackColor = True
         '
@@ -281,7 +281,7 @@ Partial Class F_Settings
         Me.BtHelp.Location = New System.Drawing.Point(3, 287)
         Me.BtHelp.Name = "BtHelp"
         Me.BtHelp.Size = New System.Drawing.Size(26, 26)
-        Me.BtHelp.TabIndex = 14
+        Me.BtHelp.TabIndex = 0
         Me.BtHelp.UseVisualStyleBackColor = True
         '
         'F_Settings

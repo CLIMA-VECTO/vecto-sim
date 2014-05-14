@@ -18,7 +18,12 @@ Public Class F_Settings
     'Initialize - load config
     Private Sub F03_Options_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
-        'Load Config
+        LoadSettings()
+
+    End Sub
+
+    Private Sub LoadSettings()
+
         Me.TextBoxLogSize.Text = Cfg.LogSize
         Me.TbAirDensity.Text = CStr(Cfg.AirDensity)
         Me.TbOpenCmd.Text = Cfg.OpenCmd
@@ -30,12 +35,14 @@ Public Class F_Settings
 
     End Sub
 
+
     'Reset Button
     Private Sub ButReset_Click(sender As System.Object, e As System.EventArgs) Handles ButReset.Click
         If MsgBox("This will reset all application settings including the Options Tab. Filehistory will not be deleted." & vbCrLf & vbCrLf & "Continue ?", MsgBoxStyle.YesNo, "Reset Application Settings") = MsgBoxResult.Yes Then
             Cfg.SetDefault()
             If Cfg.DeclMode Then Cfg.DeclInit()
             F_MAINForm.LoadOptions()
+            LoadSettings()
             Me.Close()
         End If
     End Sub
@@ -62,8 +69,8 @@ Public Class F_Settings
 
     'Help button
     Private Sub BtHelp_Click(sender As System.Object, e As System.EventArgs) Handles BtHelp.Click
-        If IO.File.Exists(MyAppPath & "User Manual\GUI\settings.html") Then
-            System.Diagnostics.Process.Start(MyAppPath & "User Manual\GUI\settings.html")
+        If IO.File.Exists(MyAppPath & "User Manual\GUI\GUI_Calls\settings.html") Then
+            System.Diagnostics.Process.Start(MyAppPath & "User Manual\GUI\GUI_Calls\settings.html")
         Else
             MsgBox("User Manual not found!", MsgBoxStyle.Critical)
         End If

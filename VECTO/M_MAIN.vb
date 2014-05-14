@@ -16,7 +16,6 @@ Imports System.Collections.Generic
 ''' <remarks></remarks>
 Module M_MAIN
 
-    Public CalcMode As tCalcMode
     Public JobFileList As List(Of String)
     Public JobCycleList As List(Of String)
 
@@ -67,23 +66,22 @@ Module M_MAIN
         ''ClearErrors()
 
         'Specify Mode and Notification-msg
-        Select Case CalcMode
-            Case tCalcMode.ModeSTANDARD
-                WorkerMsg(tMsgID.Normal, "Starting VECTO STANDARD...", MsgSrc)
-                CyclesDim = 0
-            Case tCalcMode.ModeBATCH
-                WorkerMsg(tMsgID.Normal, "Starting VECTO BATCH...", MsgSrc)
-                CyclesDim = JobCycleList.Count - 1
-        End Select
+        If Cfg.BatchMode Then
+            WorkerMsg(tMsgID.Normal, "Starting VECTO Batch...", MsgSrc)
+            CyclesDim = JobCycleList.Count - 1
+        Else
+            WorkerMsg(tMsgID.Normal, "Starting VECTO...", MsgSrc)
+            CyclesDim = 0
+        End If
         FilesDim = JobFileList.Count - 1
 
-        MsgOut = (CalcMode = tCalcMode.ModeSTANDARD)
+        MsgOut = Not Cfg.BatchMode
 
         'License check
 
-        If (CalcMode = tCalcMode.ModeBATCH) Then
+        If Cfg.BatchMode Then
             If Not Lic.LicFeature(1) Then
-                WorkerMsg(tMsgID.Err, "Your license does not support BATCH mode!", MsgSrc)
+                WorkerMsg(tMsgID.Err, "Your license does not support Batch Mode!", MsgSrc)
                 GoTo lbErrBefore
             End If
         End If
@@ -93,13 +91,13 @@ Module M_MAIN
             GoTo lbErrBefore
         End If
 
-        If CyclesDim = -1 And (CalcMode = tCalcMode.ModeBATCH) Then
+        If CyclesDim = -1 And Cfg.BatchMode Then
             WorkerMsg(tMsgID.Err, "No Driving Cycles defined.", MsgSrc)
             GoTo lbErrBefore
         End If
 
         'Create BATCH Output-folder if necessary
-        If (CalcMode = tCalcMode.ModeBATCH) Then
+        If Cfg.BatchMode Then
             Select Case UCase(Cfg.BATCHoutpath)
                 Case sKey.JobPath
                     GoTo lbSkip0
@@ -220,7 +218,7 @@ lbSkip0:
             End If
 
             'BATCH: Create Output-sub-folder
-            If (CalcMode = tCalcMode.ModeBATCH) And Cfg.ModOut And Cfg.BATCHoutSubD Then
+            If Cfg.BatchMode And Cfg.ModOut And Cfg.BATCHoutSubD Then
                 Select Case UCase(Cfg.BATCHoutpath)
                     Case sKey.JobPath
                         path0 = fPATH(JobFile)
@@ -247,7 +245,7 @@ lbSkip0:
 
                 CyclAbrtedByErr = False
 
-                If CalcMode = tCalcMode.ModeBATCH Then
+                If Cfg.BatchMode Then
 
                     'ProgBar
                     ProgBarCtrl.ProgLock = True
@@ -300,7 +298,7 @@ lbSkip0:
                     ProgBarCtrl.ProgJobInt = 0
 
 
-                    If CalcMode = tCalcMode.ModeSTANDARD Then
+                    If Not Cfg.BatchMode Then
                         MODdata.ModOutpName = fFileWoExt(JobFile) & "_" & fFILE(CurrentCycleFile, False)
                         WorkerMsg(tMsgID.NewJob, "Cycle: " & (jsubcycle + 1) & " / " & (jsubcycleDim + 1) & " | " & fFILE(CurrentCycleFile, True), MsgSrc)
                     End If
@@ -328,7 +326,7 @@ lbSkip0:
                         iLoad += 1
 
                         'ProgBar
-                        If CalcMode = tCalcMode.ModeSTANDARD Then
+                        If Not Cfg.BatchMode Then
                             ProgBarCtrl.ProgLock = True
                             ProgBarCtrl.ProgJobInt = 0
                             ProgBarCtrl.ProgOverallStartInt = 100 * iJob / (FilesDim + 1) + 100 * jsubcycle / (jsubcycleDim + 1) * 1 / (FilesDim + 1) + 100 * iLoad / (iLoadDim + 1) * 1 / ((FilesDim + 1) * (jsubcycleDim + 1))
@@ -354,7 +352,7 @@ lbSkip0:
 
                         Else
 
-                            If CalcMode = tCalcMode.ModeSTANDARD Then WorkerStatus("Current Job: " & (iJob * (CyclesDim + 1) + iCycle + 1) & " / " & (FilesDim + 1) & " | " & fFILE(JobFile, True) & " | " & fFILE(CurrentCycleFile, True))
+                            If Not Cfg.BatchMode Then WorkerStatus("Current Job: " & (iJob * (CyclesDim + 1) + iCycle + 1) & " / " & (FilesDim + 1) & " | " & fFILE(JobFile, True) & " | " & fFILE(CurrentCycleFile, True))
 
                         End If
 
@@ -499,10 +497,10 @@ lbAusg:
 
                         'Status-Update
                         ProgBarCtrl.ProgLock = True
-                        If CalcMode = tCalcMode.ModeSTANDARD Then
-                            WorkerProgJobEnd(100 * iJob / (FilesDim + 1) + 100 * jsubcycle / (jsubcycleDim + 1) * 1 / (FilesDim + 1) + 100 * (iLoad + 1) / (iLoadDim + 1) * 1 / ((FilesDim + 1) * (jsubcycleDim + 1)))
-                        ElseIf CalcMode = tCalcMode.ModeBATCH Then
+                        If Cfg.BatchMode Then
                             WorkerProgJobEnd(100 * (iJob * (CyclesDim + 1) + iCycle + 1) / ((FilesDim + 1) * (CyclesDim + 1)))
+                        Else
+                            WorkerProgJobEnd(100 * iJob / (FilesDim + 1) + 100 * jsubcycle / (jsubcycleDim + 1) * 1 / (FilesDim + 1) + 100 * (iLoad + 1) / (iLoadDim + 1) * 1 / ((FilesDim + 1) * (jsubcycleDim + 1)))
                         End If
 
                         If Cfg.DeclMode Then
@@ -703,8 +701,6 @@ lbExit:
             Return False
         End Try
 
-        If VEC.NoJSON Then WorkerMsg(tMsgID.Warn, "VECTO file format is outdated! CLICK HERE to convert to current format!", MsgSrc, "<GUI>" & GenFile)
-
 
         '-----------------------------    ~VEH~    -----------------------------
         VEH = New cVEH
@@ -720,8 +716,6 @@ lbExit:
             End Try
 
         End If
-
-        If VEH.NoJSON Then WorkerMsg(tMsgID.Warn, "Vehicle file format is outdated! CLICK HERE to convert to current format!", MsgSrc, "<GUI>" & VEC.PathVEH)
 
         If Cfg.DeclMode Then
             If Not Declaration.SetRef() Then
@@ -756,10 +750,6 @@ lbExit:
             Return False
         End Try
 
-        If ENG.NoJSON Then WorkerMsg(tMsgID.Warn, "Engine file format is outdated! CLICK HERE to convert to current format!", MsgSrc, "<GUI>" & VEC.PathENG)
-
-
-
 
         '-----------------------------    ~GBX~    -----------------------------
         GBX = New cGBX
@@ -775,8 +765,6 @@ lbExit:
             End Try
 
         End If
-
-        If GBX.NoJSON Then WorkerMsg(tMsgID.Warn, "Gearbox file format is outdated! CLICK HERE to convert to current format!", MsgSrc, "<GUI>" & VEC.PathGBX)
 
         'Must be called after cGBX.ReadFile because cGBX.GearCount is needed
         ENG.Init()
@@ -798,7 +786,6 @@ lbExit:
         Return True
 
     End Function
-
 
     '---------------------------------------------------------------------------
 

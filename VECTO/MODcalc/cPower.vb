@@ -462,7 +462,6 @@ Public Class cPower
 
         Dim amax As Single
 
-        Dim StdMode As Boolean
         Dim ProgBarShare As Int16
 
         Dim LastPmax As Single
@@ -472,8 +471,6 @@ Public Class cPower
         Dim MsgSrc As String
 
         MsgSrc = "Power/Calc"
-
-        StdMode = (CalcMode = tCalcMode.ModeSTANDARD)
 
         'Abort if no speed given
         If Not DRI.Vvorg Then
@@ -497,12 +494,12 @@ Public Class cPower
         If Cfg.GnUfromCycle Then
             Gvorg = DRI.Gvorg
             Nvorg = DRI.Nvorg
-            If StdMode Then
+            If Not Cfg.BatchMode Then
                 If Gvorg Then WorkerMsg(tMsgID.Normal, "Using gears from driving cycle", MsgSrc)
                 If Nvorg Then WorkerMsg(tMsgID.Normal, "Using rpm from driving cycle", MsgSrc)
             End If
         Else
-            If (DRI.Gvorg Or DRI.Nvorg) And StdMode Then WorkerMsg(tMsgID.Warn, "Gears/rpm from driving cycle ignored.", MsgSrc)
+            If (DRI.Gvorg Or DRI.Nvorg) And Not Cfg.BatchMode Then WorkerMsg(tMsgID.Warn, "Gears/rpm from driving cycle ignored.", MsgSrc)
             Gvorg = False
             Nvorg = False
         End If
@@ -1329,13 +1326,10 @@ lb_nOK:
         Dim nUDRI As List(Of Double)
         Dim PeDRI As List(Of Double)
         Dim PcorCount As Integer
-        Dim StdMode As Boolean
         Dim MsgSrc As String
         Dim Padd As Single
 
         MsgSrc = "Power/Eng_Calc"
-
-        StdMode = (CalcMode = tCalcMode.ModeSTANDARD)
 
         'Abort if Power/Revolutions not given
         If Not (DRI.Nvorg And DRI.Pvorg) Then

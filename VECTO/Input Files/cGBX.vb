@@ -65,7 +65,6 @@ Public Class cGBX
     Public TCnout As Single
     Public TCmustReduce As Boolean
 
-    Public NoJSON As Boolean
 
     Private MyFileList As List(Of String)
 
@@ -133,98 +132,6 @@ Public Class cGBX
         TC_file.Clear()
 
     End Sub
-
-    Private Function ReadFileOld(ByVal ShowMsg As Boolean) As Boolean
-        Dim line() As String
-        Dim file As cFile_V3
-        Dim i As Integer
-        Dim MsgSrc As String
-        Dim OldFile As Boolean = False
-
-        MsgSrc = "GBX/ReadFile"
-
-        SetDefault()
-
-        If sFilePath = "" Or Not IO.File.Exists(sFilePath) Then
-            If ShowMsg Then WorkerMsg(tMsgID.Err, "Gearbox file not found (" & sFilePath & ") !", MsgSrc)
-            Return False
-        End If
-
-        file = New cFile_V3
-
-        If Not file.OpenRead(sFilePath) Then
-            If ShowMsg Then WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
-            file = Nothing
-            Return False
-        End If
-
-        Try
-
-            ModelName = file.ReadLine(0).Replace("\c\", ",")
-            I_Getriebe = CSng(file.ReadLine(0))
-            TracIntrSi = CSng(file.ReadLine(0))
-
-
-            i = -1
-            Do While Not file.EndOfFile
-
-                line = file.ReadLine
-                i += 1
-
-                If line(0) = sKey.Break Or (OldFile And i = 16) Then Exit Do
-
-                If i = 0 AndAlso UBound(line) < 2 Then OldFile = True
-
-                If CSng(line(0)) = 0 Then Continue Do
-
-                Igetr.Add(CSng(line(0)))
-                GetrMaps.Add(New cSubPath)
-                GetrMaps(i).Init(MyPath, line(1))
-                If OldFile Then
-                    IsTCgear.Add(False)
-                Else
-                    IsTCgear.Add(CBool(CInt(line(2))))
-                End If
-
-            Loop
-
-            line = file.ReadLine
-            For i = 0 To Igetr.Count - 1
-                gs_files.Add(New cSubPath)
-                gs_files(i).Init(MyPath, line(0))
-            Next
-
-            gs_TorqueResv = CSng(file.ReadLine(0))
-            gs_SkipGears = CBool(CInt(file.ReadLine(0)))
-            gs_ShiftTime = CInt(file.ReadLine(0))
-            gs_TorqueResvStart = CSng(file.ReadLine(0))
-            gs_StartSpeed = CSng(file.ReadLine(0))
-            gs_StartAcc = CSng(file.ReadLine(0))
-            gs_ShiftInside = CBool(CInt(file.ReadLine(0)))
-
-            If Not file.EndOfFile Then
-                gs_Type = CType(CInt(file.ReadLine(0)), tGearbox)
-                TCon = CBool(CInt(file.ReadLine(0)))
-                TC_file.Init(MyPath, file.ReadLine(0))
-                TCrefrpm = CSng(file.ReadLine(0))
-            Else
-                gs_Type = tGearbox.Custom
-            End If
-
-            If OldFile And TCon Then IsTCgear(1) = True
-
-        Catch ex As Exception
-            If ShowMsg Then WorkerMsg(tMsgID.Err, ex.Message, MsgSrc)
-            file.Close()
-            Return False
-        End Try
-
-
-        file.Close()
-        Return True
-
-
-    End Function
 
     Public Function SaveFile() As Boolean
         Dim i As Integer
@@ -298,19 +205,9 @@ Public Class cGBX
 
         MsgSrc = "GBX/ReadFile"
 
-        'Flag for "File is not JSON" Warnings        
-        NoJSON = False
-
         SetDefault()
 
-        If Not JSON.ReadFile(sFilePath) Then
-            NoJSON = True
-            Try
-                Return ReadFileOld(ShowMsg)
-            Catch ex As Exception
-                Return False
-            End Try
-        End If
+        If Not JSON.ReadFile(sFilePath) Then Return False
 
         Try
 
@@ -421,6 +318,9 @@ Public Class cGBX
             WorkerMsg(tMsgID.Err, "Torque Converter file not found! (" & TC_file.FullPath & ")", MsgSrc)
             Return False
         End If
+
+        'Skip Header
+        file.ReadLine()
 
         If TCrefrpm <= 0 Then
             WorkerMsg(tMsgID.Err, "Torque converter reference torque invalid! (" & TCrefrpm & ")", MsgSrc)
@@ -771,6 +671,9 @@ lbInt:
                     MyGBmaps = Nothing
                     Return False
                 End If
+
+                'Skip header
+                file.ReadLine()
 
                 GBmap0 = New cDelaunayMap
                 GBmap0.DualMode = True
@@ -1229,6 +1132,9 @@ lbInt:
                 WorkerMsg(tMsgID.Err, "Failed to load Gear Shift Polygon File! '" & Filepath & "'", MsgSrc)
                 Return False
             End If
+
+            'Skip Header
+            file.ReadLine()
 
             'Clear lists
             gs_Mup.Clear()

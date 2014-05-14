@@ -1,0 +1,80 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (50e1b2d7-43a7-42d0-97c3-d8d48709e28c)",
+    "Date": "24.04.2014 13:04:04",
+    "AppVersion": "1.5.0-pre1",
+    "FileVersion": 2
+  },
+  "Body": {
+    "ModelName": "Generic 24t Coach",
+    "Inertia": 0.0,
+    "TracInt": 1.0,
+    "Gears": [
+      {
+        "Ratio": 3.240355,
+        "LossMap": "Axle.vtlm"
+      },
+      {
+        "Ratio": 6.38,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs"
+      },
+      {
+        "Ratio": 4.63,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs"
+      },
+      {
+        "Ratio": 3.44,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs"
+      },
+      {
+        "Ratio": 2.59,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs"
+      },
+      {
+        "Ratio": 1.86,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs"
+      },
+      {
+        "Ratio": 1.35,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs"
+      },
+      {
+        "Ratio": 1.0,
+        "LossMap": "Direct Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs"
+      },
+      {
+        "Ratio": 0.76,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs"
+      }
+    ],
+    "TqReserve": 20.0,
+    "SkipGears": true,
+    "ShiftTime": 2,
+    "EaryShiftUp": true,
+    "StartTqReserve": 20.0,
+    "StartSpeed": 2.0,
+    "StartAcc": 0.6,
+    "GearboxType": "AMT",
+    "TorqueConverter": {
+      "Enabled": false,
+      "File": "<NOFILE>",
+      "RefRPM": 0.0
+    }
+  }
+}

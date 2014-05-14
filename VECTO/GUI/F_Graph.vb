@@ -67,7 +67,6 @@ Public Class F_Graph
         For i = 2 To 3
             lv0 = New ListViewItem
             lv0.Text = Channels(i).Name
-            lv0.SubItems.Add(Channels(i).Unit)
             lv0.SubItems.Add("Left")
             lv0.Tag = i
             lv0.Checked = True
@@ -93,10 +92,6 @@ Public Class F_Graph
 
                 Channels.Clear()
 
-                For i = 1 To 4
-                    file.ReadLine()
-                Next
-
                 'Header
                 line = file.ReadLine
 
@@ -107,13 +102,6 @@ Public Class F_Graph
                     c0.Name = line(i)
                     c0.Values = New List(Of String)
                     Channels.Add(c0)
-                Next
-
-                'Units
-                line = file.ReadLine
-
-                For i = 0 To sDim
-                    Channels(i).Unit = line(i)
                 Next
 
                 'Values
@@ -200,7 +188,7 @@ Public Class F_Graph
 
         For Each lv0 In Me.ListView1.CheckedItems
 
-            IsLeft = (lv0.SubItems(2).Text = "Left")
+            IsLeft = (lv0.SubItems(1).Text = "Left")
 
             s = New System.Windows.Forms.DataVisualization.Charting.Series
 
@@ -215,9 +203,9 @@ Public Class F_Graph
             s.BorderWidth = 2
 
             If IsLeft Then
-                If Not leftaxis.Contains(lv0.SubItems(1).Text) Then leftaxis.Add(lv0.SubItems(1).Text)
+                If Not leftaxis.Contains(lv0.SubItems(0).Text) Then leftaxis.Add(lv0.SubItems(0).Text)
             Else
-                If Not rightaxis.Contains(lv0.SubItems(1).Text) Then rightaxis.Add(lv0.SubItems(1).Text)
+                If Not rightaxis.Contains(lv0.SubItems(0).Text) Then rightaxis.Add(lv0.SubItems(0).Text)
                 s.YAxisType = DataVisualization.Charting.AxisType.Secondary
             End If
 
@@ -363,7 +351,6 @@ Public Class F_Graph
 
     Private Class cChannel
         Public Name As String
-        Public Unit As String
         Public Values As List(Of String)
 
     End Class
@@ -376,7 +363,7 @@ Public Class F_Graph
         If Channels.Count = 0 Then Exit Sub
 
         For i = 0 To Channels.Count - 1
-            dlog.ComboBox1.Items.Add(Channels(i).Name & "  " & Channels(i).Unit)
+            dlog.ComboBox1.Items.Add(Channels(i).Name)
         Next
 
         dlog.RbLeft.Checked = True
@@ -387,7 +374,6 @@ Public Class F_Graph
             lv0 = New ListViewItem
             i = dlog.ComboBox1.SelectedIndex
             lv0.Text = Channels(i).Name
-            lv0.SubItems.Add(Channels(i).Unit)
             lv0.Tag = i
             lv0.Checked = True
             If dlog.RbLeft.Checked Then
@@ -414,10 +400,10 @@ Public Class F_Graph
         lv0 = Me.ListView1.SelectedItems(0)
 
         For i = 0 To Channels.Count - 1
-            dlog.ComboBox1.Items.Add(Channels(i).Name & "  " & Channels(i).Unit)
+            dlog.ComboBox1.Items.Add(Channels(i).Name)
         Next
 
-        If lv0.SubItems(2).Text = "Left" Then
+        If lv0.SubItems(1).Text = "Left" Then
             dlog.RbLeft.Checked = True
         Else
             dlog.RbRight.Checked = True
@@ -428,13 +414,12 @@ Public Class F_Graph
         If dlog.ShowDialog = Windows.Forms.DialogResult.OK Then
             i = dlog.ComboBox1.SelectedIndex
             lv0.Text = Channels(i).Name
-            lv0.SubItems(1).Text = Channels(i).Unit
             lv0.Tag = i
             lv0.Checked = True
             If dlog.RbLeft.Checked Then
-                lv0.SubItems(2).Text = "Left"
+                lv0.SubItems(1).Text = "Left"
             Else
-                lv0.SubItems(2).Text = "Right"
+                lv0.SubItems(1).Text = "Right"
             End If
 
             UpdateGraph()
@@ -598,4 +583,13 @@ Public Class F_Graph
         Me.TbXmax.Text = xMax
 
     End Sub
+
+    Private Sub ToolStripButton1_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton1.Click
+        If IO.File.Exists(MyAppPath & "User Manual\GUI\GUI_Calls\Graph.html") Then
+            System.Diagnostics.Process.Start(MyAppPath & "User Manual\GUI\GUI_Calls\Graph.html")
+        Else
+            MsgBox("User Manual not found!", MsgBoxStyle.Critical)
+        End If
+    End Sub
+
 End Class

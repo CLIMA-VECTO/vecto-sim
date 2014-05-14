@@ -47,7 +47,11 @@ Public Class F_VEH_AuxDlog
         Dim txt As String
         Dim kv As KeyValuePair(Of String, Dictionary(Of tMission, Single))
 
-        If Not Cfg.DeclMode Then Exit Sub
+        If Not Cfg.DeclMode Then
+            Me.LVTech.Visible = False
+            Me.Height = 220
+            Exit Sub
+        End If
 
         Me.CbTech.Items.Clear()
 

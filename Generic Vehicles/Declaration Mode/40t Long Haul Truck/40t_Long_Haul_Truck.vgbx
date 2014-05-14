@@ -1,0 +1,104 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (50e1b2d7-43a7-42d0-97c3-d8d48709e28c)",
+    "Date": "24.04.2014 12:59:10",
+    "AppVersion": "1.5.0-pre1",
+    "FileVersion": 2
+  },
+  "Body": {
+    "ModelName": "Generic 40t Long Haul Truck",
+    "Inertia": 0.0,
+    "TracInt": 2.0,
+    "Gears": [
+      {
+        "Ratio": 2.59,
+        "LossMap": "Axle.vtlm"
+      },
+      {
+        "Ratio": 14.93,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-"
+      },
+      {
+        "Ratio": 11.64,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-"
+      },
+      {
+        "Ratio": 9.02,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-"
+      },
+      {
+        "Ratio": 7.04,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-"
+      },
+      {
+        "Ratio": 5.64,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-"
+      },
+      {
+        "Ratio": 4.4,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-"
+      },
+      {
+        "Ratio": 3.39,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-"
+      },
+      {
+        "Ratio": 2.65,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-"
+      },
+      {
+        "Ratio": 2.05,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-"
+      },
+      {
+        "Ratio": 1.6,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-"
+      },
+      {
+        "Ratio": 1.28,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-"
+      },
+      {
+        "Ratio": 1.0,
+        "LossMap": "Direct Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-"
+      }
+    ],
+    "TqReserve": 20.0,
+    "SkipGears": true,
+    "ShiftTime": 3,
+    "EaryShiftUp": true,
+    "StartTqReserve": 20.0,
+    "StartSpeed": 2.0,
+    "StartAcc": 0.6,
+    "GearboxType": "AMT",
+    "TorqueConverter": {
+      "Enabled": false,
+      "File": "<NOFILE>",
+      "RefRPM": 0.0
+    }
+  }
+}

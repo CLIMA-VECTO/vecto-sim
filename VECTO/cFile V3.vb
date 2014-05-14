@@ -73,9 +73,7 @@ lb10:
             line0 = UCase(Trim(PreLine(0)))
 
             If SkipCom Then
-                If Left(line0, 1) = "C" And Mid(line0, 2, 1) <> ":" Then
-                    If Len(line0) = 1 Or Mid(line0, 2, 1) = " " Or InStr(line0, ".") < 1 Then GoTo lb10
-                End If
+                If Left(line0, 1) = "#" Then GoTo lb10
             End If
 
             If StopE Then FileEnd = (line0 = "E")

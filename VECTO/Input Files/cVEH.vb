@@ -55,8 +55,6 @@ Public Class cVEH
     Public MassMax As Single
     Public AxleConf As tAxleConf
 
-    Public NoJSON As Boolean
-
     Private MyFileList As List(Of String)
 
     Public Class cAxle
@@ -131,140 +129,6 @@ Public Class cVEH
 
     End Sub
 
-    Private Function ReadFileOld(ByVal ShowMsg As Boolean) As Boolean
-        Dim file As cFile_V3
-        Dim line() As String
-        Dim Itemp As Single
-        Dim a0 As cAxle
-        Dim MsgSrc As String
-
-        MsgSrc = "VEH/ReadFile"
-
-        SetDefault()
-
-        If sFilePath = "" Or Not IO.File.Exists(sFilePath) Then
-            If ShowMsg Then WorkerMsg(tMsgID.Err, "Vehicle file not found (" & sFilePath & ") !", MsgSrc)
-            Return False
-        End If
-
-        file = New cFile_V3
-
-        If Not file.OpenRead(sFilePath) Then
-            If ShowMsg Then WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
-            file = Nothing
-            Return False
-        End If
-
-        Mass = CSng(file.ReadLine(0))
-        MassExtra = CSng(file.ReadLine(0))
-        Loading = CSng(file.ReadLine(0))
-
-        Cd0 = CSng(file.ReadLine(0))
-        Aquers = CSng(file.ReadLine(0))
-
-        Cd02 = Cd0
-        Aquers2 = Aquers
-
-        Cd0Act = Cd0
-        AquersAct = Aquers
-
-        Itemp = CSng(file.ReadLine(0))
-        rdyn = 1000 * CSng(file.ReadLine(0)) / 2
-        Rim = "-"
-
-        If file.EndOfFile Then GoTo lbError
-
-        'Cd mode / Input File - Update 08/14/2012 (CO2 demo)
-        Try
-            line = file.ReadLine
-            CdMode = CType(CInt(line(0)), tCdMode)
-            CdFile.Init(MyPath, line(1))
-        Catch ex As Exception
-            If ShowMsg Then WorkerMsg(tMsgID.Err, ex.Message, MsgSrc)
-            file.Close()
-            Return False
-        End Try
-
-        If file.EndOfFile Then GoTo lbError
-
-        'Retarder - Update 02.10.2012 (CO2 Demo)
-        Try
-            RtType = CType(CInt(file.ReadLine(0)), tRtType)
-            RtRatio = CSng(file.ReadLine(0))
-            RtFile.Init(MyPath, file.ReadLine(0))
-        Catch ex As Exception
-            If ShowMsg Then WorkerMsg(tMsgID.Err, ex.Message, MsgSrc)
-            file.Close()
-            Return False
-        End Try
-
-        'Axle configuration - Update 16.10.2012
-        Do While Not file.EndOfFile
-
-            line = file.ReadLine
-
-            If line(0) = sKey.Break Then Exit Do
-
-            a0 = New cAxle
-
-            a0.Wheels = "-"
-
-            Try
-                If UBound(line) > 2 Then
-                    a0.Share = CSng(line(0))
-                    a0.TwinTire = CBool(line(1))
-                    a0.RRC = CSng(line(2))
-                    a0.FzISO = CSng(line(3))
-                Else
-                    a0.Share = 0
-                    a0.TwinTire = False
-                    a0.RRC = CSng(line(1))
-                    a0.FzISO = 0
-                End If
-            Catch ex As Exception
-                If ShowMsg Then WorkerMsg(tMsgID.Err, ex.Message, MsgSrc)
-                file.Close()
-                Return False
-            End Try
-
-            Axles.Add(a0)
-
-        Loop
-
-        For Each a0 In Axles
-            If a0.TwinTire Then
-                a0.Inertia = Itemp / (4 * Axles.Count)
-            Else
-                a0.Inertia = Itemp / (2 * Axles.Count)
-            End If
-        Next
-
-        If file.EndOfFile Then GoTo lbError
-
-        Try
-            VehCat = CType(CInt(file.ReadLine(0)), tVehCat)
-            MassExtra = CSng(file.ReadLine(0))
-            MassMax = CSng(file.ReadLine(0)) / 1000
-            AxleConf = CType(CInt(file.ReadLine(0)), tAxleConf)
-        Catch ex As Exception
-            If ShowMsg Then WorkerMsg(tMsgID.Err, ex.Message, MsgSrc)
-            file.Close()
-            Return False
-        End Try
-
-        '************************ End reading ****************************
-
-        file.Close()
-        Return True
-
-
-lbError:
-        file.Close()
-        If ShowMsg Then WorkerMsg(tMsgID.Err, "Unexpected end of file!", MsgSrc)
-        Return False
-
-    End Function
-
     Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
         Dim Itemp As Single
         Dim a0 As cAxle
@@ -276,19 +140,9 @@ lbError:
 
         MsgSrc = "VEH/ReadFile"
 
-        'Flag for "File is not JSON" Warnings        
-        NoJSON = False
-
         SetDefault()
 
-        If Not JSON.ReadFile(sFilePath) Then
-            NoJSON = True
-            Try
-                Return ReadFileOld(ShowMsg)
-            Catch ex As Exception
-                Return False
-            End Try
-        End If
+        If Not JSON.ReadFile(sFilePath) Then Return False
 
         Try
 
@@ -709,6 +563,9 @@ lbError:
             Return False
         End If
 
+        'Skip Header
+        file.ReadLine()
+
         CdDim = -1
         Do While Not file.EndOfFile
 
@@ -804,6 +661,9 @@ lbInt:
             WorkerMsg(tMsgID.Err, "Failed to read Retarder input file! (" & RtFile.FullPath & ")", MsgSrc)
             Return False
         End If
+
+        'Skip Header
+        file.ReadLine()
 
         RtDim = -1
         Do While Not file.EndOfFile

@@ -54,8 +54,6 @@ Public Class cVECTO
     Public UnderSpeed As Single
     Public EcoRollOn As Boolean
 
-    Public NoJSON As Boolean
-
     Private MyFileList As List(Of String)
 
 
@@ -63,9 +61,11 @@ Public Class cVECTO
         Public Type As String
         Public Path As cSubPath
         Public TechStr As String = ""
+
         Public Sub New()
             Path = New cSubPath
         End Sub
+
     End Class
 
     Public Function CreateFileList() As Boolean
@@ -151,180 +151,6 @@ Public Class cVECTO
         CycleFiles = New List(Of cSubPath)
 
     End Sub
-
-    Private Function ReadFileOld() As Boolean
-        Dim file As cFile_V3
-        Dim line As String()
-        'Dim txt As String
-        Dim AuxEntry As cAuxEntry
-        Dim AuxID As String
-        Dim MsgSrc As String
-        Dim SubPath As cSubPath
-
-        MsgSrc = "Main/ReadInp/GEN"
-
-        If sFilePath = "" Then Return False
-        If Not IO.File.Exists(sFilePath) Then Return False
-
-        file = New cFile_V3
-
-        SetDefault()
-
-        If Not file.OpenRead(sFilePath) Then
-            file = Nothing
-            Return False
-        End If
-
-        stPathVEH.Init(MyPath, file.ReadLine(0))
-
-        stPathENG.Init(MyPath, file.ReadLine(0))
-
-        stPathGBX.Init(MyPath, file.ReadLine(0))
-
-        Do While Not file.EndOfFile
-
-            line = file.ReadLine
-
-            If line(0) = sKey.Break Then Exit Do
-
-            SubPath = New cSubPath
-
-            SubPath.Init(MyPath, line(0))
-
-            CycleFiles.Add(SubPath)
-
-        Loop
-
-        'stdynspez.Init(MyPath, file.ReadLine(0))
-
-        'Cold start
-        'stkatmap.Init(MyPath, file.ReadLine(0))
-        'stkwmap.Init(MyPath, file.ReadLine(0))
-        'stkatkurv.Init(MyPath, file.ReadLine(0))
-        'stkwkurv.Init(MyPath, file.ReadLine(0))
-        'stcooldown.Init(MyPath, file.ReadLine(0))
-        'sttumgebung.Init(MyPath, file.ReadLine(0))
-
-        'If file.EndOfFile Then GoTo lbClose
-
-        'HEV
-        'stBatfile.Init(MyPath, file.ReadLine(0))
-        'stEmospez.Init(MyPath, file.ReadLine(0))
-        'stEANfile.Init(MyPath, file.ReadLine(0))
-        'stGetspez.Init(MyPath, file.ReadLine(0))
-        'stSTEnam.Init(MyPath, file.ReadLine(0))
-        'stEKFnam.Init(MyPath, file.ReadLine(0))
-
-        'If file.EndOfFile Then GoTo lbClose
-
-        'EXS
-        'boEXSja = CBool(file.ReadLine(0))
-        'stPathExs.Init(MyPath, file.ReadLine(0))
-
-        'boSOCnJa = CBool(file.ReadLine(0))
-        'siSOCstart = CSng(file.ReadLine(0))
-
-        'If file.EndOfFile Then GoTo lbClose
-
-        'GetrMod = CShort(file.ReadLine(0))
-
-        'If file.EndOfFile Then GoTo lbClose
-
-        'CoolantsimJa = CBool(file.ReadLine(0))
-        'stCoolantSimPath.Init(MyPath, file.ReadLine(0))
-
-        'If file.EndOfFile Then GoTo lbClose
-
-        'Einzelne Nebenverbraucher |@@| Individual next consumer
-        Do While Not file.EndOfFile
-
-            line = file.ReadLine
-
-            If line(0) = sKey.Break Then Exit Do
-
-            AuxID = UCase(Trim(line(0)))
-
-            If AuxPaths.ContainsKey(AuxID) Then
-                WorkerMsg(tMsgID.Err, "Multiple definitions of the same auxiliary type (" & line(0) & ")!", MsgSrc)
-                file.Close()
-                Return False
-            End If
-
-            AuxEntry = New cAuxEntry
-
-            AuxEntry.Type = line(1)
-            AuxEntry.Path.Init(MyPath, line(2))
-
-            AuxPaths.Add(AuxID, AuxEntry)
-
-            AuxDef = True
-
-        Loop
-
-        'DesMaxJa = CBool(file.ReadLine(0))
-        stDesMaxFile.Init(MyPath, file.ReadLine(0))
-
-        'hinauf = CSng(file.ReadLine(0))
-        'hinunter = CSng(file.ReadLine(0))
-        'lhinauf = CSng(file.ReadLine(0))
-        'lhinunter = CSng(file.ReadLine(0))
-        'pspar = CSng(file.ReadLine(0))
-        'pmodell = CSng(file.ReadLine(0))
-
-        ''Schaltmodell-Verteilung |@@| Gear-shifting Model Distribution
-        'If (pspar > 1) Then
-        '    pspar = 1
-        'ElseIf (pspar < 0) Then
-        '    pspar = 0
-        'End If
-        'If (pmodell > 1) Then
-        '    pmodell = 1
-        'ElseIf (pmodell < 0) Then
-        '    pmodell = 0
-        'End If
-        'If ((pspar + pmodell) > 1.0) Then pmodell = 1.0 - pspar
-
-
-        If Not file.EndOfFile Then EngOnly = CBool(file.ReadLine(0))
-
-        If file.EndOfFile Then GoTo lbClose
-
-        boStartStop = CBool(file.ReadLine(0))
-        siStStV = CSng(file.ReadLine(0))
-        siStStT = CSng(file.ReadLine(0))
-
-        If file.EndOfFile Then GoTo lbClose
-
-        a_lookahead = CSng(file.ReadLine(0))
-        vMin = CSng(file.ReadLine(0))
-        LookAheadOn = CBool(file.ReadLine(0))
-        OverSpeedOn = CBool(file.ReadLine(0))
-        EcoRollOn = CBool(file.ReadLine(0))
-        OverSpeed = CSng(file.ReadLine(0))
-        UnderSpeed = CSng(file.ReadLine(0))
-        vMinLA = CSng(file.ReadLine(0))
-
-        If file.EndOfFile Then GoTo lbClose
-
-        StStDelay = CSng(file.ReadLine(0))
-
-lbClose:
-
-        file.Close()
-        file = Nothing
-
-        Return True
-
-
-        'ERROR-label for clean Abort
-lbEr:
-        file.Close()
-        file = Nothing
-
-        Return False
-
-
-    End Function
 
     Public Function SaveFile() As Boolean
         Dim AuxEntryKV As KeyValuePair(Of String, cAuxEntry)
@@ -432,19 +258,9 @@ lbEr:
 
         MsgSrc = "Main/ReadInp/GEN"
 
-        'Flag for "File is not JSON" Warnings        
-        NoJSON = False
-
         SetDefault()
 
-        If Not JSON.ReadFile(sFilePath) Then
-            NoJSON = True
-            Try
-                Return ReadFileOld()
-            Catch ex As Exception
-                Return False
-            End Try
-        End If
+        If Not JSON.ReadFile(sFilePath) Then Return False
 
         Try
 
@@ -657,6 +473,9 @@ lbEr:
                 WorkerMsg(tMsgID.Err, "Can't read .vacc file (" & stDesMaxFile.FullPath & ")", MsgSrc)
                 Return False
             End If
+
+            'Skip Header
+            file.ReadLine()
 
             laDesV.Clear()
             laDesMax.Clear()

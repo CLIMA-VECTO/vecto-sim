@@ -129,8 +129,8 @@ Public Class F_GBX
 
     'Help
     Private Sub ToolStripButton1_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton1.Click
-        If IO.File.Exists(MyAppPath & "User Manual\GUI\GBX-Editor.html") Then
-            System.Diagnostics.Process.Start(MyAppPath & "User Manual\GUI\GBX-Editor.html")
+        If IO.File.Exists(MyAppPath & "User Manual\GUI\GUI_Calls\GBX.html") Then
+            System.Diagnostics.Process.Start(MyAppPath & "User Manual\GUI\GUI_Calls\GBX.html")
         Else
             MsgBox("User Manual not found!", MsgBoxStyle.Critical)
         End If
@@ -259,13 +259,6 @@ Public Class F_GBX
 
         Changed = False
         UpdatePic()
-
-        If GBX0.NoJSON Then
-            If MsgBox("File is not in JSON format!" & vbCrLf & vbCrLf & "Convert now?" & vbCrLf & "(Backup will be created with '.ORIG' extension)", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-                IO.File.Copy(GbxFile, GbxFile & ".ORIG", True)
-                SaveOrSaveAs(False)
-            End If
-        End If
 
     End Sub
 
@@ -683,6 +676,9 @@ Public Class F_GBX
 
                 f = New cFile_V3
                 If Not f.OpenRead(path) Then Exit Sub
+
+                'Header
+                f.ReadLine()
 
             Else
 

@@ -14,11 +14,11 @@ Public Class cConfig
 
     Public FilePath As String
 
-    Private Const FormatVersion As Short = 1
+    Private Const FormatVersion As Short = 2
     Private FileVersion As Short
 
     Public GnUfromCycle As Boolean
-    Public LastMode As Int16
+    Public BatchMode As Boolean
     Public ModOut As Boolean
     Public BATCHoutpath As String   'Ausgabepfad für BATCH-Modus:   <WORKDIR>, <GENPATH> oder Pfad
     Public BATCHoutSubD As Boolean
@@ -49,7 +49,7 @@ Public Class cConfig
 
     Public Sub SetDefault()
         GnUfromCycle = True
-        LastMode = 0
+        BatchMode = False
         ModOut = True
         BATCHoutpath = sKey.JobPath
         BATCHoutSubD = False
@@ -83,7 +83,11 @@ Public Class cConfig
 
             FileVersion = JSON.Content("Header")("FileVersion")
 
-            LastMode = JSON.Content("Body")("LastMode")
+            If FileVersion < 2 Then
+                BatchMode = (JSON.Content("Body")("LastMode") = 1)
+            Else
+                BatchMode = JSON.Content("Body")("LastModeBatch")
+            End If
             ModOut = JSON.Content("Body")("ModOut")
             DistCorr = JSON.Content("Body")("DistCorrection")
             GnUfromCycle = JSON.Content("Body")("UseGnUfromCycle")
@@ -124,7 +128,7 @@ Public Class cConfig
         'Body
         dic = New Dictionary(Of String, Object)
 
-        dic.Add("LastMode", F_MAINForm.CBoxMODE.SelectedIndex)
+        dic.Add("LastModeBatch", BatchMode)
         dic.Add("ModOut", ModOut)
         dic.Add("DistCorrection", DistCorr)
         dic.Add("UseGnUfromCycle", GnUfromCycle)

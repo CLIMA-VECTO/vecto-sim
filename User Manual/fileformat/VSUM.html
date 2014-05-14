@@ -2,23 +2,15 @@
 <html><head>
 <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><title>Summary Results - VECTO User Manual</title></head>
 <body>
-<table style="width: 100%; height: 54px; text-align: left; margin-left: auto; margin-right: auto;" border="0" cellpadding="2" cellspacing="2">
-<tbody>
-<tr>
-<td style="width: 110px;"><a href="../usermanual.html"><img src="../pics/VECTO-small.PNG" style="border: 0px solid ; width: 106px; height: 36px;" alt="VECTO-Logo"></a></td>
-<td><a href="../usermanual.html"><span style="color: rgb(0, 0, 0); font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; font-family: Verdana;">User
-Manual</span></a><span style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; display: inline ! important; float: none;"></span></td>
-<td style="text-align: right; width: 405px;"><a href="http://ec.europa.eu/dgs/jrc/index.cfm" target="_blank"><img src="../pics/JRC.png" style="border: 0px solid ; width: 173px; height: 36px;" alt="JRC-Logo" hspace="5"></a><a href="http://www.ivt.tugraz.at/" target="_blank"><img src="../pics/IVT.png" alt="IVT-Logo" style="border: 0px solid ; width: 74px; height: 36px;" hspace="5"></a><a href="http://portal.tugraz.at/pls/portal/url/page/TU_Graz" target="_blank"><img src="../pics/TUG.png" alt="TUG-Logo" style="border: 0px solid ; width: 96px; height: 36px;" hspace="5"></a></td>
-</tr>
-</tbody>
-</table>
-<hr style="width: 100%; height: 2px;"><a href="usermanual.html"><span style="font-family: Verdana;"></span></a><span style="font-family: Verdana;"></span>
-<div style="text-align: center;">
-<div style="text-align: left; font-family: Times New Roman,Times,serif;">
-<h2><a href="index.html">Output Files</a>
-/ Summary Results (.vsum)</h2>
-</div>
-<div style="text-align: left;"><span style="font-family: Times New Roman,Times,serif;">The
+
+
+
+<span style="font-family: Verdana;"><big><big><big><span style="font-weight: bold;">Summary Results (.vsum)</span></big></big></big></span><br>
+<hr style="width: 100%; height: 0px;">
+
+<div style="margin-left: 40px;">
+
+<span style="font-family: Times New Roman,Times,serif;">The
 .vsum file includes total / average results for each calculation run in one execution (ie. click of <a href="../GUI/mainform.html">START Button</a>). The file is located in the directory of the fist run
 .vecto file.<br>
 <br>
@@ -54,11 +46,7 @@ File</td>
 <td>[s]</td>
 <td>Total simulation&nbsp;time</td>
 </tr>
-<tr style="height: 15pt;" height="20">
-<td style="height: 15pt;" height="20">Prated</td>
-<td>[kW]</td>
-<td>Rated engine speed. See <a href="../GUI/ENG-Editor.html">Engine Editor</a></td>
-</tr>
+
 <tr style="height: 15pt;" height="20">
 <td style="height: 15pt;" height="20">distance</td>
 <td>[km]</td>
@@ -74,35 +62,27 @@ File</td>
 <td>[m]</td>
 <td>Altitude difference between start and end of cycle</td>
 </tr>
-<tr style="height: 15pt;" height="20">
-<td style="height: 15pt;" height="20">n_norm</td>
-<td>[-]</td>
-<td>Average normalised* engine speed</td>
-</tr>
-<tr style="height: 15pt;" height="20">
-<td style="height: 15pt;" height="20">Pe_norm</td>
-<td>[-]</td>
-<td>Average normalised* engine power</td>
-</tr>
+
+
 <tr style="height: 15pt;" height="20">
 <td style="height: 15pt;" height="20">Ppos</td>
-<td>[-]</td>
-<td>Average normalised* positive engine power</td>
+<td>[kW]</td>
+<td>Average&nbsp;positive engine power</td>
 </tr>
 <tr style="height: 15pt;" height="20">
 <td style="height: 15pt;" height="20">Pneg</td>
-<td>[-]</td>
-<td>Average normalised* negative engine power</td>
+<td>[kW]</td>
+<td>Average&nbsp;negative engine power</td>
 </tr>
 <tr style="height: 15pt;" height="20">
 <td style="height: 15pt;" height="20">FC</td>
 <td>[g/km]</td>
 <td>Average fuel consumption</td>
 </tr>
-<tr style="height: 15pt;" height="20">
+<tr><td>FC-AUXc</td><td>[g/km]</td><td>Fuel consumption after <a href="../general/FC.html">Auxiliary-Start/Stop Correction</a>. (Based on FC.)</td></tr><tr><td>FC-WHTCc</td><td>[g/km]</td><td>Fuel consumption after <a href="../general/FC.html">WHTC Correction</a>. (Based on FC-AUXc.)</td></tr><tr style="height: 15pt;" height="20">
 <td style="height: 15pt;" height="20">Pbrake</td>
-<td>[-]</td>
-<td>Average normalised* brake power (not including engine drag)</td>
+<td>[kW]</td>
+<td>Average brake power (not including engine drag)</td>
 </tr>
 <tr style="height: 15pt;" height="20">
 <td style="height: 15pt;" height="20">EposICE</td>
@@ -136,7 +116,7 @@ File</td>
 <td>[kWh]</td>
 <td>Total energy demand of auxiliaries</td>
 </tr>
-<tr style="height: 15pt;" height="20">
+<tr><td>Eaux_xxx</td><td>[kWh]</td><td>Energy demand of auxiliary with ID <span style="font-style: italic; font-weight: bold;">xxx</span>. See also <a href="../GUI/VECTO-Editor_Aux.html">Aux Dialog</a> and <a href="VDRI.html">Driving Cycle</a>.</td></tr><tr style="height: 15pt;" height="20">
 <td style="height: 15pt;" height="20">Ebrake</td>
 <td>[kWh]</td>
 <td>Total work dissipated in mechanical braking (sum of service brakes, retader and additional engine exhaust brakes)</td>
@@ -146,7 +126,7 @@ File</td>
 <td>[kWh]</td>
 <td>Total work of transmission losses</td>
 </tr>
-<tr style="height: 15pt;" height="20">
+<tr><td>Eretarder</td><td>[kWh]</td><td>Total retarder losses</td></tr><tr style="height: 15pt;" height="20">
 <td style="height: 15pt;" height="20">Mass</td>
 <td>[kg]</td>
 <td>Vehicle mass (equals <span style="font-weight: bold;">Curb Weight Vehicle</span>
@@ -168,12 +148,12 @@ Editor</a>)</td>
 <td style="height: 15pt;" height="20">a_pos</td>
 <td>[m/s<sup>2</sup>]</td>
 <td>Average&nbsp;acceleration in&nbsp;acceleration
-phases**</td>
+phases*</td>
 </tr>
 <tr style="height: 15pt;" height="20">
 <td style="height: 15pt;" height="20">a_neg</td>
 <td>[m/s<sup>2</sup>]</td>
-<td>Average deceleration in deceleration phases**</td>
+<td>Average deceleration in deceleration phases*</td>
 </tr>
 <tr style="height: 15pt;" height="20">
 <td style="height: 15pt;" height="20">Acc.Noise</td>
@@ -183,43 +163,38 @@ phases**</td>
 <tr style="height: 15pt;" height="20">
 <td style="height: 15pt;" height="20">pAcc</td>
 <td>[%]</td>
-<td>Time share of acceleration phases**</td>
+<td>Time share of acceleration phases*</td>
 </tr>
 <tr style="height: 15pt;" height="20">
 <td style="height: 15pt;" height="20">pDec</td>
 <td>[%]</td>
-<td>Time share of deceleration phases**</td>
+<td>Time share of deceleration phases*</td>
 </tr>
 <tr style="height: 15pt;" height="20">
 <td style="height: 15pt;" height="20">pCruise</td>
 <td>[%]</td>
-<td>Time share of cruise phases**</td>
+<td>Time share of cruise phases*</td>
 </tr>
 <tr style="height: 15pt;" height="20">
 <td style="height: 15pt;" height="20">pStop</td>
 <td>[%]</td>
-<td>Time share of stop phases**</td>
+<td>Time share of stop phases*</td>
 </tr>
 </tbody>
 </table>
-<br>*Normalisation<br><div style="margin-left: 40px;">Normalised engine speed =&nbsp;(n - n_idle)/(n_rated - n_idle)<br>Normalised power = Pe / Pe_rated</div><br>**Driving conditions:<br>
+<br>*Driving conditions:<br>
 <div style="margin-left: 40px;">Acceleration: a<sub>3s</sub> &gt;
 0.125 [m/s<sup>2</sup>]<br>
 Deceleration: a<sub>3s</sub> &lt; -0.125 [m/s<sup>2</sup>]<br>
 Cruise: -0.125 &#8804; a<sub>3s</sub> &#8804; 0.125 [m/s<sup>2</sup>]<br>
-Stop: v &lt; 0.1 [m/s]<br><span style="font-style: italic;">
-Note: a<sub>3s</sub>&nbsp;= 3 seconds-averaged acceleration&nbsp;</span><span style="font-family: Verdana;"></span></div></div>
-<div style="text-align: left;"><span style="font-family: Verdana;"></span><br>Definition of work (E...):<br><div style="margin-left: 40px;">sign &gt; 0: positive work applied to the vehicle (e.g. from engine, from kinetic energy)<br>sign &lt; 0: losses<br>Sum
-of: EposICE, EnegICE, Eair, Eroll, Egrad, Eacc, Eaux, Ebrake and
-Etransm is zero (besides small rounding error for long driving cycles)<br></div></div><br>
-<div style="text-align: left;">
-<div style="text-align: left;">
-<div style="text-align: left;">
-<hr style="width: 100%; height: 2px;"><a href="../contact.html">Contact</a>
-</div>
-</div>
-</div>
-<ul style="text-align: left; font-family: Tahoma;">
-</ul>
+Stop: v &lt; 0.1 [m/s]<br><span style="font-style: italic;"><br>a<sub>3s</sub>&nbsp;= 3 seconds-averaged acceleration&nbsp;</span></div>
+
+<br>
+Definition of work (E...):<br><div style="margin-left: 40px;">sign &gt; 0: positive work applied to the vehicle (e.g. from engine, from kinetic energy)<br>sign &lt; 0: losses<br>The
+sum
+of EposICE, EnegICE, Eair, Eroll, Egrad, Eacc, Eaux, Ebrake, Etransm
+and&nbsp;Eretarder is zero (besides small rounding error for long
+driving cycles)<br></div><br>
+
 </div>
 </body></html>

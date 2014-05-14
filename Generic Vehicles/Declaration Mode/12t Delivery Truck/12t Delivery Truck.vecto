@@ -1,0 +1,65 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (50e1b2d7-43a7-42d0-97c3-d8d48709e28c)",
+    "Date": "23.04.2014 16:59:20",
+    "AppVersion": "1.5.0-pre0",
+    "FileVersion": 1
+  },
+  "Body": {
+    "VehicleFile": "12t Delivery Truck.vveh",
+    "EngineFile": "12t Delivery Truck.veng",
+    "GearboxFile": "12t Delivery Truck.vgbx",
+    "Aux": [
+      {
+        "ID": "FAN",
+        "Type": "Fan",
+        "Path": "<NOFILE>",
+        "Technology": "Belt driven or driven via transm. - Discrete step clutch"
+      },
+      {
+        "ID": "STP",
+        "Type": "Steering pump",
+        "Path": "<NOFILE>",
+        "Technology": "Variable displacement"
+      },
+      {
+        "ID": "AC",
+        "Type": "HVAC",
+        "Path": "<NOFILE>",
+        "Technology": "Default"
+      },
+      {
+        "ID": "ES",
+        "Type": "Electric System",
+        "Path": "<NOFILE>",
+        "Technology": "Custom Technology List",
+        "TechList": []
+      },
+      {
+        "ID": "PS",
+        "Type": "Pneumatic System",
+        "Path": "<NOFILE>",
+        "Technology": "Default"
+      }
+    ],
+    "VACC": "<NOFILE>",
+    "EngineOnlyMode": false,
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 5.0,
+      "Delay": 5
+    },
+    "LAC": {
+      "Enabled": true,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "OverSpeed",
+      "MinSpeed": 50.0,
+      "OverSpeed": 5.0,
+      "UnderSpeed": 5.0
+    }
+  }
+}

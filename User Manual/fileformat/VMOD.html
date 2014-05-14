@@ -2,25 +2,13 @@
 <html><head>
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Modal Results - VECTO User Manual</title></head>
 <body>
-<table style="width: 100%; height: 54px; text-align: left; margin-left: auto; margin-right: auto;" border="0" cellpadding="2" cellspacing="2">
-<tbody>
-<tr>
-<td style="width: 110px;"><a href="../usermanual.html"><img src="../pics/VECTO-small.PNG" style="border: 0px solid ; width: 106px; height: 36px;" alt="VECTO-Logo"></a></td>
-<td><a href="../usermanual.html"><span style="color: rgb(0, 0, 0); font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; font-family: Verdana;">User
-Manual</span></a><span style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; display: inline ! important; float: none;"></span></td>
-<td style="text-align: right; width: 405px;"><a href="http://ec.europa.eu/dgs/jrc/index.cfm" target="_blank"><img src="../pics/JRC.png" style="border: 0px solid ; width: 173px; height: 36px;" alt="JRC-Logo" hspace="5"></a><a href="http://www.ivt.tugraz.at/" target="_blank"><img src="../pics/IVT.png" alt="IVT-Logo" style="border: 0px solid ; width: 74px; height: 36px;" hspace="5"></a><a href="http://portal.tugraz.at/pls/portal/url/page/TU_Graz" target="_blank"><img src="../pics/TUG.png" alt="TUG-Logo" style="border: 0px solid ; width: 96px; height: 36px;" hspace="5"></a></td>
-</tr>
-</tbody>
-</table>
-<hr style="width: 100%; height: 2px;"><a href="usermanual.html"><span style="font-family: Verdana;"></span></a><span style="font-family: Verdana;"></span>
-<div style="text-align: center;">
-<div style="text-align: left; font-family: Times New Roman,Times,serif;">
-<h2><a href="index.html">Output Files</a>
-/ Modal Results (.vmod)</h2>
-</div>
-<div style="text-align: left;"><span style="font-family: Times New Roman,Times,serif;">Modal
-results are only created if enabled in the <a href="../GUI/mainform_options.html">Options</a> tab</span>.
-One file is created for each&nbsp;calculation and stored in the&nbsp;same directory as the .vecto file.<br><br><br>&nbsp;<span style="font-weight: bold;">Quantities:</span><br><table style="width: 100%;" border="1" cellpadding="5" cellspacing="0">
+
+
+
+<span style="font-family: Verdana;"><big><big><big><span style="font-weight: bold;">Modal Results (.vmod)</span></big></big></big></span><br>
+<hr style="width: 100%; height: 0px;"><div style="margin-left: 40px;"><div style="text-align: left;"><span style="font-family: Times New Roman,Times,serif;">Modal
+results are only created if enabled in the <a href="../GUI/mainform.html">Options</a> tab</span>.
+One file is created for each&nbsp;calculation and stored in the&nbsp;same directory as the .vecto file.<br><br>&nbsp;<span style="font-weight: bold;">Quantities:</span><br><table style="width: 100%;" border="1" cellpadding="5" cellspacing="0">
 <col span="2" style="width: 60pt;" width="80">
 <tbody>
 <tr>
@@ -59,26 +47,17 @@ One file is created for each&nbsp;calculation and stored in the&nbsp;same direct
 <td style="width: 757px;">Road gradient.</td>
 </tr>
 <tr style="height: 15pt;" height="20">
-<td style="height: 15pt; width: 95px;" height="20">engine
-speed</td>
-<td style="width: 66px;">[rpm]</td>
+<td style="height: 15pt; width: 95px;" height="20">n</td>
+<td style="width: 66px;">[1/min]</td>
 <td style="width: 757px;">Engine speed.</td>
 </tr>
-<tr style="height: 15pt;" height="20">
-<td style="height: 15pt; width: 95px;" height="20">Pe</td>
+<tr><td>Tq_eng</td><td>[Nm]</td><td>Engine torque.</td></tr><tr><td>Tq_clutch</td><td>[Nm]</td><td>Torque at clutch (before clutch, engine-side)</td></tr><tr><td>Tq_full</td><td>[Nm]</td><td>Full load torque</td></tr><tr><td>Tq_drag</td><td>[Nm]</td><td>Motoring torque</td></tr><tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 95px;" height="20">Pe_eng</td>
 <td style="width: 66px;">[kW]</td>
 <td style="width: 757px;">Engine power.</td>
 </tr>
-<tr style="height: 15pt;" height="20">
-<td style="height: 15pt; width: 95px;" height="20">n_norm</td>
-<td style="width: 66px;">[-]</td>
-<td style="width: 757px;">Normalized engine speed.</td>
-</tr>
-<tr style="height: 15pt;" height="20">
-<td style="height: 15pt; width: 95px;" height="20">Pe_norm</td>
-<td style="width: 66px;">[-]</td>
-<td style="width: 757px;">Normalized engine power.</td>
-</tr>
+
+
 <tr style="height: 15pt;" height="20">
 <td style="height: 15pt; width: 95px;" height="20">Pe_full</td>
 <td style="width: 66px;">[kW]</td>
@@ -175,22 +154,9 @@ Veh</td>
 <tr style="height: 15pt;" height="20">
 <td style="height: 15pt; width: 95px;" height="20">FC</td>
 <td style="width: 66px;">[g/h]</td>
-<td style="width: 757px;">Fuel consumption.</td>
-</tr><tr><td>TC&#957;</td><td>[-]</td><td>Torque converter speed ratio*</td></tr><tr><td>TC&#956;</td><td>[-]</td><td>Torque converter torque ratio*</td></tr><tr><td>TC_M_Out</td><td>[Nm]</td><td>Torque converter output torque*</td></tr><tr><td>TC_n_Out</td><td>[1/min]</td><td>Torque converter output speed*</td></tr>
+<td style="width: 757px;">Fuel consumption from FC map..</td>
+</tr><tr><td>FC-AUXc</td><td>[g/h]</td><td>Fuel consumption after <a href="../general/FC.html">Auxiliary-Start/Stop Correction</a>. (Based on FC.)</td></tr><tr><td>FC-WHTCc</td><td>[g/h]</td><td>Fuel consumption after <a href="../general/FC.html">WHTC Correction</a>. (Based on FC-AUXc.)</td></tr><tr><td>TC&#957;</td><td>[-]</td><td>Torque converter speed ratio</td></tr><tr><td>TC&#956;</td><td>[-]</td><td>Torque converter torque ratio</td></tr><tr><td>TC_M_Out</td><td>[Nm]</td><td>Torque converter output torque</td></tr><tr><td>TC_n_Out</td><td>[1/min]</td><td>Torque converter output speed</td></tr>
 </tbody>
 </table>
-<span style="font-style: italic;">*only if the Torque Converter is defined in the <a href="../GUI/GBX-Editor.html">Gearbox</a> settings.</span><br>
-<span style="font-family: Verdana;"></span><br>
-<span style="font-family: Verdana;"></span></div>
-<span style="font-family: Verdana;"></span><br>
-<div style="text-align: left;">
-<div style="text-align: left;">
-<div style="text-align: left;">
-<hr style="width: 100%; height: 2px;"><a href="../contact.html">Contact</a>
-</div>
-</div>
-</div>
-<ul style="text-align: left; font-family: Tahoma;">
-</ul>
-</div>
-</body></html>
+
+</div><br></div></body></html>

@@ -112,6 +112,9 @@ Public Class cFLD
             Return False
         End If
 
+        'Skip Header
+        file.ReadLine()
+
         'Initialize Lists
         LTq = New System.Collections.Generic.List(Of Single)
         LTqDrag = New System.Collections.Generic.List(Of Single)

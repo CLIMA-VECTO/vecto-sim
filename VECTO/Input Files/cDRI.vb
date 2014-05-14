@@ -206,7 +206,7 @@ Public Class cDRI
         Values = New Dictionary(Of tDriComp, List(Of Double))
 
         '***
-        '*** Second row: Name/Identification of the Components
+        '*** First row: Name/Identification of the Components
         line = file.ReadLine
 
         'Check Number of Columns/Components

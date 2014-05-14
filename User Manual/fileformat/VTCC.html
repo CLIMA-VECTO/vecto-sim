@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+
+
+
+
+
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Torque Converter Characteristics (.vtcc)</title></head>
+<body>
+<big><big><big><span style="font-family: Verdana; font-weight: bold;">Torque Converter Characteristics (.vtcc)</span></big></big></big><br>
+<hr style="width: 100%; height: 0px;">
+
+<div style="margin-left: 40px;">
+
+<span style="font-weight: bold;">!!! The Torque Converter Model is still in development&nbsp;!!!</span><br><br><br>This file defines the
+torque converter characteristics as described in VDI 2153:<br>
+<span style="font-weight: bold;">Speed Ratio (</span>&#957;)
+= Output Speed / Input Speed<br>
+<span style="font-weight: bold;">Torque Ratio</span>
+(&#956;) = Output Torque / Input&nbsp;Torque<br>
+<span style="font-weight: bold;">Input Torque</span>
+(T<sub>ref(&#957;)</sub>) is the input torque (over &#957;) for a
+specific reference engine speed (see
+below).<br>
+<br>
+The Input Torque at &nbsp;reference engine speed is needed to
+calculate the actual engine torque using this formula:<br>
+<img style="width: 300px; height: 72px;" alt="" src="../GUI/pics/GBX-TC2.png"><br>
+with:<br>
+<div style="margin-left: 40px;">T<sub>in</sub>
+= engine torque [Nm]<br>
+T<sub>ref(&#957;)</sub> = reference torque at reference rpm
+(form .vtcc file) [Nm]<br>
+n<sub>in</sub> = engine speed [1/min]<br>
+n<sub>ref</sub> = reference rpm [1/min] (see below)<br>
+</div>
+<br>
+The torque converter characteristics must also be defined for speed
+ratios of more than one (<span style="font-weight: bold;"></span>&#957;&gt;1)
+in order to calculate overrun conditions (torque&lt;0).<br>
+
+<br><br>
+
+<big><big style="font-weight: bold;">File Format</big></big><br>
+
+
+<hr style="height: 1px; width: 100%;">The file uses the <a href="index.html">VECTO CSV format</a>.<br>
+
+
+<br>
+
+
+<span style="font-weight: bold;">Format:</span><br>
+
+
+<ul>
+<li>Three columns</li><li>One header line</li><li>At least two lines with numeric values (below file header)<br>
+  </li>
+</ul>
+
+
+<span style="font-weight: bold;">Columns:</span>
+<table style="background-color: white; text-align: left; height: 115px; width: 560px; margin-left: 0px;" border="1" cellpadding="2" cellspacing="1">
+<tbody>
+<tr>
+<th style="text-align: center; width: 179px;"><span style="color: rgb(51, 102, 255);"></span>Speed
+Ratio &#957;</th>
+<th style="text-align: center; width: 187px;">Torque
+Ratio &#956;</th>
+<th style="text-align: center; width: 170px;">Input
+Torque at reference rpm</th>
+</tr>
+
+<tr>
+<td style="width: 179px;">...</td>
+<td style="width: 187px;">...</td>
+<td style="width: 170px;">...</td>
+</tr>
+<tr>
+<td style="width: 179px;">...</td>
+<td style="width: 187px;">...</td>
+<td style="width: 170px;">...</td>
+</tr>
+</tbody>
+</table>
+<span style="font-weight: bold; font-style: italic; color: rgb(51, 102, 255);"></span><br><br><br><br><br></div><span style="font-family: Calibri;"></span>
+
+
+
+
+
+
+
+
+
+
+</body></html>

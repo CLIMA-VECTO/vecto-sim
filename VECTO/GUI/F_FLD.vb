@@ -88,6 +88,4 @@ Public Class F_FLD
 
 #End Region
 
-
-
 End Class

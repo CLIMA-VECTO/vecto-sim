@@ -32,176 +32,32 @@ Partial Class F_AboutBox
     'Das Bearbeiten mit dem Code-Editor ist nicht mÃ¶glich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.LinkHAUS = New System.Windows.Forms.LinkLabel()
-        Me.LinkREX = New System.Windows.Forms.LinkLabel()
-        Me.LinkLUZ = New System.Windows.Forms.LinkLabel()
-        Me.LabelTelHAUS = New System.Windows.Forms.Label()
-        Me.LabelTelREX = New System.Windows.Forms.Label()
-        Me.LabelTelLUZ = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.LabelLic = New System.Windows.Forms.Label()
         Me.LabelLicDate = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.PictureBoxJRC = New System.Windows.Forms.PictureBox()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.PictureBoxTUG = New System.Windows.Forms.PictureBox()
-        Me.PictureBoxFVT = New System.Windows.Forms.PictureBox()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label11 = New System.Windows.Forms.Label()
-        Me.LinkJRC1 = New System.Windows.Forms.LinkLabel()
-        Me.LinkJRC2 = New System.Windows.Forms.LinkLabel()
-        Me.Label12 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.Label14 = New System.Windows.Forms.Label()
-        Me.Label15 = New System.Windows.Forms.Label()
+        Me.LinkLabel2 = New System.Windows.Forms.LinkLabel()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.PictureBoxJRC = New System.Windows.Forms.PictureBox()
         Me.Panel1.SuspendLayout()
-        CType(Me.PictureBoxJRC, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBoxTUG, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBoxFVT, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.PictureBoxJRC, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(27, 345)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(179, 13)
-        Me.Label1.TabIndex = 2
-        Me.Label1.Text = "Graz University of Technology"
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(27, 298)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(172, 39)
-        Me.Label3.TabIndex = 3
-        Me.Label3.Text = "Institute of" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Internal Combustion Engines" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "and Thermodynamics"
-        '
-        'Label5
-        '
-        Me.Label5.AutoSize = True
-        Me.Label5.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(12, 276)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(108, 13)
-        Me.Label5.TabIndex = 7
-        Me.Label5.Text = "Developed by the"
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(12, 369)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(127, 13)
-        Me.Label6.TabIndex = 8
-        Me.Label6.Text = "Stefan HAUSBERGER"
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(12, 421)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(229, 13)
-        Me.Label7.TabIndex = 8
-        Me.Label7.Text = "Martin REXEIS (Support: Methodology)"
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(259, 421)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(198, 13)
-        Me.Label9.TabIndex = 8
-        Me.Label9.Text = "Raphael LUZ (Support: Software)"
-        '
-        'LinkHAUS
-        '
-        Me.LinkHAUS.AutoSize = True
-        Me.LinkHAUS.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkHAUS.Location = New System.Drawing.Point(27, 385)
-        Me.LinkHAUS.Name = "LinkHAUS"
-        Me.LinkHAUS.Size = New System.Drawing.Size(151, 13)
-        Me.LinkHAUS.TabIndex = 9
-        Me.LinkHAUS.TabStop = True
-        Me.LinkHAUS.Text = "hausberger@ivt.tugraz.at"
-        '
-        'LinkREX
-        '
-        Me.LinkREX.AutoSize = True
-        Me.LinkREX.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkREX.Location = New System.Drawing.Point(27, 437)
-        Me.LinkREX.Name = "LinkREX"
-        Me.LinkREX.Size = New System.Drawing.Size(121, 13)
-        Me.LinkREX.TabIndex = 9
-        Me.LinkREX.TabStop = True
-        Me.LinkREX.Text = "rexeis@ivt.tugraz.at"
-        '
-        'LinkLUZ
-        '
-        Me.LinkLUZ.AutoSize = True
-        Me.LinkLUZ.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkLUZ.Location = New System.Drawing.Point(274, 437)
-        Me.LinkLUZ.Name = "LinkLUZ"
-        Me.LinkLUZ.Size = New System.Drawing.Size(102, 13)
-        Me.LinkLUZ.TabIndex = 9
-        Me.LinkLUZ.TabStop = True
-        Me.LinkLUZ.Text = "luz@ivt.tugraz.at"
-        '
-        'LabelTelHAUS
-        '
-        Me.LabelTelHAUS.AutoSize = True
-        Me.LabelTelHAUS.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LabelTelHAUS.Location = New System.Drawing.Point(27, 398)
-        Me.LabelTelHAUS.Name = "LabelTelHAUS"
-        Me.LabelTelHAUS.Size = New System.Drawing.Size(149, 13)
-        Me.LabelTelHAUS.TabIndex = 10
-        Me.LabelTelHAUS.Text = "Tel.: +43 316 873 30260"
-        '
-        'LabelTelREX
-        '
-        Me.LabelTelREX.AutoSize = True
-        Me.LabelTelREX.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LabelTelREX.Location = New System.Drawing.Point(27, 450)
-        Me.LabelTelREX.Name = "LabelTelREX"
-        Me.LabelTelREX.Size = New System.Drawing.Size(149, 13)
-        Me.LabelTelREX.TabIndex = 10
-        Me.LabelTelREX.Text = "Tel.: +43 316 873 30270"
-        '
-        'LabelTelLUZ
-        '
-        Me.LabelTelLUZ.AutoSize = True
-        Me.LabelTelLUZ.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LabelTelLUZ.Location = New System.Drawing.Point(274, 450)
-        Me.LabelTelLUZ.Name = "LabelTelLUZ"
-        Me.LabelTelLUZ.Size = New System.Drawing.Size(149, 13)
-        Me.LabelTelLUZ.TabIndex = 10
-        Me.LabelTelLUZ.Text = "Tel.: +43 316 873 30274"
         '
         'Label10
         '
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(12, 202)
+        Me.Label10.Location = New System.Drawing.Point(9, 250)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(49, 13)
+        Me.Label10.Size = New System.Drawing.Size(75, 13)
         Me.Label10.TabIndex = 11
-        Me.Label10.Text = "License"
+        Me.Label10.Text = "License file:"
         '
         'LabelLic
         '
@@ -228,17 +84,17 @@ Partial Class F_AboutBox
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(12, 485)
+        Me.Label2.Location = New System.Drawing.Point(9, 346)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(99, 13)
+        Me.Label2.Size = New System.Drawing.Size(162, 13)
         Me.Label2.TabIndex = 7
-        Me.Label2.Text = "On behalf of the"
+        Me.Label2.Text = "Developed on behalf of the"
         '
         'Label8
         '
         Me.Label8.AutoSize = True
         Me.Label8.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(27, 507)
+        Me.Label8.Location = New System.Drawing.Point(24, 368)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(158, 39)
         Me.Label8.TabIndex = 3
@@ -249,20 +105,10 @@ Partial Class F_AboutBox
         Me.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.Panel1.Controls.Add(Me.LabelLic)
         Me.Panel1.Controls.Add(Me.LabelLicDate)
-        Me.Panel1.Location = New System.Drawing.Point(15, 218)
+        Me.Panel1.Location = New System.Drawing.Point(12, 266)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(464, 52)
         Me.Panel1.TabIndex = 16
-        '
-        'PictureBoxJRC
-        '
-        Me.PictureBoxJRC.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.PictureBoxJRC.Image = Global.VECTO.My.Resources.Resources.JRC_About
-        Me.PictureBoxJRC.Location = New System.Drawing.Point(219, 492)
-        Me.PictureBoxJRC.Name = "PictureBoxJRC"
-        Me.PictureBoxJRC.Size = New System.Drawing.Size(260, 54)
-        Me.PictureBoxJRC.TabIndex = 15
-        Me.PictureBoxJRC.TabStop = False
         '
         'PictureBox1
         '
@@ -273,197 +119,95 @@ Partial Class F_AboutBox
         Me.PictureBox1.TabIndex = 14
         Me.PictureBox1.TabStop = False
         '
-        'PictureBoxTUG
+        'Label1
         '
-        Me.PictureBoxTUG.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.PictureBoxTUG.Image = Global.VECTO.My.Resources.Resources.TUG_About
-        Me.PictureBoxTUG.Location = New System.Drawing.Point(363, 312)
-        Me.PictureBoxTUG.Name = "PictureBoxTUG"
-        Me.PictureBoxTUG.Size = New System.Drawing.Size(96, 36)
-        Me.PictureBoxTUG.TabIndex = 5
-        Me.PictureBoxTUG.TabStop = False
-        '
-        'PictureBoxFVT
-        '
-        Me.PictureBoxFVT.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.PictureBoxFVT.Image = Global.VECTO.My.Resources.Resources.IVT_About
-        Me.PictureBoxFVT.Location = New System.Drawing.Point(245, 312)
-        Me.PictureBoxFVT.Name = "PictureBoxFVT"
-        Me.PictureBoxFVT.Size = New System.Drawing.Size(75, 36)
-        Me.PictureBoxFVT.TabIndex = 4
-        Me.PictureBoxFVT.TabStop = False
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(12, 563)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(124, 13)
-        Me.Label4.TabIndex = 8
-        Me.Label4.Text = "Georgios FONTARAS"
-        '
-        'Label11
-        '
-        Me.Label11.AutoSize = True
-        Me.Label11.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.Location = New System.Drawing.Point(236, 563)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(111, 13)
-        Me.Label11.TabIndex = 8
-        Me.Label11.Text = "Panagiota DILARA"
-        '
-        'LinkJRC1
-        '
-        Me.LinkJRC1.AutoSize = True
-        Me.LinkJRC1.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkJRC1.Location = New System.Drawing.Point(27, 579)
-        Me.LinkJRC1.Name = "LinkJRC1"
-        Me.LinkJRC1.Size = New System.Drawing.Size(156, 13)
-        Me.LinkJRC1.TabIndex = 9
-        Me.LinkJRC1.TabStop = True
-        Me.LinkJRC1.Text = "georgios.fontaras@ftco.eu"
-        '
-        'LinkJRC2
-        '
-        Me.LinkJRC2.AutoSize = True
-        Me.LinkJRC2.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkJRC2.Location = New System.Drawing.Point(251, 579)
-        Me.LinkJRC2.Name = "LinkJRC2"
-        Me.LinkJRC2.Size = New System.Drawing.Size(203, 13)
-        Me.LinkJRC2.TabIndex = 9
-        Me.LinkJRC2.TabStop = True
-        Me.LinkJRC2.Text = "panagiota.dilara@jrc.ec.europa.eu"
-        '
-        'Label12
-        '
-        Me.Label12.AutoSize = True
-        Me.Label12.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.Location = New System.Drawing.Point(12, 625)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(419, 13)
-        Me.Label12.TabIndex = 8
-        Me.Label12.Text = "Konstantinos ANAGNOSTOPOULOS (Support: Licencing and Distribution)"
+        Me.Label1.AutoSize = True
+        Me.Label1.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Location = New System.Drawing.Point(9, 436)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(105, 13)
+        Me.Label1.TabIndex = 7
+        Me.Label1.Text = "Support Contact:"
         '
         'LinkLabel1
         '
         Me.LinkLabel1.AutoSize = True
-        Me.LinkLabel1.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LinkLabel1.Location = New System.Drawing.Point(27, 641)
+        Me.LinkLabel1.Location = New System.Drawing.Point(120, 436)
         Me.LinkLabel1.Name = "LinkLabel1"
-        Me.LinkLabel1.Size = New System.Drawing.Size(305, 13)
-        Me.LinkLabel1.TabIndex = 9
+        Me.LinkLabel1.Size = New System.Drawing.Size(122, 13)
+        Me.LinkLabel1.TabIndex = 17
         Me.LinkLabel1.TabStop = True
-        Me.LinkLabel1.Text = "konstantinos.anagnostopoulos@ext.jrc.ec.europa.eu"
+        Me.LinkLabel1.Text = "vecto@jrc.ec.europa.eu"
         '
-        'Label13
+        'LinkLabel2
         '
-        Me.Label13.AutoSize = True
-        Me.Label13.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(27, 592)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(142, 13)
-        Me.Label13.TabIndex = 10
-        Me.Label13.Text = "Tel.: +39 331 338 3644"
+        Me.LinkLabel2.AutoSize = True
+        Me.LinkLabel2.Font = New System.Drawing.Font("Verdana", 8.25!)
+        Me.LinkLabel2.Location = New System.Drawing.Point(20, 197)
+        Me.LinkLabel2.Name = "LinkLabel2"
+        Me.LinkLabel2.Size = New System.Drawing.Size(179, 13)
+        Me.LinkLabel2.TabIndex = 18
+        Me.LinkLabel2.TabStop = True
+        Me.LinkLabel2.Text = "VECTO is licensed under EUPL"
         '
-        'Label14
+        'Label3
         '
-        Me.Label14.AutoSize = True
-        Me.Label14.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.Location = New System.Drawing.Point(251, 592)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(142, 13)
-        Me.Label14.TabIndex = 10
-        Me.Label14.Text = "Tel.: +39 0332 78 9207"
+        Me.Label3.AutoSize = True
+        Me.Label3.Font = New System.Drawing.Font("Verdana", 8.25!)
+        Me.Label3.Location = New System.Drawing.Point(20, 213)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(194, 13)
+        Me.Label3.TabIndex = 19
+        Me.Label3.Text = "Copyright: 2014 European Union"
         '
-        'Label15
+        'PictureBoxJRC
         '
-        Me.Label15.AutoSize = True
-        Me.Label15.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.Location = New System.Drawing.Point(27, 654)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(142, 13)
-        Me.Label15.TabIndex = 10
-        Me.Label15.Text = "Tel.: +39 0332 78 5935"
+        Me.PictureBoxJRC.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.PictureBoxJRC.Image = Global.VECTO.My.Resources.Resources.JRC_About
+        Me.PictureBoxJRC.Location = New System.Drawing.Point(216, 353)
+        Me.PictureBoxJRC.Name = "PictureBoxJRC"
+        Me.PictureBoxJRC.Size = New System.Drawing.Size(260, 54)
+        Me.PictureBoxJRC.TabIndex = 15
+        Me.PictureBoxJRC.TabStop = False
         '
         'F_AboutBox
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(491, 674)
+        Me.ClientSize = New System.Drawing.Size(491, 474)
+        Me.Controls.Add(Me.Label3)
+        Me.Controls.Add(Me.LinkLabel2)
+        Me.Controls.Add(Me.LinkLabel1)
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.PictureBoxJRC)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.Label10)
-        Me.Controls.Add(Me.Label14)
-        Me.Controls.Add(Me.LabelTelLUZ)
-        Me.Controls.Add(Me.Label15)
-        Me.Controls.Add(Me.Label13)
-        Me.Controls.Add(Me.LabelTelREX)
-        Me.Controls.Add(Me.LabelTelHAUS)
-        Me.Controls.Add(Me.LinkJRC2)
-        Me.Controls.Add(Me.LinkLUZ)
-        Me.Controls.Add(Me.LinkLabel1)
-        Me.Controls.Add(Me.LinkJRC1)
-        Me.Controls.Add(Me.LinkREX)
-        Me.Controls.Add(Me.LinkHAUS)
-        Me.Controls.Add(Me.Label11)
-        Me.Controls.Add(Me.Label9)
-        Me.Controls.Add(Me.Label12)
-        Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.Label7)
-        Me.Controls.Add(Me.Label6)
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Label5)
-        Me.Controls.Add(Me.PictureBoxTUG)
-        Me.Controls.Add(Me.PictureBoxFVT)
-        Me.Controls.Add(Me.Label8)
-        Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.Label8)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Name = "F_AboutBox"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "About VECTO"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        CType(Me.PictureBoxJRC, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBoxTUG, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBoxFVT, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.PictureBoxJRC, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents PictureBoxFVT As System.Windows.Forms.PictureBox
-    Friend WithEvents PictureBoxTUG As System.Windows.Forms.PictureBox
-    Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents Label6 As System.Windows.Forms.Label
-    Friend WithEvents Label7 As System.Windows.Forms.Label
-    Friend WithEvents Label9 As System.Windows.Forms.Label
-    Friend WithEvents LinkHAUS As System.Windows.Forms.LinkLabel
-    Friend WithEvents LinkREX As System.Windows.Forms.LinkLabel
-    Friend WithEvents LinkLUZ As System.Windows.Forms.LinkLabel
-    Friend WithEvents LabelTelHAUS As System.Windows.Forms.Label
-    Friend WithEvents LabelTelREX As System.Windows.Forms.Label
-    Friend WithEvents LabelTelLUZ As System.Windows.Forms.Label
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents LabelLic As System.Windows.Forms.Label
     Friend WithEvents LabelLicDate As System.Windows.Forms.Label
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Label8 As System.Windows.Forms.Label
-    Friend WithEvents PictureBoxJRC As System.Windows.Forms.PictureBox
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
-    Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents LinkJRC1 As System.Windows.Forms.LinkLabel
-    Friend WithEvents LinkJRC2 As System.Windows.Forms.LinkLabel
-    Friend WithEvents Label12 As System.Windows.Forms.Label
+    Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents LinkLabel1 As System.Windows.Forms.LinkLabel
-    Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents Label14 As System.Windows.Forms.Label
-    Friend WithEvents Label15 As System.Windows.Forms.Label
+    Friend WithEvents LinkLabel2 As System.Windows.Forms.LinkLabel
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents PictureBoxJRC As System.Windows.Forms.PictureBox
 End Class

@@ -121,7 +121,7 @@ Partial Class F_FLD
         '
         Me.CmOpenFile.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.OpenWithToolStripMenuItem, Me.ShowInFolderToolStripMenuItem})
         Me.CmOpenFile.Name = "CmOpenFile"
-        Me.CmOpenFile.Size = New System.Drawing.Size(153, 70)
+        Me.CmOpenFile.Size = New System.Drawing.Size(153, 48)
         '
         'OpenWithToolStripMenuItem
         '

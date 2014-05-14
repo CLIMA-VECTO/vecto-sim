@@ -1,8 +1,4 @@
-c Demo data
-c Cross-wind sensitivity for rigid vehicle (Mitschke)
-c average cross wind: 3m/s
-c v_veh,cdx_rel
-c [km/h],[-]
+v_veh [km/h],cdx_rel [-]
 0,1.09879105165478
 5,1.09879105165478
 10,1.09879105165478

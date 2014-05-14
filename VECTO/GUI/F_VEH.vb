@@ -224,8 +224,8 @@ Public Class F_VEH
 
     'Help
     Private Sub ToolStripButton1_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton1.Click
-        If IO.File.Exists(MyAppPath & "User Manual\GUI\VEH-Editor.html") Then
-            System.Diagnostics.Process.Start(MyAppPath & "User Manual\GUI\VEH-Editor.html")
+        If IO.File.Exists(MyAppPath & "User Manual\GUI\GUI_Calls\VEH.html") Then
+            System.Diagnostics.Process.Start(MyAppPath & "User Manual\GUI\GUI_Calls\VEH.html")
         Else
             MsgBox("User Manual not found!", MsgBoxStyle.Critical)
         End If
@@ -391,13 +391,6 @@ Public Class F_VEH
         Me.Activate()
 
         Changed = False
-
-        If VEH0.NoJSON Then
-            If MsgBox("File is not in JSON format!" & vbCrLf & vbCrLf & "Convert now?" & vbCrLf & "(Backup will be created with '.ORIG' extension)", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-                IO.File.Copy(file, file & ".ORIG", True)
-                SaveOrSaveAs(False)
-            End If
-        End If
 
     End Sub
 
