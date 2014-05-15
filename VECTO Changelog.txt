@@ -1,9 +1,7 @@
-VECTO ?.? (future release) TODO
-* User Manual:
-	JSON
-
 
 VECTO x.x (current source)
+
+VECTO 2.0
 * Updated CSV file format. Now only one header with units included.
 * Changed input file comment symbol form "c" to "#".
 * Replaced old Demo/Default Data with "Demo Vehicles"
