@@ -1276,10 +1276,10 @@ lbFound:
     End Sub
 
     Private Sub UpdateNotesToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) Handles UpdateNotesToolStripMenuItem.Click
-        If IO.File.Exists(MyAppPath & "User Manual\Update Notes.pdf") Then
-            System.Diagnostics.Process.Start(MyAppPath & "User Manual\Update Notes.pdf")
+        If IO.File.Exists(MyAppPath & "User Manual\Release Notes.pdf") Then
+            System.Diagnostics.Process.Start(MyAppPath & "User Manual\Release Notes.pdf")
         Else
-            MsgBox("Update Notes not found!", MsgBoxStyle.Critical)
+            MsgBox("Release Notes not found!", MsgBoxStyle.Critical)
         End If
     End Sub
 
