@@ -1,3 +1,5 @@
+# Cross-wind sensitivity for rigid vehicle (Mitschke)
+# average cross wind: 3m/s
 v_veh [km/h],cdx_rel [-]
 0,1.09879105165478
 5,1.09879105165478
