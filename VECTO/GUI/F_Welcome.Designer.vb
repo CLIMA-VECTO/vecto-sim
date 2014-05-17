@@ -64,7 +64,7 @@ Partial Class F_Welcome
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(294, 37)
         Me.Button1.TabIndex = 2
-        Me.Button1.Text = "Open Update Notes (pdf)"
+        Me.Button1.Text = "Open Release Notes (pdf)"
         Me.Button1.UseVisualStyleBackColor = True
         '
         'Button2

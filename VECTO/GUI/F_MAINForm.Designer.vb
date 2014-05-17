@@ -910,7 +910,7 @@ Partial Class F_MAINForm
         '
         Me.UpdateNotesToolStripMenuItem.Name = "UpdateNotesToolStripMenuItem"
         Me.UpdateNotesToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
-        Me.UpdateNotesToolStripMenuItem.Text = "Update Notes"
+        Me.UpdateNotesToolStripMenuItem.Text = "Release Notes"
         '
         'ToolStripSeparator3
         '
