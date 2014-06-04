@@ -27,7 +27,7 @@ Public Class cPower
     Private Pplus As Boolean
     Private Pminus As Boolean
     Private GVmax As Single
-    Private PvorD As Single
+    Private Pwheel As Single
     Private Vist As Single
     Private aist As Single
 
@@ -42,8 +42,6 @@ Public Class cPower
     Private LastClutch As tEngClutch
 
     Public Positions As New List(Of Short)
-
-
 
     Public Function PreRun() As Boolean
         Dim i As Integer
@@ -166,9 +164,9 @@ Public Class cPower
             End If
 
             'Wheel-Power
-            PvorD = fPvD(i, Vh.fGrad(dist(i)))
+            Pwheel = fPwheel(i, Vh.fGrad(dist(i)))
 
-            Select Case PvorD
+            Select Case Pwheel
                 Case Is > 0.0001
                     Pplus = True
                 Case Is < -0.0001
@@ -184,7 +182,7 @@ Public Class cPower
                 If Gvorg Then
                     Gear = Math.Min(Vh.GearVorg(i), GBX.GearCount)
                 Else
-                    Gear = fFastGearCalc(Vist, PvorD)
+                    Gear = fFastGearCalc(Vist, Pwheel)
                 End If
             End If
 
@@ -204,12 +202,12 @@ Public Class cPower
             'Engine Power (at Clutch)
             If Pplus Or Pminus Then
 
-                PlossGB = fPlossGB(PvorD, Vist, Gear, True)
-                PlossDiff = fPlossDiff(PvorD, Vist, True)
+                PlossGB = fPlossGB(Pwheel, Vist, Gear, True)
+                PlossDiff = fPlossDiff(Pwheel, Vist, True)
                 PlossRt = fPlossRt(Vist, Gear)
                 PaGetr = fPaG(Vist, aist)
 
-                Pkup = PvorD + PlossGB + PlossDiff + PaGetr + PlossRt
+                Pkup = Pwheel + PlossGB + PlossDiff + PaGetr + PlossRt
                 P = Pkup + Paux + PaMot
 
             Else
@@ -229,7 +227,7 @@ Public Class cPower
                     'Secondary Progressbar
                     ProgBarCtrl.ProgJobInt = CInt((100 / ProgBarShare) * i / MODdata.tDim)
 
-                    If PvorD < 0 Or (i > 0 AndAlso Vh.EcoRoll(i - 1)) Then
+                    If Pwheel < 0 Or (i > 0 AndAlso Vh.EcoRoll(i - 1)) Then
 
                         Vmax = MODdata.Vh.Vsoll(i) + VEC.OverSpeed / 3.6
                         Vmin = Math.Max(0, MODdata.Vh.Vsoll(i) - VEC.UnderSpeed / 3.6)
@@ -479,7 +477,7 @@ Public Class cPower
         End If
 
         'Messages
-        If Not Cfg.DistCorr Then WorkerMsg(tMsgID.Warn, "Distance Correction is disabled!", MsgSrc, "<UM>/GUI/mainform_options.html#CycleDistCor")
+        If Not Cfg.DistCorr Then WorkerMsg(tMsgID.Warn, "Distance Correction is disabled!", MsgSrc)
 
         '   Initialize
         Vh = MODdata.Vh
@@ -630,33 +628,30 @@ lbGschw:
                 End If
             End If
 
-            PvorD = fPvD(jz, Vh.fGrad(dist))
+            Pwheel = fPwheel(jz, Vh.fGrad(dist))
 
-            Select Case PvorD
+            Select Case Pwheel
                 Case Is > 0.0001
                     Pplus = True
                 Case Is < -0.0001
                     Pminus = True
             End Select
 
+            'Eco-Roll Speed Correction (because PreRun speed profile might still be too high or speed might generally be too low)
+            If Vh.EcoRoll(jz) AndAlso Vist > MODdata.Vh.Vsoll(jz) - VEC.UnderSpeed / 3.6 AndAlso Not VehState0 = tVehState.Stopped AndAlso Pplus Then
 
-            ''Eco-Roll (triggers if Pwheel < 2 [kW])
-            'If Vh.EcoRoll(jz) AndAlso Pplus Then
-            '    Vh.ReduceSpeed(jz, 0.9999)
-            '    FirstSecItar = False
-            '    GoTo lbGschw
-            'End If
 
-            'Faster check if Power is too high
-            'If PvorD > 1.2 * VEH.Pnenn Then
-            '    Vh.ReduceSpeed(jz, 0.9)
-            '    GoTo lbGschw
-            'End If
 
-            'If jz > 0 AndAlso PvorD > 1.2 * LastPmax Then
-            '    Vh.ReduceSpeed(jz, 0.95)
-            '    GoTo lbGschw
-            'End If
+
+                '  If Declaration.CurrentMission.MissionID = tMission.RegionalDelivery And Declaration.CurrentLoading = tLoading.FullLoaded Then Stop
+
+
+
+
+                Vh.ReduceSpeed(jz, 0.9999)
+                FirstSecItar = False
+                GoTo lbGschw
+            End If
 
             '************************************ Gear selection ************************************
             If VehState0 = tVehState.Stopped Or TracIntrOn Then
@@ -729,11 +724,11 @@ lbGschw:
                 Return False
             End If
 
-            ''Eco-Roll (triggers if Pwheel < 2 [kW])
-            'If Vh.EcoRoll(jz) AndAlso PvorD < 2 Then
-            '    Clutch = tEngClutch.Opened
-            '    Gear = 0
-            'End If
+            'Eco-Roll (triggers if Pwheel < 2 [kW])
+            If Vh.EcoRoll(jz) AndAlso Pwheel <= 0 Then
+                Clutch = tEngClutch.Opened
+                Gear = 0
+            End If
 
             If Gear = 1 And Pminus And Vist <= 5 / 3.6 Then
                 Clutch = tEngClutch.Opened
@@ -754,7 +749,7 @@ lbCheck:
             'Check whether idling although Power > 0
             '   if power at wheels > 0.2 [kW], then clutch in
             If Clutch = tEngClutch.Opened Then
-                If PvorD > 0.2 Then
+                If Pwheel > 0.2 Then
 
                     If TracIntrOn Then
                         Gear = TracIntrGear
@@ -850,11 +845,11 @@ lbCheck:
 
                 If GBX.TCon And GBX.IsTCgear(Gear) Then
 
-                    PlossGB = fPlossGB(PvorD, Vist, Gear, False)
-                    PlossDiff = fPlossDiff(PvorD, Vist, False)
+                    PlossGB = fPlossGB(Pwheel, Vist, Gear, False)
+                    PlossDiff = fPlossDiff(Pwheel, Vist, False)
                     PlossRt = fPlossRt(Vist, Gear)
                     PaGetr = fPaG(Vist, aist)
-                    Pkup = PvorD + PlossGB + PlossDiff + PaGetr + PlossRt
+                    Pkup = Pwheel + PlossGB + PlossDiff + PaGetr + PlossRt
 
                     If Not GBX.TCiteration(Gear, fnUout(Vist, Gear), Pkup, jz) Then
                         WorkerMsg(tMsgID.Err, "TC Iteration failed!", MsgSrc & "/t= " & jz + 1)
@@ -941,20 +936,20 @@ lb_nOK:
 
                     Else
 
-                        PlossGB = fPlossGB(PvorD, Vist, Gear, False)
-                        PlossDiff = fPlossDiff(PvorD, Vist, False)
+                        PlossGB = fPlossGB(Pwheel, Vist, Gear, False)
+                        PlossDiff = fPlossDiff(Pwheel, Vist, False)
                         PlossRt = fPlossRt(Vist, Gear)
                         PaGetr = fPaG(Vist, aist)
-                        Pkup = PvorD + PlossGB + PlossDiff + PaGetr + PlossRt
+                        Pkup = Pwheel + PlossGB + PlossDiff + PaGetr + PlossRt
                         P = Pkup + Paux + PaMot
 
                     End If
                 Case Else 'tEngClutch.Slipping: never in AT mode!
-                    PlossGB = fPlossGB(PvorD, Vist, Gear, False)
-                    PlossDiff = fPlossDiff(PvorD, Vist, False)
+                    PlossGB = fPlossGB(Pwheel, Vist, Gear, False)
+                    PlossDiff = fPlossDiff(Pwheel, Vist, False)
                     PlossRt = fPlossRt(Vist, Gear)
                     PaGetr = fPaG(Vist, aist)
-                    Pkup = (PvorD + PlossGB + PlossDiff + PaGetr + PlossRt) / KupplEta
+                    Pkup = (Pwheel + PlossGB + PlossDiff + PaGetr + PlossRt) / KupplEta
                     P = Pkup + Paux + PaMot
             End Select
 
@@ -1032,8 +1027,8 @@ lb_nOK:
 
             '   => Pbrake
             If Clutch = tEngClutch.Opened Then
-                If PvorD < -0.00001 Then
-                    Pbrake = PvorD
+                If Pwheel < -0.00001 Then
+                    Pbrake = Pwheel
                 Else
                     Pbrake = 0
                 End If
@@ -1080,7 +1075,7 @@ lb_nOK:
                         PlossRt = fPlossRt(Vist, Gear)
                         PlossDiff = fPlossDiffFwd(Pkup - PlossGB - PlossRt, Vist, False)
 
-                        Pbrake = PvorD - (Pkup - PlossGB - PlossDiff - PaGetr - PlossRt)
+                        Pbrake = Pwheel - (Pkup - PlossGB - PlossDiff - PaGetr - PlossRt)
 
                         EngState0 = tEngState.FullDrag
                     Else
@@ -1183,7 +1178,7 @@ lb_nOK:
             MODdata.Proll.Add(fPr(MODdata.Vh.V(jz), Vh.fGrad(dist)))
             MODdata.Pstg.Add(fPs(MODdata.Vh.V(jz), Vh.fGrad(dist)))
             MODdata.Pbrake.Add(Pbrake)
-            MODdata.Psum.Add(PvorD)
+            MODdata.Psum.Add(Pwheel)
             MODdata.PauxSum.Add(Paux)
             MODdata.Grad.Add(Vh.fGrad(dist))
 
@@ -1500,7 +1495,7 @@ lb_nOK:
         eps = 0.00005
         a = MODdata.Vh.a(t)
 
-        PvD = fPvD(t, v, a, Grad)
+        PvD = fPwheel(t, v, a, Grad)
 
         If PvD > eps Then
             vVorz = -1
@@ -1535,7 +1530,7 @@ lb_nOK:
 
                 LastPvD = PvD
 
-                PvD = fPvD(t, v, a, Grad)
+                PvD = fPwheel(t, v, a, Grad)
 
             End If
 
@@ -1572,7 +1567,7 @@ lb_nOK:
         Grad = MODdata.Vh.fGrad(s)
 
 
-        PvD = fPvD(t, v, a, Grad)
+        PvD = fPwheel(t, v, a, Grad)
         Pe = PvD + fPlossGB(PvD, v, Gear, True) + fPlossDiff(PvD, v, True) + fPaG(v, a) + fPlossRt(v, Gear) + fPaux(t, nU) + fPaMot(t, Gear, v, a)
 
         Diff = Math.Abs(Pdrag - Pe)
@@ -1608,7 +1603,7 @@ lb_nOK:
 
             LastDiff = Diff
 
-            PvD = fPvD(t, v, a, Grad)
+            PvD = fPwheel(t, v, a, Grad)
             Pe = PvD + fPlossGB(PvD, v, Gear, True) + fPlossDiff(PvD, v, True) + fPaG(v, a) + fPlossRt(v, Gear) + fPaux(t, nU) + fPaMot(t, Gear, v, a)
 
             Diff = Math.Abs(Pdrag - Pe)
@@ -1655,7 +1650,7 @@ lb_nOK:
 
     End Function
 
-#Region "Schaltmodelle"
+#Region "Gear Shift Methods"
 
     Private Function fFastGearCalc(ByVal V As Single, ByVal Pe As Single) As Integer
         Dim Gear As Integer
@@ -2089,7 +2084,7 @@ lb10:
 
     'Function calculating the Power easily for Gear-shift-model
     Private Function fPeGearModvD(ByVal t As Integer, ByVal Grad As Single) As Single
-        Return fPvD(t, Grad)
+        Return fPwheel(t, Grad)
     End Function
 
     Private Function fPeGearMod(ByVal Gear As Integer, ByVal t As Integer, ByVal V As Single, ByVal a As Single, ByVal Grad As Single) As Single
@@ -2097,7 +2092,7 @@ lb10:
         Dim nU As Single
         Dim PvD As Single
 
-        PvD = fPvD(t, V, a, Grad)
+        PvD = fPwheel(t, V, a, Grad)
 
         nU = fnU(V, Gear, False)
 
@@ -2123,7 +2118,7 @@ lb10:
 
 #End Region
 
-#Region "Drehzahl"
+#Region "Engine Speed Calculation"
 
     Private Function fnn(ByVal V As Single, ByVal Gear As Integer, ByVal ClutchSlip As Boolean) As Single
         Return (fnU(V, Gear, ClutchSlip) - ENG.Nidle) / (ENG.Nrated - ENG.Nidle)
@@ -2147,14 +2142,14 @@ lb10:
 
 #End Region
 
-#Region "Leistungsberechnung"
+#Region "Power Calculation"
 
     '--------------Power before Diff = At Wheel -------------
-    Private Function fPvD(ByVal t As Integer, ByVal Grad As Single) As Single
+    Private Function fPwheel(ByVal t As Integer, ByVal Grad As Single) As Single
         Return fPr(MODdata.Vh.V(t), Grad) + fPair(MODdata.Vh.V(t), t) + fPaFZ(MODdata.Vh.V(t), MODdata.Vh.a(t)) + fPs(MODdata.Vh.V(t), Grad)
     End Function
 
-    Private Function fPvD(ByVal t As Integer, ByVal v As Single, ByVal a As Single, ByVal Grad As Single) As Single
+    Private Function fPwheel(ByVal t As Integer, ByVal v As Single, ByVal a As Single, ByVal Grad As Single) As Single
         Return fPr(v, Grad) + fPair(v, t) + fPaFZ(v, a) + fPs(v, Grad)
     End Function
 
