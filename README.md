@@ -9,8 +9,9 @@ Before compiling you need to add references to:
 The following directories/files must be provided in the application folder (e.g. ..\bin\Release):
 - User Manual
 - User Manual\Release Notes.pdf (provided with the VECTO release)
-- GRAPHi (provided with the VECTO release)
 - vectolic.dll (should be placed there automatically when compiling)
+- itextsharp.dll (should be placed there automatically when compiling)
+- Newtonsoft.Json.dll (should be placed there automatically when compiling)
 - license.dat (provided by EC/JRC)
 
 

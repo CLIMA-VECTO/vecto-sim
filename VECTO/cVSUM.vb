@@ -126,6 +126,17 @@ Class cVSUM
                 VSUMentries("FC_h").ValueString = MODdata.FCavg
             Else
                 VSUMentries("FC_km").ValueString = (MODdata.FCavg / Vquer)
+
+                VSUMentries("FCl_km").ValueString = (100 * MODdata.FCavgFinal / Vquer) / (Cfg.FuelDens * 1000)  '[l/100km]
+                VSUMentries("CO2_km").ValueString = Cfg.CO2perFC * (MODdata.FCavgFinal / Vquer)   '[g/km]
+
+                If VEH.Loading > 0 Then
+                    VSUMentries("CO2_tkm").ValueString = (Cfg.CO2perFC * (MODdata.FCavgFinal / Vquer)) / (VEH.Loading / 1000) '[g/tkm]
+                    VSUMentries("FCl_tkm").ValueString = ((100 * MODdata.FCavgFinal / Vquer) / (Cfg.FuelDens * 1000)) / (VEH.Loading / 1000)  '[l/100tkm]
+                End If
+
+                VSUMentries("FC-Final_km").ValueString = (MODdata.FCavgFinal / Vquer)
+
             End If
 
             If MODdata.FCAUXcSet Then
@@ -143,6 +154,11 @@ Class cVSUM
                     VSUMentries("FC-WHTCc_km").ValueString = (MODdata.FCavgWHTCc / Vquer)
                 End If
             End If
+
+
+
+
+
 
         End If
 
@@ -300,6 +316,7 @@ Class cVSUM
         Dim dic As Dictionary(Of String, Object)
         Dim dic0 As Dictionary(Of String, Object)
         Dim dic1 As Dictionary(Of String, Object)
+        Dim ls0 As List(Of Dictionary(Of String, Object))
         Dim key As String
 
         MsgSrc = "SUMALL/Output"
@@ -322,7 +339,17 @@ Class cVSUM
 
         str = NrOfRunStr & "," & JobFilename & "," & CycleFilename & ","
         dic.Add("Job", JobFilename)
-        dic.Add("Cycle", CycleFilename)
+
+
+        If Cfg.DeclMode Then
+            dic.Add("Cycle", Declaration.CurrentMission.NameStr)
+            dic.Add("Loading", ConvLoading(Declaration.CurrentLoading))
+        Else
+            dic.Add("Cycle", CycleFilename)
+            dic.Add("Loading", ConvLoading(tLoading.UserDefLoaded))
+        End If
+
+
 
         If AbortedByError Then
             Fvsum.WriteLine(str & "Aborted due to Error!")
@@ -334,9 +361,27 @@ Class cVSUM
             dic1 = New Dictionary(Of String, Object)
             For Each key In VSUMentryList
                 dic0 = New Dictionary(Of String, Object)
+
                 dic0.Add("Value", VSUMentries(key).ValueString)
                 dic0.Add("Unit", VSUMentries(key).Unit)
-                dic1.Add(VSUMentries(key).Head, dic0)
+
+                If VSUMentries(key).Multi Then
+
+                    If dic1.ContainsKey(VSUMentries(key).Head) Then
+                        ls0 = dic1(VSUMentries(key).Head)
+                    Else
+                        ls0 = New List(Of Dictionary(Of String, Object))
+                        dic1.Add(VSUMentries(key).Head, ls0)
+                    End If
+
+                    ls0.Add(dic0)
+
+                Else
+
+                    dic1.Add(VSUMentries(key).Head, dic0)
+
+                End If
+
             Next
             dic.Add("Results", dic1)
 
@@ -365,13 +410,19 @@ Class cVSUM
 
     End Function
 
-    Private Sub AddToVSUM(ByVal IDstring As String, ByVal Head As String, ByVal Unit As String)
+    Private Sub AddToVSUM(ByVal IDstring As String, ByVal Head As String, ByVal Unit As String, Optional Multi As Boolean = False)
         If Not VSUMentries.ContainsKey(IDstring) Then
             VSUMentries.Add(IDstring, New cVSUMentry(Head, Unit))
             VSUMentryList.Add(IDstring)
+            If Multi Then VSUMentries(IDstring).Multi = True
         End If
     End Sub
 
+    ''' <summary>
+    ''' Initializes the specified job file.
+    ''' </summary>
+    ''' <param name="JobFile">The job file.</param>
+    ''' <returns></returns>
     Public Function Init(ByVal JobFile As String) As Boolean
         Dim JobFiles As New List(Of String)
         Dim str As String
@@ -436,6 +487,9 @@ Class cVSUM
         vsumJSON.Content.Add("Body", New Dictionary(Of String, Object))
         dic = New Dictionary(Of String, Object)
         dic.Add("Air Density [kg/m3]", Cfg.AirDensity)
+        dic.Add("CO2/FC [-]", Cfg.CO2perFC)
+        dic.Add("Fuel Density [kg/l]", Cfg.FuelDens)
+
         dic.Add("Distance Correction", Cfg.DistCorr)
         vsumJSON.Content("Body").add("Settings", dic)
 
@@ -558,6 +612,14 @@ Class cVSUM
                 AddToVSUM("FC_km", "FC", "[g/km]")
                 AddToVSUM("FC-AUXc_km", "FC-AUXc", "[g/km]")
                 AddToVSUM("FC-WHTCc_km", "FC-WHTCc", "[g/km]")
+
+                AddToVSUM("CO2_km", "CO2", "[g/km]", True)
+                AddToVSUM("CO2_tkm", "CO2", "[g/tkm]", True)
+
+                AddToVSUM("FC-Final_km", "FC-Final", "[g/km]", True)
+                AddToVSUM("FCl_km", "FC-Final", "[l/100km]", True)
+                AddToVSUM("FCl_tkm", "FC-Final", "[l/100tkm]", True)
+
             End If
 
         Next
@@ -636,11 +698,13 @@ Public Class cVSUMentry
     Public Head As String
     Public Unit As String
     Public MyVal As Object
+    Public Multi As Boolean
 
     Public Sub New(ByVal HeadStr As String, ByVal UnitStr As String)
         Head = HeadStr
         Unit = UnitStr
         MyVal = Nothing
+        Multi = False
     End Sub
 
     Public Property ValueString As Object
