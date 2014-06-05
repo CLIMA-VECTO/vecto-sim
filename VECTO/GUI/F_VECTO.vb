@@ -982,10 +982,12 @@ lbDlog:
             If Declaration.SegmentTable.SetRef(s0, VEH0.VehCat, VEH0.AxleConf, VEH0.MassMax) Then
                 HDVclass = s0.HDVclass
 
-                Me.LvCycles.Items.Clear()
-                For Each m0 In s0.Missions
-                    Me.LvCycles.Items.Add(Declaration.Missions(m0).NameStr)
-                Next
+                If Cfg.DeclMode Then
+                    Me.LvCycles.Items.Clear()
+                    For Each m0 In s0.Missions
+                        Me.LvCycles.Items.Add(Declaration.Missions(m0).NameStr)
+                    Next
+                End If
 
             Else
                 HDVclass = "-"
