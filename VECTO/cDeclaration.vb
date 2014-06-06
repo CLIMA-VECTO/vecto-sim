@@ -994,8 +994,8 @@ lbInt:
 
             .Loading = VEH.Loading / 1000
             .Speed = Vquer
-            .FCkm = (100 * MODdata.FCavgWHTCc / Vquer) / (Cfg.FuelDens * 1000)
-            .CO2km = Cfg.CO2perFC * (MODdata.FCavgWHTCc / Vquer)
+            .FCkm = (100 * MODdata.FCavgFinal / Vquer) / (Cfg.FuelDens * 1000)
+            .CO2km = Cfg.CO2perFC * (MODdata.FCavgFinal / Vquer)
             If VEH.Loading > 0 Then
                 .FCtkm = .FCkm / .Loading
                 .CO2tkm = .CO2km / .Loading

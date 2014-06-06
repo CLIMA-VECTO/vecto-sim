@@ -60,6 +60,7 @@ Public Class cMOD
     Public FCavg As Single
     Public FCavgAUXc As Single
     Public FCavgWHTCc As Single
+    Public FCavgFinal As Single
 
     Public FCAUXcSet As Boolean
 
@@ -369,6 +370,7 @@ Public Class cMOD
             sum += x
         Next
         FCavg = CSng(sum / lFC.Count)
+        FCavgFinal = FCavg
 
         'Start/Stop-Aux - Correction
         If Result AndAlso LostEnergy > 0 Then
@@ -421,20 +423,31 @@ Public Class cMOD
 
             FCAUXcSet = True
 
+            FCavgFinal = FCavgAUXc
+
+
         End If
 
         'WHTC Correction
         If Cfg.DeclMode Then
 
-            For i = 0 To MODdata.tDim
-                lFCWHTCc.Add(lFC(i) * Declaration.WHTCcorrFactor)
-            Next
+            If FCAUXcSet Then
+                For i = 0 To MODdata.tDim
+                    lFCWHTCc.Add(lFCAUXc(i) * Declaration.WHTCcorrFactor)
+                Next
+            Else
+                For i = 0 To MODdata.tDim
+                    lFCWHTCc.Add(lFC(i) * Declaration.WHTCcorrFactor)
+                Next
+            End If
 
             sum = 0
             For Each x In lFCWHTCc
                 sum += x
             Next
             FCavgWHTCc = CSng(sum / lFC.Count)
+
+            FCavgFinal = FCavgWHTCc
 
         End If
 
