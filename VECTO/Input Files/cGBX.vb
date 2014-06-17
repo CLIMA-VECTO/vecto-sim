@@ -436,9 +436,6 @@ Public Class cGBX
 
 
         'Set nu boundaries
-        nuMin = Math.Max(nUout / ENG.Nrated, TCnu(0))
-        nuMax = Math.Min(TCnuMax, nUout / ENG.Nidle)
-
         If Mout < 0 Then
 
             'Speed too low in motoring(check if nu=1 allows enough engine speed)
@@ -447,14 +444,16 @@ Public Class cGBX
                 Return True
             End If
 
-            nu = 1
+            nuMin = 1
+            nuMax = Math.Min(TCnu(TCdim), nUout / ENG.Nidle)
 
         Else
-            nu = nuMin
+            nuMin = Math.Max(nUout / ENG.Nrated, TCnu(0))
+            nuMax = Math.Min(TCnuMax, nUout / ENG.Nidle)
         End If
 
         FirstDone = False
-        nu -= nuStep
+        nu = nuMin - nuStep
         iDim = -1
         Do While nu + nuStep <= nuMax
 
