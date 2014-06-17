@@ -498,7 +498,7 @@ Public Class cVECTO
             Catch ex As Exception
 
                 file.Close()
-                WorkerMsg(tMsgID.Err, "Error in .vacc file. " & ex.Message & " (" & stDesMaxFile.FullPath & ")", MsgSrc)
+                WorkerMsg(tMsgID.Err, "Error in .vacc file. " & ex.Message & " (" & stDesMaxFile.FullPath & ")", MsgSrc, stDesMaxFile.FullPath)
                 Return False
 
             End Try

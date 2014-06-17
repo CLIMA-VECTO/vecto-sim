@@ -15,7 +15,6 @@ Public Class cMOD
     Public Pe As List(Of Single)
     Public nU As List(Of Single)
     Public nUvorg As List(Of Single)
-    Public dnUvorg As List(Of Single)
     Public tDim As Integer
     Public tDimOgl As Integer
     Public Px As cPower
@@ -167,7 +166,6 @@ Public Class cMOD
 
         If DRI.Nvorg Then
             nUvorg.Insert(t, nUvorg(t))
-            dnUvorg.Insert(t, dnUvorg(t))
         End If
 
         If DRI.AuxDef Then
@@ -183,7 +181,6 @@ Public Class cMOD
 
         If DRI.Nvorg Then
             nUvorg.RemoveAt(t)
-            dnUvorg.RemoveAt(t)
         End If
 
         If DRI.AuxDef Then
@@ -224,18 +221,12 @@ Public Class cMOD
         If DRI.Nvorg Then
 
             MODdata.nUvorg = New List(Of Single)
-            MODdata.dnUvorg = New List(Of Single)
 
             L = DRI.Values(tDriComp.nU)
 
             'Revolutions
             For s = 0 To tDim
                 MODdata.nUvorg.Add(((L(s + 1) + L(s)) / 2))
-            Next
-
-            'Angular acceleration
-            For s = 0 To tDim
-                MODdata.dnUvorg.Add(L(s + 1) - L(s))
             Next
 
         End If
@@ -282,7 +273,6 @@ Public Class cMOD
         If DRI.Nvorg Then
 
             MODdata.nUvorg = New List(Of Single)
-            MODdata.dnUvorg = New List(Of Single)
 
             L = DRI.Values(tDriComp.nU)
 
@@ -290,13 +280,6 @@ Public Class cMOD
             For s = 0 To MODdata.tDim
                 MODdata.nUvorg.Add(L(s))
             Next
-
-            'Angular acceleration
-            MODdata.dnUvorg.Add(L(1) - L(0))
-            For s = 1 To MODdata.tDim - 1
-                MODdata.dnUvorg.Add((L(s + 1) - L(s - 1)) / 2)
-            Next
-            MODdata.dnUvorg.Add(L(MODdata.tDim) - L(MODdata.tDim - 1))
 
         End If
 

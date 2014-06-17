@@ -494,6 +494,11 @@ Public Class cVEH
             Return False
         End If
 
+        If rdyn <= 0 Then
+            WorkerMsg(tMsgID.Err, "rdyn is invalid!", MsgSrc, "<GUI>" & sFilePath)
+            Return False
+        End If
+
         RRC = 0
         m_red0 = 0
         For Each a0 In Axles
