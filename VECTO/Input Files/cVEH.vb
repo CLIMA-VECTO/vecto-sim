@@ -379,7 +379,7 @@ Public Class cVEH
 
         CdMode = tCdMode.CdOfV
 
-        CdFile.Init(MyPath, Declaration.SegRef.VCDVfile)
+        CdFile.Init(MyPath, Declaration.SegRef.VCDVfile(MissionID))
 
         If Declaration.SegRef.TrailerOnlyInLongHaul Then
 
