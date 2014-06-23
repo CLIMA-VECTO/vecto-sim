@@ -2,6 +2,12 @@
 ### VECTO x.x (current source)
 
 
+### VECTO 2.0.3-beta0
+* Implemented engine-side TC inertia input parameter in GBX file
+* Updated User Manual for TC inertia
+* Relabeled "OK" buttons to "Save" in input file editors
+
+
 ### VECTO 2.0.2-beta2
 * AT/TC Update
 * Various smaller fixes
