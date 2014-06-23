@@ -107,6 +107,7 @@ Partial Class F_VEH
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.PnLoad = New System.Windows.Forms.Panel()
         Me.GrAirRes = New System.Windows.Forms.GroupBox()
+        Me.PnCdATrTr = New System.Windows.Forms.Panel()
         Me.LbCdATr = New System.Windows.Forms.Label()
         Me.PnCdARig = New System.Windows.Forms.Panel()
         Me.LbCdARig = New System.Windows.Forms.Label()
@@ -119,7 +120,6 @@ Partial Class F_VEH
         Me.PnAll = New System.Windows.Forms.Panel()
         Me.PicVehicle = New System.Windows.Forms.PictureBox()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.PnCdATrTr = New System.Windows.Forms.Panel()
         Me.GroupBox6.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.GroupBox7.SuspendLayout()
@@ -130,12 +130,12 @@ Partial Class F_VEH
         Me.GroupBox1.SuspendLayout()
         Me.PnLoad.SuspendLayout()
         Me.GrAirRes.SuspendLayout()
+        Me.PnCdATrTr.SuspendLayout()
         Me.PnCdARig.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.CmOpenFile.SuspendLayout()
         Me.PnAll.SuspendLayout()
         CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.PnCdATrTr.SuspendLayout()
         Me.SuspendLayout()
         '
         'Label1
@@ -229,7 +229,7 @@ Partial Class F_VEH
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 9
-        Me.ButOK.Text = "OK"
+        Me.ButOK.Text = "Save"
         Me.ButOK.UseVisualStyleBackColor = True
         '
         'ButCancel
@@ -806,6 +806,16 @@ Partial Class F_VEH
         Me.GrAirRes.TabStop = False
         Me.GrAirRes.Text = "Air Resistance"
         '
+        'PnCdATrTr
+        '
+        Me.PnCdATrTr.Controls.Add(Me.LbCdATr)
+        Me.PnCdATrTr.Controls.Add(Me.TBcdTrTr)
+        Me.PnCdATrTr.Controls.Add(Me.TBAquersTrTr)
+        Me.PnCdATrTr.Location = New System.Drawing.Point(97, 26)
+        Me.PnCdATrTr.Name = "PnCdATrTr"
+        Me.PnCdATrTr.Size = New System.Drawing.Size(64, 78)
+        Me.PnCdATrTr.TabIndex = 27
+        '
         'LbCdATr
         '
         Me.LbCdATr.AutoSize = True
@@ -907,16 +917,6 @@ Partial Class F_VEH
         Me.Label8.TabIndex = 40
         Me.Label8.Text = "HDV Class"
         '
-        'PnCdATrTr
-        '
-        Me.PnCdATrTr.Controls.Add(Me.LbCdATr)
-        Me.PnCdATrTr.Controls.Add(Me.TBcdTrTr)
-        Me.PnCdATrTr.Controls.Add(Me.TBAquersTrTr)
-        Me.PnCdATrTr.Location = New System.Drawing.Point(97, 26)
-        Me.PnCdATrTr.Name = "PnCdATrTr"
-        Me.PnCdATrTr.Size = New System.Drawing.Size(64, 78)
-        Me.PnCdATrTr.TabIndex = 27
-        '
         'F_VEH
         '
         Me.AcceptButton = Me.ButOK
@@ -964,14 +964,14 @@ Partial Class F_VEH
         Me.PnLoad.PerformLayout()
         Me.GrAirRes.ResumeLayout(False)
         Me.GrAirRes.PerformLayout()
+        Me.PnCdATrTr.ResumeLayout(False)
+        Me.PnCdATrTr.PerformLayout()
         Me.PnCdARig.ResumeLayout(False)
         Me.PnCdARig.PerformLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.CmOpenFile.ResumeLayout(False)
         Me.PnAll.ResumeLayout(False)
         CType(Me.PicVehicle, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.PnCdATrTr.ResumeLayout(False)
-        Me.PnCdATrTr.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

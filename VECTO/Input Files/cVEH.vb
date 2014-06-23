@@ -379,7 +379,7 @@ Public Class cVEH
 
         CdMode = tCdMode.CdOfV
 
-        CdFile.Init(MyPath, Declaration.SegRef.VCDVfile)
+        CdFile.Init(MyPath, Declaration.SegRef.VCDVfile(MissionID))
 
         If Declaration.SegRef.TrailerOnlyInLongHaul Then
 
@@ -491,6 +491,11 @@ Public Class cVEH
 
         If Math.Abs(ShareSum - 1) > 0.0001 Then
             WorkerMsg(tMsgID.Err, "Sum of relative axle shares is not 100%!", MsgSrc, "<GUI>" & sFilePath)
+            Return False
+        End If
+
+        If rdyn <= 0 Then
+            WorkerMsg(tMsgID.Err, "rdyn is invalid!", MsgSrc, "<GUI>" & sFilePath)
             Return False
         End If
 

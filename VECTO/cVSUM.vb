@@ -598,7 +598,7 @@ Class cVSUM
             MAP0.FilePath = ENG0.PathMAP
 
             Try
-                If Not MAP0.ReadFile(False) Then Return False 'Fehlermeldungen werden auch bei "MsgOutput = False" ausgegeben
+                If Not MAP0.ReadFile(True) Then Return False
             Catch ex As Exception
                 WorkerMsg(tMsgID.Err, "File read error! (" & ENG0.PathMAP & ")", MsgSrc)
                 Return False

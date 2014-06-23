@@ -170,6 +170,7 @@ Public Class F_GBX
         'Me.ChTCon.Checked = False              'set by CbGStype.SelectedIndexChanged
         Me.TbTCfile.Text = ""
         Me.TbTCrefrpm.Text = ""
+        Me.TbTCinertia.Text = ""
 
         DeclInit()
 
@@ -241,6 +242,7 @@ Public Class F_GBX
 
         Me.TbTCfile.Text = GBX0.TCfile(True)
         Me.TbTCrefrpm.Text = GBX0.TCrefrpm
+        Me.TbTCinertia.Text = GBX0.TCinertia
 
         If CType(GBX0.gs_Type, Integer) <= Me.CbGStype.Items.Count - 1 Then
             Me.CbGStype.SelectedIndex = CType(GBX0.gs_Type, Integer)
@@ -310,7 +312,7 @@ Public Class F_GBX
         GBX0.TCon = Me.ChTCon.Checked
         GBX0.TCfile = Me.TbTCfile.Text
         GBX0.TCrefrpm = fTextboxToNumString(Me.TbTCrefrpm.Text)
-
+        GBX0.TCinertia = fTextboxToNumString(Me.TbTCinertia.Text)
 
         If Not GBX0.SaveFile Then
             MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
@@ -413,6 +415,10 @@ Public Class F_GBX
     End Sub
 
     Private Sub TbTCrefrpm_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbTCrefrpm.TextChanged
+        Change()
+    End Sub
+
+    Private Sub TbTCinertia_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbTCinertia.TextChanged
         Change()
     End Sub
 
@@ -819,4 +825,5 @@ Public Class F_GBX
 #End Region
 
 
+ 
 End Class

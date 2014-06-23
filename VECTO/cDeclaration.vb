@@ -229,21 +229,28 @@ Public Class cDeclaration
                     ste0.MaxGVW = CSng(line(4))
                     ste0.HDVclass = line(5)
                     ste0.VACCfile = MyDeclPath & "VACC\" & line(6)
-                    ste0.VCDVfile = MyDeclPath & "VCDV\" & line(7)
 
-                    AxleShares.Add(line(8))    'Long Haul
-                    For Each mt0 In SegmentTable.MissionList  'Other cycles
-                        If mt0 <> tMission.LongHaul Then AxleShares.Add(line(9))
+                    For Each mt0 In SegmentTable.MissionList
+                        If mt0 = tMission.LongHaul Then
+                            ste0.VCDVfile.Add(mt0, MyDeclPath & "VCDV\" & line(7))
+                        Else
+                            ste0.VCDVfile.Add(mt0, MyDeclPath & "VCDV\" & line(8))
+                        End If
                     Next
 
-                    AxleSharesTr.Add(line(10))   'Long Haul
+                    AxleShares.Add(line(9))    'Long Haul
                     For Each mt0 In SegmentTable.MissionList  'Other cycles
-                        If mt0 <> tMission.LongHaul Then AxleSharesTr.Add(line(11))
+                        If mt0 <> tMission.LongHaul Then AxleShares.Add(line(10))
                     Next
 
-                    ste0.TrailerOnlyInLongHaul = (Trim(line(10)) <> "0/0" And Trim(line(11)) = "0/0" And ste0.VehCat = tVehCat.RigidTruck)
+                    AxleSharesTr.Add(line(11))   'Long Haul
+                    For Each mt0 In SegmentTable.MissionList  'Other cycles
+                        If mt0 <> tMission.LongHaul Then AxleSharesTr.Add(line(12))
+                    Next
 
-                    i = 11
+                    ste0.TrailerOnlyInLongHaul = (Trim(line(11)) <> "0/0" And Trim(line(12)) = "0/0" And ste0.VehCat = tVehCat.RigidTruck)
+
+                    i = 12
                     For Each mt0 In SegmentTable.MissionList
                         i += 1
                         ste0.UseMission.Add(CBool(line(i)))
@@ -1179,7 +1186,7 @@ Public Class cSegmentTableEntry
     Public UseMission As New List(Of Boolean)
     Public HDVclass As String
     Public VACCfile As String
-    Public VCDVfile As String
+    Public VCDVfile As New Dictionary(Of tMission, String)
     Public BodyTrWeight As New Dictionary(Of tMission, String)
     Public Loading As New Dictionary(Of tMission, String)
     Public AxleShares As New Dictionary(Of tMission, List(Of Single))

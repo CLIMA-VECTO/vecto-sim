@@ -12,7 +12,7 @@ Imports System.Collections.Generic
 
 Public Class cGBX
 
-    Private Const FormatVersion As Short = 2
+    Private Const FormatVersion As Short = 3
     Private FileVersion As Short
 
     Private MyPath As String
@@ -49,6 +49,7 @@ Public Class cGBX
     Public TCon As Boolean
     Public TCrefrpm As Single
     Private TC_file As New cSubPath
+    Public TCinertia As Single
 
 
     Private TCnu As New List(Of Single)
@@ -62,8 +63,10 @@ Public Class cGBX
     Public TCnUin As Single
     Public TC_PeBrake As Single
     Public TCMout As Single
-    Public TCnout As Single
-    Public TCmustReduce As Boolean
+    Public TCnUout As Single
+    Public TCReduce As Boolean
+    Public TCNeutral As Boolean
+    Private TCnuMax As Single
 
 
     Private MyFileList As List(Of String)
@@ -131,6 +134,8 @@ Public Class cGBX
         TCrefrpm = 0
         TC_file.Clear()
 
+        TCinertia = 0
+
     End Sub
 
     Public Function SaveFile() As Boolean
@@ -169,7 +174,7 @@ Public Class cGBX
                 dic0.Add("TCactive", IsTCgear(i))
                 dic0.Add("ShiftPolygon", gs_files(i).PathOrDummy)
             End If
-           
+
             ls.Add(dic0)
         Next
         dic.Add("Gears", ls)
@@ -189,6 +194,7 @@ Public Class cGBX
         dic0.Add("Enabled", TCon)
         dic0.Add("File", TC_file.PathOrDummy)
         dic0.Add("RefRPM", TCrefrpm)
+        dic0.Add("Inertia", TCinertia)
         dic.Add("TorqueConverter", dic0)
 
         JSON.Content.Add("Body", dic)
@@ -263,6 +269,7 @@ Public Class cGBX
                 TCon = JSON.Content("Body")("TorqueConverter")("Enabled")
                 TC_file.Init(MyPath, JSON.Content("Body")("TorqueConverter")("File"))
                 TCrefrpm = JSON.Content("Body")("TorqueConverter")("RefRPM")
+                If FileVersion > 2 Then TCinertia = JSON.Content("Body")("TorqueConverter")("Inertia")
             End If
 
         Catch ex As Exception
@@ -335,10 +342,12 @@ Public Class cGBX
         Try
             Do While Not file.EndOfFile
                 line = file.ReadLine
-                TCnu.Add(CSng(line(0)))
-                TCmu.Add(CSng(line(1)))
-                TCtorque.Add(CSng(line(2)))
-                TCdim += 1
+                If CSng(line(0)) < 1 Then
+                    TCnu.Add(CSng(line(0)))
+                    TCmu.Add(CSng(line(1)))
+                    TCtorque.Add(CSng(line(2)))
+                    TCdim += 1
+                End If
             Loop
         Catch ex As Exception
             WorkerMsg(tMsgID.Err, "Error while reading Torque Converter file! (" & ex.Message & ")", MsgSrc)
@@ -353,176 +362,224 @@ Public Class cGBX
             Return False
         End If
 
+        TCnuMax = TCnu(TCdim)
+
+
+        'Add default values for nu>1
+        If Not file.OpenRead(MyDeclPath & "DefaultTC.vtcc") Then
+            WorkerMsg(tMsgID.Err, "Default Torque Converter file not found!", MsgSrc)
+            Return False
+        End If
+
+        'Skip Header
+        file.ReadLine()
+
+        Try
+            Do While Not file.EndOfFile
+                line = file.ReadLine
+                TCnu.Add(CSng(line(0)))
+                TCmu.Add(CSng(line(1)))
+                TCtorque.Add(CSng(line(2)))
+                TCdim += 1
+            Loop
+        Catch ex As Exception
+            WorkerMsg(tMsgID.Err, "Error while reading Default Torque Converter file! (" & ex.Message & ")", MsgSrc)
+            Return False
+        End Try
+
+        file.Close()
+
         Return True
 
     End Function
 
-    Public Function TCiteration(ByVal Gear As Integer, ByVal nUout As Single, ByVal PeOut As Single, ByVal t As Integer) As Boolean
+    Public Function TCiterationV2(ByVal Gear As Integer, ByVal nUout As Single, ByVal PeOut As Single, ByVal t As Integer, Optional ByVal LastnU As Single? = Nothing, Optional ByVal LastPe As Single? = Nothing) As Boolean
+
+        Dim i As Integer
+        Dim iDim As Integer
         Dim nUin As Single
         Dim Mout As Single
         Dim Min As Single
-        Dim VZ As Integer
-        Dim nUstep As Single
-        Dim lastErr As Single
+        Dim MinMax As Single
+        Dim nuStep As Single
+        Dim nuMin As Single
+        Dim nuMax As Single
 
         Dim nu As Single
         Dim mu As Single
 
         Dim MoutCalc As Single
 
-        Dim nUup As Single
-        Dim nUdown As Single
+        Dim Paux As Single
+        Dim PaMot As Single
+        Dim Pfull As Single
+        Dim PinMax As Single
+
+        Dim nuList As New List(Of Single)
+        Dim McalcRatio As New List(Of Single)
+
+        Dim McalcRatMax As Single
+        Dim ErrMin As Single
+        Dim iMin As Integer
+
+        Dim Brake As Boolean
+        Dim FirstDone As Boolean
 
         Dim MsgSrc As String
 
         MsgSrc = "GBX/TCiteration/t= " & t
 
         TC_PeBrake = 0
-        TCmustReduce = False
+        TCReduce = False
+        nuStep = 0.001
+        Brake = False
+        TCNeutral = False
 
-        'Dim nUmin As Single
-        'Dim nUmax As Single
 
         'Power to torque
         Mout = nPeToM(nUout, PeOut)
 
-        'rpm-limits
-        'nUmin = nnormTonU(GBX.fGSnnDown(Mout))
-        'nUmax = nnormTonU(GBX.fGSnnUp(Mout))
 
-        'Start values: Estimate torque converter state
-        'nUin = Math.Min(VEH.nNenn, nUout * 2)
-        If t = 0 Then
-            nUin = nUout
-        Else
-            nUin = MODdata.nU(t - 1)
-        End If
+        'Set nu boundaries
+        If Mout < 0 Then
 
-        'If nUin > nUmax Then nUin = nUmax
-        'If nUin < nUmin Then nUin = nUmin
-
-        nu = nUout / nUin
-
-        If nu > TCnu(TCdim) Then
-            nu = TCnu(TCdim)
-            nUin = nUout / nu
-        ElseIf nu < TCnu(0) Then
-            nu = TCnu(0)
-            nUin = nUout / nu
-        End If
-
-        mu = fTCmu(nu)
-        MoutCalc = fTCtorque(nu, nUin) * mu
-
-        nUstep = DEV.TCnUstep
-
-        If MoutCalc > Mout Then
-            VZ = -1
-        Else
-            VZ = 1
-        End If
-
-
-
-        lastErr = 99999
-
-        'Iteration
-        Do While Math.Abs(1 - MoutCalc / Mout) > DEV.TCiterPrec And nUstep > DEV.TCnUstepMin
-            nUin += VZ * nUstep
-            nu = nUout / nUin
-
-            If nu > TCnu(TCdim) Or nu < TCnu(0) Then
-                nUin -= VZ * nUstep
-                nUstep /= 2
-                VZ *= -1
-                Continue Do
+            'Speed too low in motoring(check if nu=1 allows enough engine speed)
+            If nUout < ENG.Nidle Then
+                TCNeutral = True
+                Return True
             End If
 
+            nuMin = 1
+            nuMax = Math.Min(TCnu(TCdim), nUout / ENG.Nidle)
+
+        Else
+            nuMin = Math.Max(nUout / ENG.Nrated, TCnu(0))
+            nuMax = Math.Min(TCnuMax, nUout / ENG.Nidle)
+        End If
+
+        FirstDone = False
+        nu = nuMin - nuStep
+        iDim = -1
+        Do While nu + nuStep <= nuMax
+
+            'nu
+            nu += nuStep
+
+            'Abort if nu<=0
+            If nu <= 0 Then Continue Do
+
+            'mu
             mu = fTCmu(nu)
+
+            'Abort if mu<=0
+            If mu <= 0 Then Continue Do
+
+            'nIn
+            nUin = nUout / nu
+
+            'MinMax
+            Paux = MODdata.Px.fPaux(t, Math.Max(nUin, ENG.Nidle))
+            If LastnU Is Nothing Then
+                PaMot = 0
+            Else
+                PaMot = MODdata.Px.fPaMot(nUin, LastnU)
+            End If
+            If LastPe Is Nothing Then
+                Pfull = FLD(Gear).Pfull(nUin)
+            Else
+                Pfull = FLD(Gear).Pfull(nUin, LastPe)
+            End If
+            PinMax = 0.999 * (Pfull - Paux - PaMot)
+            MinMax = nPeToM(nUin, PinMax)
+
+            'Min
             Min = Mout / mu
 
-            'Up/Downshift rpms
-            nUup = GBX.Shiftpolygons(Gear).fGSnUup(Min)
-            nUdown = GBX.Shiftpolygons(Gear).fGSnUdown(Min)
+            'Correct Min if too high
+            If Min > MinMax Then Continue Do
 
-            'If nUin > 1.05 * nUup - 0.0001 Then
-            If nUin > ENG.Nrated - 0.0001 Then
-                'nUin = 1.05 * nUup
-                nUin = ENG.Nrated
-                nUstep /= 2
-                VZ *= -1
-                Continue Do
-            ElseIf nUin < 0.95 * nUdown + 0.0001 Then
-                nUin = 0.95 * nUdown
-                nUstep /= 2
-                VZ *= -1
-                Continue Do
-            End If
-
-
+            'Calculated output torque for given mu
             MoutCalc = fTCtorque(nu, nUin) * mu
-            If Math.Abs(1 - MoutCalc / Mout) > lastErr Then
-                nUstep /= 2
-                VZ *= -1
+
+            'Add to lists
+            nuList.Add(nu)
+            McalcRatio.Add(MoutCalc / Mout)
+            iDim += 1
+
+            'Calc smallest error for each mu value
+            If FirstDone Then
+                If Math.Abs(1 - McalcRatio(i)) < ErrMin Then
+                    ErrMin = Math.Abs(1 - McalcRatio(i))
+                    iMin = i
+                End If
+                If McalcRatio(i) > McalcRatMax Then McalcRatMax = McalcRatio(i)
+            Else
+                FirstDone = True
+                ErrMin = Math.Abs(1 - McalcRatio(i))
+                iMin = i
+                McalcRatMax = McalcRatio(i)
             End If
-            lastErr = Math.Abs(1 - MoutCalc / Mout)
+
+            'Abort if error is small enough
+            If ErrMin <= DEV.TCiterPrec Then Exit Do
+
         Loop
 
-        'Calc nu again because nUin might have changed
-        nu = nUout / nUin
-
-        If nUin < ENG.Nidle Then
-
-            MODdata.ModErrors.TCextrapol = ""
-
-            nUin = ENG.Nidle
-            nu = nUout / nUin
-
-            If nu > TCnu(TCdim) Then
-                nu = TCnu(TCdim)
-                nUin = nUout / nu
-            ElseIf nu < TCnu(0) Then
-
-                WorkerMsg(tMsgID.Err, "Torque converter creeping not possible with current TC characteristics!", MsgSrc)
-                Return False
-
-                'nu = TCnu(0)
-                'nUin = nUout / nu
-            End If
-
-            mu = fTCmu(nu)
-            MoutCalc = fTCtorque(nu, nUin) * mu
-
+        If iDim = -1 Then
+            TCReduce = True
+            Return True
         End If
 
 
+        If ErrMin > DEV.TCiterPrec Then
 
+            If McalcRatMax >= 1 Then
 
-        If Math.Abs(1 - MoutCalc / Mout) > DEV.TCiterPrec Then
+                'Creeping...
+                FirstDone = False
+                For i = 0 To iDim
+                    If McalcRatio(i) > 1 Then
+                        If FirstDone Then
+                            If Math.Abs(1 - McalcRatio(i)) < ErrMin Then
+                                ErrMin = Math.Abs(1 - McalcRatio(i))
+                                iMin = i
+                            End If
+                        Else
+                            FirstDone = True
+                            ErrMin = Math.Abs(1 - McalcRatio(i))
+                            iMin = i
+                        End If
+                    End If
+                Next
 
-            If MoutCalc < Mout Then
-
-
-                If MoutCalc > 0 Then TCmustReduce = True
+                Brake = True
 
             Else
 
-                TC_PeBrake = nMtoPe(nUout, Mout - MoutCalc)
+                If MoutCalc > 0 Then
+                    TCReduce = True
+                    Return True
+                End If
 
 
             End If
 
         End If
 
-        TCMin = MoutCalc / mu
-        TCnUin = nUin
+        nu = nuList(iMin)
+        mu = fTCmu(nu)
+        TCnUin = nUout / nu
+        TCMout = fTCtorque(nu, TCnUin) * mu
+        TCMin = TCMout / mu
+        TCnUout = nUout
 
-        TCMout = MoutCalc
-        TCnout = nUout
+        If Brake Then TC_PeBrake = nMtoPe(TCnUout, Mout - TCMout)
+
 
         Return True
 
     End Function
+
 
     Private Function fTCmu(ByVal nu As Single) As Single
         Dim i As Int32

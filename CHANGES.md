@@ -1,6 +1,40 @@
 
 ### VECTO x.x (current source)
 
+
+### VECTO 2.0.3-beta0
+* Implemented engine-side TC inertia input parameter in GBX file
+* Updated User Manual for TC inertia
+* Relabeled "OK" buttons to "Save" in input file editors
+
+
+### VECTO 2.0.2-beta2
+* AT/TC Update
+* Various smaller fixes
+
+### VECTO 2.0.2-beta1
+* AT/TC Update
+* Engine inertia power demand (PaEng) is now always calculated based on the previous engine speed rather than vehicle acceleration.
+* Various smaller fixes
+
+### VECTO 2.0.1-beta1-hotfix.VECTO-33
+* Fixed VECTO-34
+* Updated .vsum(.json)
+    *  Added l/100km and CO2 results. (Fixed VECTO-33)
+    *  Added FC-Final.
+    *  Added Loading. (json)
+    *  Added missing fuel parameters. (json)
+* Updated README.md
+
+### VECTO 2.0.1-beta1
+* Updated Segment Table header
+* Fixed Eco Roll (VECTO-30)
+* Fixed Cycles in VECTO Editor being overwritten in Engineering Mode (VECTO-31)
+
+### VECTO 2.0.1-beta0
+* Update Notes > Release Notes
+* Segment Table header
+
 ### VECTO 2.0
 * Updated CSV file format. Now only one header with units included.
 * Changed input file comment symbol form "c" to "#".
