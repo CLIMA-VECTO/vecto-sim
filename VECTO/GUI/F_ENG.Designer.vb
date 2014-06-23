@@ -75,6 +75,7 @@ Partial Class F_ENG
         Me.Label32 = New System.Windows.Forms.Label()
         Me.PnInertia = New System.Windows.Forms.Panel()
         Me.GrWHTC = New System.Windows.Forms.GroupBox()
+        Me.Label13 = New System.Windows.Forms.Label()
         Me.TbWHTCmw = New System.Windows.Forms.TextBox()
         Me.TbWHTCrural = New System.Windows.Forms.TextBox()
         Me.TbWHTCurban = New System.Windows.Forms.TextBox()
@@ -85,7 +86,6 @@ Partial Class F_ENG
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.PicBox = New System.Windows.Forms.PictureBox()
-        Me.Label13 = New System.Windows.Forms.Label()
         Me.ToolStrip1.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -164,7 +164,7 @@ Partial Class F_ENG
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 12
-        Me.ButOK.Text = "OK"
+        Me.ButOK.Text = "Save"
         Me.ButOK.UseVisualStyleBackColor = True
         '
         'ToolStrip1
@@ -462,6 +462,15 @@ Partial Class F_ENG
         Me.GrWHTC.TabStop = False
         Me.GrWHTC.Text = "WHTC Test Results"
         '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(6, 27)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(91, 13)
+        Me.Label13.TabIndex = 3
+        Me.Label13.Text = "Fuel Consumption"
+        '
         'TbWHTCmw
         '
         Me.TbWHTCmw.Location = New System.Drawing.Point(348, 56)
@@ -545,15 +554,6 @@ Partial Class F_ENG
         Me.PicBox.Size = New System.Drawing.Size(474, 425)
         Me.PicBox.TabIndex = 40
         Me.PicBox.TabStop = False
-        '
-        'Label13
-        '
-        Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(6, 27)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(91, 13)
-        Me.Label13.TabIndex = 3
-        Me.Label13.Text = "Fuel Consumption"
         '
         'F_ENG
         '

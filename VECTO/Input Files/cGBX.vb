@@ -12,7 +12,7 @@ Imports System.Collections.Generic
 
 Public Class cGBX
 
-    Private Const FormatVersion As Short = 2
+    Private Const FormatVersion As Short = 3
     Private FileVersion As Short
 
     Private MyPath As String
@@ -49,6 +49,7 @@ Public Class cGBX
     Public TCon As Boolean
     Public TCrefrpm As Single
     Private TC_file As New cSubPath
+    Public TCinertia As Single
 
 
     Private TCnu As New List(Of Single)
@@ -133,6 +134,8 @@ Public Class cGBX
         TCrefrpm = 0
         TC_file.Clear()
 
+        TCinertia = 0
+
     End Sub
 
     Public Function SaveFile() As Boolean
@@ -191,6 +194,7 @@ Public Class cGBX
         dic0.Add("Enabled", TCon)
         dic0.Add("File", TC_file.PathOrDummy)
         dic0.Add("RefRPM", TCrefrpm)
+        dic0.Add("Inertia", TCinertia)
         dic.Add("TorqueConverter", dic0)
 
         JSON.Content.Add("Body", dic)
@@ -265,6 +269,7 @@ Public Class cGBX
                 TCon = JSON.Content("Body")("TorqueConverter")("Enabled")
                 TC_file.Init(MyPath, JSON.Content("Body")("TorqueConverter")("File"))
                 TCrefrpm = JSON.Content("Body")("TorqueConverter")("RefRPM")
+                If FileVersion > 2 Then TCinertia = JSON.Content("Body")("TorqueConverter")("Inertia")
             End If
 
         Catch ex As Exception
@@ -477,7 +482,7 @@ Public Class cGBX
             If LastnU Is Nothing Then
                 PaMot = 0
             Else
-                PaMot = (ENG.I_mot * (nUin - LastnU) * 0.01096 * nUin) * 0.001
+                PaMot = MODdata.Px.fPaMot(nUin, LastnU)
             End If
             If LastPe Is Nothing Then
                 Pfull = FLD(Gear).Pfull(nUin)

@@ -208,7 +208,7 @@ Public Class cPower
             If i = 0 Then
                 PaMot = 0
             Else
-                PaMot = (ENG.I_mot * (nU - LastnU) * 0.01096 * nU) * 0.001
+                PaMot = fPaMot(nU, LastnU)
             End If
 
             'Aux Demand
@@ -925,7 +925,7 @@ lb_nOK:
                 PaMot = 0
             Else
                 'Not optimal since jz-1 to jz not the right interval
-                PaMot = (ENG.I_mot * (nU - MODdata.nU(jz - 1)) * 0.01096 * nU) * 0.001
+                PaMot = fPaMot(nU, MODdata.nU(jz - 1))
             End If
 
 
@@ -2149,9 +2149,8 @@ lb10:
         If t = 0 Then
             PaM = 0
         Else
-            PaM = (ENG.I_mot * (nU - MODdata.nU(t - 1)) * 0.01096 * nU) * 0.001
+            PaM = fPaMot(nU, MODdata.nU(t - 1))
         End If
-
 
 
         If Clutch = tEngClutch.Closed Then
@@ -2244,6 +2243,14 @@ lb10:
         Return ((ENG.I_mot * (GBX.Igetr(0) * GBX.Igetr(Gear) / (VEH.rdyn / 1000)) ^ 2) * a * v) * 0.001
     End Function
 
+    Public Function fPaMot(ByVal nU As Single, ByVal nUBefore As Single) As Single
+        If GBX.TCon Then
+            Return ((ENG.I_mot + GBX.TCinertia) * (nU - nUBefore) * 0.01096 * nU) * 0.001
+        Else
+            Return (ENG.I_mot * (nU - nUBefore) * 0.01096 * nU) * 0.001
+        End If
+    End Function
+
     '----------------Slope resistance ----------------
     Private Function fPs(ByVal v As Single, ByVal Grad As Single) As Single
         Return CSng(((VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * Math.Sin(Math.Atan(Grad * 0.01)) * v) * 0.001)
@@ -2325,8 +2332,8 @@ lb10:
     '----------------Gearbox inertia ----------------
     Private Function fPaG(ByVal V As Single, ByVal a As Single) As Single
         Dim Mred As Single
-        Mred = CSng(GBX.I_Getriebe * (GBX.Igetr(0) / (VEH.rdyn / 1000)) ^ 2)
-        Return CSng((Mred * a * V) * 0.001)
+        Mred = GBX.I_Getriebe * (GBX.Igetr(0) / (VEH.rdyn / 1000)) ^ 2
+        Return (Mred * a * V) * 0.001
     End Function
 
 #End Region

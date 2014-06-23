@@ -103,6 +103,9 @@ Partial Class F_GBX
         Me.Label32 = New System.Windows.Forms.Label()
         Me.PnInertiaTI = New System.Windows.Forms.Panel()
         Me.PicBox = New System.Windows.Forms.PictureBox()
+        Me.TbTCinertia = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label18 = New System.Windows.Forms.Label()
         Me.ToolStrip1.SuspendLayout()
         Me.StatusStrip1.SuspendLayout()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -230,7 +233,7 @@ Partial Class F_GBX
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 8
-        Me.ButOK.Text = "OK"
+        Me.ButOK.Text = "Save"
         Me.ButOK.UseVisualStyleBackColor = True
         '
         'TbTracInt
@@ -584,7 +587,10 @@ Partial Class F_GBX
         'PnTC
         '
         Me.PnTC.Controls.Add(Me.Label17)
+        Me.PnTC.Controls.Add(Me.Label18)
         Me.PnTC.Controls.Add(Me.Label15)
+        Me.PnTC.Controls.Add(Me.TbTCinertia)
+        Me.PnTC.Controls.Add(Me.Label1)
         Me.PnTC.Controls.Add(Me.Label14)
         Me.PnTC.Controls.Add(Me.BtTCfileBrowse)
         Me.PnTC.Controls.Add(Me.TbTCfile)
@@ -608,11 +614,11 @@ Partial Class F_GBX
         '
         Me.Label15.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label15.AutoSize = True
-        Me.Label15.Location = New System.Drawing.Point(71, 50)
+        Me.Label15.Location = New System.Drawing.Point(185, 50)
         Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(191, 13)
+        Me.Label15.Size = New System.Drawing.Size(77, 13)
         Me.Label15.TabIndex = 0
-        Me.Label15.Text = "Reference rpm for torque characteristic"
+        Me.Label15.Text = "Reference rpm"
         '
         'Label14
         '
@@ -746,6 +752,31 @@ Partial Class F_GBX
         Me.PicBox.TabIndex = 48
         Me.PicBox.TabStop = False
         '
+        'TbTCinertia
+        '
+        Me.TbTCinertia.Location = New System.Drawing.Point(47, 47)
+        Me.TbTCinertia.Name = "TbTCinertia"
+        Me.TbTCinertia.Size = New System.Drawing.Size(67, 20)
+        Me.TbTCinertia.TabIndex = 49
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(120, 50)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(36, 13)
+        Me.Label1.TabIndex = 2
+        Me.Label1.Text = "[kgm²]"
+        '
+        'Label18
+        '
+        Me.Label18.AutoSize = True
+        Me.Label18.Location = New System.Drawing.Point(5, 50)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(36, 13)
+        Me.Label18.TabIndex = 2
+        Me.Label18.Text = "Inertia"
+        '
         'F_GBX
         '
         Me.AcceptButton = Me.ButOK
@@ -867,4 +898,7 @@ Partial Class F_GBX
     Friend WithEvents PnInertiaTI As System.Windows.Forms.Panel
     Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
     Friend WithEvents PicBox As System.Windows.Forms.PictureBox
+    Friend WithEvents TbTCinertia As System.Windows.Forms.TextBox
+    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents Label18 As System.Windows.Forms.Label
 End Class

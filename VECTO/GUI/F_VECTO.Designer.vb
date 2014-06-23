@@ -820,7 +820,7 @@ Partial Class F_VECTO
         Me.ButOK.Name = "ButOK"
         Me.ButOK.Size = New System.Drawing.Size(75, 23)
         Me.ButOK.TabIndex = 11
-        Me.ButOK.Text = "OK"
+        Me.ButOK.Text = "Save"
         Me.ButOK.UseVisualStyleBackColor = True
         '
         'ButCancel
