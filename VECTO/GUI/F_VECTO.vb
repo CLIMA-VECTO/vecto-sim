@@ -1047,7 +1047,7 @@ lbDlog:
                         Shiftpoly.SetGenericShiftPoly(FLD0, ENG0.Nidle)
 
                         s = New System.Windows.Forms.DataVisualization.Charting.Series
-                        s.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_Mup)
+                        s.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
                         s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
                         s.BorderWidth = 2
                         s.Color = Color.DarkRed
@@ -1055,7 +1055,7 @@ lbDlog:
                         MyChart.Series.Add(s)
 
                         s = New System.Windows.Forms.DataVisualization.Charting.Series
-                        s.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_Mdown)
+                        s.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
                         s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
                         s.BorderWidth = 2
                         s.Color = Color.DarkRed

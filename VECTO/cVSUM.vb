@@ -193,7 +193,7 @@ Class cVSUM
             'Eair
             sum = 0
             For t = 0 To t1
-                sum += MODdata.Pluft(t)
+                sum += MODdata.Pair(t)
             Next
             VSUMentries("\\Eair").ValueString = (-sum / 3600)
 
@@ -310,7 +310,7 @@ Class cVSUM
 
     End Function
 
-    Public Function AusgVSUM(ByVal NrOfRunStr As String, ByVal JobFilename As String, ByVal CycleFilename As String, ByVal AbortedByError As Boolean) As Boolean
+    Public Function WriteVSUM(ByVal NrOfRunStr As String, ByVal JobFilename As String, ByVal CycleFilename As String, ByVal AbortedByError As Boolean) As Boolean
         Dim str As String
         Dim MsgSrc As String
         Dim dic As Dictionary(Of String, Object)

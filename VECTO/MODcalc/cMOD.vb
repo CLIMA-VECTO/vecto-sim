@@ -27,7 +27,7 @@ Public Class cMOD
     Public Psum As List(Of Single)
     Public Proll As List(Of Single)
     Public Pstg As List(Of Single)
-    Public Pluft As List(Of Single)
+    Public Pair As List(Of Single)
     Public Pa As List(Of Single)
     Public Pbrake As List(Of Single)
     Public PauxSum As List(Of Single)
@@ -80,7 +80,7 @@ Public Class cMOD
         Psum = New List(Of Single)
         Pstg = New List(Of Single)
         Pbrake = New List(Of Single)
-        Pluft = New List(Of Single)
+        Pair = New List(Of Single)
         Pa = New List(Of Single)
         PauxSum = New List(Of Single)
         PlossGB = New List(Of Single)
@@ -132,7 +132,7 @@ Public Class cMOD
             Proll = Nothing
             Psum = Nothing
             Pstg = Nothing
-            Pluft = Nothing
+            Pair = Nothing
             Pa = Nothing
             Pbrake = Nothing
             PauxSum = Nothing
@@ -266,7 +266,6 @@ Public Class cMOD
         'Zykluslänge definieren: Gleiche Länge wie Zyklus (nicht reduziert weil keine "Zwischensekunden") |@@| Define Cycle-length: Same length as Cycle (not reduced because no "interim seconds")
         tDim = DRI.tDim
 
-        'Here the actual cycle is read:
         Vh.EngCylceInit()
 
         'Revolutions-setting
@@ -669,7 +668,7 @@ Public Class cMOD
                     s.Append(Sepp & .Proll(t))
 
                     'Drag
-                    s.Append(Sepp & .Pluft(t))
+                    s.Append(Sepp & .Pair(t))
 
                     'Slope ..
                     s.Append(Sepp & .Pstg(t))
