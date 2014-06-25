@@ -393,7 +393,7 @@ Public Class cGBX
 
     End Function
 
-    Public Function TCiterationV2(ByVal Gear As Integer, ByVal nUout As Single, ByVal PeOut As Single, ByVal t As Integer, Optional ByVal LastnU As Single? = Nothing, Optional ByVal LastPe As Single? = Nothing) As Boolean
+    Public Function TCiteration(ByVal Gear As Integer, ByVal nUout As Single, ByVal PeOut As Single, ByVal t As Integer, Optional ByVal LastnU As Single? = Nothing, Optional ByVal LastPe As Single? = Nothing) As Boolean
 
         Dim i As Integer
         Dim iDim As Integer
@@ -1155,8 +1155,8 @@ lbInt:
         Private Filepath As String
         Public MyGear As Integer
 
-        Public gs_Mup As New List(Of Single)
-        Public gs_Mdown As New List(Of Single)
+        Public gs_TqUp As New List(Of Single)
+        Public gs_TqDown As New List(Of Single)
         Public gs_nUup As New List(Of Single)
         Public gs_nUdown As New List(Of Single)
         Private gs_Dup As Integer = -1
@@ -1194,8 +1194,8 @@ lbInt:
             file.ReadLine()
 
             'Clear lists
-            gs_Mup.Clear()
-            gs_Mdown.Clear()
+            gs_TqUp.Clear()
+            gs_TqDown.Clear()
             gs_nUdown.Clear()
             gs_nUup.Clear()
             gs_Dup = -1
@@ -1205,8 +1205,8 @@ lbInt:
                 Do While Not file.EndOfFile
                     line = file.ReadLine
                     gs_Dup += 1
-                    gs_Mup.Add(CSng(line(0)))
-                    gs_Mdown.Add(CSng(line(0)))
+                    gs_TqUp.Add(CSng(line(0)))
+                    gs_TqDown.Add(CSng(line(0)))
                     gs_nUdown.Add(CSng(line(1)))
                     gs_nUup.Add(CSng(line(2)))
                 Loop
@@ -1232,8 +1232,8 @@ lbInt:
             Dim Tmax As Single
 
             'Clear lists
-            gs_Mup.Clear()
-            gs_Mdown.Clear()
+            gs_TqUp.Clear()
+            gs_TqDown.Clear()
             gs_nUdown.Clear()
             gs_nUup.Clear()
 
@@ -1246,62 +1246,62 @@ lbInt:
             gs_nUdown.Add(nidle)
             gs_nUdown.Add((fld0.Npref + fld0.Nlo) / 2)
 
-            gs_Mdown.Add(0)
-            gs_Mdown.Add(Tmax * nidle / (fld0.Npref + fld0.Nlo - nidle))
-            gs_Mdown.Add(Tmax)
+            gs_TqDown.Add(0)
+            gs_TqDown.Add(Tmax * nidle / (fld0.Npref + fld0.Nlo - nidle))
+            gs_TqDown.Add(Tmax)
 
             gs_nUup.Add(fld0.Npref)
             gs_nUup.Add(fld0.Npref)
             gs_nUup.Add(fld0.N95h)
 
-            gs_Mup.Add(0)
-            gs_Mup.Add(Tmax * (fld0.Npref - nidle) / (fld0.N95h - nidle))
-            gs_Mup.Add(Tmax)
+            gs_TqUp.Add(0)
+            gs_TqUp.Add(Tmax * (fld0.Npref - nidle) / (fld0.N95h - nidle))
+            gs_TqUp.Add(Tmax)
 
             gs_Ddown = 2
             gs_Dup = 2
 
         End Sub
 
-        Public Function fGSnUdown(ByVal Md As Single) As Single
+        Public Function fGSnUdown(ByVal Tq As Single) As Single
             Dim i As Int32
 
             'Extrapolation for x < x(1)
-            If gs_Mdown(0) >= Md Then
+            If gs_TqDown(0) >= Tq Then
                 i = 1
                 GoTo lbInt
             End If
 
             i = 0
-            Do While gs_Mdown(i) < Md And i < gs_Ddown
+            Do While gs_TqDown(i) < Tq And i < gs_Ddown
                 i += 1
             Loop
 
 
 lbInt:
             'Interpolation
-            Return (Md - gs_Mdown(i - 1)) * (gs_nUdown(i) - gs_nUdown(i - 1)) / (gs_Mdown(i) - gs_Mdown(i - 1)) + gs_nUdown(i - 1)
+            Return (Tq - gs_TqDown(i - 1)) * (gs_nUdown(i) - gs_nUdown(i - 1)) / (gs_TqDown(i) - gs_TqDown(i - 1)) + gs_nUdown(i - 1)
 
         End Function
 
-        Public Function fGSnUup(ByVal Md As Single) As Single
+        Public Function fGSnUup(ByVal Tq As Single) As Single
             Dim i As Int32
 
             'Extrapolation for x < x(1)
-            If gs_Mup(0) >= Md Then
+            If gs_TqUp(0) >= Tq Then
                 i = 1
                 GoTo lbInt
             End If
 
             i = 0
-            Do While gs_Mup(i) < Md And i < gs_Dup
+            Do While gs_TqUp(i) < Tq And i < gs_Dup
                 i += 1
             Loop
 
 
 lbInt:
             'Interpolation
-            Return (Md - gs_Mup(i - 1)) * (gs_nUup(i) - gs_nUup(i - 1)) / (gs_Mup(i) - gs_Mup(i - 1)) + gs_nUup(i - 1)
+            Return (Tq - gs_TqUp(i - 1)) * (gs_nUup(i) - gs_nUup(i - 1)) / (gs_TqUp(i) - gs_TqUp(i - 1)) + gs_nUup(i - 1)
 
         End Function
 

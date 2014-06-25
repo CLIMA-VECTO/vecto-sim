@@ -8,6 +8,7 @@ Before compiling you need to add references to:
 ### EXECUTE
 The following directories/files must be provided in the application folder (e.g. ..\bin\Release):
 - User Manual
+- Declaration
 - User Manual\Release Notes.pdf (provided with the VECTO release)
 - vectolic.dll (should be placed there automatically when compiling)
 - itextsharp.dll (should be placed there automatically when compiling)

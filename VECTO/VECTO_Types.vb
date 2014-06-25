@@ -41,7 +41,6 @@ Public Enum tCalcResult
     Err
     Abort
     Done
-    Undef
 End Enum
 
 Public Enum tJobStatus

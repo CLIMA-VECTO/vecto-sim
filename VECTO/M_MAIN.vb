@@ -508,7 +508,7 @@ lbAusg:
                         End If
 
                         'VSUM Output (first Calculation - Initialization & Header)
-                        If Not VSUM.AusgVSUM(iJob * (CyclesDim + 1) + iCycle + 1, fFILE(GenFile, True), fFILE(CurrentCycleFile, True), CyclAbrtedByErr) Then GoTo lbErrInJobLoop
+                        If Not VSUM.WriteVSUM(iJob * (CyclesDim + 1) + iCycle + 1, fFILE(GenFile, True), fFILE(CurrentCycleFile, True), CyclAbrtedByErr) Then GoTo lbErrInJobLoop
 
                         'Data Cleanup
                         MODdata.CleanUp()
@@ -549,9 +549,9 @@ lbNextJob:
 
                 If JobAbortedByErr Then
                     If CInt(iJob * (CyclesDim + 1) + 1) = CInt((iJob + 1) * (CyclesDim + 1)) Then
-                        VSUM.AusgVSUM(((iJob + 1) * (CyclesDim + 1)).ToString, fFILE(GenFile, True), "-", True)
+                        VSUM.WriteVSUM(((iJob + 1) * (CyclesDim + 1)).ToString, fFILE(GenFile, True), "-", True)
                     Else
-                        VSUM.AusgVSUM((iJob * (CyclesDim + 1) + 1).ToString & ".." & ((iJob + 1) * (CyclesDim + 1)).ToString, fFILE(GenFile, True), "-", True)
+                        VSUM.WriteVSUM((iJob * (CyclesDim + 1) + 1).ToString & ".." & ((iJob + 1) * (CyclesDim + 1)).ToString, fFILE(GenFile, True), "-", True)
                     End If
                 End If
 
