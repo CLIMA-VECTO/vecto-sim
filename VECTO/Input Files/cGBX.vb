@@ -19,7 +19,7 @@ Public Class cGBX
     Private sFilePath As String
 
     Public ModelName As String
-    Public I_Getriebe As Single
+    Public GbxInertia As Single
     Public TracIntrSi As Single
 
     Public Igetr As List(Of Single)
@@ -107,7 +107,7 @@ Public Class cGBX
     Private Sub SetDefault()
 
         ModelName = ""
-        I_Getriebe = 0
+        GbxInertia = 0
         TracIntrSi = 0
 
         Igetr = New List(Of Single)
@@ -158,7 +158,7 @@ Public Class cGBX
 
         dic.Add("ModelName", ModelName)
 
-        dic.Add("Inertia", I_Getriebe)
+        dic.Add("Inertia", GbxInertia)
         dic.Add("TracInt", TracIntrSi)
 
         ls = New List(Of Object)
@@ -220,7 +220,7 @@ Public Class cGBX
             FileVersion = JSON.Content("Header")("FileVersion")
 
             ModelName = JSON.Content("Body")("ModelName")
-            I_Getriebe = JSON.Content("Body")("Inertia")
+            GbxInertia = JSON.Content("Body")("Inertia")
             TracIntrSi = JSON.Content("Body")("TracInt")
 
             i = -1
@@ -293,7 +293,7 @@ Public Class cGBX
             Return False
         End If
 
-        I_Getriebe = cDeclaration.GbInertia
+        GbxInertia = cDeclaration.GbInertia
         TracIntrSi = Declaration.TracInt(gs_Type)
         gs_SkipGears = Declaration.SkipGears(gs_Type)
         gs_ShiftTime = Declaration.ShiftTime(gs_Type)

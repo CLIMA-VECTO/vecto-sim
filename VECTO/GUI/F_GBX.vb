@@ -202,7 +202,7 @@ Public Class F_GBX
 
         Me.TbName.Text = GBX0.ModelName
         Me.TbTracInt.Text = GBX0.TracIntrSi.ToString
-        Me.TBI_getr.Text = GBX0.I_Getriebe.ToString
+        Me.TBI_getr.Text = GBX0.GbxInertia.ToString
 
         Me.ChTCon.Checked = GBX0.TCon
 
@@ -288,7 +288,7 @@ Public Class F_GBX
         If Trim(GBX0.ModelName) = "" Then GBX0.ModelName = "Undefined"
 
         GBX0.TracIntrSi = fTextboxToNumString(Me.TbTracInt.Text)
-        GBX0.I_Getriebe = fTextboxToNumString(Me.TBI_getr.Text)
+        GBX0.GbxInertia = fTextboxToNumString(Me.TBI_getr.Text)
 
         For i = 0 To Me.LvGears.Items.Count - 1
             GBX0.IsTCgear.Add(Me.LvGears.Items(i).SubItems(1).Text = "on" And i > 0)
