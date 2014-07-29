@@ -1793,11 +1793,12 @@ lb_nOK:
         Dim nUup As Single
         Dim nUdown As Single
         Dim Tq As Single
-        Dim Pe As Single
+        Dim LastPe As Single
         Dim nUnext As Single
         Dim OutOfRpmRange As Boolean
         Dim PlusGearLockUp As Boolean
         Dim MinusGearTC As Boolean
+        Dim iRatio As Single
 
         'First time step (for vehicles with TC always the first gear is used)
         If t = 0 Then Return fStartGear(0, Grad)
@@ -1851,10 +1852,10 @@ lb_nOK:
         End If
 
         'previous power demand
-        Pe = MODdata.Pe(t - 1)
+        LastPe = MODdata.Pe(t - 1)
 
         'previous torque demand
-        Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
+        Tq = LastPe * 1000 / (nU * 2 * Math.PI / 60)
 
         'Up/Downshift rpms
         nUup = GBX.Shiftpolygons(LastGear).fGSnUup(Tq)
@@ -1862,16 +1863,19 @@ lb_nOK:
 
         'Upshift
         If PlusGearLockUp Then
-            If nUnext > nUup AndAlso Pe <= FLD(LastGear + 1).Pfull(nUnext) Then
+            If nUnext > nUup AndAlso LastPe <= FLD(LastGear + 1).Pfull(nUnext) Then
                 Return LastGear + 1
             End If
         Else
-            'TODO: 1C-to-2C
-            'If LastGear < GBX.GearCount Then
-            '    If fnUout(Vist, LastGear + 1) > Math.Min(900, GBX.Igetr(LastGear + 1) / GBX.Igetr(LastGear) * FLD(LastGear).N95h - 150) AndAlso fPeGearModTC(LastGear + 1, t, Vist, aist, Grad) > 0.7 * (FLD(LastGear).Pfull(MODdata.nU(t - 1)) + MODdata.PaGB(t - 1) + MODdata.PlossGB(t - 1)) Then
-            '        Return LastGear + 1
-            '    End If
-            'End If
+            '1C-to-2C
+            If LastGear < GBX.GearCount Then
+
+                iRatio = GBX.Igetr(LastGear + 1) / GBX.Igetr(LastGear)
+
+                If fnUout(Vact, LastGear + 1) > Math.Min(900, iRatio * (FLD(LastGear).N95h - 150)) AndAlso FLD(LastGear + 1).Pfull(nU * iRatio, LastPe) > 0.7 * FLD(LastGear).Pfull(nU, LastPe) Then
+                    Return LastGear + 1
+                End If
+            End If
         End If
 
 
@@ -2176,14 +2180,6 @@ lb10:
 
     End Function
 
-    Private Function fPeGearModTC(ByVal Gear As Integer, ByVal t As Integer, ByVal V As Single, ByVal a As Single, ByVal Grad As Single) As Single
-
-
-        'TODO...
-        Return 0
-
-    End Function
-
     Private Function fPeGearMod(ByVal Gear As Integer, ByVal t As Integer, ByVal Grad As Single) As Single
         Return fPeGearMod(Gear, t, MODdata.Vh.V(t), MODdata.Vh.a(t), Grad)
     End Function
@@ -2354,7 +2350,7 @@ lb10:
     '----------------Gearbox inertia ----------------
     Private Function fPaG(ByVal V As Single, ByVal a As Single) As Single
         Dim Mred As Single
-        Mred = GBX.I_Getriebe * (GBX.Igetr(0) / (VEH.rdyn / 1000)) ^ 2
+        Mred = GBX.GbxInertia * (GBX.Igetr(0) / (VEH.rdyn / 1000)) ^ 2
         Return (Mred * a * V) * 0.001
     End Function
 
