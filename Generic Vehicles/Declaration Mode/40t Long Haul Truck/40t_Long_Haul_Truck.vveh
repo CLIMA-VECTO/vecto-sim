@@ -1,11 +1,12 @@
 ﻿{
   "Header": {
     "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-    "Date": "25.04.2014 16:11:12",
-    "AppVersion": "2.0.0-pre0",
-    "FileVersion": 4
+    "Date": "29.07.2014 16:59:03",
+    "AppVersion": "2.0.4-beta",
+    "FileVersion": 5
   },
   "Body": {
+    "SavedInDeclMode": true,
     "VehCat": "Tractor",
     "CurbWeight": 7100.0,
     "CurbWeightExtra": 0.0,

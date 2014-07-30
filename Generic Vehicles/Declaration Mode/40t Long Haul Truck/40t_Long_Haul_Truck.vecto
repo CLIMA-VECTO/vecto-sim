@@ -1,11 +1,12 @@
 ﻿{
   "Header": {
     "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-    "Date": "25.04.2014 16:10:17",
-    "AppVersion": "2.0.0-pre0",
-    "FileVersion": 1
+    "Date": "29.07.2014 16:59:08",
+    "AppVersion": "2.0.4-beta",
+    "FileVersion": 2
   },
   "Body": {
+    "SavedInDeclMode": true,
     "VehicleFile": "40t_Long_Haul_Truck.vveh",
     "EngineFile": "40t_Long_Haul_Truck.veng",
     "GearboxFile": "40t_Long_Haul_Truck.vgbx",

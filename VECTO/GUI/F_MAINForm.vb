@@ -523,7 +523,7 @@ Public Class F_MAINForm
             If Cfg.BatchMode Then
                 LastModeName = "Batch"
             Else
-                LastModeName = "Standard"
+                LastModeName = "Engineering"
             End If
         End If
 
@@ -652,7 +652,7 @@ Public Class F_MAINForm
 #End Region
 
     'Open file - Job, vehicle, engine, gearbox or signature file
-    Private Sub OpenVectoFile(ByVal File As String)
+    Public Sub OpenVectoFile(ByVal File As String)
 
         If Not IO.File.Exists(File) Then
 
@@ -1496,7 +1496,7 @@ lbFound:
             If Cfg.DeclMode Then
                 LastModeName = "Declaration"
             Else
-                LastModeName = "STANDARD"
+                LastModeName = "Engineering"
             End If
 
             'Show mode-specific settings
@@ -1750,7 +1750,7 @@ lbFound:
         'Set Mode
         If Not Cfg.DeclMode Then Me.CbBatch.Checked = Cfg.BatchMode
 
-        Me.CbDecl.Checked = Cfg.DeclMode
+        Me.RbDecl.Checked = Cfg.DeclMode
 
     End Sub
 
@@ -2066,22 +2066,23 @@ lbFound:
 #End Region
 
     'Change Declaraion Mode
-    Private Sub CbDecl_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles CbDecl.CheckedChanged
-
+    Private Sub RbDecl_CheckedChanged(sender As Object, e As System.EventArgs) Handles RbDecl.CheckedChanged
         If CbDeclLock Then Exit Sub
 
         If F_VECTO.Visible Or F_VEH.Visible Or F_GBX.Visible Or F_ENG.Visible Then
             CbDeclLock = True
-            Me.CbDecl.Checked = Not Me.CbDecl.Checked
+            Me.RbDecl.Checked = Not Me.RbDecl.Checked
             CbDeclLock = False
             MsgBox("Please close all dialog windows (e.g. Job Editor) before changing mode!")
         Else
-            Cfg.DeclMode = Me.CbDecl.Checked
+            Cfg.DeclMode = Me.RbDecl.Checked
+            Me.RbDev.Checked = Not Me.RbDecl.Checked
             DeclOnOff()
         End If
 
-
     End Sub
+
+
 
 
 
@@ -2443,4 +2444,5 @@ Lb1:
 #End Region
 
 
+   
 End Class

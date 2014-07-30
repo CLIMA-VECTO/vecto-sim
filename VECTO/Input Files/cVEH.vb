@@ -13,7 +13,7 @@ Imports System.Collections.Generic
 Public Class cVEH
 
     'V2 MassMax is now saved in [t] instead of [kg]
-    Private Const FormatVersion As Short = 4
+    Private Const FormatVersion As Short = 5
     Private FileVersion As Short
 
     Private sFilePath As String
@@ -56,6 +56,9 @@ Public Class cVEH
     Public AxleConf As tAxleConf
 
     Private MyFileList As List(Of String)
+
+    Public SavedInDeclMode As Boolean
+
 
     Public Class cAxle
         Public RRC As Single
@@ -127,6 +130,8 @@ Public Class cVEH
         MassMax = 0
         AxleConf = tAxleConf.Undef
 
+        SavedInDeclMode = False
+
     End Sub
 
     Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
@@ -147,6 +152,13 @@ Public Class cVEH
         Try
 
             FileVersion = JSON.Content("Header")("FileVersion")
+
+            If FileVersion > 4 Then
+                SavedInDeclMode = JSON.Content("Body")("SavedInDeclMode")
+            Else
+                SavedInDeclMode = Cfg.DeclMode
+            End If
+
 
             Mass = JSON.Content("Body")("CurbWeight")
             MassExtra = JSON.Content("Body")("CurbWeightExtra")
@@ -255,6 +267,9 @@ Public Class cVEH
 
         'Body
         dic = New Dictionary(Of String, Object)
+
+        dic.Add("SavedInDeclMode", Cfg.DeclMode)
+        SavedInDeclMode = Cfg.DeclMode
 
         dic.Add("VehCat", ConvVehCat(VehCat, False))
 

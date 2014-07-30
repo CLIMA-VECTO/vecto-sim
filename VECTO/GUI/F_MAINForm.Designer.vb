@@ -64,21 +64,23 @@ Partial Class F_MAINForm
         Me.ButtonDRIremove = New System.Windows.Forms.Button()
         Me.ButtonDRIadd = New System.Windows.Forms.Button()
         Me.TabPgOptions = New System.Windows.Forms.TabPage()
-        Me.GrBoxSTD = New System.Windows.Forms.GroupBox()
         Me.GrBoxBATCH = New System.Windows.Forms.GroupBox()
         Me.ChBoxBatchSubD = New System.Windows.Forms.CheckBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.ButBObrowse = New System.Windows.Forms.Button()
         Me.CbBOmode = New System.Windows.Forms.ComboBox()
         Me.TbBOpath = New System.Windows.Forms.TextBox()
+        Me.GrBoxSTD = New System.Windows.Forms.GroupBox()
         Me.ChBoxAutoSD = New System.Windows.Forms.CheckBox()
         Me.PanelOptAllg = New System.Windows.Forms.Panel()
-        Me.CbDecl = New System.Windows.Forms.CheckBox()
+        Me.ChBoxModOut = New System.Windows.Forms.CheckBox()
+        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.RbDev = New System.Windows.Forms.RadioButton()
+        Me.RbDecl = New System.Windows.Forms.RadioButton()
         Me.PnDeclOpt = New System.Windows.Forms.Panel()
         Me.CbBatch = New System.Windows.Forms.CheckBox()
         Me.ChBoxCyclDistCor = New System.Windows.Forms.CheckBox()
         Me.ChBoxUseGears = New System.Windows.Forms.CheckBox()
-        Me.ChBoxModOut = New System.Windows.Forms.CheckBox()
         Me.TabPageDEV = New System.Windows.Forms.TabPage()
         Me.LvDEVoptions = New System.Windows.Forms.ListView()
         Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -133,6 +135,7 @@ Partial Class F_MAINForm
         Me.TabPgOptions.SuspendLayout()
         Me.GrBoxBATCH.SuspendLayout()
         Me.PanelOptAllg.SuspendLayout()
+        Me.GroupBox1.SuspendLayout()
         Me.PnDeclOpt.SuspendLayout()
         Me.TabPageDEV.SuspendLayout()
         Me.ConMenFilelist.SuspendLayout()
@@ -466,8 +469,8 @@ Partial Class F_MAINForm
         '
         'TabPgOptions
         '
-        Me.TabPgOptions.Controls.Add(Me.GrBoxSTD)
         Me.TabPgOptions.Controls.Add(Me.GrBoxBATCH)
+        Me.TabPgOptions.Controls.Add(Me.GrBoxSTD)
         Me.TabPgOptions.Controls.Add(Me.ChBoxAutoSD)
         Me.TabPgOptions.Controls.Add(Me.PanelOptAllg)
         Me.TabPgOptions.Location = New System.Drawing.Point(4, 22)
@@ -477,18 +480,6 @@ Partial Class F_MAINForm
         Me.TabPgOptions.TabIndex = 2
         Me.TabPgOptions.Text = "Options"
         Me.TabPgOptions.UseVisualStyleBackColor = True
-        '
-        'GrBoxSTD
-        '
-        Me.GrBoxSTD.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GrBoxSTD.Location = New System.Drawing.Point(6, 182)
-        Me.GrBoxSTD.Name = "GrBoxSTD"
-        Me.GrBoxSTD.Size = New System.Drawing.Size(1106, 158)
-        Me.GrBoxSTD.TabIndex = 14
-        Me.GrBoxSTD.TabStop = False
-        Me.GrBoxSTD.Text = "Standard Options"
         '
         'GrBoxBATCH
         '
@@ -500,9 +491,9 @@ Partial Class F_MAINForm
         Me.GrBoxBATCH.Controls.Add(Me.ButBObrowse)
         Me.GrBoxBATCH.Controls.Add(Me.CbBOmode)
         Me.GrBoxBATCH.Controls.Add(Me.TbBOpath)
-        Me.GrBoxBATCH.Location = New System.Drawing.Point(6, 182)
+        Me.GrBoxBATCH.Location = New System.Drawing.Point(6, 224)
         Me.GrBoxBATCH.Name = "GrBoxBATCH"
-        Me.GrBoxBATCH.Size = New System.Drawing.Size(1106, 158)
+        Me.GrBoxBATCH.Size = New System.Drawing.Size(1106, 116)
         Me.GrBoxBATCH.TabIndex = 5
         Me.GrBoxBATCH.TabStop = False
         Me.GrBoxBATCH.Text = "Batch Options"
@@ -555,10 +546,23 @@ Partial Class F_MAINForm
         Me.TbBOpath.Size = New System.Drawing.Size(818, 20)
         Me.TbBOpath.TabIndex = 1
         '
+        'GrBoxSTD
+        '
+        Me.GrBoxSTD.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GrBoxSTD.Location = New System.Drawing.Point(6, 224)
+        Me.GrBoxSTD.Name = "GrBoxSTD"
+        Me.GrBoxSTD.Size = New System.Drawing.Size(1106, 116)
+        Me.GrBoxSTD.TabIndex = 14
+        Me.GrBoxSTD.TabStop = False
+        Me.GrBoxSTD.Text = "Standard Options"
+        '
         'ChBoxAutoSD
         '
+        Me.ChBoxAutoSD.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.ChBoxAutoSD.AutoSize = True
-        Me.ChBoxAutoSD.Location = New System.Drawing.Point(246, 16)
+        Me.ChBoxAutoSD.Location = New System.Drawing.Point(943, 6)
         Me.ChBoxAutoSD.Name = "ChBoxAutoSD"
         Me.ChBoxAutoSD.Size = New System.Drawing.Size(169, 17)
         Me.ChBoxAutoSD.TabIndex = 13
@@ -567,30 +571,66 @@ Partial Class F_MAINForm
         '
         'PanelOptAllg
         '
-        Me.PanelOptAllg.Controls.Add(Me.CbDecl)
-        Me.PanelOptAllg.Controls.Add(Me.PnDeclOpt)
         Me.PanelOptAllg.Controls.Add(Me.ChBoxModOut)
+        Me.PanelOptAllg.Controls.Add(Me.GroupBox1)
+        Me.PanelOptAllg.Controls.Add(Me.PnDeclOpt)
         Me.PanelOptAllg.Location = New System.Drawing.Point(6, 6)
         Me.PanelOptAllg.Name = "PanelOptAllg"
-        Me.PanelOptAllg.Size = New System.Drawing.Size(220, 170)
+        Me.PanelOptAllg.Size = New System.Drawing.Size(358, 212)
         Me.PanelOptAllg.TabIndex = 0
         '
-        'CbDecl
+        'ChBoxModOut
         '
-        Me.CbDecl.AutoSize = True
-        Me.CbDecl.Location = New System.Drawing.Point(14, 10)
-        Me.CbDecl.Name = "CbDecl"
-        Me.CbDecl.Size = New System.Drawing.Size(110, 17)
-        Me.CbDecl.TabIndex = 15
-        Me.CbDecl.Text = "Declaration Mode"
-        Me.CbDecl.UseVisualStyleBackColor = True
+        Me.ChBoxModOut.AutoSize = True
+        Me.ChBoxModOut.Checked = True
+        Me.ChBoxModOut.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.ChBoxModOut.Location = New System.Drawing.Point(9, 180)
+        Me.ChBoxModOut.Name = "ChBoxModOut"
+        Me.ChBoxModOut.Size = New System.Drawing.Size(115, 17)
+        Me.ChBoxModOut.TabIndex = 0
+        Me.ChBoxModOut.Text = "Write modal results"
+        Me.ChBoxModOut.UseVisualStyleBackColor = True
+        '
+        'GroupBox1
+        '
+        Me.GroupBox1.Controls.Add(Me.RbDev)
+        Me.GroupBox1.Controls.Add(Me.RbDecl)
+        Me.GroupBox1.Location = New System.Drawing.Point(3, 3)
+        Me.GroupBox1.Name = "GroupBox1"
+        Me.GroupBox1.Size = New System.Drawing.Size(121, 72)
+        Me.GroupBox1.TabIndex = 15
+        Me.GroupBox1.TabStop = False
+        Me.GroupBox1.Text = "Mode"
+        '
+        'RbDev
+        '
+        Me.RbDev.AutoSize = True
+        Me.RbDev.Checked = True
+        Me.RbDev.Location = New System.Drawing.Point(6, 42)
+        Me.RbDev.Name = "RbDev"
+        Me.RbDev.Size = New System.Drawing.Size(111, 17)
+        Me.RbDev.TabIndex = 1
+        Me.RbDev.TabStop = True
+        Me.RbDev.Text = "Engineering Mode"
+        Me.RbDev.UseVisualStyleBackColor = True
+        '
+        'RbDecl
+        '
+        Me.RbDecl.AutoSize = True
+        Me.RbDecl.Location = New System.Drawing.Point(6, 19)
+        Me.RbDecl.Name = "RbDecl"
+        Me.RbDecl.Size = New System.Drawing.Size(109, 17)
+        Me.RbDecl.TabIndex = 0
+        Me.RbDecl.TabStop = True
+        Me.RbDecl.Text = "Declaration Mode"
+        Me.RbDecl.UseVisualStyleBackColor = True
         '
         'PnDeclOpt
         '
         Me.PnDeclOpt.Controls.Add(Me.CbBatch)
         Me.PnDeclOpt.Controls.Add(Me.ChBoxCyclDistCor)
         Me.PnDeclOpt.Controls.Add(Me.ChBoxUseGears)
-        Me.PnDeclOpt.Location = New System.Drawing.Point(8, 38)
+        Me.PnDeclOpt.Location = New System.Drawing.Point(3, 81)
         Me.PnDeclOpt.Name = "PnDeclOpt"
         Me.PnDeclOpt.Size = New System.Drawing.Size(202, 93)
         Me.PnDeclOpt.TabIndex = 13
@@ -624,18 +664,6 @@ Partial Class F_MAINForm
         Me.ChBoxUseGears.TabIndex = 0
         Me.ChBoxUseGears.Text = "Use gears/rpm's form driving cycle"
         Me.ChBoxUseGears.UseVisualStyleBackColor = True
-        '
-        'ChBoxModOut
-        '
-        Me.ChBoxModOut.AutoSize = True
-        Me.ChBoxModOut.Checked = True
-        Me.ChBoxModOut.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.ChBoxModOut.Location = New System.Drawing.Point(14, 137)
-        Me.ChBoxModOut.Name = "ChBoxModOut"
-        Me.ChBoxModOut.Size = New System.Drawing.Size(115, 17)
-        Me.ChBoxModOut.TabIndex = 0
-        Me.ChBoxModOut.Text = "Write modal results"
-        Me.ChBoxModOut.UseVisualStyleBackColor = True
         '
         'TabPageDEV
         '
@@ -988,6 +1016,8 @@ Partial Class F_MAINForm
         Me.GrBoxBATCH.PerformLayout()
         Me.PanelOptAllg.ResumeLayout(False)
         Me.PanelOptAllg.PerformLayout()
+        Me.GroupBox1.ResumeLayout(False)
+        Me.GroupBox1.PerformLayout()
         Me.PnDeclOpt.ResumeLayout(False)
         Me.PnDeclOpt.PerformLayout()
         Me.TabPageDEV.ResumeLayout(False)
@@ -1090,9 +1120,11 @@ Partial Class F_MAINForm
     Friend WithEvents GrBoxSTD As System.Windows.Forms.GroupBox
     Friend WithEvents PnDeclOpt As System.Windows.Forms.Panel
     Friend WithEvents LbDecl As System.Windows.Forms.Label
-    Friend WithEvents CbDecl As System.Windows.Forms.CheckBox
     Friend WithEvents GraphToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents OpenInGraphWindowToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CbBatch As System.Windows.Forms.CheckBox
+    Friend WithEvents RbDev As System.Windows.Forms.RadioButton
+    Friend WithEvents RbDecl As System.Windows.Forms.RadioButton
+    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
 
 End Class

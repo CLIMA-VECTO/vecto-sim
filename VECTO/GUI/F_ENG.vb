@@ -149,6 +149,19 @@ Public Class F_ENG
             Exit Sub
         End If
 
+        If Cfg.DeclMode <> ENG0.SavedInDeclMode Then
+            Select Case WrongMode()
+                Case 1
+                    Me.Close()
+                    F_MAINForm.RbDecl.Checked = Not F_MAINForm.RbDecl.Checked
+                    F_MAINForm.OpenVectoFile(file)
+                Case -1
+                    Exit Sub
+                Case Else '0
+                    'Continue...
+            End Select
+        End If
+
         Me.TbName.Text = ENG0.ModelName
         Me.TbDispl.Text = ENG0.Displ.ToString
         Me.TbInertia.Text = ENG0.I_mot.ToString

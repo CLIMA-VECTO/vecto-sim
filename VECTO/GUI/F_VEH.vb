@@ -318,6 +318,19 @@ Public Class F_VEH
             Exit Sub
         End If
 
+        If Cfg.DeclMode <> VEH0.SavedInDeclMode Then
+            Select Case WrongMode()
+                Case 1
+                    Me.Close()
+                    F_MAINForm.RbDecl.Checked = Not F_MAINForm.RbDecl.Checked
+                    F_MAINForm.OpenVectoFile(file)
+                Case -1
+                    Exit Sub
+                Case Else '0
+                    'Continue...
+            End Select
+        End If
+
         Me.TbMass.Text = VEH0.Mass
         Me.TbMassExtra.Text = VEH0.MassExtra
         Me.TbLoad.Text = VEH0.Loading

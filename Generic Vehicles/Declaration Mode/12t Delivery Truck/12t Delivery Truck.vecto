@@ -1,14 +1,20 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (50e1b2d7-43a7-42d0-97c3-d8d48709e28c)",
-    "Date": "23.04.2014 16:59:20",
-    "AppVersion": "1.5.0-pre0",
-    "FileVersion": 1
+    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
+    "Date": "29.07.2014 16:58:58",
+    "AppVersion": "2.0.4-beta",
+    "FileVersion": 2
   },
   "Body": {
+    "SavedInDeclMode": true,
     "VehicleFile": "12t Delivery Truck.vveh",
     "EngineFile": "12t Delivery Truck.veng",
     "GearboxFile": "12t Delivery Truck.vgbx",
+    "Cycles": [
+      "Long Haul",
+      "Regional Delivery",
+      "Urban Delivery"
+    ],
     "Aux": [
       {
         "ID": "FAN",
