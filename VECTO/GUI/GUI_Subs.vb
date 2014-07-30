@@ -234,4 +234,48 @@ Module GUI_Subs
 
     End Function
 
+    Public Function WrongMode() As Integer
+
+        If Cfg.DeclMode Then
+
+            Select Case MsgBox("This file was created in Engineering Mode! Opening in Declaration Mode will overwrite some parameters with generic values." & vbCrLf & vbCrLf & _
+             "Do you want to switch to Engineering Mode?" & vbCrLf & vbCrLf & _
+             "[Yes] Switch mode and open file" & vbCrLf & _
+             "[No] Open file without changing mode" & vbCrLf & _
+             "[Cancel] Abort opening file" _
+             , MsgBoxStyle.YesNoCancel, "Warning")
+                Case MsgBoxResult.Yes
+                    Return 1
+
+                Case (MsgBoxResult.No)
+                    Return 0
+
+                Case Else
+                    Return -1
+
+            End Select
+
+        Else
+
+            Select Case MsgBox("This file was created in Declaration Mode! For use in Engineering Mode missing parameters must be defined." & vbCrLf & vbCrLf & _
+                      "Do you want to switch to Declaration Mode?" & vbCrLf & vbCrLf & _
+                      "[Yes] Switch mode and open file" & vbCrLf & _
+                      "[No] Open file without changing mode" & vbCrLf & _
+                      "[Cancel] Abort opening file" _
+                      , MsgBoxStyle.YesNoCancel, "Warning")
+                Case MsgBoxResult.Yes
+                    Return 1
+
+                Case (MsgBoxResult.No)
+                    Return 0
+
+                Case Else
+                    Return -1
+
+            End Select
+
+        End If
+
+    End Function
+
 End Module

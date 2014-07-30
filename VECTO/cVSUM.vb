@@ -342,7 +342,7 @@ Class cVSUM
 
 
         If Cfg.DeclMode Then
-            dic.Add("Cycle", Declaration.CurrentMission.NameStr)
+            If Not Declaration.CurrentMission Is Nothing Then dic.Add("Cycle", Declaration.CurrentMission.NameStr)
             dic.Add("Loading", ConvLoading(Declaration.CurrentLoading))
         Else
             dic.Add("Cycle", CycleFilename)

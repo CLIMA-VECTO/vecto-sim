@@ -13,7 +13,7 @@ Imports System.Collections.Generic
 
 Public Class cVECTO
 
-    Private Const FormatVersion As Short = 1
+    Private Const FormatVersion As Short = 2
     Private FileVersion As Short
 
     Private sFilePath As String
@@ -55,6 +55,8 @@ Public Class cVECTO
     Public EcoRollOn As Boolean
 
     Private MyFileList As List(Of String)
+
+    Public SavedInDeclMode As Boolean
 
 
     Public Class cAuxEntry
@@ -172,6 +174,9 @@ Public Class cVECTO
         'Body
         dic0 = New Dictionary(Of String, Object)
 
+        dic0.Add("SavedInDeclMode", Cfg.DeclMode)
+        SavedInDeclMode = Cfg.DeclMode
+
         'Main Files
         dic0.Add("VehicleFile", stPathVEH.PathOrDummy)
         dic0.Add("EngineFile", stPathENG.PathOrDummy)
@@ -265,6 +270,12 @@ Public Class cVECTO
         Try
 
             FileVersion = JSON.Content("Header")("FileVersion")
+
+            If FileVersion > 1 Then
+                SavedInDeclMode = JSON.Content("Body")("SavedInDeclMode")
+            Else
+                SavedInDeclMode = Cfg.DeclMode
+            End If
 
             If Not JSON.Content("Body")("VehicleFile") Is Nothing Then stPathVEH.Init(MyPath, JSON.Content("Body")("VehicleFile"))
 
@@ -410,6 +421,8 @@ Public Class cVECTO
         OverSpeed = 0
         UnderSpeed = 0
         vMinLA = 0
+
+        SavedInDeclMode = False
 
     End Sub
 

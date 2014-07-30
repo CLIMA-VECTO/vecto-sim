@@ -20,7 +20,6 @@ Module M_MAIN
     Public JobCycleList As List(Of String)
 
     Public JobFile As String
-    Public GenFile As String
     Public CycleFiles As New List(Of String)
     Public CurrentCycleFile As String
 
@@ -156,8 +155,6 @@ lbSkip0:
 
 
             JobFile = fFileRepl(JobFileList(iJob))
-
-            GenFile = JobFile
 
             WorkerMsg(tMsgID.NewJob, "Job: " & (iJob * (CyclesDim + 1) + iCycle + 1) & " / " & ((FilesDim + 1) * (CyclesDim + 1)) & " | " & fFILE(JobFile, True), MsgSrc)
             WorkerStatus("Current Job: " & (iJob * (CyclesDim + 1) + iCycle + 1) & " / " & ((FilesDim + 1) * (CyclesDim + 1)) & " | " & fFILE(JobFile, True))
@@ -508,7 +505,7 @@ lbAusg:
                         End If
 
                         'VSUM Output (first Calculation - Initialization & Header)
-                        If Not VSUM.WriteVSUM(iJob * (CyclesDim + 1) + iCycle + 1, fFILE(GenFile, True), fFILE(CurrentCycleFile, True), CyclAbrtedByErr) Then GoTo lbErrInJobLoop
+                        If Not VSUM.WriteVSUM(iJob * (CyclesDim + 1) + iCycle + 1, fFILE(JobFile, True), fFILE(CurrentCycleFile, True), CyclAbrtedByErr) Then GoTo lbErrInJobLoop
 
                         'Data Cleanup
                         MODdata.CleanUp()
@@ -549,9 +546,9 @@ lbNextJob:
 
                 If JobAbortedByErr Then
                     If CInt(iJob * (CyclesDim + 1) + 1) = CInt((iJob + 1) * (CyclesDim + 1)) Then
-                        VSUM.WriteVSUM(((iJob + 1) * (CyclesDim + 1)).ToString, fFILE(GenFile, True), "-", True)
+                        VSUM.WriteVSUM(((iJob + 1) * (CyclesDim + 1)).ToString, fFILE(JobFile, True), "-", True)
                     Else
-                        VSUM.WriteVSUM((iJob * (CyclesDim + 1) + 1).ToString & ".." & ((iJob + 1) * (CyclesDim + 1)).ToString, fFILE(GenFile, True), "-", True)
+                        VSUM.WriteVSUM((iJob * (CyclesDim + 1) + 1).ToString & ".." & ((iJob + 1) * (CyclesDim + 1)).ToString, fFILE(JobFile, True), "-", True)
                     End If
                 End If
 
@@ -675,31 +672,41 @@ lbExit:
 
     Public Function ReadFiles() As Boolean
         Dim sb As cSubPath
+        Dim OtherModeString As String
 
 
         Dim MsgSrc As String
 
         MsgSrc = "Main/ReadInp"
 
-        '-----------------------------    ~GEN~    -----------------------------
-        'Read GEN
-        If UCase(fEXT(GenFile)) <> ".VECTO" Then
+        If Cfg.DeclMode Then
+            OtherModeString = "Engineering"
+        Else
+            OtherModeString = "Declaration"
+        End If
+
+        '-----------------------------    ~VECTO~    -----------------------------
+        'Read Job file
+        If UCase(fEXT(JobFile)) <> ".VECTO" Then
             WorkerMsg(tMsgID.Err, "Only .VECTO files are supported in this mode", MsgSrc)
             Return False
         End If
 
         VEC = New cVECTO
-        VEC.FilePath = GenFile
+        VEC.FilePath = JobFile
 
         Try
             If Not VEC.ReadFile() Then
-                WorkerMsg(tMsgID.Err, "Cannot read .vecto file (" & GenFile & ")", MsgSrc)
+                WorkerMsg(tMsgID.Err, "Cannot read .vecto file (" & JobFile & ")", MsgSrc)
                 Return False
             End If
         Catch ex As Exception
-            WorkerMsg(tMsgID.Err, "File read error! (" & GenFile & ")", MsgSrc, GenFile)
+            WorkerMsg(tMsgID.Err, "File read error! (" & JobFile & ")", MsgSrc, JobFile)
             Return False
         End Try
+
+        'Check if file was saved in different mode
+        If Cfg.DeclMode <> VEC.SavedInDeclMode Then WorkerMsg(tMsgID.Warn, "Job file was created in " & OtherModeString & " Mode! Some parameters might be missing and cause errors.", MsgSrc, "<GUI>" & JobFile)
 
 
         '-----------------------------    ~VEH~    -----------------------------
@@ -715,8 +722,12 @@ lbExit:
                 Return False
             End Try
 
+            'Check if file was saved in different mode
+            If Cfg.DeclMode <> VEH.SavedInDeclMode Then WorkerMsg(tMsgID.Warn, "Vehicle file was created in " & OtherModeString & " Mode! Some parameters might be missing and cause errors.", MsgSrc, "<GUI>" & VEC.PathVEH)
+
         End If
 
+   
         If Cfg.DeclMode Then
             If Not Declaration.SetRef() Then
                 WorkerMsg(tMsgID.Err, "Vehicle Configuration not found in Segment Table!", MsgSrc)
@@ -750,6 +761,10 @@ lbExit:
             Return False
         End Try
 
+        'Check if file was saved in different mode
+        If Cfg.DeclMode <> ENG.SavedInDeclMode Then WorkerMsg(tMsgID.Warn, "Engine file was created in " & OtherModeString & " Mode! Some parameters might be missing and cause errors.", MsgSrc, "<GUI>" & VEC.PathENG)
+
+
 
         '-----------------------------    ~GBX~    -----------------------------
         GBX = New cGBX
@@ -763,6 +778,9 @@ lbExit:
                 WorkerMsg(tMsgID.Err, "File read error! (" & VEC.PathGBX & ")", MsgSrc, VEC.PathGBX)
                 Return False
             End Try
+
+            'Check if file was saved in different mode
+            If Cfg.DeclMode <> GBX.SavedInDeclMode Then WorkerMsg(tMsgID.Warn, "Gearbox file was created in " & OtherModeString & " Mode! Some parameters might be missing and cause errors.", MsgSrc, "<GUI>" & VEC.PathGBX)
 
         End If
 

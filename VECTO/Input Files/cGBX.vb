@@ -12,7 +12,7 @@ Imports System.Collections.Generic
 
 Public Class cGBX
 
-    Private Const FormatVersion As Short = 3
+    Private Const FormatVersion As Short = 4
     Private FileVersion As Short
 
     Private MyPath As String
@@ -70,6 +70,7 @@ Public Class cGBX
 
 
     Private MyFileList As List(Of String)
+    Public SavedInDeclMode As Boolean
 
 
     Public Function CreateFileList() As Boolean
@@ -136,6 +137,8 @@ Public Class cGBX
 
         TCinertia = 0
 
+        SavedInDeclMode = False
+
     End Sub
 
     Public Function SaveFile() As Boolean
@@ -155,6 +158,9 @@ Public Class cGBX
 
         'Body
         dic = New Dictionary(Of String, Object)
+
+        dic.Add("SavedInDeclMode", Cfg.DeclMode)
+        SavedInDeclMode = Cfg.DeclMode
 
         dic.Add("ModelName", ModelName)
 
@@ -218,6 +224,12 @@ Public Class cGBX
         Try
 
             FileVersion = JSON.Content("Header")("FileVersion")
+
+            If FileVersion > 3 Then
+                SavedInDeclMode = JSON.Content("Body")("SavedInDeclMode")
+            Else
+                SavedInDeclMode = Cfg.DeclMode
+            End If
 
             ModelName = JSON.Content("Body")("ModelName")
             GbxInertia = JSON.Content("Body")("Inertia")

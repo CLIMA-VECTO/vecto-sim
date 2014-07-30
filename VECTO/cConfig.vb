@@ -20,7 +20,7 @@ Public Class cConfig
     Public GnUfromCycle As Boolean
     Public BatchMode As Boolean
     Public ModOut As Boolean
-    Public BATCHoutpath As String   'Ausgabepfad für BATCH-Modus:   <WORKDIR>, <GENPATH> oder Pfad
+    Public BATCHoutpath As String   'Output path for BATCH Mode
     Public BATCHoutSubD As Boolean
     Public DistCorr As Boolean
     Public LogSize As Single

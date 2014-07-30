@@ -200,6 +200,19 @@ Public Class F_GBX
             Exit Sub
         End If
 
+        If Cfg.DeclMode <> GBX0.SavedInDeclMode Then
+            Select Case WrongMode()
+                Case 1
+                    Me.Close()
+                    F_MAINForm.RbDecl.Checked = Not F_MAINForm.RbDecl.Checked
+                    F_MAINForm.OpenVectoFile(file)
+                Case -1
+                    Exit Sub
+                Case Else '0
+                    'Continue...
+            End Select
+        End If
+
         Me.TbName.Text = GBX0.ModelName
         Me.TbTracInt.Text = GBX0.TracIntrSi.ToString
         Me.TBI_getr.Text = GBX0.GbxInertia.ToString

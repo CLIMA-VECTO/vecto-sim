@@ -2,6 +2,11 @@
 ### VECTO x.x (current source)
 
 
+### VECTO 2.0.4-beta
+* AT update for 1C2C gearboxes
+* Warning when opening or running files if file was created in different mode (Declaration/Engineering Mode)
+
+
 ### VECTO 2.0.3-beta0
 * Implemented engine-side TC inertia input parameter in GBX file
 * Updated User Manual for TC inertia

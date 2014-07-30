@@ -353,6 +353,20 @@ Public Class F_VECTO
             Exit Sub
         End Try
 
+        If Cfg.DeclMode <> VEC0.SavedInDeclMode Then
+            Select Case WrongMode()
+                Case 1
+                    Me.Close()
+                    F_MAINForm.RbDecl.Checked = Not F_MAINForm.RbDecl.Checked
+                    F_MAINForm.OpenVectoFile(file)
+                Case -1
+                    Exit Sub
+                Case Else '0
+                    'Continue...
+            End Select
+        End If
+
+
         'Update Form
 
         'Files -----------------------------

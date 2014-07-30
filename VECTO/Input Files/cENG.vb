@@ -20,7 +20,7 @@ Public Class cENG
     ''' Current format version
     ''' </summary>
     ''' <remarks></remarks>
-    Private Const FormatVersion As Short = 1
+    Private Const FormatVersion As Short = 2
 
     ''' <summary>
     ''' Format version of input file. Defined in ReadFile.
@@ -118,6 +118,9 @@ Public Class cENG
     ''' <remarks></remarks>
     Public Pmax As Single
 
+    Public SavedInDeclMode As Boolean
+
+
     ''' <summary>
     ''' Generates list of all sub input files (e.g. FC map). Sets MyFileList.
     ''' </summary>
@@ -172,6 +175,7 @@ Public Class cENG
         WHTCrural = 0
         WHTCmw = 0
 
+        SavedInDeclMode = False
 
     End Sub
 
@@ -197,6 +201,9 @@ Public Class cENG
 
         'Body
         dic = New Dictionary(Of String, Object)
+
+        dic.Add("SavedInDeclMode", Cfg.DeclMode)
+        SavedInDeclMode = Cfg.DeclMode
 
         dic.Add("ModelName", ModelName)
 
@@ -249,6 +256,12 @@ Public Class cENG
         Try
 
             FileVersion = JSON.Content("Header")("FileVersion")
+
+            If FileVersion > 1 Then
+                SavedInDeclMode = JSON.Content("Body")("SavedInDeclMode")
+            Else
+                SavedInDeclMode = Cfg.DeclMode
+            End If
 
             ModelName = JSON.Content("Body")("ModelName")
 
