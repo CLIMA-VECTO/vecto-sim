@@ -1,14 +1,15 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (50e1b2d7-43a7-42d0-97c3-d8d48709e28c)",
-    "Date": "24.04.2014 12:59:10",
-    "AppVersion": "1.5.0-pre1",
-    "FileVersion": 2
+    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
+    "Date": "29.07.2014 16:59:06",
+    "AppVersion": "2.0.4-beta",
+    "FileVersion": 4
   },
   "Body": {
+    "SavedInDeclMode": true,
     "ModelName": "Generic 40t Long Haul Truck",
     "Inertia": 0.0,
-    "TracInt": 2.0,
+    "TracInt": 1.0,
     "Gears": [
       {
         "Ratio": 2.59,
@@ -89,7 +90,7 @@
     ],
     "TqReserve": 20.0,
     "SkipGears": true,
-    "ShiftTime": 3,
+    "ShiftTime": 2,
     "EaryShiftUp": true,
     "StartTqReserve": 20.0,
     "StartSpeed": 2.0,
@@ -98,7 +99,8 @@
     "TorqueConverter": {
       "Enabled": false,
       "File": "<NOFILE>",
-      "RefRPM": 0.0
+      "RefRPM": 0.0,
+      "Inertia": 0.0
     }
   }
 }
