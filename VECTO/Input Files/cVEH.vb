@@ -134,6 +134,21 @@ Public Class cVEH
 
     End Sub
 
+    Public Function Validate() As Boolean
+        Dim MsgSrc As String
+        Dim Check As Boolean = True
+
+        MsgSrc = "VEH/Validate"
+
+        If rdyn < 100 Then
+            WorkerMsg(tMsgID.Err, "Parameter 'Dynamic Tire Radius' is invalid (" & rdyn & "mm).", MsgSrc, sFilePath)
+            Check = False
+        End If
+
+        Return Check
+
+    End Function
+
     Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
         Dim Itemp As Single
         Dim a0 As cAxle

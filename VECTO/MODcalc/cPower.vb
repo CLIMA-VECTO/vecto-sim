@@ -901,7 +901,7 @@ lbCheck:
                     '*** Start: Revolutions Check
 
                     'Check whether Revolutions too high! => Speed Reduction
-                    Do While nU > 1.2 * (ENG.Nrated - ENG.Nidle) + ENG.Nidle
+                    Do While Gear < GBX.GearCount AndAlso nU > 1.2 * (ENG.Nrated - ENG.Nidle) + ENG.Nidle
                         Gear += 1
                         nU = fnU(Vact, Gear, Clutch = tEngClutch.Slipping)
                     Loop
@@ -1799,6 +1799,7 @@ lb_nOK:
         Dim PlusGearLockUp As Boolean
         Dim MinusGearTC As Boolean
         Dim iRatio As Single
+        Dim n As Single
 
         'First time step (for vehicles with TC always the first gear is used)
         If t = 0 Then Return fStartGear(0, Grad)
@@ -1828,33 +1829,33 @@ lb_nOK:
             MinusGearTC = False
         End If
 
-        'Rpm
-        nU = MODdata.nU(t - 1)
-
-        If LastGear < GBX.GearCount AndAlso Not GBX.IsTCgear(LastGear + 1) Then
-            nUnext = Vact * 60.0 * GBX.Igetr(0) * GBX.Igetr(LastGear + 1) / (2 * VEH.rdyn * Math.PI / 1000)
-        Else
-            nUnext = 0
-        End If
-
-        OutOfRpmRange = (nU >= 1.2 * (ENG.Nrated - ENG.Nidle) + ENG.Nidle)
-
         '2C-to-1C
-        If MinusGearTC Then
+        If MinusGearTC And GBX.IsTCgear(LastGear) Then
             If fnUout(Vact, LastGear) <= ENG.Nidle Then
                 Return LastGear - 1
             End If
         End If
 
-        'No gear change 3s after last one -except rpm out of range
-        If Not PlusGearLockUp Then
+        If LastGear < GBX.GearCount AndAlso PlusGearLockUp Then
+            nUnext = Vact * 60.0 * GBX.Igetr(0) * GBX.Igetr(LastGear + 1) / (2 * VEH.rdyn * Math.PI / 1000)
+        Else
+            nUnext = 0
+        End If
+
+        'nU
+        If GBX.IsTCgear(LastGear) Then
+            n = MODdata.TCnu(t - 1)
+            nU = (Vact * 60.0 * GBX.Igetr(0) * GBX.Igetr(LastGear) / (2 * VEH.rdyn * Math.PI / 1000)) / n
+        Else
+            nU = Vact * 60.0 * GBX.Igetr(0) * GBX.Igetr(LastGear) / (2 * VEH.rdyn * Math.PI / 1000)
+            OutOfRpmRange = (nU >= 1.2 * (ENG.Nrated - ENG.Nidle) + ENG.Nidle) Or nU < ENG.Nidle
+            'No gear change 3s after last one -except rpm out of range
             If Not OutOfRpmRange AndAlso t - LastGearChange <= GBX.gs_ShiftTime And t > GBX.gs_ShiftTime - 1 Then Return LastGear
         End If
 
         'previous power demand
         LastPe = MODdata.Pe(t - 1)
-
-        'previous torque demand
+        'Torque
         Tq = LastPe * 1000 / (nU * 2 * Math.PI / 60)
 
         'Up/Downshift rpms
