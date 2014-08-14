@@ -1112,7 +1112,7 @@ lb_nOK:
             If VECTOworker.CancellationPending Then Return True
 
             'Check whether P above Full-load => Reduce Speed
-            If Pplus And P > Pmax Then
+            If P > Pmax Then
                 If EngState0 = tEngState.Load Or EngState0 = tEngState.FullLoad Then
                     If Vact > 0.01 Then
                         Vh.ReduceSpeed(jz, 0.9999)
