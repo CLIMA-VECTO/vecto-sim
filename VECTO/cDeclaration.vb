@@ -582,6 +582,9 @@ Public Class cDeclaration
             Return False
         End If
 
+        'Skip Header
+        file.ReadLine()
+
         Try
 
             Do While Not file.EndOfFile
@@ -608,6 +611,9 @@ Public Class cDeclaration
             GUImsg(tMsgID.Err, "Failed to load Declaration Config (Wheels table)!")
             Return False
         End If
+
+        'Skip Header
+        file.ReadLine()
 
         Try
 
@@ -640,6 +646,9 @@ Public Class cDeclaration
             GUImsg(tMsgID.Err, "Failed to load Declaration Config (Rims table)!")
             Return False
         End If
+
+        'Skip Header
+        file.ReadLine()
 
         Try
 

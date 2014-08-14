@@ -439,7 +439,7 @@ Public Class cGBX
 
         Dim MsgSrc As String
 
-        MsgSrc = "GBX/TCiteration/t= " & t
+        MsgSrc = "GBX/TCiteration/t= " & t + 1
 
         TC_PeBrake = 0
         TCReduce = False

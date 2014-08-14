@@ -725,6 +725,8 @@ lbExit:
             'Check if file was saved in different mode
             If Cfg.DeclMode <> VEH.SavedInDeclMode Then WorkerMsg(tMsgID.Warn, "Vehicle file was created in " & OtherModeString & " Mode! Some parameters might be missing and cause errors.", MsgSrc, "<GUI>" & VEC.PathVEH)
 
+            If Not VEH.Validate Then Return False
+
         End If
 
    
