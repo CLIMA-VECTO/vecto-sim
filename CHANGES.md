@@ -8,6 +8,8 @@
 * Various bugfixes in AT model
 * rdyn validation
 * Fixed bug in map interpolation
+* Added ..\Developer Guide\Segment Table Description.xlsx
+* Fixed bug that caused engine power > full load
 
 ### VECTO 2.0.4-beta
 * AT update for 1C2C gearboxes
