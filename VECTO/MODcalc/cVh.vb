@@ -270,7 +270,10 @@ Public Class cVh
         End If
     End Sub
 
-    Public Sub ReduceSpeed(ByVal t As Integer, ByVal p As Single)
+    Public Function ReduceSpeed(ByVal t As Integer, ByVal p As Single) As Boolean
+
+        If lV0(t + 1) = 0 Then Return False
+
         lV0(t + 1) *= p
         lV(t) = (lV0(t + 1) + lV0(t)) / 2
         la(t) = lV0(t + 1) - lV0(t)
@@ -278,7 +281,10 @@ Public Class cVh
             lV(t + 1) = (lV0(t + 2) + lV0(t + 1)) / 2
             la(t + 1) = lV0(t + 2) - lV0(t + 1)
         End If
-    End Sub
+
+        Return True
+
+    End Function
 
 
     Public Sub SetMaxAcc(ByVal t As Integer)
