@@ -3,6 +3,11 @@
 
 
 
+### VECTO 2.0.4-beta2
+* Bugfix: VECTO freezed if torque converter creeping was not possible due to low full load torque. Now it will abort with error message.
+* Bugfix: Small fixes in torque converter model
+
+
 ### VECTO 2.0.4-beta1
 * Updated CSV format of some declaration config files
 * Various bugfixes in AT model

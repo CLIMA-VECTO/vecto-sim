@@ -469,6 +469,16 @@ Public Class cGBX
             nuMax = Math.Min(TCnuMax, nUout / ENG.Nidle)
         End If
 
+        If nuMax <= nuMin Then
+            TCReduce = True
+            Return True
+        End If
+
+        'Reduce step size if nu-range is too low
+        Do While (nuMax - nuMin) / nuStep < 10
+            nuStep *= 0.1
+        Loop
+
         FirstDone = False
         nu = nuMin - nuStep
         iDim = -1
@@ -507,7 +517,7 @@ Public Class cGBX
             'Min
             Min = Mout / mu
 
-            'Correct Min if too high
+            'Check if Min is too high
             If Min > MinMax Then Continue Do
 
             'Calculated output torque for given mu

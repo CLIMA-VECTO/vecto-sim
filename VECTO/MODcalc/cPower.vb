@@ -11,7 +11,7 @@
 Imports System.Collections.Generic
 
 Public Class cPower
- 
+
     Private ClutchNorm As Single    'Normalized clutch speed
     Private ClutchEta As Single       'clutch efficiency
 
@@ -71,14 +71,12 @@ Public Class cPower
         Dim adec As Single
         Dim LookAheadDone As Boolean
         Dim aCoasting As Single
-        Dim aRollout As Single
         Dim Gears As New List(Of Integer)
         Dim vRollout As Single
         Dim ProgBarShare As Int16
         Dim ProgBarLACpart As Int16
         Dim dist As New List(Of Double)
         Dim LastnU As Single = 0
-
 
         Dim MsgSrc As String
 
@@ -133,6 +131,7 @@ Public Class cPower
             dist.Add(dist(i - 1) + Vh.V(i))
         Next
 
+
         'Generate Positions List
         For i = 0 To MODdata.tDim
             Positions.Add(0)
@@ -171,6 +170,7 @@ Public Class cPower
                     VehState0 = tVehState.Cruise
                 End If
             End If
+
 
             'Wheel-Power
             Pwheel = fPwheel(i, Vh.fGrad(dist(i)))
@@ -255,7 +255,6 @@ Public Class cPower
                         Vmax = MODdata.Vh.Vsoll(i) + VEC.OverSpeed / 3.6
                         Vmin = Math.Max(0, MODdata.Vh.Vsoll(i) - VEC.UnderSpeed / 3.6)
                         vRollout = fRolloutSpeed(i, 1, Vh.fGrad(dist(i)))
-                        aRollout = (2 * vRollout - Vh.V0(i)) - Vh.V0(i)
 
                         If vRollout < Vmin Then
 
@@ -481,11 +480,8 @@ Public Class cPower
         Dim SecSpeedRed As Integer
         Dim FirstSecItar As Boolean
         Dim TracIntrIs As Single
-
         Dim amax As Single
-
         Dim ProgBarShare As Int16
-
         Dim LastPmax As Single
         Dim dist As Double
         Dim dist0 As Double
@@ -668,10 +664,14 @@ lbGschw:
 
             'Eco-Roll Speed Correction (because PreRun speed profile might still be too high or speed might generally be too low)
             If Vh.EcoRoll(jz) AndAlso Vact > MODdata.Vh.Vsoll(jz) - VEC.UnderSpeed / 3.6 AndAlso Not VehState0 = tVehState.Stopped AndAlso Pplus Then
-                Vh.ReduceSpeed(jz, 0.9999)
+                If Not Vh.ReduceSpeed(jz, 0.9999) Then
+                    WorkerMsg(tMsgID.Err, "Engine full load too low for vehicle start (speed reduction failed) !", MsgSrc & "/t= " & jz + 1)
+                    Return False
+                End If
                 FirstSecItar = False
                 GoTo lbGschw
             End If
+
 
             '************************************ Gear selection ************************************
             If VehState0 = tVehState.Stopped Or TracIntrOn Then
@@ -887,7 +887,10 @@ lbCheck:
                     End If
 
                     If GBX.TCReduce Then
-                        Vh.ReduceSpeed(jz, 0.999)
+                        If Not Vh.ReduceSpeed(jz, 0.999) Then
+                            WorkerMsg(tMsgID.Err, "Engine full load too low for vehicle start (speed reduction failed) !", MsgSrc & "/t= " & jz + 1)
+                            Return False
+                        End If
                         FirstSecItar = False
                         GoTo lbGschw
                     End If
@@ -910,7 +913,9 @@ lbCheck:
                     If Clutch = tEngClutch.Closed Then
                         If nU < ENG.Nidle + 0.0001 Then
                             Gear -= 1
-                            nU = fnU(Vact, Gear, Clutch = tEngClutch.Slipping)
+                            If Gear = 0 Then Clutch = tEngClutch.Opened
+                            GoTo lbCheck
+                            'nU = fnU(Vact, Gear, Clutch = tEngClutch.Slipping)
                         End If
                     End If
 
@@ -1275,7 +1280,7 @@ lb_nOK:
                     End If
 
                     Vrollout = fRolloutSpeed(jz + 1, TracIntrIs, Vh.fGrad(dist))
-                    If Vrollout < Vact Or VehState0 <> tVehState.Dec Then Vh.SetSpeed(jz + 1, Vrollout)
+                    If Vrollout < Vh.V(jz + 1) Or VehState0 <> tVehState.Dec Then Vh.SetSpeed(jz + 1, Vrollout)
 
                 End If
 
