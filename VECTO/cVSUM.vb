@@ -246,6 +246,15 @@ Class cVSUM
             Next
             VSUMentries("\\Eretarder").ValueString = (-sum / 3600)
 
+            'TC Losses
+            sum = 0
+            For t = 0 To t1
+                sum += MODdata.PlossTC(t)
+            Next
+            VSUMentries("\\Etorqueconv").ValueString = (-sum / 3600)
+
+
+
             'Masse, Loading
             VSUMentries("\\Mass").ValueString = (VEH.Mass + VEH.MassExtra)
             VSUMentries("\\Loading").ValueString = VEH.Loading
@@ -588,7 +597,10 @@ Class cVSUM
             ENG0.FilePath = VEC0.PathENG
 
             Try
-                If Not ENG0.ReadFile Then Return False
+                If Not ENG0.ReadFile Then
+                    WorkerMsg(tMsgID.Err, "File read error! (" & VEC0.PathENG & ")", MsgSrc)
+                    Return False
+                End If
             Catch ex As Exception
                 WorkerMsg(tMsgID.Err, "File read error! (" & VEC0.PathENG & ")", MsgSrc)
                 Return False
@@ -598,7 +610,10 @@ Class cVSUM
             MAP0.FilePath = ENG0.PathMAP
 
             Try
-                If Not MAP0.ReadFile(True) Then Return False
+                If Not MAP0.ReadFile(True) Then
+                    WorkerMsg(tMsgID.Err, "File read error! (" & ENG0.PathMAP & ")", MsgSrc)
+                    Return False
+                End If
             Catch ex As Exception
                 WorkerMsg(tMsgID.Err, "File read error! (" & ENG0.PathMAP & ")", MsgSrc)
                 Return False
@@ -645,6 +660,7 @@ Class cVSUM
             AddToVSUM("\\Ebrake", "Ebrake", "[kWh]")
             AddToVSUM("\\Etransm", "Etransm", "[kWh]")
             AddToVSUM("\\Eretarder", "Eretarder", "[kWh]")
+            AddToVSUM("\\Etorqueconv", "Etorqueconv", "[kWh]")
             AddToVSUM("\\Mass", "Mass", "[kg]")
             AddToVSUM("\\Loading", "Loading", "[kg]")
 

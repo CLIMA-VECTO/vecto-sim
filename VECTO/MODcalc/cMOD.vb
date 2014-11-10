@@ -34,6 +34,7 @@ Public Class cMOD
     Public PlossGB As List(Of Single)
     Public PlossDiff As List(Of Single)
     Public PlossRt As List(Of Single)
+    Public PlossTC As List(Of Single)
     Public PaEng As List(Of Single)
     Public PaGB As List(Of Single)
     Public Paux As Dictionary(Of String, List(Of Single))
@@ -86,6 +87,7 @@ Public Class cMOD
         PlossGB = New List(Of Single)
         PlossDiff = New List(Of Single)
         PlossRt = New List(Of Single)
+        PlossTC = New List(Of Single)
         PaEng = New List(Of Single)
         PaGB = New List(Of Single)
         Paux = New Dictionary(Of String, List(Of Single))
@@ -139,6 +141,7 @@ Public Class cMOD
             PlossGB = Nothing
             PlossDiff = Nothing
             PlossRt = Nothing
+            PlossTC = Nothing
             PaEng = Nothing
             PaGB = Nothing
             Paux = Nothing

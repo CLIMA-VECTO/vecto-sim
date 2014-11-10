@@ -66,6 +66,8 @@ Public Class cGBX
     Public TCnUout As Single
     Public TCReduce As Boolean
     Public TCNeutral As Boolean
+    Public TC_mu As Single
+    Public TC_nu As Single
     Private TCnuMax As Single
 
 
@@ -594,6 +596,9 @@ Public Class cGBX
         TCMout = fTCtorque(nu, TCnUin) * mu
         TCMin = TCMout / mu
         TCnUout = nUout
+
+        TC_mu = mu
+        TC_nu = nu
 
         If Brake Then TC_PeBrake = nMtoPe(TCnUout, Mout - TCMout)
 

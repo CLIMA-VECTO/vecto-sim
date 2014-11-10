@@ -475,6 +475,7 @@ Public Class cPower
         Dim PlossGB As Single
         Dim PlossDiff As Single
         Dim PlossRt As Single
+        Dim PlossTC As Single
         Dim GVset As Boolean
         Dim Vrollout As Single
         Dim SecSpeedRed As Integer
@@ -956,6 +957,7 @@ lb_nOK:
                     PlossGB = 0
                     PlossDiff = 0
                     PlossRt = 0
+                    PlossTC = 0
                     PaGbx = 0
                 Case tEngClutch.Closed
 
@@ -963,11 +965,19 @@ lb_nOK:
 
                         P = nMtoPe(nU, GBX.TCMin) + Paux + PaMot
 
+                        If P >= 0 Then
+                            PlossTC = Math.Abs(nMtoPe(GBX.TCnUin, GBX.TCMin) * (1 - GBX.TC_mu * GBX.TC_nu))
+                        Else
+                            PlossTC = Math.Abs(nMtoPe(GBX.TCnUout, GBX.TCMout) * (1 - GBX.TC_mu * GBX.TC_nu))
+                        End If
+
+
                     Else
 
                         PlossGB = fPlossGB(Pwheel, Vact, Gear, False)
                         PlossDiff = fPlossDiff(Pwheel, Vact, False)
                         PlossRt = fPlossRt(Vact, Gear)
+                        PlossTC = 0
                         PaGbx = fPaG(Vact, aact)
                         Pclutch = Pwheel + PlossGB + PlossDiff + PaGbx + PlossRt
                         P = Pclutch + Paux + PaMot
@@ -977,6 +987,7 @@ lb_nOK:
                     PlossGB = fPlossGB(Pwheel, Vact, Gear, False)
                     PlossDiff = fPlossDiff(Pwheel, Vact, False)
                     PlossRt = fPlossRt(Vact, Gear)
+                    PlossTC = 0
                     PaGbx = fPaG(Vact, aact)
                     Pclutch = (Pwheel + PlossGB + PlossDiff + PaGbx + PlossRt) / ClutchEta
                     P = Pclutch + Paux + PaMot
@@ -1218,6 +1229,7 @@ lb_nOK:
             MODdata.PlossGB.Add(PlossGB)
             MODdata.PlossDiff.Add(PlossDiff)
             MODdata.PlossRt.Add(PlossRt)
+            MODdata.PlossTC.Add(PlossTC)
             MODdata.PaEng.Add(PaMot)
             MODdata.PaGB.Add(PaGbx)
             MODdata.Pclutch.Add(Pclutch)
@@ -1382,7 +1394,7 @@ lb_nOK:
 
             'OLD and wrong because not time shifted: P_mr(jz) = 0.001 * (I_mot * 0.0109662 * (n(jz) * nnrom) * nnrom * (n(jz) - n(jz - 1))) 
             If t > 0 And t < t1 Then
-                Pmr = 0.001 * (ENG.I_mot * (2 * Math.PI / 60) ^ 2 * MODdata.nU(t) * 0.5 * (MODdata.nU(t + 1) - MODdata.nU(t - 1)))
+                Pmr = 0.001 * (ENG.I_mot * (2 * Math.PI / 60) ^ 2 * ((MODdata.nU(t + 1) + MODdata.nU(t - 1)) / 2) * 0.5 * (MODdata.nU(t + 1) - MODdata.nU(t - 1)))
             Else
                 Pmr = 0
             End If
@@ -1933,6 +1945,9 @@ lb_nOK:
             tx += 1
         Loop
 
+        'First time step after stand still
+        If LastGear = 0 Then Return fStartGear(t, Grad)
+
         nU = CSng(Vact * 60.0 * GBX.Igetr(0) * GBX.Igetr(LastGear) / (2 * VEH.rdyn * Math.PI / 1000))
 
         OutOfRpmRange = ((nU - ENG.Nidle) / (ENG.Nrated - ENG.Nidle) >= 1.2 Or nU < ENG.Nidle)
@@ -2269,9 +2284,9 @@ lb10:
 
     Public Function fPaMot(ByVal nU As Single, ByVal nUBefore As Single) As Single
         If GBX.TCon Then
-            Return ((ENG.I_mot + GBX.TCinertia) * (nU - nUBefore) * 0.01096 * nU) * 0.001
+            Return ((ENG.I_mot + GBX.TCinertia) * (nU - nUBefore) * 0.01096 * ((nU + nUBefore) / 2)) * 0.001
         Else
-            Return (ENG.I_mot * (nU - nUBefore) * 0.01096 * nU) * 0.001
+            Return (ENG.I_mot * (nU - nUBefore) * 0.01096 * ((nU + nUBefore) / 2)) * 0.001
         End If
     End Function
 
