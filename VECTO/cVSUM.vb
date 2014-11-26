@@ -38,7 +38,27 @@ Class cVSUM
         First = True
         For Each key In VSUMentryList
             If Not First Then s.Append(",")
-            s.Append(VSUMentries(key).Head & " " & VSUMentries(key).Unit)
+            If DEV.AdvFormat Then
+                s.Append(VSUMentries(key).Head)
+            Else
+                s.Append(VSUMentries(key).Head & " " & VSUMentries(key).Unit)
+            End If
+            First = False
+        Next
+
+        Return s.ToString
+
+    End Function
+
+    Public Function VSUMunit() As String
+        Dim s As New System.Text.StringBuilder
+        Dim key As String
+        Dim First As Boolean
+
+        First = True
+        For Each key In VSUMentryList
+            If Not First Then s.Append(",")
+            s.Append(VSUMentries(key).Unit)
             First = False
         Next
 
@@ -308,7 +328,12 @@ Class cVSUM
         End Try
 
         '*** Header / Units
-        Fvsum.WriteLine("Job [-],Input File [-],Cycle [-]," & VSUMhead())
+        If DEV.AdvFormat Then
+            Fvsum.WriteLine("Job,Input File,Cycle," & VSUMhead())
+            Fvsum.WriteLine("[-],[-],[-]," & VSUMunit())
+        Else
+            Fvsum.WriteLine("Job [-],Input File [-],Cycle [-]," & VSUMhead())
+        End If
 
         'Close file (will open after each job)
         Fvsum.Close()
@@ -505,15 +530,11 @@ Class cVSUM
         ResList = New List(Of Dictionary(Of String, Object))
 
         'Info
-        'Fvsum.WriteLine("VECTO results")
-        'Fvsum.WriteLine("VECTO " & VECTOvers)
-        'Fvsum.WriteLine(Now.ToString)
-        'Fvsum.WriteLine("air density [kg/m3]: " & Cfg.AirDensity)
-        'If Cfg.DistCorr Then
-        '    Fvsum.WriteLine("Distance Correction ON")
-        'Else
-        '    Fvsum.WriteLine("Distance Correction OFF")
-        'End If
+        If DEV.AdvFormat Then
+            Fvsum.WriteLine("VECTO " & VECTOvers)
+            Fvsum.WriteLine(Now.ToString)
+            Fvsum.WriteLine("Input File: " & JobFile)
+        End If
 
         'Close file (will open after each job)
         Fvsum.Close()

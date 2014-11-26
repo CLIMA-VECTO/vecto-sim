@@ -21,7 +21,7 @@ Public Class cDEV
     Public TCnUstep As Single
     Public TCnUstepMin As Single
 
-
+    Public AdvFormat As Boolean
 
 
     '**************************************************************************************************************
@@ -132,6 +132,10 @@ Public Class cDEV
         Conf0.SingleVal = 0.01
         MyOptions.Add("TCnUstepMin", Conf0)
 
+        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Better output files format")
+        Conf0.BoolVal = False
+        MyOptions.Add("AdvFormat", Conf0)
+
         '**************************** END: Parameters Configuration '*****************************
         '*****************************************************************************************
         '*****************************************************************************************
@@ -145,6 +149,7 @@ Public Class cDEV
         TCiterPrec = MyOptions("TCiterPrec").SingleVal
         TCnUstep = MyOptions("TCnUstep").SingleVal
         TCnUstepMin = MyOptions("TCnUstepMin").SingleVal
+        AdvFormat = MyOptions("AdvFormat").BoolVal
     End Sub
 
     'Demo for Delegate Function
