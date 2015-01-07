@@ -38,7 +38,27 @@ Class cVSUM
         First = True
         For Each key In VSUMentryList
             If Not First Then s.Append(",")
-            s.Append(VSUMentries(key).Head & " " & VSUMentries(key).Unit)
+            If DEV.AdvFormat Then
+                s.Append(VSUMentries(key).Head)
+            Else
+                s.Append(VSUMentries(key).Head & " " & VSUMentries(key).Unit)
+            End If
+            First = False
+        Next
+
+        Return s.ToString
+
+    End Function
+
+    Public Function VSUMunit() As String
+        Dim s As New System.Text.StringBuilder
+        Dim key As String
+        Dim First As Boolean
+
+        First = True
+        For Each key In VSUMentryList
+            If Not First Then s.Append(",")
+            s.Append(VSUMentries(key).Unit)
             First = False
         Next
 
@@ -246,6 +266,15 @@ Class cVSUM
             Next
             VSUMentries("\\Eretarder").ValueString = (-sum / 3600)
 
+            'TC Losses
+            sum = 0
+            For t = 0 To t1
+                sum += MODdata.PlossTC(t)
+            Next
+            VSUMentries("\\Etorqueconv").ValueString = (-sum / 3600)
+
+
+
             'Masse, Loading
             VSUMentries("\\Mass").ValueString = (VEH.Mass + VEH.MassExtra)
             VSUMentries("\\Loading").ValueString = VEH.Loading
@@ -299,7 +328,12 @@ Class cVSUM
         End Try
 
         '*** Header / Units
-        Fvsum.WriteLine("Job [-],Input File [-],Cycle [-]," & VSUMhead())
+        If DEV.AdvFormat Then
+            Fvsum.WriteLine("Job,Input File,Cycle," & VSUMhead())
+            Fvsum.WriteLine("[-],[-],[-]," & VSUMunit())
+        Else
+            Fvsum.WriteLine("Job [-],Input File [-],Cycle [-]," & VSUMhead())
+        End If
 
         'Close file (will open after each job)
         Fvsum.Close()
@@ -496,15 +530,11 @@ Class cVSUM
         ResList = New List(Of Dictionary(Of String, Object))
 
         'Info
-        'Fvsum.WriteLine("VECTO results")
-        'Fvsum.WriteLine("VECTO " & VECTOvers)
-        'Fvsum.WriteLine(Now.ToString)
-        'Fvsum.WriteLine("air density [kg/m3]: " & Cfg.AirDensity)
-        'If Cfg.DistCorr Then
-        '    Fvsum.WriteLine("Distance Correction ON")
-        'Else
-        '    Fvsum.WriteLine("Distance Correction OFF")
-        'End If
+        If DEV.AdvFormat Then
+            Fvsum.WriteLine("VECTO " & VECTOvers)
+            Fvsum.WriteLine(Now.ToString)
+            Fvsum.WriteLine("Input File: " & JobFile)
+        End If
 
         'Close file (will open after each job)
         Fvsum.Close()
@@ -588,7 +618,10 @@ Class cVSUM
             ENG0.FilePath = VEC0.PathENG
 
             Try
-                If Not ENG0.ReadFile Then Return False
+                If Not ENG0.ReadFile Then
+                    WorkerMsg(tMsgID.Err, "File read error! (" & VEC0.PathENG & ")", MsgSrc)
+                    Return False
+                End If
             Catch ex As Exception
                 WorkerMsg(tMsgID.Err, "File read error! (" & VEC0.PathENG & ")", MsgSrc)
                 Return False
@@ -598,7 +631,10 @@ Class cVSUM
             MAP0.FilePath = ENG0.PathMAP
 
             Try
-                If Not MAP0.ReadFile(True) Then Return False
+                If Not MAP0.ReadFile(True) Then
+                    WorkerMsg(tMsgID.Err, "File read error! (" & ENG0.PathMAP & ")", MsgSrc)
+                    Return False
+                End If
             Catch ex As Exception
                 WorkerMsg(tMsgID.Err, "File read error! (" & ENG0.PathMAP & ")", MsgSrc)
                 Return False
@@ -645,6 +681,7 @@ Class cVSUM
             AddToVSUM("\\Ebrake", "Ebrake", "[kWh]")
             AddToVSUM("\\Etransm", "Etransm", "[kWh]")
             AddToVSUM("\\Eretarder", "Eretarder", "[kWh]")
+            AddToVSUM("\\Etorqueconv", "Etorqueconv", "[kWh]")
             AddToVSUM("\\Mass", "Mass", "[kg]")
             AddToVSUM("\\Loading", "Loading", "[kg]")
 

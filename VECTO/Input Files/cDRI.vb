@@ -694,6 +694,11 @@ lbEr:
         If AuxDef Then AuxComponents = hzAuxValues
         tDim = Values(tDriComp.V).Count - 1
 
+        For i = 0 To tDim
+            If Values(tDriComp.V)(i) < 0.5 Then Values(tDriComp.V)(i) = 0
+        Next
+
+
         Return True
 
     End Function

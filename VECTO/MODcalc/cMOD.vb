@@ -34,6 +34,7 @@ Public Class cMOD
     Public PlossGB As List(Of Single)
     Public PlossDiff As List(Of Single)
     Public PlossRt As List(Of Single)
+    Public PlossTC As List(Of Single)
     Public PaEng As List(Of Single)
     Public PaGB As List(Of Single)
     Public Paux As Dictionary(Of String, List(Of Single))
@@ -86,6 +87,7 @@ Public Class cMOD
         PlossGB = New List(Of Single)
         PlossDiff = New List(Of Single)
         PlossRt = New List(Of Single)
+        PlossTC = New List(Of Single)
         PaEng = New List(Of Single)
         PaGB = New List(Of Single)
         Paux = New Dictionary(Of String, List(Of Single))
@@ -139,6 +141,7 @@ Public Class cMOD
             PlossGB = Nothing
             PlossDiff = Nothing
             PlossRt = Nothing
+            PlossTC = Nothing
             PaEng = Nothing
             PaGB = Nothing
             Paux = Nothing
@@ -443,6 +446,7 @@ Public Class cMOD
 
         Dim f As cFile_V3
         Dim s As System.Text.StringBuilder
+        Dim su As System.Text.StringBuilder
         Dim t As Integer
         Dim t1 As Integer
 
@@ -455,6 +459,8 @@ Public Class cMOD
         Dim StrKey As String
 
         Dim AuxList As New List(Of String)
+
+        Dim HeaderList As New List(Of String())
 
         Dim Gear As Integer
 
@@ -493,56 +499,99 @@ Public Class cMOD
         Next
 
 
-        'f.WriteLine("VECTO modal results")
-        'f.WriteLine("VECTO " & VECTOvers)
-        'f.WriteLine(Now.ToString)
-        'f.WriteLine("Input File: " & JobFile)
+        If DEV.AdvFormat Then
+            f.WriteLine("VECTO " & VECTOvers)
+            f.WriteLine(Now.ToString)
+            f.WriteLine("Input File: " & JobFile)
+        End If
 
 
         '***********************************************************************************************
         '***********************************************************************************************
         '***********************************************************************************************
         '*** Header & Units ****************************************************************************
+
         s.Length = 0
 
-        s.Append("time [s]")
+
+        HeaderList.Add(New String() {"time", "s"})
 
         If Not VEC.EngOnly Then
-
-            s.Append(",dist [m],v_act [km/h],v_targ [km/h],acc [m/s^2],grad [%]")
+            HeaderList.Add(New String() {"dist", "m"})
+            HeaderList.Add(New String() {"v_act", "km/h"})
+            HeaderList.Add(New String() {"v_targ", "km/h"})
+            HeaderList.Add(New String() {"acc", "m/s²"})
+            HeaderList.Add(New String() {"grad", "%"})
             dist = 0
-
         End If
 
-        s.Append(",n [1/min],Tq_eng [Nm],Tq_clutch [Nm],Tq_full [Nm],Tq_drag [Nm],Pe_eng [kW],Pe_full [kW],Pe_drag [kW],Pe_clutch [kW],Pa Eng [kW],Paux [kW]")
+        HeaderList.Add(New String() {"n", "1/min"})
+        HeaderList.Add(New String() {"Tq_eng", "Nm"})
+        HeaderList.Add(New String() {"Tq_clutch", "Nm"})
+        HeaderList.Add(New String() {"Tq_full", "Nm"})
+        HeaderList.Add(New String() {"Tq_drag", "Nm"})
+        HeaderList.Add(New String() {"Pe_eng", "kW"})
+        HeaderList.Add(New String() {"Pe_full", "kW"})
+        HeaderList.Add(New String() {"Pe_drag", "kW"})
+        HeaderList.Add(New String() {"Pe_clutch", "kW"})
+        HeaderList.Add(New String() {"Pa", "Eng", "kW"})
+        HeaderList.Add(New String() {"Paux", "kW"})
 
         If Not VEC.EngOnly Then
 
-            s.Append(",Gear [-],Ploss GB [kW],Ploss Diff [kW],Ploss Retarder [kW],Pa GB [kW],Pa Veh [kW],Proll [kW],Pair [kW],Pgrad [kW],Pwheel [kW],Pbrake [kW]")
+            HeaderList.Add(New String() {"Gear", "-"})
+            HeaderList.Add(New String() {"Ploss GB", "kW"})
+            HeaderList.Add(New String() {"Ploss Diff", "kW"})
+            HeaderList.Add(New String() {"Ploss Retarder", "kW"})
+            HeaderList.Add(New String() {"Pa GB", "kW"})
+            HeaderList.Add(New String() {"Pa Veh", "kW"})
+            HeaderList.Add(New String() {"Proll", "kW"})
+            HeaderList.Add(New String() {"Pair", "kW"})
+            HeaderList.Add(New String() {"Pgrad", "kW"})
+            HeaderList.Add(New String() {"Pwheel", "kW"})
+            HeaderList.Add(New String() {"Pbrake", "kW"})
 
             If GBX.TCon Then
-                s.Append(",TCν [-],TCμ [-],TC_T_Out [Nm],TC_n_Out [1/min]")
+                HeaderList.Add(New String() {"TCν", "-"})
+                HeaderList.Add(New String() {"TCµ", "-"})
+                HeaderList.Add(New String() {"TC_T_Out", "Nm"})
+                HeaderList.Add(New String() {"TC_n_Out", "1/min"})
             End If
 
             'Auxiliaries
             For Each StrKey In AuxList
-                s.Append(",Paux_" & StrKey & " [kW]")
+                HeaderList.Add(New String() {"Paux_" & StrKey, "kW"})
             Next
 
         End If
 
-
-        'FC
-        s.Append(Sepp & "FC [g/h]")
-
-        s.Append(Sepp & "FC-AUXc [g/h]")
-
-        s.Append(Sepp & "FC-WHTCc [g/h]")
+        HeaderList.Add(New String() {"FC", "g/h"})
+        HeaderList.Add(New String() {"FC-AUXc", "g/h"})
+        HeaderList.Add(New String() {"FC-WHTCc", "g/h"})
 
 
         'Write to File
-        '   Header
-        f.WriteLine(s.ToString)
+        If DEV.AdvFormat Then
+            su = New System.Text.StringBuilder
+            s.Append(HeaderList(0)(0))
+            su.Append("[" & HeaderList(0)(1) & "]")
+            For t = 1 To HeaderList.Count - 1
+                s.Append(Sepp & HeaderList(t)(0))
+                su.Append(Sepp & "[" & HeaderList(t)(1) & "]")
+            Next
+            f.WriteLine(s.ToString)
+            f.WriteLine(su.ToString)
+        Else
+            s.Append(HeaderList(0)(0) & " [" & HeaderList(0)(1) & "]")
+            For t = 1 To HeaderList.Count - 1
+                s.Append(Sepp & HeaderList(t)(0) & " [" & HeaderList(t)(1) & "]")
+            Next
+            f.WriteLine(s.ToString)
+        End If
+      
+
+
+
 
 
         '***********************************************************************************************
