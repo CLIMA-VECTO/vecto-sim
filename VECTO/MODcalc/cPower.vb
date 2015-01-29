@@ -219,26 +219,26 @@ Public Class cPower
                 PaMot = fPaMot(nU, LastnU)
             End If
 
-            'Aux Demand
-            Paux = fPaux(i, nU)
 
-            'Engine Power (at Clutch)
+
+            'Calculate powertrain losses => power at clutch
             If Pplus Or Pminus Then
-
                 PlossGB = fPlossGB(Pwheel, Vact, Gear, True)
                 PlossDiff = fPlossDiff(Pwheel, Vact, True)
                 PlossRt = fPlossRt(Vact, Gear)
                 PaGetr = fPaG(Vact, aact)
-
                 Pkup = Pwheel + PlossGB + PlossDiff + PaGetr + PlossRt
-                P = Pkup + Paux + PaMot
-
             Else
-
                 Pkup = 0
-                P = Paux + PaMot
-
             End If
+
+            'Total aux power
+            '[kW]
+            Paux = fPaux(i, nU)
+
+            'Internal Engine Power (Pclutch plus Aux plus Inertia)
+            P = Pkup + Paux + PaMot
+
 
             'Full load / motoring
             Pmin = FLD(Gear).Pdrag(nU)
@@ -933,26 +933,9 @@ lb_nOK:
             '************************************ Determine Engine-state ************************************
             ' nU is final here!
 
-            'Determine Aux power demand (from VEH and DRI)
-            Paux = fPaux(jz, Math.Max(nU, ENG.Nidle))
-
-            'ICE-inertia
-            If jz = 0 Then
-                PaMot = 0
-            Else
-                'Not optimal since jz-1 to jz not the right interval
-                PaMot = fPaMot(nU, MODdata.nU(jz - 1))
-            End If
-
-
-
-            'Total Engine-power
-            '   => Pantr
-            '   => P
-            '   => Pkup
+            'Power at clutch
             Select Case Clutch
                 Case tEngClutch.Opened
-                    P = Paux + PaMot
                     Pclutch = 0
                     PlossGB = 0
                     PlossDiff = 0
@@ -963,14 +946,13 @@ lb_nOK:
 
                     If GBX.TCon And GBX.IsTCgear(Gear) Then
 
-                        P = nMtoPe(nU, GBX.TCMin) + Paux + PaMot
+                        Pclutch = nMtoPe(nU, GBX.TCMin)
 
                         If P >= 0 Then
                             PlossTC = Math.Abs(nMtoPe(GBX.TCnUin, GBX.TCMin) * (1 - GBX.TC_mu * GBX.TC_nu))
                         Else
                             PlossTC = Math.Abs(nMtoPe(GBX.TCnUout, GBX.TCMout) * (1 - GBX.TC_mu * GBX.TC_nu))
                         End If
-
 
                     Else
 
@@ -980,7 +962,6 @@ lb_nOK:
                         PlossTC = 0
                         PaGbx = fPaG(Vact, aact)
                         Pclutch = Pwheel + PlossGB + PlossDiff + PaGbx + PlossRt
-                        P = Pclutch + Paux + PaMot
 
                     End If
                 Case Else 'tEngClutch.Slipping: never in AT mode!
@@ -990,8 +971,25 @@ lb_nOK:
                     PlossTC = 0
                     PaGbx = fPaG(Vact, aact)
                     Pclutch = (Pwheel + PlossGB + PlossDiff + PaGbx + PlossRt) / ClutchEta
-                    P = Pclutch + Paux + PaMot
             End Select
+
+
+            'Total aux power
+            '[kW]
+            Paux = fPaux(jz, Math.Max(nU, ENG.Nidle))
+
+
+            'ICE-inertia
+            If jz = 0 Then
+                PaMot = 0
+            Else
+                'Not optimal since jz-1 to jz not the right interval
+                PaMot = fPaMot(nU, MODdata.nU(jz - 1))
+            End If
+
+            'Internal Engine Power (Pclutch plus Aux plus Inertia)
+            P = Pclutch + Paux + PaMot
+
 
             'EngState
             If Clutch = tEngClutch.Opened Then
@@ -2295,7 +2293,7 @@ lb10:
         Return CSng(((VEH.Loading + VEH.Mass + VEH.MassExtra) * 9.81 * Math.Sin(Math.Atan(Grad * 0.01)) * v) * 0.001)
     End Function
 
-    '----------------Ancillaries(Nebenaggregate) ----------------
+    '----------------Auxillaries(Nebenaggregate) ----------------
     Public Function fPaux(ByVal t As Integer, ByVal nU As Single) As Single
         Return CSng(MODdata.Vh.Padd(t) + VEC.PauxSum(t, nU))
     End Function
