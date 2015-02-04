@@ -1138,7 +1138,6 @@ lb_nOK:
                         Return False
                     End If
                 Else 'tEngState.Idle, tEngState.Stopped, tEngState.Drag
-                    'ERROR:  Engine not in Drivetrain ... can it be?
                     If FirstSecItar Then
                         If P > 0.1 Then WorkerMsg(tMsgID.Warn, "Pwheel > 0 but EngState undefined ?!", MsgSrc & "/t= " & jz + 1)
                     End If
