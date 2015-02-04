@@ -467,7 +467,7 @@ Public Class cGBX
             nuMax = Math.Min(TCnu(TCdim), nUout / ENG.Nidle)
 
         Else
-            nuMin = Math.Max(nUout / ENG.Nrated, TCnu(0))
+            nuMin = Math.Max(nUout / FLD(Gear).N95h, TCnu(0))
             nuMax = Math.Min(TCnuMax, nUout / ENG.Nidle)
         End If
 

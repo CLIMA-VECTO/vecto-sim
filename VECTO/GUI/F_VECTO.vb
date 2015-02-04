@@ -1055,26 +1055,27 @@ lbDlog:
                     MyChart.Series.Add(s)
 
                     If Cfg.DeclMode Then
-                        FLD0.Init(ENG0.Nidle)
 
-                        Shiftpoly = New cGBX.cShiftPolygon("", 0)
-                        Shiftpoly.SetGenericShiftPoly(FLD0, ENG0.Nidle)
+                        If FLD0.Init(ENG0.Nidle) Then
+                            Shiftpoly = New cGBX.cShiftPolygon("", 0)
+                            Shiftpoly.SetGenericShiftPoly(FLD0, ENG0.Nidle)
 
-                        s = New System.Windows.Forms.DataVisualization.Charting.Series
-                        s.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
-                        s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
-                        s.BorderWidth = 2
-                        s.Color = Color.DarkRed
-                        s.Name = "Upshift curve"
-                        MyChart.Series.Add(s)
+                            s = New System.Windows.Forms.DataVisualization.Charting.Series
+                            s.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
+                            s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+                            s.BorderWidth = 2
+                            s.Color = Color.DarkRed
+                            s.Name = "Upshift curve"
+                            MyChart.Series.Add(s)
 
-                        s = New System.Windows.Forms.DataVisualization.Charting.Series
-                        s.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
-                        s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
-                        s.BorderWidth = 2
-                        s.Color = Color.DarkRed
-                        s.Name = "Downshift curve"
-                        MyChart.Series.Add(s)
+                            s = New System.Windows.Forms.DataVisualization.Charting.Series
+                            s.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
+                            s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+                            s.BorderWidth = 2
+                            s.Color = Color.DarkRed
+                            s.Name = "Downshift curve"
+                            MyChart.Series.Add(s)
+                        End If
 
                     End If
 

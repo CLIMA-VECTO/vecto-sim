@@ -330,6 +330,8 @@ lbInt:
 
         N95h = fnUofPfull(0.95 * Pfull(fnUrated), False)
 
+        If N95h < 0 Then Return -1
+
         Amax = Area(Nidle, N95h)
 
         For i = 0 To iDim - 1
@@ -465,6 +467,8 @@ lbInt:
             LastPe = nMtoPe(nU, Tq(nU))
             nUtarget = nU
 
+            If LastPe > PeTarget Then Return -1
+
             Do
                 Pe = nMtoPe(nU, Tq(nU))
 
@@ -485,6 +489,8 @@ lbInt:
             nU = nUmax
             LastPe = nMtoPe(nU, Tq(nU))
             nUtarget = nU
+
+            If LastPe > PeTarget Then Return -1
 
             Do
                 Pe = nMtoPe(nU, Tq(nU))
@@ -525,20 +531,45 @@ lbInt:
 
     End Function
 
-    Public Sub Init(ByVal Nidle As Single)
+    Public Function Init(ByVal Nidle As Single) As Boolean
         Dim Pmax As Single
+        Dim MsgSrc As String
+
+        MsgSrc = "Main/ReadInp/Eng.Init"
 
         Pmax = Pfull(fnUrated)
 
         Nlo = fnUofPfull(0.55 * Pmax, True)
 
+        If Nlo < 0 Then
+            WorkerMsg(tMsgID.Err, "Failed to calculate Nlo! Check full load curve!", MsgSrc)
+            Return False
+        End If
+
         N95h = fnUofPfull(0.95 * Pmax, False)
+
+        If N95h < 0 Then
+            WorkerMsg(tMsgID.Err, "Failed to calculate N95h! Check full load curve!", MsgSrc)
+            Return False
+        End If
 
         Npref = fNpref(Nidle)
 
+        If Npref < 0 Then
+            WorkerMsg(tMsgID.Err, "Failed to calculate Npref! Check full load curve!", MsgSrc)
+            Return False
+        End If
+
         Nhi = fnUofPfull(0.7 * Pmax, False)
 
-    End Sub
+        If Nhi < 0 Then
+            WorkerMsg(tMsgID.Err, "Failed to calculate Nhi! Check full load curve!", MsgSrc)
+            Return False
+        End If
+
+        Return True
+
+    End Function
 
     Public Sub DeclInit()
         Dim i As Integer
