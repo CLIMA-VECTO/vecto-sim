@@ -58,6 +58,9 @@ Public Class cDRI
     ''' <remarks></remarks>
     Public Pvorg As Boolean
 
+
+    Public PwheelVorg As Boolean
+
     ''' <summary>
     ''' True= Cycle includes additional auxiliary power demand (not to be confused with auxiliary supply power). Defined in ReadFile.
     ''' </summary>
@@ -125,6 +128,7 @@ Public Class cDRI
         Nvorg = False
         Gvorg = False
         Pvorg = False
+        PwheelVorg = False
         tDim = -1
         t0 = 1  'Default if no time steps are defined in driving cycle
         AuxDef = False
@@ -196,6 +200,7 @@ Public Class cDRI
         DRIcheck.Add(tDriComp.s, False)
         DRIcheck.Add(tDriComp.StopTime, False)
         DRIcheck.Add(tDriComp.Torque, False)
+        DRIcheck.Add(tDriComp.Pwheel, False)
 
         If file.EndOfFile Then
             WorkerMsg(tMsgID.Err, "Driving cycle invalid!", MsgSrc)
@@ -276,6 +281,7 @@ Public Class cDRI
         GradVorg = DRIcheck(tDriComp.Grad)
         VairVorg = DRIcheck(tDriComp.VairVres) And DRIcheck(tDriComp.VairBeta)
         Mvorg = DRIcheck(tDriComp.Torque)
+        PwheelVorg = DRIcheck(tDriComp.Pwheel)
 
         If Mvorg And Pvorg Then
             WorkerMsg(tMsgID.Warn, "Engine torque and power defined in cycle! Torque will be ignored!", MsgSrc)

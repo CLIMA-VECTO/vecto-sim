@@ -45,6 +45,9 @@ Public Class cPower
 
     Private EngSideInertia As Single
 
+    Private PwheelVorg As Boolean
+
+
     Public Function PreRun() As Boolean
         Dim i As Integer
         Dim i0 As Integer
@@ -492,10 +495,12 @@ Public Class cPower
         MsgSrc = "Power/Calc"
 
         'Abort if no speed given
-        If Not DRI.Vvorg Then
-            WorkerMsg(tMsgID.Err, "Driving cycle is not valid! Vehicle Speed required.", MsgSrc)
+        If Not DRI.Vvorg And Not (DRI.PwheelVorg And DRI.Nvorg And DRI.Gvorg) Then
+            WorkerMsg(tMsgID.Err, "Driving cycle is not valid! Vehicle Speed required or Pwheel + Gear + Engine Speed.", MsgSrc)
             Return False
         End If
+
+        PwheelVorg = DRI.PwheelVorg
 
         'Messages
         If Not Cfg.DistCorr Then WorkerMsg(tMsgID.Warn, "Distance Correction is disabled!", MsgSrc)
@@ -579,8 +584,11 @@ lbGschw:
 
             'Calculate Speed​/Acceleration -------------------
             'Now through DRI-class
-            Vact = Vh.V(jz)
-            aact = Vh.a(jz)
+
+            If Not PwheelVorg Then
+                Vact = Vh.V(jz)
+                aact = Vh.a(jz)
+            End If
 
             'distance 
             dist = dist0 + Vact
@@ -638,23 +646,37 @@ lbGschw:
             End If
             '---------------
 
+   
+            'Power demand at wheels
+            Pwheel = fPwheel(jz, Vh.fGrad(dist))
+
             'Determine Driving-state  -------------------------
             Pplus = False
             Pminus = False
-
-            If Vact < 0.0001 Then
-                VehState0 = tVehState.Stopped
+            If PwheelVorg Then
+                Select Case Pwheel
+                    Case Is > 0.0001
+                        VehState0 = tVehState.Acc
+                    Case Is < -0.0001
+                        VehState0 = tVehState.Dec
+                    Case Else
+                        VehState0 = tVehState.Stopped
+                End Select
             Else
-                If aact >= 0.01 Then
-                    VehState0 = tVehState.Acc
-                ElseIf aact < -0.01 Then
-                    VehState0 = tVehState.Dec
+                If Vact < 0.0001 Then
+                    VehState0 = tVehState.Stopped
                 Else
-                    VehState0 = tVehState.Cruise
+                    If aact >= 0.01 Then
+                        VehState0 = tVehState.Acc
+                    ElseIf aact < -0.01 Then
+                        VehState0 = tVehState.Dec
+                    Else
+                        VehState0 = tVehState.Cruise
+                    End If
                 End If
+
             End If
 
-            Pwheel = fPwheel(jz, Vh.fGrad(dist))
 
             Select Case Pwheel
                 Case Is > 0.0001
@@ -695,7 +717,7 @@ lbGschw:
             Else
 
                 'Check whether Clutch will slip (important for Gear-shifting model):
-                If Not GBX.TCon AndAlso fnn(Vact, 1, False) < ClutchNorm And Pplus Then
+                If Not GBX.TCon AndAlso fnn(Vact, 1, False) < ClutchNorm And Pplus And Not PwheelVorg Then
                     Clutch = tEngClutch.Slipping
                 Else
                     Clutch = tEngClutch.Closed
@@ -730,7 +752,7 @@ lbGschw:
 
                 Else
 
-                    If Not GBX.TCon AndAlso fnn(Vact, Gear, False) < ClutchNorm And Pplus And Not VehState0 = tVehState.Dec Then
+                    If Not GBX.TCon AndAlso fnn(Vact, Gear, False) < ClutchNorm And Pplus And Not VehState0 = tVehState.Dec And Not PwheelVorg Then
                         Clutch = tEngClutch.Slipping
                     Else
                         Clutch = tEngClutch.Closed
@@ -933,6 +955,10 @@ lb_nOK:
             '************************************ Determine Engine-state ************************************
             ' nU is final here!
 
+            If PwheelVorg Then
+                Vact = fV(nU, Gear)
+            End If
+
             'Power at clutch
             Select Case Clutch
                 Case tEngClutch.Opened
@@ -1128,7 +1154,9 @@ lb_nOK:
             'Check whether P above Full-load => Reduce Speed
             If P > Pmax Then
                 If EngState0 = tEngState.Load Or EngState0 = tEngState.FullLoad Then
-                    If Vact > 0.01 Then
+                    If PwheelVorg Then
+                        P = Pmax
+                    ElseIf Vact > 0.01 Then
                         Vh.ReduceSpeed(jz, 0.9999)
                         FirstSecItar = False
                         GoTo lbGschw
@@ -1137,6 +1165,7 @@ lb_nOK:
                         WorkerMsg(tMsgID.Err, "Speed reduction failed!", MsgSrc & "/t= " & jz + 1)
                         Return False
                     End If
+
                 Else 'tEngState.Idle, tEngState.Stopped, tEngState.Drag
                     'ERROR:  Engine not in Drivetrain ... can it be?
                     If FirstSecItar Then
@@ -1165,11 +1194,12 @@ lb_nOK:
                             TracIntrIs = 1
                         End If
 
-                        Vrollout = fRolloutSpeed(jz, TracIntrIs, Vh.fGrad(dist))
+                        If Not PwheelVorg Then
+                            Vrollout = fRolloutSpeed(jz, TracIntrIs, Vh.fGrad(dist))
+                            If Vrollout < Vact Or VehState0 <> tVehState.Dec Then Vh.SetSpeed(jz, Vrollout)
+                            GoTo lbGschw
+                        End If
 
-                        If Vrollout < Vact Or VehState0 <> tVehState.Dec Then Vh.SetSpeed(jz, Vrollout)
-
-                        GoTo lbGschw
 
                     End If
 
@@ -1211,10 +1241,18 @@ lb_nOK:
 
             MODdata.EngState.Add(EngState0)
 
-            MODdata.Pa.Add(fPaFZ(MODdata.Vh.V(jz), MODdata.Vh.a(jz)))
-            MODdata.Pair.Add(fPair(MODdata.Vh.V(jz), jz))
-            MODdata.Proll.Add(fPr(MODdata.Vh.V(jz), Vh.fGrad(dist)))
-            MODdata.Pstg.Add(fPs(MODdata.Vh.V(jz), Vh.fGrad(dist)))
+            If DRI.PwheelVorg Then
+                MODdata.Pa.Add(0)
+                MODdata.Pair.Add(0)
+                MODdata.Proll.Add(0)
+                MODdata.Pstg.Add(0)
+            Else
+                MODdata.Pa.Add(fPaFZ(MODdata.Vh.V(jz), MODdata.Vh.a(jz)))
+                MODdata.Pair.Add(fPair(MODdata.Vh.V(jz), jz))
+                MODdata.Proll.Add(fPr(MODdata.Vh.V(jz), Vh.fGrad(dist)))
+                MODdata.Pstg.Add(fPs(MODdata.Vh.V(jz), Vh.fGrad(dist)))
+            End If
+
             MODdata.Pbrake.Add(Pbrake)
             MODdata.Psum.Add(Pwheel)
             MODdata.PauxSum.Add(Paux)
@@ -1289,14 +1327,18 @@ lb_nOK:
                         TracIntrIs = 1
                     End If
 
-                    Vrollout = fRolloutSpeed(jz + 1, TracIntrIs, Vh.fGrad(dist))
-                    If Vrollout < Vh.V(jz + 1) Or VehState0 <> tVehState.Dec Then Vh.SetSpeed(jz + 1, Vrollout)
+                    If Not PwheelVorg Then
+                        Vrollout = fRolloutSpeed(jz + 1, TracIntrIs, Vh.fGrad(dist))
+                        If Vrollout < Vh.V(jz + 1) Or VehState0 <> tVehState.Dec Then Vh.SetSpeed(jz + 1, Vrollout)
+                    End If
 
                 End If
 
             End If
 
-            If Vh.Vsoll(jz) - Vact > 1.5 Then SecSpeedRed += 1
+            If Not PwheelVorg Then
+                If Vh.Vsoll(jz) - Vact > 1.5 Then SecSpeedRed += 1
+            End If
 
 
             LastGearChange = -1
@@ -2224,6 +2266,10 @@ lb10:
         Return U
     End Function
 
+    Private Function fV(ByVal nU As Single, ByVal Gear As Integer) As Single
+        Return nU * (2 * VEH.rdyn * Math.PI / 1000) / (60.0 * GBX.Igetr(0) * GBX.Igetr(Gear))
+    End Function
+
     Private Function fnUout(ByVal V As Single, ByVal Gear As Integer) As Single
         Return V * 60.0 * GBX.Igetr(0) * GBX.Igetr(Gear) / (2 * VEH.rdyn * Math.PI / 1000)
     End Function
@@ -2234,7 +2280,11 @@ lb10:
 
     '--------------Power before Diff = At Wheel -------------
     Private Function fPwheel(ByVal t As Integer, ByVal Grad As Single) As Single
-        Return fPr(MODdata.Vh.V(t), Grad) + fPair(MODdata.Vh.V(t), t) + fPaFZ(MODdata.Vh.V(t), MODdata.Vh.a(t)) + fPs(MODdata.Vh.V(t), Grad)
+        If PwheelVorg Then
+            Return MODdata.Vh.Pwheel(t)
+        Else
+            Return fPr(MODdata.Vh.V(t), Grad) + fPair(MODdata.Vh.V(t), t) + fPaFZ(MODdata.Vh.V(t), MODdata.Vh.a(t)) + fPs(MODdata.Vh.V(t), Grad)
+        End If
     End Function
 
     Private Function fPwheel(ByVal t As Integer, ByVal v As Single, ByVal a As Single, ByVal Grad As Single) As Single
