@@ -555,26 +555,27 @@ Public Class F_ENG
 
             If IsNumeric(Me.TbNleerl.Text) AndAlso Me.TbNleerl.Text > 0 Then
 
-                FLD0.Init(CSng(Me.TbNleerl.Text))
+                If FLD0.Init(CSng(Me.TbNleerl.Text)) Then
 
-                Shiftpoly = New cGBX.cShiftPolygon("", 0)
-                Shiftpoly.SetGenericShiftPoly(FLD0, Me.TbNleerl.Text)
+                    Shiftpoly = New cGBX.cShiftPolygon("", 0)
+                    Shiftpoly.SetGenericShiftPoly(FLD0, Me.TbNleerl.Text)
 
-                s = New System.Windows.Forms.DataVisualization.Charting.Series
-                s.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
-                s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
-                s.BorderWidth = 2
-                s.Color = Color.DarkRed
-                s.Name = "Upshift curve"
-                MyChart.Series.Add(s)
+                    s = New System.Windows.Forms.DataVisualization.Charting.Series
+                    s.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
+                    s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+                    s.BorderWidth = 2
+                    s.Color = Color.DarkRed
+                    s.Name = "Upshift curve"
+                    MyChart.Series.Add(s)
 
-                s = New System.Windows.Forms.DataVisualization.Charting.Series
-                s.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
-                s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
-                s.BorderWidth = 2
-                s.Color = Color.DarkRed
-                s.Name = "Downshift curve"
-                MyChart.Series.Add(s)
+                    s = New System.Windows.Forms.DataVisualization.Charting.Series
+                    s.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
+                    s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+                    s.BorderWidth = 2
+                    s.Color = Color.DarkRed
+                    s.Name = "Downshift curve"
+                    MyChart.Series.Add(s)
+                End If
 
             End If
 

@@ -787,7 +787,7 @@ lbExit:
         End If
 
         'Must be called after cGBX.ReadFile because cGBX.GearCount is needed
-        ENG.Init()
+        If Not ENG.Init() Then Return False
 
         'Must be called after cENG.Init because FLD must be loaded
         If Cfg.DeclMode Then
