@@ -573,7 +573,7 @@ Public Class cPower
             FirstSecItar = True
 
             'Secondary Progressbar
-            ProgBarCtrl.ProgJobInt = CInt((100 / ProgBarShare) * jz / MODdata.tDim + (100 - 100 / ProgBarShare))
+            ProgBarCtrl.ProgJobInt = CInt((100 / ProgBarShare) * (jz + 1) / (MODdata.tDim + 1) + (100 - 100 / ProgBarShare))
 
 
             '   Determine State
@@ -760,6 +760,12 @@ lbGschw:
 
                 End If
 
+            End If
+
+
+            If PwheelVorg Then
+                nU = MODdata.nUvorg(jz)
+                Vact = fV(nU, Gear)
             End If
 
             If Gear = -1 Then
@@ -954,10 +960,6 @@ lb_nOK:
 
             '************************************ Determine Engine-state ************************************
             ' nU is final here!
-
-            If PwheelVorg Then
-                Vact = fV(nU, Gear)
-            End If
 
             'Power at clutch
             Select Case Clutch
