@@ -913,6 +913,13 @@ lb10:
 
         'Accept New fields
         Values = NewValues
+
+        If AuxDef Then
+            For Each AuxKV In NewAuxValues
+                AuxComponents(AuxKV.Key) = AuxKV.Value
+            Next
+        End If
+
         tDim = Values(tDriComp.t).Count - 1
 
         Return True

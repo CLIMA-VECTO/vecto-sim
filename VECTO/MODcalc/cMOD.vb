@@ -838,7 +838,11 @@ Public Class cMOD
             Abort = False
 
             If TrLossMapExtr <> "" Then
-                WorkerMsg(tMsgID.Err, "Invalid extrapolation in Transmission Loss Map (" & TrLossMapExtr & ")!", MsgSrc & "/t= " & Second)
+                If Cfg.DeclMode Then
+                    WorkerMsg(tMsgID.Err, "Extrapolation of Transmission Loss Map (" & TrLossMapExtr & ")!", MsgSrc & "/t= " & Second)
+                Else
+                    WorkerMsg(tMsgID.Warn, "Extrapolation of Transmission Loss Map (" & TrLossMapExtr & ")!", MsgSrc & "/t= " & Second)
+                End If
             End If
 
             If AuxMapExtr <> "" Then
