@@ -1,0 +1,523 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SequenceDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" dslVersion="1.0.0.0" Id="784de59c-9096-4010-b35c-fa2e1ce01da2" name="Sequence1" linkedPackageId="d9536f1a-29ae-4998-a61d-8ed09f4ae8e4" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner">
+  <profileInstances>
+    <packageHasProfileInstances Id="bc773b85-788e-40ab-a17f-c3c454c766a1">
+      <profileInstance Id="07cb1b4a-f58f-45c1-8f1b-0235a99229ed" name="StandardProfileL2">
+        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+      </profileInstance>
+      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances Id="afaefff7-79ab-42fb-ae49-35a36ea3f4d7">
+      <profileInstance Id="efe5c5c8-8e0d-463e-9e22-bcd31ef0cd76" name="StandardProfileL3">
+        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+      </profileInstance>
+      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <packageHasNamedElement>
+      <interaction Id="60558488-6e4a-41e5-b61d-87aa0c2c6371" name="Sequence1" collapseFragmentsFlag="false" isActiveClass="false" isAbstract="false" isLeaf="false" isReentrant="false">
+        <elementDefinition Id="b3724a5e-054a-461f-85d8-140905c233fa" />
+        <fragments>
+          <behaviorExecutionSpecification Id="541ecae7-f53d-4732-b2c8-47ae48349984" name="BehaviorExecutionSpecification1">
+            <elementDefinition Id="5b9b4887-43e8-474d-84d5-78807e3fc106" />
+            <coveredLifelines>
+              <lifelineMoniker Id="3dab1444-620e-4fd1-ae01-53b756b8f552" LastKnownName="driverDemandInPort : DriverDemandInPort" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="c8fda89d-1f6d-44e4-8252-bbd3a0f289ab" LastKnownName="ExecutionOccurrenceSpecification2" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="bedad346-338e-4f52-9199-7af2b1b19ae6" LastKnownName="ExecutionOccurrenceSpecification1" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="e01783fa-f16e-4aa9-9465-b7c033c00f94" LastKnownName="MessageOccurrenceSpecification2" />
+              <messageOccurrenceSpecificationMoniker Id="1a6b1be3-4ca3-45b7-b61a-0552ee33be86" LastKnownName="MessageOccurrenceSpecification5" />
+              <messageOccurrenceSpecificationMoniker Id="feb26b78-ce66-4f10-b795-ef65dc6b3132" LastKnownName="MessageOccurrenceSpecification8" />
+              <messageOccurrenceSpecificationMoniker Id="eb794625-c53c-462e-81cf-b2b8dfbf40b1" LastKnownName="MessageOccurrenceSpecification3" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="bedad346-338e-4f52-9199-7af2b1b19ae6" name="ExecutionOccurrenceSpecification1">
+            <elementDefinition Id="72668309-a7a5-466c-88ce-b3b3fc97c704" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="e49435db-9daf-4b92-81b1-669fc980db86" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="3dab1444-620e-4fd1-ae01-53b756b8f552" LastKnownName="driverDemandInPort : DriverDemandInPort" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="5e11f161-f851-4167-a451-02945d35d02f" name="MessageOccurrenceSpecification1">
+            <elementDefinition Id="7be90084-1c49-41c7-abb0-fc1043119c4b" />
+            <covered>
+              <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="drivingCycle : DrivingCycle" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="e01783fa-f16e-4aa9-9465-b7c033c00f94" name="MessageOccurrenceSpecification2">
+            <elementDefinition Id="47ab19dc-07f8-4b18-bd3c-acca232d871b" />
+            <covered>
+              <lifelineMoniker Id="3dab1444-620e-4fd1-ae01-53b756b8f552" LastKnownName="driverDemandInPort : DriverDemandInPort" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="707d65e3-5fa7-4461-9ee1-58e0be5df7db" name="BehaviorExecutionSpecification2">
+            <elementDefinition Id="cff2dcb2-96af-4c6a-829c-a281c3bc1b97" />
+            <coveredLifelines>
+              <lifelineMoniker Id="e837a4db-825f-43dd-9a33-4614cbad36e2" LastKnownName="driverDemandConnector : DriverDemandConnector" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="7c2c3140-2600-4341-97db-11cb194cb08d" LastKnownName="ExecutionOccurrenceSpecification4" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="91782065-d864-4da0-ab83-e371ed296342" LastKnownName="ExecutionOccurrenceSpecification3" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="b3a5854b-f14a-45c3-977a-2d6d9e2077e9" LastKnownName="MessageOccurrenceSpecification6" />
+              <messageOccurrenceSpecificationMoniker Id="0aab0f7f-a14c-4e96-9724-3f0a30edf827" LastKnownName="MessageOccurrenceSpecification9" />
+              <messageOccurrenceSpecificationMoniker Id="8a7d8cac-7994-4bab-9331-3019a14de1dc" LastKnownName="MessageOccurrenceSpecification12" />
+              <messageOccurrenceSpecificationMoniker Id="b72c98c9-b5a4-4085-9914-983169e442d4" LastKnownName="MessageOccurrenceSpecification7" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="91782065-d864-4da0-ab83-e371ed296342" name="ExecutionOccurrenceSpecification3">
+            <elementDefinition Id="7d68ec49-7dda-4be1-bfea-cd529c292b95" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="21de0aa7-3567-47e1-b6f1-d19c7bf3828e" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="e837a4db-825f-43dd-9a33-4614cbad36e2" LastKnownName="driverDemandConnector : DriverDemandConnector" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="1a6b1be3-4ca3-45b7-b61a-0552ee33be86" name="MessageOccurrenceSpecification5">
+            <elementDefinition Id="8f2e29d7-4815-497e-999c-b5901402f96e" />
+            <covered>
+              <lifelineMoniker Id="3dab1444-620e-4fd1-ae01-53b756b8f552" LastKnownName="driverDemandInPort : DriverDemandInPort" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="b3a5854b-f14a-45c3-977a-2d6d9e2077e9" name="MessageOccurrenceSpecification6">
+            <elementDefinition Id="217827ee-21ff-4d98-aa17-1f5bdefc4549" />
+            <covered>
+              <lifelineMoniker Id="e837a4db-825f-43dd-9a33-4614cbad36e2" LastKnownName="driverDemandConnector : DriverDemandConnector" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="821202f2-50fd-4461-b02a-62f9052d1be9" name="BehaviorExecutionSpecification3">
+            <elementDefinition Id="0a28e195-4bb5-4969-be87-58cedb40cc4c" />
+            <coveredLifelines>
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="driverDemandOutPort : DriverDemandOutPort" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="b250fc76-9e9e-4a74-a825-925d484e6e1f" LastKnownName="ExecutionOccurrenceSpecification6" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="ada036c0-e0ba-4392-9d0b-7d653005062b" LastKnownName="ExecutionOccurrenceSpecification5" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="c35937db-7f24-4630-9bb9-c9e001b577f5" LastKnownName="MessageOccurrenceSpecification10" />
+              <messageOccurrenceSpecificationMoniker Id="072d6694-41bd-495e-9d90-b12a95182480" LastKnownName="MessageOccurrenceSpecification13" />
+              <messageOccurrenceSpecificationMoniker Id="3c1946fc-3d26-49fd-9488-ffa4b4216f25" LastKnownName="MessageOccurrenceSpecification16" />
+              <messageOccurrenceSpecificationMoniker Id="7d71db48-fb18-43c6-82c6-096a490712e8" LastKnownName="MessageOccurrenceSpecification11" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="ada036c0-e0ba-4392-9d0b-7d653005062b" name="ExecutionOccurrenceSpecification5">
+            <elementDefinition Id="6cb27467-d7dd-46a8-9737-7d893e7832e2" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="b64d0c20-ff5e-48d1-ab1c-5767ff40d68d" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="driverDemandOutPort : DriverDemandOutPort" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="c35937db-7f24-4630-9bb9-c9e001b577f5" name="MessageOccurrenceSpecification10">
+            <elementDefinition Id="eb8736ad-68ff-487e-a588-771e12663771" />
+            <covered>
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="driverDemandOutPort : DriverDemandOutPort" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="0aab0f7f-a14c-4e96-9724-3f0a30edf827" name="MessageOccurrenceSpecification9">
+            <elementDefinition Id="c797f040-4b12-49ad-a17c-e844ae432705" />
+            <covered>
+              <lifelineMoniker Id="e837a4db-825f-43dd-9a33-4614cbad36e2" LastKnownName="driverDemandConnector : DriverDemandConnector" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification Id="1902ffdb-616a-4310-aa09-3bb4eee198d0" name="BehaviorExecutionSpecification4">
+            <elementDefinition Id="4d88fdf9-73f0-4d6b-adad-f0fe18086cbc" />
+            <coveredLifelines>
+              <lifelineMoniker Id="941b3a1b-08a8-48aa-98cc-68310a888e1c" LastKnownName="driver : Driver" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker Id="d9355422-bb58-4efe-9942-895260ba3e61" LastKnownName="ExecutionOccurrenceSpecification8" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker Id="6a6155e8-0780-410e-a4a7-bee8cd5b4931" LastKnownName="ExecutionOccurrenceSpecification7" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="19e8157f-563c-4d4d-9152-d44a999dc6e6" LastKnownName="MessageOccurrenceSpecification14" />
+              <messageOccurrenceSpecificationMoniker Id="3d73e144-c381-4b10-8b75-14754b6d8813" LastKnownName="MessageOccurrenceSpecification15" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification Id="6a6155e8-0780-410e-a4a7-bee8cd5b4931" name="ExecutionOccurrenceSpecification7">
+            <elementDefinition Id="aab3b3ac-f55f-438b-a0af-120a0e2b1871" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="dfc132db-dd76-4b59-b07a-cfd53cf74dd9" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="941b3a1b-08a8-48aa-98cc-68310a888e1c" LastKnownName="driver : Driver" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="19e8157f-563c-4d4d-9152-d44a999dc6e6" name="MessageOccurrenceSpecification14">
+            <elementDefinition Id="70e420be-3efc-45bb-bac7-5b7d5e3cdcc7" />
+            <covered>
+              <lifelineMoniker Id="941b3a1b-08a8-48aa-98cc-68310a888e1c" LastKnownName="driver : Driver" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="072d6694-41bd-495e-9d90-b12a95182480" name="MessageOccurrenceSpecification13">
+            <elementDefinition Id="dff3564f-c6ab-433b-9dac-213e4b763dfc" />
+            <covered>
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="driverDemandOutPort : DriverDemandOutPort" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="3c1946fc-3d26-49fd-9488-ffa4b4216f25" name="MessageOccurrenceSpecification16">
+            <elementDefinition Id="8292c79d-a06a-4b81-bbd7-8390eac84c8d" />
+            <covered>
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="driverDemandOutPort : DriverDemandOutPort" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="3d73e144-c381-4b10-8b75-14754b6d8813" name="MessageOccurrenceSpecification15">
+            <elementDefinition Id="97582447-a76c-43b3-a824-650e86891c43" />
+            <covered>
+              <lifelineMoniker Id="941b3a1b-08a8-48aa-98cc-68310a888e1c" LastKnownName="driver : Driver" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="d9355422-bb58-4efe-9942-895260ba3e61" name="ExecutionOccurrenceSpecification8">
+            <elementDefinition Id="5b9666fa-c3eb-498a-8c24-688f1aa58593" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="498476a0-1f3e-4509-80c7-b9e2e8a1e1ca" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="941b3a1b-08a8-48aa-98cc-68310a888e1c" LastKnownName="driver : Driver" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="8a7d8cac-7994-4bab-9331-3019a14de1dc" name="MessageOccurrenceSpecification12">
+            <elementDefinition Id="89530dc8-7e01-458c-abd6-d6d8efaada7d" />
+            <covered>
+              <lifelineMoniker Id="e837a4db-825f-43dd-9a33-4614cbad36e2" LastKnownName="driverDemandConnector : DriverDemandConnector" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="7d71db48-fb18-43c6-82c6-096a490712e8" name="MessageOccurrenceSpecification11">
+            <elementDefinition Id="827d9485-442c-4e9c-b84b-6c8815325aee" />
+            <covered>
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="driverDemandOutPort : DriverDemandOutPort" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="b250fc76-9e9e-4a74-a825-925d484e6e1f" name="ExecutionOccurrenceSpecification6">
+            <elementDefinition Id="2c5bc84a-548e-4194-93b4-1f90abf561a0" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="22869c4e-ffe8-4ba5-8057-f169a6fa2d40" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="driverDemandOutPort : DriverDemandOutPort" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="feb26b78-ce66-4f10-b795-ef65dc6b3132" name="MessageOccurrenceSpecification8">
+            <elementDefinition Id="7e7d4d3c-9add-4e7b-bfd0-d2968c7c40be" />
+            <covered>
+              <lifelineMoniker Id="3dab1444-620e-4fd1-ae01-53b756b8f552" LastKnownName="driverDemandInPort : DriverDemandInPort" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="b72c98c9-b5a4-4085-9914-983169e442d4" name="MessageOccurrenceSpecification7">
+            <elementDefinition Id="d8eb55d9-6da3-49b5-979b-099c27c57e66" />
+            <covered>
+              <lifelineMoniker Id="e837a4db-825f-43dd-9a33-4614cbad36e2" LastKnownName="driverDemandConnector : DriverDemandConnector" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="7c2c3140-2600-4341-97db-11cb194cb08d" name="ExecutionOccurrenceSpecification4">
+            <elementDefinition Id="4535fc6e-756a-48b6-94cd-eb2f8cd4bffb" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="b073b7fb-5399-4e2f-b616-876605ace0da" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="e837a4db-825f-43dd-9a33-4614cbad36e2" LastKnownName="driverDemandConnector : DriverDemandConnector" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="eb794625-c53c-462e-81cf-b2b8dfbf40b1" name="MessageOccurrenceSpecification3">
+            <elementDefinition Id="8181d5d8-1ba7-4b41-8872-ebb0d01ea979" />
+            <covered>
+              <lifelineMoniker Id="3dab1444-620e-4fd1-ae01-53b756b8f552" LastKnownName="driverDemandInPort : DriverDemandInPort" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="b2660ad3-cb39-4239-a1da-d606d3273f2e" name="MessageOccurrenceSpecification4">
+            <elementDefinition Id="3732cd27-04b7-4d8d-b704-13ab5b44d07e" />
+            <covered>
+              <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="drivingCycle : DrivingCycle" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification Id="c8fda89d-1f6d-44e4-8252-bbd3a0f289ab" name="ExecutionOccurrenceSpecification2">
+            <elementDefinition Id="0e76d5cb-5282-4554-9514-a2753631741a" />
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker Id="aec8a5fa-ab32-46f1-bf26-19ee5e4ee6cb" LastKnownName="ExecutionEvent" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker Id="3dab1444-620e-4fd1-ae01-53b756b8f552" LastKnownName="driverDemandInPort : DriverDemandInPort" />
+            </covered>
+          </executionOccurrenceSpecification>
+        </fragments>
+        <lifelines>
+          <lifeline Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" name="drivingCycle : DrivingCycle" isActor="false" lifelineDisplayName="drivingCycle : DrivingCycle">
+            <elementDefinition Id="322b8c33-4017-46aa-8f13-52f1c88ff13e" />
+            <represents>
+              <propertyMoniker Id="a79151e0-2457-4cea-9d1e-6d56c711ef63" />
+            </represents>
+            <topLevelOccurrences>
+              <messageOccurrenceSpecificationMoniker Id="5e11f161-f851-4167-a451-02945d35d02f" LastKnownName="MessageOccurrenceSpecification1" />
+              <messageOccurrenceSpecificationMoniker Id="b2660ad3-cb39-4239-a1da-d606d3273f2e" LastKnownName="MessageOccurrenceSpecification4" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline Id="3dab1444-620e-4fd1-ae01-53b756b8f552" name="driverDemandInPort : DriverDemandInPort" isActor="false" lifelineDisplayName="driverDemandInPort : DriverDemandInPort">
+            <elementDefinition Id="a31fac8f-b2d3-4dce-91c2-2b79010969e8" />
+            <represents>
+              <propertyMoniker Id="49b29686-7730-45d7-8c35-aa46991df3e6" />
+            </represents>
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker Id="bedad346-338e-4f52-9199-7af2b1b19ae6" LastKnownName="ExecutionOccurrenceSpecification1" />
+              <executionOccurrenceSpecificationMoniker Id="c8fda89d-1f6d-44e4-8252-bbd3a0f289ab" LastKnownName="ExecutionOccurrenceSpecification2" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline Id="e837a4db-825f-43dd-9a33-4614cbad36e2" name="driverDemandConnector : DriverDemandConnector" isActor="false" lifelineDisplayName="driverDemandConnector : DriverDemandConnector">
+            <elementDefinition Id="48320ba0-5a08-48d7-9295-883ab984fd27" />
+            <represents>
+              <propertyMoniker Id="5d153efb-a915-43ab-b6a6-92ef38ce98a0" />
+            </represents>
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker Id="91782065-d864-4da0-ab83-e371ed296342" LastKnownName="ExecutionOccurrenceSpecification3" />
+              <executionOccurrenceSpecificationMoniker Id="7c2c3140-2600-4341-97db-11cb194cb08d" LastKnownName="ExecutionOccurrenceSpecification4" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" name="driverDemandOutPort : DriverDemandOutPort" isActor="false" lifelineDisplayName="driverDemandOutPort : DriverDemandOutPort">
+            <elementDefinition Id="ccd3a4e8-efe0-4ffc-b72b-cdd8ebd3fa3b" />
+            <represents>
+              <propertyMoniker Id="dd1b49c1-5b80-4638-bce8-25d5d7b2e3ae" />
+            </represents>
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker Id="ada036c0-e0ba-4392-9d0b-7d653005062b" LastKnownName="ExecutionOccurrenceSpecification5" />
+              <executionOccurrenceSpecificationMoniker Id="b250fc76-9e9e-4a74-a825-925d484e6e1f" LastKnownName="ExecutionOccurrenceSpecification6" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline Id="941b3a1b-08a8-48aa-98cc-68310a888e1c" name="driver : Driver" isActor="false" lifelineDisplayName="driver : Driver">
+            <elementDefinition Id="499edca3-03bc-4dc0-91d4-e6671a638544" />
+            <represents>
+              <propertyMoniker Id="313c81f5-61f0-4440-9171-7da08f8637f9" />
+            </represents>
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker Id="6a6155e8-0780-410e-a4a7-bee8cd5b4931" LastKnownName="ExecutionOccurrenceSpecification7" />
+              <executionOccurrenceSpecificationMoniker Id="d9355422-bb58-4efe-9942-895260ba3e61" LastKnownName="ExecutionOccurrenceSpecification8" />
+            </topLevelOccurrences>
+          </lifeline>
+        </lifelines>
+        <messages>
+          <message Id="5a4bfa68-0909-42b5-931c-f3045011b7c4" messageKind="Complete" messageSort="SynchCall" createSelfMessage="false" signatureText="+ request()">
+            <elementDefinition Id="ab5e619b-9297-410f-bbde-8dc832d7d273" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="5e11f161-f851-4167-a451-02945d35d02f" LastKnownName="MessageOccurrenceSpecification1" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="e01783fa-f16e-4aa9-9465-b7c033c00f94" LastKnownName="MessageOccurrenceSpecification2" />
+            </receiveEvent>
+          </message>
+          <message Id="ad7b5a7b-479a-4863-a40d-1b9f3935d456" messageKind="Complete" messageSort="SynchCall" createSelfMessage="false" signatureText="+ request()">
+            <elementDefinition Id="8330c79b-025a-416d-9858-354e9e3efde2" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="1a6b1be3-4ca3-45b7-b61a-0552ee33be86" LastKnownName="MessageOccurrenceSpecification5" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="b3a5854b-f14a-45c3-977a-2d6d9e2077e9" LastKnownName="MessageOccurrenceSpecification6" />
+            </receiveEvent>
+          </message>
+          <message Id="c05f63c9-a8d2-439b-8114-d94644341bb5" messageKind="Complete" messageSort="SynchCall" createSelfMessage="false" signatureText="+ request()">
+            <elementDefinition Id="c57e7f50-5251-4fcd-b197-6079d5807078" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="0aab0f7f-a14c-4e96-9724-3f0a30edf827" LastKnownName="MessageOccurrenceSpecification9" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="c35937db-7f24-4630-9bb9-c9e001b577f5" LastKnownName="MessageOccurrenceSpecification10" />
+            </receiveEvent>
+          </message>
+          <message Id="0a5e3426-0f53-489d-9c02-bdbceaeac63e" name="Message4" messageKind="Complete" messageSort="SynchCall" createSelfMessage="false">
+            <elementDefinition Id="4acb68aa-f5c8-4fd1-9665-69ca1465983f" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="072d6694-41bd-495e-9d90-b12a95182480" LastKnownName="MessageOccurrenceSpecification13" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="19e8157f-563c-4d4d-9152-d44a999dc6e6" LastKnownName="MessageOccurrenceSpecification14" />
+            </receiveEvent>
+          </message>
+          <message Id="2c772741-ca85-45a6-adda-d72837703f44" name="&lt;&lt;return&gt;&gt;" messageKind="Complete" messageSort="Reply" createSelfMessage="false">
+            <elementDefinition Id="908a754a-46ff-4f21-88ad-f8e069a75462" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="3d73e144-c381-4b10-8b75-14754b6d8813" LastKnownName="MessageOccurrenceSpecification15" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="3c1946fc-3d26-49fd-9488-ffa4b4216f25" LastKnownName="MessageOccurrenceSpecification16" />
+            </receiveEvent>
+          </message>
+          <message Id="1ae74185-dbe5-421b-94c0-ab962706aac7" name="&lt;&lt;return&gt;&gt;" messageKind="Complete" messageSort="Reply" createSelfMessage="false">
+            <elementDefinition Id="5ec45304-a138-4528-9e32-e96d7165b1a6" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="7d71db48-fb18-43c6-82c6-096a490712e8" LastKnownName="MessageOccurrenceSpecification11" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="8a7d8cac-7994-4bab-9331-3019a14de1dc" LastKnownName="MessageOccurrenceSpecification12" />
+            </receiveEvent>
+          </message>
+          <message Id="cc1550d4-ea12-4f7e-b338-92e0fdd4b018" name="&lt;&lt;return&gt;&gt;" messageKind="Complete" messageSort="Reply" createSelfMessage="false">
+            <elementDefinition Id="0630eef4-69ef-4bf7-8a99-72ec3fb49881" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="b72c98c9-b5a4-4085-9914-983169e442d4" LastKnownName="MessageOccurrenceSpecification7" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="feb26b78-ce66-4f10-b795-ef65dc6b3132" LastKnownName="MessageOccurrenceSpecification8" />
+            </receiveEvent>
+          </message>
+          <message Id="62204254-691c-4589-80f6-ac03e1253447" name="&lt;&lt;return&gt;&gt;" messageKind="Complete" messageSort="Reply" createSelfMessage="false">
+            <elementDefinition Id="0f5d2596-4d0b-423d-b884-a6faf0782705" />
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker Id="eb794625-c53c-462e-81cf-b2b8dfbf40b1" LastKnownName="MessageOccurrenceSpecification3" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker Id="b2660ad3-cb39-4239-a1da-d606d3273f2e" LastKnownName="MessageOccurrenceSpecification4" />
+            </receiveEvent>
+          </message>
+        </messages>
+        <ownedAttributesInternal>
+          <property Id="78fd1baa-dfd2-4994-b351-eb0e4043caac" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="eacfb288-4fad-4f7d-9efc-bf49413fb800" />
+            <type_NamedElement>
+              <referencedTypeMoniker Id="ccef7cdb-1ca7-4bdb-b4c7-77e53b4bdf8d" LastKnownName="DrivingCycle" />
+            </type_NamedElement>
+          </property>
+          <property Id="ec920292-5851-4aa5-91ef-1fc9a940b7fe" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="17bf4af5-6fad-4409-9fca-c88c47360dfe" />
+            <type_NamedElement>
+              <referencedTypeMoniker Id="758373ff-415b-4fe1-a1de-2e49646dbafe" LastKnownName="VectoSimulator" />
+            </type_NamedElement>
+          </property>
+          <property Id="a79151e0-2457-4cea-9d1e-6d56c711ef63" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="b489a5ab-6755-45e8-8fd9-0e5f7441261b" />
+            <type_NamedElement>
+              <referencedTypeMoniker Id="ccef7cdb-1ca7-4bdb-b4c7-77e53b4bdf8d" LastKnownName="DrivingCycle" />
+            </type_NamedElement>
+          </property>
+          <property Id="49b29686-7730-45d7-8c35-aa46991df3e6" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="30b96102-0d84-40ad-83ce-3ba840828efb" />
+            <type_NamedElement>
+              <referencedTypeMoniker Id="884e1449-a991-4320-9a16-e28bd966b8de" LastKnownName="DriverDemandInPort" />
+            </type_NamedElement>
+          </property>
+          <property Id="5d153efb-a915-43ab-b6a6-92ef38ce98a0" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="e48ddb94-bb3b-4ff8-a604-569f775142f3" />
+            <type_NamedElement>
+              <referencedTypeMoniker Id="86611c4a-9784-4774-9c85-849382089800" LastKnownName="DriverDemandConnector" />
+            </type_NamedElement>
+          </property>
+          <property Id="dd1b49c1-5b80-4638-bce8-25d5d7b2e3ae" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="116b1945-8738-478f-8ff0-275d81725470" />
+            <type_NamedElement>
+              <referencedTypeMoniker Id="272974f3-9984-4c4c-a0c4-e56565b89bb0" LastKnownName="DriverDemandOutPort" />
+            </type_NamedElement>
+          </property>
+          <property Id="313c81f5-61f0-4440-9171-7da08f8637f9" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="57fe4d5e-cc86-4cd3-aa11-80f53a29bc09" />
+            <type_NamedElement>
+              <referencedTypeMoniker Id="25ba047a-8210-433a-8fb8-44be1d19dcfb" LastKnownName="Driver" />
+            </type_NamedElement>
+          </property>
+        </ownedAttributesInternal>
+      </interaction>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="ccef7cdb-1ca7-4bdb-b4c7-77e53b4bdf8d" name="DrivingCycle" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::DrivingCycle">
+        <elementDefinition Id="48afbe6b-6554-4885-b5e3-88623e2c3ed7" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="758373ff-415b-4fe1-a1de-2e49646dbafe" name="VectoSimulator" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::VectoSimulator">
+        <elementDefinition Id="65f8b04d-75e5-4d26-a459-f5b4bc0525ba" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="884e1449-a991-4320-9a16-e28bd966b8de" name="DriverDemandInPort" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::DriverDemandInPort">
+        <elementDefinition Id="e5ea403a-118e-435d-bf25-21cfdc3c3c3c" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="86611c4a-9784-4774-9c85-849382089800" name="DriverDemandConnector" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::DriverDemandConnector">
+        <elementDefinition Id="56145300-9d95-4079-857f-35f26ea7388f" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="272974f3-9984-4c4c-a0c4-e56565b89bb0" name="DriverDemandOutPort" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::DriverDemandOutPort">
+        <elementDefinition Id="6ba4ef16-f79d-45b8-8d61-7b649b1f5fe7" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="e49435db-9daf-4b92-81b1-669fc980db86" name="ExecutionEvent">
+        <elementDefinition Id="7707572f-269f-4cf4-b567-07c992fff4ff" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="aec8a5fa-ab32-46f1-bf26-19ee5e4ee6cb" name="ExecutionEvent">
+        <elementDefinition Id="d3d311f8-c473-48bc-a745-a76814838855" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="21de0aa7-3567-47e1-b6f1-d19c7bf3828e" name="ExecutionEvent">
+        <elementDefinition Id="c9527dec-ff57-4c1c-a5e6-b0b6df6e3355" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="b073b7fb-5399-4e2f-b616-876605ace0da" name="ExecutionEvent">
+        <elementDefinition Id="05cb325f-8fd2-47f3-8904-1ddae08f9c1d" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="b64d0c20-ff5e-48d1-ab1c-5767ff40d68d" name="ExecutionEvent">
+        <elementDefinition Id="1df160d7-9dda-4ca9-8b63-74c0838dc069" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="22869c4e-ffe8-4ba5-8057-f169a6fa2d40" name="ExecutionEvent">
+        <elementDefinition Id="439efbcc-d589-48b7-8cf3-c081e54dd05c" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="25ba047a-8210-433a-8fb8-44be1d19dcfb" name="Driver" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::Driver">
+        <elementDefinition Id="ca689ad9-b211-4533-a0ff-0fd22038b6b4" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="dfc132db-dd76-4b59-b07a-cfd53cf74dd9" name="ExecutionEvent">
+        <elementDefinition Id="b3a2382d-0423-4f46-9424-1ddc6a39c0bf" />
+      </executionEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent Id="498476a0-1f3e-4509-80c7-b9e2e8a1e1ca" name="ExecutionEvent">
+        <elementDefinition Id="a99897c8-dbf2-4ee4-8d3c-17a6256e16f2" />
+      </executionEvent>
+    </packageHasNamedElement>
+  </packagedElements>
+  <package Id="d9536f1a-29ae-4998-a61d-8ed09f4ae8e4" name="VectoArchitecture">
+    <elementDefinition Id="d70f4262-18df-49eb-a245-704a07d56711" />
+  </package>
+</SequenceDesignerModel>
