@@ -143,7 +143,7 @@
               <classMoniker
                 Id="6ccde41a-02a4-4678-8224-c94070fa1e1a"
                 LastKnownName="TnInPort"
-                LastKnownLocation="VectoArchitecture.uml" />
+                LastKnownLocation="Package_1506.uml" />
             </type_NamedElement>
           </property>
         </ownedAttributesInternal>
@@ -596,6 +596,59 @@
         isAbstract="true"
         isLeaf="false"
         isActiveClass="false">
+        <ownedRedefinableTemplateSignatureInternal>
+          <redefinableTemplateSignature
+            Id="d1e530fe-2980-4542-beff-9c3c2a2e5d3e"
+            parameters=""
+            isLeaf="false">
+            <ownedParameters>
+              <classifierTemplateParameter
+                Id="64eb9acf-aae4-4606-9abe-d0d8d6b63021">
+                <ownedParameterableElement>
+                  <class
+                    Id="a9ef1952-0bd3-4c68-a3bc-149a2c493b9e"
+                    name="TI"
+                    isAbstract="false"
+                    isLeaf="false"
+                    isActiveClass="false" />
+                </ownedParameterableElement>
+                <constrainingClassifier>
+                  <classMoniker
+                    Id="5d611a82-1271-461d-ae3e-739a6f08dfc7"
+                    LastKnownName="InPort"
+                    LastKnownLocation="Package_1506.uml" />
+                </constrainingClassifier>
+              </classifierTemplateParameter>
+              <classifierTemplateParameter
+                Id="146f585d-79b3-4c9d-9c01-2bc028db02de">
+                <ownedParameterableElement>
+                  <class
+                    Id="05771f0c-bae3-47de-b9a8-07deb85fb6bc"
+                    name="TO"
+                    isAbstract="false"
+                    isLeaf="false"
+                    isActiveClass="false" />
+                </ownedParameterableElement>
+                <constrainingClassifier>
+                  <classMoniker
+                    Id="c8fccb93-ec53-4ec7-8bbb-29eafe2522ae"
+                    LastKnownName="OutPort"
+                    LastKnownLocation="Package_1506.uml" />
+                </constrainingClassifier>
+              </classifierTemplateParameter>
+              <classifierTemplateParameter
+                Id="5020e641-6281-4f6d-9560-f70f64e73948">
+                <ownedParameterableElement>
+                  <Interface
+                    Id="8c851fd1-e13b-423d-9b84-a6465f552d65"
+                    name="TP"
+                    isAbstract="false"
+                    isLeaf="false" />
+                </ownedParameterableElement>
+              </classifierTemplateParameter>
+            </ownedParameters>
+          </redefinableTemplateSignature>
+        </ownedRedefinableTemplateSignatureInternal>
         <ownedAttributesInternal>
           <property
             Id="1cd05cb6-f38e-4f7a-a972-7f238e9dcbb9"
@@ -611,8 +664,8 @@
             isComposite="false">
             <type_NamedElement>
               <classMoniker
-                Id="5d611a82-1271-461d-ae3e-739a6f08dfc7"
-                LastKnownName="InPort"
+                Id="a9ef1952-0bd3-4c68-a3bc-149a2c493b9e"
+                LastKnownName="TI"
                 LastKnownLocation="VectoArchitecture.uml" />
             </type_NamedElement>
           </property>
@@ -630,8 +683,8 @@
             isComposite="false">
             <type_NamedElement>
               <classMoniker
-                Id="c8fccb93-ec53-4ec7-8bbb-29eafe2522ae"
-                LastKnownName="OutPort"
+                Id="05771f0c-bae3-47de-b9a8-07deb85fb6bc"
+                LastKnownName="TO"
                 LastKnownLocation="VectoArchitecture.uml" />
             </type_NamedElement>
           </property>
@@ -656,7 +709,7 @@
                     <classMoniker
                       Id="c8fccb93-ec53-4ec7-8bbb-29eafe2522ae"
                       LastKnownName="OutPort"
-                      LastKnownLocation="VectoArchitecture.uml" />
+                      LastKnownLocation="Package_1506.uml" />
                   </type_NamedElement>
                 </parameter>
               </operationHasOwnedParameters>
@@ -670,7 +723,7 @@
                     <classMoniker
                       Id="5d611a82-1271-461d-ae3e-739a6f08dfc7"
                       LastKnownName="InPort"
-                      LastKnownLocation="VectoArchitecture.uml" />
+                      LastKnownLocation="Package_1506.uml" />
                   </type_NamedElement>
                 </parameter>
               </operationHasOwnedParameters>
@@ -693,325 +746,6 @@
             concurrency="Sequential"
             isQuery="false" />
         </ownedOperationsInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="1f1d480a-dc7e-4b67-ab8a-e403ad4c2c1a"
-        name="TnConnector"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="1eaf82d5-d8a5-42d1-9024-36d9f9529055"
-            isSubstitutable="false">
-            <classMoniker
-              Id="10a28496-8c6a-4c9d-9eee-9fc58f52946a"
-              LastKnownName="Connector"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-        <ownedOperationsInternal>
-          <operation
-            Id="7ac1028b-52b0-4065-bdf2-9e372415ad0d"
-            name="connect"
-            isLeaf="false"
-            isStatic="false"
-            isAbstract="false"
-            concurrency="Sequential"
-            isQuery="false">
-            <ownedParameters>
-              <operationHasOwnedParameters>
-                <parameter
-                  Id="11dee870-059f-4373-9c57-842c6353b617"
-                  name="out"
-                  direction="In"
-                  isUnique="false">
-                  <type_NamedElement>
-                    <classMoniker
-                      Id="0e473a84-9fc0-4c1a-85ba-a15b6aa614c2"
-                      LastKnownName="TnOutPort"
-                      LastKnownLocation="VectoArchitecture.uml" />
-                  </type_NamedElement>
-                </parameter>
-              </operationHasOwnedParameters>
-              <operationHasOwnedParameters>
-                <parameter
-                  Id="78fb6d57-dc34-489d-a2ce-a528796c246a"
-                  name="in"
-                  direction="In"
-                  isUnique="false">
-                  <type_NamedElement>
-                    <classMoniker
-                      Id="6ccde41a-02a4-4678-8224-c94070fa1e1a"
-                      LastKnownName="TnInPort"
-                      LastKnownLocation="VectoArchitecture.uml" />
-                  </type_NamedElement>
-                </parameter>
-              </operationHasOwnedParameters>
-            </ownedParameters>
-          </operation>
-        </ownedOperationsInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="25432d21-c553-4fc1-892a-ba5be47b8bd6"
-        name="FvConnector"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="a732a455-1b31-4106-92c2-92ed82f992b6"
-            isSubstitutable="false">
-            <classMoniker
-              Id="10a28496-8c6a-4c9d-9eee-9fc58f52946a"
-              LastKnownName="Connector"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="7dd57983-5a2d-4f2a-9791-c5f053940790"
-        name="UIConnector"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="08a9f805-998b-4712-9a97-ac162715be67"
-            isSubstitutable="false">
-            <classMoniker
-              Id="10a28496-8c6a-4c9d-9eee-9fc58f52946a"
-              LastKnownName="Connector"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="5d611a82-1271-461d-ae3e-739a6f08dfc7"
-        name="InPort"
-        isAbstract="true"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="8e1988a5-dd8a-4d07-86b6-598329e278ce"
-            isSubstitutable="false">
-            <classMoniker
-              Id="d0521447-d513-4714-b3ef-d5b2c48c260b"
-              LastKnownName="Port"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-        <ownedAttributesInternal>
-          <property
-            Id="a6b9f48a-1f6b-4893-84ad-ae2f5161109b"
-            name="connector_"
-            visibility="Protected"
-            isLeaf="false"
-            isStatic="false"
-            isReadOnly="false"
-            isUnique="false"
-            isDerived="false"
-            isDerivedUnion="false"
-            aggregation="None"
-            isComposite="false">
-            <type_NamedElement>
-              <classMoniker
-                Id="10a28496-8c6a-4c9d-9eee-9fc58f52946a"
-                LastKnownName="Connector"
-                LastKnownLocation="VectoArchitecture.uml" />
-            </type_NamedElement>
-          </property>
-        </ownedAttributesInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="6ccde41a-02a4-4678-8224-c94070fa1e1a"
-        name="TnInPort"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="384793c5-fa72-4264-a554-c2527f94fa41"
-            isSubstitutable="false">
-            <classMoniker
-              Id="5d611a82-1271-461d-ae3e-739a6f08dfc7"
-              LastKnownName="InPort"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="b54ea68f-78d3-4194-b485-22e8f7d87e05"
-        name="FvInPort"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="55052d01-896e-43b1-830d-b1ed6f43b01a"
-            isSubstitutable="false">
-            <classMoniker
-              Id="5d611a82-1271-461d-ae3e-739a6f08dfc7"
-              LastKnownName="InPort"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="3d53bef1-ec65-4837-a7d2-96c6b3ee501e"
-        name="UIInPort"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="a5a3018f-42f6-490b-96de-8c8e63443224"
-            isSubstitutable="false">
-            <classMoniker
-              Id="5d611a82-1271-461d-ae3e-739a6f08dfc7"
-              LastKnownName="InPort"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="0e473a84-9fc0-4c1a-85ba-a15b6aa614c2"
-        name="TnOutPort"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="d1e4324a-80e4-4660-9a4b-0b1c2703c6ae"
-            isSubstitutable="false">
-            <classMoniker
-              Id="c8fccb93-ec53-4ec7-8bbb-29eafe2522ae"
-              LastKnownName="OutPort"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="c8fccb93-ec53-4ec7-8bbb-29eafe2522ae"
-        name="OutPort"
-        isAbstract="true"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="51600169-a489-43b7-be1f-842e6c25424c"
-            isSubstitutable="false">
-            <classMoniker
-              Id="d0521447-d513-4714-b3ef-d5b2c48c260b"
-              LastKnownName="Port"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-        <ownedAttributesInternal>
-          <property
-            Id="af59a81e-6836-4ebe-b02f-0d2773056b60"
-            name="vsc_"
-            visibility="Protected"
-            isLeaf="false"
-            isStatic="false"
-            isReadOnly="false"
-            isUnique="false"
-            isDerived="false"
-            isDerivedUnion="false"
-            aggregation="None"
-            isComposite="false">
-            <type_NamedElement>
-              <classMoniker
-                Id="0708ae64-77eb-4a35-a272-808e3162924f"
-                LastKnownName="VectoSimulationComponent"
-                LastKnownLocation="VectoArchitecture.uml" />
-            </type_NamedElement>
-          </property>
-        </ownedAttributesInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="d0521447-d513-4714-b3ef-d5b2c48c260b"
-        name="Port"
-        isAbstract="true"
-        isLeaf="false"
-        isActiveClass="false">
-        <ownedOperationsInternal>
-          <operation
-            Id="ff62e397-a512-4c38-abbf-5dcee9e2b905"
-            name="request"
-            isLeaf="false"
-            isStatic="false"
-            isAbstract="false"
-            concurrency="Sequential"
-            isQuery="false" />
-          <operation
-            Id="be60251e-1c58-4eb0-85eb-b1075e14cb0b"
-            name="commitSimulationStep"
-            isLeaf="false"
-            isStatic="false"
-            isAbstract="false"
-            concurrency="Sequential"
-            isQuery="false" />
-        </ownedOperationsInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="ae2c2f2f-41be-4937-8f1d-25692bf6f911"
-        name="FvOutPort"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="4ed130d3-d146-499f-9a30-b83964b3baa9"
-            isSubstitutable="false">
-            <classMoniker
-              Id="c8fccb93-ec53-4ec7-8bbb-29eafe2522ae"
-              LastKnownName="OutPort"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="fa74f479-5da5-488c-aae9-ffc456b46246"
-        name="UIOutPort"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="c6f8120d-288a-4bb0-8561-856eb719d3e0"
-            isSubstitutable="false">
-            <classMoniker
-              Id="c8fccb93-ec53-4ec7-8bbb-29eafe2522ae"
-              LastKnownName="OutPort"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
       </class>
     </packageHasNamedElement>
     <packageHasNamedElement>
@@ -1081,162 +815,6 @@
             </relationshipOwnedElementsInternal>
           </association>
         </targetEnds>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="66703783-1436-4b5c-ab29-17461faaa3be"
-        name="RoadConnector"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="453a10d7-6d57-4170-84f0-6b78f375ca47"
-            isSubstitutable="false">
-            <classMoniker
-              Id="10a28496-8c6a-4c9d-9eee-9fc58f52946a"
-              LastKnownName="Connector"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="56145300-9d95-4079-857f-35f26ea7388f"
-        name="DriverDemandConnector"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="69a6f477-d3a3-4608-82ad-6e1293fad41b"
-            isSubstitutable="false">
-            <classMoniker
-              Id="10a28496-8c6a-4c9d-9eee-9fc58f52946a"
-              LastKnownName="Connector"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="8664dd12-585d-4b81-948a-99f49bd8d6a6"
-        name="RoadInPort"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="baa809ba-5606-4b3d-a31a-c4c4177e858c"
-            isSubstitutable="false">
-            <classMoniker
-              Id="5d611a82-1271-461d-ae3e-739a6f08dfc7"
-              LastKnownName="InPort"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="4949f542-60c3-418e-a153-7b7c3cec463f"
-        name="RoadOutPort"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="f4c998fb-4b97-4250-99b3-0479d2266aa4"
-            isSubstitutable="false">
-            <classMoniker
-              Id="c8fccb93-ec53-4ec7-8bbb-29eafe2522ae"
-              LastKnownName="OutPort"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="6ba4ef16-f79d-45b8-8d61-7b649b1f5fe7"
-        name="DriverDemandOutPort"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="93168b9b-6ebd-4cf2-8b00-1eabc9c6b8ed"
-            isSubstitutable="false">
-            <classMoniker
-              Id="c8fccb93-ec53-4ec7-8bbb-29eafe2522ae"
-              LastKnownName="OutPort"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-        <ownedAttributesInternal>
-          <property
-            Id="a9e8feb7-70f8-4d17-afab-09272de8164d"
-            name="connector_"
-            visibility="Protected"
-            isLeaf="false"
-            isStatic="false"
-            isReadOnly="false"
-            isUnique="false"
-            isDerived="false"
-            isDerivedUnion="false"
-            aggregation="None"
-            isComposite="false">
-            <type_NamedElement>
-              <classMoniker
-                Id="56145300-9d95-4079-857f-35f26ea7388f"
-                LastKnownName="DriverDemandConnector"
-                LastKnownLocation="VectoArchitecture.uml" />
-            </type_NamedElement>
-          </property>
-        </ownedAttributesInternal>
-      </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <class
-        Id="e5ea403a-118e-435d-bf25-21cfdc3c3c3c"
-        name="DriverDemandInPort"
-        isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false">
-        <generalsInternal>
-          <generalization
-            Id="fe798775-6cb0-4d0e-8427-cd3351989058"
-            isSubstitutable="false">
-            <classMoniker
-              Id="5d611a82-1271-461d-ae3e-739a6f08dfc7"
-              LastKnownName="InPort"
-              LastKnownLocation="VectoArchitecture.uml" />
-          </generalization>
-        </generalsInternal>
-        <ownedAttributesInternal>
-          <property
-            Id="d335ffe3-31d7-4ba3-a326-7aead669d9b9"
-            name="vsc_"
-            visibility="Protected"
-            isLeaf="false"
-            isStatic="false"
-            isReadOnly="false"
-            isUnique="false"
-            isDerived="false"
-            isDerivedUnion="false"
-            aggregation="None"
-            isComposite="false">
-            <type_NamedElement>
-              <classMoniker
-                Id="0708ae64-77eb-4a35-a272-808e3162924f"
-                LastKnownName="VectoSimulationComponent"
-                LastKnownLocation="VectoArchitecture.uml" />
-            </type_NamedElement>
-          </property>
-        </ownedAttributesInternal>
       </class>
     </packageHasNamedElement>
     <packageHasNamedElement>
@@ -1549,11 +1127,6 @@
           <messageOccurrenceSpecification
             Id="8f2e29d7-4815-497e-999c-b5901402f96e"
             name="MessageOccurrenceSpecification5">
-            <event>
-              <sendOperationEventMoniker
-                Id="6498ca85-d1e9-4cb4-a133-62f102012d66"
-                LastKnownLocation="VectoArchitecture.uml" />
-            </event>
             <covered>
               <lifelineMoniker
                 Id="a31fac8f-b2d3-4dce-91c2-2b79010969e8"
@@ -1564,11 +1137,6 @@
           <messageOccurrenceSpecification
             Id="217827ee-21ff-4d98-aa17-1f5bdefc4549"
             name="MessageOccurrenceSpecification6">
-            <event>
-              <receiveOperationEventMoniker
-                Id="dcd8dcfd-4bbd-4ba6-8dfd-657328cc0fc7"
-                LastKnownLocation="VectoArchitecture.uml" />
-            </event>
             <covered>
               <lifelineMoniker
                 Id="48320ba0-5a08-48d7-9295-883ab984fd27"
@@ -2018,8 +1586,7 @@
             Id="8330c79b-025a-416d-9858-354e9e3efde2"
             messageKind="Complete"
             messageSort="SynchCall"
-            createSelfMessage="false"
-            signatureText="+ request()">
+            createSelfMessage="false">
             <sendEvent>
               <messageOccurrenceSpecificationMoniker
                 Id="8f2e29d7-4815-497e-999c-b5901402f96e"
@@ -2210,7 +1777,7 @@
               <classMoniker
                 Id="e5ea403a-118e-435d-bf25-21cfdc3c3c3c"
                 LastKnownName="DriverDemandInPort"
-                LastKnownLocation="VectoArchitecture.uml" />
+                LastKnownLocation="Package_1506.uml" />
             </type_NamedElement>
           </property>
           <property
@@ -2223,8 +1790,8 @@
             aggregation="None"
             isComposite="false">
             <type_NamedElement>
-              <classMoniker
-                Id="56145300-9d95-4079-857f-35f26ea7388f"
+              <undefinedTypeMoniker
+                Id="b49cfd77-916e-411d-8d0d-5e0314de21b1"
                 LastKnownName="DriverDemandConnector"
                 LastKnownLocation="VectoArchitecture.uml" />
             </type_NamedElement>
@@ -2242,7 +1809,7 @@
               <classMoniker
                 Id="6ba4ef16-f79d-45b8-8d61-7b649b1f5fe7"
                 LastKnownName="DriverDemandOutPort"
-                LastKnownLocation="VectoArchitecture.uml" />
+                LastKnownLocation="Package_1506.uml" />
             </type_NamedElement>
           </property>
           <property
@@ -2311,7 +1878,7 @@
           <operationMoniker
             Id="ff62e397-a512-4c38-abbf-5dcee9e2b905"
             LastKnownName="request"
-            LastKnownLocation="VectoArchitecture.uml" />
+            LastKnownLocation="Package_1506.uml" />
         </operation>
       </sendOperationEvent>
     </packageHasNamedElement>
@@ -2322,29 +1889,7 @@
           <operationMoniker
             Id="ff62e397-a512-4c38-abbf-5dcee9e2b905"
             LastKnownName="request"
-            LastKnownLocation="VectoArchitecture.uml" />
-        </operation>
-      </receiveOperationEvent>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <sendOperationEvent
-        Id="6498ca85-d1e9-4cb4-a133-62f102012d66">
-        <operation>
-          <operationMoniker
-            Id="f9e123fe-9d57-4718-b100-8ae24a0a82fe"
-            LastKnownName="request"
-            LastKnownLocation="VectoArchitecture.uml" />
-        </operation>
-      </sendOperationEvent>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <receiveOperationEvent
-        Id="dcd8dcfd-4bbd-4ba6-8dfd-657328cc0fc7">
-        <operation>
-          <operationMoniker
-            Id="f9e123fe-9d57-4718-b100-8ae24a0a82fe"
-            LastKnownName="request"
-            LastKnownLocation="VectoArchitecture.uml" />
+            LastKnownLocation="Package_1506.uml" />
         </operation>
       </receiveOperationEvent>
     </packageHasNamedElement>
@@ -2355,7 +1900,7 @@
           <operationMoniker
             Id="ff62e397-a512-4c38-abbf-5dcee9e2b905"
             LastKnownName="request"
-            LastKnownLocation="VectoArchitecture.uml" />
+            LastKnownLocation="Package_1506.uml" />
         </operation>
       </sendOperationEvent>
     </packageHasNamedElement>
@@ -2366,17 +1911,33 @@
           <operationMoniker
             Id="ff62e397-a512-4c38-abbf-5dcee9e2b905"
             LastKnownName="request"
-            LastKnownLocation="VectoArchitecture.uml" />
+            LastKnownLocation="Package_1506.uml" />
         </operation>
       </receiveOperationEvent>
     </packageHasNamedElement>
     <packageHasNamedElement>
-      <class
-        Id="cf069517-1083-457c-bc88-ec7460e08605"
-        name="Class1"
+      <undefinedType
+        Id="b49cfd77-916e-411d-8d0d-5e0314de21b1"
+        name="DriverDemandConnector" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="4b454dd7-5989-4b9d-bb4f-87055161e26b"
+        name="IPort"
         isAbstract="false"
-        isLeaf="false"
-        isActiveClass="false" />
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="0bcc57f5-9d5d-486f-b2d0-7431faf85f71"
+        LastKnownName="Models.Connector.Ports"
+        LastKnownLocation="Package_1505.uml" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="cc1b57e9-2f05-498d-bc22-aa2508bf9af9"
+        LastKnownName="Models.Connector.Ports.Impl"
+        LastKnownLocation="Package_1506.uml" />
     </packageHasNamedElement>
   </packagedElements>
   <primitiveType

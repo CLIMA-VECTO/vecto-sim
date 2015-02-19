@@ -4,9 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using TUGraz.VectoCore.Models.Connector;
+using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	abstract class VectoSimulationComponent
+	public abstract class VectoSimulationComponent
 	{
+		abstract public InPort InPort();
+		abstract public OutPort OutPort();
+
 	}
+
 }

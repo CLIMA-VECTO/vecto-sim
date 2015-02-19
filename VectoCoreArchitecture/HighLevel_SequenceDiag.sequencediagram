@@ -1,19 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <SequenceDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" dslVersion="1.0.0.0" Id="784de59c-9096-4010-b35c-fa2e1ce01da2" name="Sequence1" linkedPackageId="d9536f1a-29ae-4998-a61d-8ed09f4ae8e4" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner">
-  <profileInstances>
-    <packageHasProfileInstances Id="bc773b85-788e-40ab-a17f-c3c454c766a1">
-      <profileInstance Id="07cb1b4a-f58f-45c1-8f1b-0235a99229ed" name="StandardProfileL2">
-        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
-      </profileInstance>
-      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
-    </packageHasProfileInstances>
-    <packageHasProfileInstances Id="afaefff7-79ab-42fb-ae49-35a36ea3f4d7">
-      <profileInstance Id="efe5c5c8-8e0d-463e-9e22-bcd31ef0cd76" name="StandardProfileL3">
-        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
-      </profileInstance>
-      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
-    </packageHasProfileInstances>
-  </profileInstances>
   <packagedElements>
     <packageHasNamedElement>
       <interaction Id="60558488-6e4a-41e5-b61d-87aa0c2c6371" name="Sequence1" collapseFragmentsFlag="false" isActiveClass="false" isAbstract="false" isLeaf="false" isReentrant="false">
@@ -336,7 +322,7 @@
               <messageOccurrenceSpecificationMoniker Id="e01783fa-f16e-4aa9-9465-b7c033c00f94" LastKnownName="MessageOccurrenceSpecification2" />
             </receiveEvent>
           </message>
-          <message Id="ad7b5a7b-479a-4863-a40d-1b9f3935d456" messageKind="Complete" messageSort="SynchCall" createSelfMessage="false" signatureText="+ request()">
+          <message Id="ad7b5a7b-479a-4863-a40d-1b9f3935d456" messageKind="Complete" messageSort="SynchCall" createSelfMessage="false">
             <elementDefinition Id="8330c79b-025a-416d-9858-354e9e3efde2" />
             <sendEvent>
               <messageOccurrenceSpecificationMoniker Id="1a6b1be3-4ca3-45b7-b61a-0552ee33be86" LastKnownName="MessageOccurrenceSpecification5" />
@@ -428,7 +414,7 @@
           <property Id="5d153efb-a915-43ab-b6a6-92ef38ce98a0" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
             <elementDefinition Id="e48ddb94-bb3b-4ff8-a604-569f775142f3" />
             <type_NamedElement>
-              <referencedTypeMoniker Id="86611c4a-9784-4774-9c85-849382089800" LastKnownName="DriverDemandConnector" />
+              <referencedTypeMoniker Id="8aaab201-1873-4964-824a-2b67799df901" LastKnownName="DriverDemandConnector" />
             </type_NamedElement>
           </property>
           <property Id="dd1b49c1-5b80-4638-bce8-25d5d7b2e3ae" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
@@ -459,11 +445,6 @@
     <packageHasNamedElement>
       <referencedType Id="884e1449-a991-4320-9a16-e28bd966b8de" name="DriverDemandInPort" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::DriverDemandInPort">
         <elementDefinition Id="e5ea403a-118e-435d-bf25-21cfdc3c3c3c" />
-      </referencedType>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <referencedType Id="86611c4a-9784-4774-9c85-849382089800" name="DriverDemandConnector" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::DriverDemandConnector">
-        <elementDefinition Id="56145300-9d95-4079-857f-35f26ea7388f" />
       </referencedType>
     </packageHasNamedElement>
     <packageHasNamedElement>
@@ -516,8 +497,27 @@
         <elementDefinition Id="a99897c8-dbf2-4ee4-8d3c-17a6256e16f2" />
       </executionEvent>
     </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="8aaab201-1873-4964-824a-2b67799df901" name="DriverDemandConnector" isAbstract="false" isLeaf="false" cachedFullName="DriverDemandConnector">
+        <elementDefinition Id="b49cfd77-916e-411d-8d0d-5e0314de21b1" />
+      </referencedType>
+    </packageHasNamedElement>
   </packagedElements>
   <package Id="d9536f1a-29ae-4998-a61d-8ed09f4ae8e4" name="VectoArchitecture">
     <elementDefinition Id="d70f4262-18df-49eb-a245-704a07d56711" />
+    <profileInstances>
+      <packageHasProfileInstances Id="bc773b85-788e-40ab-a17f-c3c454c766a1">
+        <profileInstance Id="07cb1b4a-f58f-45c1-8f1b-0235a99229ed" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="afaefff7-79ab-42fb-ae49-35a36ea3f4d7">
+        <profileInstance Id="efe5c5c8-8e0d-463e-9e22-bcd31ef0cd76" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
   </package>
 </SequenceDesignerModel>
