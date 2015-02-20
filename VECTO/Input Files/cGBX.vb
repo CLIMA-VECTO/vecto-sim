@@ -477,7 +477,7 @@ Public Class cGBX
         End If
 
         'Reduce step size if nu-range is too low
-        Do While (nuMax - nuMin) / nuStep < 10
+        Do While (nuMax - nuMin) / nuStep < 10 And nuStep > 0.00001
             nuStep *= 0.1
         Loop
 
