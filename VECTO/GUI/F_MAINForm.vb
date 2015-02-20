@@ -495,7 +495,7 @@ Public Class F_MAINForm
             If Lic.TimeWarn Then GUImsg(tMsgID.Warn, "License expiring date (y/m/d): " & Lic.ExpTime)
         End If
 
-        DEV.Enabled = Lic.LicFeature(9)
+        DEV.Enabled = True ' Lic.LicFeature(9)
 
         If DEV.Enabled Then
             DEV.LoadFromFile()

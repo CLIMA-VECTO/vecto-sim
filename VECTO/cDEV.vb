@@ -18,8 +18,7 @@ Public Class cDEV
     Private iOptionsDim As Integer
 
     Public TCiterPrec As Single
-    Public TCnUstep As Single
-    Public TCnUstepMin As Single
+    Public TClimit As Single
 
     Public AdvFormat As Boolean
 
@@ -124,17 +123,14 @@ Public Class cDEV
         Conf0.SingleVal = 0.001
         MyOptions.Add("TCiterPrec", Conf0)
 
-        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "TC iteration: start value for nU-step [1/min]")
-        Conf0.SingleVal = 100
-        MyOptions.Add("TCnUstep", Conf0)
-
-        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "TC iteration: lowest value for nU-step [1/min]")
-        Conf0.SingleVal = 0.01
-        MyOptions.Add("TCnUstepMin", Conf0)
-
-        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Better output files format")
+        Conf0 = New cDEVoption(tDEVconfType.tBoolean, "Detailed output files format")
         Conf0.BoolVal = False
         MyOptions.Add("AdvFormat", Conf0)
+
+
+        Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "Max. engine speed for torque converter operation")
+        Conf0.SingleVal = 1600
+        MyOptions.Add("TClimit", Conf0)
 
         '**************************** END: Parameters Configuration '*****************************
         '*****************************************************************************************
@@ -147,9 +143,8 @@ Public Class cDEV
     'Initialize the actual Config-Parameters from MyConfigs list
     Public Sub SetOptions()
         TCiterPrec = MyOptions("TCiterPrec").SingleVal
-        TCnUstep = MyOptions("TCnUstep").SingleVal
-        TCnUstepMin = MyOptions("TCnUstepMin").SingleVal
         AdvFormat = MyOptions("AdvFormat").BoolVal
+        TClimit = MyOptions("TClimit").SingleVal
     End Sub
 
     'Demo for Delegate Function
