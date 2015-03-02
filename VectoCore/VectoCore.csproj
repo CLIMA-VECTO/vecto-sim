@@ -40,6 +40,10 @@
       <HintPath>..\packages\Common.Logging.NLog31.3.0.0\lib\net40\Common.Logging.NLog31.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
     </Reference>
@@ -60,6 +64,8 @@
     <Compile Include="Models\Connector\Ports\Impl\TnOutPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
     <Compile Include="Models\SimulationComponent\Data\CombustionEngineData.cs" />
+    <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMap.cs" />
+    <Compile Include="Models\SimulationComponent\Data\Engine\FullLoadCurve.cs" />
     <Compile Include="Models\SimulationComponent\ICombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Wheels.cs" />
