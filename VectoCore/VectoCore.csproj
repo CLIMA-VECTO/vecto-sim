@@ -63,10 +63,13 @@
     <Compile Include="Models\Connector\Ports\Impl\TnInPort.cs" />
     <Compile Include="Models\Connector\Ports\Impl\TnOutPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ModalResult.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ModalResultFields.cs" />
     <Compile Include="Models\SimulationComponent\Data\CombustionEngineData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FullLoadCurve.cs" />
     <Compile Include="Models\SimulationComponent\ICombustionEngine.cs" />
+    <Compile Include="Models\SimulationComponent\IDataWriter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Wheels.cs" />
     <Compile Include="Models\SimulationComponent\IWheels.cs" />
