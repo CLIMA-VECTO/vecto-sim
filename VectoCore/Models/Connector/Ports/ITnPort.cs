@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports
 {
-	interface ITnPort
-	{
-	}
+    public interface ITnPort
+    {
+    }
 
-	interface ITnInPort : ITnPort
-	{
-		
-	}
+    public interface ITnInPort : ITnPort
+    {
 
-	interface ITnOutPort : ITnPort
-	{
-		
-	}
+    }
+
+    public interface ITnOutPort : ITnPort
+    {
+        void Request(TimeSpan absTime, TimeSpan dt, float torque, float engineSpeed);
+    }
 }

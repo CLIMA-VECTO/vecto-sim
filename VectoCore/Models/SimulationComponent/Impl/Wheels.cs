@@ -17,5 +17,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			throw new NotImplementedException();
 		}
+
+	    public override void CommitSimulationStep(IDataWriter writer)
+	    {
+	        throw new NotImplementedException();
+	    }
 	}
 }
