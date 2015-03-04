@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
 	public class FullLoadCurve
 	{
-        private DataTable data;
+        private DataTable _data;
 
 	    public FullLoadCurve(string fileName)
 	    {
