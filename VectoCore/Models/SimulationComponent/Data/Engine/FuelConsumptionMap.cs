@@ -8,5 +8,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
 	public class FuelConsumptionMap
 	{
+	    public FuelConsumptionMap(string fileName)
+	    {
+	        
+	    }
 	}
 }
