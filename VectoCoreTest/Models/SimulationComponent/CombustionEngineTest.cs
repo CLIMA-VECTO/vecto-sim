@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	public class CombustionEngineTest
 	{
 		[TestMethod]
-		public void TestEngineHasOutPort()
+		public void EngineHasOutPort()
 		{
 			var engineData = new CombustionEngineData();
 			var engine = new CombustionEngine(engineData);
@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 	    [TestMethod]
-	    public void TestOutPortRequestNotFailing()
+	    public void OutPortRequestNotFailing()
 	    {
             var engineData = new CombustionEngineData();
             var engine = new CombustionEngine(engineData);
@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	    }
 
         [TestMethod]
-        public void TestSimpleModalData()
+        public void SimpleModalData()
         {
             var engineData = new CombustionEngineData();
             var engine = new CombustionEngine(engineData);
