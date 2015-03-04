@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Tests.Utils;
 
-namespace VectoCoreTest
+namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
 	[TestClass]
 	public class CombustionEngineTest
@@ -30,8 +30,8 @@ namespace VectoCoreTest
 
             TimeSpan absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
             TimeSpan dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
-	        var torque = 400;
-	        var engineSpeed = 1500;
+	        const int torque = 400;
+	        const int engineSpeed = 1500;
 
             port.Request(absTime, dt, torque, engineSpeed);
 	    }
@@ -45,8 +45,8 @@ namespace VectoCoreTest
 
             TimeSpan absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
             TimeSpan dt = new TimeSpan(seconds:1, minutes:0, hours:0);
-            float torque = 400;
-            float engineSpeed = 1500;
+            const int torque = 400;
+            const int engineSpeed = 1500;
             port.Request(absTime, dt, torque, engineSpeed);
 
 
