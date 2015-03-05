@@ -18,6 +18,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 	    public static FullLoadCurve ReadFromJson(string json)
 	    {
             //todo: implement ReadFromJson
+            throw new NotImplementedException();
 	        return new FullLoadCurve();
 	    }
 

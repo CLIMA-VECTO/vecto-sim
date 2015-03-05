@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
@@ -12,6 +13,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         public static FuelConsumptionMap ReadFromJson(string json)
         {
             //todo implement ReadFromJson
+            throw new NotImplementedException();
             return new FuelConsumptionMap();
         }
     }
