@@ -17,6 +17,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 
     public interface ITnOutPort : ITnPort
     {
-        void Request(TimeSpan absTime, TimeSpan dt, float torque, float engineSpeed);
+        void Request(TimeSpan absTime, TimeSpan dt, double torque, double engineSpeed);
     }
 }

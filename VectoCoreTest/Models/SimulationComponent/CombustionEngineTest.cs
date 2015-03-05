@@ -29,10 +29,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
             var port = (ITnOutPort)engine.OutPort();
 
-            TimeSpan absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-            TimeSpan dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
-            const int torque = 400;
-            const int engineSpeed = 1500;
+            var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
+            var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+            var torque = 400.0;
+            var engineSpeed = 1500.0;
 
             port.Request(absTime, dt, torque, engineSpeed);
         }
@@ -44,16 +44,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var engine = new CombustionEngine(engineData);
             var port = (ITnOutPort)engine.OutPort();
 
-            TimeSpan absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-            TimeSpan dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+            var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
+            var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
             //todo: set correct input values to test
-            const int torque = 400;
-            const int engineSpeed = 1500;
+            var torque = 400.0;
+            var engineSpeed = 1500.0;
             port.Request(absTime, dt, torque, engineSpeed);
 
 
-            TestDataWriter dataWriter = new TestDataWriter();
+            var dataWriter = new TestDataWriter();
             engine.CommitSimulationStep(dataWriter);
 
             //todo: test with correct output values, add other fields to test
@@ -72,15 +72,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
             var data = EngineOnlyDrivingCycle.read("Coach Engine Only.vdri");
 
-            TimeSpan absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-            TimeSpan dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+            var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
+            var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
-            TestDataWriter dataWriter = new TestDataWriter();
+            var dataWriter = new TestDataWriter();
 
             foreach (DataRow row in data.Rows)
             {
-                float torque = (float)row[EngineOnlyDrivingCycleFields.Pe.ToString()];
-                float engineSpeed = (float)row[EngineOnlyDrivingCycleFields.n.ToString()];
+                var torque = (double)row[EngineOnlyDrivingCycleFields.Pe.ToString()];
+                var engineSpeed = (double)row[EngineOnlyDrivingCycleFields.n.ToString()];
                 port.Request(absTime, dt, torque, engineSpeed);
 
                 engine.CommitSimulationStep(dataWriter);

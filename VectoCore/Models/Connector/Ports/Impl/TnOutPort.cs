@@ -8,7 +8,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 {
     public class TnOutPort : OutPort, ITnOutPort
     {
-        public void Request(TimeSpan absTime, TimeSpan dt, float torque, float engineSpeed)
+        public void Request(TimeSpan absTime, TimeSpan dt, double torque, double engineSpeed)
         {
             throw new NotImplementedException();
         }
