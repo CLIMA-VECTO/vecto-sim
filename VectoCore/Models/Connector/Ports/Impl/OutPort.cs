@@ -1,6 +1,8 @@
-﻿namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
+﻿using TUGraz.VectoCore.Models.SimulationComponent;
+
+namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 {
-	public abstract class OutPort
+	public abstract class OutPort: IOutPort
 	{
 	}
 }

@@ -5,12 +5,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 	public abstract class VectoSimulationComponent
 	{
-		abstract public InPort InPort();
+		abstract public IInPort InPort();
 
-		abstract public OutPort OutPort();
+		abstract public IOutPort OutPort();
 
 	    abstract public void CommitSimulationStep(IDataWriter writer);
 
 	}
-
 }

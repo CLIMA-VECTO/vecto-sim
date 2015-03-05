@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
@@ -37,63 +40,95 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
     ///  }
     /// }
     /// </code>
-	public class CombustionEngineData : SimulationComponentData
-	{
-        private readonly Dictionary<uint, FullLoadCurve> _fullLoadCurves = new Dictionary<uint, FullLoadCurve>(); 
+    public class CombustionEngineData : SimulationComponentData
+    {
+        private readonly Dictionary<string, FullLoadCurve> _fullLoadCurves = new Dictionary<string, FullLoadCurve>();
 
-	    public CombustionEngineData(string fileName)
-	    {
+        public static CombustionEngineData ReadFromFile(string fileName)
+        {
             //todo: file exception handling: file not readable, wrong file format
-            using (StreamReader r = new StreamReader(fileName))
+            return ReadFromJson(File.ReadAllText(fileName));
+        }
+
+        public static CombustionEngineData ReadFromJson(string json)
+        {
+            CombustionEngineData engine = new CombustionEngineData();
+            var results = JsonConvert.DeserializeObject<dynamic>(json);
+
+            //todo: handle error when fields not exist
+            var header = results["Header"];
+
+            if (header["FileVersion"] > 2)
+                throw new Exception("Unsupported Version of .veng file. Got Version: " + header["FileVersion"]);
+
+            var body = results["Body"];
+
+            if (header["FileVersion"] > 1)
+                engine.SavedInDeclarationMode = body["SavedInDeclMode"];
+
+            engine.ModelName = body["ModelName"];
+            engine.Displacement = body["Displacement"];
+            engine.IdleSpeed = body["IdlingSpeed"];
+            engine.Inertia = body["Inertia"];
+
+            foreach (dynamic loadCurve in body["FullLoadCurves"])
+                engine._fullLoadCurves[loadCurve["Gears"].Value] = FullLoadCurve.ReadFromFile(loadCurve["Path"].Value);
+
+            engine.ConsumptionMap = FuelConsumptionMap.ReadFromFile(body["FuelMap"].Value);
+
+            if (body["WHTC-Urban"] != null)
+                WHTCUrban = body["WHTC-Urban"].Value;
+
+            if (body["WHTC-Rural"] != null)
+                WHTCRural = body["WHTC-Rural"].Value;
+
+            if (body["WHTC-Motorway"] != null)
+                WHTCMotorway = body["WHTC-Motorway"].Value;
+
+            return engine;
+        }
+
+        public static double WHTCMotorway { get; set; }
+
+        public static double WHTCRural { get; set; }
+
+        public static double WHTCUrban { get; set; }
+
+        public bool SavedInDeclarationMode { get; set; }
+
+        /// <summary>
+        /// Engine description (e.g., mode, type, etc.
+        /// </summary>
+        public String ModelName { get; set; }
+
+        /// <summary>
+        /// Engine displacement [ccm]
+        /// </summary>
+        public double Displacement { get; set; }
+
+        public double IdleSpeed { get; set; }
+
+        public double RatedSpeed { get; set; }
+
+        public double Inertia { get; set; }
+
+        public double MaxPower { get; set; }
+
+        public FuelConsumptionMap ConsumptionMap { get; set; }
+
+        public FullLoadCurve GetFullLoadCurve(uint gear)
+        {
+            foreach (var gear_range in _fullLoadCurves.Keys)
             {
-                var json = r.ReadToEnd();
-                var results = JsonConvert.DeserializeObject<dynamic>(json);
-                var body = results.Body;
-
-                ModelName = body.ModelName;
-                Displacement = body.Displacement;
-                IdleSpeed = body.IdlingSpeed;
-                Inertia = body.Inertia;
-
-                foreach (dynamic loadCurve in body.FullLoadCurves)
+                var low = uint.Parse(gear_range.Split('-').First().Trim());
+                if (low <= gear)
                 {
-                    string[] gears = loadCurve.Gears.ToString().Split('-');
-                    var firstGear = uint.Parse(gears.First().Trim());
-                    var lastGear = uint.Parse(gears.Last().Trim());
-
-                    for (var i = firstGear; i <= lastGear; i++)
-                    {
-                        _fullLoadCurves[i] = new FullLoadCurve(loadCurve.Path.ToString());
-                    }
+                    var high = uint.Parse(gear_range.Split('-').Last().Trim());
+                    if (high >= gear)
+                        return _fullLoadCurves[gear_range];
                 }
-
-                ConsumptionMap = new FuelConsumptionMap(body.FuelMap.ToString());
             }
-	    }
-
-		/// <summary>
-		/// Engine description (e.g., mode, type, etc.
-		/// </summary>
-		public String ModelName { get; protected set; }
-		
-		/// <summary>
-		/// Engine displacement [ccm]
-		/// </summary>
-		public double Displacement { get; protected set; }
-
-		public double IdleSpeed { get; protected set; }
-
-		public double RatedSpeed { get; protected set; }
-
-		public double Inertia { get; protected set; }
-
-		public double MaxPower { get; set; }
-
-		public FuelConsumptionMap ConsumptionMap { get; protected set; }
-
-		public FullLoadCurve FullLoadCurve(uint gear)
-		{
-		    return _fullLoadCurves[gear];
-		}
-	}
+            throw new KeyNotFoundException(string.Format("Gear '{0}' was not found in the FullLoadCurves.", gear));
+        }
+    }
 }

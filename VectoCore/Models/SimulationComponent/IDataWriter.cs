@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCore.Models.SimulationComponent.Data;
+﻿using System;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
     public interface IDataWriter
@@ -8,7 +9,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        object this[ModalResultFields key] { get; set; }
+        object this[Enum key] { get; set; }
 
         /// <summary>
         /// Commits the data of the current simulation step.

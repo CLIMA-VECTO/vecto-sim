@@ -1,31 +1,36 @@
 ﻿using System;
-using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class CombustionEngine : VectoSimulationComponent, ICombustionEngine
+    public class CombustionEngine : VectoSimulationComponent, ICombustionEngine, ITnOutPort
 	{
 		public CombustionEngine(CombustionEngineData data)
 		{
 
 		}
 
-		public override InPort InPort()
+		public override IInPort InPort()
 		{
-			throw new NotImplementedException();
+			throw new NotSupportedException("The Engine does not support InPorts.");
 		}
 
-		public override OutPort OutPort()
+        public override IOutPort OutPort()
 		{
-			throw new NotImplementedException();
+			return this;
 		}
 
 	    public override void CommitSimulationStep(IDataWriter writer)
 	    {
-	        writer[ModalResultFields.FC] = 1;
-	        writer[ModalResultFields.FC_AUXc] = 2;
-            writer[ModalResultFields.FC_WHTCc] = 3;
+	        writer[ModalResult.FC] = 1;
+	        writer[ModalResult.FC_AUXc] = 2;
+            writer[ModalResult.FC_WHTCc] = 3;
 	    }
+
+        public void Request(TimeSpan absTime, TimeSpan dt, double torque, double engineSpeed)
+        {
+            //throw new NotImplementedException();
+        }
 	}
 }

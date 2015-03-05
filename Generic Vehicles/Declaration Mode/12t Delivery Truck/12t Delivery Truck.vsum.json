@@ -1,0 +1,36 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "3/4/2015 12:31:07 PM",
+    "AppVersion": "2.0.4-beta3",
+    "FileVersion": 1
+  },
+  "Body": {
+    "Settings": {
+      "Air Density [kg/m3]": 1.188,
+      "CO2/FC [-]": 3.16,
+      "Fuel Density [kg/l]": 0.832,
+      "Distance Correction": true
+    },
+    "Results": [
+      {
+        "Job": "12t Delivery Truck.vecto",
+        "Cycle": "Long Haul",
+        "Loading": "User-defined Loading",
+        "AbortedByError": true
+      },
+      {
+        "Job": "12t Delivery Truck.vecto",
+        "Cycle": "Regional Delivery",
+        "Loading": "User-defined Loading",
+        "AbortedByError": true
+      },
+      {
+        "Job": "12t Delivery Truck.vecto",
+        "Cycle": "Urban Delivery",
+        "Loading": "User-defined Loading",
+        "AbortedByError": true
+      }
+    ]
+  }
+}

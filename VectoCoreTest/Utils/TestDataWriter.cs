@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
@@ -9,25 +10,25 @@ namespace TUGraz.VectoCore.Tests.Utils
     /// </summary>
     class TestDataWriter : IDataWriter
     {
-        private readonly DataTable _data;
-        private DataRow _currentRow;
+        public DataTable Data;
+        public DataRow CurrentRow;
 
-        public TestDataWriter()
+        public TestDataWriter(DataTable data)
         {
-            _data = ModalResult.getDataTable();
-            _currentRow = _data.NewRow();
+            Data = data;
+            CurrentRow = Data.NewRow();
         }
 
         public void CommitSimulationStep()
         {
-            _data.Rows.Add(_currentRow);
-            _currentRow = _data.NewRow();
+            Data.Rows.Add(CurrentRow);
+            CurrentRow = Data.NewRow();
         }
 
-        public object this[ModalResultFields key]
+        public object this[Enum key]
         {
-            get { return _currentRow[key.ToString()]; }
-            set { _currentRow[key.ToString()] = value; }
+            get { return CurrentRow[key.ToString()]; }
+            set { CurrentRow[key.ToString()] = value; }
         }
     }
 }

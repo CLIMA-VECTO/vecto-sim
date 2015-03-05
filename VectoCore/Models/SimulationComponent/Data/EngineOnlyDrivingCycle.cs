@@ -1,41 +1,54 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
-using System.IO;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-    public enum EngineOnlyDrivingCycleFields
+    /// <summary>
+    /// Class for representation of one EngineOnly Driving Cycle
+    /// </summary>
+    public class EngineOnlyDrivingCycle
     {
-        n,
-        Pe
-    }
+        /// <summary>
+        /// Engine Speed
+        /// </summary>
+        public double n { get; set; }
 
+        /// <summary>
+        /// Torque
+        /// </summary>
+        /// <remarks>Column "Me" in data file.</remarks>
+        public double T { get; set; }
 
-    public static class EngineOnlyDrivingCycle
-    {
-        public static DataTable getDataTable()
+        /// <summary>
+        /// Engine power
+        /// </summary>
+        public double Pe
         {
-            DataTable data = new DataTable();
-            data.Columns.Add(EngineOnlyDrivingCycleFields.n.ToString(), typeof(float));
-            data.Columns.Add(EngineOnlyDrivingCycleFields.Pe.ToString(), typeof(float));
-            return data;
+            get { return 2 * Math.PI / 60 * T * n; }
+            set { T = 60 / (2 * Math.PI) * value / n; }
         }
 
-        public static DataTable read(string fileName)
+        public static List<EngineOnlyDrivingCycle> Read(string fileName)
         {
-            var data = getDataTable();
+            var data = VectoCSVReader.Read(fileName);
 
-            var reader = new StreamReader(fileName);
-            // read header line
-            reader.ReadLine();
+            var cycles = new List<EngineOnlyDrivingCycle>();
 
-            while (!reader.EndOfStream)
+            //todo: catch exceptions if value format is wrong.
+            foreach (DataRow row in data.Rows)
             {
-                var line = reader.ReadLine();
-                var values = line.Split(',');
-                data.Rows.Add(values);
+                var cycle = new EngineOnlyDrivingCycle();
+                cycle.n = double.Parse(row.Field<string>("n"));
+
+                if (data.Columns.Contains("Pe"))
+                    cycle.Pe = double.Parse(row.Field<string>("Pe"));
+                else
+                    cycle.T = double.Parse(row.Field<string>("Me"));
+                cycles.Add(cycle);
             }
-            return data;
+
+            return cycles;
         }
     }
 }
