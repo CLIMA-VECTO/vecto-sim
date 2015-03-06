@@ -1,26 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
-	public class FullLoadCurve
-	{
-	    public static FullLoadCurve ReadFromFile(string fileName)
-	    {
-	        return ReadFromJson(File.ReadAllText(fileName));
-	    }
+    /// <summary>
+    /// Four columns
+    /// One header line 
+    /// At least two lines with numeric values (below file header)
+    /// Columns:
+    /// * n       engine speed [1/min]
+    /// * Mfull   full load torque [Nm]
+    /// * Mdrag   motoring torque [Nm]
+    /// * PT1     PT1 time constant [s] 
 
-	    public static FullLoadCurve ReadFromJson(string json)
-	    {
-            //todo: implement ReadFromJson
-            throw new NotImplementedException();
-	        return new FullLoadCurve();
-	    }
+    /// </summary>
+    public class FullLoadCurve
+    {
+        private class FullLoadCurveEntry
+        {
+            public double n { get; set; }
+            public double Mfull { get; set; }
+            public double Mdrag { get; set; }
+            public double PT1 { get; set; }
+        }
 
-	}
+        private List<FullLoadCurveEntry> entries;
+
+        public FullLoadCurve(string fileName)
+        {
+            var data = VectoCSVReader.Read(fileName);
+            entries = new List<FullLoadCurveEntry>();
+
+            //todo: catch exceptions if value format is wrong.
+            foreach (DataRow row in data.Rows)
+            {
+                var entry = new FullLoadCurveEntry();
+                entry.n = row.GetDouble("n");
+                entry.Mfull = row.GetDouble("Mfull");
+                entry.Mdrag = row.GetDouble("Mdrag");
+                entry.PT1 = row.GetDouble("PT1");
+                entries.Add(entry);
+            }
+        }
+    }
 }
