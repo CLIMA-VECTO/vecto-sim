@@ -8,14 +8,14 @@ namespace TUGraz.VectoCore.Tests.Utils
     /// <summary>
     /// Fake Data Writer Class for Tests.
     /// </summary>
-    class TestDataWriter : IDataWriter
+    class TestModalDataWriter : IModalDataWriter
     {
-        public DataTable Data;
-        public DataRow CurrentRow;
+        public ModalResults Data { get; set; }
+        public DataRow CurrentRow { get; set; }
 
-        public TestDataWriter(DataTable data)
+        public TestModalDataWriter()
         {
-            Data = data;
+            Data = new ModalResults();
             CurrentRow = Data.NewRow();
         }
 
@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Tests.Utils
             CurrentRow = Data.NewRow();
         }
 
-        public object this[Enum key]
+        public object this[ModalResult key]
         {
             get { return CurrentRow[key.ToString()]; }
             set { CurrentRow[key.ToString()] = value; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -11,13 +12,28 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
     [TestClass]
     public class CombustionEngineTest
     {
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            Directory.SetCurrentDirectory("TestData/EngineOnly/Test1");
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            // Set the current directory back to the application path
+            var assemblyLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(assemblyLocation));
+        }
+
+
         [TestMethod]
         public void TestEngineHasOutPort()
         {
             var engineData = CombustionEngineData.ReadFromFile("24t Coach.veng");
             var engine = new CombustionEngine(engineData);
 
-            var port = engine.OutPort();
+            var port = engine.OutShaft();
             Assert.IsNotNull(port);
         }
 
@@ -27,7 +43,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var engineData = CombustionEngineData.ReadFromFile("24t Coach.veng");
             var engine = new CombustionEngine(engineData);
 
-            var port = (ITnOutPort)engine.OutPort();
+            var port = engine.OutShaft();
 
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
             var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
@@ -42,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         {
             var engineData = CombustionEngineData.ReadFromFile("24t Coach.veng");
             var engine = new CombustionEngine(engineData);
-            var port = (ITnOutPort)engine.OutPort();
+            var port = engine.OutShaft();
 
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
             var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
@@ -53,13 +69,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             port.Request(absTime, dt, torque, engineSpeed);
 
 
-            var dataWriter = new TestModalDataWriter(new ModalResults());
+            var dataWriter = new TestModalDataWriter();
             engine.CommitSimulationStep(dataWriter);
 
             //todo: test with correct output values, add other fields to test
-            Assert.Equals(dataWriter[ModalResult.FC], 13000);
-            Assert.Equals(dataWriter[ModalResult.FC_AUXc], 14000);
-            Assert.Equals(dataWriter[ModalResult.FC_WHTCc], 15000);
+            Assert.AreEqual(dataWriter[ModalResult.FC], 13000);
+            Assert.AreEqual(dataWriter[ModalResult.FC_AUXc], 14000);
+            Assert.AreEqual(dataWriter[ModalResult.FC_WHTCc], 15000);
         }
 
         [TestMethod]
@@ -74,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
             var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
-            var dataWriter = new TestModalDataWriter(new ModalResults());
+            var dataWriter = new TestModalDataWriter();
 
             foreach (var cycle in data)
             {
@@ -83,15 +99,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
                 absTime += dt;
 
                 //todo: test with correct output values, add other fields to test
-                Assert.Equals(dataWriter[ModalResult.FC], 13000);
-                Assert.Equals(dataWriter[ModalResult.FC_AUXc], 14000);
-                Assert.Equals(dataWriter[ModalResult.FC_WHTCc], 15000);
+                Assert.AreEqual(dataWriter[ModalResult.FC], 13000);
+                Assert.AreEqual(dataWriter[ModalResult.FC_AUXc], 14000);
+                Assert.AreEqual(dataWriter[ModalResult.FC_WHTCc], 15000);
             }
 
             //todo: test with correct output values, add other fields to test
-            Assert.Equals(dataWriter[ModalResult.FC], 13000);
-            Assert.Equals(dataWriter[ModalResult.FC_AUXc], 14000);
-            Assert.Equals(dataWriter[ModalResult.FC_WHTCc], 15000);
+            Assert.AreEqual(dataWriter[ModalResult.FC], 13000);
+            Assert.AreEqual(dataWriter[ModalResult.FC_AUXc], 14000);
+            Assert.AreEqual(dataWriter[ModalResult.FC_WHTCc], 15000);
         }
     }
 }

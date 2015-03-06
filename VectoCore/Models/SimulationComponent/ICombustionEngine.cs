@@ -1,4 +1,6 @@
-﻿namespace TUGraz.VectoCore.Models.SimulationComponent
+﻿using TUGraz.VectoCore.Models.Connector.Ports;
+
+namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 	public interface ICombustionEngine : IOutShaft
 	{
