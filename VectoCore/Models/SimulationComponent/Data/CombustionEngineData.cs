@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -59,7 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             var header = results["Header"];
 
             if (header["FileVersion"] > 2)
-                throw new Exception("Unsupported Version of .veng file. Got Version: " + header["FileVersion"]);
+                throw new UnsupportedFileVersion("Unsupported Version of .veng file. Got Version: " + header["FileVersion"]);
 
             var body = results["Body"];
 
@@ -77,22 +78,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             engine.ConsumptionMap = FuelConsumptionMap.ReadFromFile(body["FuelMap"].Value);
 
             if (body["WHTC-Urban"] != null)
-                WHTCUrban = body["WHTC-Urban"].Value;
+                engine.WHTCUrban = body["WHTC-Urban"].Value;
 
             if (body["WHTC-Rural"] != null)
-                WHTCRural = body["WHTC-Rural"].Value;
+				engine.WHTCRural = body["WHTC-Rural"].Value;
 
             if (body["WHTC-Motorway"] != null)
-                WHTCMotorway = body["WHTC-Motorway"].Value;
+				engine.WHTCMotorway = body["WHTC-Motorway"].Value;
 
             return engine;
         }
 
-        public static double WHTCMotorway { get; set; }
+        public double WHTCMotorway { get; set; }
 
-        public static double WHTCRural { get; set; }
+        public double WHTCRural { get; set; }
 
-        public static double WHTCUrban { get; set; }
+        public double WHTCUrban { get; set; }
 
         public bool SavedInDeclarationMode { get; set; }
 

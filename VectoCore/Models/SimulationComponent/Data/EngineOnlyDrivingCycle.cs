@@ -25,8 +25,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         /// </summary>
         public double Pe
         {
-            get { return 2 * Math.PI / 60 * T * n; }
-            set { T = 60 / (2 * Math.PI) * value / n; }
+            get { return 2.0 * Math.PI / 60.0 * T * n; }
+            set { T = 60.0 / (2.0 * Math.PI) * value / n; }
         }
 
         public static List<EngineOnlyDrivingCycle> Read(string fileName)

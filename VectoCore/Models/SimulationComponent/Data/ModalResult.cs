@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
     {
         public static Type GetDataType(this ModalResult field)
         {
-            return typeof(double);
+            return GetAttr(field).FieldType;
         }
 
 	    private static ModalResultFieldAttr GetAttr(ModalResult field)
