@@ -27,10 +27,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
         private List<FullLoadCurveEntry> entries;
 
-        public FullLoadCurve(string fileName)
+        public FullLoadCurve ReadFromFile(string fileName)
         {
+            var fullLoadCurve = new FullLoadCurve();
             var data = VectoCSVReader.Read(fileName);
-            entries = new List<FullLoadCurveEntry>();
+            fullLoadCurve.entries = new List<FullLoadCurveEntry>();
 
             //todo: catch exceptions if value format is wrong.
             foreach (DataRow row in data.Rows)
@@ -40,8 +41,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                 entry.Mfull = row.GetDouble("Mfull");
                 entry.Mdrag = row.GetDouble("Mdrag");
                 entry.PT1 = row.GetDouble("PT1");
-                entries.Add(entry);
+                fullLoadCurve.entries.Add(entry);
             }
+            return fullLoadCurve;
         }
     }
 }

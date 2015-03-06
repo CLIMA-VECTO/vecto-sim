@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         /// </summary>
         public double Padd { get; set; }
 
-        public static List<EngineOnlyDrivingCycle> Read(string fileName)
+        public static List<EngineOnlyDrivingCycle> ReadFromFile(string fileName)
         {
             var data = VectoCSVReader.Read(fileName);
 
