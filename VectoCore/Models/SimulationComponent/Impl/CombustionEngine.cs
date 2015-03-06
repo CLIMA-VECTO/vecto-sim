@@ -11,17 +11,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		}
 
-		public override IInPort InPort()
-		{
-			throw new NotSupportedException("The Engine does not support InPorts.");
-		}
 
-        public override IOutPort OutPort()
+        public ITnOutPort OutShaft()
 		{
 			return this;
 		}
 
-	    public override void CommitSimulationStep(IDataWriter writer)
+	    public override void CommitSimulationStep(IModalDataWriter writer)
 	    {
 	        writer[ModalResult.FC] = 1;
 	        writer[ModalResult.FC_AUXc] = 2;

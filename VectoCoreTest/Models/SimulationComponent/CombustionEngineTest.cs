@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             port.Request(absTime, dt, torque, engineSpeed);
 
 
-            var dataWriter = new TestDataWriter(new ModalResults());
+            var dataWriter = new TestModalDataWriter(new ModalResults());
             engine.CommitSimulationStep(dataWriter);
 
             //todo: test with correct output values, add other fields to test
@@ -67,14 +67,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         {
             var engineData = CombustionEngineData.ReadFromFile("24t Coach.veng");
             var engine = new CombustionEngine(engineData);
-            var port = (ITnOutPort)engine.OutPort();
+            var port = engine.OutShaft();
 
             var data = EngineOnlyDrivingCycle.Read("Coach Engine Only.vdri");
 
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
             var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
-            var dataWriter = new TestDataWriter(new ModalResults());
+            var dataWriter = new TestModalDataWriter(new ModalResults());
 
             foreach (var cycle in data)
             {
