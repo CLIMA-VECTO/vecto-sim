@@ -17,6 +17,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
     /// </summary>
     public class FullLoadCurve
     {
+        private static class Fields
+        {
+            public const string EngineSpeed = "n";
+            public const string TorqueFullLoad = "Mfull";
+            public const string TorqueDrag = "Mdrag";
+            public const string PT1 = "PT1";
+        }
+
+
         private class FullLoadCurveEntry
         {
             public double EngineSpeed { get; set; }
@@ -37,10 +46,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             foreach (DataRow row in data.Rows)
             {
                 var entry = new FullLoadCurveEntry();
-                entry.EngineSpeed = row.GetDouble("n");
-                entry.TorqueFullLoad = row.GetDouble("Mfull");
-                entry.TorqueDrag = row.GetDouble("Mdrag");
-                entry.PT1 = row.GetDouble("PT1");
+                entry.EngineSpeed = row.GetDouble(Fields.EngineSpeed);
+                entry.TorqueFullLoad = row.GetDouble(Fields.TorqueFullLoad);
+                entry.TorqueDrag = row.GetDouble(Fields.TorqueDrag);
+                entry.PT1 = row.GetDouble(Fields.PT1);
                 fullLoadCurve.entries.Add(entry);
             }
             return fullLoadCurve;

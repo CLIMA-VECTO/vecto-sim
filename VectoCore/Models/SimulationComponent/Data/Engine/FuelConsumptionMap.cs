@@ -18,6 +18,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
     /// </summary>
     public class FuelConsumptionMap
     {
+        private static class Fields
+        {
+            public const string EngineSpeed = "engine speed";
+            public const string Torque = "torque";
+            public const string FuelConsumption = "fuel consumption";
+        };
+
         private class FuelConsumptionEntry
         {
             public double EngineSpeed { get; set; }
@@ -25,24 +32,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             public double FuelConsumption { get; set; }
         }
 
-        private List<FuelConsumptionEntry> entries;
+        private IList<FuelConsumptionEntry> entries;
 
-        public static FuelConsumptionMap ReadFromFile(string fileName)
+        public FuelConsumptionMap(string fileName)
         {
-            var fuelConsumptionMap = new FuelConsumptionMap();
             var data = VectoCSVReader.Read(fileName);
-            fuelConsumptionMap.entries = new List<FuelConsumptionEntry>();
+            entries = new List<FuelConsumptionEntry>();
 
             //todo: catch exceptions if value format is wrong.
             foreach (DataRow row in data.Rows)
             {
                 var entry = new FuelConsumptionEntry();
-                entry.EngineSpeed = row.GetDouble("engine speed");
-                entry.Torque = row.GetDouble("torque");
-                entry.FuelConsumption = row.GetDouble("fuel consumption");
-                fuelConsumptionMap.entries.Add(entry);
+                entry.EngineSpeed = row.GetDouble(Fields.EngineSpeed);
+                entry.Torque = row.GetDouble(Fields.Torque);
+                entry.FuelConsumption = row.GetDouble(Fields.FuelConsumption);
+                entries.Add(entry);
             }
-            return fuelConsumptionMap;
+        }
+
+        public static FuelConsumptionMap ReadFromFile(string fileName)
+        {
+            return new FuelConsumptionMap(fileName);
         }
     }
 }
