@@ -68,9 +68,7 @@
     <Compile Include="Models\Connector\Ports\IOutShaft.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
     <Compile Include="Models\SimulationComponent\Data\EngineOnlyDrivingCycle.cs" />
-    <Compile Include="Models\SimulationComponent\Data\ModalResultField.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Models\SimulationComponent\Data\ModalResult.cs" />
     <Compile Include="Models\SimulationComponent\Data\CombustionEngineData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FullLoadCurve.cs" />
