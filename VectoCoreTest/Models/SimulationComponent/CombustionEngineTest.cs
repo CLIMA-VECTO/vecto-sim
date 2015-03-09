@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.IO;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -15,7 +16,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestInitialize]
         public void TestInitialize()
         {
-            Directory.SetCurrentDirectory("TestData/EngineOnly/Test1");
+            Directory.SetCurrentDirectory("TestData\\EngineOnly\\Test1");
+	     
+			AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
         }
 
         [TestCleanup]
@@ -109,5 +112,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             Assert.AreEqual(dataWriter[ModalResult.FC_AUXc], 14000);
             Assert.AreEqual(dataWriter[ModalResult.FC_WHTCc], 15000);
         }
+
+		public TestContext TestContext { get; set; }
+
+		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineTests.csv", "EngineTests#csv", DataAccessMethod.Sequential)]
+	    [TestMethod]
+	    public void TestAllEngineOnlyCycles()
+	    {
+		    var a = Convert.ToDouble(TestContext.DataRow["Add1"].ToString());
+		    var b = Convert.ToDouble(TestContext.DataRow["Add2"].ToString());
+		    var res = Convert.ToDouble(TestContext.DataRow["Sum"].ToString());
+
+		    Assert.AreEqual(a + b, res);
+		}
     }
 }
