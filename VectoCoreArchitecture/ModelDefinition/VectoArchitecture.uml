@@ -1,0 +1,1963 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm9="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner"
+  dslVersion="1.0.0.0"
+  Id="d70f4262-18df-49eb-a245-704a07d56711"
+  name="VectoArchitecture" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <profileInstances>
+    <packageHasProfileInstances
+      Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b">
+      <profileInstance
+        Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791"
+        name="StandardProfileL2" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances
+      Id="29349502-908c-4fda-9054-c48619c59ed0">
+      <profileInstance
+        Id="532ea607-fb19-44b8-8502-3351b05452be"
+        name="StandardProfileL3" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <packageHasNamedElement>
+      <class
+        Id="0708ae64-77eb-4a35-a272-808e3162924f"
+        name="VectoSimulationComponent"
+        isAbstract="true"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="905f4857-6d4f-4784-8e17-977a5605ce9c"
+            isSubstitutable="false">
+            <classMoniker
+              Id="6c91a3b1-52ce-480f-a887-2330bd8c3586"
+              LastKnownName="PowerTrainElement"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="e5a0d5cc-5e01-4d15-a399-ce778a88c173"
+        name="Vehicle"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <interfaceRealization
+            Id="a48d333d-d0d0-47bc-a77a-f7b471259f47">
+            <interfaceMoniker
+              Id="6ce9ca6f-94d1-4482-b74c-5a211fd2cbb5"
+              LastKnownName="ICockpit"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </interfaceRealization>
+          <dependency
+            Id="87aa6045-eb1a-4f62-a5d4-e280abffae6d">
+            <classMoniker
+              Id="acbb0b52-662f-420c-9256-a4712fddb90d"
+              LastKnownName="VehicleData"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </dependency>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization
+            Id="a57bc6b5-e301-4491-adea-437558b87648"
+            isSubstitutable="false">
+            <classMoniker
+              Id="6c91a3b1-52ce-480f-a887-2330bd8c3586"
+              LastKnownName="PowerTrainElement"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="ca689ad9-b211-4533-a0ff-0fd22038b6b4"
+        name="Driver"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="e7ad7943-3392-4762-9e21-8f6b760775ca">
+            <classMoniker
+              Id="a34fe5da-f362-4116-862a-bbe0ba84bf10"
+              LastKnownName="DriverData"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </dependency>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization
+            Id="d6d55559-3415-4852-a237-021022b68a92"
+            isSubstitutable="false">
+            <classMoniker
+              Id="0708ae64-77eb-4a35-a272-808e3162924f"
+              LastKnownName="VectoSimulationComponent"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="295399ea-33d9-4eae-984a-b6ac22a44d93"
+        name="Wheels"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="669440ad-5c55-4c5c-bab9-ba2f0f7b2637">
+            <classMoniker
+              Id="48b0032c-2522-40a8-94fb-8bcaf2ce4d5f"
+              LastKnownName="WheelData"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </dependency>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization
+            Id="6aadaf93-942a-47c1-bdb9-c6f752762e14"
+            isSubstitutable="false">
+            <classMoniker
+              Id="6c91a3b1-52ce-480f-a887-2330bd8c3586"
+              LastKnownName="PowerTrainElement"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+        <ownedAttributesInternal>
+          <property
+            Id="d2cdf440-e96c-45d7-b20f-57e123d987c1"
+            name="inPort_"
+            visibility="Protected"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <classMoniker
+                Id="6ccde41a-02a4-4678-8224-c94070fa1e1a"
+                LastKnownName="TnInPort"
+                LastKnownLocation="Package_1506.uml" />
+            </type_NamedElement>
+          </property>
+        </ownedAttributesInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="83406bee-daa4-4f9b-8318-4bc81ab63fdf"
+        name="Gearbox"
+        isAbstract="true"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <interfaceRealization
+            Id="202236fc-6d10-4c53-83a7-5b2eb56924b8">
+            <interfaceMoniker
+              Id="09fcd4b5-4421-4c8e-b3e5-c99d69899a30"
+              LastKnownName="IGearShift"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </interfaceRealization>
+          <dependency
+            Id="952ba86a-6a38-4f4c-93f1-97e0d2a354cd">
+            <classMoniker
+              Id="62aee5ee-c048-475b-bcd0-e74bdc9f19b9"
+              LastKnownName="ShiftStrategy"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </dependency>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization
+            Id="8885b8cc-e024-4238-a81a-f1fb0c67f272"
+            isSubstitutable="false">
+            <classMoniker
+              Id="6c91a3b1-52ce-480f-a887-2330bd8c3586"
+              LastKnownName="PowerTrainElement"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association
+            Id="dc4bea7d-3891-4ced-8822-0b11269fc7ae"
+            isDerived="false"
+            sourceEndRoleName="gbx"
+            targetEndRoleName="axleGear"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="3bd0241e-5613-4cdb-b21e-dd48d373ac71"
+              LastKnownName="Gear"
+              LastKnownLocation="VectoArchitecture.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="b74fc03f-cd50-4f38-842a-b3ce729e29ef"
+                  name="gbx"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="3cb57cf5-a08b-4069-ac6b-d0fa76a30c2f"
+                  name="axleGear"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="b11bdb6f-a223-4df0-83d1-eb79aaf40160"
+            isDerived="false"
+            sourceEndRoleName="gbx"
+            targetEndRoleName="gears"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="3bd0241e-5613-4cdb-b21e-dd48d373ac71"
+              LastKnownName="Gear"
+              LastKnownLocation="VectoArchitecture.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="8793f600-d394-4e7d-96b4-096b40e60ccf"
+                  name="gbx"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="ccf2a9e3-a291-4866-8044-471d97d752de"
+                  name="gears"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="3059771e-1f5f-4d69-a875-02c40c88cd22"
+                      name="Lower"
+                      value="1" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="c612ed5e-e902-4806-9af1-89111121708e"
+                      name="Upper"
+                      value="*" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="62db4676-a508-4d12-84d7-e07e9be226d7"
+        name="Retarder"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="29e8dd52-8a91-448b-b6c2-19165a406dce">
+            <classMoniker
+              Id="f3f1a061-ce96-4dee-9dd1-3419bb1f58ed"
+              LastKnownName="RetarderData"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </dependency>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization
+            Id="eec28355-a6e5-4688-b3bf-4d6cc72916c8"
+            isSubstitutable="false">
+            <classMoniker
+              Id="6c91a3b1-52ce-480f-a887-2330bd8c3586"
+              LastKnownName="PowerTrainElement"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="c6ec901a-bfac-4860-a4be-76bd0f4f1e88"
+        name="Engine"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="54212b17-b633-4da3-bb2e-93b5a04a88f1">
+            <classMoniker
+              Id="ea1d3e3d-870c-4bbb-9dde-e98fb5bfea32"
+              LastKnownName="EngineData"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </dependency>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization
+            Id="bb46791f-5e78-4bdb-a3b3-9233caab84a3"
+            isSubstitutable="false">
+            <classMoniker
+              Id="6c91a3b1-52ce-480f-a887-2330bd8c3586"
+              LastKnownName="PowerTrainElement"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="acbb0b52-662f-420c-9256-a4712fddb90d"
+        name="VehicleData"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="9da4d4f1-d9ff-49aa-824d-52a30fbd7210"
+            isSubstitutable="false">
+            <classMoniker
+              Id="f8953500-9df6-4a81-a0e1-ceef31d0396d"
+              LastKnownName="SimulationComponentData"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="48b0032c-2522-40a8-94fb-8bcaf2ce4d5f"
+        name="WheelData"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="75fa841b-04c1-4fec-a5f1-8687193a12c1"
+            isSubstitutable="false">
+            <classMoniker
+              Id="f8953500-9df6-4a81-a0e1-ceef31d0396d"
+              LastKnownName="SimulationComponentData"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="406e825d-13fb-4da6-b580-5085d4be3bf4"
+        name="GearboxData"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="d6f4f70f-60a2-463d-a574-158915a34198">
+            <classMoniker
+              Id="83406bee-daa4-4f9b-8318-4bc81ab63fdf"
+              LastKnownName="Gearbox"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </dependency>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization
+            Id="4590a277-52fe-40d6-b2ed-7241aa225867"
+            isSubstitutable="false">
+            <classMoniker
+              Id="f8953500-9df6-4a81-a0e1-ceef31d0396d"
+              LastKnownName="SimulationComponentData"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="f3f1a061-ce96-4dee-9dd1-3419bb1f58ed"
+        name="RetarderData"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="fa22072a-af0a-49f7-8fed-caf520abbfe6"
+            isSubstitutable="false">
+            <classMoniker
+              Id="f8953500-9df6-4a81-a0e1-ceef31d0396d"
+              LastKnownName="SimulationComponentData"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="ea1d3e3d-870c-4bbb-9dde-e98fb5bfea32"
+        name="EngineData"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="4567ec4a-db12-41b7-b75b-c0c7d654b231"
+            isSubstitutable="false">
+            <classMoniker
+              Id="f8953500-9df6-4a81-a0e1-ceef31d0396d"
+              LastKnownName="SimulationComponentData"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="3bd0241e-5613-4cdb-b21e-dd48d373ac71"
+        name="Gear"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="73cf1c8f-f3c2-4eef-aa10-4ad6132ba8ae"
+        name="TorqueConverter"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="4118e57c-afa3-4ed0-8da9-5345ee73acd1"
+        name="ManualTransmissionGbx"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="21b84808-4199-48e6-b48b-3530f3b2f1b9"
+            isSubstitutable="false">
+            <classMoniker
+              Id="83406bee-daa4-4f9b-8318-4bc81ab63fdf"
+              LastKnownName="Gearbox"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="bfa1ffd9-c251-45c0-bfe8-eb2343ef8bef"
+        name="AutomatedTransmissionGbx"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="e1a1a298-a8e5-41dc-9cd7-358c4460a911"
+            isSubstitutable="false">
+            <classMoniker
+              Id="83406bee-daa4-4f9b-8318-4bc81ab63fdf"
+              LastKnownName="Gearbox"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="3068b42c-eb69-4ea1-8e20-a4eb466314a9"
+        name="AutomaticTransmissionGbx"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="031b09e2-fc67-45cf-9561-412c31d75ee8"
+            isSubstitutable="false">
+            <classMoniker
+              Id="83406bee-daa4-4f9b-8318-4bc81ab63fdf"
+              LastKnownName="Gearbox"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association
+            Id="e5173d6d-8c3b-4c49-8913-cccce5218d4b"
+            isDerived="false"
+            sourceEndRoleName="gbx"
+            targetEndRoleName="tc"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="73cf1c8f-f3c2-4eef-aa10-4ad6132ba8ae"
+              LastKnownName="TorqueConverter"
+              LastKnownLocation="VectoArchitecture.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="8435bdf4-555c-4641-b638-548e9481d1eb"
+                  name="gbx"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Composite"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="4df1a89a-f75a-4fc4-addc-3efc9da5b3be"
+                  name="tc"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="true" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="f8953500-9df6-4a81-a0e1-ceef31d0396d"
+        name="SimulationComponentData"
+        isAbstract="true"
+        isLeaf="false"
+        isActiveClass="false">
+        <ownedOperationsInternal>
+          <operation
+            Id="42d31919-36bf-4e7b-927b-cc13584661fd"
+            name="read"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+        </ownedOperationsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="a34fe5da-f362-4116-862a-bbe0ba84bf10"
+        name="DriverData"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="1b5a3ef0-9327-4fd6-8102-7c86190cebe5"
+            isSubstitutable="false">
+            <classMoniker
+              Id="f8953500-9df6-4a81-a0e1-ceef31d0396d"
+              LastKnownName="SimulationComponentData"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="10a28496-8c6a-4c9d-9eee-9fc58f52946a"
+        name="Connector"
+        isAbstract="true"
+        isLeaf="false"
+        isActiveClass="false">
+        <ownedRedefinableTemplateSignatureInternal>
+          <redefinableTemplateSignature
+            Id="d1e530fe-2980-4542-beff-9c3c2a2e5d3e"
+            parameters=""
+            isLeaf="false">
+            <ownedParameters>
+              <classifierTemplateParameter
+                Id="64eb9acf-aae4-4606-9abe-d0d8d6b63021">
+                <ownedParameterableElement>
+                  <class
+                    Id="a9ef1952-0bd3-4c68-a3bc-149a2c493b9e"
+                    name="TI"
+                    isAbstract="false"
+                    isLeaf="false"
+                    isActiveClass="false" />
+                </ownedParameterableElement>
+                <constrainingClassifier>
+                  <classMoniker
+                    Id="5d611a82-1271-461d-ae3e-739a6f08dfc7"
+                    LastKnownName="InPort"
+                    LastKnownLocation="Package_1506.uml" />
+                </constrainingClassifier>
+              </classifierTemplateParameter>
+              <classifierTemplateParameter
+                Id="146f585d-79b3-4c9d-9c01-2bc028db02de">
+                <ownedParameterableElement>
+                  <class
+                    Id="05771f0c-bae3-47de-b9a8-07deb85fb6bc"
+                    name="TO"
+                    isAbstract="false"
+                    isLeaf="false"
+                    isActiveClass="false" />
+                </ownedParameterableElement>
+                <constrainingClassifier>
+                  <classMoniker
+                    Id="c8fccb93-ec53-4ec7-8bbb-29eafe2522ae"
+                    LastKnownName="OutPort"
+                    LastKnownLocation="Package_1506.uml" />
+                </constrainingClassifier>
+              </classifierTemplateParameter>
+              <classifierTemplateParameter
+                Id="5020e641-6281-4f6d-9560-f70f64e73948">
+                <ownedParameterableElement>
+                  <Interface
+                    Id="8c851fd1-e13b-423d-9b84-a6465f552d65"
+                    name="TP"
+                    isAbstract="false"
+                    isLeaf="false" />
+                </ownedParameterableElement>
+              </classifierTemplateParameter>
+            </ownedParameters>
+          </redefinableTemplateSignature>
+        </ownedRedefinableTemplateSignatureInternal>
+        <ownedAttributesInternal>
+          <property
+            Id="1cd05cb6-f38e-4f7a-a972-7f238e9dcbb9"
+            name="in_"
+            visibility="Protected"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <classMoniker
+                Id="a9ef1952-0bd3-4c68-a3bc-149a2c493b9e"
+                LastKnownName="TI"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </type_NamedElement>
+          </property>
+          <property
+            Id="377df558-6a51-4752-ae8d-62ec12c0e2ce"
+            name="out_"
+            visibility="Protected"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isUnique="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <classMoniker
+                Id="05771f0c-bae3-47de-b9a8-07deb85fb6bc"
+                LastKnownName="TO"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </type_NamedElement>
+          </property>
+        </ownedAttributesInternal>
+        <ownedOperationsInternal>
+          <operation
+            Id="20f95e33-ac66-43db-9af3-e2d155decf65"
+            name="connect"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="true"
+            concurrency="Sequential"
+            isQuery="false">
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="3e66e497-f605-4b10-a5f9-10d38edb18d2"
+                  name="out"
+                  direction="In"
+                  isUnique="false">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="c8fccb93-ec53-4ec7-8bbb-29eafe2522ae"
+                      LastKnownName="OutPort"
+                      LastKnownLocation="Package_1506.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="ce57e8fd-8fbf-46c1-ad6d-cb0afd6ff44d"
+                  name="in"
+                  direction="In"
+                  isUnique="false">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="5d611a82-1271-461d-ae3e-739a6f08dfc7"
+                      LastKnownName="InPort"
+                      LastKnownLocation="Package_1506.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="f9e123fe-9d57-4718-b100-8ae24a0a82fe"
+            name="request"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+          <operation
+            Id="d88355de-e597-4fcc-a9e6-3399f7b45ff9"
+            name="commitSimulationStep"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false" />
+        </ownedOperationsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <undefinedType
+        Id="3a3ea609-07f1-4202-bef0-ceac00d6e672"
+        name="VectoSimulationCOmponent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="83f05ed7-8c7c-4df8-94b4-268b1ffc4154"
+        name="VectoJob"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <targetEnds>
+          <association
+            Id="6c746c32-df0d-4965-9eee-fc68b8b062b0"
+            isDerived="false"
+            sourceEndRoleName="VectoSimulationComponentContainer"
+            targetEndRoleName="simulationComponents_"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="0708ae64-77eb-4a35-a272-808e3162924f"
+              LastKnownName="VectoSimulationComponent"
+              LastKnownLocation="VectoArchitecture.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="fae0b8b3-ab23-4dcf-a849-91a3b7379b89"
+                  name="VectoSimulationComponentContainer"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="Shared"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="2959b2aa-d541-4ae9-b2b4-920387ad3907"
+                  name="simulationComponents_"
+                  visibility="Protected"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="bd74fab8-05e0-4509-8964-1d575a4b76c6"
+                      name="Lower"
+                      value="1" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="0986c2a3-3ab8-46d2-a847-9e15ba10bae9"
+                      name="Upper"
+                      value="*" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="6ce9ca6f-94d1-4482-b74c-5a211fd2cbb5"
+        name="ICockpit"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="09fcd4b5-4421-4c8e-b3e5-c99d69899a30"
+        name="IGearShift"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="65f8b04d-75e5-4d26-a459-f5b4bc0525ba"
+        name="VectoSimulator"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <suppliersInternal>
+          <dependency
+            Id="eaa86adc-58c1-414d-bbeb-d37d8a7b8d6a">
+            <classMoniker
+              Id="83f05ed7-8c7c-4df8-94b4-268b1ffc4154"
+              LastKnownName="VectoJob"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </dependency>
+        </suppliersInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="62aee5ee-c048-475b-bcd0-e74bdc9f19b9"
+        name="ShiftStrategy"
+        isAbstract="true"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="6175523c-22eb-4e0d-8f96-3965b7d79436"
+        name="DefaultShiftStrategy"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="0a4c85ff-9fd7-404a-ad47-92e08fb195e7"
+            isSubstitutable="false">
+            <classMoniker
+              Id="62aee5ee-c048-475b-bcd0-e74bdc9f19b9"
+              LastKnownName="ShiftStrategy"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="e18cf28d-ec22-4342-88e9-057367b05c42"
+        name="AutomaticShiftStrategy"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="f5707cf1-0de4-440a-8890-aa1fc988da2c"
+            isSubstitutable="false">
+            <classMoniker
+              Id="62aee5ee-c048-475b-bcd0-e74bdc9f19b9"
+              LastKnownName="ShiftStrategy"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="48afbe6b-6554-4885-b5e3-88623e2c3ed7"
+        name="DrivingCycle"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="fa080a03-63ab-43cc-8a2d-9551d7147579"
+            isSubstitutable="false">
+            <classMoniker
+              Id="0708ae64-77eb-4a35-a272-808e3162924f"
+              LastKnownName="VectoSimulationComponent"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="d9f99264-2a1a-43b2-9d46-8eccd5bb4b59"
+        name="SimulationException"
+        isAbstract="true"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="95249977-4768-46b0-a466-1768f36f0416"
+        name="EngineOverloadException"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="1c1388b4-7ab0-4777-a14b-fbdd77eeb708"
+            isSubstitutable="false">
+            <classMoniker
+              Id="d9f99264-2a1a-43b2-9d46-8eccd5bb4b59"
+              LastKnownName="SimulationException"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="fa8fce35-4c2e-4fb6-9e62-efa8b495e472"
+        name="GearboxShiftException"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="197a54c7-523a-4a7b-884c-e006cd9dee58"
+            isSubstitutable="false">
+            <classMoniker
+              Id="d9f99264-2a1a-43b2-9d46-8eccd5bb4b59"
+              LastKnownName="SimulationException"
+              LastKnownLocation="VectoArchitecture.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="6c91a3b1-52ce-480f-a887-2330bd8c3586"
+        name="PowerTrainElement"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <interaction
+        Id="b3724a5e-054a-461f-85d8-140905c233fa"
+        name="Sequence1"
+        collapseFragmentsFlag="false"
+        isActiveClass="false"
+        isAbstract="false"
+        isLeaf="false"
+        isReentrant="false">
+        <fragments>
+          <behaviorExecutionSpecification
+            Id="5b9b4887-43e8-474d-84d5-78807e3fc106"
+            name="BehaviorExecutionSpecification1">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="a31fac8f-b2d3-4dce-91c2-2b79010969e8"
+                LastKnownName="driverDemandInPort : DriverDemandInPort"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="0e76d5cb-5282-4554-9514-a2753631741a"
+                LastKnownName="ExecutionOccurrenceSpecification2"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="72668309-a7a5-466c-88ce-b3b3fc97c704"
+                LastKnownName="ExecutionOccurrenceSpecification1"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="47ab19dc-07f8-4b18-bd3c-acca232d871b"
+                LastKnownName="MessageOccurrenceSpecification2"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="8f2e29d7-4815-497e-999c-b5901402f96e"
+                LastKnownName="MessageOccurrenceSpecification5"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="7e7d4d3c-9add-4e7b-bfd0-d2968c7c40be"
+                LastKnownName="MessageOccurrenceSpecification8"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="8181d5d8-1ba7-4b41-8872-ebb0d01ea979"
+                LastKnownName="MessageOccurrenceSpecification3"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="72668309-a7a5-466c-88ce-b3b3fc97c704"
+            name="ExecutionOccurrenceSpecification1">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="7707572f-269f-4cf4-b567-07c992fff4ff"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="VectoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="a31fac8f-b2d3-4dce-91c2-2b79010969e8"
+                LastKnownName="driverDemandInPort : DriverDemandInPort"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="7be90084-1c49-41c7-abb0-fc1043119c4b"
+            name="MessageOccurrenceSpecification1">
+            <event>
+              <sendOperationEventMoniker
+                Id="373ee1f5-81a3-4481-8a29-0de0206165e3"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="322b8c33-4017-46aa-8f13-52f1c88ff13e"
+                LastKnownName="drivingCycle : DrivingCycle"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="47ab19dc-07f8-4b18-bd3c-acca232d871b"
+            name="MessageOccurrenceSpecification2">
+            <event>
+              <receiveOperationEventMoniker
+                Id="53ef5bfd-b413-4ec4-a7c8-be7fddf68da1"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="a31fac8f-b2d3-4dce-91c2-2b79010969e8"
+                LastKnownName="driverDemandInPort : DriverDemandInPort"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="cff2dcb2-96af-4c6a-829c-a281c3bc1b97"
+            name="BehaviorExecutionSpecification2">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="48320ba0-5a08-48d7-9295-883ab984fd27"
+                LastKnownName="driverDemandConnector : DriverDemandConnector"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="4535fc6e-756a-48b6-94cd-eb2f8cd4bffb"
+                LastKnownName="ExecutionOccurrenceSpecification4"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="7d68ec49-7dda-4be1-bfea-cd529c292b95"
+                LastKnownName="ExecutionOccurrenceSpecification3"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="217827ee-21ff-4d98-aa17-1f5bdefc4549"
+                LastKnownName="MessageOccurrenceSpecification6"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="c797f040-4b12-49ad-a17c-e844ae432705"
+                LastKnownName="MessageOccurrenceSpecification9"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="89530dc8-7e01-458c-abd6-d6d8efaada7d"
+                LastKnownName="MessageOccurrenceSpecification12"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="d8eb55d9-6da3-49b5-979b-099c27c57e66"
+                LastKnownName="MessageOccurrenceSpecification7"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="7d68ec49-7dda-4be1-bfea-cd529c292b95"
+            name="ExecutionOccurrenceSpecification3">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="c9527dec-ff57-4c1c-a5e6-b0b6df6e3355"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="VectoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="48320ba0-5a08-48d7-9295-883ab984fd27"
+                LastKnownName="driverDemandConnector : DriverDemandConnector"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="8f2e29d7-4815-497e-999c-b5901402f96e"
+            name="MessageOccurrenceSpecification5">
+            <covered>
+              <lifelineMoniker
+                Id="a31fac8f-b2d3-4dce-91c2-2b79010969e8"
+                LastKnownName="driverDemandInPort : DriverDemandInPort"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="217827ee-21ff-4d98-aa17-1f5bdefc4549"
+            name="MessageOccurrenceSpecification6">
+            <covered>
+              <lifelineMoniker
+                Id="48320ba0-5a08-48d7-9295-883ab984fd27"
+                LastKnownName="driverDemandConnector : DriverDemandConnector"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="0a28e195-4bb5-4969-be87-58cedb40cc4c"
+            name="BehaviorExecutionSpecification3">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="ccd3a4e8-efe0-4ffc-b72b-cdd8ebd3fa3b"
+                LastKnownName="driverDemandOutPort : DriverDemandOutPort"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="2c5bc84a-548e-4194-93b4-1f90abf561a0"
+                LastKnownName="ExecutionOccurrenceSpecification6"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="6cb27467-d7dd-46a8-9737-7d893e7832e2"
+                LastKnownName="ExecutionOccurrenceSpecification5"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="eb8736ad-68ff-487e-a588-771e12663771"
+                LastKnownName="MessageOccurrenceSpecification10"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="dff3564f-c6ab-433b-9dac-213e4b763dfc"
+                LastKnownName="MessageOccurrenceSpecification13"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="8292c79d-a06a-4b81-bbd7-8390eac84c8d"
+                LastKnownName="MessageOccurrenceSpecification16"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="827d9485-442c-4e9c-b84b-6c8815325aee"
+                LastKnownName="MessageOccurrenceSpecification11"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="6cb27467-d7dd-46a8-9737-7d893e7832e2"
+            name="ExecutionOccurrenceSpecification5">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="1df160d7-9dda-4ca9-8b63-74c0838dc069"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="VectoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="ccd3a4e8-efe0-4ffc-b72b-cdd8ebd3fa3b"
+                LastKnownName="driverDemandOutPort : DriverDemandOutPort"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="eb8736ad-68ff-487e-a588-771e12663771"
+            name="MessageOccurrenceSpecification10">
+            <event>
+              <receiveOperationEventMoniker
+                Id="c58d84d6-9c48-4520-9d09-f41dbad09966"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="ccd3a4e8-efe0-4ffc-b72b-cdd8ebd3fa3b"
+                LastKnownName="driverDemandOutPort : DriverDemandOutPort"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="c797f040-4b12-49ad-a17c-e844ae432705"
+            name="MessageOccurrenceSpecification9">
+            <event>
+              <sendOperationEventMoniker
+                Id="3c4af1bd-5f05-4563-a8d6-964016f1355c"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="48320ba0-5a08-48d7-9295-883ab984fd27"
+                LastKnownName="driverDemandConnector : DriverDemandConnector"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="4d88fdf9-73f0-4d6b-adad-f0fe18086cbc"
+            name="BehaviorExecutionSpecification4">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="499edca3-03bc-4dc0-91d4-e6671a638544"
+                LastKnownName="driver : Driver"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="5b9666fa-c3eb-498a-8c24-688f1aa58593"
+                LastKnownName="ExecutionOccurrenceSpecification8"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="aab3b3ac-f55f-438b-a0af-120a0e2b1871"
+                LastKnownName="ExecutionOccurrenceSpecification7"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="70e420be-3efc-45bb-bac7-5b7d5e3cdcc7"
+                LastKnownName="MessageOccurrenceSpecification14"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="97582447-a76c-43b3-a824-650e86891c43"
+                LastKnownName="MessageOccurrenceSpecification15"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="aab3b3ac-f55f-438b-a0af-120a0e2b1871"
+            name="ExecutionOccurrenceSpecification7">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="b3a2382d-0423-4f46-9424-1ddc6a39c0bf"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="VectoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="499edca3-03bc-4dc0-91d4-e6671a638544"
+                LastKnownName="driver : Driver"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="70e420be-3efc-45bb-bac7-5b7d5e3cdcc7"
+            name="MessageOccurrenceSpecification14">
+            <covered>
+              <lifelineMoniker
+                Id="499edca3-03bc-4dc0-91d4-e6671a638544"
+                LastKnownName="driver : Driver"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="dff3564f-c6ab-433b-9dac-213e4b763dfc"
+            name="MessageOccurrenceSpecification13">
+            <covered>
+              <lifelineMoniker
+                Id="ccd3a4e8-efe0-4ffc-b72b-cdd8ebd3fa3b"
+                LastKnownName="driverDemandOutPort : DriverDemandOutPort"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="8292c79d-a06a-4b81-bbd7-8390eac84c8d"
+            name="MessageOccurrenceSpecification16">
+            <covered>
+              <lifelineMoniker
+                Id="ccd3a4e8-efe0-4ffc-b72b-cdd8ebd3fa3b"
+                LastKnownName="driverDemandOutPort : DriverDemandOutPort"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="97582447-a76c-43b3-a824-650e86891c43"
+            name="MessageOccurrenceSpecification15">
+            <covered>
+              <lifelineMoniker
+                Id="499edca3-03bc-4dc0-91d4-e6671a638544"
+                LastKnownName="driver : Driver"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="5b9666fa-c3eb-498a-8c24-688f1aa58593"
+            name="ExecutionOccurrenceSpecification8">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="a99897c8-dbf2-4ee4-8d3c-17a6256e16f2"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="VectoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="499edca3-03bc-4dc0-91d4-e6671a638544"
+                LastKnownName="driver : Driver"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="89530dc8-7e01-458c-abd6-d6d8efaada7d"
+            name="MessageOccurrenceSpecification12">
+            <covered>
+              <lifelineMoniker
+                Id="48320ba0-5a08-48d7-9295-883ab984fd27"
+                LastKnownName="driverDemandConnector : DriverDemandConnector"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="827d9485-442c-4e9c-b84b-6c8815325aee"
+            name="MessageOccurrenceSpecification11">
+            <covered>
+              <lifelineMoniker
+                Id="ccd3a4e8-efe0-4ffc-b72b-cdd8ebd3fa3b"
+                LastKnownName="driverDemandOutPort : DriverDemandOutPort"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="2c5bc84a-548e-4194-93b4-1f90abf561a0"
+            name="ExecutionOccurrenceSpecification6">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="439efbcc-d589-48b7-8cf3-c081e54dd05c"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="VectoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="ccd3a4e8-efe0-4ffc-b72b-cdd8ebd3fa3b"
+                LastKnownName="driverDemandOutPort : DriverDemandOutPort"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="7e7d4d3c-9add-4e7b-bfd0-d2968c7c40be"
+            name="MessageOccurrenceSpecification8">
+            <covered>
+              <lifelineMoniker
+                Id="a31fac8f-b2d3-4dce-91c2-2b79010969e8"
+                LastKnownName="driverDemandInPort : DriverDemandInPort"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="d8eb55d9-6da3-49b5-979b-099c27c57e66"
+            name="MessageOccurrenceSpecification7">
+            <covered>
+              <lifelineMoniker
+                Id="48320ba0-5a08-48d7-9295-883ab984fd27"
+                LastKnownName="driverDemandConnector : DriverDemandConnector"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="4535fc6e-756a-48b6-94cd-eb2f8cd4bffb"
+            name="ExecutionOccurrenceSpecification4">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="05cb325f-8fd2-47f3-8904-1ddae08f9c1d"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="VectoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="48320ba0-5a08-48d7-9295-883ab984fd27"
+                LastKnownName="driverDemandConnector : DriverDemandConnector"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="8181d5d8-1ba7-4b41-8872-ebb0d01ea979"
+            name="MessageOccurrenceSpecification3">
+            <covered>
+              <lifelineMoniker
+                Id="a31fac8f-b2d3-4dce-91c2-2b79010969e8"
+                LastKnownName="driverDemandInPort : DriverDemandInPort"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="3732cd27-04b7-4d8d-b704-13ab5b44d07e"
+            name="MessageOccurrenceSpecification4">
+            <covered>
+              <lifelineMoniker
+                Id="322b8c33-4017-46aa-8f13-52f1c88ff13e"
+                LastKnownName="drivingCycle : DrivingCycle"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="0e76d5cb-5282-4554-9514-a2753631741a"
+            name="ExecutionOccurrenceSpecification2">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="d3d311f8-c473-48bc-a745-a76814838855"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="VectoArchitecture.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="a31fac8f-b2d3-4dce-91c2-2b79010969e8"
+                LastKnownName="driverDemandInPort : DriverDemandInPort"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+        </fragments>
+        <lifelines>
+          <lifeline
+            Id="322b8c33-4017-46aa-8f13-52f1c88ff13e"
+            name="drivingCycle : DrivingCycle"
+            isActor="false"
+            lifelineDisplayName="drivingCycle : DrivingCycle">
+            <represents>
+              <propertyMoniker
+                Id="b489a5ab-6755-45e8-8fd9-0e5f7441261b"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </represents>
+            <topLevelOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="7be90084-1c49-41c7-abb0-fc1043119c4b"
+                LastKnownName="MessageOccurrenceSpecification1"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="3732cd27-04b7-4d8d-b704-13ab5b44d07e"
+                LastKnownName="MessageOccurrenceSpecification4"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="a31fac8f-b2d3-4dce-91c2-2b79010969e8"
+            name="driverDemandInPort : DriverDemandInPort"
+            isActor="false"
+            lifelineDisplayName="driverDemandInPort : DriverDemandInPort">
+            <represents>
+              <propertyMoniker
+                Id="30b96102-0d84-40ad-83ce-3ba840828efb"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </represents>
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="72668309-a7a5-466c-88ce-b3b3fc97c704"
+                LastKnownName="ExecutionOccurrenceSpecification1"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="0e76d5cb-5282-4554-9514-a2753631741a"
+                LastKnownName="ExecutionOccurrenceSpecification2"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="48320ba0-5a08-48d7-9295-883ab984fd27"
+            name="driverDemandConnector : DriverDemandConnector"
+            isActor="false"
+            lifelineDisplayName="driverDemandConnector : DriverDemandConnector">
+            <represents>
+              <propertyMoniker
+                Id="e48ddb94-bb3b-4ff8-a604-569f775142f3"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </represents>
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="7d68ec49-7dda-4be1-bfea-cd529c292b95"
+                LastKnownName="ExecutionOccurrenceSpecification3"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="4535fc6e-756a-48b6-94cd-eb2f8cd4bffb"
+                LastKnownName="ExecutionOccurrenceSpecification4"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="ccd3a4e8-efe0-4ffc-b72b-cdd8ebd3fa3b"
+            name="driverDemandOutPort : DriverDemandOutPort"
+            isActor="false"
+            lifelineDisplayName="driverDemandOutPort : DriverDemandOutPort">
+            <represents>
+              <propertyMoniker
+                Id="116b1945-8738-478f-8ff0-275d81725470"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </represents>
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="6cb27467-d7dd-46a8-9737-7d893e7832e2"
+                LastKnownName="ExecutionOccurrenceSpecification5"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="2c5bc84a-548e-4194-93b4-1f90abf561a0"
+                LastKnownName="ExecutionOccurrenceSpecification6"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="499edca3-03bc-4dc0-91d4-e6671a638544"
+            name="driver : Driver"
+            isActor="false"
+            lifelineDisplayName="driver : Driver">
+            <represents>
+              <propertyMoniker
+                Id="57fe4d5e-cc86-4cd3-aa11-80f53a29bc09"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </represents>
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="aab3b3ac-f55f-438b-a0af-120a0e2b1871"
+                LastKnownName="ExecutionOccurrenceSpecification7"
+                LastKnownLocation="VectoArchitecture.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="5b9666fa-c3eb-498a-8c24-688f1aa58593"
+                LastKnownName="ExecutionOccurrenceSpecification8"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+        </lifelines>
+        <messages>
+          <message
+            Id="ab5e619b-9297-410f-bbde-8dc832d7d273"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false"
+            signatureText="+ request()">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="7be90084-1c49-41c7-abb0-fc1043119c4b"
+                LastKnownName="MessageOccurrenceSpecification1"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="47ab19dc-07f8-4b18-bd3c-acca232d871b"
+                LastKnownName="MessageOccurrenceSpecification2"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="8330c79b-025a-416d-9858-354e9e3efde2"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="8f2e29d7-4815-497e-999c-b5901402f96e"
+                LastKnownName="MessageOccurrenceSpecification5"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="217827ee-21ff-4d98-aa17-1f5bdefc4549"
+                LastKnownName="MessageOccurrenceSpecification6"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="c57e7f50-5251-4fcd-b197-6079d5807078"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false"
+            signatureText="+ request()">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="c797f040-4b12-49ad-a17c-e844ae432705"
+                LastKnownName="MessageOccurrenceSpecification9"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="eb8736ad-68ff-487e-a588-771e12663771"
+                LastKnownName="MessageOccurrenceSpecification10"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="4acb68aa-f5c8-4fd1-9665-69ca1465983f"
+            name="Message4"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="dff3564f-c6ab-433b-9dac-213e4b763dfc"
+                LastKnownName="MessageOccurrenceSpecification13"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="70e420be-3efc-45bb-bac7-5b7d5e3cdcc7"
+                LastKnownName="MessageOccurrenceSpecification14"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="908a754a-46ff-4f21-88ad-f8e069a75462"
+            name="&lt;&lt;return&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="97582447-a76c-43b3-a824-650e86891c43"
+                LastKnownName="MessageOccurrenceSpecification15"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="8292c79d-a06a-4b81-bbd7-8390eac84c8d"
+                LastKnownName="MessageOccurrenceSpecification16"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="5ec45304-a138-4528-9e32-e96d7165b1a6"
+            name="&lt;&lt;return&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="827d9485-442c-4e9c-b84b-6c8815325aee"
+                LastKnownName="MessageOccurrenceSpecification11"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="89530dc8-7e01-458c-abd6-d6d8efaada7d"
+                LastKnownName="MessageOccurrenceSpecification12"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="0630eef4-69ef-4bf7-8a99-72ec3fb49881"
+            name="&lt;&lt;return&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="d8eb55d9-6da3-49b5-979b-099c27c57e66"
+                LastKnownName="MessageOccurrenceSpecification7"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="7e7d4d3c-9add-4e7b-bfd0-d2968c7c40be"
+                LastKnownName="MessageOccurrenceSpecification8"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="0f5d2596-4d0b-423d-b884-a6faf0782705"
+            name="&lt;&lt;return&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="8181d5d8-1ba7-4b41-8872-ebb0d01ea979"
+                LastKnownName="MessageOccurrenceSpecification3"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="3732cd27-04b7-4d8d-b704-13ab5b44d07e"
+                LastKnownName="MessageOccurrenceSpecification4"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </receiveEvent>
+          </message>
+        </messages>
+        <ownedAttributesInternal>
+          <property
+            Id="eacfb288-4fad-4f7d-9efc-bf49413fb800"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <classMoniker
+                Id="48afbe6b-6554-4885-b5e3-88623e2c3ed7"
+                LastKnownName="DrivingCycle"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </type_NamedElement>
+          </property>
+          <property
+            Id="17bf4af5-6fad-4409-9fca-c88c47360dfe"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <classMoniker
+                Id="65f8b04d-75e5-4d26-a459-f5b4bc0525ba"
+                LastKnownName="VectoSimulator"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </type_NamedElement>
+          </property>
+          <property
+            Id="b489a5ab-6755-45e8-8fd9-0e5f7441261b"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <classMoniker
+                Id="48afbe6b-6554-4885-b5e3-88623e2c3ed7"
+                LastKnownName="DrivingCycle"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </type_NamedElement>
+          </property>
+          <property
+            Id="30b96102-0d84-40ad-83ce-3ba840828efb"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <classMoniker
+                Id="e5ea403a-118e-435d-bf25-21cfdc3c3c3c"
+                LastKnownName="DriverDemandInPort"
+                LastKnownLocation="Package_1506.uml" />
+            </type_NamedElement>
+          </property>
+          <property
+            Id="e48ddb94-bb3b-4ff8-a604-569f775142f3"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <undefinedTypeMoniker
+                Id="b49cfd77-916e-411d-8d0d-5e0314de21b1"
+                LastKnownName="DriverDemandConnector"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </type_NamedElement>
+          </property>
+          <property
+            Id="116b1945-8738-478f-8ff0-275d81725470"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <classMoniker
+                Id="6ba4ef16-f79d-45b8-8d61-7b649b1f5fe7"
+                LastKnownName="DriverDemandOutPort"
+                LastKnownLocation="Package_1506.uml" />
+            </type_NamedElement>
+          </property>
+          <property
+            Id="57fe4d5e-cc86-4cd3-aa11-80f53a29bc09"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <classMoniker
+                Id="ca689ad9-b211-4533-a0ff-0fd22038b6b4"
+                LastKnownName="Driver"
+                LastKnownLocation="VectoArchitecture.uml" />
+            </type_NamedElement>
+          </property>
+        </ownedAttributesInternal>
+      </interaction>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="7707572f-269f-4cf4-b567-07c992fff4ff"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="d3d311f8-c473-48bc-a745-a76814838855"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="c9527dec-ff57-4c1c-a5e6-b0b6df6e3355"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="05cb325f-8fd2-47f3-8904-1ddae08f9c1d"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="1df160d7-9dda-4ca9-8b63-74c0838dc069"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="439efbcc-d589-48b7-8cf3-c081e54dd05c"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="b3a2382d-0423-4f46-9424-1ddc6a39c0bf"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="a99897c8-dbf2-4ee4-8d3c-17a6256e16f2"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <sendOperationEvent
+        Id="373ee1f5-81a3-4481-8a29-0de0206165e3">
+        <operation>
+          <operationMoniker
+            Id="ff62e397-a512-4c38-abbf-5dcee9e2b905"
+            LastKnownName="request"
+            LastKnownLocation="Package_1506.uml" />
+        </operation>
+      </sendOperationEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <receiveOperationEvent
+        Id="53ef5bfd-b413-4ec4-a7c8-be7fddf68da1">
+        <operation>
+          <operationMoniker
+            Id="ff62e397-a512-4c38-abbf-5dcee9e2b905"
+            LastKnownName="request"
+            LastKnownLocation="Package_1506.uml" />
+        </operation>
+      </receiveOperationEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <sendOperationEvent
+        Id="3c4af1bd-5f05-4563-a8d6-964016f1355c">
+        <operation>
+          <operationMoniker
+            Id="ff62e397-a512-4c38-abbf-5dcee9e2b905"
+            LastKnownName="request"
+            LastKnownLocation="Package_1506.uml" />
+        </operation>
+      </sendOperationEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <receiveOperationEvent
+        Id="c58d84d6-9c48-4520-9d09-f41dbad09966">
+        <operation>
+          <operationMoniker
+            Id="ff62e397-a512-4c38-abbf-5dcee9e2b905"
+            LastKnownName="request"
+            LastKnownLocation="Package_1506.uml" />
+        </operation>
+      </receiveOperationEvent>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <undefinedType
+        Id="b49cfd77-916e-411d-8d0d-5e0314de21b1"
+        name="DriverDemandConnector" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="4b454dd7-5989-4b9d-bb4f-87055161e26b"
+        name="IPort"
+        isAbstract="false"
+        isLeaf="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="0bcc57f5-9d5d-486f-b2d0-7431faf85f71"
+        LastKnownName="Models.Connector.Ports"
+        LastKnownLocation="Package_1505.uml" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="cc1b57e9-2f05-498d-bc22-aa2508bf9af9"
+        LastKnownName="Models.Connector.Ports.Impl"
+        LastKnownLocation="Package_1506.uml" />
+    </packageHasNamedElement>
+  </packagedElements>
+  <primitiveType
+    Id="220a3521-e091-4221-bae9-3ef9018e845c"
+    name="Integer"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="8943dc84-709e-4f62-b15a-a3273aa6f165"
+    name="Boolean"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="59259974-6d55-42c6-b7bd-763d77ac8ef9"
+    name="String"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="3ab42e7d-4969-445a-b209-471f5cb8209c"
+    name="UnlimitedNatural"
+    isAbstract="false"
+    isLeaf="false" />
+</modelStoreModel>

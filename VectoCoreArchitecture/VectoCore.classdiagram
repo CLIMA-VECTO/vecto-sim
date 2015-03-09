@@ -1,0 +1,970 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<logicalClassDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" dslVersion="1.0.0.0" Id="13ea7ac7-bee2-4046-8f2d-87a716a14141" name="VectoSim" linkedPackageId="4f6da40a-477c-4f55-bbde-002d1f557086" xmlns="http://schemas.microsoft.com/dsltools/LogicalClassDesigner">
+  <packagedElements>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="af9e0e6a-6e70-4050-82ff-4492aef4110c" name="VectoSimulationComponent" isAbstract="true" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="0708ae64-77eb-4a35-a272-808e3162924f" />
+        <generalsInternal>
+          <generalization Id="f7ed68e8-9489-4299-b280-c3c9409d0407" isSubstitutable="false">
+            <classMoniker Id="2de21336-3e79-4ad1-8f93-43a8da629c50" LastKnownName="PowerTrainElement" />
+            <elementDefinition Id="905f4857-6d4f-4784-8e17-977a5605ce9c" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="0f6b019f-1abe-4092-a506-337292672d79" name="Vehicle" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="e5a0d5cc-5e01-4d15-a399-ce778a88c173" />
+        <suppliersInternal>
+          <dependency Id="f809347a-9e72-4e4a-96aa-6b4390b385bc">
+            <classMoniker Id="4eee08ba-1b8b-4cb0-8f66-f77736507755" LastKnownName="VehicleData" />
+            <elementDefinition Id="87aa6045-eb1a-4f62-a5d4-e280abffae6d" />
+          </dependency>
+          <interfaceRealization Id="5ce04028-167b-4e24-b2d2-3006a0eeacd4">
+            <interfaceMoniker Id="64c22829-7acb-4e57-bd7e-ccc92aa6e665" LastKnownName="ICockpit" />
+            <elementDefinition Id="a48d333d-d0d0-47bc-a77a-f7b471259f47" />
+          </interfaceRealization>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization Id="634fa2a0-db98-4aca-98d5-5a78b0906cdb" isSubstitutable="false">
+            <classMoniker Id="2de21336-3e79-4ad1-8f93-43a8da629c50" LastKnownName="PowerTrainElement" />
+            <elementDefinition Id="a57bc6b5-e301-4491-adea-437558b87648" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="ba6f3680-8ae3-4bec-967b-9bb9f4ca14b0" name="Driver" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="ca689ad9-b211-4533-a0ff-0fd22038b6b4" />
+        <suppliersInternal>
+          <dependency Id="74583d24-86f0-4cca-81a5-058c4561a4f3">
+            <classMoniker Id="a87c7276-f759-4df5-80db-e723e73609eb" LastKnownName="DriverData" />
+            <elementDefinition Id="e7ad7943-3392-4762-9e21-8f6b760775ca" />
+          </dependency>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization Id="f34eb18b-99e1-4be5-b12e-fa96ee34cad2" isSubstitutable="false">
+            <classMoniker Id="af9e0e6a-6e70-4050-82ff-4492aef4110c" LastKnownName="VectoSimulationComponent" />
+            <elementDefinition Id="d6d55559-3415-4852-a237-021022b68a92" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="586f88ee-7cad-43c2-b186-bcd844266a02" name="Wheels" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="295399ea-33d9-4eae-984a-b6ac22a44d93" />
+        <suppliersInternal>
+          <dependency Id="b52fefd9-5aad-4024-974c-a1ae319fcc2d">
+            <classMoniker Id="ac4a1ec9-1bc4-40e3-af0f-9a374b667ea5" LastKnownName="WheelData" />
+            <elementDefinition Id="669440ad-5c55-4c5c-bab9-ba2f0f7b2637" />
+          </dependency>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization Id="333b6988-ed0e-48c6-9f22-889924284c34" isSubstitutable="false">
+            <classMoniker Id="2de21336-3e79-4ad1-8f93-43a8da629c50" LastKnownName="PowerTrainElement" />
+            <elementDefinition Id="6aadaf93-942a-47c1-bdb9-c6f752762e14" />
+          </generalization>
+        </generalsInternal>
+        <ownedAttributesInternal>
+          <property Id="67bcef35-966f-4063-a3b8-71cc19dd43b1" name="inPort_" visibility="Protected" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="d2cdf440-e96c-45d7-b20f-57e123d987c1" />
+            <type_NamedElement>
+              <referencedTypeMoniker Id="769e74f5-2a5a-457c-8f93-eb473ee6b84f" LastKnownName="TnInPort" />
+            </type_NamedElement>
+          </property>
+        </ownedAttributesInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="e21b8cc1-9467-4ba4-acf1-2acb0591d460" name="Gearbox" isAbstract="true" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="83406bee-daa4-4f9b-8318-4bc81ab63fdf" />
+        <suppliersInternal>
+          <interfaceRealization Id="9e1b63b5-767e-4c47-81e0-7e1f9e808819">
+            <interfaceMoniker Id="59932a9c-49d5-430e-9a67-c085c58323ff" LastKnownName="IGearShift" />
+            <elementDefinition Id="202236fc-6d10-4c53-83a7-5b2eb56924b8" />
+          </interfaceRealization>
+          <dependency Id="1da15226-5add-4f49-8f94-d2a9ec049f92">
+            <classMoniker Id="3e377a0b-9f06-49e7-81bb-72c444995186" LastKnownName="ShiftStrategy" />
+            <elementDefinition Id="952ba86a-6a38-4f4c-93f1-97e0d2a354cd" />
+          </dependency>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization Id="def8283d-3804-43dc-b27a-ca6bcc83ffe2" isSubstitutable="false">
+            <classMoniker Id="2de21336-3e79-4ad1-8f93-43a8da629c50" LastKnownName="PowerTrainElement" />
+            <elementDefinition Id="8885b8cc-e024-4238-a81a-f1fb0c67f272" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association Id="4bb51483-a557-4d8a-88b5-443075178d89" isDerived="false" sourceEndRoleName="gbx" targetEndRoleName="axleGear" isLeaf="false" isAbstract="false">
+            <classMoniker Id="78defce6-1550-47cd-a8ee-48c0f4d8c728" LastKnownName="Gear" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="a6a4f4ae-9ea9-48c0-8245-c0d2b810157c" name="gbx" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Composite" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="b74fc03f-cd50-4f38-842a-b3ce729e29ef" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="ce629835-bcb4-498f-ad56-7f96e465ee5a" name="axleGear" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="true">
+                  <elementDefinition Id="3cb57cf5-a08b-4069-ac6b-d0fa76a30c2f" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="dc4bea7d-3891-4ced-8822-0b11269fc7ae" />
+          </association>
+          <association Id="00118376-e30d-40a1-978a-31647b177ce4" isDerived="false" sourceEndRoleName="gbx" targetEndRoleName="gears" isLeaf="false" isAbstract="false">
+            <classMoniker Id="78defce6-1550-47cd-a8ee-48c0f4d8c728" LastKnownName="Gear" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="798dcf7c-633f-4b8f-8cb3-f49aee5d6eb6" name="gbx" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Composite" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="8793f600-d394-4e7d-96b4-096b40e60ccf" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="87d650d1-0732-4068-95d1-def43525f762" name="gears" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="true">
+                  <lowerValueInternal>
+                    <literalString Id="a5f0f8ed-adc9-43b2-94c4-0e2856299966" name="Lower" value="1">
+                      <elementDefinition Id="3059771e-1f5f-4d69-a875-02c40c88cd22" />
+                    </literalString>
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString Id="51f11fc8-3bc4-482d-9c5d-f2692744572a" name="Upper" value="*">
+                      <elementDefinition Id="c612ed5e-e902-4806-9af1-89111121708e" />
+                    </literalString>
+                  </upperValueInternal>
+                  <elementDefinition Id="ccf2a9e3-a291-4866-8044-471d97d752de" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="b11bdb6f-a223-4df0-83d1-eb79aaf40160" />
+          </association>
+        </targetEnds>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="33d8035c-afeb-4f30-ad00-3e7114afedd2" name="Retarder" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="62db4676-a508-4d12-84d7-e07e9be226d7" />
+        <suppliersInternal>
+          <dependency Id="4e684717-8f17-48ef-ade6-6d9118c65144">
+            <classMoniker Id="b822b94c-69fc-46bc-aa90-c77cddd152fd" LastKnownName="RetarderData" />
+            <elementDefinition Id="29e8dd52-8a91-448b-b6c2-19165a406dce" />
+          </dependency>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization Id="f07da9f1-ac95-4b43-ba9b-7274f64cbff0" isSubstitutable="false">
+            <classMoniker Id="2de21336-3e79-4ad1-8f93-43a8da629c50" LastKnownName="PowerTrainElement" />
+            <elementDefinition Id="eec28355-a6e5-4688-b3bf-4d6cc72916c8" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="3ecfa6a7-b5c2-45ee-b47b-ffc9c1daa3e4" name="Engine" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="c6ec901a-bfac-4860-a4be-76bd0f4f1e88" />
+        <suppliersInternal>
+          <dependency Id="c097627c-70d2-4f9e-b96d-3ac360066bf7">
+            <classMoniker Id="8a3b719a-2875-499b-9377-8203a7d38b26" LastKnownName="EngineData" />
+            <elementDefinition Id="54212b17-b633-4da3-bb2e-93b5a04a88f1" />
+          </dependency>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization Id="3500b3b9-887e-42e3-8236-074c5b6dae29" isSubstitutable="false">
+            <classMoniker Id="2de21336-3e79-4ad1-8f93-43a8da629c50" LastKnownName="PowerTrainElement" />
+            <elementDefinition Id="bb46791f-5e78-4bdb-a3b3-9233caab84a3" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="4eee08ba-1b8b-4cb0-8f66-f77736507755" name="VehicleData" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="acbb0b52-662f-420c-9256-a4712fddb90d" />
+        <generalsInternal>
+          <generalization Id="509bb568-0658-48ec-9c22-1da603f4c9cb" isSubstitutable="false">
+            <classMoniker Id="6cd8fc69-acf1-42d9-9b07-58e9c2155519" LastKnownName="SimulationComponentData" />
+            <elementDefinition Id="9da4d4f1-d9ff-49aa-824d-52a30fbd7210" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="ac4a1ec9-1bc4-40e3-af0f-9a374b667ea5" name="WheelData" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="48b0032c-2522-40a8-94fb-8bcaf2ce4d5f" />
+        <generalsInternal>
+          <generalization Id="2ea377dd-813f-4184-bac9-a4a9613a568d" isSubstitutable="false">
+            <classMoniker Id="6cd8fc69-acf1-42d9-9b07-58e9c2155519" LastKnownName="SimulationComponentData" />
+            <elementDefinition Id="75fa841b-04c1-4fec-a5f1-8687193a12c1" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="1dd2359b-75e7-42c2-9651-43f6841f5256" name="GearboxData" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="406e825d-13fb-4da6-b580-5085d4be3bf4" />
+        <suppliersInternal>
+          <dependency Id="4dc880a6-2a01-4158-a9fa-48d02702dd7f">
+            <classMoniker Id="e21b8cc1-9467-4ba4-acf1-2acb0591d460" LastKnownName="Gearbox" />
+            <elementDefinition Id="d6f4f70f-60a2-463d-a574-158915a34198" />
+          </dependency>
+        </suppliersInternal>
+        <generalsInternal>
+          <generalization Id="383e6e2a-a25c-4aad-ac5b-2367d4d4d269" isSubstitutable="false">
+            <classMoniker Id="6cd8fc69-acf1-42d9-9b07-58e9c2155519" LastKnownName="SimulationComponentData" />
+            <elementDefinition Id="4590a277-52fe-40d6-b2ed-7241aa225867" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="b822b94c-69fc-46bc-aa90-c77cddd152fd" name="RetarderData" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="f3f1a061-ce96-4dee-9dd1-3419bb1f58ed" />
+        <generalsInternal>
+          <generalization Id="eaf3d762-f057-4314-9793-933be0381b31" isSubstitutable="false">
+            <classMoniker Id="6cd8fc69-acf1-42d9-9b07-58e9c2155519" LastKnownName="SimulationComponentData" />
+            <elementDefinition Id="fa22072a-af0a-49f7-8fed-caf520abbfe6" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="8a3b719a-2875-499b-9377-8203a7d38b26" name="EngineData" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="ea1d3e3d-870c-4bbb-9dde-e98fb5bfea32" />
+        <generalsInternal>
+          <generalization Id="22d29836-90f9-45de-bf37-f61065b62f66" isSubstitutable="false">
+            <classMoniker Id="6cd8fc69-acf1-42d9-9b07-58e9c2155519" LastKnownName="SimulationComponentData" />
+            <elementDefinition Id="4567ec4a-db12-41b7-b75b-c0c7d654b231" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="78defce6-1550-47cd-a8ee-48c0f4d8c728" name="Gear" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="3bd0241e-5613-4cdb-b21e-dd48d373ac71" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="5e94cd9b-d138-43f9-abcb-d15ea2e1f1c5" name="TorqueConverter" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="73cf1c8f-f3c2-4eef-aa10-4ad6132ba8ae" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="0b5b59bc-df57-4e54-be11-4479548765e1" name="ManualTransmissionGbx" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="4118e57c-afa3-4ed0-8da9-5345ee73acd1" />
+        <generalsInternal>
+          <generalization Id="37a02a4c-e13f-4e0e-acbe-ef38657e634b" isSubstitutable="false">
+            <classMoniker Id="e21b8cc1-9467-4ba4-acf1-2acb0591d460" LastKnownName="Gearbox" />
+            <elementDefinition Id="21b84808-4199-48e6-b48b-3530f3b2f1b9" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="1d62c9f8-e9a1-4f25-976f-8bcc2d91cbc1" name="AutomatedTransmissionGbx" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="bfa1ffd9-c251-45c0-bfe8-eb2343ef8bef" />
+        <generalsInternal>
+          <generalization Id="f5023e1c-fa44-48bf-b238-585c2a08e57e" isSubstitutable="false">
+            <classMoniker Id="e21b8cc1-9467-4ba4-acf1-2acb0591d460" LastKnownName="Gearbox" />
+            <elementDefinition Id="e1a1a298-a8e5-41dc-9cd7-358c4460a911" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="6b7245cb-0cfb-458c-b5db-82918f561844" name="AutomaticTransmissionGbx" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="3068b42c-eb69-4ea1-8e20-a4eb466314a9" />
+        <generalsInternal>
+          <generalization Id="1eff85cd-06b4-4720-8a5a-33f8dda75b2e" isSubstitutable="false">
+            <classMoniker Id="e21b8cc1-9467-4ba4-acf1-2acb0591d460" LastKnownName="Gearbox" />
+            <elementDefinition Id="031b09e2-fc67-45cf-9561-412c31d75ee8" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association Id="e0b3952c-3268-49d2-9569-ed0376b7dad1" isDerived="false" sourceEndRoleName="gbx" targetEndRoleName="tc" isLeaf="false" isAbstract="false">
+            <classMoniker Id="5e94cd9b-d138-43f9-abcb-d15ea2e1f1c5" LastKnownName="TorqueConverter" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="1ac92e60-094f-4943-963c-277749f89a62" name="gbx" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Composite" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="8435bdf4-555c-4641-b638-548e9481d1eb" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="22230209-fbfc-4323-9857-1b6cacaf7bdc" name="tc" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="true">
+                  <elementDefinition Id="4df1a89a-f75a-4fc4-addc-3efc9da5b3be" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="e5173d6d-8c3b-4c49-8913-cccce5218d4b" />
+          </association>
+        </targetEnds>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="6cd8fc69-acf1-42d9-9b07-58e9c2155519" name="SimulationComponentData" isAbstract="true" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="f8953500-9df6-4a81-a0e1-ceef31d0396d" />
+        <ownedOperationsInternal>
+          <operation Id="3c8b7cf1-e411-4e42-b1d7-93a6a59a7253" name="read" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="42d31919-36bf-4e7b-927b-cc13584661fd" />
+          </operation>
+        </ownedOperationsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="a87c7276-f759-4df5-80db-e723e73609eb" name="DriverData" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="a34fe5da-f362-4116-862a-bbe0ba84bf10" />
+        <generalsInternal>
+          <generalization Id="a2826912-2f9f-436d-bbcd-7026593a5914" isSubstitutable="false">
+            <classMoniker Id="6cd8fc69-acf1-42d9-9b07-58e9c2155519" LastKnownName="SimulationComponentData" />
+            <elementDefinition Id="1b5a3ef0-9327-4fd6-8102-7c86190cebe5" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="f9aaa008-8da3-43cd-ad4b-b0fe62d6ef28" name="Connector" isAbstract="true" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="10a28496-8c6a-4c9d-9eee-9fc58f52946a" />
+        <ownedRedefinableTemplateSignatureInternal>
+          <redefinableTemplateSignature Id="59ff0704-92d6-4f41-ad65-d5426ac6a7ec" parameters="" isLeaf="false">
+            <elementDefinition Id="d1e530fe-2980-4542-beff-9c3c2a2e5d3e" />
+            <ownedParameters>
+              <classifierTemplateParameter Id="13e8caf8-4ee1-4597-a99b-281d2e964cfb">
+                <elementDefinition Id="64eb9acf-aae4-4606-9abe-d0d8d6b63021" />
+                <ownedParameterableElement>
+                  <class Id="b3b5c70a-a177-486a-8f63-d9e93a410568" name="TI" isAbstract="false" isLeaf="false" isActiveClass="false">
+                    <elementDefinition Id="a9ef1952-0bd3-4c68-a3bc-149a2c493b9e" />
+                  </class>
+                </ownedParameterableElement>
+                <constrainingClassifier>
+                  <referencedTypeMoniker Id="a763388f-a91c-4cee-a720-044cab6c1c6e" LastKnownName="InPort" />
+                </constrainingClassifier>
+              </classifierTemplateParameter>
+              <classifierTemplateParameter Id="fd27043b-29d5-4868-9a60-832073c24fb3">
+                <elementDefinition Id="146f585d-79b3-4c9d-9c01-2bc028db02de" />
+                <ownedParameterableElement>
+                  <class Id="67411631-8bb5-4b5d-9dbc-9c05ec8c110c" name="TO" isAbstract="false" isLeaf="false" isActiveClass="false">
+                    <elementDefinition Id="05771f0c-bae3-47de-b9a8-07deb85fb6bc" />
+                  </class>
+                </ownedParameterableElement>
+                <constrainingClassifier>
+                  <referencedTypeMoniker Id="4d51cc94-12a8-4505-8918-1c17eabf3540" LastKnownName="OutPort" />
+                </constrainingClassifier>
+              </classifierTemplateParameter>
+              <classifierTemplateParameter Id="9769aebe-d982-4066-be17-8b985f634e84">
+                <elementDefinition Id="5020e641-6281-4f6d-9560-f70f64e73948" />
+                <ownedParameterableElement>
+                  <Interface Id="fa97439c-1995-48b6-b177-8ef02f79e676" name="TP" isAbstract="false" isLeaf="false">
+                    <elementDefinition Id="8c851fd1-e13b-423d-9b84-a6465f552d65" />
+                  </Interface>
+                </ownedParameterableElement>
+              </classifierTemplateParameter>
+            </ownedParameters>
+          </redefinableTemplateSignature>
+        </ownedRedefinableTemplateSignatureInternal>
+        <ownedAttributesInternal>
+          <property Id="d281409d-de52-4b22-824b-9fd033f44732" name="in_" visibility="Protected" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="1cd05cb6-f38e-4f7a-a972-7f238e9dcbb9" />
+            <type_NamedElement>
+              <referencedTypeMoniker Id="b537d208-f653-4302-804a-0e6fe2ecc4e9" LastKnownName="TI" />
+            </type_NamedElement>
+          </property>
+          <property Id="9e4a657e-81d8-4a90-b45d-384b9a1e0d4e" name="out_" visibility="Protected" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="377df558-6a51-4752-ae8d-62ec12c0e2ce" />
+            <type_NamedElement>
+              <referencedTypeMoniker Id="be87f176-b4d3-4a99-beff-74b5710351c1" LastKnownName="TO" />
+            </type_NamedElement>
+          </property>
+        </ownedAttributesInternal>
+        <ownedOperationsInternal>
+          <operation Id="be873c9d-bdff-4552-989f-f477d77de9cc" name="connect" isLeaf="false" isStatic="false" isAbstract="true" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="20f95e33-ac66-43db-9af3-e2d155decf65" />
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="8869aa62-a61b-4a30-8838-f61f8514c6f0" name="out" direction="In" isUnique="false">
+                  <elementDefinition Id="3e66e497-f605-4b10-a5f9-10d38edb18d2" />
+                  <type_NamedElement>
+                    <referencedTypeMoniker Id="4d51cc94-12a8-4505-8918-1c17eabf3540" LastKnownName="OutPort" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter Id="6063e1f7-9492-442b-81fb-cbccd3000dca" name="in" direction="In" isUnique="false">
+                  <elementDefinition Id="ce57e8fd-8fbf-46c1-ad6d-cb0afd6ff44d" />
+                  <type_NamedElement>
+                    <referencedTypeMoniker Id="a763388f-a91c-4cee-a720-044cab6c1c6e" LastKnownName="InPort" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation Id="80ee0e65-ec41-4ddc-8df2-a2b0a9abab49" name="request" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="f9e123fe-9d57-4718-b100-8ae24a0a82fe" />
+          </operation>
+          <operation Id="8d98ba7f-e87e-4a2d-b54b-275efce7f24e" name="commitSimulationStep" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+            <elementDefinition Id="d88355de-e597-4fcc-a9e6-3399f7b45ff9" />
+          </operation>
+        </ownedOperationsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <packageHasNamedElement>
+      <referencedType Id="4d51cc94-12a8-4505-8918-1c17eabf3540" name="OutPort" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::Models.Connector.Ports.Impl::OutPort">
+        <elementDefinition Id="c8fccb93-ec53-4ec7-8bbb-29eafe2522ae" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="a763388f-a91c-4cee-a720-044cab6c1c6e" name="InPort" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::Models.Connector.Ports.Impl::InPort">
+        <elementDefinition Id="5d611a82-1271-461d-ae3e-739a6f08dfc7" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="769e74f5-2a5a-457c-8f93-eb473ee6b84f" name="TnInPort" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::Models.Connector.Ports.Impl::TnInPort">
+        <elementDefinition Id="6ccde41a-02a4-4678-8224-c94070fa1e1a" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="7245767d-859f-462d-81a8-13ba515533f0" name="Connector" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::Connector">
+        <elementDefinition Id="10a28496-8c6a-4c9d-9eee-9fc58f52946a" />
+      </referencedType>
+    </packageHasNamedElement>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="83dc2ee3-2cd8-449a-9a2f-7d1e4c9e0c9a" name="VectoJob" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="83f05ed7-8c7c-4df8-94b4-268b1ffc4154" />
+        <targetEnds>
+          <association Id="af583f1e-6e9a-4bbe-8a0d-21f9d66a553a" isDerived="false" sourceEndRoleName="VectoSimulationComponentContainer" targetEndRoleName="simulationComponents_" isLeaf="false" isAbstract="false">
+            <classMoniker Id="af9e0e6a-6e70-4050-82ff-4492aef4110c" LastKnownName="VectoSimulationComponent" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="293a4591-61f0-4777-988c-3dbff8bc4aad" name="VectoSimulationComponentContainer" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="Shared" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="fae0b8b3-ab23-4dcf-a849-91a3b7379b89" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="6657feac-1b3c-4928-af22-9cee2d7db784" name="simulationComponents_" visibility="Protected" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <lowerValueInternal>
+                    <literalString Id="a15f06a4-0adc-422b-a005-75b63f4301e0" name="Lower" value="1">
+                      <elementDefinition Id="bd74fab8-05e0-4509-8964-1d575a4b76c6" />
+                    </literalString>
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString Id="0ea33a40-a804-40d0-9546-532799fe206d" name="Upper" value="*">
+                      <elementDefinition Id="0986c2a3-3ab8-46d2-a847-9e15ba10bae9" />
+                    </literalString>
+                  </upperValueInternal>
+                  <elementDefinition Id="2959b2aa-d541-4ae9-b2b4-920387ad3907" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="6c746c32-df0d-4965-9eee-fc68b8b062b0" />
+          </association>
+        </targetEnds>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <Interface Id="64c22829-7acb-4e57-bd7e-ccc92aa6e665" name="ICockpit" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="6ce9ca6f-94d1-4482-b74c-5a211fd2cbb5" />
+      </Interface>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <Interface Id="59932a9c-49d5-430e-9a67-c085c58323ff" name="IGearShift" isAbstract="false" isLeaf="false">
+        <elementDefinition Id="09fcd4b5-4421-4c8e-b3e5-c99d69899a30" />
+      </Interface>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="116b4f75-d859-4dde-bcf3-f19b24b6e861" name="VectoSimulator" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="65f8b04d-75e5-4d26-a459-f5b4bc0525ba" />
+        <suppliersInternal>
+          <dependency Id="b5f23726-1d87-4b4f-8e4c-78b0c833d8bd">
+            <classMoniker Id="83dc2ee3-2cd8-449a-9a2f-7d1e4c9e0c9a" LastKnownName="VectoJob" />
+            <elementDefinition Id="eaa86adc-58c1-414d-bbeb-d37d8a7b8d6a" />
+          </dependency>
+        </suppliersInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="3e377a0b-9f06-49e7-81bb-72c444995186" name="ShiftStrategy" isAbstract="true" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="62aee5ee-c048-475b-bcd0-e74bdc9f19b9" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="7994b280-7b6b-4aee-87f8-2b4f9a7ddf39" name="DefaultShiftStrategy" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="6175523c-22eb-4e0d-8f96-3965b7d79436" />
+        <generalsInternal>
+          <generalization Id="30d6a67b-a122-4898-8d5f-fb43d42068b1" isSubstitutable="false">
+            <classMoniker Id="3e377a0b-9f06-49e7-81bb-72c444995186" LastKnownName="ShiftStrategy" />
+            <elementDefinition Id="0a4c85ff-9fd7-404a-ad47-92e08fb195e7" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="c032fe9f-0baa-49ee-bf6d-f72477e49210" name="AutomaticShiftStrategy" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="e18cf28d-ec22-4342-88e9-057367b05c42" />
+        <generalsInternal>
+          <generalization Id="07d367fb-cd08-4421-9889-698730c764a4" isSubstitutable="false">
+            <classMoniker Id="3e377a0b-9f06-49e7-81bb-72c444995186" LastKnownName="ShiftStrategy" />
+            <elementDefinition Id="f5707cf1-0de4-440a-8890-aa1fc988da2c" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="6ef3f227-2da1-4b35-b021-917b38dcc63a" name="DrivingCycle" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="48afbe6b-6554-4885-b5e3-88623e2c3ed7" />
+        <generalsInternal>
+          <generalization Id="5ae1166d-4e4e-4638-bb4c-c8fad692dcee" isSubstitutable="false">
+            <classMoniker Id="af9e0e6a-6e70-4050-82ff-4492aef4110c" LastKnownName="VectoSimulationComponent" />
+            <elementDefinition Id="fa080a03-63ab-43cc-8a2d-9551d7147579" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="3a149270-2d99-4b1d-b6fe-af7403f40381" name="SimulationException" isAbstract="true" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="d9f99264-2a1a-43b2-9d46-8eccd5bb4b59" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="92c5760b-95e5-4f04-9c88-26f3f2c9b0d1" name="EngineOverloadException" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="95249977-4768-46b0-a466-1768f36f0416" />
+        <generalsInternal>
+          <generalization Id="2ecea6d0-6210-4573-bf8d-5d835135e0bf" isSubstitutable="false">
+            <classMoniker Id="3a149270-2d99-4b1d-b6fe-af7403f40381" LastKnownName="SimulationException" />
+            <elementDefinition Id="1c1388b4-7ab0-4777-a14b-fbdd77eeb708" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="8fc21f2e-7b9b-43c4-896f-75efb2b52683" name="GearboxShiftException" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="fa8fce35-4c2e-4fb6-9e62-efa8b495e472" />
+        <generalsInternal>
+          <generalization Id="19023c79-6a1c-4537-98f2-c4b798fcf7b5" isSubstitutable="false">
+            <classMoniker Id="3a149270-2d99-4b1d-b6fe-af7403f40381" LastKnownName="SimulationException" />
+            <elementDefinition Id="197a54c7-523a-4a7b-884c-e006cd9dee58" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <packageHasNamedElement>
+      <referencedType Id="38b160bf-3398-4b99-9289-38e59e70ce29" name="VectoSimulationComponent" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::VectoSimulationComponent">
+        <elementDefinition Id="0708ae64-77eb-4a35-a272-808e3162924f" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="5fed91e6-27a3-4db3-b3d6-5ce153a0a05f" name="VectoSimulationComponent" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::VectoSimulationComponent">
+        <elementDefinition Id="0708ae64-77eb-4a35-a272-808e3162924f" />
+      </referencedType>
+    </packageHasNamedElement>
+    <logicalClassDesignerModelHasTypes>
+      <class Id="2de21336-3e79-4ad1-8f93-43a8da629c50" name="PowerTrainElement" isAbstract="false" isLeaf="false" isActiveClass="false">
+        <elementDefinition Id="6c91a3b1-52ce-480f-a887-2330bd8c3586" />
+      </class>
+    </logicalClassDesignerModelHasTypes>
+    <packageHasNamedElement>
+      <referencedType Id="b537d208-f653-4302-804a-0e6fe2ecc4e9" name="TI" isAbstract="false" isLeaf="false" cachedFullName="TI">
+        <elementDefinition Id="a9ef1952-0bd3-4c68-a3bc-149a2c493b9e" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="be87f176-b4d3-4a99-beff-74b5710351c1" name="TO" isAbstract="false" isLeaf="false" cachedFullName="TO">
+        <elementDefinition Id="05771f0c-bae3-47de-b9a8-07deb85fb6bc" />
+      </referencedType>
+    </packageHasNamedElement>
+    <logicalClassDesignerModelHasPackages>
+      <package Id="b97e5904-e594-4791-9ea9-ec2b7cc539c2" name="Models.Connector.Ports">
+        <elementDefinition Id="0bcc57f5-9d5d-486f-b2d0-7431faf85f71" />
+        <packagedElements>
+          <packageHasNamedElement>
+            <Interface Id="d5676358-a339-4a2b-82fa-f7cd844cb9ba" name="ITnOutPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="e8990b57-448f-44b7-b422-82430cb24dff" />
+              <generalsInternal>
+                <generalization Id="7867a4ec-a1cc-46bc-8968-ba7873e8909c" isSubstitutable="false">
+                  <interfaceMoniker Id="b002fde3-68c0-4ff6-98c0-b9bcdd1ef02e" LastKnownName="ITnPort" />
+                  <elementDefinition Id="dee8ba35-143c-4191-bfa4-6e422ae741fe" />
+                </generalization>
+              </generalsInternal>
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="0aee570d-4a12-4c9d-8b13-5cfa0bc75a54" name="IFvPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="47c99095-2c01-4c58-bb86-cd324a039654" />
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="2752a561-7d4a-49f3-8618-b396e04184c0" name="IFvInPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="c98b765c-05c9-4f60-9b23-2fba53b79bcd" />
+              <generalsInternal>
+                <generalization Id="ad3104aa-46a9-43b2-85e9-d73026cd12af" isSubstitutable="false">
+                  <interfaceMoniker Id="0aee570d-4a12-4c9d-8b13-5cfa0bc75a54" LastKnownName="IFvPort" />
+                  <elementDefinition Id="33fedd3b-1f1c-4eb9-a98f-e78e1724c903" />
+                </generalization>
+              </generalsInternal>
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="9f447dd9-a2fd-42c8-ba73-a92fb44ebaec" name="IFvOutPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="d83f61e8-4f81-4a19-a4f2-9e12b6dfe62f" />
+              <generalsInternal>
+                <generalization Id="f0611171-0350-423e-9275-7997261eff29" isSubstitutable="false">
+                  <interfaceMoniker Id="0aee570d-4a12-4c9d-8b13-5cfa0bc75a54" LastKnownName="IFvPort" />
+                  <elementDefinition Id="14515bbb-1363-4df4-a94b-54849bc8c5fb" />
+                </generalization>
+              </generalsInternal>
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="0fe40198-b99a-4f91-b198-4b9e64394069" name="IUIPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="3ac61d91-b762-4dd2-b65e-e60409d641a0" />
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="62139a05-ddbd-475e-96e8-e9bdb8bdf0cb" name="IUIInPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="eacd287f-40fd-4a58-a82a-03991175b234" />
+              <generalsInternal>
+                <generalization Id="b7385b99-7f4d-4dc1-af6a-84a409fe0975" isSubstitutable="false">
+                  <interfaceMoniker Id="0fe40198-b99a-4f91-b198-4b9e64394069" LastKnownName="IUIPort" />
+                  <elementDefinition Id="4fefbcd3-9f61-49d1-bbde-38d98d0ed775" />
+                </generalization>
+              </generalsInternal>
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="caabea1a-bbc0-415d-97c7-672404c5bfd0" name="IUIOutPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="13bb2bc1-4172-4e66-8401-894a431e61b0" />
+              <generalsInternal>
+                <generalization Id="6425fbbc-c77d-476d-b155-8317010ef142" isSubstitutable="false">
+                  <interfaceMoniker Id="0fe40198-b99a-4f91-b198-4b9e64394069" LastKnownName="IUIPort" />
+                  <elementDefinition Id="ad03b6f4-a061-4be5-8db9-d7f8f5283241" />
+                </generalization>
+              </generalsInternal>
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="c71572ed-f085-49cd-92a3-9d226860ec71" name="IRoadPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="85da6ce3-7607-4dc3-a69e-60fea7e1f690" />
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="2c371772-23c1-49c6-a047-fad52f30f98f" name="IRoadInPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="a5ef3381-7cce-4f5f-812f-3b97e515782b" />
+              <generalsInternal>
+                <generalization Id="10f317cb-d627-498a-b4f2-6d6fd2b603d9" isSubstitutable="false">
+                  <interfaceMoniker Id="c71572ed-f085-49cd-92a3-9d226860ec71" LastKnownName="IRoadPort" />
+                  <elementDefinition Id="ad09ca67-7dda-48ea-8e36-36c34043a29f" />
+                </generalization>
+              </generalsInternal>
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="b2b162f6-ddf7-4601-bfb6-8867bf79150c" name="IRoadOutPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="3b02ca58-9f15-4eb2-81d5-766938d2500d" />
+              <generalsInternal>
+                <generalization Id="f07c67e8-c2cd-4389-96a0-1bffdd1e5000" isSubstitutable="false">
+                  <interfaceMoniker Id="c71572ed-f085-49cd-92a3-9d226860ec71" LastKnownName="IRoadPort" />
+                  <elementDefinition Id="72bb1003-85ef-484d-ab00-e9849a3959c5" />
+                </generalization>
+              </generalsInternal>
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="b002fde3-68c0-4ff6-98c0-b9bcdd1ef02e" name="ITnPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="be795c82-d80f-4d54-b7cb-fee5f5d85f6b" />
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="466be765-576e-4314-aea4-812699302f86" name="ITnInPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="f1e955f0-17b2-4b75-9f01-fceea4fc473b" />
+              <generalsInternal>
+                <generalization Id="50274723-f47b-4c62-80f2-4003a80568a3" isSubstitutable="false">
+                  <interfaceMoniker Id="b002fde3-68c0-4ff6-98c0-b9bcdd1ef02e" LastKnownName="ITnPort" />
+                  <elementDefinition Id="adba6723-0114-4d08-9bd4-4a916fe9da60" />
+                </generalization>
+              </generalsInternal>
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="0f47eb54-eed4-4cb6-8c75-42e117cb8cf5" name="IDriverDemandInPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="99ed4a0c-14b2-4764-bb5e-9c423da83fd4" />
+              <generalsInternal>
+                <generalization Id="7ea861ab-1630-4b26-ad05-72428069faae" isSubstitutable="false">
+                  <interfaceMoniker Id="5df88e9f-6f50-488e-8f4c-262f0fc7213b" LastKnownName="IDriverDemandPort" />
+                  <elementDefinition Id="3ff840a3-ba84-4187-b74d-05d2225c8f42" />
+                </generalization>
+              </generalsInternal>
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="9da7c9c7-150b-4a7d-a706-495a46183f00" name="IDriverDemandOutPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="9f3d3acb-f2d1-4f61-9051-d1a1ed697b12" />
+              <generalsInternal>
+                <generalization Id="9f69d4e0-6581-4c19-bb17-914d6cd4662f" isSubstitutable="false">
+                  <interfaceMoniker Id="5df88e9f-6f50-488e-8f4c-262f0fc7213b" LastKnownName="IDriverDemandPort" />
+                  <elementDefinition Id="d55df1c9-1177-429c-922a-78648276d849" />
+                </generalization>
+              </generalsInternal>
+            </Interface>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <Interface Id="5df88e9f-6f50-488e-8f4c-262f0fc7213b" name="IDriverDemandPort" isAbstract="false" isLeaf="false">
+              <elementDefinition Id="edd8ff8f-3938-4e65-bd3e-09502f39a0d1" />
+            </Interface>
+          </packageHasNamedElement>
+        </packagedElements>
+      </package>
+    </logicalClassDesignerModelHasPackages>
+    <logicalClassDesignerModelHasPackages>
+      <package Id="fbedad4e-e0ae-4b03-9d3a-9ee74ba8e3e4" name="Models.Connector.Ports.Impl">
+        <elementDefinition Id="cc1b57e9-2f05-498d-bc22-aa2508bf9af9" />
+        <packagedElements>
+          <packageHasNamedElement>
+            <class Id="2d448a9c-7dc4-4d1b-98af-6e8b93de4084" name="InPort" isAbstract="true" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="5d611a82-1271-461d-ae3e-739a6f08dfc7" />
+              <generalsInternal>
+                <generalization Id="92e14bcb-0147-4c7d-9ca7-ef00d01717bd" isSubstitutable="false">
+                  <classMoniker Id="dc5e1144-524b-4cbd-b9e6-9a393d997f64" LastKnownName="Port" />
+                  <elementDefinition Id="8e1988a5-dd8a-4d07-86b6-598329e278ce" />
+                </generalization>
+              </generalsInternal>
+              <ownedAttributesInternal>
+                <property Id="5d6717b2-7394-48ad-8555-f055a48f312b" name="connector_" visibility="Protected" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="a6b9f48a-1f6b-4893-84ad-ae2f5161109b" />
+                  <type_NamedElement>
+                    <referencedTypeMoniker Id="7245767d-859f-462d-81a8-13ba515533f0" LastKnownName="Connector" />
+                  </type_NamedElement>
+                </property>
+              </ownedAttributesInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="1cb1ed9b-3eec-44b0-9a2d-3cf9122a8a91" name="TnInPort" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="6ccde41a-02a4-4678-8224-c94070fa1e1a" />
+              <suppliersInternal>
+                <interfaceRealization Id="9b964889-d94d-457d-8b5e-bba261177921">
+                  <interfaceMoniker Id="466be765-576e-4314-aea4-812699302f86" LastKnownName="ITnInPort" />
+                  <elementDefinition Id="10e886af-6238-406f-983a-ed05a01de165" />
+                </interfaceRealization>
+              </suppliersInternal>
+              <generalsInternal>
+                <generalization Id="201c82b8-b913-45fe-9a88-b36b0cf9987d" isSubstitutable="false">
+                  <classMoniker Id="2d448a9c-7dc4-4d1b-98af-6e8b93de4084" LastKnownName="InPort" />
+                  <elementDefinition Id="384793c5-fa72-4264-a554-c2527f94fa41" />
+                </generalization>
+              </generalsInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="2adc9f78-d669-4bbb-9627-979e2401a00c" name="FvInPort" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="b54ea68f-78d3-4194-b485-22e8f7d87e05" />
+              <suppliersInternal>
+                <interfaceRealization Id="01175607-7ccf-43fe-9d5c-44401519dc2d">
+                  <interfaceMoniker Id="2752a561-7d4a-49f3-8618-b396e04184c0" LastKnownName="IFvInPort" />
+                  <elementDefinition Id="469f08de-fb5e-4442-b6fd-3d3678cc9b17" />
+                </interfaceRealization>
+              </suppliersInternal>
+              <generalsInternal>
+                <generalization Id="77918c46-20f9-42a5-850c-b2aded0124af" isSubstitutable="false">
+                  <classMoniker Id="2d448a9c-7dc4-4d1b-98af-6e8b93de4084" LastKnownName="InPort" />
+                  <elementDefinition Id="55052d01-896e-43b1-830d-b1ed6f43b01a" />
+                </generalization>
+              </generalsInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="d9059c26-d301-4c06-b591-c457f582f352" name="UIInPort" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="3d53bef1-ec65-4837-a7d2-96c6b3ee501e" />
+              <suppliersInternal>
+                <interfaceRealization Id="885a41a1-25ed-4fb2-8064-4d1126410da0">
+                  <interfaceMoniker Id="62139a05-ddbd-475e-96e8-e9bdb8bdf0cb" LastKnownName="IUIInPort" />
+                  <elementDefinition Id="f2364c29-ad78-4524-b947-79565ae2e878" />
+                </interfaceRealization>
+              </suppliersInternal>
+              <generalsInternal>
+                <generalization Id="f2d555aa-0bf0-4bd2-af15-9b3bcbfcd9a5" isSubstitutable="false">
+                  <classMoniker Id="2d448a9c-7dc4-4d1b-98af-6e8b93de4084" LastKnownName="InPort" />
+                  <elementDefinition Id="a5a3018f-42f6-490b-96de-8c8e63443224" />
+                </generalization>
+              </generalsInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="9c805018-22e6-4be2-9fd3-2992a667c57b" name="TnOutPort" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="0e473a84-9fc0-4c1a-85ba-a15b6aa614c2" />
+              <suppliersInternal>
+                <interfaceRealization Id="c19d88cf-a11f-428d-9ecc-1b514d3f3eed">
+                  <interfaceMoniker Id="d5676358-a339-4a2b-82fa-f7cd844cb9ba" LastKnownName="ITnOutPort" />
+                  <elementDefinition Id="c61586ef-6d59-4144-bb63-6b8885e12ddf" />
+                </interfaceRealization>
+              </suppliersInternal>
+              <generalsInternal>
+                <generalization Id="218b2ea1-8473-4153-a63c-6dca6d95c310" isSubstitutable="false">
+                  <classMoniker Id="00f5444a-5885-4d15-973e-9a964c842773" LastKnownName="OutPort" />
+                  <elementDefinition Id="d1e4324a-80e4-4660-9a4b-0b1c2703c6ae" />
+                </generalization>
+              </generalsInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="00f5444a-5885-4d15-973e-9a964c842773" name="OutPort" isAbstract="true" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="c8fccb93-ec53-4ec7-8bbb-29eafe2522ae" />
+              <generalsInternal>
+                <generalization Id="acad685c-b9f1-47f3-ba9f-efa67735de18" isSubstitutable="false">
+                  <classMoniker Id="dc5e1144-524b-4cbd-b9e6-9a393d997f64" LastKnownName="Port" />
+                  <elementDefinition Id="51600169-a489-43b7-be1f-842e6c25424c" />
+                </generalization>
+              </generalsInternal>
+              <ownedAttributesInternal>
+                <property Id="18d4a87c-632c-496d-82ff-0a9c74bfb761" name="vsc_" visibility="Protected" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="af59a81e-6836-4ebe-b02f-0d2773056b60" />
+                  <type_NamedElement>
+                    <referencedTypeMoniker Id="5fed91e6-27a3-4db3-b3d6-5ce153a0a05f" LastKnownName="VectoSimulationComponent" />
+                  </type_NamedElement>
+                </property>
+              </ownedAttributesInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="5b4129d5-dced-4a52-b5b7-580c4d29d2c5" name="FvOutPort" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="ae2c2f2f-41be-4937-8f1d-25692bf6f911" />
+              <suppliersInternal>
+                <interfaceRealization Id="3f7b22d9-cf04-450e-b574-a519c2e4efb5">
+                  <interfaceMoniker Id="9f447dd9-a2fd-42c8-ba73-a92fb44ebaec" LastKnownName="IFvOutPort" />
+                  <elementDefinition Id="f6565460-2dad-4ceb-91f5-787f8c91f0ff" />
+                </interfaceRealization>
+              </suppliersInternal>
+              <generalsInternal>
+                <generalization Id="762419e2-39d5-4d57-911b-764990438c79" isSubstitutable="false">
+                  <classMoniker Id="00f5444a-5885-4d15-973e-9a964c842773" LastKnownName="OutPort" />
+                  <elementDefinition Id="4ed130d3-d146-499f-9a30-b83964b3baa9" />
+                </generalization>
+              </generalsInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="7374e96c-ae40-467b-8ee1-5938f2c66ebf" name="UIOutPort" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="fa74f479-5da5-488c-aae9-ffc456b46246" />
+              <suppliersInternal>
+                <interfaceRealization Id="601f88ce-a531-4167-98fb-341985dc5395">
+                  <interfaceMoniker Id="caabea1a-bbc0-415d-97c7-672404c5bfd0" LastKnownName="IUIOutPort" />
+                  <elementDefinition Id="a3878b49-8782-4597-b78d-36a1629567be" />
+                </interfaceRealization>
+              </suppliersInternal>
+              <generalsInternal>
+                <generalization Id="acb614ef-df77-4236-9eb2-7626ba17c0b1" isSubstitutable="false">
+                  <classMoniker Id="00f5444a-5885-4d15-973e-9a964c842773" LastKnownName="OutPort" />
+                  <elementDefinition Id="c6f8120d-288a-4bb0-8561-856eb719d3e0" />
+                </generalization>
+              </generalsInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="0a1704cd-1633-4bce-b206-3c8fb8d7ca71" name="RoadInPort" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="8664dd12-585d-4b81-948a-99f49bd8d6a6" />
+              <suppliersInternal>
+                <interfaceRealization Id="19cba4d7-51bd-4ead-9874-e0af647fb3b6">
+                  <interfaceMoniker Id="2c371772-23c1-49c6-a047-fad52f30f98f" LastKnownName="IRoadInPort" />
+                  <elementDefinition Id="816028c7-3706-4f21-9059-e9fcf97609d9" />
+                </interfaceRealization>
+              </suppliersInternal>
+              <generalsInternal>
+                <generalization Id="5e0fabc5-c54c-47ad-8660-10ea57f2e552" isSubstitutable="false">
+                  <classMoniker Id="2d448a9c-7dc4-4d1b-98af-6e8b93de4084" LastKnownName="InPort" />
+                  <elementDefinition Id="baa809ba-5606-4b3d-a31a-c4c4177e858c" />
+                </generalization>
+              </generalsInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="f26d03bd-a0b6-4f61-814d-4c1708ddb3b3" name="RoadOutPort" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="4949f542-60c3-418e-a153-7b7c3cec463f" />
+              <suppliersInternal>
+                <interfaceRealization Id="c8c91fc3-7de7-44a2-bc45-369a331be3e3">
+                  <interfaceMoniker Id="b2b162f6-ddf7-4601-bfb6-8867bf79150c" LastKnownName="IRoadOutPort" />
+                  <elementDefinition Id="61062ade-750a-459b-8443-754c6e1de3d9" />
+                </interfaceRealization>
+              </suppliersInternal>
+              <generalsInternal>
+                <generalization Id="65250921-5d6b-4147-b51a-d463a195ee19" isSubstitutable="false">
+                  <classMoniker Id="00f5444a-5885-4d15-973e-9a964c842773" LastKnownName="OutPort" />
+                  <elementDefinition Id="f4c998fb-4b97-4250-99b3-0479d2266aa4" />
+                </generalization>
+              </generalsInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="c6904fc2-c087-4ae3-8aa6-961e16b4e245" name="DriverDemandOutPort" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="6ba4ef16-f79d-45b8-8d61-7b649b1f5fe7" />
+              <suppliersInternal>
+                <interfaceRealization Id="915174ea-3e8a-4a2f-9a2c-4ac81e99728b">
+                  <interfaceMoniker Id="9da7c9c7-150b-4a7d-a706-495a46183f00" LastKnownName="IDriverDemandOutPort" />
+                  <elementDefinition Id="98edb46a-403c-4975-a098-42d82e74b08b" />
+                </interfaceRealization>
+              </suppliersInternal>
+              <generalsInternal>
+                <generalization Id="103b3092-76ae-47fa-a366-bc13ce2a0792" isSubstitutable="false">
+                  <classMoniker Id="00f5444a-5885-4d15-973e-9a964c842773" LastKnownName="OutPort" />
+                  <elementDefinition Id="93168b9b-6ebd-4cf2-8b00-1eabc9c6b8ed" />
+                </generalization>
+              </generalsInternal>
+              <ownedAttributesInternal>
+                <property Id="0848b54c-9587-4530-b347-5d8e7d2da0a5" name="connector_" visibility="Protected" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="a9e8feb7-70f8-4d17-afab-09272de8164d" />
+                </property>
+              </ownedAttributesInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="6f1591da-9fde-410a-9905-005e0c053b31" name="DriverDemandInPort" isAbstract="false" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="e5ea403a-118e-435d-bf25-21cfdc3c3c3c" />
+              <suppliersInternal>
+                <interfaceRealization Id="ff63fe43-7612-4a21-bd5e-271985e2663a">
+                  <interfaceMoniker Id="0f47eb54-eed4-4cb6-8c75-42e117cb8cf5" LastKnownName="IDriverDemandInPort" />
+                  <elementDefinition Id="c8248082-8f50-4f40-bbb1-9a95f64bd591" />
+                </interfaceRealization>
+              </suppliersInternal>
+              <generalsInternal>
+                <generalization Id="741bceef-bc1e-4744-bbc5-228cb5ba0f8f" isSubstitutable="false">
+                  <classMoniker Id="2d448a9c-7dc4-4d1b-98af-6e8b93de4084" LastKnownName="InPort" />
+                  <elementDefinition Id="fe798775-6cb0-4d0e-8427-cd3351989058" />
+                </generalization>
+              </generalsInternal>
+              <ownedAttributesInternal>
+                <property Id="6dea2cd9-d1cc-4581-939f-ca60eb94106e" name="vsc_" visibility="Protected" isLeaf="false" isStatic="false" isReadOnly="false" isUnique="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="d335ffe3-31d7-4ba3-a326-7aead669d9b9" />
+                  <type_NamedElement>
+                    <referencedTypeMoniker Id="38b160bf-3398-4b99-9289-38e59e70ce29" LastKnownName="VectoSimulationComponent" />
+                  </type_NamedElement>
+                </property>
+              </ownedAttributesInternal>
+            </class>
+          </packageHasNamedElement>
+          <packageHasNamedElement>
+            <class Id="dc5e1144-524b-4cbd-b9e6-9a393d997f64" name="Port" isAbstract="true" isLeaf="false" isActiveClass="false">
+              <elementDefinition Id="d0521447-d513-4714-b3ef-d5b2c48c260b" />
+              <ownedOperationsInternal>
+                <operation Id="387a8211-6dae-4f84-ab60-8d3455fdafcc" name="request" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+                  <elementDefinition Id="ff62e397-a512-4c38-abbf-5dcee9e2b905" />
+                </operation>
+                <operation Id="46f6d65b-eb56-459c-8a85-b66084b9c84b" name="commitSimulationStep" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
+                  <elementDefinition Id="be60251e-1c58-4eb0-85eb-b1075e14cb0b" />
+                </operation>
+              </ownedOperationsInternal>
+            </class>
+          </packageHasNamedElement>
+        </packagedElements>
+      </package>
+    </logicalClassDesignerModelHasPackages>
+  </packagedElements>
+  <package Id="4f6da40a-477c-4f55-bbde-002d1f557086" name="VectoArchitecture">
+    <elementDefinition Id="d70f4262-18df-49eb-a245-704a07d56711" />
+    <profileInstances>
+      <packageHasProfileInstances Id="d4813772-4908-4d17-8733-9053de222386">
+        <profileInstance Id="82e7741a-72a4-4d6a-a6ad-b6385bfdec35" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="5bb2f153-f249-43e4-a5e4-eb26804804dc">
+        <profileInstance Id="2fecf097-6150-445d-8dde-c186565c80c0" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+    </profileInstances>
+  </package>
+</logicalClassDesignerModel>
