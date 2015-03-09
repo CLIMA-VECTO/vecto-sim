@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        object this[ModalResult key] { get; set; }
+        object this[ModalResultField key] { get; set; }
 
         /// <summary>
         /// Commits the data of the current simulation step.

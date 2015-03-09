@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Data;
 using System.IO;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -69,9 +67,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             engine.CommitSimulationStep(dataWriter);
 
             //todo: test with correct output values, add other fields to test
-            Assert.AreEqual(dataWriter[ModalResult.FC], 13000);
-            Assert.AreEqual(dataWriter[ModalResult.FC_AUXc], 14000);
-            Assert.AreEqual(dataWriter[ModalResult.FC_WHTCc], 15000);
+            Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
+            Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
+            Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
         }
 
 		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineTests.csv", "EngineTests#csv", DataAccessMethod.Sequential)]
@@ -98,15 +96,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
                 absTime += dt;
 
                 //todo: test with correct output values, add other fields to test
-                Assert.AreEqual(dataWriter[ModalResult.FC], 13000);
-                Assert.AreEqual(dataWriter[ModalResult.FC_AUXc], 14000);
-                Assert.AreEqual(dataWriter[ModalResult.FC_WHTCc], 15000);
+                Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
+                Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
+                Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
             }
 
             //todo: test with correct output values, add other fields to test
-            Assert.AreEqual(dataWriter[ModalResult.FC], 13000);
-            Assert.AreEqual(dataWriter[ModalResult.FC_AUXc], 14000);
-            Assert.AreEqual(dataWriter[ModalResult.FC_WHTCc], 15000);
+            Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
+            Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
+            Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
         }
 
 

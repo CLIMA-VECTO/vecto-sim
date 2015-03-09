@@ -21,6 +21,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
     /// </remarks>
     public class EngineOnlyDrivingCycle
     {
+        private static class Fields
+        {
+            public const string Pe = "Pe";
+            public const string Padd = "Padd";
+            public const string Me = "Me";
+            public const string n = "n";
+        }
+
         /// <summary>
         /// Engine Speed
         /// </summary>
@@ -56,15 +64,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             foreach (DataRow row in data.Rows)
             {
                 var cycle = new EngineOnlyDrivingCycle();
-                cycle.EngineSpeed = row.GetDouble("n");
+                cycle.EngineSpeed = row.GetDouble(Fields.n);
 
-                if (data.Columns.Contains("Pe"))
-                    cycle.PowerEngine = row.GetDouble("Pe");
+                if (data.Columns.Contains(Fields.Pe))
+                    cycle.PowerEngine = row.GetDouble(Fields.Pe);
                 else
-                    cycle.Torque = row.GetDouble("Me");
+                    cycle.Torque = row.GetDouble(Fields.Me);
 
-                if (data.Columns.Contains("Padd"))
-                    cycle.Padd = row.GetDouble("Padd");
+                if (data.Columns.Contains(Fields.Padd))
+                    cycle.Padd = row.GetDouble(Fields.Padd);
 
                 cycles.Add(cycle);
             }
