@@ -21,9 +21,15 @@ namespace TUGraz.VectoCore.Exceptions
 		}
 	}
 
-	class UnsupportedFileVersion : FileIOException
+	class InvalidFileFormatException : FileIOException
 	{
-		public UnsupportedFileVersion(string message) : base(message) { }
-		public UnsupportedFileVersion(string message, Exception inner) : base(message, inner) { }
+		public InvalidFileFormatException(string message) : base(message) { }
+		public InvalidFileFormatException(string message, Exception inner) : base(message) { }
+	}
+
+	class UnsupportedFileVersionException : FileIOException
+	{
+		public UnsupportedFileVersionException(string message) : base(message) { }
+		public UnsupportedFileVersionException(string message, Exception inner) : base(message, inner) { }
 	}
 }

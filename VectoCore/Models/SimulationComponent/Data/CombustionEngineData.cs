@@ -57,10 +57,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             var results = JsonConvert.DeserializeObject<dynamic>(json);
 
             //todo: handle error when fields not exist
+	        if (results["Header"] == null) {
+		        throw new InvalidFileFormatException("could not find 'Header' Section");
+	        }
             var header = results["Header"];
 
             if (header["FileVersion"] > 2)
-                throw new UnsupportedFileVersion("Unsupported Version of .veng file. Got Version: " + header["FileVersion"]);
+                throw new UnsupportedFileVersionException("Unsupported Version of .veng file. Got Version: " + header["FileVersion"]);
 
             var body = results["Body"];
 
@@ -71,6 +74,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             engine.Displacement = body["Displacement"];
             engine.IdleSpeed = body["IdlingSpeed"];
             engine.Inertia = body["Inertia"];
+
+			// engine.GetType().GetProperty("Inertia").SetValue(engine, body["Inerita"]);
 
             foreach (dynamic loadCurve in body["FullLoadCurves"])
                 engine._fullLoadCurves[loadCurve["Gears"].Value] = FullLoadCurve.ReadFromFile(loadCurve["Path"].Value);
