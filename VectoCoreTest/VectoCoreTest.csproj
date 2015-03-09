@@ -89,13 +89,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vmod" />
+    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vsum" />
+    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vsum.json" />
     <None Include="TestData\EngineTests.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="TestData\EngineOnly\ResultFiles\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

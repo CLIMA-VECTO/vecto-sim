@@ -1,2 +1,2 @@
-TestName,EngineFile,CycleFile,ResultFile
-Test1,EngineOnly\EngineMaps\24t Coach.veng,EngineOnly\Cycles\Coach Engine Only.vdri,EngineOnly\ResultFiles\test1.vmod
+TestName,EngineFile,CycleFile,ModalResultFile,SumResultFile
+Test1,TestData\EngineOnly\EngineMaps\24t Coach.veng,TestData\EngineOnly\Cycles\Coach Engine Only.vdri,TestData\EngineOnly\ResultFiles\Test1_results.vmod,TestData\EngineOnly\ResultFiles\Test1_results.vsum
