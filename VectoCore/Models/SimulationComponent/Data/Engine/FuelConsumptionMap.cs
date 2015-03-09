@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
         private List<FuelConsumptionEntry> entries;
 
-        public FuelConsumptionMap ReadFromFile(string fileName)
+        public static FuelConsumptionMap ReadFromFile(string fileName)
         {
             var fuelConsumptionMap = new FuelConsumptionMap();
             var data = VectoCSVReader.Read(fileName);
@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             {
                 var entry = new FuelConsumptionEntry();
                 entry.EngineSpeed = row.GetDouble("engine speed");
-                entry.Torque = row.GetDouble("engine torque");
+                entry.Torque = row.GetDouble("torque");
                 entry.FuelConsumption = row.GetDouble("fuel consumption");
                 fuelConsumptionMap.entries.Add(entry);
             }

@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
         private List<FullLoadCurveEntry> entries;
 
-        public FullLoadCurve ReadFromFile(string fileName)
+        public static FullLoadCurve ReadFromFile(string fileName)
         {
             var fullLoadCurve = new FullLoadCurve();
             var data = VectoCSVReader.Read(fileName);
