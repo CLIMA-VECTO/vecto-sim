@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
             foreach (var cycle in data)
             {
-                port.Request(absTime, dt, cycle.T, cycle.n);
+                port.Request(absTime, dt, cycle.Torque, cycle.EngineSpeed);
                 engine.CommitSimulationStep(dataWriter);
                 absTime += dt;
 

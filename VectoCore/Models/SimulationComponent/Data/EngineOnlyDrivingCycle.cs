@@ -24,21 +24,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         /// <summary>
         /// Engine Speed
         /// </summary>
-        public double n { get; set; }
+        public double EngineSpeed { get; set; }
 
         /// <summary>
         /// Torque
         /// </summary>
         /// <remarks>Column "Me" in data file.</remarks>
-        public double T { get; set; }
+        public double Torque { get; set; }
 
         /// <summary>
         /// Engine power
         /// </summary>
-        public double Pe
+        public double PowerEngine
         {
-            get { return 2.0 * Math.PI / 60.0 * T * n; }
-            set { T = 60.0 / (2.0 * Math.PI) * value / n; }
+            get { return 2.0 * Math.PI / 60.0 * Torque * EngineSpeed; }
+            set { Torque = 60.0 / (2.0 * Math.PI) * value / EngineSpeed; }
         }
 
         /// <summary>
@@ -56,12 +56,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             foreach (DataRow row in data.Rows)
             {
                 var cycle = new EngineOnlyDrivingCycle();
-                cycle.n = row.GetDouble("n");
+                cycle.EngineSpeed = row.GetDouble("n");
 
                 if (data.Columns.Contains("Pe"))
-                    cycle.Pe = row.GetDouble("Pe");
+                    cycle.PowerEngine = row.GetDouble("Pe");
                 else
-                    cycle.T = row.GetDouble("Me");
+                    cycle.Torque = row.GetDouble("Me");
 
                 if (data.Columns.Contains("Padd"))
                     cycle.Padd = row.GetDouble("Padd");
