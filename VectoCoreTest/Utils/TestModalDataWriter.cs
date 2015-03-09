@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Tests.Utils
             CurrentRow = Data.NewRow();
         }
 
-        public object this[ModalResult key]
+        public object this[ModalResultField key]
         {
             get { return CurrentRow[key.ToString()]; }
             set { CurrentRow[key.ToString()] = value; }

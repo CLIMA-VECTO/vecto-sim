@@ -4,19 +4,25 @@ using System.Reflection;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+    [System.ComponentModel.DesignerCategory("")] // to disable design view in VisualStudio
     public class ModalResults : DataTable
     {
         public ModalResults()
         {
-            foreach (ModalResult value in Enum.GetValues(typeof(ModalResult)))
+            foreach (ModalResultField value in Enum.GetValues(typeof(ModalResultField)))
                 Columns.Add(value.ToString(), value.GetDataType());
+        }
+
+        public DataTable ReadFromFile(string fileName)
+        {
+            throw new NotImplementedException();
         }
     }
 
     /// <summary>
     /// Enum with field definitions of the Modal Results File (.vmod).
     /// </summary>
-    public enum ModalResult
+    public enum ModalResultField
     {
         [ModalResultFieldAttr(typeof(double))] time,			//	[s]	    Time step.
         [ModalResultFieldAttr(typeof(double))] dist,			//	[km]	Travelled distance.
@@ -56,6 +62,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[ModalResultFieldAttr(typeof(double))] TC_n_Out,		//	[1/min]	Torque converter output speed
     }
 
+
+
+
+
+
 	[AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
 	class ModalResultFieldAttr : Attribute
 	{
@@ -68,19 +79,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
     public static class ModalResultFieldExtensions
     {
-        public static Type GetDataType(this ModalResult field)
+        public static Type GetDataType(this ModalResultField field)
         {
             return GetAttr(field).FieldType;
         }
 
-	    private static ModalResultFieldAttr GetAttr(ModalResult field)
+	    private static ModalResultFieldAttr GetAttr(ModalResultField field)
 	    {
 		    return (ModalResultFieldAttr)Attribute.GetCustomAttribute(ForValue(field), typeof (ModalResultFieldAttr));
 	    }
 
-	    private static MemberInfo ForValue(ModalResult field)
+	    private static MemberInfo ForValue(ModalResultField field)
 	    {
-		    return typeof (ModalResult).GetField(Enum.GetName(typeof (ModalResult), field));
+		    return typeof (ModalResultField).GetField(Enum.GetName(typeof (ModalResultField), field));
 	    }
     }
 }
