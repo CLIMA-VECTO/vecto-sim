@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         {
 			var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
 			var data = EngineOnlyDrivingCycle.ReadFromFile(TestContext.DataRow["CycleFile"].ToString());
-			// var expectedResults = ....
+			//var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
 			var engine = new CombustionEngine(engineData);
             var port = engine.OutShaft();
