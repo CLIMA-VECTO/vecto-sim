@@ -13,9 +13,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         /// <param name="fileName"></param>
         /// <returns>A DataTable which represents the CSV File.</returns>
         /// <remarks>
-        /// Header: All Combinations between max-format and min-format possible. Only "id"-field is used.
-        /// max: <id> (name) [unit], <id> (name) [unit], ... 
-        /// min: id,id,...              
+        /// The following format applies to all CSV (Comma-separated values) Input Files used in VECTO: 
+        /// List Separator: Comma "," 
+        /// Decimal-Mark: Dot "." 
+        /// Comments: "#" at the beginning of the comment line. Number and position of comment lines is not limited. 
+        /// Header: One header line (not a comment line) at the beginning of the file. 
+        ///         All Combinations between max-format and min-format possible. Only "id"-field is used.
+        ///         max: <id> (name) [unit], <id> (name) [unit], ... 
+        ///         min: id,id,...              
         /// </remarks>
         public static DataTable Read(string fileName)
         {

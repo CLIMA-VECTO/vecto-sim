@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var engine = new CombustionEngine(engineData);
             var port = engine.OutShaft();
 
-            var data = EngineOnlyDrivingCycle.Read("Coach Engine Only.vdri");
+            var data = EngineOnlyDrivingCycle.ReadFromFile("Coach Engine Only.vdri");
 
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
             var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
             foreach (var cycle in data)
             {
-                port.Request(absTime, dt, cycle.T, cycle.n);
+                port.Request(absTime, dt, cycle.Torque, cycle.EngineSpeed);
                 engine.CommitSimulationStep(dataWriter);
                 absTime += dt;
 
