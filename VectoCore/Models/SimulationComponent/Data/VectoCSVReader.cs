@@ -30,44 +30,51 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         /// </remarks>
         public static DataTable Read(string fileName)
         {
-            var lines = File.ReadAllLines(fileName);
-            var header = lines.First();
-            header = Regex.Replace(header, @"\[.*?\]", "");
-            header = Regex.Replace(header, @"\(.*?\)", "");
-            header = header.Replace("<", "");
-            header = header.Replace(">", "");
-            // or all in one regex (incl. trim):
-            // Regex.Replace(header, @"\s*\[.*?\]\s*|\s*\(.*?\)\s*|\s*<|>\s*|\s*(?=,)|(?<=,)\s*", "");
-            var cols = header.Split(Separator);
-
-            var table = new DataTable();
-            foreach (var col in cols)
-                table.Columns.Add(col.Trim(), typeof(string));
-
-            // skip header! --> begin with index 1
-            for (int i = 1; i < lines.Length; i++)
+            try
             {
-                string line = lines[i];
-                //todo: do more sophisticated splitting of csv-columns (or use a good csv library!)
+                var lines = File.ReadAllLines(fileName);
+                var header = lines.First();
+                header = Regex.Replace(header, @"\[.*?\]", "");
+                header = Regex.Replace(header, @"\(.*?\)", "");
+                header = header.Replace("<", "");
+                header = header.Replace(">", "");
+                // or all in one regex (incl. trim):
+                // Regex.Replace(header, @"\s*\[.*?\]\s*|\s*\(.*?\)\s*|\s*<|>\s*|\s*(?=,)|(?<=,)\s*", "");
+                var cols = header.Split(Separator);
 
-                if (line.Contains(Comment))
-                    line = line.Substring(0, line.IndexOf(Comment));
+                var table = new DataTable();
+                foreach (var col in cols)
+                    table.Columns.Add(col.Trim(), typeof(string));
 
-                var cells = line.Split(Separator);
-                if (cells.Length != cols.Length)
-                    throw new CSVReadException("The number of values is not correct. Line: " + i);
-
-                try
+                // skip header! --> begin with index 1
+                for (int i = 1; i < lines.Length; i++)
                 {
-                    table.Rows.Add(line.Split(Separator));
+                    string line = lines[i];
+                    //todo: do more sophisticated splitting of csv-columns (or use a good csv library!)
+
+                    if (line.Contains(Comment))
+                        line = line.Substring(0, line.IndexOf(Comment));
+
+                    var cells = line.Split(Separator);
+                    if (cells.Length != cols.Length)
+                        throw new CSVReadException(string.Format("Line {0}: The number of values is not correct.", i));
+
+                    try
+                    {
+                        table.Rows.Add(line.Split(Separator));
+                    }
+                    catch (InvalidCastException e)
+                    {
+                        throw new CSVReadException(string.Format("Line {0}: The data format of a value is not correct. {1}", i, e.Message), e);
+                    }
                 }
-                catch (InvalidCastException e)
-                {
-                    throw new CSVReadException("The data format of a value is not correct. Line " + i, e);
-                }
+
+                return table;
             }
-
-            return table;
+            catch (Exception e)
+            {
+                throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message));
+            }
         }
     }
 }

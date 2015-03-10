@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                         if (entry.FuelConsumption < 0)
                             throw new ArgumentOutOfRangeException("FuelConsumption < 0" + data.Rows.IndexOf(row));
                         fuelConsumptionMap._entries.Add(entry);
+                        fuelConsumptionMap._fuelMap.AddPoints(entry.EngineSpeed, entry.Torque, entry.FuelConsumption);
                     }
                     catch (Exception e)
                     {
@@ -73,25 +74,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                 throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message), e);
             }
 
-            fuelConsumptionMap.Triangulate();
+            fuelConsumptionMap._fuelMap.Triangulate();
 
             return fuelConsumptionMap;
         }
 
-        private void Triangulate()
-        {
-            foreach (var entry in _entries)
-            {
-                _fuelMap.AddPoints(entry.EngineSpeed, entry.Torque, entry.FuelConsumption);
-            }
-
-            _fuelMap.Triangulate();
-        }
-
-
         public double GetFuelConsumption(double engineSpeed, double torque)
         {
-            return _fuelMap.Intpol(engineSpeed, torque);
+            return _fuelMap.Interpolate(engineSpeed, torque);
         }
     }
 }
