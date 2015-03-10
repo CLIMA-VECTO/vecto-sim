@@ -1,29 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TUGraz.VectoCore.Exceptions
 {
-	
+    class VectoException : Exception
+    {
+        public VectoException(string message) : base(message) { }
+        public VectoException(string message, Exception innerException) : base(message, innerException) { }
+    }
 
-	abstract class  FileIOException : Exception
-	{
-		protected FileIOException(string message) : base(message)
-		{
+    abstract class FileIOException : VectoException
+    {
+        protected FileIOException(string message) : base(message) { }
+        protected FileIOException(string message, Exception inner) : base(message, inner) { }
+    }
 
-		}
+    /// <summary>
+    /// Exception which gets thrown when the version of a file is not supported.
+    /// </summary>
+    class UnsupportedFileVersion : FileIOException
+    {
+        public UnsupportedFileVersion(string message) : base(message) { }
+        public UnsupportedFileVersion(string message, Exception inner) : base(message, inner) { }
+    }
 
-		protected FileIOException(string message, Exception inner)
-			: base(message, inner)
-		{
-		}
-	}
-
-	class UnsupportedFileVersion : FileIOException
-	{
-		public UnsupportedFileVersion(string message) : base(message) { }
-		public UnsupportedFileVersion(string message, Exception inner) : base(message, inner) { }
-	}
+    /// <summary>
+    /// Exception which gets thrown when an error occurred during read of a vecto csv-file.
+    /// </summary>
+    class CSVReadException : FileIOException
+    {
+        public CSVReadException(string message) : base(message) { }
+        public CSVReadException(string message, Exception inner) : base(message, inner) { }
+    }
 }

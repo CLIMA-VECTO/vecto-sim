@@ -1,7 +1,9 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
+using System.Linq;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
@@ -32,27 +34,46 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             public double FuelConsumption { get; set; }
         }
 
-        private IList<FuelConsumptionEntry> entries;
+        private IList<FuelConsumptionEntry> _entries = new List<FuelConsumptionEntry>();
 
-        public FuelConsumptionMap(string fileName)
-        {
-            var data = VectoCSVReader.Read(fileName);
-            entries = new List<FuelConsumptionEntry>();
-
-            //todo: catch exceptions if value format is wrong.
-            foreach (DataRow row in data.Rows)
-            {
-                var entry = new FuelConsumptionEntry();
-                entry.EngineSpeed = row.GetDouble(Fields.EngineSpeed);
-                entry.Torque = row.GetDouble(Fields.Torque);
-                entry.FuelConsumption = row.GetDouble(Fields.FuelConsumption);
-                entries.Add(entry);
-            }
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
         public static FuelConsumptionMap ReadFromFile(string fileName)
         {
-            return new FuelConsumptionMap(fileName);
+            var fuelConsumptionMap = new FuelConsumptionMap();
+            var data = VectoCSVReader.Read(fileName);
+
+            try
+            {
+                foreach (DataRow row in data.Rows)
+                {
+                    try
+                    {
+                        var entry = new FuelConsumptionEntry
+                        {
+                            EngineSpeed = row.GetDouble(Fields.EngineSpeed),
+                            Torque = row.GetDouble(Fields.Torque),
+                            FuelConsumption = row.GetDouble(Fields.FuelConsumption)
+                        };
+                        if (entry.FuelConsumption < 0)
+                            throw new ArgumentOutOfRangeException("FuelConsumption < 0" + data.Rows.IndexOf(row));
+                        fuelConsumptionMap._entries.Add(entry);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new VectoException(string.Format("Line {0}: {1}", data.Rows.IndexOf(row), e.Message), e);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message), e);
+            }
+
+            return fuelConsumptionMap;
         }
     }
 }
