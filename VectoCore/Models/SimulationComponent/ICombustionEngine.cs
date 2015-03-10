@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TUGraz.VectoCore.Models.Connector.Ports;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	interface ICombustionEngine
+	public interface ICombustionEngine : IOutShaft
 	{
-
+		 
 	}
 }

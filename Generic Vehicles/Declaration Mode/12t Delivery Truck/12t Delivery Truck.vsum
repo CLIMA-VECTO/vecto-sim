@@ -1,0 +1,4 @@
+﻿Job [-],Input File [-],Cycle [-],time [s],Ppos [kW],Pneg [kW],FC [g/h],FC-AUXc [g/h],FC-WHTCc [g/h]
+1,12t Delivery Truck.vecto,Long Haul,Aborted due to Error!
+1,12t Delivery Truck.vecto,Regional Delivery,Aborted due to Error!
+1,12t Delivery Truck.vecto,Urban Delivery,Aborted due to Error!

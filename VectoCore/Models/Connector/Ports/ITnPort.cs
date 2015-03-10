@@ -3,20 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports
 {
-	interface ITnPort
-	{
-	}
+    public interface ITnPort
+    {
+    }
 
-	interface ITnInPort : ITnPort
-	{
-		
-	}
+    public interface ITnInPort : ITnPort, IInPort
+    {
 
-	interface ITnOutPort : ITnPort
-	{
-		
-	}
+    }
+
+    public interface ITnOutPort : ITnPort, IOutPort
+    {
+        void Request(TimeSpan absTime, TimeSpan dt, double torque, double engineSpeed);
+    }
 }

@@ -1,8 +1,8 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-    "Date": "29.07.2014 16:59:17",
-    "AppVersion": "2.0.4-beta",
+    "CreatedBy": " ()",
+    "Date": "3/4/2015 2:09:13 PM",
+    "AppVersion": "2.0.4-beta3",
     "FileVersion": 2
   },
   "Body": {
@@ -11,7 +11,7 @@
     "EngineFile": "24t Coach.veng",
     "GearboxFile": "24t Coach.vgbx",
     "Cycles": [
-      "Coach.vdri"
+      "W:\\VECTO\\CITnet\\VECTO\\bin\\Debug\\Declaration\\MissionCycles\\LOT2_rural Engine Only.vdri"
     ],
     "Aux": [
       {
@@ -34,7 +34,7 @@
       }
     ],
     "VACC": "Coach.vacc",
-    "EngineOnlyMode": false,
+    "EngineOnlyMode": true,
     "StartStop": {
       "Enabled": false,
       "MaxSpeed": 5.0,
