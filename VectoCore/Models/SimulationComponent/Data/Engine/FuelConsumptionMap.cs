@@ -1,8 +1,6 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
@@ -36,11 +34,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
         private IList<FuelConsumptionEntry> _entries = new List<FuelConsumptionEntry>();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
+        private DelauneyMap _fuelMap = new DelauneyMap();
+
+        private FuelConsumptionMap()
+        {
+            
+        }
+
         public static FuelConsumptionMap ReadFromFile(string fileName)
         {
             var fuelConsumptionMap = new FuelConsumptionMap();
@@ -61,6 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                         if (entry.FuelConsumption < 0)
                             throw new ArgumentOutOfRangeException("FuelConsumption < 0" + data.Rows.IndexOf(row));
                         fuelConsumptionMap._entries.Add(entry);
+                        fuelConsumptionMap._fuelMap.AddPoints(entry.EngineSpeed, entry.Torque, entry.FuelConsumption);
                     }
                     catch (Exception e)
                     {
@@ -73,7 +74,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                 throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message), e);
             }
 
+            fuelConsumptionMap._fuelMap.Triangulate();
+
             return fuelConsumptionMap;
+        }
+
+        public double GetFuelConsumption(double engineSpeed, double torque)
+        {
+            return _fuelMap.Interpolate(engineSpeed, torque);
         }
     }
 }
