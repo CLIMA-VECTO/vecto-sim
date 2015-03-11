@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
     /// * PT1     PT1 time constant [s] 
 
     /// </summary>
-    public class FullLoadCurve
+	public class FullLoadCurve : SimulationComponentData
     {
         private static class Fields
         {
@@ -54,5 +54,51 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             }
             return fullLoadCurve;
         }
+
+	    public double FullLoadStaticTorque(double rpm)
+	    {
+		    var idx = FindIndexForRpm(rpm);
+		    return VectoMath.Interpolate(entries[idx - 1].EngineSpeed, entries[idx].EngineSpeed,
+			    entries[idx - 1].TorqueFullLoad, entries[idx].TorqueFullLoad, rpm);
+	    }
+
+	    public double FullLoadStaticPower(double rpm)
+	    {
+		    return VectoMath.ConvertRpmToPower(rpm, FullLoadStaticTorque(rpm));
+	    }
+
+	    public double DragLoadStaticTorque(double rpm)
+	    {
+		    var idx = FindIndexForRpm(rpm);
+			return VectoMath.Interpolate(entries[idx - 1].EngineSpeed, entries[idx].EngineSpeed,
+				entries[idx - 1].TorqueDrag, entries[idx].TorqueDrag, rpm);		    
+	    }
+
+	    public double DragLoadStaticPower(double rpm)
+	    {
+		    return VectoMath.ConvertRpmToPower(rpm, DragLoadStaticTorque(rpm));
+	    }
+
+	    public double PT1(double rpm)
+	    {
+		    var idx = FindIndexForRpm(rpm);
+			return VectoMath.Interpolate(entries[idx - 1].EngineSpeed, entries[idx].EngineSpeed,
+				entries[idx - 1].PT1, entries[idx].PT1, rpm);
+	    }
+
+	    protected int FindIndexForRpm(double rpm)
+	    {
+			int idx;
+			if (rpm < entries[0].EngineSpeed) {
+				Logger.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}", rpm,
+					entries[0].EngineSpeed);
+				idx = 1;
+			} else {
+				idx = entries.FindIndex(x => x.EngineSpeed > rpm);
+			}
+			if (idx <= 0) {
+				idx = 1;
+			}
+	    }
     }
 }
