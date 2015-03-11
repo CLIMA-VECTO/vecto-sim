@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net.Mime;
-using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
-using NLog.Layouts;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 
@@ -46,6 +40,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
     /// </code>
     public class CombustionEngineData : SimulationComponentData
     {
+        /// <summary>
+        /// A class which represents the json data format for serializing and deserializing the EngineData files.
+        /// </summary>
         public class Data
         {
             public class DataHeader
@@ -165,10 +162,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         public FuelConsumptionMap ConsumptionMap { get; set; }
 
         private readonly Dictionary<string, FullLoadCurve> _fullLoadCurves = new Dictionary<string, FullLoadCurve>();
-
-
-
-
 
         public static CombustionEngineData ReadFromFile(string fileName)
         {

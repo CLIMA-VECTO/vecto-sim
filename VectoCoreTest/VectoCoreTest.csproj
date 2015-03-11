@@ -84,24 +84,29 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
     <None Include="default.runsettings" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="TestData\EngineOnly\Test1\24t Coach.veng">
+    <None Include="TestData\EngineOnly\EngineMaps\24t Coach.veng">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\EngineOnly\Test1\24t Coach.vfld">
+    <None Include="TestData\EngineOnly\EngineMaps\24t Coach.vfld">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\EngineOnly\Test1\24t Coach.vmap">
+    <None Include="TestData\EngineOnly\EngineMaps\24t Coach.vmap">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\EngineOnly\Test1\Coach Engine Only.vdri">
+    <None Include="TestData\EngineOnly\Cycles\Coach Engine Only.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vmod" />
+    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vsum" />
+    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vsum.json" />
     <None Include="TestData\EngineTests.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

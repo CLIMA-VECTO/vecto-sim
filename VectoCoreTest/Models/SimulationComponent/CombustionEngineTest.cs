@@ -77,8 +77,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
             //todo: test with correct output values, add other fields to test
             Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
-            Assert.AreEqual(dataWriter[ModalResultField.FC_AUXc], 14000);
-            Assert.AreEqual(dataWriter[ModalResultField.FC_WHTCc], 15000);
+            Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
+            Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
         }
 
         [TestMethod]
@@ -103,14 +103,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
                 //todo: test with correct output values, add other fields to test
                 Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
-                Assert.AreEqual(dataWriter[ModalResultField.FC_AUXc], 14000);
-                Assert.AreEqual(dataWriter[ModalResultField.FC_WHTCc], 15000);
+                Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
+                Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
             }
 
             //todo: test with correct output values, add other fields to test
             Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
-            Assert.AreEqual(dataWriter[ModalResultField.FC_AUXc], 14000);
-            Assert.AreEqual(dataWriter[ModalResultField.FC_WHTCc], 15000);
+            Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
+            Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
         }
 
 		public TestContext TestContext { get; set; }
