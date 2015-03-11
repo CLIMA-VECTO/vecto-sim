@@ -1,11 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Win32;
 using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
 {
+    static class FloatingPointExtensionMethods
+    {
+        public const double TOLERANCE = 0.00001;
+
+        public static bool IsEqual(this double d, double other)
+        {
+            return Math.Abs(d - other) > TOLERANCE;
+        }
+
+        public static bool IsSmaller(this double d, double other)
+        {
+            return d - other < TOLERANCE;
+        }
+
+        public static bool IsSmallerOrEqual(this double d, double other)
+        {
+            return d - other <= TOLERANCE;
+        }
+
+        public static bool IsBigger(this double d, double other)
+        {
+            return other.IsSmaller(d);
+        }
+
+        public static bool IsBiggerOrEqual(this double d, double other)
+        {
+            return other.IsSmallerOrEqual(d);
+        }
+    }
+
+
     class DelauneyMap
     {
         private int ptDim;
@@ -24,12 +54,17 @@ namespace TUGraz.VectoCore.Utils
             ptList = new List<Point>();
             ptListXZ = new List<Point>();
             DualMode = dualMode;
+
+
         }
 
         public void AddPoints(double x, double y, double z)
         {
             ptList.Add(new Point(x, y, z));
             ptListXZ.Add(new Point(x, z, y));
+
+            double p = 0;
+
         }
 
         public void Triangulate()
@@ -47,104 +82,65 @@ namespace TUGraz.VectoCore.Utils
 
             // The "supertriangle" which encompasses all triangulation points.
             // This triangle initializes the algorithm and will be removed later.
-            Triangle superTriangle = SuperTriangle(points);
+            Triangle superTriangle = CalculateSuperTriangle(points);
             triangles.Add(superTriangle);
 
-            for (var i = 0; i < points.Count; i++)
+            foreach (var p in points)
             {
                 var edges = new List<Edge>();
 
                 // If the actual vertex lies inside the circumcircle, then the three edges of the 
-                // triangle are added to the edge buffer and the triangle is removed from list.                             
-                for (var j = triangles.Count - 1; j >= 0; j--)
+                // triangle are added to the edge buffer and the triangle is removed from list.
+                var containerTriangles = triangles.Where(t => t.ContainsInCircumcircle(p) > 0).ToList();
+                foreach (var t in containerTriangles)
                 {
-                    var t = triangles[j];
-                    if (t.ContainsInCircumcircle(points[i]) > 0)
-                    {
-                        edges.Add(new Edge(t.P1, t.P2));
-                        edges.Add(new Edge(t.P2, t.P3));
-                        edges.Add(new Edge(t.P3, t.P1));
-                        triangles.RemoveAt(j);
-                    }
+                    edges.Add(new Edge(t.P1, t.P2));
+                    edges.Add(new Edge(t.P2, t.P3));
+                    edges.Add(new Edge(t.P3, t.P1));
                 }
+                // Remove all container triangles
+                triangles = triangles.Except(containerTriangles).ToList();
 
                 // Remove duplicate edges. This leaves the convex hull of the edges.
                 // The edges in this convex hull are oriented counterclockwise!
-                for (var j = edges.Count - 2; j >= 0; j--)
-                {
-                    for (var k = edges.Count - 1; k > j; k--)
-                    {
-                        if (edges[j] == edges[k])
-                        {
-                            edges.RemoveAt(k);
-                            edges.RemoveAt(j);
-                            k--;
-                        }
-                    }
-                }
+                edges = edges.GroupBy(e => e)
+                    .Where(g => g.Count() == 1)
+                    .Select(g => g.Key)
+                    .ToList();
 
                 // Generate new counterclockwise oriented triangles filling the "hole" in
                 // the existing triangulation. These triangles all share the actual vertex.
-                for (var j = 0; j < edges.Count; j++)
-                {
-                    triangles.Add(new Triangle(edges[j].StartPoint, edges[j].EndPoint, points[i]));
-                }
+                var counterTriangles = edges.Select(e => new Triangle(e.StartPoint, e.EndPoint, p));
+                triangles.AddRange(counterTriangles);
             }
 
             // We don't want the supertriangle in the triangulation, so
             // remove all triangles sharing a vertex with the supertriangle.
-            for (var i = triangles.Count - 1; i >= 0; i--)
-            {
-                if (triangles[i].SharesVertexWith(superTriangle))
-                    triangles.RemoveAt(i);
-            }
+            triangles = triangles.Where(t => !t.SharesVertexWith(superTriangle)).ToList();
+
             return triangles;
         }
 
         public double Interpolate(double x, double y)
         {
-            foreach (var tr in lDT)
-            {
-                if (IsInside(tr, x, y))
-                {
-                    var plane = new Plane(tr);
-                    return (plane.W - x * plane.X - y * plane.Y) / plane.Z;
-                }
-            }
-
-            foreach (var tr in lDT)
-            {
-                if (IsInside(tr, x, y, exact: false))
-                {
-                    var plane = new Plane(tr);
-                    return (plane.W - x * plane.X - y * plane.Y) / plane.Z;
-                }
-            }
-
-            throw new VectoException("Interpolation failed.");
+            return Interpolate(lDT, x, y);
         }
 
         public double InterpolateXZ(double x, double z)
         {
-            foreach (var tr in lDTXZ)
-            {
-                if (IsInside(tr, x, z))
-                {
-                    var plane = new Plane(tr);
-                    return (plane.W - x * plane.X - z * plane.Y) / plane.Z;
-                }
-            }
+            return Interpolate(lDTXZ, x, z);
+        }
 
-            foreach (var tr in lDTXZ)
-            {
-                if (IsInside(tr, x, z, exact: false))
-                {
-                    var plane = new Plane(tr);
-                    return (plane.W - x * plane.X - z * plane.Y) / plane.Z;
-                }
-            }
+        private double Interpolate(List<Triangle> triangles, double x, double y)
+        {
+            var tr = triangles.FirstOrDefault(t => IsInside(t, x, y, exact: true)) ??
+                     triangles.FirstOrDefault(t => IsInside(t, x, y, exact: false));
 
-            throw new VectoException("Interpolation failed.");
+            if (tr == null)
+                throw new VectoException("Interpolation failed.");
+
+            var plane = new Plane(tr);
+            return (plane.W - x * plane.X - y * plane.Y) / plane.Z;
         }
 
 
@@ -170,32 +166,23 @@ namespace TUGraz.VectoCore.Utils
             if (exact)
                 return u >= 0 && v >= 0 && u + v <= 1;
 
-            const double tolerance = 0.001;
-            return u + tolerance >= 0 & v + tolerance >= 0 & u + v <= 1 + tolerance;
+            return u.IsBiggerOrEqual(0) && v.IsBiggerOrEqual(0) && (u + v).IsSmallerOrEqual(1);
         }
 
 
 
-        private Triangle SuperTriangle(List<Point> triangulationPoints)
+        private Triangle CalculateSuperTriangle(List<Point> triangulationPoints)
         {
-            double num1 = triangulationPoints[0].X;
-            int num2 = 1;
-            int num3 = checked(triangulationPoints.Count - 1);
-            int index = num2;
-            while (index <= num3)
-            {
-                double num4 = Math.Abs(triangulationPoints[index].X);
-                double num5 = Math.Abs(triangulationPoints[index].Y);
-                if (num4 > num1)
-                    num1 = num4;
-                if (num5 > num1)
-                    num1 = num5;
-                checked { ++index; }
-            }
-            Point pp1 = new Point(10.0 * num1, 0.0, 0.0);
-            Point pp2 = new Point(0.0, 10.0 * num1, 0.0);
-            Point pp3 = new Point(-10.0 * num1, -10.0 * num1, 0.0);
-            return new Triangle(ref pp1, ref pp2, ref pp3);
+            const int scalingFactor = 10;
+            var max = triangulationPoints.Select(t => Math.Max(Math.Abs(t.X), Math.Abs(t.Y))).Max();
+
+            max *= scalingFactor;
+
+            var p1 = new Point(max, 0);
+            var p2 = new Point(0, max);
+            var p3 = new Point(-max, -max);
+
+            return new Triangle(p1, p2, p3);
         }
     }
 
@@ -214,7 +201,7 @@ namespace TUGraz.VectoCore.Utils
 
         public static bool operator ==(Point left, Point right)
         {
-            return left.X == right.X && left.Y == right.Y;
+            return left.X.IsEqual(right.X) && left.Y.IsEqual(right.Y);
         }
 
         public static bool operator !=(Point left, Point right)
@@ -228,21 +215,28 @@ namespace TUGraz.VectoCore.Utils
         }
 
         /// <summary>
-        /// Ex-Product or Vectorial Product
+        /// Vectorial Product, also called "Ex"-Product (P1 x P2)
         /// </summary>
-        /// <param name="p1"></param>
-        /// <param name="p2"></param>
-        /// <returns></returns>
-        public static Point operator *(Point p1, Point p2)
+        public Point ExProduct(Point p2)
         {
-            return new Point(p1.Y * p2.Z - p1.Z * p2.Y,
-                             p1.Z * p2.X - p1.X * p2.Z,
-                             p1.X * p2.Y - p1.Y * p2.X);
+            return new Point(Y * p2.Z - Z * p2.Y,
+                             Z * p2.X - X * p2.Z,
+                             X * p2.Y - Y * p2.X);
         }
 
+        /// <summary>
+        /// Scalar Product, also called "In"-Product or Dot-Product (P1 . P2)
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <returns></returns>
         public double DotProduct(Point p1)
         {
             return X * p1.X + Y * p1.Y + Z * p1.Z;
+        }
+
+        public double Determinant(Point p1)
+        {
+            return X * p1.Y - p1.X * Y;
         }
     }
 
@@ -265,7 +259,7 @@ namespace TUGraz.VectoCore.Utils
 
         public Plane(Point p1, Point p2, Point p3)
         {
-            var prod = (p2 - p1) * (p3 - p1);
+            var prod = (p2 - p1).ExProduct(p3 - p1);
             X = prod.X;
             Y = prod.Y;
             Z = prod.Z;
@@ -288,30 +282,20 @@ namespace TUGraz.VectoCore.Utils
 
         public double ContainsInCircumcircle(Point pt)
         {
-            double num1 = P1.X - pt.X;
-            double num2 = P1.Y - pt.Y;
-            double num3 = P2.X - pt.X;
-            double num4 = P2.Y - pt.Y;
-            double num5 = P3.X - pt.X;
-            double num6 = P3.Y - pt.Y;
-            double num7 = num1 * num4 - num3 * num2;
-            double num8 = num3 * num6 - num5 * num4;
-            double num9 = num5 * num2 - num1 * num6;
-            double num10 = num1 * num1 + num2 * num2;
-            double num11 = num3 * num3 + num4 * num4;
-            double num12 = num5 * num5 + num6 * num6;
-            return num10 * num8 + num11 * num9 + num12 * num7;
+            var p0 = P1 - pt;
+            var p1 = P2 - pt;
+            var p2 = P3 - pt;
+
+            return p0.DotProduct(p0) * p0.Determinant(p1)
+                 + p1.DotProduct(p1) * p2.Determinant(p0)
+                 + p2.DotProduct(p2) * p1.Determinant(p2);
         }
 
-        public bool SharesVertexWith(Triangle triangle)
+        public bool SharesVertexWith(Triangle t)
         {
-            return P1.X == triangle.P1.X && P1.Y == triangle.P1.Y
-                || P1.X == triangle.P2.X && P1.Y == triangle.P2.Y
-                || (P1.X == triangle.P3.X && P1.Y == triangle.P3.Y || P2.X == triangle.P1.X && P2.Y == triangle.P1.Y)
-                || (P2.X == triangle.P2.X && P2.Y == triangle.P2.Y
-                    || P2.X == triangle.P3.X && P2.Y == triangle.P3.Y
-                    || (P3.X == triangle.P1.X && P3.Y == triangle.P1.Y || P3.X == triangle.P2.X && P3.Y == triangle.P2.Y))
-                || P3.X == triangle.P3.X && P3.Y == triangle.P3.Y;
+            return (P1 == t.P1 || P1 == t.P2 || P1 == t.P3) ||
+                   (P2 == t.P1 || P2 == t.P2 || P2 == t.P3) ||
+                   (P3 == t.P1 || P3 == t.P2 || P3 == t.P3);
         }
     }
 
