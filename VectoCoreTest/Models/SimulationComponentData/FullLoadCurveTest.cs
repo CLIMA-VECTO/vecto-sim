@@ -19,6 +19,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(1352, fldCurve.FullLoadStationaryTorque(2000), tolerance);
 
 			Assert.AreEqual(1231, fldCurve.FullLoadStationaryTorque(580), tolerance);
+
+
 		}
 
 		[TestMethod]
@@ -42,7 +44,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(-301, fldCurve.DragLoadStationaryTorque(2000), tolerance);
 
 			Assert.AreEqual(-148.5, fldCurve.DragLoadStationaryTorque(580), tolerance);
-			
+
+			Assert.AreEqual(-150, fldCurve.DragLoadStationaryTorque(520.0), tolerance);
+
+			Assert.AreEqual(-339, fldCurve.DragLoadStationaryTorque(2200.0), tolerance);
+
+
 		}
 
 		[TestMethod]

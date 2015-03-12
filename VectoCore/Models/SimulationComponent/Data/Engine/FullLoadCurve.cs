@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				idx = entries.FindIndex(x => x.EngineSpeed > rpm);
 			}
 			if (idx <= 0) {
-				idx = 1;
+				idx = rpm > entries[0].EngineSpeed ? entries.Count - 1 : 1;
 			}
 		    return idx;
 	    }

@@ -29,5 +29,10 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return (2.0 * Math.PI / 60.0) * torque * rpm;
 		}
+
+		public static double ConvertPowerToTorque(double power, double rpm)
+		{
+			return power / ((2.0 * Math.PI / 60.0) * rpm);
+		}
 	}
 }
