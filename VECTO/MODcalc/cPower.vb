@@ -486,6 +486,8 @@ Public Class cPower
         Dim LastPmax As Single
         Dim dist As Double
         Dim dist0 As Double
+        Dim Tq As Single
+        Dim LastGear As Integer
 
         Dim MsgSrc As String
 
@@ -544,6 +546,8 @@ Public Class cPower
         ClutchNorm = 0.03
         ClutchEta = 1
 
+        Tq = 0
+        LastGear = 0
 
         LastClutch = tEngClutch.Opened
 
@@ -713,7 +717,10 @@ lbGschw:
 
                     'Gear-shifting Model
                     If GBX.TCon Then
-                        Gear = fGearTC(jz, Vh.fGrad(dist))
+
+                        If jz > 0 Then Tq = nPeToM(fnU(Vact, LastGear, False), fPeGearMod(LastGear, jz, Vh.fGrad(dist)))
+
+                        Gear = fGearTC(jz, Vh.fGrad(dist), Tq)
                     Else
                         Gear = fGearVECTO(jz, Vh.fGrad(dist))
                     End If
@@ -989,7 +996,7 @@ lb_nOK:
 
             'Internal Engine Power (Pclutch plus Aux plus Inertia)
             P = Pclutch + Paux + PaMot
-
+            Tq = nPeToM(nU, P)
 
             'EngState
             If Clutch = tEngClutch.Opened Then
@@ -1181,6 +1188,13 @@ lb_nOK:
             '--------------------------------------------------------------------------------------------------
             '   Finish Second
 
+
+            'If Gear = GBX.GearCount Then
+            '    Debug.Print(jz + 1 & ",-")
+            'Else
+            '    Debug.Print(jz + 1 & "," & fnU(Vact, Gear + 1, False))
+            'End If
+
             'distance 
             dist0 += Vact
 
@@ -1321,6 +1335,8 @@ lb_nOK:
             End If
 
             LastPmax = Pmax
+
+            LastGear = Gear
 
         Loop Until jz >= MODdata.tDim
 
@@ -1800,14 +1816,13 @@ lb_nOK:
 
     End Function
 
-    Private Function fGearTC(ByVal t As Int16, ByVal Grad As Single) As Integer
+    Private Function fGearTC(ByVal t As Int16, ByVal Grad As Single, ByVal Tq As Single) As Integer
         Dim LastGear As Int16
         Dim tx As Int16
         Dim nU As Single
         Dim nUup As Single
         Dim nUdown As Single
-        Dim Tq As Single
-        Dim LastPe As Single
+        Dim Pe As Single
         Dim nUnext As Single
         Dim OutOfRpmRange As Boolean
         Dim PlusGearLockUp As Boolean
@@ -1867,10 +1882,7 @@ lb_nOK:
             If Not OutOfRpmRange AndAlso t - LastGearChange <= GBX.gs_ShiftTime And t > GBX.gs_ShiftTime - 1 Then Return LastGear
         End If
 
-        'previous power demand
-        LastPe = MODdata.Pe(t - 1)
-        'Torque
-        Tq = LastPe * 1000 / (nU * 2 * Math.PI / 60)
+        Pe = Tq * (nU * 2 * Math.PI / 60) / 1000
 
         'Up/Downshift rpms
         nUup = GBX.Shiftpolygons(LastGear).fGSnUup(Tq)
@@ -1878,7 +1890,7 @@ lb_nOK:
 
         'Upshift
         If PlusGearLockUp Then
-            If nUnext > nUup AndAlso LastPe <= FLD(LastGear + 1).Pfull(nUnext) Then
+            If nUnext > nUup AndAlso Pe <= FLD(LastGear + 1).Pfull(nUnext) Then
                 Return LastGear + 1
             End If
         Else
@@ -1887,7 +1899,7 @@ lb_nOK:
 
                 iRatio = GBX.Igetr(LastGear + 1) / GBX.Igetr(LastGear)
 
-                If fnUout(Vact, LastGear + 1) > Math.Min(900, iRatio * (FLD(LastGear).N95h - 150)) AndAlso FLD(LastGear + 1).Pfull(nU * iRatio, LastPe) > 0.7 * FLD(LastGear).Pfull(nU, LastPe) Then
+                If fnUout(Vact, LastGear + 1) > Math.Min(900, iRatio * (FLD(LastGear).N80h - 150)) AndAlso FLD(LastGear + 1).Pfull(nU * iRatio, Pe) > 0.7 * FLD(LastGear).Pfull(nU, Pe) Then
                     Return LastGear + 1
                 End If
             End If

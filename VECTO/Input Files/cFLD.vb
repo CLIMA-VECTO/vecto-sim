@@ -77,6 +77,12 @@ Public Class cFLD
     Public N95h As Single
 
     ''' <summary>
+    ''' N80h [1/min]. Highest engine speed with 80% of max. power. Defined in Init.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public N80h As Single
+
+    ''' <summary>
     ''' Read file. FilePath must be set before calling. 
     ''' </summary>
     ''' <returns>True if successful.</returns>
@@ -550,6 +556,13 @@ lbInt:
 
         If N95h < 0 Then
             WorkerMsg(tMsgID.Err, "Failed to calculate N95h! Expand full load curve!", MsgSrc)
+            Return False
+        End If
+
+        N80h = fnUofPfull(0.8 * Pmax, False)
+
+        If N80h < 0 Then
+            WorkerMsg(tMsgID.Err, "Failed to calculate N80h! Expand full load curve!", MsgSrc)
             Return False
         End If
 

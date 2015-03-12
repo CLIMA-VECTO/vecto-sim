@@ -1,0 +1,45 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
+    "Date": "17.06.2014 13:48:52",
+    "AppVersion": "2.0.2-beta2",
+    "FileVersion": 1
+  },
+  "Body": {
+    "VehicleFile": "Vehicle.vveh",
+    "EngineFile": "Engine.veng",
+    "GearboxFile": "Gearbox.vgbx",
+    "Cycles": [
+      "zykl_Citybus_1_Heavy_Urban.vdri",
+      "zykl_Citybus_2_Urban.vdri",
+      "zykl_Citybus_3_Suburban.vdri"
+    ],
+    "Aux": [
+      {
+        "ID": "ALT",
+        "Type": "Alternator",
+        "Path": "Alt.vaux",
+        "Technology": ""
+      }
+    ],
+    "VACC": "test.vacc",
+    "EngineOnlyMode": false,
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 5.0,
+      "Delay": 0
+    },
+    "LAC": {
+      "Enabled": false,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "Off",
+      "MinSpeed": 0.0,
+      "OverSpeed": 0.0,
+      "UnderSpeed": 0.0
+    }
+  }
+}
