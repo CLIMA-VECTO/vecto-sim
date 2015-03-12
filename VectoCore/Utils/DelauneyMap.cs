@@ -5,37 +5,6 @@ using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
 {
-    static class FloatingPointExtensionMethods
-    {
-        public const double TOLERANCE = 0.00001;
-
-        public static bool IsEqual(this double d, double other)
-        {
-            return Math.Abs(d - other) > TOLERANCE;
-        }
-
-        public static bool IsSmaller(this double d, double other)
-        {
-            return d - other < TOLERANCE;
-        }
-
-        public static bool IsSmallerOrEqual(this double d, double other)
-        {
-            return d - other <= TOLERANCE;
-        }
-
-        public static bool IsBigger(this double d, double other)
-        {
-            return other.IsSmaller(d);
-        }
-
-        public static bool IsBiggerOrEqual(this double d, double other)
-        {
-            return other.IsSmallerOrEqual(d);
-        }
-    }
-
-
     class DelauneyMap
     {
         private int ptDim;
@@ -54,17 +23,12 @@ namespace TUGraz.VectoCore.Utils
             ptList = new List<Point>();
             ptListXZ = new List<Point>();
             DualMode = dualMode;
-
-
         }
 
         public void AddPoints(double x, double y, double z)
         {
             ptList.Add(new Point(x, y, z));
             ptListXZ.Add(new Point(x, z, y));
-
-            double p = 0;
-
         }
 
         public void Triangulate()
@@ -91,7 +55,7 @@ namespace TUGraz.VectoCore.Utils
 
                 // If the actual vertex lies inside the circumcircle, then the three edges of the 
                 // triangle are added to the edge buffer and the triangle is removed from list.
-                var containerTriangles = triangles.Where(t => t.ContainsInCircumcircle(p) > 0).ToList();
+                var containerTriangles = triangles.Where(t => t.ContainsInCircumcircle(p)).ToList();
                 foreach (var t in containerTriangles)
                 {
                     edges.Add(new Edge(t.P1, t.P2));
@@ -118,6 +82,7 @@ namespace TUGraz.VectoCore.Utils
             // remove all triangles sharing a vertex with the supertriangle.
             triangles = triangles.Where(t => !t.SharesVertexWith(superTriangle)).ToList();
 
+            Console.WriteLine("Triangles " + triangles.Count);
             return triangles;
         }
 
@@ -140,7 +105,7 @@ namespace TUGraz.VectoCore.Utils
                 throw new VectoException("Interpolation failed.");
 
             var plane = new Plane(tr);
-            return (plane.W - x * plane.X - y * plane.Y) / plane.Z;
+            return (plane.W - plane.X * x - plane.Y * y) / plane.Z;
         }
 
 
@@ -188,6 +153,30 @@ namespace TUGraz.VectoCore.Utils
 
     public class Point
     {
+        protected bool Equals(Point other)
+        {
+            return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((Point)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = X.GetHashCode();
+                hashCode = (hashCode * 397) ^ Y.GetHashCode();
+                hashCode = (hashCode * 397) ^ Z.GetHashCode();
+                return hashCode;
+            }
+        }
+
         public double X { get; set; }
         public double Y { get; set; }
         public double Z { get; set; }
@@ -199,15 +188,15 @@ namespace TUGraz.VectoCore.Utils
             Z = z;
         }
 
-        public static bool operator ==(Point left, Point right)
-        {
-            return left.X.IsEqual(right.X) && left.Y.IsEqual(right.Y);
-        }
+        //public static bool operator ==(Point left, Point right)
+        //{
+        //    return left.X.IsEqual(right.X) && left.Y.IsEqual(right.Y);
+        //}
 
-        public static bool operator !=(Point left, Point right)
-        {
-            return !(left == right);
-        }
+        //public static bool operator !=(Point left, Point right)
+        //{
+        //    return !(left == right);
+        //}
 
         public static Point operator -(Point p1, Point p2)
         {
@@ -280,44 +269,67 @@ namespace TUGraz.VectoCore.Utils
             P3 = p3;
         }
 
-        public double ContainsInCircumcircle(Point pt)
+        public bool ContainsInCircumcircle(Point pt)
         {
             var p0 = P1 - pt;
             var p1 = P2 - pt;
             var p2 = P3 - pt;
 
-            return p0.DotProduct(p0) * p0.Determinant(p1)
-                 + p1.DotProduct(p1) * p2.Determinant(p0)
-                 + p2.DotProduct(p2) * p1.Determinant(p2);
+            var result = p0.DotProduct(p0) * p1.Determinant(p2)
+                         + p1.DotProduct(p1) * p2.Determinant(p0)
+                         + p2.DotProduct(p2) * p0.Determinant(p1);
+
+            return result.IsBigger(0);
         }
 
         public bool SharesVertexWith(Triangle t)
         {
-            return (P1 == t.P1 || P1 == t.P2 || P1 == t.P3) ||
-                   (P2 == t.P1 || P2 == t.P2 || P2 == t.P3) ||
-                   (P3 == t.P1 || P3 == t.P2 || P3 == t.P3);
+            return (P1.Equals(t.P1) || P1.Equals(t.P2) || P1.Equals(t.P3)) ||
+                   (P2.Equals(t.P1) || P2.Equals(t.P2) || P2.Equals(t.P3)) ||
+                   (P3.Equals(t.P1) || P3.Equals(t.P2) || P3.Equals(t.P3));
         }
     }
 
     public class Edge
     {
-        public Point StartPoint;
-        public Point EndPoint;
-
-        public Edge(Point p1, Point p2)
+        protected bool Equals(Edge other)
         {
-            StartPoint = p1;
-            EndPoint = p2;
+            return (Equals(StartPoint, other.StartPoint) && Equals(EndPoint, other.EndPoint)) ||
+                (Equals(EndPoint, other.StartPoint) && Equals(StartPoint, other.EndPoint));
         }
 
-        public static bool operator ==(Edge left, Edge right)
+        public override bool Equals(object obj)
         {
-            return left.StartPoint == right.StartPoint && left.EndPoint == right.EndPoint || left.StartPoint == right.EndPoint && left.EndPoint == right.StartPoint;
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((Edge)obj);
         }
 
-        public static bool operator !=(Edge left, Edge right)
+        public override int GetHashCode()
         {
-            return !(left == right);
+            return (StartPoint != null ? StartPoint.GetHashCode() : 0) ^ (EndPoint != null ? EndPoint.GetHashCode() : 0);
         }
+
+        public Point StartPoint { get; set; }
+
+        public Point EndPoint { get; set; }
+
+        public Edge(Point startPoint, Point endPoint)
+        {
+            StartPoint = startPoint;
+            EndPoint = endPoint;
+        }
+
+        //public static bool operator ==(Edge left, Edge right)
+        //{
+        //    return (left.StartPoint == right.StartPoint && left.EndPoint == right.EndPoint)
+        //        || (left.StartPoint == right.EndPoint && left.EndPoint == right.StartPoint);
+        //}
+
+        //public static bool operator !=(Edge left, Edge right)
+        //{
+        //    return !(left == right);
+        //}
     }
 }
