@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Globalization;
 using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
@@ -12,12 +13,12 @@ namespace TUGraz.VectoCore.Utils
         /// <param name="row"></param>
         /// <param name="columnName">The name of the column.</param>
         /// <returns>The value of the underlying DataRows column field as double.</returns>
-        public static double GetDouble(this DataRow row, string columnName)
+        public static double GetDouble(this DataRow row, string columnName, CultureInfo culture = null)
         {
             //todo ArgumentNullException?
             try
             {
-                return double.Parse(row.Field<string>(columnName));
+                return double.Parse(row.Field<string>(columnName), culture ?? new CultureInfo("en-US"));
             }
             catch (IndexOutOfRangeException e)
             {
