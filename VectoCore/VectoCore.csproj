@@ -88,6 +88,7 @@
     <Compile Include="Utils\DataRowExtensionMethods.cs" />
     <Compile Include="Utils\VectoMath.cs" />
     <Compile Include="Utils\DelauneyMap.cs" />
+    <Compile Include="Utils\FloatingPointExtensionMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
