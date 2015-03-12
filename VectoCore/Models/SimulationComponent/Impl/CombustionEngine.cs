@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using NLog;
-using NLog.Layouts;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -14,6 +11,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class CombustionEngine : VectoSimulationComponent, ICombustionEngine, ITnOutPort
 	{
 		private const int EngineIdleSpeedStopThreshold = 100;
+		private const double MaxPowerExceededThreshold = 1.05;
+		private const double ZeroThreshold = 0.0001;
+		private const double FullLoadMargin = 0.01;
 
 		public enum EngineOperationMode
 		{
@@ -63,45 +63,71 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (engineSpeed < _data.IdleSpeed - EngineIdleSpeedStopThreshold) {
 		        _currentState.OperationMode = EngineOperationMode.Stopped;
-				_currentState.EnginePowerLoss = enginePowerLoss
-	        }
+				_currentState.EnginePowerLoss = enginePowerLoss;
+			}
 	
 			uint currentGear = 0; // TODO: get current Gear from Vehicle!
 
-	        var minEnginePower = _data.GetFullLoadCurve(currentGear).DragLoadStaticPower(engineSpeed);
+	        var minEnginePower = _data.GetFullLoadCurve(currentGear).DragLoadStationaryPower(engineSpeed);
 	        var maxEnginePower = FullLoadPowerDyamic(currentGear, engineSpeed);
 
 	        if (minEnginePower >= 0 && requestedPower < 0) {
 		        throw new VectoSimulationException(String.Format("t: {0}  P_engine_drag > 0! n: {1} [1/min] ", absTime, engineSpeed));
 	        }
 	        if (maxEnginePower <= 0 && requestedPower > 0) {
-		        throw new VectoSimulationException(String.Format("t: {0}  P_engine_full < 0! n: {1} [1/min] ", absTime, engineSpeed)));
+		        throw new VectoSimulationException(String.Format("t: {0}  P_engine_full < 0! n: {1} [1/min] ", absTime, engineSpeed));
 	        }
 
 	        if (requestedPower > maxEnginePower) {
-		        if (requestedEnginePower/maxEnginePower > 1.05) {
+				if (requestedEnginePower / maxEnginePower > MaxPowerExceededThreshold)
+				{
 			        requestedEnginePower = maxEnginePower;
 					_enginePowerCorrections.Add(absTime);
 					Log.WarnFormat("t: {0}  requested power > P_engine_full * 1.05 - corrected. P_request: {1}  P_engine_full: {2}", absTime, requestedEnginePower, maxEnginePower);
 		        }
 	        } else if (requestedPower < minEnginePower) {
-		        if (requestedEnginePower/minEnginePower > 1.05 && requestedEnginePower > -99999) {
+		        if (requestedEnginePower/minEnginePower > MaxPowerExceededThreshold && requestedEnginePower > -99999) {
 			        requestedEnginePower = minEnginePower;
 					_enginePowerCorrections.Add(absTime);
 					Log.WarnFormat("t: {0}  requested power < P_engine_drag * 1.05 - corrected. P_request: {1}  P_engine_drag: {2}", absTime, requestedEnginePower, minEnginePower);
 		        }
 	        }
 
-	        //throw new NotImplementedException();
+	        if (requestedEnginePower < -ZeroThreshold) {
+		        _currentState.OperationMode = IsFullLoad(requestedEnginePower, maxEnginePower)
+			        ? EngineOperationMode.FullLoad
+			        : EngineOperationMode.Load;
+	        }
+			else if (requestedPower > ZeroThreshold) {
+				_currentState.OperationMode = IsFullLoad(requestedEnginePower, maxEnginePower)
+					? EngineOperationMode.FullDrag
+					: EngineOperationMode.Drag;
+			}
+			else {
+				// -ZeroThreshold <= requestedEnginePower <= ZeroThreshold
+				_currentState.OperationMode = EngineOperationMode.Idle;
+			}
         }
+
+		public IList<string> Warnings()
+		{
+			IList<string> retVal = new List<string>();
+			retVal.Add(string.Format("Engine power corrected (>5%) in {0} time steps ", _enginePowerCorrections.Count));
+			return retVal;
+		}
 
 		protected double FullLoadPowerDyamic(uint gear, double rpm)
 		{
-			var staticFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStaticPower(rpm);
+			var staticFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
 			var pt1 = _data.GetFullLoadCurve(gear).PT1(rpm);
 
 			return Math.Min( (1 / (pt1 + 1)) * (staticFullLoadPower + pt1 * _previousState.EnginePower),
 				staticFullLoadPower);
+		}
+
+		protected bool IsFullLoad(double requestedPower, double maxPower)
+		{
+			return Math.Abs(requestedPower / maxPower - 1.0) < FullLoadMargin;
 		}
 
 

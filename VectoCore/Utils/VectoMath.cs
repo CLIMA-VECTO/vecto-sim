@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns>the power equivalent to the given rpm and torque [W]</returns>
 		public static double ConvertRpmToPower(double rpm, double torque)
 		{
-			return (2.0 * Math.PI / 60.0) * torque * rpm
+			return (2.0 * Math.PI / 60.0) * torque * rpm;
 		}
 	}
 }
