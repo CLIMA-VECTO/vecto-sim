@@ -17,18 +17,17 @@ namespace TUGraz.VectoCore.Utils
 
         public void Triangulate()
         {
-            const int SuperTriangleScalingFactor = 10;
+            const int superTriangleScalingFactor = 10;
 
             if (_points.Count < 3)
                 throw new ArgumentException(string.Format("Triangulations needs at least 3 Points. Got {0} Points.", _points.Count));
 
             // The "supertriangle" encompasses all triangulation points.
             // This triangle initializes the algorithm and will be removed later.
-            var max = _points.Select(point => Math.Max(Math.Abs(point.X), Math.Abs(point.Y))).Max();
-            max *= SuperTriangleScalingFactor;
-            var superTriangle = new Triangle(new Point(max, 0), new Point(0, max), new Point(-max, -max));
+            var max = _points.Max(point => Math.Max(Math.Abs(point.X), Math.Abs(point.Y))) * superTriangleScalingFactor;
+            var superTriangle = new Triangle(new Point(max, 0, 0), new Point(0, max, 0), new Point(-max, -max, 0));
 
-            _triangles.Add(superTriangle);
+            var triangles = new List<Triangle> { superTriangle };
 
             foreach (var point in _points)
             {
@@ -36,38 +35,32 @@ namespace TUGraz.VectoCore.Utils
 
                 // If the actual vertex lies inside the circumcircle, then the three edges of the 
                 // triangle are added to the edge buffer and the triangle is removed from list.
-                var containerTriangles = _triangles.Where(triangle => triangle.ContainsInCircumcircle(point)).ToList();
-
-                foreach (var triangle in containerTriangles)
+                foreach (var containerTriangle in triangles.Where(triangle => triangle.ContainsInCircumcircle(point)).ToList())
                 {
-                    edges.Add(new Edge(triangle.P1, triangle.P2));
-                    edges.Add(new Edge(triangle.P2, triangle.P3));
-                    edges.Add(new Edge(triangle.P3, triangle.P1));
-                    _triangles.Remove(triangle);
+                    edges.Add(new Edge(containerTriangle.P1, containerTriangle.P2));
+                    edges.Add(new Edge(containerTriangle.P2, containerTriangle.P3));
+                    edges.Add(new Edge(containerTriangle.P3, containerTriangle.P1));
+                    triangles.Remove(containerTriangle);
                 }
 
                 // Remove duplicate edges. This leaves the convex hull of the edges.
                 // The edges in this convex hull are oriented counterclockwise!
-                edges = edges.GroupBy(edge => edge)
-                    .Where(group => group.Count() == 1)
-                    .SelectMany(group => group)
-                    .ToList();
+                var convexHullEdges = edges.GroupBy(edge => edge).Where(group => group.Count() == 1).SelectMany(group => group);
 
                 // Generate new counterclockwise oriented triangles filling the "hole" in
                 // the existing triangulation. These triangles all share the actual vertex.
-                var counterTriangles = edges.Select(edge => new Triangle(edge.P1, edge.P2, point));
-                _triangles.AddRange(counterTriangles);
+                var counterTriangles = convexHullEdges.Select(edge => new Triangle(edge.P1, edge.P2, point));
+                triangles.AddRange(counterTriangles);
             }
 
-            // We don't want the supertriangle in the triangulation, so
-            // remove all triangles sharing a vertex with the supertriangle.
-            _triangles = _triangles.Where(triangle => !triangle.SharesVertexWith(superTriangle)).ToList();
+            // Remove all triangles sharing a vertex with the supertriangle.
+            _triangles = triangles.Where(triangle => !triangle.SharesVertexWith(superTriangle)).ToList();
         }
 
         public double Interpolate(double x, double y)
         {
-            var tr = _triangles.FirstOrDefault(triangle => triangle.IsInside(x, y, exact: true)) ??
-                     _triangles.FirstOrDefault(triangle => triangle.IsInside(x, y, exact: false));
+            var tr = _triangles.Find(triangle => triangle.IsInside(x, y, exact: true)) ??
+                     _triangles.Find(triangle => triangle.IsInside(x, y, exact: false));
 
             if (tr == null)
                 throw new VectoException("Interpolation failed.");
@@ -88,19 +81,12 @@ namespace TUGraz.VectoCore.Utils
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((Point)obj);
+            return obj.GetType() == GetType() && Equals((Point)obj);
         }
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = X.GetHashCode();
-                hashCode = (hashCode * 397) ^ Y.GetHashCode();
-                hashCode = (hashCode * 397) ^ Z.GetHashCode();
-                return hashCode;
-            }
+            return unchecked((((X.GetHashCode() * 397) ^ Y.GetHashCode()) * 397) ^ Z.GetHashCode());
         }
 
         public override string ToString()
@@ -112,7 +98,7 @@ namespace TUGraz.VectoCore.Utils
         public double Y { get; set; }
         public double Z { get; set; }
 
-        public Point(double x, double y, double z = 0)
+        public Point(double x, double y, double z)
         {
             X = x;
             Y = y;
@@ -180,7 +166,7 @@ namespace TUGraz.VectoCore.Utils
 
         public bool IsInside(double x, double y, bool exact = true)
         {
-            var p = new Point(x, y);
+            var p = new Point(x, y, 0);
 
             var v0 = P3 - P1;
             var v1 = P2 - P1;
@@ -254,8 +240,7 @@ namespace TUGraz.VectoCore.Utils
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((Edge)obj);
+            return obj.GetType() == GetType() && Equals((Edge)obj);
         }
 
         public override int GetHashCode()

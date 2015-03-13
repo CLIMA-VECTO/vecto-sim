@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Eventing.Reader;
 using System.Reflection;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -15,21 +14,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                 Columns.Add(value.GetName(), value.GetDataType());
         }
 
-        public ModalResults ReadFromFile(string fileName)
+        public static ModalResults ReadFromFile(string fileName)
         {
             var modalResults = new ModalResults();
-            var data = VectoCSVReader.Read(fileName);
+            var data = VectoCSVFile.Read(fileName);
+
             foreach (DataRow row in data.Rows)
             {
-                var new_row = modalResults.NewRow();
+                var newRow = modalResults.NewRow();
                 foreach (DataColumn col in row.Table.Columns)
                 {
-                    new_row.SetField(col, row.Field<object>(col));
+                    // In cols FC-AUXc and FC-WHTCc can be a "-"
+                    if ((col.ColumnName == ModalResultField.FCAUXc.GetName() ||
+                         col.ColumnName == ModalResultField.FCWHTCc.GetName()) && row.Field<string>(col) == "-")
+                        continue;
+
+                    // In col FC can sometimes be a "ERROR"
+                    if (col.ColumnName == ModalResultField.FC.GetName() && row.Field<string>(col) == "ERROR")
+                        continue;
+
+                    newRow.SetField(col.ColumnName, row.GetDouble(col.ColumnName));
+
                 }
-                modalResults.Rows.Add(new_row);
+                modalResults.Rows.Add(newRow);
             }
-            modalResults.Load(data.CreateDataReader());
+
             return modalResults;
+        }
+
+        public void WriteToFile(string fileName)
+        {
+            VectoCSVFile.Write(fileName, this);
         }
     }
 
@@ -37,7 +52,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
     /// Enum with field definitions of the Modal Results File (.vmod).
     /// </summary>
     public enum ModalResultField
-    {                                 
+    {
         [ModalResultField(typeof(double))] time,			//	[s]	    Time step.
 		[ModalResultField(typeof(double))] n,			    //	[1/min]	Engine speed.
 		[ModalResultField(typeof(double))] Tq_eng,			//	[Nm]	Engine torque.
@@ -71,7 +86,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		[ModalResultField(typeof(double))] Pgrad,			//	[kW]	Power demand due to road gradient.
 		[ModalResultField(typeof(double))] Pwheel,			//	[kW]	Total power demand at wheel = sum of rolling, air, acceleration and road gradient resistance.
 		[ModalResultField(typeof(double))] Pbrake,			//	[kW]	Brake power. Drag power is included in Pe.
-		//[ModalResultField(typeof(double))] Paux_xxx,		//	[kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
+        //[ModalResultField(typeof(double))] Paux_xxx,		//	[kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
 		[ModalResultField(typeof(double))] TCν,				//	[-]	    Torque converter speed ratio
 		[ModalResultField(typeof(double), "TCµ")] TCmu,			//	[-]	    Torque converter torque ratio
 		[ModalResultField(typeof(double))] TC_M_Out,		//	[Nm]	Torque converter output torque
@@ -79,19 +94,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
     }
 
 
-	[AttributeUsage(AttributeTargets.Field)]
-	class ModalResultFieldAttribute : Attribute
-	{
-		internal ModalResultFieldAttribute(Type fieldType, string name=null)
-		{
-			FieldType = fieldType;
-		    Name = name;
-		}
-		public Type FieldType { get; private set; }
-	    public string Name { get; private set; }
-	}
+    [AttributeUsage(AttributeTargets.Field)]
+    class ModalResultFieldAttribute : Attribute
+    {
+        internal ModalResultFieldAttribute(Type fieldType, string name = null)
+        {
+            FieldType = fieldType;
+            Name = name;
+        }
+        public Type FieldType { get; private set; }
+        public string Name { get; private set; }
+    }
 
-    public static class ModalResultFieldExtensions
+    public static class ModalResultFieldExtensionMethods
     {
         public static Type GetDataType(this ModalResultField field)
         {
@@ -103,14 +118,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             return GetAttr(field).Name ?? field.ToString();
         }
 
-	    private static ModalResultFieldAttribute GetAttr(ModalResultField field)
-	    {
-		    return (ModalResultFieldAttribute)Attribute.GetCustomAttribute(ForValue(field), typeof (ModalResultFieldAttribute));
-	    }
+        private static ModalResultFieldAttribute GetAttr(ModalResultField field)
+        {
+            return (ModalResultFieldAttribute)Attribute.GetCustomAttribute(ForValue(field), typeof(ModalResultFieldAttribute));
+        }
 
-	    private static MemberInfo ForValue(ModalResultField field)
-	    {
-		    return typeof (ModalResultField).GetField(Enum.GetName(typeof (ModalResultField), field));
-	    }
+        private static MemberInfo ForValue(ModalResultField field)
+        {
+            return typeof(ModalResultField).GetField(Enum.GetName(typeof(ModalResultField), field));
+        }
     }
 }

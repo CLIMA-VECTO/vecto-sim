@@ -65,18 +65,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
             public class DataBody
             {
-                public class DataFullLoadCurve
-                {
-                    [JsonProperty(Required = Required.Always)]
-                    public string Gears;
-
-                    [JsonProperty(Required = Required.Always)]
-                    public string Path;
-                }
-                
-                [JsonProperty(Required = Required.Always)]
-                public IList<DataFullLoadCurve> FullLoadCurves;
-
                 [JsonProperty("SavedInDeclMode")]
                 public bool SavedInDeclarationMode;
 
@@ -91,6 +79,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
                 [JsonProperty(Required = Required.Always)]
                 public double Inertia;
+
+                public class DataFullLoadCurve
+                {
+                    [JsonProperty(Required = Required.Always)]
+                    public string Path;
+
+                    [JsonProperty(Required = Required.Always)]
+                    public string Gears;
+                }
+
+                [JsonProperty(Required = Required.Always)]
+                public IList<DataFullLoadCurve> FullLoadCurves;
 
                 [JsonProperty(Required = Required.Always)]
                 public string FuelMap;
@@ -190,16 +190,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             return combustionEngineData;
         }
 
-        public string WriteToJson()
+        public string ToJson()
         {
             _data.Header.Date = DateTime.Now;
             _data.Header.FileVersion = 2;
             _data.Header.AppVersion = "3.0.0"; // todo: get current app version!
             _data.Header.CreatedBy = ""; // todo: get current user
             _data.Body.SavedInDeclarationMode = false; //todo: get declaration mode setting
-            return JsonConvert.SerializeObject(_data);
+            return JsonConvert.SerializeObject(_data, Formatting.Indented);
         }
 
+        public void WriteToFile(string fileName)
+        {
+            //todo handle file exceptions
+            File.WriteAllText(fileName, ToJson());
+        }
 
         public FullLoadCurve GetFullLoadCurve(uint gear)
         {

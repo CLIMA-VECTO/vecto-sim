@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Globalization;
 using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
@@ -17,7 +18,7 @@ namespace TUGraz.VectoCore.Utils
             //todo ArgumentNullException?
             try
             {
-                return double.Parse(row.Field<string>(columnName));
+                return double.Parse(row.Field<string>(columnName), CultureInfo.InvariantCulture);
             }
             catch (IndexOutOfRangeException e)
             {
