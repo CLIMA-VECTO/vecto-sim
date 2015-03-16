@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
     /// Columns:
     /// * engine speed [1/min]
     /// * engine torque [Nm]
-    /// * Fuel Consumption [g/h] 
+    /// * Fuel Consumption [g/h]
     /// </summary>
 	public class FuelConsumptionMap : SimulationComponentData
     {
@@ -33,18 +33,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         }
 
         private IList<FuelConsumptionEntry> _entries = new List<FuelConsumptionEntry>();
-
         private DelauneyMap _fuelMap = new DelauneyMap();
 
-        private FuelConsumptionMap()
-        {
-            
-        }
+        private FuelConsumptionMap() { }
 
         public static FuelConsumptionMap ReadFromFile(string fileName)
         {
             var fuelConsumptionMap = new FuelConsumptionMap();
-            var data = VectoCSVReader.Read(fileName);
+            var data = VectoCSVFile.Read(fileName);
 
             try
             {
@@ -58,10 +54,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                             Torque = row.GetDouble(Fields.Torque),
                             FuelConsumption = row.GetDouble(Fields.FuelConsumption)
                         };
+
                         if (entry.FuelConsumption < 0)
                             throw new ArgumentOutOfRangeException("FuelConsumption < 0" + data.Rows.IndexOf(row));
+
                         fuelConsumptionMap._entries.Add(entry);
-                        fuelConsumptionMap._fuelMap.AddPoints(entry.EngineSpeed, entry.Torque, entry.FuelConsumption);
+                        fuelConsumptionMap._fuelMap.AddPoint(entry.EngineSpeed, entry.Torque, entry.FuelConsumption);
                     }
                     catch (Exception e)
                     {
@@ -75,7 +73,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             }
 
             fuelConsumptionMap._fuelMap.Triangulate();
-
             return fuelConsumptionMap;
         }
 

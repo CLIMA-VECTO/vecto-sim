@@ -13,7 +13,8 @@ namespace TUGraz.VectoCore.Tests.Models
 		[TestMethod]
 		public void TestMethod1()
 		{
-			var engine = new CombustionEngine(new CombustionEngineData());
+			var engineData = CombustionEngineData.ReadFromFile("TestData\\EngineOnly\\EngineMaps\\24t Coach.veng");
+			var engine = new CombustionEngine(engineData);
 
 			var simulationcontainer = new SimulationContainer();
 

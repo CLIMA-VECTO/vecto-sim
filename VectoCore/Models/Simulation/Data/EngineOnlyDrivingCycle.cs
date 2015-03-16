@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data
+namespace TUGraz.VectoCore.Models.Simulation.Data
 {
     /// <summary>
     /// Class for representation of one EngineOnly Driving Cycle
@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
         public static List<EngineOnlyDrivingCycle> ReadFromFile(string fileName)
         {
-            var data = VectoCSVReader.Read(fileName);
+            var data = VectoCSVFile.Read(fileName);
 
             var cycles = new List<EngineOnlyDrivingCycle>();
 

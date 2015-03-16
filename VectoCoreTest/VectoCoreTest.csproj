@@ -67,7 +67,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Models\SimulationComponentData\FullLoadCurveTest.cs" />
     <Compile Include="Models\SimulationComponent\CombustionEngineTest.cs" />
     <Compile Include="Models\UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -106,14 +105,17 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vmod" />
-    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vsum" />
+    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vsum.json" />
     <None Include="TestData\EngineTests.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
