@@ -22,6 +22,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (component is IEngineCockpit) {
 				_engine = (IEngineCockpit)component;
 			}
+			else if (component is IGearboxCockpit) {
+				_gearbox = (IGearboxCockpit) component;
+			}
 		}
 
 
@@ -30,7 +33,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return new ReadOnlyCollection<VectoSimulationComponent>(_components);
 		}
 
-		public int Gear()
+		public uint Gear()
 		{
 			if (_gearbox == null) 
 				throw new VectoException("no gearbox available!");

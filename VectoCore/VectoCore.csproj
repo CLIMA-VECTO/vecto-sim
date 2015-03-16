@@ -76,6 +76,7 @@
     <Compile Include="Models\Connector\Ports\IInPort.cs" />
     <Compile Include="Models\SimulationComponent\IGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\EngineOnlyGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Wheels.cs" />
     <Compile Include="Models\Connector\Ports\IOutPort.cs" />
     <Compile Include="Models\SimulationComponent\IWheels.cs" />

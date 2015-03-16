@@ -108,8 +108,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             foreach (var cycle in data)
             {
                 port.Request(absTime, dt, cycle.Torque, cycle.EngineSpeed);
-                engine.CommitSimulationStep(dataWriter);
-                absTime += dt;
+	            foreach (var sc in vehicle.SimulationComponents()) {
+		            sc.CommitSimulationStep(dataWriter);
+	            }
+	            absTime += dt;
 
                 //todo: test with correct output values, add other fields to test
                 Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
