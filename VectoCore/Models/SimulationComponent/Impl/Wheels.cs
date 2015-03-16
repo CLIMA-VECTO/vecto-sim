@@ -1,21 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TUGraz.VectoCore.Models.Connector.Ports;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	class Wheels : VectoSimulationComponent
 	{
-		public override Connector.Ports.Impl.InPort InPort()
+		public IInPort InPort()
 		{
 			throw new NotImplementedException();
 		}
 
-		public override Connector.Ports.Impl.OutPort OutPort()
+		public IOutPort OutPort()
 		{
 			throw new NotImplementedException();
 		}
+
+	    public override void CommitSimulationStep(IModalDataWriter writer)
+	    {
+	        throw new NotImplementedException();
+	    }
 	}
 }

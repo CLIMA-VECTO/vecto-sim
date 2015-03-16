@@ -57,23 +57,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\VectoExceptions.cs" />
     <Compile Include="Exceptions\VectoSimulationException.cs" />
     <Compile Include="Models\Connector\Connector.cs" />
+    <Compile Include="Models\Connector\Ports\IInShaft.cs" />
     <Compile Include="Models\Connector\Ports\Impl\InPort.cs" />
     <Compile Include="Models\Connector\Ports\Impl\OutPort.cs" />
+    <Compile Include="Models\Connector\Ports\Impl\Port.cs" />
     <Compile Include="Models\Connector\Ports\Impl\TnInPort.cs" />
     <Compile Include="Models\Connector\Ports\Impl\TnOutPort.cs" />
+    <Compile Include="Models\Connector\Ports\IOutShaft.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
+    <Compile Include="Models\SimulationComponent\Data\EngineOnlyDrivingCycle.cs" />
+    <Compile Include="Models\SimulationComponent\Data\ModalResult.cs" />
     <Compile Include="Models\SimulationComponent\Data\CombustionEngineData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FullLoadCurve.cs" />
+    <Compile Include="Models\SimulationComponent\Data\VectoCSVFile.cs" />
     <Compile Include="Models\SimulationComponent\ICombustionEngine.cs" />
+    <Compile Include="Models\Connector\Ports\IInPort.cs" />
+    <Compile Include="Models\SimulationComponent\IGearbox.cs" />
+    <Compile Include="Models\SimulationComponent\IModalDataWriter.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Wheels.cs" />
+    <Compile Include="Models\Connector\Ports\IOutPort.cs" />
     <Compile Include="Models\SimulationComponent\IWheels.cs" />
     <Compile Include="Models\SimulationComponent\SimulationComponentData.cs" />
     <Compile Include="Models\SimulationComponent\VectoSimulationComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\DataRowExtensionMethods.cs" />
+    <Compile Include="Utils\DelauneyMap.cs" />
+    <Compile Include="Utils\FloatingPointExtensionMethods.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
