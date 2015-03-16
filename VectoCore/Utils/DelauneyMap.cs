@@ -17,7 +17,8 @@ namespace TUGraz.VectoCore.Utils
 
         protected bool Equals(DelauneyMap other)
         {
-            return Equals(_points, other._points) && Equals(_triangles, other._triangles);
+            return _points.SequenceEqual(other._points) 
+                && _triangles.SequenceEqual(other._triangles);
         }
 
         public override bool Equals(object obj)

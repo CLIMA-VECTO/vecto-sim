@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
@@ -27,7 +28,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
         protected bool Equals(FuelConsumptionMap other)
         {
-            return Equals(_entries, other._entries) && Equals(_fuelMap, other._fuelMap);
+            return _entries.SequenceEqual(other._entries) 
+                && Equals(_fuelMap, other._fuelMap);
         }
 
         public override bool Equals(object obj)
@@ -46,15 +48,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             }
         }
 
-        private class FuelConsumptionEntry
+        private struct FuelConsumptionEntry
         {
             public double EngineSpeed { get; set; }
             public double Torque { get; set; }
             public double FuelConsumption { get; set; }
         }
 
-        private IList<FuelConsumptionEntry> _entries = new List<FuelConsumptionEntry>();
-        private DelauneyMap _fuelMap = new DelauneyMap();
+        private readonly IList<FuelConsumptionEntry> _entries = new List<FuelConsumptionEntry>();
+        private readonly DelauneyMap _fuelMap = new DelauneyMap();
 
         private FuelConsumptionMap() { }
 

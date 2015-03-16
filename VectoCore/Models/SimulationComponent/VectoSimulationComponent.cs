@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
             {
                 const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
                 var props = type.GetFields(flags).Select(f => CreateProperty(f, memberSerialization)).ToList();
-                //props.ForEach(p => { p.Writable = true; p.Readable = true; });
+                props.ForEach(p => { p.Writable = true; p.Readable = true; });
                 return props;
             }
         }
@@ -48,7 +48,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
         {
             try
             {
-                return JsonConvert.DeserializeObject<T>(data);
+                var settings = new JsonSerializerSettings { ContractResolver = new MyContractResolver() };
+                return JsonConvert.DeserializeObject<T>(data, settings);
             }
             catch (Exception e)
             {

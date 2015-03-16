@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -58,6 +59,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
                 [JsonProperty(Required = Required.Always)]
                 public double FileVersion;
+
+                protected bool Equals(DataHeader other)
+                {
+                    return string.Equals(CreatedBy, other.CreatedBy) && Date.Equals(other.Date) && string.Equals(AppVersion, other.AppVersion) && FileVersion.Equals(other.FileVersion);
+                }
+
+                public override bool Equals(object obj)
+                {
+                    if (ReferenceEquals(null, obj)) return false;
+                    if (ReferenceEquals(this, obj)) return true;
+                    if (obj.GetType() != this.GetType()) return false;
+                    return Equals((DataHeader) obj);
+                }
+
+                public override int GetHashCode()
+                {
+                    unchecked
+                    {
+                        var hashCode = (CreatedBy != null ? CreatedBy.GetHashCode() : 0);
+                        hashCode = (hashCode*397) ^ Date.GetHashCode();
+                        hashCode = (hashCode*397) ^ (AppVersion != null ? AppVersion.GetHashCode() : 0);
+                        hashCode = (hashCode*397) ^ FileVersion.GetHashCode();
+                        return hashCode;
+                    }
+                }
             }
 
             [JsonProperty(Required = Required.Always)]
@@ -87,6 +113,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
                     [JsonProperty(Required = Required.Always)]
                     public string Gears;
+
+                    protected bool Equals(DataFullLoadCurve other)
+                    {
+                        return string.Equals(Path, other.Path) && string.Equals(Gears, other.Gears);
+                    }
+
+                    public override bool Equals(object obj)
+                    {
+                        if (ReferenceEquals(null, obj)) return false;
+                        if (ReferenceEquals(this, obj)) return true;
+                        if (obj.GetType() != this.GetType()) return false;
+                        return Equals((DataFullLoadCurve) obj);
+                    }
+
+                    public override int GetHashCode()
+                    {
+                        unchecked
+                        {
+                            return ((Path != null ? Path.GetHashCode() : 0)*397) ^ (Gears != null ? Gears.GetHashCode() : 0);
+                        }
+                    }
                 }
 
                 [JsonProperty(Required = Required.Always)]
@@ -103,16 +150,80 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
                 [JsonProperty("WHTC-Motorway")]
                 public double WHTCMotorway;
+
+                protected bool Equals(DataBody other)
+                {
+                    return SavedInDeclarationMode.Equals(other.SavedInDeclarationMode) 
+                        && string.Equals(ModelName, other.ModelName) 
+                        && Displacement.Equals(other.Displacement) 
+                        && IdleSpeed.Equals(other.IdleSpeed) 
+                        && Inertia.Equals(other.Inertia) 
+                        && FullLoadCurves.SequenceEqual(other.FullLoadCurves) 
+                        && string.Equals(FuelMap, other.FuelMap) 
+                        && WHTCUrban.Equals(other.WHTCUrban) 
+                        && WHTCRural.Equals(other.WHTCRural) 
+                        && WHTCMotorway.Equals(other.WHTCMotorway);
+                }
+
+                public override bool Equals(object obj)
+                {
+                    if (ReferenceEquals(null, obj)) return false;
+                    if (ReferenceEquals(this, obj)) return true;
+                    if (obj.GetType() != this.GetType()) return false;
+                    return Equals((DataBody)obj);
+                }
+
+                public override int GetHashCode()
+                {
+                    unchecked
+                    {
+                        var hashCode = SavedInDeclarationMode.GetHashCode();
+                        hashCode = (hashCode * 397) ^ (ModelName != null ? ModelName.GetHashCode() : 0);
+                        hashCode = (hashCode * 397) ^ Displacement.GetHashCode();
+                        hashCode = (hashCode * 397) ^ IdleSpeed.GetHashCode();
+                        hashCode = (hashCode * 397) ^ Inertia.GetHashCode();
+                        hashCode = (hashCode * 397) ^ (FullLoadCurves != null ? FullLoadCurves.GetHashCode() : 0);
+                        hashCode = (hashCode * 397) ^ (FuelMap != null ? FuelMap.GetHashCode() : 0);
+                        hashCode = (hashCode * 397) ^ WHTCUrban.GetHashCode();
+                        hashCode = (hashCode * 397) ^ WHTCRural.GetHashCode();
+                        hashCode = (hashCode * 397) ^ WHTCMotorway.GetHashCode();
+                        return hashCode;
+                    }
+                }
             }
 
             [JsonProperty(Required = Required.Always)]
             public DataBody Body;
+
+            protected bool Equals(Data other)
+            {
+                return Equals(Header, other.Header) && Equals(Body, other.Body);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((Data) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((Header != null ? Header.GetHashCode() : 0)*397) ^ (Body != null ? Body.GetHashCode() : 0);
+                }
+            }
         }
+
+        private Data _data;
 
         protected bool Equals(CombustionEngineData other)
         {
-            return Equals(_data, other._data) 
-                && Equals(_fullLoadCurves, other._fullLoadCurves) 
+            return Equals(_data, other._data)
+                && _fullLoadCurves.Keys.SequenceEqual(other._fullLoadCurves.Keys)
+                && _fullLoadCurves.Values.SequenceEqual(other._fullLoadCurves.Values)
                 && Equals(ConsumptionMap, other.ConsumptionMap);
         }
 
@@ -121,21 +232,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((CombustionEngineData) obj);
+            return Equals((CombustionEngineData)obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = (_data != null ? _data.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (_fullLoadCurves != null ? _fullLoadCurves.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (ConsumptionMap != null ? ConsumptionMap.GetHashCode() : 0);
+                var hashCode = _data.GetHashCode();
+                hashCode = (hashCode * 397) ^ (_fullLoadCurves != null ? _fullLoadCurves.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (ConsumptionMap != null ? ConsumptionMap.GetHashCode() : 0);
                 return hashCode;
             }
         }
-
-        private Data _data;
 
         public bool SavedInDeclarationMode
         {
@@ -234,7 +343,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
         public FullLoadCurve GetFullLoadCurve(uint gear)
         {
-			// TODO: @@@quam refactor
+            // TODO: @@@quam refactor
             foreach (var gearRange in _fullLoadCurves.Keys)
             {
                 var low = uint.Parse(gearRange.Split('-').First().Trim());

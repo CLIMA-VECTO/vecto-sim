@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -37,7 +38,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
             protected bool Equals(EngineState other)
             {
-                return OperationMode == other.OperationMode && EnginePower.Equals(other.EnginePower) && EngineSpeed.Equals(other.EngineSpeed) && EnginePowerLoss.Equals(other.EnginePowerLoss) && AbsTime.Equals(other.AbsTime);
+                return OperationMode == other.OperationMode 
+                    && EnginePower.Equals(other.EnginePower) 
+                    && EngineSpeed.Equals(other.EngineSpeed) 
+                    && EnginePowerLoss.Equals(other.EnginePowerLoss) 
+                    && AbsTime.Equals(other.AbsTime);
             }
 
             public override bool Equals(object obj)
@@ -87,7 +92,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             return Equals(_data, other._data) 
                 && Equals(_previousState, other._previousState) 
                 && Equals(_currentState, other._currentState) 
-                && Equals(_enginePowerCorrections, other._enginePowerCorrections);
+                && _enginePowerCorrections.SequenceEqual(other._enginePowerCorrections);
         }
 
         public override bool Equals(object obj)
