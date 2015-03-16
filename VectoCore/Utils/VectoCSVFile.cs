@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using TUGraz.VectoCore.Exceptions;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data
+namespace TUGraz.VectoCore.Utils
 {
     /// <summary>
     /// Class for Reading and Writing VECTO CSV Files.
