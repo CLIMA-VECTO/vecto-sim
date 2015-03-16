@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -34,7 +35,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private List<TimeSpan> _enginePowerCorrections = new List<TimeSpan>(); 
 
-		public CombustionEngine(CombustionEngineData data)
+		public CombustionEngine(IVehicleContainer cockpit, CombustionEngineData data) : base(cockpit)
 		{
 			_data = data;
 
@@ -55,6 +56,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		    _previousState = _currentState;
 			_currentState = new EngineState();
 	    }
+
+		public double EngineSpeed()
+		{
+			return _previousState.EngineSpeed;
+		}
 
         public void Request(TimeSpan absTime, TimeSpan dt, double torque, double engineSpeed)
         {
@@ -180,6 +186,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				public TimeSpan AbsTime { get; set; }
 			}
+
+
 	}
 
 

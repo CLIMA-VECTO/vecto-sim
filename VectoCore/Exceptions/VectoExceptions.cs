@@ -1,5 +1,4 @@
 ﻿using System;
-using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Exceptions
 {

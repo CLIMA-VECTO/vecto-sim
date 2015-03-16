@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Data;
 using System.IO;
-using System.Net.Security;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -31,8 +29,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestEngineHasOutPort()
         {
+	        var vehicle = new VehicleContainer();
             var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
-            var engine = new CombustionEngine(engineData);
+            var engine = new CombustionEngine(vehicle, engineData);
 
             var port = engine.OutShaft();
             Assert.IsNotNull(port);
@@ -41,8 +40,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestOutPortRequestNotFailing()
         {
+	        var vehicle = new VehicleContainer();
 			var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
-            var engine = new CombustionEngine(engineData);
+            var engine = new CombustionEngine(vehicle, engineData);
+
 
             var port = engine.OutShaft();
 
@@ -57,8 +58,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestSimpleModalData()
         {
+			var vehicle = new VehicleContainer(); 
 			var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
-            var engine = new CombustionEngine(engineData);
+            var engine = new CombustionEngine(vehicle, engineData);
             var port = engine.OutShaft();
 
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
@@ -89,11 +91,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
         public void TestEngineOnlyDrivingCycle()
         {
+			var vehicle = new VehicleContainer();
 			var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
 			var data = EngineOnlyDrivingCycle.ReadFromFile(TestContext.DataRow["CycleFile"].ToString());
 			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
-			var engine = new CombustionEngine(engineData);
+			var engine = new CombustionEngine(vehicle, engineData);
             var port = engine.OutShaft();
 
 
