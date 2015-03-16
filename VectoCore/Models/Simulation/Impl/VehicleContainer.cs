@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return new ReadOnlyCollection<VectoSimulationComponent>(_components);
 		}
 
-		public int Gear()
+		public uint Gear()
 		{
 			if (_gearbox == null) 
 				throw new VectoException("no gearbox available!");

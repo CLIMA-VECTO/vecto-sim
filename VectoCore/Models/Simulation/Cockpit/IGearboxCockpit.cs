@@ -2,6 +2,6 @@
 {
 	public interface IGearboxCockpit
 	{
-		int Gear();
+		uint Gear();
 	}
 }

@@ -9,6 +9,13 @@ namespace TUGraz.VectoCore.Models.Connector
 		protected TI InPort;
 		protected TO OutPort;
 
+		public void Connect(TI inPort, TO outPort)
+		{
+			InPort = inPort;
+			OutPort = outPort;
+
+			InPort.Connect(OutPort);
+		}
 	}
 
 }

@@ -75,8 +75,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		        _currentState.OperationMode = EngineOperationMode.Stopped;
 				_currentState.EnginePowerLoss = enginePowerLoss;
 			}
-	
-			uint currentGear = 0; // TODO: get current Gear from Vehicle!
+
+	        uint currentGear = Cockpit.Gear();
 
 	        var minEnginePower = _data.GetFullLoadCurve(currentGear).DragLoadStationaryPower(engineSpeed);
 	        var maxEnginePower = FullLoadPowerDyamic(currentGear, engineSpeed);
