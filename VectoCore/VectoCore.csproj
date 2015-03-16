@@ -84,6 +84,7 @@
     <Compile Include="Models\SimulationComponent\IWheels.cs" />
     <Compile Include="Models\SimulationComponent\SimulationComponentData.cs" />
     <Compile Include="Models\SimulationComponent\VectoSimulationComponent.cs" />
+    <Compile Include="Models\Simulation\SimulationContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\DataRowExtensionMethods.cs" />
     <Compile Include="Utils\VectoMath.cs" />

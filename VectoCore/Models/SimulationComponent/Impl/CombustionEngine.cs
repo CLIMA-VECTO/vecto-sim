@@ -164,7 +164,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var deltaEngineSpeed = engineSpeed - _previousState.EngineSpeed;
 			var avgEngineSpeed = (_previousState.EngineSpeed + engineSpeed) / 2.0;
-			return _data.Inertia*VectoMath.RpmTpAngularVelocity(deltaEngineSpeed)*VectoMath.RpmTpAngularVelocity(avgEngineSpeed);
+			return _data.Inertia * VectoMath.RpmTpAngularVelocity(deltaEngineSpeed) * VectoMath.RpmTpAngularVelocity(avgEngineSpeed);
 		}
 
 		// accelleration los rotation engine
