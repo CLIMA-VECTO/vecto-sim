@@ -1,7 +1,5 @@
-﻿using System;
-using System.Data;
-using TUGraz.VectoCore.Models.SimulationComponent;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
+﻿using System.Data;
+using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
