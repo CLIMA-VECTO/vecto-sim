@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
     /// * engine torque [Nm]
     /// * Fuel Consumption [g/h]
     /// </summary>
-    public class FuelConsumptionMap
+	public class FuelConsumptionMap : SimulationComponentData
     {
         private static class Fields
         {

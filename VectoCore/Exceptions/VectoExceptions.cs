@@ -15,6 +15,7 @@ namespace TUGraz.VectoCore.Exceptions
         protected FileIOException(string message, Exception inner) : base(message, inner) { }
     }
 
+
 	class InvalidFileFormatException : FileIOException
 	{
 		public InvalidFileFormatException(string message) : base(message) { }
@@ -31,7 +32,7 @@ namespace TUGraz.VectoCore.Exceptions
 		public UnsupportedFileVersionException(string message, Exception inner) : base(message, inner) { }
 	}
 
-/// <summary>
+	/// <summary>
     /// Exception which gets thrown when an error occurred during read of a vecto csv-file.
     /// </summary>
     class CSVReadException : FileIOException

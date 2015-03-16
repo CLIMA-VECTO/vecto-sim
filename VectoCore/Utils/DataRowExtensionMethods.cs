@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.Utils
         /// <param name="row"></param>
         /// <param name="columnName">The name of the column.</param>
         /// <returns>The value of the underlying DataRows column field as double.</returns>
-        public static double GetDouble(this DataRow row, string columnName)
+        public static double GetDouble(this DataRow row, string columnName, CultureInfo culture = null)
         {
             //todo ArgumentNullException?
             try

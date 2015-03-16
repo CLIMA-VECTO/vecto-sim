@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -209,6 +208,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
         public FullLoadCurve GetFullLoadCurve(uint gear)
         {
+			// TODO: @@@quam refactor
             foreach (var gearRange in _fullLoadCurves.Keys)
             {
                 var low = uint.Parse(gearRange.Split('-').First().Trim());

@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Data;
 using System.IO;
+using System.Net.Security;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
@@ -12,6 +16,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
     [TestClass]
     public class CombustionEngineTest
     {
+		private const string CoachEngine = "TestData\\EngineOnly\\EngineMaps\\24t Coach.veng";
+
 		public TestContext TestContext { get; set; }
 
         [ClassInitialize]
@@ -24,7 +30,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestEngineHasOutPort()
         {
-            var engineData = CombustionEngineData.ReadFromFile("TestData\\EngineOnly\\EngineMaps\\24t Coach.veng");
+            var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
             var engine = new CombustionEngine(engineData);
 
             var port = engine.OutShaft();
@@ -34,7 +40,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestOutPortRequestNotFailing()
         {
-			var engineData = CombustionEngineData.ReadFromFile("TestData\\EngineOnly\\EngineMaps\\24t Coach.veng");
+			var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
             var engine = new CombustionEngine(engineData);
 
             var port = engine.OutShaft();
@@ -50,7 +56,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestSimpleModalData()
         {
-			var engineData = CombustionEngineData.ReadFromFile("TestData\\EngineOnly\\EngineMaps\\24t Coach.veng");
+			var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
             var engine = new CombustionEngine(engineData);
             var port = engine.OutShaft();
 
@@ -58,18 +64,24 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
             //todo: set correct input values to test
-            var torque = 400.0;
-            var engineSpeed = 1500.0;
-            port.Request(absTime, dt, torque, engineSpeed);
+            var torque = 0.0;
+            var engineSpeed = 600.0;
+			var dataWriter = new TestModalDataWriter();
 
+	        for (var i = 0; i < 10; i++) {
+		        port.Request(absTime, dt, torque, engineSpeed);
+				engine.CommitSimulationStep(dataWriter);
+				absTime += dt;
+	        }
 
-            var dataWriter = new TestModalDataWriter();
-            engine.CommitSimulationStep(dataWriter);
+			port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(2329.973, 644.4445), 644.4445);
+			engine.CommitSimulationStep(dataWriter);
 
             //todo: test with correct output values, add other fields to test
-            Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
-            Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
-            Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
+            //Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
+            //Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
+            //Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
+			Assert.AreEqual(2.906175, dataWriter[ModalResultField.PaEng]);
         }
 
 		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineTests.csv", "EngineTests#csv", DataAccessMethod.Sequential)]

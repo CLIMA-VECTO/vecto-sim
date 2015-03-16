@@ -9,11 +9,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 	public class SimulationComponentData
 	{
-		protected ILog Logger;
+		protected ILog Log;
 
 		public SimulationComponentData()
 		{
-			Logger = LogManager.GetLogger(this.GetType());
+			Log = LogManager.GetLogger(this.GetType());
 		}
 
 	}
