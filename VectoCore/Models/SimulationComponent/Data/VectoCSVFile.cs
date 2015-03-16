@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -87,12 +88,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         {
             StringBuilder sb = new StringBuilder();
 
-            var header = table.Columns.Cast<DataColumn>().Select(col => col.ColumnName);
+            var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
             sb.AppendLine(string.Join(", ", header));
 
             foreach (DataRow row in table.Rows)
             {
-                sb.AppendLine(string.Join(", ", row.ItemArray.Select(item => (item is IFormattable) ? ((IFormattable)item).ToString("", CultureInfo.InvariantCulture) : item)));
+                List<string> formattedList = new List<string>();
+                
+                foreach (var item in row.ItemArray)
+                {
+                    var formattable = item as IFormattable;
+                    formattedList.Add(formattable != null
+                                      ? formattable.ToString("", CultureInfo.InvariantCulture)
+                                      : item.ToString());
+                }
+
+                var line = string.Join(Separator.ToString(), formattedList);
+                sb.AppendLine(line);
             }
 
             File.WriteAllText(fileName, sb.ToString());

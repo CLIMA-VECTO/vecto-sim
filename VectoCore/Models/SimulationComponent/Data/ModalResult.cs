@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using TUGraz.VectoCore.Utils;
 
@@ -11,7 +12,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         public ModalResults()
         {
             foreach (ModalResultField value in Enum.GetValues(typeof(ModalResultField)))
-                Columns.Add(value.GetName(), value.GetDataType());
+            {
+                var col = new DataColumn(value.GetName(), value.GetDataType()) { Caption = value.GetCaption() };
+                Columns.Add(col);
+            }
         }
 
         public static ModalResults ReadFromFile(string fileName)
@@ -53,57 +57,236 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
     /// </summary>
     public enum ModalResultField
     {
-        [ModalResultField(typeof(double))] time,			//	[s]	    Time step.
-		[ModalResultField(typeof(double))] n,			    //	[1/min]	Engine speed.
-		[ModalResultField(typeof(double))] Tq_eng,			//	[Nm]	Engine torque.
-		[ModalResultField(typeof(double))] Tq_clutch,		//	[Nm]	Torque at clutch (before clutch, engine-side)
-		[ModalResultField(typeof(double))] Tq_full,			//	[Nm]	Full load torque
-		[ModalResultField(typeof(double))] Tq_drag,			//	[Nm]	Motoring torque
-		[ModalResultField(typeof(double))] Pe_eng,			//	[kW]	Engine power.
-		[ModalResultField(typeof(double))] Pe_full,			//	[kW]	Engine full load power.
-		[ModalResultField(typeof(double))] Pe_drag,			//	[kW]	Engine drag power.
-		[ModalResultField(typeof(double))] Pe_clutch,		//	[kW]	Engine power at clutch (equals Pe minus loss due to rotational inertia Pa Eng).
-		[ModalResultField(typeof(double), "Pa")] PaEng,			//	[kW]	Rotational acceleration power: Engine.
-		[ModalResultField(typeof(double))] Paux,			//	[kW]	Total auxiliary power demand .
-		[ModalResultField(typeof(double))] FC,			    //	[g/h]	Fuel consumption from FC map..
-		[ModalResultField(typeof(double), "FC-AUXc")] FCAUXc,			//	[g/h]	Fuel consumption after Auxiliary-Start/Stop Correction. (Based on FC.)
-		[ModalResultField(typeof(double), "FC-WHTCc")] FCWHTCc,		//	[g/h]	Fuel consumption after WHTC Correction. (Based on FC-AUXc.)
+        /// <summary>
+        /// Time step [s].
+        /// </summary>
+        [ModalResultField(typeof(double), caption: "time [s]")]
+        time,
 
+        /// <summary>
+        /// Engine speed [1/min].
+        /// </summary>
+        [ModalResultField(typeof(double), caption: "n [1/min]")]
+        n,
 
-        [ModalResultField(typeof(double))] dist,			//	[km]	Travelled distance.
-        [ModalResultField(typeof(double))] v_act,			//	[km/h]	Actual vehicle speed.
-		[ModalResultField(typeof(double))] v_targ,			//	[km/h]	Target vehicle speed.
-		[ModalResultField(typeof(double))] acc,				//	[m/s2]	Vehicle acceleration.
-        [ModalResultField(typeof(double))] grad,			//	[%]	    Road gradient.
-		[ModalResultField(typeof(double))] Gear,			//	[-]	    Gear. "0" = clutch opened / neutral. "0.5" = lock-up clutch is open (AT with torque converter only, see Gearbox)
-		[ModalResultField(typeof(double), "Ploss GB")] PlossGB,			//	[kW]	Gearbox losses.
-		[ModalResultField(typeof(double), "Ploss Diff")] PlossDiff,		//	[kW]	Losses in differential / axle transmission.
-		[ModalResultField(typeof(double), "Ploss Retarder")] PlossRetarder,	//	[kW]	Retarder losses.
-		[ModalResultField(typeof(double), "Pa GB")] PaGB,			//	[kW]	Rotational acceleration power: Gearbox.
-		[ModalResultField(typeof(double), "Pa Veh")] PaVeh,			//	[kW]	Vehicle acceleration power.
-		[ModalResultField(typeof(double))] Proll,			//	[kW]	Rolling resistance power demand.
-		[ModalResultField(typeof(double))] Pair,			//	[kW]	Air resistance power demand.
-		[ModalResultField(typeof(double))] Pgrad,			//	[kW]	Power demand due to road gradient.
-		[ModalResultField(typeof(double))] Pwheel,			//	[kW]	Total power demand at wheel = sum of rolling, air, acceleration and road gradient resistance.
-		[ModalResultField(typeof(double))] Pbrake,			//	[kW]	Brake power. Drag power is included in Pe.
-        //[ModalResultField(typeof(double))] Paux_xxx,		//	[kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
-		[ModalResultField(typeof(double))] TCν,				//	[-]	    Torque converter speed ratio
-		[ModalResultField(typeof(double), "TCµ")] TCmu,			//	[-]	    Torque converter torque ratio
-		[ModalResultField(typeof(double))] TC_M_Out,		//	[Nm]	Torque converter output torque
-		[ModalResultField(typeof(double))] TC_n_Out,		//	[1/min]	Torque converter output speed
+        /// <summary>
+        ///	[Nm]	Engine torque.
+        /// </summary>
+        [ModalResultField(typeof(double), caption: "Tq_eng [Nm]")]
+        Tq_eng,
+
+        /// <summary>
+        ///	[Nm]	Torque at clutch (before clutch, engine-side)
+        /// </summary>
+        [ModalResultField(typeof(double), caption: "Tq_clutch [Nm]")]
+        Tq_clutch,
+
+        /// <summary>
+        ///	[Nm]	Full load torque
+        /// </summary>
+        [ModalResultField(typeof(double), caption: "Tq_full [Nm]")]
+        Tq_full,
+
+        /// <summary>
+        ///	[Nm]	Motoring torque
+        /// </summary>
+        [ModalResultField(typeof(double), caption: "Tq_drag [Nm]")]
+        Tq_drag,
+
+        /// <summary>
+        ///	[kW]	Engine power.
+        /// </summary>
+        [ModalResultField(typeof(double), caption: "Pe_eng [kW]")]
+        Pe_eng,
+
+        /// <summary>
+        ///	[kW]	Engine full load power.
+        /// </summary>
+        [ModalResultField(typeof(double), caption: "Pe_full [kW]")]
+        Pe_full,
+
+        /// <summary>
+        ///	[kW]	Engine drag power.
+        /// </summary>
+        [ModalResultField(typeof(double), caption: "Pe_drag [kW]")]
+        Pe_drag,
+
+        /// <summary>
+        ///	[kW]	Engine power at clutch (equals Pe minus loss due to rotational inertia Pa Eng).
+        /// </summary>
+        [ModalResultField(typeof(double), caption: "Pe_clutch [kW]")]
+        Pe_clutch,
+
+        /// <summary>
+        ///	[kW]	Rotational acceleration power: Engine.
+        /// </summary>
+        [ModalResultField(typeof(double), name: "Pa", caption: "Pa [Eng]")]
+        PaEng,
+
+        /// <summary>
+        ///	[kW]	Total auxiliary power demand .
+        /// </summary>
+        [ModalResultField(typeof(double), caption: "Paux [kW]")]
+        Paux,
+
+        /// <summary>
+        ///	[g/h]	Fuel consumption from FC map..
+        /// </summary>
+        [ModalResultField(typeof(double), caption: "FC [g/h]")]
+        FC,
+
+        /// <summary>
+        ///	[g/h]	Fuel consumption after Auxiliary-Start/Stop Correction. (Based on FC.)
+        /// </summary>
+        [ModalResultField(typeof(double), name: "FC-AUXc", caption: "FC-AUXc [g/h]")]
+        FCAUXc,
+
+        /// <summary>
+        ///	[g/h]	Fuel consumption after WHTC Correction. (Based on FC-AUXc.)
+        /// </summary>
+        [ModalResultField(typeof(double), name: "FC-WHTCc", caption: "FC-WHTCc [g/h]")]
+        FCWHTCc,
+
+        /// <summary>
+        /// [km]	Travelled distance.
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        dist,
+
+        /// <summary>
+        /// [km/h]	Actual vehicle speed.
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        v_act,
+
+        /// <summary>
+        /// [km/h]	Target vehicle speed.
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        v_targ,
+
+        /// <summary>
+        /// [m/s2]	Vehicle acceleration.
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        acc,
+
+        /// <summary>
+        /// [%]	    Road gradient.
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        grad,
+
+        /// <summary>
+        /// [-]	 Gear. "0" = clutch opened / neutral. "0.5" = lock-up clutch is open (AT with torque converter only, see Gearbox)
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        Gear,
+
+        /// <summary>
+        /// 	[kW]	Gearbox losses.
+        /// </summary>
+        [ModalResultField(typeof(double), name: "Ploss GB")]
+        PlossGB,
+
+        /// <summary>
+        /// [kW]	Losses in differential / axle transmission.
+        /// </summary>
+        [ModalResultField(typeof(double), name: "Ploss Diff")]
+        PlossDiff,
+
+        /// <summary>
+        /// [kW]	Retarder losses.
+        /// </summary>
+        [ModalResultField(typeof(double), name: "Ploss Retarder")]
+        PlossRetarder,
+
+        /// <summary>
+        /// [kW]	Rotational acceleration power: Gearbox.
+        /// </summary>
+        [ModalResultField(typeof(double), name: "Pa GB")]
+        PaGB,
+
+        /// <summary>
+        /// [kW]	Vehicle acceleration power.
+        /// </summary>
+        [ModalResultField(typeof(double), name: "Pa Veh")]
+        PaVeh,
+
+        /// <summary>
+        /// [kW]	Rolling resistance power demand.
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        Proll,
+
+        /// <summary>
+        /// [kW]	Air resistance power demand.
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        Pair,
+
+        /// <summary>
+        /// [kW]	Power demand due to road gradient.
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        Pgrad,
+
+        /// <summary>
+        /// [kW]	Total power demand at wheel = sum of rolling, air, acceleration and road gradient resistance.
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        Pwheel,
+
+        /// <summary>
+        /// [kW]	Brake power. Drag power is included in Pe.
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        Pbrake,
+
+        /// <summary>
+        ///	[kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        Paux_xxx,
+
+        /// <summary>
+        /// [-]	    Torque converter speed ratio
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        TCν,
+
+        /// <summary>
+        /// [-]	    Torque converter torque ratio
+        /// </summary>
+        [ModalResultField(typeof(double), name: "TCµ")]
+        TCmu,
+
+        /// <summary>
+        /// [Nm]	Torque converter output torque
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        TC_M_Out,
+
+        /// <summary>
+        /// [1/min]	Torque converter output speed
+        /// </summary>
+        [ModalResultField(typeof(double))]
+        TC_n_Out
     }
 
 
     [AttributeUsage(AttributeTargets.Field)]
     class ModalResultFieldAttribute : Attribute
     {
-        internal ModalResultFieldAttribute(Type fieldType, string name = null)
+        public Type FieldType { get; private set; }
+        public string Name { get; private set; }
+        public string Caption { get; set; }
+        internal ModalResultFieldAttribute(Type fieldType, string name = null, string caption = null)
         {
             FieldType = fieldType;
             Name = name;
+            Caption = caption;
         }
-        public Type FieldType { get; private set; }
-        public string Name { get; private set; }
     }
 
     public static class ModalResultFieldExtensionMethods
@@ -116,6 +299,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         public static string GetName(this ModalResultField field)
         {
             return GetAttr(field).Name ?? field.ToString();
+        }
+
+        public static string GetCaption(this ModalResultField field)
+        {
+            return GetAttr(field).Caption ?? field.GetName() ?? field.ToString();
         }
 
         private static ModalResultFieldAttribute GetAttr(ModalResultField field)
