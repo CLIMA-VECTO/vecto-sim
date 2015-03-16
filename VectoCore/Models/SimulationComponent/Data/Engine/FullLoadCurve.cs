@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         public static FullLoadCurve ReadFromFile(string fileName)
         {
             var fullLoadCurve = new FullLoadCurve();
-            var data = VectoCSVReader.Read(fileName);
+            var data = VectoCSVFile.Read(fileName);
             fullLoadCurve.entries = new List<FullLoadCurveEntry>();
 
             //todo: catch exceptions if value format is wrong.

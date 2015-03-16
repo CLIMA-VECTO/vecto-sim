@@ -23,12 +23,12 @@ namespace TUGraz.VectoCore.Utils
 
         public static bool IsBigger(this double d, double other)
         {
-            return other.IsSmaller(d);
+            return other.IsSmallerOrEqual(d);
         }
 
         public static bool IsBiggerOrEqual(this double d, double other)
         {
-            return other.IsSmallerOrEqual(d);
+            return other.IsSmaller(d);
         }
     }
 }

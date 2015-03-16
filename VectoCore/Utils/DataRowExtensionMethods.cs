@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Utils
             //todo ArgumentNullException?
             try
             {
-                return double.Parse(row.Field<string>(columnName), culture ?? new CultureInfo("en-US"));
+                return double.Parse(row.Field<string>(columnName), CultureInfo.InvariantCulture);
             }
             catch (IndexOutOfRangeException e)
             {
