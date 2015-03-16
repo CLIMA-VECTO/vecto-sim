@@ -23,10 +23,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
     {
         private static class Fields
         {
-            public const string Pe = "Pe";
-            public const string Padd = "Padd";
-            public const string Me = "Me";
-            public const string n = "n";
+            public const string PowerEngine = "Pe";
+            public const string PowerAuxilaries = "Padd";
+            public const string Torque = "Me";
+            public const string EngineSpeed = "n";
         }
 
         /// <summary>
@@ -52,11 +52,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         /// <summary>
         /// Additional power demand (aux) (Optional).
         /// </summary>
-        public double Padd { get; set; }
+        public double PowerAuxilaries { get; set; }
 
         public static List<EngineOnlyDrivingCycle> ReadFromFile(string fileName)
         {
-            var data = VectoCSVReader.Read(fileName);
+            var data = VectoCSVFile.Read(fileName);
 
             var cycles = new List<EngineOnlyDrivingCycle>();
 
@@ -64,15 +64,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             foreach (DataRow row in data.Rows)
             {
                 var cycle = new EngineOnlyDrivingCycle();
-                cycle.EngineSpeed = row.GetDouble(Fields.n);
+                cycle.EngineSpeed = row.GetDouble(Fields.EngineSpeed);
 
-                if (data.Columns.Contains(Fields.Pe))
-                    cycle.PowerEngine = row.GetDouble(Fields.Pe);
+                if (data.Columns.Contains(Fields.PowerEngine))
+                    cycle.PowerEngine = row.GetDouble(Fields.PowerEngine);
                 else
-                    cycle.Torque = row.GetDouble(Fields.Me);
+                    cycle.Torque = row.GetDouble(Fields.Torque);
 
-                if (data.Columns.Contains(Fields.Padd))
-                    cycle.Padd = row.GetDouble(Fields.Padd);
+                if (data.Columns.Contains(Fields.PowerAuxilaries))
+                    cycle.PowerAuxilaries = row.GetDouble(Fields.PowerAuxilaries);
 
                 cycles.Add(cycle);
             }
