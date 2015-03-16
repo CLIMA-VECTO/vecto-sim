@@ -4,7 +4,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	class Wheels : VectoSimulationComponent
+	public class Wheels : VectoSimulationComponent
 	{
 		public IInPort InPort()
 		{

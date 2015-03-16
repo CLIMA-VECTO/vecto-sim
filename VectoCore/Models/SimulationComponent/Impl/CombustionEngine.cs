@@ -36,13 +36,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             public double EnginePowerLoss { get; set; }
             public TimeSpan AbsTime { get; set; }
 
+            #region Equality members
+
             protected bool Equals(EngineState other)
             {
-                return OperationMode == other.OperationMode 
-                    && EnginePower.Equals(other.EnginePower) 
-                    && EngineSpeed.Equals(other.EngineSpeed) 
-                    && EnginePowerLoss.Equals(other.EnginePowerLoss) 
-                    && AbsTime.Equals(other.AbsTime);
+                return OperationMode == other.OperationMode
+                       && EnginePower.Equals(other.EnginePower)
+                       && EngineSpeed.Equals(other.EngineSpeed)
+                       && EnginePowerLoss.Equals(other.EnginePowerLoss)
+                       && AbsTime.Equals(other.AbsTime);
             }
 
             public override bool Equals(object obj)
@@ -65,6 +67,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                     return hashCode;
                 }
             }
+
+            #endregion
         }
 
         private CombustionEngineData _data = new CombustionEngineData();
@@ -76,7 +80,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         public CombustionEngine()
         {
-
         }
 
         public CombustionEngine(CombustionEngineData data)
@@ -85,34 +88,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _previousState.OperationMode = EngineOperationMode.Idle;
             _previousState.EnginePower = 0;
             _previousState.EngineSpeed = _data.IdleSpeed;
-        }
-
-        protected bool Equals(CombustionEngine other)
-        {
-            return Equals(_data, other._data) 
-                && Equals(_previousState, other._previousState) 
-                && Equals(_currentState, other._currentState) 
-                && _enginePowerCorrections.SequenceEqual(other._enginePowerCorrections);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((CombustionEngine) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = (_data != null ? _data.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (_previousState != null ? _previousState.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (_currentState != null ? _currentState.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (_enginePowerCorrections != null ? _enginePowerCorrections.GetHashCode() : 0);
-                return hashCode;
-            }
         }
 
         public ITnOutPort OutShaft()
@@ -142,7 +117,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                 _currentState.EnginePowerLoss = enginePowerLoss;
             }
 
-            uint currentGear = 0; // TODO: get current Gear from Vehicle!
+            int currentGear = 0; // TODO: get current Gear from Vehicle!
 
             var minEnginePower = _data.GetFullLoadCurve(currentGear).DragLoadStationaryPower(engineSpeed);
             var maxEnginePower = FullLoadPowerDyamic(currentGear, engineSpeed);
@@ -218,7 +193,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             return retVal;
         }
 
-        protected double FullLoadPowerDyamic(uint gear, double rpm)
+        protected double FullLoadPowerDyamic(int gear, double rpm)
         {
             var staticFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
             var pt1 = _data.GetFullLoadCurve(gear).PT1(rpm);
@@ -242,22 +217,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         // accelleration los rotation engine
         //Return (ENG.I_mot * (nU - nUBefore) * 0.01096 * ((nU + nUBefore) / 2)) * 0.001
 
+        #region Equality members
 
+        protected bool Equals(CombustionEngine other)
+        {
+            return Equals(_data, other._data)
+                   && Equals(_previousState, other._previousState)
+                   && Equals(_currentState, other._currentState)
+                   && _enginePowerCorrections.SequenceEqual(other._enginePowerCorrections);
+        }
 
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((CombustionEngine)obj);
+        }
 
-        //public string Serialize()
-        //{
-        //    var memento = new { EngineData = _data, CurrentState = _currentState, PreviousState = _previousState };
-        //    return Serialize(memento);
-        //}
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (_data != null ? _data.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (_previousState != null ? _previousState.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (_currentState != null ? _currentState.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^
+                           (_enginePowerCorrections != null ? _enginePowerCorrections.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
 
-        //public void Deserialize(string data)
-        //{
-        //    var memento = new { EngineData = _data, CurrentState = _currentState, PreviousState = _previousState };
-        //    memento = Deserialize(data, memento);
-        //    _data = memento.EngineData;
-        //    _currentState = memento.CurrentState;
-        //    _previousState = memento.PreviousState;
-        //}
+        #endregion
     }
 }

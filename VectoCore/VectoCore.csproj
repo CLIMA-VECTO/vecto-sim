@@ -76,9 +76,11 @@
     <Compile Include="Models\Connector\Ports\IInPort.cs" />
     <Compile Include="Models\SimulationComponent\IGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\Gearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Wheels.cs" />
     <Compile Include="Models\Connector\Ports\IOutPort.cs" />
     <Compile Include="Models\SimulationComponent\IWheels.cs" />
+    <Compile Include="Utils\Memento.cs" />
     <Compile Include="Models\SimulationComponent\VectoSimulationComponent.cs" />
     <Compile Include="Models\Simulation\Data\EngineOnlyDrivingCycle.cs" />
     <Compile Include="Models\Simulation\Data\IModalDataWriter.cs" />

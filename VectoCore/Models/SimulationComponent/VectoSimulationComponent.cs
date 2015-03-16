@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Common.Logging;
-using Common.Logging.Configuration;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
@@ -18,45 +13,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 
         protected VectoSimulationComponent()
         {
-            Log = LogManager.GetLogger(this.GetType());
+            Log = LogManager.GetLogger(GetType());
         }
 
         public abstract void CommitSimulationStep(IModalDataWriter writer);
 
-    }
-
-    public class Memento
-    {
-        public class MyContractResolver : DefaultContractResolver
+        protected bool IsEqual(VectoSimulationComponent other)
         {
-            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
-            {
-                const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-                var props = type.GetFields(flags).Select(f => CreateProperty(f, memberSerialization)).ToList();
-                props.ForEach(p => { p.Writable = true; p.Readable = true; });
-                return props;
-            }
+            var fields = GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            return fields.All(field => field.GetValue(this) != null
+                ? field.GetValue(this).Equals(field.GetValue(other))
+                : field.GetValue(other) == null);
         }
 
-        public static string Serialize<T>(T data)
+        public override bool Equals(object obj)
         {
-            var settings = new JsonSerializerSettings { ContractResolver = new MyContractResolver() };
-            return JsonConvert.SerializeObject(data, Formatting.Indented, settings);
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && IsEqual((VectoSimulationComponent)obj);
         }
 
-        public static T Deserialize<T>(string data)
+        public override int GetHashCode()
         {
-            try
-            {
-                var settings = new JsonSerializerSettings { ContractResolver = new MyContractResolver() };
-                return JsonConvert.DeserializeObject<T>(data, settings);
-            }
-            catch (Exception e)
-            {
-                var ex = new VectoException(string.Format("Object could not be deserialized: {0}", e.Message), e);
-                ex.Data["data"] = data;
-                throw ex;
-            }
+            var fields = GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            return fields.Aggregate(0, (current, field) => (current * fields.Length) ^ (field != null ? field.GetHashCode() : 0));
         }
     }
 }

@@ -10,7 +10,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public SimulationComponentData()
 		{
-			Log = LogManager.GetLogger(this.GetType());
+			Log = LogManager.GetLogger(GetType());
 		}
 
 	}

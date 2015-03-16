@@ -3,7 +3,6 @@ using System.IO;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -67,7 +66,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var engineSpeed = 600.0;
             var dataWriter = new TestModalDataWriter();
 
-	        for (var i = 0; i < 10; i++) {
+            for (var i = 0; i < 10; i++)
+            {
                 port.Request(absTime, dt, torque, engineSpeed);
                 engine.CommitSimulationStep(dataWriter);
                 absTime += dt;
@@ -123,16 +123,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         public void TestEngineMemento()
         {
             var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
-            var engineOrigin = new CombustionEngine(engineData);
-            var data = Memento.Serialize(engineOrigin);
-            var engineRestored = Memento.Deserialize<CombustionEngine>(data);
-            
-            Assert.AreEqual(engineOrigin, engineRestored);
+            var origin = new CombustionEngine(engineData);
+
+            var data = Memento.Serialize(origin);
+
+            var restored = Memento.Deserialize<CombustionEngine>(data);
+
+            Assert.AreEqual(origin, restored);
         }
 
 
     }
-
-
-
 }

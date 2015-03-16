@@ -26,24 +26,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             public const string PT1 = "PT1";
         }
 
-        protected bool Equals(FullLoadCurve other)
-        {
-            return _entries.SequenceEqual(other._entries);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((FullLoadCurve) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return (_entries != null ? _entries.GetHashCode() : 0);
-        }
-
         private class FullLoadCurveEntry
         {
             public double EngineSpeed { get; set; }
@@ -51,12 +33,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             public double TorqueDrag { get; set; }
             public double PT1 { get; set; }
 
+            #region Equality members
+
             protected bool Equals(FullLoadCurveEntry other)
             {
-                return EngineSpeed.Equals(other.EngineSpeed) 
-                    && TorqueFullLoad.Equals(other.TorqueFullLoad) 
-                    && TorqueDrag.Equals(other.TorqueDrag) 
-                    && PT1.Equals(other.PT1);
+                return EngineSpeed.Equals(other.EngineSpeed)
+                       && TorqueFullLoad.Equals(other.TorqueFullLoad)
+                       && TorqueDrag.Equals(other.TorqueDrag)
+                       && PT1.Equals(other.PT1);
             }
 
             public override bool Equals(object obj)
@@ -78,6 +62,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                     return hashCode;
                 }
             }
+
+            #endregion
         }
 
         private List<FullLoadCurveEntry> _entries;
@@ -91,11 +77,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             //todo: catch exceptions if value format is wrong.
             foreach (DataRow row in data.Rows)
             {
-                var entry = new FullLoadCurveEntry();
-                entry.EngineSpeed = row.GetDouble(Fields.EngineSpeed);
-                entry.TorqueFullLoad = row.GetDouble(Fields.TorqueFullLoad);
-                entry.TorqueDrag = row.GetDouble(Fields.TorqueDrag);
-                entry.PT1 = row.GetDouble(Fields.PT1);
+                var entry = new FullLoadCurveEntry
+                {
+                    EngineSpeed = row.GetDouble(Fields.EngineSpeed),
+                    TorqueFullLoad = row.GetDouble(Fields.TorqueFullLoad),
+                    TorqueDrag = row.GetDouble(Fields.TorqueDrag),
+                    PT1 = row.GetDouble(Fields.PT1)
+                };
                 fullLoadCurve._entries.Add(entry);
             }
             return fullLoadCurve;
@@ -147,5 +135,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			}
 		    return idx;
 	    }
+
+        #region Equality members
+
+        protected bool Equals(FullLoadCurve other)
+        {
+            return _entries.SequenceEqual(other._entries);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((FullLoadCurve)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_entries != null ? _entries.GetHashCode() : 0);
+        }
+
+        #endregion
     }
 }

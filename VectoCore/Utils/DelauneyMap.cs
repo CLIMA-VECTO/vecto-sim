@@ -15,28 +15,6 @@ namespace TUGraz.VectoCore.Utils
             _points.Add(new Point(x, y, z));
         }
 
-        protected bool Equals(DelauneyMap other)
-        {
-            return _points.SequenceEqual(other._points) 
-                && _triangles.SequenceEqual(other._triangles);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((DelauneyMap) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((_points != null ? _points.GetHashCode() : 0)*397) ^ (_triangles != null ? _triangles.GetHashCode() : 0);
-            }
-        }
-
         public void Triangulate()
         {
             const int superTriangleScalingFactor = 10;
@@ -90,32 +68,37 @@ namespace TUGraz.VectoCore.Utils
             var plane = new Plane(tr);
             return (plane.W - plane.X * x - plane.Y * y) / plane.Z;
         }
-    }
 
-    public class Point
-    {
-        protected bool Equals(Point other)
+        #region Equality members
+
+        protected bool Equals(DelauneyMap other)
         {
-            return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
+            return _points.SequenceEqual(other._points)
+                   && _triangles.SequenceEqual(other._triangles);
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Point)obj);
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((DelauneyMap) obj);
         }
 
         public override int GetHashCode()
         {
-            return unchecked((((X.GetHashCode() * 397) ^ Y.GetHashCode()) * 397) ^ Z.GetHashCode());
+            unchecked
+            {
+                return ((_points != null ? _points.GetHashCode() : 0)*397) ^
+                       (_triangles != null ? _triangles.GetHashCode() : 0);
+            }
         }
 
-        public override string ToString()
-        {
-            return string.Format("Point({0}, {1}, {2})", X, Y, Z);
-        }
+        #endregion
+    }
 
+    public class Point
+    {
         public double X { get; set; }
         public double Y { get; set; }
         public double Z { get; set; }
@@ -131,6 +114,30 @@ namespace TUGraz.VectoCore.Utils
         {
             return new Point(p1.X - p2.X, p1.Y - p2.Y, p1.Z - p2.Z);
         }
+
+        public override string ToString()
+        {
+            return string.Format("Point({0}, {1}, {2})", X, Y, Z);
+        }
+
+        #region Equality members
+        protected bool Equals(Point other)
+        {
+            return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((Point) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return unchecked((((X.GetHashCode()*397) ^ Y.GetHashCode())*397) ^ Z.GetHashCode());
+        }
+        #endregion
     }
 
     public class Plane
@@ -181,11 +188,6 @@ namespace TUGraz.VectoCore.Utils
             P3 = p3;
         }
 
-        public override string ToString()
-        {
-            return string.Format("Triangle({0}, {1}, {2})", P1, P2, P3);
-        }
-
         public bool IsInside(double x, double y, bool exact = true)
         {
             var p = new Point(x, y, 0);
@@ -234,6 +236,12 @@ namespace TUGraz.VectoCore.Utils
                    (P2.Equals(t.P1) || P2.Equals(t.P2) || P2.Equals(t.P3)) ||
                    (P3.Equals(t.P1) || P3.Equals(t.P2) || P3.Equals(t.P3));
         }
+        public override string ToString()
+        {
+            return string.Format("Triangle({0}, {1}, {2})", P1, P2, P3);
+        }
+
+        #region Equality members
 
         protected bool Equals(Triangle other)
         {
@@ -258,6 +266,9 @@ namespace TUGraz.VectoCore.Utils
                 return hashCode;
             }
         }
+
+        #endregion
+
     }
 
     public class Edge
@@ -276,22 +287,27 @@ namespace TUGraz.VectoCore.Utils
             return string.Format("Edge({0}, {1})", P1, P2);
         }
 
+        #region Equality members
+
         protected bool Equals(Edge other)
         {
             return Equals(P1, other.P1) && Equals(P2, other.P2)
-                || Equals(P1, other.P2) && Equals(P1, other.P2);
+                   || Equals(P1, other.P2) && Equals(P1, other.P2);
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Edge)obj);
+            return obj.GetType() == GetType() && Equals((Edge) obj);
         }
 
         public override int GetHashCode()
         {
             return ((P1 != null ? P1.GetHashCode() : 0)) ^ (P2 != null ? P2.GetHashCode() : 0);
         }
+
+        #endregion
+
     }
 }
