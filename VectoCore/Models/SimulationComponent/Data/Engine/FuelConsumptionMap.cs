@@ -25,6 +25,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             public const string FuelConsumption = "fuel consumption";
         };
 
+        protected bool Equals(FuelConsumptionMap other)
+        {
+            return Equals(_entries, other._entries) && Equals(_fuelMap, other._fuelMap);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((FuelConsumptionMap) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((_entries != null ? _entries.GetHashCode() : 0)*397) ^ (_fuelMap != null ? _fuelMap.GetHashCode() : 0);
+            }
+        }
+
         private class FuelConsumptionEntry
         {
             public double EngineSpeed { get; set; }

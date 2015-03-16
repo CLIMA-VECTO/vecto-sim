@@ -109,6 +109,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             public DataBody Body;
         }
 
+        protected bool Equals(CombustionEngineData other)
+        {
+            return Equals(_data, other._data) 
+                && Equals(_fullLoadCurves, other._fullLoadCurves) 
+                && Equals(ConsumptionMap, other.ConsumptionMap);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((CombustionEngineData) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (_data != null ? _data.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (_fullLoadCurves != null ? _fullLoadCurves.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (ConsumptionMap != null ? ConsumptionMap.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
         private Data _data;
 
         public bool SavedInDeclarationMode

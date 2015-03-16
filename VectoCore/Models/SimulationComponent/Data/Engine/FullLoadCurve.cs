@@ -25,6 +25,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             public const string PT1 = "PT1";
         }
 
+        protected bool Equals(FullLoadCurve other)
+        {
+            return Equals(entries, other.entries);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((FullLoadCurve) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (entries != null ? entries.GetHashCode() : 0);
+        }
 
         private class FullLoadCurveEntry
         {

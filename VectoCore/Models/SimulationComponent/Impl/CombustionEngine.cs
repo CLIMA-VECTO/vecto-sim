@@ -16,15 +16,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         private const double ZeroThreshold = 0.0001;
         private const double FullLoadMargin = 0.01;
 
-        public class EngineState
-        {
-            public EngineOperationMode OperationMode { get; set; }
-            public double EnginePower { get; set; }
-            public double EngineSpeed { get; set; }
-            public double EnginePowerLoss { get; set; }
-            public TimeSpan AbsTime { get; set; }
-        }
-
         public enum EngineOperationMode
         {
             Idle,
@@ -36,20 +27,87 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             Undef
         }
 
-        private CombustionEngineData _data;
+        public class EngineState
+        {
+            public EngineOperationMode OperationMode { get; set; }
+            public double EnginePower { get; set; }
+            public double EngineSpeed { get; set; }
+            public double EnginePowerLoss { get; set; }
+            public TimeSpan AbsTime { get; set; }
 
+            protected bool Equals(EngineState other)
+            {
+                return OperationMode == other.OperationMode && EnginePower.Equals(other.EnginePower) && EngineSpeed.Equals(other.EngineSpeed) && EnginePowerLoss.Equals(other.EnginePowerLoss) && AbsTime.Equals(other.AbsTime);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((EngineState) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    var hashCode = (int) OperationMode;
+                    hashCode = (hashCode*397) ^ EnginePower.GetHashCode();
+                    hashCode = (hashCode*397) ^ EngineSpeed.GetHashCode();
+                    hashCode = (hashCode*397) ^ EnginePowerLoss.GetHashCode();
+                    hashCode = (hashCode*397) ^ AbsTime.GetHashCode();
+                    return hashCode;
+                }
+            }
+        }
+
+        private CombustionEngineData _data = new CombustionEngineData();
         private EngineState _previousState = new EngineState();
         private EngineState _currentState = new EngineState();	// current state is computed in request method
-
+        
+        [NonSerialized]
         private List<TimeSpan> _enginePowerCorrections = new List<TimeSpan>();
+
+        public CombustionEngine()
+        {
+
+        }
 
         public CombustionEngine(CombustionEngineData data)
         {
             _data = data;
-
             _previousState.OperationMode = EngineOperationMode.Idle;
             _previousState.EnginePower = 0;
             _previousState.EngineSpeed = _data.IdleSpeed;
+        }
+
+        protected bool Equals(CombustionEngine other)
+        {
+            return Equals(_data, other._data) 
+                && Equals(_previousState, other._previousState) 
+                && Equals(_currentState, other._currentState) 
+                && Equals(_enginePowerCorrections, other._enginePowerCorrections);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((CombustionEngine) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (_data != null ? _data.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (_previousState != null ? _previousState.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (_currentState != null ? _currentState.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (_enginePowerCorrections != null ? _enginePowerCorrections.GetHashCode() : 0);
+                return hashCode;
+            }
         }
 
         public ITnOutPort OutShaft()
@@ -169,7 +227,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             return Math.Abs(requestedPower / maxPower - 1.0) < FullLoadMargin;
         }
 
-
         protected double InertiaPowerLoss(double torque, double engineSpeed)
         {
             var deltaEngineSpeed = engineSpeed - _previousState.EngineSpeed;
@@ -179,5 +236,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         // accelleration los rotation engine
         //Return (ENG.I_mot * (nU - nUBefore) * 0.01096 * ((nU + nUBefore) / 2)) * 0.001
+
+
+
+
+        //public string Serialize()
+        //{
+        //    var memento = new { EngineData = _data, CurrentState = _currentState, PreviousState = _previousState };
+        //    return Serialize(memento);
+        //}
+
+        //public void Deserialize(string data)
+        //{
+        //    var memento = new { EngineData = _data, CurrentState = _currentState, PreviousState = _previousState };
+        //    memento = Deserialize(data, memento);
+        //    _data = memento.EngineData;
+        //    _currentState = memento.CurrentState;
+        //    _previousState = memento.PreviousState;
+        //}
     }
 }

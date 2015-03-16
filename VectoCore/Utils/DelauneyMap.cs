@@ -15,6 +15,27 @@ namespace TUGraz.VectoCore.Utils
             _points.Add(new Point(x, y, z));
         }
 
+        protected bool Equals(DelauneyMap other)
+        {
+            return Equals(_points, other._points) && Equals(_triangles, other._triangles);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((DelauneyMap) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((_points != null ? _points.GetHashCode() : 0)*397) ^ (_triangles != null ? _triangles.GetHashCode() : 0);
+            }
+        }
+
         public void Triangulate()
         {
             const int superTriangleScalingFactor = 10;
@@ -211,6 +232,30 @@ namespace TUGraz.VectoCore.Utils
             return (P1.Equals(t.P1) || P1.Equals(t.P2) || P1.Equals(t.P3)) ||
                    (P2.Equals(t.P1) || P2.Equals(t.P2) || P2.Equals(t.P3)) ||
                    (P3.Equals(t.P1) || P3.Equals(t.P2) || P3.Equals(t.P3));
+        }
+
+        protected bool Equals(Triangle other)
+        {
+            return Equals(P1, other.P1) && Equals(P2, other.P2) && Equals(P3, other.P3);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Triangle) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (P1 != null ? P1.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (P2 != null ? P2.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (P3 != null ? P3.GetHashCode() : 0);
+                return hashCode;
+            }
         }
     }
 
