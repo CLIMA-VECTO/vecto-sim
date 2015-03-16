@@ -22,6 +22,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (component is IEngineCockpit) {
 				_engine = (IEngineCockpit)component;
 			}
+			else if (component is IGearboxCockpit) {
+				_gearbox = (IGearboxCockpit) component;
+			}
 		}
 
 
