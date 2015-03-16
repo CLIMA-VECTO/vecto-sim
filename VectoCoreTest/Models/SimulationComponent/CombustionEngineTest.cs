@@ -1,39 +1,30 @@
 ﻿using System;
-using System.Data;
 using System.IO;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
+
     [TestClass]
     public class CombustionEngineTest
     {
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            Directory.SetCurrentDirectory("TestData\\EngineOnly\\Test1");
-	     
-			AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-        }
+		public TestContext TestContext { get; set; }
 
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            // Set the current directory back to the application path
-            var assemblyLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(assemblyLocation));
+        [ClassInitialize]
+		public static void ClassInitialize(TestContext ctx)
+        {     
+			AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
         }
 
 
         [TestMethod]
         public void TestEngineHasOutPort()
         {
-            var engineData = CombustionEngineData.ReadFromFile("24t Coach.veng");
+            var engineData = CombustionEngineData.ReadFromFile("TestData\\EngineOnly\\EngineMaps\\24t Coach.veng");
             var engine = new CombustionEngine(engineData);
 
             var port = engine.OutShaft();
@@ -43,7 +34,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestOutPortRequestNotFailing()
         {
-            var engineData = CombustionEngineData.ReadFromFile("24t Coach.veng");
+			var engineData = CombustionEngineData.ReadFromFile("TestData\\EngineOnly\\EngineMaps\\24t Coach.veng");
             var engine = new CombustionEngine(engineData);
 
             var port = engine.OutShaft();
@@ -59,7 +50,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestSimpleModalData()
         {
-            var engineData = CombustionEngineData.ReadFromFile("24t Coach.veng");
+			var engineData = CombustionEngineData.ReadFromFile("TestData\\EngineOnly\\EngineMaps\\24t Coach.veng");
             var engine = new CombustionEngine(engineData);
             var port = engine.OutShaft();
 
@@ -81,14 +72,17 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
         }
 
-        [TestMethod]
+		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineTests.csv", "EngineTests#csv", DataAccessMethod.Sequential)]
+		[TestMethod]
         public void TestEngineOnlyDrivingCycle()
         {
-            var engineData = CombustionEngineData.ReadFromFile("24t Coach.veng");
-            var engine = new CombustionEngine(engineData);
+			var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
+			var data = EngineOnlyDrivingCycle.ReadFromFile(TestContext.DataRow["CycleFile"].ToString());
+			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
+
+			var engine = new CombustionEngine(engineData);
             var port = engine.OutShaft();
 
-            var data = EngineOnlyDrivingCycle.ReadFromFile("Coach Engine Only.vdri");
 
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
             var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
@@ -113,17 +107,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
         }
 
-		public TestContext TestContext { get; set; }
 
-		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineTests.csv", "EngineTests#csv", DataAccessMethod.Sequential)]
-	    [TestMethod]
-	    public void TestAllEngineOnlyCycles()
-	    {
-		    var a = Convert.ToDouble(TestContext.DataRow["Add1"].ToString());
-		    var b = Convert.ToDouble(TestContext.DataRow["Add2"].ToString());
-		    var res = Convert.ToDouble(TestContext.DataRow["Sum"].ToString());
-
-		    Assert.AreEqual(a + b, res);
-		}
     }
 }

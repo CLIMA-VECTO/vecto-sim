@@ -104,8 +104,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vmod" />
-    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vsum" />
+    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vsum.json" />
     <None Include="TestData\EngineTests.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

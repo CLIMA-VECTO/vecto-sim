@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -177,7 +178,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             combustionEngineData._data = d;
 
             if (d.Header.FileVersion > 2)
-                throw new UnsupportedFileVersion("Unsupported Version of .veng file. Got Version: " + d.Header.FileVersion);
+                throw new UnsupportedFileVersionException("Unsupported Version of .veng file. Got Version: " + d.Header.FileVersion);
 
             combustionEngineData.ConsumptionMap = FuelConsumptionMap.ReadFromFile(Path.Combine(basePath, d.Body.FuelMap));
 
