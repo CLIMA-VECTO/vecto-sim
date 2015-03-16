@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Data;
-using System.Linq;
 using System.Reflection;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data
+namespace TUGraz.VectoCore.Models.Simulation.Data
 {
     [System.ComponentModel.DesignerCategory("")] // to disable design view in VisualStudio
     public class ModalResults : DataTable
