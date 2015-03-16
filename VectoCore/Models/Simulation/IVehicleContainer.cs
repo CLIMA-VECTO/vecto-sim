@@ -5,11 +5,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 {
 	public interface IVehicleContainer : ICockpit
 	{
-		void AddComponent<T>(T component) where T : VectoSimulationComponent, ICockpitComponent;
-
-		//void AddComponent<T>(T component) where T : VectoSimulationComponent, IEngineCockpit;
-
-		//void AddComponent<T>(T component) where T : VectoSimulationComponent, IGearboxCockpit;
+		void AddComponent(VectoSimulationComponent component);
 
 	}
 }

@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private IEngineCockpit _engine = null;
 		private IGearboxCockpit _gearbox = null;
 
-		public virtual void AddComponent<T>(T component) where T : VectoSimulationComponent, ICockpitComponent
+		public virtual void AddComponent(VectoSimulationComponent component)
 		{
 			DoAddComponent(component);
 			// TODO: refactor the following to use polymorphism?

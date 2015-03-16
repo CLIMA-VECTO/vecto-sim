@@ -5,7 +5,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public abstract class VectoSimulationComponent : ICockpitComponent
+	public abstract class VectoSimulationComponent
 	{
 		protected ICockpit Cockpit;
 

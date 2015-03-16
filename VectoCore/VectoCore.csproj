@@ -80,7 +80,6 @@
     <Compile Include="Models\Connector\Ports\IOutPort.cs" />
     <Compile Include="Models\SimulationComponent\IWheels.cs" />
     <Compile Include="Models\SimulationComponent\VectoSimulationComponent.cs" />
-    <Compile Include="Models\Simulation\Cockpit\ICockpitComponent.cs" />
     <Compile Include="Models\Simulation\Data\EngineOnlyDrivingCycle.cs" />
     <Compile Include="Models\Simulation\Data\IModalDataWriter.cs" />
     <Compile Include="Models\Simulation\Data\ModalResult.cs">
