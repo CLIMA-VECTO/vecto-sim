@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 

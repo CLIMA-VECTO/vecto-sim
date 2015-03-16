@@ -1,4 +1,5 @@
 ﻿using Common.Logging;
+using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
