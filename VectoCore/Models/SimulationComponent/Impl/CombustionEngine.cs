@@ -15,6 +15,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         private const double ZeroThreshold = 0.0001;
         private const double FullLoadMargin = 0.01;
 
+        public class EngineState
+        {
+            public EngineOperationMode OperationMode { get; set; }
+            public double EnginePower { get; set; }
+            public double EngineSpeed { get; set; }
+            public double EnginePowerLoss { get; set; }
+            public TimeSpan AbsTime { get; set; }
+        }
+
         public enum EngineOperationMode
         {
             Idle,
@@ -41,7 +50,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _previousState.EnginePower = 0;
             _previousState.EngineSpeed = _data.IdleSpeed;
         }
-
 
         public ITnOutPort OutShaft()
         {
@@ -170,17 +178,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         // accelleration los rotation engine
         //Return (ENG.I_mot * (nU - nUBefore) * 0.01096 * ((nU + nUBefore) / 2)) * 0.001
-
-        public class EngineState
-        {
-            public EngineOperationMode OperationMode { get; set; }
-            public double EnginePower { get; set; }
-            public double EngineSpeed { get; set; }
-            public double EnginePowerLoss { get; set; }
-
-            public TimeSpan AbsTime { get; set; }
-        }
     }
-
-
 }
