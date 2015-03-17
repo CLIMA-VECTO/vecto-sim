@@ -6,6 +6,5 @@ namespace TUGraz.VectoCore.Models.Simulation
 	public interface IVehicleContainer : ICockpit
 	{
 		void AddComponent(VectoSimulationComponent component);
-
 	}
 }

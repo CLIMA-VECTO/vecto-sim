@@ -1,25 +1,55 @@
-﻿using Common.Logging;
+using System;
+using System.Linq;
+using System.Reflection;
+using Common.Logging;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public abstract class VectoSimulationComponent
-	{
-		protected ICockpit Cockpit;
+    public abstract class VectoSimulationComponent
+    {
+        [NonSerialized]
+        protected ICockpit Cockpit;
 
-		protected ILog Log;
+        [NonSerialized]
+        protected ILog Log;
 
-		protected VectoSimulationComponent(IVehicleContainer cockpit)
-		{
-			Cockpit = cockpit;
-			Log = LogManager.GetLogger(this.GetType());
+        protected VectoSimulationComponent()
+        {
+            Log = LogManager.GetLogger(GetType());
+        }
 
-			cockpit.AddComponent(this);
-		}
+        protected VectoSimulationComponent(IVehicleContainer cockpit)
+        {
+            Cockpit = cockpit;
+            Log = LogManager.GetLogger(this.GetType());
 
-	    abstract public void CommitSimulationStep(IModalDataWriter writer);
+            cockpit.AddComponent(this);
+        }
 
-	}
+        public abstract void CommitSimulationStep(IModalDataWriter writer);
+
+        protected bool IsEqual(VectoSimulationComponent other)
+        {
+            var fields = GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            return fields.All(field => field.GetValue(this) != null
+                ? field.GetValue(this).Equals(field.GetValue(other))
+                : field.GetValue(other) == null);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && IsEqual((VectoSimulationComponent)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            var fields = GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            return fields.Aggregate(0, (current, field) => (current * fields.Length) ^ (field != null ? field.GetHashCode() : 0));
+        }
+    }
 }
