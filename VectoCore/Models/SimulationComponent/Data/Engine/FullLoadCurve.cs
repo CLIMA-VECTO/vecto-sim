@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Newtonsoft.Json;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
@@ -66,6 +67,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             #endregion
         }
 
+        [JsonProperty]
         private List<FullLoadCurveEntry> _entries;
 
         public static FullLoadCurve ReadFromFile(string fileName)

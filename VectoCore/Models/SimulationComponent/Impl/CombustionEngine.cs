@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.CompilerServices;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
@@ -11,7 +11,7 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 
-    public class CombustionEngine : VectoSimulationComponent, ICombustionEngine, ITnOutPort
+    public class CombustionEngine : VectoSimulationComponent, ICombustionEngine, ITnOutPort, IMemento
     {
         private const int EngineIdleSpeedStopThreshold = 100;
         private const double MaxPowerExceededThreshold = 1.05;
@@ -74,10 +74,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         public CombustionEngine()
         {
-            
+
         }
 
-        public CombustionEngine(IVehicleContainer cockpit, CombustionEngineData data) : base(cockpit)
+        public CombustionEngine(IVehicleContainer cockpit, CombustionEngineData data)
+            : base(cockpit)
         {
             _data = data;
 
@@ -86,7 +87,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _previousState.EngineSpeed = _data.IdleSpeed;
         }
 
-        private CombustionEngineData _data;
+        private CombustionEngineData _data = new CombustionEngineData();
         private EngineState _previousState = new EngineState();
         private EngineState _currentState = new EngineState();	// current state is computed in request method
 
@@ -251,5 +252,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         }
 
         #endregion
+
+        public string Serialize()
+        {
+            var mem = new { Data = _data, PreviousState = _previousState };
+            return Memento.Serialize(mem);
+        }
+
+        public void Deserialize(string data)
+        {
+            var mem = new { Data = _data, PreviousState = _previousState };
+            mem = Memento.Deserialize(data, mem);
+
+            _data = mem.Data;
+            _previousState = mem.PreviousState;
+        }
     }
 }
