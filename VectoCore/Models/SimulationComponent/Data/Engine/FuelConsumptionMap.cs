@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
@@ -30,10 +31,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             public double EngineSpeed { get; set; }
             public double Torque { get; set; }
             public double FuelConsumption { get; set; }
+
+            #region Equality members
+            protected bool Equals(FuelConsumptionEntry other)
+            {
+                return EngineSpeed.Equals(other.EngineSpeed) && Torque.Equals(other.Torque) &&
+                       FuelConsumption.Equals(other.FuelConsumption);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((FuelConsumptionEntry) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    var hashCode = EngineSpeed.GetHashCode();
+                    hashCode = (hashCode*397) ^ Torque.GetHashCode();
+                    hashCode = (hashCode*397) ^ FuelConsumption.GetHashCode();
+                    return hashCode;
+                }
+            }
+            #endregion
         }
 
-        private IList<FuelConsumptionEntry> _entries = new List<FuelConsumptionEntry>();
-        private DelauneyMap _fuelMap = new DelauneyMap();
+        private readonly IList<FuelConsumptionEntry> _entries = new List<FuelConsumptionEntry>();
+        private readonly DelauneyMap _fuelMap = new DelauneyMap();
 
         private FuelConsumptionMap() { }
 
@@ -80,5 +108,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         {
             return _fuelMap.Interpolate(engineSpeed, torque);
         }
+
+        #region Equality members
+
+        protected bool Equals(FuelConsumptionMap other)
+        {
+            return _entries.SequenceEqual(other._entries)
+                   && Equals(_fuelMap, other._fuelMap);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((FuelConsumptionMap) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((_entries != null ? _entries.GetHashCode() : 0)*397) ^
+                       (_fuelMap != null ? _fuelMap.GetHashCode() : 0);
+            }
+        }
+
+        #endregion
     }
 }

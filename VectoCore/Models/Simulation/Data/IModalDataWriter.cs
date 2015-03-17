@@ -13,5 +13,7 @@
         /// Commits the data of the current simulation step.
         /// </summary>
         void CommitSimulationStep();
+
+        void Finish();
     }
 }

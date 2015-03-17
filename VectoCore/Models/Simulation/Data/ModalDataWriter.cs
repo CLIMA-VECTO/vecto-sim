@@ -1,21 +1,22 @@
-﻿using System.Data;
-using TUGraz.VectoCore.Models.Simulation.Data;
+using System.Data;
+using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Tests.Utils
+namespace TUGraz.VectoCore.Models.Simulation.Data
 {
-    /// <summary>
-    /// Fake Data Writer Class for Tests.
-    /// </summary>
-    class TestModalDataWriter : IModalDataWriter
+    public class ModalDataWriter : IModalDataWriter
     {
-        public ModalResults Data { get; set; }
-        public DataRow CurrentRow { get; set; }
+        private ModalResults Data { get; set; }
 
-        public TestModalDataWriter()
+        private DataRow CurrentRow { get; set; }
+
+        public ModalDataWriter(string fileName)
         {
+            FileName = fileName;
             Data = new ModalResults();
             CurrentRow = Data.NewRow();
         }
+
+        public string FileName { get; set; }
 
         public void CommitSimulationStep()
         {
@@ -25,7 +26,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
         public void Finish()
         {
-            
+            VectoCSVFile.Write(FileName, Data);
         }
 
         public object this[ModalResultField key]
