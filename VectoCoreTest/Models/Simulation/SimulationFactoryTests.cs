@@ -36,6 +36,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         {
             var job = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly-result.vmod");
             job.Run();
+
+            //todo add assertions
+            Assert.Fail();
         }
 
         [TestMethod]
@@ -45,6 +48,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             var job = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly-result.vmod");
             sim.AddJob(job);            
             sim.RunSimulation();
+
+            //todo add assertions
+            Assert.Fail();
         }
     }
 }
