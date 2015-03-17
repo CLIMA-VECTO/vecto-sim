@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Cockpit;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -56,7 +58,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			_components.Add(component);
 		}
-	
-	
+
+
+        public ITnOutPort GetEngineOnlyStartPort()
+	    {
+            //todo: find a better solution for getting the initial port in a powertrain
+	        return (_gearbox as IGearbox).OutShaft();
+	    }
+
+	    public void CommitSimulationStep(IModalDataWriter dataWriter)
+	    {
+            foreach (var c in _components)
+            {
+                c.CommitSimulationStep(dataWriter);
+            }
+	    }
+
+        public void FinishSimulation(IModalDataWriter dataWriter)
+        {
+            dataWriter.Finish();
+        }
 	}
 }
