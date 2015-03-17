@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
@@ -17,7 +18,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
     /// * engine torque [Nm]
     /// * Fuel Consumption [g/h]
     /// </summary>
-	public class FuelConsumptionMap : SimulationComponentData
+    [JsonObject(MemberSerialization.Fields)]
+    public class FuelConsumptionMap : SimulationComponentData
     {
         private static class Fields
         {

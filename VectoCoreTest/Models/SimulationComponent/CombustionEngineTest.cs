@@ -4,6 +4,7 @@ using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -29,7 +30,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestEngineHasOutPort()
         {
-	        var vehicle = new VehicleContainer();
+            var vehicle = new VehicleContainer();
             var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
             var engine = new CombustionEngine(vehicle, engineData);
 
@@ -40,8 +41,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestOutPortRequestNotFailing()
         {
-	        var vehicle = new VehicleContainer();
-			var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
+            var vehicle = new VehicleContainer();
+            var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
             var engine = new CombustionEngine(vehicle, engineData);
 
 
@@ -58,8 +59,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestSimpleModalData()
         {
-			var vehicle = new VehicleContainer(); 
-			var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
+            var vehicle = new VehicleContainer();
+            var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
             var engine = new CombustionEngine(vehicle, engineData);
             var port = engine.OutShaft();
 
@@ -92,12 +93,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestEngineOnlyDrivingCycle()
         {
-			var vehicle = new VehicleContainer();
-			var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
-			var data = EngineOnlyDrivingCycle.ReadFromFile(TestContext.DataRow["CycleFile"].ToString());
-			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
+            var vehicle = new VehicleContainer();
+            var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
+            var data = EngineOnlyDrivingCycle.ReadFromFile(TestContext.DataRow["CycleFile"].ToString());
+            var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
-			var engine = new CombustionEngine(vehicle, engineData);
+            var engine = new CombustionEngine(vehicle, engineData);
             var port = engine.OutShaft();
 
 
@@ -109,10 +110,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             foreach (var cycle in data)
             {
                 port.Request(absTime, dt, cycle.Torque, cycle.EngineSpeed);
-	            foreach (var sc in vehicle.SimulationComponents()) {
-		            sc.CommitSimulationStep(dataWriter);
-	            }
-	            absTime += dt;
+                foreach (var sc in vehicle.SimulationComponents())
+                {
+                    sc.CommitSimulationStep(dataWriter);
+                }
+                absTime += dt;
 
                 //todo: test with correct output values, add other fields to test
                 Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
@@ -135,12 +137,21 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var origin = new CombustionEngine(vehicle, engineData);
 
             var data = Memento.Serialize(origin);
-
             var restored = Memento.Deserialize<CombustionEngine>(data);
 
-            Assert.AreEqual(origin, restored);
+            Assert.AreEqual(origin, restored, "Serialized with Memento, Deserialized with Memento");
+
+            data = origin.Serialize();
+            restored = Memento.Deserialize<CombustionEngine>(data);
+
+            Assert.AreEqual(origin, restored, "Serialized with Object, Deserialized with Memento");
+
+
+            data = origin.Serialize();
+            restored = new CombustionEngine();
+            restored.Deserialize(data);
+
+            Assert.AreEqual(origin, restored, "Serialized with Object, Deserialized with Object");
         }
-
-
     }
 }

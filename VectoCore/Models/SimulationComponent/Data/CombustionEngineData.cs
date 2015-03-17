@@ -236,6 +236,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             #endregion
         }
 
+        [JsonProperty]
         private Data _data;
 
         public bool SavedInDeclarationMode
@@ -352,6 +353,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             #endregion
         }
 
+        [JsonProperty]
         private readonly Dictionary<Range, FullLoadCurve> _fullLoadCurves = new Dictionary<Range, FullLoadCurve>();
 
         public static CombustionEngineData ReadFromFile(string fileName)

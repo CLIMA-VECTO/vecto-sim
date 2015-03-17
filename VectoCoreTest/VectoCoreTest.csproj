@@ -69,8 +69,6 @@
   <ItemGroup>
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
     <Compile Include="Models\SimulationComponent\CombustionEngineTest.cs" />
-    <Compile Include="Models\SimulationComponent\GearboxTest.cs" />
-    <Compile Include="Models\SimulationComponent\WheelTest.cs" />
     <Compile Include="Models\Simulation\SimulationFactoryTests.cs" />
     <Compile Include="Models\Simulation\VechicleContainerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

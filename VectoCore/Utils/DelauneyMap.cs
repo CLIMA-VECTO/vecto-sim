@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
 {
+    [JsonObject(MemberSerialization.Fields)]
     class DelauneyMap
     {
         private readonly List<Point> _points = new List<Point>();
