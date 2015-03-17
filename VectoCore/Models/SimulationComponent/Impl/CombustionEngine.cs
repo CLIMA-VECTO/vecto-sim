@@ -68,12 +68,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	        _currentState.AbsTime = absTime;
 
 			var requestedPower = VectoMath.ConvertRpmToPower(engineSpeed, torque);
-			var enginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
-			var requestedEnginePower = requestedPower + enginePowerLoss;
+			_currentState.EnginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
+			var requestedEnginePower = requestedPower + _currentState.EnginePowerLoss;
 
 			if (engineSpeed < _data.IdleSpeed - EngineIdleSpeedStopThreshold) {
 		        _currentState.OperationMode = EngineOperationMode.Stopped;
-				_currentState.EnginePowerLoss = enginePowerLoss;
+				return;
 			}
 
 	        uint currentGear = Cockpit.Gear();

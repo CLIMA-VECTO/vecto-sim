@@ -59,8 +59,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         public void TestSimpleModalData()
         {
 			var vehicle = new VehicleContainer(); 
-			var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
-            var engine = new CombustionEngine(vehicle, engineData);
+            var engine = new CombustionEngine(vehicle, CombustionEngineData.ReadFromFile(CoachEngine));
+			new EngineOnlyGearbox(vehicle).InShaft().Connect(engine.OutShaft());
             var port = engine.OutShaft();
 
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
