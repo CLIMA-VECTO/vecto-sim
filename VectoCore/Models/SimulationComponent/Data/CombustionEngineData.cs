@@ -306,14 +306,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         [TypeConverter(typeof(RangeConverter))]
         private class Range
         {
-            private int Start { get; set; }
+            private uint Start { get; set; }
 
-            private int End { get; set; }
+            private uint End { get; set; }
 
             public Range(string range)
             {
-                Start = int.Parse(range.Split('-').First().Trim());
-                End = int.Parse(range.Split('-').Last().Trim());
+                Start = uint.Parse(range.Split('-').First().Trim());
+                End = uint.Parse(range.Split('-').Last().Trim());
             }
 
             public override string ToString()
@@ -321,7 +321,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                 return string.Format("{0} - {1}", Start, End);
             }
 
-            public bool Contains(int value)
+            public bool Contains(uint value)
             {
                 return Start <= value && value <= End;
             }
@@ -345,7 +345,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             {
                 unchecked
                 {
-                    return (Start * 397) ^ End;
+                    return (int)((Start * 397) ^ End);
                 }
             }
 
@@ -398,7 +398,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             return JsonConvert.SerializeObject(_data, Formatting.Indented);
         }
 
-        public FullLoadCurve GetFullLoadCurve(int gear)
+        public FullLoadCurve GetFullLoadCurve(uint gear)
         {
             var curve = _fullLoadCurves.FirstOrDefault(kv => kv.Key.Contains(gear));
             if (curve.Key.Equals(null))

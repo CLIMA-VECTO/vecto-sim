@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
@@ -10,7 +11,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestGearboxMemento()
         {
-            var origin = new Gearbox();
+            var vehicle = new VehicleContainer();
+            var origin = new Gearbox(vehicle);
 
             var data = Memento.Serialize(origin);
 

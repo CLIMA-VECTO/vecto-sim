@@ -1,11 +1,20 @@
-﻿using System;
+using System;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Wheels : VectoSimulationComponent
 	{
+        public Wheels() { }
+
+		public Wheels(IVehicleContainer cockpit)
+			: base(cockpit)
+		{
+
+		}
+
 		public IInPort InPort()
 		{
 			throw new NotImplementedException();

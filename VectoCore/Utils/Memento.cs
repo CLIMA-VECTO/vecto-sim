@@ -23,7 +23,11 @@ namespace TUGraz.VectoCore.Utils
 
         public static string Serialize<T>(T data)
         {
-            var settings = new JsonSerializerSettings { ContractResolver = new PrivateFieldsContractResolver() };
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new PrivateFieldsContractResolver(),
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
             return JsonConvert.SerializeObject(data, Formatting.Indented, settings);
         }
 

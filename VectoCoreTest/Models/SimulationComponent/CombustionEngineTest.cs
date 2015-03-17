@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -28,8 +29,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestEngineHasOutPort()
         {
+	        var vehicle = new VehicleContainer();
             var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
-            var engine = new CombustionEngine(engineData);
+            var engine = new CombustionEngine(vehicle, engineData);
 
             var port = engine.OutShaft();
             Assert.IsNotNull(port);
@@ -38,8 +40,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestOutPortRequestNotFailing()
         {
-            var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
-            var engine = new CombustionEngine(engineData);
+	        var vehicle = new VehicleContainer();
+			var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
+            var engine = new CombustionEngine(vehicle, engineData);
+
 
             var port = engine.OutShaft();
 
@@ -54,8 +58,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestSimpleModalData()
         {
-            var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
-            var engine = new CombustionEngine(engineData);
+			var vehicle = new VehicleContainer(); 
+			var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
+            var engine = new CombustionEngine(vehicle, engineData);
             var port = engine.OutShaft();
 
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
@@ -87,11 +92,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestEngineOnlyDrivingCycle()
         {
-            var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
-            var data = EngineOnlyDrivingCycle.ReadFromFile(TestContext.DataRow["CycleFile"].ToString());
-            var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
+			var vehicle = new VehicleContainer();
+			var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
+			var data = EngineOnlyDrivingCycle.ReadFromFile(TestContext.DataRow["CycleFile"].ToString());
+			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
-            var engine = new CombustionEngine(engineData);
+			var engine = new CombustionEngine(vehicle, engineData);
             var port = engine.OutShaft();
 
 
@@ -103,8 +109,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             foreach (var cycle in data)
             {
                 port.Request(absTime, dt, cycle.Torque, cycle.EngineSpeed);
-                engine.CommitSimulationStep(dataWriter);
-                absTime += dt;
+	            foreach (var sc in vehicle.SimulationComponents()) {
+		            sc.CommitSimulationStep(dataWriter);
+	            }
+	            absTime += dt;
 
                 //todo: test with correct output values, add other fields to test
                 Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
@@ -122,8 +130,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestEngineMemento()
         {
+            var vehicle = new VehicleContainer();
             var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
-            var origin = new CombustionEngine(engineData);
+            var origin = new CombustionEngine(vehicle, engineData);
 
             var data = Memento.Serialize(origin);
 

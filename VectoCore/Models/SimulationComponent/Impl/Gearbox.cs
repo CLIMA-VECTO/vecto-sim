@@ -2,19 +2,17 @@
 using System.Collections.Generic;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
     public class Gearbox : VectoSimulationComponent, IGearbox, ITnOutPort
     {
-        public class Gear
+        public Gearbox(VehicleContainer container)
         {
-
+            
         }
 
-        public Gear AxleGear { get; set; }
-
-        public IEnumerable<Gear> Gears { get; set; }
 
         public ITnInPort InShaft()
         {
@@ -32,6 +30,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         }
 
         public override void CommitSimulationStep(IModalDataWriter writer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public uint Gear()
         {
             throw new NotImplementedException();
         }
