@@ -1,16 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
     public class Gearbox : VectoSimulationComponent, IGearbox, ITnOutPort
     {
-        public Gearbox(VehicleContainer container)
+        public Gearbox() { }
+
+        public Gearbox(IVehicleContainer container): base(container)
         {
-            
+
         }
 
 
