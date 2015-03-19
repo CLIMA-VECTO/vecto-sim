@@ -29,11 +29,94 @@
       <SubType>Content</SubType>
       <DependentUpon>HighLevel_SequenceDiag.sequencediagram</DependentUpon>
     </Content>
+    <Content Include="ModelDefinition\Package10_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package11_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package12_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package13_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package14_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package15_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package16_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package17_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package18_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package19_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package1_0820.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package1_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package20_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package2_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package3_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package4_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package5_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package6_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package7_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package8_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package9_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package_0820.uml">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="ModelDefinition\Package_1344.uml">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="ModelDefinition\Package_1505.uml">
       <SubType>Content</SubType>
     </Content>
     <Content Include="ModelDefinition\Package_1506.uml">
       <SubType>Content</SubType>
+    </Content>
+    <Content Include="UMLActivityDiagram1.activitydiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="UMLActivityDiagram1.activitydiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>UMLActivityDiagram1.activitydiagram</DependentUpon>
+    </Content>
+    <Content Include="UMLClassDiagram1.classdiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="UMLClassDiagram1.classdiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>UMLClassDiagram1.classdiagram</DependentUpon>
     </Content>
     <Content Include="VectoCore.classdiagram">
       <SubType>Content</SubType>

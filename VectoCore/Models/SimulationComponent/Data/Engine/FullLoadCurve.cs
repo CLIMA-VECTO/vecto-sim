@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 	    public double FullLoadStationaryPower(double rpm)
 	    {
-		    return VectoMath.ConvertRpmToPower(rpm, FullLoadStationaryTorque(rpm));
+		    return VectoMath.ConvertRpmTorqueToPower(rpm, FullLoadStationaryTorque(rpm));
 	    }
 
 	    public double DragLoadStationaryTorque(double rpm)
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 	    public double DragLoadStationaryPower(double rpm)
 	    {
-		    return VectoMath.ConvertRpmToPower(rpm, DragLoadStationaryTorque(rpm));
+		    return VectoMath.ConvertRpmTorqueToPower(rpm, DragLoadStationaryTorque(rpm));
 	    }
 
 	    public double PT1(double rpm)
