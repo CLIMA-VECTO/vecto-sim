@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Newtonsoft.Json.Schema;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
@@ -10,6 +11,15 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
+
+	public class SuperEninge : CombustionEngine
+	{
+
+		protected new void ValidatePowerDemand(double requestedEnginePower, double maxEnginePower, double minEnginePower)
+		{
+			
+		}
+	}
 
     public class CombustionEngine : VectoSimulationComponent, ICombustionEngine, ITnOutPort, IMemento
     {
@@ -116,14 +126,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _currentState.EngineSpeed = engineSpeed;
             _currentState.AbsTime = absTime;
 
-            var requestedPower = VectoMath.ConvertRpmToPower(engineSpeed, torque);
-            var enginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
-            var requestedEnginePower = requestedPower + enginePowerLoss;
+            var requestedPower = VectoMath.ConvertRpmTorqueToPower(engineSpeed, torque);
+            _currentState.EnginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
+            var requestedEnginePower = requestedPower + _currentState.EnginePowerLoss;
 
             if (engineSpeed < _data.IdleSpeed - EngineIdleSpeedStopThreshold)
             {
                 _currentState.OperationMode = EngineOperationMode.Stopped;
-                _currentState.EnginePowerLoss = enginePowerLoss;
+                //_currentState.EnginePowerLoss = enginePowerLoss;
             }
 
             var currentGear = Cockpit.Gear();
