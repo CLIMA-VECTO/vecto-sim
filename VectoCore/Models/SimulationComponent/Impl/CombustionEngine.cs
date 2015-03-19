@@ -72,6 +72,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             #endregion
         }
 
+        #region IEngineCockpit
+        public double EngineSpeed()
+        {
+            return _previousState.EngineSpeed;
+        }
+        #endregion
+
+
+
+
+        private CombustionEngineData _data = new CombustionEngineData();
+        private EngineState _previousState = new EngineState();
+        private EngineState _currentState = new EngineState();	// current state is computed in request method
+
+        [NonSerialized]
+        private List<TimeSpan> _enginePowerCorrections = new List<TimeSpan>();
+
         public CombustionEngine()
         {
 
@@ -87,17 +104,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _previousState.EngineSpeed = _data.IdleSpeed;
         }
 
-        private CombustionEngineData _data = new CombustionEngineData();
-        private EngineState _previousState = new EngineState();
-        private EngineState _currentState = new EngineState();	// current state is computed in request method
 
-        [NonSerialized]
-        private List<TimeSpan> _enginePowerCorrections = new List<TimeSpan>();
 
         public ITnOutPort OutShaft()
         {
             return this;
         }
+
 
         public override void CommitSimulationStep(IModalDataWriter writer)
         {
@@ -106,17 +119,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _currentState = new EngineState();
         }
 
-        public double EngineSpeed()
-        {
-            return _previousState.EngineSpeed;
-        }
-
         public void Request(TimeSpan absTime, TimeSpan dt, double torque, double engineSpeed)
         {
             _currentState.EngineSpeed = engineSpeed;
             _currentState.AbsTime = absTime;
 
-            var requestedPower = VectoMath.ConvertRpmToPower(engineSpeed, torque);
+            var requestedPower = VectoMath.ConvertRpmTorqueToPower(engineSpeed, torque);
             var enginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
             var requestedEnginePower = requestedPower + enginePowerLoss;
 
@@ -137,6 +145,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
             UpdateEngineState(requestedEnginePower, maxEnginePower, minEnginePower);
         }
+
+
+
+
+
+
 
         protected void ValidatePowerDemand(double requestedEnginePower, double maxEnginePower, double minEnginePower)
         {
@@ -253,6 +267,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         #endregion
 
+        #region IMemento
         public string Serialize()
         {
             var mem = new { Data = _data, PreviousState = _previousState };
@@ -267,5 +282,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _data = mem.Data;
             _previousState = mem.PreviousState;
         }
+        #endregion
     }
 }

@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         {
             var vehicle = new VehicleContainer();
             var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
-            var data = EngineOnlyDrivingCycle.ReadFromFile(TestContext.DataRow["CycleFile"].ToString());
+            EngineOnlyDrivingCycle data = new EngineOnlyDrivingCycle(vehicle, TestContext.DataRow["CycleFile"].ToString());
             var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
             var engine = new CombustionEngine(vehicle, engineData);
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
             var dataWriter = new TestModalDataWriter();
 
-            foreach (var cycle in data)
+            foreach (var cycle in data.Entries)
             {
                 port.Request(absTime, dt, cycle.Torque, cycle.EngineSpeed);
                 foreach (var sc in vehicle.SimulationComponents())

@@ -5,7 +5,7 @@ using TUGraz.VectoCore.Exceptions;
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
     [TestClass]
-    public class SimulationFactoryTests
+    public class SimulationTests
     {
         private const string EngineFile = @"TestData\EngineOnly\EngineMaps\24t Coach.veng";
         private const string CycleFile = @"TestData\EngineOnly\Cycles\Coach Engine Only.vdri";
@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         [TestMethod]
         public void TestEngineOnly_JobRun()
         {
-            var job = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly-result.vmod");
+            var job = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly_JobRun-result.vmod");
             job.Run();
 
             //todo add assertions
@@ -45,9 +45,30 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public void TestEngineOnly_SimulatorRun()
         {
             var sim = new VectoSimulator();
-            var job = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly-result.vmod");
-            sim.AddJob(job);            
+            var job = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly-SimulatorRun-result.vmod");
+            sim.AddJob(job);
             sim.RunSimulation();
+
+            //todo add assertions
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void TestEngineOnly_MultipleJobs()
+        {
+            var sim = new VectoSimulator();
+            
+            var job1 = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly-MultipleJobs-result1.vmod");
+            sim.AddJob(job1);
+
+            var job2 = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly-MultipleJobs-result2.vmod");
+            sim.AddJob(job2);
+
+            var job3 = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly-MultipleJobs-result3.vmod");
+            sim.AddJob(job3);
+
+            sim.RunSimulation();
+
 
             //todo add assertions
             Assert.Fail();
