@@ -4,7 +4,6 @@ using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -45,6 +44,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
             var engine = new CombustionEngine(vehicle, engineData);
 
+            var gearbox = new EngineOnlyGearbox(vehicle);
+
 
             var port = engine.OutShaft();
 
@@ -62,6 +63,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var vehicle = new VehicleContainer();
             var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
             var engine = new CombustionEngine(vehicle, engineData);
+            var gearbox = new EngineOnlyGearbox(vehicle);
             var port = engine.OutShaft();
 
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
@@ -83,9 +85,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             engine.CommitSimulationStep(dataWriter);
 
             //todo: test with correct output values, add other fields to test
-            //Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
-            //Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
-            //Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
             Assert.AreEqual(2.906175, dataWriter[ModalResultField.PaEng]);
         }
 
@@ -95,7 +94,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         {
             var vehicle = new VehicleContainer();
             var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
-            EngineOnlyDrivingCycle data = new EngineOnlyDrivingCycle(vehicle, TestContext.DataRow["CycleFile"].ToString());
+
+            var gearbox = new EngineOnlyGearbox(vehicle);
+
+            var data = EngineOnlyDrivingCycleData.ReadFromFile(TestContext.DataRow["CycleFile"].ToString());
             var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
             var engine = new CombustionEngine(vehicle, engineData);

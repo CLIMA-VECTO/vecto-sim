@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         [TestMethod]
         public void TestEngineOnly()
         {
-            var job = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile,  "TestEngineOnly-result.vmod");
+            var job = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly-result.vmod");
 
             var container = job.GetContainer();
 
@@ -37,8 +37,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             var job = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly_JobRun-result.vmod");
             job.Run();
 
-            //todo add assertions
-            Assert.Fail();
+            Assert.Fail("Add additional assertions.");
         }
 
         [TestMethod]
@@ -49,15 +48,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             sim.AddJob(job);
             sim.RunSimulation();
 
-            //todo add assertions
-            Assert.Fail();
+            Assert.Fail("Add additional assertions.");
         }
 
         [TestMethod]
         public void TestEngineOnly_MultipleJobs()
         {
             var sim = new VectoSimulator();
-            
+
             var job1 = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly-MultipleJobs-result1.vmod");
             sim.AddJob(job1);
 
@@ -70,8 +68,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             sim.RunSimulation();
 
 
-            //todo add assertions
-            Assert.Fail();
+            Assert.Fail("Add additional assertions.");
         }
     }
 }

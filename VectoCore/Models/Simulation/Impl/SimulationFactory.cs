@@ -23,7 +23,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             var gearBox = new EngineOnlyGearbox(container);
 
             debug("SimulationFactory creating cycle.");
-            var cycle = new EngineOnlyDrivingCycle(container, cycleFile);
+            var cycleData = EngineOnlyDrivingCycleData.ReadFromFile(cycleFile);
+            var cycle = new EngineOnlyDrivingCycle(container, cycleData);
 
             debug("SimulationFactory connecting gearbox with engine.");
             gearBox.InShaft().Connect(engine.OutShaft());
@@ -32,6 +33,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             cycle.InShaft().Connect(gearBox.OutShaft());
 
             var dataWriter = new ModalDataWriter(resultFile);
+
+            debug("SimulationFactory creating VectoJob.");
             var job = new VectoJob(container, cycle, dataWriter);
 
             return job;

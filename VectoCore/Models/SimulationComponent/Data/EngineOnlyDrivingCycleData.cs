@@ -1,15 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
-using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
+using Common.Logging;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
     /// <summary>
-    /// Class for representation of one EngineOnly Driving Cycle
+    /// Class for storing Data for one Driving Cycle in EngineOnly Mode.
     /// </summary>
     /// <remarks>
     /// The driving cycle (.vdri) must contain:
@@ -21,7 +20,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
     /// 
     /// To explicitly define motoring operation use the <DRAG> keyword - VECTO replaces the keyword with the motoring torque/power from the .vfld file during calculation.
     /// </remarks>
-    public class EngineOnlyDrivingCycle : VectoSimulationComponent, IDrivingCycle, ITnInPort
+    public class EngineOnlyDrivingCycleData : SimulationComponentData
     {
         private static class Fields
         {
@@ -31,13 +30,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
             public const string AuxilariesPower = "Padd";
         }
 
-        protected TimeSpan AbsTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-        protected TimeSpan dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
-        protected List<EngineOnlyDrivingCycleEntry> CycleEntries = new List<EngineOnlyDrivingCycleEntry>();
-
-        private ITnOutPort OutPort { get; set; }
-
-        private int CurrentStep { get; set; }
+        public List<EngineOnlyDrivingCycleEntry> Entries { get; set; }
 
         public class EngineOnlyDrivingCycleEntry
         {
@@ -51,42 +44,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
             public bool Drag { get; set; }
         }
 
-        #region IDrivingCycle
-        public bool DoSimulationStep()
-        {
-            if (CycleEntries.Count >= CurrentStep)
-                return false;
 
-            var entry = CycleEntries[CurrentStep];
-            OutPort.Request(AbsTime, dt, entry.Torque, entry.EngineSpeed);
-            AbsTime += dt;
-            CurrentStep++;
-            return true;
-        }
-        #endregion
-
-        #region ITnInPort
-        public void Connect(ITnOutPort other)
-        {
-            OutPort = other;
-        }
-        #endregion
-
-        #region IInShaft
-        public ITnInPort InShaft()
-        {
-            return this;
-        }
-        #endregion
-
-        public IReadOnlyList<EngineOnlyDrivingCycleEntry> Entries
-        {
-            get { return CycleEntries.AsReadOnly(); }
-        }
-
-        public EngineOnlyDrivingCycle(IVehicleContainer container, string fileName)
+        public static EngineOnlyDrivingCycleData ReadFromFile(string fileName)
         {
             var data = VectoCSVFile.Read(fileName);
+            var Log = LogManager.GetLogger<EngineOnlyDrivingCycleData>();
 
             DataColumn engineSpeedCol = null, torqueCol = null, powerCol = null, auxCol = null;
 
@@ -99,12 +61,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
             }
             else
             {
+                Log.Warn("EngineOnlyDrivingCycleData Header is not valid. Falling back to column index.");
                 engineSpeedCol = data.Columns[0];
                 torqueCol = data.Columns[1];
                 if (data.Columns.Count > 2)
                     auxCol = data.Columns[2];
             }
 
+            if (auxCol != null)
+                Log.Info("EngineOnlyDrivingCycleData Column for Auxiliary Power Consumption found.");
+
+
+            var entries = new List<EngineOnlyDrivingCycleEntry>();
             foreach (DataRow row in data.Rows)
             {
                 var entry = new EngineOnlyDrivingCycleEntry();
@@ -129,20 +97,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
                 if (auxCol != null)
                     entry.AuxilariesPower = row.GetDouble(auxCol);
 
-                CycleEntries.Add(entry);
+                entries.Add(entry);
             }
-            container.AddComponent(this);
+
+            var cycle = new EngineOnlyDrivingCycleData { Entries = entries };
+
+            Log.Info(string.Format("EngineOnlyDrivingCycle Data loaded. Number of Entries: {0}", entries.Count));
+
+            return cycle;
         }
 
         private static bool HeaderIsValid(DataTable data)
         {
             return (!(data.Columns[Fields.EngineSpeed] != null
-                && (data.Columns[Fields.Torque] == null || data.Columns[Fields.EnginePower] == null)));
-        }
-
-        public override void CommitSimulationStep(IModalDataWriter writer)
-        {
-
+                      && (data.Columns[Fields.Torque] == null || data.Columns[Fields.EnginePower] == null)));
         }
     }
 }

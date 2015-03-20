@@ -1,6 +1,6 @@
 using TUGraz.VectoCore.Models.Connector.Ports;
 
-namespace TUGraz.VectoCore.Models.Simulation.Impl
+namespace TUGraz.VectoCore.Models.Simulation
 {
     public interface IDrivingCycle: IInShaft
     {

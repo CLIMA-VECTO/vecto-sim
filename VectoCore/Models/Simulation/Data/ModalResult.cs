@@ -1,12 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Data;
 using System.Reflection;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
-    [DesignerCategory("")] // to disable design view in VisualStudio
+    [System.ComponentModel.DesignerCategory("")] // Full qualified attribute needed to disable design view in VisualStudio
     public class ModalResults : DataTable
     {
         public ModalResults()

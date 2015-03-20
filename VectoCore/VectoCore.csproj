@@ -75,7 +75,8 @@
     <Compile Include="Models\SimulationComponent\ICombustionEngine.cs" />
     <Compile Include="Models\Connector\Ports\IInPort.cs" />
     <Compile Include="Models\SimulationComponent\IGearbox.cs" />
-    <Compile Include="Models\Simulation\Impl\IDrivingCycle.cs" />
+    <Compile Include="Models\SimulationComponent\Data\EngineOnlyDrivingCycleData.cs" />
+    <Compile Include="Models\SimulationComponent\IDrivingCycle.cs" />
     <Compile Include="Utils\IMemento.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyGearbox.cs" />
@@ -85,11 +86,9 @@
     <Compile Include="Models\SimulationComponent\IWheels.cs" />
     <Compile Include="Utils\Memento.cs" />
     <Compile Include="Models\SimulationComponent\VectoSimulationComponent.cs" />
-    <Compile Include="Models\Simulation\Data\EngineOnlyDrivingCycle.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\EngineOnlyDrivingCycle.cs" />
     <Compile Include="Models\Simulation\Data\IModalDataWriter.cs" />
-    <Compile Include="Models\Simulation\Data\ModalResult.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="Models\Simulation\Data\ModalResult.cs" />
     <Compile Include="Models\Simulation\IVectoJob.cs" />
     <Compile Include="Models\Simulation\IVectoSimulator.cs" />
     <Compile Include="Models\Simulation\Data\ModalDataWriter.cs" />
