@@ -5,8 +5,10 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+    //todo: combine with EngineOnlyDrivingCycleData?
     public class DrivingCycleData : SimulationComponentData
     {
+        
         private static class Fields
         {
             /// <summary>
