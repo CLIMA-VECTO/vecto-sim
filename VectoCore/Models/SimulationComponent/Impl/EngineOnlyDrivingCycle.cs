@@ -8,7 +8,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
     /// <summary>
     /// Class representing one EngineOnly Driving Cycle
     /// </summary>
-    public class EngineOnlyDrivingCycle : VectoSimulationComponent, IDrivingCycle, ITnInPort
+    public class EngineOnlyDrivingCycle : VectoSimulationComponent, IEngineOnlyDrivingCycle, ITnInPort
     {
         protected TimeSpan AbsTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
         protected TimeSpan dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);

@@ -1,11 +1,12 @@
 using Common.Logging;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
     public class VectoJob : IVectoJob
     {
-        protected IDrivingCycle Cycle { get; set; }
+        protected IEngineOnlyDrivingCycle Cycle { get; set; }
         protected IModalDataWriter DataWriter { get; set; }
         protected IVehicleContainer Container { get; set; }
 
@@ -14,7 +15,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             return Container;
         }
 
-        public VectoJob(IVehicleContainer container, IDrivingCycle cycle, IModalDataWriter dataWriter)
+        public VectoJob(IVehicleContainer container, IEngineOnlyDrivingCycle cycle, IModalDataWriter dataWriter)
         {
             
             Container = container;
