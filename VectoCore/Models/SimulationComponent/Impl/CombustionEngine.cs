@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
@@ -104,13 +103,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _previousState.EngineSpeed = _data.IdleSpeed;
         }
 
-
-
         public ITnOutPort OutShaft()
         {
             return this;
         }
-
 
         public override void CommitSimulationStep(IModalDataWriter writer)
         {
@@ -125,13 +121,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _currentState.AbsTime = absTime;
 
             var requestedPower = VectoMath.ConvertRpmTorqueToPower(engineSpeed, torque);
-            var enginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
-            var requestedEnginePower = requestedPower + enginePowerLoss;
+            _currentState.EnginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
+            var requestedEnginePower = requestedPower + _currentState.EnginePowerLoss;
 
             if (engineSpeed < _data.IdleSpeed - EngineIdleSpeedStopThreshold)
             {
                 _currentState.OperationMode = EngineOperationMode.Stopped;
-                _currentState.EnginePowerLoss = enginePowerLoss;
+                //_currentState.EnginePowerLoss = enginePowerLoss;
             }
 
             var currentGear = Cockpit.Gear();
@@ -145,12 +141,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
             UpdateEngineState(requestedEnginePower, maxEnginePower, minEnginePower);
         }
-
-
-
-
-
-
 
         protected void ValidatePowerDemand(double requestedEnginePower, double maxEnginePower, double minEnginePower)
         {

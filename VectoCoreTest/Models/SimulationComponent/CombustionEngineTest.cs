@@ -46,7 +46,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
             var gearbox = new EngineOnlyGearbox(vehicle);
 
-
             var port = engine.OutShaft();
 
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
@@ -85,7 +84,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             engine.CommitSimulationStep(dataWriter);
 
             //todo: test with correct output values, add other fields to test
-            Assert.AreEqual(2.906175, dataWriter[ModalResultField.PaEng]);
+            //Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
+            //Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
+            //Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
+            Assert.AreEqual(1152.40304, Double.Parse(dataWriter[ModalResultField.PaEng].ToString()), 0.001);
         }
 
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineTests.csv", "EngineTests#csv", DataAccessMethod.Sequential)]
