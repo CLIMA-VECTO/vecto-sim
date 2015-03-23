@@ -7,12 +7,46 @@ namespace TUGraz.VectoCore.Utils
 {
     public static class DataRowExtensionMethods
     {
-        /// <summary>
-        /// Gets the field of a DataRow as double.
-        /// </summary>
-        /// <param name="row"></param>
-        /// <param name="columnName">The name of the column.</param>
-        /// <returns>The value of the underlying DataRows column field as double.</returns>
+        public static double GetDouble(this DataRow row, DataColumn column, CultureInfo culture = null)
+        {
+            //todo ArgumentNullException?
+            try
+            {
+                return double.Parse(row.Field<string>(column), CultureInfo.InvariantCulture);
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                throw new VectoException(string.Format("Column {0} was not found in DataRow.", column.ColumnName), e);
+            }
+            catch (NullReferenceException e)
+            {
+                throw new VectoException(string.Format("Column {0} must not be null.", column.ColumnName), e);
+            }
+            catch (FormatException e)
+            {
+                throw new VectoException(string.Format("Column {0} is not in a valid number format: {1}", column.ColumnName,
+                    row.Field<string>(column)), e);
+            }
+            catch (OverflowException e)
+            {
+                throw new VectoException(string.Format("Column {0} has a value too high or too low: {1}", column.ColumnName,
+                    row.Field<string>(column)), e);
+            }
+            catch (ArgumentNullException e)
+            {
+                throw new VectoException(string.Format("Column {0} contains null which cannot be converted to a number.", column.ColumnName), e);
+            }
+            catch (Exception e)
+            {
+                throw new VectoException(string.Format("Column {0}: {1}", column.ColumnName, e.Message), e);
+            }
+        }
+
+        public static double GetDoubleOrDefault(this DataRow row, string columnName)
+        {
+            return row.Table.Columns.Contains(columnName) ? row.GetDouble(columnName) : default(double);
+        }
+
         public static double GetDouble(this DataRow row, string columnName, CultureInfo culture = null)
         {
             //todo ArgumentNullException?

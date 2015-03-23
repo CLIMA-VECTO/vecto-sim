@@ -1,3 +1,5 @@
+using System;
+using Common.Logging;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -8,20 +10,32 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
     {
         public static IVectoJob CreateTimeBasedEngineOnlyJob(string engineFile, string cycleFile, string resultFile)
         {
+            Action<string> debug = LogManager.GetLogger<SimulationFactory>().Debug;
+
+            debug("SimulationFactory creating VehicleContainer.");
             var container = new VehicleContainer();
+
+            debug("SimulationFactory creating engine.");
             var engineData = CombustionEngineData.ReadFromFile(engineFile);
             var engine = new CombustionEngine(container, engineData);
+
+            debug("SimulationFactory creating gearbox.");
             var gearBox = new EngineOnlyGearbox(container);
 
-            var engineOutShaft = engine.OutShaft();
-            var gearBoxInShaft = gearBox.InShaft();
+            debug("SimulationFactory creating cycle.");
+            var cycleData = DrivingCycleData.ReadFromFileEngineOnly(cycleFile);
+            var cycle = new EngineOnlyDrivingCycle(container, cycleData);
 
-            gearBoxInShaft.Connect(engineOutShaft);
+            debug("SimulationFactory connecting gearbox with engine.");
+            gearBox.InShaft().Connect(engine.OutShaft());
 
-            var cycles = EngineOnlyDrivingCycle.ReadFromFile(cycleFile.ToString());
+            debug("SimulationFactory connecting cycle with gearbox.");
+            cycle.InShaft().Connect(gearBox.OutShaft());
+
             var dataWriter = new ModalDataWriter(resultFile);
 
-            var job = new EngineOnlyTimeBasedVectoJob(container, cycles, dataWriter);
+            debug("SimulationFactory creating VectoJob.");
+            var job = new VectoJob(container, cycle, dataWriter);
 
             return job;
         }
