@@ -60,21 +60,29 @@
     <Compile Include="Exceptions\VectoExceptions.cs" />
     <Compile Include="Exceptions\VectoSimulationException.cs" />
     <Compile Include="Models\Connector\Connector.cs" />
+    <Compile Include="Models\Connector\Ports\IDriverDemandInPort.cs" />
+    <Compile Include="Models\Connector\Ports\IDriverDemandInProvider.cs" />
     <Compile Include="Models\Connector\Ports\IInShaft.cs" />
+    <Compile Include="Models\Connector\Ports\IDriverDemandOutPort.cs" />
+    <Compile Include="Models\Connector\Ports\IDriverDemandOutProvider.cs" />
     <Compile Include="Models\Connector\Ports\Impl\InPort.cs" />
     <Compile Include="Models\Connector\Ports\Impl\OutPort.cs" />
-    <Compile Include="Models\Connector\Ports\Impl\Port.cs" />
-    <Compile Include="Models\Connector\Ports\Impl\TnInPort.cs" />
-    <Compile Include="Models\Connector\Ports\Impl\TnOutPort.cs" />
     <Compile Include="Models\Connector\Ports\IOutShaft.cs" />
+    <Compile Include="Models\Connector\Ports\ITnInPort.cs" />
+    <Compile Include="Models\Connector\Ports\ITnOutPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
     <Compile Include="Models\SimulationComponent\Data\CombustionEngineData.cs" />
+    <Compile Include="Models\SimulationComponent\Data\DrivingCycleData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FullLoadCurve.cs" />
     <Compile Include="Models\SimulationComponent\Data\SimulationComponentData.cs" />
     <Compile Include="Models\SimulationComponent\ICombustionEngine.cs" />
     <Compile Include="Models\Connector\Ports\IInPort.cs" />
     <Compile Include="Models\SimulationComponent\IGearbox.cs" />
+    <Compile Include="Models\SimulationComponent\IDrivingCycle.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\DistanceBasedDrivingCycle.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\TimeBasedDrivingCycle.cs" />
+    <Compile Include="Models\Simulation\Data\EngineOnlyDrivingCycle.cs" />
     <Compile Include="Utils\IMemento.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyGearbox.cs" />
@@ -84,12 +92,9 @@
     <Compile Include="Models\SimulationComponent\IWheels.cs" />
     <Compile Include="Utils\Memento.cs" />
     <Compile Include="Models\SimulationComponent\VectoSimulationComponent.cs" />
-    <Compile Include="Models\Simulation\Data\EngineOnlyDrivingCycle.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\EngineOnlyDrivingCycle.cs" />
     <Compile Include="Models\Simulation\Data\IModalDataWriter.cs" />
-    <Compile Include="Models\Simulation\Data\ModalResult.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Models\Simulation\Impl\EngineOnlyTimeBasedVectoJob.cs" />
+    <Compile Include="Models\Simulation\Data\ModalResult.cs" />
     <Compile Include="Models\Simulation\IVectoJob.cs" />
     <Compile Include="Models\Simulation\IVectoSimulator.cs" />
     <Compile Include="Models\Simulation\Data\ModalDataWriter.cs" />

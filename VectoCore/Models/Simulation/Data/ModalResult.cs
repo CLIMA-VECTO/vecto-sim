@@ -1,12 +1,11 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Data;
 using System.Reflection;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
-    [DesignerCategory("")] // to disable design view in VisualStudio
+    [System.ComponentModel.DesignerCategory("")] // Full qualified attribute needed to disable design view in VisualStudio
     public class ModalResults : DataTable
     {
         public ModalResults()
@@ -37,7 +36,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
                     if (col.ColumnName == ModalResultField.FC.GetName() && row.Field<string>(col) == "ERROR")
                         continue;
 
-                    newRow.SetField(col.ColumnName, row.GetDouble(col.ColumnName));
+                    newRow.SetField(col.ColumnName, row.ParseDouble(col.ColumnName));
 
                 }
                 modalResults.Rows.Add(newRow);

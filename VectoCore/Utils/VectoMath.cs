@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="rpm">revolutions per minute [1/min]</param>
 		/// <param name="torque">torque [Nm]</param>
 		/// <returns>the power equivalent to the given rpm and torque [W]</returns>
-		public static double ConvertRpmToPower(double rpm, double torque)
+		public static double ConvertRpmTorqueToPower(double rpm, double torque)
 		{
 			return (2.0 * Math.PI / 60.0) * torque * rpm;
 		}

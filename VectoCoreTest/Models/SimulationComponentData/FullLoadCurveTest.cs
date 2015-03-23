@@ -7,7 +7,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[TestClass]
 	public class FullLoadCurveTest
 	{
-		private static string CoachEngineFLD = "TestData\\EngineOnly\\EngineMaps\\24t Coach.vfld";
+		private static string CoachEngineFLD = @"TestData\Components\24t Coach.vfld";
 		private static double tolerance = 0.0001;
 
 		[TestMethod]

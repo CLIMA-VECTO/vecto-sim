@@ -8,7 +8,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	[TestClass]
 	public class VechicleContainerTests
 	{
-		private const string EngineFile = "TestData\\EngineOnly\\EngineMaps\\24t Coach.veng";
+		private const string EngineFile = @"TestData\Components\24t Coach.veng";
 
 		[TestMethod]
 		public void VechicleContainerHasEngine()
