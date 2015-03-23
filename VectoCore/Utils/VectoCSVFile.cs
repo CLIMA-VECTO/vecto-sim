@@ -41,29 +41,34 @@ namespace TUGraz.VectoCore.Utils
             {
                 var lines = File.ReadAllLines(fileName);
                 var header = lines.First();
+                lines = lines.Skip(1).ToArray();
+
                 header = Regex.Replace(header, @"\[.*?\]", "");
                 header = Regex.Replace(header, @"\(.*?\)", "");
                 header = header.Replace("<", "");
                 header = header.Replace(">", "");
-                // or all in one regex (incl. trim):
-                // Regex.Replace(header, @"\s*\[.*?\]\s*|\s*\(.*?\)\s*|\s*<|>\s*|\s*(?=,)|(?<=,)\s*", "");
-                var cols = header.Split(Separator);
+                var cols = header.Split(Separator).Select(col => col.Trim());
+
+                double test;
+                var validColumns = cols.Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out test));
 
                 var table = new DataTable();
-                foreach (var col in cols)
-                    table.Columns.Add(col.Trim(), typeof(string));
+                foreach (var col in validColumns)
+                    table.Columns.Add(col);
 
-                // skip header! --> begin with index 1
-                for (int i = 1; i < lines.Length; i++)
+                if (table.Columns.Count == 0)
+                    throw new CSVReadException("Line 0: The data format is not correct: no columns found.");
+
+                for (var i = 0; i < lines.Length; i++)
                 {
-                    string line = lines[i];
+                    var line = lines[i];
                     //todo: do more sophisticated splitting of csv-columns (or use a good csv library!)
 
                     if (line.Contains(Comment))
                         line = line.Substring(0, line.IndexOf(Comment));
 
                     var cells = line.Split(Separator);
-                    if (cells.Length != cols.Length)
+                    if (cells.Length != table.Columns.Count)
                         throw new CSVReadException(string.Format("Line {0}: The number of values is not correct.", i));
 
                     try
@@ -94,7 +99,7 @@ namespace TUGraz.VectoCore.Utils
             foreach (DataRow row in table.Rows)
             {
                 List<string> formattedList = new List<string>();
-                
+
                 foreach (var item in row.ItemArray)
                 {
                     var formattable = item as IFormattable;
