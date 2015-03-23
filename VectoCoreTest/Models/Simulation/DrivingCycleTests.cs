@@ -12,21 +12,16 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
     [TestClass]
     public class DrivingCycleTests
     {
-        private const string CycleFile = @"TestData\EngineOnly\Cycles\Coach.vdri";
-
         [TestMethod]
         public void TestEngineOnly()
         {
             var container = new VehicleContainer();
 
-            var cycleData = EngineOnlyDrivingCycleData.ReadFromFile(CycleFile);
+            var cycleData = DrivingCycleData.ReadFromFileEngineOnly(@"TestData\Cycles\Coach Engine Only.vdri");
             IEngineOnlyDrivingCycle cycle = new EngineOnlyDrivingCycle(container, cycleData);
 
             var outPort = new MockTnOutPort();
-            Assert.IsInstanceOfType(outPort, typeof(ITnOutPort));
-
-            var inPort = cycle.InShaft();
-            Assert.IsInstanceOfType(outPort, typeof(ITnInPort));
+            ITnInPort inPort = cycle.InShaft();
 
             inPort.Connect(outPort);
 
@@ -48,16 +43,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         {
             var container = new VehicleContainer();
 
-            var cycleData = DrivingCycleData.ReadFromFile(CycleFile);
-
+            var cycleData = DrivingCycleData.ReadFromFileTimeBased(@"TestData\Cycles\Coach.vdri");
             IDrivingCycle cycle = new TimeBasedDrivingCycle(container, cycleData);
 
             var outPort = new MockDriverDemandOutPort();
 
-            Assert.IsInstanceOfType(outPort, typeof(IDriverDemandOutPort));
-
-            var inPort = cycle.InPort();
-            Assert.IsInstanceOfType(inPort, typeof(IDriverDemandInPort));
+            IDriverDemandInPort inPort = cycle.InPort();
 
             inPort.Connect(outPort);
 
@@ -79,11 +70,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         {
             var container = new VehicleContainer();
 
-            var cycleData = DrivingCycleData.ReadFromFile(CycleFile);
+            var cycleData = DrivingCycleData.ReadFromFileDistanceBased(@"TestData\Cycles\Coach.vdri");
             IDrivingCycle cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
             var outPort = new MockDriverDemandOutPort();
-            cycle.InPort().Connect(outPort);
+
+            IDriverDemandInPort inPort = cycle.InPort();
+
+            inPort.Connect(outPort);
 
             cycle.DoSimulationStep();
 

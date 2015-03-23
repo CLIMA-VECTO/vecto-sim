@@ -7,8 +7,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
     [TestClass]
     public class SimulationTests
     {
-        private const string EngineFile = @"TestData\EngineOnly\EngineMaps\24t Coach.veng";
-        private const string CycleFile = @"TestData\EngineOnly\Cycles\Coach Engine Only.vdri";
+        private const string EngineFile = @"TestData\Components\24t Coach.veng";
+        private const string CycleFile = @"TestData\Cycles\Coach Engine Only.vdri";
 
         [TestMethod]
         public void TestEngineOnly()
@@ -37,7 +37,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             var job = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly_JobRun-result.vmod");
             job.Run();
 
-            Assert.Fail("Add additional assertions.");
+            // todo: Add additional assertions.
+            Assert.Fail("Todo: Add additional assertions.");
         }
 
         [TestMethod]
@@ -48,7 +49,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             sim.AddJob(job);
             sim.RunSimulation();
 
-            Assert.Fail("Add additional assertions.");
+            // todo: Add additional assertions.
+            Assert.Fail("Todo: Add additional assertions.");
         }
 
         [TestMethod]
@@ -67,8 +69,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
             sim.RunSimulation();
 
-
-            Assert.Fail("Add additional assertions.");
+            // todo: Add additional assertions.
+            Assert.Fail("Todo: Add additional assertions.");
         }
     }
 }

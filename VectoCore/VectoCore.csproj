@@ -79,7 +79,6 @@
     <Compile Include="Models\SimulationComponent\ICombustionEngine.cs" />
     <Compile Include="Models\Connector\Ports\IInPort.cs" />
     <Compile Include="Models\SimulationComponent\IGearbox.cs" />
-    <Compile Include="Models\SimulationComponent\Data\EngineOnlyDrivingCycleData.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DistanceBasedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TimeBasedDrivingCycle.cs" />

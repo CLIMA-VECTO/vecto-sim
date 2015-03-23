@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
     [TestClass]
     public class CombustionEngineTest
     {
-        private const string CoachEngine = "TestData\\EngineOnly\\EngineMaps\\24t Coach.veng";
+        private const string CoachEngine = @"TestData\Components\24t Coach.veng";
 
         public TestContext TestContext { get; set; }
 
@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
             var gearbox = new EngineOnlyGearbox(vehicle);
 
-            var data = EngineOnlyDrivingCycleData.ReadFromFile(TestContext.DataRow["CycleFile"].ToString());
+            var data = DrivingCycleData.ReadFromFileEngineOnly(TestContext.DataRow["CycleFile"].ToString());
             var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
             var engine = new CombustionEngine(vehicle, engineData);
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
             foreach (var cycle in data.Entries)
             {
-                port.Request(absTime, dt, cycle.Torque, cycle.EngineSpeed);
+                port.Request(absTime, dt, cycle.EngineTorque, cycle.EngineSpeed);
                 foreach (var sc in vehicle.SimulationComponents())
                 {
                     sc.CommitSimulationStep(dataWriter);
@@ -119,15 +119,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
                 absTime += dt;
 
                 //todo: test with correct output values, add other fields to test
-                Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
-                Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
-                Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
+                Assert.AreEqual(13000, dataWriter[ModalResultField.FC]);
+                Assert.AreEqual(14000, dataWriter[ModalResultField.FCAUXc]);
+                Assert.AreEqual(15000, dataWriter[ModalResultField.FCWHTCc]);
             }
 
             //todo: test with correct output values, add other fields to test
-            Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
-            Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
-            Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
+            Assert.AreEqual(13000, dataWriter[ModalResultField.FC]);
+            Assert.AreEqual(14000, dataWriter[ModalResultField.FCAUXc]);
+            Assert.AreEqual(15000, dataWriter[ModalResultField.FCWHTCc]);
         }
 
 

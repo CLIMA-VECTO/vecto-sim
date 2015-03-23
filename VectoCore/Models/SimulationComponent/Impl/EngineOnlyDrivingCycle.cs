@@ -2,6 +2,7 @@ using System;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -13,13 +14,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         protected TimeSpan AbsTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
         protected TimeSpan dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
-        protected EngineOnlyDrivingCycleData Data;
+        protected DrivingCycleData Data;
 
         private ITnOutPort OutPort { get; set; }
 
         private int CurrentStep { get; set; }
 
-        public EngineOnlyDrivingCycle(IVehicleContainer container, EngineOnlyDrivingCycleData cycle)
+        public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle)
         {
             Data = cycle;
             container.AddComponent(this);
@@ -32,7 +33,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                 return false;
 
             var entry = Data.Entries[CurrentStep];
-            OutPort.Request(AbsTime, dt, entry.Torque, entry.EngineSpeed);
+            OutPort.Request(AbsTime, dt, entry.EngineTorque, entry.EngineSpeed);
             AbsTime += dt;
             CurrentStep++;
             return true;
@@ -59,9 +60,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             // therefore it has to be decreased again for commit. The needed time
             // for the moddata is between the last AbsTime and the current AbsTime,
             // therefore dt/2 has to be subtracted from the current AbsTime.
-            // todo: document this in a jira ticket!
+            // todo: document this dt/2 in a jira ticket!
             var halfDt = new TimeSpan(dt.Ticks/2);
-            writer[ModalResultField.time] = AbsTime - halfDt;
+            writer[ModalResultField.time] = (AbsTime - halfDt).TotalSeconds;
         }
     }
 }

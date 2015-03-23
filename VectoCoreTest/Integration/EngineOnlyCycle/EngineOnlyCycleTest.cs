@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 	[TestClass]
 	public class EngineOnlyCycleTest
 	{
-		private const string EngineFile = "TestData\\EngineOnly\\EngineMaps\\24t Coach.veng";
+		private const string EngineFile = @"TestData\Components\24t Coach.veng";
 
 		[TestMethod]
 		public void AssembleEngineOnlyPowerTrain()

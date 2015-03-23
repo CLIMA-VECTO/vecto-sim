@@ -42,6 +42,11 @@ namespace TUGraz.VectoCore.Utils
             }
         }
 
+        public static double GetDoubleOrDefault(this DataRow row, string columnName)
+        {
+            return row.Table.Columns.Contains(columnName) ? row.GetDouble(columnName) : default(double);
+        }
+
         public static double GetDouble(this DataRow row, string columnName, CultureInfo culture = null)
         {
             //todo ArgumentNullException?

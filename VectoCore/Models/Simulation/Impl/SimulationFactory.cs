@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             var gearBox = new EngineOnlyGearbox(container);
 
             debug("SimulationFactory creating cycle.");
-            var cycleData = EngineOnlyDrivingCycleData.ReadFromFile(cycleFile);
+            var cycleData = DrivingCycleData.ReadFromFileEngineOnly(cycleFile);
             var cycle = new EngineOnlyDrivingCycle(container, cycleData);
 
             debug("SimulationFactory connecting gearbox with engine.");

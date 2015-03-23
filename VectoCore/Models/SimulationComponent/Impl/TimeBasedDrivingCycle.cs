@@ -11,8 +11,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
     /// </summary>
     public class TimeBasedDrivingCycle : VectoSimulationComponent, IDrivingCycle, IDriverDemandInPort
     {
-        protected TimeSpan AbsTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-        protected TimeSpan dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+        protected TimeSpan AbsTime;
+        protected TimeSpan dt = TimeSpan.FromSeconds(1);
 
         protected DrivingCycleData Data;
 
@@ -33,6 +33,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                 return false;
 
             var entry = Data.Entries[CurrentStep];
+
+            dt = TimeSpan.FromSeconds(entry.Time) - AbsTime;
             OutPort.Request(AbsTime, dt, entry.VehicleSpeed, entry.RoadGradient);
             AbsTime += dt;
             CurrentStep++;
@@ -47,7 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             // for the moddata is between the last AbsTime and the current AbsTime,
             // therefore dt/2 has to be subtracted from the current AbsTime.
             // todo: document this in a jira ticket!
-            var halfDt = new TimeSpan(dt.Ticks/2);
+            var halfDt = new TimeSpan(dt.Ticks / 2);
             writer[ModalResultField.time] = (AbsTime - halfDt).TotalSeconds;
         }
 

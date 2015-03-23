@@ -51,6 +51,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Design" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -71,7 +72,7 @@
     <Compile Include="Models\SimulationComponentData\FullLoadCurveTest.cs" />
     <Compile Include="Models\SimulationComponent\CombustionEngineTest.cs" />
     <Compile Include="Models\Simulation\DrivingCycleTests.cs" />
-    <Compile Include="Models\Simulation\MockPorts.cs" />
+    <Compile Include="Models\SimulationComponent\MockPorts.cs" />
     <Compile Include="Models\Simulation\SimulationTests.cs" />
     <Compile Include="Models\Simulation\VechicleContainerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -96,34 +97,34 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="TestData\EngineOnly\Cycles\Coach.vdri">
+    <None Include="TestData\Cycles\Coach.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\EngineOnly\EngineMaps\24t Coach.veng">
+    <None Include="TestData\Components\24t Coach.veng">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\EngineOnly\EngineMaps\24t Coach.vfld">
+    <None Include="TestData\Components\24t Coach.vfld">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\EngineOnly\EngineMaps\24t Coach.vmap">
+    <None Include="TestData\Components\24t Coach.vmap">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\EngineOnly\Cycles\Coach Engine Only.vdri">
+    <None Include="TestData\Cycles\Coach Engine Only.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vmod">
+    <None Include="TestData\Results\Test1_results.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vsum">
+    <None Include="TestData\Results\Test1_results.vsum">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\EngineOnly\ResultFiles\Test1_results.vsum.json" />
     <None Include="TestData\EngineTests.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
