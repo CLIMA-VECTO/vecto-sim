@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -80,14 +81,35 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
                 absTime += dt;
             }
 
-            port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(2329.973, 644.4445), 644.4445);
+	        engineSpeed = 644.4445;
+            port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(2329.973, engineSpeed), engineSpeed);
             engine.CommitSimulationStep(dataWriter);
+	        absTime += dt;
 
-            //todo: test with correct output values, add other fields to test
-            //Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
-            //Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
-            //Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
-            Assert.AreEqual(1152.40304, Double.Parse(dataWriter[ModalResultField.PaEng].ToString()), 0.001);
+            Assert.AreEqual(1152.40304, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+
+	        torque = 4264.177;
+	        for (var i = 0; i < 2; i++) {
+		        port.Request(absTime, dt, torque, engineSpeed);
+				engine.CommitSimulationStep(dataWriter);
+		        absTime += dt;
+	        }
+
+			engineSpeed = 869.7512;
+			port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(7984.56, engineSpeed), engineSpeed);
+			engine.CommitSimulationStep(dataWriter);
+	        absTime += dt;
+
+			Assert.AreEqual(7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+
+			engineSpeed = 644.4445;
+			port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(7984.56, engineSpeed), engineSpeed);
+			engine.CommitSimulationStep(dataWriter);
+			absTime += dt;
+
+			Assert.AreEqual(-7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+
+
         }
 
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineTests.csv", "EngineTests#csv", DataAccessMethod.Sequential)]

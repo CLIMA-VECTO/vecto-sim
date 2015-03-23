@@ -259,14 +259,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         {
             var entry = new DrivingCycleEntry
             {
-                Distance = row.GetDouble(Fields.Distance),
-                VehicleSpeed = row.GetDouble(Fields.VehicleSpeed),
-                RoadGradient = row.GetDoubleOrDefault(Fields.RoadGradient),
-                AdditionalAuxPowerDemand = row.GetDoubleOrDefault(Fields.AdditionalAuxPowerDemand),
-                EngineSpeed = row.GetDoubleOrDefault(Fields.EngineSpeed),
-                Gear = row.GetDoubleOrDefault(Fields.Gear),
-                AirSpeedRelativeToVehicle = row.GetDoubleOrDefault(Fields.AirSpeedRelativeToVehicle),
-                WindYawAngle = row.GetDoubleOrDefault(Fields.WindYawAngle)
+                Distance = row.ParseDouble(Fields.Distance),
+                VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed),
+                RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
+                AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand),
+                EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed),
+                Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
+                AirSpeedRelativeToVehicle = row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle),
+                WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle)
             };
 
             // todo: implement additional aux as dictionary!
@@ -300,14 +300,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         {
             var entry = new DrivingCycleEntry
             {
-                Time = row.GetDoubleOrDefault(Fields.Time),
-                VehicleSpeed = row.GetDouble(Fields.VehicleSpeed),
-                RoadGradient = row.GetDoubleOrDefault(Fields.RoadGradient),
-                AdditionalAuxPowerDemand = row.GetDoubleOrDefault(Fields.AdditionalAuxPowerDemand),
-                Gear = row.GetDoubleOrDefault(Fields.Gear),
-                EngineSpeed = row.GetDoubleOrDefault(Fields.EngineSpeed),
-                AirSpeedRelativeToVehicle = row.GetDoubleOrDefault(Fields.AirSpeedRelativeToVehicle),
-                WindYawAngle = row.GetDoubleOrDefault(Fields.WindYawAngle)
+                Time = row.ParseDoubleOrGetDefault(Fields.Time),
+                VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed),
+                RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
+                AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand),
+                Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
+                EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed),
+                AirSpeedRelativeToVehicle = row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle),
+                WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle)
             };
 
             // todo: implement additional aux as dictionary!
@@ -339,25 +339,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         {
             var entry = new DrivingCycleEntry();
 
-            entry.EngineSpeed = row.GetDouble(Fields.EngineSpeed);
+            entry.EngineSpeed = row.ParseDouble(Fields.EngineSpeed);
 
             if (row.Table.Columns.Contains(Fields.EngineTorque))
             {
                 if (row.Field<string>(Fields.EngineTorque).Equals("<DRAG>"))
                     entry.Drag = true;
                 else
-                    entry.EngineTorque = row.GetDouble(Fields.EngineTorque);
+                    entry.EngineTorque = row.ParseDouble(Fields.EngineTorque);
             }
             else
             {
                 if (row.Field<string>(Fields.EnginePower).Equals("<DRAG>"))
                     entry.Drag = true;
                 else
-                    entry.EngineTorque = VectoMath.ConvertPowerToTorque(row.GetDouble(Fields.EnginePower), entry.EngineSpeed);
+                    entry.EngineTorque = VectoMath.ConvertPowerToTorque(row.ParseDouble(Fields.EnginePower), entry.EngineSpeed);
             }
 
             if (row.Table.Columns.Contains(Fields.AdditionalAuxPowerDemand))
-                entry.AdditionalAuxPowerDemand = row.GetDouble(Fields.AdditionalAuxPowerDemand);
+                entry.AdditionalAuxPowerDemand = row.ParseDouble(Fields.AdditionalAuxPowerDemand);
 
             return entry;
         }

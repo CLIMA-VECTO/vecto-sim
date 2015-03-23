@@ -81,10 +81,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             {
                 var entry = new FullLoadCurveEntry
                 {
-                    EngineSpeed = row.GetDouble(Fields.EngineSpeed),
-                    TorqueFullLoad = row.GetDouble(Fields.TorqueFullLoad),
-                    TorqueDrag = row.GetDouble(Fields.TorqueDrag),
-                    PT1 = row.GetDouble(Fields.PT1)
+                    EngineSpeed = row.ParseDouble(Fields.EngineSpeed),
+                    TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad),
+                    TorqueDrag = row.ParseDouble(Fields.TorqueDrag),
+                    PT1 = row.ParseDouble(Fields.PT1)
                 };
                 fullLoadCurve._entries.Add(entry);
             }
