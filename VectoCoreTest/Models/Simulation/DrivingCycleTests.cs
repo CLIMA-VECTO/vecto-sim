@@ -6,6 +6,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
+using EngineOnlyDrivingCycle = TUGraz.VectoCore.Models.SimulationComponent.Impl.EngineOnlyDrivingCycle;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {

@@ -81,15 +81,35 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
                 absTime += dt;
             }
 
-            port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(2329.973, 644.4445), 644.4445);
+	        engineSpeed = 644.4445;
+            port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(2329.973, engineSpeed), engineSpeed);
             engine.CommitSimulationStep(dataWriter);
 	        absTime += dt;
 
             Assert.AreEqual(1152.40304, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
 
+	        torque = 4264.177;
 	        for (var i = 0; i < 2; i++) {
 		        port.Request(absTime, dt, torque, engineSpeed);
+				engine.CommitSimulationStep(dataWriter);
+		        absTime += dt;
 	        }
+
+			engineSpeed = 869.7512;
+			port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(7984.56, engineSpeed), engineSpeed);
+			engine.CommitSimulationStep(dataWriter);
+	        absTime += dt;
+
+			Assert.AreEqual(7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+
+			engineSpeed = 644.4445;
+			port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(7984.56, engineSpeed), engineSpeed);
+			engine.CommitSimulationStep(dataWriter);
+			absTime += dt;
+
+			Assert.AreEqual(-7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+
+
         }
 
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineTests.csv", "EngineTests#csv", DataAccessMethod.Sequential)]

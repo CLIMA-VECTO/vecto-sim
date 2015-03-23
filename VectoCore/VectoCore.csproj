@@ -82,6 +82,7 @@
     <Compile Include="Models\SimulationComponent\IDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DistanceBasedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TimeBasedDrivingCycle.cs" />
+    <Compile Include="Models\Simulation\Data\EngineOnlyDrivingCycle.cs" />
     <Compile Include="Utils\IMemento.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyGearbox.cs" />

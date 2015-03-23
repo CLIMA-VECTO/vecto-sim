@@ -3,6 +3,7 @@ using Common.Logging;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using EngineOnlyDrivingCycle = TUGraz.VectoCore.Models.SimulationComponent.Impl.EngineOnlyDrivingCycle;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
