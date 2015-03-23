@@ -116,7 +116,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _currentState.EngineSpeed = engineSpeed;
             _currentState.AbsTime = absTime;
 
-            var requestedPower = VectoMath.ConvertRpmToPower(engineSpeed, torque);
+			var requestedPower = VectoMath.ConvertRpmTorqueToPower(engineSpeed, torque);
             var enginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
             var requestedEnginePower = requestedPower + enginePowerLoss;
 
