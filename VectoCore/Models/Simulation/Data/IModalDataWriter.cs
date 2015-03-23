@@ -1,4 +1,6 @@
-﻿namespace TUGraz.VectoCore.Models.Simulation.Data
+﻿using System;
+
+namespace TUGraz.VectoCore.Models.Simulation.Data
 {
     public interface IModalDataWriter
     {
@@ -12,7 +14,7 @@
         /// <summary>
         /// Commits the data of the current simulation step.
         /// </summary>
-        void CommitSimulationStep();
+        void CommitSimulationStep(TimeSpan absTime, TimeSpan simulationInterval);
 
         void Finish();
     }
