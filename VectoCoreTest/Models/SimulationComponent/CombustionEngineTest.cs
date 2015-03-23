@@ -5,7 +5,6 @@ using System.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -17,7 +16,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
     [TestClass]
     public class CombustionEngineTest
     {
-        private const string CoachEngine = "TestData\\EngineOnly\\EngineMaps\\24t Coach.veng";
+        private const string CoachEngine = @"TestData\Components\24t Coach.veng";
 
         public TestContext TestContext { get; set; }
 
@@ -46,6 +45,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
             var engine = new CombustionEngine(vehicle, engineData);
 
+            var gearbox = new EngineOnlyGearbox(vehicle);
 
             var port = engine.OutShaft();
 
@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var vehicle = new VehicleContainer();
             var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
             var engine = new CombustionEngine(vehicle, engineData);
-	        new EngineOnlyGearbox(vehicle);
+            var gearbox = new EngineOnlyGearbox(vehicle);
             var port = engine.OutShaft();
 
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
@@ -98,7 +98,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         {
             var vehicle = new VehicleContainer();
             var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
-            var data = EngineOnlyDrivingCycle.ReadFromFile(TestContext.DataRow["CycleFile"].ToString());
+
+            var gearbox = new EngineOnlyGearbox(vehicle);
+
+            var data = DrivingCycleData.ReadFromFileEngineOnly(TestContext.DataRow["CycleFile"].ToString());
             var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
             var engine = new CombustionEngine(vehicle, engineData);
@@ -110,9 +113,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
             var dataWriter = new TestModalDataWriter();
 
-            foreach (var cycle in data)
+            foreach (var cycle in data.Entries)
             {
-                port.Request(absTime, dt, cycle.Torque, cycle.EngineSpeed);
+                port.Request(absTime, dt, cycle.EngineTorque, cycle.EngineSpeed);
                 foreach (var sc in vehicle.SimulationComponents())
                 {
                     sc.CommitSimulationStep(dataWriter);
@@ -120,15 +123,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
                 absTime += dt;
 
                 //todo: test with correct output values, add other fields to test
-                Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
-                Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
-                Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
+                Assert.AreEqual(13000, dataWriter[ModalResultField.FC]);
+                Assert.AreEqual(14000, dataWriter[ModalResultField.FCAUXc]);
+                Assert.AreEqual(15000, dataWriter[ModalResultField.FCWHTCc]);
             }
 
             //todo: test with correct output values, add other fields to test
-            Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
-            Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
-            Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
+            Assert.AreEqual(13000, dataWriter[ModalResultField.FC]);
+            Assert.AreEqual(14000, dataWriter[ModalResultField.FCAUXc]);
+            Assert.AreEqual(15000, dataWriter[ModalResultField.FCWHTCc]);
         }
 
 

@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 	[TestClass]
 	public class EngineOnlyCycleTest
 	{
-		private const string EngineFile = "TestData\\EngineOnly\\EngineMaps\\24t Coach.veng";
+		private const string EngineFile = @"TestData\Components\24t Coach.veng";
 
 		[TestMethod]
 		public void AssembleEngineOnlyPowerTrain()
@@ -25,8 +25,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			gearbox.InShaft().Connect(engine.OutShaft());
 
-			var absTime = new TimeSpan(days: 0, hours: 0, minutes: 0, seconds: 0);
-			var dt = new TimeSpan(days: 0, hours: 0, minutes: 0, seconds: 1);
+			var absTime = new TimeSpan();
+			var dt = TimeSpan.FromSeconds(1);
 
 
 			gearbox.Request(absTime, dt, VectoMath.ConvertPowerToTorque(2329.973, 644.4445), 644.4445);

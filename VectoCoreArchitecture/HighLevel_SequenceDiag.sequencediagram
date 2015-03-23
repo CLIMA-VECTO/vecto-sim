@@ -1,13 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <SequenceDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" dslVersion="1.0.0.0" Id="784de59c-9096-4010-b35c-fa2e1ce01da2" name="Sequence1" linkedPackageId="d9536f1a-29ae-4998-a61d-8ed09f4ae8e4" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner">
-  <profileInstances>
-    <packageHasProfileInstances Id="5cc078d7-edae-48fe-b2c4-874722ecc648">
-      <profileInstance Id="5465f10b-5a51-4760-b8ac-33cd360ee53e" name="CSharpProfile">
-        <elementDefinition Id="a6d84b35-fa55-4f2c-bad4-64e6c6bb5f81" />
-      </profileInstance>
-      <elementDefinition Id="24c10212-1b6e-4dbf-9717-54ac8ebd361f" />
-    </packageHasProfileInstances>
-  </profileInstances>
   <packagedElements>
     <packageHasNamedElement>
       <interaction Id="60558488-6e4a-41e5-b61d-87aa0c2c6371" name="Sequence1" collapseFragmentsFlag="false" isActiveClass="false" isAbstract="false" isLeaf="false" isReentrant="false">

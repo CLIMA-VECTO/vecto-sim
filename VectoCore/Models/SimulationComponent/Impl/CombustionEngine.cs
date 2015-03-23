@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Newtonsoft.Json.Schema;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
@@ -73,6 +71,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             #endregion
         }
 
+        #region IEngineCockpit
+        public double EngineSpeed()
+        {
+            return _previousState.EngineSpeed;
+        }
+        #endregion
+
+
+
+
+        private CombustionEngineData _data = new CombustionEngineData();
+        private EngineState _previousState = new EngineState();
+        private EngineState _currentState = new EngineState();	// current state is computed in request method
+
+        [NonSerialized]
+        private List<TimeSpan> _enginePowerCorrections = new List<TimeSpan>();
+
         public CombustionEngine()
         {
 
@@ -88,13 +103,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _previousState.EngineSpeed = _data.IdleSpeed;
         }
 
-        private CombustionEngineData _data = new CombustionEngineData();
-        private EngineState _previousState = new EngineState();
-        private EngineState _currentState = new EngineState();	// current state is computed in request method
-
-        [NonSerialized]
-        private List<TimeSpan> _enginePowerCorrections = new List<TimeSpan>();
-
         public ITnOutPort OutShaft()
         {
             return this;
@@ -105,11 +113,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             writer[ModalResultField.PaEng] = _currentState.EnginePowerLoss;
             _previousState = _currentState;
             _currentState = new EngineState();
-        }
-
-        public double EngineSpeed()
-        {
-            return _previousState.EngineSpeed;
         }
 
         public void Request(TimeSpan absTime, TimeSpan dt, double torque, double engineSpeed)
@@ -254,6 +257,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         #endregion
 
+        #region IMemento
         public string Serialize()
         {
             var mem = new { Data = _data, PreviousState = _previousState };
@@ -268,5 +272,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _data = mem.Data;
             _previousState = mem.PreviousState;
         }
+        #endregion
     }
 }

@@ -7,12 +7,12 @@ namespace TUGraz.VectoCore.Utils
 {
     public static class DataRowExtensionMethods
     {
-        /// <summary>
-        /// Gets the field of a DataRow as double.
-        /// </summary>
-        /// <param name="row"></param>
-        /// <param name="columnName">The name of the column.</param>
-        /// <returns>The value of the underlying DataRows column field as double.</returns>
+
+        public static double ParseDoubleOrGetDefault(this DataRow row, string columnName)
+        {
+            return row.Table.Columns.Contains(columnName) ? row.ParseDouble(columnName) : default(double);
+        }
+
         public static double ParseDouble(this DataRow row, string columnName, CultureInfo culture = null)
         {
             //todo ArgumentNullException?
