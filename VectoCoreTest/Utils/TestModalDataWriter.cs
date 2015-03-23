@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -33,5 +34,11 @@ namespace TUGraz.VectoCore.Tests.Utils
             get { return CurrentRow[key.GetName()]; }
             set { CurrentRow[key.GetName()] = value; }
         }
+
+	    public double GetDouble(ModalResultField key)
+	    {
+		    return CurrentRow.Field<double>(key.GetName());
+	    }
+
     }
 }

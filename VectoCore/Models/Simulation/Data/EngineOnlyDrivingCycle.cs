@@ -64,15 +64,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
             foreach (DataRow row in data.Rows)
             {
                 var cycle = new EngineOnlyDrivingCycle();
-                cycle.EngineSpeed = row.GetDouble(Fields.EngineSpeed);
+                cycle.EngineSpeed = row.ParseDouble(Fields.EngineSpeed);
 
                 if (data.Columns.Contains(Fields.PowerEngine))
-                    cycle.PowerEngine = row.GetDouble(Fields.PowerEngine);
+                    cycle.PowerEngine = row.ParseDouble(Fields.PowerEngine);
                 else
-                    cycle.Torque = row.GetDouble(Fields.Torque);
+                    cycle.Torque = row.ParseDouble(Fields.Torque);
 
                 if (data.Columns.Contains(Fields.PowerAuxilaries))
-                    cycle.PowerAuxilaries = row.GetDouble(Fields.PowerAuxilaries);
+                    cycle.PowerAuxilaries = row.ParseDouble(Fields.PowerAuxilaries);
 
                 cycles.Add(cycle);
             }

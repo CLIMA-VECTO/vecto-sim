@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
                     if (col.ColumnName == ModalResultField.FC.GetName() && row.Field<string>(col) == "ERROR")
                         continue;
 
-                    newRow.SetField(col.ColumnName, row.GetDouble(col.ColumnName));
+                    newRow.SetField(col.ColumnName, row.ParseDouble(col.ColumnName));
 
                 }
                 modalResults.Rows.Add(newRow);
