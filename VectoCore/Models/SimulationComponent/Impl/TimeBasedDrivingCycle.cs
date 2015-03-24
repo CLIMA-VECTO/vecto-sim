@@ -29,12 +29,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         #region IDrivingCycle
         public bool DoSimulationStep()
         {
-            if (Data.Entries.Count >= CurrentStep)
+            if (CurrentStep >= Data.Entries.Count)
                 return false;
 
             var entry = Data.Entries[CurrentStep];
 
-            dt = TimeSpan.FromSeconds(entry.Time) - AbsTime;
+            //todo: variable time steps!
+            dt = TimeSpan.FromSeconds(1);
+
             OutPort.Request(AbsTime, dt, entry.VehicleSpeed, entry.RoadGradient);
             AbsTime += dt;
             CurrentStep++;

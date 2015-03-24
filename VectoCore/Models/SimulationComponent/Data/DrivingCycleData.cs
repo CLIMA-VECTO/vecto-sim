@@ -118,8 +118,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             /// <summary>
             ///  [kW]	Supply Power input for each auxiliary defined in the .vecto file where xxx matches the ID of the corresponding Auxiliary. ID's are not case sensitive and must not contain space or special characters.
             /// </summary>
-            // todo: implement additional aux as dictionary!
-            public double AuxiliarySupplyPower { get; set; }
+            public Dictionary<string, double> AuxiliarySupplyPower { get; set; }
 
             /// <summary>
             ///  [rpm]	If <n> is defined VECTO uses that instead of the calculated engine speed value.
@@ -191,8 +190,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             var reader = GetDataRowReader(type);
             var entries = data.Rows.Cast<DataRow>().Select(r => reader(r)).ToList();
 
-            // if cycle is timebased and time field is missing, the time field gets filled up automatically in 1Hz steps
-            if (type == CycleType.TimeBased && !data.Columns.Contains(Fields.Time))
+            // update time field in 1Hz steps, if time field is missing and cycle type is timebase
+            if (!data.Columns.Contains(Fields.Time) && type == CycleType.TimeBased)
             {
                 for (var i = 0; i < entries.Count; i++)
                     entries[i].Time = i;
@@ -273,13 +272,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                 EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed),
                 Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
                 AirSpeedRelativeToVehicle = row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle),
-                WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle)
+                WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
+                AuxiliarySupplyPower = ReadAuxSupplyPowerColumns(row)
             };
 
-            // todo: implement additional aux as dictionary!
-            //AuxiliarySupplyPower = row.GetDouble(Fields.AuxiliarySupplyPower),
+
 
             return entry;
+        }
+
+        private static Dictionary<string, double> ReadAuxSupplyPowerColumns(DataRow row)
+        {
+            var entries = new Dictionary<string, double>();
+            foreach (DataColumn c in row.Table.Columns)
+            {
+                if (c.ColumnName.StartsWith(Fields.AuxiliarySupplyPower))
+                {
+                    var auxName = c.ColumnName.Substring(Fields.AuxiliarySupplyPower.Length - 1);
+                    entries[auxName] = row.ParseDouble(c);
+                }
+            }
+            return entries;
         }
 
         private static bool HeaderIsValidTimeBased(ICollection<string> header)
@@ -314,11 +327,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                 Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
                 EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed),
                 AirSpeedRelativeToVehicle = row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle),
-                WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle)
+                WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
+                AuxiliarySupplyPower = ReadAuxSupplyPowerColumns(row)
             };
-
-            // todo: implement additional aux as dictionary!
-            //AuxiliarySupplyPower = row.GetDouble(Fields.AuxiliarySupplyPower),
 
             return entry;
         }
@@ -363,8 +374,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                     entry.EngineTorque = VectoMath.ConvertPowerToTorque(row.ParseDouble(Fields.EnginePower), entry.EngineSpeed);
             }
 
-            if (row.Table.Columns.Contains(Fields.AdditionalAuxPowerDemand))
-                entry.AdditionalAuxPowerDemand = row.ParseDouble(Fields.AdditionalAuxPowerDemand);
+            entry.AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand);
+
+            entry.AuxiliarySupplyPower = ReadAuxSupplyPowerColumns(row);
 
             return entry;
         }
