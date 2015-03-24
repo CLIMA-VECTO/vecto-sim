@@ -191,6 +191,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             var reader = GetDataRowReader(type);
             var entries = data.Rows.Cast<DataRow>().Select(r => reader(r)).ToList();
 
+            // if cycle is timebased and time field is missing, the time field gets filled up automatically in 1Hz steps
+            if (type == CycleType.TimeBased && !data.Columns.Contains(Fields.Time))
+            {
+                for (var i = 0; i < entries.Count; i++)
+                    entries[i].Time = i;
+            }
+
             var cycle = new DrivingCycleData { Entries = entries };
 
             Log.Info(string.Format("Data loaded. Number of Entries: {0}", entries.Count));
