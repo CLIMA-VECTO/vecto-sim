@@ -1,13 +1,11 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
-using EngineOnlyDrivingCycle = TUGraz.VectoCore.Models.SimulationComponent.Impl.EngineOnlyDrivingCycle;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -23,7 +21,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             IEngineOnlyDrivingCycle cycle = new EngineOnlyDrivingCycle(container, cycleData);
 
             var outPort = new MockTnOutPort();
-            ITnInPort inPort = cycle.InShaft();
+            var inPort = cycle.InShaft();
 
             inPort.Connect(outPort);
 
@@ -34,8 +32,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
             Assert.AreEqual(0.0, outPort.AbsTime.TotalSeconds);
             Assert.AreEqual(1.0, outPort.Dt.TotalSeconds);
-            Assert.AreEqual(1500, outPort.EngineSpeed);
-            Assert.AreEqual(600, outPort.Torque);
+            Assert.AreEqual(600, outPort.EngineSpeed);
+            Assert.AreEqual(0, outPort.Torque);
 
             Assert.AreEqual(0.5, dataWriter[ModalResultField.time]);
         }
@@ -50,7 +48,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
             var outPort = new MockDriverDemandOutPort();
 
-            IDriverDemandInPort inPort = cycle.InPort();
+            var inPort = cycle.InPort();
 
             inPort.Connect(outPort);
 
@@ -77,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
             var outPort = new MockDriverDemandOutPort();
 
-            IDriverDemandInPort inPort = cycle.InPort();
+            var inPort = cycle.InPort();
 
             inPort.Connect(outPort);
 

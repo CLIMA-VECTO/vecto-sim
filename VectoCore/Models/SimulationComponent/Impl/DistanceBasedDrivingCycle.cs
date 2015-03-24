@@ -32,17 +32,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         {
             //todo: Distance calculation and comparison!!!
             throw new NotImplementedException("Distance based Cycle is not yet implemented.");
-
-            if (Data.Entries.Count >= CurrentStep)
-                return false;
-
-            var entry = Data.Entries[CurrentStep];
-            OutPort.Request(AbsTime, Dt, entry.VehicleSpeed, entry.RoadGradient);
-
-            AbsTime += Dt;
-            CurrentStep++;
-
-            return true;
         }
         #endregion
 

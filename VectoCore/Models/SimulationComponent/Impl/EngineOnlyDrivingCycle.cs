@@ -29,10 +29,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         #region IDrivingCycle
         public bool DoSimulationStep()
         {
-            if (Data.Entries.Count >= CurrentStep)
+            if (CurrentStep >= Data.Entries.Count)
                 return false;
 
             var entry = Data.Entries[CurrentStep];
+
+            //todo: variable time steps!
+            dt = TimeSpan.FromSeconds(1);
+
             OutPort.Request(AbsTime, dt, entry.EngineTorque, entry.EngineSpeed);
             AbsTime += dt;
             CurrentStep++;
@@ -61,7 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             // for the moddata is between the last AbsTime and the current AbsTime,
             // therefore dt/2 has to be subtracted from the current AbsTime.
             // todo: document this dt/2 in a jira ticket!
-            var halfDt = new TimeSpan(dt.Ticks/2);
+            var halfDt = new TimeSpan(dt.Ticks / 2);
             writer[ModalResultField.time] = (AbsTime - halfDt).TotalSeconds;
         }
     }

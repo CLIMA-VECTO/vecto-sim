@@ -84,6 +84,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
             try
             {
                 var curve = FullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve insufficient columns.vfld");
+                Assert.Fail("this should not be reached.");
             }
             catch (VectoException ex)
             {
@@ -112,6 +113,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
             try
             {
                 var curve = FullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve no header.vfld");
+                Assert.Fail("this should not be reached.");
             }
             catch (VectoException ex)
             {
@@ -130,6 +132,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
             try
             {
                 var curve = FullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve insufficient entries.vfld");
+                Assert.Fail("this should not be reached.");
             }
             catch (VectoException ex)
             {
