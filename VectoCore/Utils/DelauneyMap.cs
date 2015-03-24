@@ -17,46 +17,45 @@ namespace TUGraz.VectoCore.Utils
             _points.Add(new Point(x, y, z));
         }
 
+
+
         public void Triangulate()
         {
-            const int superTriangleScalingFactor = 10;
-
             if (_points.Count < 3)
                 throw new ArgumentException(string.Format("Triangulations needs at least 3 Points. Got {0} Points.", _points.Count));
 
-            // The "supertriangle" encompasses all triangulation points.
-            // This triangle initializes the algorithm and will be removed later.
-            var max = _points.Max(point => Math.Max(Math.Abs(point.X), Math.Abs(point.Y))) * superTriangleScalingFactor;
-            var superTriangle = new Triangle(new Point(max, 0, 0), new Point(0, max, 0), new Point(-max, -max, 0));
+            var superTriangle = CalculateSuperTriangle();
 
             var triangles = new List<Triangle> { superTriangle };
 
             foreach (var point in _points)
             {
-                var edges = new List<Edge>();
+                var containerTriangles = triangles.Where(t => t.ContainsInCircumcircle(point)).ToList();
+                containerTriangles.ForEach(t => triangles.Remove(t));
 
-                // If the actual vertex lies inside the circumcircle, then the three edges of the 
-                // triangle are added to the edge buffer and the triangle is removed from list.
-                foreach (var containerTriangle in triangles.Where(triangle => triangle.ContainsInCircumcircle(point)).ToList())
-                {
-                    edges.Add(new Edge(containerTriangle.P1, containerTriangle.P2));
-                    edges.Add(new Edge(containerTriangle.P2, containerTriangle.P3));
-                    edges.Add(new Edge(containerTriangle.P3, containerTriangle.P1));
-                    triangles.Remove(containerTriangle);
-                }
+                var edges = containerTriangles.SelectMany(t => t.GetEdges());
 
-                // Remove duplicate edges. This leaves the convex hull of the edges.
-                // The edges in this convex hull are oriented counterclockwise!
-                var convexHullEdges = edges.GroupBy(edge => edge).Where(group => group.Count() == 1).SelectMany(group => group);
+                var convexHullEdges = edges.
+                                      GroupBy(edge => edge).
+                                      Where(group => group.Count() == 1).
+                                      SelectMany(group => group);
 
-                // Generate new counterclockwise oriented triangles filling the "hole" in
-                // the existing triangulation. These triangles all share the actual vertex.
-                var counterTriangles = convexHullEdges.Select(edge => new Triangle(edge.P1, edge.P2, point));
-                triangles.AddRange(counterTriangles);
+                var newTriangles = convexHullEdges.Select(edge => new Triangle(edge.P1, edge.P2, point));
+                triangles.AddRange(newTriangles);
             }
 
-            // Remove all triangles sharing a vertex with the supertriangle.
             _triangles = triangles.Where(triangle => !triangle.SharesVertexWith(superTriangle)).ToList();
+        }
+
+        /// <summary>
+        /// The "supertriangle" encompasses all triangulation points.
+        /// This triangle initializes the algorithm and will be removed later.
+        /// </summary>
+        private Triangle CalculateSuperTriangle()
+        {
+            const int superTriangleScalingFactor = 10;
+            var max = _points.Max(point => Math.Max(Math.Abs(point.X), Math.Abs(point.Y))) * superTriangleScalingFactor;
+            return new Triangle(new Point(max, 0, 0), new Point(0, max, 0), new Point(-max, -max, 0));
         }
 
         public double Interpolate(double x, double y)
@@ -84,14 +83,14 @@ namespace TUGraz.VectoCore.Utils
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((DelauneyMap) obj);
+            return Equals((DelauneyMap)obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((_points != null ? _points.GetHashCode() : 0)*397) ^
+                return ((_points != null ? _points.GetHashCode() : 0) * 397) ^
                        (_triangles != null ? _triangles.GetHashCode() : 0);
             }
         }
@@ -132,12 +131,12 @@ namespace TUGraz.VectoCore.Utils
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Point) obj);
+            return obj.GetType() == GetType() && Equals((Point)obj);
         }
 
         public override int GetHashCode()
         {
-            return unchecked((((X.GetHashCode()*397) ^ Y.GetHashCode())*397) ^ Z.GetHashCode());
+            return unchecked((((X.GetHashCode() * 397) ^ Y.GetHashCode()) * 397) ^ Z.GetHashCode());
         }
         #endregion
     }
@@ -255,7 +254,7 @@ namespace TUGraz.VectoCore.Utils
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Triangle) obj);
+            return Equals((Triangle)obj);
         }
 
         public override int GetHashCode()
@@ -263,14 +262,20 @@ namespace TUGraz.VectoCore.Utils
             unchecked
             {
                 var hashCode = (P1 != null ? P1.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (P2 != null ? P2.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (P3 != null ? P3.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (P2 != null ? P2.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (P3 != null ? P3.GetHashCode() : 0);
                 return hashCode;
             }
         }
 
         #endregion
 
+        public IEnumerable<Edge> GetEdges()
+        {
+            yield return new Edge(P1, P2);
+            yield return new Edge(P2, P3);
+            yield return new Edge(P3, P1);
+        }
     }
 
     public class Edge
@@ -301,7 +306,7 @@ namespace TUGraz.VectoCore.Utils
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((Edge) obj);
+            return obj.GetType() == GetType() && Equals((Edge)obj);
         }
 
         public override int GetHashCode()
