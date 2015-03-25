@@ -24,16 +24,23 @@ namespace TUGraz.VectoCore.Utils
 
             var superTriangle = CalculateSuperTriangle();
 
+            // The "supertriangle" encompasses all triangulation points.
+            // This triangle initializes the algorithm and will be removed later.
+
             var triangles = new List<Triangle> { superTriangle };
 
             foreach (var point in _points)
             {
+
+                // If the actual vertex lies inside a triangle, the edges of the triangle are 
+                // added to the edge buffer and the triangle is removed from list.
                 var containerTriangles = triangles.FindAll(t => t.ContainsInCircumcircle(point));
                 triangles.RemoveAll(t => t.ContainsInCircumcircle(point));
 
-                var edges = containerTriangles.SelectMany(t => t.GetEdges());
-
-                var convexHullEdges = edges.
+                // Remove duplicate edges. This leaves the convex hull of the edges.
+                // The edges in this convex hull are oriented counterclockwise!
+                var convexHullEdges = containerTriangles.
+                                      SelectMany(t => t.GetEdges()).
                                       GroupBy(edge => edge).
                                       Where(group => group.Count() == 1).
                                       SelectMany(group => group);
@@ -46,10 +53,6 @@ namespace TUGraz.VectoCore.Utils
             _triangles = triangles.FindAll(t => !t.SharesVertexWith(superTriangle));
         }
 
-        /// <summary>
-        /// The "supertriangle" encompasses all triangulation points.
-        /// This triangle initializes the algorithm and will be removed later.
-        /// </summary>
         private Triangle CalculateSuperTriangle()
         {
             const int superTriangleScalingFactor = 10;
