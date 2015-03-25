@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
         /// <summary>
         /// Commits the data of the current simulation step.
         /// </summary>
-        void CommitSimulationStep(TimeSpan absTime, TimeSpan simulationInterval);
+        void CommitSimulationStep();
 
         void Finish();
     }

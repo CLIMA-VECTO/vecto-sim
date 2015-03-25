@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             }
 
 	        engineSpeed = 644.4445;
-            port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(2329.973, engineSpeed), engineSpeed);
+            port.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(2329.973, engineSpeed), engineSpeed);
             engine.CommitSimulationStep(dataWriter);
 
 			Assert.AreEqual(1152.40304, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	        }
 
 			engineSpeed = 869.7512;
-			port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(7984.56, engineSpeed), engineSpeed);
+			port.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(7984.56, engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
 
 
@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			absTime += dt;
 
 			engineSpeed = 644.4445;
-			port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(7984.56, engineSpeed), engineSpeed);
+			port.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(7984.56, engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
 			absTime += dt;
 

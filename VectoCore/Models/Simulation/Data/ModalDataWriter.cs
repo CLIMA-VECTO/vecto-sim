@@ -19,10 +19,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
         public string FileName { get; set; }
 
-		public void CommitSimulationStep(TimeSpan absTime, TimeSpan simulationInterval)
+		public void CommitSimulationStep()
 		{
-			this[ModalResultField.time] = (absTime - TimeSpan.FromTicks(simulationInterval.Ticks / 2)).TotalSeconds;
-			this[ModalResultField.simulationInterval] = simulationInterval.TotalSeconds;
             Data.Rows.Add(CurrentRow);
             CurrentRow = Data.NewRow();
         }
