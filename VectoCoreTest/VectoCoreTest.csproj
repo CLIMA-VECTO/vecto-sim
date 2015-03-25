@@ -81,6 +81,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Utils\DelauneyMapTest.cs" />
     <Compile Include="Utils\TestModalDataWriter.cs" />
   </ItemGroup>
   <ItemGroup>

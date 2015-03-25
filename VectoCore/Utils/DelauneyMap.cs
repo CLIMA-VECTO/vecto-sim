@@ -7,7 +7,7 @@ using TUGraz.VectoCore.Exceptions;
 namespace TUGraz.VectoCore.Utils
 {
     [JsonObject(MemberSerialization.Fields)]
-    class DelauneyMap
+    public class DelauneyMap
     {
         private readonly List<Point> _points = new List<Point>();
         private List<Triangle> _triangles = new List<Triangle>();
