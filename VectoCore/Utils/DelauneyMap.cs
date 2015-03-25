@@ -17,8 +17,6 @@ namespace TUGraz.VectoCore.Utils
             _points.Add(new Point(x, y, z));
         }
 
-
-
         public void Triangulate()
         {
             if (_points.Count < 3)
@@ -30,8 +28,8 @@ namespace TUGraz.VectoCore.Utils
 
             foreach (var point in _points)
             {
-                var containerTriangles = triangles.Where(t => t.ContainsInCircumcircle(point)).ToList();
-                containerTriangles.ForEach(t => triangles.Remove(t));
+                var containerTriangles = triangles.FindAll(t => t.ContainsInCircumcircle(point));
+                triangles.RemoveAll(t => t.ContainsInCircumcircle(point));
 
                 var edges = containerTriangles.SelectMany(t => t.GetEdges());
 
@@ -41,10 +39,11 @@ namespace TUGraz.VectoCore.Utils
                                       SelectMany(group => group);
 
                 var newTriangles = convexHullEdges.Select(edge => new Triangle(edge.P1, edge.P2, point));
-                triangles.AddRange(newTriangles);
+
+               triangles.AddRange(newTriangles);
             }
 
-            _triangles = triangles.Where(triangle => !triangle.SharesVertexWith(superTriangle)).ToList();
+            _triangles = triangles.FindAll(t => !t.SharesVertexWith(superTriangle));
         }
 
         /// <summary>
