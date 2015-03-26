@@ -91,9 +91,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
 
-	        torque = 4264.177;
-	        for (var i = 0; i < 2; i++) {
-		        port.Request(absTime, dt, torque, engineSpeed);
+	        var power = new double[] {569.3641, 4264.177};
+;	        for (var i = 0; i < 2; i++) {
+				port.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(power[i], engineSpeed), engineSpeed);
 				engine.CommitSimulationStep(dataWriter);
 				dataWriter.CommitSimulationStep(absTime, dt);
 				absTime += dt;
@@ -109,12 +109,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			absTime += dt;
 
 			engineSpeed = 644.4445;
-			port.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(7984.56, engineSpeed), engineSpeed);
+			port.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(1351.656, engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
-			absTime += dt;
 
 			Assert.AreEqual(-7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
 			dataWriter.CommitSimulationStep(absTime, dt);
+			absTime += dt;
 
 			dataWriter.Data.WriteToFile(@"test1.csv");
         }
