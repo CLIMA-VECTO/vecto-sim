@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using System.Xml.Schema;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
@@ -11,6 +8,8 @@ namespace TUGraz.VectoCore.Tests.Utils
     [TestClass]
     public class DelauneyMapTest
     {
+        private const double tolerance = 0.00001;
+
         public static void AssertException<T>(Action func, string message) where T : Exception
         {
             try
@@ -36,7 +35,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
             var result = map.Interpolate(0.25, 0.25);
 
-            Assert.AreEqual(0, result);
+            Assert.AreEqual(0, result, tolerance);
         }
 
         [TestMethod]
@@ -50,21 +49,21 @@ namespace TUGraz.VectoCore.Tests.Utils
             map.Triangulate();
 
             // fixed points
-            Assert.AreEqual(0, map.Interpolate(0, 0));
-            Assert.AreEqual(1, map.Interpolate(1, 0));
-            Assert.AreEqual(2, map.Interpolate(0, 1));
+            Assert.AreEqual(0, map.Interpolate(0, 0), tolerance);
+            Assert.AreEqual(1, map.Interpolate(1, 0), tolerance);
+            Assert.AreEqual(2, map.Interpolate(0, 1), tolerance);
 
             // interpolations
-            Assert.AreEqual(0.5, map.Interpolate(0.5, 0));
-            Assert.AreEqual(1, map.Interpolate(0, 0.5));
-            Assert.AreEqual(1.5, map.Interpolate(0.5, 0.5));
+            Assert.AreEqual(0.5, map.Interpolate(0.5, 0), tolerance);
+            Assert.AreEqual(1, map.Interpolate(0, 0.5), tolerance);
+            Assert.AreEqual(1.5, map.Interpolate(0.5, 0.5), tolerance);
 
-            Assert.AreEqual(0.25, map.Interpolate(0.25, 0));
-            Assert.AreEqual(0.5, map.Interpolate(0, 0.25));
-            Assert.AreEqual(0.75, map.Interpolate(0.25, 0.25));
+            Assert.AreEqual(0.25, map.Interpolate(0.25, 0), tolerance);
+            Assert.AreEqual(0.5, map.Interpolate(0, 0.25), tolerance);
+            Assert.AreEqual(0.75, map.Interpolate(0.25, 0.25), tolerance);
 
-            Assert.AreEqual(0.75, map.Interpolate(0.75, 0));
-            Assert.AreEqual(1.5, map.Interpolate(0, 0.75));
+            Assert.AreEqual(0.75, map.Interpolate(0.75, 0), tolerance);
+            Assert.AreEqual(1.5, map.Interpolate(0, 0.75), tolerance);
 
             // extrapolation (should fail)
             AssertException<VectoException>(() => map.Interpolate(1, 1), "Interpolation failed.");
@@ -86,24 +85,24 @@ namespace TUGraz.VectoCore.Tests.Utils
             map.Triangulate();
 
             // fixed points
-            Assert.AreEqual(0, map.Interpolate(0, 0));
-            Assert.AreEqual(1, map.Interpolate(1, 0));
-            Assert.AreEqual(2, map.Interpolate(0, 1));
-            Assert.AreEqual(3, map.Interpolate(1, 1));
+            Assert.AreEqual(0, map.Interpolate(0, 0), tolerance);
+            Assert.AreEqual(1, map.Interpolate(1, 0), tolerance);
+            Assert.AreEqual(2, map.Interpolate(0, 1), tolerance);
+            Assert.AreEqual(3, map.Interpolate(1, 1), tolerance);
 
             // interpolations
-            Assert.AreEqual(0.5, map.Interpolate(0.5, 0));
-            Assert.AreEqual(1, map.Interpolate(0, 0.5));
-            Assert.AreEqual(2, map.Interpolate(1, 0.5));
-            Assert.AreEqual(2.5, map.Interpolate(0.5, 1));
+            Assert.AreEqual(0.5, map.Interpolate(0.5, 0), tolerance);
+            Assert.AreEqual(1, map.Interpolate(0, 0.5), tolerance);
+            Assert.AreEqual(2, map.Interpolate(1, 0.5), tolerance);
+            Assert.AreEqual(2.5, map.Interpolate(0.5, 1), tolerance);
 
-            Assert.AreEqual(1.5, map.Interpolate(0.5, 0.5));
+            Assert.AreEqual(1.5, map.Interpolate(0.5, 0.5), tolerance);
 
-            Assert.AreEqual(0.75, map.Interpolate(0.25, 0.25));
-            Assert.AreEqual(2.25, map.Interpolate(0.75, 0.75));
+            Assert.AreEqual(0.75, map.Interpolate(0.25, 0.25), tolerance);
+            Assert.AreEqual(2.25, map.Interpolate(0.75, 0.75), tolerance);
 
-            Assert.AreEqual(1.75, map.Interpolate(0.25, 0.75));
-            Assert.AreEqual(1.25, map.Interpolate(0.75, 0.25));
+            Assert.AreEqual(1.75, map.Interpolate(0.25, 0.75), tolerance);
+            Assert.AreEqual(1.25, map.Interpolate(0.75, 0.25), tolerance);
 
             // extrapolation (should fail)
             AssertException<VectoException>(() => map.Interpolate(1.5, 0.5), "Interpolation failed.");
@@ -159,13 +158,6 @@ namespace TUGraz.VectoCore.Tests.Utils
             map.AddPoint(1, 0, 0);
             map.AddPoint(0, 1, 0);
             map.Triangulate();
-        }
-
-
-        [TestMethod]
-        public void Test_DelauneyWithRealData()
-        {
-            Assert.Fail();
         }
     }
 }
