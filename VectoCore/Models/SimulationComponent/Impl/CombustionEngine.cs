@@ -37,7 +37,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             public double EnginePowerLoss { get; set; }
 			public double StationaryFullLoadPower { get; set; }
 			public double DynamicFullLoadPower { get; set; }
-			public double FullLoadTorque { get; set; }
+			public double StationaryFullLoadTorque { get; set; }
+			public double DynamicFullLoadTorque { get; set; }
 			public double FullDragPower { get; set; }
 			public double FullDragTorque { get; set; }
 			public double EngineTorque { get; set; }
@@ -118,13 +119,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         {
             writer[ModalResultField.PaEng] = _currentState.EnginePowerLoss;
 	        writer[ModalResultField.Pe_drag] = _currentState.FullDragPower;
-	        writer[ModalResultField.Pe_full] = _currentState.StationaryFullLoadPower;
+	        writer[ModalResultField.Pe_full] = _currentState.DynamicFullLoadPower;
 	        writer[ModalResultField.Pe_eng] = _currentState.EnginePower;
 			
 			writer[ModalResultField.Tq_drag] = _currentState.FullDragTorque;
-			writer[ModalResultField.Tq_full] = _currentState.FullLoadTorque;
+			writer[ModalResultField.Tq_full] = _currentState.DynamicFullLoadTorque;
 	        writer[ModalResultField.Tq_eng] = _currentState.EngineTorque;
 			writer[ModalResultField.n] = _currentState.EngineSpeed;
+
+	        writer[ModalResultField.FC] = _data.ConsumptionMap.GetFuelConsumption(_currentState.EngineSpeed,
+		        _currentState.EngineTorque);
+
             _previousState = _currentState;
             _currentState = new EngineState();
         }
@@ -150,7 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.FullDragTorque = _data.GetFullLoadCurve(currentGear).DragLoadStationaryTorque(engineSpeed);
 			_currentState.FullDragPower = VectoMath.ConvertRpmTorqueToPower(engineSpeed, _currentState.FullDragTorque);
 
-	        ComputeFullLoadPower(currentGear, engineSpeed);
+	        ComputeFullLoadPower(currentGear, engineSpeed, dt);
 
             ValidatePowerDemand(requestedEnginePower);
 
@@ -158,7 +163,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
             UpdateEngineState(requestedEnginePower);
 
-	        _currentState.EnginePower = requestedEnginePower + _currentState.EnginePowerLoss;
+	        _currentState.EnginePower = requestedEnginePower; // + _currentState.EnginePowerLoss;
 			_currentState.EngineTorque = VectoMath.ConvertPowerRpmToTorque(_currentState.EnginePower, _currentState.EngineSpeed);
         }
 
@@ -226,16 +231,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             return retVal;
         }
 
-        protected void ComputeFullLoadPower(uint gear, double rpm)
+        protected void ComputeFullLoadPower(uint gear, double rpm, TimeSpan dt)
         {
 			//_currentState.StationaryFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
-	        _currentState.FullLoadTorque = _data.GetFullLoadCurve(gear).FullLoadStationaryTorque(rpm);
-	        _currentState.StationaryFullLoadPower = VectoMath.ConvertRpmTorqueToPower(rpm, _currentState.FullLoadTorque);
+	        _currentState.StationaryFullLoadTorque = _data.GetFullLoadCurve(gear).FullLoadStationaryTorque(rpm);
+	        _currentState.StationaryFullLoadPower = VectoMath.ConvertRpmTorqueToPower(rpm, _currentState.StationaryFullLoadTorque);
 
             var pt1 = _data.GetFullLoadCurve(gear).PT1(rpm);
 
+			// TODO @@@quam: handle dynamic timesteps
+	        if (Math.Abs(dt.TotalSeconds - 1) > 0.01) {
+		        throw new VectoSimulationException("simulation steps other than 1s can not be handled ATM");
+	        }
 			_currentState.DynamicFullLoadPower = Math.Min((1 / (pt1 + 1)) * (_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower),
 				_currentState.StationaryFullLoadPower);
+			_currentState.DynamicFullLoadTorque = VectoMath.ConvertPowerRpmToTorque(_currentState.DynamicFullLoadPower, rpm);
         }
 
         protected bool IsFullLoad(double requestedPower, double maxPower)
