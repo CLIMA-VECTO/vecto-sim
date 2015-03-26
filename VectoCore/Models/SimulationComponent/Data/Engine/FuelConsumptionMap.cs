@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                         };
 
                         if (entry.FuelConsumption < 0)
-                            throw new ArgumentOutOfRangeException("FuelConsumption < 0" + data.Rows.IndexOf(row));
+                            throw new ArgumentOutOfRangeException("FuelConsumption < 0");
 
                         fuelConsumptionMap._entries.Add(entry);
                         fuelConsumptionMap._fuelMap.AddPoint(entry.EngineSpeed, entry.Torque, entry.FuelConsumption);
