@@ -1157,7 +1157,8 @@ lb_nOK:
             If P > Pmax Then
                 If EngState0 = tEngState.Load Or EngState0 = tEngState.FullLoad Then
                     If PwheelVorg Then
-                        P = Pmax
+                        MODdata.Vh.Pwheel(jz) *= 0.999
+                        GoTo lbGschw
                     ElseIf Vact > 0.01 Then
                         Vh.ReduceSpeed(jz, 0.9999)
                         FirstSecItar = False
