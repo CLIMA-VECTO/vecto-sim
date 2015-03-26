@@ -1,4 +1,6 @@
-﻿namespace TUGraz.VectoCore.Models.Simulation.Data
+﻿using System;
+
+namespace TUGraz.VectoCore.Models.Simulation.Data
 {
     public interface IModalDataWriter
     {
