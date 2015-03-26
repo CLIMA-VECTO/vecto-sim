@@ -127,8 +127,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	        writer[ModalResultField.Tq_eng] = _currentState.EngineTorque;
 			writer[ModalResultField.n] = _currentState.EngineSpeed;
 
-	        writer[ModalResultField.FC] = _data.ConsumptionMap.GetFuelConsumption(_currentState.EngineSpeed,
-		        _currentState.EngineTorque);
+			try { 
+				writer[ModalResultField.FC] = _data.ConsumptionMap.GetFuelConsumption(_currentState.EngineSpeed,
+					_currentState.EngineTorque);
+			} catch (VectoException ex) {
+				Log.WarnFormat("t: {0} - {1} n: {2} Tq: {3}",_currentState.AbsTime.TotalSeconds, ex.Message, _currentState.EngineSpeed, _currentState.EngineTorque);
+				writer[ModalResultField.FC] = Double.NaN;
+			}
 
             _previousState = _currentState;
             _currentState = new EngineState();
@@ -210,15 +215,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_currentState.OperationMode = IsFullLoad(requestedEnginePower, _currentState.DynamicFullLoadPower)
                     ? EngineOperationMode.FullLoad
                     : EngineOperationMode.Load;
-            }
-            else if (requestedEnginePower > ZeroThreshold)
-            {
+            } else if (requestedEnginePower > ZeroThreshold) {
 				_currentState.OperationMode = IsFullLoad(requestedEnginePower, _currentState.FullDragPower)
                     ? EngineOperationMode.FullDrag
                     : EngineOperationMode.Drag;
-            }
-            else
-            {
+            } else {
                 // -ZeroThreshold <= requestedEnginePower <= ZeroThreshold
                 _currentState.OperationMode = EngineOperationMode.Idle;
             }

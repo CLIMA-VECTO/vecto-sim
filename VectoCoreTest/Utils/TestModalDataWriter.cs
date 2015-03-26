@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 	    public double GetDouble(ModalResultField key)
 	    {
-		    return CurrentRow.Field<double>(key.GetName());
+			return CurrentRow.Field<double>(key.GetName());
 	    }
 
     }

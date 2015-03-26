@@ -371,7 +371,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                 if (row.Field<string>(Fields.EnginePower).Equals("<DRAG>"))
                     entry.Drag = true;
                 else
-                    entry.EngineTorque = VectoMath.ConvertPowerRpmToTorque(row.ParseDouble(Fields.EnginePower), entry.EngineSpeed);
+                    entry.EngineTorque = VectoMath.ConvertPowerRpmToTorque(row.ParseDouble(Fields.EnginePower) * 1000, entry.EngineSpeed);
             }
 
             entry.AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand);
