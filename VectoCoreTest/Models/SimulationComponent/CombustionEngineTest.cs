@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -15,7 +16,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
     [TestClass]
     public class CombustionEngineTest
     {
-        private const string CoachEngine = "TestData\\EngineOnly\\EngineMaps\\24t Coach.veng";
+        private const string CoachEngine = @"TestData\Components\24t Coach.veng";
 
         public TestContext TestContext { get; set; }
 
@@ -29,7 +30,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestEngineHasOutPort()
         {
-	        var vehicle = new VehicleContainer();
+            var vehicle = new VehicleContainer();
             var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
             var engine = new CombustionEngine(vehicle, engineData);
 
@@ -40,10 +41,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestOutPortRequestNotFailing()
         {
-	        var vehicle = new VehicleContainer();
-			var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
+            var vehicle = new VehicleContainer();
+            var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
             var engine = new CombustionEngine(vehicle, engineData);
 
+            var gearbox = new EngineOnlyGearbox(vehicle);
 
             var port = engine.OutShaft();
 
@@ -58,46 +60,78 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
         [TestMethod]
         public void TestSimpleModalData()
         {
-			var vehicle = new VehicleContainer(); 
-            var engine = new CombustionEngine(vehicle, CombustionEngineData.ReadFromFile(CoachEngine));
-			new EngineOnlyGearbox(vehicle).InShaft().Connect(engine.OutShaft());
+            var vehicle = new VehicleContainer();
+            var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
+            var engine = new CombustionEngine(vehicle, engineData);
+            var gearbox = new EngineOnlyGearbox(vehicle);
             var port = engine.OutShaft();
 
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
             var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
-            //todo: set correct input values to test
             var torque = 0.0;
             var engineSpeed = 600.0;
             var dataWriter = new TestModalDataWriter();
 
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < 21; i++)
             {
                 port.Request(absTime, dt, torque, engineSpeed);
                 engine.CommitSimulationStep(dataWriter);
+				if (i > 0)
+					dataWriter.CommitSimulationStep(absTime, dt);
                 absTime += dt;
             }
 
-            port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(2329.973, 644.4445), 644.4445);
+	        engineSpeed = 644.4445;
+            port.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(2329.973, engineSpeed), engineSpeed);
             engine.CommitSimulationStep(dataWriter);
 
-            //todo: test with correct output values, add other fields to test
-            //Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
-            //Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
-            //Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
-            Assert.AreEqual(2.906175, dataWriter[ModalResultField.PaEng]);
+			Assert.AreEqual(1152.40304, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+
+			dataWriter.CommitSimulationStep(absTime, dt);
+			absTime += dt;
+
+	        var power = new double[] {569.3641, 4264.177};
+;	        for (var i = 0; i < 2; i++) {
+				port.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(power[i], engineSpeed), engineSpeed);
+				engine.CommitSimulationStep(dataWriter);
+				dataWriter.CommitSimulationStep(absTime, dt);
+				absTime += dt;
+	        }
+
+			engineSpeed = 869.7512;
+			port.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(7984.56, engineSpeed), engineSpeed);
+			engine.CommitSimulationStep(dataWriter);
+
+
+			Assert.AreEqual(7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+			dataWriter.CommitSimulationStep(absTime, dt);
+			absTime += dt;
+
+			engineSpeed = 644.4445;
+			port.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(1351.656, engineSpeed), engineSpeed);
+			engine.CommitSimulationStep(dataWriter);
+
+			Assert.AreEqual(-7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+			dataWriter.CommitSimulationStep(absTime, dt);
+			absTime += dt;
+
+			dataWriter.Data.WriteToFile(@"test1.csv");
         }
 
         [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineTests.csv", "EngineTests#csv", DataAccessMethod.Sequential)]
         [TestMethod]
         public void TestEngineOnlyDrivingCycle()
         {
-			var vehicle = new VehicleContainer();
-			var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
-			var data = EngineOnlyDrivingCycle.ReadFromFile(TestContext.DataRow["CycleFile"].ToString());
-			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
+            var vehicle = new VehicleContainer();
+            var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
 
-			var engine = new CombustionEngine(vehicle, engineData);
+            var gearbox = new EngineOnlyGearbox(vehicle);
+
+            var data = DrivingCycleData.ReadFromFileEngineOnly(TestContext.DataRow["CycleFile"].ToString());
+            var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
+
+            var engine = new CombustionEngine(vehicle, engineData);
             var port = engine.OutShaft();
 
 
@@ -106,24 +140,25 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
             var dataWriter = new TestModalDataWriter();
 
-            foreach (var cycle in data)
+            foreach (var cycle in data.Entries)
             {
-                port.Request(absTime, dt, cycle.Torque, cycle.EngineSpeed);
-	            foreach (var sc in vehicle.SimulationComponents()) {
-		            sc.CommitSimulationStep(dataWriter);
-	            }
-	            absTime += dt;
+                port.Request(absTime, dt, cycle.EngineTorque, cycle.EngineSpeed);
+                foreach (var sc in vehicle.SimulationComponents())
+                {
+                    sc.CommitSimulationStep(dataWriter);
+                }
+                absTime += dt;
 
                 //todo: test with correct output values, add other fields to test
-                Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
-                Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
-                Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
+                Assert.AreEqual(13000, dataWriter[ModalResultField.FC]);
+                Assert.AreEqual(14000, dataWriter[ModalResultField.FCAUXc]);
+                Assert.AreEqual(15000, dataWriter[ModalResultField.FCWHTCc]);
             }
 
             //todo: test with correct output values, add other fields to test
-            Assert.AreEqual(dataWriter[ModalResultField.FC], 13000);
-            Assert.AreEqual(dataWriter[ModalResultField.FCAUXc], 14000);
-            Assert.AreEqual(dataWriter[ModalResultField.FCWHTCc], 15000);
+            Assert.AreEqual(13000, dataWriter[ModalResultField.FC]);
+            Assert.AreEqual(14000, dataWriter[ModalResultField.FCAUXc]);
+            Assert.AreEqual(15000, dataWriter[ModalResultField.FCWHTCc]);
         }
 
 
@@ -135,12 +170,21 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var origin = new CombustionEngine(vehicle, engineData);
 
             var data = Memento.Serialize(origin);
-
             var restored = Memento.Deserialize<CombustionEngine>(data);
 
-            Assert.AreEqual(origin, restored);
+            Assert.AreEqual(origin, restored, "Serialized with Memento, Deserialized with Memento");
+
+            data = origin.Serialize();
+            restored = Memento.Deserialize<CombustionEngine>(data);
+
+            Assert.AreEqual(origin, restored, "Serialized with Object, Deserialized with Memento");
+
+
+            data = origin.Serialize();
+            restored = new CombustionEngine();
+            restored.Deserialize(data);
+
+            Assert.AreEqual(origin, restored, "Serialized with Object, Deserialized with Object");
         }
-
-
     }
 }

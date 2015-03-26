@@ -1,0 +1,25 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "3/4/2015 12:26:24 PM",
+    "AppVersion": "2.0.4-beta3",
+    "FileVersion": 2
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "ModelName": "Generic 24t Coach",
+    "Displacement": 12730.0,
+    "IdlingSpeed": 560.0,
+    "Inertia": 3.8,
+    "FullLoadCurves": [
+      {
+        "Path": "24t Coach.vfld",
+        "Gears": "0 - 99"
+      }
+    ],
+    "FuelMap": "24t Coach.vmap",
+    "WHTC-Urban": 0.0,
+    "WHTC-Rural": 0.0,
+    "WHTC-Motorway": 0.0
+  }
+}

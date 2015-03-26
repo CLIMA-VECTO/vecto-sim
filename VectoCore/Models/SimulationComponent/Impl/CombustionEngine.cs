@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
@@ -31,11 +30,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         public class EngineState
         {
-            public EngineOperationMode OperationMode { get; set; }
+			public TimeSpan AbsTime { get; set; }
+			public EngineOperationMode OperationMode { get; set; }
             public double EnginePower { get; set; }
             public double EngineSpeed { get; set; }
             public double EnginePowerLoss { get; set; }
-            public TimeSpan AbsTime { get; set; }
+			public double StationaryFullLoadPower { get; set; }
+			public double DynamicFullLoadPower { get; set; }
+			public double StationaryFullLoadTorque { get; set; }
+			public double DynamicFullLoadTorque { get; set; }
+			public double FullDragPower { get; set; }
+			public double FullDragTorque { get; set; }
+			public double EngineTorque { get; set; }
 
             #region Equality members
 
@@ -72,6 +78,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             #endregion
         }
 
+        #region IEngineCockpit
+        public double EngineSpeed()
+        {
+            return _previousState.EngineSpeed;
+        }
+        #endregion
+
+
+
+
+        private CombustionEngineData _data = new CombustionEngineData();
+        private EngineState _previousState = new EngineState();
+        private EngineState _currentState = new EngineState();	// current state is computed in request method
+
+        [NonSerialized]
+        private List<TimeSpan> _enginePowerCorrections = new List<TimeSpan>();
+
         public CombustionEngine()
         {
 
@@ -87,13 +110,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _previousState.EngineSpeed = _data.IdleSpeed;
         }
 
-        private CombustionEngineData _data = new CombustionEngineData();
-        private EngineState _previousState = new EngineState();
-        private EngineState _currentState = new EngineState();	// current state is computed in request method
-
-        [NonSerialized]
-        private List<TimeSpan> _enginePowerCorrections = new List<TimeSpan>();
-
         public ITnOutPort OutShaft()
         {
             return this;
@@ -102,88 +118,102 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         public override void CommitSimulationStep(IModalDataWriter writer)
         {
             writer[ModalResultField.PaEng] = _currentState.EnginePowerLoss;
+	        writer[ModalResultField.Pe_drag] = _currentState.FullDragPower;
+	        writer[ModalResultField.Pe_full] = _currentState.DynamicFullLoadPower;
+	        writer[ModalResultField.Pe_eng] = _currentState.EnginePower;
+			
+			writer[ModalResultField.Tq_drag] = _currentState.FullDragTorque;
+			writer[ModalResultField.Tq_full] = _currentState.DynamicFullLoadTorque;
+	        writer[ModalResultField.Tq_eng] = _currentState.EngineTorque;
+			writer[ModalResultField.n] = _currentState.EngineSpeed;
+
+	        writer[ModalResultField.FC] = _data.ConsumptionMap.GetFuelConsumption(_currentState.EngineSpeed,
+		        _currentState.EngineTorque);
+
             _previousState = _currentState;
             _currentState = new EngineState();
-        }
-
-        public double EngineSpeed()
-        {
-            return _previousState.EngineSpeed;
         }
 
         public void Request(TimeSpan absTime, TimeSpan dt, double torque, double engineSpeed)
         {
             _currentState.EngineSpeed = engineSpeed;
+	        
             _currentState.AbsTime = absTime;
 
-            var requestedPower = VectoMath.ConvertRpmToPower(engineSpeed, torque);
+            var requestedPower = VectoMath.ConvertRpmTorqueToPower(engineSpeed, torque);
             _currentState.EnginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
-			var requestedEnginePower = requestedPower + _currentState.EnginePowerLoss;
+            var requestedEnginePower = requestedPower + _currentState.EnginePowerLoss;
 
             if (engineSpeed < _data.IdleSpeed - EngineIdleSpeedStopThreshold)
             {
                 _currentState.OperationMode = EngineOperationMode.Stopped;
+                //_currentState.EnginePowerLoss = enginePowerLoss;
             }
 
             var currentGear = Cockpit.Gear();
 
-            var minEnginePower = _data.GetFullLoadCurve(currentGear).DragLoadStationaryPower(engineSpeed);
-            var maxEnginePower = FullLoadPowerDyamic(currentGear, engineSpeed);
+			_currentState.FullDragTorque = _data.GetFullLoadCurve(currentGear).DragLoadStationaryTorque(engineSpeed);
+			_currentState.FullDragPower = VectoMath.ConvertRpmTorqueToPower(engineSpeed, _currentState.FullDragTorque);
 
-            ValidatePowerDemand(requestedEnginePower, maxEnginePower, minEnginePower);
+	        ComputeFullLoadPower(currentGear, engineSpeed, dt);
 
-            requestedEnginePower = LimitEnginePower(requestedEnginePower, maxEnginePower, minEnginePower);
+            ValidatePowerDemand(requestedEnginePower);
 
-            UpdateEngineState(requestedEnginePower, maxEnginePower, minEnginePower);
+            requestedEnginePower = LimitEnginePower(requestedEnginePower);
+
+            UpdateEngineState(requestedEnginePower);
+
+	        _currentState.EnginePower = requestedEnginePower; // + _currentState.EnginePowerLoss;
+			_currentState.EngineTorque = VectoMath.ConvertPowerRpmToTorque(_currentState.EnginePower, _currentState.EngineSpeed);
         }
 
-        protected void ValidatePowerDemand(double requestedEnginePower, double maxEnginePower, double minEnginePower)
+        protected void ValidatePowerDemand(double requestedEnginePower)
         {
-            if (minEnginePower >= 0 && requestedEnginePower < 0)
+			if (_currentState.FullDragPower >= 0 && requestedEnginePower < 0)
             {
                 throw new VectoSimulationException(String.Format("t: {0}  P_engine_drag > 0! n: {1} [1/min] ", _currentState.AbsTime, _currentState.EngineSpeed));
             }
-            if (maxEnginePower <= 0 && requestedEnginePower > 0)
+			if (_currentState.DynamicFullLoadPower <= 0 && requestedEnginePower > 0)
             {
                 throw new VectoSimulationException(String.Format("t: {0}  P_engine_full < 0! n: {1} [1/min] ", _currentState.AbsTime, _currentState.EngineSpeed));
             }
         }
 
-        protected double LimitEnginePower(double requestedEnginePower, double maxEnginePower, double minEnginePower)
+        protected double LimitEnginePower(double requestedEnginePower)
         {
-            if (requestedEnginePower > maxEnginePower)
+			if (requestedEnginePower > _currentState.DynamicFullLoadPower)
             {
-                if (requestedEnginePower / maxEnginePower > MaxPowerExceededThreshold)
+				if (requestedEnginePower / _currentState.DynamicFullLoadPower > MaxPowerExceededThreshold)
                 {
                     _enginePowerCorrections.Add(_currentState.AbsTime);
-                    Log.WarnFormat("t: {0}  requested power > P_engine_full * 1.05 - corrected. P_request: {1}  P_engine_full: {2}", _currentState.AbsTime, requestedEnginePower, maxEnginePower);
-                    return maxEnginePower;
+					Log.WarnFormat("t: {0}  requested power > P_engine_full * 1.05 - corrected. P_request: {1}  P_engine_full: {2}", _currentState.AbsTime, requestedEnginePower, _currentState.DynamicFullLoadPower);
+					return _currentState.DynamicFullLoadPower;
                 }
             }
-            else if (requestedEnginePower < minEnginePower)
+			else if (requestedEnginePower < _currentState.FullDragPower)
             {
-                if (requestedEnginePower / minEnginePower > MaxPowerExceededThreshold && requestedEnginePower > -99999)
+				if (requestedEnginePower / _currentState.FullDragPower > MaxPowerExceededThreshold && requestedEnginePower > -99999)
                 {
                     _enginePowerCorrections.Add(_currentState.AbsTime);
-                    Log.WarnFormat("t: {0}  requested power < P_engine_drag * 1.05 - corrected. P_request: {1}  P_engine_drag: {2}", _currentState.AbsTime, requestedEnginePower, minEnginePower);
-                    return minEnginePower;
+					Log.WarnFormat("t: {0}  requested power < P_engine_drag * 1.05 - corrected. P_request: {1}  P_engine_drag: {2}", _currentState.AbsTime, requestedEnginePower, _currentState.FullDragPower);
+					return _currentState.FullDragPower;
                 }
             }
             return requestedEnginePower;
 
         }
 
-        protected void UpdateEngineState(double requestedEnginePower, double maxEnginePower, double minEnginePower)
+        protected void UpdateEngineState(double requestedEnginePower)
         {
             if (requestedEnginePower < -ZeroThreshold)
             {
-                _currentState.OperationMode = IsFullLoad(requestedEnginePower, maxEnginePower)
+				_currentState.OperationMode = IsFullLoad(requestedEnginePower, _currentState.DynamicFullLoadPower)
                     ? EngineOperationMode.FullLoad
                     : EngineOperationMode.Load;
             }
             else if (requestedEnginePower > ZeroThreshold)
             {
-                _currentState.OperationMode = IsFullLoad(requestedEnginePower, minEnginePower)
+				_currentState.OperationMode = IsFullLoad(requestedEnginePower, _currentState.FullDragPower)
                     ? EngineOperationMode.FullDrag
                     : EngineOperationMode.Drag;
             }
@@ -201,13 +231,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             return retVal;
         }
 
-        protected double FullLoadPowerDyamic(uint gear, double rpm)
+        protected void ComputeFullLoadPower(uint gear, double rpm, TimeSpan dt)
         {
-            var staticFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
+			//_currentState.StationaryFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
+	        _currentState.StationaryFullLoadTorque = _data.GetFullLoadCurve(gear).FullLoadStationaryTorque(rpm);
+	        _currentState.StationaryFullLoadPower = VectoMath.ConvertRpmTorqueToPower(rpm, _currentState.StationaryFullLoadTorque);
+
             var pt1 = _data.GetFullLoadCurve(gear).PT1(rpm);
 
-            return Math.Min((1 / (pt1 + 1)) * (staticFullLoadPower + pt1 * _previousState.EnginePower),
-                staticFullLoadPower);
+			// TODO @@@quam: handle dynamic timesteps
+	        if (Math.Abs(dt.TotalSeconds - 1) > 0.01) {
+		        throw new VectoSimulationException("simulation steps other than 1s can not be handled ATM");
+	        }
+			_currentState.DynamicFullLoadPower = Math.Min((1 / (pt1 + 1)) * (_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower),
+				_currentState.StationaryFullLoadPower);
+			_currentState.DynamicFullLoadTorque = VectoMath.ConvertPowerRpmToTorque(_currentState.DynamicFullLoadPower, rpm);
         }
 
         protected bool IsFullLoad(double requestedPower, double maxPower)
@@ -252,6 +290,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         #endregion
 
+        #region IMemento
         public string Serialize()
         {
             var mem = new { Data = _data, PreviousState = _previousState };
@@ -266,5 +305,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _data = mem.Data;
             _previousState = mem.PreviousState;
         }
+        #endregion
     }
 }

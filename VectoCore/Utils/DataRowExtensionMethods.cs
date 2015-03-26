@@ -7,44 +7,53 @@ namespace TUGraz.VectoCore.Utils
 {
     public static class DataRowExtensionMethods
     {
-        /// <summary>
-        /// Gets the field of a DataRow as double.
-        /// </summary>
-        /// <param name="row"></param>
-        /// <param name="columnName">The name of the column.</param>
-        /// <returns>The value of the underlying DataRows column field as double.</returns>
-        public static double GetDouble(this DataRow row, string columnName, CultureInfo culture = null)
+
+        public static double ParseDoubleOrGetDefault(this DataRow row, string columnName)
         {
-            //todo ArgumentNullException?
+            return row.Table.Columns.Contains(columnName) ? row.ParseDouble(columnName) : default(double);
+        }
+
+        public static double ParseDouble(this DataRow row, int columnIndex)
+        {
+            return row.ParseDouble(row.Table.Columns[columnIndex]);
+        }
+
+        public static double ParseDouble(this DataRow row, string columnName)
+        {
+            return row.ParseDouble(row.Table.Columns[columnName]);
+        }
+
+        public static double ParseDouble(this DataRow row, DataColumn column)
+        {
             try
             {
-                return double.Parse(row.Field<string>(columnName), CultureInfo.InvariantCulture);
+                return double.Parse(row.Field<string>(column), CultureInfo.InvariantCulture);
             }
             catch (IndexOutOfRangeException e)
             {
-                throw new VectoException(string.Format("Field {0} was not found in DataRow.", columnName), e);
+                throw new VectoException(string.Format("Field {0} was not found in DataRow.", column), e);
             }
             catch (NullReferenceException e)
             {
-                throw new VectoException(string.Format("Field {0} must not be null.", columnName), e);
+                throw new VectoException(string.Format("Field {0} must not be null.", column), e);
             }
             catch (FormatException e)
             {
-                throw new VectoException(string.Format("Field {0} is not in a valid number format: {1}", columnName,
-                    row.Field<string>(columnName)), e);
+                throw new VectoException(string.Format("Field {0} is not in a valid number format: {1}", column,
+                    row.Field<string>(column)), e);
             }
             catch (OverflowException e)
             {
-                throw new VectoException(string.Format("Field {0} has a value too high or too low: {1}", columnName,
-                    row.Field<string>(columnName)), e);
+                throw new VectoException(string.Format("Field {0} has a value too high or too low: {1}", column,
+                    row.Field<string>(column)), e);
             }
             catch (ArgumentNullException e)
             {
-                throw new VectoException(string.Format("Field {0} contains null which cannot be converted to a number.", columnName), e);
+                throw new VectoException(string.Format("Field {0} contains null which cannot be converted to a number.", column), e);
             }
             catch (Exception e)
             {
-                throw new VectoException(string.Format("Field {0}: {1}", columnName, e.Message), e);
+                throw new VectoException(string.Format("Field {0}: {1}", column, e.Message), e);
             }
         }
     }
