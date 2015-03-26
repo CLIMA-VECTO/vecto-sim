@@ -415,6 +415,7 @@ Public Class cGBX
         Dim Mout As Single
         Dim Min As Single
         Dim MinMax As Single
+        Dim MinCalc As Single
         Dim nuStep As Single
         Dim nuMin As Single
         Dim nuMax As Single
@@ -522,8 +523,9 @@ Public Class cGBX
             'Check if Min is too high
             If Min > MinMax Then Continue Do
 
-            'Calculated output torque for given mu
-            MoutCalc = fTCtorque(nu, nUin) * mu
+            'Calculated input and output torque for given mu
+            MinCalc = fTCtorque(nu, nUin)
+            MoutCalc = MinCalc * mu
 
             'Add to lists
             nuList.Add(nu)

@@ -1,6 +1,9 @@
 
 ### VECTO x.x (current source)
 
+TODO
+- Don't mark gearbox extrapolation as error > only info (MAN)
+- Traction interruption: No engine rev down - hold rpm until new gear engaged (Allison)
 
 
 ### VECTO 2.0.4-beta3

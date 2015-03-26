@@ -670,7 +670,7 @@ lbGschw:
             'Eco-Roll Speed Correction (because PreRun speed profile might still be too high or speed might generally be too low)
             If Vh.EcoRoll(jz) AndAlso Vact > MODdata.Vh.Vsoll(jz) - VEC.UnderSpeed / 3.6 AndAlso Not VehState0 = tVehState.Stopped AndAlso Pplus Then
                 If Not Vh.ReduceSpeed(jz, 0.9999) Then
-                    WorkerMsg(tMsgID.Err, "Engine full load too low for vehicle start (speed reduction failed) !", MsgSrc & "/t= " & jz + 1)
+                    WorkerMsg(tMsgID.Err, "Engine full load too low for vehicle start! Road gradient = " & Vh.fGrad(dist) & "[%] at " & dist.ToString("#.0") & "[m]", MsgSrc & "/t= " & jz + 1)
                     Return False
                 End If
                 FirstSecItar = False
@@ -955,7 +955,7 @@ lb_nOK:
 
                         Pclutch = nMtoPe(nU, GBX.TCMin)
 
-                        If P >= 0 Then
+                        If Pclutch >= 0 Then
                             PlossTC = Math.Abs(nMtoPe(GBX.TCnUin, GBX.TCMin) * (1 - GBX.TC_mu * GBX.TC_nu))
                         Else
                             PlossTC = Math.Abs(nMtoPe(GBX.TCnUout, GBX.TCMout) * (1 - GBX.TC_mu * GBX.TC_nu))
@@ -1140,8 +1140,8 @@ lb_nOK:
                         FirstSecItar = False
                         GoTo lbGschw
                     Else
-                        'ERROR: Speed Reduction brings nothing? ...
-                        WorkerMsg(tMsgID.Err, "Speed reduction failed!", MsgSrc & "/t= " & jz + 1)
+                        'ERROR: Speed Reduction failed. (Road gradient too high)
+                        WorkerMsg(tMsgID.Err, "Engine full load too low for vehicle start! Road gradient = " & Vh.fGrad(dist) & "[%] at " & dist.ToString("#.0") & "[m]", MsgSrc & "/t= " & jz + 1)
                         Return False
                     End If
                 Else 'tEngState.Idle, tEngState.Stopped, tEngState.Drag
@@ -1899,7 +1899,7 @@ lb_nOK:
 
                 iRatio = GBX.Igetr(LastGear + 1) / GBX.Igetr(LastGear)
 
-                If fnUout(Vact, LastGear + 1) > Math.Min(900, iRatio * (FLD(LastGear).N80h - 150)) AndAlso FLD(LastGear + 1).Pfull(nU * iRatio, Pe) > 0.7 * FLD(LastGear).Pfull(nU, Pe) Then
+                If fnUout(Vact, LastGear + 1) > Math.Min(900, iRatio * (FLD(LastGear).N80h - 150)) AndAlso FLD(LastGear + 1).Pfull(nU * iRatio) > 0.7 * FLD(LastGear).Pfull(nU) Then
                     Return LastGear + 1
                 End If
             End If
