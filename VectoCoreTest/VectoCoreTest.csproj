@@ -134,10 +134,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestData\Results\Test1_results.vmod">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Results\Test1_results.vsum">
+    <None Include="TestData\Cycles\EngineOnly_FullLoad.vdri" />
+    <None Include="TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\EngineTests.csv">
