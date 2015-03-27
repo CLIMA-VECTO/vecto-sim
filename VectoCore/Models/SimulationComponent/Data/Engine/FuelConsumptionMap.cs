@@ -8,16 +8,6 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
-    /// <summary>
-    /// Three columns
-    /// One header line 
-    /// At least four lines with numeric values (below file header)
-    /// The map must cover the full engine range between full load and motoring curve. Extrapolation is not possible! 
-    /// Columns:
-    /// * engine speed [1/min]
-    /// * engine torque [Nm]
-    /// * Fuel Consumption [g/h]
-    /// </summary>
     [JsonObject(MemberSerialization.Fields)]
     public class FuelConsumptionMap : SimulationComponentData
     {
@@ -30,8 +20,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
         private class FuelConsumptionEntry
         {
+            /// <summary>
+            /// engine speed [rad/s]
+            /// </summary>
             public double EngineSpeed { get; set; }
+
+            /// <summary>
+            /// Torque [Nm]
+            /// </summary>
             public double Torque { get; set; }
+
+            /// <summary>
+            /// Fuel consumption [g/s]
+            /// </summary>
             public double FuelConsumption { get; set; }
 
             #region Equality members
@@ -46,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
                 if (obj.GetType() != this.GetType()) return false;
-                return Equals((FuelConsumptionEntry) obj);
+                return Equals((FuelConsumptionEntry)obj);
             }
 
             public override int GetHashCode()
@@ -54,8 +55,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                 unchecked
                 {
                     var hashCode = EngineSpeed.GetHashCode();
-                    hashCode = (hashCode*397) ^ Torque.GetHashCode();
-                    hashCode = (hashCode*397) ^ FuelConsumption.GetHashCode();
+                    hashCode = (hashCode * 397) ^ Torque.GetHashCode();
+                    hashCode = (hashCode * 397) ^ FuelConsumption.GetHashCode();
                     return hashCode;
                 }
             }
@@ -80,16 +81,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                     {
                         var entry = new FuelConsumptionEntry
                         {
-                            EngineSpeed = row.ParseDouble(Fields.EngineSpeed),
+                            EngineSpeed = row.ParseDouble(Fields.EngineSpeed) / Units.RPMPerRadiant,
                             Torque = row.ParseDouble(Fields.Torque),
-                            FuelConsumption = row.ParseDouble(Fields.FuelConsumption)
+                            FuelConsumption = row.ParseDouble(Fields.FuelConsumption) * 1 / Units.SecondsPerHour
                         };
 
                         if (entry.FuelConsumption < 0)
                             throw new ArgumentOutOfRangeException("FuelConsumption < 0");
 
                         fuelConsumptionMap._entries.Add(entry);
-                        fuelConsumptionMap._fuelMap.AddPoint(entry.EngineSpeed, entry.Torque, entry.FuelConsumption);
+
+                        // the delauney map works as expected, when the original engine speed field is used.
+                        fuelConsumptionMap._fuelMap.AddPoint(entry.EngineSpeed * Units.RPMPerRadiant, entry.Torque, entry.FuelConsumption);
                     }
                     catch (Exception e)
                     {
@@ -106,9 +109,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             return fuelConsumptionMap;
         }
 
+        /// <summary>
+        /// Calculates the fuel consumption based on the given fuel map.
+        /// </summary>
+        /// <param name="engineSpeed">Engine speed (n) in [rad/sec].</param>
+        /// <param name="torque">Torque (T) in [Nm].</param>
+        /// <returns></returns>
         public double GetFuelConsumption(double engineSpeed, double torque)
         {
-            return _fuelMap.Interpolate(engineSpeed, torque);
+            return _fuelMap.Interpolate(engineSpeed * Units.RPMPerRadiant, torque);
         }
 
         #region Equality members
@@ -124,14 +133,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((FuelConsumptionMap) obj);
+            return Equals((FuelConsumptionMap)obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((_entries != null ? _entries.GetHashCode() : 0)*397) ^
+                return ((_entries != null ? _entries.GetHashCode() : 0) * 397) ^
                        (_fuelMap != null ? _fuelMap.GetHashCode() : 0);
             }
         }

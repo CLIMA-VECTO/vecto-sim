@@ -66,10 +66,10 @@ namespace TUGraz.VectoCore.Tests.Utils
             Assert.AreEqual(1.5, map.Interpolate(0, 0.75), tolerance);
 
             // extrapolation (should fail)
-            AssertException<VectoException>(() => map.Interpolate(1, 1), "Interpolation failed.");
-            AssertException<VectoException>(() => map.Interpolate(-1, -1), "Interpolation failed.");
-            AssertException<VectoException>(() => map.Interpolate(1, -1), "Interpolation failed.");
-            AssertException<VectoException>(() => map.Interpolate(-1, 1), "Interpolation failed.");
+            AssertException<VectoException>(() => map.Interpolate(1, 1), "Interpolation failed. x: 1, y: 1");
+            AssertException<VectoException>(() => map.Interpolate(-1, -1), "Interpolation failed. x: -1, y: -1");
+            AssertException<VectoException>(() => map.Interpolate(1, -1), "Interpolation failed. x: 1, y: -1");
+            AssertException<VectoException>(() => map.Interpolate(-1, 1), "Interpolation failed. x: -1, y: 1");
         }
 
 

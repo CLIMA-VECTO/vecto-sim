@@ -75,6 +75,7 @@
     <Compile Include="Models\SimulationComponent\Data\DrivingCycleData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FullLoadCurve.cs" />
+    <Compile Include="Utils\Units.cs" />
     <Compile Include="Models\SimulationComponent\Data\SimulationComponentData.cs" />
     <Compile Include="Models\SimulationComponent\ICombustionEngine.cs" />
     <Compile Include="Models\Connector\Ports\IInPort.cs" />
