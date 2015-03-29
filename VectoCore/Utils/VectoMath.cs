@@ -1,4 +1,4 @@
-﻿namespace TUGraz.VectoCore.Utils
+namespace TUGraz.VectoCore.Utils
 {
     public class VectoMath
     {

@@ -13,8 +13,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
     {
         private static class Fields
         {
+            /// <summary>
+            /// [rpm]
+            /// </summary>
             public const string EngineSpeed = "engine speed";
+
+            /// <summary>
+            /// [Nm]
+            /// </summary>
             public const string Torque = "torque";
+
+            /// <summary>
+            /// [g/h]
+            /// </summary>
             public const string FuelConsumption = "fuel consumption";
         };
 
@@ -81,18 +92,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                     {
                         var entry = new FuelConsumptionEntry
                         {
-                            EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.ConvertTo.Radiant.Per.Second,
+                            EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute,
                             Torque = row.ParseDouble(Fields.Torque).SI().Newton.Meter,
-                            FuelConsumption = row.ParseDouble(Fields.FuelConsumption).SI().Gramm.Per.Hour.ConvertTo.Gramm.Per.Second
+                            FuelConsumption = row.ParseDouble(Fields.FuelConsumption).SI().Gramm.Per.Hour
                         };
 
+                        // todo Contract.Assert
                         if (entry.FuelConsumption < 0)
-                            throw new ArgumentOutOfRangeException("FuelConsumption < 0");
+                            throw new ArgumentOutOfRangeException("FuelConsumption", "FuelConsumption < 0 not allowed.");
 
                         fuelConsumptionMap._entries.Add(entry);
 
-                        // the delauney map works as expected, when the original engine speed field is used.
-                        fuelConsumptionMap._fuelMap.AddPoint(entry.EngineSpeed.SI().Radiant.Per.Second.ConvertTo.Rounds.Per.Minute, entry.Torque, entry.FuelConsumption);
+                        // Delauney map works only as expected, when the engineSpeed is in rpm.
+                        fuelConsumptionMap._fuelMap.AddPoint(entry.EngineSpeed.SI().To().Rounds.Per.Minute, entry.Torque, entry.FuelConsumption);
                     }
                     catch (Exception e)
                     {
@@ -110,14 +122,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         }
 
         /// <summary>
-        /// Calculates the fuel consumption based on the given fuel map.
+        /// [g/s] Calculates the fuel consumption based on the given fuel map, 
+        /// the engineSpeed [rad/s] and the torque [Nm].
         /// </summary>
-        /// <param name="engineSpeed">Engine speed (n) in [rad/sec].</param>
-        /// <param name="torque">Torque (T) in [Nm].</param>
-        /// <returns></returns>
+        /// <param name="engineSpeed">[rad/sec]</param>
+        /// <param name="torque">[Nm]</param>
+        /// <returns>[g/s]</returns>
         public double GetFuelConsumption(double engineSpeed, double torque)
         {
-            return _fuelMap.Interpolate(engineSpeed.SI().Radiant.Per.Second.ConvertTo.Rounds.Per.Minute, torque);
+            return _fuelMap.Interpolate(engineSpeed.SI().To().Rounds.Per.Minute, torque);
         }
 
         #region Equality members

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using Common.Logging;
 using Newtonsoft.Json;
@@ -13,22 +14,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         private static class Fields
         {
             /// <summary>
-            /// engine speed [1/min]
+            /// [rpm] engine speed 
             /// </summary>
             public const string EngineSpeed = "engine speed";
 
             /// <summary>
-            /// full load torque [Nm]
+            /// [Nm] full load torque 
             /// </summary>
             public const string TorqueFullLoad = "full load torque";
 
             /// <summary>
-            /// motoring torque [Nm]
+            /// [Nm] motoring torque 
             /// </summary>
             public const string TorqueDrag = "motoring torque";
 
             /// <summary>
-            /// time constant [s]
+            /// [s] time constant 
             /// </summary>
             public const string PT1 = "PT1";
         }
@@ -36,22 +37,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         private class FullLoadCurveEntry
         {
             /// <summary>
-            /// engine speed [rad/s]
+            /// [rad/s] engine speed 
             /// </summary>
             public double EngineSpeed { get; set; }
 
             /// <summary>
-            /// full load torque [Nm]
+            /// [Nm] full load torque 
             /// </summary>
             public double TorqueFullLoad { get; set; }
 
             /// <summary>
-            /// motoring torque [Nm]
+            /// [Nm] motoring torque 
             /// </summary>
             public double TorqueDrag { get; set; }
 
             /// <summary>
-            /// PT1 time constant [s]
+            /// [s] PT1 time constant 
             /// </summary>
             public double PT1 { get; set; }
 
@@ -90,9 +91,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         {
             var data = VectoCSVFile.Read(fileName);
 
+            //todo Contract.Requires<VectoException>(data.Columns.Count != 4, "FullLoadCurve Data File must consist of 4 columns.");
             if (data.Columns.Count != 4)
                 throw new VectoException("FullLoadCurve Data File must consist of 4 columns.");
 
+            //todo Contract.Requires<VectoException>(data.Rows.Count < 2, "FullLoadCurve must consist of at least two lines with numeric values (below file header)");
             if (data.Rows.Count < 2)
                 throw new VectoException("FullLoadCurve must consist of at least two lines with numeric values (below file header)");
 
@@ -103,10 +106,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             }
             else
             {
-                LogManager.GetLogger<FullLoadCurve>().WarnFormat(
-                    "FullLoadCurve: Header Line is not valid. Expected: '{0}, {1}, {2}, {3}', Got: '{4}'. Falling back to column index.",
-                    Fields.EngineSpeed, Fields.TorqueFullLoad, Fields.TorqueDrag, Fields.PT1,
-                    string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
+                var log = LogManager.GetLogger<FullLoadCurve>();
+                log.WarnFormat("FullLoadCurve: Header Line is not valid. Expected: '{0}, {1}, {2}, {3}', Got: '{4}'. Falling back to column index.",
+                               Fields.EngineSpeed, Fields.TorqueFullLoad, Fields.TorqueDrag, Fields.PT1,
+                               string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
 
                 entries = CreateFromColumnIndizes(data);
             }
@@ -122,98 +125,118 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                    && columns.Contains(Fields.PT1);
         }
 
-        private static List<FullLoadCurveEntry> CreateFromColumnIndizes(DataTable data)
-        {
-            return (from DataRow row in data.Rows
-                    select new FullLoadCurveEntry
-                    {
-                        EngineSpeed = row.ParseDouble(0).SI().Rounds.Per.Minute.ConvertTo.Radiant.Per.Second,
-                        TorqueFullLoad = row.ParseDouble(1),
-                        TorqueDrag = row.ParseDouble(2),
-                        PT1 = row.ParseDouble(3)
-                    }).ToList();
-        }
-
         private static List<FullLoadCurveEntry> CreateFromColumnNames(DataTable data)
         {
             return (from DataRow row in data.Rows
                     select new FullLoadCurveEntry
                     {
-                        EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.ConvertTo.Radiant.Per.Second,
+                        EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute,
                         TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad),
                         TorqueDrag = row.ParseDouble(Fields.TorqueDrag),
                         PT1 = row.ParseDouble(Fields.PT1)
                     }).ToList();
         }
 
+        private static List<FullLoadCurveEntry> CreateFromColumnIndizes(DataTable data)
+        {
+            return (from DataRow row in data.Rows
+                    select new FullLoadCurveEntry
+                    {
+                        EngineSpeed = row.ParseDouble(0).SI().Rounds.Per.Minute,
+                        TorqueFullLoad = row.ParseDouble(1),
+                        TorqueDrag = row.ParseDouble(2),
+                        PT1 = row.ParseDouble(3)
+                    }).ToList();
+        }
+
         /// <summary>
         /// [rad/s] => [Nm]
         /// </summary>
-        /// <param name="engineSpeed">[rad/s]</param>
+        /// <param name="angularFrequency">[rad/s]</param>
         /// <returns>[Nm]</returns>
-        public double FullLoadStationaryTorque(double engineSpeed)
+        public SI FullLoadStationaryTorque(SI angularFrequency)
         {
-            var idx = FindIndex(engineSpeed);
+            Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
+            Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Newton.Meter));
+
+            var idx = FindIndex(angularFrequency);
             return VectoMath.Interpolate(_entries[idx - 1].EngineSpeed, _entries[idx].EngineSpeed,
-                _entries[idx - 1].TorqueFullLoad, _entries[idx].TorqueFullLoad, engineSpeed);
+                                         _entries[idx - 1].TorqueFullLoad, _entries[idx].TorqueFullLoad,
+                                         angularFrequency).SI().Newton.Meter;
         }
 
         /// <summary>
         /// [rad/s] => [W]
         /// </summary>
-        /// <param name="engineSpeed">[rad/s]</param>
+        /// <param name="angularFrequency">[rad/s]</param>
         /// <returns>[W]</returns>
-        public double FullLoadStationaryPower(double engineSpeed)
+        public SI FullLoadStationaryPower(SI angularFrequency)
         {
-            return Formulas.TorqueToPower(FullLoadStationaryTorque(engineSpeed).SI().Newton.Meter, engineSpeed.SI().Radiant.Per.Second);
+            Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
+            Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Watt));
+
+            return Formulas.TorqueToPower(FullLoadStationaryTorque(angularFrequency), angularFrequency);
         }
 
         /// <summary>
         /// [rad/s] => [Nm]
         /// </summary>
-        /// <param name="engineSpeed">[rad/s]</param>
+        /// <param name="angularFrequency">[rad/s]</param>
         /// <returns>[Nm]</returns>
-        public double DragLoadStationaryTorque(double engineSpeed)
+        public SI DragLoadStationaryTorque(SI angularFrequency)
         {
-            var idx = FindIndex(engineSpeed);
+            Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
+            Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Newton.Meter));
+
+            var idx = FindIndex(angularFrequency);
             return VectoMath.Interpolate(_entries[idx - 1].EngineSpeed, _entries[idx].EngineSpeed,
-                _entries[idx - 1].TorqueDrag, _entries[idx].TorqueDrag, engineSpeed);
+                                         _entries[idx - 1].TorqueDrag, _entries[idx].TorqueDrag,
+                                         angularFrequency).SI().Newton.Meter;
         }
 
         /// <summary>
         /// [rad/s] => [W].
         /// </summary>
-        /// <param name="engineSpeed">[rad/sec]</param>
+        /// <param name="angularFrequency">[rad/s]</param>
         /// <returns>[W]</returns>
-        public double DragLoadStationaryPower(double engineSpeed)
+        public SI DragLoadStationaryPower(SI angularFrequency)
         {
-            return Formulas.TorqueToPower(DragLoadStationaryTorque(engineSpeed).SI().Newton.Meter, engineSpeed.SI().Radiant.Per.Second);
+            Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
+            Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Watt));
+
+            return Formulas.TorqueToPower(DragLoadStationaryTorque(angularFrequency), angularFrequency);
         }
 
         /// <summary>
-        /// [rad/s] => [W]
+        /// [rad/s] => [-]
         /// </summary>
-        /// <param name="engineSpeed">[rad/s]</param>
-        /// <returns>[W]</returns>
-        public double PT1(double engineSpeed)
+        /// <param name="angularFrequency">[rad/s]</param>
+        /// <returns>[-]</returns>
+        public SI PT1(SI angularFrequency)
         {
-            var idx = FindIndex(engineSpeed);
+            Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
+            Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI()));
+
+            var idx = FindIndex(angularFrequency);
             return VectoMath.Interpolate(_entries[idx - 1].EngineSpeed, _entries[idx].EngineSpeed,
-                _entries[idx - 1].PT1, _entries[idx].PT1, engineSpeed);
+                                         _entries[idx - 1].PT1, _entries[idx].PT1,
+                                         angularFrequency).SI();
         }
 
         /// <summary>
-        /// Get item index for engineSpeed [rad/s].
+        /// [rad/s] => index. Get item index for engineSpeed.
         /// </summary>
         /// <param name="engineSpeed">[rad/s]</param>
-        /// <returns></returns>
-        protected int FindIndex(double engineSpeed)
+        /// <returns>index</returns>
+        protected int FindIndex(SI engineSpeed)
         {
+            Contract.Requires(engineSpeed.HasEqualUnit(new SI().Radian.Per.Second));
+
             int idx;
             if (engineSpeed < _entries[0].EngineSpeed)
             {
-                Log.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}", engineSpeed.SI().Rounds.Per.Minute,
-                    _entries[0].EngineSpeed.SI().Rounds.Per.Minute);
+                Log.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}",
+                                engineSpeed.To().Rounds.Per.Minute, _entries[0].EngineSpeed.SI().To().Rounds.Per.Minute);
                 idx = 1;
             }
             else

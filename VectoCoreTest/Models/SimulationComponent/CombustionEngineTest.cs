@@ -68,91 +68,56 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
             var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
-            //todo: set correct input values to test
-            var torque = 0.0;
-            var engineSpeed = 600.SI().Rounds.Per.Minute;
+            var torque = 0.0.SI().Newton.Meter;
+            var engineSpeed = 600.0.SI().Rounds.Per.Minute;
             var dataWriter = new TestModalDataWriter();
 
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < 21; i++)
             {
                 port.Request(absTime, dt, torque, engineSpeed);
                 engine.CommitSimulationStep(dataWriter);
+				if (i > 0)
+					dataWriter.CommitSimulationStep(absTime, dt);
                 absTime += dt;
             }
 
-            engineSpeed = 644.4445.SI().Rounds.Per.Minute;
+	        engineSpeed = 644.4445.SI().Rounds.Per.Minute;
             port.Request(absTime, dt, Formulas.PowerToTorque(2329.973.SI().Watt, engineSpeed), engineSpeed);
             engine.CommitSimulationStep(dataWriter);
-            absTime += dt;
 
-            Assert.AreEqual(1152.40304, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+			Assert.AreEqual(1152.40304, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
 
-            torque = 4264.177;
-            for (var i = 0; i < 2; i++)
-            {
-                port.Request(absTime, dt, torque, engineSpeed);
-                engine.CommitSimulationStep(dataWriter);
-                absTime += dt;
-            }
+			dataWriter.CommitSimulationStep(absTime, dt);
+			absTime += dt;
 
-            engineSpeed = 869.7512.SI().Rounds.Per.Minute;
-            port.Request(absTime, dt, Formulas.PowerToTorque(7984.56.SI().Watt, engineSpeed), engineSpeed);
-            engine.CommitSimulationStep(dataWriter);
-            absTime += dt;
+	        var power = new[] {569.3641, 4264.177};
+;	        for (var i = 0; i < 2; i++) {
+				port.Request(absTime, dt, Formulas.PowerToTorque(power[i].SI().Watt, engineSpeed), engineSpeed);
+				engine.CommitSimulationStep(dataWriter);
+				dataWriter.CommitSimulationStep(absTime, dt);
+				absTime += dt;
+	        }
 
-            Assert.AreEqual(7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
-
-            engineSpeed = 644.4445.SI().Rounds.Per.Minute;
-            port.Request(absTime, dt, Formulas.PowerToTorque(7984.56.SI().Watt, engineSpeed), engineSpeed);
-            engine.CommitSimulationStep(dataWriter);
-            absTime += dt;
-
-            Assert.AreEqual(-7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+			engineSpeed = 869.7512.SI().Newton.Meter;
+			port.Request(absTime, dt, Formulas.PowerToTorque(7984.56.SI().Watt, engineSpeed), engineSpeed);
+			engine.CommitSimulationStep(dataWriter);
 
 
+			Assert.AreEqual(7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+			dataWriter.CommitSimulationStep(absTime, dt);
+			absTime += dt;
+
+			engineSpeed = 644.4445.SI().Newton.Meter;
+			port.Request(absTime, dt, Formulas.PowerToTorque(1351.656.SI().Watt, engineSpeed), engineSpeed);
+			engine.CommitSimulationStep(dataWriter);
+
+			Assert.AreEqual(-7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+			dataWriter.CommitSimulationStep(absTime, dt);
+			absTime += dt;
+
+			dataWriter.Data.WriteToFile(@"test1.csv");
         }
 
-        [DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineTests.csv", "EngineTests#csv", DataAccessMethod.Sequential)]
-        [TestMethod]
-        public void TestEngineOnlyDrivingCycle()
-        {
-            var vehicle = new VehicleContainer();
-            var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
-
-            var gearbox = new EngineOnlyGearbox(vehicle);
-
-            var data = DrivingCycleData.ReadFromFileEngineOnly(TestContext.DataRow["CycleFile"].ToString());
-            var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
-
-            var engine = new CombustionEngine(vehicle, engineData);
-            var port = engine.OutShaft();
-
-
-            var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-            var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
-
-            var dataWriter = new TestModalDataWriter();
-
-            foreach (var cycle in data.Entries)
-            {
-                port.Request(absTime, dt, cycle.EngineTorque, cycle.EngineSpeed);
-                foreach (var sc in vehicle.SimulationComponents())
-                {
-                    sc.CommitSimulationStep(dataWriter);
-                }
-                absTime += dt;
-
-                //todo: test with correct output values, add other fields to test
-                Assert.AreEqual(13000, dataWriter[ModalResultField.FC]);
-                Assert.AreEqual(14000, dataWriter[ModalResultField.FCAUXc]);
-                Assert.AreEqual(15000, dataWriter[ModalResultField.FCWHTCc]);
-            }
-
-            //todo: test with correct output values, add other fields to test
-            Assert.AreEqual(13000, dataWriter[ModalResultField.FC]);
-            Assert.AreEqual(14000, dataWriter[ModalResultField.FCAUXc]);
-            Assert.AreEqual(15000, dataWriter[ModalResultField.FCWHTCc]);
-        }
 
 
         [TestMethod]

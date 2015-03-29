@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
@@ -31,10 +32,61 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         public class EngineState
         {
             public EngineOperationMode OperationMode { get; set; }
-            public double EnginePower { get; set; }
-            public double EngineSpeed { get; set; }
-            public double EnginePowerLoss { get; set; }
+
+            /// <summary>
+            /// [s]
+            /// </summary>
             public TimeSpan AbsTime { get; set; }
+
+            /// <summary>
+            /// [W]
+            /// </summary>
+            public double EnginePower { get; set; }
+
+            /// <summary>
+            /// [rad/s]
+            /// </summary>
+            public double EngineSpeed { get; set; }
+
+            /// <summary>
+            /// [W]
+            /// </summary>
+            public double EnginePowerLoss { get; set; }
+
+            /// <summary>
+            /// [W]
+            /// </summary>
+            public double StationaryFullLoadPower { get; set; }
+
+            /// <summary>
+            /// [W]
+            /// </summary>
+            public double DynamicFullLoadPower { get; set; }
+
+            /// <summary>
+            /// [Nm]
+            /// </summary>
+            public double StationaryFullLoadTorque { get; set; }
+
+            /// <summary>
+            /// [Nm]
+            /// </summary>
+            public double DynamicFullLoadTorque { get; set; }
+
+            /// <summary>
+            /// [W]
+            /// </summary>
+            public double FullDragPower { get; set; }
+
+            /// <summary>
+            /// [Nm]
+            /// </summary>
+            public double FullDragTorque { get; set; }
+
+            /// <summary>
+            /// [Nm]
+            /// </summary>
+            public double EngineTorque { get; set; }
 
             #region Equality members
 
@@ -72,18 +124,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         }
 
         #region IEngineCockpit
+        /// <summary>
+        /// [rad/s]
+        /// </summary>
         public double EngineSpeed()
         {
             return _previousState.EngineSpeed;
         }
         #endregion
 
-
-
-
         private CombustionEngineData _data = new CombustionEngineData();
         private EngineState _previousState = new EngineState();
-        private EngineState _currentState = new EngineState();	// current state is computed in request method
+
+        /// <summary>
+        /// Current state is computed in request method
+        /// </summary>
+        private EngineState _currentState = new EngineState();
 
         [NonSerialized]
         private List<TimeSpan> _enginePowerCorrections = new List<TimeSpan>();
@@ -111,91 +167,131 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         public override void CommitSimulationStep(IModalDataWriter writer)
         {
             writer[ModalResultField.PaEng] = _currentState.EnginePowerLoss;
+            writer[ModalResultField.Pe_drag] = _currentState.FullDragPower;
+            writer[ModalResultField.Pe_full] = _currentState.DynamicFullLoadPower;
+            writer[ModalResultField.Pe_eng] = _currentState.EnginePower;
+
+            writer[ModalResultField.Tq_drag] = _currentState.FullDragTorque;
+            writer[ModalResultField.Tq_full] = _currentState.DynamicFullLoadTorque;
+            writer[ModalResultField.Tq_eng] = _currentState.EngineTorque;
+            writer[ModalResultField.n] = _currentState.EngineSpeed;
+
+            try
+            {
+                writer[ModalResultField.FC] = _data.ConsumptionMap.GetFuelConsumption(_currentState.EngineSpeed, _currentState.EngineTorque);
+            }
+            catch (VectoException ex)
+            {
+                Log.WarnFormat("t: {0} - {1} n: {2} Tq: {3}", _currentState.AbsTime.TotalSeconds, ex.Message, _currentState.EngineSpeed, _currentState.EngineTorque);
+                writer[ModalResultField.FC] = Double.NaN;
+            }
+
             _previousState = _currentState;
             _currentState = new EngineState();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="absTime">[s]</param>
-        /// <param name="dt">[s]</param>
-        /// <param name="torque">[Nm]</param>
-        /// <param name="engineSpeed">[rad/s]</param>
         public void Request(TimeSpan absTime, TimeSpan dt, double torque, double engineSpeed)
         {
             _currentState.EngineSpeed = engineSpeed;
             _currentState.AbsTime = absTime;
 
-            var requestedPower = Formulas.TorqueToPower(torque.SI().Newton.Meter, engineSpeed.SI().Radiant.Per.Second);
-            _currentState.EnginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
-            var requestedEnginePower = requestedPower + _currentState.EnginePowerLoss;
+            var requestedPower = Formulas.TorqueToPower(torque.SI().Newton.Meter, engineSpeed.SI().Radian.Per.Second);
+            _currentState.EnginePowerLoss = InertiaPowerLoss(torque.SI().Newton.Meter, engineSpeed.SI().Radian.Per.Second);
+            var requestedEnginePower = requestedPower + _currentState.EnginePowerLoss.SI().Watt;
 
             if (engineSpeed < _data.IdleSpeed - EngineIdleSpeedStopThreshold)
             {
                 _currentState.OperationMode = EngineOperationMode.Stopped;
-                //_currentState.EnginePowerLoss = enginePowerLoss;
+                //todo: _currentState.EnginePowerLoss = enginePowerLoss;
             }
 
             var currentGear = Cockpit.Gear();
 
-            var minEnginePower = _data.GetFullLoadCurve(currentGear).DragLoadStationaryPower(engineSpeed);
-            var maxEnginePower = FullLoadPowerDyamic(currentGear, engineSpeed);
+            _currentState.FullDragTorque = _data.GetFullLoadCurve(currentGear).DragLoadStationaryTorque(engineSpeed.SI().Radian.Per.Second);
+            _currentState.FullDragPower = Formulas.TorqueToPower(_currentState.FullDragTorque.SI().Newton.Meter,
+                                                                 engineSpeed.SI().Radian.Per.Second);
 
-            ValidatePowerDemand(requestedEnginePower, maxEnginePower, minEnginePower);
+            ComputeFullLoadPower(currentGear, engineSpeed.SI().Radian.Per.Second, dt);
 
-            requestedEnginePower = LimitEnginePower(requestedEnginePower, maxEnginePower, minEnginePower);
+            ValidatePowerDemand(requestedEnginePower);
 
-            UpdateEngineState(requestedEnginePower, maxEnginePower, minEnginePower);
+            requestedEnginePower = LimitEnginePower(requestedEnginePower);
+
+            UpdateEngineState(requestedEnginePower);
+
+            _currentState.EnginePower = requestedEnginePower; //todo + _currentState.EnginePowerLoss;
+            _currentState.EngineTorque = Formulas.PowerToTorque(_currentState.EnginePower.SI().Watt,
+                                                                _currentState.EngineSpeed.SI().Radian.Per.Second);
         }
 
-        protected void ValidatePowerDemand(double requestedEnginePower, double maxEnginePower, double minEnginePower)
+        /// <summary>
+        /// Validates the requested power demand [W].
+        /// </summary>
+        /// <param name="requestedEnginePower">[W]</param>
+        protected void ValidatePowerDemand(SI requestedEnginePower)
         {
-            if (minEnginePower >= 0 && requestedEnginePower < 0)
+            Contract.Requires(requestedEnginePower.HasEqualUnit(new SI().Watt));
+
+            if (_currentState.FullDragPower >= 0 && requestedEnginePower < 0)
             {
-                throw new VectoSimulationException(String.Format("t: {0}  P_engine_drag > 0! n: {1} [1/min] ", _currentState.AbsTime, _currentState.EngineSpeed));
+                throw new VectoSimulationException(String.Format("t: {0}  P_engine_drag > 0! n: {1} [1/min] ",
+                    _currentState.AbsTime, _currentState.EngineSpeed.SI().To().Rounds.Per.Minute));
             }
-            if (maxEnginePower <= 0 && requestedEnginePower > 0)
+            if (_currentState.DynamicFullLoadPower <= 0 && requestedEnginePower > 0)
             {
-                throw new VectoSimulationException(String.Format("t: {0}  P_engine_full < 0! n: {1} [1/min] ", _currentState.AbsTime, _currentState.EngineSpeed));
+                throw new VectoSimulationException(String.Format("t: {0}  P_engine_full < 0! n: {1} [1/min] ",
+                    _currentState.AbsTime, _currentState.EngineSpeed.SI().To().Rounds.Per.Minute));
             }
         }
 
-        protected double LimitEnginePower(double requestedEnginePower, double maxEnginePower, double minEnginePower)
+        /// <summary>
+        /// [W] => [W]
+        /// </summary>
+        /// <param name="requestedEnginePower">[W]</param>
+        /// <returns>[W]</returns>
+        protected SI LimitEnginePower(SI requestedEnginePower)
         {
-            if (requestedEnginePower > maxEnginePower)
+            Contract.Requires(requestedEnginePower.HasEqualUnit(new SI().Watt));
+            Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Watt));
+
+            if (requestedEnginePower > _currentState.DynamicFullLoadPower)
             {
-                if (requestedEnginePower / maxEnginePower > MaxPowerExceededThreshold)
+                if (requestedEnginePower / _currentState.DynamicFullLoadPower > MaxPowerExceededThreshold)
                 {
                     _enginePowerCorrections.Add(_currentState.AbsTime);
-                    Log.WarnFormat("t: {0}  requested power > P_engine_full * 1.05 - corrected. P_request: {1}  P_engine_full: {2}", _currentState.AbsTime, requestedEnginePower, maxEnginePower);
-                    return maxEnginePower;
+                    Log.WarnFormat("t: {0}  requested power > P_engine_full * 1.05 - corrected. P_request: {1}  P_engine_full: {2}", _currentState.AbsTime, requestedEnginePower, _currentState.DynamicFullLoadPower);
+                    return _currentState.DynamicFullLoadPower.SI().Watt;
                 }
             }
-            else if (requestedEnginePower < minEnginePower)
+            else if (requestedEnginePower < _currentState.FullDragPower)
             {
-                if (requestedEnginePower / minEnginePower > MaxPowerExceededThreshold && requestedEnginePower > -99999)
+                if (requestedEnginePower / _currentState.FullDragPower > MaxPowerExceededThreshold && requestedEnginePower > -99999)
                 {
                     _enginePowerCorrections.Add(_currentState.AbsTime);
-                    Log.WarnFormat("t: {0}  requested power < P_engine_drag * 1.05 - corrected. P_request: {1}  P_engine_drag: {2}", _currentState.AbsTime, requestedEnginePower, minEnginePower);
-                    return minEnginePower;
+                    Log.WarnFormat("t: {0}  requested power < P_engine_drag * 1.05 - corrected. P_request: {1}  P_engine_drag: {2}", _currentState.AbsTime, requestedEnginePower, _currentState.FullDragPower);
+                    return _currentState.FullDragPower.SI().Watt;
                 }
             }
             return requestedEnginePower;
-
         }
 
-        protected void UpdateEngineState(double requestedEnginePower, double maxEnginePower, double minEnginePower)
+        /// <summary>
+        /// Updates the engine state dependend on the requested power [W].
+        /// </summary>
+        /// <param name="requestedEnginePower">[W]</param>
+        protected void UpdateEngineState(SI requestedEnginePower)
         {
+            Contract.Requires(requestedEnginePower.HasEqualUnit(new SI().Watt));
+
             if (requestedEnginePower < -ZeroThreshold)
             {
-                _currentState.OperationMode = IsFullLoad(requestedEnginePower, maxEnginePower)
+                _currentState.OperationMode = IsFullLoad(requestedEnginePower, _currentState.DynamicFullLoadPower.SI().Watt)
                     ? EngineOperationMode.FullLoad
                     : EngineOperationMode.Load;
             }
             else if (requestedEnginePower > ZeroThreshold)
             {
-                _currentState.OperationMode = IsFullLoad(requestedEnginePower, minEnginePower)
+                _currentState.OperationMode = IsFullLoad(requestedEnginePower, _currentState.FullDragPower.SI().Watt)
                     ? EngineOperationMode.FullDrag
                     : EngineOperationMode.Drag;
             }
@@ -214,21 +310,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         }
 
         /// <summary>
-        /// gear [-], engineSpeed [rad/s] => power [W]
+        /// computes full load power from gear [-], angularFrequency [rad/s] and dt [s].
         /// </summary>
-        /// <param name="gear">[-]</param>
-        /// <param name="engineSpeed">[rad/s]</param>
-        /// <returns>[W]</returns>
-        protected double FullLoadPowerDyamic(uint gear, double engineSpeed)
+        /// <param name="gear"></param>
+        /// <param name="angularFrequency">[rad/s]</param>
+        /// <param name="dt">[s]</param>
+        protected void ComputeFullLoadPower(uint gear, SI angularFrequency, TimeSpan dt)
         {
-            var staticFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(engineSpeed);
-            var pt1 = _data.GetFullLoadCurve(gear).PT1(engineSpeed);
+            Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
+            Contract.Requires(dt.Ticks != 0);
+            // TODO @@@quam: handle dynamic timesteps
+            Contract.Requires<VectoSimulationException>(dt.TotalSeconds.IsSmallerOrEqual(1), "simulation steps other than 1s can not be handled ATM");
+            Contract.Ensures(_currentState.DynamicFullLoadPower <= _currentState.StationaryFullLoadPower);
 
-            return Math.Min((1 / (pt1 + 1)) * (staticFullLoadPower + pt1 * _previousState.EnginePower), staticFullLoadPower);
+            //_currentState.StationaryFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
+            _currentState.StationaryFullLoadTorque = _data.GetFullLoadCurve(gear).FullLoadStationaryTorque(angularFrequency);
+            _currentState.StationaryFullLoadPower = Formulas.TorqueToPower(_currentState.StationaryFullLoadTorque.SI().Newton.Meter,
+                                                                           angularFrequency);
+
+            var pt1 = _data.GetFullLoadCurve(gear).PT1(angularFrequency);
+
+            _currentState.DynamicFullLoadPower = Math.Min((1 / (pt1 + 1)) * (_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower),
+                                                          _currentState.StationaryFullLoadPower);
+            _currentState.DynamicFullLoadTorque = Formulas.PowerToTorque(_currentState.DynamicFullLoadPower.SI().Watt, angularFrequency);
         }
 
-        protected bool IsFullLoad(double requestedPower, double maxPower)
+        protected bool IsFullLoad(SI requestedPower, SI maxPower)
         {
+            Contract.Requires(requestedPower.HasEqualUnit(new SI().Watt));
+            Contract.Requires(maxPower.HasEqualUnit(new SI().Watt));
+
             return Math.Abs(requestedPower / maxPower - 1.0) < FullLoadMargin;
         }
 
@@ -238,11 +349,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         /// <param name="torque">[Nm]</param>
         /// <param name="engineSpeed">[rad/sec]</param>
         /// <returns>[W]</returns>
-        protected double InertiaPowerLoss(double torque, double engineSpeed)
+        protected SI InertiaPowerLoss(SI torque, SI engineSpeed)
         {
-            var deltaEngineSpeed = engineSpeed - _previousState.EngineSpeed;
-            var avgEngineSpeed = (_previousState.EngineSpeed + engineSpeed) / 2.0;
-            return _data.Inertia * deltaEngineSpeed * avgEngineSpeed;
+            Contract.Requires(torque.HasEqualUnit(new SI().Newton.Meter));
+            Contract.Requires(engineSpeed.HasEqualUnit(new SI().Radian.Per.Second));
+            Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Watt));
+
+            var deltaEngineSpeed = (engineSpeed - _previousState.EngineSpeed.SI().Radian.Per.Second).To().Rounds.Per.Second;
+            var avgEngineSpeed = ((_previousState.EngineSpeed.SI().Radian.Per.Second + engineSpeed) / new SI(2).Second).To().Rounds.Per.Square.Second;
+            return _data.Inertia.SI().To().Kilo.Gramm.Square.Meter * deltaEngineSpeed * avgEngineSpeed;
         }
 
         #region Equality members

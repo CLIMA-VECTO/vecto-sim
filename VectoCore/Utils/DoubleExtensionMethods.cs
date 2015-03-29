@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.Contracts;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -6,41 +7,51 @@ namespace TUGraz.VectoCore.Utils
     {
         public const double Tolerance = 0.001;
 
-        public static bool IsEqual(this double d, double other)
+        [Pure]
+        public static bool IsEqual(this double d, double other, double tolerance = Tolerance)
         {
-            return Math.Abs(d - other) > Tolerance;
+            return Math.Abs(d - other) > tolerance;
         }
 
-        public static bool IsSmaller(this double d, double other)
+        [Pure]
+        public static bool IsSmaller(this double d, double other, double tolerance = Tolerance)
         {
-            return d - other < Tolerance;
+            return d - other < tolerance;
         }
 
-        public static bool IsSmallerOrEqual(this double d, double other)
+        [Pure]
+        public static bool IsSmallerOrEqual(this double d, double other, double tolerance = Tolerance)
         {
-            return d - other <= Tolerance;
+            return d - other <= tolerance;
         }
 
-        public static bool IsGreater(this double d, double other)
+        [Pure]
+        public static bool IsGreater(this double d, double other, double tolerance = Tolerance)
         {
-            return other.IsSmallerOrEqual(d);
+            return other.IsSmallerOrEqual(d, tolerance);
         }
 
-        public static bool IsGreaterOrEqual(this double d, double other)
+        [Pure]
+        public static bool IsGreaterOrEqual(this double d, double other, double tolerance = Tolerance)
         {
-            return other.IsSmaller(d);
+            return other.IsSmaller(d, tolerance);
         }
 
-        public static bool IsPositive(this double d)
+        [Pure]
+        public static bool IsPositive(this double d, double tolerance = Tolerance)
         {
-            return d.IsGreaterOrEqual(0.0);
+            return d.IsGreaterOrEqual(0.0, tolerance);
         }
 
+        /// <summary>
+        /// Gets the SI representation of the double (unit-less).
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        [Pure]
         public static SI SI(this double d)
         {
-            return new SI(d);
+            return (SI)d;
         }
-
-
     }
 }

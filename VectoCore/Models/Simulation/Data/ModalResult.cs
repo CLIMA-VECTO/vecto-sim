@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Reflection;
 using TUGraz.VectoCore.Utils;
@@ -58,9 +58,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
     {
         /// <summary>
         /// Time step [s].
+        /// Midpoint of the simulated interval.
         /// </summary>
         [ModalResultField(typeof(double), caption: "time [s]")]
         time,
+
+		/// <summary>
+		/// Simulation interval around the current time step. [s]
+		/// </summary>
+		[ModalResultField(typeof(double), caption: "simulation_interval [s]")]
+		simulationInterval,
 
         /// <summary>
         /// Engine speed [1/min].

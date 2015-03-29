@@ -2,6 +2,9 @@
 {
 	public interface IEngineCockpit
 	{
+        /// <summary>
+        /// [rad/s] 
+        /// </summary>
 		double EngineSpeed();
 	}
 }

@@ -17,7 +17,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
         public VectoJob(IVehicleContainer container, IEngineOnlyDrivingCycle cycle, IModalDataWriter dataWriter)
         {
-            
             Container = container;
             Cycle = cycle;
             DataWriter = dataWriter;
