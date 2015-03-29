@@ -8,15 +8,15 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-    public enum CycleType
-    {
-        EngineOnly,
-        TimeBased,
-        DistanceBased
-    }
-
     public class DrivingCycleData : SimulationComponentData
     {
+        public enum CycleType
+        {
+            EngineOnly,
+            TimeBased,
+            DistanceBased
+        }
+
         private static class Fields
         {
             /// <summary>
@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             public const string Time = "t";
 
             /// <summary>
-            /// [km/h]	Required except for Engine Only Mode calculations.
+            /// [m/s]	Required except for Engine Only Mode calculations.
             /// </summary>
             public const string VehicleSpeed = "v";
 
@@ -45,13 +45,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             public const string StoppingTime = "stop";
 
             /// <summary>
-            ///  [kW]	"Aux_xxx" Supply Power input for each auxiliary defined in the .vecto file , where xxx matches the ID of the corresponding Auxiliary. ID's are not case sensitive and must not contain space or special characters.
+            ///  [W]	"Aux_xxx" Supply Power input for each auxiliary defined in the .vecto file , where xxx matches the ID of the corresponding Auxiliary. ID's are not case sensitive and must not contain space or special characters.
             /// </summary>
             // todo: implement additional aux as dictionary!
             public const string AuxiliarySupplyPower = "Aux_";
 
             /// <summary>
-            ///  [rpm]	If n is defined VECTO uses that instead of the calculated engine speed value.
+            ///  [rad/s]	If n is defined VECTO uses that instead of the calculated engine speed value.
             /// </summary>
             public const string EngineSpeed = "n";
 
@@ -61,22 +61,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             public const string Gear = "gear";
 
             /// <summary>
-            ///  [kW]	This power input will be directly added to the engine power in addition to possible other auxiliaries. Also used in Engine Only Mode.
+            ///  [W]	This power input will be directly added to the engine power in addition to possible other auxiliaries. Also used in Engine Only Mode.
             /// </summary>
             public const string AdditionalAuxPowerDemand = "Padd";
 
             /// <summary>
-            ///  [km/h]	Only required if Cross Wind Correction is set to Vair and Beta Input.
+            ///  [m/s]	Only required if Cross Wind Correction is set to Vair and Beta Input.
             /// </summary>
             public const string AirSpeedRelativeToVehicle = "vair_res";
 
             /// <summary>
-            ///  [∞]	Only required if Cross Wind Correction is set to Vair and Beta Input.
+            ///  [°]	Only required if Cross Wind Correction is set to Vair and Beta Input.
             /// </summary>
             public const string WindYawAngle = "vair_beta";
 
             /// <summary>
-            ///  [kW]	Effective engine power at clutch. Only required in Engine Only Mode. Alternatively torque Me can be defined. Use DRAG to define motoring operation.
+            ///  [W]	Effective engine power at clutch. Only required in Engine Only Mode. Alternatively torque Me can be defined. Use DRAG to define motoring operation.
             /// </summary>
             public const string EnginePower = "Pe";
 
@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             public double Time { get; set; }
 
             /// <summary>
-            /// [km/h]	Required except for Engine Only Mode calculations.
+            /// [m/s]	Required except for Engine Only Mode calculations.
             /// </summary>
             public double VehicleSpeed { get; set; }
 
@@ -116,12 +116,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             public double StoppingTime { get; set; }
 
             /// <summary>
-            ///  [kW]	Supply Power input for each auxiliary defined in the .vecto file where xxx matches the ID of the corresponding Auxiliary. ID's are not case sensitive and must not contain space or special characters.
+            ///  [W]	Supply Power input for each auxiliary defined in the .vecto file where xxx matches the ID of the corresponding Auxiliary. ID's are not case sensitive and must not contain space or special characters.
             /// </summary>
             public Dictionary<string, double> AuxiliarySupplyPower { get; set; }
 
             /// <summary>
-            ///  [rpm]	If <n> is defined VECTO uses that instead of the calculated engine speed value.
+            ///  [rad/s]	If <n> is defined VECTO uses that instead of the calculated engine speed value.
             /// </summary>
             public double EngineSpeed { get; set; }
 
@@ -131,12 +131,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             public double Gear { get; set; }
 
             /// <summary>
-            ///  [kW]	This power input will be directly added to the engine power in addition to possible other auxiliaries. Also used in Engine Only Mode.
+            ///  [W]	This power input will be directly added to the engine power in addition to possible other auxiliaries. Also used in Engine Only Mode.
             /// </summary>
             public double AdditionalAuxPowerDemand { get; set; }
 
             /// <summary>
-            ///  [km/h]	Only required if Cross Wind Correction is set to Vair & Beta Input.
+            ///  [m/s]	Only required if Cross Wind Correction is set to Vair & Beta Input.
             /// </summary>
             public double AirSpeedRelativeToVehicle { get; set; }
 
@@ -144,11 +144,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             ///  [°]	Only required if Cross Wind Correction is set to Vair & Beta Input.
             /// </summary>
             public double WindYawAngle { get; set; }
-
-            /// <summary>
-            ///  [kW]	Effective engine power at clutch. Only required in Engine Only Mode. Alternatively torque <Me> can be defined. Use <DRAG> to define motoring operation.
-            /// </summary>
-            public double EnginePower { get; set; }
 
             /// <summary>
             ///  [Nm]	Effective engine torque at clutch. Only required in Engine Only Mode. Alternatively power <Pe> can be defined. Use <DRAG> to define motoring operation.
@@ -177,18 +172,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
         public static DrivingCycleData ReadFromFile(string fileName, CycleType type)
         {
-            var Log = LogManager.GetLogger<DrivingCycleData>();
+            var log = LogManager.GetLogger<DrivingCycleData>();
 
             var data = VectoCSVFile.Read(fileName);
 
             var header = data.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToList();
 
-            var validator = GetHeaderValidator(type);
-            if (!validator(header))
-                throw new VectoException("Header is not valid.");
-
-            var reader = GetDataRowReader(type);
-            var entries = data.Rows.Cast<DataRow>().Select(r => reader(r)).ToList();
+            var parser = CreateDataParser(type);
+            parser.ValidateHeader(header);
+            var entries = data.Rows.Cast<DataRow>().Select(parser.Parse).ToList();
 
             // update time field in 1Hz steps, if time field is missing and cycle type is timebase
             if (!data.Columns.Contains(Fields.Time) && type == CycleType.TimeBased)
@@ -199,47 +191,48 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
             var cycle = new DrivingCycleData { Entries = entries };
 
-            Log.Info(string.Format("Data loaded. Number of Entries: {0}", entries.Count));
+            log.Info(string.Format("Data loaded. Number of Entries: {0}", entries.Count));
 
             return cycle;
         }
 
-        private delegate bool HeaderValidator(ICollection<string> header);
-        private delegate DrivingCycleEntry DataRowReader(DataRow row);
-
-        private static HeaderValidator GetHeaderValidator(CycleType type)
+        #region private IDataParser
+        private static IDataParser CreateDataParser(CycleType type)
         {
             switch (type)
             {
                 case CycleType.EngineOnly:
-                    return HeaderIsValidEngineOnly;
+                    return new EngineOnlyDataParser();
                 case CycleType.TimeBased:
-                    return HeaderIsValidTimeBased;
+                    return new TimeBasedDataParser();
                 case CycleType.DistanceBased:
-                    return HeaderIsValidDistanceBased;
+                    return new DistanceBasedDataParser();
                 default:
                     throw new ArgumentOutOfRangeException("type");
             }
         }
-
-        private static DataRowReader GetDataRowReader(CycleType type)
+        private static Dictionary<string, double> ReadAuxSupplyPowerColumns(DataRow row)
         {
-            switch (type)
+            var entries = new Dictionary<string, double>();
+            var auxColumns = row.Table.Columns.Cast<DataColumn>().Where(c => c.ColumnName.StartsWith(Fields.AuxiliarySupplyPower));
+            foreach (var c in auxColumns)
             {
-                case CycleType.EngineOnly:
-                    return ParseEngineOnly;
-                case CycleType.TimeBased:
-                    return ParseTimeBased;
-                case CycleType.DistanceBased:
-                    return ParseDistanceBased;
-                default:
-                    throw new ArgumentOutOfRangeException("type");
+                var auxName = c.ColumnName.Substring(Fields.AuxiliarySupplyPower.Length - 1);
+                entries[auxName] = row.ParseDouble(c).SI().Kilo.Watt;
             }
+            return entries;
         }
-
-        private static bool HeaderIsValidDistanceBased(ICollection<string> header)
+        private interface IDataParser
         {
-            var allowedCols = new[]
+            void ValidateHeader(ICollection<string> header);
+
+            DrivingCycleEntry Parse(DataRow row);
+        }
+        private class DistanceBasedDataParser : IDataParser
+        {
+            public void ValidateHeader(ICollection<string> header)
+            {
+                var allowedCols = new[]
             { 
                 Fields.Distance,
                 Fields.VehicleSpeed,
@@ -252,133 +245,141 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                 Fields.WindYawAngle
             };
 
+                foreach (var col in header.Where(col => !(allowedCols.Contains(col) || col.StartsWith(Fields.AuxiliarySupplyPower))))
+                    throw new VectoException(string.Format("Column '{0}' is not allowed.", col));
 
-            var allColumnsAllowed = header.All(h => allowedCols.Contains(h) || h.StartsWith(Fields.AuxiliarySupplyPower));
-            var requiredColumnsExist = header.Contains(Fields.Distance)
-                                       && header.Contains(Fields.VehicleSpeed)
-                                       && !(header.Contains(Fields.AirSpeedRelativeToVehicle) ^ header.Contains(Fields.WindYawAngle));
+                if (!header.Contains(Fields.VehicleSpeed))
+                    throw new VectoException(string.Format("Column '{0}' is missing.", Fields.VehicleSpeed));
 
-            return allColumnsAllowed && requiredColumnsExist;
-        }
+                if (!header.Contains(Fields.Distance))
+                    throw new VectoException(string.Format("Column '{0}' is missing.", Fields.Distance));
 
-        private static DrivingCycleEntry ParseDistanceBased(DataRow row)
-        {
-            var entry = new DrivingCycleEntry
+                if (header.Contains(Fields.AirSpeedRelativeToVehicle) ^ header.Contains(Fields.WindYawAngle))
+                    throw new VectoException(string.Format("Both Columns '{0}' and '{1}' must be defined, or none of them.",
+                        Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle));
+            }
+
+            public DrivingCycleEntry Parse(DataRow row)
             {
-                Distance = row.ParseDouble(Fields.Distance),
-                VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed),
-                RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
-                AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand),
-                EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed),
-                Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
-                AirSpeedRelativeToVehicle = row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle),
-                WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
-                AuxiliarySupplyPower = ReadAuxSupplyPowerColumns(row)
-            };
-
-
-
-            return entry;
-        }
-
-        private static Dictionary<string, double> ReadAuxSupplyPowerColumns(DataRow row)
-        {
-            var entries = new Dictionary<string, double>();
-            foreach (DataColumn c in row.Table.Columns)
-            {
-                if (c.ColumnName.StartsWith(Fields.AuxiliarySupplyPower))
+                var entry = new DrivingCycleEntry
                 {
-                    var auxName = c.ColumnName.Substring(Fields.AuxiliarySupplyPower.Length - 1);
-                    entries[auxName] = row.ParseDouble(c);
+                    Distance = row.ParseDouble(Fields.Distance),
+                    VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour,
+                    RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
+                    AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt,
+                    EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute,
+                    Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
+                    AirSpeedRelativeToVehicle = row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle).SI().Kilo.Meter.Per.Hour,
+                    WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
+                    AuxiliarySupplyPower = ReadAuxSupplyPowerColumns(row)
+                };
+
+
+
+                return entry;
+            }
+        }
+        private class TimeBasedDataParser : IDataParser
+        {
+            public void ValidateHeader(ICollection<string> header)
+            {
+                var allowedCols = new[]
+                { 
+                    Fields.Time,
+                    Fields.VehicleSpeed,
+                    Fields.RoadGradient,
+                    Fields.EngineSpeed,
+                    Fields.Gear,
+                    Fields.AdditionalAuxPowerDemand,
+                    Fields.AirSpeedRelativeToVehicle,
+                    Fields.WindYawAngle
+                };
+
+                foreach (var col in header.Where(col => !(allowedCols.Contains(col) || col.StartsWith(Fields.AuxiliarySupplyPower))))
+                    throw new VectoException(string.Format("Column '{0}' is not allowed.", col));
+
+                if (!header.Contains(Fields.VehicleSpeed))
+                    throw new VectoException(string.Format("Column '{0}' is missing.", Fields.VehicleSpeed));
+
+                if (header.Contains(Fields.AirSpeedRelativeToVehicle) ^ header.Contains(Fields.WindYawAngle))
+                    throw new VectoException(string.Format("Both Columns '{0}' and '{1}' must be defined, or none of them.",
+                        Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle));
+            }
+
+            public DrivingCycleEntry Parse(DataRow row)
+            {
+                var entry = new DrivingCycleEntry
+                {
+                    Time = row.ParseDoubleOrGetDefault(Fields.Time),
+                    VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour,
+                    RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
+                    AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt,
+                    Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
+                    EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute,
+                    AirSpeedRelativeToVehicle = row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle).SI().Kilo.Meter.Per.Hour,
+                    WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
+                    AuxiliarySupplyPower = ReadAuxSupplyPowerColumns(row)
+                };
+
+                return entry;
+            }
+        }
+        private class EngineOnlyDataParser : IDataParser
+        {
+            public void ValidateHeader(ICollection<string> header)
+            {
+                var allowedCols = new[]
+                {
+                    Fields.EngineTorque,
+                    Fields.EnginePower,
+                    Fields.EngineSpeed,
+                    Fields.AdditionalAuxPowerDemand
+                };
+
+                foreach (var col in header.Where(col => !allowedCols.Contains(col)))
+                    throw new VectoException(string.Format("Column '{0}' is not allowed.", col));
+
+                if (!header.Contains(Fields.EngineSpeed))
+                    throw new VectoException(string.Format("Column '{0}' is missing.", Fields.EngineSpeed));
+
+                if (!(header.Contains(Fields.EngineTorque) || header.Contains(Fields.EnginePower)))
+                    throw new VectoException(string.Format("Columns missing: Either column '{0}' or column '{1}' must be defined.",
+                        Fields.EngineTorque, Fields.EnginePower));
+
+                if (header.Contains(Fields.EngineTorque) && header.Contains(Fields.EnginePower))
+                    LogManager.GetLogger<DrivingCycleData>()
+                        .WarnFormat("Found column '{0}' and column '{1}': only column '{0}' will be used.",
+                            Fields.EngineTorque, Fields.EnginePower);
+            }
+
+            public DrivingCycleEntry Parse(DataRow row)
+            {
+                var entry = new DrivingCycleEntry
+                {
+                    EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute,
+                    AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt,
+                    AuxiliarySupplyPower = ReadAuxSupplyPowerColumns(row)
+                };
+
+                if (row.Table.Columns.Contains(Fields.EngineTorque))
+                {
+                    if (row.Field<string>(Fields.EngineTorque).Equals("<DRAG>"))
+                        entry.Drag = true;
+                    else
+                        entry.EngineTorque = row.ParseDouble(Fields.EngineTorque);
                 }
-            }
-            return entries;
-        }
-
-        private static bool HeaderIsValidTimeBased(ICollection<string> header)
-        {
-            var allowedCols = new[]
-            { 
-                Fields.Time,
-                Fields.VehicleSpeed,
-                Fields.RoadGradient,
-                Fields.EngineSpeed,
-                Fields.Gear,
-                Fields.AdditionalAuxPowerDemand,
-                Fields.AirSpeedRelativeToVehicle,
-                Fields.WindYawAngle
-            };
-
-            var allColumnsAllowed = header.All(h => allowedCols.Contains(h) || h.StartsWith(Fields.AuxiliarySupplyPower));
-            var requiredColumnsExist = header.Contains(Fields.VehicleSpeed)
-                && !(header.Contains(Fields.AirSpeedRelativeToVehicle) ^ header.Contains(Fields.WindYawAngle));
-
-            return allColumnsAllowed && requiredColumnsExist;
-        }
-
-        private static DrivingCycleEntry ParseTimeBased(DataRow row)
-        {
-            var entry = new DrivingCycleEntry
-            {
-                Time = row.ParseDoubleOrGetDefault(Fields.Time),
-                VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed),
-                RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
-                AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand),
-                Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
-                EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed),
-                AirSpeedRelativeToVehicle = row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle),
-                WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
-                AuxiliarySupplyPower = ReadAuxSupplyPowerColumns(row)
-            };
-
-            return entry;
-        }
-
-        private static bool HeaderIsValidEngineOnly(ICollection<string> header)
-        {
-            var allowedCols = new[]
-            { 
-                Fields.EngineTorque, 
-                Fields.EnginePower, 
-                Fields.EngineSpeed, 
-                Fields.AdditionalAuxPowerDemand 
-            };
-
-            var allColumnsAllowed = header.All(h => allowedCols.Contains(h));
-
-            var requiredColumnsExist = header.Contains(Fields.EngineSpeed)
-                                       && (header.Contains(Fields.EngineTorque) || header.Contains(Fields.EnginePower));
-
-
-            return allColumnsAllowed && requiredColumnsExist;
-        }
-
-        private static DrivingCycleEntry ParseEngineOnly(DataRow row)
-        {
-            var entry = new DrivingCycleEntry();
-
-            entry.EngineSpeed = row.ParseDouble(Fields.EngineSpeed);
-
-            if (row.Table.Columns.Contains(Fields.EngineTorque))
-            {
-                if (row.Field<string>(Fields.EngineTorque).Equals("<DRAG>"))
-                    entry.Drag = true;
                 else
-                    entry.EngineTorque = row.ParseDouble(Fields.EngineTorque);
+                {
+                    if (row.Field<string>(Fields.EnginePower).Equals("<DRAG>"))
+                        entry.Drag = true;
+                    else
+                        entry.EngineTorque = Formulas.PowerToTorque(row.ParseDouble(Fields.EnginePower).SI().Kilo.Watt,
+                                                                    entry.EngineSpeed.SI().Radiant.Per.Second);
+                }
+
+                return entry;
             }
-            else
-            {
-                if (row.Field<string>(Fields.EnginePower).Equals("<DRAG>"))
-                    entry.Drag = true;
-                else
-                    entry.EngineTorque = VectoMath.ConvertPowerToTorque(row.ParseDouble(Fields.EnginePower), entry.EngineSpeed);
-            }
-
-            entry.AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand);
-
-            entry.AuxiliarySupplyPower = ReadAuxSupplyPowerColumns(row);
-
-            return entry;
         }
+        #endregion
     }
 }

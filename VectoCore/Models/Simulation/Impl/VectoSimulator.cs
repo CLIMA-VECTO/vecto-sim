@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
         public void RunSimulation()
         {
             LogManager.GetLogger(GetType()).Info("VectoSimulator started running. Starting Jobs.");
-            Task.WhenAll(_jobs.Select(job => Task.Factory.StartNew(job.Run)));
+            Task.WaitAll(_jobs.Select(job => Task.Factory.StartNew(job.Run)).ToArray());
         }
     }
 }

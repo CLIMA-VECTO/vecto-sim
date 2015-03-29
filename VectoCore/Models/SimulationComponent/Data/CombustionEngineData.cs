@@ -7,6 +7,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -153,12 +154,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                 [JsonProperty(Required = Required.Always)]
                 public string FuelMap;
 
+                /// <summary>
+                /// The WHTC test results are required in Declaration Mode for the WHTC FC Correction. 
+                /// The fuel consumption must be defined in [g/kWh] for each test part (Urban, Rural, Motorway) separately.
+                /// </summary>
                 [JsonProperty("WHTC-Urban")]
                 public double WHTCUrban;
 
+                /// <summary>
+                /// The WHTC test results are required in Declaration Mode for the WHTC FC Correction. 
+                /// The fuel consumption must be defined in [g/kWh] for each test part (Urban, Rural, Motorway) separately.
+                /// </summary>
                 [JsonProperty("WHTC-Rural")]
                 public double WHTCRural;
 
+                /// <summary>
+                /// The WHTC test results are required in Declaration Mode for the WHTC FC Correction. 
+                /// The fuel consumption must be defined in [g/kWh] for each test part (Urban, Rural, Motorway) separately.
+                /// </summary>
                 [JsonProperty("WHTC-Motorway")]
                 public double WHTCMotorway;
 
@@ -251,40 +264,58 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             protected set { _data.Body.ModelName = value; }
         }
 
+        /// <summary>
+        /// [m^3]
+        /// </summary>
         public double Displacement
         {
-            get { return _data.Body.Displacement; }
-            protected set { _data.Body.Displacement = value; }
+            get { return _data.Body.Displacement.SI().Cubic.Centi.Meter; }
+            protected set { _data.Body.Displacement = value.SI().Cubic.Meter.ConvertTo.Cubic.Centi.Meter; }
         }
 
+        /// <summary>
+        /// [rad/sec]
+        /// </summary>
         public double IdleSpeed
         {
-            get { return _data.Body.IdleSpeed; }
-            protected set { _data.Body.IdleSpeed = value; }
+            get { return _data.Body.IdleSpeed.SI().Rounds.Per.Minute.ConvertTo.Radiant.Per.Second; }
+            protected set { _data.Body.IdleSpeed = value.SI().Radiant.Per.Second.ConvertTo.Rounds.Per.Minute; }
         }
 
+        /// <summary>
+        /// [kgm^2]
+        /// </summary>
         public double Inertia
         {
             get { return _data.Body.Inertia; }
             protected set { _data.Body.Inertia = value; }
         }
 
+        /// <summary>
+        /// [g/W]
+        /// </summary>
         public double WHTCUrban
         {
-            get { return _data.Body.WHTCUrban; }
-            protected set { _data.Body.WHTCUrban = value; }
+            get { return _data.Body.WHTCUrban.SI().Gramm.Per.Kilo.Watt.Hour; }
+            protected set { _data.Body.WHTCUrban = value.SI().ConvertTo.Gramm.Per.Kilo.Watt.Hour; }
         }
 
+        /// <summary>
+        /// [g/W]
+        /// </summary>
         public double WHTCRural
         {
-            get { return _data.Body.WHTCRural; }
-            protected set { _data.Body.WHTCRural = value; }
+            get { return _data.Body.WHTCRural.SI().Gramm.Per.Kilo.Watt.Hour; }
+            protected set { _data.Body.WHTCRural = value.SI().ConvertTo.Gramm.Per.Kilo.Watt.Hour; }
         }
 
+        /// <summary>
+        /// [g/W]
+        /// </summary>
         public double WHTCMotorway
         {
-            get { return _data.Body.WHTCMotorway; }
-            protected set { _data.Body.WHTCMotorway = value; }
+            get { return _data.Body.WHTCMotorway.SI().Gramm.Per.Kilo.Watt.Hour; }
+            protected set { _data.Body.WHTCMotorway = value.SI().ConvertTo.Gramm.Per.Kilo.Watt.Hour; }
         }
 
         public FuelConsumptionMap ConsumptionMap { get; set; }
@@ -367,6 +398,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             var combustionEngineData = new CombustionEngineData();
             //todo handle conversion errors
             var d = JsonConvert.DeserializeObject<Data>(json);
+
             combustionEngineData._data = d;
 
             if (d.Header.FileVersion > 2)

@@ -8,18 +8,6 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
-    /// <summary>
-    /// This file contains the full load and drag curves and the PT1 values for the transient full load calculation.
-    /// File Format: The file uses the VECTO CSV format.
-    ///              Four columns, One header line 
-    ///              At least two lines with numeric values (below file header)
-    /// Columns:
-    ///     * engine speed      [1/min]
-    ///     * full load torque  [Nm]
-    ///     * motoring torque   [Nm]
-    ///     * PT1               [s] 
-
-    /// </summary>
     public class FullLoadCurve : SimulationComponentData
     {
         private static class Fields
@@ -48,7 +36,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         private class FullLoadCurveEntry
         {
             /// <summary>
-            /// engine speed [1/min]
+            /// engine speed [rad/s]
             /// </summary>
             public double EngineSpeed { get; set; }
 
@@ -115,7 +103,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             }
             else
             {
-                // todo: display warning to the user!
                 LogManager.GetLogger<FullLoadCurve>().WarnFormat(
                     "FullLoadCurve: Header Line is not valid. Expected: '{0}, {1}, {2}, {3}', Got: '{4}'. Falling back to column index.",
                     Fields.EngineSpeed, Fields.TorqueFullLoad, Fields.TorqueDrag, Fields.PT1,
@@ -137,73 +124,105 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
         private static List<FullLoadCurveEntry> CreateFromColumnIndizes(DataTable data)
         {
-            var entries = (from DataRow row in data.Rows
-                select new FullLoadCurveEntry
-                {
-                    EngineSpeed = row.ParseDouble(0),
-                    TorqueFullLoad = row.ParseDouble(1),
-                    TorqueDrag = row.ParseDouble(2),
-                    PT1 = row.ParseDouble(3)
-                }).ToList();
-            return entries;
+            return (from DataRow row in data.Rows
+                    select new FullLoadCurveEntry
+                    {
+                        EngineSpeed = row.ParseDouble(0).SI().Rounds.Per.Minute.ConvertTo.Radiant.Per.Second,
+                        TorqueFullLoad = row.ParseDouble(1),
+                        TorqueDrag = row.ParseDouble(2),
+                        PT1 = row.ParseDouble(3)
+                    }).ToList();
         }
 
         private static List<FullLoadCurveEntry> CreateFromColumnNames(DataTable data)
         {
-            var entries = (from DataRow row in data.Rows
-                select new FullLoadCurveEntry
-                {
-                    EngineSpeed = row.ParseDouble(Fields.EngineSpeed),
-                    TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad),
-                    TorqueDrag = row.ParseDouble(Fields.TorqueDrag),
-                    PT1 = row.ParseDouble(Fields.PT1)
-                }).ToList();
-            return entries;
+            return (from DataRow row in data.Rows
+                    select new FullLoadCurveEntry
+                    {
+                        EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.ConvertTo.Radiant.Per.Second,
+                        TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad),
+                        TorqueDrag = row.ParseDouble(Fields.TorqueDrag),
+                        PT1 = row.ParseDouble(Fields.PT1)
+                    }).ToList();
         }
 
-        public double FullLoadStationaryTorque(double rpm)
+        /// <summary>
+        /// [rad/s] => [Nm]
+        /// </summary>
+        /// <param name="engineSpeed">[rad/s]</param>
+        /// <returns>[Nm]</returns>
+        public double FullLoadStationaryTorque(double engineSpeed)
         {
-            var idx = FindIndexForRpm(rpm);
+            var idx = FindIndex(engineSpeed);
             return VectoMath.Interpolate(_entries[idx - 1].EngineSpeed, _entries[idx].EngineSpeed,
-                _entries[idx - 1].TorqueFullLoad, _entries[idx].TorqueFullLoad, rpm);
+                _entries[idx - 1].TorqueFullLoad, _entries[idx].TorqueFullLoad, engineSpeed);
         }
 
-        public double FullLoadStationaryPower(double rpm)
+        /// <summary>
+        /// [rad/s] => [W]
+        /// </summary>
+        /// <param name="engineSpeed">[rad/s]</param>
+        /// <returns>[W]</returns>
+        public double FullLoadStationaryPower(double engineSpeed)
         {
-            return VectoMath.ConvertRpmTorqueToPower(rpm, FullLoadStationaryTorque(rpm));
+            return Formulas.TorqueToPower(FullLoadStationaryTorque(engineSpeed).SI().Newton.Meter, engineSpeed.SI().Radiant.Per.Second);
         }
 
-        public double DragLoadStationaryTorque(double rpm)
+        /// <summary>
+        /// [rad/s] => [Nm]
+        /// </summary>
+        /// <param name="engineSpeed">[rad/s]</param>
+        /// <returns>[Nm]</returns>
+        public double DragLoadStationaryTorque(double engineSpeed)
         {
-            var idx = FindIndexForRpm(rpm);
+            var idx = FindIndex(engineSpeed);
             return VectoMath.Interpolate(_entries[idx - 1].EngineSpeed, _entries[idx].EngineSpeed,
-                _entries[idx - 1].TorqueDrag, _entries[idx].TorqueDrag, rpm);
+                _entries[idx - 1].TorqueDrag, _entries[idx].TorqueDrag, engineSpeed);
         }
 
-        public double DragLoadStationaryPower(double rpm)
+        /// <summary>
+        /// [rad/s] => [W].
+        /// </summary>
+        /// <param name="engineSpeed">[rad/sec]</param>
+        /// <returns>[W]</returns>
+        public double DragLoadStationaryPower(double engineSpeed)
         {
-            return VectoMath.ConvertRpmTorqueToPower(rpm, DragLoadStationaryTorque(rpm));
+            return Formulas.TorqueToPower(DragLoadStationaryTorque(engineSpeed).SI().Newton.Meter, engineSpeed.SI().Radiant.Per.Second);
         }
 
-        public double PT1(double rpm)
+        /// <summary>
+        /// [rad/s] => [W]
+        /// </summary>
+        /// <param name="engineSpeed">[rad/s]</param>
+        /// <returns>[W]</returns>
+        public double PT1(double engineSpeed)
         {
-            var idx = FindIndexForRpm(rpm);
+            var idx = FindIndex(engineSpeed);
             return VectoMath.Interpolate(_entries[idx - 1].EngineSpeed, _entries[idx].EngineSpeed,
-                _entries[idx - 1].PT1, _entries[idx].PT1, rpm);
+                _entries[idx - 1].PT1, _entries[idx].PT1, engineSpeed);
         }
 
-        protected int FindIndexForRpm(double rpm)
+        /// <summary>
+        /// Get item index for engineSpeed [rad/s].
+        /// </summary>
+        /// <param name="engineSpeed">[rad/s]</param>
+        /// <returns></returns>
+        protected int FindIndex(double engineSpeed)
         {
             int idx;
-			if (rpm < _entries[0].EngineSpeed) {
-                Log.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}", rpm,
-                    _entries[0].EngineSpeed);
+            if (engineSpeed < _entries[0].EngineSpeed)
+            {
+                Log.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}", engineSpeed.SI().Rounds.Per.Minute,
+                    _entries[0].EngineSpeed.SI().Rounds.Per.Minute);
                 idx = 1;
-			} else {
-                idx = _entries.FindIndex(x => x.EngineSpeed > rpm);
             }
-			if (idx <= 0) {
-                idx = rpm > _entries[0].EngineSpeed ? _entries.Count - 1 : 1;
+            else
+            {
+                idx = _entries.FindIndex(x => x.EngineSpeed > engineSpeed);
+            }
+            if (idx <= 0)
+            {
+                idx = engineSpeed > _entries[0].EngineSpeed ? _entries.Count - 1 : 1;
             }
             return idx;
         }

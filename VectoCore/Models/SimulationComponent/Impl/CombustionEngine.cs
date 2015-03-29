@@ -115,12 +115,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _currentState = new EngineState();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="absTime">[s]</param>
+        /// <param name="dt">[s]</param>
+        /// <param name="torque">[Nm]</param>
+        /// <param name="engineSpeed">[rad/s]</param>
         public void Request(TimeSpan absTime, TimeSpan dt, double torque, double engineSpeed)
         {
             _currentState.EngineSpeed = engineSpeed;
             _currentState.AbsTime = absTime;
 
-            var requestedPower = VectoMath.ConvertRpmTorqueToPower(engineSpeed, torque);
+            var requestedPower = Formulas.TorqueToPower(torque.SI().Newton.Meter, engineSpeed.SI().Radiant.Per.Second);
             _currentState.EnginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
             var requestedEnginePower = requestedPower + _currentState.EnginePowerLoss;
 
@@ -206,13 +213,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             return retVal;
         }
 
-        protected double FullLoadPowerDyamic(uint gear, double rpm)
+        /// <summary>
+        /// gear [-], engineSpeed [rad/s] => power [W]
+        /// </summary>
+        /// <param name="gear">[-]</param>
+        /// <param name="engineSpeed">[rad/s]</param>
+        /// <returns>[W]</returns>
+        protected double FullLoadPowerDyamic(uint gear, double engineSpeed)
         {
-            var staticFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
-            var pt1 = _data.GetFullLoadCurve(gear).PT1(rpm);
+            var staticFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(engineSpeed);
+            var pt1 = _data.GetFullLoadCurve(gear).PT1(engineSpeed);
 
-            return Math.Min((1 / (pt1 + 1)) * (staticFullLoadPower + pt1 * _previousState.EnginePower),
-                staticFullLoadPower);
+            return Math.Min((1 / (pt1 + 1)) * (staticFullLoadPower + pt1 * _previousState.EnginePower), staticFullLoadPower);
         }
 
         protected bool IsFullLoad(double requestedPower, double maxPower)
@@ -220,11 +232,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             return Math.Abs(requestedPower / maxPower - 1.0) < FullLoadMargin;
         }
 
+        /// <summary>
+        /// Calculates power loss. [W]
+        /// </summary>
+        /// <param name="torque">[Nm]</param>
+        /// <param name="engineSpeed">[rad/sec]</param>
+        /// <returns>[W]</returns>
         protected double InertiaPowerLoss(double torque, double engineSpeed)
         {
             var deltaEngineSpeed = engineSpeed - _previousState.EngineSpeed;
             var avgEngineSpeed = (_previousState.EngineSpeed + engineSpeed) / 2.0;
-            return _data.Inertia * VectoMath.RpmTpAngularVelocity(deltaEngineSpeed) * VectoMath.RpmTpAngularVelocity(avgEngineSpeed);
+            return _data.Inertia * deltaEngineSpeed * avgEngineSpeed;
         }
 
         #region Equality members

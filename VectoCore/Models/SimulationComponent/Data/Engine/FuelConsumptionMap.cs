@@ -81,9 +81,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                     {
                         var entry = new FuelConsumptionEntry
                         {
-                            EngineSpeed = row.ParseDouble(Fields.EngineSpeed) / Units.RPMPerRadiant,
-                            Torque = row.ParseDouble(Fields.Torque),
-                            FuelConsumption = row.ParseDouble(Fields.FuelConsumption) * 1 / Units.SecondsPerHour
+                            EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.ConvertTo.Radiant.Per.Second,
+                            Torque = row.ParseDouble(Fields.Torque).SI().Newton.Meter,
+                            FuelConsumption = row.ParseDouble(Fields.FuelConsumption).SI().Gramm.Per.Hour.ConvertTo.Gramm.Per.Second
                         };
 
                         if (entry.FuelConsumption < 0)
@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                         fuelConsumptionMap._entries.Add(entry);
 
                         // the delauney map works as expected, when the original engine speed field is used.
-                        fuelConsumptionMap._fuelMap.AddPoint(entry.EngineSpeed * Units.RPMPerRadiant, entry.Torque, entry.FuelConsumption);
+                        fuelConsumptionMap._fuelMap.AddPoint(entry.EngineSpeed.SI().Radiant.Per.Second.ConvertTo.Rounds.Per.Minute, entry.Torque, entry.FuelConsumption);
                     }
                     catch (Exception e)
                     {
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         /// <returns></returns>
         public double GetFuelConsumption(double engineSpeed, double torque)
         {
-            return _fuelMap.Interpolate(engineSpeed * Units.RPMPerRadiant, torque);
+            return _fuelMap.Interpolate(engineSpeed.SI().Radiant.Per.Second.ConvertTo.Rounds.Per.Minute, torque);
         }
 
         #region Equality members

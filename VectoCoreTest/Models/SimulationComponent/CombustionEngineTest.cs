@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -45,14 +44,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
             var engine = new CombustionEngine(vehicle, engineData);
 
-            var gearbox = new EngineOnlyGearbox(vehicle);
+            new EngineOnlyGearbox(vehicle);
 
             var port = engine.OutShaft();
 
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
             var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
-            var torque = 400.0;
-            var engineSpeed = 1500.0;
+            var torque = 400;
+            var engineSpeed = 1500.SI().Rounds.Per.Minute;
 
             port.Request(absTime, dt, torque, engineSpeed);
         }
@@ -71,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
             //todo: set correct input values to test
             var torque = 0.0;
-            var engineSpeed = 600.0;
+            var engineSpeed = 600.SI().Rounds.Per.Minute;
             var dataWriter = new TestModalDataWriter();
 
             for (var i = 0; i < 10; i++)
@@ -81,33 +80,34 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
                 absTime += dt;
             }
 
-	        engineSpeed = 644.4445;
-            port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(2329.973, engineSpeed), engineSpeed);
+            engineSpeed = 644.4445.SI().Rounds.Per.Minute;
+            port.Request(absTime, dt, Formulas.PowerToTorque(2329.973.SI().Watt, engineSpeed), engineSpeed);
             engine.CommitSimulationStep(dataWriter);
-	        absTime += dt;
+            absTime += dt;
 
             Assert.AreEqual(1152.40304, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
 
-	        torque = 4264.177;
-	        for (var i = 0; i < 2; i++) {
-		        port.Request(absTime, dt, torque, engineSpeed);
-				engine.CommitSimulationStep(dataWriter);
-		        absTime += dt;
-	        }
+            torque = 4264.177;
+            for (var i = 0; i < 2; i++)
+            {
+                port.Request(absTime, dt, torque, engineSpeed);
+                engine.CommitSimulationStep(dataWriter);
+                absTime += dt;
+            }
 
-			engineSpeed = 869.7512;
-			port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(7984.56, engineSpeed), engineSpeed);
-			engine.CommitSimulationStep(dataWriter);
-	        absTime += dt;
+            engineSpeed = 869.7512.SI().Rounds.Per.Minute;
+            port.Request(absTime, dt, Formulas.PowerToTorque(7984.56.SI().Watt, engineSpeed), engineSpeed);
+            engine.CommitSimulationStep(dataWriter);
+            absTime += dt;
 
-			Assert.AreEqual(7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+            Assert.AreEqual(7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
 
-			engineSpeed = 644.4445;
-			port.Request(absTime, dt, VectoMath.ConvertPowerToTorque(7984.56, engineSpeed), engineSpeed);
-			engine.CommitSimulationStep(dataWriter);
-			absTime += dt;
+            engineSpeed = 644.4445.SI().Rounds.Per.Minute;
+            port.Request(absTime, dt, Formulas.PowerToTorque(7984.56.SI().Watt, engineSpeed), engineSpeed);
+            engine.CommitSimulationStep(dataWriter);
+            absTime += dt;
 
-			Assert.AreEqual(-7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+            Assert.AreEqual(-7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
 
 
         }
