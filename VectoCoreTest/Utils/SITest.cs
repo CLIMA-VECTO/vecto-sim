@@ -52,6 +52,20 @@ namespace TUGraz.VectoCore.Tests.Utils
             Assert.AreEqual(5000, (double)kg);
             Assert.AreEqual("5000 [g]", kg.ToString());
 
+            var x = 5.SI();
+            Assert.AreEqual((2.0 / 5.0).SI(), 2 / x);
+            Assert.AreEqual((5.0 / 2.0).SI(), x / 2);
+            Assert.AreEqual((2.0 * 5.0).SI(), 2 * x);
+            Assert.AreEqual((5.0 * 2.0).SI(), x * 2);
+
+            Assert.AreEqual((2.0 / 5.0).SI(), 2.0 / x);
+            Assert.AreEqual((5.0 / 2.0).SI(), x / 2.0);
+            Assert.AreEqual((2 * 5).SI(), 2.0 * x);
+            Assert.AreEqual((5 * 2).SI(), x * 2.0);
+
+
+            var y = 2.SI();
+            Assert.AreEqual((2 * 5).SI(), y * x);
         }
     }
 }

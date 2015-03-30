@@ -378,6 +378,11 @@ namespace TUGraz.VectoCore.Utils
             return new SI(si1._value * d, si1);
         }
 
+        public static SI operator *(double d, SI si1)
+        {
+            return new SI(d * si1._value, si1);
+        }
+
         public static SI operator /(SI si1, double d)
         {
             return new SI(si1._value / d, si1);
@@ -385,7 +390,7 @@ namespace TUGraz.VectoCore.Utils
 
         public static SI operator /(double d, SI si1)
         {
-            return si1 / d;
+            return new SI(d / si1._value, si1);
         }
 
         public static bool operator <(SI si1, SI si2)
