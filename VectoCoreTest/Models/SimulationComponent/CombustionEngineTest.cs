@@ -144,5 +144,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
             Assert.AreEqual(origin, restored, "Serialized with Object, Deserialized with Object");
         }
+
+        [TestMethod]
+        public void TestWriteToFile()
+        {
+            var vehicle = new VehicleContainer();
+            var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
+            var engine = new CombustionEngine(vehicle, engineData);
+
+            engineData.WriteToFile("engineData test output.veng");
+
+        }
     }
 }
