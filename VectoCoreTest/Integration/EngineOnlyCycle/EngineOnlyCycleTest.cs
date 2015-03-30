@@ -41,8 +41,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var i = 0;
 		    var results = new[] { ModalResultField.n, ModalResultField.PaEng, ModalResultField.Tq_drag, ModalResultField.Pe_drag, ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.Tq_full, ModalResultField.Pe_full, }; 
 			//, ModalResultField.FC };
-			var siFactor = new double[] {1, 1000, 1, 1000, 1000, 1, 1, 1000, 1 };
-			var tolerances = new double[] {0.0001, 0.1, 0.0001, 0.1, 0.1, 0.001, 0.001, 0.1, 0.01 };
+			var siFactor = new[] {1, 1000, 1, 1000, 1000, 1, 1, 1000, 1 };
+			var tolerances = new[] {0.0001, 0.1, 0.0001, 0.1, 0.1, 0.001, 0.001, 0.1, 0.01 };
 			foreach (var cycle in data.Entries)
 			{
 				port.Request(absTime, dt, cycle.EngineTorque, cycle.EngineSpeed);

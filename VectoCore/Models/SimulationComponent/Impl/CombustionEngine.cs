@@ -92,10 +92,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
             protected bool Equals(EngineState other)
             {
-                return OperationMode == other.OperationMode
-                    && EnginePower.Equals(other.EnginePower)
-                    && EngineSpeed.Equals(other.EngineSpeed)
-                    && EnginePowerLoss.Equals(other.EnginePowerLoss)
+                return OperationMode == other.OperationMode 
+                    && Equals(EnginePower, other.EnginePower) 
+                    && Equals(EngineSpeed, other.EngineSpeed) 
+                    && Equals(EnginePowerLoss, other.EnginePowerLoss) 
                     && AbsTime.Equals(other.AbsTime);
             }
 
@@ -103,19 +103,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             {
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType()) return false;
-                return Equals((EngineState)obj);
+                var other = obj as EngineState;
+                return other != null && Equals(other);
             }
 
             public override int GetHashCode()
             {
                 unchecked
                 {
-                    var hashCode = (int)OperationMode;
-                    hashCode = (hashCode * 397) ^ EnginePower.GetHashCode();
-                    hashCode = (hashCode * 397) ^ EngineSpeed.GetHashCode();
-                    hashCode = (hashCode * 397) ^ EnginePowerLoss.GetHashCode();
-                    hashCode = (hashCode * 397) ^ AbsTime.GetHashCode();
+                    var hashCode = (int) OperationMode;
+                    hashCode = (hashCode*397) ^ (EnginePower != null ? EnginePower.GetHashCode() : 0);
+                    hashCode = (hashCode*397) ^ (EngineSpeed != null ? EngineSpeed.GetHashCode() : 0);
+                    hashCode = (hashCode*397) ^ (EnginePowerLoss != null ? EnginePowerLoss.GetHashCode() : 0);
+                    hashCode = (hashCode*397) ^ AbsTime.GetHashCode();
                     return hashCode;
                 }
             }
@@ -166,14 +166,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         public override void CommitSimulationStep(IModalDataWriter writer)
         {
-            writer[ModalResultField.PaEng] = _currentState.EnginePowerLoss;
-            writer[ModalResultField.Pe_drag] = _currentState.FullDragPower;
-            writer[ModalResultField.Pe_full] = _currentState.DynamicFullLoadPower;
-            writer[ModalResultField.Pe_eng] = _currentState.EnginePower;
+            writer[ModalResultField.PaEng] = (double)_currentState.EnginePowerLoss;
+            writer[ModalResultField.Pe_drag] = (double)_currentState.FullDragPower;
+            writer[ModalResultField.Pe_full] = (double)_currentState.DynamicFullLoadPower;
+            writer[ModalResultField.Pe_eng] = (double)_currentState.EnginePower;
 
-            writer[ModalResultField.Tq_drag] = _currentState.FullDragTorque;
-            writer[ModalResultField.Tq_full] = _currentState.DynamicFullLoadTorque;
-            writer[ModalResultField.Tq_eng] = _currentState.EngineTorque;
+            writer[ModalResultField.Tq_drag] = (double)_currentState.FullDragTorque;
+            writer[ModalResultField.Tq_full] = (double)_currentState.DynamicFullLoadTorque;
+            writer[ModalResultField.Tq_eng] = (double)_currentState.EngineTorque;
             writer[ModalResultField.n] = (double)_currentState.EngineSpeed.To().Rounds.Per.Minute;
 
             try

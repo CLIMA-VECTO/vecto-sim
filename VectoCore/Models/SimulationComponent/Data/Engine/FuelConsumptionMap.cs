@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         /// <returns>[kg/s]</returns>
         public SI GetFuelConsumption(NewtonMeter torque, RadianPerSecond engineSpeed)
         {
-            return _fuelMap.Interpolate((double)torque, (double)engineSpeed).SI().Kilo.Gramm.Per.Second;
+            return _fuelMap.Interpolate((double)torque, (double)engineSpeed.To().Rounds.Per.Minute).SI().Kilo.Gramm.Per.Second;
         }
 
         #region Equality members

@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             Assert.AreEqual(0.0, outPort.AbsTime.TotalSeconds);
             Assert.AreEqual(1.0, outPort.Dt.TotalSeconds);
             Assert.AreEqual(new SI(600).Rounds.Per.Minute, outPort.AngularFrequency);
-            Assert.AreEqual(0, outPort.Torque);
+            Assert.AreEqual(0.SI<NewtonMeter>(), outPort.Torque);
 
             Assert.AreEqual(0.5, dataWriter[ModalResultField.time]);
         }
@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             // todo: assert correct values!
             Assert.AreEqual(0.0, outPort.AbsTime.TotalSeconds);
             Assert.AreEqual(1.0, outPort.Dt.TotalSeconds);
-            Assert.AreEqual(0.0, outPort.Velocity);
+            Assert.AreEqual(0.0.SI<MeterPerSecond>(), outPort.Velocity);
             Assert.AreEqual(-0.020237973, outPort.Gradient);
             Assert.AreEqual(0.5, dataWriter[ModalResultField.time]);
         }

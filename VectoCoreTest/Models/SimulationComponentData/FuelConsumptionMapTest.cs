@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
                 try
                 {
                     Assert.AreEqual((double)entry[2].SI().Gramm.Per.Hour.To().Kilo.Gramm.Per.Second, 
-                                    (double)map.GetFuelConsumption(entry[1].SI<NewtonMeter>(), entry[0].SI().Rounds.Per.Minute.To<RadianPerSecond>()), 
+                                    (double)map.GetFuelConsumption(entry[1].SI<NewtonMeter>(), entry[0].RPMtoRad()), 
                                     Tolerance,
                                     string.Format("Line: {0}, n={1}, T={2}", (i + 2), entry[0].SI().Rounds.Per.Minute, entry[1]));
 
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
                 catch (VectoException ex)
                 {
                     throw new VectoException(string.Format("Row {0}: Error in ConsumptionMap n={1}, T={2}: {3}",
-                        i + 2, entry[0].SI().Rounds.Per.Minute, entry[1], ex.Message));
+                        i + 2, entry[0], entry[1], ex.Message));
                 }
             }
         }
