@@ -259,12 +259,12 @@ namespace TUGraz.VectoCore.Utils
 
                 var result = p0square * det12 + p1square * det20 + p2square * det01;
 
-                return result.IsPositive();
+                return result > 0;
             }
 
             private bool Contains(Point p)
             {
-                return P1.Equals(p) || P2.Equals(p) || P3.Equals(p);
+                return p.Equals(P1) || p.Equals(P2) || p.Equals(P3);
             }
 
             public bool SharesVertexWith(Triangle t)

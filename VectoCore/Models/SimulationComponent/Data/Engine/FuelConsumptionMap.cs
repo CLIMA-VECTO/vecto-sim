@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                         fuelConsumptionMap._entries.Add(entry);
 
                         // Delauney map works only as expected, when the engineSpeed is in rpm.
-                        fuelConsumptionMap._fuelMap.AddPoint(entry.EngineSpeed.SI().Radian.Per.Second.To().Rounds.Per.Minute, entry.Torque, entry.FuelConsumption);
+                        fuelConsumptionMap._fuelMap.AddPoint(row.ParseDouble(Fields.EngineSpeed), entry.Torque, entry.FuelConsumption);
                     }
                     catch (Exception e)
                     {

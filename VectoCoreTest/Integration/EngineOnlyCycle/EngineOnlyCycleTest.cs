@@ -1,7 +1,4 @@
 using System;
-using System.IO;
-using System.Reflection;
-using System.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
