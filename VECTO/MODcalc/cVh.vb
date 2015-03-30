@@ -20,6 +20,7 @@ Public Class cVh
     Private lPadd As List(Of Single)
     Private lVairVres As List(Of Single)
     Private lVairBeta As List(Of Single)
+    Public Pwheel As List(Of Single)
     Public EcoRoll As List(Of Boolean)
 
     'Calculated
@@ -50,6 +51,7 @@ Public Class cVh
         Weg = New List(Of Double)
         lVairVres = New List(Of Single)
         lVairBeta = New List(Of Single)
+        Pwheel = New List(Of Single)
         EcoRoll = New List(Of Boolean)
         NoDistCorr = New List(Of Boolean)
         iAlt = 1
@@ -69,6 +71,7 @@ Public Class cVh
         lVairVres = Nothing
         lVairBeta = Nothing
         EcoRoll = Nothing
+        Pwheel = Nothing
         NoDistCorr = Nothing
     End Sub
 
@@ -111,7 +114,7 @@ Public Class cVh
         End If
 
         'Altitude / distance
-        If Not DRI.Scycle Then
+        If Not DRI.Scycle And DRI.Vvorg Then
             L = DRI.Values(tDriComp.Alt)
             lAlt0.Add(0)
             ls0.Add(lV0(0))
@@ -176,6 +179,13 @@ Public Class cVh
                 lVairBeta.Add(Val)
             Next
 
+        End If
+
+        If DRI.PwheelVorg Then
+            L = DRI.Values(tDriComp.Pwheel)
+            For s = 0 To MODdata.tDim
+                Pwheel.Add(L(s))
+            Next
         End If
 
         For s = 0 To MODdata.tDim
@@ -356,8 +366,16 @@ Public Class cVh
         End If
     End Sub
 
-    Public Sub DistCorrInit()
+    Public Function DistCorrInit() As Boolean
         Dim i As Int16
+
+        If Not Cfg.DistCorr Then Return True
+
+        If Not DRI.Vvorg Then
+            WorkerMsg(tMsgID.Err, "Distance Correction not possible without speed input!", "DistCorrInit")
+            Return False
+        End If
+
 
         WegX = 0
         dWegIst = 0
@@ -368,10 +386,14 @@ Public Class cVh
             WegV.Add(lV0(i))
         Next
 
-    End Sub
+        Return True
+
+    End Function
 
     Public Function DistCorrection(ByVal t As Integer, ByVal VehState As tVehState) As Boolean
         Dim v As Single
+
+        If Not DRI.Vvorg Then Return False
 
         v = lV(t)
         dWegIst += v
@@ -441,6 +463,7 @@ Public Class cVh
         lGears.Insert(t, lGears(t))
         lPadd.Insert(t, lPadd(t))
         EcoRoll.Insert(t, EcoRoll(t))
+        Pwheel.Insert(t, Pwheel(t))
         NoDistCorr.Insert(t, NoDistCorr(t))
 
         If DRI.VairVorg Then
@@ -471,6 +494,7 @@ Public Class cVh
         lGears.Insert(t, lGears(t))
         lPadd.Insert(t, lPadd(t))
         EcoRoll.Insert(t, EcoRoll(t))
+        Pwheel.Insert(t, Pwheel(t))
         NoDistCorr.Insert(t, NoDistCorr(t))
 
         If DRI.VairVorg Then
@@ -503,6 +527,7 @@ Public Class cVh
         lGears.RemoveAt(t)
         lPadd.RemoveAt(t)
         EcoRoll.RemoveAt(t)
+        Pwheel.RemoveAt(t)
         NoDistCorr.RemoveAt(t)
 
         If DRI.VairVorg Then
@@ -571,6 +596,8 @@ Public Class cVh
         Dim i As Int32
         Dim dh As Single
         Dim ds As Single
+
+        If Not DRI.Vvorg Then Return 0
 
         If ls0(0) >= s Then
             i = 1

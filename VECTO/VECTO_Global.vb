@@ -121,6 +121,8 @@ Module VECTO_Global
                 Return tDriComp.Torque
             Case sKey.DRI.Alt
                 Return tDriComp.Alt
+            Case sKey.DRI.Pwheel
+                Return tDriComp.Pwheel
             Case Else
                 Return tDriComp.Undefined
 
@@ -639,6 +641,7 @@ Public Class csKey
         Public s As String = "<S>"
         Public StopTime As String = "<STOP>"
         Public Torque As String = "<ME>"
+        Public Pwheel As String = "<PWHEEL>"
     End Class
 
     Public Class csKeyAux

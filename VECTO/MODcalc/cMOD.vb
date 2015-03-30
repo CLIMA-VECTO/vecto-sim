@@ -618,18 +618,37 @@ Public Class cMOD
 
                 If Not VEC.EngOnly Then
 
-                    'distance
-                    dist += .Vh.V(t)
-                    s.Append(Sepp & dist)
+                    If DRI.Vvorg Then
 
-                    'Actual-speed.
-                    s.Append(Sepp & .Vh.V(t) * 3.6)
+                        'distance
+                        dist += .Vh.V(t)
+                        s.Append(Sepp & dist)
 
-                    'Target-speed
-                    s.Append(Sepp & .Vh.Vsoll(t) * 3.6)
+                        'Actual-speed.
+                        s.Append(Sepp & .Vh.V(t) * 3.6)
 
-                    'Acc.
-                    s.Append(Sepp & .Vh.a(t))
+                        'Target-speed
+                        s.Append(Sepp & .Vh.Vsoll(t) * 3.6)
+
+                        'Acc.
+                        s.Append(Sepp & .Vh.a(t))
+
+                    Else
+
+                        'distance
+                        s.Append(Sepp & "-")
+
+                        'Actual-speed.
+                        s.Append(Sepp & "-")
+
+                        'Target-speed
+                        s.Append(Sepp & "-")
+
+                        'Acc.
+                        s.Append(Sepp & "-")
+
+                    End If
+
 
                     'Slope
                     s.Append(Sepp & .Grad(t))
