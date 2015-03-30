@@ -89,10 +89,10 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var absTime = new TimeSpan();
 			var dt = TimeSpan.FromSeconds(1);
 
-		    var angularVelocity = 644.4445.SI().Rounds.Per.Minute;
-		    var power = 2329.973;
+		    var angularVelocity = 644.4445.RPMtoRad();
+		    var power = 2329.973.SI<Watt>();
 
-            gearbox.Request(absTime, dt, Formulas.PowerToTorque(power.SI().Watt, angularVelocity), angularVelocity);
+            gearbox.Request(absTime, dt, Formulas.PowerToTorque(power, angularVelocity), angularVelocity);
 
 			foreach (var sc in vehicleContainer.SimulationComponents())
 			{

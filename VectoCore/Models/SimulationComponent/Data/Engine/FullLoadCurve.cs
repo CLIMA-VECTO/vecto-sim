@@ -39,31 +39,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             /// <summary>
             /// [rad/s] engine speed 
             /// </summary>
-            public double EngineSpeed { get; set; }
+            public RadianPerSecond EngineSpeed { get; set; }
 
             /// <summary>
             /// [Nm] full load torque 
             /// </summary>
-            public double TorqueFullLoad { get; set; }
+            public NewtonMeter TorqueFullLoad { get; set; }
 
             /// <summary>
             /// [Nm] motoring torque 
             /// </summary>
-            public double TorqueDrag { get; set; }
+            public NewtonMeter TorqueDrag { get; set; }
 
             /// <summary>
             /// [s] PT1 time constant 
             /// </summary>
-            public double PT1 { get; set; }
+            public Second PT1 { get; set; }
 
             #region Equality members
             protected bool Equals(FullLoadCurveEntry other)
             {
                 Contract.Requires(other != null);
-                return EngineSpeed.IsEqual(other.EngineSpeed)
-                       && TorqueFullLoad.IsEqual(other.TorqueFullLoad)
-                       && TorqueDrag.IsEqual(other.TorqueDrag)
-                       && PT1.IsEqual(other.PT1);
+                return EngineSpeed.Equals(other.EngineSpeed)
+                       && TorqueFullLoad.Equals(other.TorqueFullLoad)
+                       && TorqueDrag.Equals(other.TorqueDrag)
+                       && PT1.Equals(other.PT1);
             }
 
             public override bool Equals(object obj)
@@ -133,10 +133,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             return (from DataRow row in data.Rows
                     select new FullLoadCurveEntry
                     {
-                        EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute,
-                        TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad),
-                        TorqueDrag = row.ParseDouble(Fields.TorqueDrag),
-                        PT1 = row.ParseDouble(Fields.PT1)
+                        EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.To<RadianPerSecond>(),
+                        TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad).SI<NewtonMeter>(),
+                        TorqueDrag = row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>(),
+                        PT1 = row.ParseDouble(Fields.PT1).SI<Second>()
                     }).ToList();
         }
 
@@ -146,10 +146,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             return (from DataRow row in data.Rows
                     select new FullLoadCurveEntry
                     {
-                        EngineSpeed = row.ParseDouble(0).SI().Rounds.Per.Minute,
-                        TorqueFullLoad = row.ParseDouble(1),
-                        TorqueDrag = row.ParseDouble(2),
-                        PT1 = row.ParseDouble(3)
+                        EngineSpeed = row.ParseDouble(0).SI().Rounds.Per.Minute.To<RadianPerSecond>(),
+                        TorqueFullLoad = row.ParseDouble(1).SI<NewtonMeter>(),
+                        TorqueDrag = row.ParseDouble(2).SI<NewtonMeter>(),
+                        PT1 = row.ParseDouble(3).SI<Second>()
                     }).ToList();
         }
 
@@ -158,15 +158,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         /// </summary>
         /// <param name="angularFrequency">[rad/s]</param>
         /// <returns>[Nm]</returns>
-        public SI FullLoadStationaryTorque(SI angularFrequency)
+        public NewtonMeter FullLoadStationaryTorque(RadianPerSecond angularFrequency)
         {
-            Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
-            Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Newton.Meter));
-
             var idx = FindIndex(angularFrequency);
-            return VectoMath.Interpolate(_entries[idx - 1].EngineSpeed, _entries[idx].EngineSpeed,
-                                         _entries[idx - 1].TorqueFullLoad, _entries[idx].TorqueFullLoad,
-                                         angularFrequency).SI().Newton.Meter;
+            return VectoMath.Interpolate((double)_entries[idx - 1].EngineSpeed, (double)_entries[idx].EngineSpeed,
+                                        (double)_entries[idx - 1].TorqueFullLoad, (double)_entries[idx].TorqueFullLoad,
+                                         (double)angularFrequency).SI<NewtonMeter>();
         }
 
         /// <summary>
@@ -174,11 +171,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         /// </summary>
         /// <param name="angularFrequency">[rad/s]</param>
         /// <returns>[W]</returns>
-        public SI FullLoadStationaryPower(SI angularFrequency)
+        public Watt FullLoadStationaryPower(RadianPerSecond angularFrequency)
         {
-            Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
-            Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Watt));
-
             return Formulas.TorqueToPower(FullLoadStationaryTorque(angularFrequency), angularFrequency);
         }
 
@@ -187,15 +181,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         /// </summary>
         /// <param name="angularFrequency">[rad/s]</param>
         /// <returns>[Nm]</returns>
-        public SI DragLoadStationaryTorque(SI angularFrequency)
+        public NewtonMeter DragLoadStationaryTorque(RadianPerSecond angularFrequency)
         {
-            Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
-            Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Newton.Meter));
-
             var idx = FindIndex(angularFrequency);
-            return VectoMath.Interpolate(_entries[idx - 1].EngineSpeed, _entries[idx].EngineSpeed,
-                                         _entries[idx - 1].TorqueDrag, _entries[idx].TorqueDrag,
-                                         angularFrequency).SI().Newton.Meter;
+            return VectoMath.Interpolate((double)_entries[idx - 1].EngineSpeed, (double)_entries[idx].EngineSpeed,
+                                         (double)_entries[idx - 1].TorqueDrag, (double)_entries[idx].TorqueDrag,
+                                         (double)angularFrequency).SI<NewtonMeter>();
         }
 
         /// <summary>
@@ -203,7 +194,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         /// </summary>
         /// <param name="angularFrequency">[rad/s]</param>
         /// <returns>[W]</returns>
-        public SI DragLoadStationaryPower(SI angularFrequency)
+        public Watt DragLoadStationaryPower(RadianPerSecond angularFrequency)
         {
             Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
             Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Watt));
@@ -222,9 +213,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI()));
 
             var idx = FindIndex(angularFrequency);
-            return VectoMath.Interpolate(_entries[idx - 1].EngineSpeed, _entries[idx].EngineSpeed,
-                                         _entries[idx - 1].PT1, _entries[idx].PT1,
-                                         angularFrequency).SI();
+            return VectoMath.Interpolate((double)_entries[idx - 1].EngineSpeed, (double)_entries[idx].EngineSpeed,
+                                         (double)_entries[idx - 1].PT1, (double)_entries[idx].PT1,
+                                         (double)angularFrequency).SI();
         }
 
         /// <summary>
@@ -240,7 +231,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             if (engineSpeed < _entries[0].EngineSpeed)
             {
                 Log.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}",
-                                engineSpeed.To().Rounds.Per.Minute, _entries[0].EngineSpeed.SI().Radian.Per.Second.To().Rounds.Per.Minute);
+                                engineSpeed.To().Rounds.Per.Minute, _entries[0].EngineSpeed.To().Rounds.Per.Minute);
                 idx = 1;
             }
             else

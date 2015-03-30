@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
             Assert.AreEqual(0.0, outPort.AbsTime.TotalSeconds);
             Assert.AreEqual(1.0, outPort.Dt.TotalSeconds);
-            Assert.AreEqual(new SI(600).Rounds.Per.Minute, outPort.EngineSpeed);
+            Assert.AreEqual(new SI(600).Rounds.Per.Minute, outPort.AngularFrequency);
             Assert.AreEqual(0, outPort.Torque);
 
             Assert.AreEqual(0.5, dataWriter[ModalResultField.time]);

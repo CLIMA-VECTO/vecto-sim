@@ -8,16 +8,34 @@ using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
 {
+    public class MeterPerSecond : SI
+    {
+        public MeterPerSecond(double value = 0) : base(value, new SI().Meter.Per.Second) { }
+    }
+
+    public class Second : SI
+    {
+        public Second(double value = 0) : base(value, new SI().Second) { }
+    }
+
+    public class Watt : SI
+    {
+        public Watt(double value = 0) : base(value, new SI().Watt) { }
+    }
+
+    public class RadianPerSecond : SI
+    {
+        public RadianPerSecond(double value = 0) : base(value, new SI().Radian.Per.Second) { }
+    }
+
+    public class NewtonMeter : SI
+    {
+        public NewtonMeter(double value = 0) : base(value, new SI().Newton.Meter) { }
+    }
+
     [DataContract]
     public class SI
     {
-        [ContractInvariantMethod]
-        private void Invariant()
-        {
-            Contract.Invariant(_denominator != null);
-            Contract.Invariant(_numerator != null);
-        }
-
         [DataMember]
         protected readonly double _value;
 
@@ -309,7 +327,7 @@ namespace TUGraz.VectoCore.Utils
         /// <summary>
         /// Gets the basic scalar value. 
         /// </summary>
-        public double ScalarValue() { return _value; }
+        protected double ScalarValue() { return _value; }
 
         public SI Value()
         {
@@ -345,6 +363,31 @@ namespace TUGraz.VectoCore.Utils
             return new SI(si1._value / si2._value, numerator, denominator);
         }
 
+        public static SI operator +(SI si1, double d)
+        {
+            return new SI(si1._value + d, si1);
+        }
+
+        public static SI operator -(SI si1, double d)
+        {
+            return new SI(si1._value - d, si1);
+        }
+
+        public static SI operator *(SI si1, double d)
+        {
+            return new SI(si1._value * d, si1);
+        }
+
+        public static SI operator /(SI si1, double d)
+        {
+            return new SI(si1._value / d, si1);
+        }
+
+        public static SI operator /(double d, SI si1)
+        {
+            return si1 / d;
+        }
+
         public static bool operator <(SI si1, SI si2)
         {
             Contract.Requires(si1.HasEqualUnit(si2));
@@ -369,6 +412,30 @@ namespace TUGraz.VectoCore.Utils
             return si1._value >= si2._value;
         }
 
+        public static bool operator <(SI si1, double d)
+        {
+            return si1._value < d;
+        }
+
+        public static bool operator >(SI si1, double d)
+        {
+            return si1._value > d;
+        }
+
+        public static bool operator <=(SI si1, double d)
+        {
+            return si1._value <= d;
+        }
+
+        public static bool operator >=(SI si1, double d)
+        {
+            return si1._value >= d;
+        }
+
+
+
+
+
         #endregion
 
         #region Double Conversion
@@ -377,7 +444,7 @@ namespace TUGraz.VectoCore.Utils
         /// </summary>
         /// <param name="si"></param>
         /// <returns></returns>
-        public static implicit operator double(SI si)
+        public static explicit operator double(SI si)
         {
             return si._value;
         }
@@ -410,7 +477,7 @@ namespace TUGraz.VectoCore.Utils
 
             return "-";
         }
-        
+
         /// <summary>
         /// Returns the String representation.
         /// </summary>
@@ -446,8 +513,8 @@ namespace TUGraz.VectoCore.Utils
             unchecked
             {
                 var hashCode = _value.GetHashCode();
-                hashCode = (hashCode*397) ^ (_numerator != null ? _numerator.GetHashCode() : 0);
-                hashCode = (hashCode*397) ^ (_denominator != null ? _denominator.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (_numerator != null ? _numerator.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (_denominator != null ? _denominator.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -462,21 +529,13 @@ namespace TUGraz.VectoCore.Utils
             return !Equals(left, right);
         }
         #endregion
+
+        public SI Abs()
+        {
+            return new SI(Math.Abs(_value), this);
+        }
     }
 
-    public class Watt : SI
-    {
-        public Watt(double value=0) : base(value, new SI().Watt) { }
-    }
 
-    public class RadianPerSecond : SI
-    {
-        public RadianPerSecond(double value=0) : base(value, new SI().Radian.Per.Second) { }
-    }
-
-    public class NewtonMeter : SI
-    {
-        public NewtonMeter(double value=0) : base(value, new SI().Newton.Meter) { }
-    }
 
 }

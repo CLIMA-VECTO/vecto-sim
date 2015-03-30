@@ -43,6 +43,12 @@ namespace TUGraz.VectoCore.Utils
             return d.IsGreaterOrEqual(0.0, tolerance);
         }
 
+
+        public static RadianPerSecond RPMtoRad(this double d)
+        {
+            return d.SI().Rounds.Per.Minute.To<RadianPerSecond>();
+        }
+
         /// <summary>
         /// Gets the SI representation of the double (unit-less).
         /// </summary>

@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.Tests.Utils
         public void TestSI()
         {
             var si = new SI();
-            Assert.AreEqual(0.0, si.ScalarValue());
+            Assert.AreEqual(0.0, (double)si);
             Assert.AreEqual("0 [-]", si.ToString());
             Assert.IsTrue(si.HasEqualUnit(new SI()));
 
@@ -41,15 +41,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 
             var kg = 5.0.SI().Kilo.Gramm;
-            Assert.AreEqual(5.0, kg.ScalarValue());
+            Assert.AreEqual(5.0, (double)kg);
             Assert.AreEqual("5 [kg]", kg.ToString());
 
             kg = kg.To().Kilo.Gramm.Value();
-            Assert.AreEqual(5.0, kg.ScalarValue());
+            Assert.AreEqual(5.0, (double)kg);
             Assert.AreEqual("5 [kg]", kg.ToString());
 
             kg = kg.To().Gramm.Value();
-            Assert.AreEqual(5000, kg.ScalarValue());
+            Assert.AreEqual(5000, (double)kg);
             Assert.AreEqual("5000 [g]", kg.ToString());
 
         }

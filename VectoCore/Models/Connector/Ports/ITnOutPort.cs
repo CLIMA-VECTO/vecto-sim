@@ -1,4 +1,5 @@
 ﻿using System;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports
 {
@@ -11,6 +12,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
         /// <param name="dt">[s]</param>
         /// <param name="torque">[Nm]</param>
         /// <param name="angularVelocity">[rad/s]</param>
-        void Request(TimeSpan absTime, TimeSpan dt, double torque, double angularVelocity);
+        void Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond angularVelocity);
     }
 }

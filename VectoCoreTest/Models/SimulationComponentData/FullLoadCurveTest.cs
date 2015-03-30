@@ -16,9 +16,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
         {
             var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD);
 
-            Assert.AreEqual(1180, fldCurve.FullLoadStationaryTorque(560.SI().Rounds.Per.Minute), Tolerance);
-            Assert.AreEqual(1352, fldCurve.FullLoadStationaryTorque(2000.SI().Rounds.Per.Minute), Tolerance);
-            Assert.AreEqual(1231, fldCurve.FullLoadStationaryTorque(580.SI().Rounds.Per.Minute), Tolerance);
+            Assert.AreEqual(1180, (double)fldCurve.FullLoadStationaryTorque(560.0.RPMtoRad()), Tolerance);
+            Assert.AreEqual(1352, (double)fldCurve.FullLoadStationaryTorque(2000.0.RPMtoRad()), Tolerance);
+            Assert.AreEqual(1231, (double)fldCurve.FullLoadStationaryTorque(580.0.RPMtoRad()), Tolerance);
         }
 
         [TestMethod]
@@ -26,9 +26,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
         {
             var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD);
 
-            Assert.AreEqual(69198.814183, fldCurve.FullLoadStationaryPower(560.SI().Rounds.Per.Minute), Tolerance);
-            Assert.AreEqual(283162.218372, fldCurve.FullLoadStationaryPower(2000.SI().Rounds.Per.Minute), Tolerance);
-            Assert.AreEqual(74767.810760, fldCurve.FullLoadStationaryPower(580.SI().Rounds.Per.Minute), Tolerance);
+            Assert.AreEqual(69198.814183, (double)fldCurve.FullLoadStationaryPower(560.0.RPMtoRad()), Tolerance);
+            Assert.AreEqual(283162.218372, (double)fldCurve.FullLoadStationaryPower(2000.0.RPMtoRad()), Tolerance);
+            Assert.AreEqual(74767.810760, (double)fldCurve.FullLoadStationaryPower(580.0.RPMtoRad()), Tolerance);
 
         }
 
@@ -37,11 +37,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
         {
             var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD);
 
-            Assert.AreEqual(-149, fldCurve.DragLoadStationaryTorque(560.SI().Rounds.Per.Minute), Tolerance);
-            Assert.AreEqual(-301, fldCurve.DragLoadStationaryTorque(2000.SI().Rounds.Per.Minute), Tolerance);
-            Assert.AreEqual(-148.5, fldCurve.DragLoadStationaryTorque(580.SI().Rounds.Per.Minute), Tolerance);
-            Assert.AreEqual(-150, fldCurve.DragLoadStationaryTorque(520.SI().Rounds.Per.Minute), Tolerance);
-            Assert.AreEqual(-339, fldCurve.DragLoadStationaryTorque(2200.SI().Rounds.Per.Minute), Tolerance);
+            Assert.AreEqual(-149, (double)fldCurve.DragLoadStationaryTorque(560.0.RPMtoRad()), Tolerance);
+            Assert.AreEqual(-301, (double)fldCurve.DragLoadStationaryTorque(2000.0.RPMtoRad()), Tolerance);
+            Assert.AreEqual(-148.5, (double)fldCurve.DragLoadStationaryTorque(580.0.RPMtoRad()), Tolerance);
+            Assert.AreEqual(-150, (double)fldCurve.DragLoadStationaryTorque(520.0.RPMtoRad()), Tolerance);
+            Assert.AreEqual(-339, (double)fldCurve.DragLoadStationaryTorque(2200.0.RPMtoRad()), Tolerance);
         }
 
         [TestMethod]
@@ -49,9 +49,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
         {
             var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD);
 
-            Assert.AreEqual(-8737.81636, fldCurve.DragLoadStationaryPower(560.SI().Rounds.Per.Minute), Tolerance);
-            Assert.AreEqual(-63041.29254, fldCurve.DragLoadStationaryPower(2000.SI().Rounds.Per.Minute), Tolerance);
-            Assert.AreEqual(-9019.51251, fldCurve.DragLoadStationaryPower(580.SI().Rounds.Per.Minute), Tolerance);
+            Assert.AreEqual(-8737.81636, (double)fldCurve.DragLoadStationaryPower(560.0.RPMtoRad()), Tolerance);
+            Assert.AreEqual(-63041.29254, (double)fldCurve.DragLoadStationaryPower(2000.0.RPMtoRad()), Tolerance);
+            Assert.AreEqual(-9019.51251, (double)fldCurve.DragLoadStationaryPower(580.0.RPMtoRad()), Tolerance);
         }
 
         [TestMethod]
@@ -59,9 +59,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
         {
             var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD);
 
-            Assert.AreEqual(0.6, fldCurve.PT1(560.SI().Rounds.Per.Minute), Tolerance);
-            Assert.AreEqual(0.25, fldCurve.PT1(2000.SI().Rounds.Per.Minute), Tolerance);
-            Assert.AreEqual(0.37, fldCurve.PT1(1700.SI().Rounds.Per.Minute), Tolerance);
+            Assert.AreEqual(0.6, (double)fldCurve.PT1(560.0.RPMtoRad()), Tolerance);
+            Assert.AreEqual(0.25, (double)fldCurve.PT1(2000.0.RPMtoRad()), Tolerance);
+            Assert.AreEqual(0.37, (double)fldCurve.PT1(1700.0.RPMtoRad()), Tolerance);
 
         }
 
@@ -99,8 +99,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
         public void Test_FileRead_NoHeader()
         {
             var curve = FullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve no header.vfld");
-            var result = curve.FullLoadStationaryTorque(new SI(1).Radian.Per.Second);
-            Assert.AreNotEqual(result.ScalarValue(), 0.0);
+            var result = curve.FullLoadStationaryTorque(1.SI<RadianPerSecond>());
+            Assert.AreNotEqual((double)result, 0.0);
         }
 
         /// <summary>
