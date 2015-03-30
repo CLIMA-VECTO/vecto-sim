@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -90,6 +91,7 @@ namespace TUGraz.VectoCore.Utils
 
         private static string[] GetValidHeaderColumns(string line)
         {
+            Contract.Requires(line != null);
             double test;
             var validColumns = GetColumns(line).
                                Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out test));
@@ -98,6 +100,8 @@ namespace TUGraz.VectoCore.Utils
 
         private static IEnumerable<string> GetColumns(string line)
         {
+            Contract.Requires(line != null);
+
             line = Regex.Replace(line, @"\[.*?\]", "");
             line = Regex.Replace(line, @"\(.*?\)", "");
             line = line.Replace("<", "");
@@ -107,10 +111,12 @@ namespace TUGraz.VectoCore.Utils
 
         private static string[] RemoveComments(string[] lines)
         {
+            Contract.Requires(lines != null);
+
             lines = lines.
-                Select(line => line.Contains('#') ? line.Substring(0, line.IndexOf(Comment)) : line).
-                Where(line => !string.IsNullOrEmpty(line)).
-                ToArray();
+                    Select(line => line.Contains('#') ? line.Substring(0, line.IndexOf(Comment)) : line).
+                    Where(line => !string.IsNullOrEmpty(line)).
+                    ToArray();
             return lines;
         }
 

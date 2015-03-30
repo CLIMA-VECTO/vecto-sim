@@ -37,8 +37,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
                 var entry = lines[i].Split(',').Select(x => double.Parse(x, CultureInfo.InvariantCulture)).ToArray();
                 try
                 {
-                    Assert.AreEqual(entry[2].SI().Gramm.Per.Hour, map.GetFuelConsumption(entry[0].SI().Rounds.Per.Minute, entry[1]), Tolerance,
-                        string.Format("Line: {0}, n={1}, T={2}", (i + 2), entry[0].SI().Rounds.Per.Minute, entry[1]));
+                    Assert.AreEqual(entry[2].SI().Gramm.Per.Hour.To().Kilo.Gramm.Per.Second, 
+                                    map.GetFuelConsumption(entry[0].SI().Rounds.Per.Minute, entry[1]), 
+                                    Tolerance,
+                                    string.Format("Line: {0}, n={1}, T={2}", (i + 2), entry[0].SI().Rounds.Per.Minute, entry[1]));
 
                 }
                 catch (VectoException ex)

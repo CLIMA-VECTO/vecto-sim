@@ -1,11 +1,14 @@
 using System;
+using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
-    [System.ComponentModel.DesignerCategory("")] // Full qualified attribute needed to disable design view in VisualStudio
+    [SuppressMessage("Microsoft.Usage", "CA2237:MarkISerializableTypesWithSerializable")]
+    [DesignerCategory("")] // Full qualified attribute needed to disable design view in VisualStudio
     public class ModalResults : DataTable
     {
         public ModalResults()

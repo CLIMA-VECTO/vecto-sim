@@ -1,17 +1,31 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Linq;
+using System.Runtime.Serialization;
+using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
 {
+    [DataContract]
     public class SI
     {
+        [DataMember]
         private readonly double _value;
+
+        [DataMember]
         private readonly string[] _divident;
+
+        [DataMember]
         private readonly string[] _divisor;
+
+        [DataMember]
         private readonly bool _reciproc;
+
+        [DataMember]
         private readonly bool _reverse;
+
+        [DataMember]
         private readonly int _exponent;
 
         public SI(double value = 0.0)
@@ -73,7 +87,10 @@ namespace TUGraz.VectoCore.Utils
                 if (!_reciproc)
                 {
                     if (_reverse && !string.IsNullOrEmpty(fromUnit))
-                        divident.Remove(fromUnit);
+                        if (divident.Contains(fromUnit))
+                            divident.Remove(fromUnit);
+                        else
+                            throw new VectoException("Unit missing. Conversion not possible.");
 
                     if (!string.IsNullOrEmpty(toUnit))
                         divident.Add(toUnit);
@@ -84,7 +101,10 @@ namespace TUGraz.VectoCore.Utils
                 else
                 {
                     if (_reverse && !string.IsNullOrEmpty(fromUnit))
-                        divisor.Remove(fromUnit);
+                        if (divisor.Contains(fromUnit))
+                            divisor.Remove(fromUnit);
+                        else
+                            throw new VectoException("Unit missing. Conversion not possible.");
 
                     if (!string.IsNullOrEmpty(toUnit))
                         divisor.Add(toUnit);
@@ -94,7 +114,7 @@ namespace TUGraz.VectoCore.Utils
                 }
             }
 
-            foreach (var v in divisor.Where(v => divident.Contains(v)))
+            foreach (var v in divisor.ToArray().Where(v => divident.Contains(v)))
             {
                 divident.Remove(v);
                 divisor.Remove(v);
@@ -150,7 +170,7 @@ namespace TUGraz.VectoCore.Utils
                 switch (unit)
                 {
                     case "W":
-                        divident.Add("K");
+                        divident.Add("k");
                         divident.Add("g");
                         divident.Add("m");
                         divident.Add("m");
@@ -159,7 +179,7 @@ namespace TUGraz.VectoCore.Utils
                         divisor.Add("s");
                         break;
                     case "N":
-                        divident.Add("K");
+                        divident.Add("k");
                         divident.Add("g");
                         divident.Add("m");
                         divisor.Add("s");
@@ -176,7 +196,7 @@ namespace TUGraz.VectoCore.Utils
                 switch (unit)
                 {
                     case "N":
-                        divisor.Add("K");
+                        divisor.Add("k");
                         divisor.Add("g");
                         divisor.Add("m");
                         divisor.Add("m");
@@ -185,7 +205,7 @@ namespace TUGraz.VectoCore.Utils
                         divident.Add("s");
                         break;
                     case "W":
-                        divisor.Add("K");
+                        divisor.Add("k");
                         divisor.Add("g");
                         divisor.Add("m");
                         divident.Add("s");
@@ -248,7 +268,12 @@ namespace TUGraz.VectoCore.Utils
         /// <summary>
         /// Gets the basic scalar value. 
         /// </summary>
-        public double Value { get { return _value; } }
+        public double ScalarValue() { return _value; }
+
+        public SI Value()
+        {
+            return new SI(_value, _divident, _divisor);
+        }
 
         /// <summary>
         /// Returns the Unit Part of the SI Unit Expression.
@@ -284,6 +309,11 @@ namespace TUGraz.VectoCore.Utils
 
         public static SI operator *(SI si1, SI si2)
         {
+            Contract.Assume(si1._divisor != null);
+            Contract.Assume(si2._divisor != null);
+            Contract.Assume(si1._divident != null);
+            Contract.Assume(si2._divident != null);
+
             var divident = si1._divident.Concat(si2._divident).Where(d => d != "rad");
             var divisor = si1._divisor.Concat(si2._divisor).Where(d => d != "rad");
             return new SI(si1._value * si2._value, divident, divisor);
@@ -291,6 +321,11 @@ namespace TUGraz.VectoCore.Utils
 
         public static SI operator /(SI si1, SI si2)
         {
+            Contract.Assume(si1._divisor != null);
+            Contract.Assume(si2._divisor != null);
+            Contract.Assume(si1._divident != null);
+            Contract.Assume(si2._divident != null);
+
             var divident = si1._divident.Concat(si2._divisor).Where(d => d != "rad");
             var divisor = si1._divisor.Concat(si2._divident).Where(d => d != "rad");
             return new SI(si1._value / si2._value, divident, divisor);

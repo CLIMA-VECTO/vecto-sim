@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TUGraz.VectoCore.Models.Connector.Ports
+﻿namespace TUGraz.VectoCore.Models.Connector.Ports
 {
     public interface IDriverDemandInPort
     {

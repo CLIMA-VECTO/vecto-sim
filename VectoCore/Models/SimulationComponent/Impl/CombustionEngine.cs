@@ -178,7 +178,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
             try
             {
-                writer[ModalResultField.FC] = _data.ConsumptionMap.GetFuelConsumption(_currentState.EngineSpeed, _currentState.EngineTorque);
+                writer[ModalResultField.FC] = _data.ConsumptionMap.GetFuelConsumption(_currentState.EngineSpeed, _currentState.EngineTorque).
+                                              SI().Kilo.Gramm.Per.Second.
+                                              To().Gramm.Per.Hour.ScalarValue();
             }
             catch (VectoException ex)
             {
@@ -320,7 +322,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
             Contract.Requires(dt.Ticks != 0);
             // TODO @@@quam: handle dynamic timesteps
-            Contract.Requires<VectoSimulationException>(dt.TotalSeconds.IsSmallerOrEqual(1), "simulation steps other than 1s can not be handled ATM");
+            Contract.Requires(dt.TotalSeconds.IsSmallerOrEqual(1), "simulation steps other than 1s can not be handled ATM");
             Contract.Ensures(_currentState.DynamicFullLoadPower <= _currentState.StationaryFullLoadPower);
 
             //_currentState.StationaryFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
@@ -347,7 +349,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         /// Calculates power loss. [W]
         /// </summary>
         /// <param name="torque">[Nm]</param>
-        /// <param name="engineSpeed">[rad/sec]</param>
+        /// <param name="engineSpeed">[rad/s]</param>
         /// <returns>[W]</returns>
         protected SI InertiaPowerLoss(SI torque, SI engineSpeed)
         {
@@ -355,9 +357,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             Contract.Requires(engineSpeed.HasEqualUnit(new SI().Radian.Per.Second));
             Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Watt));
 
-            var deltaEngineSpeed = (engineSpeed - _previousState.EngineSpeed.SI().Radian.Per.Second).To().Rounds.Per.Second;
-            var avgEngineSpeed = ((_previousState.EngineSpeed.SI().Radian.Per.Second + engineSpeed) / new SI(2).Second).To().Rounds.Per.Square.Second;
-            return _data.Inertia.SI().To().Kilo.Gramm.Square.Meter * deltaEngineSpeed * avgEngineSpeed;
+            var deltaEngineSpeed = engineSpeed - _previousState.EngineSpeed.SI().Radian.Per.Second;
+            var avgEngineSpeed = (_previousState.EngineSpeed.SI().Radian.Per.Second + engineSpeed) / new SI(2).Second;
+            var result = _data.Inertia * deltaEngineSpeed * avgEngineSpeed;
+            return result;
         }
 
         #region Equality members

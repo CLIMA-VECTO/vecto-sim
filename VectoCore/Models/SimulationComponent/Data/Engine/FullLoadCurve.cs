@@ -57,12 +57,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             public double PT1 { get; set; }
 
             #region Equality members
-            protected bool Equals(FullLoadCurveEntry other)
+            private bool Equals(FullLoadCurveEntry other)
             {
-                return EngineSpeed.Equals(other.EngineSpeed)
-                       && TorqueFullLoad.Equals(other.TorqueFullLoad)
-                       && TorqueDrag.Equals(other.TorqueDrag)
-                       && PT1.Equals(other.PT1);
+                return EngineSpeed.IsEqual(other.EngineSpeed)
+                       && TorqueFullLoad.IsEqual(other.TorqueFullLoad)
+                       && TorqueDrag.IsEqual(other.TorqueDrag)
+                       && PT1.IsEqual(other.PT1);
             }
 
             public override bool Equals(object obj)
@@ -119,6 +119,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
         private static bool HeaderIsValid(DataColumnCollection columns)
         {
+            Contract.Requires(columns != null);
             return columns.Contains(Fields.EngineSpeed)
                    && columns.Contains(Fields.TorqueDrag)
                    && columns.Contains(Fields.TorqueFullLoad)
@@ -127,6 +128,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
         private static List<FullLoadCurveEntry> CreateFromColumnNames(DataTable data)
         {
+            Contract.Requires(data != null);
             return (from DataRow row in data.Rows
                     select new FullLoadCurveEntry
                     {
@@ -139,6 +141,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
         private static List<FullLoadCurveEntry> CreateFromColumnIndizes(DataTable data)
         {
+            Contract.Requires(data != null);
             return (from DataRow row in data.Rows
                     select new FullLoadCurveEntry
                     {
@@ -236,7 +239,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             if (engineSpeed < _entries[0].EngineSpeed)
             {
                 Log.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}",
-                                engineSpeed.To().Rounds.Per.Minute, _entries[0].EngineSpeed.SI().To().Rounds.Per.Minute);
+                                engineSpeed.To().Rounds.Per.Minute, _entries[0].EngineSpeed.SI().Radian.Per.Second.To().Rounds.Per.Minute);
                 idx = 1;
             }
             else

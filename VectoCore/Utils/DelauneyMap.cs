@@ -3,6 +3,7 @@ using System.Linq;
 using Common.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
@@ -115,6 +116,8 @@ namespace TUGraz.VectoCore.Utils
 
             public static Point operator -(Point p1, Point p2)
             {
+                Contract.Requires(p1 != null);
+                Contract.Requires(p2 != null);
                 return new Point(p1.X - p2.X, p1.Y - p2.Y, p1.Z - p2.Z);
             }
 
@@ -165,6 +168,7 @@ namespace TUGraz.VectoCore.Utils
 
             public Plane(Triangle tr)
             {
+                Contract.Requires(tr != null);
                 var ab = tr.P2 - tr.P1;
                 var ac = tr.P3 - tr.P1;
 
@@ -224,6 +228,7 @@ namespace TUGraz.VectoCore.Utils
 
             public bool ContainsInCircumcircle(Point p)
             {
+                Contract.Requires(p != null);
                 var p0 = P1 - p;
                 var p1 = P2 - p;
                 var p2 = P3 - p;
@@ -241,14 +246,14 @@ namespace TUGraz.VectoCore.Utils
                 return result.IsPositive();
             }
 
-            public bool Contains(Point p)
+            private bool Contains(Point p)
             {
-                return (p.Equals(P1) || p.Equals(P2) || p.Equals(P3));
+                return P1.Equals(p) || P2.Equals(p) || P3.Equals(p);
             }
 
             public bool SharesVertexWith(Triangle t)
             {
-                return t.Contains(P1) || t.Contains(P2) || t.Contains(P3);
+                return Contains(t.P1) || Contains(t.P2) || Contains(t.P3);
             }
 
             public override string ToString()
@@ -313,7 +318,7 @@ namespace TUGraz.VectoCore.Utils
             protected bool Equals(Edge other)
             {
                 return Equals(P1, other.P1) && Equals(P2, other.P2)
-                       || Equals(P1, other.P2) && Equals(P1, other.P2);
+                    || Equals(P1, other.P2) && Equals(P1, other.P2);
             }
 
             public override bool Equals(object obj)

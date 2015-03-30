@@ -1,7 +1,6 @@
 ﻿using System;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
@@ -47,7 +48,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             public double FuelConsumption { get; set; }
 
             #region Equality members
-            protected bool Equals(FuelConsumptionEntry other)
+            private bool Equals(FuelConsumptionEntry other)
             {
                 return EngineSpeed.Equals(other.EngineSpeed) && Torque.Equals(other.Torque) &&
                        FuelConsumption.Equals(other.FuelConsumption);
@@ -94,7 +95,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                         {
                             EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute,
                             Torque = row.ParseDouble(Fields.Torque).SI().Newton.Meter,
-                            FuelConsumption = row.ParseDouble(Fields.FuelConsumption).SI().Gramm.Per.Hour
+                            FuelConsumption = row.ParseDouble(Fields.FuelConsumption).SI().Gramm.Per.Hour.To().Kilo.Gramm.Per.Second
                         };
 
                         // todo Contract.Assert
@@ -104,7 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                         fuelConsumptionMap._entries.Add(entry);
 
                         // Delauney map works only as expected, when the engineSpeed is in rpm.
-                        fuelConsumptionMap._fuelMap.AddPoint(entry.EngineSpeed.SI().To().Rounds.Per.Minute, entry.Torque, entry.FuelConsumption);
+                        fuelConsumptionMap._fuelMap.AddPoint(entry.EngineSpeed.SI().Radian.Per.Second.To().Rounds.Per.Minute, entry.Torque, entry.FuelConsumption);
                     }
                     catch (Exception e)
                     {
@@ -122,23 +123,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         }
 
         /// <summary>
-        /// [g/s] Calculates the fuel consumption based on the given fuel map, 
+        /// [kg/s] Calculates the fuel consumption based on the given fuel map, 
         /// the engineSpeed [rad/s] and the torque [Nm].
         /// </summary>
         /// <param name="engineSpeed">[rad/sec]</param>
         /// <param name="torque">[Nm]</param>
-        /// <returns>[g/s]</returns>
+        /// <returns>[kg/s]</returns>
         public double GetFuelConsumption(double engineSpeed, double torque)
         {
-            return _fuelMap.Interpolate(engineSpeed.SI().To().Rounds.Per.Minute, torque);
+            return _fuelMap.Interpolate(engineSpeed.SI().Radian.Per.Second.To().Rounds.Per.Minute, torque);
         }
 
         #region Equality members
 
         protected bool Equals(FuelConsumptionMap other)
         {
-            return _entries.SequenceEqual(other._entries)
-                   && Equals(_fuelMap, other._fuelMap);
+            return _entries.SequenceEqual(other._entries) && Equals(_fuelMap, other._fuelMap);
         }
 
         public override bool Equals(object obj)

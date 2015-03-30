@@ -98,17 +98,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
         [TestMethod]
         public void Test_FileRead_NoHeader()
         {
-            try
-            {
-                FullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve no header.vfld");
-                Assert.Fail("this should not be reached.");
-            }
-            catch (VectoException ex)
-            {
-                Assert.AreEqual(
-                    @"File TestData\Components\FullLoadCurve no header.vfld: Line 0: The data format is not correct: no columns found.",
-                    ex.Message);
-            }
+            var curve = FullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve no header.vfld");
+            var result = curve.FullLoadStationaryTorque(new SI(1).Radian.Per.Second);
+            Assert.AreNotEqual(result.ScalarValue(), 0.0);
         }
 
         /// <summary>

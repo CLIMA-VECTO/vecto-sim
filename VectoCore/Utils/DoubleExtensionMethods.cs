@@ -10,7 +10,7 @@ namespace TUGraz.VectoCore.Utils
         [Pure]
         public static bool IsEqual(this double d, double other, double tolerance = Tolerance)
         {
-            return Math.Abs(d - other) > tolerance;
+            return Math.Abs(d - other) > -tolerance;
         }
 
         [Pure]

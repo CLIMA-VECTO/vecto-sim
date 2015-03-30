@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics.Contracts;
 
 namespace TUGraz.VectoCore.Utils
@@ -14,8 +13,8 @@ namespace TUGraz.VectoCore.Utils
         [Pure]
         public static SI TorqueToPower(SI torque, SI angularFrequency)
         {
-            Contract.Requires<ArgumentException>(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
-            Contract.Requires<ArgumentException>(torque.HasEqualUnit(new SI().Newton.Meter));
+            Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
+            Contract.Requires(torque.HasEqualUnit(new SI().Newton.Meter));
             Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Watt));
 
             return torque * angularFrequency;
@@ -30,8 +29,8 @@ namespace TUGraz.VectoCore.Utils
         [Pure]
         public static SI PowerToTorque(SI power, SI angularFrequency)
         {
-            Contract.Requires<ArgumentException>(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
-            Contract.Requires<ArgumentException>(power.HasEqualUnit(new SI().Watt));
+            Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
+            Contract.Requires(power.HasEqualUnit(new SI().Watt));
             Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Newton.Meter));
 
             return power / angularFrequency;
