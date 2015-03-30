@@ -53,5 +53,11 @@ namespace TUGraz.VectoCore.Utils
         {
             return (SI)d;
         }
+
+        [Pure]
+        public static T SI<T>(this double d) where T : SI
+        {
+            return (T)Activator.CreateInstance(typeof(T), d);
+        }
     }
 }

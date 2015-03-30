@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
 using TUGraz.VectoCore.Exceptions;
@@ -13,70 +14,76 @@ namespace TUGraz.VectoCore.Utils
         [ContractInvariantMethod]
         private void Invariant()
         {
-            Contract.Invariant(_divisor != null);
-            Contract.Invariant(_divident != null);
+            Contract.Invariant(_denominator != null);
+            Contract.Invariant(_numerator != null);
         }
 
         [DataMember]
-        private readonly double _value;
+        protected readonly double _value;
 
         [DataMember]
-        private readonly string[] _divident;
+        protected readonly string[] _numerator;
 
         [DataMember]
-        private readonly string[] _divisor;
+        protected readonly string[] _denominator;
 
         [DataMember]
-        private readonly bool _reciproc;
+        protected readonly bool _reciproc;
 
         [DataMember]
-        private readonly bool _reverse;
+        protected readonly bool _reverse;
 
         [DataMember]
-        private readonly int _exponent;
+        protected readonly int _exponent;
 
         public SI(double value = 0.0)
         {
             _value = value;
             _reciproc = false;
             _reverse = false;
-            _divident = new string[0];
-            _divisor = new string[0];
+            _numerator = new string[0];
+            _denominator = new string[0];
             _exponent = 1;
         }
 
-        private SI(double value, IEnumerable<string> divident, IEnumerable<string> divisor, bool reciproc = false, bool reverse = false, int exponent = 1)
+        protected SI(double value, IEnumerable<string> numerator, IEnumerable<string> denominator, bool reciproc = false, bool reverse = false, int exponent = 1)
         {
-            Contract.Requires(divident != null);
-            Contract.Requires(divisor != null);
+            Contract.Requires(numerator != null);
+            Contract.Requires(denominator != null);
 
             _value = value;
             _reciproc = reciproc;
             _reverse = reverse;
             _exponent = exponent;
 
-            var tmpDivident = divident.ToList();
-            var tmpDivisor = divisor.ToList();
+            var tmpNumerator = numerator.ToList();
+            var tmpDenominator = denominator.ToList();
 
-            foreach (var v in tmpDivisor.ToArray().Where(v => tmpDivident.Contains(v)))
+            foreach (var v in tmpDenominator.ToArray().Where(v => tmpNumerator.Contains(v)))
             {
-                tmpDivident.Remove(v);
-                tmpDivisor.Remove(v);
+                tmpNumerator.Remove(v);
+                tmpDenominator.Remove(v);
             }
 
-            _divident = tmpDivident.ToArray();
-            _divisor = tmpDivisor.ToArray();
+            _numerator = tmpNumerator.ToArray();
+            _denominator = tmpDenominator.ToArray();
         }
 
-        private SI(SI si, double? factor = null, string fromUnit = null, string toUnit = null,
+        protected SI(double value, SI unit)
+            : this(value, unit._numerator, unit._denominator)
+        {
+
+        }
+
+        protected SI(SI si, double? factor = null, string fromUnit = null, string toUnit = null,
             bool? reciproc = null, bool? reverse = null, int? exponent = null)
         {
             Contract.Requires(si != null);
-            Contract.Requires(si._divisor != null);
-            Contract.Requires(si._divident != null);
+            Contract.Requires(si._denominator != null);
+            Contract.Requires(si._numerator != null);
 
-            var divisor = si._divisor.ToList();
-            var divident = si._divident.ToList();
+            var numerator = si._denominator.ToList();
+            var denominator = si._numerator.ToList();
 
             _value = si._value;
             _reciproc = reciproc ?? si._reciproc;
@@ -96,13 +103,13 @@ namespace TUGraz.VectoCore.Utils
                 if (!_reciproc)
                 {
                     if (_reverse && !string.IsNullOrEmpty(fromUnit))
-                        if (divident.Contains(fromUnit))
-                            divident.Remove(fromUnit);
+                        if (denominator.Contains(fromUnit))
+                            denominator.Remove(fromUnit);
                         else
                             throw new VectoException("Unit missing. Conversion not possible.");
 
                     if (!string.IsNullOrEmpty(toUnit))
-                        divident.Add(toUnit);
+                        denominator.Add(toUnit);
 
                     if (factor.HasValue)
                         _value *= factor.Value;
@@ -110,169 +117,194 @@ namespace TUGraz.VectoCore.Utils
                 else
                 {
                     if (_reverse && !string.IsNullOrEmpty(fromUnit))
-                        if (divisor.Contains(fromUnit))
-                            divisor.Remove(fromUnit);
+                        if (numerator.Contains(fromUnit))
+                            numerator.Remove(fromUnit);
                         else
                             throw new VectoException("Unit missing. Conversion not possible.");
 
                     if (!string.IsNullOrEmpty(toUnit))
-                        divisor.Add(toUnit);
+                        numerator.Add(toUnit);
 
                     if (factor.HasValue)
                         _value /= factor.Value;
                 }
             }
 
-            foreach (var v in divisor.ToArray().Where(v => divident.Contains(v)))
+            foreach (var v in numerator.ToArray().Where(v => denominator.Contains(v)))
             {
-                divident.Remove(v);
-                divisor.Remove(v);
+                denominator.Remove(v);
+                numerator.Remove(v);
             }
 
-            _divident = divident.ToArray();
-            _divisor = divisor.ToArray();
+            _numerator = denominator.ToArray();
+            _denominator = numerator.ToArray();
         }
+
+        #region Unit Definitions
+        /// <summary>
+        /// Defines the denominator by the terms following after the Per.
+        /// </summary>
+        [DebuggerHidden]
+        public SI Per { get { return new SI(Linear, reciproc: !_reciproc); } }
 
         /// <summary>
         /// Takes all following terms as cubic terms (=to the power of 3).
         /// </summary>
+        [DebuggerHidden]
         public SI Cubic { get { return new SI(this, exponent: 3); } }
 
         /// <summary>
         /// Takes all following terms as quadratic terms (=to the power of 2).
         /// </summary>
+        [DebuggerHidden]
         public SI Square { get { return new SI(this, exponent: 2); } }
 
         /// <summary>
         /// Takes all following terms as linear terms (=to the power of 1).
         /// </summary>
+        [DebuggerHidden]
         public SI Linear { get { return new SI(this, exponent: 1); } }
 
         /// <summary>
-        /// Defines the divisor by the following terms.
+        /// [g] (to basic unit: [kg])
         /// </summary>
-        public SI Per { get { return new SI(Linear, reciproc: !_reciproc); } }
-
-        /// <summary>
-        /// Convert an SI unit into another SI unit, defined by following terms.
-        /// </summary>
-        /// <returns></returns>
-        public SI To() { return new SI(Linear, reciproc: false, reverse: true); }
-
-        /// <summary>
-        /// [g]
-        /// </summary>
-        public SI Gramm { get { return new SI(this, fromUnit: "g", toUnit: "g"); } }
+        [DebuggerHidden]
+        public SI Gramm { get { return new SI(new SI(this, toUnit: "k"), factor: 0.001, fromUnit: "g", toUnit: "g"); } }
 
         /// <summary>
         /// [N]
         /// </summary>
+        [DebuggerHidden]
         public SI Newton { get { return new SI(this, fromUnit: "N", toUnit: "N"); } }
-
-        public SI ToBasicUnits()
-        {
-            var divident = new List<string>();
-            var divisor = new List<string>();
-
-            foreach (var unit in _divident)
-            {
-                switch (unit)
-                {
-                    case "W":
-                        divident.Add("k");
-                        divident.Add("g");
-                        divident.Add("m");
-                        divident.Add("m");
-                        divisor.Add("s");
-                        divisor.Add("s");
-                        divisor.Add("s");
-                        break;
-                    case "N":
-                        divident.Add("k");
-                        divident.Add("g");
-                        divident.Add("m");
-                        divisor.Add("s");
-                        divisor.Add("s");
-                        break;
-                    default:
-                        divident.Add(unit);
-                        break;
-                }
-            }
-
-            foreach (var unit in _divisor)
-            {
-                switch (unit)
-                {
-                    case "N":
-                        divisor.Add("k");
-                        divisor.Add("g");
-                        divisor.Add("m");
-                        divisor.Add("m");
-                        divident.Add("s");
-                        divident.Add("s");
-                        divident.Add("s");
-                        break;
-                    case "W":
-                        divisor.Add("k");
-                        divisor.Add("g");
-                        divisor.Add("m");
-                        divident.Add("s");
-                        divident.Add("s");
-                        break;
-                    default:
-                        divisor.Add(unit);
-                        break;
-                }
-            }
-
-            return new SI(_value, divident, divisor);
-        }
 
         /// <summary>
         /// [W]
         /// </summary>
+        [DebuggerHidden]
         public SI Watt { get { return new SI(this, fromUnit: "W", toUnit: "W"); } }
 
         /// <summary>
         /// [m]
         /// </summary>
+        [DebuggerHidden]
         public SI Meter { get { return new SI(this, fromUnit: "m", toUnit: "m"); } }
 
         /// <summary>
         /// [s]
         /// </summary>
+        [DebuggerHidden]
         public SI Second { get { return new SI(this, fromUnit: "s", toUnit: "s"); } }
 
         /// <summary>
         /// [rad]
         /// </summary>
+        [DebuggerHidden]
         public SI Radian { get { return new SI(this, fromUnit: "rad", toUnit: "rad"); } }
 
         /// <summary>
         /// Converts to/from Radiant
         /// </summary>
+        [DebuggerHidden]
         public SI Rounds { get { return new SI(this, 2 * Math.PI, toUnit: "rad"); } }
 
         /// <summary>
         /// Converts to/from Second
         /// </summary>
+        [DebuggerHidden]
         public SI Hour { get { return new SI(this, factor: 3600.0, fromUnit: "h", toUnit: "s"); } }
 
         /// <summary>
         /// Converts to/from Second
         /// </summary>
+        [DebuggerHidden]
         public SI Minute { get { return new SI(this, factor: 60.0, fromUnit: "min", toUnit: "s"); } }
 
         /// <summary>
         /// Converts to/from 1000 * Basic Unit 
         /// </summary>
+        [DebuggerHidden]
         public SI Kilo { get { return new SI(this, factor: 1000.0, fromUnit: "k"); } }
 
         /// <summary>
         /// Converts to/from Basic Unit / 100 
         /// </summary>
+        [DebuggerHidden]
         public SI Centi { get { return new SI(this, factor: 1.0 / 100.0, fromUnit: "c"); } }
+        #endregion
+
+        /// <summary>
+        /// Convert an SI unit into another SI unit, defined by term following after the To().
+        /// </summary>
+        /// <returns></returns>
+        public SI To() { return new SI(Linear, reciproc: false, reverse: true); }
+
+        public T To<T>() where T : SI
+        {
+            var t = (T)Activator.CreateInstance(typeof(T), _value);
+            Contract.Assert(HasEqualUnit(t), string.Format("SI Unit Conversion failed: From {0} to {1}", this, t));
+            return t;
+        }
+
+        public SI ToBasicUnits()
+        {
+            var numerator = new List<string>();
+            var denominator = new List<string>();
+
+            foreach (var unit in _numerator)
+            {
+                switch (unit)
+                {
+                    case "W":
+                        numerator.Add("k");
+                        numerator.Add("g");
+                        numerator.Add("m");
+                        numerator.Add("m");
+                        denominator.Add("s");
+                        denominator.Add("s");
+                        denominator.Add("s");
+                        break;
+                    case "N":
+                        numerator.Add("k");
+                        numerator.Add("g");
+                        numerator.Add("m");
+                        denominator.Add("s");
+                        denominator.Add("s");
+                        break;
+                    default:
+                        numerator.Add(unit);
+                        break;
+                }
+            }
+
+            foreach (var unit in _denominator)
+            {
+                switch (unit)
+                {
+                    case "N":
+                        denominator.Add("k");
+                        denominator.Add("g");
+                        denominator.Add("m");
+                        denominator.Add("m");
+                        numerator.Add("s");
+                        numerator.Add("s");
+                        numerator.Add("s");
+                        break;
+                    case "W":
+                        denominator.Add("k");
+                        denominator.Add("g");
+                        denominator.Add("m");
+                        numerator.Add("s");
+                        numerator.Add("s");
+                        break;
+                    default:
+                        denominator.Add(unit);
+                        break;
+                }
+            }
+
+            return new SI(_value, numerator, denominator);
+        }
+
 
         /// <summary>
         /// Gets the basic scalar value. 
@@ -281,24 +313,7 @@ namespace TUGraz.VectoCore.Utils
 
         public SI Value()
         {
-            return new SI(_value, _divident, _divisor);
-        }
-
-        /// <summary>
-        /// Returns the Unit Part of the SI Unit Expression.
-        /// </summary>
-        private string Unit()
-        {
-            if (_divisor.Any())
-                if (_divident.Any())
-                    return string.Format("{0}/{1}", string.Join("", _divident), string.Join("", _divisor));
-                else
-                    return string.Format("1/{0}", string.Join("", _divisor));
-
-            if (_divident.Any())
-                return string.Format("{0}", string.Join("", _divident));
-
-            return "-";
+            return new SI(_value, _numerator, _denominator);
         }
 
         #region Operators
@@ -306,42 +321,55 @@ namespace TUGraz.VectoCore.Utils
         {
             Contract.Requires(si1.HasEqualUnit(si2));
 
-            return new SI(si1._value + si2._value, si1._divident, si1._divisor);
+            return new SI(si1._value + si2._value, si1._numerator, si1._denominator);
         }
 
         public static SI operator -(SI si1, SI si2)
         {
             Contract.Requires(si1.HasEqualUnit(si2));
 
-            return new SI(si1._value - si2._value, si1._divident, si1._divisor);
+            return new SI(si1._value - si2._value, si1._numerator, si1._denominator);
         }
 
         public static SI operator *(SI si1, SI si2)
         {
-            Contract.Assume(si1._divisor != null);
-            Contract.Assume(si2._divisor != null);
-            Contract.Assume(si1._divident != null);
-            Contract.Assume(si2._divident != null);
-
-            var divident = si1._divident.Concat(si2._divident).Where(d => d != "rad");
-            var divisor = si1._divisor.Concat(si2._divisor).Where(d => d != "rad");
-            return new SI(si1._value * si2._value, divident, divisor);
+            var numerator = si1._numerator.Concat(si2._numerator).Where(d => d != "rad");
+            var denominator = si1._denominator.Concat(si2._denominator).Where(d => d != "rad");
+            return new SI(si1._value * si2._value, numerator, denominator);
         }
 
         public static SI operator /(SI si1, SI si2)
         {
-            Contract.Assume(si1._divisor != null);
-            Contract.Assume(si2._divisor != null);
-            Contract.Assume(si1._divident != null);
-            Contract.Assume(si2._divident != null);
-
-            var divident = si1._divident.Concat(si2._divisor).Where(d => d != "rad");
-            var divisor = si1._divisor.Concat(si2._divident).Where(d => d != "rad");
-            return new SI(si1._value / si2._value, divident, divisor);
+            var numerator = si1._numerator.Concat(si2._denominator).Where(d => d != "rad");
+            var denominator = si1._denominator.Concat(si2._numerator).Where(d => d != "rad");
+            return new SI(si1._value / si2._value, numerator, denominator);
         }
+
+        public static bool operator <(SI si1, SI si2)
+        {
+            Contract.Requires(si1.HasEqualUnit(si2));
+            return si1._value < si2._value;
+        }
+
+        public static bool operator >(SI si1, SI si2)
+        {
+            Contract.Requires(si1.HasEqualUnit(si2));
+            return si1._value > si2._value;
+        }
+
+        public static bool operator <=(SI si1, SI si2)
+        {
+            Contract.Requires(si1.HasEqualUnit(si2));
+            return si1._value <= si2._value;
+        }
+
+        public static bool operator >=(SI si1, SI si2)
+        {
+            Contract.Requires(si1.HasEqualUnit(si2));
+            return si1._value >= si2._value;
+        }
+
         #endregion
-
-
 
         #region Double Conversion
         /// <summary>
@@ -367,19 +395,88 @@ namespace TUGraz.VectoCore.Utils
 
         #region ToString
         /// <summary>
+        /// Returns the Unit Part of the SI Unit Expression.
+        /// </summary>
+        private string GetUnitString()
+        {
+            if (_denominator.Any())
+                if (_numerator.Any())
+                    return string.Format("{0}/{1}", string.Join("", _numerator), string.Join("", _denominator));
+                else
+                    return string.Format("1/{0}", string.Join("", _denominator));
+
+            if (_numerator.Any())
+                return string.Format("{0}", string.Join("", _numerator));
+
+            return "-";
+        }
+        
+        /// <summary>
         /// Returns the String representation.
         /// </summary>
-        public override string ToString() { return string.Format("{0} [{1}]", _value, Unit()); }
+        public override string ToString() { return string.Format("{0} [{1}]", _value, GetUnitString()); }
         #endregion
 
+        #region Equality members
         /// <summary>
         /// Compares the Unit-Parts of two SI Units.
         /// </summary>
         [Pure]
         public bool HasEqualUnit(SI si)
         {
-            var quot = si.ToBasicUnits() / ToBasicUnits();
-            return quot._divisor.Length == 0 && quot._divident.Length == 0;
+            return ToBasicUnits()._denominator.OrderBy(x => x).SequenceEqual(si.ToBasicUnits()._denominator.OrderBy(x => x))
+                && ToBasicUnits()._numerator.OrderBy(x => x).SequenceEqual(si.ToBasicUnits()._numerator.OrderBy(x => x));
         }
+
+        protected bool Equals(SI other)
+        {
+            return _value.Equals(other._value) && HasEqualUnit(other);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            var other = obj as SI;
+            return other != null && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = _value.GetHashCode();
+                hashCode = (hashCode*397) ^ (_numerator != null ? _numerator.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (_denominator != null ? _denominator.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==(SI left, SI right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(SI left, SI right)
+        {
+            return !Equals(left, right);
+        }
+        #endregion
     }
+
+    public class Watt : SI
+    {
+        public Watt(double value=0) : base(value, new SI().Watt) { }
+    }
+
+    public class RadianPerSecond : SI
+    {
+        public RadianPerSecond(double value=0) : base(value, new SI().Radian.Per.Second) { }
+    }
+
+    public class NewtonMeter : SI
+    {
+        public NewtonMeter(double value=0) : base(value, new SI().Newton.Meter) { }
+    }
+
 }
