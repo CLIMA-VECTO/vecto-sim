@@ -57,8 +57,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             public double PT1 { get; set; }
 
             #region Equality members
-            private bool Equals(FullLoadCurveEntry other)
+            protected bool Equals(FullLoadCurveEntry other)
             {
+                Contract.Requires(other != null);
                 return EngineSpeed.IsEqual(other.EngineSpeed)
                        && TorqueFullLoad.IsEqual(other.TorqueFullLoad)
                        && TorqueDrag.IsEqual(other.TorqueDrag)

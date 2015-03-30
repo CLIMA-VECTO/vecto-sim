@@ -12,6 +12,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
     [JsonObject(MemberSerialization.Fields)]
     public class FuelConsumptionMap : SimulationComponentData
     {
+        [ContractInvariantMethod]
+        private void Invariant()
+        {
+            Contract.Invariant(_entries != null);
+            Contract.Invariant(_fuelMap != null);
+        }
+
+
+
         private static class Fields
         {
             /// <summary>
@@ -50,6 +59,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             #region Equality members
             private bool Equals(FuelConsumptionEntry other)
             {
+                Contract.Requires(other != null);
                 return EngineSpeed.Equals(other.EngineSpeed) && Torque.Equals(other.Torque) &&
                        FuelConsumption.Equals(other.FuelConsumption);
             }

@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 						Assert.AreEqual((double) row[field.GetName()] * siFactor[j], dataWriter.GetDouble(field), tolerances[j]);
 					}
 					if (row[ModalResultField.FC.GetName()] is double) {
-						Assert.AreEqual((double)row[ModalResultField.FC.GetName()], dataWriter.GetDouble(ModalResultField.FC).SI().Kilo.Gramm.Per.Second.To().Gramm.Per.Hour, 0.01);
+						Assert.AreEqual((double)row[ModalResultField.FC.GetName()], dataWriter.GetDouble(ModalResultField.FC), 0.01);
 					}
 					else {
 						Assert.IsTrue(Double.IsNaN(dataWriter.GetDouble(ModalResultField.FC)));

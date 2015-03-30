@@ -4,6 +4,7 @@ using Common.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Runtime.Serialization;
 using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
@@ -11,6 +12,13 @@ namespace TUGraz.VectoCore.Utils
     [JsonObject(MemberSerialization.Fields)]
     public class DelauneyMap
     {
+        [ContractInvariantMethod]
+        private void Invariant()
+        {
+            Contract.Invariant(_points != null);
+            Contract.Invariant(_triangles != null);
+        }
+
         private readonly List<Point> _points = new List<Point>();
         private List<Triangle> _triangles = new List<Triangle>();
 
@@ -78,15 +86,14 @@ namespace TUGraz.VectoCore.Utils
 
         protected bool Equals(DelauneyMap other)
         {
-            return _points.SequenceEqual(other._points)
-                   && _triangles.SequenceEqual(other._triangles);
+            return _points.SequenceEqual(other._points) && _triangles.SequenceEqual(other._triangles);
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((DelauneyMap)obj);
         }
 
@@ -129,10 +136,7 @@ namespace TUGraz.VectoCore.Utils
             #region Equality members
             protected bool Equals(Point other)
             {
-                //const double tolerance = 0.0001m;
-                //return Math.Abs(X - other.X) < tolerance
-                //       && Math.Abs(X - other.X) < tolerance
-                //       && Math.Abs(X - other.X) < tolerance;
+                Contract.Requires(other != null);
 
                 return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
             }
@@ -169,6 +173,10 @@ namespace TUGraz.VectoCore.Utils
             public Plane(Triangle tr)
             {
                 Contract.Requires(tr != null);
+                Contract.Requires(tr.P1 != null);
+                Contract.Requires(tr.P2 != null);
+                Contract.Requires(tr.P3 != null);
+
                 var ab = tr.P2 - tr.P1;
                 var ac = tr.P3 - tr.P1;
 
@@ -203,6 +211,10 @@ namespace TUGraz.VectoCore.Utils
 
             public bool IsInside(double x, double y, bool exact = true)
             {
+                Contract.Requires(P1 != null);
+                Contract.Requires(P2 != null);
+                Contract.Requires(P3 != null);
+
                 //Barycentric Technique: http://www.blackpawn.com/texts/pointinpoly/default.html
                 var p = new Point(x, y, 0);
 
@@ -229,6 +241,10 @@ namespace TUGraz.VectoCore.Utils
             public bool ContainsInCircumcircle(Point p)
             {
                 Contract.Requires(p != null);
+                Contract.Requires(P1 != null);
+                Contract.Requires(P2 != null);
+                Contract.Requires(P3 != null);
+
                 var p0 = P1 - p;
                 var p1 = P2 - p;
                 var p2 = P3 - p;
@@ -253,6 +269,7 @@ namespace TUGraz.VectoCore.Utils
 
             public bool SharesVertexWith(Triangle t)
             {
+                Contract.Requires(t != null);
                 return Contains(t.P1) || Contains(t.P2) || Contains(t.P3);
             }
 
@@ -265,6 +282,7 @@ namespace TUGraz.VectoCore.Utils
 
             protected bool Equals(Triangle other)
             {
+                Contract.Requires(other != null);
                 return Equals(P1, other.P1) && Equals(P2, other.P2) && Equals(P3, other.P3);
             }
 
@@ -317,6 +335,7 @@ namespace TUGraz.VectoCore.Utils
 
             protected bool Equals(Edge other)
             {
+                Contract.Requires(other != null);
                 return Equals(P1, other.P1) && Equals(P2, other.P2)
                     || Equals(P1, other.P2) && Equals(P1, other.P2);
             }

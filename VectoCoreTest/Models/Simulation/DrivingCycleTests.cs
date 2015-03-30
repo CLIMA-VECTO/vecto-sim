@@ -61,8 +61,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             // todo: assert correct values!
             Assert.AreEqual(0.0, outPort.AbsTime.TotalSeconds);
             Assert.AreEqual(1.0, outPort.Dt.TotalSeconds);
-            Assert.AreEqual(80, outPort.Velocity);
-            Assert.AreEqual(0.03, outPort.Gradient);
+            Assert.AreEqual(0.0, outPort.Velocity);
+            Assert.AreEqual(-0.020237973, outPort.Gradient);
             Assert.AreEqual(0.5, dataWriter[ModalResultField.time]);
         }
 

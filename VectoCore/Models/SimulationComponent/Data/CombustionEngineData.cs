@@ -386,6 +386,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
             protected bool Equals(Range other)
             {
+                Contract.Requires(other != null);
                 return _start == other._start && _end == other._end;
             }
 

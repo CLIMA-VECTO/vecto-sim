@@ -174,7 +174,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             writer[ModalResultField.Tq_drag] = _currentState.FullDragTorque;
             writer[ModalResultField.Tq_full] = _currentState.DynamicFullLoadTorque;
             writer[ModalResultField.Tq_eng] = _currentState.EngineTorque;
-            writer[ModalResultField.n] = _currentState.EngineSpeed;
+            writer[ModalResultField.n] = _currentState.EngineSpeed.
+                                         SI().Radian.Per.Second.
+                                         To().Rounds.Per.Minute.ScalarValue();
 
             try
             {

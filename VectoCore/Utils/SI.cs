@@ -10,6 +10,13 @@ namespace TUGraz.VectoCore.Utils
     [DataContract]
     public class SI
     {
+        [ContractInvariantMethod]
+        private void Invariant()
+        {
+            Contract.Invariant(_divisor != null);
+            Contract.Invariant(_divident != null);
+        }
+
         [DataMember]
         private readonly double _value;
 
@@ -65,6 +72,8 @@ namespace TUGraz.VectoCore.Utils
             bool? reciproc = null, bool? reverse = null, int? exponent = null)
         {
             Contract.Requires(si != null);
+            Contract.Requires(si._divisor != null);
+            Contract.Requires(si._divident != null);
 
             var divisor = si._divisor.ToList();
             var divident = si._divident.ToList();

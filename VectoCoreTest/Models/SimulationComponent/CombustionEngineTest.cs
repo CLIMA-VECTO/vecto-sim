@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				absTime += dt;
 	        }
 
-			engineSpeed = 869.7512.SI().Newton.Meter;
+			engineSpeed = 869.7512.SI().Rounds.Per.Minute;
 			port.Request(absTime, dt, Formulas.PowerToTorque(7984.56.SI().Watt, engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
 
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
 
-			engineSpeed = 644.4445.SI().Newton.Meter;
+            engineSpeed = 644.4445.SI().Rounds.Per.Minute;
 			port.Request(absTime, dt, Formulas.PowerToTorque(1351.656.SI().Watt, engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
 
