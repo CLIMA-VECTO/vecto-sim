@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -17,6 +16,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
     public class CombustionEngineTest
     {
         private const string CoachEngine = @"TestData\Components\24t Coach.veng";
+
+        public TestContext TestContext { get; set; }
 
         [ClassInitialize]
         public static void ClassInitialize(TestContext ctx)
@@ -43,14 +44,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
             var engine = new CombustionEngine(vehicle, engineData);
 
-            var gearbox = new EngineOnlyGearbox(vehicle);
+            new EngineOnlyGearbox(vehicle);
 
             var port = engine.OutShaft();
 
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
             var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
-            var torque = 400.0;
-            var engineSpeed = 1500.0;
+            var torque = 400.SI<NewtonMeter>();
+            var engineSpeed = 1500.0.RPMtoRad();
 
             port.Request(absTime, dt, torque, engineSpeed);
         }
@@ -67,8 +68,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
             var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
-            var torque = 0.0;
-            var engineSpeed = 600.0;
+            var torque = new NewtonMeter();
+            var engineSpeed = 600.0.RPMtoRad();
             var dataWriter = new TestModalDataWriter();
 
             for (var i = 0; i < 21; i++)
@@ -80,8 +81,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
                 absTime += dt;
             }
 
-	        engineSpeed = 644.4445;
-            port.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(2329.973, engineSpeed), engineSpeed);
+            engineSpeed = 644.4445.RPMtoRad();
+            port.Request(absTime, dt, Formulas.PowerToTorque(2329.973.SI<Watt>(), engineSpeed), engineSpeed);
             engine.CommitSimulationStep(dataWriter);
 
 			Assert.AreEqual(1152.40304, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
@@ -89,16 +90,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
 
-	        var power = new double[] {569.3641, 4264.177};
+	        var power = new[] {569.3641, 4264.177};
 ;	        for (var i = 0; i < 2; i++) {
-				port.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(power[i], engineSpeed), engineSpeed);
+				port.Request(absTime, dt, Formulas.PowerToTorque(power[i].SI<Watt>(), engineSpeed), engineSpeed);
 				engine.CommitSimulationStep(dataWriter);
 				dataWriter.CommitSimulationStep(absTime, dt);
 				absTime += dt;
 	        }
 
-			engineSpeed = 869.7512;
-			port.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(7984.56, engineSpeed), engineSpeed);
+			engineSpeed = 869.7512.RPMtoRad();
+            port.Request(absTime, dt, Formulas.PowerToTorque(7984.56.SI<Watt>(), engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
 
 
@@ -106,8 +107,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
 
-			engineSpeed = 644.4445;
-			port.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(1351.656, engineSpeed), engineSpeed);
+            engineSpeed = 644.4445.RPMtoRad();
+            port.Request(absTime, dt, Formulas.PowerToTorque(1351.656.SI<Watt>(), engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
 
 			Assert.AreEqual(-7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
@@ -145,6 +146,17 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             restored.Deserialize(data);
 
             Assert.AreEqual(origin, restored, "Serialized with Object, Deserialized with Object");
+        }
+
+        [TestMethod]
+        public void TestWriteToFile()
+        {
+            var vehicle = new VehicleContainer();
+            var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
+            var engine = new CombustionEngine(vehicle, engineData);
+
+            engineData.WriteToFile("engineData test output.veng");
+
         }
     }
 }

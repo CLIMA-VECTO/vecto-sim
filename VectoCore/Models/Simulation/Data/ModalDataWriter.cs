@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -19,8 +18,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
         public string FileName { get; set; }
 
-		public void CommitSimulationStep()
-		{
+        public void CommitSimulationStep()
+        {
             Data.Rows.Add(CurrentRow);
             CurrentRow = Data.NewRow();
         }

@@ -5,6 +5,7 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -57,7 +58,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
         #endregion
 
         #region IEngineCockpit
-        public double EngineSpeed()
+        public RadianPerSecond EngineSpeed()
         {
             if (_engine == null)
                 throw new VectoException("no engine available!");

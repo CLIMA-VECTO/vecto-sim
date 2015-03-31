@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -40,6 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
     ///  }
     /// }
     /// </code>
+    [DataContract]
     public class CombustionEngineData : SimulationComponentData
     {
         /// <summary>
@@ -100,18 +104,38 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                 [JsonProperty("SavedInDeclMode")]
                 public bool SavedInDeclarationMode;
 
+                /// <summary>
+                /// Model. Free text defining the engine model, type, etc.
+                /// </summary>
                 [JsonProperty(Required = Required.Always)]
                 public string ModelName;
 
+                /// <summary>
+                /// [ccm] Displacement in cubic centimeter. 
+                /// Used in Declaration Mode to calculate inertia.
+                /// </summary>
                 [JsonProperty(Required = Required.Always)]
                 public double Displacement;
 
+                /// <summary>
+                /// [rpm] Idling Engine Speed 
+                /// Low idle, applied in simulation for vehicle standstill in neutral gear position.
+                /// </summary>
                 [JsonProperty("IdlingSpeed", Required = Required.Always)]
                 public double IdleSpeed;
 
+                /// <summary>
+                /// [kgm^2] Inertia including Flywheel
+                /// Inertia for rotating parts including engine flywheel.
+                /// In Declaration Mode the inertia is calculated automatically.
+                /// </summary>
                 [JsonProperty(Required = Required.Always)]
                 public double Inertia;
 
+                /// <summary>
+                /// Multiple Full Load and Drag Curves (.vfld) can be defined and assigned to different gears. 
+                /// Gear "0" must be assigned for idling and Engine Only Mode.
+                /// </summary>
                 public class DataFullLoadCurve
                 {
                     [JsonProperty(Required = Required.Always)]
@@ -150,15 +174,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                 [JsonProperty(Required = Required.Always)]
                 public IList<DataFullLoadCurve> FullLoadCurves;
 
+                /// <summary>
+                /// The Fuel Consumption Map is used to calculate the base Fuel Consumption (FC) value.
+                /// </summary>
                 [JsonProperty(Required = Required.Always)]
                 public string FuelMap;
 
+                /// <summary>
+                /// [g/kWh] The WHTC test results are required in Declaration Mode for the urban WHTC FC Correction. 
+                /// </summary>
                 [JsonProperty("WHTC-Urban")]
                 public double WHTCUrban;
 
+                /// <summary>
+                /// [g/kWh] The WHTC test results are required in Declaration Mode for the rural WHTC FC Correction. 
+                /// </summary>
                 [JsonProperty("WHTC-Rural")]
                 public double WHTCRural;
 
+                /// <summary>
+                /// [g/kWh] The WHTC test results are required in Declaration Mode for the motorway WHTC FC Correction. 
+                /// </summary>
                 [JsonProperty("WHTC-Motorway")]
                 public double WHTCMotorway;
 
@@ -236,7 +272,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             #endregion
         }
 
-        [JsonProperty]
+        [DataMember]
         private Data _data;
 
         public bool SavedInDeclarationMode
@@ -251,45 +287,62 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             protected set { _data.Body.ModelName = value; }
         }
 
-        public double Displacement
+        /// <summary>
+        /// [m^3]
+        /// </summary>
+        public SI Displacement
         {
-            get { return _data.Body.Displacement; }
-            protected set { _data.Body.Displacement = value; }
+            get { return _data.Body.Displacement.SI().Cubic.Centi.Meter.To().Cubic.Meter.Value(); }
+            protected set { _data.Body.Displacement = (double)value.To().Cubic.Centi.Meter; }
         }
 
-        public double IdleSpeed
+        /// <summary>
+        /// [rad/s]
+        /// </summary>
+        public RadianPerSecond IdleSpeed
         {
-            get { return _data.Body.IdleSpeed; }
-            protected set { _data.Body.IdleSpeed = value; }
+            get { return _data.Body.IdleSpeed.SI().Rounds.Per.Minute.To<RadianPerSecond>(); }
+            protected set { _data.Body.IdleSpeed = (double)value.To().Rounds.Per.Minute; }
         }
 
-        public double Inertia
+        /// <summary>
+        /// [kgm^2]
+        /// </summary>
+        public SI Inertia
         {
-            get { return _data.Body.Inertia; }
-            protected set { _data.Body.Inertia = value; }
+            get { return _data.Body.Inertia.SI().Kilo.Gramm.Square.Meter.To().Kilo.Gramm.Square.Meter.Value(); }
+            protected set { _data.Body.Inertia = (double)value.To().Kilo.Gramm.Square.Meter; }
         }
 
-        public double WHTCUrban
+        /// <summary>
+        /// [kg/Ws]
+        /// </summary>
+        public SI WHTCUrban
         {
-            get { return _data.Body.WHTCUrban; }
-            protected set { _data.Body.WHTCUrban = value; }
+            get { return _data.Body.WHTCUrban.SI().Gramm.Per.Kilo.Watt.Hour.To().Kilo.Gramm.Per.Watt.Second.Value(); }
+            protected set { _data.Body.WHTCUrban = (double)value.To().Gramm.Per.Kilo.Watt.Hour; }
         }
 
-        public double WHTCRural
+        /// <summary>
+        /// [kg/Ws]
+        /// </summary>
+        public SI WHTCRural
         {
-            get { return _data.Body.WHTCRural; }
-            protected set { _data.Body.WHTCRural = value; }
+            get { return _data.Body.WHTCRural.SI().Gramm.Per.Kilo.Watt.Hour.To().Kilo.Gramm.Per.Watt.Second.Value(); }
+            protected set { _data.Body.WHTCRural = (double)value.To().Gramm.Per.Kilo.Watt.Hour; }
         }
 
-        public double WHTCMotorway
+        /// <summary>
+        /// [g/Ws]
+        /// </summary>
+        public SI WHTCMotorway
         {
-            get { return _data.Body.WHTCMotorway; }
-            protected set { _data.Body.WHTCMotorway = value; }
+            get { return _data.Body.WHTCMotorway.SI().Gramm.Per.Kilo.Watt.Hour.To().Kilo.Gramm.Per.Watt.Second.Value(); }
+            protected set { _data.Body.WHTCMotorway = (double)value.To().Gramm.Per.Kilo.Watt.Hour; }
         }
 
+        [DataMember]
         public FuelConsumptionMap ConsumptionMap { get; set; }
-
-
 
         public class RangeConverter : TypeConverter
         {
@@ -307,31 +360,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         [TypeConverter(typeof(RangeConverter))]
         private class Range
         {
-            private uint Start { get; set; }
+            private readonly uint _start;
 
-            private uint End { get; set; }
+            private readonly uint _end;
 
             public Range(string range)
             {
-                Start = uint.Parse(range.Split('-').First().Trim());
-                End = uint.Parse(range.Split('-').Last().Trim());
+                Contract.Requires(range != null);
+
+                _start = uint.Parse(range.Split('-').First().Trim());
+                _end = uint.Parse(range.Split('-').Last().Trim());
             }
 
             public override string ToString()
             {
-                return string.Format("{0} - {1}", Start, End);
+                return string.Format("{0} - {1}", _start, _end);
             }
 
             public bool Contains(uint value)
             {
-                return Start <= value && value <= End;
+                return _start <= value && value <= _end;
             }
 
             #region Equality members
 
             protected bool Equals(Range other)
             {
-                return Start == other.Start && End == other.End;
+                Contract.Requires(other != null);
+                return _start == other._start && _end == other._end;
             }
 
             public override bool Equals(object obj)
@@ -346,19 +402,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             {
                 unchecked
                 {
-                    return (int)((Start * 397) ^ End);
+                    return (int)((_start * 397) ^ _end);
                 }
             }
 
             #endregion
         }
 
-        [JsonProperty]
+        [DataMember]
         private readonly Dictionary<Range, FullLoadCurve> _fullLoadCurves = new Dictionary<Range, FullLoadCurve>();
 
         public static CombustionEngineData ReadFromFile(string fileName)
         {
-            //todo: file exception handling: file not readable
             return ReadFromJson(File.ReadAllText(fileName), Path.GetDirectoryName(fileName));
         }
 
@@ -367,6 +422,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             var combustionEngineData = new CombustionEngineData();
             //todo handle conversion errors
             var d = JsonConvert.DeserializeObject<Data>(json);
+
             combustionEngineData._data = d;
 
             if (d.Header.FileVersion > 2)

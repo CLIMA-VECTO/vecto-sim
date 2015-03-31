@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,7 +19,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
         public void RunSimulation()
         {
             LogManager.GetLogger(GetType()).Info("VectoSimulator started running. Starting Jobs.");
-            Task.WhenAll(_jobs.Select(job => Task.Factory.StartNew(job.Run)));
+            Task.WaitAll(_jobs.Select(job => Task.Factory.StartNew(job.Run)).ToArray());
         }
     }
 }

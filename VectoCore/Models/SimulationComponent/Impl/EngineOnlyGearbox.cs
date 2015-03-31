@@ -2,8 +2,8 @@
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return 0;
 		}
 
-		public void Request(TimeSpan absTime, TimeSpan dt, double torque, double engineSpeed)
+		public void Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond engineSpeed)
 		{
 			if (_outPort == null) {
 				Log.ErrorFormat("{0} cannot handle incoming request - no outport available", absTime);

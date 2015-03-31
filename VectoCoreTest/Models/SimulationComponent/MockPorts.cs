@@ -1,6 +1,7 @@
 using System;
 using Common.Logging;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -8,17 +9,17 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
     {
         public TimeSpan AbsTime { get; set; }
         public TimeSpan Dt { get; set; }
-        public double Torque { get; set; }
-        public double EngineSpeed { get; set; }
+        public NewtonMeter Torque { get; set; }
+        public RadianPerSecond AngularFrequency { get; set; }
 
-        public void Request(TimeSpan absTime, TimeSpan dt, double torque, double engineSpeed)
+        public void Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond angularFrequency)
         {
             AbsTime = absTime;
             Dt = dt;
             Torque = torque;
-            EngineSpeed = engineSpeed;
+            AngularFrequency = angularFrequency;
             LogManager.GetLogger(GetType()).DebugFormat("Request: absTime: {0}, dt: {1}, torque: {3}, engineSpeed: {4}",
-                                                        absTime, dt, torque, engineSpeed);
+                                                        absTime, dt, torque, angularFrequency);
         }
     }
 
@@ -27,9 +28,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         public TimeSpan AbsTime { get; set; }
 
         public TimeSpan Dt { get; set; }
-        public double Velocity { get; set; }
+        public MeterPerSecond Velocity { get; set; }
         public double Gradient { get; set; }
-        public void Request(TimeSpan absTime, TimeSpan dt, double velocity, double gradient)
+        public void Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond velocity, double gradient)
         {
             AbsTime = absTime;
             Dt = dt;

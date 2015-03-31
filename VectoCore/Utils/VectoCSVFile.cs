@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
@@ -20,7 +22,7 @@ namespace TUGraz.VectoCore.Utils
     /// Comments: "#" at the beginning of the comment line. Number and position of comment lines is not limited. 
     /// Header: One header line (not a comment line) at the beginning of the file. 
     ///         All Combinations between max-format and min-format possible. Only "id"-field is used.
-    ///         max: <id> (name) [unit], <id> (name) [unit], ... 
+    ///         max: id (name) [unit], id (name) [unit], ... 
     ///         min: id,id,...
     /// </remarks>
     public static class VectoCSVFile
@@ -40,32 +42,30 @@ namespace TUGraz.VectoCore.Utils
             try
             {
                 var lines = File.ReadAllLines(fileName);
-                var header = lines.First();
-                lines = lines.Skip(1).ToArray();
+                lines = RemoveComments(lines);
 
-                header = Regex.Replace(header, @"\[.*?\]", "");
-                header = Regex.Replace(header, @"\(.*?\)", "");
-                header = header.Replace("<", "");
-                header = header.Replace(">", "");
-                var cols = header.Split(Separator).Select(col => col.Trim());
+                var validColumns = GetValidHeaderColumns(lines.First());
 
-                double test;
-                var validColumns = cols.Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out test));
+                if (validColumns.Length > 0)
+                {
+                    // Valid Columns found => header was valid => skip header line
+                    lines = lines.Skip(1).ToArray();
+                }
+                else
+                {
+                    var log = LogManager.GetLogger(typeof(VectoCSVFile));
+                    log.Warn("No valid Data Header found. Interpreting the first line as data line.");
+                    // set the validColumns to: {"0", "1", "2", "3", ...} for all columns in first line.
+                    validColumns = GetColumns(lines.First()).Select((_, index) => index.ToString()).ToArray();
+                }
 
                 var table = new DataTable();
                 foreach (var col in validColumns)
                     table.Columns.Add(col);
 
-                if (table.Columns.Count == 0)
-                    throw new CSVReadException("Line 0: The data format is not correct: no columns found.");
-
                 for (var i = 0; i < lines.Length; i++)
                 {
                     var line = lines[i];
-                    //todo: do more sophisticated splitting of csv-columns (or use a good csv library!)
-
-                    if (line.Contains(Comment))
-                        line = line.Substring(0, line.IndexOf(Comment));
 
                     var cells = line.Split(Separator);
                     if (cells.Length != table.Columns.Count)
@@ -89,27 +89,54 @@ namespace TUGraz.VectoCore.Utils
             }
         }
 
+        private static string[] GetValidHeaderColumns(string line)
+        {
+            Contract.Requires(line != null);
+            double test;
+            var validColumns = GetColumns(line).
+                               Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out test));
+            return validColumns.ToArray();
+        }
+
+        private static IEnumerable<string> GetColumns(string line)
+        {
+            Contract.Requires(line != null);
+
+            line = Regex.Replace(line, @"\[.*?\]", "");
+            line = Regex.Replace(line, @"\(.*?\)", "");
+            line = line.Replace("<", "");
+            line = line.Replace(">", "");
+            return line.Split(Separator).Select(col => col.Trim());
+        }
+
+        private static string[] RemoveComments(string[] lines)
+        {
+            Contract.Requires(lines != null);
+
+            lines = lines.
+                    Select(line => line.Contains('#') ? line.Substring(0, line.IndexOf(Comment)) : line).
+                    Where(line => !string.IsNullOrEmpty(line)).
+                    ToArray();
+            return lines;
+        }
+
         public static void Write(string fileName, DataTable table)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
             sb.AppendLine(string.Join(", ", header));
 
             foreach (DataRow row in table.Rows)
             {
-                List<string> formattedList = new List<string>();
-
+                var formattedList = new List<string>();
                 foreach (var item in row.ItemArray)
                 {
                     var formattable = item as IFormattable;
-                    formattedList.Add(formattable != null
-                                      ? formattable.ToString("", CultureInfo.InvariantCulture)
-                                      : item.ToString());
+                    var formattedValue = formattable != null ? formattable.ToString("", CultureInfo.InvariantCulture) : item.ToString();
+                    formattedList.Add(formattedValue);
                 }
-
-                var line = string.Join(Separator.ToString(), formattedList);
-                sb.AppendLine(line);
+                sb.AppendLine(string.Join(Separator.ToString(), formattedList));
             }
 
             File.WriteAllText(fileName, sb.ToString());

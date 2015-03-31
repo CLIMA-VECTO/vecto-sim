@@ -1,7 +1,12 @@
-﻿namespace TUGraz.VectoCore.Models.Simulation.Cockpit
+﻿using TUGraz.VectoCore.Utils;
+
+namespace TUGraz.VectoCore.Models.Simulation.Cockpit
 {
 	public interface IEngineCockpit
 	{
-		double EngineSpeed();
+        /// <summary>
+        /// [rad/s] 
+        /// </summary>
+		RadianPerSecond EngineSpeed();
 	}
 }

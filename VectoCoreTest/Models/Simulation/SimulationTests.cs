@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -11,14 +12,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         private const string CycleFile = @"TestData\Cycles\Coach Engine Only.vdri";
 
         [TestMethod]
-        public void TestEngineOnly()
+        public void TestSimulationEngineOnly()
         {
             var job = SimulationFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly-result.vmod");
 
             var container = job.GetContainer();
 
-            Assert.AreEqual(560, container.EngineSpeed(), "Engine Speed");
-            Assert.AreEqual(0U, container.Gear(), "Gear");
+            Assert.AreEqual(560.SI().Rounds.Per.Minute, container.EngineSpeed());
+            Assert.AreEqual(0U, container.Gear());
 
             try
             {

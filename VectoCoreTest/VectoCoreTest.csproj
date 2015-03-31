@@ -68,6 +68,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
     <Compile Include="Models\SimulationComponentData\FuelConsumptionMapTest.cs" />
     <Compile Include="Models\SimulationComponentData\FullLoadCurveTest.cs" />
@@ -82,6 +83,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Utils\SITest.cs" />
     <Compile Include="Utils\DelauneyMapTest.cs" />
     <Compile Include="Utils\TestModalDataWriter.cs" />
   </ItemGroup>
@@ -112,6 +114,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\FullLoadCurve insufficient entries.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Cycles\Coach time based.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Cycles\Coach Engine Only Paux.vdri">
