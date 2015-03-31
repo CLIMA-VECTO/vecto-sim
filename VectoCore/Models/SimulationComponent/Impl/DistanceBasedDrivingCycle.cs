@@ -21,10 +21,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         private int CurrentStep { get; set; }
 
-        public DistanceBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle)
+        public DistanceBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
         {
             Data = cycle;
-            container.AddComponent(this);
         }
 
         #region IDrivingCycle

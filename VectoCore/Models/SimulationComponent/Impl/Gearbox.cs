@@ -7,8 +7,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
     public class Gearbox : VectoSimulationComponent, IGearbox, ITnOutPort
     {
-        public Gearbox() { }
-
         public Gearbox(IVehicleContainer container): base(container)
         {
 

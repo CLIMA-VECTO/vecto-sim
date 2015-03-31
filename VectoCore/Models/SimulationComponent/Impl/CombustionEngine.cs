@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         public class EngineState
         {
-			public TimeSpan AbsTime { get; set; }
+	        public TimeSpan AbsTime { get; set; }
 			public EngineOperationMode OperationMode { get; set; }
             public double EnginePower { get; set; }
             public double EngineSpeed { get; set; }
@@ -45,35 +45,48 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
             #region Equality members
 
-            protected bool Equals(EngineState other)
-            {
-                return OperationMode == other.OperationMode
-                    && EnginePower.Equals(other.EnginePower)
-                    && EngineSpeed.Equals(other.EngineSpeed)
-                    && EnginePowerLoss.Equals(other.EnginePowerLoss)
-                    && AbsTime.Equals(other.AbsTime);
-            }
+			protected bool Equals(EngineState other)
+			{
+				return AbsTime.Equals(other.AbsTime) && OperationMode == other.OperationMode && EnginePower.Equals(other.EnginePower) && EngineSpeed.Equals(other.EngineSpeed) && EnginePowerLoss.Equals(other.EnginePowerLoss) && StationaryFullLoadPower.Equals(other.StationaryFullLoadPower) && DynamicFullLoadPower.Equals(other.DynamicFullLoadPower) && StationaryFullLoadTorque.Equals(other.StationaryFullLoadTorque) && DynamicFullLoadTorque.Equals(other.DynamicFullLoadTorque) && FullDragPower.Equals(other.FullDragPower) && FullDragTorque.Equals(other.FullDragTorque) && EngineTorque.Equals(other.EngineTorque);
+			}
 
-            public override bool Equals(object obj)
-            {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType()) return false;
-                return Equals((EngineState)obj);
-            }
+			public override bool Equals(object obj)
+			{
+				if (ReferenceEquals(null, obj))
+				{
+					return false;
+				}
+				if (ReferenceEquals(this, obj))
+				{
+					return true;
+				}
+				if (obj.GetType() != this.GetType())
+				{
+					return false;
+				}
+				return Equals((EngineState)obj);
+			}
 
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    var hashCode = (int)OperationMode;
-                    hashCode = (hashCode * 397) ^ EnginePower.GetHashCode();
-                    hashCode = (hashCode * 397) ^ EngineSpeed.GetHashCode();
-                    hashCode = (hashCode * 397) ^ EnginePowerLoss.GetHashCode();
-                    hashCode = (hashCode * 397) ^ AbsTime.GetHashCode();
-                    return hashCode;
-                }
-            }
+			public override int GetHashCode()
+			{
+				unchecked
+				{
+					var hashCode = AbsTime.GetHashCode();
+
+					hashCode = (hashCode * 397) ^ (int)OperationMode;
+					hashCode = (hashCode * 397) ^ EnginePower.GetHashCode();
+					hashCode = (hashCode * 397) ^ EngineSpeed.GetHashCode();
+					hashCode = (hashCode * 397) ^ EnginePowerLoss.GetHashCode();
+					hashCode = (hashCode * 397) ^ StationaryFullLoadPower.GetHashCode();
+					hashCode = (hashCode * 397) ^ DynamicFullLoadPower.GetHashCode();
+					hashCode = (hashCode * 397) ^ StationaryFullLoadTorque.GetHashCode();
+					hashCode = (hashCode * 397) ^ DynamicFullLoadTorque.GetHashCode();
+					hashCode = (hashCode * 397) ^ FullDragPower.GetHashCode();
+					hashCode = (hashCode * 397) ^ FullDragTorque.GetHashCode();
+					hashCode = (hashCode * 397) ^ EngineTorque.GetHashCode();
+					return hashCode;
+				}
+			}
 
             #endregion
         }
@@ -93,12 +106,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         private EngineState _currentState = new EngineState();	// current state is computed in request method
 
         [NonSerialized]
-        private List<TimeSpan> _enginePowerCorrections = new List<TimeSpan>();
+        private readonly List<TimeSpan> _enginePowerCorrections = new List<TimeSpan>();
 
-        public CombustionEngine()
-        {
-
-        }
 
         public CombustionEngine(IVehicleContainer cockpit, CombustionEngineData data)
             : base(cockpit)
