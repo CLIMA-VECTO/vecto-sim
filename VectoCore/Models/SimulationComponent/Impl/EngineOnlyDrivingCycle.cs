@@ -64,9 +64,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             // therefore it has to be decreased again for commit. The needed time
             // for the moddata is between the last AbsTime and the current AbsTime,
             // therefore dt/2 has to be subtracted from the current AbsTime.
-            // todo: document this dt/2 in a jira ticket!
-            var halfDt = new TimeSpan(dt.Ticks / 2);
-            writer[ModalResultField.time] = (AbsTime - halfDt).TotalSeconds;
+            // todo: document dt/2 in a jira ticket!
+            writer[ModalResultField.time] = (AbsTime - TimeSpan.FromTicks(dt.Ticks / 2)).TotalSeconds;
+            writer[ModalResultField.simulationInterval] = dt.TotalSeconds;
+
         }
     }
 }

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
@@ -27,22 +28,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
             foreach (DataRow row in data.Rows)
             {
-                var newRow = modalResults.NewRow();
-                foreach (DataColumn col in row.Table.Columns)
+                try
                 {
-                    // In cols FC-AUXc and FC-WHTCc can be a "-"
-                    if ((col.ColumnName == ModalResultField.FCAUXc.GetName() ||
-                         col.ColumnName == ModalResultField.FCWHTCc.GetName()) && row.Field<string>(col) == "-")
-                        continue;
+                    var newRow = modalResults.NewRow();
+                    foreach (DataColumn col in row.Table.Columns)
+                    {
+                        // In cols FC-AUXc and FC-WHTCc can be a "-"
+                        if (row.Field<string>(col) == "-"
+                        && (col.ColumnName == ModalResultField.FCAUXc.GetName() || col.ColumnName == ModalResultField.FCWHTCc.GetName()))
+                            continue;
 
-                    // In col FC can sometimes be a "ERROR"
-                    if (col.ColumnName == ModalResultField.FC.GetName() && row.Field<string>(col) == "ERROR")
-                        continue;
+                        // In col FC can sometimes be a "ERROR"
+                        if (row.Field<string>(col) == "ERROR" && col.ColumnName == ModalResultField.FC.GetName())
+                            continue;
 
-                    newRow.SetField(col.ColumnName, row.ParseDouble(col.ColumnName));
+                        newRow.SetField(col.ColumnName, row.ParseDoubleOrGetDefault(col.ColumnName));
+
+                    }
+                    modalResults.Rows.Add(newRow);
 
                 }
-                modalResults.Rows.Add(newRow);
+                catch (VectoException ex)
+                {
+                    throw new VectoException(string.Format("Row {0}: {1}", data.Rows.IndexOf(row), ex.Message), ex);
+                }
             }
 
             return modalResults;
@@ -66,11 +75,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
         [ModalResultField(typeof(double), caption: "time [s]")]
         time,
 
-		/// <summary>
-		/// Simulation interval around the current time step. [s]
-		/// </summary>
-		[ModalResultField(typeof(double), caption: "simulation_interval [s]")]
-		simulationInterval,
+        /// <summary>
+        /// Simulation interval around the current time step. [s]
+        /// </summary>
+        [ModalResultField(typeof(double), name: "simulation_interval", caption: "simulation_interval [s]")]
+        simulationInterval,
 
         /// <summary>
         /// Engine speed [1/min].
