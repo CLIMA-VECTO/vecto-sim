@@ -6,6 +6,7 @@ using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -32,8 +33,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
             Assert.AreEqual(0.0, outPort.AbsTime.TotalSeconds);
             Assert.AreEqual(1.0, outPort.Dt.TotalSeconds);
-            Assert.AreEqual(600, outPort.EngineSpeed);
-            Assert.AreEqual(0, outPort.Torque);
+            Assert.AreEqual(new SI(600).Rounds.Per.Minute, outPort.AngularFrequency);
+            Assert.AreEqual(0.SI<NewtonMeter>(), outPort.Torque);
 
             Assert.AreEqual(0.5, dataWriter[ModalResultField.time]);
         }
@@ -43,7 +44,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
         {
             var container = new VehicleContainer();
 
-            var cycleData = DrivingCycleData.ReadFromFileTimeBased(@"TestData\Cycles\Coach.vdri");
+            var cycleData = DrivingCycleData.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based.vdri");
             IDrivingCycle cycle = new TimeBasedDrivingCycle(container, cycleData);
 
             var outPort = new MockDriverDemandOutPort();
@@ -60,8 +61,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             // todo: assert correct values!
             Assert.AreEqual(0.0, outPort.AbsTime.TotalSeconds);
             Assert.AreEqual(1.0, outPort.Dt.TotalSeconds);
-            Assert.AreEqual(80, outPort.Velocity);
-            Assert.AreEqual(0.03, outPort.Gradient);
+            Assert.AreEqual(0.0.SI<MeterPerSecond>(), outPort.Velocity);
+            Assert.AreEqual(-0.020237973, outPort.Gradient);
             Assert.AreEqual(0.5, dataWriter[ModalResultField.time]);
         }
 

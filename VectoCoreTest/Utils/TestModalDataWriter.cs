@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;

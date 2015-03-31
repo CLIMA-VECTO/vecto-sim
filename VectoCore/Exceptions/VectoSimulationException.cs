@@ -2,7 +2,7 @@
 
 namespace TUGraz.VectoCore.Exceptions
 {
-	class VectoSimulationException : Exception
+	public class VectoSimulationException : Exception
 	{
 		public VectoSimulationException(string msg) : base(msg) { }
 

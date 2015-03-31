@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Data;
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -19,8 +16,6 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 		public TestContext TestContext { get; set; }
 		
 		private const string EngineFile = @"TestData\Components\24t Coach.veng";
-
-		private const double tolerance = 0.001;
 
 		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineTests.csv", "EngineTests#csv", DataAccessMethod.Sequential)]
 		[TestMethod]
@@ -44,11 +39,10 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var dataWriter = new TestModalDataWriter();
 
 			var i = 0;
-			DataRow row;
-			ModalResultField[] results = new ModalResultField[] { ModalResultField.n, ModalResultField.PaEng, ModalResultField.Tq_drag, ModalResultField.Pe_drag, ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.Tq_full, ModalResultField.Pe_full, }; 
+		    var results = new[] { ModalResultField.n, ModalResultField.PaEng, ModalResultField.Tq_drag, ModalResultField.Pe_drag, ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.Tq_full, ModalResultField.Pe_full, }; 
 			//, ModalResultField.FC };
-			double[] siFactor = new double[] {1, 1000, 1, 1000, 1000, 1, 1, 1000, 1 };
-			double[] tolerances = new double[] {0.0001, 0.1, 0.0001, 0.1, 0.1, 0.001, 0.001, 0.1, 0.01 };
+			var siFactor = new[] {1, 1000, 1, 1000, 1000, 1, 1, 1000, 1 };
+			var tolerances = new[] {0.0001, 0.1, 0.0001, 0.1, 0.1, 0.001, 0.001, 0.1, 0.01 };
 			foreach (var cycle in data.Entries)
 			{
 				port.Request(absTime, dt, cycle.EngineTorque, cycle.EngineSpeed);
@@ -58,7 +52,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 				}
 
 				// TODO: handle initial state of engine
-				row = expectedResults.Rows[i++];
+				var row = expectedResults.Rows[i++];
 				if (i > 2) {
 					for (var j = 0; j < results.Length; j++) {
 						var field = results[j];
@@ -66,7 +60,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 						Assert.AreEqual((double) row[field.GetName()] * siFactor[j], dataWriter.GetDouble(field), tolerances[j]);
 					}
 					if (row[ModalResultField.FC.GetName()] is double) {
-						Assert.AreEqual((double) row[ModalResultField.FC.GetName()], dataWriter.GetDouble(ModalResultField.FC), 0.01);
+						Assert.AreEqual((double)row[ModalResultField.FC.GetName()], dataWriter.GetDouble(ModalResultField.FC), 0.01);
 					}
 					else {
 						Assert.IsTrue(Double.IsNaN(dataWriter.GetDouble(ModalResultField.FC)));
@@ -95,8 +89,10 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var absTime = new TimeSpan();
 			var dt = TimeSpan.FromSeconds(1);
 
+		    var angularVelocity = 644.4445.RPMtoRad();
+		    var power = 2329.973.SI<Watt>();
 
-			gearbox.Request(absTime, dt, VectoMath.ConvertPowerRpmToTorque(2329.973, 644.4445), 644.4445);
+            gearbox.Request(absTime, dt, Formulas.PowerToTorque(power, angularVelocity), angularVelocity);
 
 			foreach (var sc in vehicleContainer.SimulationComponents())
 			{
