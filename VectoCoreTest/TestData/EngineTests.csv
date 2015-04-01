@@ -1,2 +1,3 @@
 TestName,EngineFile,CycleFile,ModalResultFile
 Test1,TestData\Components\24t Coach.veng,TestData\Cycles\Coach Engine Only.vdri,TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly.vmod
+Test2,TestData\Components\24t Coach.veng,TestData\Cycles\Coach Engine Only Paux.vdri,TestData\Results\EngineOnlyCycles\24tCoach_EngineOnlyPaux.vmod

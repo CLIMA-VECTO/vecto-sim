@@ -1,5 +1,6 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -21,17 +22,24 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 		[TestMethod]
 		public void TestEngineOnlyDrivingCycle()
 		{
-			var vehicle = new VehicleContainer();
-			var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
-
-			var gearbox = new EngineOnlyGearbox(vehicle);
-
 			var data = DrivingCycleData.ReadFromFileEngineOnly(TestContext.DataRow["CycleFile"].ToString());
 			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
-			var engine = new CombustionEngine(vehicle, engineData);
-			var port = engine.OutShaft();
+			var vehicle = new VehicleContainer();
+			var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
 
+			var aux = new EngineOnlyAuxiliary(vehicle, new AuxiliariesDemandAdapter(data));
+			var gearbox = new EngineOnlyGearbox(vehicle);
+
+	
+			var engine = new CombustionEngine(vehicle, engineData);
+
+			aux.Connect(engine);
+			gearbox.Connect(aux);
+			var port = aux.OutShaft();
+
+//			IVectoJob job = SimulationFactory.CreateTimeBasedEngineOnlyJob(TestContext.DataRow["EngineFile"].ToString(),
+//				TestContext.DataRow["CycleFile"].ToString(), "test2.csv");
 
 			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
 			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
@@ -57,13 +65,13 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 					for (var j = 0; j < results.Length; j++) {
 						var field = results[j];
 //						if (!Double.IsNaN(dataWriter.GetDouble(field)))
-						Assert.AreEqual((double) row[field.GetName()] * siFactor[j], dataWriter.GetDouble(field), tolerances[j]);
+						Assert.AreEqual((double) row[field.GetName()] * siFactor[j], dataWriter.GetDouble(field), tolerances[j],String.Format("t: {0}  field: {1}", i, field));
 					}
 					if (row[ModalResultField.FC.GetName()] is double) {
-						Assert.AreEqual((double)row[ModalResultField.FC.GetName()], dataWriter.GetDouble(ModalResultField.FC), 0.01);
+						Assert.AreEqual((double) row[ModalResultField.FC.GetName()], dataWriter.GetDouble(ModalResultField.FC), 0.01, "t: {0}  field: {1}", i, ModalResultField.FC);
 					}
 					else {
-						Assert.IsTrue(Double.IsNaN(dataWriter.GetDouble(ModalResultField.FC)));
+						Assert.IsTrue(Double.IsNaN(dataWriter.GetDouble(ModalResultField.FC)), String.Format("t: {0}", i));
 					}
 				}
 

@@ -144,10 +144,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         [NonSerialized]
         private List<TimeSpan> _enginePowerCorrections = new List<TimeSpan>();
 
-        public CombustionEngine()
-        {
-
-        }
 
         public CombustionEngine(IVehicleContainer cockpit, CombustionEngineData data)
             : base(cockpit)
@@ -256,18 +252,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
                 {
                     _enginePowerCorrections.Add(_currentState.AbsTime);
                     Log.WarnFormat("t: {0}  requested power > P_engine_full * 1.05 - corrected. P_request: {1}  P_engine_full: {2}", _currentState.AbsTime, requestedEnginePower, _currentState.DynamicFullLoadPower);
-                    return _currentState.DynamicFullLoadPower;
                 }
-            }
+				return _currentState.DynamicFullLoadPower;
+			}
             else if (requestedEnginePower < _currentState.FullDragPower)
             {
                 if (requestedEnginePower / _currentState.FullDragPower > MaxPowerExceededThreshold && requestedEnginePower > -99999)
                 {
                     _enginePowerCorrections.Add(_currentState.AbsTime);
                     Log.WarnFormat("t: {0}  requested power < P_engine_drag * 1.05 - corrected. P_request: {1}  P_engine_drag: {2}", _currentState.AbsTime, requestedEnginePower, _currentState.FullDragPower);
-                    return _currentState.FullDragPower;
                 }
-            }
+				return _currentState.FullDragPower;
+			}
             return requestedEnginePower;
         }
 

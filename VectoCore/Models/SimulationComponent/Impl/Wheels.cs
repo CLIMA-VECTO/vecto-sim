@@ -7,7 +7,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Wheels : VectoSimulationComponent
 	{
-        public Wheels() { }
 
 		public Wheels(IVehicleContainer cockpit)
 			: base(cockpit)

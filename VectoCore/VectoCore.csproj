@@ -120,6 +120,7 @@
     <Compile Include="Models\Connector\Ports\ITnInPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnOutPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
+    <Compile Include="Models\SimulationComponent\Data\AuxiliariesDemandAdapter.cs" />
     <Compile Include="Models\SimulationComponent\Data\CombustionEngineData.cs" />
     <Compile Include="Models\SimulationComponent\Data\DrivingCycleData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMap.cs" />
@@ -128,11 +129,13 @@
     <Compile Include="Utils\IntExtensionMethods.cs" />
     <Compile Include="Utils\SI.cs" />
     <Compile Include="Models\SimulationComponent\Data\SimulationComponentData.cs" />
+    <Compile Include="Models\SimulationComponent\IAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\ICombustionEngine.cs" />
     <Compile Include="Models\Connector\Ports\IInPort.cs" />
     <Compile Include="Models\SimulationComponent\IGearbox.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DistanceBasedDrivingCycle.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\EngineOnlyAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TimeBasedDrivingCycle.cs" />
     <Compile Include="Utils\IMemento.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />

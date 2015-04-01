@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public void CommitSimulationStep(TimeSpan absTime, TimeSpan simulationInterval)
 		{
-			CurrentRow[ModalResultField.time.GetName()] = (absTime - TimeSpan.FromTicks(simulationInterval.Ticks / 2)).TotalSeconds;
+			CurrentRow[ModalResultField.time.GetName()] = (absTime + TimeSpan.FromTicks(simulationInterval.Ticks / 2)).TotalSeconds;
 			CurrentRow[ModalResultField.simulationInterval.GetName()] = simulationInterval.TotalSeconds;
 			CommitSimulationStep();
         }

@@ -15,19 +15,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             debug("SimulationFactory creating VehicleContainer.");
             var container = new VehicleContainer();
 
-            debug("SimulationFactory creating engine.");
+			debug("SimulationFactory creating cycle.");
+			var cycleData = DrivingCycleData.ReadFromFileEngineOnly(cycleFile);
+			var cycle = new EngineOnlyDrivingCycle(container, cycleData);
+			
+			debug("SimulationFactory creating engine.");
             var engineData = CombustionEngineData.ReadFromFile(engineFile);
             var engine = new CombustionEngine(container, engineData);
 
             debug("SimulationFactory creating gearbox.");
             var gearBox = new EngineOnlyGearbox(container);
 
-            debug("SimulationFactory creating cycle.");
-            var cycleData = DrivingCycleData.ReadFromFileEngineOnly(cycleFile);
-            var cycle = new EngineOnlyDrivingCycle(container, cycleData);
+			debug("SimulationFactory creating auxiliary");
+	        var aux = new EngineOnlyAuxiliary(container, new AuxiliariesDemandAdapter(cycleData));
 
-            debug("SimulationFactory connecting gearbox with engine.");
-            gearBox.InShaft().Connect(engine.OutShaft());
+			debug("SimulationFactory connecting auxiliary with engine.");
+			aux.Connect(engine.OutShaft());
+
+			debug("SimulationFactory connecting gearbox with auxiliary.");
+			gearBox.InShaft().Connect(aux.OutShaft());
 
             debug("SimulationFactory connecting cycle with gearbox.");
             cycle.InShaft().Connect(gearBox.OutShaft());
