@@ -32,7 +32,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			//	Log.ErrorFormat("could not find entry in driving cycle for time {0}", absTime.TotalSeconds);
 			//	return 0;
 			//}
-			Log.ErrorFormat("Found Entry at index {0}", entry);
+			if (entry == -1) {
+				Log.ErrorFormat("time: {0} could not find power demand for auxiliary {1}", absTime.TotalSeconds, _auxiliaryId);
+				throw new VectoSimulationException(String.Format("time: {0} could not find power demand for auxiliary {1}", absTime.TotalSeconds, _auxiliaryId));
+			}
 			return _auxiliaryId == null ? _drivingCycle.Entries[entry].AdditionalAuxPowerDemand : _drivingCycle.Entries[entry].AuxiliarySupplyPower[_auxiliaryId];
 		}
 
