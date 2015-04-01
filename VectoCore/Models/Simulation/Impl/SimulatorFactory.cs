@@ -6,13 +6,13 @@ using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-    public class SimulationFactory
+    public class SimulatorFactory
     {
-        public static IVectoJob CreateTimeBasedEngineOnlyJob(string engineFile, string cycleFile, string resultFile)
+        public static IVectoSimulator CreateTimeBasedEngineOnlyJob(string engineFile, string cycleFile, string resultFile)
         {
-            Action<string> debug = LogManager.GetLogger<SimulationFactory>().Debug;
+            Action<string> debug = LogManager.GetLogger<SimulatorFactory>().Debug;
 
-            debug("SimulationFactory creating VehicleContainer.");
+            debug("Creating VehicleContainer.");
             var container = new VehicleContainer();
 
 			debug("SimulationFactory creating cycle.");
@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             var engineData = CombustionEngineData.ReadFromFile(engineFile);
             var engine = new CombustionEngine(container, engineData);
 
-            debug("SimulationFactory creating gearbox.");
+            debug("Creating gearbox.");
             var gearBox = new EngineOnlyGearbox(container);
 
 			debug("SimulationFactory creating auxiliary");
@@ -40,10 +40,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
             var dataWriter = new ModalDataWriter(resultFile);
 
-            debug("SimulationFactory creating VectoJob.");
-            var job = new VectoJob(container, cycle, dataWriter);
+            debug("Creating Simulator.");
+            var simulator = new VectoSimulator(container, cycle, dataWriter);
 
-            return job;
+            return simulator;
         }
     }
 }

@@ -312,9 +312,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             {
                 ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
 
-                var entries = table.Rows.Cast<DataRow>().Select(row => new DrivingCycleEntry
+                var entries = table.Rows.Cast<DataRow>().Select((row, index) => new DrivingCycleEntry
                 {
-                    Time = row.ParseDoubleOrGetDefault(Fields.Time),
+                    Time = row.ParseDoubleOrGetDefault(Fields.Time, index),
                     VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour.To<MeterPerSecond>(),
                     RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
                     AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.To<Watt>(),
@@ -324,13 +324,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                     WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
                     AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
                 }).ToArray();
-
-                // update time with 1Hz if time field is missing.
-                if (!table.Columns.Contains(Fields.Time))
-                {
-                    for (var i = 0; i < entries.Length; i++)
-                        entries[i].Time = i;
-                }
 
                 return entries;
             }

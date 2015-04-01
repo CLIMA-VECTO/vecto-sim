@@ -1,5 +1,6 @@
 using System;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -11,8 +12,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
     /// </summary>
     public class EngineOnlyDrivingCycle : VectoSimulationComponent, IEngineOnlyDrivingCycle, ITnInPort
     {
-        protected TimeSpan AbsTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-        protected TimeSpan dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
         protected DrivingCycleData Data;
 
@@ -24,24 +23,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         {
             Data = cycle;
         }
-
-        #region IDrivingCycle
-        public bool DoSimulationStep()
-        {
-            if (CurrentStep >= Data.Entries.Count)
-                return false;
-
-            var entry = Data.Entries[CurrentStep];
-
-            //todo: variable time steps!
-            dt = TimeSpan.FromSeconds(1);
-
-            OutPort.Request(AbsTime, dt, entry.EngineTorque, entry.EngineSpeed);
-            AbsTime += dt;
-            CurrentStep++;
-            return true;
-        }
-        #endregion
 
         #region ITnInPort
         public void Connect(ITnOutPort other)
@@ -55,17 +36,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         {
             return this;
         }
+
+        public IResponse Request(TimeSpan absTime, TimeSpan dt)
+        {
+            //todo: change to variable time steps
+            var index = (int)Math.Floor(absTime.TotalSeconds);
+            if (index >= Data.Entries.Count)
+                return new ResponseCycleFinished();
+
+            return OutPort.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
+        }
+
         #endregion
 
         public override void CommitSimulationStep(IModalDataWriter writer)
         {
-            // AbsTime gets increased before doing the CommitSimulationStep, 
-            // therefore it has to be decreased again for commit. The needed time
-            // for the moddata is between the last AbsTime and the current AbsTime,
-            // therefore dt/2 has to be subtracted from the current AbsTime.
-            // todo: document this dt/2 in a jira ticket!
-            var halfDt = new TimeSpan(dt.Ticks / 2);
-            writer[ModalResultField.time] = (AbsTime - halfDt).TotalSeconds;
         }
+
     }
 }
