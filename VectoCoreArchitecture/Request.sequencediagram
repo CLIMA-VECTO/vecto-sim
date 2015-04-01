@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SequenceDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" dslVersion="1.0.0.0" Id="784de59c-9096-4010-b35c-fa2e1ce01da2" name="Request Sequence" linkedPackageId="d9536f1a-29ae-4998-a61d-8ed09f4ae8e4" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner">
+<SequenceDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" dslVersion="1.0.0.0" Id="784de59c-9096-4010-b35c-fa2e1ce01da2" name="Request Sequence" linkedPackageId="d9536f1a-29ae-4998-a61d-8ed09f4ae8e4" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner">
   <packagedElements>
     <packageHasNamedElement>
       <interaction Id="60558488-6e4a-41e5-b61d-87aa0c2c6371" name="Request Sequence" collapseFragmentsFlag="false" isActiveClass="false" isAbstract="false" isLeaf="false" isReentrant="false">
@@ -101,7 +101,7 @@ return OutPort.Request(...)</body>
           <messageOccurrenceSpecification Id="c37eea89-36cb-4890-9f7c-70fe6fd1d3ce" name="MessageOccurrenceSpecification233">
             <elementDefinition Id="99dd5995-f41f-4460-a8ee-34f296502410" />
             <covered>
-              <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="Component 1" />
+              <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="C1 : VectoSimulationComponent" />
             </covered>
           </messageOccurrenceSpecification>
           <behaviorExecutionSpecification Id="0ae9bc9e-68fc-4538-9e62-f4be16ab03f4" name="BehaviorExecutionSpecification61">
@@ -148,7 +148,7 @@ return OutPort.Request(...)</body>
           <behaviorExecutionSpecification Id="6243784d-5be4-42db-ad08-2ae7fad0a810" name="BehaviorExecutionSpecification62">
             <elementDefinition Id="5c6aa059-5ae0-43a6-b356-f40f7454a2d2" />
             <coveredLifelines>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
             </coveredLifelines>
             <finish>
               <executionOccurrenceSpecificationMoniker Id="9e9378c7-1b31-4d6c-a669-e7eb0c637c3a" LastKnownName="ExecutionOccurrenceSpecification124" />
@@ -169,7 +169,7 @@ return OutPort.Request(...)</body>
               </executionOccurrenceSpecificationReferencesEvent>
             </event>
             <covered>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
             </covered>
           </executionOccurrenceSpecification>
           <messageOccurrenceSpecification Id="a281c74b-6347-40a4-847f-2409de3e01dc" name="MessageOccurrenceSpecification241">
@@ -181,7 +181,7 @@ return OutPort.Request(...)</body>
           <messageOccurrenceSpecification Id="f6fada2b-c5b0-4882-9c64-0e6760a5efb2" name="MessageOccurrenceSpecification242">
             <elementDefinition Id="e8c4c311-2fc4-468c-a0ad-e1cdfa213410" />
             <covered>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
             </covered>
           </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="2483c51e-0fe2-47fc-9275-cba7ad0ca1c5" name="MessageOccurrenceSpecification244">
@@ -193,7 +193,7 @@ return OutPort.Request(...)</body>
           <messageOccurrenceSpecification Id="709696d6-7c1d-4337-a855-8d03c9833b66" name="MessageOccurrenceSpecification243">
             <elementDefinition Id="70b5d96b-b26a-4d42-8c1f-2dbb6991339b" />
             <covered>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
             </covered>
           </messageOccurrenceSpecification>
           <executionOccurrenceSpecification Id="9e9378c7-1b31-4d6c-a669-e7eb0c637c3a" name="ExecutionOccurrenceSpecification124">
@@ -204,19 +204,19 @@ return OutPort.Request(...)</body>
               </executionOccurrenceSpecificationReferencesEvent>
             </event>
             <covered>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
             </covered>
           </executionOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="18dc9bbe-caeb-4879-ace8-37c361f2fda7" name="MessageOccurrenceSpecification240">
-            <elementDefinition Id="38579256-57dd-4025-8c13-36df6f512aff" />
-            <covered>
-              <lifelineMoniker Id="3dab1444-620e-4fd1-ae01-53b756b8f552" LastKnownName="OutPort" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="75c7c48d-3f5f-484b-bade-59048e0f6cfc" name="MessageOccurrenceSpecification239">
             <elementDefinition Id="c1cbabd0-7ce7-4740-8251-456c87c0bd02" />
             <covered>
               <lifelineMoniker Id="e837a4db-825f-43dd-9a33-4614cbad36e2" LastKnownName="InPort" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="18dc9bbe-caeb-4879-ace8-37c361f2fda7" name="MessageOccurrenceSpecification240">
+            <elementDefinition Id="38579256-57dd-4025-8c13-36df6f512aff" />
+            <covered>
+              <lifelineMoniker Id="3dab1444-620e-4fd1-ae01-53b756b8f552" LastKnownName="OutPort" />
             </covered>
           </messageOccurrenceSpecification>
           <executionOccurrenceSpecification Id="e9b0e678-fcc6-44b9-bffb-43879322661f" name="ExecutionOccurrenceSpecification122">
@@ -239,7 +239,7 @@ return OutPort.Request(...)</body>
           <messageOccurrenceSpecification Id="f0c48cca-3f4d-4412-b57c-8838efffb1ca" name="MessageOccurrenceSpecification236">
             <elementDefinition Id="65ceafba-6834-4f24-8133-a042eedaf077" />
             <covered>
-              <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="Component 1" />
+              <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="C1 : VectoSimulationComponent" />
             </covered>
           </messageOccurrenceSpecification>
           <executionOccurrenceSpecification Id="2f6095ed-52a8-4d14-877b-464f106bb274" name="ExecutionOccurrenceSpecification120">
@@ -291,7 +291,7 @@ return OutPort.Request(...)</body>
           <messageOccurrenceSpecification Id="47c0b450-046e-49cd-926d-4999ef2e0d0c" name="MessageOccurrenceSpecification245">
             <elementDefinition Id="0c3dc0d8-76e1-4846-a9b9-90f71922186c" />
             <covered>
-              <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="Component 1" />
+              <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="C1 : VectoSimulationComponent" />
             </covered>
           </messageOccurrenceSpecification>
           <behaviorExecutionSpecification Id="648f6929-1eb1-49c2-a48a-21105918465d" name="BehaviorExecutionSpecification64">
@@ -338,7 +338,7 @@ return OutPort.Request(...)</body>
           <behaviorExecutionSpecification Id="1a77a542-8f63-4686-a8e0-63ae9d3144d6" name="BehaviorExecutionSpecification65">
             <elementDefinition Id="ec343afd-9804-4d59-ac97-79e989b79f92" />
             <coveredLifelines>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
             </coveredLifelines>
             <finish>
               <executionOccurrenceSpecificationMoniker Id="1d38361c-9195-433c-98f2-2beea4175d9c" LastKnownName="ExecutionOccurrenceSpecification130" />
@@ -359,25 +359,25 @@ return OutPort.Request(...)</body>
               </executionOccurrenceSpecificationReferencesEvent>
             </event>
             <covered>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
             </covered>
           </executionOccurrenceSpecification>
-          <messageOccurrenceSpecification Id="f1dd7190-d013-412a-97b2-b0ed5e78bd95" name="MessageOccurrenceSpecification254">
-            <elementDefinition Id="a9b966fc-80de-431c-9343-0b7861c7ca70" />
-            <covered>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
-            </covered>
-          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="5b58b5d9-6a7d-4526-be8a-398b35c888bf" name="MessageOccurrenceSpecification253">
             <elementDefinition Id="1b832d00-ed75-4eca-9d69-45a0860074a2" />
             <covered>
               <lifelineMoniker Id="e837a4db-825f-43dd-9a33-4614cbad36e2" LastKnownName="InPort" />
             </covered>
           </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification Id="f1dd7190-d013-412a-97b2-b0ed5e78bd95" name="MessageOccurrenceSpecification254">
+            <elementDefinition Id="a9b966fc-80de-431c-9343-0b7861c7ca70" />
+            <covered>
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
+            </covered>
+          </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="3816c65a-0ef6-42e4-85d6-7d39dfd49c67" name="MessageOccurrenceSpecification255">
             <elementDefinition Id="08f1f512-315b-4be4-9dfa-b5abdb42c450" />
             <covered>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
             </covered>
           </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="f306988c-f044-4170-b911-7a65d9633129" name="MessageOccurrenceSpecification256">
@@ -394,7 +394,7 @@ return OutPort.Request(...)</body>
               </executionOccurrenceSpecificationReferencesEvent>
             </event>
             <covered>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
             </covered>
           </executionOccurrenceSpecification>
           <messageOccurrenceSpecification Id="18728a7a-6b95-443f-9a87-6af47ec6c3c9" name="MessageOccurrenceSpecification252">
@@ -429,7 +429,7 @@ return OutPort.Request(...)</body>
           <messageOccurrenceSpecification Id="517c7e8b-f0e4-4e3c-a903-c0ca943a5281" name="MessageOccurrenceSpecification248">
             <elementDefinition Id="28367c4a-1eb1-47f5-9728-f4ce1082c90c" />
             <covered>
-              <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="Component 1" />
+              <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="C1 : VectoSimulationComponent" />
             </covered>
           </messageOccurrenceSpecification>
           <executionOccurrenceSpecification Id="1640a3bb-c3a8-44b1-95f8-c71d4cfbaae3" name="ExecutionOccurrenceSpecification126">
@@ -475,7 +475,7 @@ return OutPort.Request(...)</body>
           <messageOccurrenceSpecification Id="cc3a860f-4b6c-4e97-9dad-282fd17bc4ea" name="MessageOccurrenceSpecification257">
             <elementDefinition Id="70667da9-53e0-4b3a-acd5-edf3a4a09104" />
             <covered>
-              <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="Component 1" />
+              <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="C1 : VectoSimulationComponent" />
             </covered>
           </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="87edae92-11df-49d5-9706-3da2b8189800" name="MessageOccurrenceSpecification258">
@@ -528,7 +528,7 @@ return OutPort.Request(...)</body>
           <behaviorExecutionSpecification Id="e6d27219-f03e-4644-bd83-f58afbe98e80" name="BehaviorExecutionSpecification68">
             <elementDefinition Id="e27c37d3-d153-4da5-8450-55d8a7cffd7b" />
             <coveredLifelines>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
             </coveredLifelines>
             <finish>
               <executionOccurrenceSpecificationMoniker Id="15a0321f-7399-4fb0-9a03-c70c83c48a9d" LastKnownName="ExecutionOccurrenceSpecification136" />
@@ -549,7 +549,7 @@ return OutPort.Request(...)</body>
               </executionOccurrenceSpecificationReferencesEvent>
             </event>
             <covered>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
             </covered>
           </executionOccurrenceSpecification>
           <messageOccurrenceSpecification Id="67fe908e-ad8c-4c44-b4a6-81817e5820bf" name="MessageOccurrenceSpecification265">
@@ -561,13 +561,13 @@ return OutPort.Request(...)</body>
           <messageOccurrenceSpecification Id="a7416518-4c2c-4350-9b2a-9a374b576ac1" name="MessageOccurrenceSpecification266">
             <elementDefinition Id="ecabdb5c-6966-4082-9aae-ffb6b5d269bb" />
             <covered>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
             </covered>
           </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="ea0b3cfe-d201-439a-b426-8a67d6f7cc48" name="MessageOccurrenceSpecification267">
             <elementDefinition Id="86e34cd6-21d2-451c-9f5e-4fa2f7595f42" />
             <covered>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
             </covered>
           </messageOccurrenceSpecification>
           <messageOccurrenceSpecification Id="c82f594f-e36e-4fee-87a9-1fcd6f4a7b1d" name="MessageOccurrenceSpecification268">
@@ -584,7 +584,7 @@ return OutPort.Request(...)</body>
               </executionOccurrenceSpecificationReferencesEvent>
             </event>
             <covered>
-              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+              <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
             </covered>
           </executionOccurrenceSpecification>
           <messageOccurrenceSpecification Id="d03d085c-07db-409f-b796-3b72a2818f8b" name="MessageOccurrenceSpecification263">
@@ -619,7 +619,7 @@ return OutPort.Request(...)</body>
           <messageOccurrenceSpecification Id="f6bc7acf-3511-4830-bd77-431fadbdbc30" name="MessageOccurrenceSpecification260">
             <elementDefinition Id="d77d9778-0281-49a9-b595-eec326c7c7a2" />
             <covered>
-              <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="Component 1" />
+              <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="C1 : VectoSimulationComponent" />
             </covered>
           </messageOccurrenceSpecification>
           <executionOccurrenceSpecification Id="d92d76b5-f439-44bc-848e-84bd3e5b0cab" name="ExecutionOccurrenceSpecification132">
@@ -635,8 +635,11 @@ return OutPort.Request(...)</body>
           </executionOccurrenceSpecification>
         </fragments>
         <lifelines>
-          <lifeline Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" name="Component 1" isActor="false" lifelineDisplayName="Component 1">
+          <lifeline Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" name="C1 : VectoSimulationComponent" isActor="false" lifelineDisplayName="C1 : VectoSimulationComponent">
             <elementDefinition Id="322b8c33-4017-46aa-8f13-52f1c88ff13e" />
+            <represents>
+              <propertyMoniker Id="323bc1a5-1edd-47f1-b7f8-d48566470f64" />
+            </represents>
             <topLevelOccurrences>
               <messageOccurrenceSpecificationMoniker Id="c37eea89-36cb-4890-9f7c-70fe6fd1d3ce" LastKnownName="MessageOccurrenceSpecification233" />
               <messageOccurrenceSpecificationMoniker Id="f0c48cca-3f4d-4412-b57c-8838efffb1ca" LastKnownName="MessageOccurrenceSpecification236" />
@@ -668,8 +671,11 @@ return OutPort.Request(...)</body>
               <executionOccurrenceSpecificationMoniker Id="1bb42c2e-0275-4d45-92d7-fc9a0986e9dc" LastKnownName="ExecutionOccurrenceSpecification134" />
             </topLevelOccurrences>
           </lifeline>
-          <lifeline Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" name="Component 2" isActor="false" lifelineDisplayName="Component 2">
+          <lifeline Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" name="C2 : VectoSimulationComponent" isActor="false" lifelineDisplayName="C2 : VectoSimulationComponent">
             <elementDefinition Id="ccd3a4e8-efe0-4ffc-b72b-cdd8ebd3fa3b" />
+            <represents>
+              <propertyMoniker Id="73001868-693e-4ac8-92b3-2ee812c59718" />
+            </represents>
             <topLevelOccurrences>
               <executionOccurrenceSpecificationMoniker Id="f5761b2c-3dd4-4582-81ac-46d1d74f5940" LastKnownName="ExecutionOccurrenceSpecification123" />
               <executionOccurrenceSpecificationMoniker Id="9e9378c7-1b31-4d6c-a669-e7eb0c637c3a" LastKnownName="ExecutionOccurrenceSpecification124" />
@@ -875,6 +881,18 @@ return OutPort.Request(...)</body>
               <referencedTypeMoniker Id="72b392f1-61c7-47e9-98d8-64f6c59c62b6" LastKnownName="ITnInPort" />
             </type_NamedElement>
           </property>
+          <property Id="323bc1a5-1edd-47f1-b7f8-d48566470f64" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="e28e7568-69d4-49ef-b646-9dbde34decf5" />
+            <type_NamedElement>
+              <referencedTypeMoniker Id="c2d5c7a3-637d-4587-9987-e089d4676e8b" LastKnownName="VectoSimulationComponent" />
+            </type_NamedElement>
+          </property>
+          <property Id="73001868-693e-4ac8-92b3-2ee812c59718" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+            <elementDefinition Id="dacd3181-985b-43dd-8301-a2bebe3075fe" />
+            <type_NamedElement>
+              <referencedTypeMoniker Id="c2d5c7a3-637d-4587-9987-e089d4676e8b" LastKnownName="VectoSimulationComponent" />
+            </type_NamedElement>
+          </property>
         </ownedAttributesInternal>
       </interaction>
     </packageHasNamedElement>
@@ -1021,6 +1039,11 @@ return OutPort.Request(...)</body>
     <packageHasNamedElement>
       <referencedType Id="72b392f1-61c7-47e9-98d8-64f6c59c62b6" name="ITnInPort" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::Models.Connector.Ports::ITnInPort">
         <elementDefinition Id="f1e955f0-17b2-4b75-9f01-fceea4fc473b" />
+      </referencedType>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <referencedType Id="c2d5c7a3-637d-4587-9987-e089d4676e8b" name="VectoSimulationComponent" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::VectoSimulationComponent">
+        <elementDefinition Id="0708ae64-77eb-4a35-a272-808e3162924f" />
       </referencedType>
     </packageHasNamedElement>
   </packagedElements>

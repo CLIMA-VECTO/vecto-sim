@@ -3,14 +3,14 @@
   <SequenceDesignerModelMoniker Id="784de59c-9096-4010-b35c-fa2e1ce01da2" />
   <nestedChildShapes>
     <lifelineShape Id="d323ad9d-719d-4227-8b5e-b708249b1bbe" absoluteBounds="1.025, 1, 0.15, 6.7468749999999984" visible="true" visualStyleMode="Modified">
-      <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="Component 1" />
+      <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="C1 : VectoSimulationComponent" />
       <relativeChildShapes>
-        <umlLifelineHeadShape Id="d7af58ba-3a6d-4191-9533-bdd8c7f5d03a" absoluteBounds="0.59285521030426014, 0.6, 1.0142895793914795, 0.4" customColor="White" visualStyleMode="Modified">
-          <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="Component 1" />
+        <umlLifelineHeadShape Id="d7af58ba-3a6d-4191-9533-bdd8c7f5d03a" absoluteBounds="0.099999999999999867, 0.6, 2, 0.4" customColor="White" visualStyleMode="Modified">
+          <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="C1 : VectoSimulationComponent" />
           <relativeChildShapes />
         </umlLifelineHeadShape>
         <lifelineHoverShape Id="43b0bd74-1492-4175-9e9e-46cc1fc67e49" absoluteBounds="1.025, 1, 0, 6.75">
-          <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="Component 1" />
+          <lifelineMoniker Id="c2ec8124-ce7d-46ff-9852-989e99d965d8" LastKnownName="C1 : VectoSimulationComponent" />
         </lifelineHoverShape>
       </relativeChildShapes>
     </lifelineShape>
@@ -57,14 +57,14 @@
       </relativeChildShapes>
     </lifelineShape>
     <lifelineShape Id="d4d922a8-4088-4b17-aa08-35b4c2e9163d" absoluteBounds="7.9250000000000007, 1, 0.15, 6.7770833333333336" visible="true" visualStyleMode="Modified">
-      <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+      <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
       <relativeChildShapes>
-        <umlLifelineHeadShape Id="2bf707c3-0ff6-4ffc-a968-cb91575f2da5" absoluteBounds="7.4928552103042607, 0.6, 1.0142895793914795, 0.4" customColor="White" visualStyleMode="Modified">
-          <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+        <umlLifelineHeadShape Id="2bf707c3-0ff6-4ffc-a968-cb91575f2da5" absoluteBounds="7.0000000000000009, 0.6, 2, 0.4" customColor="White" visualStyleMode="Modified">
+          <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
           <relativeChildShapes />
         </umlLifelineHeadShape>
         <lifelineHoverShape Id="5701e285-d6cd-4c3b-8d62-e1b7685fe4a6" absoluteBounds="7.9250000000000007, 1, 0, 6.75">
-          <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="Component 2" />
+          <lifelineMoniker Id="8251abbd-da3f-4ad8-827f-ff4a45d8811e" LastKnownName="C2 : VectoSimulationComponent" />
         </lifelineHoverShape>
         <umlExecutionSpecificationShape Id="48314357-8587-4e2a-85b4-e72b0a5032cd" absoluteBounds="7.9250000000000007, 1.9000000000000001, 0.15, 0.55" customColor="184, 204, 215" visualStyleMode="Modified">
           <behaviorExecutionSpecificationMoniker Id="6243784d-5be4-42db-ad08-2ae7fad0a810" LastKnownName="BehaviorExecutionSpecification62" />

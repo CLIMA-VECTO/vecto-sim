@@ -22,13 +22,6 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\ArchitectureTools\Microsoft.VisualStudio.TeamArchitect.ModelingProject.targets" Condition="'$(VSToolsPath)' != ''" />
   <ItemGroup>
-    <Content Include="HighLevel_SequenceDiag.sequencediagram">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="HighLevel_SequenceDiag.sequencediagram.layout">
-      <SubType>Content</SubType>
-      <DependentUpon>HighLevel_SequenceDiag.sequencediagram</DependentUpon>
-    </Content>
     <Content Include="ModelDefinition\Package10_1344.uml">
       <SubType>Content</SubType>
     </Content>
@@ -103,6 +96,20 @@
     </Content>
     <Content Include="ModelDefinition\Package_1506.uml">
       <SubType>Content</SubType>
+    </Content>
+    <Content Include="Request.sequencediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Request.sequencediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>Request.sequencediagram</DependentUpon>
+    </Content>
+    <Content Include="Simulation.sequencediagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Simulation.sequencediagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>Simulation.sequencediagram</DependentUpon>
     </Content>
     <Content Include="UMLActivityDiagram1.activitydiagram">
       <SubType>Content</SubType>

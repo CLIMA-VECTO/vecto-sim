@@ -1,25 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<SequenceDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" dslVersion="1.0.0.0" Id="0bcb8d92-48a7-4b95-9226-642597bdbda4" name="Simulation" linkedPackageId="ce4f6e12-d118-4ade-be24-06da87c4e4d8" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner">
-  <profileInstances>
-    <packageHasProfileInstances Id="fa8fa5c1-33a4-4592-86ed-6d9b07a20450">
-      <profileInstance Id="5021f2c1-2136-447a-85d2-81a8d816918e" name="StandardProfileL2">
-        <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
-      </profileInstance>
-      <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
-    </packageHasProfileInstances>
-    <packageHasProfileInstances Id="0451f694-684c-4ac9-ab20-7b91663afddf">
-      <profileInstance Id="5507eab4-ed9f-490a-ba1c-17d40be0d6d5" name="StandardProfileL3">
-        <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
-      </profileInstance>
-      <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
-    </packageHasProfileInstances>
-    <packageHasProfileInstances Id="e6c9ced3-b599-482d-8fcd-2105003b5d4f">
-      <profileInstance Id="1b042d70-4545-4948-bee7-10ca1ac2c673" name="CSharpProfile">
-        <elementDefinition Id="a6d84b35-fa55-4f2c-bad4-64e6c6bb5f81" />
-      </profileInstance>
-      <elementDefinition Id="24c10212-1b6e-4dbf-9717-54ac8ebd361f" />
-    </packageHasProfileInstances>
-  </profileInstances>
+<SequenceDesignerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/ModelStore" dslVersion="1.0.0.0" Id="0bcb8d92-48a7-4b95-9226-642597bdbda4" name="Simulation" linkedPackageId="ce4f6e12-d118-4ade-be24-06da87c4e4d8" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner">
   <packagedElements>
     <packageHasNamedElement>
       <interaction Id="38829ed0-f832-41a5-b55e-301311151345" name="Simulation" collapseFragmentsFlag="false" isActiveClass="false" isAbstract="false" isLeaf="false" isReentrant="false">
@@ -51,16 +31,78 @@ Start Cycle 3 ...</body>
           </comment>
           <comment Id="28faa847-b49d-4568-8cb3-07cd8c89f0e8">
             <elementDefinition Id="2abf9533-9791-414d-bb10-edcda9455296" />
-            <body>Successfull Request
-Sequence</body>
+            <body>Cycle with successful Response</body>
           </comment>
           <comment Id="864a3c61-5962-42d9-9398-5cf82b751e42">
             <elementDefinition Id="27b8745c-a987-40e1-8473-3b2169f07986" />
-            <body>Time fail</body>
+            <body>Cycle with Time fail</body>
           </comment>
           <comment Id="0737772c-6d7e-4d42-a4f5-644c1b80bcf6">
             <elementDefinition Id="0cbaf074-5d26-4eae-bdaf-bf9618e9b347" />
-            <body>Engine Overload</body>
+            <body>Cycle with Engine Overload</body>
+          </comment>
+          <comment Id="b9032297-ed64-4923-beaf-26854ccc0109">
+            <elementDefinition Id="46fbd15c-d4c3-4d87-a42f-bf05e6ec4994" />
+            <body>* Knows Simulators
+* Runs Simulators</body>
+          </comment>
+          <comment Id="0d639f46-366c-425b-8d2a-5927031eef4c">
+            <elementDefinition Id="75ce67be-7550-4c30-9d32-99fc11c51284" />
+            <body>*Knows Driving Cycle and VehicleContainer
+* Controls absoluteTime and dt
+* Runs Simulation Cycles
+* Handles changes in time slice (dt)</body>
+          </comment>
+          <comment Id="4c5c1879-70c6-4826-be31-dca7b9975bcf">
+            <elementDefinition Id="5f2e5006-3bd9-4702-b39d-75b8e815b53c" />
+            <body>* Knows Components
+* Commits Components</body>
+          </comment>
+          <comment Id="2ab2a60b-5806-4389-8e3a-efb9f83b9d10">
+            <elementDefinition Id="e257d0d5-f300-4cba-92ce-568d427acc5d" />
+            <body>* Knows Driving Demands
+* Interpolates them for current absTime and dt</body>
+          </comment>
+          <comment Id="fdf15130-942c-4749-8a01-67f4524d14e1">
+            <elementDefinition Id="b668f778-1714-4d43-a6c2-f2a3756e9b52" />
+            <body>* Limits Driving demands by Driver Model.
+* Handles Engine overload</body>
+          </comment>
+          <comment Id="25e40a30-5980-43d1-9dd5-9f589e8fda1e">
+            <elementDefinition Id="98e0bbed-5fb8-4033-b7e9-0ff50ab630a5" />
+            <body>* Models the Vehicle Ineratia and Wind Influence
+* Converts Driver demands to vehicle demands (force to accelerate, and current velocity)</body>
+          </comment>
+          <comment Id="2c9d475c-b459-4a4e-87bf-ecec71ca62fd">
+            <elementDefinition Id="f0cf46a8-76ed-43a0-85d7-049c44997c46" />
+            <body>Converts force and velocity to torque and angularVelocity</body>
+          </comment>
+          <comment Id="c14c4b09-973b-44f8-934a-38ae2aeaf79d">
+            <elementDefinition Id="451dd27d-6719-4950-8c36-3d54d8a9306a" />
+            <body>* Models axle Gear loss</body>
+          </comment>
+          <comment Id="48c35cee-0d56-499f-9d89-b7e832d9257e">
+            <elementDefinition Id="4aeedfd8-c63b-46c6-b1fa-53d5e76517c0" />
+            <body>* Models the Gearbox and Shifting Strategies
+* May decrements dt while shifting (e.g. from 1s to 0.3 sec)</body>
+          </comment>
+          <comment Id="dfa9b3d1-d920-45b0-9e2d-4aa69b7050dc">
+            <elementDefinition Id="aa132851-22a2-4efd-b8cd-8ba6bb455953" />
+            <body>* Models Clutch power loss</body>
+          </comment>
+          <comment Id="16e4023d-82d8-4864-b73c-bcefed92b30e">
+            <elementDefinition Id="cf9a26a3-8f0b-4f0d-9fc6-d8fe158c3dfc" />
+            <body>* Models the power consumption at different Auxiliary components (could be more than one)</body>
+          </comment>
+          <comment Id="933f0530-1bee-4a27-8753-50dd1b19f465">
+            <elementDefinition Id="fc5245fa-b15a-4720-8e79-650e628c4857" />
+            <body>* Models the main power provider: Engine
+* Fails if the power consumption is too high</body>
+          </comment>
+          <comment Id="0167b631-e895-4804-b3db-829a68de9a47">
+            <elementDefinition Id="fccccb9d-bd53-4838-856d-f3324d92e257" />
+            <body>Commit Cycle 2
+Start Cycle 3...</body>
           </comment>
         </ownedCommentsInternal>
         <elementDefinition Id="16d41b2b-d917-4614-85c9-523ad415ee1a" />
@@ -5083,5 +5125,25 @@ Sequence</body>
   </packagedElements>
   <package Id="ce4f6e12-d118-4ade-be24-06da87c4e4d8" name="VectoArchitecture">
     <elementDefinition Id="d70f4262-18df-49eb-a245-704a07d56711" />
+    <profileInstances>
+      <packageHasProfileInstances Id="fa8fa5c1-33a4-4592-86ed-6d9b07a20450">
+        <profileInstance Id="5021f2c1-2136-447a-85d2-81a8d816918e" name="StandardProfileL2">
+          <elementDefinition Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791" />
+        </profileInstance>
+        <elementDefinition Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="0451f694-684c-4ac9-ab20-7b91663afddf">
+        <profileInstance Id="5507eab4-ed9f-490a-ba1c-17d40be0d6d5" name="StandardProfileL3">
+          <elementDefinition Id="532ea607-fb19-44b8-8502-3351b05452be" />
+        </profileInstance>
+        <elementDefinition Id="29349502-908c-4fda-9054-c48619c59ed0" />
+      </packageHasProfileInstances>
+      <packageHasProfileInstances Id="e6c9ced3-b599-482d-8fcd-2105003b5d4f">
+        <profileInstance Id="1b042d70-4545-4948-bee7-10ca1ac2c673" name="CSharpProfile">
+          <elementDefinition Id="a6d84b35-fa55-4f2c-bad4-64e6c6bb5f81" />
+        </profileInstance>
+        <elementDefinition Id="24c10212-1b6e-4dbf-9717-54ac8ebd361f" />
+      </packageHasProfileInstances>
+    </profileInstances>
   </package>
 </SequenceDesignerModel>
