@@ -8,9 +8,15 @@ namespace TUGraz.VectoCore.Utils
     public static class DataRowExtensionMethods
     {
 
-        public static double ParseDoubleOrGetDefault(this DataRow row, string columnName)
+        public static double ParseDoubleOrGetDefault(this DataRow row, string columnName, double defaultValue = default(double))
         {
-            return row.Table.Columns.Contains(columnName) ? row.ParseDouble(columnName) : default(double);
+            if (row.Table.Columns.Contains(columnName))
+            {
+                double result;
+                if (double.TryParse(row.Field<string>(columnName), NumberStyles.Any, CultureInfo.InvariantCulture, out result))
+                    return result;
+            }
+            return defaultValue;
         }
 
         public static double ParseDouble(this DataRow row, int columnIndex)

@@ -26,23 +26,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             Data = cycle;
         }
 
-        #region IDrivingCycle
-        public bool DoSimulationStep()
-        {
-            //todo: Distance calculation and comparison!!!
-            throw new NotImplementedException("Distance based Cycle is not yet implemented.");
-        }
-        #endregion
-
         public override void CommitSimulationStep(IModalDataWriter writer)
         {
-            // AbsTime gets increased before doing the CommitSimulationStep, 
-            // therefore it has to be decreased again for commit. The needed time
-            // for the moddata is between the last AbsTime and the current AbsTime,
-            // therefore dt/2 has to be subtracted from the current AbsTime.
-            // todo: document this in a jira ticket!
-            var halfDt = new TimeSpan(Dt.Ticks / 2);
-            writer[ModalResultField.time] = (AbsTime - halfDt).TotalSeconds;
+            throw new NotImplementedException("Distance based Cycle is not yet implemented.");
         }
 
         public IDriverDemandInPort InPort()
@@ -53,6 +39,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         public void Connect(IDriverDemandOutPort other)
         {
             OutPort = other;
+        }
+
+        public IResponse Request(TimeSpan absTime, TimeSpan dt)
+        {
+            //todo: Distance calculation and comparison!!!
+            throw new NotImplementedException("Distance based Cycle is not yet implemented.");
         }
     }
 }

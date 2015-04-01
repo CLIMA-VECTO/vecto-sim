@@ -39,6 +39,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             {
                 component.CommitSimulationStep(dataWriter);
             }
+            dataWriter.CommitSimulationStep();
         }
 
         public void FinishSimulation(IModalDataWriter dataWriter)

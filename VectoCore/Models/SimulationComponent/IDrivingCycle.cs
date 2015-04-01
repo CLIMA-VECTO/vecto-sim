@@ -1,14 +1,21 @@
+using System;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-    public interface IDrivingCycle : IDriverDemandInProvider
+    public interface IDrivingCycle
     {
-        bool DoSimulationStep();
+        IResponse Request(TimeSpan absTime, TimeSpan dt);
     }
 
-    public interface IEngineOnlyDrivingCycle: IInShaft
+    public interface IDriverDemandDrivingCycle : IDrivingCycle, IDriverDemandInProvider
     {
-        bool DoSimulationStep();
+
+    }
+
+    public interface IEngineOnlyDrivingCycle : IDrivingCycle, IInShaft
+    {
+
     }
 }

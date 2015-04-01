@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_outPort = other;
 		}
 
-		public void Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond engineSpeed)
+		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond engineSpeed)
 		{
 			if (_outPort == null)
 			{
@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			_powerDemand = _demand.GetPowerDemand(absTime, dt);
 			var tq = Formulas.PowerToTorque(_powerDemand, engineSpeed);
-			_outPort.Request(absTime, dt, (torque + tq).To<NewtonMeter>(), engineSpeed);
+			return _outPort.Request(absTime, dt, (torque + tq).To<NewtonMeter>(), engineSpeed);
 		}
 
 		public override void CommitSimulationStep(IModalDataWriter writer)

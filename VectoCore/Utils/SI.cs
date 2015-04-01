@@ -28,6 +28,11 @@ namespace TUGraz.VectoCore.Utils
         public RadianPerSecond(double val = 0) : base(val, new SI().Radian.Per.Second) { }
     }
 
+    public class RoundsPerMinute : SI
+    {
+        public RoundsPerMinute(double val = 0) : base(val, new SI().Rounds.Per.Minute) { }
+    }
+
     public class NewtonMeter : SI
     {
         public NewtonMeter(double val = 0) : base(val, new SI().Newton.Meter) { }
