@@ -45,14 +45,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
                 if (response is ResponseCycleFinished)
                     break;
 
-                _absTime += _dt;
 
-                DataWriter[ModalResultField.time] = (_absTime - TimeSpan.FromTicks(_dt.Ticks / 2)).TotalSeconds;
+                DataWriter[ModalResultField.time] = (_absTime + TimeSpan.FromTicks(_dt.Ticks / 2)).TotalSeconds;
                 DataWriter[ModalResultField.simulationInterval] = _dt.TotalSeconds;
 
                 Container.CommitSimulationStep(DataWriter);
 
                 // set _dt to difference to next full second.
+                _absTime += _dt;
                 _dt = TimeSpan.FromSeconds(1) - TimeSpan.FromMilliseconds(_dt.Milliseconds);
             } while (response is ResponseSuccess);
 
