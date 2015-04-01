@@ -31,8 +31,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
         public object this[ModalResultField key]
         {
-            get { return CurrentRow[key.GetName()]; }
-            set { CurrentRow[key.GetName()] = value; }
+            get { return CurrentRow[(int)key]; }
+            set { CurrentRow[(int)key] = value; }
         }
     }
 }
