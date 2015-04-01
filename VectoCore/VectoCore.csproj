@@ -115,8 +115,10 @@
     <Compile Include="Models\Connector\Ports\IDriverDemandOutPort.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandOutProvider.cs" />
     <Compile Include="Models\Connector\Ports\Impl\InPort.cs" />
+    <Compile Include="Models\Connector\Ports\IResponse.cs" />
     <Compile Include="Models\Connector\Ports\Impl\OutPort.cs" />
     <Compile Include="Models\Connector\Ports\IOutShaft.cs" />
+    <Compile Include="Models\Connector\Ports\Impl\Response.cs" />
     <Compile Include="Models\Connector\Ports\ITnInPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnOutPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
@@ -132,7 +134,6 @@
     <Compile Include="Models\Connector\Ports\IInPort.cs" />
     <Compile Include="Models\SimulationComponent\IGearbox.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycle.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\DistanceBasedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TimeBasedDrivingCycle.cs" />
     <Compile Include="Utils\IMemento.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
@@ -148,12 +149,11 @@
     <Compile Include="Models\Simulation\Data\ModalResult.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Models\Simulation\IVectoJob.cs" />
     <Compile Include="Models\Simulation\IVectoSimulator.cs" />
     <Compile Include="Models\Simulation\Data\ModalDataWriter.cs" />
-    <Compile Include="Models\Simulation\Impl\SimulationFactory.cs" />
-    <Compile Include="Models\Simulation\Impl\VectoJob.cs" />
+    <Compile Include="Models\Simulation\Impl\SimulatorFactory.cs" />
     <Compile Include="Models\Simulation\Impl\VectoSimulator.cs" />
+    <Compile Include="Models\Simulation\Impl\JobContainer.cs" />
     <Compile Include="Models\Simulation\Impl\VehicleContainer.cs" />
     <Compile Include="Models\Simulation\Cockpit\ICockpit.cs" />
     <Compile Include="Models\Simulation\Cockpit\IEngineCockpit.cs" />

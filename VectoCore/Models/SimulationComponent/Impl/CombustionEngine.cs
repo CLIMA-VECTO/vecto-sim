@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -190,7 +191,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _currentState = new EngineState();
         }
 
-        public void Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond engineSpeed)
+        public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond engineSpeed)
         {
             _currentState.EngineSpeed = engineSpeed;
             _currentState.AbsTime = absTime;
@@ -221,6 +222,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _currentState.EnginePower = requestedEnginePower; //todo + _currentState.EnginePowerLoss;
             _currentState.EngineTorque = Formulas.PowerToTorque(_currentState.EnginePower,
                                                                 _currentState.EngineSpeed);
+
+            //todo: use ResponseOverloadFail in case of overload
+            return new ResponseSuccess();
         }
 
         /// <summary>

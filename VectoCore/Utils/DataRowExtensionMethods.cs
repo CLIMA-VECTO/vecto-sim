@@ -10,10 +10,12 @@ namespace TUGraz.VectoCore.Utils
 
         public static double ParseDoubleOrGetDefault(this DataRow row, string columnName, double defaultValue = default(double))
         {
-            double result;
-            if (double.TryParse(row.Field<string>(columnName), NumberStyles.Any, CultureInfo.InvariantCulture, out result))
-                return result;
-
+            if (row.Table.Columns.Contains(columnName))
+            {
+                double result;
+                if (double.TryParse(row.Field<string>(columnName), NumberStyles.Any, CultureInfo.InvariantCulture, out result))
+                    return result;
+            }
             return defaultValue;
         }
 

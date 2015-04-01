@@ -1,5 +1,6 @@
 ﻿using System;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
@@ -26,7 +27,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             throw new NotImplementedException();
         }
 
-        public void Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond engineSpeed)
+        public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond engineSpeed)
         {
             throw new NotImplementedException();
         }

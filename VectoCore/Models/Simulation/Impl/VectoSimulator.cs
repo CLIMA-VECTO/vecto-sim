@@ -1,25 +1,66 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System;
 using Common.Logging;
+using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-    //todo: add job tracking (state of jobs, iteration, ...)
-    //todo: add job control (pause, stop)
     public class VectoSimulator : IVectoSimulator
     {
-        private List<IVectoJob> _jobs = new List<IVectoJob>();
+        private TimeSpan _absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
+        private TimeSpan _dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
-        public void AddJob(IVectoJob job)
+        protected IDrivingCycle Cycle { get; set; }
+        protected IModalDataWriter DataWriter { get; set; }
+        protected IVehicleContainer Container { get; set; }
+
+        public IVehicleContainer GetContainer()
         {
-            _jobs.Add(job);
+            return Container;
         }
 
-        public void RunSimulation()
+        public VectoSimulator(IVehicleContainer container, IDrivingCycle cycle, IModalDataWriter dataWriter)
         {
-            LogManager.GetLogger(GetType()).Info("VectoSimulator started running. Starting Jobs.");
-            Task.WaitAll(_jobs.Select(job => Task.Factory.StartNew(job.Run)).ToArray());
+            Container = container;
+            Cycle = cycle;
+            DataWriter = dataWriter;
+        }
+
+        public void Run()
+        {
+            LogManager.GetLogger(GetType()).Info("VectoJob started running.");
+            IResponse response;
+            do
+            {
+                response = Cycle.Request(_absTime, _dt);
+                while (response is ResponseFailTimeInterval)
+                {
+                    _dt = (response as ResponseFailTimeInterval).DeltaT;
+                    response = Cycle.Request(_absTime, _dt);
+                }
+
+                if (response is ResponseCycleFinished)
+                    break;
+
+                _absTime += _dt;
+
+                DataWriter[ModalResultField.time] = (_absTime - TimeSpan.FromTicks(_dt.Ticks / 2)).TotalSeconds;
+                DataWriter[ModalResultField.simulationInterval] = _dt.TotalSeconds;
+
+                Container.CommitSimulationStep(DataWriter);
+
+                // set _dt to difference to next full second.
+                _dt = TimeSpan.FromSeconds(1) - TimeSpan.FromMilliseconds(_dt.Milliseconds);
+            } while (response is ResponseSuccess);
+
+            Container.FinishSimulation(DataWriter);
+
+            //todo: write vsum file
+
+            LogManager.GetLogger(GetType()).Info("VectoJob finished.");
         }
     }
 }
