@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             /// Auxiliary. ID's are not case sensitive and must not contain 
             /// space or special characters.
             /// </summary>
-            public Dictionary<string, double> AuxiliarySupplyPower { get; set; }
+            public Dictionary<string, Watt> AuxiliarySupplyPower { get; set; }
 
             /// <summary>
             /// [rad/s]	If "n" is defined VECTO uses that instead of the 
@@ -223,12 +223,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             /// <summary>
             /// [W]. Reads Auxiliary Supply Power (defined by Fields.AuxiliarySupplyPower-Prefix).
             /// </summary>
-            public static Dictionary<string, double> Read(DataRow row)
+            public static Dictionary<string, Watt> Read(DataRow row)
             {
                 return row.Table.Columns.Cast<DataColumn>().
                        Where(col => col.ColumnName.StartsWith(Fields.AuxiliarySupplyPower)).
                        ToDictionary(col => col.ColumnName.Substring(Fields.AuxiliarySupplyPower.Length - 1),
-                                    col => (double)row.ParseDouble(col).SI().Kilo.Watt);
+                                    col => row.ParseDouble(col).SI().Kilo.Watt.To<Watt>());
             }
         }
 
@@ -359,6 +359,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             public IEnumerable<DrivingCycleEntry> Parse(DataTable table)
             {
                 ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
+				TimeSpan absTime = new TimeSpan(hours: 0, minutes:0, seconds: 0);
 
                 foreach (DataRow row in table.Rows)
                 {
@@ -383,6 +384,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                             entry.EngineTorque = Formulas.PowerToTorque(row.ParseDouble(Fields.EnginePower).SI().Kilo.Watt.To<Watt>(),
                                                                         entry.EngineSpeed);
                     }
+	                entry.Time = absTime.TotalSeconds;
+	                absTime += new TimeSpan(hours: 0, minutes: 0, seconds: 1);
+
                     yield return entry;
                 }
             }

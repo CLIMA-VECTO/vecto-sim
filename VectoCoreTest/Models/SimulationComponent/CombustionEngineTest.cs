@@ -128,18 +128,21 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
             var origin = new CombustionEngine(vehicle, engineData);
 
             var data = Memento.Serialize(origin);
-            var restored = Memento.Deserialize<CombustionEngine>(data);
+
+			var restored = new CombustionEngine(vehicle, engineData);
+			Memento.Deserialize<CombustionEngine>(restored, data);
 
             Assert.AreEqual(origin, restored, "Serialized with Memento, Deserialized with Memento");
 
             data = origin.Serialize();
-            restored = Memento.Deserialize<CombustionEngine>(data);
+			restored = new CombustionEngine(vehicle, engineData);
+			Memento.Deserialize<CombustionEngine>(restored, data);
 
             Assert.AreEqual(origin, restored, "Serialized with Object, Deserialized with Memento");
 
 
             data = origin.Serialize();
-            restored = new CombustionEngine();
+            restored = new CombustionEngine(vehicle, engineData);
             restored.Deserialize(data);
 
             Assert.AreEqual(origin, restored, "Serialized with Object, Deserialized with Object");

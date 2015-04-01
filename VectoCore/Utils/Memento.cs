@@ -26,5 +26,10 @@ namespace TUGraz.VectoCore.Utils
             x.Deserialize(data);
             return x;
         }
+
+		public static void Deserialize<T>(T instance, string data) where T : IMemento
+	    {
+		    instance.Deserialize(data);
+	    }
     }
 }

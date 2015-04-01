@@ -20,18 +20,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         private IDriverDemandOutPort OutPort { get; set; }
 
-        public TimeBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle)
+        public TimeBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle): base(container)
         {
             Data = cycle;
-            _nextIterator = Data.Entries.AsEnumerable().GetEnumerator();
-            _current = _nextIterator.Current;
-            container.AddComponent(this);
         }
-
-        private DrivingCycleData.DrivingCycleEntry _current;
-
-        private readonly IEnumerator<DrivingCycleData.DrivingCycleEntry> _nextIterator;
-
 
         public override void CommitSimulationStep(IModalDataWriter writer)
         {

@@ -14,11 +14,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
         [NonSerialized]
         protected ILog Log;
 
-        protected VectoSimulationComponent()
-        {
-            Log = LogManager.GetLogger(GetType());
-        }
-
         protected VectoSimulationComponent(IVehicleContainer cockpit)
         {
             Cockpit = cockpit;
