@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -24,15 +25,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
-		public double GetPowerDemand(TimeSpan absTime, TimeSpan dt)
+		public Watt GetPowerDemand(TimeSpan absTime, TimeSpan dt)
 		{
-			var entry = _drivingCycle.Entries.FindIndex(x => x.Time > absTime.TotalSeconds);
+			var entry = _drivingCycle.Entries.FindLastIndex(x => x.Time <= absTime.TotalSeconds);
 			//if (entry == null) {
 			//	Log.ErrorFormat("could not find entry in driving cycle for time {0}", absTime.TotalSeconds);
 			//	return 0;
 			//}
 			Log.ErrorFormat("Found Entry at index {0}", entry);
-			return _auxiliaryId == null ? _drivingCycle.Entries[entry].AdditionalAuxPowerDemand * 1000 : _drivingCycle.Entries[entry].AuxiliarySupplyPower[_auxiliaryId] * 1000;
+			return _auxiliaryId == null ? _drivingCycle.Entries[entry].AdditionalAuxPowerDemand : _drivingCycle.Entries[entry].AuxiliarySupplyPower[_auxiliaryId];
 		}
 
 	}
