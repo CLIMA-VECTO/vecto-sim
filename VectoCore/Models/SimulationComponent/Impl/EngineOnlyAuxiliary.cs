@@ -10,10 +10,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class EngineOnlyAuxiliary : VectoSimulationComponent, IAuxiliary, ITnInPort, ITnOutPort
 	{
+		private readonly AuxiliariesDemandAdapter _demand;
 		private ITnOutPort _outPort;
-		private AuxiliariesDemandAdapter _demand;
 		private Watt _powerDemand;
-
 
 		public EngineOnlyAuxiliary(IVehicleContainer container, AuxiliariesDemandAdapter demand) : base(container)
 		{
@@ -37,10 +36,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond engineSpeed)
 		{
-			if (_outPort == null)
-			{
+			if (_outPort == null) {
 				Log.ErrorFormat("{0} cannot handle incoming request - no outport available", absTime);
-				throw new VectoSimulationException(String.Format("{0} cannot handle incoming request - no outport available", absTime.TotalSeconds));
+				throw new VectoSimulationException(String.Format("{0} cannot handle incoming request - no outport available",
+					absTime.TotalSeconds));
 			}
 			_powerDemand = _demand.GetPowerDemand(absTime, dt);
 			var tq = Formulas.PowerToTorque(_powerDemand, engineSpeed);
@@ -49,7 +48,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override void CommitSimulationStep(IModalDataWriter writer)
 		{
-			writer[ModalResultField.Paux] = (double)_powerDemand;
+			writer[ModalResultField.Paux] = (double) _powerDemand;
 		}
 	}
 }

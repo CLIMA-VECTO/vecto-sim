@@ -2,7 +2,7 @@
 
 namespace TUGraz.VectoCore.Models.Connector
 {
-	class Connector<TI, TO, TP> 
+	internal class Connector<TI, TO, TP>
 		where TI : InPort, TP
 		where TO : OutPort, TP
 	{
@@ -17,5 +17,4 @@ namespace TUGraz.VectoCore.Models.Connector
 			InPort.Connect(OutPort);
 		}
 	}
-
 }

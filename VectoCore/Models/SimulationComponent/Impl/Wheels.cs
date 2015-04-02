@@ -7,12 +7,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Wheels : VectoSimulationComponent
 	{
-
 		public Wheels(IVehicleContainer cockpit)
-			: base(cockpit)
-		{
-
-		}
+			: base(cockpit) {}
 
 		public IInPort InPort()
 		{
@@ -24,9 +20,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new NotImplementedException();
 		}
 
-	    public override void CommitSimulationStep(IModalDataWriter writer)
-	    {
-	        throw new NotImplementedException();
-	    }
+		public override void CommitSimulationStep(IModalDataWriter writer)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

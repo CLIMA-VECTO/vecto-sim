@@ -3,8 +3,5 @@ using TUGraz.VectoCore.Models.Simulation.Cockpit;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public interface ICombustionEngine : IOutShaft, IEngineCockpit
-	{
-		 
-	}
+	public interface ICombustionEngine : IOutShaft, IEngineCockpit {}
 }

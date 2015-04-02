@@ -1,6 +1,4 @@
 ﻿namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	interface IWheels
-	{
-	}
+	internal interface IWheels {}
 }
