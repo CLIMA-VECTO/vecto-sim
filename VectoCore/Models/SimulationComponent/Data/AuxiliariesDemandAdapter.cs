@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
@@ -10,18 +9,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class AuxiliariesDemandAdapter
 	{
-		private readonly DrivingCycleData _drivingCycle;
-		private IEnumerator<DrivingCycleData.DrivingCycleEntry> _nextCycleEntry; 
 		private readonly string _auxiliaryId;
-
-		protected DrivingCycleData.DrivingCycleEntry CurrentCycleEntry { get; set; }
+		private readonly DrivingCycleData _drivingCycle;
+		private readonly IEnumerator<DrivingCycleData.DrivingCycleEntry> _nextCycleEntry;
 		//protected DrivingCycleData.DrivingCycleEntry NextCycleEntry { get { return _nextCycleEntry.Current; } }
 
-		private ILog Log;
+		private readonly ILog Log;
 
 		public AuxiliariesDemandAdapter(DrivingCycleData inputData, string column = null)
 		{
-			Log = LogManager.GetLogger(this.GetType());
+			Log = LogManager.GetLogger(GetType());
 			_drivingCycle = inputData;
 			_nextCycleEntry = _drivingCycle.Entries.GetEnumerator();
 			_nextCycleEntry.MoveNext();
@@ -33,14 +30,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
+		protected DrivingCycleData.DrivingCycleEntry CurrentCycleEntry { get; set; }
+
 		public Watt GetPowerDemand(TimeSpan absTime, TimeSpan dt)
 		{
 			if (_nextCycleEntry.Current.Time <= absTime.TotalSeconds) {
 				CurrentCycleEntry = _nextCycleEntry.Current;
 				_nextCycleEntry.MoveNext();
 			}
-			return String.IsNullOrEmpty(_auxiliaryId) ? CurrentCycleEntry.AdditionalAuxPowerDemand : CurrentCycleEntry.AuxiliarySupplyPower[_auxiliaryId];
+			return String.IsNullOrEmpty(_auxiliaryId)
+				? CurrentCycleEntry.AdditionalAuxPowerDemand
+				: CurrentCycleEntry.AuxiliarySupplyPower[_auxiliaryId];
 		}
-
 	}
 }

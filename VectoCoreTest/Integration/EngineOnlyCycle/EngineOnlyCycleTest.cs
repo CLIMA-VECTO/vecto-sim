@@ -1,6 +1,5 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -13,12 +12,11 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 	[TestClass]
 	public class EngineOnlyCycleTest
 	{
-
-		public TestContext TestContext { get; set; }
-		
 		private const string EngineFile = @"TestData\Components\24t Coach.veng";
+		public TestContext TestContext { get; set; }
 
-		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineTests.csv", "EngineTests#csv", DataAccessMethod.Sequential)]
+		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineTests.csv",
+			"EngineTests#csv", DataAccessMethod.Sequential)]
 		[TestMethod]
 		public void TestEngineOnlyDrivingCycle()
 		{
@@ -31,7 +29,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var aux = new EngineOnlyAuxiliary(vehicle, new AuxiliariesDemandAdapter(data));
 			var gearbox = new EngineOnlyGearbox(vehicle);
 
-	
+
 			var engine = new CombustionEngine(vehicle, engineData);
 
 			aux.Connect(engine);
@@ -47,15 +45,16 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var dataWriter = new TestModalDataWriter();
 
 			var i = 0;
-		    var results = new[] { ModalResultField.n, ModalResultField.PaEng, ModalResultField.Tq_drag, ModalResultField.Pe_drag, ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.Tq_full, ModalResultField.Pe_full, }; 
+			var results = new[] {
+				ModalResultField.n, ModalResultField.PaEng, ModalResultField.Tq_drag, ModalResultField.Pe_drag,
+				ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.Tq_full, ModalResultField.Pe_full
+			};
 			//, ModalResultField.FC };
-			var siFactor = new[] {1, 1000, 1, 1000, 1000, 1, 1, 1000, 1 };
-			var tolerances = new[] {0.0001, 0.1, 0.0001, 0.1, 0.1, 0.001, 0.001, 0.1, 0.01 };
-			foreach (var cycle in data.Entries)
-			{
+			var siFactor = new[] { 1, 1000, 1, 1000, 1000, 1, 1, 1000, 1 };
+			var tolerances = new[] { 0.0001, 0.1, 0.0001, 0.1, 0.1, 0.001, 0.001, 0.1, 0.01 };
+			foreach (var cycle in data.Entries) {
 				port.Request(absTime, dt, cycle.EngineTorque, cycle.EngineSpeed);
-				foreach (var sc in vehicle.SimulationComponents())
-				{
+				foreach (var sc in vehicle.SimulationComponents()) {
 					sc.CommitSimulationStep(dataWriter);
 				}
 
@@ -65,12 +64,13 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 					for (var j = 0; j < results.Length; j++) {
 						var field = results[j];
 //						if (!Double.IsNaN(dataWriter.GetDouble(field)))
-						Assert.AreEqual((double) row[field.GetName()] * siFactor[j], dataWriter.GetDouble(field), tolerances[j],String.Format("t: {0}  field: {1}", i, field));
+						Assert.AreEqual((double) row[field.GetName()] * siFactor[j], dataWriter.GetDouble(field), tolerances[j],
+							String.Format("t: {0}  field: {1}", i, field));
 					}
 					if (row[ModalResultField.FC.GetName()] is double) {
-						Assert.AreEqual((double) row[ModalResultField.FC.GetName()], dataWriter.GetDouble(ModalResultField.FC), 0.01, "t: {0}  field: {1}", i, ModalResultField.FC);
-					}
-					else {
+						Assert.AreEqual((double) row[ModalResultField.FC.GetName()], dataWriter.GetDouble(ModalResultField.FC), 0.01,
+							"t: {0}  field: {1}", i, ModalResultField.FC);
+					} else {
 						Assert.IsTrue(Double.IsNaN(dataWriter.GetDouble(ModalResultField.FC)), String.Format("t: {0}", i));
 					}
 				}
@@ -80,7 +80,6 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			}
 			dataWriter.Data.WriteToFile("test2.csv");
 		}
-
 
 		[TestMethod]
 		public void AssembleEngineOnlyPowerTrain()
@@ -97,13 +96,12 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var absTime = new TimeSpan();
 			var dt = TimeSpan.FromSeconds(1);
 
-		    var angularVelocity = 644.4445.RPMtoRad();
-		    var power = 2329.973.SI<Watt>();
+			var angularVelocity = 644.4445.RPMtoRad();
+			var power = 2329.973.SI<Watt>();
 
-            gearbox.Request(absTime, dt, Formulas.PowerToTorque(power, angularVelocity), angularVelocity);
+			gearbox.Request(absTime, dt, Formulas.PowerToTorque(power, angularVelocity), angularVelocity);
 
-			foreach (var sc in vehicleContainer.SimulationComponents())
-			{
+			foreach (var sc in vehicleContainer.SimulationComponents()) {
 				sc.CommitSimulationStep(dataWriter);
 			}
 

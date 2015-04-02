@@ -7,51 +7,50 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-    /// <summary>
-    /// Class representing one EngineOnly Driving Cycle
-    /// </summary>
-    public class EngineOnlyDrivingCycle : VectoSimulationComponent, IEngineOnlyDrivingCycle, ITnInPort
-    {
+	/// <summary>
+	///     Class representing one EngineOnly Driving Cycle
+	/// </summary>
+	public class EngineOnlyDrivingCycle : VectoSimulationComponent, IEngineOnlyDrivingCycle, ITnInPort
+	{
+		protected DrivingCycleData Data;
 
-        protected DrivingCycleData Data;
+		public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+		{
+			Data = cycle;
+		}
 
-        private ITnOutPort OutPort { get; set; }
+		private ITnOutPort OutPort { get; set; }
+		private int CurrentStep { get; set; }
 
-        private int CurrentStep { get; set; }
+		#region ITnInPort
 
-        public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
-        {
-            Data = cycle;
-        }
+		public void Connect(ITnOutPort other)
+		{
+			OutPort = other;
+		}
 
-        #region ITnInPort
-        public void Connect(ITnOutPort other)
-        {
-            OutPort = other;
-        }
-        #endregion
+		#endregion
 
-        #region IInShaft
-        public ITnInPort InShaft()
-        {
-            return this;
-        }
+		public override void CommitSimulationStep(IModalDataWriter writer) {}
 
-        public IResponse Request(TimeSpan absTime, TimeSpan dt)
-        {
-            //todo: change to variable time steps
-            var index = (int)Math.Floor(absTime.TotalSeconds);
-            if (index >= Data.Entries.Count)
-                return new ResponseCycleFinished();
+		#region IInShaft
 
-            return OutPort.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
-        }
+		public ITnInPort InShaft()
+		{
+			return this;
+		}
 
-        #endregion
+		public IResponse Request(TimeSpan absTime, TimeSpan dt)
+		{
+			//todo: change to variable time steps
+			var index = (int) Math.Floor(absTime.TotalSeconds);
+			if (index >= Data.Entries.Count) {
+				return new ResponseCycleFinished();
+			}
 
-        public override void CommitSimulationStep(IModalDataWriter writer)
-        {
-        }
+			return OutPort.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
+		}
 
-    }
+		#endregion
+	}
 }
