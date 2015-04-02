@@ -312,18 +312,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         protected void ComputeFullLoadPower(uint gear, RadianPerSecond angularFrequency, TimeSpan dt)
         {
             Contract.Requires(dt.Ticks != 0);
-            // TODO @@@quam: handle dynamic timesteps
             Contract.Requires(dt.TotalSeconds.IsSmallerOrEqual(1), "simulation steps other than 1s can not be handled ATM");
             Contract.Ensures(_currentState.DynamicFullLoadPower <= _currentState.StationaryFullLoadPower);
 
-            //_currentState.StationaryFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
             _currentState.StationaryFullLoadTorque = _data.GetFullLoadCurve(gear).FullLoadStationaryTorque(angularFrequency);
             _currentState.StationaryFullLoadPower = Formulas.TorqueToPower(_currentState.StationaryFullLoadTorque,
                                                                            angularFrequency);
 
-            var pt1 = _data.GetFullLoadCurve(gear).PT1(angularFrequency);
+            var pt1 = _data.GetFullLoadCurve(gear).PT1(angularFrequency) / dt.TotalSeconds;
 
-            var dynFullPowerCalculated = ((1 / (pt1 + 1)) * (_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower)).To<Watt>();
+			var dynFullPowerCalculated = ((1 / (pt1 + 1)) * (_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower)).To<Watt>();
             _currentState.DynamicFullLoadPower = dynFullPowerCalculated < _currentState.StationaryFullLoadPower
                                                  ? dynFullPowerCalculated
                                                  : _currentState.StationaryFullLoadPower;
