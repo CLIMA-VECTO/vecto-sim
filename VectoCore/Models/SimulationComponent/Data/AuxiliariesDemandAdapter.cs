@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Common.Logging;
@@ -10,7 +11,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	public class AuxiliariesDemandAdapter
 	{
 		private readonly DrivingCycleData _drivingCycle;
+		private IEnumerator<DrivingCycleData.DrivingCycleEntry> _nextCycleEntry; 
 		private readonly string _auxiliaryId;
+
+		protected DrivingCycleData.DrivingCycleEntry CurrentCycleEntry { get; set; }
+		//protected DrivingCycleData.DrivingCycleEntry NextCycleEntry { get { return _nextCycleEntry.Current; } }
 
 		private ILog Log;
 
@@ -18,6 +23,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			Log = LogManager.GetLogger(this.GetType());
 			_drivingCycle = inputData;
+			_nextCycleEntry = _drivingCycle.Entries.GetEnumerator();
+			_nextCycleEntry.MoveNext();
+			CurrentCycleEntry = _drivingCycle.Entries.First();
 			_auxiliaryId = column;
 			if (_auxiliaryId != null && !_drivingCycle.Entries.First().AuxiliarySupplyPower.ContainsKey(_auxiliaryId)) {
 				Log.ErrorFormat("driving cycle data does not contain column {0}", column);
@@ -27,16 +35,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public Watt GetPowerDemand(TimeSpan absTime, TimeSpan dt)
 		{
-			var entry = _drivingCycle.Entries.FindLastIndex(x => x.Time <= absTime.TotalSeconds);
-			//if (entry == null) {
-			//	Log.ErrorFormat("could not find entry in driving cycle for time {0}", absTime.TotalSeconds);
-			//	return 0;
-			//}
-			if (entry == -1) {
-				Log.ErrorFormat("time: {0} could not find power demand for auxiliary {1}", absTime.TotalSeconds, _auxiliaryId);
-				throw new VectoSimulationException(String.Format("time: {0} could not find power demand for auxiliary {1}", absTime.TotalSeconds, _auxiliaryId));
+			if (_nextCycleEntry.Current.Time <= absTime.TotalSeconds) {
+				CurrentCycleEntry = _nextCycleEntry.Current;
+				_nextCycleEntry.MoveNext();
 			}
-			return _auxiliaryId == null ? _drivingCycle.Entries[entry].AdditionalAuxPowerDemand : _drivingCycle.Entries[entry].AuxiliarySupplyPower[_auxiliaryId];
+			return String.IsNullOrEmpty(_auxiliaryId) ? CurrentCycleEntry.AdditionalAuxPowerDemand : CurrentCycleEntry.AuxiliarySupplyPower[_auxiliaryId];
 		}
 
 	}

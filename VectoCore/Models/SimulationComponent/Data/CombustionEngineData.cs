@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         /// </summary>
         public SI Inertia
         {
-            get { return _data.Body.Inertia.SI().Kilo.Gramm.Square.Meter.To().Kilo.Gramm.Square.Meter.Value(); }
+            get { return _data.Body.Inertia.SI().Kilo.Gramm.Square.Meter; }
             protected set { _data.Body.Inertia = (double)value.To().Kilo.Gramm.Square.Meter; }
         }
 
