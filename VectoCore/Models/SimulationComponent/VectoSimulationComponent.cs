@@ -6,22 +6,19 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-    public abstract class VectoSimulationComponent
-    {
-        [NonSerialized]
-        protected ICockpit Cockpit;
+	public abstract class VectoSimulationComponent
+	{
+		[NonSerialized] protected ICockpit Cockpit;
+		[NonSerialized] protected ILog Log;
 
-        [NonSerialized]
-        protected ILog Log;
+		protected VectoSimulationComponent(IVehicleContainer cockpit)
+		{
+			Cockpit = cockpit;
+			Log = LogManager.GetLogger(GetType());
 
-        protected VectoSimulationComponent(IVehicleContainer cockpit)
-        {
-            Cockpit = cockpit;
-            Log = LogManager.GetLogger(this.GetType());
+			cockpit.AddComponent(this);
+		}
 
-            cockpit.AddComponent(this);
-        }
-
-        public abstract void CommitSimulationStep(IModalDataWriter writer);
-    }
+		public abstract void CommitSimulationStep(IModalDataWriter writer);
+	}
 }

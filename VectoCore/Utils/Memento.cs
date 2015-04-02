@@ -3,33 +3,35 @@ using Newtonsoft.Json;
 
 namespace TUGraz.VectoCore.Utils
 {
-    public static class Memento
-    {
-        public static string Serialize<T>(T memento)
-        {
-            var mementoObject = (memento as IMemento);
-            if (mementoObject != null)
-                return mementoObject.Serialize();
-            
-            return JsonConvert.SerializeObject(memento, Formatting.Indented, new JsonSerializerSettings { Culture = CultureInfo.InvariantCulture });
-        }
+	public static class Memento
+	{
+		public static string Serialize<T>(T memento)
+		{
+			var mementoObject = (memento as IMemento);
+			if (mementoObject != null) {
+				return mementoObject.Serialize();
+			}
 
-        public static T Deserialize<T>(string data, T mem)
-        {
-            return JsonConvert.DeserializeAnonymousType(data, mem,
-                new JsonSerializerSettings { Culture = CultureInfo.InvariantCulture });
-        }
+			return JsonConvert.SerializeObject(memento, Formatting.Indented,
+				new JsonSerializerSettings {Culture = CultureInfo.InvariantCulture});
+		}
 
-        public static T Deserialize<T>(string data) where T : IMemento, new()
-        {
-            var x = new T();
-            x.Deserialize(data);
-            return x;
-        }
+		public static T Deserialize<T>(string data, T mem)
+		{
+			return JsonConvert.DeserializeAnonymousType(data, mem,
+				new JsonSerializerSettings {Culture = CultureInfo.InvariantCulture});
+		}
+
+		public static T Deserialize<T>(string data) where T : IMemento, new()
+		{
+			var x = new T();
+			x.Deserialize(data);
+			return x;
+		}
 
 		public static void Deserialize<T>(T instance, string data) where T : IMemento
-	    {
-		    instance.Deserialize(data);
-	    }
-    }
+		{
+			instance.Deserialize(data);
+		}
+	}
 }

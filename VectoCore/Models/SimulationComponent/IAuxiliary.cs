@@ -2,8 +2,5 @@
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public interface IAuxiliary : IInShaft, IOutShaft
-	{
-		 
-	}
+	public interface IAuxiliary : IInShaft, IOutShaft {}
 }
