@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
@@ -17,10 +19,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
+			_nextEntry = cycle.Entries.GetEnumerator();
+			CurrentEntry = _nextEntry.Current;
+			_nextEntry.MoveNext();
 		}
 
 		private ITnOutPort OutPort { get; set; }
 		private int CurrentStep { get; set; }
+
+		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> _nextEntry;
+		protected DrivingCycleData.DrivingCycleEntry NextEntry { get { return _nextEntry.Current; } }
+		protected DrivingCycleData.DrivingCycleEntry CurrentEntry { get; set; }
 
 		#region ITnInPort
 
@@ -42,13 +51,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(TimeSpan absTime, TimeSpan dt)
 		{
-			//todo: change to variable time steps
-			var index = (int) Math.Floor(absTime.TotalSeconds);
-			if (index >= Data.Entries.Count) {
-				return new ResponseCycleFinished();
+			if (absTime.TotalSeconds < CurrentEntry.Time.Double()) {
+				Log.ErrorFormat(("cannot go back in time! current: {0}  requested: {1}", CurrentEntry.Time, absTime.TotalSeconds));
+				throw new VectoSimulationException(String.Format("cannot go back in time! current: {0}  requested: {1}", CurrentEntry.Time, absTime.TotalSeconds));
+			}
+			while (NextEntry.Time <= absTime.TotalSeconds) {
+				CurrentEntry = NextEntry;
+				if (!_nextEntry.MoveNext()) {
+					return new ResponseCycleFinished();
+				}
+			}
+			if (dt.TotalSeconds > (NextEntry.Time - CurrentEntry.Time).Double()) {
+				return new ResponseFailTimeInterval(TimeSpan.FromSeconds((NextEntry.Time - CurrentEntry.Time).Double()));
 			}
 
-			return OutPort.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
+			return OutPort.Request(absTime, dt, CurrentEntry.EngineTorque, CurrentEntry.EngineSpeed);
 		}
 
 		#endregion

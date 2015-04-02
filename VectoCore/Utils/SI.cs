@@ -8,6 +8,11 @@ using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
 {
+	public class Meter : SI
+	{
+		public Meter(double val = 0) : base(val, new SI().Meter) { }
+	}
+
 	public class MeterPerSecond : SI
 	{
 		public MeterPerSecond(double val = 0) : base(val, new SI().Meter.Per.Second) {}
@@ -56,6 +61,11 @@ namespace TUGraz.VectoCore.Utils
 			Numerator = new string[0];
 			Denominator = new string[0];
 			Exponent = 1;
+		}
+
+		public double Double()
+		{
+			return Val;
 		}
 
 		protected SI(double val, IEnumerable<string> numerator, IEnumerable<string> denominator, bool reciproc = false,

@@ -10,6 +10,11 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 	public class ResponseFailTimeInterval : IResponse
 	{
+		public ResponseFailTimeInterval(TimeSpan dt)
+		{
+			DeltaT = dt;
+		}
 		public TimeSpan DeltaT { get; set; }
 	}
+
 }

@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		private EngineState _currentState = new EngineState();
 
-		private CombustionEngineData _data = new CombustionEngineData();
+		private CombustionEngineData _data;
 		private EngineState _previousState = new EngineState();
 
 		public CombustionEngine(IVehicleContainer cockpit, CombustionEngineData data)
@@ -213,10 +213,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.StationaryFullLoadPower = Formulas.TorqueToPower(_currentState.StationaryFullLoadTorque,
 				angularFrequency);
 
-            var pt1 = _data.GetFullLoadCurve(gear).PT1(angularFrequency) / dt.TotalSeconds;
+			var pt1 = _data.GetFullLoadCurve(gear).PT1(angularFrequency) / dt.TotalSeconds;
 
 			var dynFullPowerCalculated = ((1 / (pt1 + 1)) * (_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower)).To<Watt>();
-				((1 / (pt1 + 1)) * (_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower)).To<Watt>();
+										 
 			_currentState.DynamicFullLoadPower = dynFullPowerCalculated < _currentState.StationaryFullLoadPower
 				? dynFullPowerCalculated
 				: _currentState.StationaryFullLoadPower;
