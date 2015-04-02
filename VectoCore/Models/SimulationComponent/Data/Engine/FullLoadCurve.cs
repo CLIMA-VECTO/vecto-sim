@@ -9,261 +9,263 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 {
-    public class FullLoadCurve : SimulationComponentData
-    {
-        private static class Fields
-        {
-            /// <summary>
-            /// [rpm] engine speed 
-            /// </summary>
-            public const string EngineSpeed = "engine speed";
+	public class FullLoadCurve : SimulationComponentData
+	{
+		[JsonProperty] private List<FullLoadCurveEntry> _entries;
 
-            /// <summary>
-            /// [Nm] full load torque 
-            /// </summary>
-            public const string TorqueFullLoad = "full load torque";
+		public static FullLoadCurve ReadFromFile(string fileName)
+		{
+			var data = VectoCSVFile.Read(fileName);
 
-            /// <summary>
-            /// [Nm] motoring torque 
-            /// </summary>
-            public const string TorqueDrag = "motoring torque";
+			//todo Contract.Requires<VectoException>(data.Columns.Count != 4, "FullLoadCurve Data File must consist of 4 columns.");
+			if (data.Columns.Count != 4) {
+				throw new VectoException("FullLoadCurve Data File must consist of 4 columns.");
+			}
 
-            /// <summary>
-            /// [s] time constant 
-            /// </summary>
-            public const string PT1 = "PT1";
-        }
+			//todo Contract.Requires<VectoException>(data.Rows.Count < 2, "FullLoadCurve must consist of at least two lines with numeric values (below file header)");
+			if (data.Rows.Count < 2) {
+				throw new VectoException("FullLoadCurve must consist of at least two lines with numeric values (below file header)");
+			}
 
-        private class FullLoadCurveEntry
-        {
-            /// <summary>
-            /// [rad/s] engine speed 
-            /// </summary>
-            public RadianPerSecond EngineSpeed { get; set; }
+			List<FullLoadCurveEntry> entries;
+			if (HeaderIsValid(data.Columns)) {
+				entries = CreateFromColumnNames(data);
+			} else {
+				var log = LogManager.GetLogger<FullLoadCurve>();
+				log.WarnFormat(
+					"FullLoadCurve: Header Line is not valid. Expected: '{0}, {1}, {2}, {3}', Got: '{4}'. Falling back to column index.",
+					Fields.EngineSpeed, Fields.TorqueFullLoad, Fields.TorqueDrag, Fields.PT1,
+					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
 
-            /// <summary>
-            /// [Nm] full load torque 
-            /// </summary>
-            public NewtonMeter TorqueFullLoad { get; set; }
+				entries = CreateFromColumnIndizes(data);
+			}
 
-            /// <summary>
-            /// [Nm] motoring torque 
-            /// </summary>
-            public NewtonMeter TorqueDrag { get; set; }
+			return new FullLoadCurve {_entries = entries};
+		}
 
-            /// <summary>
-            /// [s] PT1 time constant 
-            /// </summary>
-            public Second PT1 { get; set; }
+		private static bool HeaderIsValid(DataColumnCollection columns)
+		{
+			Contract.Requires(columns != null);
+			return columns.Contains(Fields.EngineSpeed)
+					&& columns.Contains(Fields.TorqueDrag)
+					&& columns.Contains(Fields.TorqueFullLoad)
+					&& columns.Contains(Fields.PT1);
+		}
 
-            #region Equality members
-            protected bool Equals(FullLoadCurveEntry other)
-            {
-                Contract.Requires(other != null);
-                return EngineSpeed.Equals(other.EngineSpeed)
-                       && TorqueFullLoad.Equals(other.TorqueFullLoad)
-                       && TorqueDrag.Equals(other.TorqueDrag)
-                       && PT1.Equals(other.PT1);
-            }
+		private static List<FullLoadCurveEntry> CreateFromColumnNames(DataTable data)
+		{
+			Contract.Requires(data != null);
+			return (from DataRow row in data.Rows
+				select new FullLoadCurveEntry {
+					EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.To<RadianPerSecond>(),
+					TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad).SI<NewtonMeter>(),
+					TorqueDrag = row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>(),
+					PT1 = row.ParseDouble(Fields.PT1).SI<Second>()
+				}).ToList();
+		}
 
-            public override bool Equals(object obj)
-            {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                return obj.GetType() == GetType() && Equals((FullLoadCurveEntry)obj);
-            }
+		private static List<FullLoadCurveEntry> CreateFromColumnIndizes(DataTable data)
+		{
+			Contract.Requires(data != null);
+			return (from DataRow row in data.Rows
+				select new FullLoadCurveEntry {
+					EngineSpeed = row.ParseDouble(0).SI().Rounds.Per.Minute.To<RadianPerSecond>(),
+					TorqueFullLoad = row.ParseDouble(1).SI<NewtonMeter>(),
+					TorqueDrag = row.ParseDouble(2).SI<NewtonMeter>(),
+					PT1 = row.ParseDouble(3).SI<Second>()
+				}).ToList();
+		}
 
-            public override int GetHashCode()
-            {
-                var hashCode = EngineSpeed.GetHashCode();
-                hashCode = (hashCode * 397) ^ TorqueFullLoad.GetHashCode();
-                hashCode = (hashCode * 397) ^ TorqueDrag.GetHashCode();
-                hashCode = (hashCode * 397) ^ PT1.GetHashCode();
-                return hashCode;
-            }
+		/// <summary>
+		///     [rad/s] => [Nm]
+		/// </summary>
+		/// <param name="angularFrequency">[rad/s]</param>
+		/// <returns>[Nm]</returns>
+		public NewtonMeter FullLoadStationaryTorque(RadianPerSecond angularFrequency)
+		{
+			var idx = FindIndex(angularFrequency);
+			return VectoMath.Interpolate((double) _entries[idx - 1].EngineSpeed, (double) _entries[idx].EngineSpeed,
+				(double) _entries[idx - 1].TorqueFullLoad, (double) _entries[idx].TorqueFullLoad,
+				(double) angularFrequency).SI<NewtonMeter>();
+		}
 
-            #endregion
-        }
+		/// <summary>
+		///     [rad/s] => [W]
+		/// </summary>
+		/// <param name="angularFrequency">[rad/s]</param>
+		/// <returns>[W]</returns>
+		public Watt FullLoadStationaryPower(RadianPerSecond angularFrequency)
+		{
+			return Formulas.TorqueToPower(FullLoadStationaryTorque(angularFrequency), angularFrequency);
+		}
 
-        [JsonProperty]
-        private List<FullLoadCurveEntry> _entries;
+		/// <summary>
+		///     [rad/s] => [Nm]
+		/// </summary>
+		/// <param name="angularFrequency">[rad/s]</param>
+		/// <returns>[Nm]</returns>
+		public NewtonMeter DragLoadStationaryTorque(RadianPerSecond angularFrequency)
+		{
+			var idx = FindIndex(angularFrequency);
+			return VectoMath.Interpolate((double) _entries[idx - 1].EngineSpeed, (double) _entries[idx].EngineSpeed,
+				(double) _entries[idx - 1].TorqueDrag, (double) _entries[idx].TorqueDrag,
+				(double) angularFrequency).SI<NewtonMeter>();
+		}
 
-        public static FullLoadCurve ReadFromFile(string fileName)
-        {
-            var data = VectoCSVFile.Read(fileName);
+		/// <summary>
+		///     [rad/s] => [W].
+		/// </summary>
+		/// <param name="angularFrequency">[rad/s]</param>
+		/// <returns>[W]</returns>
+		public Watt DragLoadStationaryPower(RadianPerSecond angularFrequency)
+		{
+			Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
+			Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Watt));
 
-            //todo Contract.Requires<VectoException>(data.Columns.Count != 4, "FullLoadCurve Data File must consist of 4 columns.");
-            if (data.Columns.Count != 4)
-                throw new VectoException("FullLoadCurve Data File must consist of 4 columns.");
+			return Formulas.TorqueToPower(DragLoadStationaryTorque(angularFrequency), angularFrequency);
+		}
 
-            //todo Contract.Requires<VectoException>(data.Rows.Count < 2, "FullLoadCurve must consist of at least two lines with numeric values (below file header)");
-            if (data.Rows.Count < 2)
-                throw new VectoException("FullLoadCurve must consist of at least two lines with numeric values (below file header)");
+		/// <summary>
+		///     [rad/s] => [-]
+		/// </summary>
+		/// <param name="angularFrequency">[rad/s]</param>
+		/// <returns>[-]</returns>
+		public SI PT1(SI angularFrequency)
+		{
+			Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
+			Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI()));
 
-            List<FullLoadCurveEntry> entries;
-            if (HeaderIsValid(data.Columns))
-            {
-                entries = CreateFromColumnNames(data);
-            }
-            else
-            {
-                var log = LogManager.GetLogger<FullLoadCurve>();
-                log.WarnFormat("FullLoadCurve: Header Line is not valid. Expected: '{0}, {1}, {2}, {3}', Got: '{4}'. Falling back to column index.",
-                               Fields.EngineSpeed, Fields.TorqueFullLoad, Fields.TorqueDrag, Fields.PT1,
-                               string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
+			var idx = FindIndex(angularFrequency);
+			return VectoMath.Interpolate((double) _entries[idx - 1].EngineSpeed, (double) _entries[idx].EngineSpeed,
+				(double) _entries[idx - 1].PT1, (double) _entries[idx].PT1,
+				(double) angularFrequency).SI();
+		}
 
-                entries = CreateFromColumnIndizes(data);
-            }
+		/// <summary>
+		///     [rad/s] => index. Get item index for engineSpeed.
+		/// </summary>
+		/// <param name="engineSpeed">[rad/s]</param>
+		/// <returns>index</returns>
+		protected int FindIndex(SI engineSpeed)
+		{
+			Contract.Requires(engineSpeed.HasEqualUnit(new SI().Radian.Per.Second));
 
-            return new FullLoadCurve { _entries = entries };
-        }
+			int idx;
+			if (engineSpeed < _entries[0].EngineSpeed) {
+				Log.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}",
+					engineSpeed.To().Rounds.Per.Minute, _entries[0].EngineSpeed.To().Rounds.Per.Minute);
+				idx = 1;
+			} else {
+				idx = _entries.FindIndex(x => x.EngineSpeed > engineSpeed);
+			}
+			if (idx <= 0) {
+				idx = engineSpeed > _entries[0].EngineSpeed ? _entries.Count - 1 : 1;
+			}
+			return idx;
+		}
 
-        private static bool HeaderIsValid(DataColumnCollection columns)
-        {
-            Contract.Requires(columns != null);
-            return columns.Contains(Fields.EngineSpeed)
-                   && columns.Contains(Fields.TorqueDrag)
-                   && columns.Contains(Fields.TorqueFullLoad)
-                   && columns.Contains(Fields.PT1);
-        }
+		private static class Fields
+		{
+			/// <summary>
+			///     [rpm] engine speed
+			/// </summary>
+			public const string EngineSpeed = "engine speed";
 
-        private static List<FullLoadCurveEntry> CreateFromColumnNames(DataTable data)
-        {
-            Contract.Requires(data != null);
-            return (from DataRow row in data.Rows
-                    select new FullLoadCurveEntry
-                    {
-                        EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.To<RadianPerSecond>(),
-                        TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad).SI<NewtonMeter>(),
-                        TorqueDrag = row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>(),
-                        PT1 = row.ParseDouble(Fields.PT1).SI<Second>()
-                    }).ToList();
-        }
+			/// <summary>
+			///     [Nm] full load torque
+			/// </summary>
+			public const string TorqueFullLoad = "full load torque";
 
-        private static List<FullLoadCurveEntry> CreateFromColumnIndizes(DataTable data)
-        {
-            Contract.Requires(data != null);
-            return (from DataRow row in data.Rows
-                    select new FullLoadCurveEntry
-                    {
-                        EngineSpeed = row.ParseDouble(0).SI().Rounds.Per.Minute.To<RadianPerSecond>(),
-                        TorqueFullLoad = row.ParseDouble(1).SI<NewtonMeter>(),
-                        TorqueDrag = row.ParseDouble(2).SI<NewtonMeter>(),
-                        PT1 = row.ParseDouble(3).SI<Second>()
-                    }).ToList();
-        }
+			/// <summary>
+			///     [Nm] motoring torque
+			/// </summary>
+			public const string TorqueDrag = "motoring torque";
 
-        /// <summary>
-        /// [rad/s] => [Nm]
-        /// </summary>
-        /// <param name="angularFrequency">[rad/s]</param>
-        /// <returns>[Nm]</returns>
-        public NewtonMeter FullLoadStationaryTorque(RadianPerSecond angularFrequency)
-        {
-            var idx = FindIndex(angularFrequency);
-            return VectoMath.Interpolate((double)_entries[idx - 1].EngineSpeed, (double)_entries[idx].EngineSpeed,
-                                        (double)_entries[idx - 1].TorqueFullLoad, (double)_entries[idx].TorqueFullLoad,
-                                         (double)angularFrequency).SI<NewtonMeter>();
-        }
+			/// <summary>
+			///     [s] time constant
+			/// </summary>
+			public const string PT1 = "PT1";
+		}
 
-        /// <summary>
-        /// [rad/s] => [W]
-        /// </summary>
-        /// <param name="angularFrequency">[rad/s]</param>
-        /// <returns>[W]</returns>
-        public Watt FullLoadStationaryPower(RadianPerSecond angularFrequency)
-        {
-            return Formulas.TorqueToPower(FullLoadStationaryTorque(angularFrequency), angularFrequency);
-        }
+		private class FullLoadCurveEntry
+		{
+			/// <summary>
+			///     [rad/s] engine speed
+			/// </summary>
+			public RadianPerSecond EngineSpeed { get; set; }
 
-        /// <summary>
-        /// [rad/s] => [Nm]
-        /// </summary>
-        /// <param name="angularFrequency">[rad/s]</param>
-        /// <returns>[Nm]</returns>
-        public NewtonMeter DragLoadStationaryTorque(RadianPerSecond angularFrequency)
-        {
-            var idx = FindIndex(angularFrequency);
-            return VectoMath.Interpolate((double)_entries[idx - 1].EngineSpeed, (double)_entries[idx].EngineSpeed,
-                                         (double)_entries[idx - 1].TorqueDrag, (double)_entries[idx].TorqueDrag,
-                                         (double)angularFrequency).SI<NewtonMeter>();
-        }
+			/// <summary>
+			///     [Nm] full load torque
+			/// </summary>
+			public NewtonMeter TorqueFullLoad { get; set; }
 
-        /// <summary>
-        /// [rad/s] => [W].
-        /// </summary>
-        /// <param name="angularFrequency">[rad/s]</param>
-        /// <returns>[W]</returns>
-        public Watt DragLoadStationaryPower(RadianPerSecond angularFrequency)
-        {
-            Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
-            Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Watt));
+			/// <summary>
+			///     [Nm] motoring torque
+			/// </summary>
+			public NewtonMeter TorqueDrag { get; set; }
 
-            return Formulas.TorqueToPower(DragLoadStationaryTorque(angularFrequency), angularFrequency);
-        }
+			/// <summary>
+			///     [s] PT1 time constant
+			/// </summary>
+			public Second PT1 { get; set; }
 
-        /// <summary>
-        /// [rad/s] => [-]
-        /// </summary>
-        /// <param name="angularFrequency">[rad/s]</param>
-        /// <returns>[-]</returns>
-        public SI PT1(SI angularFrequency)
-        {
-            Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
-            Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI()));
+			#region Equality members
 
-            var idx = FindIndex(angularFrequency);
-            return VectoMath.Interpolate((double)_entries[idx - 1].EngineSpeed, (double)_entries[idx].EngineSpeed,
-                                         (double)_entries[idx - 1].PT1, (double)_entries[idx].PT1,
-                                         (double)angularFrequency).SI();
-        }
+			protected bool Equals(FullLoadCurveEntry other)
+			{
+				Contract.Requires(other != null);
+				return EngineSpeed.Equals(other.EngineSpeed)
+						&& TorqueFullLoad.Equals(other.TorqueFullLoad)
+						&& TorqueDrag.Equals(other.TorqueDrag)
+						&& PT1.Equals(other.PT1);
+			}
 
-        /// <summary>
-        /// [rad/s] => index. Get item index for engineSpeed.
-        /// </summary>
-        /// <param name="engineSpeed">[rad/s]</param>
-        /// <returns>index</returns>
-        protected int FindIndex(SI engineSpeed)
-        {
-            Contract.Requires(engineSpeed.HasEqualUnit(new SI().Radian.Per.Second));
+			public override bool Equals(object obj)
+			{
+				if (ReferenceEquals(null, obj)) {
+					return false;
+				}
+				if (ReferenceEquals(this, obj)) {
+					return true;
+				}
+				return obj.GetType() == GetType() && Equals((FullLoadCurveEntry) obj);
+			}
 
-            int idx;
-            if (engineSpeed < _entries[0].EngineSpeed)
-            {
-                Log.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}",
-                                engineSpeed.To().Rounds.Per.Minute, _entries[0].EngineSpeed.To().Rounds.Per.Minute);
-                idx = 1;
-            }
-            else
-            {
-                idx = _entries.FindIndex(x => x.EngineSpeed > engineSpeed);
-            }
-            if (idx <= 0)
-            {
-                idx = engineSpeed > _entries[0].EngineSpeed ? _entries.Count - 1 : 1;
-            }
-            return idx;
-        }
+			public override int GetHashCode()
+			{
+				var hashCode = EngineSpeed.GetHashCode();
+				hashCode = (hashCode * 397) ^ TorqueFullLoad.GetHashCode();
+				hashCode = (hashCode * 397) ^ TorqueDrag.GetHashCode();
+				hashCode = (hashCode * 397) ^ PT1.GetHashCode();
+				return hashCode;
+			}
 
-        #region Equality members
+			#endregion
+		}
 
-        protected bool Equals(FullLoadCurve other)
-        {
-            return _entries.SequenceEqual(other._entries);
-        }
+		#region Equality members
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((FullLoadCurve)obj);
-        }
+		protected bool Equals(FullLoadCurve other)
+		{
+			return _entries.SequenceEqual(other._entries);
+		}
 
-        public override int GetHashCode()
-        {
-            return (_entries != null ? _entries.GetHashCode() : 0);
-        }
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj)) {
+				return false;
+			}
+			if (ReferenceEquals(this, obj)) {
+				return true;
+			}
+			return obj.GetType() == GetType() && Equals((FullLoadCurve) obj);
+		}
 
-        #endregion
-    }
+		public override int GetHashCode()
+		{
+			return (_entries != null ? _entries.GetHashCode() : 0);
+		}
+
+		#endregion
+	}
 }

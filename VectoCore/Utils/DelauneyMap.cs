@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Utils
 			// The "supertriangle" encompasses all triangulation points.
 			// This triangle initializes the algorithm and will be removed later.
 			var superTriangle = CalculateSuperTriangle();
-			var triangles = new List<Triangle> {superTriangle};
+			var triangles = new List<Triangle> { superTriangle };
 
 			foreach (var point in _points) {
 				// If the actual vertex lies inside a triangle, the edges of the triangle are 

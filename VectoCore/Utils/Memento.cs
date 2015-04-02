@@ -13,13 +13,13 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			return JsonConvert.SerializeObject(memento, Formatting.Indented,
-				new JsonSerializerSettings {Culture = CultureInfo.InvariantCulture});
+				new JsonSerializerSettings { Culture = CultureInfo.InvariantCulture });
 		}
 
 		public static T Deserialize<T>(string data, T mem)
 		{
 			return JsonConvert.DeserializeAnonymousType(data, mem,
-				new JsonSerializerSettings {Culture = CultureInfo.InvariantCulture});
+				new JsonSerializerSettings { Culture = CultureInfo.InvariantCulture });
 		}
 
 		public static T Deserialize<T>(string data) where T : IMemento, new()

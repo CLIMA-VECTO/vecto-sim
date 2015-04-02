@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
 
-			var power = new[] {569.3641, 4264.177};
+			var power = new[] { 569.3641, 4264.177 };
 			;
 			for (var i = 0; i < 2; i++) {
 				port.Request(absTime, dt, Formulas.PowerToTorque(power[i].SI<Watt>(), engineSpeed), engineSpeed);

@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			log.Info(string.Format("Data loaded. Number of Entries: {0}", entries.Count));
 
-			var cycle = new DrivingCycleData {Entries = entries};
+			var cycle = new DrivingCycleData { Entries = entries };
 			return cycle;
 		}
 
