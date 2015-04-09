@@ -3,5 +3,8 @@ using TUGraz.VectoCore.Models.Simulation.Cockpit;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public interface IGearbox : IInShaft, IOutShaft, IGearboxCockpit {}
+    /// <summary>
+    /// Defines interfaces for a gearbox.
+    /// </summary>
+    public interface IGearbox : IInShaft, IOutShaft, IGearboxCockpit {}
 }

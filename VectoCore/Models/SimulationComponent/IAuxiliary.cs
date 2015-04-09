@@ -2,5 +2,8 @@
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public interface IAuxiliary : IInShaft, IOutShaft {}
+    /// <summary>
+    /// Defines interfaces for auxiliary components.
+    /// </summary>
+    public interface IAuxiliary : IInShaft, IOutShaft {}
 }

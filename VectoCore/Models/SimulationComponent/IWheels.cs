@@ -1,4 +1,9 @@
-﻿namespace TUGraz.VectoCore.Models.SimulationComponent
+﻿using TUGraz.VectoCore.Models.Connector.Ports;
+
+namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	internal interface IWheels {}
+    /// <summary>
+    /// Defines interfaces for a wheels component.
+    /// </summary>
+    public interface IWheels : IRoadPortOutProvider, IInShaft {}
 }
