@@ -13,14 +13,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
   public class Clutch:VectoSimulationComponent, IClutch,ITnOutPort,ITnInPort
   {
+    private RadianPerSecond _idleSpeed;
+    private RadianPerSecond _ratedSpeed;
+
+
     public Clutch(IVehicleContainer cockpit, CombustionEngineData engineData) : base(cockpit)
     {
-
-      //engineData.IdleSpeed;
-
-      //engineData.GetFullLoadCurve(0).RatedSpeed();
-
+      _idleSpeed = engineData.IdleSpeed;
+      _ratedSpeed= engineData.GetFullLoadCurve(0).RatedSpeed();
     }
+
     public override void CommitSimulationStep(IModalDataWriter writer)
     {
       throw new NotImplementedException();

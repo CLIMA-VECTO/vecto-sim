@@ -21,6 +21,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(1231, (double) fldCurve.FullLoadStationaryTorque(580.0.RPMtoRad()), Tolerance);
 		}
 
+    [TestMethod]
+    public void TestFullLoadEngineSpeedRated()
+    {
+      var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD); 
+      Assert.AreEqual(181.79349, (double)fldCurve.RatedSpeed(), Tolerance);
+    }
+
 		[TestMethod]
 		public void TestFullLoadStaticPower()
 		{
