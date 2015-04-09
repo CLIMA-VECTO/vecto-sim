@@ -2,6 +2,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -32,8 +33,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var engine = new CombustionEngine(vehicle, engineData);
 
-			aux.Connect(engine);
-			gearbox.Connect(aux);
+			aux.InShaft().Connect(engine.OutShaft());
+			gearbox.Connect(aux.OutShaft());
 			var port = aux.OutShaft();
 
 //			IVectoJob job = SimulationFactory.CreateTimeBasedEngineOnlyJob(TestContext.DataRow["EngineFile"].ToString(),
