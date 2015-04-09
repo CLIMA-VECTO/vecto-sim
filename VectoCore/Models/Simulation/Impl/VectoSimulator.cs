@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
             public class DataBody
             {
-                [JsonProperty("SavedInDeclMode")] public bool SavedInDeclMode;
+                [JsonProperty("SavedInDeclMode")] public bool SavedInDeclarationMode;
 
                 [JsonProperty(Required = Required.Always)] public string VehicleFile;
                 [JsonProperty(Required = Required.Always)] public string EngineFile;
@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
             Container.FinishSimulation(DataWriter);
 
 
-            WriteSummary();
+            //todo: WriteSummary();
 
             LogManager.GetLogger(GetType()).Info("VectoJob finished.");
         }
@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
         pDec	[%]	Time share of deceleration phases*
         pCruise	[%]	Time share of cruise phases*
         pStop	[%]	Time share of stop phases*
-    */
+        */
 
         private static class SummaryFile
         {
@@ -282,66 +282,66 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
                 table.Columns.Add("pCruise [%]", typeof(double));
                 table.Columns.Add("pStop [%]", typeof(double));
             }
-        }
 
 
-        private void WriteSummary(ModalResults modData)
-        {
-            //var data = new ModalResults();
+            private void WriteSummary(ModalResults modData)
+            {
+                //var data = new ModalResults();
 
-            var row = table.NewRow();
-            //row["Job [-]"] = Name;
-            //row["Input File [-]"] = FileName;
-            //row["Cycle [-]"] = Container.CycleFileName();
-            //row["time [s]"] = data.Compute("Max(time)", "");
-            //row["distance [km]"] = data.Compute("Max(distance)", "");
-            //row["speed [km/h]"] = data.Compute("Avg(speed)", "");
-            //row["∆altitude [m]"] = data.Rows[data.Rows.Count-1].Field<double>("altitude") - data.Rows[0].Field<double>("altitude");
-            //row["Ppos [kw]"] = data.Compute("Avg(Peng)", "Peng > 0");
-            //row["Pneg [kw]"] = data.Compute("Avg(Peng)", "Peng < 0");
-            //row["FC [g/km]"] = data.Compute("Avg(FC)", "");
-            //row["FC-AUXc [g/km]"] = data.Compute("Avg(FC-AUXc)", "");
-            //row["FC-WHTCc [g/km]"] = data.Compute("Avg(FC-WHTCc)", "");
-            //row["Pbrake [kw]"] = data.Compute("Avg(Pbrake)", "");
-            //row["EposICE [kwh]"] = data.Compute("Avg(pos)", "pos > 0");
-            //row["EnegICE [kwh]"] = data.Compute("Avg(pos)", "pos < 0");
-            //row["Eair [kwh]"] = data.Compute("Sum(air)", "");
-            //row["Eroll [kwh]"] = data.Compute("Sum(roll)", "");
-            //row["Egrad [kwh]"] = data.Compute("Sum(grad)", "");
-            //row["Eacc [kwh]"] = data.Compute("Sum(acc)", "");
-            //row["Eaux [kwh]"] = data.Compute("Sum(aux)", "");
+                var row = table.NewRow();
+                //row["Job [-]"] = Name;
+                //row["Input File [-]"] = FileName;
+                //row["Cycle [-]"] = Container.CycleFileName();
+                //row["time [s]"] = data.Compute("Max(time)", "");
+                //row["distance [km]"] = data.Compute("Max(distance)", "");
+                //row["speed [km/h]"] = data.Compute("Avg(speed)", "");
+                //row["∆altitude [m]"] = data.Rows[data.Rows.Count-1].Field<double>("altitude") - data.Rows[0].Field<double>("altitude");
+                //row["Ppos [kw]"] = data.Compute("Avg(Peng)", "Peng > 0");
+                //row["Pneg [kw]"] = data.Compute("Avg(Peng)", "Peng < 0");
+                //row["FC [g/km]"] = data.Compute("Avg(FC)", "");
+                //row["FC-AUXc [g/km]"] = data.Compute("Avg(FC-AUXc)", "");
+                //row["FC-WHTCc [g/km]"] = data.Compute("Avg(FC-WHTCc)", "");
+                //row["Pbrake [kw]"] = data.Compute("Avg(Pbrake)", "");
+                //row["EposICE [kwh]"] = data.Compute("Avg(pos)", "pos > 0");
+                //row["EnegICE [kwh]"] = data.Compute("Avg(pos)", "pos < 0");
+                //row["Eair [kwh]"] = data.Compute("Sum(air)", "");
+                //row["Eroll [kwh]"] = data.Compute("Sum(roll)", "");
+                //row["Egrad [kwh]"] = data.Compute("Sum(grad)", "");
+                //row["Eacc [kwh]"] = data.Compute("Sum(acc)", "");
+                //row["Eaux [kwh]"] = data.Compute("Sum(aux)", "");
 
-            //todo auxiliaries
-            //foreach (var auxCol in data.Auxiliaries) {
-            //    row["Eaux_" + auxCol.Name + " [kwh]"] = data.Compute("Sum(aux_" + auxCol.Name + ")", "");
-            //}
+                //todo auxiliaries
+                //foreach (var auxCol in data.Auxiliaries) {
+                //    row["Eaux_" + auxCol.Name + " [kwh]"] = data.Compute("Sum(aux_" + auxCol.Name + ")", "");
+                //}
 
 
-            //row["Ebrake [kwh]"] = data.Compute("Sum(brake)", "");
-            //row["Etransm [kwh]"] = data.Compute("Sum(transm)", "");
-            //row["Eretarder [kwh]"] = data.Compute("Sum(retarder)", "");
-            //row["Mass [kg]"] = Container.VehicleMass();
-            //row["Loading [kg]"] = Container.LoadingMass();
-            //row["a [m/s2]"] = data.Compute("Avg(a)", "");
+                //row["Ebrake [kwh]"] = data.Compute("Sum(brake)", "");
+                //row["Etransm [kwh]"] = data.Compute("Sum(transm)", "");
+                //row["Eretarder [kwh]"] = data.Compute("Sum(retarder)", "");
+                //row["Mass [kg]"] = Container.VehicleMass();
+                //row["Loading [kg]"] = Container.LoadingMass();
+                //row["a [m/s2]"] = data.Compute("Avg(a)", "");
 
-            ////todo: a3s = average over 3 seconds!!!
-            //row["a_pos [m/s2]"] = data.Compute("Avg(a)", "a > 0.125");
-            //row["a_neg [m/s2]"] = data.Compute("Avg(a)", "a < -0.125");
+                ////todo: a3s = average over 3 seconds!!!
+                //row["a_pos [m/s2]"] = data.Compute("Avg(a)", "a > 0.125");
+                //row["a_neg [m/s2]"] = data.Compute("Avg(a)", "a < -0.125");
 
-            //// todo: is this really acc.noise?
-            //row["Acc.Noise [m/s2]"] = data.Compute("Sum(a)", "a < 0.125 and a > -0.125");
+                //// todo: is this really acc.noise?
+                //row["Acc.Noise [m/s2]"] = data.Compute("Sum(a)", "a < 0.125 and a > -0.125");
 
-            //row["pAcc [%]"] = (double) data.Compute("Sum(time_interval)", "a > 0.125") /
-            //                  (double) data.Compute("Sum(time_interval)", "");
-            //row["pDec [%]"] = (double) data.Compute("Sum(time_interval)", "a > 0.125") /
-            //                  (double) data.Compute("Sum(time_interval)", "");
-            //row["pCruise [%]"] = (double) data.Compute("Sum(time_interval)", "a > 0.125") /
-            //                     (double) data.Compute("Sum(time_interval)", "");
-            //row["pStop [%]"] = (double) data.Compute("Sum(time_interval)", "a < 0.125 and a > -0.125") /
-            //                   (double) data.Compute("Sum(time_interval)", "");
+                //row["pAcc [%]"] = (double) data.Compute("Sum(time_interval)", "a > 0.125") /
+                //                  (double) data.Compute("Sum(time_interval)", "");
+                //row["pDec [%]"] = (double) data.Compute("Sum(time_interval)", "a > 0.125") /
+                //                  (double) data.Compute("Sum(time_interval)", "");
+                //row["pCruise [%]"] = (double) data.Compute("Sum(time_interval)", "a > 0.125") /
+                //                     (double) data.Compute("Sum(time_interval)", "");
+                //row["pStop [%]"] = (double) data.Compute("Sum(time_interval)", "a < 0.125 and a > -0.125") /
+                //                   (double) data.Compute("Sum(time_interval)", "");
 
-            table.ImportRow(row);
-            VectoCSVFile.Write(FileName, table);
+                table.ImportRow(row);
+                VectoCSVFile.Write(FileName, table);
+            }
         }
     }
 }
