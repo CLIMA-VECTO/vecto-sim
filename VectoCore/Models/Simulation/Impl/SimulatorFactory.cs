@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var aux = new EngineOnlyAuxiliary(container, new AuxiliariesDemandAdapter(cycleData));
 
 			debug("SimulationFactory connecting auxiliary with engine.");
-			aux.Connect(engine.OutShaft());
+			aux.InShaft().Connect(engine.OutShaft());
 
 			debug("SimulationFactory connecting gearbox with auxiliary.");
 			gearBox.InShaft().Connect(aux.OutShaft());
