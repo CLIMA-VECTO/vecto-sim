@@ -92,7 +92,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			UpdateEngineState(requestedEnginePower);
 
-			_currentState.EnginePower = requestedEnginePower; //todo + _currentState.EnginePowerLoss;
+			_currentState.EnginePower = requestedEnginePower;
 			_currentState.EngineTorque = Formulas.PowerToTorque(_currentState.EnginePower,
 				_currentState.EngineSpeed);
 

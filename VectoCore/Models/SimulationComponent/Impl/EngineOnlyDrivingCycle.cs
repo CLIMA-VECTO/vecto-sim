@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(TimeSpan absTime, TimeSpan dt)
 		{
 			if (absTime.TotalSeconds < CurrentEntry.Time.Double()) {
-				Log.ErrorFormat(("cannot go back in time! current: {0}  requested: {1}", CurrentEntry.Time, absTime.TotalSeconds));
+				Log.ErrorFormat("cannot go back in time! current: {0}  requested: {1}", CurrentEntry.Time, absTime.TotalSeconds);
 				throw new VectoSimulationException(String.Format("cannot go back in time! current: {0}  requested: {1}", CurrentEntry.Time, absTime.TotalSeconds));
 			}
 			while (NextEntry.Time <= absTime.TotalSeconds) {
