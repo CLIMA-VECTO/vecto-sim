@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
             var engine = new CombustionEngine(vehicle, engineData);
 
 			aux.InShaft().Connect(engine.OutShaft());
-			gearbox.Connect(aux.OutShaft());
+			gearbox.InShaft().Connect(aux.OutShaft());
             var port = aux.OutShaft();
 
 //			IVectoJob job = SimulationFactory.CreateTimeBasedEngineOnlyJob(TestContext.DataRow["EngineFile"].ToString(),

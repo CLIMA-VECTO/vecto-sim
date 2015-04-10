@@ -41,10 +41,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
-		public void Connect(IOutPort other)
-		{
-			throw new NotImplementedException();
-		}
 
 		public override void CommitSimulationStep(IModalDataWriter writer) {}
 	}

@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         #region IEngineCockpit
 
-        RadianPerSecond IEngineCockpit.EngineSpeed()
+       
 		public PerSecond EngineSpeed()
         {
             return _previousState.EngineSpeed;
@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         #region ITnOutPort
 
-        IResponse ITnOutPort.Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond engineSpeed)
+        IResponse ITnOutPort.Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
         {
             _currentState.EngineSpeed = engineSpeed;
             _currentState.AbsTime = absTime;
