@@ -7,50 +7,66 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	/// <summary>
-	///     Class representing one EngineOnly Driving Cycle
-	/// </summary>
-	public class EngineOnlyDrivingCycle : VectoSimulationComponent, IEngineOnlyDrivingCycle, ITnInPort
-	{
-		protected DrivingCycleData Data;
+    /// <summary>
+    ///     Class representing one EngineOnly Driving Cycle
+    /// </summary>
+    public class EngineOnlyDrivingCycle : VectoSimulationComponent, IEngineOnlyDrivingCycle, ITnInPort,
+        IDrivingCycleOutPort
+    {
+        protected DrivingCycleData Data;
+        private ITnOutPort _outPort;
 
-		public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
-		{
-			Data = cycle;
-		}
+        public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+        {
+            Data = cycle;
+        }
 
-		private ITnOutPort OutPort { get; set; }
-		private int CurrentStep { get; set; }
+        #region IInShaft
 
-		#region ITnInPort
+        public ITnInPort InShaft()
+        {
+            return this;
+        }
 
-		public void Connect(ITnOutPort other)
-		{
-			OutPort = other;
-		}
+        #endregion
 
-		#endregion
+        #region IDrivingCycleOutProvider
 
-		public override void CommitSimulationStep(IModalDataWriter writer) {}
+        public IDrivingCycleOutPort OutPort()
+        {
+            return this;
+        }
 
-		#region IInShaft
+        #endregion
 
-		public ITnInPort InShaft()
-		{
-			return this;
-		}
+        #region IDrivingCycleOutPort
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt)
-		{
-			//todo: change to variable time steps
-			var index = (int) Math.Floor(absTime.TotalSeconds);
-			if (index >= Data.Entries.Count) {
-				return new ResponseCycleFinished();
-			}
+        IResponse IDrivingCycleOutPort.Request(TimeSpan absTime, TimeSpan dt)
+        {
+            //todo: change to variable time steps
+            var index = (int) Math.Floor(absTime.TotalSeconds);
+            if (index >= Data.Entries.Count) {
+                return new ResponseCycleFinished();
+            }
 
-			return OutPort.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
-		}
+            return _outPort.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
+        }
 
-		#endregion
-	}
+        #endregion
+
+        #region ITnInPort
+
+        void ITnInPort.Connect(ITnOutPort other)
+        {
+            _outPort = other;
+        }
+
+        #endregion
+
+        #region VectoSimulationComponent
+
+        public override void CommitSimulationStep(IModalDataWriter writer) {}
+
+        #endregion
+    }
 }
