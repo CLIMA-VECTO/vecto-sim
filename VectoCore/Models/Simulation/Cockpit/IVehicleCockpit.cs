@@ -1,7 +1,16 @@
-﻿namespace TUGraz.VectoCore.Models.Simulation.Cockpit
+﻿using TUGraz.VectoCore.Utils;
+
+namespace TUGraz.VectoCore.Models.Simulation.Cockpit
 {
-	public interface IVehicleCockpit
-	{
-		double VehicleSpeed();
-	}
+    /// <summary>
+    /// Defines a method to access shared data of the vehicle.
+    /// </summary>
+    public interface IVehicleCockpit
+    {
+        /// <summary>
+        /// Returns the current vehicle speed.
+        /// </summary>
+        /// <returns></returns>
+        MeterPerSecond VehicleSpeed();
+    }
 }
