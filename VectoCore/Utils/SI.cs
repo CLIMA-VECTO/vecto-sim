@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Utils
 
 	public class PerSecond : SI
     {
-		public PerSecond(double val = 0) : base(val, new SI().Radian.Per.Second) {}
+		public PerSecond(double val = 0) : base(val, new SI().Per.Second) {}
     }
 
     public class RoundsPerMinute : SI
@@ -327,7 +327,7 @@ namespace TUGraz.VectoCore.Utils
         [DebuggerHidden]
         public SI Rounds
         {
-            get { return new SI(this, 2 * Math.PI, toUnit: "rad"); }
+            get { return new SI(this, 2 * Math.PI); }
         }
 
         /// <summary>

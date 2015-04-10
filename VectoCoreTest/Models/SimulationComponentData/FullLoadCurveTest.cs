@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
     public void TestFullLoadEngineSpeedRated()
     {
       var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD); 
-      Assert.AreEqual(181.79349, (double)fldCurve.RatedSpeed(), Tolerance);
+      Assert.AreEqual(181.8444, (double)fldCurve.RatedSpeed(), Tolerance);
     }
 
 		[TestMethod]

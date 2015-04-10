@@ -34,8 +34,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	    gearbox.CurrentGear = 1;
       clutchOutPort.Request(new TimeSpan(), new TimeSpan(), 100.SI<NewtonMeter>(), new PerSecond(30.0));
 
-			Assert.AreEqual(48.29470124, (double)outPort.Torque, 0.001);
-			Assert.AreEqual(62.11861598, (double)outPort.AngularFrequency, 0.001);
+			Assert.AreEqual(48.293649, (double)outPort.Torque, 0.001);
+			Assert.AreEqual(62.119969, (double)outPort.AngularFrequency, 0.001);
 
 			//Test - Clutch opened
 			gearbox.CurrentGear = 0;
