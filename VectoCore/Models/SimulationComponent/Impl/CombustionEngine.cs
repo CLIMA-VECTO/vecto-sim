@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		///     [rad/s]
 		/// </summary>
-		public RadianPerSecond EngineSpeed()
+		public PerSecond EngineSpeed()
 		{
 			return _previousState.EngineSpeed;
 		}
@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return this;
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond engineSpeed)
+		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
 		{
 			_currentState.EngineSpeed = engineSpeed;
 			_currentState.AbsTime = absTime;
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="gear"></param>
 		/// <param name="angularFrequency">[rad/s]</param>
 		/// <param name="dt">[s]</param>
-		protected void ComputeFullLoadPower(uint gear, RadianPerSecond angularFrequency, TimeSpan dt)
+		protected void ComputeFullLoadPower(uint gear, PerSecond angularFrequency, TimeSpan dt)
 		{
 			Contract.Requires(dt.Ticks != 0);
 			// TODO @@@quam: handle dynamic timesteps
@@ -237,7 +237,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="torque">[Nm]</param>
 		/// <param name="engineSpeed">[rad/s]</param>
 		/// <returns>[W]</returns>
-		protected Watt InertiaPowerLoss(NewtonMeter torque, RadianPerSecond engineSpeed)
+		protected Watt InertiaPowerLoss(NewtonMeter torque, PerSecond engineSpeed)
 		{
 			var deltaEngineSpeed = engineSpeed - _previousState.EngineSpeed;
 			var avgEngineSpeed = (_previousState.EngineSpeed + engineSpeed) / new SI(2).Second;
@@ -262,7 +262,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			/// <summary>
 			///     [rad/s]
 			/// </summary>
-			public RadianPerSecond EngineSpeed { get; set; }
+			public PerSecond EngineSpeed { get; set; }
 
 			/// <summary>
 			///     [W]

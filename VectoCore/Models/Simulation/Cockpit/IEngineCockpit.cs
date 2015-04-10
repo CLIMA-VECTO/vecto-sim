@@ -7,6 +7,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Cockpit
 		/// <summary>
 		///     [rad/s]
 		/// </summary>
-		RadianPerSecond EngineSpeed();
+		PerSecond EngineSpeed();
 	}
 }

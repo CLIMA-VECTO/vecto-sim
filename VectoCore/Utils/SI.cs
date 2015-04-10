@@ -23,9 +23,9 @@ namespace TUGraz.VectoCore.Utils
 		public Watt(double val = 0) : base(val, new SI().Watt) {}
 	}
 
-	public class RadianPerSecond : SI
+	public class PerSecond : SI
 	{
-		public RadianPerSecond(double val = 0) : base(val, new SI().Radian.Per.Second) {}
+		public PerSecond(double val = 0) : base(val, new SI().Radian.Per.Second) {}
 	}
 
 	public class RoundsPerMinute : SI

@@ -75,9 +75,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		///     [rad/s]
 		/// </summary>
-		public RadianPerSecond IdleSpeed
+		public PerSecond IdleSpeed
 		{
-			get { return _data.Body.IdleSpeed.SI().Rounds.Per.Minute.To<RadianPerSecond>(); }
+			get { return _data.Body.IdleSpeed.SI().Rounds.Per.Minute.To<PerSecond>(); }
 			protected set { _data.Body.IdleSpeed = (double) value.To().Rounds.Per.Minute; }
 		}
 

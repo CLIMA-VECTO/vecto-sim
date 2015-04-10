@@ -11,9 +11,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public TimeSpan AbsTime { get; set; }
 		public TimeSpan Dt { get; set; }
 		public NewtonMeter Torque { get; set; }
-		public RadianPerSecond AngularFrequency { get; set; }
+		public PerSecond AngularFrequency { get; set; }
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond angularFrequency)
+		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond angularFrequency)
 		{
 			AbsTime = absTime;
 			Dt = dt;

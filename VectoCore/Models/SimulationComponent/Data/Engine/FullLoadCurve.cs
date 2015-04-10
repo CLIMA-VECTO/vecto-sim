@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
       return (from DataRow row in data.Rows
               select new FullLoadCurveEntry
               {
-                EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.To<RadianPerSecond>(),
+                EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.To<PerSecond>(),
                 TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad).SI<NewtonMeter>(),
                 TorqueDrag = row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>(),
                 PT1 = row.ParseDouble(Fields.PT1).SI<Second>()
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
       return (from DataRow row in data.Rows
               select new FullLoadCurveEntry
               {
-                EngineSpeed = row.ParseDouble(0).SI().Rounds.Per.Minute.To<RadianPerSecond>(),
+                EngineSpeed = row.ParseDouble(0).SI().Rounds.Per.Minute.To<PerSecond>(),
                 TorqueFullLoad = row.ParseDouble(1).SI<NewtonMeter>(),
                 TorqueDrag = row.ParseDouble(2).SI<NewtonMeter>(),
                 PT1 = row.ParseDouble(3).SI<Second>()
@@ -90,7 +90,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
     /// </summary>
     /// <param name="angularFrequency">[rad/s]</param>
     /// <returns>[Nm]</returns>
-    public NewtonMeter FullLoadStationaryTorque(RadianPerSecond angularFrequency)
+    public NewtonMeter FullLoadStationaryTorque(PerSecond angularFrequency)
     {
       var idx = FindIndex(angularFrequency);
       return VectoMath.Interpolate((double)_entries[idx - 1].EngineSpeed, (double)_entries[idx].EngineSpeed,
@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
     /// </summary>
     /// <param name="angularFrequency">[rad/s]</param>
     /// <returns>[W]</returns>
-    public Watt FullLoadStationaryPower(RadianPerSecond angularFrequency)
+    public Watt FullLoadStationaryPower(PerSecond angularFrequency)
     {
       return Formulas.TorqueToPower(FullLoadStationaryTorque(angularFrequency), angularFrequency);
     }
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
     /// </summary>
     /// <param name="angularFrequency">[rad/s]</param>
     /// <returns>[Nm]</returns>
-    public NewtonMeter DragLoadStationaryTorque(RadianPerSecond angularFrequency)
+    public NewtonMeter DragLoadStationaryTorque(PerSecond angularFrequency)
     {
       var idx = FindIndex(angularFrequency);
       return VectoMath.Interpolate((double)_entries[idx - 1].EngineSpeed, (double)_entries[idx].EngineSpeed,
@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
     /// </summary>
     /// <param name="angularFrequency">[rad/s]</param>
     /// <returns>[W]</returns>
-    public Watt DragLoadStationaryPower(RadianPerSecond angularFrequency)
+    public Watt DragLoadStationaryPower(PerSecond angularFrequency)
     {
       Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
       Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI().Watt));
@@ -205,7 +205,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
       /// <summary>
       ///     [rad/s] engine speed
       /// </summary>
-      public RadianPerSecond EngineSpeed { get; set; }
+      public PerSecond EngineSpeed { get; set; }
 
       /// <summary>
       ///     [Nm] full load torque
@@ -285,12 +285,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
     #endregion
 
-    public RadianPerSecond RatedSpeed()
+    public PerSecond RatedSpeed()
     {
       var powerMax = new Watt();
-      var engineSpeed = new RadianPerSecond();
-      var engineSpeedMax = new RadianPerSecond();
-      var engineSpeedRated = new RadianPerSecond();
+      var engineSpeed = new PerSecond();
+      var engineSpeedMax = new PerSecond();
+      var engineSpeedRated = new PerSecond();
       var engineSpeedStep = 1.0.RPMtoRad();
       var power = new Watt();
 
@@ -307,7 +307,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
           engineSpeedRated = engineSpeed;
         }
 
-        engineSpeed = (engineSpeed + engineSpeedStep).To<RadianPerSecond>();
+        engineSpeed = (engineSpeed + engineSpeedStep).To<PerSecond>();
 
       } while (engineSpeed <= engineSpeedMax);
 

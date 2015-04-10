@@ -1,16 +1,20 @@
-using System;
+﻿using System;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class EngineOnlyGearbox : VectoSimulationComponent, IGearbox, ITnInPort, ITnOutPort
+	public class DummyGearbox : VectoSimulationComponent, IGearbox, ITnInPort, ITnOutPort
 	{
 		private ITnOutPort _outPort;
-		public EngineOnlyGearbox(IVehicleContainer cockpit) : base(cockpit) {}
+		public uint CurrentGear { get; set; }
+
+		 
+		public DummyGearbox(IVehicleContainer cockpit) : base(cockpit) {}
 
 		public ITnInPort InShaft()
 		{
@@ -24,7 +28,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public uint Gear()
 		{
-			return 0;
+			return CurrentGear;
 		}
 
 		public void Connect(ITnOutPort other)
@@ -34,12 +38,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
 		{
-			if (_outPort == null) {
-				Log.ErrorFormat("{0} cannot handle incoming request - no outport available", absTime);
-				throw new VectoSimulationException(String.Format("{0} cannot handle incoming request - no outport available",
-					absTime.TotalSeconds));
-			}
-			return _outPort.Request(absTime, dt, torque, engineSpeed);
+			throw new NotImplementedException();
 		}
 
 		public void Connect(IOutPort other)
