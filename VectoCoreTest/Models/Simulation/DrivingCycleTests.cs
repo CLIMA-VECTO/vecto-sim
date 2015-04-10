@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
             Assert.AreEqual(absTime, outPort.AbsTime);
             Assert.AreEqual(dt, outPort.Dt);
             Assert.AreEqual(0.0.SI<MeterPerSecond>(), outPort.Velocity);
-            Assert.AreEqual((-0.020237973).SI().GradientPercent.To<Radian>(), outPort.Gradient);
+            Assert.AreEqual((-0.020237973).SI().GradientPercent.As<Radian>(), outPort.Gradient);
         }
 
         [TestMethod]

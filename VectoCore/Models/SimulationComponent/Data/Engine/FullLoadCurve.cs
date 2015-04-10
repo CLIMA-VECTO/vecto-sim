@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             Contract.Requires(data != null);
             return (from DataRow row in data.Rows
                 select new FullLoadCurveEntry {
-                    EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.To<RadianPerSecond>(),
+                    EngineSpeed = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
                     TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad).SI<NewtonMeter>(),
                     TorqueDrag = row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>(),
                     PT1 = row.ParseDouble(Fields.PT1).SI<Second>()
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             Contract.Requires(data != null);
             return (from DataRow row in data.Rows
                 select new FullLoadCurveEntry {
-                    EngineSpeed = row.ParseDouble(0).SI().Rounds.Per.Minute.To<RadianPerSecond>(),
+                    EngineSpeed = row.ParseDouble(0).RPMtoRad(),
                     TorqueFullLoad = row.ParseDouble(1).SI<NewtonMeter>(),
                     TorqueDrag = row.ParseDouble(2).SI<NewtonMeter>(),
                     PT1 = row.ParseDouble(3).SI<Second>()
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         /// </summary>
         /// <param name="angularFrequency">[rad/s]</param>
         /// <returns>[-]</returns>
-        public SI PT1(SI angularFrequency)
+        public double PT1(SI angularFrequency)
         {
             Contract.Requires(angularFrequency.HasEqualUnit(new SI().Radian.Per.Second));
             Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI()));
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             var idx = FindIndex(angularFrequency);
             return VectoMath.Interpolate((double) _entries[idx - 1].EngineSpeed, (double) _entries[idx].EngineSpeed,
                 (double) _entries[idx - 1].PT1, (double) _entries[idx].PT1,
-                (double) angularFrequency).SI();
+                (double) angularFrequency);
         }
 
         /// <summary>

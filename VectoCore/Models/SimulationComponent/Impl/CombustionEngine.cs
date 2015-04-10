@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
             var requestedPower = Formulas.TorqueToPower(torque, engineSpeed);
             _currentState.EnginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
-            var requestedEnginePower = (requestedPower + _currentState.EnginePowerLoss).To<Watt>();
+            var requestedEnginePower = requestedPower + _currentState.EnginePowerLoss;
 
             if (engineSpeed < (double) _data.IdleSpeed - EngineIdleSpeedStopThreshold) {
                 _currentState.OperationMode = EngineOperationMode.Stopped;
@@ -241,8 +241,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
             var pt1 = _data.GetFullLoadCurve(gear).PT1(angularFrequency);
 
-            var dynFullPowerCalculated =
-                ((1 / (pt1 + 1)) * (_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower)).To<Watt>();
+            var dynFullPowerCalculated = (1 / (pt1 + 1)) *
+                                         (_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower);
             _currentState.DynamicFullLoadPower = dynFullPowerCalculated < _currentState.StationaryFullLoadPower
                 ? dynFullPowerCalculated
                 : _currentState.StationaryFullLoadPower;
@@ -257,7 +257,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         }
 
         /// <summary>
-        ///     Calculates power loss. [W]
+        /// Calculates power loss. [W]
         /// </summary>
         /// <param name="torque">[Nm]</param>
         /// <param name="engineSpeed">[rad/s]</param>
@@ -265,9 +265,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
         protected Watt InertiaPowerLoss(NewtonMeter torque, RadianPerSecond engineSpeed)
         {
             var deltaEngineSpeed = engineSpeed - _previousState.EngineSpeed;
-            var avgEngineSpeed = (_previousState.EngineSpeed + engineSpeed) / new SI(2).Second;
+            var avgEngineSpeed = (_previousState.EngineSpeed + engineSpeed) / 2.0.SI<Second>();
             var result = _data.Inertia * deltaEngineSpeed * avgEngineSpeed;
-            return result.To<Watt>();
+            return result.As<Watt>();
         }
 
         public class EngineState

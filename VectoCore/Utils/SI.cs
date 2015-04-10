@@ -8,44 +8,124 @@ using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
 {
-    public class MeterPerSecond : SI
+    public class MeterPerSecond : SIBase<MeterPerSecond>
     {
         public MeterPerSecond(double val = 0) : base(val, new SI().Meter.Per.Second) {}
     }
 
-    public class Radian : SI
+    public class Radian : SIBase<Radian>
     {
         public Radian(double val = 0) : base(val, new SI().Radian) {}
     }
 
-    public class Second : SI
+    public class Second : SIBase<Second>
     {
         public Second(double val = 0) : base(val, new SI().Second) {}
     }
 
-    public class Watt : SI
+    public class Watt : SIBase<Watt>
     {
         public Watt(double val = 0) : base(val, new SI().Watt) {}
     }
 
-    public class RadianPerSecond : SI
+    public class RadianPerSecond : SIBase<RadianPerSecond>
     {
         public RadianPerSecond(double val = 0) : base(val, new SI().Radian.Per.Second) {}
     }
 
-    public class RoundsPerMinute : SI
+    public class RoundsPerMinute : SIBase<RoundsPerMinute>
     {
         public RoundsPerMinute(double val = 0) : base(val, new SI().Rounds.Per.Minute) {}
     }
 
-    public class NewtonMeter : SI
+    public class NewtonMeter : SIBase<NewtonMeter>
     {
         public NewtonMeter(double val = 0) : base(val, new SI().Newton.Meter) {}
     }
 
-    public class Newton : SI
+    public class Newton : SIBase<Newton>
     {
         public Newton(double val = 0) : base(val, new SI().Newton) {}
+    }
+
+    public abstract class SIBase<T> : SI where T : SIBase<T>
+    {
+        protected SIBase(double val = 0) : base(val) {}
+        protected SIBase(double val, SI unit) : base(val, unit) {}
+
+        #region Operators
+
+        public static T operator +(SIBase<T> si1, SIBase<T> si2)
+        {
+            return (si1 as SI) + si2;
+        }
+
+        public static T operator +(SIBase<T> si1, SI si2)
+        {
+            return ((si1 as SI) + si2).As<T>();
+        }
+
+        public static T operator +(SI si1, SIBase<T> si2)
+        {
+            return si2 + si1;
+        }
+
+        public static T operator +(SIBase<T> si1, double d)
+        {
+            return ((si1 as SI) + d).As<T>();
+        }
+
+        public static T operator +(double d, SIBase<T> si)
+        {
+            return si + d;
+        }
+
+        public static T operator -(SIBase<T> si1, SIBase<T> si2)
+        {
+            return (si1 as SI) - si2;
+        }
+
+        public static T operator -(SIBase<T> si1, SI si2)
+        {
+            return -si2 + si1;
+        }
+
+        public static T operator -(SI si1, SIBase<T> si2)
+        {
+            return (si1 - (si2 as SI)).As<T>();
+        }
+
+        public static T operator -(SIBase<T> si, double d)
+        {
+            return ((si as SI) - d).As<T>();
+        }
+
+        public static T operator -(double d, SIBase<T> si)
+        {
+            return (d - (si as SI)).As<T>();
+        }
+
+        public static T operator *(double d, SIBase<T> si)
+        {
+            return si * d;
+        }
+
+        public static T operator *(SIBase<T> si, double d)
+        {
+            return ((si as SI) * d).As<T>();
+        }
+
+        public static T operator /(double d, SIBase<T> si)
+        {
+            return si / d;
+        }
+
+        public static T operator /(SIBase<T> si, double d)
+        {
+            return ((si as SI) / d).As<T>();
+        }
+
+        #endregion
     }
 
 
@@ -69,7 +149,8 @@ namespace TUGraz.VectoCore.Utils
             Exponent = 1;
         }
 
-        protected SI(double val, IEnumerable<string> numerator, IEnumerable<string> denominator, bool reciproc = false,
+        protected SI(double val, IEnumerable<string> numerator, IEnumerable<string> denominator,
+            bool reciproc = false,
             bool reverse = false, int exponent = 1)
         {
             Contract.Requires(numerator != null);
@@ -156,7 +237,10 @@ namespace TUGraz.VectoCore.Utils
         }
 
         /// <summary>
-        ///     Convert an SI unit into another SI unit, defined by term following after the To().
+        /// Converts the SI unit to another SI unit, defined by term(s) following after the To().
+        /// The Conversion Mode is active until an arithmetic operator is used (+,-,*,/), 
+        /// or the .Value-Method, or the .As-Method were called.
+        /// ATTENTION: Before returning an SI Unit, ensure to cancel Conversion Mode (with .Value or .As).
         /// </summary>
         /// <returns></returns>
         public SI To()
@@ -164,7 +248,12 @@ namespace TUGraz.VectoCore.Utils
             return new SI(Linear, reciproc: false, reverse: true);
         }
 
-        public T To<T>() where T : SI
+        /// <summary>
+        /// Casts the SI Unit to the concrete unit type if the units are correct.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T As<T>() where T : SIBase<T>
         {
             var t = (T) Activator.CreateInstance(typeof (T), Val);
             Contract.Assert(HasEqualUnit(t), string.Format("SI Unit Conversion failed: From {0} to {1}", this, t));
@@ -403,9 +492,24 @@ namespace TUGraz.VectoCore.Utils
             return new SI(si1.Val + d, si1);
         }
 
+        public static SI operator +(double d, SI si1)
+        {
+            return si1 + d;
+        }
+
         public static SI operator -(SI si1, double d)
         {
             return new SI(si1.Val - d, si1);
+        }
+
+        public static SI operator -(double d, SI si1)
+        {
+            return new SI(d - si1.Val, si1);
+        }
+
+        public static SI operator -(SI si1)
+        {
+            return 0 - si1;
         }
 
         public static SI operator *(SI si1, double d)

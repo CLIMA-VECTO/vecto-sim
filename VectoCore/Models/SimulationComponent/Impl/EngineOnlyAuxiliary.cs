@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             }
             _powerDemand = _demand.GetPowerDemand(absTime, dt);
             var tq = Formulas.PowerToTorque(_powerDemand, engineSpeed);
-            return _outPort.Request(absTime, dt, (torque + tq).To<NewtonMeter>(), engineSpeed);
+            return _outPort.Request(absTime, dt, torque + tq, engineSpeed);
         }
 
         #endregion
