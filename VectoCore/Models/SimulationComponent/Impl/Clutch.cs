@@ -7,83 +7,83 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-  public class Clutch : VectoSimulationComponent, IClutch, ITnOutPort, ITnInPort
-  {
-    private readonly PerSecond _idleSpeed;
-    private readonly PerSecond _ratedSpeed;
-    private ITnOutPort _nextComponent;
-    private const double ClutchEff = 1;
-    private const double CluchNormSpeed = 0.03;
-	  public ClutchState _clutchState = ClutchState.ClutchClosed;
+	public class Clutch : VectoSimulationComponent, IClutch, ITnOutPort, ITnInPort
+	{
+		private readonly PerSecond _idleSpeed;
+		private readonly PerSecond _ratedSpeed;
+		private ITnOutPort _nextComponent;
+		private const double ClutchEff = 1;
+		private const double CluchNormSpeed = 0.03;
+		private ClutchState _clutchState = ClutchState.ClutchClosed;
 
-	  public enum ClutchState
-    {
-      ClutchClosed,
-      ClutchOpened,
-      ClutchSlipping
-    }
+		public enum ClutchState
+		{
+			ClutchClosed,
+			ClutchOpened,
+			ClutchSlipping
+		}
 
-    public Clutch(IVehicleContainer cockpit, CombustionEngineData engineData) : base(cockpit)
-    {
-      _idleSpeed = engineData.IdleSpeed;
-      _ratedSpeed = engineData.GetFullLoadCurve(0).RatedSpeed();
-    }
+		public Clutch(IVehicleContainer cockpit, CombustionEngineData engineData)
+			: base(cockpit)
+		{
+			_idleSpeed = engineData.IdleSpeed;
+			_ratedSpeed = engineData.GetFullLoadCurve(0).RatedSpeed();
+		}
 
-    public override void CommitSimulationStep(IModalDataWriter writer)
-    {
-      throw new NotImplementedException();
-    }
+		public ClutchState State()
+		{
+			return _clutchState;
+		}
 
-    public ITnInPort InShaft()
-    {
-      return this;
-    }
+		public override void CommitSimulationStep(IModalDataWriter writer)
+		{
+			throw new NotImplementedException();
+		}
 
-
-	  public ITnOutPort OutShaft()
-	  {
-		  return this;
-	  }
-
-    public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond angularVelocity)
-    {
-      var torque_in = new NewtonMeter();
-      var engineSpeed_in = new PerSecond();
-      var engineSpeed0 = new PerSecond();
-      double engineSpeedNorm;
+		public ITnInPort InShaft()
+		{
+			return this;
+		}
 
 
-      if (Cockpit.Gear() == 0) {
-        _clutchState = ClutchState.ClutchOpened;
-        engineSpeed_in = _idleSpeed;
-        torque_in = new NewtonMeter();
-      } else {
-        engineSpeedNorm = ((double) angularVelocity - (double) _idleSpeed) /
-                          ((double) _ratedSpeed - (double) _idleSpeed);
-        if (engineSpeedNorm < CluchNormSpeed) {
-          _clutchState = ClutchState.ClutchSlipping;
+		public ITnOutPort OutShaft()
+		{
+			return this;
+		}
 
-          engineSpeed0 = new PerSecond(Math.Max((double) _idleSpeed, (double) angularVelocity));
-          var clutchSpeedNorm = CluchNormSpeed /
-                                ((_idleSpeed + CluchNormSpeed * (_ratedSpeed - _idleSpeed)) / _ratedSpeed);
-          engineSpeed_in = new PerSecond((double)((clutchSpeedNorm * engineSpeed0 / _ratedSpeed) * (_ratedSpeed - _idleSpeed) + _idleSpeed));
+		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond angularVelocity)
+		{
+			var torqueIn = torque;
+			var engineSpeedIn = angularVelocity;
 
-          torque_in = Formulas.PowerToTorque(Formulas.TorqueToPower(torque,angularVelocity)/ClutchEff, engineSpeed_in); 
+			if (Cockpit.Gear() == 0) {
+				_clutchState = ClutchState.ClutchOpened;
+				engineSpeedIn = _idleSpeed;
+				torqueIn = 0.0.SI<NewtonMeter>();
+			} else {
+				var engineSpeedNorm = (angularVelocity - _idleSpeed) /
+									(_ratedSpeed - _idleSpeed);
+				if (engineSpeedNorm < CluchNormSpeed) {
+					_clutchState = ClutchState.ClutchSlipping;
 
-        } else {
-          _clutchState = ClutchState.ClutchClosed;
-          engineSpeed_in = angularVelocity;
-          torque_in = torque;
-        }
-      }
+					var engineSpeed0 = new PerSecond(Math.Max((double) _idleSpeed, (double) angularVelocity));
+					var clutchSpeedNorm = CluchNormSpeed /
+										((_idleSpeed + CluchNormSpeed * (_ratedSpeed - _idleSpeed)) / _ratedSpeed);
+					engineSpeedIn =
+						new PerSecond((double) ((clutchSpeedNorm * engineSpeed0 / _ratedSpeed) * (_ratedSpeed - _idleSpeed) + _idleSpeed));
 
+					torqueIn = Formulas.PowerToTorque(Formulas.TorqueToPower(torque, angularVelocity) / ClutchEff, engineSpeedIn);
+				} else {
+					_clutchState = ClutchState.ClutchClosed;
+				}
+			}
 
-      return _nextComponent.Request(absTime, dt, torque_in, engineSpeed_in);
-    }
+			return _nextComponent.Request(absTime, dt, torqueIn, engineSpeedIn);
+		}
 
-    public void Connect(ITnOutPort other)
-    {
-      _nextComponent = other;
-    }
-  }
+		public void Connect(ITnOutPort other)
+		{
+			_nextComponent = other;
+		}
+	}
 }
