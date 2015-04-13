@@ -32,21 +32,21 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			//Test - Clutch slipping
 	    gearbox.CurrentGear = 1;
-      clutchOutPort.Request(new TimeSpan(), new TimeSpan(), 100.SI<NewtonMeter>(), new PerSecond(30.0));
+      clutchOutPort.Request(new TimeSpan(), new TimeSpan(), 100.SI<NewtonMeter>(), new RadianPerSecond(30.0));
 
 			Assert.AreEqual(48.293649, (double)outPort.Torque, 0.001);
 			Assert.AreEqual(62.119969, (double)outPort.AngularFrequency, 0.001);
 
 			//Test - Clutch opened
 			gearbox.CurrentGear = 0;
-			clutchOutPort.Request(new TimeSpan(), new TimeSpan(), 100.SI<NewtonMeter>(), new PerSecond(30.0));
+			clutchOutPort.Request(new TimeSpan(), new TimeSpan(), 100.SI<NewtonMeter>(), new RadianPerSecond(30.0));
 
 			Assert.AreEqual(0, (double)outPort.Torque, 0.001);
 			Assert.AreEqual((double)engineData.IdleSpeed, (double)outPort.AngularFrequency, 0.001);
 
 			//Test - Clutch closed
 			gearbox.CurrentGear = 1;
-			clutchOutPort.Request(new TimeSpan(), new TimeSpan(), 100.SI<NewtonMeter>(), new PerSecond(80.0));
+			clutchOutPort.Request(new TimeSpan(), new TimeSpan(), 100.SI<NewtonMeter>(), new RadianPerSecond(80.0));
 
 			Assert.AreEqual(100.0, (double)outPort.Torque, 0.001);
 			Assert.AreEqual(80.0, (double)outPort.AngularFrequency, 0.001);

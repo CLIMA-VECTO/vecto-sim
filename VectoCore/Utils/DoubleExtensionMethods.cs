@@ -43,9 +43,9 @@ namespace TUGraz.VectoCore.Utils
 			return d.IsGreaterOrEqual(0.0, tolerance);
 		}
 
-		public static PerSecond RPMtoRad(this double d)
+		public static RadianPerSecond RPMtoRad(this double d)
 		{
-			return d.SI().Rounds.Per.Minute.To<PerSecond>();
+			return d.SI().Rounds.Per.Minute.To<RadianPerSecond>();
 		}
 
 		/// <summary>

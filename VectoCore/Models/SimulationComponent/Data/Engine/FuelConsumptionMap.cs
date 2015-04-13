@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				foreach (DataRow row in data.Rows) {
 					try {
 						var entry = new FuelConsumptionEntry {
-							EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.To<PerSecond>(),
+							EngineSpeed = row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.To<RadianPerSecond>(),
 							Torque = row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
 							FuelConsumption = row.ParseDouble(Fields.FuelConsumption).SI().Gramm.Per.Hour.To().Kilo.Gramm.Per.Second
 						};
@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		/// <param name="engineSpeed">[rad/sec]</param>
 		/// <param name="torque">[Nm]</param>
 		/// <returns>[kg/s]</returns>
-		public SI GetFuelConsumption(NewtonMeter torque, PerSecond engineSpeed)
+		public SI GetFuelConsumption(NewtonMeter torque, RadianPerSecond engineSpeed)
 		{
 			return _fuelMap.Interpolate((double) torque, (double) engineSpeed.To().Rounds.Per.Minute).SI().Kilo.Gramm.Per.Second;
 		}
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			/// <summary>
 			///     engine speed [rad/s]
 			/// </summary>
-			public PerSecond EngineSpeed { get; set; }
+			public RadianPerSecond EngineSpeed { get; set; }
 
 			/// <summary>
 			///     Torque [Nm]

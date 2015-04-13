@@ -178,7 +178,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			///     [rad/s]	If "n" is defined VECTO uses that instead of the
 			///     calculated engine speed value.
 			/// </summary>
-			public PerSecond EngineSpeed { get; set; }
+			public RadianPerSecond EngineSpeed { get; set; }
 
 			/// <summary>
 			///     [-]	Gear input. Overwrites the gear shift model.
@@ -247,7 +247,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour.To<MeterPerSecond>(),
 					RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
 					AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.To<Watt>(),
-					EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.To<PerSecond>(),
+					EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.To<RadianPerSecond>(),
 					Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
 					AirSpeedRelativeToVehicle =
 						row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle).SI().Kilo.Meter.Per.Hour.To<MeterPerSecond>(),
@@ -302,7 +302,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
 					AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.To<Watt>(),
 					Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
-					EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.To<PerSecond>(),
+					EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.To<RadianPerSecond>(),
 					AirSpeedRelativeToVehicle =
 						row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle).SI().Kilo.Meter.Per.Hour.To<MeterPerSecond>(),
 					WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
@@ -350,7 +350,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 				foreach (DataRow row in table.Rows) {
 					var entry = new DrivingCycleEntry {
-						EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.To<PerSecond>(),
+						EngineSpeed = row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.To<RadianPerSecond>(),
 						AdditionalAuxPowerDemand = row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.To<Watt>(),
 						AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
 					};

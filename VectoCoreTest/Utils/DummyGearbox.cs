@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		private ITnOutPort _outPort;
 		public uint CurrentGear { get; set; }
 
-		 
+
 		public DummyGearbox(IVehicleContainer cockpit) : base(cockpit) {}
 
 		public ITnInPort InShaft()
@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			_outPort = other;
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
+		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond engineSpeed)
 		{
 			throw new NotImplementedException();
 		}

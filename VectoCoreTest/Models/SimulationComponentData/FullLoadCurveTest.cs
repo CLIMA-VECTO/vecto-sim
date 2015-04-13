@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void Test_FileRead_NoHeader()
 		{
 			var curve = FullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve no header.vfld");
-			var result = curve.FullLoadStationaryTorque(1.SI<PerSecond>());
+			var result = curve.FullLoadStationaryTorque(1.SI<RadianPerSecond>());
 			Assert.AreNotEqual((double) result, 0.0);
 		}
 

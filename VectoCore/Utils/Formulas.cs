@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="angularFrequency">[rad/s]</param>
 		/// <returns>power [W]</returns>
 		[Pure]
-		public static Watt TorqueToPower(NewtonMeter torque, PerSecond angularFrequency)
+		public static Watt TorqueToPower(NewtonMeter torque, RadianPerSecond angularFrequency)
 		{
 			return (torque * angularFrequency).To<Watt>();
 		}
@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="angularFrequency">[rad/s]</param>
 		/// <returns>torque [Nm]</returns>
 		[Pure]
-		public static NewtonMeter PowerToTorque(SI power, PerSecond angularFrequency)
+		public static NewtonMeter PowerToTorque(SI power, RadianPerSecond angularFrequency)
 		{
 			return (power / angularFrequency).To<NewtonMeter>();
 		}
