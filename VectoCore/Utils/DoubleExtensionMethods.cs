@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Utils
         /// <returns></returns>
         public static RadianPerSecond RPMtoRad(this double d)
         {
-            return d.SI().Rounds.Per.Minute.To().Radian.Per.Second.As<RadianPerSecond>();
+            return d.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<RadianPerSecond>();
         }
 
         /// <summary>

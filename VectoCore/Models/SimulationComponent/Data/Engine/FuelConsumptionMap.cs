@@ -26,10 +26,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
                     try {
                         var entry = new FuelConsumptionEntry {
                             EngineSpeed =
-                                row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.As<RadianPerSecond>(),
+                                row.ParseDouble(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<RadianPerSecond>(),
                             Torque = row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
                             FuelConsumption =
-                                row.ParseDouble(Fields.FuelConsumption).SI().Gramm.Per.Hour.To().Kilo.Gramm.Per.Second
+                                row.ParseDouble(Fields.FuelConsumption).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second
                         };
 
                         // todo Contract.Assert
@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         {
             // delauney map needs is initialised with rpm, therefore the engineSpeed has to be converted.
             return
-                _fuelMap.Interpolate((double) torque, (double) engineSpeed.To().Rounds.Per.Minute)
+                _fuelMap.Interpolate((double) torque, (double) engineSpeed.ConvertTo().Rounds.Per.Minute)
                     .SI()
                     .Kilo.Gramm.Per.Second;
         }

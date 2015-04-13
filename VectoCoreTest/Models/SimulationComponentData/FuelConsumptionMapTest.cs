@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
             for (var i = 1; i < lines.Count(); i++) {
                 var entry = lines[i].Split(',').Select(x => double.Parse(x, CultureInfo.InvariantCulture)).ToArray();
                 try {
-                    Assert.AreEqual((double) entry[2].SI().Gramm.Per.Hour.To().Kilo.Gramm.Per.Second,
+                    Assert.AreEqual((double) entry[2].SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second,
                         (double) map.GetFuelConsumption(entry[1].SI<NewtonMeter>(), entry[0].RPMtoRad()),
                         Tolerance,
                         string.Format("Line: {0}, n={1}, T={2}", (i + 2), entry[0].SI().Rounds.Per.Minute, entry[1]));

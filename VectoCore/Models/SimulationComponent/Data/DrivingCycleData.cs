@@ -232,7 +232,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                 return row.Table.Columns.Cast<DataColumn>().
                     Where(col => col.ColumnName.StartsWith(Fields.AuxiliarySupplyPower)).
                     ToDictionary(col => col.ColumnName.Substring(Fields.AuxiliarySupplyPower.Length - 1),
-                        col => row.ParseDouble(col).SI().Kilo.Watt.As<Watt>());
+                        col => row.ParseDouble(col).SI().Kilo.Watt.Cast<Watt>());
             }
         }
 
@@ -244,17 +244,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
                 return table.Rows.Cast<DataRow>().Select(row => new DrivingCycleEntry {
                     Distance = row.ParseDouble(Fields.Distance),
-                    VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour.As<MeterPerSecond>(),
+                    VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
                     RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
                     AdditionalAuxPowerDemand =
-                        row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.As<Watt>(),
+                        row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
                     EngineSpeed =
-                        row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.As<RadianPerSecond>(),
+                        row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<RadianPerSecond>(),
                     Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
                     AirSpeedRelativeToVehicle =
                         row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle)
                             .SI()
-                            .Kilo.Meter.Per.Hour.As<MeterPerSecond>(),
+                            .Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
                     WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
                     AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
                 });
@@ -305,17 +305,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
                 var entries = table.Rows.Cast<DataRow>().Select((row, index) => new DrivingCycleEntry {
                     Time = row.ParseDoubleOrGetDefault(Fields.Time, index),
-                    VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour.As<MeterPerSecond>(),
+                    VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
                     RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
                     AdditionalAuxPowerDemand =
-                        row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.As<Watt>(),
+                        row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
                     Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
                     EngineSpeed =
-                        row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.As<RadianPerSecond>(),
+                        row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<RadianPerSecond>(),
                     AirSpeedRelativeToVehicle =
                         row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle)
                             .SI()
-                            .Kilo.Meter.Per.Hour.As<MeterPerSecond>(),
+                            .Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
                     WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
                     AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
                 }).ToArray();
@@ -365,9 +365,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                 foreach (DataRow row in table.Rows) {
                     var entry = new DrivingCycleEntry {
                         EngineSpeed =
-                            row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.As<RadianPerSecond>(),
+                            row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<RadianPerSecond>(),
                         AdditionalAuxPowerDemand =
-                            row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.As<Watt>(),
+                            row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
                         AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
                     };
                     if (row.Table.Columns.Contains(Fields.EngineTorque)) {
@@ -381,7 +381,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
                             entry.Drag = true;
                         } else {
                             entry.EngineTorque =
-                                Formulas.PowerToTorque(row.ParseDouble(Fields.EnginePower).SI().Kilo.Watt.As<Watt>(),
+                                Formulas.PowerToTorque(row.ParseDouble(Fields.EnginePower).SI().Kilo.Watt.Cast<Watt>(),
                                     entry.EngineSpeed);
                         }
                     }

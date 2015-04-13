@@ -29,12 +29,12 @@ namespace TUGraz.VectoCore.Utils
 
 		public static RadianPerSecond operator /(Watt watt, NewtonMeter newtonMeter)
 		{
-			return ((watt as SI) / newtonMeter).As<RadianPerSecond>();
+			return ((watt as SI) / newtonMeter).Cast<RadianPerSecond>();
 		}
 
 		public static NewtonMeter operator /(Watt watt, RadianPerSecond radianPerSecond)
 		{
-			return ((watt as SI) / radianPerSecond).As<NewtonMeter>();
+			return ((watt as SI) / radianPerSecond).Cast<NewtonMeter>();
 		}
 	}
 
@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public static Watt operator *(RadianPerSecond radianPerSecond, NewtonMeter newtonMeter)
 		{
-			return ((radianPerSecond as SI) * newtonMeter).As<Watt>();
+			return ((radianPerSecond as SI) * newtonMeter).Cast<Watt>();
 		}
 	}
 
@@ -59,12 +59,12 @@ namespace TUGraz.VectoCore.Utils
 
 		public static Watt operator *(NewtonMeter newtonMeter, RadianPerSecond radianPerSecond)
 		{
-			return ((newtonMeter as SI) * radianPerSecond).As<Watt>();
+			return ((newtonMeter as SI) * radianPerSecond).Cast<Watt>();
 		}
 
 		public static Second operator /(NewtonMeter newtonMeter, Watt watt)
 		{
-			return ((newtonMeter as SI) / watt).As<Second>();
+			return ((newtonMeter as SI) / watt).Cast<Second>();
 		}
 	}
 
@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public static T operator +(SIBase<T> si1, SI si2)
 		{
-			return ((si1 as SI) + si2).As<T>();
+			return ((si1 as SI) + si2).Cast<T>();
 		}
 
 		public static T operator +(SI si1, SIBase<T> si2)
@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public static T operator +(SIBase<T> si1, double d)
 		{
-			return ((si1 as SI) + d).As<T>();
+			return ((si1 as SI) + d).Cast<T>();
 		}
 
 		public static T operator +(double d, SIBase<T> si)
@@ -117,17 +117,17 @@ namespace TUGraz.VectoCore.Utils
 
 		public static T operator -(SI si1, SIBase<T> si2)
 		{
-			return (si1 - (si2 as SI)).As<T>();
+			return (si1 - (si2 as SI)).Cast<T>();
 		}
 
 		public static T operator -(SIBase<T> si, double d)
 		{
-			return ((si as SI) - d).As<T>();
+			return ((si as SI) - d).Cast<T>();
 		}
 
 		public static T operator -(double d, SIBase<T> si)
 		{
-			return (d - (si as SI)).As<T>();
+			return (d - (si as SI)).Cast<T>();
 		}
 
 		public static T operator *(double d, SIBase<T> si)
@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public static T operator *(SIBase<T> si, double d)
 		{
-			return ((si as SI) * d).As<T>();
+			return ((si as SI) * d).Cast<T>();
 		}
 
 		public static T operator /(double d, SIBase<T> si)
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public static T operator /(SIBase<T> si, double d)
 		{
-			return ((si as SI) / d).As<T>();
+			return ((si as SI) / d).Cast<T>();
 		}
 
 		#endregion
@@ -262,13 +262,13 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		/// <summary>
-		/// Converts the SI unit to another SI unit, defined by term(s) following after the To().
+		/// Converts the SI unit to another SI unit, defined by term(s) following after the ConvertTo().
 		/// The Conversion Mode is active until an arithmetic operator is used (+,-,*,/), 
-		/// or the .Value-Method, or the .As-Method were called.
-		/// ATTENTION: Before returning an SI Unit, ensure to cancel Conversion Mode (with .Value or .As).
+		/// or the .Value-Method, or the .Cast-Method were called.
+		/// ATTENTION: Before returning an SI Unit, ensure to cancel Conversion Mode (with .Value or .Cast).
 		/// </summary>
 		/// <returns></returns>
-		public SI To()
+		public SI ConvertTo()
 		{
 			return new SI(Linear, reciproc: false, reverse: true);
 		}
@@ -278,7 +278,7 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
-		public T As<T>() where T : SIBase<T>
+		public T Cast<T>() where T : SIBase<T>
 		{
 			var t = (T) Activator.CreateInstance(typeof (T), Val);
 			Contract.Assert(HasEqualUnit(t), string.Format("SI Unit Conversion failed: From {0} to {1}", this, t));
@@ -321,9 +321,9 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		/// <summary>
-		///     Gets the basic scalar value.
+		///     Gets the basic double value.
 		/// </summary>
-		protected double ScalarValue()
+		public double Double()
 		{
 			return Val;
 		}

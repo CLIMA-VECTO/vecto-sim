@@ -68,8 +68,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         /// </summary>
         public SI Displacement
         {
-            get { return _data.Body.Displacement.SI().Cubic.Centi.Meter.To().Cubic.Meter.Value(); }
-            protected set { _data.Body.Displacement = (double) value.To().Cubic.Centi.Meter; }
+            get { return _data.Body.Displacement.SI().Cubic.Centi.Meter.ConvertTo().Cubic.Meter.Value(); }
+            protected set { _data.Body.Displacement = (double) value.ConvertTo().Cubic.Centi.Meter; }
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         public RadianPerSecond IdleSpeed
         {
             get { return _data.Body.IdleSpeed.RPMtoRad(); }
-            protected set { _data.Body.IdleSpeed = (double) value.To().Rounds.Per.Minute; }
+            protected set { _data.Body.IdleSpeed = (double) value.ConvertTo().Rounds.Per.Minute; }
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         public SI Inertia
         {
             get { return _data.Body.Inertia.SI().Kilo.Gramm.Square.Meter; }
-            protected set { _data.Body.Inertia = (double) value.To().Kilo.Gramm.Square.Meter; }
+            protected set { _data.Body.Inertia = (double) value.ConvertTo().Kilo.Gramm.Square.Meter; }
         }
 
         /// <summary>
@@ -95,8 +95,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         /// </summary>
         public SI WHTCUrban
         {
-            get { return _data.Body.WHTCUrban.SI().Gramm.Per.Kilo.Watt.Hour.To().Kilo.Gramm.Per.Watt.Second.Value(); }
-            protected set { _data.Body.WHTCUrban = (double) value.To().Gramm.Per.Kilo.Watt.Hour; }
+            get { return _data.Body.WHTCUrban.SI().Gramm.Per.Kilo.Watt.Hour.ConvertTo().Kilo.Gramm.Per.Watt.Second.Value(); }
+            protected set { _data.Body.WHTCUrban = (double) value.ConvertTo().Gramm.Per.Kilo.Watt.Hour; }
         }
 
         /// <summary>
@@ -104,8 +104,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         /// </summary>
         public SI WHTCRural
         {
-            get { return _data.Body.WHTCRural.SI().Gramm.Per.Kilo.Watt.Hour.To().Kilo.Gramm.Per.Watt.Second.Value(); }
-            protected set { _data.Body.WHTCRural = (double) value.To().Gramm.Per.Kilo.Watt.Hour; }
+            get { return _data.Body.WHTCRural.SI().Gramm.Per.Kilo.Watt.Hour.ConvertTo().Kilo.Gramm.Per.Watt.Second.Value(); }
+            protected set { _data.Body.WHTCRural = (double) value.ConvertTo().Gramm.Per.Kilo.Watt.Hour; }
         }
 
         /// <summary>
@@ -116,9 +116,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
             get
             {
                 return
-                    _data.Body.WHTCMotorway.SI().Gramm.Per.Kilo.Watt.Hour.To().Kilo.Gramm.Per.Watt.Second.Value();
+                    _data.Body.WHTCMotorway.SI().Gramm.Per.Kilo.Watt.Hour.ConvertTo().Kilo.Gramm.Per.Watt.Second.Value();
             }
-            protected set { _data.Body.WHTCMotorway = (double) value.To().Gramm.Per.Kilo.Watt.Hour; }
+            protected set { _data.Body.WHTCMotorway = (double) value.ConvertTo().Gramm.Per.Kilo.Watt.Hour; }
         }
 
         [DataMember]

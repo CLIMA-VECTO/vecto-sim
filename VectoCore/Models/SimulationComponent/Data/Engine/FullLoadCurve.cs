@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
             int idx;
             if (engineSpeed < _entries[0].EngineSpeed) {
                 Log.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}",
-                    engineSpeed.To().Rounds.Per.Minute, _entries[0].EngineSpeed.To().Rounds.Per.Minute);
+                    engineSpeed.ConvertTo().Rounds.Per.Minute, _entries[0].EngineSpeed.ConvertTo().Rounds.Per.Minute);
                 idx = 1;
             } else {
                 idx = _entries.FindIndex(x => x.EngineSpeed > engineSpeed);
