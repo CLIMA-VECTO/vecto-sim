@@ -6,13 +6,13 @@ namespace TUGraz.VectoCore.Utils
 	public static class IntExtensionMethods
 	{
 		/// <summary>
-		/// Converts the value from rounds per minute to the SI Unit RadianPerSecond
+		/// Converts the value from rounds per minute to the SI Unit PerSecond
 		/// </summary>
 		/// <param name="d"></param>
 		/// <returns></returns>
-		public static RadianPerSecond RPMtoRad(this double d)
+		public static PerSecond RPMtoRad(this int d)
 		{
-			return d.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<RadianPerSecond>();
+			return d.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
 		}
 
 		/// <summary>
@@ -30,9 +30,9 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="d"></param>
 		/// <returns></returns>
-		public static T SI<T>(this int d) where T : SIBase<T>
+		public static T SI<T>(this int d) where T : SIBase<T>, new()
 		{
-			return (T) Activator.CreateInstance(typeof (T), d);
+			return SIBase<T>.Create(d);
 		}
 	}
 }

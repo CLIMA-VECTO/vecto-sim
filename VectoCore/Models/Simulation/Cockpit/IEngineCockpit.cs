@@ -10,6 +10,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Cockpit
         /// <summary>
         /// [rad/s] The current engine speed.
         /// </summary>
-        RadianPerSecond EngineSpeed();
+        PerSecond EngineSpeed();
     }
 }

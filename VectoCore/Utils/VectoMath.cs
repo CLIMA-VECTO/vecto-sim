@@ -11,19 +11,25 @@ namespace TUGraz.VectoCore.Utils
 			return (xint - x1) * (y2 - y1) / (x2 - x1) + y1;
 		}
 
-		public static T Abs<T>(T si) where T : SIBase<T>
+		public static SI Abs(SI si)
 		{
-			return (T) si.Abs();
+			return si.Abs();
 		}
 
-		public static T Min<T>(T c1, T c2) where T : SIBase<T>
+
+		public static T Abs<T>(T si) where T : SIBase<T>, new()
 		{
-			return c1 <= c2 ? c1 : c2;
+			return si.Abs().Cast<T>();
 		}
 
-		public static T Max<T>(T c1, T c2) where T : SIBase<T>
+		public static T Min<T>(T c1, T c2) where T : IComparable
 		{
-			return c1 >= c2 ? c1 : c2;
+			return c1.CompareTo(c2) <= 0 ? c1 : c2;
+		}
+
+		public static T Max<T>(T c1, T c2) where T : IComparable
+		{
+			return c1.CompareTo(c2) >= 0 ? c1 : c2;
 		}
 	}
 }

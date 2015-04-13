@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
         #region ITnOutPort
 
-        IResponse ITnOutPort.Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond engineSpeed)
+        IResponse ITnOutPort.Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
         {
             if (_outPort == null) {
                 Log.ErrorFormat("{0} cannot handle incoming request - no outport available", absTime);

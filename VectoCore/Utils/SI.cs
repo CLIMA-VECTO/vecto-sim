@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Dynamic;
 using System.Linq;
 using System.Runtime.Serialization;
 using TUGraz.VectoCore.Exceptions;
@@ -10,56 +11,72 @@ namespace TUGraz.VectoCore.Utils
 {
 	public class MeterPerSecond : SIBase<MeterPerSecond>
 	{
-		public MeterPerSecond(double val = 0) : base(val, new SI().Meter.Per.Second) {}
-	}
-
-	public class Radian : SIBase<Radian>
-	{
-		public Radian(double val = 0) : base(val, new SI().Radian) {}
+		public MeterPerSecond() : this(0) {}
+		protected MeterPerSecond(double val) : base(val, new SI().Meter.Per.Second) {}
 	}
 
 	public class Second : SIBase<Second>
 	{
-		public Second(double val = 0) : base(val, new SI().Second) {}
+		public Second() : this(0) {}
+		protected Second(double val) : base(val, new SI().Second) {}
 	}
 
 	public class Watt : SIBase<Watt>
 	{
-		public Watt(double val = 0) : base(val, new SI().Watt) {}
+		public Watt() : this(0) {}
+		protected Watt(double val) : base(val, new SI().Watt) {}
 
-		public static RadianPerSecond operator /(Watt watt, NewtonMeter newtonMeter)
+		public static PerSecond operator /(Watt watt, NewtonMeter newtonMeter)
 		{
-			return ((watt as SI) / newtonMeter).Cast<RadianPerSecond>();
+			return ((watt as SI) / newtonMeter).Cast<PerSecond>();
 		}
 
-		public static NewtonMeter operator /(Watt watt, RadianPerSecond radianPerSecond)
+		public static NewtonMeter operator /(Watt watt, PerSecond perSecond)
 		{
-			return ((watt as SI) / radianPerSecond).Cast<NewtonMeter>();
+			return ((watt as SI) / perSecond).Cast<NewtonMeter>();
 		}
 	}
 
-	public class RadianPerSecond : SIBase<RadianPerSecond>
+	public class PerSecond : SIBase<PerSecond>
 	{
-		public RadianPerSecond(double val = 0) : base(val, new SI().Radian.Per.Second) {}
-
-		public static Watt operator *(RadianPerSecond radianPerSecond, NewtonMeter newtonMeter)
-		{
-			return ((radianPerSecond as SI) * newtonMeter).Cast<Watt>();
-		}
+		public PerSecond() : this(0) {}
+		protected PerSecond(double val) : base(val, new SI().Radian.Per.Second) {}
 	}
 
 	public class RoundsPerMinute : SIBase<RoundsPerMinute>
 	{
-		public RoundsPerMinute(double val = 0) : base(val, new SI().Rounds.Per.Minute) {}
+		public RoundsPerMinute() : this(0) {}
+		protected RoundsPerMinute(double val) : base(val, new SI().Rounds.Per.Minute) {}
+	}
+
+
+	public class Newton : SIBase<Newton>
+	{
+		protected Newton(double val) : base(val, new SI().Newton) {}
+
+		public Newton() : this(0) {}
+	}
+
+	public class Radian : SIBase<Radian>
+	{
+		public Radian() : this(0) {}
+
+		public Radian(double val) : base(val, new SI().Radian) {}
 	}
 
 	public class NewtonMeter : SIBase<NewtonMeter>
 	{
-		public NewtonMeter(double val = 0) : base(val, new SI().Newton.Meter) {}
+		public NewtonMeter() : this(0) {}
+		protected NewtonMeter(double val) : base(val, new SI().Newton.Meter) {}
 
-		public static Watt operator *(NewtonMeter newtonMeter, RadianPerSecond radianPerSecond)
+		public static Watt operator *(NewtonMeter newtonMeter, PerSecond perSecond)
 		{
-			return ((newtonMeter as SI) * radianPerSecond).Cast<Watt>();
+			return ((newtonMeter as SI) * perSecond).Cast<Watt>();
+		}
+
+		public static Watt operator *(PerSecond perSecond, NewtonMeter newtonMeter)
+		{
+			return ((perSecond as SI) * newtonMeter).Cast<Watt>();
 		}
 
 		public static Second operator /(NewtonMeter newtonMeter, Watt watt)
@@ -68,14 +85,16 @@ namespace TUGraz.VectoCore.Utils
 		}
 	}
 
-	public class Newton : SIBase<Newton>
-	{
-		public Newton(double val = 0) : base(val, new SI().Newton) {}
-	}
 
-	public abstract class SIBase<T> : SI where T : SIBase<T>
+	public abstract class SIBase<T> : SI where T : SIBase<T>, new()
 	{
-		protected SIBase(double val = 0) : base(val) {}
+		public static T Create(double val)
+		{
+			return new T { Val = val };
+		}
+
+		protected SIBase() {}
+		protected SIBase(double val) : base(val) {}
 		protected SIBase(double val, SI unit) : base(val, unit) {}
 
 		#region Operators
@@ -153,16 +172,15 @@ namespace TUGraz.VectoCore.Utils
 		#endregion
 	}
 
-
 	[DataContract]
-	public class SI
+	public class SI : IComparable
 	{
 		[DataMember] protected readonly string[] Denominator;
 		[DataMember] protected readonly int Exponent;
 		[DataMember] protected readonly string[] Numerator;
 		[DataMember] protected readonly bool Reciproc;
 		[DataMember] protected readonly bool Reverse;
-		[DataMember] protected readonly double Val;
+		[DataMember] protected double Val;
 
 		public SI(double val = 0.0)
 		{
@@ -278,9 +296,12 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
-		public T Cast<T>() where T : SIBase<T>
+		public T Cast<T>() where T : SIBase<T>, new()
 		{
-			var t = (T) Activator.CreateInstance(typeof (T), Val);
+			var t = SIBase<T>.Create(Val);
+			if (!HasEqualUnit(t)) {
+				throw new VectoException(string.Format("SI Unit Conversion failed: From {0} to {1}", this, t));
+			}
 			Contract.Assert(HasEqualUnit(t), string.Format("SI Unit Conversion failed: From {0} to {1}", this, t));
 			return t;
 		}
@@ -427,12 +448,12 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public SI Radian
 		{
-			get { return new SI(this, fromUnit: "rad", toUnit: "rad"); }
+			get { return new SI(this); }
 		}
 
 		public SI GradientPercent
 		{
-			get { return new SI(this, factor: Math.Atan(Val) / Val, fromUnit: "%", toUnit: "rad"); }
+			get { return new SI(this, factor: Math.Atan(Val) / Val, fromUnit: "%", toUnit: ""); }
 		}
 
 		/// <summary>
@@ -441,7 +462,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public SI Rounds
 		{
-			get { return new SI(this, 2 * Math.PI, toUnit: "rad"); }
+			get { return new SI(this, 2 * Math.PI); }
 		}
 
 		/// <summary>
@@ -699,6 +720,16 @@ namespace TUGraz.VectoCore.Utils
 				hashCode = (hashCode * 397) ^ (Denominator != null ? Denominator.GetHashCode() : 0);
 				return hashCode;
 			}
+		}
+
+		int IComparable.CompareTo(object obj)
+		{
+			var si = (obj as SI);
+			if (si == null || this > si) {
+				return 1;
+			}
+
+			return this < si ? -1 : 0;
 		}
 
 		public static bool operator ==(SI left, SI right)

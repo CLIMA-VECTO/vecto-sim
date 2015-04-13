@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
         #region IEngineCockpit
 
-        public RadianPerSecond EngineSpeed()
+        public PerSecond EngineSpeed()
         {
             if (_engine == null) {
                 throw new VectoException("no engine available!");
