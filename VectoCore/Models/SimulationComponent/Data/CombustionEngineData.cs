@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         /// </summary>
         public RadianPerSecond IdleSpeed
         {
-            get { return _data.Body.IdleSpeed.SI().Rounds.Per.Minute.To<RadianPerSecond>(); }
+            get { return _data.Body.IdleSpeed.RPMtoRad(); }
             protected set { _data.Body.IdleSpeed = (double) value.To().Rounds.Per.Minute; }
         }
 
@@ -115,7 +115,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
         {
             get
             {
-                return _data.Body.WHTCMotorway.SI().Gramm.Per.Kilo.Watt.Hour.To().Kilo.Gramm.Per.Watt.Second.Value();
+                return
+                    _data.Body.WHTCMotorway.SI().Gramm.Per.Kilo.Watt.Hour.To().Kilo.Gramm.Per.Watt.Second.Value();
             }
             protected set { _data.Body.WHTCMotorway = (double) value.To().Gramm.Per.Kilo.Watt.Hour; }
         }
