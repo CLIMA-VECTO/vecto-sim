@@ -275,10 +275,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		#endregion
 
-		private Tuple<RadianPerSecond, Watt> FindMaxPower(FullLoadCurveEntry p1, FullLoadCurveEntry p2)
+		private Tuple<PerSecond, Watt> FindMaxPower(FullLoadCurveEntry p1, FullLoadCurveEntry p2)
 		{
 			if (p1.EngineSpeed == p2.EngineSpeed) {
-				return new Tuple<RadianPerSecond, Watt>(p1.EngineSpeed, Formulas.TorqueToPower(p1.TorqueFullLoad, p1.EngineSpeed));
+				return new Tuple<PerSecond, Watt>(p1.EngineSpeed, Formulas.TorqueToPower(p1.TorqueFullLoad, p1.EngineSpeed));
 			}
 			if (p2.EngineSpeed < p1.EngineSpeed) {
 				var tmp = p1;
@@ -289,24 +289,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			var k = (p2.TorqueFullLoad - p1.TorqueFullLoad) / (p2.EngineSpeed - p1.EngineSpeed);
 			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;
 			if (k == 0.0.SI()) {
-				return new Tuple<RadianPerSecond, Watt>(p2.EngineSpeed, Formulas.TorqueToPower(p2.TorqueFullLoad, p2.EngineSpeed));
+				return new Tuple<PerSecond, Watt>(p2.EngineSpeed, Formulas.TorqueToPower(p2.TorqueFullLoad, p2.EngineSpeed));
 			}
-			var engineSpeedMaxPower = (-1 * d / (2 * k)).Radian.To<RadianPerSecond>();
+			var engineSpeedMaxPower = (-1 * d / (2 * k)).Cast<PerSecond>();
 			if (engineSpeedMaxPower < p1.EngineSpeed || engineSpeedMaxPower > p2.EngineSpeed) {
 				if (k > 0) {
-					return new Tuple<RadianPerSecond, Watt>(p2.EngineSpeed, Formulas.TorqueToPower(p2.TorqueFullLoad, p2.EngineSpeed));
+					return new Tuple<PerSecond, Watt>(p2.EngineSpeed, Formulas.TorqueToPower(p2.TorqueFullLoad, p2.EngineSpeed));
 				}
-				return new Tuple<RadianPerSecond, Watt>(p1.EngineSpeed, Formulas.TorqueToPower(p1.TorqueFullLoad, p1.EngineSpeed));
+				return new Tuple<PerSecond, Watt>(p1.EngineSpeed, Formulas.TorqueToPower(p1.TorqueFullLoad, p1.EngineSpeed));
 			}
 			//return null;
 			var engineTorqueMaxPower = FullLoadStationaryTorque(engineSpeedMaxPower);
-			return new Tuple<RadianPerSecond, Watt>(engineSpeedMaxPower,
+			return new Tuple<PerSecond, Watt>(engineSpeedMaxPower,
 				Formulas.TorqueToPower(engineTorqueMaxPower, engineSpeedMaxPower));
 		}
 
-		public RadianPerSecond RatedSpeed()
+		public PerSecond RatedSpeed()
 		{
-			var max = new Tuple<RadianPerSecond, Watt>(new RadianPerSecond(), new Watt());
+			var max = new Tuple<PerSecond, Watt>(new PerSecond(), new Watt());
 			for (var idx = 1; idx < _entries.Count; idx++) {
 				var currentMax = FindMaxPower(_entries[idx - 1], _entries[idx]);
 				if (currentMax.Item2 > max.Item2) {
