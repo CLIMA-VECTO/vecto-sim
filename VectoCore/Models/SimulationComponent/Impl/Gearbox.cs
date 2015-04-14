@@ -36,8 +36,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             throw new NotImplementedException();
         }
 
-        #endregion
+				#endregion
 
+	
         #region ITnOutPort
 
         IResponse ITnOutPort.Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
