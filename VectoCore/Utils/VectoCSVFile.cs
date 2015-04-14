@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Utils
                     // Valid Columns found => header was valid => skip header line
                     lines = lines.Skip(1).ToArray();
                 } else {
-                    var log = LogManager.GetLogger(typeof(VectoCSVFile));
+					var log = LogManager.GetLogger(typeof (VectoCSVFile));
                     log.Warn("No valid Data Header found. Interpreting the first line as data line.");
                     // set the validColumns to: {"0", "1", "2", "3", ...} for all columns in first line.
                     validColumns = GetColumns(lines.First()).Select((_, index) => index.ToString()).ToArray();

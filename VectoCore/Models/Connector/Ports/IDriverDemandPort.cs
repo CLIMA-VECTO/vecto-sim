@@ -6,26 +6,26 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
     /// <summary>
     /// Defines a connect method to connect the inport to an outport.
     /// </summary>
-    public interface ITnInPort
+    public interface IDriverDemandInPort
     {
         /// <summary>
         /// Connects the inport to another outport.
         /// </summary>
-        void Connect(ITnOutPort other);
+        void Connect(IDriverDemandOutPort other);
     }
 
     /// <summary>
-    /// Defines a request method for a Tn-Out-Port.
+    /// Defines a request method for a DriverDemand-Out-Port.
     /// </summary>
-    public interface ITnOutPort
+    public interface IDriverDemandOutPort
     {
         /// <summary>
-        /// Requests the Outport with the given torque [Nm] and angularVelocity [rad/s].
+        /// Requests the Outport with the given velocity [m/s] and road gradient [rad].
         /// </summary>
         /// <param name="absTime">[s]</param>
         /// <param name="dt">[s]</param>
-        /// <param name="torque">[Nm]</param>
-        /// <param name="angularVelocity">[rad/s]</param>
-        IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond angularVelocity);
+        /// <param name="velocity">[m/s]</param>
+        /// <param name="gradient">[rad]</param>
+        IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond velocity, Radian gradient);
     }
 }

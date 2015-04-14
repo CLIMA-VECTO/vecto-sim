@@ -6,43 +6,67 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	/// <summary>
-	///     Class representing one Distance Based Driving Cycle
-	/// </summary>
-	public class DistanceBasedDrivingCycle : VectoSimulationComponent, IDrivingCycle, IDriverDemandInPort
-	{
-		protected TimeSpan AbsTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-		protected DrivingCycleData Data;
-		protected double Distance = 0;
-		protected TimeSpan Dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+    /// <summary>
+    ///     Class representing one Distance Based Driving Cycle
+    /// </summary>
+    public class DistanceBasedDrivingCycle : VectoSimulationComponent, IDriverDemandDrivingCycle, IDrivingCycleOutPort,
+        IDriverDemandInPort
+    {
+        protected TimeSpan AbsTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
+        protected DrivingCycleData Data;
+        protected double Distance = 0;
+        protected TimeSpan Dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+        private IDriverDemandOutPort _outPort;
 
-		public DistanceBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
-		{
-			Data = cycle;
-		}
+        public DistanceBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+        {
+            Data = cycle;
+        }
 
-		private IDriverDemandOutPort OutPort { get; set; }
-		private int CurrentStep { get; set; }
+        #region IDriverDemandInProvider
 
-		public void Connect(IDriverDemandOutPort other)
-		{
-			OutPort = other;
-		}
+        public IDriverDemandInPort InPort()
+        {
+            return this;
+        }
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt)
-		{
-			//todo: Distance calculation and comparison!!!
-			throw new NotImplementedException("Distance based Cycle is not yet implemented.");
-		}
+        #endregion
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
-		{
-			throw new NotImplementedException("Distance based Cycle is not yet implemented.");
-		}
+        #region IDrivingCycleOutProvider
 
-		public IDriverDemandInPort InPort()
-		{
-			return this;
-		}
-	}
+        public IDrivingCycleOutPort OutPort()
+        {
+            return this;
+        }
+
+        #endregion
+
+        #region IDriverDemandInPort
+
+        void IDriverDemandInPort.Connect(IDriverDemandOutPort other)
+        {
+            _outPort = other;
+        }
+
+        #endregion
+
+        #region IDrivingCycleOutPort
+
+        IResponse IDrivingCycleOutPort.Request(TimeSpan absTime, TimeSpan dt)
+        {
+            //todo: Distance calculation and comparison!!!
+            throw new NotImplementedException("Distance based Cycle is not yet implemented.");
+        }
+
+        #endregion
+
+        #region VectoSimulationComponent
+
+        public override void CommitSimulationStep(IModalDataWriter writer)
+        {
+            throw new NotImplementedException("Distance based Cycle is not yet implemented.");
+        }
+
+        #endregion
+    }
 }

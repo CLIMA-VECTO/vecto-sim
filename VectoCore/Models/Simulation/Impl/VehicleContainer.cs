@@ -9,84 +9,84 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class VehicleContainer : IVehicleContainer
-	{
-		private readonly IList<VectoSimulationComponent> _components = new List<VectoSimulationComponent>();
-		private IEngineCockpit _engine;
-		private IGearboxCockpit _gearbox;
+    public class VehicleContainer : IVehicleContainer
+    {
+        private readonly IList<VectoSimulationComponent> _components = new List<VectoSimulationComponent>();
+        private IEngineCockpit _engine;
+        private IGearboxCockpit _gearbox;
 
-		#region IGearCockpit
+        #region IGearCockpit
 
-		public uint Gear()
-		{
-			if (_gearbox == null) {
-				throw new VectoException("no gearbox available!");
-			}
-			return _gearbox.Gear();
-		}
+        public uint Gear()
+        {
+            if (_gearbox == null) {
+                throw new VectoException("no gearbox available!");
+            }
+            return _gearbox.Gear();
+        }
 
-		#endregion
+        #endregion
 
-		#region IEngineCockpit
+        #region IEngineCockpit
 
-		public RadianPerSecond EngineSpeed()
-		{
-			if (_engine == null) {
-				throw new VectoException("no engine available!");
-			}
-			return _engine.EngineSpeed();
-		}
+        public PerSecond EngineSpeed()
+        {
+            if (_engine == null) {
+                throw new VectoException("no engine available!");
+            }
+            return _engine.EngineSpeed();
+        }
 
-		#endregion
+        #endregion
 
-		#region IVehicleCockpit
+        #region IVehicleCockpit
 
-		public double VehicleSpeed()
-		{
-			throw new VectoException("no vehicle available!");
-		}
+        public MeterPerSecond VehicleSpeed()
+        {
+            throw new VectoException("no vehicle available!");
+        }
 
-		#endregion
+        #endregion
 
-		public IReadOnlyCollection<VectoSimulationComponent> SimulationComponents()
-		{
-			return new ReadOnlyCollection<VectoSimulationComponent>(_components);
-		}
+        #region IVehicleContainer
 
-		#region IVehicleContainer
+        public virtual void AddComponent(VectoSimulationComponent component)
+        {
+            _components.Add(component);
 
-		public virtual void AddComponent(VectoSimulationComponent component)
-		{
-			_components.Add(component);
+            // TODO: refactor the following to use polymorphism?
+            var engine = component as IEngineCockpit;
+            if (engine != null) {
+                _engine = engine;
+            }
 
-			// TODO: refactor the following to use polymorphism?
-			var engine = component as IEngineCockpit;
-			if (engine != null) {
-				_engine = engine;
-			}
-
-			var gearbox = component as IGearboxCockpit;
-			if (gearbox != null) {
-				_gearbox = gearbox;
-			}
-		}
+            var gearbox = component as IGearboxCockpit;
+            if (gearbox != null) {
+                _gearbox = gearbox;
+            }
+        }
 
 
-		public void CommitSimulationStep(IModalDataWriter dataWriter)
-		{
-			LogManager.GetLogger(GetType()).Info("VehicleContainer committing simulation.");
-			foreach (var component in _components) {
-				component.CommitSimulationStep(dataWriter);
-			}
-			dataWriter.CommitSimulationStep();
-		}
+        public void CommitSimulationStep(IModalDataWriter dataWriter)
+        {
+            LogManager.GetLogger(GetType()).Info("VehicleContainer committing simulation.");
+            foreach (var component in _components) {
+                component.CommitSimulationStep(dataWriter);
+            }
+            dataWriter.CommitSimulationStep();
+        }
 
-		public void FinishSimulation(IModalDataWriter dataWriter)
-		{
-			LogManager.GetLogger(GetType()).Info("VehicleContainer finishing simulation.");
-			dataWriter.Finish();
-		}
+        public void FinishSimulation(IModalDataWriter dataWriter)
+        {
+            LogManager.GetLogger(GetType()).Info("VehicleContainer finishing simulation.");
+            dataWriter.Finish();
+        }
 
-		#endregion
-	}
+        #endregion
+
+        public IReadOnlyCollection<VectoSimulationComponent> SimulationComponents()
+        {
+            return new ReadOnlyCollection<VectoSimulationComponent>(_components);
+        }
+    }
 }

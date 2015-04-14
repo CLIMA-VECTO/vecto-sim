@@ -23,13 +23,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var outPort = new MockTnOutPort();
 			var inPort = cycle.InShaft();
+			var cycleOut = cycle.OutPort();
 
 			inPort.Connect(outPort);
 
 			var absTime = new TimeSpan();
 			var dt = TimeSpan.FromSeconds(1);
 
-			var response = cycle.Request(absTime, dt);
+			var response = cycleOut.Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof (ResponseSuccess));
 
 			var dataWriter = new TestModalDataWriter();
@@ -37,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.AreEqual(absTime, outPort.AbsTime);
 			Assert.AreEqual(dt, outPort.Dt);
-			Assert.AreEqual(600.0.RPMtoRad(), outPort.AngularFrequency);
+			Assert.AreEqual(600.0.RPMtoRad(), outPort.AngularVelocity);
 			Assert.AreEqual(0.SI<NewtonMeter>(), outPort.Torque);
 		}
 
@@ -52,19 +53,20 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var outPort = new MockDriverDemandOutPort();
 
 			var inPort = cycle.InPort();
+			var cycleOut = cycle.OutPort();
 
 			inPort.Connect(outPort);
 
 			var absTime = new TimeSpan();
 			var dt = TimeSpan.FromSeconds(1);
 
-			var response = cycle.Request(absTime, dt);
+			var response = cycleOut.Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof (ResponseSuccess));
 
 			Assert.AreEqual(absTime, outPort.AbsTime);
 			Assert.AreEqual(dt, outPort.Dt);
 			Assert.AreEqual(0.0.SI<MeterPerSecond>(), outPort.Velocity);
-			Assert.AreEqual(-0.020237973, outPort.Gradient);
+			Assert.AreEqual((-0.020237973).SI().GradientPercent.Cast<Radian>(), outPort.Gradient);
 		}
 
 		[TestMethod]
@@ -78,6 +80,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var outPort = new MockDriverDemandOutPort();
 
 			var inPort = cycle.InPort();
+			var cycleOut = cycle.OutPort();
 
 			inPort.Connect(outPort);
 
@@ -85,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var absTime = new TimeSpan();
 			var dt = TimeSpan.FromSeconds(1);
 
-			while (cycle.Request(absTime, dt) is ResponseSuccess) {
+			while (cycleOut.Request(absTime, dt) is ResponseSuccess) {
 				Assert.AreEqual(absTime, outPort.AbsTime);
 				Assert.AreEqual(dt, outPort.Dt);
 				container.CommitSimulationStep(dataWriter);

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -8,57 +9,250 @@ using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
 {
-	public class MeterPerSecond : SI
+	public class MeterPerSecond : SIBase<MeterPerSecond>
 	{
-		public MeterPerSecond(double val = 0) : base(val, new SI().Meter.Per.Second) {}
+		public MeterPerSecond() : this(0) {}
+		protected MeterPerSecond(double val) : base(val, new SI().Meter.Per.Second) {}
 	}
 
-	public class Second : SI
+	public class Second : SIBase<Second>
 	{
-		public Second(double val = 0) : base(val, new SI().Second) {}
+		public Second() : this(0) {}
+		protected Second(double val) : base(val, new SI().Second) {}
 	}
 
-	public class Watt : SI
+	public class Watt : SIBase<Watt>
 	{
-		public Watt(double val = 0) : base(val, new SI().Watt) {}
+		public Watt() : this(0) {}
+		protected Watt(double val) : base(val, new SI().Watt) {}
+
+		public static PerSecond operator /(Watt watt, NewtonMeter newtonMeter)
+		{
+			return ((watt as SI) / newtonMeter).Cast<PerSecond>();
+		}
+
+		public static NewtonMeter operator /(Watt watt, PerSecond perSecond)
+		{
+			return ((watt as SI) / perSecond).Cast<NewtonMeter>();
+		}
 	}
 
-	public class RadianPerSecond : SI
+	public class PerSecond : SIBase<PerSecond>
 	{
-		public RadianPerSecond(double val = 0) : base(val, new SI().Radian.Per.Second) {}
+		public PerSecond() : this(0) {}
+		protected PerSecond(double val) : base(val, new SI().Radian.Per.Second) {}
 	}
 
-	public class RoundsPerMinute : SI
+	public class RoundsPerMinute : SIBase<RoundsPerMinute>
 	{
-		public RoundsPerMinute(double val = 0) : base(val, new SI().Rounds.Per.Minute) {}
+		public RoundsPerMinute() : this(0) {}
+		protected RoundsPerMinute(double val) : base(val, new SI().Rounds.Per.Minute) {}
 	}
 
-	public class NewtonMeter : SI
+
+	public class Newton : SIBase<Newton>
 	{
-		public NewtonMeter(double val = 0) : base(val, new SI().Newton.Meter) {}
+		public Newton() : this(0) {}
+		protected Newton(double val) : base(val, new SI().Newton) {}
 	}
 
+	public class Radian : SIBase<Radian>
+	{
+		public Radian() : this(0) {}
+		protected Radian(double val) : base(val, new SI().Radian) {}
+	}
+
+	public class NewtonMeter : SIBase<NewtonMeter>
+	{
+		public NewtonMeter() : this(0) {}
+		protected NewtonMeter(double val) : base(val, new SI().Newton.Meter) {}
+
+		public static Watt operator *(NewtonMeter newtonMeter, PerSecond perSecond)
+		{
+			return ((newtonMeter as SI) * perSecond).Cast<Watt>();
+		}
+
+		public static Watt operator *(PerSecond perSecond, NewtonMeter newtonMeter)
+		{
+			return ((perSecond as SI) * newtonMeter).Cast<Watt>();
+		}
+
+		public static Second operator /(NewtonMeter newtonMeter, Watt watt)
+		{
+			return ((newtonMeter as SI) / watt).Cast<Second>();
+		}
+	}
+
+
+	public abstract class SIBase<T> : SI where T : SIBase<T>, new()
+	{
+		public static T Create(double val)
+		{
+			return new T { Val = val };
+		}
+
+		protected SIBase() {}
+		protected SIBase(double val) : base(val) {}
+		protected SIBase(double val, SI unit) : base(val, unit) {}
+
+		#region Operators
+
+		public static T operator +(SIBase<T> si1, SIBase<T> si2)
+		{
+			return (si1 as SI) + si2;
+		}
+
+		public static T operator +(SIBase<T> si1, SI si2)
+		{
+			return ((si1 as SI) + si2).Cast<T>();
+		}
+
+		public static T operator +(SI si1, SIBase<T> si2)
+		{
+			return si2 + si1;
+		}
+
+		public static T operator +(SIBase<T> si1, double d)
+		{
+			return ((si1 as SI) + d).Cast<T>();
+		}
+
+		public static T operator +(double d, SIBase<T> si)
+		{
+			return si + d;
+		}
+
+		public static T operator -(SIBase<T> si1, SIBase<T> si2)
+		{
+			return (si1 as SI) - si2;
+		}
+
+		public static T operator -(SIBase<T> si1, SI si2)
+		{
+			return -si2 + si1;
+		}
+
+		public static T operator -(SI si1, SIBase<T> si2)
+		{
+			return (si1 - (si2 as SI)).Cast<T>();
+		}
+
+		public static T operator -(SIBase<T> si, double d)
+		{
+			return ((si as SI) - d).Cast<T>();
+		}
+
+		public static T operator -(double d, SIBase<T> si)
+		{
+			return (d - (si as SI)).Cast<T>();
+		}
+
+		public static T operator *(double d, SIBase<T> si)
+		{
+			return si * d;
+		}
+
+		public static T operator *(SIBase<T> si, double d)
+		{
+			return ((si as SI) * d).Cast<T>();
+		}
+
+		public static T operator /(double d, SIBase<T> si)
+		{
+			return si / d;
+		}
+
+		public static T operator /(SIBase<T> si, double d)
+		{
+			return ((si as SI) / d).Cast<T>();
+		}
+
+		#endregion
+	}
+
+	/// <summary>
+	/// Class for Representing SI Units.
+	/// </summary>
 	[DataContract]
-	public class SI
+	public class SI : IComparable
 	{
-		[DataMember] protected readonly string[] Denominator;
+		[DataMember] protected readonly Unit[] Denominator;
 		[DataMember] protected readonly int Exponent;
-		[DataMember] protected readonly string[] Numerator;
+		[DataMember] protected readonly Unit[] Numerator;
 		[DataMember] protected readonly bool Reciproc;
 		[DataMember] protected readonly bool Reverse;
-		[DataMember] protected readonly double Val;
+		[DataMember] protected double Val;
 
+		[SuppressMessage("ReSharper", "InconsistentNaming")]
+		protected enum Unit
+		{
+			/// <summary>
+			/// kilo
+			/// </summary>
+			k,
+
+			/// <summary>
+			/// seconds
+			/// </summary>
+			s,
+
+			/// <summary>
+			/// meter
+			/// </summary>
+			m,
+
+			/// <summary>
+			/// gramm
+			/// </summary>
+			g,
+
+			/// <summary>
+			/// Watt
+			/// </summary>
+			W,
+
+			/// <summary>
+			/// Newton
+			/// </summary>
+			N,
+
+			/// <summary>
+			/// %
+			/// </summary>
+			Percent,
+
+			/// <summary>
+			/// minutes
+			/// </summary>
+			min,
+
+			/// <summary>
+			/// centi
+			/// </summary>
+			c,
+
+			/// <summary>
+			/// Hour
+			/// </summary>
+			h
+		}
+
+		/// <summary>
+		/// Creates a new dimensionless SI Unit.
+		/// </summary>
+		/// <param name="val"></param>
 		public SI(double val = 0.0)
 		{
 			Val = val;
 			Reciproc = false;
 			Reverse = false;
-			Numerator = new string[0];
-			Denominator = new string[0];
+			Numerator = new Unit[0];
+			Denominator = new Unit[0];
 			Exponent = 1;
 		}
 
-		protected SI(double val, IEnumerable<string> numerator, IEnumerable<string> denominator, bool reciproc = false,
+		protected SI(double val, IEnumerable<Unit> numerator, IEnumerable<Unit> denominator,
+			bool reciproc = false,
 			bool reverse = false, int exponent = 1)
 		{
 			Contract.Requires(numerator != null);
@@ -84,7 +278,7 @@ namespace TUGraz.VectoCore.Utils
 		protected SI(double val, SI unit)
 			: this(val, unit.Numerator, unit.Denominator) {}
 
-		protected SI(SI si, double? factor = null, string fromUnit = null, string toUnit = null,
+		protected SI(SI si, double? factor = null, Unit? fromUnit = null, Unit? toUnit = null,
 			bool? reciproc = null, bool? reverse = null, int? exponent = null)
 		{
 			Contract.Requires(si != null);
@@ -129,64 +323,81 @@ namespace TUGraz.VectoCore.Utils
 			Denominator = numerator.ToArray();
 		}
 
-		private void UpdateUnit(string fromUnit, string toUnit, ICollection<string> units)
+		private void UpdateUnit(Unit? fromUnit, Unit? toUnit, ICollection<Unit> units)
 		{
-			if (Reverse && !string.IsNullOrEmpty(fromUnit)) {
-				if (units.Contains(fromUnit)) {
-					units.Remove(fromUnit);
+			if (Reverse && fromUnit.HasValue) {
+				if (units.Contains(fromUnit.Value)) {
+					units.Remove(fromUnit.Value);
 				} else {
-					throw new VectoException("Unit missing. Conversion not possible.");
+					throw new VectoException(string.Format("Unit missing. Conversion not possible. [{0}] does not contain a [{1}].",
+						string.Join(", ", units), fromUnit));
 				}
 			}
 
-			if (!string.IsNullOrEmpty(toUnit)) {
-				units.Add(toUnit);
+			if (toUnit.HasValue) {
+				units.Add(toUnit.Value);
 			}
 		}
 
 		/// <summary>
-		///     Convert an SI unit into another SI unit, defined by term following after the To().
+		/// Converts the SI unit to another SI unit, defined by term(s) following after the ConvertTo().
+		/// The Conversion Mode is active until an arithmetic operator is used (+,-,*,/), 
+		/// or the .Value-Method, or the .Cast-Method were called.
+		/// ATTENTION: Before returning an SI Unit, ensure to cancel Conversion Mode (with .Value or .Cast).
 		/// </summary>
 		/// <returns></returns>
-		public SI To()
+		public SI ConvertTo()
 		{
 			return new SI(Linear, reciproc: false, reverse: true);
 		}
 
-		public T To<T>() where T : SI
+		/// <summary>
+		/// Casts the SI Unit to the concrete unit type (if the units allow such an cast).
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		public T Cast<T>() where T : SIBase<T>, new()
 		{
-			var t = (T) Activator.CreateInstance(typeof (T), Val);
-			Contract.Assert(HasEqualUnit(t), string.Format("SI Unit Conversion failed: From {0} to {1}", this, t));
+			var t = SIBase<T>.Create(Val);
+			if (!HasEqualUnit(t)) {
+				throw new VectoException(string.Format("SI Unit Conversion failed: From {0} to {1}", this, t));
+			}
 			return t;
 		}
 
+		/// <summary>
+		/// Converts the derived SI units to the basic units and returns this as a new SI object.
+		/// </summary>
+		/// <returns></returns>
 		public SI ToBasicUnits()
 		{
-			var numerator = new List<string>();
-			var denominator = new List<string>();
+			var numerator = new List<Unit>();
+			var denominator = new List<Unit>();
 			Numerator.ToList().ForEach(unit => ConvertToBasicUnits(unit, numerator, denominator));
 			Denominator.ToList().ForEach(unit => ConvertToBasicUnits(unit, denominator, numerator));
 			return new SI(Val, numerator, denominator);
 		}
 
-		private static void ConvertToBasicUnits(string unit, ICollection<string> numerator, ICollection<string> denominator)
+
+		private static void ConvertToBasicUnits(Unit unit, ICollection<Unit> numerator,
+			ICollection<Unit> denominator)
 		{
 			switch (unit) {
-				case "W":
-					numerator.Add("k");
-					numerator.Add("g");
-					numerator.Add("m");
-					numerator.Add("m");
-					denominator.Add("s");
-					denominator.Add("s");
-					denominator.Add("s");
+				case Unit.W:
+					numerator.Add(Unit.k);
+					numerator.Add(Unit.g);
+					numerator.Add(Unit.m);
+					numerator.Add(Unit.m);
+					denominator.Add(Unit.s);
+					denominator.Add(Unit.s);
+					denominator.Add(Unit.s);
 					break;
-				case "N":
-					numerator.Add("k");
-					numerator.Add("g");
-					numerator.Add("m");
-					denominator.Add("s");
-					denominator.Add("s");
+				case Unit.N:
+					numerator.Add(Unit.k);
+					numerator.Add(Unit.g);
+					numerator.Add(Unit.m);
+					denominator.Add(Unit.s);
+					denominator.Add(Unit.s);
 					break;
 				default:
 					numerator.Add(unit);
@@ -195,9 +406,9 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		/// <summary>
-		///     Gets the basic scalar value.
+		///     Gets the basic double value.
 		/// </summary>
-		protected double ScalarValue()
+		public double Double()
 		{
 			return Val;
 		}
@@ -256,7 +467,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public SI Gramm
 		{
-			get { return new SI(new SI(this, toUnit: "k"), 0.001, "g", "g"); }
+			get { return new SI(new SI(this, toUnit: Unit.k), 0.001, Unit.g, Unit.g); }
 		}
 
 		/// <summary>
@@ -265,7 +476,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public SI Newton
 		{
-			get { return new SI(this, fromUnit: "N", toUnit: "N"); }
+			get { return new SI(this, fromUnit: Unit.N, toUnit: Unit.N); }
 		}
 
 		/// <summary>
@@ -274,7 +485,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public SI Watt
 		{
-			get { return new SI(this, fromUnit: "W", toUnit: "W"); }
+			get { return new SI(this, fromUnit: Unit.W, toUnit: Unit.W); }
 		}
 
 		/// <summary>
@@ -283,7 +494,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public SI Meter
 		{
-			get { return new SI(this, fromUnit: "m", toUnit: "m"); }
+			get { return new SI(this, fromUnit: Unit.m, toUnit: Unit.m); }
 		}
 
 		/// <summary>
@@ -292,7 +503,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public SI Second
 		{
-			get { return new SI(this, fromUnit: "s", toUnit: "s"); }
+			get { return new SI(this, fromUnit: Unit.s, toUnit: Unit.s); }
 		}
 
 		/// <summary>
@@ -301,7 +512,12 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public SI Radian
 		{
-			get { return new SI(this, fromUnit: "rad", toUnit: "rad"); }
+			get { return new SI(this); }
+		}
+
+		public SI GradientPercent
+		{
+			get { return new SI(this, factor: Math.Atan(Val) / Val, fromUnit: Unit.Percent); }
 		}
 
 		/// <summary>
@@ -310,7 +526,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public SI Rounds
 		{
-			get { return new SI(this, 2 * Math.PI, toUnit: "rad"); }
+			get { return new SI(this, 2 * Math.PI); }
 		}
 
 		/// <summary>
@@ -319,7 +535,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public SI Hour
 		{
-			get { return new SI(this, 3600.0, "h", "s"); }
+			get { return new SI(this, 3600.0, Unit.h, Unit.s); }
 		}
 
 		/// <summary>
@@ -328,7 +544,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public SI Minute
 		{
-			get { return new SI(this, 60.0, "min", "s"); }
+			get { return new SI(this, 60.0, Unit.min, Unit.s); }
 		}
 
 		/// <summary>
@@ -337,7 +553,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public SI Kilo
 		{
-			get { return new SI(this, 1000.0, "k"); }
+			get { return new SI(this, 1000.0, Unit.k); }
 		}
 
 		/// <summary>
@@ -346,7 +562,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public SI Centi
 		{
-			get { return new SI(this, 1.0 / 100.0, "c"); }
+			get { return new SI(this, 1.0 / 100.0, Unit.c); }
 		}
 
 		#endregion
@@ -355,29 +571,34 @@ namespace TUGraz.VectoCore.Utils
 
 		public static SI operator +(SI si1, SI si2)
 		{
-			Contract.Requires(si1.HasEqualUnit(si2));
+			if (!si1.HasEqualUnit(si2)) {
+				throw new VectoException(
+					string.Format("Operator '+' can only operate on SI Objects with the same unit. Got: {0} + {1}", si1, si2));
+			}
 
 			return new SI(si1.Val + si2.Val, si1.Numerator, si1.Denominator);
 		}
 
 		public static SI operator -(SI si1, SI si2)
 		{
-			Contract.Requires(si1.HasEqualUnit(si2));
-
+			if (!si1.HasEqualUnit(si2)) {
+				throw new VectoException(
+					string.Format("Operator '-' can only operate on SI Objects with the same unit. Got: {0} + {1}", si1, si2));
+			}
 			return new SI(si1.Val - si2.Val, si1.Numerator, si1.Denominator);
 		}
 
 		public static SI operator *(SI si1, SI si2)
 		{
-			var numerator = si1.Numerator.Concat(si2.Numerator).Where(d => d != "rad");
-			var denominator = si1.Denominator.Concat(si2.Denominator).Where(d => d != "rad");
+			var numerator = si1.Numerator.Concat(si2.Numerator);
+			var denominator = si1.Denominator.Concat(si2.Denominator);
 			return new SI(si1.Val * si2.Val, numerator, denominator);
 		}
 
 		public static SI operator /(SI si1, SI si2)
 		{
-			var numerator = si1.Numerator.Concat(si2.Denominator).Where(d => d != "rad");
-			var denominator = si1.Denominator.Concat(si2.Numerator).Where(d => d != "rad");
+			var numerator = si1.Numerator.Concat(si2.Denominator);
+			var denominator = si1.Denominator.Concat(si2.Numerator);
 			return new SI(si1.Val / si2.Val, numerator, denominator);
 		}
 
@@ -386,9 +607,24 @@ namespace TUGraz.VectoCore.Utils
 			return new SI(si1.Val + d, si1);
 		}
 
+		public static SI operator +(double d, SI si1)
+		{
+			return si1 + d;
+		}
+
 		public static SI operator -(SI si1, double d)
 		{
 			return new SI(si1.Val - d, si1);
+		}
+
+		public static SI operator -(double d, SI si1)
+		{
+			return new SI(d - si1.Val, si1);
+		}
+
+		public static SI operator -(SI si1)
+		{
+			return 0 - si1;
 		}
 
 		public static SI operator *(SI si1, double d)
@@ -413,25 +649,37 @@ namespace TUGraz.VectoCore.Utils
 
 		public static bool operator <(SI si1, SI si2)
 		{
-			Contract.Requires(si1.HasEqualUnit(si2));
+			if (!si1.HasEqualUnit(si2)) {
+				throw new VectoException(
+					string.Format("Operator '<' can only operate on SI Objects with the same unit. Got: {0} + {1}", si1, si2));
+			}
 			return si1.Val < si2.Val;
 		}
 
 		public static bool operator >(SI si1, SI si2)
 		{
-			Contract.Requires(si1.HasEqualUnit(si2));
+			if (!si1.HasEqualUnit(si2)) {
+				throw new VectoException(
+					string.Format("Operator '>' can only operate on SI Objects with the same unit. Got: {0} + {1}", si1, si2));
+			}
 			return si1.Val > si2.Val;
 		}
 
 		public static bool operator <=(SI si1, SI si2)
 		{
-			Contract.Requires(si1.HasEqualUnit(si2));
+			if (!si1.HasEqualUnit(si2)) {
+				throw new VectoException(
+					string.Format("Operator '<=' can only operate on SI Objects with the same unit. Got: {0} + {1}", si1, si2));
+			}
 			return si1.Val <= si2.Val;
 		}
 
 		public static bool operator >=(SI si1, SI si2)
 		{
-			Contract.Requires(si1.HasEqualUnit(si2));
+			if (!si1.HasEqualUnit(si2)) {
+				throw new VectoException(
+					string.Format("Operator '>=' can only operate on SI Objects with the same unit. Got: {0} + {1}", si1, si2));
+			}
 			return si1.Val >= si2.Val;
 		}
 
@@ -511,6 +759,14 @@ namespace TUGraz.VectoCore.Utils
 			return string.Format("{0} [{1}]", Val, GetUnitString());
 		}
 
+		public virtual string ToString(string format)
+		{
+			if (string.IsNullOrEmpty(format)) {
+				format = "";
+			}
+			return string.Format("{0:" + format + "} [{2}]", Val, format, GetUnitString());
+		}
+
 		#endregion
 
 		#region Equality members
@@ -521,13 +777,11 @@ namespace TUGraz.VectoCore.Utils
 		[Pure]
 		public bool HasEqualUnit(SI si)
 		{
-			return ToBasicUnits().Denominator.OrderBy(x => x).SequenceEqual(si.ToBasicUnits().Denominator.OrderBy(x => x))
-					&& ToBasicUnits().Numerator.OrderBy(x => x).SequenceEqual(si.ToBasicUnits().Numerator.OrderBy(x => x));
-		}
-
-		protected bool Equals(SI other)
-		{
-			return Val.Equals(other.Val) && HasEqualUnit(other);
+			return ToBasicUnits()
+				.Denominator.OrderBy(x => x)
+				.SequenceEqual(si.ToBasicUnits().Denominator.OrderBy(x => x))
+					&&
+					ToBasicUnits().Numerator.OrderBy(x => x).SequenceEqual(si.ToBasicUnits().Numerator.OrderBy(x => x));
 		}
 
 		public override bool Equals(object obj)
@@ -539,17 +793,38 @@ namespace TUGraz.VectoCore.Utils
 				return true;
 			}
 			var other = obj as SI;
-			return other != null && Equals(other);
+			return other != null && Val.Equals(other.Val) && HasEqualUnit(other);
 		}
 
 		public override int GetHashCode()
 		{
 			unchecked {
+				// ReSharper disable once NonReadonlyMemberInGetHashCode
 				var hashCode = Val.GetHashCode();
 				hashCode = (hashCode * 397) ^ (Numerator != null ? Numerator.GetHashCode() : 0);
 				hashCode = (hashCode * 397) ^ (Denominator != null ? Denominator.GetHashCode() : 0);
 				return hashCode;
 			}
+		}
+
+		public int CompareTo(object obj)
+		{
+			var si = (obj as SI);
+			if (si == null) {
+				return 1;
+			}
+
+			if (!HasEqualUnit(si)) {
+				if (si.Numerator.Length + si.Denominator.Length <= Numerator.Length + Denominator.Length) {
+					return -1;
+				}
+				return 1;
+			}
+
+			if (this > si) {
+				return 1;
+			}
+			return this < si ? -1 : 0;
 		}
 
 		public static bool operator ==(SI left, SI right)

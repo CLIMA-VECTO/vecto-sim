@@ -11,16 +11,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public TimeSpan AbsTime { get; set; }
 		public TimeSpan Dt { get; set; }
 		public NewtonMeter Torque { get; set; }
-		public RadianPerSecond AngularFrequency { get; set; }
+		public PerSecond AngularVelocity { get; set; }
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond angularFrequency)
+		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond angularVelocity)
 		{
 			AbsTime = absTime;
 			Dt = dt;
 			Torque = torque;
-			AngularFrequency = angularFrequency;
+			AngularVelocity = angularVelocity;
 			LogManager.GetLogger(GetType()).DebugFormat("Request: absTime: {0}, dt: {1}, torque: {3}, engineSpeed: {4}",
-				absTime, dt, torque, angularFrequency);
+				absTime, dt, torque, angularVelocity);
 			return new ResponseSuccess();
 		}
 	}
@@ -30,9 +30,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public TimeSpan AbsTime { get; set; }
 		public TimeSpan Dt { get; set; }
 		public MeterPerSecond Velocity { get; set; }
-		public double Gradient { get; set; }
+		public Radian Gradient { get; set; }
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond velocity, double gradient)
+		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond velocity, Radian gradient)
 		{
 			AbsTime = absTime;
 			Dt = dt;
