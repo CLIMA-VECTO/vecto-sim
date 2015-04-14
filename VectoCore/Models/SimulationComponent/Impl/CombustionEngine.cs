@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IEngineCockpit
 
-		public RadianPerSecond EngineSpeed()
+		PerSecond IEngineCockpit.EngineSpeed()
 		{
 			return _previousState.EngineSpeed;
 		}
@@ -73,14 +73,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond engineSpeed)
+		IResponse ITnOutPort.Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
 		{
 			_currentState.EngineSpeed = engineSpeed;
 			_currentState.AbsTime = absTime;
 
 			var requestedPower = Formulas.TorqueToPower(torque, engineSpeed);
 			_currentState.EnginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
-			var requestedEnginePower = (requestedPower + _currentState.EnginePowerLoss).To<Watt>();
+			var requestedEnginePower = requestedPower + _currentState.EnginePowerLoss;
 
 			if (engineSpeed < (double) _data.IdleSpeed - EngineIdleSpeedStopThreshold) {
 				_currentState.OperationMode = EngineOperationMode.Stopped;
@@ -122,13 +122,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			writer[ModalResultField.Tq_drag] = (double) _currentState.FullDragTorque;
 			writer[ModalResultField.Tq_full] = (double) _currentState.DynamicFullLoadTorque;
 			writer[ModalResultField.Tq_eng] = (double) _currentState.EngineTorque;
-			writer[ModalResultField.n] = (double) _currentState.EngineSpeed.To().Rounds.Per.Minute;
+			writer[ModalResultField.n] = (double) _currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute;
 
 			try {
 				writer[ModalResultField.FC] =
 					(double)
 						_data.ConsumptionMap.GetFuelConsumption(_currentState.EngineTorque, _currentState.EngineSpeed)
-							.To()
+							.ConvertTo()
 							.Gramm.Per.Hour;
 			} catch (VectoException ex) {
 				Log.WarnFormat("t: {0} - {1} n: {2} Tq: {3}", _currentState.AbsTime.TotalSeconds, ex.Message,
@@ -152,11 +152,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (_currentState.FullDragPower >= 0 && requestedEnginePower < 0) {
 				throw new VectoSimulationException(String.Format("t: {0}  P_engine_drag > 0! n: {1} [1/min] ",
-					_currentState.AbsTime, _currentState.EngineSpeed.To().Rounds.Per.Minute));
+					_currentState.AbsTime, _currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute));
 			}
 			if (_currentState.DynamicFullLoadPower <= 0 && requestedEnginePower > 0) {
 				throw new VectoSimulationException(String.Format("t: {0}  P_engine_full < 0! n: {1} [1/min] ",
-					_currentState.AbsTime, _currentState.EngineSpeed.To().Rounds.Per.Minute));
+					_currentState.AbsTime, _currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute));
 			}
 		}
 
@@ -217,12 +217,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		/// <summary>
-		///     computes full load power from gear [-], angularFrequency [rad/s] and dt [s].
+		///     computes full load power from gear [-], angularVelocity [rad/s] and dt [s].
 		/// </summary>
 		/// <param name="gear"></param>
-		/// <param name="angularFrequency">[rad/s]</param>
+		/// <param name="angularVelocity">[rad/s]</param>
 		/// <param name="dt">[s]</param>
-		protected void ComputeFullLoadPower(uint gear, RadianPerSecond angularFrequency, TimeSpan dt)
+		protected void ComputeFullLoadPower(uint gear, PerSecond angularVelocity, TimeSpan dt)
 		{
 			if (dt.Ticks == 0) {
 				throw new VectoException("ComputeFullLoadPower cannot compute at time 0.");
@@ -235,19 +235,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//_currentState.StationaryFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
 			_currentState.StationaryFullLoadTorque =
-				_data.GetFullLoadCurve(gear).FullLoadStationaryTorque(angularFrequency);
+				_data.GetFullLoadCurve(gear).FullLoadStationaryTorque(angularVelocity);
 			_currentState.StationaryFullLoadPower = Formulas.TorqueToPower(_currentState.StationaryFullLoadTorque,
-				angularFrequency);
+				angularVelocity);
 
-			var pt1 = _data.GetFullLoadCurve(gear).PT1(angularFrequency);
+			var pt1 = _data.GetFullLoadCurve(gear).PT1(angularVelocity);
 
-			var dynFullPowerCalculated =
-				((1 / (pt1 + 1)) * (_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower)).To<Watt>();
+			var dynFullPowerCalculated = (1 / (pt1 + 1)) *
+										(_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower);
 			_currentState.DynamicFullLoadPower = dynFullPowerCalculated < _currentState.StationaryFullLoadPower
 				? dynFullPowerCalculated
 				: _currentState.StationaryFullLoadPower;
 			_currentState.DynamicFullLoadTorque = Formulas.PowerToTorque(_currentState.DynamicFullLoadPower,
-				angularFrequency);
+				angularVelocity);
 		}
 
 		protected bool IsFullLoad(Watt requestedPower, Watt maxPower)
@@ -257,17 +257,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		/// <summary>
-		///     Calculates power loss. [W]
+		/// Calculates power loss. [W]
 		/// </summary>
 		/// <param name="torque">[Nm]</param>
-		/// <param name="engineSpeed">[rad/s]</param>
+		/// <param name="angularVelocity">[rad/s]</param>
 		/// <returns>[W]</returns>
-		protected Watt InertiaPowerLoss(NewtonMeter torque, RadianPerSecond engineSpeed)
+		protected Watt InertiaPowerLoss(NewtonMeter torque, PerSecond angularVelocity)
 		{
-			var deltaEngineSpeed = engineSpeed - _previousState.EngineSpeed;
-			var avgEngineSpeed = (_previousState.EngineSpeed + engineSpeed) / new SI(2).Second;
+			var deltaEngineSpeed = angularVelocity - _previousState.EngineSpeed;
+			var avgEngineSpeed = (_previousState.EngineSpeed + angularVelocity) / 2.0.SI<Second>();
 			var result = _data.Inertia * deltaEngineSpeed * avgEngineSpeed;
-			return result.To<Watt>();
+			return result.Cast<Watt>();
 		}
 
 		public class EngineState
@@ -287,7 +287,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			/// <summary>
 			///     [rad/s]
 			/// </summary>
-			public RadianPerSecond EngineSpeed { get; set; }
+			public PerSecond EngineSpeed { get; set; }
 
 			/// <summary>
 			///     [W]

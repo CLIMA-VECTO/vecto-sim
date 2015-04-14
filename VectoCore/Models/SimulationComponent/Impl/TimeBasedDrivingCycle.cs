@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             }
 
             return _outPort.Request(absTime, dt, Data.Entries[index].VehicleSpeed,
-                Data.Entries[index].RoadGradient.SI().GradientPercent.To<Radian>());
+                Data.Entries[index].RoadGradient.SI().GradientPercent.Cast<Radian>());
         }
 
         #endregion

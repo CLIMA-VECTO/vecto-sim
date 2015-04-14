@@ -88,6 +88,8 @@
     <Compile Include="Utils\SITest.cs" />
     <Compile Include="Utils\DelauneyMapTest.cs" />
     <Compile Include="Utils\TestModalDataWriter.cs" />
+    <Compile Include="Utils\DoubleExtensionMethodTest.cs" />
+    <Compile Include="Utils\VectoMathTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VectoCore\VectoCore.csproj">
