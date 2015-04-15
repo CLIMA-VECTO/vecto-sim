@@ -44,7 +44,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
             _outPort = other;
         }
 
-        #endregion
+				#endregion
+
+
 
         #region ITnOutPort
 
