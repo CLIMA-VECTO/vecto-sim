@@ -122,6 +122,12 @@
     <Compile Include="Models\SimulationComponent\Data\DrivingCycleData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FullLoadCurve.cs" />
+    <Compile Include="Models\SimulationComponent\Data\GearboxData.cs" />
+    <Compile Include="Models\SimulationComponent\Data\Gearbox\Gear.cs" />
+    <Compile Include="Models\SimulationComponent\Data\Gearbox\TransmissionLossMap.cs" />
+    <Compile Include="Models\SimulationComponent\Data\Gearbox\ShiftPolygon.cs" />
+    <Compile Include="Models\SimulationComponent\Data\Gearbox\TorqueConverterData.cs" />
+    <Compile Include="Models\SimulationComponent\Data\JsonDataHeader.cs" />
     <Compile Include="Models\SimulationComponent\Data\RetarderLossMap.cs" />
     <Compile Include="Models\SimulationComponent\IClutch.cs" />
     <Compile Include="Models\SimulationComponent\IEngineOnlyDrivingCycle.cs" />
