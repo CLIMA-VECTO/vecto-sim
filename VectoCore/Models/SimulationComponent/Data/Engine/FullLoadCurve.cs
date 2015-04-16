@@ -90,9 +90,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		public NewtonMeter FullLoadStationaryTorque(PerSecond angularVelocity)
 		{
 			var idx = FindIndex(angularVelocity);
-			return VectoMath.Interpolate((double) _entries[idx - 1].EngineSpeed, (double) _entries[idx].EngineSpeed,
-				(double) _entries[idx - 1].TorqueFullLoad, (double) _entries[idx].TorqueFullLoad,
-				(double) angularVelocity).SI<NewtonMeter>();
+			return VectoMath.Interpolate(_entries[idx - 1].EngineSpeed, _entries[idx].EngineSpeed,
+				_entries[idx - 1].TorqueFullLoad, _entries[idx].TorqueFullLoad,
+				angularVelocity);
 		}
 
 		/// <summary>
@@ -113,9 +113,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		public NewtonMeter DragLoadStationaryTorque(PerSecond angularVelocity)
 		{
 			var idx = FindIndex(angularVelocity);
-			return VectoMath.Interpolate((double) _entries[idx - 1].EngineSpeed, (double) _entries[idx].EngineSpeed,
-				(double) _entries[idx - 1].TorqueDrag, (double) _entries[idx].TorqueDrag,
-				(double) angularVelocity).SI<NewtonMeter>();
+			return VectoMath.Interpolate(_entries[idx - 1].EngineSpeed, _entries[idx].EngineSpeed,
+				_entries[idx - 1].TorqueDrag, _entries[idx].TorqueDrag,
+				angularVelocity);
 		}
 
 		/// <summary>
@@ -132,21 +132,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		}
 
 		/// <summary>
-		///     [rad/s] => [-]
+		///     [rad/s] => [s]
 		/// </summary>
 		/// <param name="angularVelocity">[rad/s]</param>
-		/// <returns>[-]</returns>
-		public double PT1(PerSecond angularVelocity)
+		/// <returns>[s]</returns>
+		public Second PT1(PerSecond angularVelocity)
 		{
 			Contract.Requires(angularVelocity.HasEqualUnit(new SI().Radian.Per.Second));
 			Contract.Ensures(Contract.Result<SI>().HasEqualUnit(new SI()));
 
 			var idx = FindIndex(angularVelocity);
-			return VectoMath.Interpolate(_entries[idx - 1].EngineSpeed.Double(),
-				_entries[idx].EngineSpeed.Double(),
-				_entries[idx - 1].PT1.Double(), _entries[idx].PT1.Double(),
-				angularVelocity.Double());
+			return VectoMath.Interpolate(_entries[idx - 1].EngineSpeed, _entries[idx].EngineSpeed,
+				_entries[idx - 1].PT1, _entries[idx].PT1, angularVelocity);
 		}
+
+		/// <summary>
+		///		Get the engine's rated speed from the given full-load curve (i.e. engine speed with max. power)
+		/// </summary>
+		/// <returns>[1/s]</returns>
+		public PerSecond RatedSpeed()
+		{
+			var max = new Tuple<PerSecond, Watt>(new PerSecond(), new Watt());
+			for (var idx = 1; idx < _entries.Count; idx++) {
+				var currentMax = FindMaxPower(_entries[idx - 1], _entries[idx]);
+				if (currentMax.Item2 > max.Item2) {
+					max = currentMax;
+				}
+			}
+
+			return max.Item1;
+		}
+
 
 		/// <summary>
 		///     [rad/s] => index. Get item index for angularVelocity.
@@ -169,6 +185,35 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				idx = angularVelocity > _entries[0].EngineSpeed ? _entries.Count - 1 : 1;
 			}
 			return idx;
+		}
+
+		private Tuple<PerSecond, Watt> FindMaxPower(FullLoadCurveEntry p1, FullLoadCurveEntry p2)
+		{
+			if (p1.EngineSpeed == p2.EngineSpeed) {
+				return new Tuple<PerSecond, Watt>(p1.EngineSpeed, Formulas.TorqueToPower(p1.TorqueFullLoad, p1.EngineSpeed));
+			}
+			if (p2.EngineSpeed < p1.EngineSpeed) {
+				var tmp = p1;
+				p1 = p2;
+				p2 = tmp;
+			}
+			// y = kx + d
+			var k = (p2.TorqueFullLoad - p1.TorqueFullLoad) / (p2.EngineSpeed - p1.EngineSpeed);
+			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;
+			if (k == 0.0.SI()) {
+				return new Tuple<PerSecond, Watt>(p2.EngineSpeed, Formulas.TorqueToPower(p2.TorqueFullLoad, p2.EngineSpeed));
+			}
+			var engineSpeedMaxPower = (-1 * d / (2 * k)).Cast<PerSecond>();
+			if (engineSpeedMaxPower < p1.EngineSpeed || engineSpeedMaxPower > p2.EngineSpeed) {
+				if (k > 0) {
+					return new Tuple<PerSecond, Watt>(p2.EngineSpeed, Formulas.TorqueToPower(p2.TorqueFullLoad, p2.EngineSpeed));
+				}
+				return new Tuple<PerSecond, Watt>(p1.EngineSpeed, Formulas.TorqueToPower(p1.TorqueFullLoad, p1.EngineSpeed));
+			}
+			//return null;
+			var engineTorqueMaxPower = FullLoadStationaryTorque(engineSpeedMaxPower);
+			return new Tuple<PerSecond, Watt>(engineSpeedMaxPower,
+				Formulas.TorqueToPower(engineTorqueMaxPower, engineSpeedMaxPower));
 		}
 
 		private static class Fields
@@ -274,47 +319,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		}
 
 		#endregion
-
-		private Tuple<PerSecond, Watt> FindMaxPower(FullLoadCurveEntry p1, FullLoadCurveEntry p2)
-		{
-			if (p1.EngineSpeed == p2.EngineSpeed) {
-				return new Tuple<PerSecond, Watt>(p1.EngineSpeed, Formulas.TorqueToPower(p1.TorqueFullLoad, p1.EngineSpeed));
-			}
-			if (p2.EngineSpeed < p1.EngineSpeed) {
-				var tmp = p1;
-				p1 = p2;
-				p2 = tmp;
-			}
-			// y = kx + d
-			var k = (p2.TorqueFullLoad - p1.TorqueFullLoad) / (p2.EngineSpeed - p1.EngineSpeed);
-			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;
-			if (k == 0.0.SI()) {
-				return new Tuple<PerSecond, Watt>(p2.EngineSpeed, Formulas.TorqueToPower(p2.TorqueFullLoad, p2.EngineSpeed));
-			}
-			var engineSpeedMaxPower = (-1 * d / (2 * k)).Cast<PerSecond>();
-			if (engineSpeedMaxPower < p1.EngineSpeed || engineSpeedMaxPower > p2.EngineSpeed) {
-				if (k > 0) {
-					return new Tuple<PerSecond, Watt>(p2.EngineSpeed, Formulas.TorqueToPower(p2.TorqueFullLoad, p2.EngineSpeed));
-				}
-				return new Tuple<PerSecond, Watt>(p1.EngineSpeed, Formulas.TorqueToPower(p1.TorqueFullLoad, p1.EngineSpeed));
-			}
-			//return null;
-			var engineTorqueMaxPower = FullLoadStationaryTorque(engineSpeedMaxPower);
-			return new Tuple<PerSecond, Watt>(engineSpeedMaxPower,
-				Formulas.TorqueToPower(engineTorqueMaxPower, engineSpeedMaxPower));
-		}
-
-		public PerSecond RatedSpeed()
-		{
-			var max = new Tuple<PerSecond, Watt>(new PerSecond(), new Watt());
-			for (var idx = 1; idx < _entries.Count; idx++) {
-				var currentMax = FindMaxPower(_entries[idx - 1], _entries[idx]);
-				if (currentMax.Item2 > max.Item2) {
-					max = currentMax;
-				}
-			}
-
-			return max.Item1;
-		}
 	}
 }
