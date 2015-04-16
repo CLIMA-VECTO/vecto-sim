@@ -2,5 +2,5 @@
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public interface IClutch : IPowerTrainComponent {}
+	public interface IPowerTrainComponent : IInShaft, IOutShaft {}
 }
