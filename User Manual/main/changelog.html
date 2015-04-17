@@ -1,11 +1,133 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 
+
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>VECTO Changelog</title></head><body>
 
 <div style="text-align: center;"><div style="text-align: left;"><span style="font-family: Verdana;"><big><big><big><span style="font-weight: bold;">Changelog</span></big></big></big></span><br><hr style="width: 100%; height: 0px;"><br><span style="font-family: Verdana;"></span></div><span style="font-family: Verdana;"></span>
 
-<div style="text-align: left;"><span style="font-family: Tahoma;">VECTO 2.0<br>
+<div style="text-align: left;"><span style="font-family: Tahoma;">VECTO 2.1<br>
+</span>
+<ul>
+  <li><span style="font-family: Tahoma;">Limit engine rpm in torque converter operation acc. &gt; acc_min</span></li>
+  <li><span style="font-family: Tahoma;">Shift up (C-to-L, L-to-L) if acc. &gt; acc_min and next-gear-rpm &gt; threshold</span></li>
+  <li><span style="font-family: Tahoma;">C-to-C up-shift condition based on N80h engine speed (instead of N95h)</span></li>
+  <li><span style="font-family: Tahoma;">Pwheel-Input (SiCo Mode)</span></li>
+  <li><span style="font-family: Tahoma;">FC [g/h] is always saved in output (in addition to [g/km]), not only in Engine Only mode</span></li>
+  <li><span style="font-family: Tahoma;">Updated DEV options for AT update</span></li>
+  <li><span style="font-family: Tahoma;">"DEV" tab is now "Test"</span></li>
+  <li><span style="font-family: Tahoma;">GUI: Corrected air density unit in GUI</span></li>
+  <li><span style="font-family: Tahoma;">Bugfix: Format error in .vmod header</span></li>
+</ul>
+<span style="font-family: Tahoma;"><br>
+VECTO 2.0.4-beta4_Test (Test Release)<br>
+</span>
+<ul>
+  <li><span style="font-family: Tahoma;">Transmission loss extrapolation Errors are now Warnings in Engineering Mode.</span></li>
+  <li><span style="font-family: Tahoma;">Bugfix: Error in TC Iteration caused crash</span></li>
+  <li><span style="font-family: Tahoma;">Bugfix: Minimizing Graph window caused crash</span></li>
+  <li><span style="font-family: Tahoma;">Fixed error in cycle conversion</span></li>
+  <li><span style="font-family: Tahoma;">Errors if full load curve is too "short"</span></li>
+</ul>
+<span style="font-family: Tahoma;"><br>
+VECTO 2.0.4-beta3<br>
+</span>
+<ul>
+  <li><span style="font-family: Tahoma;">Bugfix: VECTO didn't check if
+the full load curve covers the speed range up to nhi. Now it will abort
+if the full load curve is "too short"</span></li>
+  <li><span style="font-family: Tahoma;">Update in Torque Convert model: Allowed engine speed range up to n95h (before: Pmax-speed)</span></li>
+  <li><span style="font-family: Tahoma;">Bugfix: Rare crashes caused by gear shift model</span></li>
+  <li><span style="font-family: Tahoma;">Bugfix: Error in engine inertia power calculation</span></li>
+  <li><span style="font-family: Tahoma;">Torque Converter losses in modal results</span></li>
+  <li><span style="font-family: Tahoma;">Implemented speed profile cleaning for very small values. (Caused shifting back to first gear when decelerating.)</span></li>
+  <li><span style="font-family: Tahoma;">DEV Option for advanced CSV format output (units line, additional info)</span></li>
+</ul>
+<span style="font-family: Tahoma;"><br>
+VECTO 2.0.4-beta2<br>
+</span>
+<ul>
+  <li><span style="font-family: Tahoma;">Bugfix: VECTO freezed if
+torque converter creeping was not possible due to low full load torque.
+Now it will abort with error message.</span></li>
+  <li><span style="font-family: Tahoma;">Bugfix: Small fixes in torque converter model</span></li>
+</ul>
+<span style="font-family: Tahoma;"><br>
+VECTO 2.0.4-beta1<br>
+</span>
+<ul>
+  <li><span style="font-family: Tahoma;">Updated CSV format of some declaration config files</span></li>
+  <li><span style="font-family: Tahoma;">Various bugfixes in AT model</span></li>
+  <li><span style="font-family: Tahoma;">rdyn validation</span></li>
+  <li><span style="font-family: Tahoma;">Fixed bug in map interpolation</span></li>
+  <li><span style="font-family: Tahoma;">Added ..\Developer Guide\Segment Table Description.xlsx</span></li>
+  <li><span style="font-family: Tahoma;">Fixed bug that caused engine power &gt; full load</span></li>
+</ul>
+<span style="font-family: Tahoma;"><br>
+VECTO 2.0.4-beta<br>
+</span>
+<ul>
+  <li><span style="font-family: Tahoma;">AT update for 1C2C gearboxes</span></li>
+  <li><span style="font-family: Tahoma;">Warning when opening or running files if file was created in different mode (Declaration/Engineering Mode)</span></li>
+</ul>
+<span style="font-family: Tahoma;"><br>
+VECTO 2.0.3-beta0<br>
+</span>
+<ul>
+  <li><span style="font-family: Tahoma;">Implemented engine-side TC inertia input parameter in GBX file</span></li>
+  <li><span style="font-family: Tahoma;">Updated User Manual for TC inertia</span></li>
+  <li><span style="font-family: Tahoma;">Relabeled "OK" buttons to "Save" in input file editors</span></li>
+</ul>
+<span style="font-family: Tahoma;"><br>
+VECTO 2.0.2-beta2<br>
+</span>
+<ul>
+  <li><span style="font-family: Tahoma;">AT/TC Update</span></li>
+  <li><span style="font-family: Tahoma;">Various smaller fixes</span></li>
+</ul>
+<span style="font-family: Tahoma;"><br>
+VECTO 2.0.2-beta1<br>
+</span>
+<ul>
+  <li><span style="font-family: Tahoma;">AT/TC Update</span></li>
+  <li><span style="font-family: Tahoma;">Engine inertia power demand
+(PaEng) is now always calculated based on the previous engine speed
+rather than vehicle acceleration.</span></li>
+  <li><span style="font-family: Tahoma;">Various smaller fixes</span></li>
+</ul>
+<span style="font-family: Tahoma;"><br>
+VECTO 2.0.1-beta1-hotfix.VECTO-33<br>
+</span>
+<ul>
+  <li><span style="font-family: Tahoma;">Fixed VECTO-34</span></li>
+  <li><span style="font-family: Tahoma;">Updated .vsum(.json)</span></li>
+  <ul>
+    <li><span style="font-family: Tahoma;">&nbsp;&nbsp;&nbsp; Added l/100km and CO2 results. (Fixed VECTO-33)</span></li>
+    <li><span style="font-family: Tahoma;">&nbsp;&nbsp;&nbsp; Added FC-Final.</span></li>
+    <li><span style="font-family: Tahoma;">&nbsp;&nbsp;&nbsp; Added Loading. (json)</span></li>
+    <li><span style="font-family: Tahoma;">&nbsp;&nbsp;&nbsp; Added missing fuel parameters. (json)</span></li>
+  </ul>
+  <li><span style="font-family: Tahoma;">Updated README.md</span></li>
+</ul>
+<span style="font-family: Tahoma;"><br>
+VECTO 2.0.1-beta1<br>
+</span>
+<ul>
+  <li><span style="font-family: Tahoma;">Updated Segment Table header</span></li>
+  <li><span style="font-family: Tahoma;">Fixed Eco Roll (VECTO-30)</span></li>
+  <li><span style="font-family: Tahoma;">Fixed Cycles in VECTO Editor being overwritten in Engineering Mode (VECTO-31)</span></li>
+</ul>
+<span style="font-family: Tahoma;"><br>
+VECTO 2.0.1-beta0<br>
+</span>
+<ul>
+  <li><span style="font-family: Tahoma;">Update Notes &gt; Release Notes</span></li>
+  <li><span style="font-family: Tahoma;">Segment Table header</span></li>
+</ul>
+<span style="font-family: Tahoma;"><br>
+<br>
+<br>
+VECTO 2.0<br>
 </span>
 <ul>
   <li><span style="font-family: Tahoma;">Updated CSV file format. Now only one header with units included.</span></li>

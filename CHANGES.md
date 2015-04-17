@@ -2,9 +2,26 @@
 ### VECTO x.x (current source)
 
 TODO
-- Don't mark gearbox extrapolation as error > only info (MAN)
 - Traction interruption: No engine rev down - hold rpm until new gear engaged (Allison)
 
+
+### VECTO 2.1
+* Limit engine rpm in torque converter operation acc. > acc_min
+* Shift up (C-to-L, L-to-L) if acc. > acc_min and next-gear-rpm > threshold
+* C-to-C up-shift condition based on N80h engine speed (instead of N95h)
+* Pwheel-Input (SiCo Mode)
+* FC [g/h] is always saved in output (in addition to [g/km]), not only in Engine Only mode
+* Updated DEV options for AT update
+* "DEV" tab is now "Test"
+* GUI: Corrected air density unit in GUI
+* Bugfix: Format error in .vmod header
+
+### VECTO 2.0.4-beta4_Test (Test Release)
+* Transmission loss extrapolation Errors are now Warnings in Engineering Mode.
+* Bugfix: Error in TC Iteration caused crash
+* Bugfix: Minimizing Graph window caused crash
+* Fixed error in cycle conversion
+* Errors if full load curve is too "short"
 
 ### VECTO 2.0.4-beta3
 * Bugfix: VECTO didn't check if the full load curve covers the speed range up to nhi. Now it will abort if the full load curve is "too short"
