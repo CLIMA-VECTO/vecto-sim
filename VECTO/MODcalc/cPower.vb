@@ -1962,18 +1962,27 @@ Public Class cPower
 
 		'Upshift
 		If PlusGearLockUp Then
-			If nUnext > nUup AndAlso Pe <= FLD(LastGear + 1).Pfull(nUnext) Then
-				Return LastGear + 1
+			'C-to-L / L-to-L
+			If DEV.TCshiftModeNew Then
+				If _
+					nUnext > nUup AndAlso
+					fPeGearMod(LastGear + 1, t, MODdata.Vh.V(t), DEV.TCaccmin, Grad) <= FLD(LastGear + 1).Pfull(nUnext) Then
+					Return LastGear + 1
+				End If
+			Else
+				If nUnext > nUup AndAlso Pe <= FLD(LastGear + 1).Pfull(nUnext) Then
+					Return LastGear + 1
+				End If
 			End If
 		Else
-			'1C-to-2C
+			'C-to-C
 			If LastGear < GBX.GearCount Then
 
-				iRatio = GBX.Igetr(LastGear + 1)/GBX.Igetr(LastGear)
+				iRatio = GBX.Igetr(LastGear + 1) / GBX.Igetr(LastGear)
 
 				If _
-					fnUout(Vact, LastGear + 1) > Math.Min(900, iRatio*(FLD(LastGear).N80h - 150)) AndAlso
-					FLD(LastGear + 1).Pfull(nU*iRatio) > 0.7*FLD(LastGear).Pfull(nU) Then
+					fnUout(Vact, LastGear + 1) > Math.Min(900, iRatio * (FLD(LastGear).N80h - 150)) AndAlso
+					FLD(LastGear + 1).Pfull(nU * iRatio) > 0.7 * FLD(LastGear).Pfull(nU) Then
 					Return LastGear + 1
 				End If
 			End If

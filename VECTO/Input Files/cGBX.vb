@@ -433,6 +433,8 @@ Public Class cGBX
 		Dim Brake As Boolean
 		Dim FirstDone As Boolean
 
+		Dim rpmLimit As Single
+
 		Dim MsgSrc As String
 
 		MsgSrc = "GBX/TCiteration/t= " & t + 1
@@ -443,6 +445,16 @@ Public Class cGBX
 		Brake = False
 		TCNeutral = False
 
+		'TC rpm limit
+		If DEV.TClimitOn Then
+			If MODdata.Vh.a(t) >= DEV.TCaccmin Then
+				rpmLimit = DEV.TClimit
+			Else
+				rpmLimit = ENG.Nrated
+			End If
+		Else
+			rpmLimit = ENG.Nrated
+		End If
 
 		'Power to torque
 		Mout = nPeToM(nUout, PeOut)
@@ -461,7 +473,7 @@ Public Class cGBX
 			nuMax = Math.Min(TCnu(TCdim), nUout/ENG.Nidle)
 
 		Else
-			nuMin = Math.Max(nUout/DEV.TClimit, TCnu(0))
+			nuMin = Math.Max(nUout / rpmLimit, TCnu(0))
 			nuMax = Math.Min(TCnuMax, nUout/ENG.Nidle)
 		End If
 

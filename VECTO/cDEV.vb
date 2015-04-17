@@ -16,11 +16,12 @@ Public Class cDEV
 	Private MyOptions As Dictionary(Of String, cDEVoption)
 	Private iOptionsDim As Integer
 
-	Public TCiterPrec As Single
-	Public TClimit As Single
-
-
 	Public AdvFormat As Boolean
+	Public TCiterPrec As Single
+	Public TClimitOn As Boolean
+	Public TClimit As Single
+	Public TCshiftModeNew As Boolean
+	Public TCaccmin As Single
 
 
 	'**************************************************************************************************************
@@ -136,14 +137,14 @@ Public Class cDEV
 
 		Conf0 = New cDEVoption(tDEVconfType.tSelection,
 								"Acceleration for AT Up-Shift power condition")
-		Conf0.AddMode("acc_target (old)")
-		Conf0.AddMode("acc_min (new)")
+		Conf0.AddMode("acc_target")	'0
+		Conf0.AddMode("acc_min")		'1
 		Conf0.ModeIndex = 1
 		MyOptions.Add("TCshiftMode", Conf0)
 
 
 		Conf0 = New cDEVoption(tDEVconfType.tSingleVal, "Minimum acceleration (acc_min) for TC rpm limit and AT-Shift [m/s²]")
-		Conf0.SingleVal = 0.02
+		Conf0.SingleVal = 0.025
 		MyOptions.Add("TCaccMin", Conf0)
 
 
@@ -158,7 +159,10 @@ Public Class cDEV
 	Public Sub SetOptions()
 		TCiterPrec = MyOptions("TCiterPrec").SingleVal
 		AdvFormat = MyOptions("AdvFormat").BoolVal
+		TClimitOn = MyOptions("TClimitOn").BoolVal
 		TClimit = MyOptions("TClimit").SingleVal
+		TCshiftModeNew = (MyOptions("TCshiftMode").ModeIndex = 1)
+		TCaccmin = MyOptions("TCaccMin").SingleVal
 	End Sub
 
 	'Demo for Delegate Function
