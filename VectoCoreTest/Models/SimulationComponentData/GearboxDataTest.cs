@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(1.0, gbxData.TractionInterruption.Double(), 0.0001);
 			Assert.AreEqual(9, gbxData.GearsCount());
 
-			Assert.AreEqual(3.240355, gbxData[0].Ratio, 0.0001);
+			Assert.AreEqual(3.240355, gbxData.AxleGear.Ratio, 0.0001);
 			Assert.AreEqual(1.0, gbxData[7].Ratio, 0.0001);
 
 			Assert.AreEqual(-400, gbxData[1].ShiftPolygon[0].Torque.Double(), 0.0001);

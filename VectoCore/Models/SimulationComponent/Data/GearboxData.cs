@@ -64,6 +64,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			Custom
 		}
 
+		[DataMember]
+		public Gear AxleGear { get; protected set; }
+
 		[DataMember] private Dictionary<int, Gear> _gearData = new Dictionary<int, Gear>();
 
 		[DataMember] private Data _data;
@@ -86,14 +89,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			gearboxData._data = d;
 
-			foreach (var gearSettings in d.Body.Gears) {
+			for (var i = 0; i < d.Body.Gears.Count; i++) {
+				//foreach (var gearSettings in d.Body.Gears) {
+				var gearSettings = d.Body.Gears[i];
 				var lossMap = TransmissionLossMap.ReadFromFile(Path.Combine(basePath, gearSettings.LossMap));
 				var shiftPolygon = !String.IsNullOrEmpty(gearSettings.ShiftPolygon)
 					? ShiftPolygon.ReadFromFile(Path.Combine(basePath, gearSettings.ShiftPolygon))
 					: null;
 				var gear = new Gear(lossMap, shiftPolygon, gearSettings.Ratio, gearSettings.TCactive);
-				gearboxData._gearData.Add(gearboxData._gearData.Count, gear);
+				if (i == 0) {
+					gearboxData.AxleGear = gear;
+				} else {
+					gearboxData._gearData.Add(i, gear);
+				}
 			}
+
 			switch (d.Body.GearboxTypeStr) {
 				case "AMT":
 					gearboxData._type = GearboxType.AutomatedManualTransmission;
