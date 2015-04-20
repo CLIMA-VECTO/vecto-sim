@@ -1,14 +1,12 @@
 using System;
-using Common.Logging.Factory;
-using NLog.LayoutRenderers.Wrappers;
 
 namespace TUGraz.VectoCore.Utils
 {
 	public class VectoMath
 	{
-		public static double Interpolate(double x1, double x2, double y1, double y2, double xint)
+		public static T2 Interpolate<T1, T2>(T1 x1, T1 x2, T2 y1, T2 y2, T1 xint) where T1 : SI where T2 : SIBase<T2>
 		{
-			return (xint - x1) * (y2 - y1) / (x2 - x1) + y1;
+			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1).Cast<T2>();
 		}
 
 		public static SI Abs(SI si)
