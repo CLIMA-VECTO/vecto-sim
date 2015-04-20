@@ -2,6 +2,7 @@
 <html><head>
 
 
+
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>VECTO Changelog</title></head><body>
 
 <div style="text-align: center;"><div style="text-align: left;"><span style="font-family: Verdana;"><big><big><big><span style="font-weight: bold;">Changelog</span></big></big></big></span><br><hr style="width: 100%; height: 0px;"><br><span style="font-family: Verdana;"></span></div><span style="font-family: Verdana;"></span>
@@ -9,14 +10,25 @@
 <div style="text-align: left;"><span style="font-family: Tahoma;">VECTO 2.1<br>
 </span>
 <ul>
-  <li><span style="font-family: Tahoma;">Limit engine rpm in torque converter operation acc. &gt; acc_min</span></li>
-  <li><span style="font-family: Tahoma;">Shift up (C-to-L, L-to-L) if acc. &gt; acc_min and next-gear-rpm &gt; threshold</span></li>
-  <li><span style="font-family: Tahoma;">C-to-C up-shift condition based on N80h engine speed (instead of N95h)</span></li>
+  
+  <li><span style="font-family: Tahoma;">Automatic Transmission / Torque Converter Model<br>
+    </span></li>
+  <ul>
+    <li><span style="font-family: Tahoma;">Limit engine rpm in torque converter operation acc. &gt; acc_min</span></li>
+  </ul>
+
+  
+  <ul>
+    <li><span style="font-family: Tahoma;">Shift up (C-to-L, L-to-L) if acc. &gt; acc_min and next-gear-rpm &gt; threshold</span></li>
+  </ul>
+
+  
+  <ul>
+    <li><span style="font-family: Tahoma;">C-to-C up-shift condition based on N80h engine speed (instead of N95h)</span></li>
+  </ul>
+
   <li><span style="font-family: Tahoma;">Pwheel-Input (SiCo Mode)</span></li>
-  <li><span style="font-family: Tahoma;">FC [g/h] is always saved in output (in addition to [g/km]), not only in Engine Only mode</span></li>
-  <li><span style="font-family: Tahoma;">Updated DEV options for AT update</span></li>
-  <li><span style="font-family: Tahoma;">"DEV" tab is now "Test"</span></li>
-  <li><span style="font-family: Tahoma;">GUI: Corrected air density unit in GUI</span></li>
+  <li><span style="font-family: Tahoma;">FC [g/h] is always saved in output (in addition to [g/km]), not only in Engine Only mode</span></li><li><span style="font-family: Tahoma;">GUI: Corrected air density unit in GUI</span></li>
   <li><span style="font-family: Tahoma;">Bugfix: Format error in .vmod header</span></li>
 </ul>
 <span style="font-family: Tahoma;"><br>
@@ -125,8 +137,6 @@ VECTO 2.0.1-beta0<br>
   <li><span style="font-family: Tahoma;">Segment Table header</span></li>
 </ul>
 <span style="font-family: Tahoma;"><br>
-<br>
-<br>
 VECTO 2.0<br>
 </span>
 <ul>
