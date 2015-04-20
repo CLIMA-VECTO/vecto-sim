@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -21,6 +23,24 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public static void ClassInitialize(TestContext ctx)
 		{
 			AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+		}
+
+		/// <summary>
+		/// Assert an expected Exception.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="func"></param>
+		/// <param name="message"></param>
+		public static void AssertException<T>(Action func, string message = null) where T : Exception
+		{
+			try {
+				func();
+				Assert.Fail("Expected Exception {0}, but no exception occured.", typeof(T));
+			} catch (T ex) {
+				if (message != null) {
+					Assert.AreEqual(message, ex.Message);
+				}
+			}
 		}
 
 		[TestMethod]
@@ -152,6 +172,39 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engine = new CombustionEngine(vehicle, engineData);
 
 			engineData.WriteToFile("engineData test output.veng");
+		}
+
+		[TestMethod]
+		public void Test_EngineData()
+		{
+			var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
+			var motorway = engineData.WHTCMotorway;
+			Assert.AreEqual(motorway.Double(), 0);
+			Assert.IsTrue(motorway.HasEqualUnit(new SI().Kilo.Gramm.Per.Watt.Second.ConvertTo()));
+
+			var rural = engineData.WHTCRural;
+			Assert.AreEqual(rural.Double(), 0);
+			Assert.IsTrue(rural.HasEqualUnit(new SI().Kilo.Gramm.Per.Watt.Second.ConvertTo()));
+
+			var urban = engineData.WHTCUrban;
+			Assert.AreEqual(urban.Double(), 0);
+			Assert.IsTrue(urban.HasEqualUnit(new SI().Kilo.Gramm.Per.Watt.Second.ConvertTo()));
+
+			var displace = engineData.Displacement;
+			Assert.AreEqual(0.01273, displace.Double());
+			Assert.IsTrue(displace.HasEqualUnit(new SI().Cubic.Meter));
+
+			var inert = engineData.Inertia;
+			Assert.AreEqual(3.8, inert.Double(), 0.00001);
+			Assert.IsTrue(inert.HasEqualUnit(new SI().Kilo.Gramm.Square.Meter));
+
+			var idle = engineData.IdleSpeed;
+			Assert.AreEqual(58.6430628670095, idle.Double(), 0.000001);
+			Assert.IsTrue(idle.HasEqualUnit(0.SI<PerSecond>()));
+
+			var flc0 = engineData.GetFullLoadCurve(0);
+
+			AssertException<KeyNotFoundException>(() => { var flc10000 = engineData.GetFullLoadCurve(1000); });
 		}
 	}
 }

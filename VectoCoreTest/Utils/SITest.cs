@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			try {
 				func();
-				Assert.Fail("Expected Exception {0}, but no exception occured.", typeof (T));
+				Assert.Fail("Expected Exception {0}, but no exception occured.", typeof(T));
 			} catch (T ex) {
 				if (message != null) {
 					Assert.AreEqual(message, ex.Message);
@@ -27,63 +27,64 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 		}
 
+		[TestMethod]
 		public void SI_TypicalUsageTest()
 		{
 			//mult
 			var angularVelocity = 600.RPMtoRad();
 			var torque = 1500.SI<NewtonMeter>();
 			var power = angularVelocity * torque;
-			Assert.IsInstanceOfType(power, typeof (Watt));
-			Assert.AreEqual(600 * 1500, power.Double());
+			Assert.IsInstanceOfType(power, typeof(Watt));
+			Assert.AreEqual(600.0 / 60 * 2 * Math.PI * 1500, power.Double());
 
 			var siStandardMult = power * torque;
-			Assert.IsInstanceOfType(siStandardMult, typeof (SI));
-			Assert.AreEqual(600 * 1500 * 1500, siStandardMult.Double());
+			Assert.IsInstanceOfType(siStandardMult, typeof(SI));
+			Assert.AreEqual(600.0 / 60 * 2 * Math.PI * 1500 * 1500, siStandardMult.Double());
 			Assert.IsTrue(siStandardMult.HasEqualUnit(new SI().Watt.Newton.Meter));
 
 			//div
 			var torque2 = power / angularVelocity;
-			Assert.IsInstanceOfType(torque2, typeof (NewtonMeter));
+			Assert.IsInstanceOfType(torque2, typeof(NewtonMeter));
 			Assert.AreEqual(1500, torque2.Double());
 
 			var siStandardDiv = power / power;
-			Assert.IsInstanceOfType(siStandardMult, typeof (SI));
+			Assert.IsInstanceOfType(siStandardMult, typeof(SI));
 			Assert.IsTrue(siStandardDiv.HasEqualUnit(new SI()));
-			Assert.AreEqual(600 * 1500 * 1500, siStandardMult.Double());
+			Assert.AreEqual(600.0 / 60 * 2 * Math.PI * 1500 * 1500, siStandardMult.Double());
 
 
 			//add
 			var angularVelocity2 = 400.SI<RoundsPerMinute>().Cast<PerSecond>();
 			var angVeloSum = angularVelocity + angularVelocity2;
-			Assert.IsInstanceOfType(angVeloSum, typeof (PerSecond));
-			Assert.AreEqual(400 + 600, angVeloSum.Double());
+			Assert.IsInstanceOfType(angVeloSum, typeof(PerSecond));
+			Assert.AreEqual((400.0 + 600) / 60 * 2 * Math.PI, angVeloSum.Double(), 0.0000001);
 			AssertException<VectoException>(() => { var x = 500.SI().Watt + 300.SI().Newton; });
 
 			//subtract
 			var angVeloDiff = angularVelocity - angularVelocity2;
-			Assert.IsInstanceOfType(angVeloDiff, typeof (PerSecond));
-			Assert.AreEqual(600 - 400, angVeloDiff.Double());
+			Assert.IsInstanceOfType(angVeloDiff, typeof(PerSecond));
+			Assert.AreEqual((600.0 - 400) / 60 * 2 * Math.PI, angVeloDiff.Double(), 0.0000001);
 
 			//general si unit
-			var generalSIUnit = 60000.SI().Gramm.Per.Kilo.Watt.Hour.ConvertTo().Kilo.Gramm.Per.Watt.Second;
-			Assert.IsInstanceOfType(generalSIUnit, typeof (SI));
+			var generalSIUnit = 3600000000.0.SI().Gramm.Per.Kilo.Watt.Hour.ConvertTo().Kilo.Gramm.Per.Watt.Second;
+			Assert.IsInstanceOfType(generalSIUnit, typeof(SI));
 			Assert.AreEqual(1, generalSIUnit.Double());
 
 
 			//type conversion
-			var engineSpeed = 600;
+			var engineSpeed = 600.0;
 			var angularVelocity3 = engineSpeed.RPMtoRad();
 
 			// convert between units measures
 			var angularVelocity4 = engineSpeed.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second;
 
 			// cast SI to specialized unit classes.
-			var angularVelocity5 = angularVelocity2.Cast<PerSecond>();
+			var angularVelocity5 = angularVelocity4.Cast<PerSecond>();
 			Assert.AreEqual(angularVelocity3, angularVelocity5);
 			Assert.AreEqual(angularVelocity3.Double(), angularVelocity4.Double());
-			Assert.IsInstanceOfType(angularVelocity3, typeof (PerSecond));
-			Assert.IsInstanceOfType(angularVelocity5, typeof (PerSecond));
-			Assert.IsInstanceOfType(angularVelocity4, typeof (SI));
+			Assert.IsInstanceOfType(angularVelocity3, typeof(PerSecond));
+			Assert.IsInstanceOfType(angularVelocity5, typeof(PerSecond));
+			Assert.IsInstanceOfType(angularVelocity4, typeof(SI));
 
 
 			// ConvertTo only allows conversion if the units are correct.
@@ -154,6 +155,27 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			var v1 = 600.SI<NewtonMeter>();
 			var v2 = 455.SI<NewtonMeter>();
+
+			Assert.IsTrue(v1 > v2);
+			Assert.IsTrue(v2 < v1);
+			Assert.IsTrue(v1 >= v2);
+			Assert.IsTrue(v2 <= v1);
+
+			Assert.IsFalse(v1 < v2);
+			Assert.IsFalse(v2 > v1);
+			Assert.IsFalse(v1 <= v2);
+			Assert.IsFalse(v2 >= v1);
+
+			Assert.AreEqual(1, new SI().CompareTo(null));
+			Assert.AreEqual(1, new SI().CompareTo("bla"));
+			Assert.AreEqual(-1, new SI().Meter.CompareTo(new SI().Kilo.Meter.Per.Hour));
+			Assert.AreEqual(1, new SI().Newton.Meter.CompareTo(new SI().Meter));
+
+			Assert.AreEqual(0, 1.SI().CompareTo(1.SI()));
+			Assert.AreEqual(-1, 1.SI().CompareTo(2.SI()));
+			Assert.AreEqual(1, 2.SI().CompareTo(1.SI()));
+
+
 			NewtonMeter v3 = v1 + v2;
 
 			NewtonMeter v4 = v1 - v2;
@@ -176,6 +198,19 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			PerSecond angVelo1 = w / t;
 			Second sec = t / w;
+		}
+
+		[TestMethod]
+		public void SI_SpecialUnits()
+		{
+			2.SI<MeterPerSecond>();
+			1.SI<Second>();
+			2.SI<Watt>();
+			1.SI<PerSecond>();
+			2.SI<RoundsPerMinute>();
+			3.SI<Newton>();
+			4.SI<Radian>();
+			5.SI<NewtonMeter>();
 		}
 	}
 }

@@ -52,14 +52,14 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		public static SI SI(this double d)
 		{
-			return (SI) d;
+			return (SI)d;
 		}
 
 
 		/// <summary>
 		/// Gets the special SI class of the number.
 		/// </summary>
-		public static T SI<T>(this double d) where T : SIBase<T>, new()
+		public static T SI<T>(this double d) where T : SIBase<T>
 		{
 			return SIBase<T>.Create(d);
 		}

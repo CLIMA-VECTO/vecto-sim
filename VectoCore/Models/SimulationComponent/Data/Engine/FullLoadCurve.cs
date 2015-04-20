@@ -90,9 +90,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		public NewtonMeter FullLoadStationaryTorque(PerSecond angularVelocity)
 		{
 			var idx = FindIndex(angularVelocity);
-			return VectoMath.Interpolate((double) _entries[idx - 1].EngineSpeed, (double) _entries[idx].EngineSpeed,
-				(double) _entries[idx - 1].TorqueFullLoad, (double) _entries[idx].TorqueFullLoad,
-				(double) angularVelocity).SI<NewtonMeter>();
+			return VectoMath.Interpolate((double)_entries[idx - 1].EngineSpeed, (double)_entries[idx].EngineSpeed,
+				(double)_entries[idx - 1].TorqueFullLoad, (double)_entries[idx].TorqueFullLoad,
+				(double)angularVelocity).SI<NewtonMeter>();
 		}
 
 		/// <summary>
@@ -113,9 +113,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		public NewtonMeter DragLoadStationaryTorque(PerSecond angularVelocity)
 		{
 			var idx = FindIndex(angularVelocity);
-			return VectoMath.Interpolate((double) _entries[idx - 1].EngineSpeed, (double) _entries[idx].EngineSpeed,
-				(double) _entries[idx - 1].TorqueDrag, (double) _entries[idx].TorqueDrag,
-				(double) angularVelocity).SI<NewtonMeter>();
+			return VectoMath.Interpolate((double)_entries[idx - 1].EngineSpeed, (double)_entries[idx].EngineSpeed,
+				(double)_entries[idx - 1].TorqueDrag, (double)_entries[idx].TorqueDrag,
+				(double)angularVelocity).SI<NewtonMeter>();
 		}
 
 		/// <summary>
@@ -155,8 +155,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		/// <returns>index</returns>
 		protected int FindIndex(PerSecond angularVelocity)
 		{
-			Contract.Requires(angularVelocity.HasEqualUnit(new SI().Radian.Per.Second));
-
 			int idx;
 			if (angularVelocity < _entries[0].EngineSpeed) {
 				Log.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}",
@@ -235,7 +233,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				if (ReferenceEquals(this, obj)) {
 					return true;
 				}
-				return obj.GetType() == GetType() && Equals((FullLoadCurveEntry) obj);
+				return obj.GetType() == GetType() && Equals((FullLoadCurveEntry)obj);
 			}
 
 			public override int GetHashCode()
@@ -265,7 +263,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (ReferenceEquals(this, obj)) {
 				return true;
 			}
-			return obj.GetType() == GetType() && Equals((FullLoadCurve) obj);
+			return obj.GetType() == GetType() && Equals((FullLoadCurve)obj);
 		}
 
 		public override int GetHashCode()
@@ -306,7 +304,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		public PerSecond RatedSpeed()
 		{
-			var max = new Tuple<PerSecond, Watt>(new PerSecond(), new Watt());
+			var max = new Tuple<PerSecond, Watt>(0.SI<PerSecond>(), 0.SI<Watt>());
 			for (var idx = 1; idx < _entries.Count; idx++) {
 				var currentMax = FindMaxPower(_entries[idx - 1], _entries[idx]);
 				if (currentMax.Item2 > max.Item2) {

@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 
-		public static T Abs<T>(T si) where T : SIBase<T>, new()
+		public static T Abs<T>(T si) where T : SIBase<T>
 		{
 			return si.Abs().Cast<T>();
 		}

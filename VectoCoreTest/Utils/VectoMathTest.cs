@@ -26,6 +26,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var negativeWatt = -10.SI<Watt>();
 			var positiveWatt = 10.SI<Watt>();
 			Assert.AreEqual(smallerWatt, VectoMath.Min(smallerWatt, biggerWatt));
+			Assert.AreEqual(smallerWatt, VectoMath.Min(biggerWatt, smallerWatt));
 
 			Assert.AreEqual(biggerWatt, VectoMath.Max(smallerWatt, biggerWatt));
 

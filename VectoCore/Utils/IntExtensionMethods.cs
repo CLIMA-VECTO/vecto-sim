@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public static SI SI(this int d)
 		{
-			return (SI) d;
+			return (SI)d;
 		}
 
 		/// <summary>
@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="d"></param>
 		/// <returns></returns>
-		public static T SI<T>(this int d) where T : SIBase<T>, new()
+		public static T SI<T>(this int d) where T : SIBase<T>
 		{
 			return SIBase<T>.Create(d);
 		}
