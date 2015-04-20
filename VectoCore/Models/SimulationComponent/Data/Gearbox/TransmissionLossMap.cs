@@ -75,11 +75,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				}).ToList();
 		}
 
-		public GearLossMapEntry GetDummyEntry()
+		public GearLossMapEntry this[int i]
 		{
-			return _entries.First();
+			get { return _entries[i]; }
 		}
-
 
 		public class GearLossMapEntry
 		{

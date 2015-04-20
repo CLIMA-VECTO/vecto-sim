@@ -31,15 +31,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			} else {
 				var log = LogManager.GetLogger<ShiftPolygon>();
 				log.WarnFormat(
-					"ShiftPolygon: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{4}'. Falling back to column index");
+					"ShiftPolygon: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index");
 				entries = CreateFromColumnIndizes(data);
 			}
 			return new ShiftPolygon { _entries = entries };
 		}
 
-		public ShiftPolygonEntry GetDummyEntry()
+		public ShiftPolygonEntry this[int i]
 		{
-			return _entries.First();
+			get { return _entries[i]; }
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)

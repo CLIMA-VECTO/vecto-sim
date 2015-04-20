@@ -2,12 +2,20 @@
 {
 	public class Gear
 	{
-		public ShiftPolygon ShiftPolygon { get; set; }
+		public ShiftPolygon ShiftPolygon { get; protected set; }
 
-		public TransmissionLossMap LossMap { get; set; }
+		public TransmissionLossMap LossMap { get; protected set; }
 
-		public double Ratio { get; set; }
+		public double Ratio { get; protected set; }
 
-		public bool TorqueConverterActive { get; set; } // TODO: think about refactoring...
+		public bool TorqueConverterActive { get; protected set; } // TODO: think about refactoring...
+
+		public Gear(TransmissionLossMap lossMap, Gearbox.ShiftPolygon shiftPolygon, double ratio, bool torqueconverterActive)
+		{
+			LossMap = lossMap;
+			ShiftPolygon = shiftPolygon;
+			Ratio = ratio;
+			TorqueConverterActive = torqueconverterActive;
+		}
 	}
 }

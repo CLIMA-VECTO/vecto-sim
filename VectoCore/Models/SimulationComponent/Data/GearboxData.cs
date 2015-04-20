@@ -25,6 +25,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	///    "ModelName": "Generic 24t Coach",
 	///    "Inertia": 0.0,
 	///    "TracInt": 1.0,
+	///     "TqReserve": 20.0,
+	///		"SkipGears": true,
+	///		"ShiftTime": 2,
+	///		"EaryShiftUp": true,
+	///		"StartTqReserve": 20.0,
+	///		"StartSpeed": 2.0,
+	///		"StartAcc": 0.6,
+	///		"GearboxType": "AMT",
+	///		"TorqueConverter": {
+	///			"Enabled": false,
+	///			"File": "<NOFILE>",
+	///			"RefRPM": 0.0,
+	///			"Inertia": 0.0
+	///		}
 	///    "Gears": [
 	///      {
 	///        "Ratio": 3.240355,
@@ -77,12 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				var shiftPolygon = !String.IsNullOrEmpty(gearSettings.ShiftPolygon)
 					? ShiftPolygon.ReadFromFile(Path.Combine(basePath, gearSettings.ShiftPolygon))
 					: null;
-				var gear = new Gear {
-					LossMap = lossMap,
-					ShiftPolygon = shiftPolygon,
-					Ratio = gearSettings.Ratio,
-					TorqueConverterActive = gearSettings.TCactive
-				};
+				var gear = new Gear(lossMap, shiftPolygon, gearSettings.Ratio, gearSettings.TCactive);
 				gearboxData._gearData.Add(gearboxData._gearData.Count, gear);
 			}
 			switch (d.Body.GearboxTypeStr) {
@@ -100,6 +109,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					break;
 			}
 			return gearboxData;
+		}
+
+		public int GearsCount()
+		{
+			return _data.Body.Gears.Count;
+		}
+
+		public Gear this[int i]
+		{
+			get { return _gearData[i]; }
 		}
 
 		public bool SavedInDeclarationMode
