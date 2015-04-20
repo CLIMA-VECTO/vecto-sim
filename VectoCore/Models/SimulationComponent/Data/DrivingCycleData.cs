@@ -8,6 +8,12 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+	//todo: automatic parsing of si units - idea of kostis
+	// https://webgate.ec.europa.eu/CITnet/jira/browse/VECTO-80?focusedCommentId=1345532&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-1345532
+	// VECTO-80 Kostis ANAGNOSTOPOULOS:
+	// It would be really nice to link the actual units used by data and column-headers, and being able to parse them back,
+	// using a format like this: foo [m/s^2], bar [kg (m/s)^2], 
+
 	public class DrivingCycleData : SimulationComponentData
 	{
 		public enum CycleType

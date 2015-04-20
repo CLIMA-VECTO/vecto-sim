@@ -1,141 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using Common.Logging;
-using Newtonsoft.Json;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class VectoJob
-	{
-		/// <summary>
-		///     A class which represents the json data format for serializing and deserializing the VectoJob files.
-		/// </summary>
-		/// <remarks>
-		///{
-		///   "Header": {
-		///     "CreatedBy": " ()",
-		///     "Date": "3/4/2015 2:09:13 PM",
-		///     "AppVersion": "2.0.4-beta3",
-		///     "FileVersion": 2
-		///   },
-		///   "Body": {
-		///     "SavedInDeclMode": false,
-		///     "VehicleFile": "24t Coach.vveh",
-		///     "EngineFile": "24t Coach.veng",
-		///     "GearboxFile": "24t Coach.vgbx",
-		///     "Cycles": [
-		///       "W:\\VECTO\\CITnet\\VECTO\\bin\\Debug\\Declaration\\MissionCycles\\LOT2_rural Engine Only.vdri"
-		///     ],
-		///     "Aux": [
-		///       {
-		///         "ID": "ALT1",
-		///         "Type": "Alternator",
-		///         "Path": "24t_Coach_ALT.vaux",
-		///         "Technology": ""
-		///       },
-		///       {
-		///         "ID": "ALT2",
-		///         "Type": "Alternator",
-		///         "Path": "24t_Coach_ALT.vaux",
-		///         "Technology": ""
-		///       },
-		///       {
-		///         "ID": "ALT3",
-		///         "Type": "Alternator",
-		///         "Path": "24t_Coach_ALT.vaux",
-		///         "Technology": ""
-		///       }
-		///     ],
-		///     "VACC": "Coach.vacc",
-		///     "EngineOnlyMode": true,
-		///     "StartStop": {
-		///       "Enabled": false,
-		///       "MaxSpeed": 5.0,
-		///       "MinTime": 0.0,
-		///       "Delay": 0
-		///     },
-		///     "LAC": {
-		///       "Enabled": true,
-		///       "Dec": -0.5,
-		///       "MinSpeed": 50.0
-		///     },
-		///     "OverSpeedEcoRoll": {
-		///       "Mode": "OverSpeed",
-		///       "MinSpeed": 70.0,
-		///       "OverSpeed": 5.0,
-		///       "UnderSpeed": 5.0
-		///     }
-		///   }
-		/// }
-		/// </remarks>
-		public class Data
-		{
-			[JsonProperty(Required = Required.Always)] public DataHeader Header;
-			[JsonProperty(Required = Required.Always)] public DataBody Body;
-
-			public class DataHeader
-			{
-				[JsonProperty(Required = Required.Always)] public string CreatedBy;
-				[JsonProperty(Required = Required.Always)] public DateTime Date;
-				[JsonProperty(Required = Required.Always)] public string AppVersion;
-				[JsonProperty(Required = Required.Always)] public double FileVersion;
-			}
-
-			public class DataBody
-			{
-				[JsonProperty("SavedInDeclMode")] public bool SavedInDeclarationMode;
-
-				[JsonProperty(Required = Required.Always)] public string VehicleFile;
-				[JsonProperty(Required = Required.Always)] public string EngineFile;
-				[JsonProperty(Required = Required.Always)] public string GearboxFile;
-				[JsonProperty(Required = Required.Always)] public IList<string> Cycles;
-				[JsonProperty(Required = Required.Always)] public IList<AuxData> Aux;
-				[JsonProperty(Required = Required.Always)] public string VACC;
-				[JsonProperty(Required = Required.Always)] public bool EngineOnlyMode;
-				[JsonProperty(Required = Required.Always)] public StartStopData StartStop;
-				[JsonProperty(Required = Required.Always)] public LACData LAC;
-				[JsonProperty(Required = Required.Always)] public OverSpeedEcoRollData OverSpeedEcoRoll;
-
-				public class AuxData
-				{
-					[JsonProperty(Required = Required.Always)] public string ID;
-					[JsonProperty(Required = Required.Always)] public string Type;
-					[JsonProperty(Required = Required.Always)] public string Path;
-					[JsonProperty(Required = Required.Always)] public string Technology;
-				}
-
-				public class StartStopData
-				{
-					[JsonProperty(Required = Required.Always)] public bool Enabled;
-					[JsonProperty(Required = Required.Always)] public double MaxSpeed;
-					[JsonProperty(Required = Required.Always)] public double MinTime;
-					[JsonProperty(Required = Required.Always)] public double Delay;
-				}
-
-				public class LACData
-				{
-					[JsonProperty(Required = Required.Always)] public bool Enabled;
-					[JsonProperty(Required = Required.Always)] public double Dec;
-					[JsonProperty(Required = Required.Always)] public double MinSpeed;
-				}
-
-				public class OverSpeedEcoRollData
-				{
-					[JsonProperty(Required = Required.Always)] public string Mode;
-					[JsonProperty(Required = Required.Always)] public double MinSpeed;
-					[JsonProperty(Required = Required.Always)] public double OverSpeed;
-					[JsonProperty(Required = Required.Always)] public double UnderSpeed;
-				}
-			}
-		}
-	}
-
-
 	/// <summary>
 	/// Simulator for one vecto simulation job.
 	/// </summary>
@@ -144,19 +15,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private TimeSpan _absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
 		private TimeSpan _dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
-		public VectoSimulator(string name, string fileName, IVehicleContainer container, IDrivingCycleOutPort cyclePort,
+		public VectoSimulator(string jobName, string jobFileName, IVehicleContainer container, IDrivingCycleOutPort cyclePort,
 			IModalDataWriter dataWriter)
 		{
-			Name = name;
-			FileName = fileName;
+			JobName = jobName;
+			JobFileName = jobFileName;
 			Container = container;
 			CyclePort = cyclePort;
 			DataWriter = dataWriter;
 		}
 
-		public string FileName { get; set; }
+		public string JobFileName { get; set; }
 
-		protected string Name { get; set; }
+		protected string JobName { get; set; }
 
 		protected IDrivingCycleOutPort CyclePort { get; set; }
 		protected IModalDataWriter DataWriter { get; set; }
@@ -202,10 +73,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 
 		/*
-        Name	Unit	Description
+        jobName	Unit	Description
         Job	[-]	Job number. Format is "x-y" with x = file number and y = cycle number
-        Input File	[-]	Name of the input file
-        Cycle	[-]	Name of the cycle file
+        Input File	[-]	jobName of the input file
+        Cycle	[-]	jobName of the cycle file
         time	[s]	Total simulation time
         distance	[km]	Total travelled distance
         speed	[km/h]	Average vehicle speed
@@ -246,40 +117,40 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			static SummaryFile()
 			{
 				table = new DataTable();
-				table.Columns.Add("Job [-]", typeof (string));
-				table.Columns.Add("Input File [-]", typeof (string));
-				table.Columns.Add("Cycle [-]", typeof (string));
-				table.Columns.Add("Time [s]", typeof (double));
-				table.Columns.Add("distance [km]", typeof (double));
-				table.Columns.Add("speed [km/h]", typeof (double));
-				table.Columns.Add("∆altitude [m]", typeof (double));
-				table.Columns.Add("Ppos [kw]", typeof (double));
-				table.Columns.Add("Pneg [kw]", typeof (double));
-				table.Columns.Add("FC [g/km]", typeof (double));
-				table.Columns.Add("FC-AUXc [g/km]", typeof (double));
-				table.Columns.Add("FC-WHTCc [g/km]", typeof (double));
-				table.Columns.Add("Pbrake [kw]", typeof (double));
-				table.Columns.Add("EposICE [kwh]", typeof (double));
-				table.Columns.Add("EnegICE [kwh]", typeof (double));
-				table.Columns.Add("Eair [kwh]", typeof (double));
-				table.Columns.Add("Eroll [kwh]", typeof (double));
-				table.Columns.Add("Egrad [kwh]", typeof (double));
-				table.Columns.Add("Eacc [kwh]", typeof (double));
-				table.Columns.Add("Eaux [kwh]", typeof (double));
-				table.Columns.Add("Eaux_xxx [kwh]", typeof (double));
-				table.Columns.Add("Ebrake [kwh]", typeof (double));
-				table.Columns.Add("Etransm [kwh]", typeof (double));
-				table.Columns.Add("Eretarder [kwh]", typeof (double));
-				table.Columns.Add("Mass [kg]", typeof (double));
-				table.Columns.Add("Loading [kg]", typeof (double));
-				table.Columns.Add("a [m/s2]", typeof (double));
-				table.Columns.Add("a_pos [m/s2]", typeof (double));
-				table.Columns.Add("a_neg [m/s2]", typeof (double));
-				table.Columns.Add("Acc.Noise [m/s2]", typeof (double));
-				table.Columns.Add("pAcc [%]", typeof (double));
-				table.Columns.Add("pDec [%]", typeof (double));
-				table.Columns.Add("pCruise [%]", typeof (double));
-				table.Columns.Add("pStop [%]", typeof (double));
+				table.Columns.Add("Job [-]", typeof(string));
+				table.Columns.Add("Input File [-]", typeof(string));
+				table.Columns.Add("Cycle [-]", typeof(string));
+				table.Columns.Add("Time [s]", typeof(double));
+				table.Columns.Add("distance [km]", typeof(double));
+				table.Columns.Add("speed [km/h]", typeof(double));
+				table.Columns.Add("∆altitude [m]", typeof(double));
+				table.Columns.Add("Ppos [kw]", typeof(double));
+				table.Columns.Add("Pneg [kw]", typeof(double));
+				table.Columns.Add("FC [g/km]", typeof(double));
+				table.Columns.Add("FC-AUXc [g/km]", typeof(double));
+				table.Columns.Add("FC-WHTCc [g/km]", typeof(double));
+				table.Columns.Add("Pbrake [kw]", typeof(double));
+				table.Columns.Add("EposICE [kwh]", typeof(double));
+				table.Columns.Add("EnegICE [kwh]", typeof(double));
+				table.Columns.Add("Eair [kwh]", typeof(double));
+				table.Columns.Add("Eroll [kwh]", typeof(double));
+				table.Columns.Add("Egrad [kwh]", typeof(double));
+				table.Columns.Add("Eacc [kwh]", typeof(double));
+				table.Columns.Add("Eaux [kwh]", typeof(double));
+				table.Columns.Add("Eaux_xxx [kwh]", typeof(double));
+				table.Columns.Add("Ebrake [kwh]", typeof(double));
+				table.Columns.Add("Etransm [kwh]", typeof(double));
+				table.Columns.Add("Eretarder [kwh]", typeof(double));
+				table.Columns.Add("Mass [kg]", typeof(double));
+				table.Columns.Add("Loading [kg]", typeof(double));
+				table.Columns.Add("a [m/s2]", typeof(double));
+				table.Columns.Add("a_pos [m/s2]", typeof(double));
+				table.Columns.Add("a_neg [m/s2]", typeof(double));
+				table.Columns.Add("Acc.Noise [m/s2]", typeof(double));
+				table.Columns.Add("pAcc [%]", typeof(double));
+				table.Columns.Add("pDec [%]", typeof(double));
+				table.Columns.Add("pCruise [%]", typeof(double));
+				table.Columns.Add("pStop [%]", typeof(double));
 			}
 
 
@@ -288,8 +159,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				//var data = new ModalResults();
 
 				var row = table.NewRow();
-				//row["Job [-]"] = Name;
-				//row["Input File [-]"] = FileName;
+				//row["Job [-]"] = jobName;
+				//row["Input File [-]"] = jobFileName;
 				//row["Cycle [-]"] = Container.CycleFileName();
 				//row["time [s]"] = data.Compute("Max(time)", "");
 				//row["distance [km]"] = data.Compute("Max(distance)", "");
@@ -311,7 +182,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				//todo auxiliaries
 				//foreach (var auxCol in data.Auxiliaries) {
-				//    row["Eaux_" + auxCol.Name + " [kwh]"] = data.Compute("Sum(aux_" + auxCol.Name + ")", "");
+				//    row["Eaux_" + auxCol.jobName + " [kwh]"] = data.Compute("Sum(aux_" + auxCol.jobName + ")", "");
 				//}
 
 
@@ -339,7 +210,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				//                   (double) data.Compute("Sum(time_interval)", "");
 
 				table.ImportRow(row);
-				//VectoCSVFile.Write(FileName, table);
+				//VectoCSVFile.Write(jobFileName, table);
 			}
 		}
 	}
