@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	///      },
 	///      {
 	///        "Ratio": 6.38,
-	///        "LossMap": "Indirect Gear.vtlm",
+	///        "LossMap": "Indirect GearData.vtlm",
 	///        "TCactive": false,
 	///        "ShiftPolygon": "ShiftPolygon.vgbs"
 	///      },
@@ -65,9 +65,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		}
 
 		[DataMember]
-		public Gear AxleGear { get; protected set; }
+		public GearData AxleGearData { get; protected set; }
 
-		[DataMember] private Dictionary<int, Gear> _gearData = new Dictionary<int, Gear>();
+		//private double _axleGearEfficiency;
+
+		[DataMember] private Dictionary<uint, GearData> _gearData = new Dictionary<uint, GearData>();
+
+		//private Dictionary<uint, double> _gearEfficiency = new Dictionary<uint, double>();
 
 		[DataMember] private Data _data;
 
@@ -80,6 +84,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public static GearboxData ReadFromJson(string json, string basePath = "")
 		{
+			var lossMaps = new Dictionary<string, TransmissionLossMap>();
+
 			var gearboxData = new GearboxData();
 
 			var d = JsonConvert.DeserializeObject<Data>(json);
@@ -89,16 +95,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			gearboxData._data = d;
 
-			for (var i = 0; i < d.Body.Gears.Count; i++) {
-				//foreach (var gearSettings in d.Body.Gears) {
-				var gearSettings = d.Body.Gears[i];
-				var lossMap = TransmissionLossMap.ReadFromFile(Path.Combine(basePath, gearSettings.LossMap));
+			for (uint i = 0; i < d.Body.Gears.Count; i++) {
+				var gearSettings = d.Body.Gears[(int) i];
+				var lossMapPath = Path.Combine(basePath, gearSettings.LossMap);
+				TransmissionLossMap lossMap;
+				if (lossMaps.ContainsKey(lossMapPath)) {
+					lossMap = lossMaps[lossMapPath];
+					lossMaps.Add(lossMapPath, lossMap);
+				} else {
+					lossMap = TransmissionLossMap.ReadFromFile(lossMapPath);
+				}
+
 				var shiftPolygon = !String.IsNullOrEmpty(gearSettings.ShiftPolygon)
 					? ShiftPolygon.ReadFromFile(Path.Combine(basePath, gearSettings.ShiftPolygon))
 					: null;
-				var gear = new Gear(lossMap, shiftPolygon, gearSettings.Ratio, gearSettings.TCactive);
+
+				var gear = new GearData(lossMap, shiftPolygon, gearSettings.Ratio, gearSettings.TCactive);
 				if (i == 0) {
-					gearboxData.AxleGear = gear;
+					gearboxData.AxleGearData = gear;
 				} else {
 					gearboxData._gearData.Add(i, gear);
 				}
@@ -121,12 +135,62 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return gearboxData;
 		}
 
+
+		public void CalculateAverageEfficiency(CombustionEngineData engineData)
+		{
+			var angularVelocityStep = (2.0 / 3.0) * (engineData.GetFullLoadCurve(0).RatedSpeed() - engineData.IdleSpeed) / 10.0;
+
+			var axleGearEfficiencySum = 0.0;
+			var axleGearSumCount = 0;
+
+			foreach (var gearEntry in _gearData) {
+				var gearEfficiencySum = 0.0;
+				var gearSumCount = 0;
+				for (var angularVelocity = engineData.IdleSpeed + angularVelocityStep;
+					angularVelocity < engineData.GetFullLoadCurve(0).RatedSpeed();
+					angularVelocity += angularVelocityStep) {
+					var fullLoadStationaryTorque = engineData.GetFullLoadCurve(gearEntry.Key).FullLoadStationaryTorque(angularVelocity);
+					var torqueStep = (2.0 / 3.0) * fullLoadStationaryTorque / 10.0;
+					for (var engineOutTorque = (1.0 / 3.0) * fullLoadStationaryTorque;
+						engineOutTorque < fullLoadStationaryTorque;
+						engineOutTorque += torqueStep) {
+						var engineOutPower = Formulas.TorqueToPower(engineOutTorque, angularVelocity);
+						var gearboxOutPower =
+							Formulas.TorqueToPower(
+								gearEntry.Value.LossMap.GearboxOutTorque(angularVelocity, engineOutTorque), angularVelocity);
+						if (gearboxOutPower > engineOutPower) {
+							gearboxOutPower = engineOutPower;
+						}
+
+						gearEfficiencySum += ((engineOutPower - gearboxOutPower) / engineOutPower).Double();
+						gearSumCount += 1;
+
+
+						// axle gear
+						var angularVelocityAxleGear = angularVelocity / gearEntry.Value.Ratio;
+						var axlegearOutPower =
+							Formulas.TorqueToPower(
+								AxleGearData.LossMap.GearboxOutTorque(angularVelocityAxleGear,
+									Formulas.PowerToTorque(engineOutPower, angularVelocityAxleGear)),
+								angularVelocityAxleGear);
+						if (axlegearOutPower > engineOutPower) {
+							axlegearOutPower = engineOutPower;
+						}
+						axleGearEfficiencySum += (axlegearOutPower / engineOutPower).Double();
+						axleGearSumCount += 1;
+					}
+				}
+				gearEntry.Value.AverageEfficiency = gearEfficiencySum / gearSumCount;
+			}
+			AxleGearData.AverageEfficiency = axleGearEfficiencySum / axleGearSumCount;
+		}
+
 		public int GearsCount()
 		{
 			return _data.Body.Gears.Count;
 		}
 
-		public Gear this[int i]
+		public GearData this[uint i]
 		{
 			get { return _gearData[i]; }
 		}

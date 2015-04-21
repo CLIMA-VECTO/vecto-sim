@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public ModalResults()
 		{
 			foreach (ModalResultField value in Enum.GetValues(typeof (ModalResultField))) {
-				var col = new DataColumn(value.GetName(), value.GetDataType()) {Caption = value.GetCaption()};
+				var col = new DataColumn(value.GetName(), value.GetDataType()) { Caption = value.GetCaption() };
 				Columns.Add(col);
 			}
 		}
@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		[ModalResultField(typeof (double))] grad,
 
 		/// <summary>
-		///     [-]	 Gear. "0" = clutch opened / neutral. "0.5" = lock-up clutch is open (AT with torque converter only, see
+		///     [-]	 GearData. "0" = clutch opened / neutral. "0.5" = lock-up clutch is open (AT with torque converter only, see
 		///     Gearbox)
 		/// </summary>
 		[ModalResultField(typeof (double))] Gear,

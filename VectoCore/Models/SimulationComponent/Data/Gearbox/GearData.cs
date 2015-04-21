@@ -1,6 +1,6 @@
 ﻿namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
-	public class Gear
+	public class GearData
 	{
 		public ShiftPolygon ShiftPolygon { get; protected set; }
 
@@ -10,7 +10,10 @@
 
 		public bool TorqueConverterActive { get; protected set; } // TODO: think about refactoring...
 
-		public Gear(TransmissionLossMap lossMap, Gearbox.ShiftPolygon shiftPolygon, double ratio, bool torqueconverterActive)
+		public double AverageEfficiency { get; set; }
+
+		public GearData(TransmissionLossMap lossMap, Gearbox.ShiftPolygon shiftPolygon, double ratio,
+			bool torqueconverterActive)
 		{
 			LossMap = lossMap;
 			ShiftPolygon = shiftPolygon;

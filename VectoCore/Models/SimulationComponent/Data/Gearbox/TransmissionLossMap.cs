@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Messaging;
 using Common.Logging;
 using Newtonsoft.Json;
@@ -12,7 +13,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
 	public class TransmissionLossMap
 	{
-		[JsonProperty] private List<GearLossMapEntry> _entries;
+		[JsonProperty] private readonly List<GearLossMapEntry> _entries;
+
+		private readonly DelauneyMap _lossMap; // Input Speed, Output Torque (to Wheels) => Input Torque (Engine)
+		private readonly DelauneyMap _reverseLossMap; // Input Speed, Input Torque (Engine) => Output Torque (Wheels)
 
 		public static TransmissionLossMap ReadFromFile(string fileName)
 		{
@@ -39,7 +43,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 				entries = CreateFromColumIndizes(data);
 			}
-			return new TransmissionLossMap { _entries = entries };
+
+			return new TransmissionLossMap(entries);
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
@@ -73,6 +78,45 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 					TorqueLoss = row.ParseDouble(2).SI<NewtonMeter>(),
 					Efficiency = (!hasEfficiency || row[3] == DBNull.Value || row[3] != null) ? double.NaN : row.ParseDouble(3)
 				}).ToList();
+		}
+
+		private TransmissionLossMap(List<GearLossMapEntry> entries)
+		{
+			_entries = entries;
+			_lossMap = new DelauneyMap();
+			_reverseLossMap = new DelauneyMap();
+			foreach (var entry in _entries) {
+				_lossMap.AddPoint(entry.InputSpeed.Double(), entry.InputTorque.Double() - entry.TorqueLoss.Double(),
+					entry.InputTorque.Double());
+				_reverseLossMap.AddPoint(entry.InputSpeed.Double(), entry.InputTorque.Double(),
+					entry.InputTorque.Double() - entry.TorqueLoss.Double());
+			}
+			_lossMap.Triangulate();
+			_reverseLossMap.Triangulate();
+		}
+
+		/// <summary>
+		///		Compute the required torque at the input of the gearbox (from engine)
+		/// </summary>
+		/// <param name="angularVelocity">[1/s] angular speed of the shaft</param>
+		/// <param name="gbxOutTorque">[Nm] torque requested by the previous componend (towards the wheels)</param>
+		/// <returns>[Nm] torque requested from the next component (towards the engine)</returns>
+		public NewtonMeter GearboxInTorque(PerSecond angularVelocity, NewtonMeter gbxOutTorque)
+		{
+			// TODO: extrapolate!
+			return _lossMap.Interpolate(angularVelocity.Double(), gbxOutTorque.Double()).SI<NewtonMeter>();
+		}
+
+		/// <summary>
+		///		Compute the available torque at the output of the gearbox (towards wheels)
+		/// </summary>
+		/// <param name="angularVelocity">[1/s] angular speed of the shaft</param>
+		/// <param name="gbxInTorque">[Nm] torque provided by the engine at the gearbox' input shaft</param>
+		/// <returns>[Nm] torque provided to the next component (towards the wheels)</returns>
+		public NewtonMeter GearboxOutTorque(PerSecond angularVelocity, NewtonMeter gbxInTorque)
+		{
+			// TODO extrapolate!
+			return _reverseLossMap.Interpolate(angularVelocity.Double(), gbxInTorque.Double()).SI<NewtonMeter>();
 		}
 
 		public GearLossMapEntry this[int i]
