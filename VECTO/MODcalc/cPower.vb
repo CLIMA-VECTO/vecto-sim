@@ -644,18 +644,6 @@ lbGschw:
 
 			End If
 
-
-			'From Power -----
-			If aact < 0 Then
-				If (Vact < 0.025) Then
-					'Vh.SetSpeed(jz, 0)
-					'GoTo lbGschw
-					Vact = 0
-				End If
-			End If
-			'---------------
-
-
 			'Power demand at wheels
 			Pwheel = fPwheel(jz, Vh.fGrad(dist))
 
@@ -1172,7 +1160,8 @@ lb_nOK:
 			If VECTOworker.CancellationPending Then Return True
 
 
-			If False AndAlso jz = 53 Then
+			If False AndAlso jz = 6915 Then
+				Stop
 				Debug.Print(
 					Vact * 3.6 & "," & aact & "," & Vh.fGrad(dist) & "," & GBX.TC_nu & "," & GBX.TC_mu & "," & nU & "," & Pwheel & "," &
 					nMtoPe(GBX.TCnUout, GBX.TCMout) & "," &
