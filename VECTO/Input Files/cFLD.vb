@@ -77,6 +77,12 @@ Public Class cFLD
     Public N95h As Single
 
     ''' <summary>
+    ''' N80h [1/min]. Highest engine speed with 80% of max. power. Defined in Init.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public N80h As Single
+
+    ''' <summary>
     ''' Read file. FilePath must be set before calling. 
     ''' </summary>
     ''' <returns>True if successful.</returns>
@@ -542,28 +548,35 @@ lbInt:
         Nlo = fnUofPfull(0.55 * Pmax, True)
 
         If Nlo < 0 Then
-            WorkerMsg(tMsgID.Err, "Failed to calculate Nlo! Check full load curve!", MsgSrc)
+            WorkerMsg(tMsgID.Err, "Failed to calculate Nlo! Expand full load curve!", MsgSrc)
             Return False
         End If
 
         N95h = fnUofPfull(0.95 * Pmax, False)
 
         If N95h < 0 Then
-            WorkerMsg(tMsgID.Err, "Failed to calculate N95h! Check full load curve!", MsgSrc)
+            WorkerMsg(tMsgID.Err, "Failed to calculate N95h! Expand full load curve!", MsgSrc)
+            Return False
+        End If
+
+        N80h = fnUofPfull(0.8 * Pmax, False)
+
+        If N80h < 0 Then
+            WorkerMsg(tMsgID.Err, "Failed to calculate N80h! Expand full load curve!", MsgSrc)
             Return False
         End If
 
         Npref = fNpref(Nidle)
 
         If Npref < 0 Then
-            WorkerMsg(tMsgID.Err, "Failed to calculate Npref! Check full load curve!", MsgSrc)
+            WorkerMsg(tMsgID.Err, "Failed to calculate Npref! Expand full load curve!", MsgSrc)
             Return False
         End If
 
         Nhi = fnUofPfull(0.7 * Pmax, False)
 
         If Nhi < 0 Then
-            WorkerMsg(tMsgID.Err, "Failed to calculate Nhi! Check full load curve!", MsgSrc)
+            WorkerMsg(tMsgID.Err, "Failed to calculate Nhi! Expand full load curve!", MsgSrc)
             Return False
         End If
 

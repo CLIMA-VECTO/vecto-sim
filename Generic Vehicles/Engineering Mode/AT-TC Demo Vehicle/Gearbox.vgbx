@@ -1,0 +1,57 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
+    "Date": "23.06.2014 13:46:07",
+    "AppVersion": "2.0.2-beta3",
+    "FileVersion": 3
+  },
+  "Body": {
+    "ModelName": "Gearbox",
+    "Inertia": 0.0,
+    "TracInt": 0.0,
+    "Gears": [
+      {
+        "Ratio": 6.2,
+        "Efficiency": "0.95"
+      },
+      {
+        "Ratio": 3.0,
+        "Efficiency": "0.96",
+        "TCactive": true,
+        "ShiftPolygon": "AT-Shift.vgbs"
+      },
+      {
+        "Ratio": 3.0,
+        "Efficiency": "0.96",
+        "TCactive": false,
+        "ShiftPolygon": "AT-Shift.vgbs"
+      },
+      {
+        "Ratio": 1.0,
+        "Efficiency": "0.98",
+        "TCactive": false,
+        "ShiftPolygon": "AT-Shift.vgbs"
+      },
+      {
+        "Ratio": 0.8,
+        "Efficiency": "0.96",
+        "TCactive": false,
+        "ShiftPolygon": "AT-Shift.vgbs"
+      }
+    ],
+    "TqReserve": 5.0,
+    "SkipGears": false,
+    "ShiftTime": 1,
+    "EaryShiftUp": false,
+    "StartTqReserve": 40.0,
+    "StartSpeed": 4.0,
+    "StartAcc": 0.8,
+    "GearboxType": "AT",
+    "TorqueConverter": {
+      "Enabled": true,
+      "File": "TorqueConverter.vtcc",
+      "RefRPM": 1000.0,
+      "Inertia": 0.5
+    }
+  }
+}

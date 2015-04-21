@@ -67,6 +67,7 @@ Public Enum tDriComp
     s
     StopTime
     Torque
+    Pwheel
 End Enum
 
 Public Enum tVehState

@@ -11,882 +11,874 @@
 Imports System.Collections.Generic
 
 Public Class cMOD
+	Public Pe As List(Of Single)
+	Public nU As List(Of Single)
+	Public nUvorg As List(Of Single)
+	Public tDim As Integer
+	Public tDimOgl As Integer
+	Public Px As cPower
+	Public Vh As cVh
+	Public CylceKin As cCycleKin
+	Public ModOutpName As String
+	Public ModErrors As cModErrors
+
+	'Power
+	Public Psum As List(Of Single)
+	Public Proll As List(Of Single)
+	Public Pstg As List(Of Single)
+	Public Pair As List(Of Single)
+	Public Pa As List(Of Single)
+	Public Pbrake As List(Of Single)
+	Public PauxSum As List(Of Single)
+	Public PlossGB As List(Of Single)
+	Public PlossDiff As List(Of Single)
+	Public PlossRt As List(Of Single)
+	Public PlossTC As List(Of Single)
+	Public PaEng As List(Of Single)
+	Public PaGB As List(Of Single)
+	Public Paux As Dictionary(Of String, List(Of Single))
+	Public Pclutch As List(Of Single)
+	Public Grad As List(Of Single)
+
+	Public EngState As List(Of tEngState)
+
+	'Vehicle
+	Public Gear As List(Of Single)
+	Public VehState As List(Of tVehState)
+
+	Public TCnu As List(Of Single)
+	Public TCmu As List(Of Single)
+	Public TCMout As List(Of Single)
+	Public TCnOut As List(Of Single)
+
+	'FC
+	Public FCerror As Boolean
+	Public lFC As List(Of Single)
+	Public lFCAUXc As List(Of Single)
+	Public lFCWHTCc As List(Of Single)
+	Public FCavg As Single
+	Public FCavgAUXc As Single
+	Public FCavgWHTCc As Single
+	Public FCavgFinal As Single
+
+	Public FCAUXcSet As Boolean
+
+	Private bInit As Boolean
+
+	Public Sub New()
+		bInit = False
+	End Sub
+
+	Public Sub Init()
+		Pe = New List(Of Single)
+		nU = New List(Of Single)
+		Px = New cPower
+		Vh = New cVh
+		CylceKin = New cCycleKin
+
+		Proll = New List(Of Single)
+		Psum = New List(Of Single)
+		Pstg = New List(Of Single)
+		Pbrake = New List(Of Single)
+		Pair = New List(Of Single)
+		Pa = New List(Of Single)
+		PauxSum = New List(Of Single)
+		PlossGB = New List(Of Single)
+		PlossDiff = New List(Of Single)
+		PlossRt = New List(Of Single)
+		PlossTC = New List(Of Single)
+		PaEng = New List(Of Single)
+		PaGB = New List(Of Single)
+		Paux = New Dictionary(Of String, List(Of Single))
+		Pclutch = New List(Of Single)
+		Grad = New List(Of Single)
+
+		EngState = New List(Of tEngState)
+
+		Gear = New List(Of Single)
+		VehState = New List(Of tVehState)
+
+		TCnu = New List(Of Single)
+		TCmu = New List(Of Single)
+		TCMout = New List(Of Single)
+		TCnOut = New List(Of Single)
+
+		lFC = New List(Of Single)
+		lFCAUXc = New List(Of Single)
+		lFCWHTCc = New List(Of Single)
+		FCAUXcSet = False
+
+		FCerror = False
+
+
+		Vh.Init()
+		ModErrors = New cModErrors
+
+
+		bInit = True
+	End Sub
+
+	Public Sub CleanUp()
+		If bInit Then
+			lFC = Nothing
+			lFCAUXc = Nothing
+			lFCWHTCc = Nothing
+
+			Vh.CleanUp()
+			Px = Nothing
+			Vh = Nothing
+			Pe = Nothing
+			nU = Nothing
+
+			Proll = Nothing
+			Psum = Nothing
+			Pstg = Nothing
+			Pair = Nothing
+			Pa = Nothing
+			Pbrake = Nothing
+			PauxSum = Nothing
+			PlossGB = Nothing
+			PlossDiff = Nothing
+			PlossRt = Nothing
+			PlossTC = Nothing
+			PaEng = Nothing
+			PaGB = Nothing
+			Paux = Nothing
+			Pclutch = Nothing
+			Grad = Nothing
+
+			EngState = Nothing
+
+			Gear = Nothing
+			VehState = Nothing
 
-    Public Pe As List(Of Single)
-    Public nU As List(Of Single)
-    Public nUvorg As List(Of Single)
-    Public tDim As Integer
-    Public tDimOgl As Integer
-    Public Px As cPower
-    Public Vh As cVh
-    Public CylceKin As cCycleKin
-    Public ModOutpName As String
-    Public ModErrors As cModErrors
-
-    'Power
-    Public Psum As List(Of Single)
-    Public Proll As List(Of Single)
-    Public Pstg As List(Of Single)
-    Public Pair As List(Of Single)
-    Public Pa As List(Of Single)
-    Public Pbrake As List(Of Single)
-    Public PauxSum As List(Of Single)
-    Public PlossGB As List(Of Single)
-    Public PlossDiff As List(Of Single)
-    Public PlossRt As List(Of Single)
-    Public PlossTC As List(Of Single)
-    Public PaEng As List(Of Single)
-    Public PaGB As List(Of Single)
-    Public Paux As Dictionary(Of String, List(Of Single))
-    Public Pclutch As List(Of Single)
-    Public Grad As List(Of Single)
-
-    Public EngState As List(Of tEngState)
-
-    'Vehicle
-    Public Gear As List(Of Single)
-    Public VehState As List(Of tVehState)
-
-    Public TCnu As List(Of Single)
-    Public TCmu As List(Of Single)
-    Public TCMout As List(Of Single)
-    Public TCnOut As List(Of Single)
-
-    'FC
-    Public FCerror As Boolean
-    Public lFC As List(Of Single)
-    Public lFCAUXc As List(Of Single)
-    Public lFCWHTCc As List(Of Single)
-    Public FCavg As Single
-    Public FCavgAUXc As Single
-    Public FCavgWHTCc As Single
-    Public FCavgFinal As Single
-
-    Public FCAUXcSet As Boolean
-
-    Private bInit As Boolean
-
-    Public Sub New()
-        bInit = False
-    End Sub
-
-    Public Sub Init()
-        Pe = New List(Of Single)
-        nU = New List(Of Single)
-        Px = New cPower
-        Vh = New cVh
-        CylceKin = New cCycleKin
-
-        Proll = New List(Of Single)
-        Psum = New List(Of Single)
-        Pstg = New List(Of Single)
-        Pbrake = New List(Of Single)
-        Pair = New List(Of Single)
-        Pa = New List(Of Single)
-        PauxSum = New List(Of Single)
-        PlossGB = New List(Of Single)
-        PlossDiff = New List(Of Single)
-        PlossRt = New List(Of Single)
-        PlossTC = New List(Of Single)
-        PaEng = New List(Of Single)
-        PaGB = New List(Of Single)
-        Paux = New Dictionary(Of String, List(Of Single))
-        Pclutch = New List(Of Single)
-        Grad = New List(Of Single)
-
-        EngState = New List(Of tEngState)
-
-        Gear = New List(Of Single)
-        VehState = New List(Of tVehState)
-
-        TCnu = New List(Of Single)
-        TCmu = New List(Of Single)
-        TCMout = New List(Of Single)
-        TCnOut = New List(Of Single)
-
-        lFC = New List(Of Single)
-        lFCAUXc = New List(Of Single)
-        lFCWHTCc = New List(Of Single)
-        FCAUXcSet = False
-
-        FCerror = False
-
-
-        Vh.Init()
-        ModErrors = New cModErrors
+			TCnu = Nothing
+			TCmu = Nothing
+			TCMout = Nothing
+			TCnOut = Nothing
+
+			CylceKin = Nothing
+			ModErrors = Nothing
+			bInit = False
+		End If
+	End Sub
 
+	Public Sub Duplicate(ByVal t As Integer)
+		Dim AuxKV As KeyValuePair(Of String, List(Of Single))
 
-        bInit = True
-    End Sub
+		If DRI.Nvorg Then
+			nUvorg.Insert(t, nUvorg(t))
+		End If
 
-    Public Sub CleanUp()
-        If bInit Then
-            lFC = Nothing
-            lFCAUXc = Nothing
-            lFCWHTCc = Nothing
+		If DRI.AuxDef Then
+			For Each AuxKV In DRI.AuxComponents
+				AuxKV.Value.Insert(t, AuxKV.Value(t))
+			Next
+		End If
+	End Sub
 
-            Vh.CleanUp()
-            Px = Nothing
-            Vh = Nothing
-            Pe = Nothing
-            nU = Nothing
+	Public Sub Cut(ByVal t As Integer)
+		Dim AuxKV As KeyValuePair(Of String, List(Of Single))
 
-            Proll = Nothing
-            Psum = Nothing
-            Pstg = Nothing
-            Pair = Nothing
-            Pa = Nothing
-            Pbrake = Nothing
-            PauxSum = Nothing
-            PlossGB = Nothing
-            PlossDiff = Nothing
-            PlossRt = Nothing
-            PlossTC = Nothing
-            PaEng = Nothing
-            PaGB = Nothing
-            Paux = Nothing
-            Pclutch = Nothing
-            Grad = Nothing
+		If DRI.Nvorg Then
+			nUvorg.RemoveAt(t)
+		End If
 
-            EngState = Nothing
+		If DRI.AuxDef Then
+			For Each AuxKV In DRI.AuxComponents
+				AuxKV.Value.RemoveAt(t)
+			Next
+		End If
+	End Sub
 
-            Gear = Nothing
-            VehState = Nothing
 
-            TCnu = Nothing
-            TCmu = Nothing
-            TCMout = Nothing
-            TCnOut = Nothing
+	Public Sub CycleInit()
+
+		If VEC.EngOnly Then
+			EngCycleInit()
+		Else
+			VehCycleInit()
+		End If
 
-            CylceKin = Nothing
-            ModErrors = Nothing
-            bInit = False
-        End If
-    End Sub
+		tDimOgl = tDim
+	End Sub
 
-    Public Sub Duplicate(ByVal t As Integer)
-        Dim AuxKV As KeyValuePair(Of String, List(Of Single))
+	Private Sub VehCycleInit()
+		Dim s As Integer
+		Dim L As List(Of Double)
+		Dim AuxKV As KeyValuePair(Of String, List(Of Single))
+		Dim st As String
+
+		'Define Cycle-length (shorter by 1sec than original because of Interim-seconds)
+		tDim = DRI.tDim - 1
 
-        If DRI.Nvorg Then
-            nUvorg.Insert(t, nUvorg(t))
-        End If
+		'Here the actual cycle is read:
+		Vh.VehCylceInit()
 
-        If DRI.AuxDef Then
-            For Each AuxKV In DRI.AuxComponents
-                AuxKV.Value.Insert(t, AuxKV.Value(t))
-            Next
-        End If
+		'Revolutions-setting
+		If DRI.Nvorg Then
 
-    End Sub
+			MODdata.nUvorg = New List(Of Single)
 
-    Public Sub Cut(ByVal t As Integer)
-        Dim AuxKV As KeyValuePair(Of String, List(Of Single))
+			L = DRI.Values(tDriComp.nU)
 
-        If DRI.Nvorg Then
-            nUvorg.RemoveAt(t)
-        End If
+			'Revolutions
+			For s = 0 To tDim
+				MODdata.nUvorg.Add(((L(s + 1) + L(s)) / 2))
+			Next
 
-        If DRI.AuxDef Then
-            For Each AuxKV In DRI.AuxComponents
-                AuxKV.Value.RemoveAt(t)
-            Next
-        End If
+		End If
 
-    End Sub
+		'Specify average Aux and Aux-lists, when Aux present in DRI and VEH
+		If Cfg.DeclMode Then
 
+			For Each st In VEC.AuxPaths.Keys
+				MODdata.Paux.Add(st, New List(Of Single))
+			Next
 
+		Else
 
-    Public Sub CycleInit()
+			If DRI.AuxDef Then
+				For Each AuxKV In DRI.AuxComponents
 
-        If VEC.EngOnly Then
-            EngCycleInit()
-        Else
-            VehCycleInit()
-        End If
+					For s = 0 To tDim
+						AuxKV.Value(s) = (AuxKV.Value(s + 1) + AuxKV.Value(s)) / 2
+					Next
 
-        tDimOgl = tDim
+					If VEC.AuxPaths.ContainsKey(AuxKV.Key) Then MODdata.Paux.Add(AuxKV.Key, New List(Of Single))
 
-    End Sub
+				Next
+			End If
 
-    Private Sub VehCycleInit()
-        Dim s As Integer
-        Dim L As List(Of Double)
-        Dim AuxKV As KeyValuePair(Of String, List(Of Single))
-        Dim st As String
+		End If
+	End Sub
 
-        'Define Cycle-length (shorter by 1sec than original because of Interim-seconds)
-        tDim = DRI.tDim - 1
+	Private Sub EngCycleInit()
+		Dim s As Integer
+		Dim L As List(Of Double)
 
-        'Here the actual cycle is read:
-        Vh.VehCylceInit()
+		'Zykluslänge definieren: Gleiche Länge wie Zyklus (nicht reduziert weil keine "Zwischensekunden") |@@| Define Cycle-length: Same length as Cycle (not reduced because no "interim seconds")
+		tDim = DRI.tDim
 
-        'Revolutions-setting
-        If DRI.Nvorg Then
+		Vh.EngCylceInit()
 
-            MODdata.nUvorg = New List(Of Single)
+		'Revolutions-setting
+		If DRI.Nvorg Then
 
-            L = DRI.Values(tDriComp.nU)
+			MODdata.nUvorg = New List(Of Single)
 
-            'Revolutions
-            For s = 0 To tDim
-                MODdata.nUvorg.Add(((L(s + 1) + L(s)) / 2))
-            Next
+			L = DRI.Values(tDriComp.nU)
 
-        End If
+			'Revolutions
+			For s = 0 To MODdata.tDim
+				MODdata.nUvorg.Add(L(s))
+			Next
 
-        'Specify average Aux and Aux-lists, when Aux present in DRI and VEH
-        If Cfg.DeclMode Then
+		End If
+	End Sub
 
-            For Each st In VEC.AuxPaths.Keys
-                MODdata.Paux.Add(st, New List(Of Single))
-            Next
 
-        Else
+	Public Sub FCcalc(ByVal WHTCcorrection As Boolean)
+		Dim v As Single
+		Dim i As Integer
+		Dim Result As Boolean
+		Dim x As Single
+		Dim sum As Double
+		Dim LostEnergy As Double
+		Dim EngOnTime As Integer
+		Dim AddEngLoad As Single
+		Dim info As cRegression.RegressionProcessInfo
+		Dim reg As cRegression
+		Dim rx As List(Of Double)
+		Dim ry As List(Of Double)
+		Dim rR2 As Single
+		Dim rA As Double
+		Dim rB As Double
+		Dim rSE As Double
+		Dim PeAdd As Double
 
-            If DRI.AuxDef Then
-                For Each AuxKV In DRI.AuxComponents
+		Dim MsgSrc As String
 
-                    For s = 0 To tDim
-                        AuxKV.Value(s) = (AuxKV.Value(s + 1) + AuxKV.Value(s)) / 2
-                    Next
+		MsgSrc = "MAP/FC_Intp"
 
-                    If VEC.AuxPaths.ContainsKey(AuxKV.Key) Then MODdata.Paux.Add(AuxKV.Key, New List(Of Single))
+		FCerror = False
+		Result = True
+		LostEnergy = 0
+		EngOnTime = 0
+		rx = New List(Of Double)
+		ry = New List(Of Double)
 
-                Next
-            End If
+		For i = 0 To MODdata.tDim
 
-        End If
+			Select Case MODdata.EngState(i)
 
+				Case tEngState.Stopped
 
+					lFC.Add(0)
+					LostEnergy += MODdata.PauxSum(i) / 3600
 
+				Case Else '<= Idle / Drag / FullLoad-Unterscheidung...?
 
-    End Sub
 
-    Private Sub EngCycleInit()
-        Dim s As Integer
-        Dim L As List(Of Double)
+					'Delaunay
+					v = MAP.fFCdelaunay_Intp(MODdata.nU(i), nPeToM(MODdata.nU(i), MODdata.Pe(i)))
 
-        'Zykluslänge definieren: Gleiche Länge wie Zyklus (nicht reduziert weil keine "Zwischensekunden") |@@| Define Cycle-length: Same length as Cycle (not reduced because no "interim seconds")
-        tDim = DRI.tDim
+					If v < 0 And v > -999 Then v = 0
 
-        Vh.EngCylceInit()
+					If Result Then
+						If v < -999 Then Result = False
+					End If
+					lFC.Add(v)
 
-        'Revolutions-setting
-        If DRI.Nvorg Then
+					EngOnTime += 1
+					rx.Add(MODdata.Pe(i))
+					ry.Add(v)
 
-            MODdata.nUvorg = New List(Of Single)
+			End Select
 
-            L = DRI.Values(tDriComp.nU)
+		Next
 
-            'Revolutions
-            For s = 0 To MODdata.tDim
-                MODdata.nUvorg.Add(L(s))
-            Next
+		'Calc average FC
+		sum = 0
+		For Each x In lFC
+			sum += x
+		Next
+		FCavg = CSng(sum / lFC.Count)
+		FCavgFinal = FCavg
 
-        End If
+		'Start/Stop-Aux - Correction
+		If Result AndAlso LostEnergy > 0 Then
 
-    End Sub
+			WorkerMsg(tMsgID.Normal, "Correcting FC due to wrong aux energy balance during engine stop times", MsgSrc)
+			WorkerMsg(tMsgID.Normal, " > Error in aux energy balance: " & LostEnergy.ToString("0.000") & " [kWh]", MsgSrc)
 
+			If EngOnTime < 1 Then
+				WorkerMsg(tMsgID.Err, " > ERROR: Engine-On Time = 0!", MsgSrc)
+				FCerror = True
+				Exit Sub
+			End If
 
+			'Linear regression of FC=f(Pe)
+			reg = New cRegression
 
-    Public Sub FCcalc(ByVal WHTCcorrection As Boolean)
-        Dim v As Single
-        Dim i As Integer
-        Dim Result As Boolean
-        Dim x As Single
-        Dim sum As Double
-        Dim LostEnergy As Double
-        Dim EngOnTime As Integer
-        Dim AddEngLoad As Single
-        Dim info As cRegression.RegressionProcessInfo
-        Dim reg As cRegression
-        Dim rx As List(Of Double)
-        Dim ry As List(Of Double)
-        Dim rR2 As Single
-        Dim rA As Double
-        Dim rB As Double
-        Dim rSE As Double
-        Dim PeAdd As Double
+			info = reg.Regress(rx.ToArray, ry.ToArray)
+			rR2 = info.PearsonsR ^ 2
+			rA = info.a
+			rB = info.b
+			rSE = info.StandardError
 
-        Dim MsgSrc As String
+			If rB <= 0 Then
+				WorkerMsg(tMsgID.Err, " > ERROR in linear regression ( b=" & rB & ")!", MsgSrc)
+				FCerror = True
+				Exit Sub
+			End If
 
-        MsgSrc = "MAP/FC_Intp"
+			'Additional engine load due to lost Aux energy: [kW] = [kWh]/[h]
+			AddEngLoad = LostEnergy / (EngOnTime / 3600)
 
-        FCerror = False
-        Result = True
-        LostEnergy = 0
-        EngOnTime = 0
-        rx = New List(Of Double)
-        ry = New List(Of Double)
+			WorkerMsg(tMsgID.Normal, " > Additional engine load: " & AddEngLoad.ToString("0.000") & " [kW]", MsgSrc)
 
-        For i = 0 To MODdata.tDim
+			For i = 0 To MODdata.tDim
+				lFCAUXc.Add(lFC(i))
+				If MODdata.EngState(i) <> tEngState.Stopped Then
+					PeAdd = AddEngLoad + MODdata.Pbrake(i)
+					If PeAdd > 0 Then
+						lFCAUXc(i) += rB * PeAdd
+					End If
+				End If
+			Next
 
-            Select Case MODdata.EngState(i)
+			'average
+			sum = 0
+			For Each x In lFCAUXc
+				sum += x
+			Next
+			FCavgAUXc = CSng(sum / lFC.Count)
 
-                Case tEngState.Stopped
+			FCAUXcSet = True
 
-                    lFC.Add(0)
-                    LostEnergy += MODdata.PauxSum(i) / 3600
+			FCavgFinal = FCavgAUXc
 
-                Case Else   '<= Idle / Drag / FullLoad-Unterscheidung...?
 
+		End If
 
-                    'Delaunay
-                    v = MAP.fFCdelaunay_Intp(MODdata.nU(i), nPeToM(MODdata.nU(i), MODdata.Pe(i)))
+		'WHTC Correction
+		If Cfg.DeclMode Then
 
-                    If v < 0 And v > -999 Then v = 0
+			If FCAUXcSet Then
+				For i = 0 To MODdata.tDim
+					lFCWHTCc.Add(lFCAUXc(i) * Declaration.WHTCcorrFactor)
+				Next
+			Else
+				For i = 0 To MODdata.tDim
+					lFCWHTCc.Add(lFC(i) * Declaration.WHTCcorrFactor)
+				Next
+			End If
 
-                    If Result Then
-                        If v < -999 Then Result = False
-                    End If
-                    lFC.Add(v)
+			sum = 0
+			For Each x In lFCWHTCc
+				sum += x
+			Next
+			FCavgWHTCc = CSng(sum / lFC.Count)
 
-                    EngOnTime += 1
-                    rx.Add(MODdata.Pe(i))
-                    ry.Add(v)
+			FCavgFinal = FCavgWHTCc
 
-            End Select
+		End If
 
-        Next
+		If Not Result Then FCerror = True
+	End Sub
 
-        'Calc average FC
-        sum = 0
-        For Each x In lFC
-            sum += x
-        Next
-        FCavg = CSng(sum / lFC.Count)
-        FCavgFinal = FCavg
 
-        'Start/Stop-Aux - Correction
-        If Result AndAlso LostEnergy > 0 Then
+	Public Function Output() As Boolean
 
-            WorkerMsg(tMsgID.Normal, "Correcting FC due to wrong aux energy balance during engine stop times", MsgSrc)
-            WorkerMsg(tMsgID.Normal, " > Error in aux energy balance: " & LostEnergy.ToString("0.000") & " [kWh]", MsgSrc)
+		Dim f As cFile_V3
+		Dim s As System.Text.StringBuilder
+		Dim su As System.Text.StringBuilder
+		Dim t As Integer
+		Dim t1 As Integer
 
-            If EngOnTime < 1 Then
-                WorkerMsg(tMsgID.Err, " > ERROR: Engine-On Time = 0!", MsgSrc)
-                FCerror = True
-                Exit Sub
-            End If
+		Dim Sepp As String
+		Dim path As String
+		Dim dist As Double
+		Dim MsgSrc As String
+		Dim tdelta As Single
 
-            'Linear regression of FC=f(Pe)
-            reg = New cRegression
+		Dim StrKey As String
 
-            info = reg.Regress(rx.ToArray, ry.ToArray)
-            rR2 = info.PearsonsR ^ 2
-            rA = info.a
-            rB = info.b
-            rSE = info.StandardError
+		Dim AuxList As New List(Of String)
 
-            If rB <= 0 Then
-                WorkerMsg(tMsgID.Err, " > ERROR in linear regression ( b=" & rB & ")!", MsgSrc)
-                FCerror = True
-                Exit Sub
-            End If
+		Dim HeaderList As New List(Of String())
 
-            'Additional engine load due to lost Aux energy: [kW] = [kWh]/[h]
-            AddEngLoad = LostEnergy / (EngOnTime / 3600)
+		Dim Gear As Integer
 
-            WorkerMsg(tMsgID.Normal, " > Additional engine load: " & AddEngLoad.ToString("0.000") & " [kW]", MsgSrc)
+		MsgSrc = "MOD/Output"
 
-            For i = 0 To MODdata.tDim
-                lFCAUXc.Add(lFC(i))
-                If MODdata.EngState(i) <> tEngState.Stopped Then
-                    PeAdd = AddEngLoad + MODdata.Pbrake(i)
-                    If PeAdd > 0 Then
-                        lFCAUXc(i) += rB * PeAdd
-                    End If
-                End If
-            Next
+		'*********** Initialization / Open File **************
+		If ModOutpName = "" Then
+			WorkerMsg(tMsgID.Err, "Invalid output path!", MsgSrc)
+			Return False
+		End If
 
-            'average
-            sum = 0
-            For Each x In lFCAUXc
-                sum += x
-            Next
-            FCavgAUXc = CSng(sum / lFC.Count)
+		f = New cFile_V3
 
-            FCAUXcSet = True
+		path = ModOutpName & ".vmod"
 
-            FCavgFinal = FCavgAUXc
+		If Not f.OpenWrite(path, ",", False) Then
+			WorkerMsg(tMsgID.Err, "Can't write to " & path, MsgSrc)
+			Return False
+		End If
 
+		s = New System.Text.StringBuilder
 
-        End If
+		'*********** Settings **************
+		Sepp = ","
+		t1 = MODdata.tDim
+		If VEC.EngOnly Then
+			tdelta = 0
+		Else
+			tdelta = 0.5
+		End If
 
-        'WHTC Correction
-        If Cfg.DeclMode Then
 
-            If FCAUXcSet Then
-                For i = 0 To MODdata.tDim
-                    lFCWHTCc.Add(lFCAUXc(i) * Declaration.WHTCcorrFactor)
-                Next
-            Else
-                For i = 0 To MODdata.tDim
-                    lFCWHTCc.Add(lFC(i) * Declaration.WHTCcorrFactor)
-                Next
-            End If
+		'********** Aux-List ************
+		For Each StrKey In VEC.AuxRefs.Keys	'Wenn Engine Only dann wird das garnicht verwendet
+			AuxList.Add(StrKey)
+		Next
 
-            sum = 0
-            For Each x In lFCWHTCc
-                sum += x
-            Next
-            FCavgWHTCc = CSng(sum / lFC.Count)
 
-            FCavgFinal = FCavgWHTCc
+		If DEV.AdvFormat Then
+			f.WriteLine("VECTO " & VECTOvers)
+			f.WriteLine(Now.ToString)
+			f.WriteLine("Input File: " & JobFile)
+		End If
 
-        End If
+
+		'***********************************************************************************************
+		'***********************************************************************************************
+		'***********************************************************************************************
+		'*** Header & Units ****************************************************************************
 
-        If Not Result Then FCerror = True
+		s.Length = 0
 
-    End Sub
 
+		HeaderList.Add(New String() {"time", "s"})
 
+		If Not VEC.EngOnly Then
+			HeaderList.Add(New String() {"dist", "m"})
+			HeaderList.Add(New String() {"v_act", "km/h"})
+			HeaderList.Add(New String() {"v_targ", "km/h"})
+			HeaderList.Add(New String() {"acc", "m/s²"})
+			HeaderList.Add(New String() {"grad", "%"})
+			dist = 0
+		End If
 
-    Public Function Output() As Boolean
+		HeaderList.Add(New String() {"n", "1/min"})
+		HeaderList.Add(New String() {"Tq_eng", "Nm"})
+		HeaderList.Add(New String() {"Tq_clutch", "Nm"})
+		HeaderList.Add(New String() {"Tq_full", "Nm"})
+		HeaderList.Add(New String() {"Tq_drag", "Nm"})
+		HeaderList.Add(New String() {"Pe_eng", "kW"})
+		HeaderList.Add(New String() {"Pe_full", "kW"})
+		HeaderList.Add(New String() {"Pe_drag", "kW"})
+		HeaderList.Add(New String() {"Pe_clutch", "kW"})
+		HeaderList.Add(New String() {"Pa Eng", "kW"})
+		HeaderList.Add(New String() {"Paux", "kW"})
 
-        Dim f As cFile_V3
-        Dim s As System.Text.StringBuilder
-        Dim su As System.Text.StringBuilder
-        Dim t As Integer
-        Dim t1 As Integer
+		If Not VEC.EngOnly Then
 
-        Dim Sepp As String
-        Dim path As String
-        Dim dist As Double
-        Dim MsgSrc As String
-        Dim tdelta As Single
+			HeaderList.Add(New String() {"Gear", "-"})
+			HeaderList.Add(New String() {"Ploss GB", "kW"})
+			HeaderList.Add(New String() {"Ploss Diff", "kW"})
+			HeaderList.Add(New String() {"Ploss Retarder", "kW"})
+			HeaderList.Add(New String() {"Pa GB", "kW"})
+			HeaderList.Add(New String() {"Pa Veh", "kW"})
+			HeaderList.Add(New String() {"Proll", "kW"})
+			HeaderList.Add(New String() {"Pair", "kW"})
+			HeaderList.Add(New String() {"Pgrad", "kW"})
+			HeaderList.Add(New String() {"Pwheel", "kW"})
+			HeaderList.Add(New String() {"Pbrake", "kW"})
 
-        Dim StrKey As String
+			If GBX.TCon Then
+				HeaderList.Add(New String() {"TCν", "-"})
+				HeaderList.Add(New String() {"TCµ", "-"})
+				HeaderList.Add(New String() {"TC_T_Out", "Nm"})
+				HeaderList.Add(New String() {"TC_n_Out", "1/min"})
+			End If
 
-        Dim AuxList As New List(Of String)
+			'Auxiliaries
+			For Each StrKey In AuxList
+				HeaderList.Add(New String() {"Paux_" & StrKey, "kW"})
+			Next
 
-        Dim HeaderList As New List(Of String())
+		End If
 
-        Dim Gear As Integer
+		HeaderList.Add(New String() {"FC", "g/h"})
+		HeaderList.Add(New String() {"FC-AUXc", "g/h"})
+		HeaderList.Add(New String() {"FC-WHTCc", "g/h"})
 
-        MsgSrc = "MOD/Output"
 
-        '*********** Initialization / Open File **************
-        If ModOutpName = "" Then
-            WorkerMsg(tMsgID.Err, "Invalid output path!", MsgSrc)
-            Return False
-        End If
+		'Write to File
+		If DEV.AdvFormat Then
+			su = New System.Text.StringBuilder
+			s.Append(HeaderList(0)(0))
+			su.Append("[" & HeaderList(0)(1) & "]")
+			For t = 1 To HeaderList.Count - 1
+				s.Append(Sepp & HeaderList(t)(0))
+				su.Append(Sepp & "[" & HeaderList(t)(1) & "]")
+			Next
+			f.WriteLine(s.ToString)
+			f.WriteLine(su.ToString)
+		Else
+			s.Append(HeaderList(0)(0) & " [" & HeaderList(0)(1) & "]")
+			For t = 1 To HeaderList.Count - 1
+				s.Append(Sepp & HeaderList(t)(0) & " [" & HeaderList(t)(1) & "]")
+			Next
+			f.WriteLine(s.ToString)
+		End If
 
-        f = New cFile_V3
 
-        path = ModOutpName & ".vmod"
+		'***********************************************************************************************
+		'***********************************************************************************************
+		'***********************************************************************************************
+		'*** Values *************************************************************************************
 
-        If Not f.OpenWrite(path, ",", False) Then
-            WorkerMsg(tMsgID.Err, "Can't write to " & path, MsgSrc)
-            Return False
-        End If
+		With MODdata
 
-        s = New System.Text.StringBuilder
+			For t = 0 To t1
 
-        '*********** Settings **************
-        Sepp = ","
-        t1 = MODdata.tDim
-        If VEC.EngOnly Then
-            tdelta = 0
-        Else
-            tdelta = 0.5
-        End If
+				'Predefine Gear for FLD assignment
+				If VEC.EngOnly Then
+					Gear = 0
+				Else
+					Gear = .Gear(t)
+				End If
 
 
-        '********** Aux-List ************
-        For Each StrKey In VEC.AuxRefs.Keys     'Wenn Engine Only dann wird das garnicht verwendet
-            AuxList.Add(StrKey)
-        Next
+				s.Length = 0
 
+				'Time
+				s.Append(t + DRI.t0 + tdelta)
 
-        If DEV.AdvFormat Then
-            f.WriteLine("VECTO " & VECTOvers)
-            f.WriteLine(Now.ToString)
-            f.WriteLine("Input File: " & JobFile)
-        End If
+				If Not VEC.EngOnly Then
 
+					If DRI.Vvorg Then
 
-        '***********************************************************************************************
-        '***********************************************************************************************
-        '***********************************************************************************************
-        '*** Header & Units ****************************************************************************
+						'distance
+						dist += .Vh.V(t)
+						s.Append(Sepp & dist)
 
-        s.Length = 0
+						'Actual-speed.
+						s.Append(Sepp & .Vh.V(t) * 3.6)
 
+						'Target-speed
+						s.Append(Sepp & .Vh.Vsoll(t) * 3.6)
 
-        HeaderList.Add(New String() {"time", "s"})
+						'Acc.
+						s.Append(Sepp & .Vh.a(t))
 
-        If Not VEC.EngOnly Then
-            HeaderList.Add(New String() {"dist", "m"})
-            HeaderList.Add(New String() {"v_act", "km/h"})
-            HeaderList.Add(New String() {"v_targ", "km/h"})
-            HeaderList.Add(New String() {"acc", "m/s²"})
-            HeaderList.Add(New String() {"grad", "%"})
-            dist = 0
-        End If
+					Else
 
-        HeaderList.Add(New String() {"n", "1/min"})
-        HeaderList.Add(New String() {"Tq_eng", "Nm"})
-        HeaderList.Add(New String() {"Tq_clutch", "Nm"})
-        HeaderList.Add(New String() {"Tq_full", "Nm"})
-        HeaderList.Add(New String() {"Tq_drag", "Nm"})
-        HeaderList.Add(New String() {"Pe_eng", "kW"})
-        HeaderList.Add(New String() {"Pe_full", "kW"})
-        HeaderList.Add(New String() {"Pe_drag", "kW"})
-        HeaderList.Add(New String() {"Pe_clutch", "kW"})
-        HeaderList.Add(New String() {"Pa", "Eng", "kW"})
-        HeaderList.Add(New String() {"Paux", "kW"})
+						'distance
+						s.Append(Sepp & "-")
 
-        If Not VEC.EngOnly Then
+						'Actual-speed.
+						s.Append(Sepp & "-")
 
-            HeaderList.Add(New String() {"Gear", "-"})
-            HeaderList.Add(New String() {"Ploss GB", "kW"})
-            HeaderList.Add(New String() {"Ploss Diff", "kW"})
-            HeaderList.Add(New String() {"Ploss Retarder", "kW"})
-            HeaderList.Add(New String() {"Pa GB", "kW"})
-            HeaderList.Add(New String() {"Pa Veh", "kW"})
-            HeaderList.Add(New String() {"Proll", "kW"})
-            HeaderList.Add(New String() {"Pair", "kW"})
-            HeaderList.Add(New String() {"Pgrad", "kW"})
-            HeaderList.Add(New String() {"Pwheel", "kW"})
-            HeaderList.Add(New String() {"Pbrake", "kW"})
+						'Target-speed
+						s.Append(Sepp & "-")
 
-            If GBX.TCon Then
-                HeaderList.Add(New String() {"TCν", "-"})
-                HeaderList.Add(New String() {"TCµ", "-"})
-                HeaderList.Add(New String() {"TC_T_Out", "Nm"})
-                HeaderList.Add(New String() {"TC_n_Out", "1/min"})
-            End If
+						'Acc.
+						s.Append(Sepp & "-")
 
-            'Auxiliaries
-            For Each StrKey In AuxList
-                HeaderList.Add(New String() {"Paux_" & StrKey, "kW"})
-            Next
+					End If
 
-        End If
 
-        HeaderList.Add(New String() {"FC", "g/h"})
-        HeaderList.Add(New String() {"FC-AUXc", "g/h"})
-        HeaderList.Add(New String() {"FC-WHTCc", "g/h"})
+					'Slope
+					s.Append(Sepp & .Grad(t))
 
+				End If
 
-        'Write to File
-        If DEV.AdvFormat Then
-            su = New System.Text.StringBuilder
-            s.Append(HeaderList(0)(0))
-            su.Append("[" & HeaderList(0)(1) & "]")
-            For t = 1 To HeaderList.Count - 1
-                s.Append(Sepp & HeaderList(t)(0))
-                su.Append(Sepp & "[" & HeaderList(t)(1) & "]")
-            Next
-            f.WriteLine(s.ToString)
-            f.WriteLine(su.ToString)
-        Else
-            s.Append(HeaderList(0)(0) & " [" & HeaderList(0)(1) & "]")
-            For t = 1 To HeaderList.Count - 1
-                s.Append(Sepp & HeaderList(t)(0) & " [" & HeaderList(t)(1) & "]")
-            Next
-            f.WriteLine(s.ToString)
-        End If
-      
+				'Revolutions
+				s.Append(Sepp & .nU(t))
 
+				If Math.Abs(2 * Math.PI * .nU(t) / 60) < 0.00001 Then
+					s.Append(Sepp & "0" & Sepp & "0" & Sepp & "0" & Sepp & "0")
+				Else
 
+					'Torque
+					s.Append(Sepp & nPeToM(.nU(t), .Pe(t)))
 
+					'Torque at clutch
+					s.Append(Sepp & nPeToM(.nU(t), .Pclutch(t)))
 
+					'Full-load and Drag torque
+					If .EngState(t) = tEngState.Stopped Then
+						s.Append(Sepp & "0" & Sepp & "0")
+					Else
+						If t = 0 Then
+							s.Append(Sepp & nPeToM(.nU(t), FLD(Gear).Pfull(.nU(t))) & Sepp & nPeToM(.nU(t), FLD(Gear).Pdrag(.nU(t))))
+						Else
+							s.Append(
+								Sepp & nPeToM(.nU(t), FLD(Gear).Pfull(.nU(t), .Pe(t - 1))) & Sepp & nPeToM(.nU(t), FLD(Gear).Pdrag(.nU(t))))
+						End If
+					End If
 
-        '***********************************************************************************************
-        '***********************************************************************************************
-        '***********************************************************************************************
-        '*** Values *************************************************************************************
+				End If
 
-        With MODdata
+				'Power
+				s.Append(Sepp & .Pe(t))
 
-            For t = 0 To t1
+				'Revolutions normalized
+				's.Append(Sepp & .nn(t))
 
-                'Predefine Gear for FLD assignment
-                If VEC.EngOnly Then
-                    Gear = 0
-                Else
-                    Gear = .Gear(t)
-                End If
+				'Power normalized
+				's.Append(Sepp & .Pe(t))
 
+				'Full-load and Drag
+				If .EngState(t) = tEngState.Stopped Then
+					s.Append(Sepp & "-" & Sepp & "-")
+				Else
+					If t = 0 Then
+						s.Append(Sepp & FLD(Gear).Pfull(.nU(t)) & Sepp & FLD(Gear).Pdrag(.nU(t)))
+					Else
+						s.Append(Sepp & FLD(Gear).Pfull(.nU(t), .Pe(t - 1)) & Sepp & FLD(Gear).Pdrag(.nU(t)))
+					End If
+				End If
 
-                s.Length = 0
+				'Power at Clutch
+				s.Append(Sepp & .Pclutch(t))
 
-                'Time
-                s.Append(t + DRI.t0 + tdelta)
+				'PaEng
+				s.Append(Sepp & .PaEng(t))
 
-                If Not VEC.EngOnly Then
+				'Aux..
+				s.Append(Sepp & .PauxSum(t))
 
-                    'distance
-                    dist += .Vh.V(t)
-                    s.Append(Sepp & dist)
 
-                    'Actual-speed.
-                    s.Append(Sepp & .Vh.V(t) * 3.6)
+				If Not VEC.EngOnly Then
 
-                    'Target-speed
-                    s.Append(Sepp & .Vh.Vsoll(t) * 3.6)
+					'Gear
+					s.Append(Sepp & .Gear(t))
 
-                    'Acc.
-                    s.Append(Sepp & .Vh.a(t))
+					'Transmission-losses
+					s.Append(Sepp & .PlossGB(t))
 
-                    'Slope
-                    s.Append(Sepp & .Grad(t))
+					'Diff-losses
+					s.Append(Sepp & .PlossDiff(t))
 
-                End If
+					'Retarder-losses
+					s.Append(Sepp & .PlossRt(t))
 
-                'Revolutions
-                s.Append(Sepp & .nU(t))
+					'PaGB
+					s.Append(Sepp & .PaGB(t))
 
-                If Math.Abs(2 * Math.PI * .nU(t) / 60) < 0.00001 Then
-                    s.Append(Sepp & "0" & Sepp & "0" & Sepp & "0" & Sepp & "0")
-                Else
+					'Pa Veh
+					s.Append(Sepp & .Pa(t))
 
-                    'Torque
-                    s.Append(Sepp & nPeToM(.nU(t), .Pe(t)))
+					'Roll..
+					s.Append(Sepp & .Proll(t))
 
-                    'Torque at clutch
-                    s.Append(Sepp & nPeToM(.nU(t), .Pclutch(t)))
+					'Drag
+					s.Append(Sepp & .Pair(t))
 
-                    'Full-load and Drag torque
-                    If .EngState(t) = tEngState.Stopped Then
-                        s.Append(Sepp & "0" & Sepp & "0")
-                    Else
-                        If t = 0 Then
-                            s.Append(Sepp & nPeToM(.nU(t), FLD(Gear).Pfull(.nU(t))) & Sepp & nPeToM(.nU(t), FLD(Gear).Pdrag(.nU(t))))
-                        Else
-                            s.Append(Sepp & nPeToM(.nU(t), FLD(Gear).Pfull(.nU(t), .Pe(t - 1))) & Sepp & nPeToM(.nU(t), FLD(Gear).Pdrag(.nU(t))))
-                        End If
-                    End If
+					'Slope ..
+					s.Append(Sepp & .Pstg(t))
 
-                End If
+					'Wheel-power
+					s.Append(Sepp & .Psum(t))
 
-                'Power
-                s.Append(Sepp & .Pe(t))
+					'Brake
+					s.Append(Sepp & .Pbrake(t))
 
-                'Revolutions normalized
-                's.Append(Sepp & .nn(t))
+					'Torque Converter output
+					If GBX.TCon Then s.Append(Sepp & .TCnu(t) & Sepp & .TCmu(t) & Sepp & .TCMout(t) & Sepp & .TCnOut(t))
 
-                'Power normalized
-                's.Append(Sepp & .Pe(t))
+					'Auxiliaries
+					For Each StrKey In AuxList
+						s.Append(Sepp & .Paux(StrKey)(t))
+					Next
 
-                'Full-load and Drag
-                If .EngState(t) = tEngState.Stopped Then
-                    s.Append(Sepp & "-" & Sepp & "-")
-                Else
-                    If t = 0 Then
-                        s.Append(Sepp & FLD(Gear).Pfull(.nU(t)) & Sepp & FLD(Gear).Pdrag(.nU(t)))
-                    Else
-                        s.Append(Sepp & FLD(Gear).Pfull(.nU(t), .Pe(t - 1)) & Sepp & FLD(Gear).Pdrag(.nU(t)))
-                    End If
-                End If
+				End If
 
-                'Power at Clutch
-                s.Append(Sepp & .Pclutch(t))
+				'FC
+				If .lFC(t) > -0.0001 Then
+					s.Append(Sepp & .lFC(t))
+				Else
+					s.Append(Sepp & "ERROR")
+				End If
 
-                'PaEng
-                s.Append(Sepp & .PaEng(t))
+				If FCAUXcSet Then
+					If .lFCAUXc(t) > -0.0001 Then
+						s.Append(Sepp & .lFCAUXc(t))
+					Else
+						s.Append(Sepp & "ERROR")
+					End If
+				Else
+					s.Append(Sepp & "-")
+				End If
 
-                'Aux..
-                s.Append(Sepp & .PauxSum(t))
 
+				If Cfg.DeclMode Then
+					If .lFCWHTCc(t) > -0.0001 Then
+						s.Append(Sepp & .lFCWHTCc(t))
+					Else
+						s.Append(Sepp & "ERROR")
+					End If
+				Else
+					s.Append(Sepp & "-")
+				End If
 
+				'Write to File
+				f.WriteLine(s.ToString)
 
-                If Not VEC.EngOnly Then
+			Next
 
-                    'Gear
-                    s.Append(Sepp & .Gear(t))
+		End With
 
-                    'Transmission-losses
-                    s.Append(Sepp & .PlossGB(t))
+		f.Close()
 
-                    'Diff-losses
-                    s.Append(Sepp & .PlossDiff(t))
+		'Add file to signing list
+		Lic.FileSigning.AddFile(path)
 
-                    'Retarder-losses
-                    s.Append(Sepp & .PlossRt(t))
+		Return True
+	End Function
 
-                    'PaGB
-                    s.Append(Sepp & .PaGB(t))
+	'Errors/Warnings die sekündlich auftreten können |@@| Errors/Warnings occuring every second
+	Public Class cModErrors
+		Public TrLossMapExtr As String
+		Public AuxMapExtr As String
+		Public AuxNegative As String
+		Public FLDextrapol As String
+		Public CdExtrapol As String
+		Public RtExtrapol As String
+		Public DesMaxExtr As String
+		Public TCextrapol As String
 
-                    'Pa Veh
-                    s.Append(Sepp & .Pa(t))
+		Public Sub New()
+			ResetAll()
+		End Sub
 
-                    'Roll..
-                    s.Append(Sepp & .Proll(t))
 
-                    'Drag
-                    s.Append(Sepp & .Pair(t))
+		'Reset-Hierarchie:
+		' ResetAll
+		'   DesMaxExtr
+		'   -GeschRedReset(Speed-Reduce-Reset)
+		'       CdExtrapol        
+		'       -PxReset
+		'           TrLossMapExtr 
+		'           AuxMapExtr 
+		'           AuxNegative
+		'           FLDextrapol
 
-                    'Slope ..
-                    s.Append(Sepp & .Pstg(t))
+		'Full reset (at the beginning of each second step)
+		Public Sub ResetAll()
+			DesMaxExtr = ""
+			GeschRedReset()
+		End Sub
 
-                    'Wheel-power
-                    s.Append(Sepp & .Psum(t))
+		'Reset Errors related to Speed Reduction (within iteration)
+		Public Sub GeschRedReset()
+			CdExtrapol = ""
+			RtExtrapol = ""
+			TCextrapol = ""
+			PxReset()
+		End Sub
 
-                    'Brake
-                    s.Append(Sepp & .Pbrake(t))
+		'Reset von Errors die mit der Leistungsberechnung zu tun haben (nach Schaltmodell durchzuführen) |@@| Reset errors related to Power-calculation (towards performing the Gear-shifting model)
+		Public Sub PxReset()
+			TrLossMapExtr = ""
+			AuxMapExtr = ""
+			AuxNegative = ""
+			FLDextrapol = ""
+		End Sub
 
-                    'Torque Converter output
-                    If GBX.TCon Then s.Append(Sepp & .TCnu(t) & Sepp & .TCmu(t) & Sepp & .TCMout(t) & Sepp & .TCnOut(t))
+		'Emit Errors
+		Public Function MsgOutputAbort(ByVal Second As String, ByVal MsgSrc As String) As Boolean
+			Dim Abort As Boolean
 
-                    'Auxiliaries
-                    For Each StrKey In AuxList
-                        s.Append(Sepp & .Paux(StrKey)(t))
-                    Next
+			Abort = False
 
-                End If
+			If TrLossMapExtr <> "" Then
+				If Cfg.DeclMode Then
+					WorkerMsg(tMsgID.Err, "Extrapolation of Transmission Loss Map (" & TrLossMapExtr & ")!", MsgSrc & "/t= " & Second)
+				Else
+					WorkerMsg(tMsgID.Warn, "Extrapolation of Transmission Loss Map (" & TrLossMapExtr & ")!", MsgSrc & "/t= " & Second)
+				End If
+			End If
 
-                'FC
-                If .lFC(t) > -0.0001 Then
-                    s.Append(Sepp & .lFC(t))
-                Else
-                    s.Append(Sepp & "ERROR")
-                End If
+			If AuxMapExtr <> "" Then
+				WorkerMsg(tMsgID.Err, "Invalid extrapolation in Auxiliary Map (" & AuxMapExtr & ")!", MsgSrc & "/t= " & Second)
+			End If
 
-                If FCAUXcSet Then
-                    If .lFCAUXc(t) > -0.0001 Then
-                        s.Append(Sepp & .lFCAUXc(t))
-                    Else
-                        s.Append(Sepp & "ERROR")
-                    End If
-                Else
-                    s.Append(Sepp & "-")
-                End If
+			If AuxNegative <> "" Then
+				WorkerMsg(tMsgID.Err, "Aux power < 0 (" & AuxNegative & ") Check cycle and aux efficiency map!",
+						MsgSrc & "/t= " & Second)
+				Abort = True
+			End If
 
+			If FLDextrapol <> "" Then
+				WorkerMsg(tMsgID.Warn, "Extrapolation of Full load / drag curve (" & FLDextrapol & ")!", MsgSrc & "/t= " & Second)
+			End If
 
-                If Cfg.DeclMode Then
-                    If .lFCWHTCc(t) > -0.0001 Then
-                        s.Append(Sepp & .lFCWHTCc(t))
-                    Else
-                        s.Append(Sepp & "ERROR")
-                    End If
-                Else
-                    s.Append(Sepp & "-")
-                End If
+			If CdExtrapol <> "" Then
+				WorkerMsg(tMsgID.Warn, "Extrapolation in Cd input file (" & CdExtrapol & ")!", MsgSrc & "/t= " & Second)
+			End If
 
-                'Write to File
-                f.WriteLine(s.ToString)
+			If DesMaxExtr <> "" Then
+				WorkerMsg(tMsgID.Warn, "Extrapolation in .vacc input file (" & DesMaxExtr & ")!", MsgSrc & "/t= " & Second)
+			End If
 
-            Next
+			If RtExtrapol <> "" Then
+				WorkerMsg(tMsgID.Warn, "Extrapolation in Retarder input file (" & RtExtrapol & ")!", MsgSrc & "/t= " & Second)
+			End If
 
-        End With
+			If TCextrapol <> "" Then
+				WorkerMsg(tMsgID.Warn, "Extrapolation in Torque Converter file (" & TCextrapol & ")!", MsgSrc & "/t= " & Second)
+			End If
 
-        f.Close()
-
-        'Add file to signing list
-        Lic.FileSigning.AddFile(path)
-
-        Return True
-
-    End Function
-
-    'Errors/Warnings die sekündlich auftreten können |@@| Errors/Warnings occuring every second
-    Public Class cModErrors
-        Public TrLossMapExtr As String
-        Public AuxMapExtr As String
-        Public AuxNegative As String
-        Public FLDextrapol As String
-        Public CdExtrapol As String
-        Public RtExtrapol As String
-        Public DesMaxExtr As String
-        Public TCextrapol As String
-
-        Public Sub New()
-            ResetAll()
-        End Sub
-
-
-        'Reset-Hierarchie:
-        ' ResetAll
-        '   DesMaxExtr
-        '   -GeschRedReset(Speed-Reduce-Reset)
-        '       CdExtrapol        
-        '       -PxReset
-        '           TrLossMapExtr 
-        '           AuxMapExtr 
-        '           AuxNegative
-        '           FLDextrapol
-
-        'Full reset (at the beginning of each second step)
-        Public Sub ResetAll()
-            DesMaxExtr = ""
-            GeschRedReset()
-        End Sub
-
-        'Reset Errors related to Speed Reduction (within iteration)
-        Public Sub GeschRedReset()
-            CdExtrapol = ""
-            RtExtrapol = ""
-            TCextrapol = ""
-            PxReset()
-        End Sub
-
-        'Reset von Errors die mit der Leistungsberechnung zu tun haben (nach Schaltmodell durchzuführen) |@@| Reset errors related to Power-calculation (towards performing the Gear-shifting model)
-        Public Sub PxReset()
-            TrLossMapExtr = ""
-            AuxMapExtr = ""
-            AuxNegative = ""
-            FLDextrapol = ""
-        End Sub
-
-        'Emit Errors
-        Public Function MsgOutputAbort(ByVal Second As String, ByVal MsgSrc As String) As Boolean
-            Dim Abort As Boolean
-
-            Abort = False
-
-            If TrLossMapExtr <> "" Then
-                WorkerMsg(tMsgID.Err, "Invalid extrapolation in Transmission Loss Map (" & TrLossMapExtr & ")!", MsgSrc & "/t= " & Second)
-            End If
-
-            If AuxMapExtr <> "" Then
-                WorkerMsg(tMsgID.Err, "Invalid extrapolation in Auxiliary Map (" & AuxMapExtr & ")!", MsgSrc & "/t= " & Second)
-            End If
-
-            If AuxNegative <> "" Then
-                WorkerMsg(tMsgID.Err, "Aux power < 0 (" & AuxNegative & ") Check cycle and aux efficiency map!", MsgSrc & "/t= " & Second)
-                Abort = True
-            End If
-
-            If FLDextrapol <> "" Then
-                WorkerMsg(tMsgID.Warn, "Extrapolation of Full load / drag curve (" & FLDextrapol & ")!", MsgSrc & "/t= " & Second)
-            End If
-
-            If CdExtrapol <> "" Then
-                WorkerMsg(tMsgID.Warn, "Extrapolation in Cd input file (" & CdExtrapol & ")!", MsgSrc & "/t= " & Second)
-            End If
-
-            If DesMaxExtr <> "" Then
-                WorkerMsg(tMsgID.Warn, "Extrapolation in .vacc input file (" & DesMaxExtr & ")!", MsgSrc & "/t= " & Second)
-            End If
-
-            If RtExtrapol <> "" Then
-                WorkerMsg(tMsgID.Warn, "Extrapolation in Retarder input file (" & RtExtrapol & ")!", MsgSrc & "/t= " & Second)
-            End If
-
-            If TCextrapol <> "" Then
-                WorkerMsg(tMsgID.Warn, "Extrapolation in Torque Converter file (" & TCextrapol & ")!", MsgSrc & "/t= " & Second)
-            End If
-
-            Return Abort
-
-        End Function
-
-    End Class
-
-
-
-
-
-
-
-
-
-
+			Return Abort
+		End Function
+	End Class
 End Class
-
-
 
 
