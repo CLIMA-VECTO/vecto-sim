@@ -36,4 +36,4 @@ Checklist to build a new release:
     https://webgate.ec.europa.eu/CITnet/confluence/display/VECTO/Releases    
 - Make licenses and update private pages
 - Tag repos.
-- Send announcment email through JIRA (ie see VECTO-28)
+- Announce in VECTO-58
