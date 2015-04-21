@@ -8,6 +8,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[TestClass]
 	public class GearboxDataTest
 	{
+		public TestContext TestContext { get; set; }
+
 		protected const string GearboxFile = @"Testdata\Components\24t Coach.vgbx";
 
 		[TestMethod]
@@ -32,22 +34,37 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		}
 
 		[TestMethod]
+		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV",
+			"|DataDirectory|\\TestData\\AxleGearLossInterpolation.csv",
+			"AxleGearLossInterpolation#csv", DataAccessMethod.Sequential)]
 		public void TestInterpolation()
 		{
-			var gbxData = GearboxData.ReadFromFile(GearboxFile);
+			var rdyn = Double.Parse(TestContext.DataRow["rDyn"].ToString());
+			var speed = double.Parse(TestContext.DataRow["v"].ToString());
 
-			var v = 11.72958;
-			var rdyn = 520;
-			var angSpeed = ((60 * v) / (2 * rdyn * Math.PI / 1000) * gbxData.AxleGearData.Ratio).SI<PerSecond>();
-			var PvD = 169640.7.SI<Watt>();
+			var gbxData = GearboxData.ReadFromFile(TestContext.DataRow["GearboxDataFile"].ToString());
+
+
+			var angSpeed = SpeedToAngularSpeed(speed, rdyn) * gbxData.AxleGearData.Ratio;
+			var PvD = Double.Parse(TestContext.DataRow["PowerGbxOut"].ToString()).SI<Watt>();
 
 			var torqueToWheels = Formulas.PowerToTorque(PvD, angSpeed);
-			var torqueFromEngine = gbxData.AxleGearData.LossMap.GearboxOutTorque(angSpeed, torqueToWheels);
+			var torqueFromEngine = 0.SI<NewtonMeter>();
+
+			if (TestContext.DataRow["Gear"].ToString() == "A") {
+				torqueFromEngine = gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
+			}
 
 			var powerEngine = Formulas.TorqueToPower(torqueFromEngine, angSpeed);
 			var loss = powerEngine - PvD;
 
-			Assert.AreEqual(5551.5799, loss.Double(), 0.0001);
+			Assert.AreEqual(Double.Parse(TestContext.DataRow["GbxPowerLoss"].ToString()), loss.Double(), 0.1,
+				TestContext.DataRow["TestName"].ToString());
+		}
+
+		protected PerSecond SpeedToAngularSpeed(double v, double r)
+		{
+			return ((60 * v) / (2 * r * Math.PI / 1000)).RPMtoRad();
 		}
 	}
 }

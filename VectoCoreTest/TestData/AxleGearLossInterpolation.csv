@@ -1,0 +1,10 @@
+TestName,GearboxDataFile,rDyn,v,Gear,PowerGbxOut,GbxPowerLoss
+Test1,TestData\Components\24t Coach.vgbx,520,20.320,A,279698.4,9401.44062
+Test2,TestData\Components\24t Coach.vgbx,520,0.5858335,A,17173.5,409.773677587509
+Test3,TestData\Components\24t Coach.vgbx,520,0.3996113,A,292.5253,118.282541632652
+Test4,TestData\Components\24t Coach.vgbx,520,5.327739,A,57431.12,2222.78785705566
+Test5,TestData\Components\24t Coach.vgbx,520,5.661779,A,73563.93,2553.00283432007
+Test6,TestData\Components\24t Coach.vgbx,520,14.15156,A,212829.5,6822.16882705688
+Test7,TestData\Components\24t Coach.vgbx,520,14.55574,A,15225.52,4308.41207504272
+Test8,TestData\Components\24t Coach.vgbx,520,4.601774,A,-1240.225,1362.09738254547
+Test9,TestData\Components\24t Coach.vgbx,520,3.934339,A,-698.5989,1164.5405292511
