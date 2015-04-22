@@ -2,51 +2,73 @@ using System;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class EngineOnlyGearbox : VectoSimulationComponent, IGearbox, ITnInPort, ITnOutPort
-	{
-		private ITnOutPort _outPort;
-		public EngineOnlyGearbox(IVehicleContainer cockpit) : base(cockpit) {}
+    public class EngineOnlyGearbox : VectoSimulationComponent, IGearbox, ITnInPort, ITnOutPort
+    {
+        private ITnOutPort _outPort;
+        public EngineOnlyGearbox(IVehicleContainer cockpit) : base(cockpit) {}
 
-		public ITnInPort InShaft()
-		{
-			return this;
-		}
+        #region IInShaft
 
-		public ITnOutPort OutShaft()
-		{
-			return this;
-		}
+        public ITnInPort InShaft()
+        {
+            return this;
+        }
 
-		public uint Gear()
-		{
-			return 0;
-		}
+        #endregion IOutShaft
 
-		public void Connect(ITnOutPort other)
-		{
-			_outPort = other;
-		}
+        #region IOutShaft
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, RadianPerSecond engineSpeed)
-		{
-			if (_outPort == null) {
-				Log.ErrorFormat("{0} cannot handle incoming request - no outport available", absTime);
-				throw new VectoSimulationException(String.Format("{0} cannot handle incoming request - no outport available",
-					absTime.TotalSeconds));
-			}
-			return _outPort.Request(absTime, dt, torque, engineSpeed);
-		}
+        public ITnOutPort OutShaft()
+        {
+            return this;
+        }
 
-		public void Connect(IOutPort other)
-		{
-			throw new NotImplementedException();
-		}
+        #endregion
 
-		public override void CommitSimulationStep(IModalDataWriter writer) {}
-	}
+        #region IGearboxCockpit
+
+        uint IGearboxCockpit.Gear()
+        {
+            return 0;
+        }
+
+        #endregion
+
+        #region ITnInPort
+
+        void ITnInPort.Connect(ITnOutPort other)
+        {
+            _outPort = other;
+        }
+
+				#endregion
+
+
+        #region ITnOutPort
+
+        IResponse ITnOutPort.Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
+        {
+            if (_outPort == null) {
+                Log.ErrorFormat("{0} cannot handle incoming request - no outport available", absTime);
+                throw new VectoSimulationException(
+                    String.Format("{0} cannot handle incoming request - no outport available",
+                        absTime.TotalSeconds));
+            }
+            return _outPort.Request(absTime, dt, torque, engineSpeed);
+        }
+
+        #endregion
+
+        #region VectoSimulationComponent
+
+        public override void CommitSimulationStep(IModalDataWriter writer) {}
+
+        #endregion
+    }
 }

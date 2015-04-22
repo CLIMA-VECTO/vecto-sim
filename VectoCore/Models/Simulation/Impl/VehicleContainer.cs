@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IEngineCockpit
 
-		public RadianPerSecond EngineSpeed()
+        public PerSecond EngineSpeed()
 		{
 			if (_engine == null) {
 				throw new VectoException("no engine available!");
@@ -41,17 +41,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IVehicleCockpit
 
-		public double VehicleSpeed()
+		public MeterPerSecond VehicleSpeed()
 		{
 			throw new VectoException("no vehicle available!");
 		}
 
 		#endregion
-
-		public IReadOnlyCollection<VectoSimulationComponent> SimulationComponents()
-		{
-			return new ReadOnlyCollection<VectoSimulationComponent>(_components);
-		}
 
 		#region IVehicleContainer
 
@@ -88,5 +83,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		#endregion
+
+		public IReadOnlyCollection<VectoSimulationComponent> SimulationComponents()
+		{
+			return new ReadOnlyCollection<VectoSimulationComponent>(_components);
+		}
 	}
 }

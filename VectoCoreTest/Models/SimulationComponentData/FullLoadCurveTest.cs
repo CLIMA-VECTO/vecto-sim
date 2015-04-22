@@ -22,6 +22,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(1231, (double) fldCurve.FullLoadStationaryTorque(580.0.RPMtoRad()), Tolerance);
 		}
 
+    [TestMethod]
+    public void TestFullLoadEngineSpeedRated()
+    {
+      var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD); 
+      Assert.AreEqual(181.8444, (double)fldCurve.RatedSpeed(), Tolerance);
+    }
+
 		[TestMethod]
 		public void TestFullLoadStaticPower()
 		{
@@ -95,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void Test_FileRead_NoHeader()
 		{
 			var curve = FullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve no header.vfld");
-			var result = curve.FullLoadStationaryTorque(1.SI<RadianPerSecond>());
+			var result = curve.FullLoadStationaryTorque(1.SI<PerSecond>());
 			Assert.AreNotEqual((double) result, 0.0);
 		}
 

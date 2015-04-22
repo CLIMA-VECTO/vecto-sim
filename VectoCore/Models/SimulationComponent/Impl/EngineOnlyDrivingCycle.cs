@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
@@ -9,65 +7,66 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	/// <summary>
-	///     Class representing one EngineOnly Driving Cycle
-	/// </summary>
-	public class EngineOnlyDrivingCycle : VectoSimulationComponent, IEngineOnlyDrivingCycle, ITnInPort
-	{
-		protected DrivingCycleData Data;
+    /// <summary>
+    ///     Class representing one EngineOnly Driving Cycle
+    /// </summary>
+    public class EngineOnlyDrivingCycle : VectoSimulationComponent, IEngineOnlyDrivingCycle, ITnInPort,
+        IDrivingCycleOutPort
+    {
+        protected DrivingCycleData Data;
+        private ITnOutPort _outPort;
 
-		public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
-		{
-			Data = cycle;
-			_nextEntry = cycle.Entries.GetEnumerator();
-			CurrentEntry = _nextEntry.Current;
-			_nextEntry.MoveNext();
-		}
+        public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+        {
+            Data = cycle;
+        }
 
-		private ITnOutPort OutPort { get; set; }
-		private int CurrentStep { get; set; }
+        #region IInShaft
 
-		protected IEnumerator<DrivingCycleData.DrivingCycleEntry> _nextEntry;
-		protected DrivingCycleData.DrivingCycleEntry NextEntry { get { return _nextEntry.Current; } }
-		protected DrivingCycleData.DrivingCycleEntry CurrentEntry { get; set; }
+        public ITnInPort InShaft()
+        {
+            return this;
+        }
 
-		#region ITnInPort
+        #endregion
 
-		public void Connect(ITnOutPort other)
-		{
-			OutPort = other;
-		}
+        #region IDrivingCycleOutProvider
 
-		#endregion
+        public IDrivingCycleOutPort OutPort()
+        {
+            return this;
+        }
 
-		public override void CommitSimulationStep(IModalDataWriter writer) {}
+        #endregion
 
-		#region IInShaft
+        #region IDrivingCycleOutPort
 
-		public ITnInPort InShaft()
-		{
-			return this;
-		}
+        IResponse IDrivingCycleOutPort.Request(TimeSpan absTime, TimeSpan dt)
+        {
+            //todo: change to variable time steps
+            var index = (int) Math.Floor(absTime.TotalSeconds);
+            if (index >= Data.Entries.Count) {
+                return new ResponseCycleFinished();
+            }
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt)
-		{
-			if (absTime.TotalSeconds < CurrentEntry.Time.Double()) {
-				Log.ErrorFormat("cannot go back in time! current: {0}  requested: {1}", CurrentEntry.Time, absTime.TotalSeconds);
-				throw new VectoSimulationException(String.Format("cannot go back in time! current: {0}  requested: {1}", CurrentEntry.Time, absTime.TotalSeconds));
-			}
-			while (NextEntry.Time <= absTime.TotalSeconds) {
-				CurrentEntry = NextEntry;
-				if (!_nextEntry.MoveNext()) {
-					return new ResponseCycleFinished();
-				}
-			}
-			if (dt.TotalSeconds > (NextEntry.Time - CurrentEntry.Time).Double()) {
-				return new ResponseFailTimeInterval(TimeSpan.FromSeconds((NextEntry.Time - CurrentEntry.Time).Double()));
-			}
+            return _outPort.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
+        }
 
-			return OutPort.Request(absTime, dt, CurrentEntry.EngineTorque, CurrentEntry.EngineSpeed);
-		}
+        #endregion
 
-		#endregion
-	}
+        #region ITnInPort
+
+        void ITnInPort.Connect(ITnOutPort other)
+        {
+            _outPort = other;
+        }
+
+        #endregion
+
+        #region VectoSimulationComponent
+
+        public override void CommitSimulationStep(IModalDataWriter writer) {}
+
+        #endregion
+    }
 }

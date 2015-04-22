@@ -1,4 +1,7 @@
 namespace TUGraz.VectoCore.Models.Connector.Ports
 {
-	public interface IResponse {}
+    /// <summary>
+    /// Defines an interface for a Response.
+    /// </summary>
+    public interface IResponse {}
 }

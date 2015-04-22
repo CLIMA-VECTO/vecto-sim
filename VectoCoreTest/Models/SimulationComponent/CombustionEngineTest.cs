@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
 			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
-			var torque = new NewtonMeter();
+			var torque = 0.SI<NewtonMeter>();
 			var engineSpeed = 600.0.RPMtoRad();
 			var dataWriter = new TestModalDataWriter();
 

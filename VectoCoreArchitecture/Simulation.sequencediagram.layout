@@ -1103,7 +1103,7 @@
       <commentMoniker Id="933f0530-1bee-4a27-8753-50dd1b19f465" />
       <relativeChildShapes />
     </commentShape>
-    <commentShape Id="1373bee0-2462-4404-baa3-c5ab90cfbdfd" absoluteBounds="2.625, 34, 1.25, 0.375" customColor="251, 247, 200">
+    <commentShape Id="1373bee0-2462-4404-baa3-c5ab90cfbdfd" absoluteBounds="2.625, 34, 1.25, 0.5" customColor="251, 247, 200">
       <commentMoniker Id="0167b631-e895-4804-b3db-829a68de9a47" />
       <relativeChildShapes />
     </commentShape>
