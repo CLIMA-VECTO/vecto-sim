@@ -116,6 +116,25 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			dataWriter.Data.WriteToFile(@"test1.csv");
 		}
 
+
+		[TestMethod]
+		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineLoadJumpTests.csv",
+			"EngineLoadJumpTests#csv", DataAccessMethod.Sequential)]
+		public void TestEngineFullLoadJump()
+		{
+			var vehicleContainer = new VehicleContainer();
+			var gearbox = new EngineOnlyGearbox(vehicleContainer);
+			var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
+			var engine = new CombustionEngine(vehicleContainer, engineData);
+
+			gearbox.InShaft().Connect(engine.OutShaft());
+
+			var modalData = new TestModalDataWriter();
+
+			var idlePower = 5000.SI<Watt>();
+			var angularSpeed = 1000;
+		}
+
 		[TestMethod]
 		public void TestEngineMemento()
 		{
