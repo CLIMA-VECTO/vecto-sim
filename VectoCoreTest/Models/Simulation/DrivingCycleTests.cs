@@ -58,32 +58,32 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var absTime = TimeSpan.FromSeconds(10);
 			var dt = TimeSpan.FromSeconds(1);
 
-			var response = cycle.Request(absTime, dt);
-			Assert.IsInstanceOfType(response, typeof(ResponseFailTimeInterval));
+			var response = cycle.OutPort().Request(absTime, dt);
+			Assert.IsInstanceOfType(response, typeof (ResponseFailTimeInterval));
 
 			dt = TimeSpan.FromSeconds(0.25);
-			response = cycle.Request(absTime, dt);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			response = cycle.OutPort().Request(absTime, dt);
+			Assert.IsInstanceOfType(response, typeof (ResponseSuccess));
 
 			var dataWriter = new TestModalDataWriter();
 			container.CommitSimulationStep(dataWriter);
 
 			Assert.AreEqual(absTime, outPort.AbsTime);
 			Assert.AreEqual(dt, outPort.Dt);
-			Assert.AreEqual(743.2361.RPMtoRad(), outPort.AngularFrequency);
+			Assert.AreEqual(743.2361.RPMtoRad(), outPort.AngularVelocity);
 			Assert.AreEqual(Formulas.PowerToTorque(2779.576.SI<Watt>(), 743.2361.RPMtoRad()), outPort.Torque);
 
 			// ========================
 
 			dt = TimeSpan.FromSeconds(1);
 			absTime = TimeSpan.FromSeconds(500);
-			response = cycle.Request(absTime, dt);
-			Assert.IsInstanceOfType(response, typeof(ResponseFailTimeInterval));
+			response = cycle.OutPort().Request(absTime, dt);
+			Assert.IsInstanceOfType(response, typeof (ResponseFailTimeInterval));
 
 			dt = TimeSpan.FromSeconds(0.25);
 
 			for (int i = 0; i < 2; i++) {
-				response = cycle.Request(absTime, dt);
+				response = cycle.OutPort().Request(absTime, dt);
 				Assert.IsInstanceOfType(response, typeof (ResponseSuccess));
 
 				dataWriter = new TestModalDataWriter();
@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 				Assert.AreEqual(absTime, outPort.AbsTime);
 				Assert.AreEqual(dt, outPort.Dt);
-				Assert.AreEqual(1584.731.RPMtoRad(), outPort.AngularFrequency);
+				Assert.AreEqual(1584.731.RPMtoRad(), outPort.AngularVelocity);
 				Assert.AreEqual(Formulas.PowerToTorque(3380.548.SI<Watt>(), 1584.731.RPMtoRad()), outPort.Torque);
 
 				absTime += dt;

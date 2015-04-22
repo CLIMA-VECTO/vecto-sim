@@ -118,8 +118,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 
 		[TestMethod]
-		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineLoadJumpTests.csv",
-			"EngineLoadJumpTests#csv", DataAccessMethod.Sequential)]
+		//[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineLoadJumpTests.csv",
+		//	"EngineLoadJumpTests#csv", DataAccessMethod.Sequential)]
 		public void TestEngineFullLoadJump()
 		{
 			var vehicleContainer = new VehicleContainer();
@@ -129,10 +129,29 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			gearbox.InShaft().Connect(engine.OutShaft());
 
+			var requestPort = gearbox.OutShaft();
+
 			var modalData = new TestModalDataWriter();
 
-			var idlePower = 5000.SI<Watt>();
-			var angularSpeed = 1000;
+			var idlePower = 50.SI<Watt>();
+			var angularSpeed = 1000.RPMtoRad();
+
+			var t = TimeSpan.FromSeconds(0);
+			var dt = TimeSpan.FromSeconds(0.5);
+			for (; t.TotalSeconds < 10; t += dt) {
+				requestPort.Request(t, dt, Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
+			}
+
+			var fullLoadPower = Formulas.TorqueToPower(2300.SI<NewtonMeter>(), angularSpeed);
+
+			for (; t.TotalSeconds < 20; t += dt) {
+				requestPort.Request(t, dt, Formulas.PowerToTorque(fullLoadPower, angularSpeed), angularSpeed);
+				modalData[ModalResultField.time] = t.TotalSeconds;
+				modalData[ModalResultField.simulationInterval] = dt.TotalSeconds;
+				engine.CommitSimulationStep(modalData);
+				// todo: compare results...
+				modalData.CommitSimulationStep();
+			}
 		}
 
 		[TestMethod]
