@@ -737,7 +737,7 @@ lbGschw:
 					'Gear-shifting Model
 					If GBX.TCon Then
 
-						If jz > 0 Then Tq = nPeToM(fnU(Vact, LastGear, False), fPeGearMod(LastGear, jz, Vh.fGrad(dist)))
+						If jz > 0 Then Tq = Math.Min(nPeToM(fnU(Vact, LastGear, False), fPeGearMod(LastGear, jz, Vh.fGrad(dist))), FLD(LastGear).Tq(fnU(Vact, LastGear, False)))
 
 						Gear = fGearTC(jz, Vh.fGrad(dist), Tq)
 					Else
@@ -1233,11 +1233,10 @@ lb_nOK:
 			'--------------------------------------------------------------------------------------------------
 			'   Finish Second
 
-
-			'If Gear = GBX.GearCount Then
-			'    Debug.Print(jz + 1 & ",-")
+			'If Gear > 1 AndAlso Gear = LastGear + 1 Then
+			'	Debug.Print(jz & "," & nU.ToString() & "," & nPeToM(nU, P))
 			'Else
-			'    Debug.Print(jz + 1 & "," & fnU(Vact, Gear + 1, False))
+			'	Debug.Print(jz & ",-,-")
 			'End If
 
 			'distance 
@@ -1939,9 +1938,17 @@ lb_nOK:
 			nU = (Vact * 60.0 * GBX.Igetr(0) * GBX.Igetr(LastGear) / (2 * VEH.rdyn * Math.PI / 1000)) / n
 		Else
 			nU = Vact * 60.0 * GBX.Igetr(0) * GBX.Igetr(LastGear) / (2 * VEH.rdyn * Math.PI / 1000)
-			OutOfRpmRange = (nU >= 1.2 * (ENG.Nrated - ENG.Nidle) + ENG.Nidle) Or nU < ENG.Nidle
+			OutOfRpmRange = (nU >= ENG.Nrated) Or (nU < ENG.Nidle)
 			'No gear change 3s after last one -except rpm out of range
 			If Not OutOfRpmRange AndAlso t - LastGearChange <= GBX.gs_ShiftTime And t > GBX.gs_ShiftTime - 1 Then Return LastGear
+		End If
+
+		If OutOfRpmRange Then
+			If (nU >= ENG.Nrated) And LastGear < GBX.GearCount Then
+				Return LastGear + 1
+			ElseIf nU < ENG.Nidle Then
+				Return LastGear - 1
+			End If
 		End If
 
 		Pe = Tq * (nU * 2 * Math.PI / 60) / 1000
@@ -1985,7 +1992,7 @@ lb_nOK:
 				Return LastGear - 1
 			End If
 		Else
-			If nU < nUdown Then
+			If nU < nUdown AndAlso fnU(Vact, LastGear - 1, False) <= ENG.Nrated Then
 				Return LastGear - 1
 			End If
 		End If
