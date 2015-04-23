@@ -34,6 +34,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 		}
 
+
 		[TestMethod]
 		public void TestEngineOnly_JobRun()
 		{
@@ -58,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var sim = new JobContainer();
 			var job = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, resultFileName);
 			sim.AddJob(job);
-			sim.RunSimulation();
+			sim.RunJobs();
 
 			var results = ModalResults.ReadFromFile(resultFileName);
 			var expectedResults = ModalResults.ReadFromFile(expectedResultsName);
@@ -89,7 +90,26 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				simulation.AddJob(CreateJob(resultFile));
 			}
 
-			simulation.RunSimulation();
+			simulation.RunJobs();
+
+			foreach (var resultFile in resultFiles) {
+				var results = ModalResults.ReadFromFile(resultFile);
+				Assert.AreEqual(expectedResults.Rows.Count, results.Rows.Count, "Moddata: Row count differs.");
+			}
+		}
+
+		[TestMethod]
+		public void Test_VectoJob()
+		{
+			var resultFileName = "TestEngineOnly-MultipleJobs-result{0}.vmod";
+			var resultFiles = new[] { 1, 2, 3 }.Select(x => string.Format(resultFileName, x)).ToList();
+
+			var expectedResultsName = @"24t Coach.vmod";
+			var expectedResults = ModalResults.ReadFromFile(expectedResultsName);
+
+			var jobData = VectoJobData.ReadFromFile(@"TestData\Jobs\24t Coach.vecto");
+			var jobContainer = new JobContainer(jobData);
+			jobContainer.RunJobs();
 
 			foreach (var resultFile in resultFiles) {
 				var results = ModalResults.ReadFromFile(resultFile);

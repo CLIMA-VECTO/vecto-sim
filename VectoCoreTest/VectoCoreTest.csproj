@@ -106,9 +106,13 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="TestData\Components\24t Coach.vgbx" />
+    <None Include="TestData\Components\24t Coach.vveh" />
     <None Include="TestData\Components\24t CoachInterpolated.vmap">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Components\24t_Coach_ALT.vaux" />
+    <None Include="TestData\Components\Coach.vacc" />
     <None Include="TestData\Components\FullLoadCurve insufficient columns.vfld">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -124,6 +128,7 @@
     <None Include="TestData\Components\Retarder.vrlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Cycles\LOT2_rural Engine Only.vmod" />
     <None Include="TestData\Cycles\Coach Engine Only short.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -154,6 +159,7 @@
     <None Include="TestData\Cycles\Coach Engine Only.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Jobs\24t Coach.vecto" />
     <None Include="TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

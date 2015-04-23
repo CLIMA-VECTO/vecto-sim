@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// <summary>
 		///     Runs all jobs, waits until finished.
 		/// </summary>
-		public void RunSimulation()
+		public void RunJobs()
 		{
 			LogManager.GetLogger(GetType()).Info("VectoSimulator started running. Starting Jobs.");
 			Task.WaitAll(_simulators.Select(job => Task.Factory.StartNew(job.Run)).ToArray());
