@@ -10,7 +10,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	public class SimulatorFactory
 	{
 		/// <summary>
-		/// Creates a time based engine only powertrain and simulation job for the given files.
+		/// Creates a simulation job for time based engine only powertrain.
 		/// </summary>
 		public static IVectoSimulator CreateTimeBasedEngineOnlyJob(string engineFile, string cycleFile,
 			string resultFile)
@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return simulator;
 		}
 
-		public static IEnumerable<IVectoSimulator> BuildJobs(VectoJobData data)
+		public static IEnumerable<IVectoSimulator> CreateJobs(VectoJobData data)
 		{
 			foreach (var cycle in data.Cycles) {
 				var builder = new SimulatorBuilder(data.IsEngineOnly);

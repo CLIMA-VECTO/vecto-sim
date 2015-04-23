@@ -1,5 +1,4 @@
 using System;
-using System.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Utils;
 
@@ -9,7 +8,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 	public class DoubleExtensionMethodTest
 	{
 		[TestMethod]
-		public void DoubleExtensions_SI_Test()
+		public void DoubleExtensions_SI()
 		{
 			var val = 600.0.RPMtoRad();
 			Assert.AreEqual(600 / 60 * 2 * Math.PI, val.Double());
@@ -28,7 +27,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		[TestMethod]
-		public void DoubleExtension_CompareTests()
+		public void DoubleExtension_ComparisonOperators()
 		{
 			Assert.IsTrue(0.0.IsEqual(0.0));
 			Assert.IsTrue(1.0.IsGreater(0.0));
@@ -37,8 +36,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.IsTrue(0.0.IsSmaller(1.0));
 			Assert.IsTrue(1.0.IsSmallerOrEqual(1.0));
 
+			const double inTolerance = 0.00099;
+			Assert.IsTrue(0.0.IsEqual(inTolerance));
+			Assert.IsTrue(inTolerance.IsEqual(0.0));
+			Assert.IsTrue(0.0.IsEqual(-inTolerance));
+			Assert.IsTrue((-inTolerance).IsEqual(0.0));
 
-			Assert.IsTrue(0.0.IsEqual(0.001));
+			Assert.IsFalse(0.0.IsEqual(0.1));
+			Assert.IsFalse(0.1.IsEqual(0.0));
+			Assert.IsFalse(0.0.IsEqual(-0.1));
+			Assert.IsFalse((-0.1).IsEqual(0.0));
 
 			Assert.IsTrue(1.002.IsGreater(1.0));
 			Assert.IsTrue(1.001.IsGreater(1.0));

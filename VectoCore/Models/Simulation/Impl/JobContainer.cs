@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public JobContainer(VectoJobData data)
 		{
-			_simulators.AddRange(SimulatorFactory.BuildJobs(data));
+			_simulators.AddRange(SimulatorFactory.CreateJobs(data));
 		}
 
 
