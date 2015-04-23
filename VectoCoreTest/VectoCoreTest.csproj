@@ -148,6 +148,21 @@
     <None Include="TestData\Cycles\Coach Engine Only.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\EngineFullLoadJumps.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_1Hz.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_2Hz.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_5Hz.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Results\EngineOnlyCycles\24tCoach_EngineOnlyPaux.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

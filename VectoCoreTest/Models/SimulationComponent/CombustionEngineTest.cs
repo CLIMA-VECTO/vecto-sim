@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -118,38 +119,45 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 
 		[TestMethod]
-		//[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineLoadJumpTests.csv",
-		//	"EngineLoadJumpTests#csv", DataAccessMethod.Sequential)]
+		[DataSource("Microsoft.VisualStudio.TestTools.DataSource.CSV", "|DataDirectory|\\TestData\\EngineFullLoadJumps.csv",
+			"EngineFullLoadJumps#csv", DataAccessMethod.Sequential)]
 		public void TestEngineFullLoadJump()
 		{
 			var vehicleContainer = new VehicleContainer();
 			var gearbox = new EngineOnlyGearbox(vehicleContainer);
-			var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
+			var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 
 			gearbox.InShaft().Connect(engine.OutShaft());
+
+			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
 
 			var requestPort = gearbox.OutShaft();
 
 			var modalData = new TestModalDataWriter();
 
-			var idlePower = 50.SI<Watt>();
-			var angularSpeed = 1000.RPMtoRad();
+			var idlePower = Double.Parse(TestContext.DataRow["initialIdleLoad"].ToString()).SI<Watt>();
 
-			var t = TimeSpan.FromSeconds(0);
-			var dt = TimeSpan.FromSeconds(0.5);
-			for (; t.TotalSeconds < 10; t += dt) {
+			var angularSpeed = Double.Parse(TestContext.DataRow["rpm"].ToString()).RPMtoRad();
+
+			var t = TimeSpan.FromSeconds(-10);
+			var dt = TimeSpan.FromSeconds(1);
+			for (; t.TotalSeconds < 0; t += dt) {
 				requestPort.Request(t, dt, Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
 			}
 
+			dt = TimeSpan.FromSeconds(double.Parse(TestContext.DataRow["dt"].ToString(), CultureInfo.InvariantCulture));
 			var fullLoadPower = Formulas.TorqueToPower(2300.SI<NewtonMeter>(), angularSpeed);
-
-			for (; t.TotalSeconds < 20; t += dt) {
+			var i = 0;
+			for (; t.TotalSeconds < 10; t += dt, i++) {
 				requestPort.Request(t, dt, Formulas.PowerToTorque(fullLoadPower, angularSpeed), angularSpeed);
 				modalData[ModalResultField.time] = t.TotalSeconds;
 				modalData[ModalResultField.simulationInterval] = dt.TotalSeconds;
 				engine.CommitSimulationStep(modalData);
 				// todo: compare results...
+				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.TotalSeconds, 0.001, "Time");
+				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), modalData.GetDouble(ModalResultField.Pe_full), 0.1,
+					String.Format("Load in timestep {0}", t));
 				modalData.CommitSimulationStep();
 			}
 		}
