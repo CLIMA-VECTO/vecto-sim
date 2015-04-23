@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				builder.AddEngine(data.EngineFile);
 				builder.AddGearbox(data.GearboxFile);
 				foreach (var aux in data.Aux) {
-					builder.AddAux(aux);
+					builder.AddAuxiliary(aux.Path, aux.ID);
 				}
 
 				builder.AddDriver(data.StartStop, data.OverSpeedEcoRoll, data.LookAheadCoasting,
@@ -50,16 +50,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			private VehicleContainer _container;
 			private ICombustionEngine _engine;
 			private IGearbox _gearBox;
+			//private IVehicle _vehicle;
+			//private IWheels _wheels;
+			//private IDriver _driver;
+			private Dictionary<string, AuxiliaryData> _auxDict = new Dictionary<string, AuxiliaryData>();
 
 			public SimulatorBuilder(bool engineOnly)
 			{
 				_engineOnly = engineOnly;
 				_container = new VehicleContainer();
-			}
-
-			public void AddVehicle(string vehicleFile)
-			{
-				throw new NotImplementedException();
 			}
 
 			public void AddEngine(string engineFile)
@@ -77,37 +76,77 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 			}
 
-			public void AddAux(VectoJobData.Data.DataBody.AuxData aux)
+			public void AddAuxiliary(string auxFileName, string auxID)
 			{
-				throw new NotImplementedException();
+				_auxDict[auxID] = AuxiliaryData.ReadFromFile(auxFileName);
 			}
+
 
 			public void AddDriver(VectoJobData.Data.DataBody.StartStopData startStop,
 				VectoJobData.Data.DataBody.OverSpeedEcoRollData overSpeedEcoRoll,
 				VectoJobData.Data.DataBody.LACData lookAheadCoasting, string accelerationLimitingFile)
 			{
-				throw new NotImplementedException();
+				throw new NotImplementedException("Vehicle is not implemented yet.");
+				//var driverData = new DriverData(startStop, overSpeedEcoRoll, lookAheadCoasting, accelerationLimitingFile);
+				//_driver = new Driver(driverData);
+			}
+
+			public void AddVehicle(string vehicleFile)
+			{
+				throw new NotImplementedException("Vehicle is not implemented yet.");
+				//var vehicleData = VehicleData.ReadFromFile(vehicleFile);
+				//_vehicle = new Vehicle(_container, vehicleData);
 			}
 
 			public IVectoSimulator Build(string cycleFile, string resultFile, string jobName, string jobFileName)
 			{
+				if (_engineOnly) {
+					return BuildEngineOnly(cycleFile, resultFile, jobName, jobFileName);
+				}
+				return BuildFullPowertrain(cycleFile, resultFile, jobName, jobFileName);
+			}
+
+			private IVectoSimulator BuildFullPowertrain(string cycleFile, string resultFile, string jobName, string jobFileName)
+			{
+				throw new NotImplementedException("FullPowertrain is not fully implemented yet.");
+				//var cycleData = DrivingCycleData.ReadFromFileEngineOnly(cycleFile);
+				////todo: make distinction between time based and distance based driving cycle!
+				//var cycle = new TimeBasedDrivingCycle(_container, cycleData);
+
+				//IAuxiliary aux = new DirectAuxiliary(_container, new AuxiliaryCycleDataAdapter(cycleData));
+				//aux.InShaft().Connect(_engine.OutShaft());
+				//var previousAux = aux;
+
+				//foreach (var auxData in _auxDict) {
+				//	var auxCycleData = new AuxiliaryCycleDataAdapter(cycleData, auxData.Key);
+				//	IAuxiliary auxiliary = new MappingAuxiliary(_container, auxCycleData, auxData.Value);
+				//	auxiliary.InShaft().Connect(previousAux.OutShaft());
+				//	previousAux = auxiliary;
+				//}
+
+				//retarder.InShaft().Connect(previousAux.OutShaft());
+				//clutch.InShaft().Connect(retarder.OutShaft());
+				//_gearBox.InShaft().Connect(prevAux.OutShaft());
+				//_axleGear.InShaft().Connect(_gearBox.OutShaft());
+				//_wheels.InShaft().Connect(_axleGear.OutShaft());
+				//_vehicle.InShaft().Connect(_wheels.OutShaft());
+				//_driver.InShaft().Connect(_vehicle.OutShaft());
+				//cycle.InShaft().Connect(_gearBox.OutShaft());
+
+				//var dataWriter = new ModalDataWriter(resultFile);
+				//var simulator = new VectoSimulator(jobName, jobFileName, _container, cycle, dataWriter);
+				//return simulator;
+			}
+
+			private IVectoSimulator BuildEngineOnly(string cycleFile, string resultFile, string jobName, string jobFileName)
+			{
 				var cycleData = DrivingCycleData.ReadFromFileEngineOnly(cycleFile);
 				var cycle = new EngineOnlyDrivingCycle(_container, cycleData);
 
-				var aux = new EngineOnlyAuxiliary(_container, new AuxiliariesDemandAdapter(cycleData));
-				aux.InShaft().Connect(_engine.OutShaft());
+				IAuxiliary addAux = new DirectAuxiliary(_container, new AuxiliaryCycleDataAdapter(cycleData));
+				addAux.InShaft().Connect(_engine.OutShaft());
 
-				//todo: connect other auxiliaries
-
-				// todo: connect retarder
-				// todo: connect clutch
-
-				_gearBox.InShaft().Connect(aux.OutShaft());
-
-				// todo: connect Axle Gear
-				// todo: connect wheels
-				// todo: connect vehicle
-				// todo: connect driver
+				_gearBox.InShaft().Connect(addAux.OutShaft());
 
 				cycle.InShaft().Connect(_gearBox.OutShaft());
 

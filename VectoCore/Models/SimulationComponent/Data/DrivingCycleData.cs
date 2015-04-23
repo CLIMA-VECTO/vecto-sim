@@ -8,12 +8,6 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	//todo: automatic parsing of si units - idea of kostis
-	// https://webgate.ec.europa.eu/CITnet/jira/browse/VECTO-80?focusedCommentId=1345532&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-1345532
-	// VECTO-80 Kostis ANAGNOSTOPOULOS:
-	// It would be really nice to link the actual units used by data and column-headers, and being able to parse them back,
-	// using a format like this: foo [m/s^2], bar [kg (m/s)^2], 
-
 	public class DrivingCycleData : SimulationComponentData
 	{
 		public enum CycleType
@@ -61,8 +55,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					return new EngineOnlyDataParser();
 				case CycleType.TimeBased:
 					return new TimeBasedDataParser();
-                case CycleType.DistanceBased:
-                    return new DistanceBasedDataParser();
+				case CycleType.DistanceBased:
+					return new DistanceBasedDataParser();
 				default:
 					throw new ArgumentOutOfRangeException("type");
 			}
@@ -242,66 +236,66 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
-        private class DistanceBasedDataParser : IDataParser
-        {
-            public IEnumerable<DrivingCycleEntry> Parse(DataTable table)
-            {
-                ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
+		private class DistanceBasedDataParser : IDataParser
+		{
+			public IEnumerable<DrivingCycleEntry> Parse(DataTable table)
+			{
+				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
 
-                return table.Rows.Cast<DataRow>().Select(row => new DrivingCycleEntry {
-                    Distance = row.ParseDouble(Fields.Distance),
-                    VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
-                    RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
-                    AdditionalAuxPowerDemand =
-                        row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
-                    EngineSpeed =
-                        row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<PerSecond>(),
-                    Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
-                    AirSpeedRelativeToVehicle =
-                        row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle)
-                            .SI()
-                            .Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
-                    WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
-                    AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
-                });
-            }
+				return table.Rows.Cast<DataRow>().Select(row => new DrivingCycleEntry {
+					Distance = row.ParseDouble(Fields.Distance),
+					VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
+					RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
+					AdditionalAuxPowerDemand =
+						row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
+					EngineSpeed =
+						row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<PerSecond>(),
+					Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
+					AirSpeedRelativeToVehicle =
+						row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle)
+							.SI()
+							.Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
+					WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
+					AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
+				});
+			}
 
-            private static void ValidateHeader(string[] header)
-            {
-                var allowedCols = new[] {
-                    Fields.Distance,
-                    Fields.VehicleSpeed,
-                    Fields.RoadGradient,
-                    Fields.StoppingTime,
-                    Fields.EngineSpeed,
-                    Fields.Gear,
-                    Fields.AdditionalAuxPowerDemand,
-                    Fields.AirSpeedRelativeToVehicle,
-                    Fields.WindYawAngle
-                };
+			private static void ValidateHeader(string[] header)
+			{
+				var allowedCols = new[] {
+					Fields.Distance,
+					Fields.VehicleSpeed,
+					Fields.RoadGradient,
+					Fields.StoppingTime,
+					Fields.EngineSpeed,
+					Fields.Gear,
+					Fields.AdditionalAuxPowerDemand,
+					Fields.AirSpeedRelativeToVehicle,
+					Fields.WindYawAngle
+				};
 
-                foreach (
-                    var col in
-                        header.Where(col => !(allowedCols.Contains(col) || col.StartsWith(Fields.AuxiliarySupplyPower)))
-                    ) {
-                    throw new VectoException(string.Format("Column '{0}' is not allowed.", col));
-                }
+				foreach (
+					var col in
+						header.Where(col => !(allowedCols.Contains(col) || col.StartsWith(Fields.AuxiliarySupplyPower)))
+					) {
+					throw new VectoException(string.Format("Column '{0}' is not allowed.", col));
+				}
 
-                if (!header.Contains(Fields.VehicleSpeed)) {
-                    throw new VectoException(string.Format("Column '{0}' is missing.", Fields.VehicleSpeed));
-                }
+				if (!header.Contains(Fields.VehicleSpeed)) {
+					throw new VectoException(string.Format("Column '{0}' is missing.", Fields.VehicleSpeed));
+				}
 
-                if (!header.Contains(Fields.Distance)) {
-                    throw new VectoException(string.Format("Column '{0}' is missing.", Fields.Distance));
-                }
+				if (!header.Contains(Fields.Distance)) {
+					throw new VectoException(string.Format("Column '{0}' is missing.", Fields.Distance));
+				}
 
-                if (header.Contains(Fields.AirSpeedRelativeToVehicle) ^ header.Contains(Fields.WindYawAngle)) {
-                    throw new VectoException(
-                        string.Format("Both Columns '{0}' and '{1}' must be defined, or none of them.",
-                            Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle));
-                }
-            }
-        }
+				if (header.Contains(Fields.AirSpeedRelativeToVehicle) ^ header.Contains(Fields.WindYawAngle)) {
+					throw new VectoException(
+						string.Format("Both Columns '{0}' and '{1}' must be defined, or none of them.",
+							Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle));
+				}
+			}
+		}
 
 		private class TimeBasedDataParser : IDataParser
 		{
