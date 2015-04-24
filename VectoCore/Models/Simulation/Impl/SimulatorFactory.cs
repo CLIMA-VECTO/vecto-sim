@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -19,7 +20,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			builder.AddEngine(engineFile);
 			builder.AddGearbox();
 
-			var simulator = builder.Build(cycleFile, resultFile, jobName: "", jobFileName: "");
+			var simulator = builder.Build(cycleFile, resultFile);
 			return simulator;
 		}
 
@@ -37,7 +38,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				builder.AddDriver(data.StartStop, data.OverSpeedEcoRoll, data.LookAheadCoasting,
 					data.AccelerationLimitingFile);
 
-				var job = builder.Build(cycle, resultFile: "", jobName: "", jobFileName: data.FileName);
+				var job = builder.Build(cycle, data.FileName);
 
 				yield return job;
 			}
@@ -63,12 +64,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				_container = new VehicleContainer();
 			}
 
-			public IVectoSimulator Build(string cycleFile, string resultFile, string jobName, string jobFileName)
+			public IVectoSimulator Build(string cycleFile, string jobFile)
 			{
 				if (_engineOnly) {
-					return BuildEngineOnly(cycleFile, resultFile, jobName, jobFileName);
+					return BuildEngineOnly(cycleFile, jobFile);
 				}
-				return BuildFullPowertrain(cycleFile, resultFile, jobName, jobFileName);
+				return BuildFullPowertrain(cycleFile, jobFile);
 			}
 
 			public void AddEngine(string engineFile)
@@ -103,12 +104,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				VectoJobData.Data.DataBody.OverSpeedEcoRollData overSpeedEcoRoll,
 				VectoJobData.Data.DataBody.LACData lookAheadCoasting, string accelerationLimitingFile)
 			{
+				if (_engineOnly) {
+					return;
+				}
 				var driverData = new DriverData(startStop, overSpeedEcoRoll, lookAheadCoasting, accelerationLimitingFile);
 				_driver = new Driver(driverData);
 			}
 
 			public void AddVehicle(string vehicleFile)
 			{
+				if (_engineOnly) {
+					return;
+				}
+
 				var vehicleData = VehicleData.ReadFromFile(vehicleFile);
 				_vehicle = new Vehicle(_container, vehicleData);
 			}
@@ -119,7 +127,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				_retarder = new Retarder(_container, retarderData);
 			}
 
-			private IVectoSimulator BuildFullPowertrain(string cycleFile, string resultFile, string jobName, string jobFileName)
+			private IVectoSimulator BuildFullPowertrain(string cycleFile, string jobFile)
 			{
 				//throw new NotImplementedException("FullPowertrain is not fully implemented yet.");
 				var cycleData = DrivingCycleData.ReadFromFileEngineOnly(cycleFile);
@@ -154,12 +162,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				// connect clutch --> aux
 				_clutch.InShaft().Connect(previousAux.OutShaft());
 
-				var dataWriter = new ModalDataWriter(resultFile);
-				var simulator = new VectoSimulator(jobName, jobFileName, _container, cycle, dataWriter);
+				var dataWriter =
+					new ModalDataWriter(string.Format("{0}_{1}.vmod", Path.GetFileNameWithoutExtension(jobFile),
+						Path.GetFileNameWithoutExtension(cycleFile)));
+				var simulator = new VectoSimulator(Path.GetFileNameWithoutExtension(jobFile), jobFile, _container, cycle, dataWriter);
 				return simulator;
 			}
 
-			private IVectoSimulator BuildEngineOnly(string cycleFile, string resultFile, string jobName, string jobFileName)
+			private IVectoSimulator BuildEngineOnly(string cycleFile, string jobFile)
 			{
 				var cycleData = DrivingCycleData.ReadFromFileEngineOnly(cycleFile);
 				var cycle = new EngineOnlyDrivingCycle(_container, cycleData);
@@ -171,8 +181,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				cycle.InShaft().Connect(_gearBox.OutShaft());
 
-				var dataWriter = new ModalDataWriter(resultFile);
-				var simulator = new VectoSimulator(jobName, jobFileName, _container, cycle, dataWriter);
+				var dataWriter =
+					new ModalDataWriter(string.Format("{0}_{1}.vmod", Path.GetFileNameWithoutExtension(jobFile),
+						Path.GetFileNameWithoutExtension(cycleFile)));
+				var simulator = new VectoSimulator(Path.GetFileNameWithoutExtension(jobFile), jobFile, _container, cycle, dataWriter);
 				return simulator;
 			}
 		}

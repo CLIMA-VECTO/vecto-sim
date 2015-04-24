@@ -37,7 +37,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override void CommitSimulationStep(IModalDataWriter writer)
 		{
-			throw new NotImplementedException();
+			//todo: implement!
+			//throw new NotImplementedException();
 		}
 
 		public ITnInPort InShaft()

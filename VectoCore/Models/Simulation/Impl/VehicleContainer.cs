@@ -14,6 +14,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private readonly IList<VectoSimulationComponent> _components = new List<VectoSimulationComponent>();
 		private IEngineCockpit _engine;
 		private IGearboxCockpit _gearbox;
+		private ILog _logger;
 
 		#region IGearCockpit
 
@@ -29,7 +30,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IEngineCockpit
 
-        public PerSecond EngineSpeed()
+		public PerSecond EngineSpeed()
 		{
 			if (_engine == null) {
 				throw new VectoException("no engine available!");
@@ -47,6 +48,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		#endregion
+
+		public VehicleContainer()
+		{
+			_logger = LogManager.GetLogger(GetType());
+		}
 
 		#region IVehicleContainer
 
@@ -69,7 +75,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void CommitSimulationStep(IModalDataWriter dataWriter)
 		{
-			LogManager.GetLogger(GetType()).Info("VehicleContainer committing simulation.");
+			_logger.Info("VehicleContainer committing simulation.");
 			foreach (var component in _components) {
 				component.CommitSimulationStep(dataWriter);
 			}
@@ -78,7 +84,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void FinishSimulation(IModalDataWriter dataWriter)
 		{
-			LogManager.GetLogger(GetType()).Info("VehicleContainer finishing simulation.");
+			_logger.Info("VehicleContainer finishing simulation.");
 			dataWriter.Finish();
 		}
 

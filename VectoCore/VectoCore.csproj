@@ -124,7 +124,6 @@
     <Compile Include="Models\SimulationComponent\Data\Engine\FullLoadCurve.cs" />
     <Compile Include="Models\SimulationComponent\Data\IAuxiliaryCycleData.cs" />
     <Compile Include="Models\SimulationComponent\Data\RetarderLossMap.cs" />
-    <Compile Include="Models\SimulationComponent\IAxleGear.cs" />
     <Compile Include="Models\SimulationComponent\IClutch.cs" />
     <Compile Include="Models\SimulationComponent\IEngineOnlyDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriverDemandDrivingCycle.cs" />

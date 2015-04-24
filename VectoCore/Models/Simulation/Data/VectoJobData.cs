@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -96,7 +97,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				[JsonProperty(Required = Required.Always)] public string EngineFile;
 				[JsonProperty(Required = Required.Always)] public string GearboxFile;
 				[JsonProperty(Required = Required.Always)] public IList<string> Cycles;
-				[JsonProperty(Required = Required.Always)] public IList<AuxData> Aux;
+				[JsonProperty] public IList<AuxData> Aux = new List<AuxData>();
 				[JsonProperty(Required = Required.Always)] public string VACC;
 				[JsonProperty(Required = Required.Always)] public bool EngineOnlyMode;
 				[JsonProperty(Required = Required.Always)] public StartStopData StartStop;
