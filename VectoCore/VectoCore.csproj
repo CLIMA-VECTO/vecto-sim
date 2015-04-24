@@ -124,6 +124,7 @@
     <Compile Include="Models\SimulationComponent\Data\Engine\FullLoadCurve.cs" />
     <Compile Include="Models\SimulationComponent\Data\IAuxiliaryCycleData.cs" />
     <Compile Include="Models\SimulationComponent\Data\RetarderLossMap.cs" />
+    <Compile Include="Models\SimulationComponent\IAxleGear.cs" />
     <Compile Include="Models\SimulationComponent\IClutch.cs" />
     <Compile Include="Models\SimulationComponent\IEngineOnlyDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriverDemandDrivingCycle.cs" />
@@ -134,6 +135,10 @@
     <Compile Include="Models\SimulationComponent\Impl\Retarder.cs" />
     <Compile Include="Models\SimulationComponent\IPowerTrainComponent.cs" />
     <Compile Include="Models\Simulation\Data\VectoJobData.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\Driver.cs" />
+    <Compile Include="Models\SimulationComponent\Data\DriverData.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\Vehicle.cs" />
+    <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
     <Compile Include="Utils\Formulas.cs" />
     <Compile Include="Utils\IntExtensionMethods.cs" />
     <Compile Include="Utils\SI.cs" />

@@ -9,6 +9,6 @@
 		/// Returns the outport to send requests to.
 		/// </summary>
 		/// <returns></returns>
-		IDrivingCycleOutPort OutPort();
+		IDrivingCycleOutPort OutShaft();
 	}
 }

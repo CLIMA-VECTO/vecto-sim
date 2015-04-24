@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -46,14 +45,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public class SimulatorBuilder
 		{
-			private bool _engineOnly;
-			private VehicleContainer _container;
+			private readonly bool _engineOnly;
+			private readonly VehicleContainer _container;
 			private ICombustionEngine _engine;
 			private IGearbox _gearBox;
-			//private IVehicle _vehicle;
-			//private IWheels _wheels;
-			//private IDriver _driver;
-			private Dictionary<string, AuxiliaryData> _auxDict = new Dictionary<string, AuxiliaryData>();
+			private IVehicle _vehicle;
+			private IWheels _wheels;
+			private IDriver _driver;
+			private readonly Dictionary<string, AuxiliaryData> _auxDict = new Dictionary<string, AuxiliaryData>();
+			private IPowerTrainComponent _retarder;
+			private IClutch _clutch;
+			private IPowerTrainComponent _axleGear;
 
 			public SimulatorBuilder(bool engineOnly)
 			{
@@ -61,10 +63,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				_container = new VehicleContainer();
 			}
 
+			public IVectoSimulator Build(string cycleFile, string resultFile, string jobName, string jobFileName)
+			{
+				if (_engineOnly) {
+					return BuildEngineOnly(cycleFile, resultFile, jobName, jobFileName);
+				}
+				return BuildFullPowertrain(cycleFile, resultFile, jobName, jobFileName);
+			}
+
 			public void AddEngine(string engineFile)
 			{
 				var engineData = CombustionEngineData.ReadFromFile(engineFile);
 				_engine = new CombustionEngine(_container, engineData);
+
+				AddClutch(engineFile);
+			}
+
+			public void AddClutch(string engineFile)
+			{
+				var engineData = CombustionEngineData.ReadFromFile(engineFile);
+				_clutch = new Clutch(_container, engineData);
 			}
 
 			public void AddGearbox(string gearboxFile = null)
@@ -81,61 +99,64 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				_auxDict[auxID] = AuxiliaryData.ReadFromFile(auxFileName);
 			}
 
-
 			public void AddDriver(VectoJobData.Data.DataBody.StartStopData startStop,
 				VectoJobData.Data.DataBody.OverSpeedEcoRollData overSpeedEcoRoll,
 				VectoJobData.Data.DataBody.LACData lookAheadCoasting, string accelerationLimitingFile)
 			{
-				throw new NotImplementedException("Vehicle is not implemented yet.");
-				//var driverData = new DriverData(startStop, overSpeedEcoRoll, lookAheadCoasting, accelerationLimitingFile);
-				//_driver = new Driver(driverData);
+				var driverData = new DriverData(startStop, overSpeedEcoRoll, lookAheadCoasting, accelerationLimitingFile);
+				_driver = new Driver(driverData);
 			}
 
 			public void AddVehicle(string vehicleFile)
 			{
-				throw new NotImplementedException("Vehicle is not implemented yet.");
-				//var vehicleData = VehicleData.ReadFromFile(vehicleFile);
-				//_vehicle = new Vehicle(_container, vehicleData);
+				var vehicleData = VehicleData.ReadFromFile(vehicleFile);
+				_vehicle = new Vehicle(_container, vehicleData);
 			}
 
-			public IVectoSimulator Build(string cycleFile, string resultFile, string jobName, string jobFileName)
+			public void AddRetarder(string retarderFile)
 			{
-				if (_engineOnly) {
-					return BuildEngineOnly(cycleFile, resultFile, jobName, jobFileName);
-				}
-				return BuildFullPowertrain(cycleFile, resultFile, jobName, jobFileName);
+				var retarderData = RetarderLossMap.ReadFromFile(retarderFile);
+				_retarder = new Retarder(_container, retarderData);
 			}
 
 			private IVectoSimulator BuildFullPowertrain(string cycleFile, string resultFile, string jobName, string jobFileName)
 			{
-				throw new NotImplementedException("FullPowertrain is not fully implemented yet.");
-				//var cycleData = DrivingCycleData.ReadFromFileEngineOnly(cycleFile);
-				////todo: make distinction between time based and distance based driving cycle!
-				//var cycle = new TimeBasedDrivingCycle(_container, cycleData);
+				//throw new NotImplementedException("FullPowertrain is not fully implemented yet.");
+				var cycleData = DrivingCycleData.ReadFromFileEngineOnly(cycleFile);
+				//todo: make distinction between time based and distance based driving cycle!
+				var cycle = new TimeBasedDrivingCycle(_container, cycleData);
 
-				//IAuxiliary aux = new DirectAuxiliary(_container, new AuxiliaryCycleDataAdapter(cycleData));
-				//aux.InShaft().Connect(_engine.OutShaft());
-				//var previousAux = aux;
+				_axleGear = null;
+				_wheels = null;
 
-				//foreach (var auxData in _auxDict) {
-				//	var auxCycleData = new AuxiliaryCycleDataAdapter(cycleData, auxData.Key);
-				//	IAuxiliary auxiliary = new MappingAuxiliary(_container, auxCycleData, auxData.Value);
-				//	auxiliary.InShaft().Connect(previousAux.OutShaft());
-				//	previousAux = auxiliary;
-				//}
+				// connect cycle --> driver --> vehicle --> wheels --> axleGear --> gearBox --> retarder --> clutch
+				cycle.InShaft().Connect(_driver.OutShaft());
+				_driver.InShaft().Connect(_vehicle.OutShaft());
+				_vehicle.InShaft().Connect(_wheels.OutShaft());
+				_wheels.InShaft().Connect(_axleGear.OutShaft());
+				_axleGear.InShaft().Connect(_gearBox.OutShaft());
+				_gearBox.InShaft().Connect(_retarder.OutShaft());
+				_retarder.InShaft().Connect(_clutch.OutShaft());
 
-				//retarder.InShaft().Connect(previousAux.OutShaft());
-				//clutch.InShaft().Connect(retarder.OutShaft());
-				//_gearBox.InShaft().Connect(prevAux.OutShaft());
-				//_axleGear.InShaft().Connect(_gearBox.OutShaft());
-				//_wheels.InShaft().Connect(_axleGear.OutShaft());
-				//_vehicle.InShaft().Connect(_wheels.OutShaft());
-				//_driver.InShaft().Connect(_vehicle.OutShaft());
-				//cycle.InShaft().Connect(_gearBox.OutShaft());
+				// connect directAux --> engine
+				IAuxiliary directAux = new DirectAuxiliary(_container, new AuxiliaryCycleDataAdapter(cycleData));
+				directAux.InShaft().Connect(_engine.OutShaft());
 
-				//var dataWriter = new ModalDataWriter(resultFile);
-				//var simulator = new VectoSimulator(jobName, jobFileName, _container, cycle, dataWriter);
-				//return simulator;
+				// connect aux --> ... --> aux_XXX --> directAux
+				var previousAux = directAux;
+				foreach (var auxData in _auxDict) {
+					var auxCycleData = new AuxiliaryCycleDataAdapter(cycleData, auxData.Key);
+					IAuxiliary auxiliary = new MappingAuxiliary(_container, auxCycleData, auxData.Value);
+					auxiliary.InShaft().Connect(previousAux.OutShaft());
+					previousAux = auxiliary;
+				}
+
+				// connect clutch --> aux
+				_clutch.InShaft().Connect(previousAux.OutShaft());
+
+				var dataWriter = new ModalDataWriter(resultFile);
+				var simulator = new VectoSimulator(jobName, jobFileName, _container, cycle, dataWriter);
+				return simulator;
 			}
 
 			private IVectoSimulator BuildEngineOnly(string cycleFile, string resultFile, string jobName, string jobFileName)

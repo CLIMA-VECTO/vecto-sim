@@ -101,22 +101,36 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Test_VectoJob()
 		{
-			var resultFileName = @"24t Coach.vmod";
-			var resultFiles = new[] { 1, 2, 3 }.Select(x => string.Format(resultFileName, x)).ToList();
-
-			//var expectedResultsName = @"TestData\Results\EngineOnlyCycles\LOT2_rural Engine Only.vmod";
-			//var expectedResults = ModalResults.ReadFromFile(expectedResultsName);
-
+			//run jobs
 			var jobData = VectoJobData.ReadFromFile(@"TestData\Jobs\24t Coach.vecto");
 			var jobContainer = new JobContainer(jobData);
 			jobContainer.RunJobs();
 
-			//foreach (var resultFile in resultFiles) {
-			//	var results = ModalResults.ReadFromFile(resultFile);
-			//	Assert.AreEqual(expectedResults.Rows.Count, results.Rows.Count, "Moddata: Row count differs.");
-			//}
 
-			Assert.Inconclusive("compare correct files!!");
+			// compare results
+			var resultFiles = new[] { 1, 2, 3 }.Select(x => string.Format(@"24t Coach{0}.vmod", x)).ToList();
+			var sumFile = @"24t Coach.vsum";
+			var expectedSumFile = "24t Coach-expected.vsum";
+
+			Assert.IsTrue(File.Exists(sumFile), "sum file is missing: " + sumFile);
+			foreach (var result in resultFiles) {
+				Assert.IsTrue(File.Exists(result), "vmod file is missing: " + result);
+			}
+			var expectedResultFiles =
+				resultFiles.Select(x => Path.GetFileNameWithoutExtension(x) + "-expected.vmod").GetEnumerator();
+
+			Assert.AreEqual(File.ReadAllLines(sumFile).Length, File.ReadAllLines(expectedSumFile).Length,
+				"sum file row count differs.");
+
+			foreach (var resultFile in resultFiles) {
+				var results = ModalResults.ReadFromFile(resultFile);
+				expectedResultFiles.MoveNext();
+				var expectedResults = ModalResults.ReadFromFile(expectedResultFiles.Current);
+
+				Assert.AreEqual(expectedResults.Rows.Count, results.Rows.Count, "Moddata: Row count differs.");
+			}
+
+			Assert.Inconclusive("compare correct filenames!!");
 		}
 	}
 }

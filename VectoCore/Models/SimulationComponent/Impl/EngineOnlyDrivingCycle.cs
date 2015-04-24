@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IDrivingCycleOutProvider
 
-		public IDrivingCycleOutPort OutPort()
+		public IDrivingCycleOutPort OutShaft()
 		{
 			return this;
 		}
@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		IResponse IDrivingCycleOutPort.Request(TimeSpan absTime, TimeSpan dt)
 		{
 			//todo: change to variable time steps
-			var index = (int) Math.Floor(absTime.TotalSeconds);
+			var index = (int)Math.Floor(absTime.TotalSeconds);
 			if (index >= Data.Entries.Count) {
 				return new ResponseCycleFinished();
 			}

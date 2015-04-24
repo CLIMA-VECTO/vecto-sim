@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var outPort = new MockTnOutPort();
 			var inPort = cycle.InShaft();
-			var cycleOut = cycle.OutPort();
+			var cycleOut = cycle.OutShaft();
 
 			inPort.Connect(outPort);
 
@@ -52,8 +52,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var outPort = new MockDriverDemandOutPort();
 
-			var inPort = cycle.InPort();
-			var cycleOut = cycle.OutPort();
+			var inPort = cycle.InShaft();
+			var cycleOut = cycle.OutShaft();
 
 			inPort.Connect(outPort);
 
@@ -79,8 +79,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var outPort = new MockDriverDemandOutPort();
 
-			var inPort = cycle.InPort();
-			var cycleOut = cycle.OutPort();
+			var inPort = cycle.InShaft();
+			var cycleOut = cycle.OutShaft();
 
 			inPort.Connect(outPort);
 
