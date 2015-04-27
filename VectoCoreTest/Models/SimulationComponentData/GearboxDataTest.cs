@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -62,6 +63,53 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(Double.Parse(TestContext.DataRow["GbxPowerLoss"].ToString(), CultureInfo.InvariantCulture),
 				loss.Double(), 0.1,
 				TestContext.DataRow["TestName"].ToString());
+		}
+
+		[TestMethod]
+		public void TestInputOutOfRange()
+		{
+			var rdyn = 520.0;
+			//var speed = double.Parse(TestContext.DataRow["v"].ToString(), CultureInfo.InvariantCulture);
+
+			var gbxData = GearboxData.ReadFromFile(GearboxFile);
+
+
+			var angSpeed = 2700.RPMtoRad();
+			var torqueToWheels = 100.SI<NewtonMeter>();
+
+			try {
+				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
+				Assert.Fail("angular Speed too high");
+			} catch (Exception e) {
+				Assert.IsInstanceOfType(e, typeof (VectoSimulationException));
+			}
+
+			angSpeed = 1000.RPMtoRad();
+			torqueToWheels = 50000.SI<NewtonMeter>();
+			try {
+				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
+				Assert.Fail("torque too high");
+			} catch (Exception e) {
+				Assert.IsInstanceOfType(e, typeof (VectoSimulationException));
+			}
+
+			angSpeed = 1000.RPMtoRad();
+			torqueToWheels = -5000.SI<NewtonMeter>();
+			try {
+				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
+				Assert.Fail("torque too low");
+			} catch (Exception e) {
+				Assert.IsInstanceOfType(e, typeof (VectoSimulationException));
+			}
+
+			angSpeed = -1000.RPMtoRad();
+			torqueToWheels = 500.SI<NewtonMeter>();
+			try {
+				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
+				Assert.Fail("negative angular speed");
+			} catch (Exception e) {
+				Assert.IsInstanceOfType(e, typeof (VectoSimulationException));
+			}
 		}
 
 		protected PerSecond SpeedToAngularSpeed(double v, double r)

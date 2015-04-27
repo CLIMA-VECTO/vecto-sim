@@ -8,11 +8,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class AxleGear : IPowerTrainComponent, ITnInPort, ITnOutPort
 	{
 		private ITnOutPort _nextComponent;
-		private GearData _gearDataData;
+		private readonly GearData _gearData;
 
-		public AxleGear(GearData gearDataData)
+		public AxleGear(GearData gearData)
 		{
-			_gearDataData = gearDataData;
+			_gearData = gearData;
 		}
 
 		public ITnInPort InShaft()
@@ -32,7 +32,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond angularVelocity)
 		{
-			return _nextComponent.Request(absTime, dt, torque, angularVelocity);
+			return _nextComponent.Request(absTime, dt,
+				_gearData.LossMap.GearboxInTorque(angularVelocity * _gearData.Ratio, torque),
+				angularVelocity * _gearData.Ratio);
 		}
 	}
 }
