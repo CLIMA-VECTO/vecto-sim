@@ -79,8 +79,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void TestEngineOnly_MultipleJobs()
 		{
-			var resultFiles = new[] { 1, 2, 3 }.Select(x => string.Format("TestEngineOnly-MultipleJobs-result{0}", x)).ToList();
-
+			var resultFiles = new[] {
+				@"TestEngineOnly-MultipleJobs-result1",
+				@"TestEngineOnly-MultipleJobs-result2",
+				@"TestEngineOnly-MultipleJobs-result3"
+			};
 			var expectedResultsName = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
 			var expectedResults = ModalResults.ReadFromFile(expectedResultsName);
 
@@ -88,7 +91,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			foreach (var resultFile in resultFiles) {
 				simulation.AddJob(CreateJob(resultFile));
 			}
-			resultFiles = resultFiles.Select(x => x + "_Coach Engine Only short.vmod").ToList();
+
+			resultFiles = resultFiles.Select(x => x + "_Coach Engine Only short.vmod").ToArray();
 
 			simulation.RunJobs();
 
@@ -106,10 +110,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(jobData);
 			jobContainer.RunJobs();
 
+
 			// compare results
-			var expectedResultFiles =
-				new[] { 1, 2, 3 }.Select(x => string.Format(@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only{0}.vmod", x))
-					.ToList();
+
+			var expectedResultFiles = new[] {
+				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only1.vmod",
+				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only2.vmod",
+				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only3.vmod"
+			};
 			var sumFile = @"24t Coach.vsum";
 			var expectedSumFile = "24t Coach-expected.vsum";
 
