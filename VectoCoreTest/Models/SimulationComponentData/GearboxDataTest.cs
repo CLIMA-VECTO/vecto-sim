@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -40,13 +41,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void TestInterpolation()
 		{
 			var rdyn = Double.Parse(TestContext.DataRow["rDyn"].ToString());
-			var speed = double.Parse(TestContext.DataRow["v"].ToString());
+			var speed = double.Parse(TestContext.DataRow["v"].ToString(), CultureInfo.InvariantCulture);
 
 			var gbxData = GearboxData.ReadFromFile(TestContext.DataRow["GearboxDataFile"].ToString());
 
 
 			var angSpeed = SpeedToAngularSpeed(speed, rdyn) * gbxData.AxleGearData.Ratio;
-			var PvD = Double.Parse(TestContext.DataRow["PowerGbxOut"].ToString()).SI<Watt>();
+			var PvD = Double.Parse(TestContext.DataRow["PowerGbxOut"].ToString(), CultureInfo.InvariantCulture).SI<Watt>();
 
 			var torqueToWheels = Formulas.PowerToTorque(PvD, angSpeed);
 			var torqueFromEngine = 0.SI<NewtonMeter>();
@@ -58,7 +59,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var powerEngine = Formulas.TorqueToPower(torqueFromEngine, angSpeed);
 			var loss = powerEngine - PvD;
 
-			Assert.AreEqual(Double.Parse(TestContext.DataRow["GbxPowerLoss"].ToString()), loss.Double(), 0.1,
+			Assert.AreEqual(Double.Parse(TestContext.DataRow["GbxPowerLoss"].ToString(), CultureInfo.InvariantCulture),
+				loss.Double(), 0.1,
 				TestContext.DataRow["TestName"].ToString());
 		}
 
