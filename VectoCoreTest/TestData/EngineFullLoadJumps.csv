@@ -1,5 +1,5 @@
 TestName,dt,EngineFile,rpm,initialIdleLoad,finalIdleLoad,ResultFile
-Test1Hz,"1",TestData\Components\24t Coach.veng,1000,50,70,TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_1Hz.csv
-Test2Hz,"0.5",TestData\Components\24t Coach.veng,1000,50,70,TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_2Hz.csv
-Test5Hz,"0.2",TestData\Components\24t Coach.veng,1000,50,70,TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_5Hz.csv
-Test10Hz,"0.1",TestData\Components\24t Coach.veng,1000,50,70,TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz.csv
+Test1Hz,"1",TestData\Components\24t Coach.veng,1000,50,50,TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_1Hz.csv
+Test2Hz,"0.5",TestData\Components\24t Coach.veng,1000,50,50,TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_2Hz.csv
+Test5Hz,"0.2",TestData\Components\24t Coach.veng,1000,50,50,TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_5Hz.csv
+Test10Hz,"0.1",TestData\Components\24t Coach.veng,1000,50,50,TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz.csv

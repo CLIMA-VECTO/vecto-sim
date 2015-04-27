@@ -134,6 +134,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var requestPort = gearbox.OutShaft();
 
+			//var modalData = new ModalDataWriter(string.Format("load_jump_{0}.csv", TestContext.DataRow["TestName"].ToString()));
 			var modalData = new TestModalDataWriter();
 
 			var idlePower = Double.Parse(TestContext.DataRow["initialIdleLoad"].ToString()).SI<Watt>();
@@ -147,10 +148,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 
 			dt = TimeSpan.FromSeconds(double.Parse(TestContext.DataRow["dt"].ToString(), CultureInfo.InvariantCulture));
-			var fullLoadPower = Formulas.TorqueToPower(2300.SI<NewtonMeter>(), angularSpeed);
+			var engineLoadPower = engineData.GetFullLoadCurve(0).FullLoadStationaryPower(angularSpeed);
+			idlePower = Double.Parse(TestContext.DataRow["finalIdleLoad"].ToString()).SI<Watt>();
 			var i = 0;
 			for (; t.TotalSeconds < 10; t += dt, i++) {
-				requestPort.Request(t, dt, Formulas.PowerToTorque(fullLoadPower, angularSpeed), angularSpeed);
+				if (t > TimeSpan.FromSeconds(10)) {
+					engineLoadPower = idlePower;
+				}
+				requestPort.Request(t, dt, Formulas.PowerToTorque(engineLoadPower, angularSpeed), angularSpeed);
 				modalData[ModalResultField.time] = t.TotalSeconds;
 				modalData[ModalResultField.simulationInterval] = dt.TotalSeconds;
 				engine.CommitSimulationStep(modalData);
@@ -160,6 +165,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					String.Format("Load in timestep {0}", t));
 				modalData.CommitSimulationStep();
 			}
+			modalData.Finish();
 		}
 
 		[TestMethod]
