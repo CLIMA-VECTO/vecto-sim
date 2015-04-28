@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			var smaller = 0.SI();
 			var bigger = 5.SI();
-			var negative = -10.SI();
+			var negative = -1 * 10.SI();
 			var positive = 10.SI();
 			Assert.AreEqual(smaller, VectoMath.Min(smaller, bigger));
 
