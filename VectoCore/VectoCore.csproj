@@ -133,6 +133,8 @@
     <Compile Include="Models\SimulationComponent\Impl\Clutch.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Retarder.cs" />
     <Compile Include="Models\SimulationComponent\IPowerTrainComponent.cs" />
+    <Compile Include="Models\Simulation\Data\ISummaryDataWriter.cs" />
+    <Compile Include="Models\Simulation\Data\SummaryFileWriter.cs" />
     <Compile Include="Models\Simulation\Data\VectoJobData.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Driver.cs" />
     <Compile Include="Models\SimulationComponent\Data\DriverData.cs" />

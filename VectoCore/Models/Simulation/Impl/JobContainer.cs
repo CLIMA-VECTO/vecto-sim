@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Common.Logging;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -17,19 +18,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	public class JobContainer
 	{
 		private readonly List<IVectoSimulator> _simulators = new List<IVectoSimulator>();
-		private readonly SummaryFileWriter _sumWriter;
+		private readonly ISummaryDataWriter _sumWriter;
+
+		private static int _jobNumber;
 
 		public JobContainer() {}
 
 		public JobContainer(VectoJobData data)
 		{
-			_sumWriter = new SummaryFileWriter(Path.GetFileNameWithoutExtension(data.FileName) + ".vsum", data.FileName);
-			_simulators.AddRange(SimulatorFactory.CreateJobs(data, _sumWriter));
+			var sumFileName = Path.GetFileNameWithoutExtension(data.JobFileName);
+			var sumFilePath = Path.GetDirectoryName(data.JobFileName);
+
+			_sumWriter = new SummaryFileWriter(string.Format("{0}.vsum", Path.Combine(sumFilePath, sumFileName)));
+			AddJobs(data);
 		}
 
+		public void AddJobs(VectoJobData data)
+		{
+			_jobNumber++;
+			_simulators.AddRange(SimulatorFactory.CreateJobs(data, _sumWriter, _jobNumber));
+		}
 
 		public void AddJob(IVectoSimulator sim)
 		{
+			_jobNumber++;
 			_simulators.Add(sim);
 		}
 

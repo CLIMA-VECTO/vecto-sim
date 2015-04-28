@@ -52,10 +52,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 				}
 
-				DataWriter[ModalResultField.time] = (_absTime + TimeSpan.FromTicks(_dt.Ticks / 2)).TotalSeconds;
-				DataWriter[ModalResultField.simulationInterval] = _dt.TotalSeconds;
+				var time = (_absTime + TimeSpan.FromTicks(_dt.Ticks / 2)).TotalSeconds;
+				var simulationInterval = _dt.TotalSeconds;
 
-				Container.CommitSimulationStep();
+
+				Container.CommitSimulationStep(time, simulationInterval);
 
 				// set _dt to difference to next full second.
 				_absTime += _dt;

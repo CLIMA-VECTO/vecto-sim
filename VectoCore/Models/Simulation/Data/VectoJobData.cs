@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			get { return _data.Body.OverSpeedEcoRoll; }
 		}
 
-		public string FileName { get; set; }
+		public string JobFileName { get; set; }
 
 		public static VectoJobData ReadFromFile(string fileName)
 		{
@@ -200,7 +200,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public static VectoJobData ReadFromJson(string json, string basePath = "", string fileName = "")
 		{
 			var data = new VectoJobData();
-			data.FileName = fileName;
+			data.JobFileName = fileName;
 			//todo handle conversion errors
 			var d = JsonConvert.DeserializeObject<Data>(json);
 

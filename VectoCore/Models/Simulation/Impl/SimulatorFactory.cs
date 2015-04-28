@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -9,36 +8,48 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class SimulatorFactory
 	{
+		private static IModalDataWriter _dataWriter;
+
 		/// <summary>
 		/// Creates a simulation job for time based engine only powertrain.
 		/// </summary>
 		public static IVectoSimulator CreateTimeBasedEngineOnlyJob(string engineFile, string cycleFile,
-			string resultFile)
+			IModalDataWriter dataWriter, SummaryFileWriter sumWriter)
 		{
-			var builder = new SimulatorBuilder(engineOnly: true);
+			var builder = new SimulatorBuilder(dataWriter, sumWriter, "", "", cycleFile, engineOnly: true);
 
 			builder.AddEngine(engineFile);
-			builder.AddGearbox();
 
-			var simulator = builder.Build(cycleFile, resultFile);
+			var simulator = builder.Build(cycleFile);
 			return simulator;
 		}
 
-		public static IEnumerable<IVectoSimulator> CreateJobs(VectoJobData data, SummaryFileWriter sumWriter)
+		public static IEnumerable<IVectoSimulator> CreateJobs(VectoJobData data, ISummaryDataWriter sumWriter, int jobNumber)
 		{
-			foreach (var cycle in data.Cycles) {
-				var builder = new SimulatorBuilder(data.IsEngineOnly);
-				builder.AddVehicle(data.VehicleFile);
+			for (var i = 0; i < data.Cycles.Count; i++) {
+				var cycleFile = data.Cycles[i];
+				var jobName = string.Format("{0}-{1}", jobNumber, i);
+				var modFileName = string.Format("{0}_{1}.vmod", data.JobFileName, cycleFile);
+				_dataWriter = new ModalDataWriter(modFileName);
+
+				var builder = new SimulatorBuilder(_dataWriter, sumWriter, data.JobFileName, jobName, cycleFile, data.IsEngineOnly);
+
 				builder.AddEngine(data.EngineFile);
-				builder.AddGearbox(data.GearboxFile);
-				foreach (var aux in data.Aux) {
-					builder.AddAuxiliary(aux.Path, aux.ID);
+
+				if (!data.IsEngineOnly) {
+					builder.AddVehicle(data.VehicleFile);
+					builder.AddGearbox(data.GearboxFile);
+
+
+					foreach (var aux in data.Aux) {
+						builder.AddAuxiliary(aux.Path, aux.ID);
+					}
+
+					builder.AddDriver(data.StartStop, data.OverSpeedEcoRoll, data.LookAheadCoasting,
+						data.AccelerationLimitingFile);
 				}
 
-				builder.AddDriver(data.StartStop, data.OverSpeedEcoRoll, data.LookAheadCoasting,
-					data.AccelerationLimitingFile);
-
-				var job = builder.Build(cycle, data.FileName, sumWriter);
+				var job = builder.Build(cycleFile);
 
 				yield return job;
 			}
@@ -58,27 +69,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			private IClutch _clutch;
 			private IPowerTrainComponent _axleGear;
 
-			public SimulatorBuilder(bool engineOnly)
+			public SimulatorBuilder(IModalDataWriter dataWriter, ISummaryDataWriter sumWriter, string jobFileName, string jobName,
+				string cycleFile, bool engineOnly)
 			{
 				_engineOnly = engineOnly;
-				_container = new VehicleContainer();
+
+				_container = new VehicleContainer(dataWriter, sumWriter, jobFileName, jobName, cycleFile);
 			}
 
-			public IVectoSimulator Build(string cycleFile, string jobFile, SummaryFileWriter sumWriter)
+			public IVectoSimulator Build(string cycleFile)
 			{
-				var modFileName = string.Format("{0}_{1}.vmod", Path.GetFileNameWithoutExtension(jobFile),
-					Path.GetFileNameWithoutExtension(cycleFile));
-				var dataWriter = new ModalDataWriter(modFileName, sumWriter);
-
-
 				if (_engineOnly) {
-					return BuildEngineOnly(cycleFile, dataWriter, sumWriter);
+					return BuildEngineOnly(cycleFile);
 				}
-				return BuildFullPowertrain(cycleFile, dataWriter, sumWriter);
+				return BuildFullPowertrain(cycleFile);
 			}
 
-			private IVectoSimulator BuildFullPowertrain(string cycleFile, IModalDataWriter dataWriter,
-				SummaryFileWriter sumWriter)
+			private IVectoSimulator BuildFullPowertrain(string cycleFile)
 			{
 				//throw new NotImplementedException("FullPowertrain is not fully implemented yet.");
 				var cycleData = DrivingCycleData.ReadFromFileEngineOnly(cycleFile);
@@ -113,17 +120,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				// connect clutch --> aux
 				_clutch.InShaft().Connect(previousAux.OutShaft());
 
-				var simulator = new VectoSimulator(_container, cycle, dataWriter, sumWriter);
+				var simulator = new VectoSimulator(_container, cycle);
 				return simulator;
 			}
 
-			private IVectoSimulator BuildEngineOnly(string cycleFile, IModalDataWriter dataWriter, SummaryFileWriter sumWriter)
+			private IVectoSimulator BuildEngineOnly(string cycleFile)
 			{
 				var cycleData = DrivingCycleData.ReadFromFileEngineOnly(cycleFile);
 				var cycle = new EngineOnlyDrivingCycle(_container, cycleData);
 
 				IAuxiliary addAux = new DirectAuxiliary(_container, new AuxiliaryCycleDataAdapter(cycleData));
 				addAux.InShaft().Connect(_engine.OutShaft());
+
+				if (_gearBox == null) {
+					_gearBox = new EngineOnlyGearbox(_container);
+				}
 
 				_gearBox.InShaft().Connect(addAux.OutShaft());
 
@@ -133,6 +144,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				return simulator;
 			}
 
+
+			public void AddCycle(string cycleFile) {}
 
 			public void AddEngine(string engineFile)
 			{
@@ -148,13 +161,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				_clutch = new Clutch(_container, engineData);
 			}
 
-			public void AddGearbox(string gearboxFile = null)
+			public void AddGearbox(string gearboxFile)
 			{
-				if (_engineOnly) {
-					_gearBox = new EngineOnlyGearbox(_container);
-				} else {
-					_gearBox = new Gearbox(_container);
-				}
+				_gearBox = new Gearbox(_container);
 			}
 
 			public void AddAuxiliary(string auxFileName, string auxID)

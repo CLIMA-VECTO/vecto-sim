@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// <summary>
 		/// Commits the current simulation step.
 		/// </summary>
-		void CommitSimulationStep();
+		void CommitSimulationStep(double time, double simulationInterval);
 
 		/// <summary>
 		/// Finishes the simulation.
