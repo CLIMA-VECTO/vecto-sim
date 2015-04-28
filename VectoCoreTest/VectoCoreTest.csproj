@@ -141,6 +141,12 @@
     <None Include="TestData\Components\ShiftPolygons.vgbs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Cycles\Coach Engine Only FullLoad.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Cycles\Coach Engine Only Paux_var-dt.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Cycles\Coach time based.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -163,6 +169,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Cycles\Coach Engine Only.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\EngineFullLoadJumps.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_1Hz.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_varHz.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineOnlyCycles\24tCoach_EngineOnlyFullLoad.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Results\EngineOnlyCycles\24tCoach_EngineOnlyPaux.vmod">

@@ -42,6 +42,65 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.AreEqual(0.SI<NewtonMeter>(), outPort.Torque);
 		}
 
+		[TestMethod, Ignore]
+		public void TestEngineOnlyWithTimestamps()
+		{
+			var container = new VehicleContainer();
+
+			var cycleData = DrivingCycleData.ReadFromFileEngineOnly(@"TestData\Cycles\Coach Engine Only Paux_var-dt.vdri");
+			var cycle = new EngineOnlyDrivingCycle(container, cycleData);
+
+			var outPort = new MockTnOutPort();
+			var inPort = cycle.InShaft();
+
+			inPort.Connect(outPort);
+
+			var absTime = TimeSpan.FromSeconds(10);
+			var dt = TimeSpan.FromSeconds(1);
+
+			var response = cycle.OutPort().Request(absTime, dt);
+			Assert.IsInstanceOfType(response, typeof (ResponseFailTimeInterval));
+
+			dt = TimeSpan.FromSeconds(0.25);
+			response = cycle.OutPort().Request(absTime, dt);
+			Assert.IsInstanceOfType(response, typeof (ResponseSuccess));
+
+			var dataWriter = new TestModalDataWriter();
+			container.CommitSimulationStep(dataWriter);
+
+			Assert.AreEqual(absTime, outPort.AbsTime);
+			Assert.AreEqual(dt, outPort.Dt);
+			Assert.AreEqual(743.2361.RPMtoRad(), outPort.AngularVelocity);
+			Assert.AreEqual(Formulas.PowerToTorque(2779.576.SI<Watt>(), 743.2361.RPMtoRad()), outPort.Torque);
+
+			// ========================
+
+			dt = TimeSpan.FromSeconds(1);
+			absTime = TimeSpan.FromSeconds(500);
+			response = cycle.OutPort().Request(absTime, dt);
+			Assert.IsInstanceOfType(response, typeof (ResponseFailTimeInterval));
+
+			dt = TimeSpan.FromSeconds(0.25);
+
+			for (int i = 0; i < 2; i++) {
+				response = cycle.OutPort().Request(absTime, dt);
+				Assert.IsInstanceOfType(response, typeof (ResponseSuccess));
+
+				dataWriter = new TestModalDataWriter();
+				container.CommitSimulationStep(dataWriter);
+
+				Assert.AreEqual(absTime, outPort.AbsTime);
+				Assert.AreEqual(dt, outPort.Dt);
+				Assert.AreEqual(1584.731.RPMtoRad(), outPort.AngularVelocity);
+				Assert.AreEqual(Formulas.PowerToTorque(3380.548.SI<Watt>(), 1584.731.RPMtoRad()), outPort.Torque);
+
+				absTime += dt;
+			}
+
+
+			// todo: test going backward in time, end of cycle
+		}
+
 		[TestMethod]
 		public void Test_TimeBased_FirstCycle()
 		{
