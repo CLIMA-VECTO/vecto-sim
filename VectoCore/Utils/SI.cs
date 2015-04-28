@@ -135,7 +135,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public static T operator -(SIBase<T> si1, SI si2)
 		{
-			return si1 - si2;
+			return (-1 * si2) + si1;
 		}
 
 		public static T operator -(SI si1, SIBase<T> si2)

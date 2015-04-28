@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			"AxleGearLossInterpolation#csv", DataAccessMethod.Sequential)]
 		public void TestInterpolation()
 		{
-			var rdyn = Double.Parse(TestContext.DataRow["rDyn"].ToString());
+			var rdyn = double.Parse(TestContext.DataRow["rDyn"].ToString(), CultureInfo.InvariantCulture);
 			var speed = double.Parse(TestContext.DataRow["v"].ToString(), CultureInfo.InvariantCulture);
 
 			var gbxData = GearboxData.ReadFromFile(TestContext.DataRow["GearboxDataFile"].ToString());
