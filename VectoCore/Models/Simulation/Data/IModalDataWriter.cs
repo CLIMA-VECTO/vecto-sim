@@ -22,6 +22,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		Object Compute(string expression, string filter);
 
-		IEnumerable<object> GetValues(ModalResultField key);
+		IEnumerable<T> GetValues<T>(ModalResultField key);
 	}
 }

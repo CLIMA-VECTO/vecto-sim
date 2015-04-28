@@ -33,9 +33,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return Data.Compute(expression, filter);
 		}
 
-		public IEnumerable<object> GetValues(ModalResultField key)
+		public IEnumerable<T> GetValues<T>(ModalResultField key)
 		{
-			return Data.Rows.Cast<DataRow>().Select(x => x[(int)key]);
+			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>((int)key));
 		}
 
 		public object this[ModalResultField key]

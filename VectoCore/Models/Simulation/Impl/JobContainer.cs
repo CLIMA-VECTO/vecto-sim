@@ -22,7 +22,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private static int _jobNumber;
 
-		public JobContainer() {}
+		public JobContainer(ISummaryDataWriter sumWriter)
+		{
+			_sumWriter = sumWriter;
+		}
 
 		public JobContainer(VectoJobData data)
 		{

@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var job = CreateJob(resultFileName);
 
-			var sim = new JobContainer();
+			var sim = new JobContainer(new TestSumWriter());
 			sim.AddJob(job);
 			sim.RunJobs();
 
@@ -100,7 +100,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var expectedResultsName = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
 			var expectedResults = ModalResults.ReadFromFile(expectedResultsName);
 
-			var simulation = new JobContainer();
+			var simulation = new JobContainer(new TestSumWriter());
 			foreach (var resultFile in resultFiles) {
 				simulation.AddJob(CreateJob(resultFile));
 			}
