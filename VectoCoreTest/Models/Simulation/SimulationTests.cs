@@ -118,12 +118,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only2.vmod",
 				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only3.vmod"
 			};
-			var sumFile = @"24t Coach.vsum";
-			var expectedSumFile = "24t Coach-expected.vsum";
 
+			var expectedSumFile = @"TestData\Results\EngineOnlyCycles\24t Coach.vsum";
+			var sumFile = @"24t Coach.vsum";
 			var resultFiles = expectedResultFiles.Select(x => Path.GetFileName(x));
 
-			//Assert.IsTrue(File.Exists(sumFile), "sum file is missing: " + sumFile);
+			Assert.IsTrue(File.Exists(sumFile), "sum file is missing: " + sumFile);
 			foreach (var result in resultFiles) {
 				Assert.IsTrue(File.Exists(result), "vmod file is missing: " + result);
 			}

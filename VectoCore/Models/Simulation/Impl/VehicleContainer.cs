@@ -15,6 +15,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private IEngineCockpit _engine;
 		private IGearboxCockpit _gearbox;
 		private ILog _logger;
+		private SummaryFileWriter _sumWriter;
+		private IModalDataWriter _dataWriter;
+		private string _jobName;
+		private string _cycleFileName;
 
 		#region IGearCockpit
 
@@ -49,9 +53,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#endregion
 
-		public VehicleContainer()
+		public VehicleContainer(IModalDataWriter dataWriter, SummaryFileWriter sumWriter, string jobName, string cycleFileName)
 		{
 			_logger = LogManager.GetLogger(GetType());
+			_dataWriter = dataWriter;
+			_sumWriter = sumWriter;
+			_jobName = jobName;
+			_cycleFileName = cycleFileName;
 		}
 
 		#region IVehicleContainer
@@ -73,19 +81,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 
-		public void CommitSimulationStep(IModalDataWriter dataWriter)
+		public void CommitSimulationStep()
 		{
 			_logger.Info("VehicleContainer committing simulation.");
 			foreach (var component in _components) {
-				component.CommitSimulationStep(dataWriter);
+				component.CommitSimulationStep(_dataWriter);
 			}
-			dataWriter.CommitSimulationStep();
+			_dataWriter.CommitSimulationStep();
 		}
 
-		public void FinishSimulation(IModalDataWriter dataWriter)
+		public void FinishSimulation()
 		{
 			_logger.Info("VehicleContainer finishing simulation.");
-			dataWriter.Finish();
+			_dataWriter.Finish();
+
+			_sumWriter.Write(_dataWriter, _jobName, _cycleFileName);
 		}
 
 		#endregion
