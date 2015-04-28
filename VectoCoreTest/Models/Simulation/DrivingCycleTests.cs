@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.AreEqual(0.SI<NewtonMeter>(), outPort.Torque);
 		}
 
-		[TestMethod]
+		[TestMethod, Ignore]
 		public void TestEngineOnlyWithTimestamps()
 		{
 			var container = new VehicleContainer();

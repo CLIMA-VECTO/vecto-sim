@@ -141,18 +141,22 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var angularSpeed = Double.Parse(TestContext.DataRow["rpm"].ToString()).RPMtoRad();
 
-			var t = TimeSpan.FromSeconds(-10);
-			var dt = TimeSpan.FromSeconds(1);
-			for (; t.TotalSeconds < 0; t += dt) {
+			var t = TimeSpan.FromSeconds(0);
+			var dt = TimeSpan.FromSeconds(0.1);
+
+			for (; t.TotalSeconds < 2; t += dt) {
 				requestPort.Request(t, dt, Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
+				engine.CommitSimulationStep(modalData);
 			}
 
-			dt = TimeSpan.FromSeconds(double.Parse(TestContext.DataRow["dt"].ToString(), CultureInfo.InvariantCulture));
+			var i = 0;
+			// dt = TimeSpan.FromSeconds(double.Parse(TestContext.DataRow["dt"].ToString(), CultureInfo.InvariantCulture));
+			// dt = TimeSpan.FromSeconds(expectedResults.Rows[i].ParseDouble(0)) - t;
 			var engineLoadPower = engineData.GetFullLoadCurve(0).FullLoadStationaryPower(angularSpeed);
 			idlePower = Double.Parse(TestContext.DataRow["finalIdleLoad"].ToString()).SI<Watt>();
-			var i = 0;
-			for (; t.TotalSeconds < 10; t += dt, i++) {
-				if (t > TimeSpan.FromSeconds(10)) {
+			for (; t.TotalSeconds < 25; t += dt, i++) {
+				dt = TimeSpan.FromSeconds(expectedResults.Rows[i + 1].ParseDouble(0) - expectedResults.Rows[i].ParseDouble(0));
+				if (t >= TimeSpan.FromSeconds(10)) {
 					engineLoadPower = idlePower;
 				}
 				requestPort.Request(t, dt, Formulas.PowerToTorque(engineLoadPower, angularSpeed), angularSpeed);
