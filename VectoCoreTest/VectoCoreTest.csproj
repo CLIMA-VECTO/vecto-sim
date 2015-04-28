@@ -72,8 +72,10 @@
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
     <Compile Include="Models\SimulationComponentData\FuelConsumptionMapTest.cs" />
     <Compile Include="Models\SimulationComponentData\FullLoadCurveTest.cs" />
+    <Compile Include="Models\SimulationComponentData\GearboxDataTest.cs" />
     <Compile Include="Models\SimulationComponent\ClutchTest.cs" />
     <Compile Include="Models\SimulationComponent\CombustionEngineTest.cs" />
+    <Compile Include="Models\SimulationComponent\GearboxTest.cs" />
     <Compile Include="Models\SimulationComponent\RetarderTest.cs" />
     <Compile Include="Models\Simulation\DrivingCycleTests.cs" />
     <Compile Include="Models\SimulationComponent\MockPorts.cs" />
@@ -106,7 +108,16 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="TestData\Components\24t Coach.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Components\24t CoachInterpolated.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\Axle.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\Direct Gear.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\FullLoadCurve insufficient columns.vfld">
@@ -119,6 +130,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\FullLoadCurve insufficient entries.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\Indirect Gear.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\Retarder.vrlm">
@@ -182,7 +196,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="TestData\AxleGearLossInterpolation.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
