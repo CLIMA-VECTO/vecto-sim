@@ -73,6 +73,7 @@
     <Compile Include="Models\SimulationComponentData\FuelConsumptionMapTest.cs" />
     <Compile Include="Models\SimulationComponentData\FullLoadCurveTest.cs" />
     <Compile Include="Models\SimulationComponentData\GearboxDataTest.cs" />
+    <Compile Include="Models\SimulationComponentData\VehicleDataTest.cs" />
     <Compile Include="Models\SimulationComponent\ClutchTest.cs" />
     <Compile Include="Models\SimulationComponent\CombustionEngineTest.cs" />
     <Compile Include="Models\SimulationComponent\GearboxTest.cs" />
@@ -109,6 +110,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="TestData\Components\24t Coach.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\24t Coach.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\24t CoachInterpolated.vmap">
