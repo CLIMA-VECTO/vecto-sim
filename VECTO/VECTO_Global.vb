@@ -11,7 +11,7 @@
 Imports System.Collections.Generic
 
 Module VECTO_Global
-	Public Const VECTOvers As String = "2.1"
+	Public Const VECTOvers As String = "2.1.1"
 	Public Const LicSigAppCode As String = "VECTO-Release-0093C61E0A2E4BFA9A7ED7E729C56AE4"
 	Public MyAppPath As String
 	Public MyConfPath As String

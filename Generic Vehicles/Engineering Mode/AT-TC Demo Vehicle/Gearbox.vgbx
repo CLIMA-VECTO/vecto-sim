@@ -1,11 +1,12 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-    "Date": "23.06.2014 13:46:07",
-    "AppVersion": "2.0.2-beta3",
-    "FileVersion": 3
+    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
+    "Date": "22.04.2015 15:19:44",
+    "AppVersion": "2.1",
+    "FileVersion": 4
   },
   "Body": {
+    "SavedInDeclMode": false,
     "ModelName": "Gearbox",
     "Inertia": 0.0,
     "TracInt": 0.0,

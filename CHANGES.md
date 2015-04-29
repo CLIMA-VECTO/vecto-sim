@@ -5,6 +5,10 @@ TODO
 - Traction interruption: No engine rev down - hold rpm until new gear engaged (Allison)
 
 
+### VECTO 2.1.1
+* Bugfix: Incorrect torque calculation in AT/TC model caused early up-shifts
+* Updated C-to-C shift strategy with acc_min rule (see V2.1)
+
 ### VECTO 2.1
 * Limit engine rpm in torque converter operation acc. > acc_min
 * Shift up (C-to-L, L-to-L) if acc. > acc_min and next-gear-rpm > threshold

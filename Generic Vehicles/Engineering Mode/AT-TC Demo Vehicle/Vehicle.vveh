@@ -1,11 +1,12 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-    "Date": "17.06.2014 12:25:51",
-    "AppVersion": "2.0.2-beta1",
-    "FileVersion": 4
+    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
+    "Date": "22.04.2015 15:19:41",
+    "AppVersion": "2.1",
+    "FileVersion": 5
   },
   "Body": {
+    "SavedInDeclMode": false,
     "VehCat": "Citybus",
     "CurbWeight": 11500.0,
     "CurbWeightExtra": 0.0,

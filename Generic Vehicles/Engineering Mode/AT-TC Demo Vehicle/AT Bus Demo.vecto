@@ -1,11 +1,12 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-    "Date": "17.06.2014 13:48:52",
-    "AppVersion": "2.0.2-beta2",
-    "FileVersion": 1
+    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
+    "Date": "22.04.2015 15:19:30",
+    "AppVersion": "2.1",
+    "FileVersion": 2
   },
   "Body": {
+    "SavedInDeclMode": false,
     "VehicleFile": "Vehicle.vveh",
     "EngineFile": "Engine.veng",
     "GearboxFile": "Gearbox.vgbx",
