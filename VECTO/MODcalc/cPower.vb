@@ -1229,10 +1229,10 @@ lb_nOK:
 			'--------------------------------------------------------------------------------------------------
 			'   Finish Second
 
-			'If Gear = 4 AndAlso Gear = LastGear + 1 Then
-			'	Debug.Print(jz & "," & nU.ToString() & "," & nPeToM(nU, P))
+			'If Gear > 1 AndAlso Gear = LastGear + 1 Then
+			'	Debug.Print(jz & "," & nU.ToString() & "," & nPeToM(nU, P) & "," & Gear)
 			'Else
-			'	Debug.Print(jz & ",-,-")
+			'	Debug.Print(jz & ",-,-,-")
 			'End If
 
 			'distance 
@@ -1887,6 +1887,8 @@ lb_nOK:
 		Dim n As Single
 		Dim TqNext As Single = 0
 		Dim TqCurrent As Single
+		Dim TCaccmin As Single
+
 
 		'First time step (for vehicles with TC always the first gear is used)
 		If t = 0 Then Return fStartGear(0, Grad)
@@ -1950,19 +1952,21 @@ lb_nOK:
 		End If
 
 
-	
+
 		'Upshift
 		If LastGear < GBX.GearCount Then
 
 			TqNext = Math.Min(nPeToM(fnU(Vact, LastGear + 1, False), fPeGearMod(LastGear + 1, t, Grad)), FLD(LastGear + 1).Tq(fnU(Vact, LastGear + 1, False)))
 			nUup = GBX.Shiftpolygons(LastGear).fGSnUup(TqNext)
 
+			TCaccmin = Math.Min(DEV.TCaccmin, MODdata.Vh.a(t))
+
 			If PlusGearLockUp Then
 				'C-to-L / L-to-L
 				If DEV.TCshiftModeNew Then
 					If _
 						nUnext > nUup AndAlso
-						fPeGearMod(LastGear + 1, t, MODdata.Vh.V(t), DEV.TCaccmin, Grad) <= FLD(LastGear + 1).Pfull(nUnext) Then
+						fPeGearMod(LastGear + 1, t, MODdata.Vh.V(t), TCaccmin, Grad) <= FLD(LastGear + 1).Pfull(nUnext) Then
 						Return LastGear + 1
 					End If
 				Else
@@ -1976,11 +1980,21 @@ lb_nOK:
 
 					iRatio = GBX.Igetr(LastGear + 1) / GBX.Igetr(LastGear)
 
-					If _
+					If DEV.TCshiftModeNew Then
+						If _
+						 fnUout(Vact, LastGear + 1) > Math.Min(900, iRatio * (FLD(LastGear).N80h - 150)) AndAlso
+						 FLD(LastGear + 1).Pfull(nU * iRatio) >= fPeGearMod(LastGear + 1, t, MODdata.Vh.V(t), TCaccmin, Grad) Then
+							Return LastGear + 1
+						End If
+					Else
+						If _
 						fnUout(Vact, LastGear + 1) > Math.Min(900, iRatio * (FLD(LastGear).N80h - 150)) AndAlso
 						FLD(LastGear + 1).Pfull(nU * iRatio) > 0.7 * FLD(LastGear).Pfull(nU) Then
-						Return LastGear + 1
+							Return LastGear + 1
+						End If
 					End If
+
+
 				End If
 			End If
 
@@ -2004,7 +2018,7 @@ lb_nOK:
 				End If
 			End If
 		End If
-		
+
 
 
 		Return LastGear
