@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.IO;
+using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -16,10 +17,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		private readonly RetarderType _type;
 
-		public RetarderData(Data data)
+		public RetarderData(Data data, string basePath = "")
 		{
 			_data = data;
-			LossMap = RetarderLossMap.ReadFromFile(_data.File);
+			LossMap = RetarderLossMap.ReadFromFile(Path.Combine(basePath, _data.File));
 			switch (_data.TypeStr) {
 				case "Primary":
 					_type = RetarderType.Primary;
@@ -48,7 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public class Data
 		{
-			[JsonProperty(Required = Required.Always)] public string TypeStr;
+			[JsonProperty("Type", Required = Required.Always)] public string TypeStr;
 
 			[JsonProperty] public double Ratio;
 

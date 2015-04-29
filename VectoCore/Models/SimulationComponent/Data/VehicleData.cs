@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			vehicleData._data = d;
 
-			vehicleData._retarder = new RetarderData(d.Body.Retarder);
+			vehicleData._retarder = new RetarderData(d.Body.Retarder, basePath);
 
 			vehicleData._axleData = new List<Axle>(d.Body.AxleConfig.Axles.Count);
 			foreach (var axle in d.Body.AxleConfig.Axles) {
@@ -217,7 +217,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 				[JsonProperty] public double Loading;
 
-				[JsonProperty("MaxMass", Required = Required.Always)] public double GrossVehicleMassRating;
+				[JsonProperty("MassMax", Required = Required.Always)] public double GrossVehicleMassRating;
 
 				[JsonProperty("Cd2")] public double DragCoefficientRigidTruck; // without trailer
 
@@ -242,7 +242,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 				public class AxleConfigData
 				{
-					[JsonProperty(Required = Required.Always)] public string TypeStr;
+					[JsonProperty("Type", Required = Required.Always)] public string TypeStr;
 					[JsonProperty(Required = Required.Always)] public IList<AxleData> Axles;
 				}
 
