@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using TUGraz.VectoCore.Exceptions;
 
@@ -15,10 +16,34 @@ namespace TUGraz.VectoCore.Utils
 		protected MeterPerSecond(double val) : base(val, new SI().Meter.Per.Second) {}
 	}
 
+	public class MeterPerSquareSecond : SIBase<MeterPerSquareSecond>
+	{
+		public MeterPerSquareSecond() : this(0) {}
+		protected MeterPerSquareSecond(double val) : base(val, new SI().Meter.Per.Square.Second) {}
+	}
+
 	public class Second : SIBase<Second>
 	{
 		public Second() : this(0) {}
 		protected Second(double val) : base(val, new SI().Second) {}
+	}
+
+	public class Meter : SIBase<Meter>
+	{
+		public Meter() : this(0) {}
+		protected Meter(double val) : base(val, new SI().Meter) {}
+	}
+
+	public class Kilogram : SIBase<Kilogram>
+	{
+		public Kilogram() : this(0) {}
+		protected Kilogram(double val) : base(val, new SI().Kilo.Gramm) {}
+	}
+
+	public class SquareMeter : SIBase<SquareMeter>
+	{
+		public SquareMeter() : this(0) {}
+		protected SquareMeter(double val) : base(val, new SI().Square.Meter) {}
 	}
 
 	public class Watt : SIBase<Watt>
@@ -240,7 +265,12 @@ namespace TUGraz.VectoCore.Utils
 			/// <summary>
 			/// Hour
 			/// </summary>
-			h
+			h,
+
+			/// <summary>
+			/// Milli
+			/// </summary>
+			milli
 		}
 
 		/// <summary>
@@ -476,6 +506,7 @@ namespace TUGraz.VectoCore.Utils
 			get { return new SI(new SI(this, toUnit: Unit.k), 0.001, Unit.g, Unit.g); }
 		}
 
+
 		/// <summary>
 		///     [N]
 		/// </summary>
@@ -551,6 +582,11 @@ namespace TUGraz.VectoCore.Utils
 		public SI Minute
 		{
 			get { return new SI(this, 60.0, Unit.min, Unit.s); }
+		}
+
+		public SI Milli
+		{
+			get { return new SI(this, 0.001, Unit.milli); }
 		}
 
 		/// <summary>
