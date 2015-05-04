@@ -79,6 +79,7 @@
     <Compile Include="Models\SimulationComponent\CombustionEngineTest.cs" />
     <Compile Include="Models\SimulationComponent\GearboxTest.cs" />
     <Compile Include="Models\SimulationComponent\RetarderTest.cs" />
+    <Compile Include="Models\SimulationComponent\WheelsTest.cs" />
     <Compile Include="Models\SimulationComponent\VehicleTest.cs" />
     <Compile Include="Models\Simulation\DrivingCycleTests.cs" />
     <Compile Include="Models\SimulationComponent\MockPorts.cs" />
