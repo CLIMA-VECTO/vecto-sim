@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -29,7 +30,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			for (var i = 0; i < data.Cycles.Count; i++) {
 				var cycleFile = data.Cycles[i];
 				var jobName = string.Format("{0}-{1}", jobNumber, i);
-				var modFileName = string.Format("{0}_{1}.vmod", data.JobFileName, cycleFile);
+				var modFileName = string.Format("{0}_{1}.vmod", Path.GetFileNameWithoutExtension(data.JobFileName),
+					Path.GetFileNameWithoutExtension(cycleFile));
 				_dataWriter = new ModalDataWriter(modFileName);
 
 				var builder = new SimulatorBuilder(_dataWriter, sumWriter, data.JobFileName, jobName, cycleFile, data.IsEngineOnly);

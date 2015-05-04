@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (Cockpit.Gear() == 0) {
 				_clutchState = ClutchState.ClutchOpened;
 				engineSpeedIn = _idleSpeed;
-				torqueIn = 0.0.SI<NewtonMeter>();
+				torqueIn = 0.SI<NewtonMeter>();
 			} else {
 				var engineSpeedNorm = (angularVelocity - _idleSpeed) /
 									(_ratedSpeed - _idleSpeed);

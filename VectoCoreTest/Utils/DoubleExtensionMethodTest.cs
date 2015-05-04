@@ -10,12 +10,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 		[TestMethod]
 		public void DoubleExtensions_SI()
 		{
-			var val = 600.0.RPMtoRad();
+			var val = 600.RPMtoRad();
 			Assert.AreEqual(600 / 60 * 2 * Math.PI, val.Double());
 
-			Assert.IsTrue(0.0.SI<PerSecond>().HasEqualUnit(val));
+			Assert.IsTrue(0.SI<PerSecond>().HasEqualUnit(val));
 
-			var val2 = 1200.0.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
+			var val2 = 1200.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
 			val = val * 2;
 			Assert.AreEqual(val, val2);
 

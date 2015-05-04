@@ -198,7 +198,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			// y = kx + d
 			var k = (p2.TorqueFullLoad - p1.TorqueFullLoad) / (p2.EngineSpeed - p1.EngineSpeed);
 			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;
-			if (k == 0.0.SI()) {
+			if (k == 0.SI()) {
 				return new Tuple<PerSecond, Watt>(p2.EngineSpeed, Formulas.TorqueToPower(p2.TorqueFullLoad, p2.EngineSpeed));
 			}
 			var engineSpeedMaxPower = (-1 * d / (2 * k)).Cast<PerSecond>();

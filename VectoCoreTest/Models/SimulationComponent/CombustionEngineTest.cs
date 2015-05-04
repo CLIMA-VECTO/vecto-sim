@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
 			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 			var torque = 400.SI<NewtonMeter>();
-			var engineSpeed = 1500.0.RPMtoRad();
+			var engineSpeed = 1500.RPMtoRad();
 
 			port.Request(absTime, dt, torque, engineSpeed);
 		}
@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
 			var torque = 0.SI<NewtonMeter>();
-			var engineSpeed = 600.0.RPMtoRad();
+			var engineSpeed = 600.RPMtoRad();
 			var dataWriter = new TestModalDataWriter();
 
 			for (var i = 0; i < 21; i++) {

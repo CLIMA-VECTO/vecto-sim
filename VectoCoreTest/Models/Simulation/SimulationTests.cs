@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var container = job.GetContainer();
 
-			Assert.AreEqual(560.0.RPMtoRad(), container.EngineSpeed());
+			Assert.AreEqual(560.RPMtoRad(), container.EngineSpeed());
 			Assert.AreEqual(0U, container.Gear());
 
 			try {
@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 
 			var expectedSumFile = @"TestData\Results\EngineOnlyCycles\24t Coach.vsum";
-			var sumFile = @"24t Coach.vsum";
+			var sumFile = @"TestData\Jobs\24t Coach.vsum";
 			var resultFiles = expectedResultFiles.Select(x => Path.GetFileName(x));
 
 			Assert.IsTrue(File.Exists(sumFile), "sum file is missing: " + sumFile);
@@ -141,8 +141,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				Assert.IsTrue(File.Exists(result), "vmod file is missing: " + result);
 			}
 
-			//Assert.AreEqual(File.ReadAllLines(sumFile).Length, File.ReadAllLines(expectedSumFile).Length,
-			//	"sum file row count differs.");
+			Assert.AreEqual(File.ReadAllLines(sumFile).Length, File.ReadAllLines(expectedSumFile).Length,
+				"sum file row count differs.");
 
 			var resultFileIt = resultFiles.GetEnumerator();
 
@@ -153,9 +153,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 				Assert.AreEqual(expectedResults.Rows.Count, results.Rows.Count, "Moddata: Row count differs.");
 			}
-
-			//todo compare sum file
-			Assert.Inconclusive("todo: compare sum file!!");
 		}
 	}
 }

@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.AreEqual("0 [-]", si.ToString());
 			Assert.IsTrue(si.HasEqualUnit(new SI()));
 
-			var si2 = 5.0.SI().Watt;
+			var si2 = 5.SI().Watt;
 			Assert.AreEqual("5 [W]", si2.ToString());
 
 			var si3 = 2.SI().Radian.Per.Second;
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.AreEqual("10 [kgmm/ssss]", si4.ToBasicUnits().ToString());
 
 
-			var kg = 5.0.SI().Kilo.Gramm;
+			var kg = 5.SI().Kilo.Gramm;
 			Assert.AreEqual(5.0, kg.Double());
 			Assert.AreEqual("5 [kg]", kg.ToString());
 

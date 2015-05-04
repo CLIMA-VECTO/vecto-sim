@@ -16,9 +16,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD);
 
-			Assert.AreEqual(1180, (double) fldCurve.FullLoadStationaryTorque(560.0.RPMtoRad()), Tolerance);
-			Assert.AreEqual(1352, (double) fldCurve.FullLoadStationaryTorque(2000.0.RPMtoRad()), Tolerance);
-			Assert.AreEqual(1231, (double) fldCurve.FullLoadStationaryTorque(580.0.RPMtoRad()), Tolerance);
+			Assert.AreEqual(1180, (double) fldCurve.FullLoadStationaryTorque(560.RPMtoRad()), Tolerance);
+			Assert.AreEqual(1352, (double) fldCurve.FullLoadStationaryTorque(2000.RPMtoRad()), Tolerance);
+			Assert.AreEqual(1231, (double) fldCurve.FullLoadStationaryTorque(580.RPMtoRad()), Tolerance);
 		}
 
     [TestMethod]
@@ -33,9 +33,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD);
 
-			Assert.AreEqual(69198.814183, (double) fldCurve.FullLoadStationaryPower(560.0.RPMtoRad()), Tolerance);
-			Assert.AreEqual(283162.218372, (double) fldCurve.FullLoadStationaryPower(2000.0.RPMtoRad()), Tolerance);
-			Assert.AreEqual(74767.810760, (double) fldCurve.FullLoadStationaryPower(580.0.RPMtoRad()), Tolerance);
+			Assert.AreEqual(69198.814183, (double) fldCurve.FullLoadStationaryPower(560.RPMtoRad()), Tolerance);
+			Assert.AreEqual(283162.218372, (double) fldCurve.FullLoadStationaryPower(2000.RPMtoRad()), Tolerance);
+			Assert.AreEqual(74767.810760, (double) fldCurve.FullLoadStationaryPower(580.RPMtoRad()), Tolerance);
 		}
 
 		[TestMethod]
@@ -43,11 +43,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD);
 
-			Assert.AreEqual(-149, (double) fldCurve.DragLoadStationaryTorque(560.0.RPMtoRad()), Tolerance);
-			Assert.AreEqual(-301, (double) fldCurve.DragLoadStationaryTorque(2000.0.RPMtoRad()), Tolerance);
-			Assert.AreEqual(-148.5, (double) fldCurve.DragLoadStationaryTorque(580.0.RPMtoRad()), Tolerance);
-			Assert.AreEqual(-150, (double) fldCurve.DragLoadStationaryTorque(520.0.RPMtoRad()), Tolerance);
-			Assert.AreEqual(-339, (double) fldCurve.DragLoadStationaryTorque(2200.0.RPMtoRad()), Tolerance);
+			Assert.AreEqual(-149, (double) fldCurve.DragLoadStationaryTorque(560.RPMtoRad()), Tolerance);
+			Assert.AreEqual(-301, (double) fldCurve.DragLoadStationaryTorque(2000.RPMtoRad()), Tolerance);
+			Assert.AreEqual(-148.5, (double) fldCurve.DragLoadStationaryTorque(580.RPMtoRad()), Tolerance);
+			Assert.AreEqual(-150, (double) fldCurve.DragLoadStationaryTorque(520.RPMtoRad()), Tolerance);
+			Assert.AreEqual(-339, (double) fldCurve.DragLoadStationaryTorque(2200.RPMtoRad()), Tolerance);
 		}
 
 		[TestMethod]
@@ -55,9 +55,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD);
 
-			Assert.AreEqual(-8737.81636, (double) fldCurve.DragLoadStationaryPower(560.0.RPMtoRad()), Tolerance);
-			Assert.AreEqual(-63041.29254, (double) fldCurve.DragLoadStationaryPower(2000.0.RPMtoRad()), Tolerance);
-			Assert.AreEqual(-9019.51251, (double) fldCurve.DragLoadStationaryPower(580.0.RPMtoRad()), Tolerance);
+			Assert.AreEqual(-8737.81636, (double) fldCurve.DragLoadStationaryPower(560.RPMtoRad()), Tolerance);
+			Assert.AreEqual(-63041.29254, (double) fldCurve.DragLoadStationaryPower(2000.RPMtoRad()), Tolerance);
+			Assert.AreEqual(-9019.51251, (double) fldCurve.DragLoadStationaryPower(580.RPMtoRad()), Tolerance);
 		}
 
 		[TestMethod]
@@ -65,9 +65,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD);
 
-			Assert.AreEqual(0.6, (double) fldCurve.PT1(560.0.RPMtoRad()), Tolerance);
-			Assert.AreEqual(0.25, (double) fldCurve.PT1(2000.0.RPMtoRad()), Tolerance);
-			Assert.AreEqual(0.37, (double) fldCurve.PT1(1700.0.RPMtoRad()), Tolerance);
+			Assert.AreEqual(0.6, (double) fldCurve.PT1(560.RPMtoRad()), Tolerance);
+			Assert.AreEqual(0.25, (double) fldCurve.PT1(2000.RPMtoRad()), Tolerance);
+			Assert.AreEqual(0.37, (double) fldCurve.PT1(1700.RPMtoRad()), Tolerance);
 		}
 
 		/// <summary>

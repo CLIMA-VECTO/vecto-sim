@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCore.Utils;
@@ -133,10 +132,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				}
 			}
 
-
 			row["pStop [%]"] = 100.0 * timeSum / (double)data.Compute("Max(time)", "");
 
-			_table.ImportRow(row);
+			_table.Rows.Add(row);
 		}
 
 		public void Finish()
