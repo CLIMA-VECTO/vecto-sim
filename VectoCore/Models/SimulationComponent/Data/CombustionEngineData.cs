@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			var curve = _fullLoadCurves.FirstOrDefault(kv => kv.Key.Contains(gear));
 			if (curve.Key == null) {
-				throw new KeyNotFoundException(string.Format("Gear '{0}' was not found in the FullLoadCurves.", gear));
+				throw new KeyNotFoundException(string.Format("GearData '{0}' was not found in the FullLoadCurves.", gear));
 			}
 
 			return curve.Value;
@@ -180,51 +180,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// </summary>
 		public class Data
 		{
+			[JsonProperty(Required = Required.Always)] public JsonDataHeader Header;
 			[JsonProperty(Required = Required.Always)] public DataBody Body;
-			[JsonProperty(Required = Required.Always)] public DataHeader Header;
-
-			public class DataHeader
-			{
-				[JsonProperty(Required = Required.Always)] public string AppVersion;
-				[JsonProperty(Required = Required.Always)] public string CreatedBy;
-				[JsonProperty(Required = Required.Always)] public DateTime Date;
-				[JsonProperty(Required = Required.Always)] public double FileVersion;
-
-				#region Equality members
-
-				protected bool Equals(DataHeader other)
-				{
-					return string.Equals(CreatedBy, other.CreatedBy) && Date.Equals(other.Date) &&
-							string.Equals(AppVersion, other.AppVersion) && FileVersion.Equals(other.FileVersion);
-				}
-
-				public override bool Equals(object obj)
-				{
-					if (ReferenceEquals(null, obj)) {
-						return false;
-					}
-					if (ReferenceEquals(this, obj)) {
-						return true;
-					}
-					if (obj.GetType() != GetType()) {
-						return false;
-					}
-					return Equals((DataHeader)obj);
-				}
-
-				public override int GetHashCode()
-				{
-					unchecked {
-						var hashCode = (CreatedBy != null ? CreatedBy.GetHashCode() : 0);
-						hashCode = (hashCode * 397) ^ Date.GetHashCode();
-						hashCode = (hashCode * 397) ^ (AppVersion != null ? AppVersion.GetHashCode() : 0);
-						hashCode = (hashCode * 397) ^ FileVersion.GetHashCode();
-						return hashCode;
-					}
-				}
-
-				#endregion
-			}
 
 			public class DataBody
 			{
@@ -278,7 +235,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 				/// <summary>
 				///     Multiple Full Load and Drag Curves (.vfld) can be defined and assigned to different gears.
-				///     Gear "0" must be assigned for idling and Engine Only Mode.
+				///     GearData "0" must be assigned for idling and Engine Only Mode.
 				/// </summary>
 				public class DataFullLoadCurve
 				{

@@ -1,5 +1,6 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting.Web;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -50,8 +51,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 				ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.Tq_full, ModalResultField.Pe_full
 			};
 			//, ModalResultField.FC };
-			var siFactor = new[] { 1, 1000, 1, 1000, 1000, 1, 1, 1000, 1 };
-			var tolerances = new[] { 0.0001, 0.1, 0.0001, 0.1, 0.1, 0.001, 0.001, 0.1, 0.01 };
+			//var siFactor = new[] { 1, 1000, 1, 1000, 1000, 1, 1, 1000, 1 };
+			//var tolerances = new[] { 0.0001, 0.1, 0.0001, 0.1, 0.1, 0.001, 0.001, 0.1, 0.01 };
 			foreach (var cycle in data.Entries) {
 				port.Request(absTime, dt, cycle.EngineTorque, cycle.EngineSpeed);
 				foreach (var sc in vehicle.SimulationComponents()) {
@@ -63,13 +64,14 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 				if (i > 2) {
 					for (var j = 0; j < results.Length; j++) {
 						var field = results[j];
-//						if (!Double.IsNaN(dataWriter.GetDouble(field)))
-						Assert.AreEqual((double)row[field.GetName()] * siFactor[j], dataWriter.GetDouble(field),
-							tolerances[j],
+						//						if (!Double.IsNaN(dataWriter.GetDouble(field)))
+						Assert.AreEqual((double) row[field.GetName()], dataWriter.GetDouble(field),
+							0.0001,
 							String.Format("t: {0}  field: {1}", i, field));
 					}
-					if (row[ModalResultField.FC.GetName()] is double) {
-						Assert.AreEqual((double)row[ModalResultField.FC.GetName()],
+					if (row[ModalResultField.FC.GetName()] is double &&
+						!Double.IsNaN(Double.Parse(row[ModalResultField.FC.GetName()].ToString()))) {
+						Assert.AreEqual((double) row[ModalResultField.FC.GetName()],
 							dataWriter.GetDouble(ModalResultField.FC), 0.01,
 							"t: {0}  field: {1}", i, ModalResultField.FC);
 					} else {
@@ -81,7 +83,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 				dataWriter.CommitSimulationStep(absTime, dt);
 				absTime += dt;
 			}
-			dataWriter.Data.WriteToFile("test2.csv");
+			dataWriter.Data.WriteToFile(String.Format("result_{0}.csv", TestContext.DataRow["TestName"].ToString()));
 		}
 
 		[TestMethod]
