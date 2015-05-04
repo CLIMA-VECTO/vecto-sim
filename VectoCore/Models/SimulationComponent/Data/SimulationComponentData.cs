@@ -1,5 +1,6 @@
 ﻿using System;
 using Common.Logging;
+using Newtonsoft.Json;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
@@ -10,6 +11,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public SimulationComponentData()
 		{
 			Log = LogManager.GetLogger(GetType());
+		}
+
+
+		protected static int GetFileVersion(string jsonStr)
+		{
+			dynamic json = JsonConvert.DeserializeObject(jsonStr);
+			return json.Header.FileVersion;
 		}
 	}
 }

@@ -40,9 +40,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			AxleConfig8x8,
 		}
 
-		[DataMember] private Data _data;
+		[DataMember] private DataV5Engineering _data;
 
-		[DataMember] private VehicleCategory _vehicleCategory;
+		[DataMember]
+		protected DataV5Engineering Data
+		{
+			get { return _data; }
+			set
+			{
+				_data = value;
+				_data.SetProperties(this);
+			}
+		}
 
 		[DataMember] private CrossWindCorrectionMode _crossWindCorrectionMode;
 
@@ -52,6 +61,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		[DataMember] private AxleConfiguration _axleConfiguration;
 
+		[DataMember]
+		public string BasePath { get; protected set; }
+
+		protected VehicleData(string basePath)
+		{
+			BasePath = basePath;
+		}
 
 		public bool SavedInDeclarationMode
 		{
@@ -59,28 +75,41 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			set { _data.Body.SavedInDeclarationMode = value; }
 		}
 
+		[DataMember] private VehicleCategory _vehicleCategory;
+
 		public VehicleCategory Category
 		{
 			get { return _vehicleCategory; }
-			protected set { _vehicleCategory = value; }
+			set
+			{
+				_vehicleCategory = value;
+				_data.Body.VehicleCategoryStr = value.ToString();
+			}
 		}
 
-		public double CurbWeight
+
+		public Kilogram CurbWeight
 		{
-			get { return _data.Body.CurbWeight; }
-			set { _data.Body.CurbWeight = value; }
+			get { return _data.Body.CurbWeight.SI<Kilogram>(); }
+			set { _data.Body.CurbWeight = value.Double(); }
 		}
 
-		public double CurbWeigthExtra
+
+		public Kilogram CurbWeigthExtra
 		{
-			get { return _data.Body.CurbWeightExtra; }
-			set { _data.Body.CurbWeightExtra = value; }
+			get { return _data.Body.CurbWeightExtra.SI<Kilogram>(); }
+			set { _data.Body.CurbWeightExtra = value.Double(); }
 		}
 
-		public double Loading
+		public Kilogram Loading
 		{
-			get { return _data.Body.Loading; }
-			set { _data.Body.Loading = value; }
+			get { return _data.Body.Loading.SI<Kilogram>(); }
+			set { _data.Body.Loading = value.Double(); }
+		}
+
+		public Kilogram TotalVehicleWeight()
+		{
+			return CurbWeight + CurbWeigthExtra + Loading;
 		}
 
 		public Kilogram GrossVehicleMassRating
@@ -119,6 +148,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			set { _data.Body.DynamicTyreRadius = (double) value.ConvertTo().Milli.Meter; }
 		}
 
+		public Kilogram ReducedMassWheels { get; set; }
+
 		public string Rim
 		{
 			get { throw new NotImplementedException(); }
@@ -128,7 +159,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public CrossWindCorrectionMode CrossWindCorrection
 		{
 			get { return _crossWindCorrectionMode; }
-			protected set { _crossWindCorrectionMode = value; }
+			set { _crossWindCorrectionMode = value; }
 		}
 
 		public RetarderData Retarder
@@ -142,6 +173,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			get { return _axleConfiguration; }
 		}
 
+		public double TotalRollResistanceCoefficient { get; protected set; }
+
 		public static VehicleData ReadFromFile(string fileName)
 		{
 			return ReadFromJson(File.ReadAllText(fileName), Path.GetDirectoryName(fileName));
@@ -149,61 +182,85 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public static VehicleData ReadFromJson(string json, string basePath = "")
 		{
-			var vehicleData = new VehicleData();
+			var vehicleData = new VehicleData(basePath);
 
-			var d = JsonConvert.DeserializeObject<Data>(json);
-			if (d.Header.FileVersion > 5) {
-				throw new UnsupportedFileVersionException("Unsupported Version of .vveh file. Got Version " + d.Header.FileVersion);
-			}
-
-			vehicleData._data = d;
-
-			vehicleData._retarder = new RetarderData(d.Body.Retarder, basePath);
-
-			vehicleData._axleData = new List<Axle>(d.Body.AxleConfig.Axles.Count);
-			foreach (var axle in d.Body.AxleConfig.Axles) {
-				vehicleData._axleData.Add(new Axle(axle));
-			}
-
-			vehicleData._axleConfiguration = AxleConfiguration.AxleConfig4x2;
-
-			switch (d.Body.VehicleCategoryStr) {
-				case "RigidTruck":
-					vehicleData._vehicleCategory = VehicleCategory.RigidTruck;
-					break;
-				case "Tractor":
-					vehicleData._vehicleCategory = VehicleCategory.Tractor;
-					break;
-				case "CityBus":
-					vehicleData._vehicleCategory = VehicleCategory.CityBus;
-					break;
-				case "InterurbanBus":
-					vehicleData._vehicleCategory = VehicleCategory.InterurbanBus;
-					break;
-				case "Coach":
-					vehicleData._vehicleCategory = VehicleCategory.Coach;
-					break;
-			}
-
-			switch (d.Body.CrossWindCorrectionModeStr) {
-				case "CdOfBeta":
-					vehicleData._crossWindCorrectionMode = CrossWindCorrectionMode.VAirBeta;
-					break;
-				case "CdOfV":
-					vehicleData._crossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependent;
+			var fileVersion = GetFileVersion(json);
+			switch (fileVersion) {
+				case 5:
+					var data = JsonConvert.DeserializeObject<DataV5Engineering>(json);
+					vehicleData.Data = data;
 					break;
 				default:
-					vehicleData._crossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection;
-					break;
+					throw new UnsupportedFileVersionException("Unsupported Version of .vveh file. Got Version " + fileVersion);
 			}
 
 			return vehicleData;
 		}
 
-		public class Data
+		public class DataV5Engineering
 		{
 			[JsonProperty(Required = Required.Always)] public JsonDataHeader Header;
 			[JsonProperty(Required = Required.Always)] public DataBody Body;
+
+			public void SetProperties(VehicleData vehicleData)
+			{
+				vehicleData._axleConfiguration = AxleConfiguration.AxleConfig4x2;
+
+				vehicleData._retarder = new RetarderData(Body.Retarder, vehicleData.BasePath);
+
+				vehicleData._axleData = new List<Axle>(Body.AxleConfig.Axles.Count);
+				var RRC = 0.0;
+				var mRed0 = 0.SI<Kilogram>();
+				foreach (var axleData in Body.AxleConfig.Axles) {
+					var axle = new Axle(axleData);
+					if (axle.RollResistanceCoefficient < 0) {
+						throw new VectoException("Axle roll resistance coefficient < 0");
+					}
+					if (axle.TyreTestLoad <= 0) {
+						throw new VectoException("Axle tyre test load (FzISO) must be greater than 0!");
+					}
+					var nrWheels = axle.TwinTyres ? 4 : 2;
+					RRC += axle.AxleWeightShare * axle.RollResistanceCoefficient *
+							Math.Pow(
+								(axle.AxleWeightShare * vehicleData.TotalVehicleWeight() * Physics.GravityAccelleration / axle.TyreTestLoad /
+								nrWheels).Double(), Physics.RollResistanceExponent - 1);
+					mRed0 += nrWheels * (axle.Inertia / vehicleData.DynamicTyreRadius / vehicleData.DynamicTyreRadius).Cast<Kilogram>();
+
+					vehicleData._axleData.Add(axle);
+				}
+				vehicleData.TotalRollResistanceCoefficient = RRC;
+				vehicleData.ReducedMassWheels = mRed0;
+
+				switch (Body.VehicleCategoryStr) {
+					case "RigidTruck":
+						vehicleData.Category = VehicleCategory.RigidTruck;
+						break;
+					case "Tractor":
+						vehicleData.Category = VehicleCategory.Tractor;
+						break;
+					case "CityBus":
+						vehicleData.Category = VehicleCategory.CityBus;
+						break;
+					case "InterurbanBus":
+						vehicleData.Category = VehicleCategory.InterurbanBus;
+						break;
+					case "Coach":
+						vehicleData.Category = VehicleCategory.Coach;
+						break;
+				}
+
+				switch (Body.CrossWindCorrectionModeStr) {
+					case "CdOfBeta":
+						vehicleData._crossWindCorrectionMode = CrossWindCorrectionMode.VAirBeta;
+						break;
+					case "CdOfV":
+						vehicleData._crossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependent;
+						break;
+					default:
+						vehicleData._crossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection;
+						break;
+				}
+			}
 
 			public class DataBody
 			{
@@ -258,25 +315,171 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
+
+		public class DataV5Declaration
+		{
+			[JsonProperty(Required = Required.Always)] public JsonDataHeader Header;
+			[JsonProperty(Required = Required.Always)] public DataBody Body;
+
+			public void SetProperties(VehicleData vehicleData)
+			{
+				vehicleData._axleConfiguration = AxleConfiguration.AxleConfig4x2;
+
+				vehicleData._retarder = new RetarderData(Body.Retarder, vehicleData.BasePath);
+
+				vehicleData._axleData = new List<Axle>(Body.AxleConfig.Axles.Count);
+				var RRC = 0.0;
+				var mRed0 = 0.SI<Kilogram>();
+				foreach (var axleData in Body.AxleConfig.Axles) {
+					var axle = new Axle(axleData);
+					if (axle.RollResistanceCoefficient < 0) {
+						throw new VectoException("Axle roll resistance coefficient < 0");
+					}
+					if (axle.TyreTestLoad <= 0) {
+						throw new VectoException("Axle tyre test load (FzISO) must be greater than 0!");
+					}
+					var nrWheels = axle.TwinTyres ? 4 : 2;
+					RRC += axle.AxleWeightShare * axle.RollResistanceCoefficient *
+							Math.Pow(
+								(axle.AxleWeightShare * vehicleData.TotalVehicleWeight() * Physics.GravityAccelleration / axle.TyreTestLoad /
+								nrWheels).Double(), Physics.RollResistanceExponent - 1);
+					mRed0 += nrWheels * (axle.Inertia / vehicleData.DynamicTyreRadius / vehicleData.DynamicTyreRadius).Cast<Kilogram>();
+
+					vehicleData._axleData.Add(axle);
+				}
+				vehicleData.TotalRollResistanceCoefficient = RRC;
+				vehicleData.ReducedMassWheels = mRed0;
+
+				switch (Body.VehicleCategoryStr) {
+					case "RigidTruck":
+						vehicleData.Category = VehicleCategory.RigidTruck;
+						break;
+					case "Tractor":
+						vehicleData.Category = VehicleCategory.Tractor;
+						break;
+					case "CityBus":
+						vehicleData.Category = VehicleCategory.CityBus;
+						break;
+					case "InterurbanBus":
+						vehicleData.Category = VehicleCategory.InterurbanBus;
+						break;
+					case "Coach":
+						vehicleData.Category = VehicleCategory.Coach;
+						break;
+				}
+
+				//switch (Body.CrossWindCorrectionModeStr) {
+				//	case "CdOfBeta":
+				//		vehicleData._crossWindCorrectionMode = CrossWindCorrectionMode.VAirBeta;
+				//		break;
+				//	case "CdOfV":
+				//		vehicleData._crossWindCorrectionMode = CrossWindCorrectionMode.SpeedDependent;
+				//		break;
+				//	default:
+				//		vehicleData._crossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection;
+				//		break;
+				//}
+			}
+
+			public class DataBody
+			{
+				[JsonProperty("SavedInDeclMode", Required = Required.Always)] public bool SavedInDeclarationMode;
+
+				[JsonProperty("VehCat", Required = Required.Always)] public string VehicleCategoryStr;
+
+				[JsonProperty(Required = Required.Always)] public double CurbWeight;
+
+				//[JsonProperty]
+				//public double CurbWeightExtra;
+
+				//[JsonProperty]
+				//public double Loading;
+
+				[JsonProperty("MassMax", Required = Required.Always)] public double GrossVehicleMassRating;
+
+				[JsonProperty("Cd2")] public double DragCoefficientRigidTruck; // without trailer
+
+				[JsonProperty("CrossSecArea2")] public double CrossSectionAreaRigidTruck;
+
+				[JsonProperty("Cd", Required = Required.Always)] public double DragCoefficient;
+
+				[JsonProperty("CrossSecArea", Required = Required.Always)] public double CrossSectionArea;
+
+				//[JsonProperty("rdyn")]
+				//public double DynamicTyreRadius;
+
+				[JsonProperty("Rim", Required = Required.Always)] public string RimStr;
+
+				//[JsonProperty("CdCorrMode")]
+				//public string CrossWindCorrectionModeStr;
+
+				//[JsonProperty("CdCorrFile")]
+				//public string CrossWindCorrectionFile;
+
+				[JsonProperty("Retarder", Required = Required.Always)] public RetarderData.Data Retarder;
+
+				[JsonProperty(Required = Required.Always)] public AxleConfigData AxleConfig;
+
+
+				public class AxleConfigData
+				{
+					[JsonProperty("Type", Required = Required.Always)] public string TypeStr;
+					[JsonProperty(Required = Required.Always)] public IList<AxleData> Axles;
+				}
+
+				public class AxleData
+				{
+					//[JsonProperty]
+					//public double Inertia;
+					[JsonProperty(Required = Required.Always)] public string WheelsStr;
+					//[JsonProperty(Required = Required.Always)]
+					//public double AxleWeightShare;
+					[JsonProperty(Required = Required.Always)] public bool TwinTyres;
+					[JsonProperty("RRCISO", Required = Required.Always)] public double RollResistanceCoefficient;
+					[JsonProperty("FzISO", Required = Required.Always)] public double TyreTestLoad;
+				}
+			}
+		}
+
 		public class Axle
 		{
-			private Data.DataBody.AxleData _data;
+			private DataV5Engineering.DataBody.AxleData _data;
 
-			public Axle(Data.DataBody.AxleData data)
+			public Axle(DataV5Engineering.DataBody.AxleData data)
 			{
 				_data = data;
 			}
 
-			public double Inertia
+			public Axle(DataV5Declaration.DataBody.AxleData data) {}
+
+			public SI Inertia
 			{
-				get { return _data.Inertia; }
-				set { _data.Inertia = value; }
+				get { return _data.Inertia.SI().Kilo.Gramm.Square.Meter; }
+				set { _data.Inertia = value.Double(); }
 			}
 
 			public double RollResistanceCoefficient
 			{
 				get { return _data.RollResistanceCoefficient; }
 				set { _data.RollResistanceCoefficient = value; }
+			}
+
+			public Newton TyreTestLoad
+			{
+				get { return _data.TyreTestLoad.SI<Newton>(); }
+				set { _data.TyreTestLoad = value.Double(); }
+			}
+
+			public double AxleWeightShare
+			{
+				get { return _data.AxleWeightShare; }
+				set { _data.AxleWeightShare = value; }
+			}
+
+			public bool TwinTyres
+			{
+				get { return _data.TwinTyres; }
+				set { _data.TwinTyres = value; }
 			}
 		}
 	}

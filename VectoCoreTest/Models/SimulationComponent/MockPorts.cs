@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 	}
 
-	public class MockDriverDemandOutPort : IDriverDemandOutPort
+	public class MockDrivingCycleDemandOutPort : IDrivingCycleDemandOutPort
 	{
 		public TimeSpan AbsTime { get; set; }
 		public TimeSpan Dt { get; set; }
@@ -38,8 +38,28 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Dt = dt;
 			Velocity = velocity;
 			Gradient = gradient;
-			LogManager.GetLogger(GetType()).DebugFormat("Request: absTime: {0}, dt: {1}, velocity: {3}, gradient: {4}",
+			LogManager.GetLogger(GetType()).DebugFormat("Request: absTime: {0}, dt: {1}, velocity: {2}, gradient: {3}",
 				absTime, dt, velocity, gradient);
+			return new ResponseSuccess();
+		}
+	}
+
+	public class MockFvOutPort : IFvOutPort
+	{
+		public TimeSpan AbsTime { get; set; }
+		public TimeSpan Dt { get; set; }
+		public Newton Force { get; set; }
+		public MeterPerSecond Velocity { get; set; }
+
+
+		public IResponse Request(TimeSpan absTime, TimeSpan dt, Newton force, MeterPerSecond velocity)
+		{
+			AbsTime = absTime;
+			Dt = dt;
+			Force = force;
+			Velocity = velocity;
+			LogManager.GetLogger(GetType())
+				.DebugFormat("Request: abstime: {0}, dt: {1}, force: {2}, velocity: {3}", absTime, dt, force, velocity);
 			return new ResponseSuccess();
 		}
 	}

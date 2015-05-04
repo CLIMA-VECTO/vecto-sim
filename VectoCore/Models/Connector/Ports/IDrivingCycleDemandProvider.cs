@@ -3,24 +3,24 @@
 	/// <summary>
 	/// Defines a method to acquire an DriverDemand in port.
 	/// </summary>
-	public interface IDriverDemandInProvider
+	public interface IDrivingCycleDemandInProvider
 	{
 		/// <summary>
 		/// Returns the inport to connect it to another outport.
 		/// </summary>
 		/// <returns></returns>
-		IDriverDemandInPort InPort();
+		IDrivingCycleDemandInPort InPort();
 	}
 
 	/// <summary>
 	/// Defines a method to acquire an DriverDemand out port.
 	/// </summary>
-	public interface IDriverDemandOutProvider
+	public interface IDrivingCycleDemandOutProvider
 	{
 		/// <summary>
 		/// Returns the outport to send requests to.
 		/// </summary>
 		/// <returns></returns>
-		IDriverDemandOutPort OutPort();
+		IDrivingCycleDemandOutPort OutPort();
 	}
 }
