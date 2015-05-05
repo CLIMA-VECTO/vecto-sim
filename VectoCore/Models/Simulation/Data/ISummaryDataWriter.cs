@@ -9,7 +9,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <param name="jobFileName">Name of the job file.</param>
 		/// <param name="jobName">Name of the job.</param>
 		/// <param name="cycleFileName">Name of the cycle file.</param>
-		void Write(IModalDataWriter data, string jobFileName, string jobName, string cycleFileName);
+		/// <param name="vehicleMass">The vehicle mass.</param>
+		/// <param name="vehicleLoading">The vehicle loading.</param>
+		void Write(IModalDataWriter data, string jobFileName, string jobName, string cycleFileName, double vehicleMass,
+			double vehicleLoading);
 
 		/// <summary>
 		/// Writes the data to the sum file.

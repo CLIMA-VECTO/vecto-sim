@@ -25,14 +25,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.AreEqual(560.RPMtoRad(), container.EngineSpeed());
 			Assert.AreEqual(0U, container.Gear());
-
-			try {
-				container.VehicleSpeed();
-				Assert.Fail(
-					"Access to Vehicle speed should fail, because there should be no vehicle in EngineOnly Mode.");
-			} catch (VectoException ex) {
-				Assert.AreEqual(ex.Message, "no vehicle available!", "Vehicle speed wrong exception message.");
-			}
 		}
 
 
@@ -124,25 +116,23 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			jobContainer.RunJobs();
 
 
-			// compare results
+			// check sum file
+			var expectedSumFile = @"TestData\Results\EngineOnlyCycles\24t Coach.vsum";
+			var sumFile = @"TestData\Jobs\24t Coach.vsum";
+			Assert.IsTrue(File.Exists(sumFile), "sum file is missing: " + sumFile);
+			Assert.AreEqual(File.ReadAllLines(sumFile).Length, File.ReadAllLines(expectedSumFile).Length,
+				string.Format("sum file row count differs. Expected File: {0}, Actual File: {1}", expectedSumFile, sumFile));
 
+			// check vmod files
 			var expectedResultFiles = new[] {
 				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only1.vmod",
 				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only2.vmod",
 				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only3.vmod"
 			};
-
-			var expectedSumFile = @"TestData\Results\EngineOnlyCycles\24t Coach.vsum";
-			var sumFile = @"TestData\Jobs\24t Coach.vsum";
 			var resultFiles = expectedResultFiles.Select(x => Path.GetFileName(x));
-
-			Assert.IsTrue(File.Exists(sumFile), "sum file is missing: " + sumFile);
 			foreach (var result in resultFiles) {
 				Assert.IsTrue(File.Exists(result), "vmod file is missing: " + result);
 			}
-
-			Assert.AreEqual(File.ReadAllLines(sumFile).Length, File.ReadAllLines(expectedSumFile).Length,
-				"sum file row count differs.");
 
 			var resultFileIt = resultFiles.GetEnumerator();
 
@@ -151,7 +141,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				var results = ModalResults.ReadFromFile(resultFileIt.Current);
 				var expectedResults = ModalResults.ReadFromFile(expectedResultFile);
 
-				Assert.AreEqual(expectedResults.Rows.Count, results.Rows.Count, "Moddata: Row count differs.");
+				Assert.AreEqual(expectedResults.Rows.Count, results.Rows.Count,
+					string.Format("Moddata: Row count differs. Expected File: {0}, Actual File: {1}", expectedResultFile,
+						resultFileIt.Current));
 			}
 		}
 	}

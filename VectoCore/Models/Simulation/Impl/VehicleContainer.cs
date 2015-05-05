@@ -14,6 +14,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private readonly IList<VectoSimulationComponent> _components = new List<VectoSimulationComponent>();
 		private IEngineCockpit _engine;
 		private IGearboxCockpit _gearbox;
+		private IVehicleCockpit _vehicle;
 		private ILog _logger;
 		private ISummaryDataWriter _sumWriter;
 		private IModalDataWriter _dataWriter;
@@ -49,7 +50,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public MeterPerSecond VehicleSpeed()
 		{
-			throw new VectoException("no vehicle available!");
+			return _vehicle != null ? _vehicle.VehicleSpeed() : 0.SI<MeterPerSecond>();
+		}
+
+		public double VehicleMass()
+		{
+			return _vehicle != null ? _vehicle.VehicleMass() : 0;
+		}
+
+		public double VehicleLoading()
+		{
+			return _vehicle != null ? _vehicle.VehicleLoading() : 0;
 		}
 
 		#endregion
@@ -73,7 +84,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			_components.Add(component);
 
-			// TODO: refactor the following to use polymorphism?
 			var engine = component as IEngineCockpit;
 			if (engine != null) {
 				_engine = engine;
@@ -82,6 +92,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var gearbox = component as IGearboxCockpit;
 			if (gearbox != null) {
 				_gearbox = gearbox;
+			}
+
+			var vehicle = component as IVehicleCockpit;
+			if (vehicle != null) {
+				_vehicle = vehicle;
 			}
 		}
 
@@ -103,7 +118,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_logger.Info("VehicleContainer finishing simulation.");
 			_dataWriter.Finish();
 
-			_sumWriter.Write(_dataWriter, _jobFileName, _jobName, _cycleFileName);
+			_sumWriter.Write(_dataWriter, _jobFileName, _jobName, _cycleFileName, VehicleMass(), VehicleLoading());
 		}
 
 		#endregion

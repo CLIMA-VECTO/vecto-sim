@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+﻿using System.Collections.Generic;
 using TUGraz.VectoCore.Utils;
+using System.Linq;
+using System.Data;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
@@ -11,6 +10,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private readonly DataTable _table;
 		private readonly string _sumFileName;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SummaryFileWriter"/> class.
+		/// </summary>
+		/// <param name="sumFileName">Name of the sum file.</param>
 		public SummaryFileWriter(string sumFileName)
 		{
 			_sumFileName = sumFileName;
@@ -51,8 +54,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			_table.Columns.Add("pStop [%]", typeof(double));
 		}
 
-
-		public void Write(IModalDataWriter data, string jobFileName, string jobName, string cycleFileName)
+		public void Write(IModalDataWriter data, string jobFileName, string jobName, string cycleFileName, double vehicleMass,
+			double vehicleLoading)
 		{
 			var row = _table.NewRow();
 			row["Job [-]"] = jobName;
@@ -88,25 +91,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			//}
 
 			//todo get data from vehicle file
-			//row["Mass [kg]"] = Container.VehicleMass();
-			//row["Loading [kg]"] = Container.LoadingMass();
-
+			row["Mass [kg]"] = vehicleMass;
+			row["Loading [kg]"] = vehicleLoading;
 
 			var dtValues = data.GetValues<double>(ModalResultField.simulationInterval).ToList();
 			var accValues = data.GetValues<double?>(ModalResultField.acc);
 			var accelerations = CalculateAverageOverSeconds(dtValues, accValues).ToList();
 			row["a [m/s2]"] = accelerations.Average();
 
-
-			var acceleration3SecondAverage = new List<double>();
-			if (accelerations.Count >= 3) {
-				var runningAverage = (accelerations[0] + accelerations[1] + accelerations[2]) / 3.0;
-				for (var i = 2; i < accelerations.Count() - 1; i++) {
-					runningAverage -= accelerations[i - 2] / 3;
-					runningAverage += accelerations[i + 1] / 3;
-					acceleration3SecondAverage.Add(runningAverage);
-				}
-			}
+			var acceleration3SecondAverage = Calculate3SecondAverage(accelerations).ToList();
 
 			row["a_pos [m/s2]"] = acceleration3SecondAverage.Where(x => x > 0.125).DefaultIfEmpty(0).Average();
 			row["a_neg [m/s2]"] = acceleration3SecondAverage.Where(x => x < -0.125).DefaultIfEmpty(0).Average();
@@ -115,15 +108,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			row["pCruise [%]"] = 100.0 * acceleration3SecondAverage.Count(x => x < 0.125 && x > -0.125) /
 								acceleration3SecondAverage.Count;
 
-			var velocity = data.GetValues<double?>(ModalResultField.v_act).ToList();
-			var timeSum = dtValues.Sum();
-			//todo pStop
-			row["pStop [%]"] = 100.0 * timeSum / (double)data.Compute("Max(time)", "");
+			var pStopTime = data.GetValues<double?>(ModalResultField.v_act)
+				.Zip(dtValues, (velocity, dt) => new { velocity, dt })
+				.Where(x => x.velocity < 0.1)
+				.Sum(x => x.dt);
+			row["pStop [%]"] = 100.0 * pStopTime / dtValues.Sum();
 
 			_table.Rows.Add(row);
 		}
 
-		private IEnumerable<double> CalculateAverageOverSeconds(IEnumerable<double> dtValues, IEnumerable<double?> accValues)
+		private static IEnumerable<double> Calculate3SecondAverage(List<double> accelerations)
+		{
+			if (accelerations.Count >= 3) {
+				var runningAverage = (accelerations[0] + accelerations[1] + accelerations[2]) / 3.0;
+				for (var i = 2; i < accelerations.Count() - 1; i++) {
+					runningAverage -= accelerations[i - 2] / 3.0;
+					runningAverage += accelerations[i + 1] / 3.0;
+					yield return runningAverage;
+				}
+			}
+		}
+
+
+		private static IEnumerable<double> CalculateAverageOverSeconds(IEnumerable<double> dtValues,
+			IEnumerable<double?> accValues)
 		{
 			var dtSum = 0.0;
 			var accSum = 0.0;
