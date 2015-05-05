@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCore.Utils;
@@ -60,8 +61,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			row["time [s]"] = data.Compute("Max(time)", "");
 			row["distance [km]"] = data.Compute("Max(dist)", "");
 			row["speed [km/h]"] = data.Compute("Avg(v_act)", "");
-
-
 			row["Ppos [kw]"] = data.Compute("Avg(Pe_eng)", "Pe_eng > 0");
 			row["Pneg [kw]"] = data.Compute("Avg(Pe_eng)", "Pe_eng < 0");
 			row["FC [g/km]"] = data.Compute("Avg(FC)", "");
@@ -78,8 +77,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			row["Etransm [kwh]"] = data.Compute("Sum([Ploss Diff]) + Sum([Ploss GB])", "");
 			row["Eretarder [kwh]"] = data.Compute("Sum([Ploss Retarder])", "");
 			row["Eacc [kwh]"] = data.Compute("Sum(Pa)+Sum([Pa GB])", ""); // TODO +PaEng?
-			row["a [m/s2]"] = data.Compute("Avg(acc)", ""); // todo dynamic time steps!
-
 
 			//todo altitude - calculate when reading the cycle file, add column for altitude
 			//row["∆altitude [m]"] = Data.Rows[Data.Rows.Count - 1].Field<double>("altitude") -
@@ -94,47 +91,64 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			//row["Mass [kg]"] = Container.VehicleMass();
 			//row["Loading [kg]"] = Container.LoadingMass();
 
-			var acceleration = data.GetValues<double?>(ModalResultField.acc).ToList();
-			var simInterval = data.GetValues<double>(ModalResultField.simulationInterval).ToList();
 
-			//todo dynamic time steps!!!
-			var runningAverage = (acceleration[0] + acceleration[1] + acceleration[2]) / 3;
-			var accelerationAvg = new List<double?>();
-
-			for (var i = 2; i < acceleration.Count() - 1; i++) {
-				runningAverage -= acceleration[i - 2] / 3;
-				runningAverage += acceleration[i + 1] / 3;
-				accelerationAvg.Add(runningAverage);
-			}
+			var dtValues = data.GetValues<double>(ModalResultField.simulationInterval).ToList();
+			var accValues = data.GetValues<double?>(ModalResultField.acc);
+			var accelerations = CalculateAverageOverSeconds(dtValues, accValues).ToList();
+			row["a [m/s2]"] = accelerations.Average();
 
 
-			var apos = accelerationAvg.Where(x => x > 0.125).Average();
-			if (apos.HasValue) {
-				row["a_pos [m/s2]"] = apos;
-			}
-
-			var aneg = accelerationAvg.Where(x => x < -0.125).Average();
-			if (aneg.HasValue) {
-				row["a_neg [m/s2]"] = aneg;
-			}
-
-
-			row["pAcc [%]"] = 100.0 * accelerationAvg.Count(x => x > 0.125) / accelerationAvg.Count;
-			row["pDec [%]"] = 100.0 * accelerationAvg.Count(x => x < -0.125) / accelerationAvg.Count;
-			row["pCruise [%]"] = 100.0 * accelerationAvg.Count(x => x < 0.125 && x > -0.125) / accelerationAvg.Count;
-
-
-			var velocity = data.GetValues<double?>(ModalResultField.v_act).ToList();
-			var timeSum = 0.0;
-			for (var i = 0; i < velocity.Count; i++) {
-				if (velocity[i] < 0.1) {
-					timeSum += simInterval[i];
+			var acceleration3SecondAverage = new List<double>();
+			if (accelerations.Count >= 3) {
+				var runningAverage = (accelerations[0] + accelerations[1] + accelerations[2]) / 3.0;
+				for (var i = 2; i < accelerations.Count() - 1; i++) {
+					runningAverage -= accelerations[i - 2] / 3;
+					runningAverage += accelerations[i + 1] / 3;
+					acceleration3SecondAverage.Add(runningAverage);
 				}
 			}
 
+			row["a_pos [m/s2]"] = acceleration3SecondAverage.Where(x => x > 0.125).DefaultIfEmpty(0).Average();
+			row["a_neg [m/s2]"] = acceleration3SecondAverage.Where(x => x < -0.125).DefaultIfEmpty(0).Average();
+			row["pAcc [%]"] = 100.0 * acceleration3SecondAverage.Count(x => x > 0.125) / acceleration3SecondAverage.Count;
+			row["pDec [%]"] = 100.0 * acceleration3SecondAverage.Count(x => x < -0.125) / acceleration3SecondAverage.Count;
+			row["pCruise [%]"] = 100.0 * acceleration3SecondAverage.Count(x => x < 0.125 && x > -0.125) /
+								acceleration3SecondAverage.Count;
+
+			var velocity = data.GetValues<double?>(ModalResultField.v_act).ToList();
+			var timeSum = dtValues.Sum();
+			//todo pStop
 			row["pStop [%]"] = 100.0 * timeSum / (double)data.Compute("Max(time)", "");
 
 			_table.Rows.Add(row);
+		}
+
+		private IEnumerable<double> CalculateAverageOverSeconds(IEnumerable<double> dtValues, IEnumerable<double?> accValues)
+		{
+			var dtSum = 0.0;
+			var accSum = 0.0;
+			var acceleration = dtValues.Zip(accValues, (dt, acc) => new { dt, acc }).ToList();
+			foreach (var x in acceleration.ToList()) {
+				var currentX = x;
+
+				while (dtSum + currentX.dt >= 1) {
+					var splitX = new { dt = 1 - dtSum, currentX.acc };
+					yield return accSum;
+					accSum = 0.0;
+					dtSum = 0.0;
+
+					currentX = new { dt = currentX.dt - splitX.dt, currentX.acc };
+				}
+				if (currentX.dt > 0) {
+					accSum += currentX.dt * currentX.acc ?? 0.0;
+					dtSum += currentX.dt;
+				}
+			}
+
+			// return remaining data. acts like extrapolation to next whole second.
+			if (dtSum > 0) {
+				yield return accSum;
+			}
 		}
 
 		public void Finish()
