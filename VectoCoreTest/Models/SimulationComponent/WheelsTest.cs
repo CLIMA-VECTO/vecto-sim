@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var retVal = requestPort.Request(absTime, dt, force, velocity);
 
-			Assert.AreEqual(250.0, mockPort.Torque.Double(), 0.0001);
+			Assert.AreEqual(2600.0, mockPort.Torque.Double(), 0.0001);
 			Assert.AreEqual(38.4615384615, mockPort.AngularVelocity.Double(), 0.0001);
 		}
 	}
