@@ -2330,7 +2330,7 @@ lb10:
 	Private Function fnU(ByVal V As Single, ByVal Gear As Integer, ByVal ClutchSlip As Boolean) As Single
 		Dim akn As Single
 		Dim U As Single
-		U = CSng(V * 60.0 * GBX.Igetr(0) * GBX.Igetr(Gear) / (2 * VEH.rdyn * Math.PI / 1000))
+		U = fnUout(V, Gear)
 		If U < ENG.Nidle Then U = ENG.Nidle
 		If ClutchSlip Then
 			akn = ClutchNorm / ((ENG.Nidle + ClutchNorm * (ENG.Nrated - ENG.Nidle)) / ENG.Nrated)
@@ -2344,7 +2344,7 @@ lb10:
 	End Function
 
 	Private Function fnUout(ByVal V As Single, ByVal Gear As Integer) As Single
-		Return V * 60.0 * GBX.Igetr(0) * GBX.Igetr(Gear) / (2 * VEH.rdyn * Math.PI / 1000)
+		Return V * 60.0 * GBX.Igetr(0) * GBX.Igetr(Gear) / (2 * Math.PI * VEH.rdyn / 1000)
 	End Function
 
 #End Region
