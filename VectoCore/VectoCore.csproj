@@ -194,8 +194,8 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Resources\Rims.csv" />
-    <None Include="Resources\Wheels.csv" />
+    <EmbeddedResource Include="Resources\Declaration\Rims.csv" />
+    <EmbeddedResource Include="Resources\Declaration\Wheels.csv" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
