@@ -349,8 +349,9 @@ Public Class cGBX
 		Try
 			Do While Not file.EndOfFile
 				line = file.ReadLine
+				TCnuMax = CSng(line(0))
 				If CSng(line(0)) < 1 Then
-					TCnu.Add(CSng(line(0)))
+					TCnu.Add(TCnuMax)
 					TCmu.Add(CSng(line(1)))
 					TCtorque.Add(CSng(line(2)))
 					TCdim += 1
@@ -369,8 +370,7 @@ Public Class cGBX
 			Return False
 		End If
 
-		TCnuMax = TCnu(TCdim)
-
+		If TCnuMax > 1 Then TCnuMax = 1
 
 		'Add default values for nu>1
 		If Not file.OpenRead(MyDeclPath & "DefaultTC.vtcc") Then
@@ -435,13 +435,14 @@ Public Class cGBX
 
 		Dim rpmLimit As Single
 
+		Dim iOptPassed As Integer
+
 		Dim MsgSrc As String
 
 		MsgSrc = "GBX/TCiteration/t= " & t + 1
 
 		TC_PeBrake = 0
 		TCReduce = False
-		nuStep = 0.001
 		Brake = False
 		TCNeutral = False
 
@@ -483,84 +484,104 @@ Public Class cGBX
 		End If
 
 		'Reduce step size if nu-range is too low
-		Do While (nuMax - nuMin)/nuStep < 10 And nuStep > 0.0001
+		nuStep = 0.01
+		Do While (nuMax - nuMin) / nuStep < 10 And nuStep > 0.00001
 			nuStep *= 0.1
 		Loop
 
-		FirstDone = False
-		nu = nuMin - nuStep
-		iDim = - 1
-		Do While nu + nuStep <= nuMax
 
-			'nu
-			nu += nuStep
 
-			'Abort if nu<=0
-			If nu <= 0 Then Continue Do
+		Do
 
-			'mu
-			mu = fTCmu(nu)
+			iOptPassed = -1
+			FirstDone = False
+			nu = nuMin - nuStep
+			iDim = -1
+			nuList.Clear()
+			McalcRatio.Clear()
+			Do While nu + nuStep <= nuMax
 
-			'Abort if mu<=0
-			If mu <= 0 Then Continue Do
+				'nu
+				nu += nuStep
 
-			'nIn
-			nUin = nUout/nu
+				'Abort if nu<=0
+				If nu <= 0 Then Continue Do
 
-			'MinMax
-			Paux = MODdata.Px.fPaux(t, Math.Max(nUin, ENG.Nidle))
-			If LastnU Is Nothing Then
-				PaMot = 0
-			Else
-				PaMot = MODdata.Px.fPaMot(nUin, LastnU)
-			End If
-			If LastPe Is Nothing Then
-				Pfull = FLD(Gear).Pfull(nUin)
-			Else
-				Pfull = FLD(Gear).Pfull(nUin, LastPe)
-			End If
-			PinMax = 0.999*(Pfull - Paux - PaMot)
-			MinMax = nPeToM(nUin, PinMax)
+				'mu
+				mu = fTCmu(nu)
 
-			'Min
-			Min = Mout/mu
+				'Abort if mu<=0
+				If mu <= 0 Then Continue Do
 
-			'Check if Min is too high
-			If Min > MinMax Then Continue Do
+				'nIn
+				nUin = nUout / nu
 
-			'Calculated input and output torque for given mu
-			MinCalc = fTCtorque(nu, nUin)
-			MoutCalc = MinCalc*mu
-
-			'Add to lists
-			nuList.Add(nu)
-			McalcRatio.Add(MoutCalc/Mout)
-			iDim += 1
-
-			'Calc smallest error for each mu value
-			If FirstDone Then
-				If Math.Abs(1 - McalcRatio(i)) < ErrMin Then
-					ErrMin = Math.Abs(1 - McalcRatio(i))
-					iMin = i
+				'MinMax
+				Paux = MODdata.Px.fPaux(t, Math.Max(nUin, ENG.Nidle))
+				If LastnU Is Nothing Then
+					PaMot = 0
+				Else
+					PaMot = MODdata.Px.fPaMot(nUin, LastnU)
 				End If
-				If McalcRatio(i) > McalcRatMax Then McalcRatMax = McalcRatio(i)
-			Else
-				FirstDone = True
-				ErrMin = Math.Abs(1 - McalcRatio(i))
-				iMin = i
-				McalcRatMax = McalcRatio(i)
+				If LastPe Is Nothing Then
+					Pfull = FLD(Gear).Pfull(nUin)
+				Else
+					Pfull = FLD(Gear).Pfull(nUin, LastPe)
+				End If
+				PinMax = 0.999 * (Pfull - Paux - PaMot)
+				MinMax = nPeToM(nUin, PinMax)
+
+				'Min
+				Min = Mout / mu
+
+				'Check if Min is too high
+				If Min > MinMax Then Continue Do
+
+				'Calculated input and output torque for given mu
+				MinCalc = fTCtorque(nu, nUin)
+				MoutCalc = MinCalc * mu
+
+				'Add to lists
+				nuList.Add(nu)
+				McalcRatio.Add(MoutCalc / Mout)
+				iDim += 1
+
+				'Calc smallest error for each mu value
+				If FirstDone Then
+					If Math.Abs(1 - McalcRatio(iDim)) < ErrMin Then
+						ErrMin = Math.Abs(1 - McalcRatio(iDim))
+						iMin = iDim
+					End If
+					If McalcRatio(iDim) > McalcRatMax Then McalcRatMax = McalcRatio(iDim)
+					If (McalcRatio(iDim) > 1 AndAlso McalcRatio(iDim - 1) < 1) OrElse (McalcRatio(iDim) < 1 AndAlso McalcRatio(iDim - 1) > 1) Then
+						iOptPassed = iDim
+					End If
+				Else
+					FirstDone = True
+					ErrMin = Math.Abs(1 - McalcRatio(iDim))
+					iMin = iDim
+					McalcRatMax = McalcRatio(iDim)
+				End If
+
+				'Abort if error is small enough
+				If ErrMin <= DEV.TCiterPrec Then Exit Do
+
+			Loop
+
+			If iDim = -1 Then
+				TCReduce = True
+				Return True
 			End If
 
-			'Abort if error is small enough
-			If ErrMin <= DEV.TCiterPrec Then Exit Do
+			If iOptPassed > -1 AndAlso nuStep > 0.00001 Then
+				nuMin = nuList(iOptPassed - 1)
+				nuMax = nuList(iOptPassed)
+				nuStep = Math.Max((nuMax - nuMin) / 10, 0.00001)
+			Else
+				Exit Do
+			End If
 
 		Loop
-
-		If iDim = - 1 Then
-			TCReduce = True
-			Return True
-		End If
-
 
 		If ErrMin > DEV.TCiterPrec Then
 
