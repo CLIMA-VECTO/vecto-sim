@@ -112,6 +112,12 @@ namespace TUGraz.VectoCore.Utils
 			return lines;
 		}
 
+        /// <summary>
+        /// Writes the datatable to the csv file.
+        /// Uses the column caption as header (with fallback to column name) for the csv header.
+        /// </summary>
+        /// <param name="fileName">Path to the file.</param>
+        /// <param name="table">The Datatable.</param>
 		public static void Write(string fileName, DataTable table)
 		{
 			var sb = new StringBuilder();

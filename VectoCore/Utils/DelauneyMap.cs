@@ -90,9 +90,9 @@ namespace TUGraz.VectoCore.Utils
 				Z = z;
 			}
 
-			public double X { get; set; }
-			public double Y { get; set; }
-			public double Z { get; set; }
+			public double X;
+			public double Y;
+			public double Z;
 
 			public static Point operator -(Point p1, Point p2)
 			{
@@ -123,7 +123,7 @@ namespace TUGraz.VectoCore.Utils
 				if (ReferenceEquals(this, obj)) {
 					return true;
 				}
-				return obj.GetType() == GetType() && Equals((Point) obj);
+				return obj.GetType() == GetType() && Equals((Point)obj);
 			}
 
 			public override int GetHashCode()
@@ -164,10 +164,10 @@ namespace TUGraz.VectoCore.Utils
 				W = tr.P1.X * cross.X + tr.P1.Y * cross.Y + tr.P1.Z * cross.Z;
 			}
 
-			public double X { get; set; }
-			public double Y { get; set; }
-			public double Z { get; set; }
-			public double W { get; set; }
+			public double X;
+			public double Y;
+			public double Z;
+			public double W;
 
 			public override string ToString()
 			{
@@ -184,9 +184,9 @@ namespace TUGraz.VectoCore.Utils
 				P3 = p3;
 			}
 
-			public Point P1 { get; set; }
-			public Point P2 { get; set; }
-			public Point P3 { get; set; }
+			public Point P1;
+			public Point P2;
+			public Point P3;
 
 			public bool IsInside(double x, double y, bool exact = true)
 			{
@@ -284,7 +284,7 @@ namespace TUGraz.VectoCore.Utils
 				if (obj.GetType() != GetType()) {
 					return false;
 				}
-				return Equals((Triangle) obj);
+				return Equals((Triangle)obj);
 			}
 
 			public override int GetHashCode()
@@ -308,8 +308,8 @@ namespace TUGraz.VectoCore.Utils
 				P2 = p2;
 			}
 
-			public Point P1 { get; set; }
-			public Point P2 { get; set; }
+			public Point P1;
+			public Point P2;
 
 			public override string ToString()
 			{
@@ -333,7 +333,7 @@ namespace TUGraz.VectoCore.Utils
 				if (ReferenceEquals(this, obj)) {
 					return true;
 				}
-				return obj.GetType() == GetType() && Equals((Edge) obj);
+				return obj.GetType() == GetType() && Equals((Edge)obj);
 			}
 
 			public override int GetHashCode()
@@ -362,7 +362,7 @@ namespace TUGraz.VectoCore.Utils
 			if (obj.GetType() != GetType()) {
 				return false;
 			}
-			return Equals((DelauneyMap) obj);
+			return Equals((DelauneyMap)obj);
 		}
 
 		public override int GetHashCode()

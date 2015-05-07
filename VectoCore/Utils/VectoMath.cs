@@ -1,12 +1,10 @@
 using System;
-using Common.Logging.Factory;
-using NLog.LayoutRenderers.Wrappers;
 
 namespace TUGraz.VectoCore.Utils
 {
 	public class VectoMath
 	{
-		public static T2 Interpolate<T1, T2>(T1 x1, T1 x2, T2 y1, T2 y2, T1 xint) where T1 : SI where T2 : SIBase<T2>, new()
+		public static T2 Interpolate<T1, T2>(T1 x1, T1 x2, T2 y1, T2 y2, T1 xint) where T1 : SI where T2 : SIBase<T2>
 		{
 			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1).Cast<T2>();
 		}
@@ -17,7 +15,7 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 
-		public static T Abs<T>(T si) where T : SIBase<T>, new()
+		public static T Abs<T>(T si) where T : SIBase<T>
 		{
 			return si.Abs().Cast<T>();
 		}

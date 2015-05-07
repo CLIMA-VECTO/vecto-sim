@@ -1,95 +1,150 @@
-﻿using System.Data;
+﻿using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
-    [TestClass]
-    public class SimulationTests
-    {
-        private const string EngineFile = @"TestData\Components\24t Coach.veng";
-        private const string CycleFile = @"TestData\Cycles\Coach Engine Only.vdri";
+	[TestClass]
+	public class SimulationTests
+	{
+		private const string EngineFile = @"TestData\Components\24t Coach.veng";
+		private const string CycleFile = @"TestData\Cycles\Coach Engine Only short.vdri";
 
-        [TestMethod]
-        public void TestSimulationEngineOnly()
-        {
-            var job = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly-result.vmod");
+		[TestMethod]
+		public void TestSimulationEngineOnly()
+		{
+			var resultFileName = "TestEngineOnly-result.vmod";
+			var job = CreateJob(resultFileName);
 
-            var container = job.GetContainer();
+			var container = job.GetContainer();
 
-            Assert.AreEqual(560.0.RPMtoRad(), container.EngineSpeed());
-            Assert.AreEqual(0U, container.Gear());
+			Assert.AreEqual(560.RPMtoRad(), container.EngineSpeed());
+			Assert.AreEqual(0U, container.Gear());
+		}
 
-            try {
-                container.VehicleSpeed();
-                Assert.Fail(
-                    "Access to Vehicle speed should fail, because there should be no vehicle in EngineOnly Mode.");
-            } catch (VectoException ex) {
-                Assert.AreEqual(ex.Message, "no vehicle available!", "Vehicle speed wrong exception message.");
-            }
-        }
 
-        [TestMethod]
-        public void TestEngineOnly_JobRun()
-        {
-            var resultFileName = "TestEngineOnly_JobRun-result.vmod";
-            var expectedResultsName = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly.vmod";
+		[TestMethod]
+		public void TestEngineOnly_JobRun()
+		{
+			var resultFileName = "TestEngineOnly_JobRun-result.vmod";
+			var expectedResultsName = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
 
-            var job = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, resultFileName);
-            job.Run();
+			var job = CreateJob(resultFileName);
+			job.Run();
 
-            var results = ModalResults.ReadFromFile(resultFileName);
-            var expectedResults = ModalResults.ReadFromFile(expectedResultsName);
+			var results = ModalResults.ReadFromFile(resultFileName);
+			var expectedResults = ModalResults.ReadFromFile(expectedResultsName);
 
-            Assert.AreEqual(expectedResults.Rows.Count, results.Rows.Count, "Moddata: Row count differs.");
+			Assert.AreEqual(expectedResults.Rows.Count, results.Rows.Count, "Moddata: Row count differs.");
+		}
 
-            for (var i = 0; i < expectedResults.Rows.Count; i++) {
-                var row = results.Rows[i];
-                var expectedRow = expectedResults.Rows[i];
+		[TestMethod]
+		public void TestEngineOnly_SimulatorRun()
+		{
+			var resultFileName = "TestEngineOnly_SimulatorRun-result.vmod";
+			var expectedResultsName = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
 
-                foreach (DataColumn col in expectedResults.Columns) {
-                    Assert.AreEqual(expectedRow[col], row[col], "Moddata: Value differs (Row {0}, Col {1}): {2} != {3}");
-                }
-            }
-        }
+			var job = CreateJob(resultFileName);
 
-        [TestMethod]
-        public void TestEngineOnly_SimulatorRun()
-        {
-            var sim = new JobContainer();
-            var job = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile,
-                "TestEngineOnly-SimulatorRun-result.vmod");
-            sim.AddJob(job);
-            sim.RunSimulation();
+			var sim = new JobContainer(new TestSumWriter());
+			sim.AddJob(job);
+			sim.RunJobs();
 
-            // todo: Add additional assertions.
-            Assert.Fail("Todo: Add additional assertions.");
-        }
+			var results = ModalResults.ReadFromFile(resultFileName);
+			var expectedResults = ModalResults.ReadFromFile(expectedResultsName);
 
-        [TestMethod]
-        public void TestEngineOnly_MultipleJobs()
-        {
-            var simulation = new JobContainer();
+			Assert.AreEqual(expectedResults.Rows.Count, results.Rows.Count, "Moddata: Row count differs.");
+		}
 
-            var sim1 = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile,
-                "TestEngineOnly-MultipleJobs-result1.vmod");
-            simulation.AddJob(sim1);
+		public IVectoSimulator CreateJob(string resultFileName)
+		{
+			var sumFileName = resultFileName.Substring(0, resultFileName.Length - 4) + "vsum";
 
-            var sim2 = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile,
-                "TestEngineOnly-MultipleJobs-result2.vmod");
-            simulation.AddJob(sim2);
+			if (File.Exists(resultFileName)) {
+				File.Delete(resultFileName);
+			}
 
-            var sim3 = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile,
-                "TestEngineOnly-MultipleJobs-result3.vmod");
-            simulation.AddJob(sim3);
+			if (File.Exists(sumFileName)) {
+				File.Delete(sumFileName);
+			}
 
-            simulation.RunSimulation();
+			var dataWriter = new ModalDataWriter(resultFileName);
+			var sumWriter = new SummaryFileWriter(sumFileName);
+			var job = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, dataWriter, sumWriter);
 
-            // todo: Add additional assertions.
-            Assert.Fail("Todo: Add additional assertions.");
-        }
-    }
+			return job;
+		}
+
+
+		[TestMethod]
+		public void TestEngineOnly_MultipleJobs()
+		{
+			var resultFiles = new[] {
+				@"TestEngineOnly-MultipleJobs-result1",
+				@"TestEngineOnly-MultipleJobs-result2",
+				@"TestEngineOnly-MultipleJobs-result3"
+			};
+			var expectedResultsName = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
+			var expectedResults = ModalResults.ReadFromFile(expectedResultsName);
+
+			var simulation = new JobContainer(new TestSumWriter());
+			foreach (var resultFile in resultFiles) {
+				simulation.AddJob(CreateJob(resultFile));
+			}
+
+			resultFiles = resultFiles.Select(x => x + "_Coach Engine Only short.vmod").ToArray();
+
+			simulation.RunJobs();
+
+			foreach (var resultFile in resultFiles) {
+				var results = ModalResults.ReadFromFile(resultFile);
+				Assert.AreEqual(expectedResults.Rows.Count, results.Rows.Count, "Moddata: Row count differs.");
+			}
+		}
+
+		[TestMethod]
+		public void Test_VectoJob()
+		{
+			//run jobs
+			var jobData = VectoJobData.ReadFromFile(@"TestData\Jobs\24t Coach.vecto");
+			var jobContainer = new JobContainer(jobData);
+			jobContainer.RunJobs();
+
+
+			// check sum file
+			var expectedSumFile = @"TestData\Results\EngineOnlyCycles\24t Coach.vsum";
+			var sumFile = @"TestData\Jobs\24t Coach.vsum";
+			Assert.IsTrue(File.Exists(sumFile), "sum file is missing: " + sumFile);
+			Assert.AreEqual(File.ReadAllLines(sumFile).Length, File.ReadAllLines(expectedSumFile).Length,
+				string.Format("sum file row count differs. Expected File: {0}, Actual File: {1}", expectedSumFile, sumFile));
+
+			// check vmod files
+			var expectedResultFiles = new[] {
+				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only1.vmod",
+				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only2.vmod",
+				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only3.vmod"
+			};
+			var resultFiles = expectedResultFiles.Select(x => Path.GetFileName(x));
+			foreach (var result in resultFiles) {
+				Assert.IsTrue(File.Exists(result), "vmod file is missing: " + result);
+			}
+
+			var resultFileIt = resultFiles.GetEnumerator();
+
+			foreach (var expectedResultFile in expectedResultFiles) {
+				resultFileIt.MoveNext();
+				var results = ModalResults.ReadFromFile(resultFileIt.Current);
+				var expectedResults = ModalResults.ReadFromFile(expectedResultFile);
+
+				Assert.AreEqual(expectedResults.Rows.Count, results.Rows.Count,
+					string.Format("Moddata: Row count differs. Expected File: {0}, Actual File: {1}", expectedResultFile,
+						resultFileIt.Current));
+			}
+		}
+	}
 }

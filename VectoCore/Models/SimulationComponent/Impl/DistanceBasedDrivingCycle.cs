@@ -6,67 +6,67 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-    /// <summary>
-    ///     Class representing one Distance Based Driving Cycle
-    /// </summary>
-    public class DistanceBasedDrivingCycle : VectoSimulationComponent, IDriverDemandDrivingCycle, IDrivingCycleOutPort,
-        IDriverDemandInPort
-    {
-        protected TimeSpan AbsTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-        protected DrivingCycleData Data;
-        protected double Distance = 0;
-        protected TimeSpan Dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
-        private IDriverDemandOutPort _outPort;
+	/// <summary>
+	///     Class representing one Distance Based Driving Cycle
+	/// </summary>
+	public class DistanceBasedDrivingCycle : VectoSimulationComponent, IDriverDemandDrivingCycle, IDrivingCycleOutPort,
+		IDriverDemandInPort
+	{
+		protected TimeSpan AbsTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
+		protected DrivingCycleData Data;
+		protected double Distance = 0;
+		protected TimeSpan Dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+		private IDriverDemandOutPort _outPort;
 
-        public DistanceBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
-        {
-            Data = cycle;
-        }
+		public DistanceBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+		{
+			Data = cycle;
+		}
 
-        #region IDriverDemandInProvider
+		#region IDriverDemandInProvider
 
-        public IDriverDemandInPort InPort()
-        {
-            return this;
-        }
+		public IDriverDemandInPort InShaft()
+		{
+			return this;
+		}
 
-        #endregion
+		#endregion
 
-        #region IDrivingCycleOutProvider
+		#region IDrivingCycleOutProvider
 
-        public IDrivingCycleOutPort OutPort()
-        {
-            return this;
-        }
+		public IDrivingCycleOutPort OutShaft()
+		{
+			return this;
+		}
 
-        #endregion
+		#endregion
 
-        #region IDriverDemandInPort
+		#region IDriverDemandInPort
 
-        void IDriverDemandInPort.Connect(IDriverDemandOutPort other)
-        {
-            _outPort = other;
-        }
+		void IDriverDemandInPort.Connect(IDriverDemandOutPort other)
+		{
+			_outPort = other;
+		}
 
-        #endregion
+		#endregion
 
-        #region IDrivingCycleOutPort
+		#region IDrivingCycleOutPort
 
-        IResponse IDrivingCycleOutPort.Request(TimeSpan absTime, TimeSpan dt)
-        {
-            //todo: Distance calculation and comparison!!!
-            throw new NotImplementedException("Distance based Cycle is not yet implemented.");
-        }
+		IResponse IDrivingCycleOutPort.Request(TimeSpan absTime, TimeSpan dt)
+		{
+			//todo: Distance calculation and comparison!!!
+			throw new NotImplementedException("Distance based Cycle is not yet implemented.");
+		}
 
-        #endregion
+		#endregion
 
-        #region VectoSimulationComponent
+		#region VectoSimulationComponent
 
-        public override void CommitSimulationStep(IModalDataWriter writer)
-        {
-            throw new NotImplementedException("Distance based Cycle is not yet implemented.");
-        }
+		public override void CommitSimulationStep(IModalDataWriter writer)
+		{
+			throw new NotImplementedException("Distance based Cycle is not yet implemented.");
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

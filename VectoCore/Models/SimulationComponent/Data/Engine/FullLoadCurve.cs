@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		/// <returns>[1/s]</returns>
 		public PerSecond RatedSpeed()
 		{
-			var max = new Tuple<PerSecond, Watt>(new PerSecond(), new Watt());
+			var max = new Tuple<PerSecond, Watt>(0.SI<PerSecond>(), 0.SI<Watt>());
 			for (var idx = 1; idx < _entries.Count; idx++) {
 				var currentMax = FindMaxPower(_entries[idx - 1], _entries[idx]);
 				if (currentMax.Item2 > max.Item2) {
@@ -171,8 +171,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		/// <returns>index</returns>
 		protected int FindIndex(PerSecond angularVelocity)
 		{
-			Contract.Requires(angularVelocity.HasEqualUnit(new SI().Radian.Per.Second));
-
 			int idx;
 			if (angularVelocity < _entries[0].EngineSpeed) {
 				Log.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}",
@@ -200,7 +198,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			// y = kx + d
 			var k = (p2.TorqueFullLoad - p1.TorqueFullLoad) / (p2.EngineSpeed - p1.EngineSpeed);
 			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;
-			if (k == 0.0.SI()) {
+			if (k == 0.SI()) {
 				return new Tuple<PerSecond, Watt>(p2.EngineSpeed, Formulas.TorqueToPower(p2.TorqueFullLoad, p2.EngineSpeed));
 			}
 			var engineSpeedMaxPower = (-1 * d / (2 * k)).Cast<PerSecond>();
@@ -280,7 +278,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				if (ReferenceEquals(this, obj)) {
 					return true;
 				}
-				return obj.GetType() == GetType() && Equals((FullLoadCurveEntry) obj);
+				return obj.GetType() == GetType() && Equals((FullLoadCurveEntry)obj);
 			}
 
 			public override int GetHashCode()
@@ -310,7 +308,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (ReferenceEquals(this, obj)) {
 				return true;
 			}
-			return obj.GetType() == GetType() && Equals((FullLoadCurve) obj);
+			return obj.GetType() == GetType() && Equals((FullLoadCurve)obj);
 		}
 
 		public override int GetHashCode()

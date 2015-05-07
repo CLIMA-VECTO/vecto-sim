@@ -8,67 +8,67 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-    /// <summary>
-    ///     Class representing one Time Based Driving Cycle
-    /// </summary>
-    public class TimeBasedDrivingCycle : VectoSimulationComponent, IDriverDemandDrivingCycle, IDriverDemandInPort,
-        IDrivingCycleOutPort
-    {
-        protected DrivingCycleData Data;
-        private IDriverDemandOutPort _outPort;
+	/// <summary>
+	///     Class representing one Time Based Driving Cycle
+	/// </summary>
+	public class TimeBasedDrivingCycle : VectoSimulationComponent, IDriverDemandDrivingCycle, IDriverDemandInPort,
+		IDrivingCycleOutPort
+	{
+		protected DrivingCycleData Data;
+		private IDriverDemandOutPort _outPort;
 
-        public TimeBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
-        {
-            Data = cycle;
-        }
+		public TimeBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+		{
+			Data = cycle;
+		}
 
-        #region IDrivingCycleOutProvider
+		#region IDrivingCycleOutProvider
 
-        public IDrivingCycleOutPort OutPort()
-        {
-            return this;
-        }
+		public IDrivingCycleOutPort OutShaft()
+		{
+			return this;
+		}
 
-        #endregion
+		#endregion
 
-        #region IDriverDemandInProvider
+		#region IDriverDemandInProvider
 
-        public IDriverDemandInPort InPort()
-        {
-            return this;
-        }
+		public IDriverDemandInPort InShaft()
+		{
+			return this;
+		}
 
-        #endregion
+		#endregion
 
-        #region IDrivingCycleOutPort
+		#region IDrivingCycleOutPort
 
-        IResponse IDrivingCycleOutPort.Request(TimeSpan absTime, TimeSpan dt)
-        {
-            //todo: change to variable time steps
-            var index = (int) Math.Floor(absTime.TotalSeconds);
-            if (index >= Data.Entries.Count) {
-                return new ResponseCycleFinished();
-            }
+		IResponse IDrivingCycleOutPort.Request(TimeSpan absTime, TimeSpan dt)
+		{
+			//todo: change to variable time steps
+			var index = (int)Math.Floor(absTime.TotalSeconds);
+			if (index >= Data.Entries.Count) {
+				return new ResponseCycleFinished();
+			}
 
-            return _outPort.Request(absTime, dt, Data.Entries[index].VehicleSpeed,
-                Data.Entries[index].RoadGradient.SI().GradientPercent.Cast<Radian>());
-        }
+			return _outPort.Request(absTime, dt, Data.Entries[index].VehicleSpeed,
+				Data.Entries[index].RoadGradient.SI().GradientPercent.Cast<Radian>());
+		}
 
-        #endregion
+		#endregion
 
-        #region IDriverDemandInPort
+		#region IDriverDemandInPort
 
-        void IDriverDemandInPort.Connect(IDriverDemandOutPort other)
-        {
-            _outPort = other;
-        }
+		void IDriverDemandInPort.Connect(IDriverDemandOutPort other)
+		{
+			_outPort = other;
+		}
 
-        #endregion
+		#endregion
 
-        #region VectoSimulationComponent
+		#region VectoSimulationComponent
 
-        public override void CommitSimulationStep(IModalDataWriter writer) {}
+		public override void CommitSimulationStep(IModalDataWriter writer) {}
 
-        #endregion
-    }
+		#endregion
+	}
 }

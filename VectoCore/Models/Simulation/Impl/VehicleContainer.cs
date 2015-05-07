@@ -14,6 +14,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private readonly IList<VectoSimulationComponent> _components = new List<VectoSimulationComponent>();
 		private IEngineCockpit _engine;
 		private IGearboxCockpit _gearbox;
+		private IVehicleCockpit _vehicle;
+		private ILog _logger;
+		private ISummaryDataWriter _sumWriter;
+		private IModalDataWriter _dataWriter;
+		private string _jobName;
+		private string _cycleFileName;
+		private string _jobFileName;
 
 		#region IGearCockpit
 
@@ -29,7 +36,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IEngineCockpit
 
-        public PerSecond EngineSpeed()
+		public PerSecond EngineSpeed()
 		{
 			if (_engine == null) {
 				throw new VectoException("no engine available!");
@@ -43,10 +50,33 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public MeterPerSecond VehicleSpeed()
 		{
-			throw new VectoException("no vehicle available!");
+			return _vehicle != null ? _vehicle.VehicleSpeed() : 0.SI<MeterPerSecond>();
+		}
+
+		public double VehicleMass()
+		{
+			return _vehicle != null ? _vehicle.VehicleMass() : 0;
+		}
+
+		public double VehicleLoading()
+		{
+			return _vehicle != null ? _vehicle.VehicleLoading() : 0;
 		}
 
 		#endregion
+
+		public VehicleContainer(IModalDataWriter dataWriter = null, ISummaryDataWriter sumWriter = null,
+			string jobFileName = "",
+			string jobName = "",
+			string cycleFileName = "")
+		{
+			_logger = LogManager.GetLogger(GetType());
+			_dataWriter = dataWriter;
+			_sumWriter = sumWriter;
+			_jobFileName = jobFileName;
+			_jobName = jobName;
+			_cycleFileName = cycleFileName;
+		}
 
 		#region IVehicleContainer
 
@@ -54,7 +84,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			_components.Add(component);
 
-			// TODO: refactor the following to use polymorphism?
 			var engine = component as IEngineCockpit;
 			if (engine != null) {
 				_engine = engine;
@@ -64,22 +93,32 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (gearbox != null) {
 				_gearbox = gearbox;
 			}
-		}
 
-
-		public void CommitSimulationStep(IModalDataWriter dataWriter)
-		{
-			LogManager.GetLogger(GetType()).Info("VehicleContainer committing simulation.");
-			foreach (var component in _components) {
-				component.CommitSimulationStep(dataWriter);
+			var vehicle = component as IVehicleCockpit;
+			if (vehicle != null) {
+				_vehicle = vehicle;
 			}
-			dataWriter.CommitSimulationStep();
 		}
 
-		public void FinishSimulation(IModalDataWriter dataWriter)
+
+		public void CommitSimulationStep(double time, double simulationInterval)
 		{
-			LogManager.GetLogger(GetType()).Info("VehicleContainer finishing simulation.");
-			dataWriter.Finish();
+			_logger.Info("VehicleContainer committing simulation.");
+			foreach (var component in _components) {
+				component.CommitSimulationStep(_dataWriter);
+			}
+
+			_dataWriter[ModalResultField.time] = time;
+			_dataWriter[ModalResultField.simulationInterval] = simulationInterval;
+			_dataWriter.CommitSimulationStep();
+		}
+
+		public void FinishSimulation()
+		{
+			_logger.Info("VehicleContainer finishing simulation.");
+			_dataWriter.Finish();
+
+			_sumWriter.Write(_dataWriter, _jobFileName, _jobName, _cycleFileName, VehicleMass(), VehicleLoading());
 		}
 
 		#endregion

@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
 	public interface IModalDataWriter
@@ -15,5 +19,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		void CommitSimulationStep();
 
 		void Finish();
+
+		Object Compute(string expression, string filter);
+
+		IEnumerable<T> GetValues<T>(ModalResultField key);
 	}
 }
