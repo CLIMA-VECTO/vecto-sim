@@ -341,8 +341,10 @@ Module VECTO_Global
 		Select Case CdMode
 			Case tCdMode.CdOfBeta
 				Return "CdOfBeta"
-			Case tCdMode.CdOfV
-				Return "CdOfV"
+			Case tCdMode.CdOfVeng
+				Return "CdOfVeng"
+			Case tCdMode.CdOfVdecl
+				Return "CdOfVdecl"
 			Case Else 'tCdMode.ConstCd0
 				Return "Off"
 		End Select
@@ -352,8 +354,10 @@ Module VECTO_Global
 		Select Case UCase(Trim(CdMode))
 			Case "CDOFBETA"
 				Return tCdMode.CdOfBeta
-			Case "CDOFV"
-				Return tCdMode.CdOfV
+			Case "CDOFV", "CDOFVENG"
+				Return tCdMode.CdOfVeng
+			Case "CDOFVDECL"
+				Return tCdMode.CdOfVdecl
 			Case Else '"OFF"
 				Return tCdMode.ConstCd0
 		End Select
