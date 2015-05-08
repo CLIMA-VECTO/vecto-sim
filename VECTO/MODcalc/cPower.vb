@@ -2374,7 +2374,10 @@ lb10:
 	'----------------Drag-resistance----------------
 	Private Function fPair(ByVal v As Single, ByVal t As Integer) As Single
 		Dim vair As Single
+		Dim Vkmh As Single
 		Dim CdA As Single
+
+		Vkmh = v * 3.6
 
 		Select Case VEH.CdMode
 
@@ -2384,11 +2387,11 @@ lb10:
 
 			Case tCdMode.CdOfVeng
 				vair = v
-				CdA = VEH.Cd(v) * VEH.CrossSecArea
+				CdA = VEH.Cd(Vkmh) * VEH.CrossSecArea
 
 			Case tCdMode.CdOfVdecl
 				vair = v
-				CdA = VEH.CdA(v)
+				CdA = VEH.CdA(Vkmh)
 
 			Case Else 'tCdType.CdOfBeta
 				vair = MODdata.Vh.VairVres(t)
