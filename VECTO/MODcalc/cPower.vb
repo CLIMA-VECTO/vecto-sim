@@ -2330,7 +2330,7 @@ lb10:
 	Private Function fnU(ByVal V As Single, ByVal Gear As Integer, ByVal ClutchSlip As Boolean) As Single
 		Dim akn As Single
 		Dim U As Single
-		U = CSng(V * 60.0 * GBX.Igetr(0) * GBX.Igetr(Gear) / (2 * VEH.rdyn * Math.PI / 1000))
+		U = fnUout(V, Gear)
 		If U < ENG.Nidle Then U = ENG.Nidle
 		If ClutchSlip Then
 			akn = ClutchNorm / ((ENG.Nidle + ClutchNorm * (ENG.Nrated - ENG.Nidle)) / ENG.Nrated)
@@ -2344,7 +2344,7 @@ lb10:
 	End Function
 
 	Private Function fnUout(ByVal V As Single, ByVal Gear As Integer) As Single
-		Return V * 60.0 * GBX.Igetr(0) * GBX.Igetr(Gear) / (2 * VEH.rdyn * Math.PI / 1000)
+		Return V * 60.0 * GBX.Igetr(0) * GBX.Igetr(Gear) / (2 * Math.PI * VEH.rdyn / 1000)
 	End Function
 
 #End Region
@@ -2374,25 +2374,33 @@ lb10:
 	'----------------Drag-resistance----------------
 	Private Function fPair(ByVal v As Single, ByVal t As Integer) As Single
 		Dim vair As Single
-		Dim Cd As Single
+		Dim Vkmh As Single
+		Dim CdA As Single
+
+		Vkmh = v * 3.6
 
 		Select Case VEH.CdMode
 
 			Case tCdMode.ConstCd0
 				vair = v
-				Cd = VEH.Cd
+				CdA = VEH.Cd * VEH.CrossSecArea
 
-			Case tCdMode.CdOfV
+			Case tCdMode.CdOfVeng
 				vair = v
-				Cd = VEH.Cd(v)
+				CdA = VEH.Cd(Vkmh) * VEH.CrossSecArea
+
+			Case tCdMode.CdOfVdecl
+				vair = v
+				CdA = VEH.CdA(Vkmh)
 
 			Case Else 'tCdType.CdOfBeta
 				vair = MODdata.Vh.VairVres(t)
-				Cd = VEH.Cd(Math.Abs(MODdata.Vh.VairBeta(t)))
+				CdA = VEH.Cd(Math.Abs(MODdata.Vh.VairBeta(t))) * VEH.CrossSecArea
 
 		End Select
 
-		Return CSng((Cd * VEH.CrossSecArea * Cfg.AirDensity / 2 * ((vair) ^ 2)) * v * 0.001)
+		Return CSng((CdA * Cfg.AirDensity / 2 * ((vair) ^ 2)) * v * 0.001)
+
 	End Function
 
 	'--------Vehicle Acceleration-capability(Beschleunigungsleistung) --------

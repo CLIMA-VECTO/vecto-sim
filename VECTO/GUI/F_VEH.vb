@@ -156,384 +156,385 @@ Public Class F_VEH
 
         Me.TbMassExtra.Text = "-"
         Me.TbLoad.Text = "-"
-        Me.CbCdMode.SelectedIndex = 1
+		Me.CbCdMode.SelectedIndex = CType(tCdMode.CdOfVdecl, Integer)
+		Me.TbCdFile.Text = ""
 
-        If Me.LvRRC.Items.Count > 0 Then
-            rdyn = Declaration.rdyn(Me.LvRRC.Items(1).SubItems(5).Text, Me.CbRim.Text)
-        Else
-            rdyn = -1
-        End If
+		If Me.LvRRC.Items.Count > 0 Then
+			rdyn = Declaration.rdyn(Me.LvRRC.Items(1).SubItems(5).Text, Me.CbRim.Text)
+		Else
+			rdyn = -1
+		End If
 
-        If rdyn < 0 Then
-            Me.TBrdyn.Text = "-"
-        Else
-            Me.TBrdyn.Text = rdyn
-        End If
+		If rdyn < 0 Then
+			Me.TBrdyn.Text = "-"
+		Else
+			Me.TBrdyn.Text = rdyn
+		End If
 
-    End Sub
+	End Sub
 
 
 
 #Region "Toolbar"
 
-    'New
-    Private Sub ToolStripBtNew_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtNew.Click
-        newVEH()
-    End Sub
+	'New
+	Private Sub ToolStripBtNew_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtNew.Click
+		newVEH()
+	End Sub
 
-    'Open
-    Private Sub ToolStripBtOpen_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtOpen.Click
-        If fbVEH.OpenDialog(VehFile) Then openVEH(fbVEH.Files(0))
-    End Sub
+	'Open
+	Private Sub ToolStripBtOpen_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtOpen.Click
+		If fbVEH.OpenDialog(VehFile) Then openVEH(fbVEH.Files(0))
+	End Sub
 
-    'Save
-    Private Sub ToolStripBtSave_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtSave.Click
-        SaveOrSaveAs(False)
-    End Sub
+	'Save
+	Private Sub ToolStripBtSave_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtSave.Click
+		SaveOrSaveAs(False)
+	End Sub
 
-    'Save As
-    Private Sub ToolStripBtSaveAs_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtSaveAs.Click
-        SaveOrSaveAs(True)
-    End Sub
+	'Save As
+	Private Sub ToolStripBtSaveAs_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtSaveAs.Click
+		SaveOrSaveAs(True)
+	End Sub
 
-    'Send to VECTO Editor
-    Private Sub ToolStripBtSendTo_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtSendTo.Click
+	'Send to VECTO Editor
+	Private Sub ToolStripBtSendTo_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripBtSendTo.Click
 
-        If ChangeCheckCancel() Then Exit Sub
+		If ChangeCheckCancel() Then Exit Sub
 
-        If VehFile = "" Then
-            If MsgBox("Save file now?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
-                If Not SaveOrSaveAs(True) Then Exit Sub
-            Else
-                Exit Sub
-            End If
-        End If
+		If VehFile = "" Then
+			If MsgBox("Save file now?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
+				If Not SaveOrSaveAs(True) Then Exit Sub
+			Else
+				Exit Sub
+			End If
+		End If
 
 
-        If Not F_VECTO.Visible Then
-            JobDir = ""
-            F_VECTO.Show()
-            F_VECTO.VECTOnew()
-        Else
-            F_VECTO.WindowState = FormWindowState.Normal
-        End If
+		If Not F_VECTO.Visible Then
+			JobDir = ""
+			F_VECTO.Show()
+			F_VECTO.VECTOnew()
+		Else
+			F_VECTO.WindowState = FormWindowState.Normal
+		End If
 
-        F_VECTO.TbVEH.Text = fFileWoDir(VehFile, JobDir)
+		F_VECTO.TbVEH.Text = fFileWoDir(VehFile, JobDir)
 
-    End Sub
+	End Sub
 
-    'Help
-    Private Sub ToolStripButton1_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton1.Click
-        If IO.File.Exists(MyAppPath & "User Manual\GUI\GUI_Calls\VEH.html") Then
-            System.Diagnostics.Process.Start(MyAppPath & "User Manual\GUI\GUI_Calls\VEH.html")
-        Else
-            MsgBox("User Manual not found!", MsgBoxStyle.Critical)
-        End If
-    End Sub
+	'Help
+	Private Sub ToolStripButton1_Click(sender As System.Object, e As System.EventArgs) Handles ToolStripButton1.Click
+		If IO.File.Exists(MyAppPath & "User Manual\GUI\GUI_Calls\VEH.html") Then
+			System.Diagnostics.Process.Start(MyAppPath & "User Manual\GUI\GUI_Calls\VEH.html")
+		Else
+			MsgBox("User Manual not found!", MsgBoxStyle.Critical)
+		End If
+	End Sub
 
 #End Region
 
-    'Save and Close
-    Private Sub ButOK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOK.Click
-        If SaveOrSaveAs(False) Then Me.Close()
-    End Sub
+	'Save and Close
+	Private Sub ButOK_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButOK.Click
+		If SaveOrSaveAs(False) Then Me.Close()
+	End Sub
 
-    'Cancel
-    Private Sub ButCancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButCancel.Click
-        Me.Close()
-    End Sub
+	'Cancel
+	Private Sub ButCancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ButCancel.Click
+		Me.Close()
+	End Sub
 
-    'Save or Save As function = true if file is saved
-    Private Function SaveOrSaveAs(ByVal SaveAs As Boolean) As Boolean
-        If VehFile = "" Or SaveAs Then
-            If fbVEH.SaveDialog(VehFile) Then
-                VehFile = fbVEH.Files(0)
-            Else
-                Return False
-            End If
-        End If
-        Return saveVEH(VehFile)
-    End Function
+	'Save or Save As function = true if file is saved
+	Private Function SaveOrSaveAs(ByVal SaveAs As Boolean) As Boolean
+		If VehFile = "" Or SaveAs Then
+			If fbVEH.SaveDialog(VehFile) Then
+				VehFile = fbVEH.Files(0)
+			Else
+				Return False
+			End If
+		End If
+		Return saveVEH(VehFile)
+	End Function
 
-    'New VEH
-    Private Sub newVEH()
+	'New VEH
+	Private Sub newVEH()
 
-        If ChangeCheckCancel() Then Exit Sub
+		If ChangeCheckCancel() Then Exit Sub
 
-        Me.TbMass.Text = ""
-        Me.TbLoad.Text = ""
-        Me.TBrdyn.Text = ""
-        Me.TBcdTrTr.Text = ""
-        Me.TBAquersTrTr.Text = ""
-        Me.TBcwRig.Text = ""
-        Me.TBAquersRig.Text = ""
+		Me.TbMass.Text = ""
+		Me.TbLoad.Text = ""
+		Me.TBrdyn.Text = ""
+		Me.TBcdTrTr.Text = ""
+		Me.TBAquersTrTr.Text = ""
+		Me.TBcwRig.Text = ""
+		Me.TBAquersRig.Text = ""
 
-        Me.CbCdMode.SelectedIndex = 0
-        Me.TbCdFile.Text = ""
+		Me.CbCdMode.SelectedIndex = 0
+		Me.TbCdFile.Text = ""
 
-        Me.CbRtType.SelectedIndex = 0
-        Me.TbRtRatio.Text = "1"
-        Me.TbRtPath.Text = ""
+		Me.CbRtType.SelectedIndex = 0
+		Me.TbRtRatio.Text = "1"
+		Me.TbRtPath.Text = ""
 
-        Me.CbCat.SelectedIndex = 0
+		Me.CbCat.SelectedIndex = 0
 
-        Me.LvRRC.Items.Clear()
-
-        Me.TbMassMass.Text = ""
-        Me.TbMassExtra.Text = ""
-        Me.CbAxleConfig.SelectedIndex = 0
-
-        Me.CbRim.SelectedIndex = 0
-
+		Me.LvRRC.Items.Clear()
+
+		Me.TbMassMass.Text = ""
+		Me.TbMassExtra.Text = ""
+		Me.CbAxleConfig.SelectedIndex = 0
+
+		Me.CbRim.SelectedIndex = 0
+
 
-        DeclInit()
-
+		DeclInit()
+
 
 
-        VehFile = ""
-        Me.Text = "VEH Editor"
-        Me.LbStatus.Text = ""
+		VehFile = ""
+		Me.Text = "VEH Editor"
+		Me.LbStatus.Text = ""
 
-        Changed = False
+		Changed = False
 
-    End Sub
+	End Sub
 
-    'Open VEH
-    Sub openVEH(ByVal file As String)
-        Dim i As Int16
-        Dim VEH0 As cVEH
-        Dim inertia As Single
+	'Open VEH
+	Sub openVEH(ByVal file As String)
+		Dim i As Int16
+		Dim VEH0 As cVEH
+		Dim inertia As Single
 
-        Dim a0 As cVEH.cAxle
-        Dim lvi As ListViewItem
+		Dim a0 As cVEH.cAxle
+		Dim lvi As ListViewItem
 
-        If ChangeCheckCancel() Then Exit Sub
+		If ChangeCheckCancel() Then Exit Sub
 
-        VEH0 = New cVEH
+		VEH0 = New cVEH
 
-        VEH0.FilePath = file
+		VEH0.FilePath = file
 
-        If Not VEH0.ReadFile Then
-            MsgBox("Cannot read " & file & "!")
-            Exit Sub
-        End If
+		If Not VEH0.ReadFile Then
+			MsgBox("Cannot read " & file & "!")
+			Exit Sub
+		End If
 
-        If Cfg.DeclMode <> VEH0.SavedInDeclMode Then
-            Select Case WrongMode()
-                Case 1
-                    Me.Close()
-                    F_MAINForm.RbDecl.Checked = Not F_MAINForm.RbDecl.Checked
-                    F_MAINForm.OpenVectoFile(file)
-                Case -1
-                    Exit Sub
-                Case Else '0
-                    'Continue...
-            End Select
-        End If
+		If Cfg.DeclMode <> VEH0.SavedInDeclMode Then
+			Select Case WrongMode()
+				Case 1
+					Me.Close()
+					F_MAINForm.RbDecl.Checked = Not F_MAINForm.RbDecl.Checked
+					F_MAINForm.OpenVectoFile(file)
+				Case -1
+					Exit Sub
+				Case Else '0
+					'Continue...
+			End Select
+		End If
 
-        Me.TbMass.Text = VEH0.Mass
-        Me.TbMassExtra.Text = VEH0.MassExtra
-        Me.TbLoad.Text = VEH0.Loading
-        Me.TBrdyn.Text = VEH0.rdyn
-        Me.CbRim.Text = VEH0.Rim
+		Me.TbMass.Text = VEH0.Mass
+		Me.TbMassExtra.Text = VEH0.MassExtra
+		Me.TbLoad.Text = VEH0.Loading
+		Me.TBrdyn.Text = VEH0.rdyn
+		Me.CbRim.Text = VEH0.Rim
 
 
-        Me.CbCdMode.SelectedIndex = CType(VEH0.CdMode, Integer)
-        Me.TbCdFile.Text = VEH0.CdFile.OriginalPath
+		Me.CbCdMode.SelectedIndex = CType(VEH0.CdMode, Integer)
+		Me.TbCdFile.Text = VEH0.CdFile.OriginalPath
 
-        Me.CbRtType.SelectedIndex = CType(VEH0.RtType, Integer)
-        Me.TbRtRatio.Text = CStr(VEH0.RtRatio)
-        Me.TbRtPath.Text = CStr(VEH0.RtFile.OriginalPath)
+		Me.CbRtType.SelectedIndex = CType(VEH0.RtType, Integer)
+		Me.TbRtRatio.Text = CStr(VEH0.RtRatio)
+		Me.TbRtPath.Text = CStr(VEH0.RtFile.OriginalPath)
 
 
-        Me.CbCat.SelectedIndex = CType(VEH0.VehCat, Integer)
+		Me.CbCat.SelectedIndex = CType(VEH0.VehCat, Integer)
 
 
-        Me.LvRRC.Items.Clear()
-        i = 0
-        For Each a0 In VEH0.Axles
-            i += 1
-            lvi = New ListViewItem
-            lvi.SubItems(0).Text = i.ToString
+		Me.LvRRC.Items.Clear()
+		i = 0
+		For Each a0 In VEH0.Axles
+			i += 1
+			lvi = New ListViewItem
+			lvi.SubItems(0).Text = i.ToString
 
-            If Cfg.DeclMode Then
-                lvi.SubItems.Add("-")
-            Else
-                lvi.SubItems.Add(a0.Share)
-            End If
+			If Cfg.DeclMode Then
+				lvi.SubItems.Add("-")
+			Else
+				lvi.SubItems.Add(a0.Share)
+			End If
 
-            If a0.TwinTire Then
-                lvi.SubItems.Add("yes")
-            Else
-                lvi.SubItems.Add("no")
-            End If
-            lvi.SubItems.Add(a0.RRC)
-            lvi.SubItems.Add(a0.FzISO)
-            lvi.SubItems.Add(a0.Wheels)
+			If a0.TwinTire Then
+				lvi.SubItems.Add("yes")
+			Else
+				lvi.SubItems.Add("no")
+			End If
+			lvi.SubItems.Add(a0.RRC)
+			lvi.SubItems.Add(a0.FzISO)
+			lvi.SubItems.Add(a0.Wheels)
 
-            If Cfg.DeclMode Then
-                inertia = Declaration.WheelsInertia(a0.Wheels)
-                If inertia < 0 Then
-                    lvi.SubItems.Add("-")
-                Else
-                    lvi.SubItems.Add(inertia)
-                End If
-            Else
-                lvi.SubItems.Add(a0.Inertia)
-            End If
+			If Cfg.DeclMode Then
+				inertia = Declaration.WheelsInertia(a0.Wheels)
+				If inertia < 0 Then
+					lvi.SubItems.Add("-")
+				Else
+					lvi.SubItems.Add(inertia)
+				End If
+			Else
+				lvi.SubItems.Add(a0.Inertia)
+			End If
 
-            LvRRC.Items.Add(lvi)
-        Next
+			LvRRC.Items.Add(lvi)
+		Next
 
-        Me.TbMassMass.Text = VEH0.MassMax
-        Me.TbMassExtra.Text = VEH0.MassExtra
+		Me.TbMassMass.Text = VEH0.MassMax
+		Me.TbMassExtra.Text = VEH0.MassExtra
 
-        Me.CbAxleConfig.SelectedIndex = CType(VEH0.AxleConf, Integer)
+		Me.CbAxleConfig.SelectedIndex = CType(VEH0.AxleConf, Integer)
 
-        Me.TBcdTrTr.Text = VEH0.Cd0
-        Me.TBAquersTrTr.Text = VEH0.Aquers
-        Me.TBcwRig.Text = VEH0.Cd02
-        Me.TBAquersRig.Text = VEH0.Aquers2
+		Me.TBcdTrTr.Text = VEH0.Cd0
+		Me.TBAquersTrTr.Text = VEH0.Aquers
+		Me.TBcwRig.Text = VEH0.Cd02
+		Me.TBAquersRig.Text = VEH0.Aquers2
 
-        DeclInit()
+		DeclInit()
 
-        fbVEH.UpdateHistory(file)
-        Me.Text = fFILE(file, True)
-        Me.LbStatus.Text = ""
-        VehFile = file
-        Me.Activate()
+		fbVEH.UpdateHistory(file)
+		Me.Text = fFILE(file, True)
+		Me.LbStatus.Text = ""
+		VehFile = file
+		Me.Activate()
 
-        Changed = False
+		Changed = False
 
-    End Sub
+	End Sub
 
-    'Save VEH
-    Private Function saveVEH(ByVal file As String) As Boolean
-        Dim a0 As cVEH.cAxle
-        Dim VEH0 As cVEH
-        Dim LV0 As ListViewItem
+	'Save VEH
+	Private Function saveVEH(ByVal file As String) As Boolean
+		Dim a0 As cVEH.cAxle
+		Dim VEH0 As cVEH
+		Dim LV0 As ListViewItem
 
-        VEH0 = New cVEH
-        VEH0.FilePath = file
+		VEH0 = New cVEH
+		VEH0.FilePath = file
 
-        VEH0.Mass = CSng(fTextboxToNumString(Me.TbMass.Text))
-        VEH0.MassExtra = CSng(fTextboxToNumString(Me.TbMassExtra.Text))
-        VEH0.Loading = CSng(fTextboxToNumString(Me.TbLoad.Text))
+		VEH0.Mass = CSng(fTextboxToNumString(Me.TbMass.Text))
+		VEH0.MassExtra = CSng(fTextboxToNumString(Me.TbMassExtra.Text))
+		VEH0.Loading = CSng(fTextboxToNumString(Me.TbLoad.Text))
 
-        VEH0.Cd0 = CSng(fTextboxToNumString(Me.TBcdTrTr.Text))
-        VEH0.Aquers = CSng(fTextboxToNumString(Me.TBAquersTrTr.Text))
+		VEH0.Cd0 = CSng(fTextboxToNumString(Me.TBcdTrTr.Text))
+		VEH0.Aquers = CSng(fTextboxToNumString(Me.TBAquersTrTr.Text))
 
-        If Me.PnCdARig.Visible Then
-            VEH0.Cd02 = CSng(fTextboxToNumString(Me.TBcwRig.Text))
-            VEH0.Aquers2 = CSng(fTextboxToNumString(Me.TBAquersRig.Text))
-        End If
+		If Me.PnCdARig.Visible Then
+			VEH0.Cd02 = CSng(fTextboxToNumString(Me.TBcwRig.Text))
+			VEH0.Aquers2 = CSng(fTextboxToNumString(Me.TBAquersRig.Text))
+		End If
 
-        VEH0.Rim = Me.CbRim.Text
+		VEH0.Rim = Me.CbRim.Text
 
-        VEH0.rdyn = CSng(fTextboxToNumString(Me.TBrdyn.Text))
+		VEH0.rdyn = CSng(fTextboxToNumString(Me.TBrdyn.Text))
 
 
-        VEH0.CdMode = CType(Me.CbCdMode.SelectedIndex, tCdMode)
-        VEH0.CdFile.Init(fPATH(file), Me.TbCdFile.Text)
+		VEH0.CdMode = CType(Me.CbCdMode.SelectedIndex, tCdMode)
+		VEH0.CdFile.Init(fPATH(file), Me.TbCdFile.Text)
 
-        VEH0.RtType = CType(Me.CbRtType.SelectedIndex, tRtType)
-        VEH0.RtRatio = CSng(fTextboxToNumString(Me.TbRtRatio.Text))
-        VEH0.RtFile.Init(fPATH(file), Me.TbRtPath.Text)
+		VEH0.RtType = CType(Me.CbRtType.SelectedIndex, tRtType)
+		VEH0.RtRatio = CSng(fTextboxToNumString(Me.TbRtRatio.Text))
+		VEH0.RtFile.Init(fPATH(file), Me.TbRtPath.Text)
 
-        VEH0.VehCat = CType(Me.CbCat.SelectedIndex, tVehCat)
+		VEH0.VehCat = CType(Me.CbCat.SelectedIndex, tVehCat)
 
-        For Each LV0 In LvRRC.Items
+		For Each LV0 In LvRRC.Items
 
-            a0 = New cVEH.cAxle
+			a0 = New cVEH.cAxle
 
-            a0.Share = fTextboxToNumString(LV0.SubItems(1).Text)
-            a0.TwinTire = (LV0.SubItems(2).Text = "yes")
-            a0.RRC = fTextboxToNumString(LV0.SubItems(3).Text)
-            a0.FzISO = fTextboxToNumString(LV0.SubItems(4).Text)
-            a0.Wheels = LV0.SubItems(5).Text
-            a0.Inertia = fTextboxToNumString(LV0.SubItems(6).Text)
+			a0.Share = fTextboxToNumString(LV0.SubItems(1).Text)
+			a0.TwinTire = (LV0.SubItems(2).Text = "yes")
+			a0.RRC = fTextboxToNumString(LV0.SubItems(3).Text)
+			a0.FzISO = fTextboxToNumString(LV0.SubItems(4).Text)
+			a0.Wheels = LV0.SubItems(5).Text
+			a0.Inertia = fTextboxToNumString(LV0.SubItems(6).Text)
 
-            VEH0.Axles.Add(a0)
+			VEH0.Axles.Add(a0)
 
-        Next
+		Next
 
-        VEH0.MassMax = CSng(fTextboxToNumString(Me.TbMassMass.Text))
-        VEH0.MassExtra = CSng(fTextboxToNumString(Me.TbMassExtra.Text))
-        VEH0.AxleConf = CType(Me.CbAxleConfig.SelectedIndex, tAxleConf)
+		VEH0.MassMax = CSng(fTextboxToNumString(Me.TbMassMass.Text))
+		VEH0.MassExtra = CSng(fTextboxToNumString(Me.TbMassExtra.Text))
+		VEH0.AxleConf = CType(Me.CbAxleConfig.SelectedIndex, tAxleConf)
 
-        '---------------------------------------------------------------------------------
+		'---------------------------------------------------------------------------------
 
-        If Not VEH0.SaveFile Then
-            MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
-            Return False
-        End If
+		If Not VEH0.SaveFile Then
+			MsgBox("Cannot safe to " & file, MsgBoxStyle.Critical)
+			Return False
+		End If
 
-        If AutoSendTo Then
-            If F_VECTO.Visible Then
-                If UCase(fFileRepl(F_VECTO.TbVEH.Text, JobDir)) <> UCase(file) Then F_VECTO.TbVEH.Text = fFileWoDir(file, JobDir)
-                F_VECTO.UpdatePic()
-            End If
-        End If
+		If AutoSendTo Then
+			If F_VECTO.Visible Then
+				If UCase(fFileRepl(F_VECTO.TbVEH.Text, JobDir)) <> UCase(file) Then F_VECTO.TbVEH.Text = fFileWoDir(file, JobDir)
+				F_VECTO.UpdatePic()
+			End If
+		End If
 
-        fbVEH.UpdateHistory(file)
-        Me.Text = fFILE(file, True)
-        Me.LbStatus.Text = ""
+		fbVEH.UpdateHistory(file)
+		Me.Text = fFILE(file, True)
+		Me.LbStatus.Text = ""
 
-        Changed = False
+		Changed = False
 
-        Return True
+		Return True
 
-    End Function
+	End Function
 
 #Region "Cd"
 
-    'Cd Mode Change
-    Private Sub CbCdMode_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbCdMode.SelectedIndexChanged
-        Dim bEnabled As Boolean
+	'Cd Mode Change
+	Private Sub CbCdMode_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbCdMode.SelectedIndexChanged
+		Dim bEnabled As Boolean
 
-        Select Case CType(Me.CbCdMode.SelectedIndex, tCdMode)
+		Select Case CType(Me.CbCdMode.SelectedIndex, tCdMode)
 
-            Case tCdMode.ConstCd0
-                bEnabled = False
-                Me.LbCdMode.Text = ""
+			Case tCdMode.CdOfBeta
+				bEnabled = True
+				Me.LbCdMode.Text = "Input file: Yaw Angle [°], Cd Scaling Factor [-]"
 
-            Case tCdMode.CdOfV
-                bEnabled = True
-                Me.LbCdMode.Text = "Input file: Vehicle Speed [km/h], Cd Scaling Factor [-]"
+			Case tCdMode.CdOfVeng
+				bEnabled = True
+				Me.LbCdMode.Text = "Input file: Vehicle Speed [km/h], Cd Scaling Factor [-]"
 
-            Case Else ' tCdMode.CdOfBeta
-                bEnabled = True
-                Me.LbCdMode.Text = "Input file: Yaw Angle [°], Cd Scaling Factor [-]"
+			Case Else ' tCdMode.ConstCd0, tCdMode.CdOfVdecl
+				bEnabled = False
+				Me.LbCdMode.Text = ""
 
-        End Select
+		End Select
 
-        If Not Cfg.DeclMode Then
-            Me.TbCdFile.Enabled = bEnabled
-            Me.BtCdFileBrowse.Enabled = bEnabled
-            Me.BtCdFileOpen.Enabled = bEnabled
-        End If
+		If Not Cfg.DeclMode Then
+			Me.TbCdFile.Enabled = bEnabled
+			Me.BtCdFileBrowse.Enabled = bEnabled
+			Me.BtCdFileOpen.Enabled = bEnabled
+		End If
 
-        Change()
-    End Sub
+		Change()
+	End Sub
 
-    'Cd File Browse
-    Private Sub BtCdFileBrowse_Click(sender As System.Object, e As System.EventArgs) Handles BtCdFileBrowse.Click
-        Dim ex As String
+	'Cd File Browse
+	Private Sub BtCdFileBrowse_Click(sender As System.Object, e As System.EventArgs) Handles BtCdFileBrowse.Click
+		Dim ex As String
 
-        If Me.CbCdMode.SelectedIndex = 1 Then
-            ex = "vcdv"
-        Else
-            ex = "vcdb"
-        End If
+		If Me.CbCdMode.SelectedIndex = 1 Then
+			ex = "vcdv"
+		Else
+			ex = "vcdb"
+		End If
 
-        If fbCDx.OpenDialog(fFileRepl(Me.TbCdFile.Text, fPATH(VehFile)), False, ex) Then TbCdFile.Text = fFileWoDir(fbCDx.Files(0), fPATH(VehFile))
+		If fbCDx.OpenDialog(fFileRepl(Me.TbCdFile.Text, fPATH(VehFile)), False, ex) Then TbCdFile.Text = fFileWoDir(fbCDx.Files(0), fPATH(VehFile))
 
-    End Sub
+	End Sub
 
-    'Open Cd File
-    Private Sub BtCdFileOpen_Click(sender As System.Object, e As System.EventArgs) Handles BtCdFileOpen.Click
-        OpenFiles(fFileRepl(Me.TbCdFile.Text, fPATH(VehFile)))
-    End Sub
+	'Open Cd File
+	Private Sub BtCdFileOpen_Click(sender As System.Object, e As System.EventArgs) Handles BtCdFileOpen.Click
+		OpenFiles(fFileRepl(Me.TbCdFile.Text, fPATH(VehFile)))
+	End Sub
 
 #End Region
 

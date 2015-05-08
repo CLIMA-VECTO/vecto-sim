@@ -5,6 +5,11 @@ TODO
 - Traction interruption: No engine rev down - hold rpm until new gear engaged (Allison)
 
 
+### VECTO 2.1.2
+* Improved TC iteration for higher precision
+* Extended possible TC speed ratio 
+
+
 ### VECTO 2.1.1
 * Bugfix: Incorrect torque calculation in AT/TC model caused early up-shifts
 * Updated C-to-C shift strategy with acc_min rule (see V2.1)

@@ -100,8 +100,9 @@ End Enum
 
 Public Enum tCdMode
     ConstCd0 = 0
-    CdOfV = 1
-    CdOfBeta = 2
+	CdOfVeng = 1
+	CdOfVdecl = 2
+	CdOfBeta = 3
 End Enum
 
 Public Enum tRtType
