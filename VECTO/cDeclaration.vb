@@ -98,7 +98,6 @@ Public Class cDeclaration
 		Dim i As Integer
 		Dim a As Integer
 		Dim s0 As String
-		Dim s As String()
 		Dim TrS As Single
 		Dim TrA As Single
 		Dim stl As String()
@@ -109,7 +108,6 @@ Public Class cDeclaration
 		Dim AxleShares As List(Of String)
 		Dim AxleSharesTr As List(Of String)
 		Dim l0 As List(Of Single)
-		Dim WHTCWF As List(Of String)
 		Dim dWHTCWF As Dictionary(Of tWHTCpart, Single)
 
 		Dim at0 As List(Of String)
@@ -252,7 +250,6 @@ Public Class cDeclaration
 					LoadingList = New List(Of String)
 					AxleShares = New List(Of String)
 					AxleSharesTr = New List(Of String)
-					WHTCWF = New List(Of String)
 
 					ste0.VehCat = ConvVehCat(line(1))
 
@@ -294,7 +291,7 @@ Public Class cDeclaration
 						If mt0 <> tMission.LongHaul Then AxleSharesTr.Add(line(12))
 					Next
 
-					ste0.TrailerOnlyInLongHaul = (Trim(line(11)) <> "0/0" And Trim(line(12)) = "0/0" And ste0.VehCat = tVehCat.RigidTruck)
+					ste0.TrailerOnlyInLongHaul = (Trim(line(11)) <> "-" And Trim(line(12)) = "-" And ste0.VehCat = tVehCat.RigidTruck)
 
 					i = 12
 					For Each mt0 In SegmentTable.MissionList
@@ -308,11 +305,6 @@ Public Class cDeclaration
 					For Each mt0 In SegmentTable.MissionList
 						i += 1
 						LoadingList.Add(line(i))
-					Next
-
-					For Each mt0 In SegmentTable.MissionList
-						i += 1
-						WHTCWF.Add(line(i))
 					Next
 
 					For i = 0 To SegmentTable.MissionList.Count - 1
@@ -329,8 +321,14 @@ Public Class cDeclaration
 
 							l0 = New List(Of Single)
 
-							TrS = AxleSharesTr(i).Split("/")(0)
-							TrA = AxleSharesTr(i).Split("/")(1)
+							If AxleSharesTr(i) = "-" Then
+								TrS = 0
+								TrA = 0
+							Else
+								TrS = AxleSharesTr(i).Split("/")(0)
+								TrA = AxleSharesTr(i).Split("/")(1)
+							End If
+
 
 							For a = 1 To TrA
 								l0.Add(TrS / TrA)
@@ -338,11 +336,10 @@ Public Class cDeclaration
 
 							ste0.AxleSharesTr.Add(SegmentTable.MissionList(i), l0)
 
-							s = WHTCWF(i).Split("/")
 							dWHTCWF = New Dictionary(Of tWHTCpart, Single)
-							dWHTCWF.Add(tWHTCpart.Urban, CSng(s(0)) / 100)
-							dWHTCWF.Add(tWHTCpart.Rural, CSng(s(1)) / 100)
-							dWHTCWF.Add(tWHTCpart.Motorway, CSng(s(2)) / 100)
+							dWHTCWF.Add(tWHTCpart.Urban, 0)
+							dWHTCWF.Add(tWHTCpart.Rural, 0)
+							dWHTCWF.Add(tWHTCpart.Motorway, 0)
 
 							ste0.WHTCWF.Add(SegmentTable.MissionList(i), dWHTCWF)
 
@@ -668,7 +665,7 @@ Public Class cDeclaration
 				w0 = New cWheel
 				w0.Inertia = CSng(line(1))
 				w0.Diam = CSng(line(2))
-				w0.SizeA = (CInt(line(3)) = 1)
+				w0.SizeA = (line(3) = "a")
 
 				Wheels.Add(line(0), w0)
 
