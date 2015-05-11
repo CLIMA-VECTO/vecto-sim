@@ -75,7 +75,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var dataWriter = new ModalDataWriter(resultFileName);
 			var sumWriter = new SummaryFileWriter(sumFileName);
-			var job = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, dataWriter, sumWriter);
+			var job = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, jobFileName: "", jobName: "",
+				dataWriter: dataWriter, sumWriter: sumWriter);
 
 			return job;
 		}

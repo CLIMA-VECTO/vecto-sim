@@ -14,10 +14,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// <summary>
 		/// Creates a simulation job for time based engine only powertrain.
 		/// </summary>
-		public static IVectoSimulator CreateTimeBasedEngineOnlyJob(string engineFile, string cycleFile,
+		public static IVectoSimulator CreateTimeBasedEngineOnlyJob(string engineFile, string cycleFile, string jobFileName,
+			string jobName,
 			IModalDataWriter dataWriter, SummaryFileWriter sumWriter)
 		{
-			var builder = new SimulatorBuilder(dataWriter, sumWriter, "", "", cycleFile, engineOnly: true);
+			var builder = new SimulatorBuilder(dataWriter,
+				new SumWriterDecoratorEngineOnly(sumWriter, jobFileName, jobName, cycleFile), engineOnly: true);
 
 			builder.AddEngine(engineFile);
 
@@ -25,7 +27,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return simulator;
 		}
 
-		public static IEnumerable<IVectoSimulator> CreateJobs(VectoJobData data, ISummaryDataWriter sumWriter, int jobNumber)
+		/// <summary>
+		/// Creates powertrains and jobs from a VectoJobData Object.
+		/// </summary>
+		/// <param name="data">The data.</param>
+		/// <param name="sumWriter">The sum writer.</param>
+		/// <param name="jobNumber">The job number.</param>
+		/// <returns></returns>
+		public static IEnumerable<IVectoSimulator> CreateJobs(VectoJobData data, SummaryFileWriter sumWriter, int jobNumber)
 		{
 			for (var i = 0; i < data.Cycles.Count; i++) {
 				var cycleFile = data.Cycles[i];
@@ -34,7 +43,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Path.GetFileNameWithoutExtension(cycleFile));
 				_dataWriter = new ModalDataWriter(modFileName);
 
-				var builder = new SimulatorBuilder(_dataWriter, sumWriter, data.JobFileName, jobName, cycleFile, data.IsEngineOnly);
+				ISummaryDataWriter sumWriterDecorator;
+				if (data.IsEngineOnly) {
+					sumWriterDecorator = new SumWriterDecoratorEngineOnly(sumWriter, data.JobFileName, jobName, cycleFile);
+				} else {
+					sumWriterDecorator = new SumWriterDecoratorFullPowertrain(sumWriter, data.JobFileName, jobName, cycleFile);
+				}
+				var builder = new SimulatorBuilder(_dataWriter, sumWriterDecorator, data.IsEngineOnly);
 
 				builder.AddEngine(data.EngineFile);
 
@@ -71,12 +86,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			private IClutch _clutch;
 			private IPowerTrainComponent _axleGear;
 
-			public SimulatorBuilder(IModalDataWriter dataWriter, ISummaryDataWriter sumWriter, string jobFileName, string jobName,
-				string cycleFile, bool engineOnly)
+			public SimulatorBuilder(IModalDataWriter dataWriter, ISummaryDataWriter sumWriter, bool engineOnly)
 			{
 				_engineOnly = engineOnly;
-
-				_container = new VehicleContainer(dataWriter, sumWriter, jobFileName, jobName, cycleFile);
+				_container = new VehicleContainer(dataWriter, sumWriter);
 			}
 
 			public IVectoSimulator Build(string cycleFile)

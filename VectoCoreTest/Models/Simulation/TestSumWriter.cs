@@ -2,11 +2,10 @@
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
-	public class TestSumWriter : ISummaryDataWriter
+	public class TestSumWriter : SummaryFileWriter, ISummaryDataWriter
 	{
-		public void Write(IModalDataWriter data, string jobFileName, string jobName, string cycleFileName, double vehicleMass,
-			double vehicleLoading) {}
+		public void Write(IModalDataWriter data, double vehicleMass = 0, double vehicleLoading = 0) {}
 
-		public void Finish() {}
+		public override void Finish() {}
 	}
 }
