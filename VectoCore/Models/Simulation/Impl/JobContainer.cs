@@ -38,8 +38,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var sumFileName = Path.GetFileNameWithoutExtension(data.JobFileName);
 			var sumFilePath = Path.GetDirectoryName(data.JobFileName);
-
 			_sumWriter = new SummaryFileWriter(string.Format("{0}.vsum", Path.Combine(sumFilePath, sumFileName)));
+
 			AddJobs(data);
 		}
 

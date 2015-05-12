@@ -15,26 +15,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private const string JOB = "Job [-]";
 		private const string INPUTFILE = "Input File [-]";
 		private const string CYCLE = "Cycle [-]";
-		private const string TIME = "Time [s]";
+		private const string TIME = "time [s]";
 		private const string DISTANCE = "distance [km]";
 		private const string SPEED = "speed [km/h]";
 		private const string ALTITUDE = "∆altitude [m]";
-		private const string PPOS = "Ppos [kw]";
-		private const string PNEG = "Pneg [kw]";
-		private const string FC = "FC [g/km]";
-		private const string FCAUXC = "FC-AUXc [g/km]";
-		private const string FCWHTCC = "FC-WHTCc [g/km]";
-		private const string PBRAKE = "Pbrake [kw]";
-		private const string EPOSICE = "EposICE [kwh]";
-		private const string ENEGICE = "EnegICE [kwh]";
-		private const string EAIR = "Eair [kwh]";
-		private const string EROLL = "Eroll [kwh]";
-		private const string EGRAD = "Egrad [kwh]";
-		private const string EACC = "Eacc [kwh]";
-		private const string EAUX = "Eaux [kwh]";
-		private const string EBRAKE = "Ebrake [kwh]";
-		private const string ETRANSM = "Etransm [kwh]";
-		private const string ERETARDER = "Eretarder [kwh]";
+		private const string PPOS = "Ppos [kW]";
+		private const string PNEG = "Pneg [kW]";
+		private const string FC = "FC [g/h]";
+		private const string FCAUXC = "FC-AUXc [g/h]";
+		private const string FCWHTCC = "FC-WHTCc [g/h]";
+		private const string PBRAKE = "Pbrake [kW]";
+		private const string EPOSICE = "EposICE [kWh]";
+		private const string ENEGICE = "EnegICE [kWh]";
+		private const string EAIR = "Eair [kWh]";
+		private const string EROLL = "Eroll [kWh]";
+		private const string EGRAD = "Egrad [kWh]";
+		private const string EACC = "Eacc [kWh]";
+		private const string EAUX = "Eaux [kWh]";
+		private const string EBRAKE = "Ebrake [kWh]";
+		private const string ETRANSM = "Etransm [kWh]";
+		private const string ERETARDER = "Eretarder [kWh]";
 		private const string MASS = "Mass [kg]";
 		private const string LOADING = "Loading [kg]";
 		private const string A = "a [m/s2]";
@@ -233,10 +233,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 /// </summary>
 public class SumWriterDecoratorFullPowertrain : SummaryFileWriter, ISummaryDataWriter
 {
-	protected SummaryFileWriter _writer;
-	protected string _jobFileName;
-	protected string _jobName;
-	protected string _cycleFileName;
+	private readonly SummaryFileWriter _writer;
+	private readonly string _jobFileName;
+	private readonly string _jobName;
+	private readonly string _cycleFileName;
 
 	public SumWriterDecoratorFullPowertrain(SummaryFileWriter writer, string jobFileName, string jobName,
 		string cycleFileName)
@@ -259,10 +259,10 @@ public class SumWriterDecoratorFullPowertrain : SummaryFileWriter, ISummaryDataW
 /// </summary>
 public class SumWriterDecoratorEngineOnly : SummaryFileWriter, ISummaryDataWriter
 {
-	protected SummaryFileWriter _writer;
-	protected string _jobFileName;
-	protected string _jobName;
-	protected string _cycleFileName;
+	private readonly SummaryFileWriter _writer;
+	private readonly string _jobFileName;
+	private readonly string _jobName;
+	private readonly string _cycleFileName;
 
 	public SumWriterDecoratorEngineOnly(SummaryFileWriter writer, string jobFileName, string jobName, string cycleFileName)
 	{

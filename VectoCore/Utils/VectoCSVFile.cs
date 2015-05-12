@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	/// <remarks>
 	///     The following format applies to all CSV (Comma-separated values) Input Files used in VECTO:
-	///     List Separator: Comma ","
+	///     List DELIMITER: Comma ","
 	///     Decimal-Mark: Dot "."
 	///     Comments: "#" at the beginning of the comment line. Number and position of comment lines is not limited.
 	///     Header: One header line (not a comment line) at the beginning of the file.
@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </remarks>
 	public static class VectoCSVFile
 	{
-		private const char Separator = ',';
+		private const char Delimiter = ',';
 		private const char Comment = '#';
 
 		/// <summary>
@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Utils
 					// Valid Columns found => header was valid => skip header line
 					lines = lines.Skip(1).ToArray();
 				} else {
-					var log = LogManager.GetLogger(typeof (VectoCSVFile));
+					var log = LogManager.GetLogger(typeof(VectoCSVFile));
 					log.Warn("No valid Data Header found. Interpreting the first line as data line.");
 					// set the validColumns to: {"0", "1", "2", "3", ...} for all columns in first line.
 					validColumns = GetColumns(lines.First()).Select((_, index) => index.ToString()).ToArray();
@@ -62,13 +62,13 @@ namespace TUGraz.VectoCore.Utils
 				for (var i = 0; i < lines.Length; i++) {
 					var line = lines[i];
 
-					var cells = line.Split(Separator);
+					var cells = line.Split(Delimiter);
 					if (!ignoreEmptyColumns && cells.Length != table.Columns.Count) {
 						throw new CSVReadException(string.Format("Line {0}: The number of values is not correct.", i));
 					}
 
 					try {
-						table.Rows.Add(line.Split(Separator));
+						table.Rows.Add(line.Split(Delimiter));
 					} catch (InvalidCastException e) {
 						throw new CSVReadException(
 							string.Format("Line {0}: The data format of a value is not correct. {1}", i, e.Message), e);
@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Utils
 			line = Regex.Replace(line, @"\(.*?\)", "");
 			line = line.Replace("<", "");
 			line = line.Replace(">", "");
-			return line.Split(Separator).Select(col => col.Trim());
+			return line.Split(Delimiter).Select(col => col.Trim());
 		}
 
 		private static string[] RemoveComments(string[] lines)
@@ -112,18 +112,18 @@ namespace TUGraz.VectoCore.Utils
 			return lines;
 		}
 
-        /// <summary>
-        /// Writes the datatable to the csv file.
-        /// Uses the column caption as header (with fallback to column name) for the csv header.
-        /// </summary>
-        /// <param name="fileName">Path to the file.</param>
-        /// <param name="table">The Datatable.</param>
+		/// <summary>
+		/// Writes the datatable to the csv file.
+		/// Uses the column caption as header (with fallback to column name) for the csv header.
+		/// </summary>
+		/// <param name="fileName">Path to the file.</param>
+		/// <param name="table">The Datatable.</param>
 		public static void Write(string fileName, DataTable table)
 		{
 			var sb = new StringBuilder();
 
 			var header = table.Columns.Cast<DataColumn>().Select(col => col.Caption ?? col.ColumnName);
-			sb.AppendLine(string.Join(", ", header));
+			sb.AppendLine(string.Join(Delimiter.ToString(), header));
 
 			foreach (DataRow row in table.Rows) {
 				var formattedList = new List<string>();
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Utils
 						: item.ToString();
 					formattedList.Add(formattedValue);
 				}
-				sb.AppendLine(string.Join(Separator.ToString(), formattedList));
+				sb.AppendLine(string.Join(Delimiter.ToString(), formattedList));
 			}
 
 			File.WriteAllText(fileName, sb.ToString());
