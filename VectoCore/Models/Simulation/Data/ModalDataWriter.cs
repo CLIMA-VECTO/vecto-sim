@@ -15,11 +15,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public ModalDataWriter(string modFileName, bool engineOnly)
 		{
+			HasTorqueConverter = false;
 			ModFileName = modFileName;
 			Data = new ModalResults();
 			CurrentRow = Data.NewRow();
 			_engineOnly = engineOnly;
 		}
+
+		public bool HasTorqueConverter { get; set; }
 
 		public void CommitSimulationStep()
 		{
@@ -71,13 +74,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 					ModalResultField.Pbrake
 				});
 
-				//todo only add if (GBX.TCon)
-				dataColumns.AddRange(new[] {
-					ModalResultField.TCν,
-					ModalResultField.TCmu,
-					ModalResultField.TC_M_Out,
-					ModalResultField.TC_n_Out
-				});
+				if (HasTorqueConverter) {
+					dataColumns.AddRange(new[] {
+						ModalResultField.TCν,
+						ModalResultField.TCmu,
+						ModalResultField.TC_M_Out,
+						ModalResultField.TC_n_Out
+					});
+				}
 
 				//todo: auxiliaries
 			}

@@ -20,6 +20,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public ModalResults Data { get; set; }
 		public DataRow CurrentRow { get; set; }
 
+		public bool HasTorqueConverter { get; set; }
+
 		public void CommitSimulationStep()
 		{
 			Data.Rows.Add(CurrentRow);

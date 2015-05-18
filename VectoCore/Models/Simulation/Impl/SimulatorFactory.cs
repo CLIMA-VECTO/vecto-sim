@@ -105,10 +105,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			public IVectoSimulator Build(string cycleFile)
 			{
-				if (_engineOnly) {
-					return BuildEngineOnly(cycleFile);
-				}
-				return BuildFullPowertrain(cycleFile);
+				return _engineOnly ? BuildEngineOnly(cycleFile) : BuildFullPowertrain(cycleFile);
 			}
 
 			private IVectoSimulator BuildFullPowertrain(string cycleFile)
@@ -189,6 +186,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			public void AddGearbox(string gearboxFile)
 			{
+				var gearboxData = GearboxData.ReadFromFile(gearboxFile);
+				_axleGear = new AxleGear(gearboxData.AxleGearData);
+
+				_dataWriter.HasTorqueConverter = gearboxData.HasTorqueConverter;
+
+				//todo init gearbox with gearbox data
 				_gearBox = new Gearbox(_container);
 			}
 

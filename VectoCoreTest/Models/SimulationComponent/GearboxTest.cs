@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void AxleGearTest()
 		{
-			VehicleContainer vehicle = new VehicleContainer();
+			var vehicle = new VehicleContainer();
 			var gbxData = GearboxData.ReadFromFile(GearboxDataFile);
 			//GearData gearData = new GearData();
 			var axleGear = new AxleGear(gbxData.AxleGearData);
