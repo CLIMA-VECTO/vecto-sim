@@ -31,9 +31,10 @@ namespace TUGraz.VectoCore.Utils
 		private const char Comment = '#';
 
 		/// <summary>
-		///     Reads a CSV file which is stored in Vecto-CSV-Format.
+		/// Reads a CSV file which is stored in Vecto-CSV-Format.
 		/// </summary>
 		/// <param name="fileName"></param>
+		/// <param name="ignoreEmptyColumns"></param>
 		/// <exception cref="FileIOException"></exception>
 		/// <returns>A DataTable which represents the CSV File.</returns>
 		public static DataTable Read(string fileName, bool ignoreEmptyColumns = false)
