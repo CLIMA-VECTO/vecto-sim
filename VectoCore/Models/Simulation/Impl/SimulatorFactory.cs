@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System.IO;
+using System.Collections.Generic;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -14,27 +14,36 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// <summary>
 		/// Creates a simulation job for time based engine only powertrain.
 		/// </summary>
-		public static IVectoSimulator CreateTimeBasedEngineOnlyJob(string engineFile, string cycleFile,
-			IModalDataWriter dataWriter, SummaryFileWriter sumWriter)
+		public static IVectoSimulator CreateTimeBasedEngineOnlyJob(string engineFile, string cycleFile, string jobFileName,
+			string jobName, IModalDataWriter dataWriter, SummaryFileWriter sumWriter)
 		{
-			var builder = new SimulatorBuilder(dataWriter, sumWriter, "", "", cycleFile, engineOnly: true);
+			var sumWriterDecorator = new SumWriterDecoratorEngineOnly(sumWriter, jobFileName, jobName, cycleFile);
+			var builder = new SimulatorBuilder(dataWriter, sumWriterDecorator, engineOnly: true);
 
 			builder.AddEngine(engineFile);
 
-			var simulator = builder.Build(cycleFile);
-			return simulator;
+			return builder.Build(cycleFile);
 		}
 
-		public static IEnumerable<IVectoSimulator> CreateJobs(VectoJobData data, ISummaryDataWriter sumWriter, int jobNumber)
+		/// <summary>
+		/// Creates powertrains and jobs from a VectoJobData Object.
+		/// </summary>
+		/// <param name="data">The data.</param>
+		/// <param name="sumWriter">The sum writer.</param>
+		/// <param name="jobNumber">The job number.</param>
+		/// <returns></returns>
+		public static IEnumerable<IVectoSimulator> CreateJobs(VectoJobData data, SummaryFileWriter sumWriter, int jobNumber)
 		{
 			for (var i = 0; i < data.Cycles.Count; i++) {
 				var cycleFile = data.Cycles[i];
 				var jobName = string.Format("{0}-{1}", jobNumber, i);
 				var modFileName = string.Format("{0}_{1}.vmod", Path.GetFileNameWithoutExtension(data.JobFileName),
 					Path.GetFileNameWithoutExtension(cycleFile));
-				_dataWriter = new ModalDataWriter(modFileName);
 
-				var builder = new SimulatorBuilder(_dataWriter, sumWriter, data.JobFileName, jobName, cycleFile, data.IsEngineOnly);
+				_dataWriter = new ModalDataWriter(modFileName, data.IsEngineOnly);
+
+				var sumWriterDecorator = DecorateSumWriter(data.IsEngineOnly, sumWriter, data.JobFileName, jobName, cycleFile);
+				var builder = new SimulatorBuilder(_dataWriter, sumWriterDecorator, data.IsEngineOnly);
 
 				builder.AddEngine(data.EngineFile);
 
@@ -42,21 +51,38 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					builder.AddVehicle(data.VehicleFile);
 					builder.AddGearbox(data.GearboxFile);
 
-
 					foreach (var aux in data.Aux) {
 						builder.AddAuxiliary(aux.Path, aux.ID);
 					}
 
-					builder.AddDriver(data.StartStop, data.OverSpeedEcoRoll, data.LookAheadCoasting,
-						data.AccelerationLimitingFile);
+					builder.AddDriver(data.StartStop, data.OverSpeedEcoRoll, data.LookAheadCoasting, data.AccelerationLimitingFile);
 				}
-
-				var job = builder.Build(cycleFile);
-
-				yield return job;
+				yield return builder.Build(cycleFile);
 			}
 		}
 
+		/// <summary>
+		/// Decorates the sum writer with a correct decorator (either EngineOnly or FullPowertrain).
+		/// </summary>
+		/// <param name="engineOnly">if set to <c>true</c> [engine only].</param>
+		/// <param name="sumWriter">The sum writer.</param>
+		/// <param name="jobFileName">Name of the job file.</param>
+		/// <param name="jobName">Name of the job.</param>
+		/// <param name="cycleFile">The cycle file.</param>
+		/// <returns></returns>
+		private static ISummaryDataWriter DecorateSumWriter(bool engineOnly, SummaryFileWriter sumWriter,
+			string jobFileName, string jobName, string cycleFile)
+		{
+			if (engineOnly) {
+				return new SumWriterDecoratorEngineOnly(sumWriter, jobFileName, jobName, cycleFile);
+			}
+
+			return new SumWriterDecoratorFullPowertrain(sumWriter, jobFileName, jobName, cycleFile);
+		}
+
+		/// <summary>
+		/// Provides Methods to build a simulator with a powertrain step by step.
+		/// </summary>
 		public class SimulatorBuilder
 		{
 			private readonly bool _engineOnly;
@@ -71,20 +97,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			private IClutch _clutch;
 			private IPowerTrainComponent _axleGear;
 
-			public SimulatorBuilder(IModalDataWriter dataWriter, ISummaryDataWriter sumWriter, string jobFileName, string jobName,
-				string cycleFile, bool engineOnly)
+			public SimulatorBuilder(IModalDataWriter dataWriter, ISummaryDataWriter sumWriter, bool engineOnly)
 			{
 				_engineOnly = engineOnly;
-
-				_container = new VehicleContainer(dataWriter, sumWriter, jobFileName, jobName, cycleFile);
+				_container = new VehicleContainer(dataWriter, sumWriter);
 			}
 
 			public IVectoSimulator Build(string cycleFile)
 			{
-				if (_engineOnly) {
-					return BuildEngineOnly(cycleFile);
-				}
-				return BuildFullPowertrain(cycleFile);
+				return _engineOnly ? BuildEngineOnly(cycleFile) : BuildFullPowertrain(cycleFile);
 			}
 
 			private IVectoSimulator BuildFullPowertrain(string cycleFile)
@@ -165,6 +186,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			public void AddGearbox(string gearboxFile)
 			{
+				var gearboxData = GearboxData.ReadFromFile(gearboxFile);
+				_axleGear = new AxleGear(gearboxData.AxleGearData);
+
+				_dataWriter.HasTorqueConverter = gearboxData.HasTorqueConverter;
+
+				//todo init gearbox with gearbox data
 				_gearBox = new Gearbox(_container);
 			}
 

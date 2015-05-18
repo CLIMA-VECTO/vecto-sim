@@ -13,6 +13,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <returns></returns>
 		object this[ModalResultField key] { get; set; }
 
+		bool HasTorqueConverter { get; set; }
+
 		/// <summary>
 		///     Commits the data of the current simulation step.
 		/// </summary>

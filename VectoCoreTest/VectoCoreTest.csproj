@@ -78,9 +78,10 @@
     <Compile Include="Models\SimulationComponent\GearboxTest.cs" />
     <Compile Include="Models\SimulationComponent\RetarderTest.cs" />
     <Compile Include="Models\Simulation\DrivingCycleTests.cs" />
-    <Compile Include="Models\SimulationComponent\MockPorts.cs" />
+    <Compile Include="Utils\ResultFileHelper.cs" />
+    <Compile Include="Utils\MockPorts.cs" />
     <Compile Include="Models\Simulation\SimulationTests.cs" />
-    <Compile Include="Models\Simulation\TestSumWriter.cs" />
+    <Compile Include="Utils\TestSumWriter.cs" />
     <Compile Include="Models\Simulation\VechicleContainerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -190,7 +191,7 @@
     <None Include="TestData\Cycles\Coach Engine Only.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-        <None Include="TestData\EngineFullLoadJumps.csv">
+    <None Include="TestData\EngineFullLoadJumps.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz.csv">

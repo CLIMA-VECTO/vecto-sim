@@ -435,6 +435,9 @@ namespace TUGraz.VectoCore.Utils
 			return new SI(Val, Numerator, Denominator);
 		}
 
+		/// <summary>
+		/// Returns the absolute value.
+		/// </summary>
 		public SI Abs()
 		{
 			return new SI(Math.Abs(Val), this);
