@@ -48,8 +48,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 				Assert.AreEqual(expected.Columns.Count, actual.Columns.Count,
 					string.Format("Moddata: Columns count differs.\nExpected {0} Columns in {1}\nGot {2} Columns in {3}",
-						expected.Columns.Count,
-						result.expectedFile, actual.Columns.Count, result.actualFile));
+						expected.Columns.Count, result.expectedFile, actual.Columns.Count, result.actualFile));
 
 				var actualCols = actual.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList();
 				var expectedCols = expected.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList();
