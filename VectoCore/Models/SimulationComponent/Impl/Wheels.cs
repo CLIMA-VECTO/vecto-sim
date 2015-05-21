@@ -6,56 +6,56 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-    public class Wheels : VectoSimulationComponent, IWheels, IFvOutPort, ITnInPort
-    {
-        private ITnOutPort _outPort;
+	public class Wheels : VectoSimulationComponent, IWheels, IFvOutPort, ITnInPort
+	{
+		private ITnOutPort _outPort;
 
-        public Wheels(IVehicleContainer cockpit)
-            : base(cockpit) {}
+		public Wheels(IVehicleContainer cockpit)
+			: base(cockpit) {}
 
-        #region IRoadPortOutProvider
+		#region IRoadPortOutProvider
 
-        IFvOutPort IRoadPortOutProvider.OutPort()
-        {
-            throw new NotImplementedException();
-        }
+		IFvOutPort IRoadPortOutProvider.OutShaft()
+		{
+			throw new NotImplementedException();
+		}
 
-        #endregion
+		#endregion
 
-        #region IInShaft
+		#region IInShaft
 
-        ITnInPort IInShaft.InShaft()
-        {
-            throw new NotImplementedException();
-        }
+		ITnInPort IInShaft.InShaft()
+		{
+			throw new NotImplementedException();
+		}
 
-        #endregion
+		#endregion
 
-        #region IFvOutPort
+		#region IFvOutPort
 
-        IResponse IFvOutPort.Request(TimeSpan absTime, TimeSpan dt, Newton force, MeterPerSecond velocity)
-        {
-            throw new NotImplementedException();
-        }
+		IResponse IFvOutPort.Request(TimeSpan absTime, TimeSpan dt, Newton force, MeterPerSecond velocity)
+		{
+			throw new NotImplementedException();
+		}
 
-        #endregion
+		#endregion
 
-        #region ITnInPort
+		#region ITnInPort
 
-        void ITnInPort.Connect(ITnOutPort other)
-        {
-            _outPort = other;
-        }
+		void ITnInPort.Connect(ITnOutPort other)
+		{
+			_outPort = other;
+		}
 
-        #endregion
+		#endregion
 
-        #region VectoSimulationComponent
+		#region VectoSimulationComponent
 
-        public override void CommitSimulationStep(IModalDataWriter writer)
-        {
-            throw new NotImplementedException();
-        }
+		public override void CommitSimulationStep(IModalDataWriter writer)
+		{
+			throw new NotImplementedException();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

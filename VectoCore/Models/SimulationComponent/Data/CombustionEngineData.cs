@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public SI Displacement
 		{
 			get { return _data.Body.Displacement.SI().Cubic.Centi.Meter.ConvertTo().Cubic.Meter.Value(); }
-			protected set { _data.Body.Displacement = (double) value.ConvertTo().Cubic.Centi.Meter; }
+			protected set { _data.Body.Displacement = (double)value.ConvertTo().Cubic.Centi.Meter; }
 		}
 
 		/// <summary>
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public PerSecond IdleSpeed
 		{
 			get { return _data.Body.IdleSpeed.RPMtoRad(); }
-			protected set { _data.Body.IdleSpeed = (double) value.ConvertTo().Rounds.Per.Minute; }
+			protected set { _data.Body.IdleSpeed = (double)value.ConvertTo().Rounds.Per.Minute; }
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public KilogramSquareMeter Inertia
 		{
 			get { return _data.Body.Inertia.SI<KilogramSquareMeter>(); }
-			protected set { _data.Body.Inertia = (double) value.ConvertTo().Kilo.Gramm.Square.Meter; }
+			protected set { _data.Body.Inertia = (double)value.ConvertTo().Kilo.Gramm.Square.Meter; }
 		}
 
 		/// <summary>
@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public SI WHTCUrban
 		{
 			get { return _data.Body.WHTCUrban.SI().Gramm.Per.Kilo.Watt.Hour.ConvertTo().Kilo.Gramm.Per.Watt.Second.Value(); }
-			protected set { _data.Body.WHTCUrban = (double) value.ConvertTo().Gramm.Per.Kilo.Watt.Hour; }
+			protected set { _data.Body.WHTCUrban = (double)value.ConvertTo().Gramm.Per.Kilo.Watt.Hour; }
 		}
 
 		/// <summary>
@@ -105,16 +105,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public SI WHTCRural
 		{
 			get { return _data.Body.WHTCRural.SI().Gramm.Per.Kilo.Watt.Hour.ConvertTo().Kilo.Gramm.Per.Watt.Second.Value(); }
-			protected set { _data.Body.WHTCRural = (double) value.ConvertTo().Gramm.Per.Kilo.Watt.Hour; }
+			protected set { _data.Body.WHTCRural = (double)value.ConvertTo().Gramm.Per.Kilo.Watt.Hour; }
 		}
 
 		/// <summary>
-		///     [g/Ws]
+		///     [kg/Ws]
 		/// </summary>
 		public SI WHTCMotorway
 		{
 			get { return _data.Body.WHTCMotorway.SI().Gramm.Per.Kilo.Watt.Hour.ConvertTo().Kilo.Gramm.Per.Watt.Second.Value(); }
-			protected set { _data.Body.WHTCMotorway = (double) value.ConvertTo().Gramm.Per.Kilo.Watt.Hour; }
+			protected set { _data.Body.WHTCMotorway = (double)value.ConvertTo().Gramm.Per.Kilo.Watt.Hour; }
 		}
 
 		[DataMember]
@@ -168,7 +168,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public FullLoadCurve GetFullLoadCurve(uint gear)
 		{
 			var curve = _fullLoadCurves.FirstOrDefault(kv => kv.Key.Contains(gear));
-			if (curve.Key.Equals(null)) {
+			if (curve.Key == null) {
 				throw new KeyNotFoundException(string.Format("GearData '{0}' was not found in the FullLoadCurves.", gear));
 			}
 
@@ -260,7 +260,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 						if (obj.GetType() != GetType()) {
 							return false;
 						}
-						return Equals((DataFullLoadCurve) obj);
+						return Equals((DataFullLoadCurve)obj);
 					}
 
 					public override int GetHashCode()
@@ -301,7 +301,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					if (obj.GetType() != GetType()) {
 						return false;
 					}
-					return Equals((DataBody) obj);
+					return Equals((DataBody)obj);
 				}
 
 				public override int GetHashCode()
@@ -342,7 +342,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				if (obj.GetType() != GetType()) {
 					return false;
 				}
-				return Equals((Data) obj);
+				return Equals((Data)obj);
 			}
 
 			public override int GetHashCode()
@@ -359,18 +359,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
 			{
-				return sourceType == typeof (string) || base.CanConvertFrom(context, sourceType);
+				return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
 			}
 
 			public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
 			{
-				return value.GetType() == typeof (string)
-					? new Range((string) value)
+				return value.GetType() == typeof(string)
+					? new Range((string)value)
 					: base.ConvertFrom(context, culture, value);
 			}
 		}
 
-		[TypeConverter(typeof (RangeConverter))]
+		[TypeConverter(typeof(RangeConverter))]
 		private class Range
 		{
 			private readonly uint _end;
@@ -413,13 +413,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				if (obj.GetType() != GetType()) {
 					return false;
 				}
-				return Equals((Range) obj);
+				return Equals((Range)obj);
 			}
 
 			public override int GetHashCode()
 			{
 				unchecked {
-					return (int) ((_start * 397) ^ _end);
+					return (int)((_start * 397) ^ _end);
 				}
 			}
 
@@ -447,7 +447,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (obj.GetType() != GetType()) {
 				return false;
 			}
-			return Equals((CombustionEngineData) obj);
+			return Equals((CombustionEngineData)obj);
 		}
 
 		public override int GetHashCode()

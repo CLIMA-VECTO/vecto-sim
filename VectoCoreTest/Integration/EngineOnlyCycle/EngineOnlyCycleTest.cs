@@ -3,7 +3,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Web;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
@@ -28,7 +27,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var vehicle = new VehicleContainer();
 			var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
 
-			var aux = new EngineOnlyAuxiliary(vehicle, new AuxiliariesDemandAdapter(data));
+			var aux = new DirectAuxiliary(vehicle, new AuxiliaryCycleDataAdapter(data));
 			var gearbox = new EngineOnlyGearbox(vehicle);
 
 

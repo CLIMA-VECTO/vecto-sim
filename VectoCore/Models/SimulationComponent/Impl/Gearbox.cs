@@ -7,63 +7,62 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-    public class Gearbox : VectoSimulationComponent, IGearbox, ITnOutPort, ITnInPort
-    {
-        public Gearbox(IVehicleContainer container) : base(container) {}
+	public class Gearbox : VectoSimulationComponent, IGearbox, ITnOutPort, ITnInPort
+	{
+		public Gearbox(IVehicleContainer container) : base(container) {}
 
-        #region IInShaft
+		#region IInShaft
 
-        public ITnInPort InShaft()
-        {
-            throw new NotImplementedException();
-        }
+		public ITnInPort InShaft()
+		{
+			throw new NotImplementedException();
+		}
 
-        #endregion
+		#endregion
 
-        #region IOutShaft
+		#region IOutShaft
 
-        public ITnOutPort OutShaft()
-        {
-            throw new NotImplementedException();
-        }
+		public ITnOutPort OutShaft()
+		{
+			throw new NotImplementedException();
+		}
 
-        #endregion
+		#endregion
 
-        #region IGearboxCockpit
+		#region IGearboxCockpit
 
-        uint IGearboxCockpit.Gear()
-        {
-            throw new NotImplementedException();
-        }
+		uint IGearboxCockpit.Gear()
+		{
+			throw new NotImplementedException();
+		}
 
-				#endregion
+		#endregion
 
-	
-        #region ITnOutPort
+		#region ITnOutPort
 
-        IResponse ITnOutPort.Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
-        {
-            throw new NotImplementedException();
-        }
+		IResponse ITnOutPort.Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
+		{
+			throw new NotImplementedException();
+		}
 
-        #endregion
+		#endregion
 
-        #region ITnInPort
+		#region ITnInPort
 
-        void ITnInPort.Connect(ITnOutPort other)
-        {
-            throw new NotImplementedException();
-        }
+		void ITnInPort.Connect(ITnOutPort other)
+		{
+			throw new NotImplementedException();
+		}
 
-        #endregion
+		#endregion
 
-        #region VectoSimulationComponent
+		#region VectoSimulationComponent
 
-        public override void CommitSimulationStep(IModalDataWriter writer)
-        {
-            throw new NotImplementedException();
-        }
+		public override void CommitSimulationStep(IModalDataWriter writer)
+		{
+			throw new NotImplementedException();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

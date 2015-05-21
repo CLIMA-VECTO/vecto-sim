@@ -1,95 +1,106 @@
-﻿using System.Data;
+﻿using System.IO;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
-    [TestClass]
-    public class SimulationTests
-    {
-        private const string EngineFile = @"TestData\Components\24t Coach.veng";
-        private const string CycleFile = @"TestData\Cycles\Coach Engine Only.vdri";
+	[TestClass]
+	public class SimulationTests
+	{
+		private const string EngineFile = @"TestData\Components\24t Coach.veng";
+		private const string CycleFile = @"TestData\Cycles\Coach Engine Only short.vdri";
 
-        [TestMethod]
-        public void TestSimulationEngineOnly()
-        {
-            var job = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, "TestEngineOnly-result.vmod");
+		[TestMethod]
+		public void TestSimulationEngineOnly()
+		{
+			var resultFileName = "TestEngineOnly-result.vmod";
+			var job = CreateJob(resultFileName);
 
-            var container = job.GetContainer();
+			var container = job.GetContainer();
 
-            Assert.AreEqual(560.0.RPMtoRad(), container.EngineSpeed());
-            Assert.AreEqual(0U, container.Gear());
+			Assert.AreEqual(560.RPMtoRad(), container.EngineSpeed());
+			Assert.AreEqual(0U, container.Gear());
+		}
 
-            try {
-                container.VehicleSpeed();
-                Assert.Fail(
-                    "Access to Vehicle speed should fail, because there should be no vehicle in EngineOnly Mode.");
-            } catch (VectoException ex) {
-                Assert.AreEqual(ex.Message, "no vehicle available!", "Vehicle speed wrong exception message.");
-            }
-        }
+		[TestMethod]
+		public void TestEngineOnly_JobRun()
+		{
+			var actual = "TestEngineOnly_JobRun-result.vmod";
+			var expected = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
 
-        [TestMethod]
-        public void TestEngineOnly_JobRun()
-        {
-            var resultFileName = "TestEngineOnly_JobRun-result.vmod";
-            var expectedResultsName = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly.vmod";
+			var job = CreateJob(actual);
+			job.Run();
 
-            var job = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, resultFileName);
-            job.Run();
+			ResultFileHelper.TestModFile(expected, actual);
+		}
 
-            var results = ModalResults.ReadFromFile(resultFileName);
-            var expectedResults = ModalResults.ReadFromFile(expectedResultsName);
+		[TestMethod]
+		public void TestEngineOnly_SimulatorRun()
+		{
+			var actual = @"TestEngineOnly_SimulatorRun-result.vmod";
+			var expected = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
 
-            Assert.AreEqual(expectedResults.Rows.Count, results.Rows.Count, "Moddata: Row count differs.");
+			var job = CreateJob(actual);
 
-            for (var i = 0; i < expectedResults.Rows.Count; i++) {
-                var row = results.Rows[i];
-                var expectedRow = expectedResults.Rows[i];
+			var sim = new JobContainer(new TestSumWriter());
+			sim.AddJob(job);
+			sim.RunJobs();
 
-                foreach (DataColumn col in expectedResults.Columns) {
-                    Assert.AreEqual(expectedRow[col], row[col], "Moddata: Value differs (Row {0}, Col {1}): {2} != {3}");
-                }
-            }
-        }
+			ResultFileHelper.TestModFile(expected, actual);
+		}
 
-        [TestMethod]
-        public void TestEngineOnly_SimulatorRun()
-        {
-            var sim = new JobContainer();
-            var job = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile,
-                "TestEngineOnly-SimulatorRun-result.vmod");
-            sim.AddJob(job);
-            sim.RunSimulation();
+		public IVectoSimulator CreateJob(string resultFileName)
+		{
+			var sumFileName = resultFileName.Substring(0, resultFileName.Length - 4) + "vsum";
 
-            // todo: Add additional assertions.
-            Assert.Fail("Todo: Add additional assertions.");
-        }
+			var dataWriter = new ModalDataWriter(resultFileName, engineOnly: true);
+			var sumWriter = new SummaryFileWriter(sumFileName);
+			var job = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, jobFileName: "", jobName: "",
+				dataWriter: dataWriter, sumWriter: sumWriter);
 
-        [TestMethod]
-        public void TestEngineOnly_MultipleJobs()
-        {
-            var simulation = new JobContainer();
+			return job;
+		}
 
-            var sim1 = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile,
-                "TestEngineOnly-MultipleJobs-result1.vmod");
-            simulation.AddJob(sim1);
 
-            var sim2 = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile,
-                "TestEngineOnly-MultipleJobs-result2.vmod");
-            simulation.AddJob(sim2);
+		[TestMethod]
+		public void TestEngineOnly_MultipleJobs()
+		{
+			var resultFiles = new[] {
+				@"TestEngineOnly-MultipleJobs-result1",
+				@"TestEngineOnly-MultipleJobs-result2",
+				@"TestEngineOnly-MultipleJobs-result3"
+			};
 
-            var sim3 = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile,
-                "TestEngineOnly-MultipleJobs-result3.vmod");
-            simulation.AddJob(sim3);
+			var simulation = new JobContainer(new TestSumWriter());
+			foreach (var resultFile in resultFiles) {
+				simulation.AddJob(CreateJob(resultFile));
+			}
+			simulation.RunJobs();
 
-            simulation.RunSimulation();
+			ResultFileHelper.TestModFiles(resultFiles.Select(x => x + "_Coach Engine Only short.vmod"),
+				Enumerable.Repeat(@"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod", resultFiles.Length));
+		}
 
-            // todo: Add additional assertions.
-            Assert.Fail("Todo: Add additional assertions.");
-        }
-    }
+		[TestMethod]
+		public void Test_VectoJob()
+		{
+			var jobData = VectoJobData.ReadFromFile(@"TestData\Jobs\24t Coach.vecto");
+			var jobContainer = new JobContainer(jobData);
+			jobContainer.RunJobs();
+
+			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum", @"TestData\Jobs\24t Coach.vsum");
+			ResultFileHelper.TestModFiles(new[] {
+				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only1.vmod",
+				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only2.vmod",
+				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only3.vmod"
+			}, new[] { "24t Coach_Engine Only1.vmod", "24t Coach_Engine Only2.vmod", "24t Coach_Engine Only3.vmod" });
+		}
+	}
 }

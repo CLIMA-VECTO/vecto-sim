@@ -7,16 +7,15 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	public class AuxiliariesDemandAdapter
+	public class AuxiliaryCycleDataAdapter : IAuxiliaryCycleData
 	{
 		private readonly string _auxiliaryId;
 		private readonly DrivingCycleData _drivingCycle;
 		private readonly IEnumerator<DrivingCycleData.DrivingCycleEntry> _nextCycleEntry;
-		//protected DrivingCycleData.DrivingCycleEntry NextCycleEntry { get { return _nextCycleEntry.Current; } }
 
 		private readonly ILog Log;
 
-		public AuxiliariesDemandAdapter(DrivingCycleData inputData, string column = null)
+		public AuxiliaryCycleDataAdapter(DrivingCycleData inputData, string column = null)
 		{
 			Log = LogManager.GetLogger(GetType());
 			_drivingCycle = inputData;

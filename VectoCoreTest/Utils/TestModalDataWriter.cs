@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -18,6 +20,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public ModalResults Data { get; set; }
 		public DataRow CurrentRow { get; set; }
 
+		public bool HasTorqueConverter { get; set; }
+
 		public void CommitSimulationStep()
 		{
 			Data.Rows.Add(CurrentRow);
@@ -25,6 +29,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public void Finish() {}
+
+		public object Compute(string expression, string filter)
+		{
+			return Data.Compute(expression, filter);
+		}
+
+		public IEnumerable<T> GetValues<T>(ModalResultField key)
+		{
+			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>((int)key));
+		}
 
 		public object this[ModalResultField key]
 		{

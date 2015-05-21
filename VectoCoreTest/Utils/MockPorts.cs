@@ -4,7 +4,7 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
+namespace TUGraz.VectoCore.Tests.Utils
 {
 	public class MockTnOutPort : ITnOutPort
 	{

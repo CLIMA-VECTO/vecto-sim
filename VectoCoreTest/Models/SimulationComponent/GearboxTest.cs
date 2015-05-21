@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
@@ -19,7 +18,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void AxleGearTest()
 		{
-			VehicleContainer vehicle = new VehicleContainer();
+			var vehicle = new VehicleContainer();
 			var gbxData = GearboxData.ReadFromFile(GearboxDataFile);
 			//GearData gearData = new GearData();
 			var axleGear = new AxleGear(gbxData.AxleGearData);

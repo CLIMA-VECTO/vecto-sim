@@ -81,8 +81,10 @@
     <Compile Include="Models\SimulationComponent\RetarderTest.cs" />
     <Compile Include="Models\SimulationComponent\VehicleTest.cs" />
     <Compile Include="Models\Simulation\DrivingCycleTests.cs" />
-    <Compile Include="Models\SimulationComponent\MockPorts.cs" />
+    <Compile Include="Utils\ResultFileHelper.cs" />
+    <Compile Include="Utils\MockPorts.cs" />
     <Compile Include="Models\Simulation\SimulationTests.cs" />
+    <Compile Include="Utils\TestSumWriter.cs" />
     <Compile Include="Models\Simulation\VechicleContainerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -117,6 +119,7 @@
     <None Include="TestData\Components\24t Coach.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Components\24t Coach.vveh" />
     <None Include="TestData\Components\24t CoachInterpolated.vmap">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -126,6 +129,8 @@
     <None Include="TestData\Components\Direct Gear.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Components\24t_Coach_ALT.vaux" />
+    <None Include="TestData\Components\Coach.vacc" />
     <None Include="TestData\Components\FullLoadCurve insufficient columns.vfld">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -136,6 +141,21 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\FullLoadCurve insufficient entries.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\Indirect Gear.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\Retarder.vrlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Cycles\LOT2_rural Engine Only.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Cycles\Coach Engine Only short.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Cycles\Coach First Cycle only.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\Indirect Gear.vtlm">
@@ -192,12 +212,44 @@
     <None Include="TestData\Results\EngineOnlyCycles\24tCoach_EngineOnlyFullLoad.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Jobs\24t Coach.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineOnlyCycles\24t Coach.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineOnlyCycles\24t Coach.vsum.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineOnlyCycles\24t Coach_Engine Only1.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineOnlyCycles\24t Coach_Engine Only2.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineOnlyCycles\24t Coach_Engine Only3.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Cycles\Engine Only1.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Cycles\Engine Only2.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Cycles\Engine Only3.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Results\EngineOnlyCycles\24tCoach_EngineOnlyPaux.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="TestData\Cycles\EngineOnly_FullLoad.vdri" />
+    <None Include="TestData\Cycles\EngineOnly_FullLoad.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

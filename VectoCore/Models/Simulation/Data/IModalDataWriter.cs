@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
 	public interface IModalDataWriter
@@ -9,11 +13,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <returns></returns>
 		object this[ModalResultField key] { get; set; }
 
+		bool HasTorqueConverter { get; set; }
+
 		/// <summary>
 		///     Commits the data of the current simulation step.
 		/// </summary>
 		void CommitSimulationStep();
 
 		void Finish();
+
+		Object Compute(string expression, string filter);
+
+		IEnumerable<T> GetValues<T>(ModalResultField key);
 	}
 }
