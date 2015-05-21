@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var vehicleData = VehicleData.ReadFromFile(VehicleDataFile);
 
-			Assert.AreEqual(VehicleData.VehicleCategory.Coach, vehicleData.Category);
+			Assert.AreEqual(VehicleCategory.Coach, vehicleData.VehicleCategory);
 		}
 	}
 }

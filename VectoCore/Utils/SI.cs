@@ -46,6 +46,12 @@ namespace TUGraz.VectoCore.Utils
 		protected SquareMeter(double val) : base(val, new SI().Square.Meter) {}
 	}
 
+	public class KilogramSquareMeter : SIBase<KilogramSquareMeter>
+	{
+		public KilogramSquareMeter() : this(0) {}
+		protected KilogramSquareMeter(double val) : base(val, new SI().Kilo.Gramm.Square.Meter) {}
+	}
+
 	public class Watt : SIBase<Watt>
 	{
 		public Watt() : this(0) {}

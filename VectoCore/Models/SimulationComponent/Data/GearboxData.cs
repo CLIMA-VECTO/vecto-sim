@@ -203,9 +203,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		///		kgm^2
 		/// </summary>
-		public SI Inertia
+		public KilogramSquareMeter Inertia
 		{
-			get { return _data.Body.Inertia.SI().Kilo.Gramm.Square.Meter; }
+			get { return _data.Body.Inertia.SI<KilogramSquareMeter>(); }
 			protected set { _data.Body.Inertia = (double) value.ConvertTo().Kilo.Gramm.Square.Meter; }
 		}
 

@@ -14,13 +14,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private VehicleState _previousState;
 		private VehicleState _currentState;
 
-		private VehicleData _data;
+		private readonly VehicleData _data;
 
 		public Vehicle(VehicleContainer container, VehicleData data) : base(container)
 		{
 			_data = data;
-			_previousState = new VehicleState();
-			_previousState.Velocity = 0.SI<MeterPerSecond>();
+			_previousState = new VehicleState { Velocity = 0.SI<MeterPerSecond>() };
 			_currentState = new VehicleState();
 		}
 
@@ -71,8 +70,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected Newton AirDragResistance()
 		{
 			// TODO different types of cross-wind correction...
-			var Cd = _data.DragCoefficient;
 			var vAir = _currentState.Velocity;
+			var Cd = _data.DragCoefficient;
+			switch (_data.CrossWindCorrection) {
+				case CrossWindCorrectionMode.SpeedDependent:
+					//Cd = 
+					break;
+				case CrossWindCorrectionMode.VAirBeta:
+					break;
+			}
 
 			return (Cd * _data.CrossSectionArea * Physics.AirDensity / 2 * vAir * vAir).Cast<Newton>();
 		}
