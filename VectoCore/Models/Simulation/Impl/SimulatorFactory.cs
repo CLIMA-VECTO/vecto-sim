@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				// connect cycle --> driver --> vehicle --> wheels --> axleGear --> gearBox --> retarder --> clutch
 				cycle.InShaft().Connect(_driver.OutShaft());
 				_driver.InShaft().Connect(_vehicle.OutShaft());
-				_vehicle.InShaft().Connect(_wheels.OutShaft());
+				_vehicle.InPort().Connect(_wheels.OutPort());
 				_wheels.InShaft().Connect(_axleGear.OutShaft());
 				_axleGear.InShaft().Connect(_gearBox.OutShaft());
 				_gearBox.InShaft().Connect(_retarder.OutShaft());
@@ -219,7 +219,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 
 				var vehicleData = EngineeringModeSimulationComponentFactory.Instance().CreateVehicleData(vehicleFile);
-					//VehicleData.ReadFromFile(vehicleFile);
+				//VehicleData.ReadFromFile(vehicleFile);
 				_vehicle = new Vehicle(_container, vehicleData);
 			}
 
