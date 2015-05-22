@@ -383,7 +383,7 @@ Public Class cVEH
 				a0 = New cAxle
 
 				a0.Inertia = 0	 'Defined later
-				a0.Wheels = "385/65 R22.5"
+				a0.Wheels = cDeclaration.TyreTr
 
 				a0.Share = a / 100
 				a0.TwinTire = False

@@ -38,6 +38,7 @@ Public Class cDeclaration
 
 	Public Const RRCTr As Single = 0.00555
 	Public Const FzISOTr As Single = 37500
+	Public Const TyreTr As String = "385/65 R22.5"
 
 	Public Const AirDensity As Single = 1.188
 	Public Const FuelDens As Single = 0.832
