@@ -9,15 +9,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class Wheels : VectoSimulationComponent, IWheels, IFvOutPort, ITnInPort
 	{
 		private ITnOutPort _outPort;
+		private Meter _dynamicWheelRadius;
 
-		public Wheels(IVehicleContainer cockpit)
-			: base(cockpit) {}
+		public Wheels(IVehicleContainer cockpit, Meter rdyn)
+			: base(cockpit)
+		{
+			_dynamicWheelRadius = rdyn;
+		}
 
 		#region IRoadPortOutProvider
 
-		IFvOutPort IRoadPortOutProvider.OutShaft()
+		IFvOutPort IRoadPortOutProvider.OutPort()
 		{
-			throw new NotImplementedException();
+			return this;
 		}
 
 		#endregion
@@ -26,7 +30,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		ITnInPort IInShaft.InShaft()
 		{
-			throw new NotImplementedException();
+			return this;
 		}
 
 		#endregion
@@ -35,7 +39,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		IResponse IFvOutPort.Request(TimeSpan absTime, TimeSpan dt, Newton force, MeterPerSecond velocity)
 		{
-			throw new NotImplementedException();
+			NewtonMeter torque = (force * _dynamicWheelRadius).Cast<NewtonMeter>();
+			var angularVelocity = (velocity / _dynamicWheelRadius).Cast<PerSecond>();
+			return _outPort.Request(absTime, dt, torque, angularVelocity);
 		}
 
 		#endregion

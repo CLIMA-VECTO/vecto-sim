@@ -9,7 +9,7 @@
 		/// Returns the inport to connect it to another outport.
 		/// </summary>
 		/// <returns></returns>
-		IFvInPort InShaft();
+		IFvInPort InPort();
 	}
 
 	/// <summary>
@@ -21,6 +21,6 @@
 		/// Returns the outport to send requests to.
 		/// </summary>
 		/// <returns></returns>
-		IFvOutPort OutShaft();
+		IFvOutPort OutPort();
 	}
 }

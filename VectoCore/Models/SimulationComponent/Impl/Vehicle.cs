@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_previousState.Velocity = initialVelocity.SI<MeterPerSecond>();
 		}
 
-		public IFvInPort InShaft()
+		public IFvInPort InPort()
 		{
 			return this;
 		}
