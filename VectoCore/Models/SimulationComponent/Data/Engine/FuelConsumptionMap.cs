@@ -65,9 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
         {
             // delauney map needs is initialised with rpm, therefore the engineSpeed has to be converted.
             return
-                _fuelMap.Interpolate((double) torque, (double) engineSpeed.ConvertTo().Rounds.Per.Minute)
-                    .SI()
-                    .Kilo.Gramm.Per.Second;
+                _fuelMap.Interpolate(torque.Double(), engineSpeed.ConvertTo().Rounds.Per.Minute.Double()).SI().Kilo.Gramm.Per.Second;
         }
 
         private static class Fields

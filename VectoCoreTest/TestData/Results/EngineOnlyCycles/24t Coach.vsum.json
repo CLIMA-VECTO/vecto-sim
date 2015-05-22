@@ -1,0 +1,114 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "4/24/2015 11:11:47 AM",
+    "AppVersion": "2.0.4-beta3",
+    "FileVersion": 1
+  },
+  "Body": {
+    "Settings": {
+      "Air Density [kg/m3]": 1.188,
+      "CO2/FC [-]": 3.16,
+      "Fuel Density [kg/l]": 0.832,
+      "Distance Correction": true
+    },
+    "Results": [
+      {
+        "Job": "24t Coach.vecto",
+        "Cycle": "Engine Only1.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 3951,
+            "Unit": "[s]"
+          },
+          "Ppos": {
+            "Value": 29.599963484631711,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -1.6357945519695312,
+            "Unit": "[kW]"
+          },
+          "FC": {
+            "Value": "ERROR",
+            "Unit": "[g/h]"
+          },
+          "FC-AUXc": {
+            "Value": "-",
+            "Unit": "[g/h]"
+          },
+          "FC-WHTCc": {
+            "Value": "-",
+            "Unit": "[g/h]"
+          }
+        }
+      },
+      {
+        "Job": "24t Coach.vecto",
+        "Cycle": "Engine Only2.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 3951,
+            "Unit": "[s]"
+          },
+          "Ppos": {
+            "Value": 29.599963484631711,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -1.6357945519695312,
+            "Unit": "[kW]"
+          },
+          "FC": {
+            "Value": "ERROR",
+            "Unit": "[g/h]"
+          },
+          "FC-AUXc": {
+            "Value": "-",
+            "Unit": "[g/h]"
+          },
+          "FC-WHTCc": {
+            "Value": "-",
+            "Unit": "[g/h]"
+          }
+        }
+      },
+      {
+        "Job": "24t Coach.vecto",
+        "Cycle": "Engine Only3.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 3951,
+            "Unit": "[s]"
+          },
+          "Ppos": {
+            "Value": 29.599963484631711,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -1.6357945519695312,
+            "Unit": "[kW]"
+          },
+          "FC": {
+            "Value": "ERROR",
+            "Unit": "[g/h]"
+          },
+          "FC-AUXc": {
+            "Value": "-",
+            "Unit": "[g/h]"
+          },
+          "FC-WHTCc": {
+            "Value": "-",
+            "Unit": "[g/h]"
+          }
+        }
+      }
+    ]
+  }
+}

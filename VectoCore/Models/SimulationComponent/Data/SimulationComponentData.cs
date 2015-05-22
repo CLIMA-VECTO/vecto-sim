@@ -13,11 +13,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			Log = LogManager.GetLogger(GetType());
 		}
 
-
-		protected static int GetFileVersion(string jsonStr)
+		protected static Tuple<int, bool> GetFileVersion(string jsonStr)
 		{
 			dynamic json = JsonConvert.DeserializeObject(jsonStr);
-			return json.Header.FileVersion;
+			return new Tuple<int, bool>(Int32.Parse(json.Header.FileVersion.ToString()),
+				Boolean.Parse(json.Body.SavedInDeclMode.ToString()));
 		}
 	}
 }

@@ -2,7 +2,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Factories;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
@@ -17,15 +19,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer();
 
-			var vehicleData = VehicleData.ReadFromFile(VehicleDataFile);
-			vehicleData.CrossWindCorrection = VehicleData.CrossWindCorrectionMode.NoCorrection;
+			var vehicleData = EngineeringModeSimulationComponentFactory.Instance().CreateVehicleData(VehicleDataFile);
+				//VehicleData.ReadFromFile(VehicleDataFile);
+			//vehicleData.CrossWindCorrection = VehicleData.CrossWindCorrectionMode.NoCorrection;
 			var vehicle = new Vehicle(container, vehicleData, 17.210535);
 
 			var mockPort = new MockFvOutPort();
 
-			vehicle.InPort().Connect(mockPort);
+			vehicle.InShaft().Connect(mockPort);
 
-			var requestPort = vehicle.OutPort();
+			var requestPort = vehicle.OutShaft();
 
 			var absTime = TimeSpan.FromSeconds(0);
 			var dt = TimeSpan.FromSeconds(1);

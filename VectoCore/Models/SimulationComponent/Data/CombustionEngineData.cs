@@ -84,9 +84,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		///     [kgm^2]
 		/// </summary>
-		public SI Inertia
+		public KilogramSquareMeter Inertia
 		{
-			get { return _data.Body.Inertia.SI().Kilo.Gramm.Square.Meter; }
+			get { return _data.Body.Inertia.SI<KilogramSquareMeter>(); }
 			protected set { _data.Body.Inertia = (double) value.ConvertTo().Kilo.Gramm.Square.Meter; }
 		}
 
@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		}
 
 		/// <summary>
-		///     [g/Ws]
+		///     [kg/Ws]
 		/// </summary>
 		public SI WHTCMotorway
 		{
@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public string ToJson()
 		{
-			_data.Header.Date = DateTime.Now;
+			_data.Header.Date = DateTime.Now.ToString(CultureInfo.InvariantCulture);
 			_data.Header.FileVersion = 2;
 			_data.Header.AppVersion = "3.0.0"; // todo: get current app version!
 			_data.Header.CreatedBy = ""; // todo: get current user
@@ -168,7 +168,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public FullLoadCurve GetFullLoadCurve(uint gear)
 		{
 			var curve = _fullLoadCurves.FirstOrDefault(kv => kv.Key.Contains(gear));
-			if (curve.Key.Equals(null)) {
+			if (curve.Key == null) {
 				throw new KeyNotFoundException(string.Format("GearData '{0}' was not found in the FullLoadCurves.", gear));
 			}
 

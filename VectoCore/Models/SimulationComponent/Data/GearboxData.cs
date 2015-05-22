@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			gearboxData._data = d;
 
 			for (uint i = 0; i < d.Body.Gears.Count; i++) {
-				var gearSettings = d.Body.Gears[(int) i];
+				var gearSettings = d.Body.Gears[(int)i];
 				var lossMapPath = Path.Combine(basePath, gearSettings.LossMap);
 				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
 
@@ -203,10 +203,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		///		kgm^2
 		/// </summary>
-		public SI Inertia
+		public KilogramSquareMeter Inertia
 		{
-			get { return _data.Body.Inertia.SI().Kilo.Gramm.Square.Meter; }
-			protected set { _data.Body.Inertia = (double) value.ConvertTo().Kilo.Gramm.Square.Meter; }
+			get { return _data.Body.Inertia.SI<KilogramSquareMeter>(); }
+			protected set { _data.Body.Inertia = (double)value.ConvertTo().Kilo.Gramm.Square.Meter; }
 		}
 
 		/// <summary>
@@ -261,6 +261,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			get { return _data.Body.StartAcceleration; }
 			protected set { _data.Body.StartAcceleration = value; }
+		}
+
+		public bool HasTorqueConverter
+		{
+			get { return _data.Body.TorqueConverter != null; }
 		}
 
 

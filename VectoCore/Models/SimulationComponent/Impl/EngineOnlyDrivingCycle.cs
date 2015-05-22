@@ -7,66 +7,66 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-    /// <summary>
-    ///     Class representing one EngineOnly Driving Cycle
-    /// </summary>
-    public class EngineOnlyDrivingCycle : VectoSimulationComponent, IEngineOnlyDrivingCycle, ITnInPort,
-        IDrivingCycleOutPort
-    {
-        protected DrivingCycleData Data;
-        private ITnOutPort _outPort;
+	/// <summary>
+	///     Class representing one EngineOnly Driving Cycle
+	/// </summary>
+	public class EngineOnlyDrivingCycle : VectoSimulationComponent, IEngineOnlyDrivingCycle, ITnInPort,
+		IDrivingCycleOutPort
+	{
+		protected DrivingCycleData Data;
+		private ITnOutPort _outPort;
 
-        public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
-        {
-            Data = cycle;
-        }
+		public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+		{
+			Data = cycle;
+		}
 
-        #region IInShaft
+		#region IInShaft
 
-        public ITnInPort InShaft()
-        {
-            return this;
-        }
+		public ITnInPort InShaft()
+		{
+			return this;
+		}
 
-        #endregion
+		#endregion
 
-        #region IDrivingCycleOutProvider
+		#region IDrivingCycleOutProvider
 
-        public IDrivingCycleOutPort OutPort()
-        {
-            return this;
-        }
+		public IDrivingCycleOutPort OutShaft()
+		{
+			return this;
+		}
 
-        #endregion
+		#endregion
 
-        #region IDrivingCycleOutPort
+		#region IDrivingCycleOutPort
 
-        IResponse IDrivingCycleOutPort.Request(TimeSpan absTime, TimeSpan dt)
-        {
-            //todo: change to variable time steps
-            var index = (int) Math.Floor(absTime.TotalSeconds);
-            if (index >= Data.Entries.Count) {
-                return new ResponseCycleFinished();
-            }
+		IResponse IDrivingCycleOutPort.Request(TimeSpan absTime, TimeSpan dt)
+		{
+			//todo: change to variable time steps
+			var index = (int)Math.Floor(absTime.TotalSeconds);
+			if (index >= Data.Entries.Count) {
+				return new ResponseCycleFinished();
+			}
 
-            return _outPort.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
-        }
+			return _outPort.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
+		}
 
-        #endregion
+		#endregion
 
-        #region ITnInPort
+		#region ITnInPort
 
-        void ITnInPort.Connect(ITnOutPort other)
-        {
-            _outPort = other;
-        }
+		void ITnInPort.Connect(ITnOutPort other)
+		{
+			_outPort = other;
+		}
 
-        #endregion
+		#endregion
 
-        #region VectoSimulationComponent
+		#region VectoSimulationComponent
 
-        public override void CommitSimulationStep(IModalDataWriter writer) {}
+		public override void CommitSimulationStep(IModalDataWriter writer) {}
 
-        #endregion
-    }
+		#endregion
+	}
 }
