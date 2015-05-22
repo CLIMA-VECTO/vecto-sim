@@ -40,46 +40,72 @@ namespace TUGraz.VectoCore.Utils
 		public static DataTable Read(string fileName, bool ignoreEmptyColumns = false)
 		{
 			try {
-				var lines = File.ReadAllLines(fileName);
-				lines = RemoveComments(lines);
-
-				var validColumns = GetValidHeaderColumns(lines.First());
-
-				if (validColumns.Length > 0) {
-					// Valid Columns found => header was valid => skip header line
-					lines = lines.Skip(1).ToArray();
-				} else {
-					var log = LogManager.GetLogger(typeof(VectoCSVFile));
-					log.Warn("No valid Data Header found. Interpreting the first line as data line.");
-					// set the validColumns to: {"0", "1", "2", "3", ...} for all columns in first line.
-					validColumns = GetColumns(lines.First()).Select((_, index) => index.ToString()).ToArray();
-				}
-
-				var table = new DataTable();
-				foreach (var col in validColumns) {
-					table.Columns.Add(col);
-				}
-
-				for (var i = 0; i < lines.Length; i++) {
-					var line = lines[i];
-
-					var cells = line.Split(Delimiter);
-					if (!ignoreEmptyColumns && cells.Length != table.Columns.Count) {
-						throw new CSVReadException(string.Format("Line {0}: The number of values is not correct.", i));
-					}
-
-					try {
-						table.Rows.Add(line.Split(Delimiter));
-					} catch (InvalidCastException e) {
-						throw new CSVReadException(
-							string.Format("Line {0}: The data format of a value is not correct. {1}", i, e.Message), e);
-					}
-				}
-
-				return table;
+				return ReadData(File.ReadAllLines(fileName), ignoreEmptyColumns);
 			} catch (Exception e) {
 				throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message));
 			}
+		}
+
+		/// <summary>
+		///     Reads a CSV file which is stored in Vecto-CSV-Format.
+		/// </summary>
+		/// <param name="stream"></param>
+		/// <param name="ignoreEmptyColumns"></param>
+		/// <exception cref="FileIOException"></exception>
+		/// <returns>A DataTable which represents the CSV File.</returns>
+		public static DataTable ReadStream(Stream stream, bool ignoreEmptyColumns = false)
+		{
+			try {
+				var lines = new List<string>();
+				using (StreamReader reader = new StreamReader(stream)) {
+					while (!reader.EndOfStream) {
+						lines.Add(reader.ReadLine());
+					}
+				}
+				return ReadData(lines.ToArray(), ignoreEmptyColumns);
+			} catch (Exception e) {
+				throw new VectoException("failed to read stream", e);
+			}
+		}
+
+		private static DataTable ReadData(string[] data, bool ignoreEmptyColumns = false)
+		{
+			var lines = RemoveComments(data);
+
+			var validColumns = GetValidHeaderColumns(lines.First());
+
+			if (validColumns.Length > 0) {
+				// Valid Columns found => header was valid => skip header line
+				lines = lines.Skip(1).ToArray();
+			} else {
+				var log = LogManager.GetLogger(typeof (VectoCSVFile));
+				log.Warn("No valid Data Header found. Interpreting the first line as data line.");
+				// set the validColumns to: {"0", "1", "2", "3", ...} for all columns in first line.
+				validColumns = GetColumns(lines.First()).Select((_, index) => index.ToString()).ToArray();
+			}
+
+			var table = new DataTable();
+			foreach (var col in validColumns) {
+				table.Columns.Add(col);
+			}
+
+			for (var i = 0; i < lines.Length; i++) {
+				var line = lines[i];
+
+					var cells = line.Split(Delimiter);
+				if (!ignoreEmptyColumns && cells.Length != table.Columns.Count) {
+					throw new CSVReadException(string.Format("Line {0}: The number of values is not correct.", i));
+				}
+
+				try {
+						table.Rows.Add(line.Split(Delimiter));
+				} catch (InvalidCastException e) {
+					throw new CSVReadException(
+						string.Format("Line {0}: The data format of a value is not correct. {1}", i, e.Message), e);
+				}
+			}
+
+			return table;
 		}
 
 		private static string[] GetValidHeaderColumns(string line)

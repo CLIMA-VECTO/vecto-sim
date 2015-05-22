@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Factories;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -217,7 +218,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return;
 				}
 
-				var vehicleData = VehicleData.ReadFromFile(vehicleFile);
+				var vehicleData = EngineeringModeSimulationComponentFactory.Instance().CreateVehicleData(vehicleFile);
+					//VehicleData.ReadFromFile(vehicleFile);
 				_vehicle = new Vehicle(_container, vehicleData);
 			}
 

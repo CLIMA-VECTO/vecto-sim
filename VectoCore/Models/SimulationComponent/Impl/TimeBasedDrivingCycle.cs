@@ -11,11 +11,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	///     Class representing one Time Based Driving Cycle
 	/// </summary>
-	public class TimeBasedDrivingCycle : VectoSimulationComponent, IDriverDemandDrivingCycle, IDriverDemandInPort,
+	public class TimeBasedDrivingCycle : VectoSimulationComponent, IDrivingCycleDemandDrivingCycle,
+		IDrivingCycleDemandInPort,
 		IDrivingCycleOutPort
 	{
 		protected DrivingCycleData Data;
-		private IDriverDemandOutPort _outPort;
+		private IDrivingCycleDemandOutPort _outPort;
 
 		public TimeBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
@@ -31,9 +32,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		#region IDriverDemandInProvider
+		#region IDrivingCycleDemandInProvider
 
-		public IDriverDemandInPort InShaft()
+		public IDrivingCycleDemandInPort InShaft()
 		{
 			return this;
 		}
@@ -45,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		IResponse IDrivingCycleOutPort.Request(TimeSpan absTime, TimeSpan dt)
 		{
 			//todo: change to variable time steps
-			var index = (int)Math.Floor(absTime.TotalSeconds);
+			var index = (int) Math.Floor(absTime.TotalSeconds);
 			if (index >= Data.Entries.Count) {
 				return new ResponseCycleFinished();
 			}
@@ -56,9 +57,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		#region IDriverDemandInPort
+		#region IDrivingCycleDemandInPort
 
-		void IDriverDemandInPort.Connect(IDriverDemandOutPort other)
+		void IDrivingCycleDemandInPort.Connect(IDrivingCycleDemandOutPort other)
 		{
 			_outPort = other;
 		}

@@ -70,13 +70,16 @@
   <ItemGroup>
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
+    <Compile Include="Models\DeclarationData\DeclarationDataTest.cs" />
     <Compile Include="Models\SimulationComponentData\FuelConsumptionMapTest.cs" />
     <Compile Include="Models\SimulationComponentData\FullLoadCurveTest.cs" />
     <Compile Include="Models\SimulationComponentData\GearboxDataTest.cs" />
+    <Compile Include="Models\SimulationComponentData\VehicleDataTest.cs" />
     <Compile Include="Models\SimulationComponent\ClutchTest.cs" />
     <Compile Include="Models\SimulationComponent\CombustionEngineTest.cs" />
     <Compile Include="Models\SimulationComponent\GearboxTest.cs" />
     <Compile Include="Models\SimulationComponent\RetarderTest.cs" />
+    <Compile Include="Models\SimulationComponent\VehicleTest.cs" />
     <Compile Include="Models\Simulation\DrivingCycleTests.cs" />
     <Compile Include="Utils\ResultFileHelper.cs" />
     <Compile Include="Utils\MockPorts.cs" />
@@ -111,6 +114,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="TestData\Components\24t Coach.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\24t Coach.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\24t Coach.vveh" />

@@ -38,6 +38,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var resultFiles = expectedFiles.ZipAll(actualFiles, (expectedFile, actualFile) => new { expectedFile, actualFile });
 			foreach (var result in resultFiles) {
 				Assert.IsTrue(File.Exists(result.actualFile), "MOD File is missing: " + result);
+				Assert.IsTrue(File.Exists(result.expectedFile), "Expected File is missing: " + result);
 
 				var expected = ModalResults.ReadFromFile(result.expectedFile);
 				var actual = ModalResults.ReadFromFile(result.actualFile);

@@ -9,23 +9,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	///     Class representing one Distance Based Driving Cycle
 	/// </summary>
-	public class DistanceBasedDrivingCycle : VectoSimulationComponent, IDriverDemandDrivingCycle, IDrivingCycleOutPort,
-		IDriverDemandInPort
+	public class DistanceBasedDrivingCycle : VectoSimulationComponent, IDrivingCycleDemandDrivingCycle,
+		IDrivingCycleOutPort,
+		IDrivingCycleDemandInPort
 	{
 		protected TimeSpan AbsTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
 		protected DrivingCycleData Data;
 		protected double Distance = 0;
 		protected TimeSpan Dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
-		private IDriverDemandOutPort _outPort;
+		private IDrivingCycleDemandOutPort _outPort;
 
 		public DistanceBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
 		}
 
-		#region IDriverDemandInProvider
+		#region IDrivingCycleDemandInProvider
 
-		public IDriverDemandInPort InShaft()
+		public IDrivingCycleDemandInPort InShaft()
 		{
 			return this;
 		}
@@ -41,9 +42,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		#region IDriverDemandInPort
+		#region IDrivingCycleDemandInPort
 
-		void IDriverDemandInPort.Connect(IDriverDemandOutPort other)
+		void IDrivingCycleDemandInPort.Connect(IDrivingCycleDemandOutPort other)
 		{
 			_outPort = other;
 		}

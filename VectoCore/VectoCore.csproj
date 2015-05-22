@@ -108,15 +108,24 @@
   <ItemGroup>
     <Compile Include="Exceptions\VectoExceptions.cs" />
     <Compile Include="Exceptions\VectoSimulationException.cs" />
+    <Compile Include="FileIO\InputFileReader.cs" />
+    <Compile Include="FileIO\VehicleFileDeclaration.cs" />
+    <Compile Include="FileIO\VehicleFileEngineering.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
-    <Compile Include="Models\Connector\Ports\IDrivingCycleProvider.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandProvider.cs" />
+    <Compile Include="Models\Connector\Ports\IDrivingCycleDemandPort.cs" />
+    <Compile Include="Models\Connector\Ports\IDrivingCycleProvider.cs" />
+    <Compile Include="Models\Connector\Ports\IDrivingCycleDemandProvider.cs" />
     <Compile Include="Models\Connector\Ports\IResponse.cs" />
     <Compile Include="Models\Connector\Ports\IRoadPortProvider.cs" />
     <Compile Include="Models\Connector\Ports\IShaft.cs" />
     <Compile Include="Models\Connector\Ports\Impl\Response.cs" />
     <Compile Include="Models\Connector\Ports\IFvPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
+    <Compile Include="Models\DeclarationData.cs" />
+    <Compile Include="Models\Declaration\LookupData.cs" />
+    <Compile Include="Models\Declaration\Rims.cs" />
+    <Compile Include="Models\Declaration\Wheels.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryCycleDataAdapter.cs" />
     <Compile Include="Models\SimulationComponent\Data\CombustionEngineData.cs" />
     <Compile Include="Models\SimulationComponent\Data\DrivingCycleData.cs" />
@@ -129,12 +138,17 @@
     <Compile Include="Models\SimulationComponent\Data\Gearbox\ShiftPolygon.cs" />
     <Compile Include="Models\SimulationComponent\Data\Gearbox\TorqueConverterData.cs" />
     <Compile Include="Models\SimulationComponent\Data\JsonDataHeader.cs" />
+    <Compile Include="Models\SimulationComponent\Data\RetarderData.cs" />
     <Compile Include="Models\SimulationComponent\Data\RetarderLossMap.cs" />
+    <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\DeclarationModeSimulationComponentFactory.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\EngineeringModeSimulationComponentFactory.cs" />
     <Compile Include="Models\SimulationComponent\IClutch.cs" />
     <Compile Include="Models\SimulationComponent\IEngineOnlyDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriverDemandDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriver.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MappingAuxiliary.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\Vehicle.cs" />
     <Compile Include="Models\SimulationComponent\IVehicle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Clutch.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AxleGear.cs" />
@@ -145,10 +159,9 @@
     <Compile Include="Models\Simulation\Data\VectoJobData.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Driver.cs" />
     <Compile Include="Models\SimulationComponent\Data\DriverData.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Vehicle.cs" />
-    <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
     <Compile Include="Utils\Formulas.cs" />
     <Compile Include="Utils\IntExtensionMethods.cs" />
+    <Compile Include="Utils\Physics.cs" />
     <Compile Include="Utils\SI.cs" />
     <Compile Include="Models\SimulationComponent\Data\SimulationComponentData.cs" />
     <Compile Include="Models\SimulationComponent\IAuxiliary.cs" />
@@ -192,8 +205,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Resources\Declaration\Rims.csv" />
+    <EmbeddedResource Include="Resources\Declaration\Wheels.csv" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -2,18 +2,18 @@
 using Common.Logging;
 using Newtonsoft.Json;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data
+namespace TUGraz.VectoCore.FileIO
 {
-	public class SimulationComponentData
+	public class InputFileReader
 	{
-		[NonSerialized] protected ILog Log;
+		protected ILog Log;
 
-		public SimulationComponentData()
+		protected InputFileReader()
 		{
 			Log = LogManager.GetLogger(GetType());
 		}
 
-		protected static Tuple<int, bool> GetFileVersion(string jsonStr)
+		protected Tuple<int, bool> GetFileVersion(string jsonStr)
 		{
 			dynamic json = JsonConvert.DeserializeObject(jsonStr);
 			return new Tuple<int, bool>(Int32.Parse(json.Header.FileVersion.ToString()),

@@ -2,8 +2,9 @@
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	/// <summary>
-	/// Defines interfaces for a vehicle.
-	/// </summary>
-	public interface IVehicle : IDriverDemandOutProvider, IRoadPortInProvider {}
+	public interface IVehicle : IRoadPortInProvider, IDriverDemandOutProvider, IFvInPort, IDriverDemandOutPort {}
 }
+
+/// </summary>
+//	public interface IVehicle : IDriverDemandOutProvider, IRoadPortInProvider {}
+//}
