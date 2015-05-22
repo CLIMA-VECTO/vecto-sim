@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -95,76 +96,102 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>();
 		}
 
-		public string BasePath { get; protected set; }
+		public string BasePath { get; internal set; }
 
 		public bool SavedInDeclarationMode { get; internal set; }
 
-		protected readonly VehicleCategory _vehicleCategory;
+		public VehicleCategory VehicleCategory { get; internal set; }
 
-		public VehicleCategory VehicleCategory
+		public CrossWindCorrectionMode CrossWindCorrectionMode { get; internal set; }
+
+		public RetarderData Retarder { get; internal set; }
+
+		private List<Axle> _axleData;
+
+		/// <summary>
+		/// Set the properties for all axles of the vehicle
+		/// </summary>
+		public List<Axle> AxleData
 		{
-			get { return _vehicleCategory; }
+			get { return _axleData; }
+			internal set
+			{
+				_axleData = value;
+				ComputeRollResistanceAndReducedMassWheels();
+			}
 		}
 
-		public CrossWindCorrectionMode CrossWindCorrectionMode { get; protected set; }
+		public AxleConfiguration AxleConfiguration { get; internal set; }
 
-		public RetarderData Retarder { get; protected set; }
+		public Kilogram CurbWeight { get; internal set; }
 
-		//[DataMember] private List<Axle> _axleData;
+		public Kilogram CurbWeigthExtra { get; internal set; }
 
-		public AxleConfiguration AxleConfiguration { get; protected set; }
-
-		public Kilogram CurbWeight { get; protected set; }
-
-		public Kilogram CurbWeigthExtra { get; protected set; }
-
-		public Kilogram Loading { get; protected set; }
+		public Kilogram Loading { get; internal set; }
 
 		public Kilogram TotalVehicleWeight()
 		{
-			return CurbWeight + CurbWeigthExtra + Loading;
+			var retVal = 0.SI<Kilogram>();
+			retVal += CurbWeight ?? 0.SI<Kilogram>();
+			retVal += CurbWeigthExtra ?? 0.SI<Kilogram>();
+			retVal += Loading ?? 0.SI<Kilogram>();
+			return retVal;
 		}
 
-		public Kilogram GrossVehicleMassRating { get; protected internal set; }
+		public Kilogram GrossVehicleMassRating { get; internal set; }
 
-		public double DragCoefficient { get; protected internal set; }
+		public double DragCoefficient { get; internal set; }
 
-		public SquareMeter CrossSectionArea { get; protected internal set; }
+		public SquareMeter CrossSectionArea { get; internal set; }
 
-		public double DragCoefficientRigidTruck { get; protected internal set; }
+		public double DragCoefficientRigidTruck { get; internal set; }
 
-		public SquareMeter CrossSectionAreaRigidTruck { get; protected internal set; }
+		public SquareMeter CrossSectionAreaRigidTruck { get; internal set; }
 
-		public CrossWindCorrectionMode CrossWindCorrection { get; protected set; }
+		public CrossWindCorrectionMode CrossWindCorrection { get; internal set; }
 
-		public Meter DynamicTyreRadius { get; protected set; }
+		public Meter DynamicTyreRadius { get; internal set; }
 
-		public Kilogram ReducedMassWheels { get; set; }
+		public Kilogram ReducedMassWheels { get; private set; }
 
-		public string Rim { get; protected set; }
+		public string Rim { get; internal set; }
 
-		public double TotalRollResistanceCoefficient { get; protected set; }
+		public double TotalRollResistanceCoefficient { get; private set; }
+
+		protected void ComputeRollResistanceAndReducedMassWheels()
+		{
+			if (TotalVehicleWeight() == 0.SI<Kilogram>()) {
+				throw new VectoException("Total vehicle weight must be greater than 0! Set CurbWeight and Loading before!");
+			}
+			if (DynamicTyreRadius == null) {
+				throw new VectoException("Dynamic tyre radius must be set before axles!");
+			}
+
+			var RRC = 0.0;
+			var mRed0 = 0.SI<Kilogram>();
+			foreach (var axle in _axleData) {
+				var nrWheels = axle.TwinTyres ? 4 : 2;
+				RRC += axle.AxleWeightShare * axle.RollResistanceCoefficient *
+						Math.Pow(
+							(axle.AxleWeightShare * TotalVehicleWeight() * Physics.GravityAccelleration / axle.TyreTestLoad /
+							nrWheels).Double(), Physics.RollResistanceExponent - 1);
+				mRed0 += nrWheels * (axle.Inertia / DynamicTyreRadius / DynamicTyreRadius).Cast<Kilogram>();
+			}
+			TotalRollResistanceCoefficient = RRC;
+			ReducedMassWheels = mRed0;
+		}
 	}
 
 	public class Axle
 	{
-		//private DataV5Engineering.DataBody.AxleData _data;
+		public KilogramSquareMeter Inertia { get; internal set; }
 
-		public Axle()
-		{
-			//_data = data;
-		}
+		public double RollResistanceCoefficient { get; internal set; }
 
-		//public Axle(DataV5Declaration.DataBody.AxleData data) {}
+		public Newton TyreTestLoad { get; internal set; }
 
-		public KilogramSquareMeter Inertia { get; protected set; }
+		public double AxleWeightShare { get; internal set; }
 
-		public double RollResistanceCoefficient { get; protected set; }
-
-		public Newton TyreTestLoad { get; protected set; }
-
-		public double AxleWeightShare { get; protected set; }
-
-		public bool TwinTyres { get; protected set; }
+		public bool TwinTyres { get; internal set; }
 	}
 }

@@ -7,7 +7,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		[JsonProperty(Required = Required.Always)] public string AppVersion;
 		[JsonProperty(Required = Required.Always)] public string CreatedBy;
-		[JsonProperty(Required = Required.Always)] public DateTime Date;
+		[JsonProperty(Required = Required.Always)] public string Date;
 		[JsonProperty(Required = Required.Always)] public double FileVersion;
 
 		#region Equality members

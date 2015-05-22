@@ -9,7 +9,7 @@
 		/// Returns the inport to connect it to another outport.
 		/// </summary>
 		/// <returns></returns>
-		IDriverDemandInPort InPort();
+		IDriverDemandInPort InShaft();
 	}
 
 	/// <summary>
@@ -21,6 +21,6 @@
 		/// Returns the outport to send requests to.
 		/// </summary>
 		/// <returns></returns>
-		IDriverDemandOutPort OutPort();
+		IDriverDemandOutPort OutShaft();
 	}
 }

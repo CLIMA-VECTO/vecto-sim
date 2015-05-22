@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.FileIO
 			{
 				//[JsonProperty]
 				//public double Inertia;
-				[JsonProperty(Required = Required.Always)] public string WheelsStr;
+				[JsonProperty("Wheels", Required = Required.Always)] public string WheelsStr;
 				//[JsonProperty(Required = Required.Always)]
 				//public double AxleWeightShare;
 				[JsonProperty(Required = Required.Always)] public bool TwinTyres;

@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IDrivingCycleDemandInProvider
 
-		public IDrivingCycleDemandInPort InPort()
+		public IDrivingCycleDemandInPort InShaft()
 		{
 			return this;
 		}
@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IDrivingCycleOutProvider
 
-		public IDrivingCycleOutPort OutPort()
+		public IDrivingCycleOutPort OutShaft()
 		{
 			return this;
 		}

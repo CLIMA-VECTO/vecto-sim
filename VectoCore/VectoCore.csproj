@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\VectoExceptions.cs" />
     <Compile Include="Exceptions\VectoSimulationException.cs" />
+    <Compile Include="FileIO\InputFileReader.cs" />
     <Compile Include="FileIO\VehicleFileDeclaration.cs" />
     <Compile Include="FileIO\VehicleFileEngineering.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
@@ -122,8 +123,10 @@
     <Compile Include="Models\Connector\Ports\IFvPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
     <Compile Include="Models\DeclarationData.cs" />
+    <Compile Include="Models\Declaration\LookupData.cs" />
     <Compile Include="Models\Declaration\Rims.cs" />
     <Compile Include="Models\Declaration\Wheels.cs" />
+    <Compile Include="Models\SimulationComponent\Data\AuxiliaryCycleDataAdapter.cs" />
     <Compile Include="Models\SimulationComponent\Data\CombustionEngineData.cs" />
     <Compile Include="Models\SimulationComponent\Data\DrivingCycleData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMap.cs" />
@@ -138,24 +141,24 @@
     <Compile Include="Models\SimulationComponent\Data\RetarderData.cs" />
     <Compile Include="Models\SimulationComponent\Data\RetarderLossMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\DeclarationModeSimulationComponentFactory.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\EngineeringModeSimulationComponentFactory.cs" />
     <Compile Include="Models\SimulationComponent\IClutch.cs" />
     <Compile Include="Models\SimulationComponent\IEngineOnlyDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriverDemandDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriver.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MappingAuxiliary.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\Vehicle.cs" />
     <Compile Include="Models\SimulationComponent\IVehicle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Clutch.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AxleGear.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Retarder.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Vehicle.cs" />
     <Compile Include="Models\SimulationComponent\IPowerTrainComponent.cs" />
     <Compile Include="Models\Simulation\Data\ISummaryDataWriter.cs" />
     <Compile Include="Models\Simulation\Data\SummaryFileWriter.cs" />
     <Compile Include="Models\Simulation\Data\VectoJobData.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Driver.cs" />
     <Compile Include="Models\SimulationComponent\Data\DriverData.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Vehicle.cs" />
-    <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
     <Compile Include="Utils\Formulas.cs" />
     <Compile Include="Utils\IntExtensionMethods.cs" />
     <Compile Include="Utils\Physics.cs" />

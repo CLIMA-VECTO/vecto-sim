@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static Newton()
 		{
-			Constructors.Add(typeof(Newton), val => new Newton(val));
+			Constructors.Add(typeof (Newton), val => new Newton(val));
 		}
 
 		[JsonConstructor]
@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static Radian()
 		{
-			Constructors.Add(typeof(Radian), val => new Radian(val));
+			Constructors.Add(typeof (Radian), val => new Radian(val));
 		}
 
 		[JsonConstructor]
@@ -34,16 +34,21 @@ namespace TUGraz.VectoCore.Utils
 	}
 
 
+	public class MeterPerSquareSecond : SIBase<MeterPerSquareSecond>
 	{
-		public MeterPerSquareSecond() : this(0) {}
-		protected MeterPerSquareSecond(double val) : base(val, new SI().Meter.Per.Square.Second) {}
+		static MeterPerSquareSecond()
+		{
+			Constructors.Add(typeof (MeterPerSquareSecond), val => new MeterPerSquareSecond(val));
+		}
+
+		protected MeterPerSquareSecond(double val) : base(new SI(val).Meter.Per.Square.Second) {}
 	}
 
 	public class Second : SIBase<Second>
 	{
 		static Second()
 		{
-			Constructors.Add(typeof(Second), val => new Second(val));
+			Constructors.Add(typeof (Second), val => new Second(val));
 		}
 
 		[JsonConstructor]
@@ -52,33 +57,52 @@ namespace TUGraz.VectoCore.Utils
 
 	public class Meter : SIBase<Meter>
 	{
-		public Meter() : this(0) {}
-		protected Meter(double val) : base(val, new SI().Meter) {}
+		static Meter()
+		{
+			Constructors.Add(typeof (Meter), val => new Meter(val));
+		}
+
+		protected Meter(double val) : base(new SI(val).Meter) {}
 	}
 
 	public class Kilogram : SIBase<Kilogram>
 	{
-		public Kilogram() : this(0) {}
-		protected Kilogram(double val) : base(val, new SI().Kilo.Gramm) {}
+		static Kilogram()
+		{
+			Constructors.Add(typeof (Kilogram), val => new Kilogram(val));
+		}
+
+		[JsonConstructor]
+		protected Kilogram(double val) : base(new SI(val).Kilo.Gramm) {}
 	}
 
 	public class SquareMeter : SIBase<SquareMeter>
 	{
-		public SquareMeter() : this(0) {}
-		protected SquareMeter(double val) : base(val, new SI().Square.Meter) {}
+		static SquareMeter()
+		{
+			Constructors.Add(typeof (SquareMeter), val => new SquareMeter(val));
+		}
+
+		[JsonConstructor]
+		private SquareMeter(double val) : base(new SI(val).Square.Meter) {}
 	}
 
 	public class KilogramSquareMeter : SIBase<KilogramSquareMeter>
 	{
-		public KilogramSquareMeter() : this(0) {}
-		protected KilogramSquareMeter(double val) : base(val, new SI().Kilo.Gramm.Square.Meter) {}
+		static KilogramSquareMeter()
+		{
+			Constructors.Add(typeof (KilogramSquareMeter), val => new KilogramSquareMeter(val));
+		}
+
+		[JsonConstructor]
+		protected KilogramSquareMeter(double val) : base(new SI(val).Kilo.Gramm.Square.Meter) {}
 	}
 
 	public class Watt : SIBase<Watt>
 	{
 		static Watt()
 		{
-			Constructors.Add(typeof(Watt), val => new Watt(val));
+			Constructors.Add(typeof (Watt), val => new Watt(val));
 		}
 
 		[JsonConstructor]
@@ -99,7 +123,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static PerSecond()
 		{
-			Constructors.Add(typeof(PerSecond), val => new PerSecond(val));
+			Constructors.Add(typeof (PerSecond), val => new PerSecond(val));
 		}
 
 		[JsonConstructor]
@@ -110,7 +134,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static MeterPerSecond()
 		{
-			Constructors.Add(typeof(MeterPerSecond), val => new MeterPerSecond(val));
+			Constructors.Add(typeof (MeterPerSecond), val => new MeterPerSecond(val));
 		}
 
 		[JsonConstructor]
@@ -122,7 +146,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static RoundsPerMinute()
 		{
-			Constructors.Add(typeof(RoundsPerMinute), val => new RoundsPerMinute(val));
+			Constructors.Add(typeof (RoundsPerMinute), val => new RoundsPerMinute(val));
 		}
 
 		[JsonConstructor]
@@ -134,7 +158,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static NewtonMeter()
 		{
-			Constructors.Add(typeof(NewtonMeter), val => new NewtonMeter(val));
+			Constructors.Add(typeof (NewtonMeter), val => new NewtonMeter(val));
 		}
 
 		[JsonConstructor]
@@ -163,8 +187,8 @@ namespace TUGraz.VectoCore.Utils
 
 		public static T Create(double val)
 		{
-			RuntimeHelpers.RunClassConstructor(typeof(T).TypeHandle);
-			return Constructors[typeof(T)](val);
+			RuntimeHelpers.RunClassConstructor(typeof (T).TypeHandle);
+			return Constructors[typeof (T)](val);
 		}
 
 		protected SIBase(Type type, Func<double, T> constructor)

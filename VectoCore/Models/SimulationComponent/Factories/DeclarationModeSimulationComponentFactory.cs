@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO;
@@ -8,7 +9,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Factories
 {
-	public class DeclarationModeSimulationComponentFactory
+	public class DeclarationModeSimulationComponentFactory : InputFileReader
 	{
 		protected static DeclarationModeSimulationComponentFactory _instance;
 
@@ -20,7 +21,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories
 		public VehicleData CreateVehicleData(string fileName)
 		{
 			var json = File.ReadAllText(fileName);
-			var fileInfo = SimulationComponentData.GetFileVersion(json);
+			var fileInfo = GetFileVersion(json);
 
 			if (!fileInfo.Item2) {
 				throw new VectoException("File not saved in Declaration Mode!");
@@ -37,15 +38,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories
 
 		protected VehicleData CreateVehicleData(string basePath, VehicleFileV5Declaration.DataBodyDecl data)
 		{
-			return new VehicleData {
-				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				VehicleCategory = data.VehicleCategory(),
-				GrossVehicleMassRating = data.GrossVehicleMassRating.SI<Kilogram>(),
-				DragCoefficient = data.DragCoefficient,
-				CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>(),
-				DragCoefficientRigidTruck = data.DragCoefficientRigidTruck,
-				CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>()
-			};
+			//return new VehicleData {
+			//	SavedInDeclarationMode = data.SavedInDeclarationMode,
+			//	VehicleCategory = data.VehicleCategory(),
+			//	GrossVehicleMassRating = data.GrossVehicleMassRating.SI<Kilogram>(),
+			//	DragCoefficient = data.DragCoefficient,
+			//	CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>(),
+			//	DragCoefficientRigidTruck = data.DragCoefficientRigidTruck,
+			//	CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>()
+			//};
+			return null;
 		}
 	}
 }
