@@ -186,104 +186,111 @@ Class cVSUM
 
 
         'Only Entire-vehicle (not EngOnly)
-        If Not VEC.EngOnly Then
+		If Not VEC.EngOnly Then
 
-            'Pbrake-norm
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Pbrake(t)
-            Next
-            VSUMentries("\\Pbrake").ValueString = (sum / (t1 + 1))
+			'PwheelPos
+			sum = 0
+			For t = 0 To t1
+				sum += Math.Max(0, MODdata.Psum(t))
+			Next
+			VSUMentries("\\PwheelPos").ValueString = (sum / (t1 + 1))
 
-            'Eair
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Pair(t)
-            Next
-            VSUMentries("\\Eair").ValueString = (-sum / 3600)
+			'Pbrake-norm
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.Pbrake(t)
+			Next
+			VSUMentries("\\Pbrake").ValueString = (sum / (t1 + 1))
 
-            'Eroll
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Proll(t)
-            Next
-            VSUMentries("\\Eroll").ValueString = (-sum / 3600)
+			'Eair
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.Pair(t)
+			Next
+			VSUMentries("\\Eair").ValueString = (-sum / 3600)
 
-            'Egrad
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Pstg(t)
-            Next
-            VSUMentries("\\Egrad").ValueString = (-sum / 3600)
+			'Eroll
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.Proll(t)
+			Next
+			VSUMentries("\\Eroll").ValueString = (-sum / 3600)
 
-            'Eacc
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Pa(t) + MODdata.PaGB(t) + MODdata.PaEng(t)
-            Next
-            VSUMentries("\\Eacc").ValueString = (-sum / 3600)
+			'Egrad
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.Pstg(t)
+			Next
+			VSUMentries("\\Egrad").ValueString = (-sum / 3600)
 
-            'Eaux
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.PauxSum(t)
-            Next
-            VSUMentries("\\Eaux").ValueString = (-sum / 3600)
+			'Eacc
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.Pa(t) + MODdata.PaGB(t) + MODdata.PaEng(t)
+			Next
+			VSUMentries("\\Eacc").ValueString = (-sum / 3600)
 
-            'Ebrake
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Pbrake(t)
-            Next
-            VSUMentries("\\Ebrake").ValueString = (sum / 3600)
+			'Eaux
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.PauxSum(t)
+			Next
+			VSUMentries("\\Eaux").ValueString = (-sum / 3600)
 
-            'Etransm
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.PlossDiff(t) + MODdata.PlossGB(t)
-            Next
-            VSUMentries("\\Etransm").ValueString = (-sum / 3600)
+			'Ebrake
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.Pbrake(t)
+			Next
+			VSUMentries("\\Ebrake").ValueString = (sum / 3600)
 
-            'Retarder
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.PlossRt(t)
-            Next
-            VSUMentries("\\Eretarder").ValueString = (-sum / 3600)
+			'Etransm
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.PlossDiff(t) + MODdata.PlossGB(t)
+			Next
+			VSUMentries("\\Etransm").ValueString = (-sum / 3600)
 
-            'TC Losses
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.PlossTC(t)
-            Next
-            VSUMentries("\\Etorqueconv").ValueString = (-sum / 3600)
+			'Retarder
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.PlossRt(t)
+			Next
+			VSUMentries("\\Eretarder").ValueString = (-sum / 3600)
+
+			'TC Losses
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.PlossTC(t)
+			Next
+			VSUMentries("\\Etorqueconv").ValueString = (-sum / 3600)
 
 
 
-            'Masse, Loading
-            VSUMentries("\\Mass").ValueString = (VEH.Mass + VEH.MassExtra)
-            VSUMentries("\\Loading").ValueString = VEH.Loading
+			'Masse, Loading
+			VSUMentries("\\Mass").ValueString = (VEH.Mass + VEH.MassExtra)
+			VSUMentries("\\Loading").ValueString = VEH.Loading
 
-            'CylceKin
-            For Each VSUMentry In MODdata.CylceKin.VSUMentries
-                VSUMentries("\\" & VSUMentry.Head).ValueString = MODdata.CylceKin.GetValueString(VSUMentry.Head)
-            Next
+			'CylceKin
+			For Each VSUMentry In MODdata.CylceKin.VSUMentries
+				VSUMentries("\\" & VSUMentry.Head).ValueString = MODdata.CylceKin.GetValueString(VSUMentry.Head)
+			Next
 
-            'EposICE
-            sum = 0
-            For t = 0 To t1
-                sum += Math.Max(0, MODdata.Pe(t))
-            Next
-            VSUMentries("\\EposICE").ValueString = (sum / 3600)
+			'EposICE
+			sum = 0
+			For t = 0 To t1
+				sum += Math.Max(0, MODdata.Pe(t))
+			Next
+			VSUMentries("\\EposICE").ValueString = (sum / 3600)
 
-            'EnegICE
-            sum = 0
-            For t = 0 To t1
-                sum += Math.Min(0, MODdata.Pe(t))
-            Next
-            VSUMentries("\\EnegICE").ValueString = (sum / 3600)
+			'EnegICE
+			sum = 0
+			For t = 0 To t1
+				sum += Math.Min(0, MODdata.Pe(t))
+			Next
+			VSUMentries("\\EnegICE").ValueString = (sum / 3600)
 
-        End If
+		End If
 
         'Create Output-string:
         First = True
@@ -651,7 +658,8 @@ Class cVSUM
 
         If NonEngOnly Then
 
-            'Vehicle-related fields
+			'Vehicle-related fields
+			AddToVSUM("\\PwheelPos", "PwheelPos", "[kW]")
             AddToVSUM("\\Pbrake", "Pbrake", "[kW]")
             AddToVSUM("\\EposICE", "EposICE", "[kWh]")
             AddToVSUM("\\EnegICE", "EnegICE", "[kWh]")
