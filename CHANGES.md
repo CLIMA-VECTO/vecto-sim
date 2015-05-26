@@ -4,11 +4,15 @@
 TODO
 - Traction interruption: No engine rev down - hold rpm until new gear engaged (Allison)
 
+### VECTO 2.1.3
+* PwheelPos output in VSUM file.
+* Implemented new Cd*A(v) method
+* Bugfix in TC model
+* Bugfix: Unit error in Cd(v) methods caused incorrect Delta-Cd value being used
 
 ### VECTO 2.1.2
 * Improved TC iteration for higher precision
 * Extended possible TC speed ratio 
-
 
 ### VECTO 2.1.1
 * Bugfix: Incorrect torque calculation in AT/TC model caused early up-shifts
