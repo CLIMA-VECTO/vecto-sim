@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.FileIO
 {
@@ -69,7 +66,7 @@ namespace TUGraz.VectoCore.FileIO
 
 			public VehicleCategory VehicleCategory()
 			{
-				return (VehicleCategory) Enum.Parse(typeof (VehicleCategory), VehicleCategoryStr, true);
+				return (VehicleCategory)Enum.Parse(typeof(VehicleCategory), VehicleCategoryStr, true);
 			}
 
 			[JsonProperty(Required = Required.Always)] public double CurbWeight;

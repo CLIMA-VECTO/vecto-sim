@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Reflection;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Resources.Declaration
+namespace TUGraz.VectoCore.Models.Declaration
 {
 	public abstract class LookupData<TEntryType>
 	{
@@ -12,10 +13,8 @@ namespace TUGraz.VectoCore.Resources.Declaration
 
 		protected DataTable ReadCsvFile(string resourceId)
 		{
-			var myAssembly = System.Reflection.Assembly.GetExecutingAssembly();
-
+			var myAssembly = Assembly.GetExecutingAssembly();
 			var file = myAssembly.GetManifestResourceStream(resourceId);
-
 			return VectoCSVFile.ReadStream(file);
 		}
 

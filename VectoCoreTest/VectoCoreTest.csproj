@@ -70,7 +70,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
-    <Compile Include="Models\DeclarationData\DeclarationDataTest.cs" />
+    <Compile Include="Models\DeclarationDataTest.cs" />
     <Compile Include="Models\SimulationComponentData\FuelConsumptionMapTest.cs" />
     <Compile Include="Models\SimulationComponentData\FullLoadCurveTest.cs" />
     <Compile Include="Models\SimulationComponentData\GearboxDataTest.cs" />
@@ -262,6 +262,9 @@
     <None Include="TestData\AxleGearLossInterpolation.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\DeclarationData\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

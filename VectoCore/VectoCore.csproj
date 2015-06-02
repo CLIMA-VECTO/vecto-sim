@@ -141,7 +141,7 @@
     <Compile Include="Models\SimulationComponent\Data\RetarderData.cs" />
     <Compile Include="Models\SimulationComponent\Data\RetarderLossMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
-    <Compile Include="Models\SimulationComponent\Factories\DeclarationModeSimulationComponentFactory.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\DeclarationModeFactory.cs" />
     <Compile Include="Models\SimulationComponent\Factories\EngineeringModeSimulationComponentFactory.cs" />
     <Compile Include="Models\SimulationComponent\IClutch.cs" />
     <Compile Include="Models\SimulationComponent\IEngineOnlyDrivingCycle.cs" />
