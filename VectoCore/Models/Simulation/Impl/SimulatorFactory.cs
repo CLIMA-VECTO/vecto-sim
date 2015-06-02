@@ -218,7 +218,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return;
 				}
 
-				var vehicleData = EngineeringModeSimulationComponentFactory.Instance().CreateVehicleData(vehicleFile);
+				var vehicleData = EngineeringModeFactory.Instance().CreateVehicleData(vehicleFile);
 				//VehicleData.ReadFromFile(vehicleFile);
 				_vehicle = new Vehicle(_container, vehicleData);
 			}

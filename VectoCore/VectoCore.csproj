@@ -142,7 +142,7 @@
     <Compile Include="Models\SimulationComponent\Data\RetarderLossMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
     <Compile Include="Models\SimulationComponent\Factories\DeclarationModeFactory.cs" />
-    <Compile Include="Models\SimulationComponent\Factories\EngineeringModeSimulationComponentFactory.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\EngineeringModeFactory.cs" />
     <Compile Include="Models\SimulationComponent\IClutch.cs" />
     <Compile Include="Models\SimulationComponent\IEngineOnlyDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriverDemandDrivingCycle.cs" />
@@ -207,6 +207,7 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\Declaration\Rims.csv" />
     <EmbeddedResource Include="Resources\Declaration\Wheels.csv" />
+    <EmbeddedResource Include="Resources\Declaration\SegmentTable.csv" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.FileIO
 		protected VersionInfo GetFileVersion(string jsonStr)
 		{
 			var data = new { Header = new { FileVersion = -1 }, Body = new { SavedInDeclMode = false } };
-			JsonConvert.PopulateObject(jsonStr, data);
+			data = JsonConvert.DeserializeAnonymousType(jsonStr, data);
 			return new VersionInfo { SavedInDeclarationMode = data.Body.SavedInDeclMode, Version = data.Header.FileVersion };
 		}
 

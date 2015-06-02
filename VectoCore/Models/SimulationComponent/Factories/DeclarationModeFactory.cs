@@ -33,8 +33,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories
 				case 5:
 					return CreateVehicleData(Path.GetDirectoryName(filename), Deserialize<VehicleFileV5Declaration>(json));
 				default:
-					throw new UnsupportedFileVersionException(string.Format("Unsupported Version of {0} file. Got Version {1}",
-						Path.GetExtension(filename), fileInfo.Version));
+					throw new UnsupportedFileVersionException(filename, fileInfo.Version);
 			}
 		}
 
@@ -62,8 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories
 				case 5:
 					return CreateVectoJobData(Path.GetDirectoryName(filename), Deserialize<VectoJobFileV2Declaration>(json));
 				default:
-					throw new UnsupportedFileVersionException(string.Format("Unsupported Version of {0} file. Got Version {1}",
-						Path.GetExtension(filename), fileInfo.Version));
+					throw new UnsupportedFileVersionException(filename, fileInfo.Version);
 			}
 		}
 

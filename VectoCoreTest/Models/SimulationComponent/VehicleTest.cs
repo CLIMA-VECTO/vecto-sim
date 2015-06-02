@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer();
 
-			var vehicleData = EngineeringModeSimulationComponentFactory.Instance().CreateVehicleData(VehicleDataFile);
+			var vehicleData = EngineeringModeFactory.Instance().CreateVehicleData(VehicleDataFile);
 			//VehicleData.ReadFromFile(VehicleDataFile);
 			//vehicleData.CrossWindCorrection = VehicleData.CrossWindCorrectionMode.NoCorrection;
 			var vehicle = new Vehicle(container, vehicleData, 17.210535);

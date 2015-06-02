@@ -12,7 +12,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void ReadVehicleFileTest()
 		{
-			var vehicleData = EngineeringModeSimulationComponentFactory.Instance().CreateVehicleData(VehicleDataFile);
+			var vehicleData = EngineeringModeFactory.Instance().CreateVehicleData(VehicleDataFile);
 				//VehicleData.ReadFromFile(VehicleDataFile);
 
 			Assert.AreEqual(VehicleCategory.Coach, vehicleData.VehicleCategory);

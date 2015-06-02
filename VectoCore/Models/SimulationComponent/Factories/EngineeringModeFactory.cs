@@ -8,32 +8,37 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Factories
 {
-	public class EngineeringModeSimulationComponentFactory : InputFileReader
+	public class EngineeringModeFactory : InputFileReader
 	{
-		protected static EngineeringModeSimulationComponentFactory _instance;
+		protected static EngineeringModeFactory _instance;
 
-		public static EngineeringModeSimulationComponentFactory Instance()
+		public static EngineeringModeFactory Instance()
 		{
-			return _instance ?? (_instance = new EngineeringModeSimulationComponentFactory());
+			return _instance ?? (_instance = new EngineeringModeFactory());
+		}
+
+		private void CheckEngineeringMode(string fileName, VersionInfo fileInfo)
+		{
+			if (fileInfo.SavedInDeclarationMode) {
+				Log.WarnFormat("File {0} was saved in Declaration Mode but is used for Engineering Mode!", fileName);
+			}
 		}
 
 		public VehicleData CreateVehicleData(string fileName)
 		{
 			var json = File.ReadAllText(fileName);
 			var fileInfo = GetFileVersion(json);
+			CheckEngineeringMode(fileName, fileInfo);
 
-			if (fileInfo.Item2) {
-				Log.WarnFormat("File {0} was saved in Declaration Mode but is used for Engineering Mode!", fileName);
-			}
-
-			switch (fileInfo.Item1) {
+			switch (fileInfo.Version) {
 				case 5:
 					var data = JsonConvert.DeserializeObject<VehicleFileV5Engineering>(json);
 					return CreateVehicleData(Path.GetDirectoryName(fileName), data.Body);
 				default:
-					throw new UnsupportedFileVersionException("Unsupported Version of .vveh file. Got Version " + fileInfo.Item1);
+					throw new UnsupportedFileVersionException(fileName, fileInfo.Version);
 			}
 		}
+
 
 		protected VehicleData CreateVehicleData(string basePath, VehicleFileV5Engineering.DataBodyEng data)
 		{

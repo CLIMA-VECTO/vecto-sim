@@ -43,6 +43,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			//var job = factory.ReadJobFile("12t Delivery Truck.vecto");
 			//var vehicleData = factory.ReadVehicleData(job.VehicleFile);
 
+			//mock vehicleData
 			var vehicleData = new {
 				VehicleCategory = VehicleCategory.RigidTruck,
 				AxleConfiguration = AxleConfiguration.AxleConfig4x2,
@@ -50,8 +51,8 @@ namespace TUGraz.VectoCore.Tests.Models
 				CurbWeight = 5850.SI<Kilogram>()
 			};
 
-			var segment = DeclarationData.GetSegment(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
-				vehicleData.GrossVehicleMassRating);
+			var segment = DeclarationData.Instance().GetSegment(vehicleData.VehicleCategory, vehicleData.AxleConfiguration,
+				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
 
 
 			Assert.AreEqual(2, segment.HDVClass);
@@ -59,49 +60,41 @@ namespace TUGraz.VectoCore.Tests.Models
 			Assert.AreEqual(3, segment.Missions.Length);
 
 			var longHaulMission = segment.Missions[0];
-			Assert.AreEqual("LongHaul", longHaulMission.Name);
+			Assert.AreEqual(MissionType.LongHaul, longHaulMission.MissionType);
 			Assert.AreEqual("RigidSolo.vcdv", longHaulMission.VCDV);
 			Assert.AreEqual(new[] { 40, 60 }, longHaulMission.AxleWeightDistribution);
-			Assert.AreEqual(1900, longHaulMission.MassExtra);
-			Assert.AreEqual(588.2 * vehicleData.GrossVehicleMassRating - 2511.8, longHaulMission.RefLoad);
+			Assert.AreEqual(1900.SI<Kilogram>(), longHaulMission.MassExtra);
 			Assert.AreEqual("Long_Haul.vdri", longHaulMission.CycleFile);
-
-			Assert.AreEqual(
-				new[] {
-					0.SI<Kilogram>(), longHaulMission.RefLoad,
-					vehicleData.GrossVehicleMassRating - longHaulMission.MassExtra - vehicleData.CurbWeight
-				},
-				longHaulMission.Loadings);
+			Assert.AreEqual(0.SI<Kilogram>(), longHaulMission.MinLoad);
+			Assert.AreEqual(588.2 * vehicleData.GrossVehicleMassRating - 2511.8, longHaulMission.RefLoad);
+			Assert.AreEqual(vehicleData.GrossVehicleMassRating - longHaulMission.MassExtra - vehicleData.CurbWeight,
+				longHaulMission.MaxLoad);
 
 			var regionalDeliveryMission = segment.Missions[1];
-			Assert.AreEqual("RegionalDelivery", regionalDeliveryMission.Name);
+			Assert.AreEqual("RegionalDelivery", regionalDeliveryMission.MissionType);
 			Assert.AreEqual("RigidSolo.vcdv", regionalDeliveryMission.VCDV);
 			Assert.AreEqual(new[] { 45, 55 }, regionalDeliveryMission.AxleWeightDistribution);
-			Assert.AreEqual(1900, regionalDeliveryMission.MassExtra);
-			Assert.AreEqual(394.1 * vehicleData.GrossVehicleMassRating - 1705.9, regionalDeliveryMission.RefLoad);
+			Assert.AreEqual(1900.SI<Kilogram>(), regionalDeliveryMission.MassExtra);
+
 			Assert.AreEqual("Regional_Delivery.vdri", regionalDeliveryMission.CycleFile);
 
-			Assert.AreEqual(
-				new[] {
-					0.SI<Kilogram>(), regionalDeliveryMission.RefLoad,
-					vehicleData.GrossVehicleMassRating - regionalDeliveryMission.MassExtra - vehicleData.CurbWeight
-				},
-				regionalDeliveryMission.Loadings);
+			Assert.AreEqual(0.SI<Kilogram>(), regionalDeliveryMission.MinLoad);
+			Assert.AreEqual(394.1 * vehicleData.GrossVehicleMassRating - 1705.9, regionalDeliveryMission.RefLoad);
+			Assert.AreEqual(vehicleData.GrossVehicleMassRating - regionalDeliveryMission.MassExtra - vehicleData.CurbWeight,
+				regionalDeliveryMission.MaxLoad);
 
 			var urbanDeliveryMission = segment.Missions[1];
-			Assert.AreEqual("UrbanDelivery", urbanDeliveryMission.Name);
+			Assert.AreEqual("UrbanDelivery", urbanDeliveryMission.MissionType);
 			Assert.AreEqual("RigidSolo.vcdv", urbanDeliveryMission.VCDV);
 			Assert.AreEqual(new[] { 45, 55 }, urbanDeliveryMission.AxleWeightDistribution);
-			Assert.AreEqual(1900, urbanDeliveryMission.MassExtra);
-			Assert.AreEqual(394.1 * vehicleData.GrossVehicleMassRating - 1705.9, urbanDeliveryMission.RefLoad);
+			Assert.AreEqual(1900.SI<Kilogram>(), urbanDeliveryMission.MassExtra);
+
 			Assert.AreEqual("Urban_Delivery.vdri", urbanDeliveryMission.CycleFile);
 
-			Assert.AreEqual(
-				new[] {
-					0.SI<Kilogram>(), urbanDeliveryMission.RefLoad,
-					vehicleData.GrossVehicleMassRating - urbanDeliveryMission.MassExtra - vehicleData.CurbWeight
-				},
-				urbanDeliveryMission.Loadings);
+			Assert.AreEqual(0.SI<Kilogram>(), urbanDeliveryMission.MinLoad);
+			Assert.AreEqual(394.1 * vehicleData.GrossVehicleMassRating - 1705.9, urbanDeliveryMission.RefLoad);
+			Assert.AreEqual(vehicleData.GrossVehicleMassRating - urbanDeliveryMission.MassExtra - vehicleData.CurbWeight,
+				urbanDeliveryMission.MaxLoad);
 
 
 			//var runs = new List<IVectoSimulator>();
