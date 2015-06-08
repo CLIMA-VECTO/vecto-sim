@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		[JsonConstructor]
-		protected Ton(double val) : base(new SI(val).Kilo.Kilo.Gramm) {}
+		protected Ton(double val) : base(new SI(val).Ton) {}
 	}
 
 
@@ -333,11 +333,8 @@ namespace TUGraz.VectoCore.Utils
 			min,
 			c,
 			h,
-
-			/// <summary>
-			/// Milli
-			/// </summary>
-			milli
+			milli,
+			t
 		}
 
 		/// <summary>
@@ -502,6 +499,11 @@ namespace TUGraz.VectoCore.Utils
 					denominator.Add(Unit.s);
 					denominator.Add(Unit.s);
 					break;
+				case Unit.t:
+					numerator.Add(Unit.k);
+					numerator.Add(Unit.k);
+					numerator.Add(Unit.g);
+					break;
 				default:
 					numerator.Add(unit);
 					break;
@@ -574,6 +576,15 @@ namespace TUGraz.VectoCore.Utils
 		public SI Gramm
 		{
 			get { return new SI(new SI(this, toUnit: Unit.k), 0.001, Unit.g, Unit.g); }
+		}
+
+		/// <summary>
+		///  [t] (to basic unit: [kg])
+		/// </summary>
+		[DebuggerHidden]
+		public SI Ton
+		{
+			get { return new SI(new SI(this, toUnit: Unit.k), 1000, Unit.t, Unit.g); }
 		}
 
 
