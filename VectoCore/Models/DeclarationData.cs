@@ -44,7 +44,7 @@ namespace TUGraz.VectoCore.Models
 		LongHaul,
 		RegionalDelivery,
 		UrbanDelivery,
-		MunicipalDelivery,
+		MunicipalUtility,
 		Construction,
 		HeavyUrban,
 		Urban,
@@ -75,42 +75,49 @@ namespace TUGraz.VectoCore.Models
 			Kilogram grossVehicleMassRating, Kilogram curbWeight)
 		{
 			var row = _segmentTable.Rows.Cast<DataRow>().First(r => r.Field<string>("tvehcat") == vehicleCategory.ToString()
-																	&& r.Field<string>("taxleconf") == axleConfiguration.ToString()
-																	&& r.Field<double>("ggw_min").SI<Ton>() <= grossVehicleMassRating.Double()
-																	&& r.Field<double>("ggw_max").SI<Ton>() > grossVehicleMassRating.Double());
+																	&& r.Field<string>("taxleconf") == axleConfiguration.GetName()
+																	&& r.ParseDouble("gvw_min").SI<Ton>() <= grossVehicleMassRating
+																	&& r.ParseDouble("gvw_max").SI<Ton>() > grossVehicleMassRating);
 			var segment = new Segment();
+			segment.GrossVehicleWeightMin = row.ParseDouble("gvw_min").SI().Ton.Cast<Kilogram>();
+			segment.GrossVehicleWeightMax = row.ParseDouble("gvw_max").SI().Ton.Cast<Kilogram>();
+			segment.VehicleCategory = vehicleCategory;
+			segment.AxleConfiguration = axleConfiguration;
 			segment.HDVClass = row.Field<string>("hdv_class");
 			segment.VACC = row.Field<string>("vacc");
 
 			var missions = new List<Mission>();
 
 			foreach (var missionType in Enum.GetValues(typeof(MissionType)).Cast<MissionType>()) {
-				if (row.Field<bool>(missionType.ToString())) {
+				if (row.Field<string>(missionType.ToString()) == "1") {
 					var mission = new Mission();
 					mission.MissionType = missionType;
 
-					List<double> axles;
-					string[] trailerAxles;
+
+					string vcdv_field;
+					string axleField;
+					string trailerField;
 
 					if (missionType == MissionType.LongHaul) {
-						mission.VCDV = row.Field<string>("vcdv-" + missionType.ToString().ToLower());
-						axles = row.Field<string>("rigid/truckaxles-longhaul").Split('/').Select(double.Parse).ToList();
-						trailerAxles = row.Field<string>("traileraxles-" + missionType.ToString().ToLower()).Split('/');
+						vcdv_field = "vcdv-longhaul";
+						axleField = "rigid/truckaxles-longhaul";
+						trailerField = "traileraxles-longhaul";
 					} else {
-						mission.VCDV = row.Field<string>("vcdv-other");
-						axles = row.Field<string>("rigid/truckaxles-other").Split('/').Select(double.Parse).ToList();
-						trailerAxles = row.Field<string>("traileraxles-" + missionType.ToString().ToLower()).Split('/');
+						vcdv_field = "vcdv-other";
+						axleField = "rigid/truckaxles-other";
+						trailerField = "traileraxles-other";
 					}
 
-					var weightPercent = double.Parse(trailerAxles[0]);
+					mission.VCDV = row.Field<string>(vcdv_field);
+					mission.AxleWeightDistribution =
+						row.Field<string>(axleField).Split('/').ToDouble().Select(x => x / 100.0).ToArray();
+
+					var trailerAxles = row.Field<string>(trailerField).Split('/');
 					var count = int.Parse(trailerAxles[1]);
-					if (count > 0) {
-						axles.AddRange(Enumerable.Repeat(weightPercent / count, count));
-					}
+					var weightPercent = trailerAxles[0].ToDouble();
+					mission.TrailerAxleWeightDistribution = Enumerable.Repeat(weightPercent / count / 100.0, count).ToArray();
 
-					mission.AxleWeightDistribution = axles.ToArray();
-
-					mission.MassExtra = row.Field<double>("massextra-" + missionType.ToString().ToLower()).SI<Kilogram>();
+					mission.MassExtra = row.ParseDouble("massextra-" + missionType.ToString().ToLower()).SI<Kilogram>();
 
 					mission.MinLoad = 0.SI<Kilogram>();
 
@@ -123,6 +130,7 @@ namespace TUGraz.VectoCore.Models
 					} else {
 						mission.RefLoad = row.Field<double>("refload-" + missionType.ToString().ToLower()).SI<Kilogram>();
 					}
+					mission.RefLoad = VectoMath.Min(mission.RefLoad, grossVehicleMassRating);
 
 					mission.MaxLoad = grossVehicleMassRating - mission.MassExtra - curbWeight;
 					//todo: rename cycle files to equal the enumeration
@@ -138,6 +146,11 @@ namespace TUGraz.VectoCore.Models
 
 	public class Segment
 	{
+		public VehicleCategory VehicleCategory { get; set; }
+		public AxleConfiguration AxleConfiguration { get; set; }
+		public Kilogram GrossVehicleWeightMin { get; set; }
+		public Kilogram GrossVehicleWeightMax { get; set; }
+
 		public string HDVClass { get; internal set; }
 		public string VACC { get; internal set; }
 		public Mission[] Missions { get; internal set; }
@@ -148,10 +161,19 @@ namespace TUGraz.VectoCore.Models
 		public MissionType MissionType { get; set; }
 		public string VCDV { get; set; }
 		public double[] AxleWeightDistribution { get; set; }
+		public double[] TrailerAxleWeightDistribution { get; set; }
+
 		public Kilogram MassExtra { get; set; }
+
 		public Kilogram RefLoad { get; set; }
 		public Kilogram MinLoad { get; set; }
 		public Kilogram MaxLoad { get; set; }
+
+		public IEnumerable<Kilogram> Loadings
+		{
+			get { return new[] { MinLoad, RefLoad, MaxLoad }; }
+		}
+
 		public string CycleFile { get; set; }
 	}
 }

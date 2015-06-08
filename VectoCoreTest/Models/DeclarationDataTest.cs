@@ -1,6 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Factories;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -55,14 +59,14 @@ namespace TUGraz.VectoCore.Tests.Models
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
 
 
-			Assert.AreEqual(2, segment.HDVClass);
+			Assert.AreEqual("2", segment.HDVClass);
 			Assert.AreEqual("Truck.vacc", segment.VACC);
 			Assert.AreEqual(3, segment.Missions.Length);
 
 			var longHaulMission = segment.Missions[0];
 			Assert.AreEqual(MissionType.LongHaul, longHaulMission.MissionType);
 			Assert.AreEqual("RigidSolo.vcdv", longHaulMission.VCDV);
-			Assert.AreEqual(new[] { 40, 60 }, longHaulMission.AxleWeightDistribution);
+			Assert.IsTrue(new[] { 40d, 60 }.SequenceEqual(longHaulMission.AxleWeightDistribution));
 			Assert.AreEqual(1900.SI<Kilogram>(), longHaulMission.MassExtra);
 			Assert.AreEqual("Long_Haul.vdri", longHaulMission.CycleFile);
 			Assert.AreEqual(0.SI<Kilogram>(), longHaulMission.MinLoad);
@@ -73,7 +77,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			var regionalDeliveryMission = segment.Missions[1];
 			Assert.AreEqual("RegionalDelivery", regionalDeliveryMission.MissionType);
 			Assert.AreEqual("RigidSolo.vcdv", regionalDeliveryMission.VCDV);
-			Assert.AreEqual(new[] { 45, 55 }, regionalDeliveryMission.AxleWeightDistribution);
+			Assert.IsTrue(new[] { 45d, 55 }.SequenceEqual(regionalDeliveryMission.AxleWeightDistribution));
 			Assert.AreEqual(1900.SI<Kilogram>(), regionalDeliveryMission.MassExtra);
 
 			Assert.AreEqual("Regional_Delivery.vdri", regionalDeliveryMission.CycleFile);
@@ -86,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			var urbanDeliveryMission = segment.Missions[1];
 			Assert.AreEqual("UrbanDelivery", urbanDeliveryMission.MissionType);
 			Assert.AreEqual("RigidSolo.vcdv", urbanDeliveryMission.VCDV);
-			Assert.AreEqual(new[] { 45, 55 }, urbanDeliveryMission.AxleWeightDistribution);
+			Assert.IsTrue(new[] { 45d, 55 }.SequenceEqual(urbanDeliveryMission.AxleWeightDistribution));
 			Assert.AreEqual(1900.SI<Kilogram>(), urbanDeliveryMission.MassExtra);
 
 			Assert.AreEqual("Urban_Delivery.vdri", urbanDeliveryMission.CycleFile);
@@ -97,10 +101,12 @@ namespace TUGraz.VectoCore.Tests.Models
 				urbanDeliveryMission.MaxLoad);
 
 
-			//var runs = new List<IVectoSimulator>();
+			var runs = new List<IVectoSimulator>();
 
-			//foreach (var mission in segment.Missions) {
-			//	foreach (var loading in mission.Loadings) {
+			//foreach (var mission in segment.Missions)
+			//{
+			//	foreach (var loading in mission.Loadings)
+			//	{
 			//		var container = new VehicleContainer();
 
 			//		// connect cycle --> driver --> vehicle --> wheels --> axleGear --> gearBox
@@ -120,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			//		var wheels = new Wheels(container, 0.SI<Meter>());
 
-			//		var missionVehicleData = new VehicleData(vehicleData, loading);
+			//		var missionVehicleData = new VehicleData(vehicleData, loading, mission.AxleWeightDistribution);
 			//		var vehicle = new Vehicle(container, missionVehicleData);
 			//		vehicle.InPort().Connect(wheels.OutPort());
 
@@ -135,7 +141,6 @@ namespace TUGraz.VectoCore.Tests.Models
 			//		var simulator = new VectoSimulator(container, cycle);
 			//		runs.Add(simulator);
 			//	}
-			//}
 		}
 	}
 }
