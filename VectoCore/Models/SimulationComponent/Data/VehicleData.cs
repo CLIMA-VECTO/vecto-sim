@@ -40,6 +40,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		AxleConfig8x8,
 	}
 
+	public static class AxleConfigurationExtensions
+	{
+		public static string GetName(this AxleConfiguration self)
+		{
+			return self.ToString().Substring(10);
+		}
+	}
+
 	public class VehicleData : SimulationComponentData
 	{
 		//public static VehicleData ReadFromFile(string fileName)
