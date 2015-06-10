@@ -1843,7 +1843,8 @@ lb_nOK:
 		Else
 
 			'Calculate Start Gear 
-			For Gear = GBX.GearCount To 1 Step -1
+			' Loop finishes at Gear = 1 (If "Exit For" is not called)
+			For Gear = GBX.GearCount To 2 Step -1
 
 				'rpm at StartSpeed  [m/s]
 				nU = GBX.gs_StartSpeed * 60.0 * GBX.Igetr(0) * GBX.Igetr(Gear) / (2 * VEH.rdyn * Math.PI / 1000)
@@ -1872,8 +1873,6 @@ lb_nOK:
 				If nU > nUdown And nU >= ENG.Nidle And (1 - Tq / MdMax >= GBX.gs_TorqueResvStart / 100 Or Tq < 0) Then Exit For
 
 			Next
-
-			Gear=1
 
 		End If
 
@@ -2207,10 +2206,11 @@ lb_nOK:
 			If GBX.gs_ShiftInside And LastGear < GBX.GearCount Then
 
 				'Calculate Shift-rpm for higher gear
-				nU = fnU(Vact, Gear + 1, False)
+				'old: nU = fnU(Vact, Gear + 1, False)
+				nU = fnUout(Vact, Gear + 1)
 
 				'Continue only if rpm (for higher gear) is below rated rpm
-				If nU <= ENG.Nrated Then
+				If nU > ENG.Nidle AndAlso nU <= ENG.Nrated Then
 					Pe = Math.Min(fPeGearMod(Gear + 1, t, Grad), FLD(Gear + 1).Pfull(nU))
 					Pe = Math.Max(Pe, FLD(Gear + 1).Pdrag(nU))
 					Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
