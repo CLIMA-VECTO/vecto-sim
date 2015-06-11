@@ -552,7 +552,7 @@ Public Class cMOD
 
 		End If
 
-		HeaderList.Add(New String() {"FC", "g/h"})
+		HeaderList.Add(New String() {"FC-Map", "g/h"})
 		HeaderList.Add(New String() {"FC-AUXc", "g/h"})
 		HeaderList.Add(New String() {"FC-WHTCc", "g/h"})
 

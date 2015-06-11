@@ -393,18 +393,18 @@ Class cVSUM
 
                 If VSUMentries(key).Multi Then
 
-                    If dic1.ContainsKey(VSUMentries(key).Head) Then
-                        ls0 = dic1(VSUMentries(key).Head)
-                    Else
-                        ls0 = New List(Of Dictionary(Of String, Object))
-                        dic1.Add(VSUMentries(key).Head, ls0)
-                    End If
+					If dic1.ContainsKey(VSUMentries(key).Head) Then
+						ls0 = dic1(VSUMentries(key).Head)
+					Else
+						ls0 = New List(Of Dictionary(Of String, Object))
+						dic1.Add(VSUMentries(key).Head, ls0)
+					End If
 
                     ls0.Add(dic0)
 
                 Else
 
-                    dic1.Add(VSUMentries(key).Head, dic0)
+					dic1.Add(VSUMentries(key).Head, dic0)
 
                 End If
 
@@ -436,13 +436,13 @@ Class cVSUM
 
     End Function
 
-    Private Sub AddToVSUM(ByVal IDstring As String, ByVal Head As String, ByVal Unit As String, Optional Multi As Boolean = False)
-        If Not VSUMentries.ContainsKey(IDstring) Then
-            VSUMentries.Add(IDstring, New cVSUMentry(Head, Unit))
-            VSUMentryList.Add(IDstring)
-            If Multi Then VSUMentries(IDstring).Multi = True
-        End If
-    End Sub
+	Private Sub AddToVSUM(ByVal IDstring As String, ByVal Head As String, ByVal Unit As String, Optional Multi As Boolean = False)
+		If Not VSUMentries.ContainsKey(IDstring) Then
+			VSUMentries.Add(IDstring, New cVSUMentry(Head, Unit))
+			VSUMentryList.Add(IDstring)
+			If Multi Then VSUMentries(IDstring).Multi = True
+		End If
+	End Sub
 
 
     Public Function Init(ByVal JobFile As String) As Boolean
@@ -628,15 +628,15 @@ Class cVSUM
                 Return False
             End Try
 
-            AddToVSUM("FC_h", "FCh", "[g/h]")
-            AddToVSUM("FC-AUXc_h", "FCh-AUXc", "[g/h]")
-            AddToVSUM("FC-WHTCc_h", "FCh-WHTCc", "[g/h]")
+			AddToVSUM("FC_h", "FC-Map", "[g/h]", True)
+			AddToVSUM("FC-AUXc_h", "FC-AUXc", "[g/h]", True)
+			AddToVSUM("FC-WHTCc_h", "FC-WHTCc", "[g/h]", True)
 
             If Not VEC0.EngOnly Then
 
-                AddToVSUM("FC_km", "FC", "[g/km]")
-                AddToVSUM("FC-AUXc_km", "FC-AUXc", "[g/km]")
-                AddToVSUM("FC-WHTCc_km", "FC-WHTCc", "[g/km]")
+				AddToVSUM("FC_km", "FC-Map", "[g/km]", True)
+				AddToVSUM("FC-AUXc_km", "FC-AUXc", "[g/km]", True)
+				AddToVSUM("FC-WHTCc_km", "FC-WHTCc", "[g/km]", True)
 
                 AddToVSUM("CO2_km", "CO2", "[g/km]", True)
                 AddToVSUM("CO2_tkm", "CO2", "[g/tkm]", True)
@@ -678,7 +678,7 @@ Class cVSUM
             'CylceKin
             CylceKin = New cCycleKin
             For Each VSUMentry In CylceKin.VSUMentries
-                AddToVSUM("\\" & VSUMentry.Head, VSUMentry.Head, VSUMentry.Unit)
+				AddToVSUM("\\" & VSUMentry.Head, VSUMentry.Head, VSUMentry.Unit)
             Next
 
         End If
@@ -722,8 +722,8 @@ Class cVSUM
 End Class
 
 Public Class cVSUMentry
-    Public Head As String
-    Public Unit As String
+	Public Head As String
+	Public Unit As String
     Public MyVal As Object
     Public Multi As Boolean
 
@@ -731,8 +731,8 @@ Public Class cVSUMentry
         Head = HeadStr
         Unit = UnitStr
         MyVal = Nothing
-        Multi = False
-    End Sub
+		Multi = False
+	End Sub
 
     Public Property ValueString As Object
         Get

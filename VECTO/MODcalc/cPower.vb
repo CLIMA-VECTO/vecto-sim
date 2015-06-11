@@ -1988,13 +1988,13 @@ lb_nOK:
 
 					If DEV.TCshiftModeNew Then
 						If _
-						 fnUout(Vact, LastGear + 1) > Math.Min(900, iRatio * (FLD(LastGear).N80h - 150)) AndAlso
+						 fnUout(Vact, LastGear + 1) > Math.Min(700, iRatio * (FLD(LastGear).N80h - 150)) AndAlso
 						 FLD(LastGear + 1).Pfull(nU * iRatio) >= fPeGearMod(LastGear + 1, t, MODdata.Vh.V(t), TCaccmin, Grad) Then
 							Return LastGear + 1
 						End If
 					Else
 						If _
-						fnUout(Vact, LastGear + 1) > Math.Min(900, iRatio * (FLD(LastGear).N80h - 150)) AndAlso
+						fnUout(Vact, LastGear + 1) > Math.Min(700, iRatio * (FLD(LastGear).N80h - 150)) AndAlso
 						FLD(LastGear + 1).Pfull(nU * iRatio) > 0.7 * FLD(LastGear).Pfull(nU) Then
 							Return LastGear + 1
 						End If
