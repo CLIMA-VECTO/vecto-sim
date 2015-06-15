@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
-using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
@@ -51,16 +48,6 @@ namespace TUGraz.VectoCore.Utils
 			} catch (Exception e) {
 				throw new VectoException(string.Format("Field {0}: {1}", column, e.Message), e);
 			}
-		}
-
-		public static double ToDouble(this string self)
-		{
-			return double.Parse(self, CultureInfo.InvariantCulture);
-		}
-
-		public static IEnumerable<double> ToDouble(this IEnumerable<string> self)
-		{
-			return self.Select(ToDouble);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Factories;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void ReadVehicleFileTest()
 		{
 			var vehicleData = EngineeringModeFactory.Instance().CreateVehicleData(VehicleDataFile);
-				//VehicleData.ReadFromFile(VehicleDataFile);
+			//VehicleData.ReadFromFile(VehicleDataFile);
 
 			Assert.AreEqual(VehicleCategory.Coach, vehicleData.VehicleCategory);
 		}
