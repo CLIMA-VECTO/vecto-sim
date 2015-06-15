@@ -13,7 +13,7 @@ Imports System.Collections.Generic
 Public Class cVEH
 
     'V2 MassMax is now saved in [t] instead of [kg]
-    Private Const FormatVersion As Short = 5
+	Private Const FormatVersion As Short = 6
     Private FileVersion As Short
 
     Private sFilePath As String
@@ -76,7 +76,7 @@ Public Class cVEH
         MyFileList = New List(Of String)
 
         '.vcdv  / .vcdb
-        If Me.CdMode <> tCdMode.ConstCd0 Then MyFileList.Add(Me.CdFile.FullPath)
+		If Me.CdMode = tCdMode.CdOfVeng Or Me.CdMode = tCdMode.CdOfBeta Then MyFileList.Add(Me.CdFile.FullPath)
 
         'Retarder
         If Me.RtType <> tRtType.None Then MyFileList.Add(Me.RtFile.FullPath)
@@ -229,7 +229,8 @@ Public Class cVEH
                     a0.Wheels = "-"
                 Else
                     a0.Inertia = CSng(dic("Inertia"))
-                    a0.Wheels = CStr(dic("Wheels"))
+					a0.Wheels = CStr(dic("Wheels"))
+					If FileVersion < 6 Then a0.Wheels = a0.Wheels.Replace("R ", "R")
                 End If
 
                 a0.Share = CSng(dic("AxleWeightShare"))
@@ -382,7 +383,7 @@ Public Class cVEH
 				a0 = New cAxle
 
 				a0.Inertia = 0	 'Defined later
-				a0.Wheels = "385/65 R 22.5"
+				a0.Wheels = cDeclaration.TyreTr
 
 				a0.Share = a / 100
 				a0.TwinTire = False

@@ -38,6 +38,7 @@ Public Class cDeclaration
 
 	Public Const RRCTr As Single = 0.00555
 	Public Const FzISOTr As Single = 37500
+	Public Const TyreTr As String = "385/65 R22.5"
 
 	Public Const AirDensity As Single = 1.188
 	Public Const FuelDens As Single = 0.832
@@ -98,7 +99,6 @@ Public Class cDeclaration
 		Dim i As Integer
 		Dim a As Integer
 		Dim s0 As String
-		Dim s As String()
 		Dim TrS As Single
 		Dim TrA As Single
 		Dim stl As String()
@@ -109,8 +109,6 @@ Public Class cDeclaration
 		Dim AxleShares As List(Of String)
 		Dim AxleSharesTr As List(Of String)
 		Dim l0 As List(Of Single)
-		Dim WHTCWF As List(Of String)
-		Dim dWHTCWF As Dictionary(Of tWHTCpart, Single)
 
 		Dim at0 As List(Of String)
 		Dim AuxPower0 As Dictionary(Of tMission, Single)
@@ -230,7 +228,45 @@ Public Class cDeclaration
 
 		file.Close()
 
+		'WHTC-Weighting-Factors.csv
+		If Not file.OpenRead(MyDeclPath & "WHTC-Weighting-Factors.csv") Then
+			GUImsg(tMsgID.Err, "Failed to load Declaration Config (WHTC-Weighting-Factors.csv)!")
+			Return False
+		End If
 
+		'Skip Header
+		file.ReadLine()
+
+		Try
+
+			For i = 0 To 2
+				If file.EndOfFile Then Throw New Exception("Unexpected end of file.")
+				line = file.ReadLine
+
+				a = 0
+				For Each mt0 In Missions.Keys
+					a += 1
+					mc0 = Missions(mt0)
+					Select Case i
+						Case 0
+							mc0.WHTCWF = New Dictionary(Of tWHTCpart, Single)
+							mc0.WHTCWF.Add(tWHTCpart.Urban, line(a) / 100)
+						Case 1
+							mc0.WHTCWF.Add(tWHTCpart.Rural, line(a) / 100)
+						Case Else '2
+							mc0.WHTCWF.Add(tWHTCpart.Motorway, line(a) / 100)
+					End Select
+				Next
+			Next
+
+
+		Catch ex As Exception
+			file.Close()
+			GUImsg(tMsgID.Err, "Error in WHTC-Weighting-Factors! " & ex.Message)
+			Return False
+		End Try
+
+		file.Close()
 
 		'Segment Table
 		If Not file.OpenRead(MyDeclPath & "SegmentTable.csv") Then
@@ -252,7 +288,6 @@ Public Class cDeclaration
 					LoadingList = New List(Of String)
 					AxleShares = New List(Of String)
 					AxleSharesTr = New List(Of String)
-					WHTCWF = New List(Of String)
 
 					ste0.VehCat = ConvVehCat(line(1))
 
@@ -294,7 +329,7 @@ Public Class cDeclaration
 						If mt0 <> tMission.LongHaul Then AxleSharesTr.Add(line(12))
 					Next
 
-					ste0.TrailerOnlyInLongHaul = (Trim(line(11)) <> "0/0" And Trim(line(12)) = "0/0" And ste0.VehCat = tVehCat.RigidTruck)
+					ste0.TrailerOnlyInLongHaul = (Trim(line(11)) <> "-" And Trim(line(12)) = "-" And ste0.VehCat = tVehCat.RigidTruck)
 
 					i = 12
 					For Each mt0 In SegmentTable.MissionList
@@ -308,11 +343,6 @@ Public Class cDeclaration
 					For Each mt0 In SegmentTable.MissionList
 						i += 1
 						LoadingList.Add(line(i))
-					Next
-
-					For Each mt0 In SegmentTable.MissionList
-						i += 1
-						WHTCWF.Add(line(i))
 					Next
 
 					For i = 0 To SegmentTable.MissionList.Count - 1
@@ -329,22 +359,20 @@ Public Class cDeclaration
 
 							l0 = New List(Of Single)
 
-							TrS = AxleSharesTr(i).Split("/")(0)
-							TrA = AxleSharesTr(i).Split("/")(1)
+							If AxleSharesTr(i) = "-" Then
+								TrS = 0
+								TrA = 0
+							Else
+								TrS = AxleSharesTr(i).Split("/")(0)
+								TrA = AxleSharesTr(i).Split("/")(1)
+							End If
+
 
 							For a = 1 To TrA
 								l0.Add(TrS / TrA)
 							Next
 
 							ste0.AxleSharesTr.Add(SegmentTable.MissionList(i), l0)
-
-							s = WHTCWF(i).Split("/")
-							dWHTCWF = New Dictionary(Of tWHTCpart, Single)
-							dWHTCWF.Add(tWHTCpart.Urban, CSng(s(0)) / 100)
-							dWHTCWF.Add(tWHTCpart.Rural, CSng(s(1)) / 100)
-							dWHTCWF.Add(tWHTCpart.Motorway, CSng(s(2)) / 100)
-
-							ste0.WHTCWF.Add(SegmentTable.MissionList(i), dWHTCWF)
 
 						End If
 					Next
@@ -668,7 +696,7 @@ Public Class cDeclaration
 				w0 = New cWheel
 				w0.Inertia = CSng(line(1))
 				w0.Diam = CSng(line(2))
-				w0.SizeA = (CInt(line(3)) = 1)
+				w0.SizeA = (line(3) = "a")
 
 				Wheels.Add(line(0), w0)
 
@@ -869,9 +897,9 @@ Public Class cDeclaration
 
 		CurrentMission = Missions(SegRef.Missions(CycleIndex))
 
-		WHTCcorrFactor = Declaration.SegRef.WHTCWF(Declaration.CurrentMission.MissionID)(tWHTCpart.Urban) * ENG.WHTCurban / Declaration.WHTCresults(tWHTCpart.Urban) _
-			+ Declaration.SegRef.WHTCWF(Declaration.CurrentMission.MissionID)(tWHTCpart.Rural) * ENG.WHTCrural / Declaration.WHTCresults(tWHTCpart.Rural) _
-			+ Declaration.SegRef.WHTCWF(Declaration.CurrentMission.MissionID)(tWHTCpart.Motorway) * ENG.WHTCmw / Declaration.WHTCresults(tWHTCpart.Motorway)
+		WHTCcorrFactor = CurrentMission.WHTCWF(tWHTCpart.Urban) * ENG.WHTCurban / Declaration.WHTCresults(tWHTCpart.Urban) _
+			+ CurrentMission.WHTCWF(tWHTCpart.Rural) * ENG.WHTCrural / Declaration.WHTCresults(tWHTCpart.Rural) _
+			+ CurrentMission.WHTCWF(tWHTCpart.Motorway) * ENG.WHTCmw / Declaration.WHTCresults(tWHTCpart.Motorway)
 
 
 		If Not VEH.DeclInitCycle Then Return False
@@ -1207,6 +1235,7 @@ Public Class cMission
 	Public MissionID As tMission
 	Public NameStr As String
 	Public CyclePath As String
+	Public WHTCWF As New Dictionary(Of tWHTCpart, Single)
 End Class
 
 Public Class cSegmentTable
@@ -1244,7 +1273,6 @@ Public Class cSegmentTableEntry
 	Public Loading As New Dictionary(Of tMission, String)
 	Public AxleShares As New Dictionary(Of tMission, List(Of Single))
 	Public AxleSharesTr As New Dictionary(Of tMission, List(Of Single))
-	Public WHTCWF As New Dictionary(Of tMission, Dictionary(Of tWHTCpart, Single))
 	Public TrailerOnlyInLongHaul As Boolean
 
 	Public Function GetCycles() As List(Of String)

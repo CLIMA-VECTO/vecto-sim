@@ -1798,6 +1798,7 @@ lb_nOK:
 		Dim nUdown As Single
 		Dim Tq As Single
 		Dim Pe As Single
+		Dim TqX As Single
 		Dim MdMax As Single
 		Dim Pmax As Single
 
@@ -1842,10 +1843,13 @@ lb_nOK:
 		Else
 
 			'Calculate Start Gear 
-			For Gear = GBX.GearCount To 1 Step -1
+			' Loop finishes at Gear = 1 (If "Exit For" is not called)
+			For Gear = GBX.GearCount To 2 Step -1
 
 				'rpm at StartSpeed  [m/s]
 				nU = GBX.gs_StartSpeed * 60.0 * GBX.Igetr(0) * GBX.Igetr(Gear) / (2 * VEH.rdyn * Math.PI / 1000)
+
+				If nU > FLD(Gear).fnUrated Then Continue For
 
 				'full load
 				Pmax = FLD(Gear).Pfull(nU)
@@ -1854,15 +1858,17 @@ lb_nOK:
 				MdMax = Pmax * 1000 / (nU * 2 * Math.PI / 60)
 
 				'power demand
-				Pe = Math.Min(fPeGearMod(Gear, t, GBX.gs_StartSpeed, GBX.gs_StartAcc, Grad), Pmax)
-				Pe = Math.Max(Pe, FLD(Gear).Pdrag(nU))
+				Pe = fPeGearMod(Gear, t, GBX.gs_StartSpeed, GBX.gs_StartAcc, Grad)
 
 				'torque demand
 				Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
 
+				'torque (limited to max)
+				TqX = Math.Min(Tq, FLD(Gear).Tmax)
+
 				'Up/Downshift rpms
-				nUup = GBX.Shiftpolygons(Gear).fGSnUup(Tq)
-				nUdown = GBX.Shiftpolygons(Gear).fGSnUdown(Tq)
+				nUup = GBX.Shiftpolygons(Gear).fGSnUup(TqX)
+				nUdown = GBX.Shiftpolygons(Gear).fGSnUdown(TqX)
 
 				If nU > nUdown And nU >= ENG.Nidle And (1 - Tq / MdMax >= GBX.gs_TorqueResvStart / 100 Or Tq < 0) Then Exit For
 
@@ -1982,13 +1988,13 @@ lb_nOK:
 
 					If DEV.TCshiftModeNew Then
 						If _
-						 fnUout(Vact, LastGear + 1) > Math.Min(900, iRatio * (FLD(LastGear).N80h - 150)) AndAlso
+						 fnUout(Vact, LastGear + 1) > Math.Min(700, iRatio * (FLD(LastGear).N80h - 150)) AndAlso
 						 FLD(LastGear + 1).Pfull(nU * iRatio) >= fPeGearMod(LastGear + 1, t, MODdata.Vh.V(t), TCaccmin, Grad) Then
 							Return LastGear + 1
 						End If
 					Else
 						If _
-						fnUout(Vact, LastGear + 1) > Math.Min(900, iRatio * (FLD(LastGear).N80h - 150)) AndAlso
+						fnUout(Vact, LastGear + 1) > Math.Min(700, iRatio * (FLD(LastGear).N80h - 150)) AndAlso
 						FLD(LastGear + 1).Pfull(nU * iRatio) > 0.7 * FLD(LastGear).Pfull(nU) Then
 							Return LastGear + 1
 						End If
@@ -2036,7 +2042,8 @@ lb_nOK:
 		Dim LastPeNorm As Single
 
 		Dim tx As Int16
-		Dim OutOfRpmRange As Boolean
+		Dim RpmTooHigh As Boolean
+		Dim RpmTooLow As Boolean
 
 		'First time step OR first time step after stand still
 		If t = 0 OrElse MODdata.VehState(t - 1) = tVehState.Stopped Then Return fStartGear(t, Grad)
@@ -2058,47 +2065,40 @@ lb_nOK:
 		'First time step after stand still
 		If LastGear = 0 Then Return fStartGear(t, Grad)
 
-		nU = CSng(Vact * 60.0 * GBX.Igetr(0) * GBX.Igetr(LastGear) / (2 * VEH.rdyn * Math.PI / 1000))
+		nU = fnUout(Vact, LastGear)
 
-		OutOfRpmRange = ((nU - ENG.Nidle) / (ENG.Nrated - ENG.Nidle) >= 1.2 Or nU < ENG.Nidle)
+		RpmTooLow = (nU < ENG.Nidle)
+		RpmTooHigh = ((nU - ENG.Nidle) / (ENG.Nrated - ENG.Nidle) >= 1.2)
 
 		'No gear change 3s after last one -except rpm out of range
-		If Not OutOfRpmRange AndAlso t - LastGearChange <= GBX.gs_ShiftTime And t > GBX.gs_ShiftTime - 1 Then Return LastGear
+		If Not (RpmTooHigh Or RpmTooLow) AndAlso t - LastGearChange <= GBX.gs_ShiftTime And t > GBX.gs_ShiftTime - 1 Then Return LastGear
 
 		'During start (clutch slipping) no gear shift
 		If LastClutch = tEngClutch.Slipping And VehState0 = tVehState.Acc Then Return LastGear
 
-		''Search for last Gear-change
-		'itgangw = 0
-		'For i = t - 1 To 1 Step -1
-		'    If MODdata.Gear(i) <> MODdata.Gear(i - 1) Then
-		'        itgangw = i
-		'        Exit For
-		'    End If
-		'Next
+		
+		If Not (RpmTooHigh Or RpmTooLow) Then
 
-		''Maximum permissible Gear-shifts every 3 seconds:
-		'If t - itgangw <= 3 And t > 2 Then
-		'    Return LastGear    '<<< no further checks!!!
-		'End If
+			'Current rpm with previous gear
+			nU = fnU(Vact, LastGear, Clutch = tEngClutch.Slipping)
 
-		'Current rpm with previous gear
-		nU = fnU(Vact, LastGear, Clutch = tEngClutch.Slipping)
+			'Current power demand with previous gear
+			Pe = Math.Min(fPeGearMod(LastGear, t, Grad), FLD(LastGear).Pfull(nU))
+			Pe = Math.Max(Pe, FLD(LastGear).Pdrag(nU))
 
-		'Current power demand with previous gear
-		Pe = Math.Min(fPeGearMod(LastGear, t, Grad), FLD(LastGear).Pfull(nU))
-		Pe = Math.Max(Pe, FLD(LastGear).Pdrag(nU))
+			'Current torque demand with previous gear
+			Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
+			MdMax = FLD(LastGear).Pfull(nU, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
 
-		'Current torque demand with previous gear
-		Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
-		MdMax = FLD(LastGear).Pfull(nU, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
+			'Up/Downshift rpms
+			nnUp = GBX.Shiftpolygons(LastGear).fGSnUup(Tq)
+			nnDown = GBX.Shiftpolygons(LastGear).fGSnUdown(Tq)
 
-		'Up/Downshift rpms
-		nnUp = GBX.Shiftpolygons(LastGear).fGSnUup(Tq)
-		nnDown = GBX.Shiftpolygons(LastGear).fGSnUdown(Tq)
+		End If
+
 
 		'Compare rpm with Up/Downshift rpms 
-		If nU <= nnDown And LastGear > 1 Then
+		If (RpmTooLow OrElse nU <= nnDown) And LastGear > 1 Then
 
 			'Shift DOWN
 			Gear = LastGear - 1
@@ -2144,7 +2144,7 @@ lb_nOK:
 
 			End If
 
-		ElseIf LastGear < GBX.GearCount And nU > nnUp Then
+		ElseIf (RpmTooHigh OrElse nU > nnUp) And LastGear < GBX.GearCount Then
 
 			'Shift UP
 			Gear = LastGear + 1
@@ -2206,10 +2206,11 @@ lb_nOK:
 			If GBX.gs_ShiftInside And LastGear < GBX.GearCount Then
 
 				'Calculate Shift-rpm for higher gear
-				nU = fnU(Vact, Gear + 1, False)
+				'old: nU = fnU(Vact, Gear + 1, False)
+				nU = fnUout(Vact, Gear + 1)
 
 				'Continue only if rpm (for higher gear) is below rated rpm
-				If nU <= ENG.Nrated Then
+				If nU > ENG.Nidle AndAlso nU <= ENG.Nrated Then
 					Pe = Math.Min(fPeGearMod(Gear + 1, t, Grad), FLD(Gear + 1).Pfull(nU))
 					Pe = Math.Max(Pe, FLD(Gear + 1).Pdrag(nU))
 					Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
