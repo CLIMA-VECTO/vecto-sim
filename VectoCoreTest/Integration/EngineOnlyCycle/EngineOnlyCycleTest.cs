@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			gearbox.InShaft().Connect(aux.OutShaft());
 			var port = aux.OutShaft();
 
-//			IVectoJob job = SimulationFactory.CreateTimeBasedEngineOnlyJob(TestContext.DataRow["EngineFile"].ToString(),
+//			IVectoJob job = SimulationFactory.CreateTimeBasedEngineOnlyRun(TestContext.DataRow["EngineFile"].ToString(),
 //				TestContext.DataRow["CycleFile"].ToString(), "test2.csv");
 
 			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);

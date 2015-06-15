@@ -11,12 +11,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	/// <summary>
 	/// Simulator for one vecto simulation job.
 	/// </summary>
-	public class VectoSimulator : IVectoSimulator
+	public class VectoRun : IVectoRun
 	{
 		private TimeSpan _absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
 		private TimeSpan _dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
-		public VectoSimulator(IVehicleContainer container, IDrivingCycleOutPort cyclePort)
+		public VectoRun(IVehicleContainer container, IDrivingCycleOutPort cyclePort)
 		{
 			Container = container;
 			CyclePort = cyclePort;

@@ -194,10 +194,10 @@
     <Compile Include="Models\Simulation\Data\ModalResult.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Models\Simulation\IVectoSimulator.cs" />
+    <Compile Include="Models\Simulation\IVectoRun.cs" />
     <Compile Include="Models\Simulation\Data\ModalDataWriter.cs" />
     <Compile Include="Models\Simulation\Impl\SimulatorFactory.cs" />
-    <Compile Include="Models\Simulation\Impl\VectoSimulator.cs" />
+    <Compile Include="Models\Simulation\Impl\VectoRun.cs" />
     <Compile Include="Models\Simulation\Impl\JobContainer.cs" />
     <Compile Include="Models\Simulation\Impl\VehicleContainer.cs" />
     <Compile Include="Models\Simulation\Cockpit\ICockpit.cs" />

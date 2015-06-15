@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	/// </summary>
 	public class JobContainer
 	{
-		private readonly List<IVectoSimulator> _simulators = new List<IVectoSimulator>();
+		private readonly List<IVectoRun> _runs = new List<IVectoRun>();
 		private readonly SummaryFileWriter _sumWriter;
 
 		private static int _jobNumber;
@@ -40,37 +40,37 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var sumFilePath = Path.GetDirectoryName(data.JobFileName);
 			_sumWriter = new SummaryFileWriter(string.Format("{0}.vsum", Path.Combine(sumFilePath, sumFileName)));
 
-			AddJobs(data);
+			AddRuns(data);
 		}
 
 		/// <summary>
 		/// Creates and Adds jobs from the VectoJobData object.
 		/// </summary>
 		/// <param name="data">The data.</param>
-		public void AddJobs(VectoJobData data)
+		public void AddRuns(VectoJobData data)
 		{
 			_jobNumber++;
-			_simulators.AddRange(SimulatorFactory.CreateJobs(data, _sumWriter, _jobNumber));
+			_runs.AddRange(SimulatorFactory.CreateRuns(data, _sumWriter, _jobNumber));
 		}
 
 		/// <summary>
 		/// Adds a custom created job.
 		/// </summary>
-		/// <param name="sim">The sim.</param>
-		public void AddJob(IVectoSimulator sim)
+		/// <param name="run">The run.</param>
+		public void AddRun(IVectoRun run)
 		{
 			_jobNumber++;
-			_simulators.Add(sim);
+			_runs.Add(run);
 		}
 
 		/// <summary>
-		/// Runs all jobs, waits until finished.
+		/// Execute all runs, waits until finished.
 		/// </summary>
-		public void RunJobs()
+		public void Execute()
 		{
-			LogManager.GetLogger(GetType()).Info("VectoSimulator started running. Starting Jobs.");
+			LogManager.GetLogger(GetType()).Info("VectoRun started running. Executing Runs.");
 
-			Task.WaitAll(_simulators.Select(job => Task.Factory.StartNew(job.Run)).ToArray());
+			Task.WaitAll(_runs.Select(r => Task.Factory.StartNew(r.Run)).ToArray());
 
 			_sumWriter.Finish();
 		}
