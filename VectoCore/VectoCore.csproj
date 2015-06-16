@@ -229,6 +229,7 @@
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\MunicipalUtility.vdri" />
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\RegionalDelivery.vdri" />
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\UrbanDelivery.vdri" />
+    <EmbeddedResource Include="Resources\Declaration\PT1.csv" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

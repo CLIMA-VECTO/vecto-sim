@@ -2,14 +2,26 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
+using Common.Logging;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public abstract class LookupData<TEntryType>
+	public abstract class LookupData<TEntryType, TKeyType>
 	{
-		protected Dictionary<String, TEntryType> _data;
+		protected LookupData()
+		{
+			Log = LogManager.GetLogger(GetType());
+			var csvFile = ReadCsvFile(ResourceId);
+			ParseData(csvFile);
+		}
 
+		[NonSerialized] protected ILog Log;
+
+		protected abstract string ResourceId { get; }
+		protected abstract void ParseData(DataTable table);
+
+		protected Dictionary<TKeyType, TEntryType> Data;
 
 		protected DataTable ReadCsvFile(string resourceId)
 		{
@@ -18,13 +30,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return VectoCSVFile.ReadStream(file);
 		}
 
-		protected abstract void ParseData(DataTable table);
-
-		public TEntryType Lookup(String key)
+		public virtual TEntryType Lookup(TKeyType key)
 		{
 			var retVal = default(TEntryType);
-			if (_data.ContainsKey(key)) {
-				retVal = _data[key];
+			if (Data.ContainsKey(key)) {
+				retVal = Data[key];
 			}
 			return retVal;
 		}

@@ -5,20 +5,16 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class DeclarationWheels : LookupData<DeclarationWheels.WheelsEntry>
+	public class DeclarationWheels : LookupData<DeclarationWheels.WheelsEntry, string>
 	{
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Wheels.csv";
-
-		internal DeclarationWheels()
+		protected override string ResourceId
 		{
-			var csvFile = ReadCsvFile(ResourceId);
-			ParseData(csvFile);
+			get { return "TUGraz.VectoCore.Resources.Declaration.Wheels.csv"; }
 		}
-
 
 		protected override sealed void ParseData(DataTable table)
 		{
-			_data = (from DataRow row in table.Rows
+			Data = (from DataRow row in table.Rows
 				select new WheelsEntry {
 					WheelType = row[0].ToString(),
 					Inertia = row.ParseDouble(1).SI<KilogramSquareMeter>(),

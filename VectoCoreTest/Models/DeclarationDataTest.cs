@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
@@ -38,40 +40,50 @@ namespace TUGraz.VectoCore.Tests.Models
 		[TestMethod]
 		public void PT1Test()
 		{
-			//var pt1 = DeclarationData.PT1;
+			const double TOLERANCE = 0.0001;
+			var pt1 = DeclarationData.PT1;
 
-			//// FIXED POINTS
-			//Assert.AreEqual(0, pt1.Lookup(400));
-			//Assert.AreEqual(0.47, pt1.Lookup(800));
-			//Assert.AreEqual(0.58, pt1.Lookup(1000));
-			//Assert.AreEqual(0.53, pt1.Lookup(1200));
-			//Assert.AreEqual(0.46, pt1.Lookup(1400));
-			//Assert.AreEqual(0.43, pt1.Lookup(1500));
-			//Assert.AreEqual(0.22, pt1.Lookup(1750));
-			//Assert.AreEqual(0.2, pt1.Lookup(1800));
-			//Assert.AreEqual(0.11, pt1.Lookup(2000));
-			//Assert.AreEqual(0.11, pt1.Lookup(2500));
+			// FIXED POINTS
+			Assert.AreEqual(0, pt1.Lookup(400.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.47, pt1.Lookup(800.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.58, pt1.Lookup(1000.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.53, pt1.Lookup(1200.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.46, pt1.Lookup(1400.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.43, pt1.Lookup(1500.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.22, pt1.Lookup(1750.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.2, pt1.Lookup(1800.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.11, pt1.Lookup(2000.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.11, pt1.Lookup(2500.RPMtoRad()).Double(), TOLERANCE);
 
-			//// INTERPOLATE
-			//Assert.AreEqual(0.235, pt1.Lookup(600));
-			//Assert.AreEqual(0.525, pt1.Lookup(900));
-			//Assert.AreEqual(0.555, pt1.Lookup(1100));
-			//Assert.AreEqual(0.495, pt1.Lookup(1300));
-			//Assert.AreEqual(0.445, pt1.Lookup(1450));
-			//Assert.AreEqual(0.325, pt1.Lookup(1625));
-			//Assert.AreEqual(0.21, pt1.Lookup(1775));
-			//Assert.AreEqual(0.155, pt1.Lookup(1900));
-			//Assert.AreEqual(0.11, pt1.Lookup(2250));
+			// INTERPOLATE
+			Assert.AreEqual(0.235, pt1.Lookup(600.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.525, pt1.Lookup(900.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.555, pt1.Lookup(1100.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.495, pt1.Lookup(1300.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.445, pt1.Lookup(1450.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.325, pt1.Lookup(1625.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.21, pt1.Lookup(1775.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.155, pt1.Lookup(1900.RPMtoRad()).Double(), TOLERANCE);
+			Assert.AreEqual(0.11, pt1.Lookup(2250.RPMtoRad()).Double(), TOLERANCE);
 
 
-			// TODO EXTRAPOLATE
-			//Assert.AreEqual(??, pt1.Lookup(0));
-			//Assert.AreEqual(??, pt1.Lookup(100));
-			//Assert.AreEqual(??, pt1.Lookup(200));
-			//Assert.AreEqual(??, pt1.Lookup(300));
-			//Assert.AreEqual(??, pt1.Lookup(2500));
+			//TODO EXTRAPOLATE 
+			Assert.AreEqual(0.11, pt1.Lookup(3000.RPMtoRad()).Double(), TOLERANCE);
+			AssertException<VectoException>(() => pt1.Lookup(200.RPMtoRad()));
+			AssertException<VectoException>(() => pt1.Lookup(0.RPMtoRad()));
+		}
 
-			Assert.Inconclusive();
+
+		public static void AssertException<T>(Action func, string message = null) where T : Exception
+		{
+			try {
+				func();
+				Assert.Fail("Expected an exception.");
+			} catch (T ex) {
+				if (!string.IsNullOrEmpty(message)) {
+					Assert.AreEqual(message, ex.Message);
+				}
+			}
 		}
 
 		[TestMethod]
