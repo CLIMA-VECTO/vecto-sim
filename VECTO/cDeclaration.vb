@@ -1000,7 +1000,7 @@ Public Class cDeclaration
 
 		'PS
 		Try
-			AuxPower.Add(sKey.AUX.PneumSys, AuxPSpower(SegRef.HDVclass)(CurrentMission.MissionID) / 1000)
+			AuxPower.Add(sKey.AUX.PneumSys, AuxPSpower(SegRef.HDVclass)(CurrentMission.MissionID))
 		Catch ex As Exception
 			WorkerMsg(tMsgID.Err, "Failed to initialise pneumatic system! " & ex.Message, MsgSrc)
 			Result = False
