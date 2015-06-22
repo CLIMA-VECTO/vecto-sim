@@ -233,6 +233,11 @@
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\UrbanDelivery.vdri" />
     <EmbeddedResource Include="Resources\Declaration\PT1.csv" />
     <EmbeddedResource Include="Resources\Declaration\AccelerationFile.vacc" />
+    <EmbeddedResource Include="Resources\Declaration\VACC\Truck.vacc" />
+    <EmbeddedResource Include="Resources\Declaration\VCDV\CoachBus.vcdv" />
+    <EmbeddedResource Include="Resources\Declaration\VCDV\RigidSolo.vcdv" />
+    <EmbeddedResource Include="Resources\Declaration\VCDV\RigidTrailer.vcdv" />
+    <EmbeddedResource Include="Resources\Declaration\VCDV\TractorSemitrailer.vcdv" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

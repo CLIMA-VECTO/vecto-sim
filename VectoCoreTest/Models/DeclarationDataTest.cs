@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -125,7 +127,29 @@ namespace TUGraz.VectoCore.Tests.Models
 		[TestMethod]
 		public void AuxEXTechTest()
 		{
-			Assert.Inconclusive();
+			var es = DeclarationData.ElectricSystem;
+
+			var expected = new[] {
+				new { Mission = MissionType.LongHaul, Base = 1240, LED = 1190 },
+				new { Mission = MissionType.RegionalDelivery, Base = 1055, LED = 1005 },
+				new { Mission = MissionType.UrbanDelivery, Base = 974, LED = 924 },
+				new { Mission = MissionType.MunicipalUtility, Base = 975, LED = 925 },
+				new { Mission = MissionType.Construction, Base = 0, LED = 0 },
+				new { Mission = MissionType.HeavyUrban, Base = 0, LED = 0 },
+				new { Mission = MissionType.Urban, Base = 0, LED = 0 },
+				new { Mission = MissionType.Suburban, Base = 0, LED = 0 },
+				new { Mission = MissionType.Interurban, Base = 0, LED = 0 },
+				new { Mission = MissionType.Coach, Base = 0, LED = 0 }
+			};
+			Assert.AreEqual(expected.Length, Enum.GetValues(typeof(MissionType)).Length);
+
+			foreach (var expectation in expected) {
+				Watt baseConsumption = es.Lookup(expectation.Mission, technologies = new string[] { });
+				Watt withLEDs = es.Lookup(expectation.Mission, technologies = new[] { "LED lights" });
+
+				Assert.AreEqual(expectation.Base, baseConsumption.Double(), Tolerance);
+				Assert.AreEqual(expectation.LED, withLEDs.Double(), Tolerance);
+			}
 		}
 
 		[TestMethod]

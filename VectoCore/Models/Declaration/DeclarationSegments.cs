@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				VehicleCategory = vehicleCategory,
 				AxleConfiguration = axleConfiguration,
 				HDVClass = row.Field<string>("hdv_class"),
-				VACC = row.Field<string>("vacc"),
+				AccelerationFile = RessourceHelper.ReadStream(ResourceNamespace + "VACC." + row.Field<string>("vacc")),
 				Missions = CreateMissions(grossVehicleMassRating, curbWeight, row).ToArray()
 			};
 			return segment;
@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				var mission = new Mission {
 					MissionType = missionType,
-					VCDV = row.Field<string>(vcdvField),
+					CrossWindCorrectionFile = RessourceHelper.ReadStream(ResourceNamespace + "VCDV." + row.Field<string>(vcdvField)),
 					MassExtra = row.ParseDouble("massextra-" + missionType.ToString().ToLower()).SI<Kilogram>(),
 					CycleFile = RessourceHelper.ReadStream(ResourceNamespace + "MissionCycles." + missionType + ".vdri"),
 					AxleWeightDistribution = row.Field<string>(axleField).Split('/').ToDouble().Select(x => x / 100.0).ToArray()

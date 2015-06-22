@@ -39,4 +39,26 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return retVal;
 		}
 	}
+
+	public abstract class LookupData<TKey1, TKey2, TValue>
+	{
+		[NonSerialized] protected ILog Log;
+		protected abstract string ResourceId { get; }
+		protected abstract void ParseData(DataTable table);
+		public abstract TValue Lookup(TKey1 key1, TKey2 key2);
+
+		protected LookupData()
+		{
+			Log = LogManager.GetLogger(GetType());
+			var csvFile = ReadCsvFile(ResourceId);
+			ParseData(csvFile);
+		}
+
+		protected DataTable ReadCsvFile(string resourceId)
+		{
+			var myAssembly = Assembly.GetExecutingAssembly();
+			var file = myAssembly.GetManifestResourceStream(resourceId);
+			return VectoCSVFile.ReadStream(file);
+		}
+	}
 }
