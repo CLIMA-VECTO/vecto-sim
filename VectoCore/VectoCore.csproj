@@ -122,7 +122,9 @@
     <Compile Include="Models\Connector\Ports\Impl\Response.cs" />
     <Compile Include="Models\Connector\Ports\IFvPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
+    <Compile Include="Models\Declaration\AccelerationCurve.cs" />
     <Compile Include="Models\Declaration\DeclarationData.cs" />
+    <Compile Include="Models\Declaration\DeclarationPT1.cs" />
     <Compile Include="Models\Declaration\LookupData.cs" />
     <Compile Include="Models\Declaration\Declaration.cs" />
     <Compile Include="Models\Declaration\DeclarationWheels.cs" />
@@ -230,6 +232,7 @@
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\RegionalDelivery.vdri" />
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\UrbanDelivery.vdri" />
     <EmbeddedResource Include="Resources\Declaration\PT1.csv" />
+    <EmbeddedResource Include="Resources\Declaration\AccelerationFile.vacc" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

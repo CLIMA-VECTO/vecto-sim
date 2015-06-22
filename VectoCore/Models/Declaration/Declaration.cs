@@ -4,7 +4,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class DeclarationRims : LookupData<DeclarationRims.RimsEntry, string>
+	public class DeclarationRims : LookupData<string, DeclarationRims.RimsEntry>
 	{
 		internal DeclarationRims()
 		{

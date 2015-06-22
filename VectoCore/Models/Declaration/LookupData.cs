@@ -7,7 +7,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public abstract class LookupData<TEntryType, TKeyType>
+	public abstract class LookupData<TKeyType, TEntryType>
 	{
 		protected LookupData()
 		{
