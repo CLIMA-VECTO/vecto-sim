@@ -122,9 +122,10 @@
     <Compile Include="Models\Connector\Ports\Impl\Response.cs" />
     <Compile Include="Models\Connector\Ports\IFvPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
-    <Compile Include="Models\Declaration\AccelerationCurve.cs" />
+    <Compile Include="Models\SimulationComponent\Data\AccelerationCurve.cs" />
     <Compile Include="Models\Declaration\DeclarationData.cs" />
     <Compile Include="Models\Declaration\DeclarationPT1.cs" />
+    <Compile Include="Models\Declaration\ElectricSystem.cs" />
     <Compile Include="Models\Declaration\LookupData.cs" />
     <Compile Include="Models\Declaration\Declaration.cs" />
     <Compile Include="Models\Declaration\DeclarationWheels.cs" />
@@ -232,12 +233,17 @@
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\RegionalDelivery.vdri" />
     <EmbeddedResource Include="Resources\Declaration\MissionCycles\UrbanDelivery.vdri" />
     <EmbeddedResource Include="Resources\Declaration\PT1.csv" />
-    <EmbeddedResource Include="Resources\Declaration\AccelerationFile.vacc" />
     <EmbeddedResource Include="Resources\Declaration\VACC\Truck.vacc" />
     <EmbeddedResource Include="Resources\Declaration\VCDV\CoachBus.vcdv" />
     <EmbeddedResource Include="Resources\Declaration\VCDV\RigidSolo.vcdv" />
     <EmbeddedResource Include="Resources\Declaration\VCDV\RigidTrailer.vcdv" />
     <EmbeddedResource Include="Resources\Declaration\VCDV\TractorSemitrailer.vcdv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\ES-Tech.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\Fan-Tech.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\HVAC-Table.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\PS-Table.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Table.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Tech.csv" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

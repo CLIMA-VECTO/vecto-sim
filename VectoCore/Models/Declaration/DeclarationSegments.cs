@@ -6,28 +6,30 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class DeclarationSegments
+	public class DeclarationSegments : LookupData<VehicleCategory, AxleConfiguration, Kilogram, Kilogram, Segment>
 	{
 		private const string ResourceNamespace = "TUGraz.VectoCore.Resources.Declaration.";
-		private const string ResourceName = ResourceNamespace + "SegmentTable.csv";
 
-		private readonly DataTable _segmentTable;
-
-		public DeclarationSegments()
+		protected override string ResourceId
 		{
-			var file = RessourceHelper.ReadStream(ResourceName);
-			_segmentTable = VectoCSVFile.ReadStream(file);
-
-			// normalize column names, remove whitespaces and lowercase
-			foreach (DataColumn col in _segmentTable.Columns) {
-				_segmentTable.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLower().Replace(" ", "");
-			}
+			get { return ResourceNamespace + "SegmentTable.csv"; }
 		}
 
-		public Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
+		protected override void ParseData(DataTable table)
+		{
+			// normalize column names, remove whitespaces and lowercase
+			foreach (DataColumn col in table.Columns) {
+				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLower().Replace(" ", "");
+			}
+			SegmentTable = table.Copy();
+		}
+
+		private DataTable SegmentTable { get; set; }
+
+		public override Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight)
 		{
-			var row = _segmentTable.Rows.Cast<DataRow>().First(r => r.Field<string>("tvehcat") == vehicleCategory.ToString()
+			var row = SegmentTable.Rows.Cast<DataRow>().First(r => r.Field<string>("tvehcat") == vehicleCategory.ToString()
 																	&& r.Field<string>("taxleconf") == axleConfiguration.GetName()
 																	&& r.ParseDouble("gvw_min").SI<Ton>() <= grossVehicleMassRating
 																	&& r.ParseDouble("gvw_max").SI<Ton>() > grossVehicleMassRating);

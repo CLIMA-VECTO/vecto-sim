@@ -71,6 +71,7 @@
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
     <Compile Include="Models\DeclarationDataTest.cs" />
+    <Compile Include="Models\SimulationComponentData\AccelerationCurveTest.cs" />
     <Compile Include="Models\SimulationComponentData\FuelConsumptionMapTest.cs" />
     <Compile Include="Models\SimulationComponentData\FullLoadCurveTest.cs" />
     <Compile Include="Models\SimulationComponentData\GearboxDataTest.cs" />
@@ -131,7 +132,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\24t_Coach_ALT.vaux" />
-    <None Include="TestData\Components\Coach.vacc" />
+    <None Include="TestData\Components\Coach.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Components\FullLoadCurve insufficient columns.vfld">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

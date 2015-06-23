@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models
@@ -94,47 +95,17 @@ namespace TUGraz.VectoCore.Tests.Models
 			Assert.Inconclusive();
 		}
 
-
-		public void EqualAcceleration(double velocity, double acceleration, double deceleration)
-		{
-			var entry = DeclarationData.AccelerationCurve.Lookup(velocity.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>());
-			Assert.AreEqual(entry.Acceleration.Double(), acceleration, Tolerance);
-			Assert.AreEqual(entry.Deceleration.Double(), deceleration, Tolerance);
-		}
-
 		[TestMethod]
-		public void AccelerationTest()
-		{
-			// FIXED POINTS
-			EqualAcceleration(0, 1, -1);
-			EqualAcceleration(25, 1, -1);
-			EqualAcceleration(50, 0.642857143, -1);
-			EqualAcceleration(60, 0.5, -0.5);
-			EqualAcceleration(120, 0.5, -0.5);
-
-			// INTERPOLATED POINTS
-			EqualAcceleration(20, 1, -1);
-			EqualAcceleration(40, 0.785714286, -1);
-			EqualAcceleration(55, 0.571428572, -0.75);
-			EqualAcceleration(80, 0.5, -0.5);
-			EqualAcceleration(100, 0.5, -0.5);
-
-			// EXTRAPOLATE 
-			EqualAcceleration(-20, 1, -1);
-			EqualAcceleration(140, 0.5, -0.5);
-		}
-
-		[TestMethod]
-		public void AuxEXTechTest()
+		public void AuxESTechTest()
 		{
 			var es = DeclarationData.ElectricSystem;
 
 			var expected = new[] {
-				new { Mission = MissionType.LongHaul, Base = 1240, LED = 1190 },
-				new { Mission = MissionType.RegionalDelivery, Base = 1055, LED = 1005 },
-				new { Mission = MissionType.UrbanDelivery, Base = 974, LED = 924 },
-				new { Mission = MissionType.MunicipalUtility, Base = 975, LED = 925 },
-				new { Mission = MissionType.Construction, Base = 0, LED = 0 },
+				new { Mission = MissionType.LongHaul, Base = 1240, LED = 1290 },
+				new { Mission = MissionType.RegionalDelivery, Base = 1055, LED = 1105 },
+				new { Mission = MissionType.UrbanDelivery, Base = 974, LED = 1024 },
+				new { Mission = MissionType.MunicipalUtility, Base = 974, LED = 1024 },
+				new { Mission = MissionType.Construction, Base = 975, LED = 1025 },
 				new { Mission = MissionType.HeavyUrban, Base = 0, LED = 0 },
 				new { Mission = MissionType.Urban, Base = 0, LED = 0 },
 				new { Mission = MissionType.Suburban, Base = 0, LED = 0 },
@@ -144,8 +115,8 @@ namespace TUGraz.VectoCore.Tests.Models
 			Assert.AreEqual(expected.Length, Enum.GetValues(typeof(MissionType)).Length);
 
 			foreach (var expectation in expected) {
-				Watt baseConsumption = es.Lookup(expectation.Mission, technologies = new string[] { });
-				Watt withLEDs = es.Lookup(expectation.Mission, technologies = new[] { "LED lights" });
+				var baseConsumption = es.Lookup(expectation.Mission, technologies: new string[] { });
+				var withLEDs = es.Lookup(expectation.Mission, technologies: new[] { "LED lights" });
 
 				Assert.AreEqual(expectation.Base, baseConsumption.Double(), Tolerance);
 				Assert.AreEqual(expectation.LED, withLEDs.Double(), Tolerance);
@@ -202,12 +173,18 @@ namespace TUGraz.VectoCore.Tests.Models
 
 
 			Assert.AreEqual("2", segment.HDVClass);
-			Assert.AreEqual("Truck.vacc", segment.VACC);
+
+			var data = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
+			TestAcceleration(data);
+
 			Assert.AreEqual(3, segment.Missions.Length);
 
 			var longHaulMission = segment.Missions[0];
 			Assert.AreEqual(MissionType.LongHaul, longHaulMission.MissionType);
-			Assert.AreEqual("RigidSolo.vcdv", longHaulMission.VCDV);
+
+			Assert.IsNotNull(longHaulMission.CrossWindCorrectionFile);
+			Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(longHaulMission.CrossWindCorrectionFile).ReadLine()));
+
 			Assert.IsTrue(new[] { 0.4, 0.6 }.SequenceEqual(longHaulMission.AxleWeightDistribution));
 			Assert.IsTrue(new double[] { }.SequenceEqual(longHaulMission.TrailerAxleWeightDistribution));
 			Assert.AreEqual(1900.SI<Kilogram>(), longHaulMission.MassExtra);
@@ -220,10 +197,12 @@ namespace TUGraz.VectoCore.Tests.Models
 			Assert.AreEqual(vehicleData.GrossVehicleMassRating - longHaulMission.MassExtra - vehicleData.CurbWeight,
 				longHaulMission.MaxLoad);
 
-
 			var regionalDeliveryMission = segment.Missions[1];
 			Assert.AreEqual(MissionType.RegionalDelivery, regionalDeliveryMission.MissionType);
-			Assert.AreEqual("RigidSolo.vcdv", regionalDeliveryMission.VCDV);
+
+			Assert.IsNotNull(regionalDeliveryMission.CrossWindCorrectionFile);
+			Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(regionalDeliveryMission.CrossWindCorrectionFile).ReadLine()));
+
 			Assert.IsTrue(new[] { 0.45, 0.55 }.SequenceEqual(regionalDeliveryMission.AxleWeightDistribution));
 			Assert.IsTrue(new double[] { }.SequenceEqual(regionalDeliveryMission.TrailerAxleWeightDistribution));
 			Assert.AreEqual(1900.SI<Kilogram>(), regionalDeliveryMission.MassExtra);
@@ -236,10 +215,12 @@ namespace TUGraz.VectoCore.Tests.Models
 			Assert.AreEqual(vehicleData.GrossVehicleMassRating - regionalDeliveryMission.MassExtra - vehicleData.CurbWeight,
 				regionalDeliveryMission.MaxLoad);
 
-
 			var urbanDeliveryMission = segment.Missions[2];
 			Assert.AreEqual(MissionType.UrbanDelivery, urbanDeliveryMission.MissionType);
-			Assert.AreEqual("RigidSolo.vcdv", urbanDeliveryMission.VCDV);
+
+			Assert.IsNotNull(urbanDeliveryMission.CrossWindCorrectionFile);
+			Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(urbanDeliveryMission.CrossWindCorrectionFile).ReadLine()));
+
 			Assert.IsTrue(new[] { 0.45, 0.55 }.SequenceEqual(urbanDeliveryMission.AxleWeightDistribution));
 			Assert.IsTrue(new double[] { }.SequenceEqual(urbanDeliveryMission.TrailerAxleWeightDistribution));
 			Assert.AreEqual(1900.SI<Kilogram>(), urbanDeliveryMission.MassExtra);
@@ -293,6 +274,34 @@ namespace TUGraz.VectoCore.Tests.Models
 			//		runs.Add(simulator);
 			//	}
 			//}
+		}
+
+		public void EqualAcceleration(AccelerationCurveData data, double velocity, double acceleration, double deceleration)
+		{
+			var entry = data.Lookup(velocity.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>());
+			Assert.AreEqual(entry.Acceleration.Double(), acceleration, Tolerance);
+			Assert.AreEqual(entry.Deceleration.Double(), deceleration, Tolerance);
+		}
+
+		public void TestAcceleration(AccelerationCurveData data)
+		{
+			// FIXED POINTS
+			EqualAcceleration(data, 0, 1, -1);
+			EqualAcceleration(data, 25, 1, -1);
+			EqualAcceleration(data, 50, 0.642857143, -1);
+			EqualAcceleration(data, 60, 0.5, -0.5);
+			EqualAcceleration(data, 120, 0.5, -0.5);
+
+			// INTERPOLATED POINTS
+			EqualAcceleration(data, 20, 1, -1);
+			EqualAcceleration(data, 40, 0.785714286, -1);
+			EqualAcceleration(data, 55, 0.571428572, -0.75);
+			EqualAcceleration(data, 80, 0.5, -0.5);
+			EqualAcceleration(data, 100, 0.5, -0.5);
+
+			// EXTRAPOLATE 
+			EqualAcceleration(data, -20, 1, -1);
+			EqualAcceleration(data, 140, 0.5, -0.5);
 		}
 	}
 }

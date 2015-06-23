@@ -7,7 +7,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public abstract class LookupData<TKeyType, TEntryType>
+	public abstract class LookupData
 	{
 		protected LookupData()
 		{
@@ -21,18 +21,22 @@ namespace TUGraz.VectoCore.Models.Declaration
 		protected abstract string ResourceId { get; }
 		protected abstract void ParseData(DataTable table);
 
-		protected Dictionary<TKeyType, TEntryType> Data;
-
 		protected DataTable ReadCsvFile(string resourceId)
 		{
 			var myAssembly = Assembly.GetExecutingAssembly();
 			var file = myAssembly.GetManifestResourceStream(resourceId);
 			return VectoCSVFile.ReadStream(file);
 		}
+	}
 
-		public virtual TEntryType Lookup(TKeyType key)
+
+	public abstract class LookupData<TKey, TValue> : LookupData
+	{
+		protected Dictionary<TKey, TValue> Data;
+
+		public virtual TValue Lookup(TKey key)
 		{
-			var retVal = default(TEntryType);
+			var retVal = default(TValue);
 			if (Data.ContainsKey(key)) {
 				retVal = Data[key];
 			}
@@ -40,25 +44,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 	}
 
-	public abstract class LookupData<TKey1, TKey2, TValue>
+	public abstract class LookupData<TKey1, TKey2, TValue> : LookupData
 	{
-		[NonSerialized] protected ILog Log;
-		protected abstract string ResourceId { get; }
-		protected abstract void ParseData(DataTable table);
 		public abstract TValue Lookup(TKey1 key1, TKey2 key2);
+	}
 
-		protected LookupData()
-		{
-			Log = LogManager.GetLogger(GetType());
-			var csvFile = ReadCsvFile(ResourceId);
-			ParseData(csvFile);
-		}
+	public abstract class LookupData<TKey1, TKey2, TKey3, TValue> : LookupData
+	{
+		public abstract TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3);
+	}
 
-		protected DataTable ReadCsvFile(string resourceId)
-		{
-			var myAssembly = Assembly.GetExecutingAssembly();
-			var file = myAssembly.GetManifestResourceStream(resourceId);
-			return VectoCSVFile.ReadStream(file);
-		}
+	public abstract class LookupData<TKey1, TKey2, TKey3, TKey4, TValue> : LookupData
+	{
+		public abstract TValue Lookup(TKey1 key1, TKey2 key2, TKey3 key3, TKey4 key4);
 	}
 }

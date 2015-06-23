@@ -68,9 +68,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void TestInputOutOfRange()
 		{
-			var rdyn = 520.0;
-			//var speed = double.Parse(TestContext.DataRow["v"].ToString(), CultureInfo.InvariantCulture);
-
 			var gbxData = GearboxData.ReadFromFile(GearboxFile);
 
 
@@ -81,7 +78,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
 				Assert.Fail("angular Speed too high");
 			} catch (Exception e) {
-				Assert.IsInstanceOfType(e, typeof (VectoSimulationException), "angular speed too high");
+				Assert.IsInstanceOfType(e, typeof(VectoSimulationException), "angular speed too high");
 			}
 
 			angSpeed = 1000.RPMtoRad();
@@ -90,7 +87,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
 				Assert.Fail("torque too high");
 			} catch (Exception e) {
-				Assert.IsInstanceOfType(e, typeof (VectoSimulationException), "torque too high");
+				Assert.IsInstanceOfType(e, typeof(VectoSimulationException), "torque too high");
 			}
 
 			angSpeed = 1000.RPMtoRad();
@@ -99,7 +96,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
 				Assert.Fail("torque too low");
 			} catch (Exception e) {
-				Assert.IsInstanceOfType(e, typeof (VectoSimulationException), "torque too low");
+				Assert.IsInstanceOfType(e, typeof(VectoSimulationException), "torque too low");
 			}
 
 			angSpeed = -1000.RPMtoRad();
@@ -108,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
 				Assert.Fail("negative angular speed");
 			} catch (Exception e) {
-				Assert.IsInstanceOfType(e, typeof (VectoSimulationException), "negative angular speed");
+				Assert.IsInstanceOfType(e, typeof(VectoSimulationException), "negative angular speed");
 			}
 		}
 
