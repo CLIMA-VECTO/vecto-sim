@@ -19,9 +19,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override void ParseData(DataTable table)
 		{
-			foreach (DataColumn col in table.Columns) {
-				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLower().Replace(" ", "");
-			}
+			NormalizeTable(table);
 
 			foreach (DataRow row in table.Rows) {
 				var name = row.Field<string>("Technology");

@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Models
 		{
 			var fan = DeclarationData.Fan;
 
-			var defaultFan = "Crankshaft mounted - Electronically controlled visco clutch (Default)";
+			const string defaultFan = "Crankshaft mounted - Electronically controlled visco clutch (Default)";
 			var expected = new Dictionary<string, int[]> {
 				{
 					"Crankshaft mounted - Electronically controlled visco clutch (Default)",
@@ -180,7 +180,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			for (var i = 0; i < missions.Length; i++) {
 				// default
 				Watt defaultValue = fan.Lookup(missions[i], "");
-				Assert.AreEqual(expected[defaultFan].Value[i], defaultValue.Double(), Tolerance);
+				Assert.AreEqual(expected[defaultFan][i], defaultValue.Double(), Tolerance);
 
 				// all fan techs
 				foreach (var expect in expected) {

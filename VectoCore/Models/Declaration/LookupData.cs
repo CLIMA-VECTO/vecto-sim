@@ -18,7 +18,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		[NonSerialized] protected ILog Log;
 
+		/// <summary>
+		/// Gets the resource identifier. e.g. "TUGraz.VectoCore.Resources.Declaration.Rims.csv"
+		/// </summary>
 		protected abstract string ResourceId { get; }
+
 		protected abstract void ParseData(DataTable table);
 
 		protected DataTable ReadCsvFile(string resourceId)
@@ -26,6 +30,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var myAssembly = Assembly.GetExecutingAssembly();
 			var file = myAssembly.GetManifestResourceStream(resourceId);
 			return VectoCSVFile.ReadStream(file);
+		}
+
+		protected void NormalizeTable(DataTable table)
+		{
+			foreach (DataColumn col in table.Columns) {
+				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLower().Replace(" ", "");
+			}
 		}
 	}
 
