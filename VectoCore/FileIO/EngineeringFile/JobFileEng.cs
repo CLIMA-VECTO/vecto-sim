@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using TUGraz.VectoCore.FileIO.DeclarationFile;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.FileIO.EngineeringFile
@@ -65,12 +66,12 @@ namespace TUGraz.VectoCore.FileIO.EngineeringFile
 	///  }
 	///}
 	/// </code>
-	public class VectoJobFileV2Engineering : DeclarationFile.VectoJobFileV2Declaration
+	public class VectoJobFileV2Engineering : VectoJobFileV2Declaration
 	{
 		[JsonProperty(Required = Required.Always)] public new DataBodyEng Body;
 
 
-		public class DataBodyEng : DataBodyDecl
+		public class DataBodyEng : VectoJobFileV2Declaration.DataBodyDecl
 		{
 			[JsonProperty(Required = Required.Always)] public IList<string> Cycles;
 			[JsonProperty] public new IList<AuxDataEng> Aux = new List<AuxDataEng>();

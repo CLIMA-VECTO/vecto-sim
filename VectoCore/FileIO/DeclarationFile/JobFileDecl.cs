@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.FileIO.DeclarationFile
 	///  }
 	///}
 	/// </code>
-	public class VectoJobFileV2Declaration
+	public class VectoJobFileV2Declaration : VectoJobFile
 	{
 		[JsonProperty(Required = Required.Always)] public JsonDataHeader Header;
 		[JsonProperty(Required = Required.Always)] public DataBodyDecl Body;

@@ -72,5 +72,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories
 		}
 	}
 
-	public class VectoJobFileV2Declaration {}
+	//public class VectoJobFileV2Declaration {}
 }

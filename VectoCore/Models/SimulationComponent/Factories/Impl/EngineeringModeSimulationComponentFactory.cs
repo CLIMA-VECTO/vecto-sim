@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -7,6 +8,7 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO;
 using TUGraz.VectoCore.FileIO.EngineeringFile;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -15,7 +17,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 {
-	public class EngineeringModeSimulationComponentFactory : InputFileReader, IDataFileReader
+	public class EngineeringModeSimulationComponentFactory : AbstractSimulationRunCreator
 	{
 		internal EngineeringModeSimulationComponentFactory() {}
 
@@ -110,6 +112,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 					//Wheels = axle.WheelsStr
 				}).ToList()
 			};
+		}
+
+		public override IEnumerable<IVectoRun> NextRun()
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void ReadJob(string json)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void ReadVehicle(string json)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void ReadEngine(string json)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void ReadGearbox(string json)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void ReadRetarder(string json)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

@@ -3,25 +3,25 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Factories
 {
-	public interface ISimulationDataFactory
-	{
-		void SetJobFile(string fileName);
+	//public interface ISimulationDataFactory
+	//{
+	//	void SetJobFile(string fileName);
 
-		void SetJobJson(string jsonData, string basePath);
-	}
+	//	void SetJobJson(string jsonData, string basePath);
+	//}
 
-	public interface IDataFileReader
-	{
-		VectoJobData ReadVectoJobFile(string fileName);
+	//public interface IDataFileReader
+	//{
+	//	VectoJobData ReadVectoJobFile(string fileName);
 
-		VehicleData ReadVehicleDataFile(string fileName);
+	//	VehicleData ReadVehicleDataFile(string fileName);
 
-		VehicleData ReadVehicleDataJson(string jsonData, string basePath);
+	//	VehicleData ReadVehicleDataJson(string jsonData, string basePath);
 
-		void ReadEngineFile(string fileName);
+	//	void ReadEngineFile(string fileName);
 
-		void ReadEngineJson(string jsonData, string basePath);
+	//	void ReadEngineJson(string jsonData, string basePath);
 
-		//void AddCycle(string fileName);
-	}
+	//	//void AddCycle(string fileName);
+	//}
 }

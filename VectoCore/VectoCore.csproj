@@ -113,6 +113,7 @@
     <Compile Include="FileIO\EngineeringFile\JobFileEng.cs" />
     <Compile Include="FileIO\EngineeringFile\VehicleFileEng.cs" />
     <Compile Include="FileIO\InputFileReader.cs" />
+    <Compile Include="FileIO\VectoFiles.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandProvider.cs" />
     <Compile Include="Models\Connector\Ports\IDrivingCycleDemandPort.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Models\Declaration\DeclarationWheels.cs" />
     <Compile Include="Models\Declaration\Mission.cs" />
     <Compile Include="Models\Declaration\MissionType.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\Impl\AbstractSimulationRunCreator.cs" />
     <Compile Include="Models\SimulationComponent\Factories\Impl\DeclarationModeSimulationComponentFactory.cs" />
     <Compile Include="Models\SimulationComponent\Factories\Impl\EngineeringModeSimulationComponentFactory.cs" />
     <Compile Include="Models\SimulationComponent\Factories\ISimulationDataFactory.cs" />

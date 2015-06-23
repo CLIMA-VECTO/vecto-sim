@@ -6,7 +6,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.FileIO.DeclarationFile
 {
-	internal class VehicleFileV5Declaration
+	internal class VehicleFileV5Declaration : VectoVehicleFile
 	{
 		[JsonProperty(Required = Required.Always)] public JsonDataHeader Header;
 		[JsonProperty(Required = Required.Always)] public DataBodyDecl Body;
