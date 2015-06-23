@@ -108,9 +108,11 @@
   <ItemGroup>
     <Compile Include="Exceptions\VectoExceptions.cs" />
     <Compile Include="Exceptions\VectoSimulationException.cs" />
+    <Compile Include="FileIO\DeclarationFile\JobFileDecl.cs" />
+    <Compile Include="FileIO\DeclarationFile\VehicleFileDecl.cs" />
+    <Compile Include="FileIO\EngineeringFile\JobFileEng.cs" />
+    <Compile Include="FileIO\EngineeringFile\VehicleFileEng.cs" />
     <Compile Include="FileIO\InputFileReader.cs" />
-    <Compile Include="FileIO\VehicleFileDeclaration.cs" />
-    <Compile Include="FileIO\VehicleFileEngineering.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandProvider.cs" />
     <Compile Include="Models\Connector\Ports\IDrivingCycleDemandPort.cs" />
@@ -141,8 +143,10 @@
     <Compile Include="Models\SimulationComponent\Data\RetarderData.cs" />
     <Compile Include="Models\SimulationComponent\Data\RetarderLossMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
-    <Compile Include="Models\SimulationComponent\Factories\DeclarationModeSimulationComponentFactory.cs" />
-    <Compile Include="Models\SimulationComponent\Factories\EngineeringModeSimulationComponentFactory.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\Impl\DeclarationModeSimulationComponentFactory.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\Impl\EngineeringModeSimulationComponentFactory.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\ISimulationDataFactory.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\SimulationDataFactory.cs" />
     <Compile Include="Models\SimulationComponent\IClutch.cs" />
     <Compile Include="Models\SimulationComponent\IEngineOnlyDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriverDemandDrivingCycle.cs" />

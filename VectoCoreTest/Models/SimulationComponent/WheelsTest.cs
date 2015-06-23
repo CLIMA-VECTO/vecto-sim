@@ -4,6 +4,7 @@ using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Factories;
+using TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -19,7 +20,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void WheelsRequestTest()
 		{
 			var container = new VehicleContainer();
-			var vehicleData = EngineeringModeSimulationComponentFactory.Instance().CreateVehicleData(VehicleDataFile);
+			var reader = new EngineeringModeSimulationComponentFactory();
+			var vehicleData = reader.ReadVehicleDataFile(VehicleDataFile);
 
 			IWheels wheels = new Wheels(container, vehicleData.DynamicTyreRadius);
 			var mockPort = new MockTnOutPort();

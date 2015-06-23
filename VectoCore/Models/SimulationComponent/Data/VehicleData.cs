@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO;
+using TUGraz.VectoCore.FileIO.DeclarationFile;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -29,15 +30,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 	public enum AxleConfiguration
 	{
-		AxleConfig4x2,
-		AxleConfig4x4,
-		AxleConfig6x2,
-		AxleConfig6x4,
-		AxleConfig6x6,
-		AxleConfig8x2,
-		AxleConfig8x4,
-		AxleConfig8x6,
-		AxleConfig8x8,
+		AxleConfig_4x2,
+		AxleConfig_4x4,
+		AxleConfig_6x2,
+		AxleConfig_6x4,
+		AxleConfig_6x6,
+		AxleConfig_8x2,
+		AxleConfig_8x4,
+		AxleConfig_8x6,
+		AxleConfig_8x8,
 	}
 
 	public class VehicleData : SimulationComponentData
@@ -83,18 +84,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		//	SetGenericData(data.Body);
 		//}
 
-		protected void SetGenericData(VehicleFileV5Declaration.DataBodyDecl data)
-		{
-			SavedInDeclarationMode = data.SavedInDeclarationMode;
-			VehicleCategory = data.VehicleCategory();
-			GrossVehicleMassRating = data.GrossVehicleMassRating.SI<Kilogram>();
+		//internal void SetGenericData(VehicleFileV5Declaration.DataBodyDecl data)
+		//{
+		//	SavedInDeclarationMode = data.SavedInDeclarationMode;
+		//	VehicleCategory = data.VehicleCategory();
+		//	GrossVehicleMassRating = data.GrossVehicleMassRating.SI<Kilogram>();
 
-			DragCoefficient = data.DragCoefficient;
-			CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>();
+		//	DragCoefficient = data.DragCoefficient;
+		//	CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>();
 
-			DragCoefficientRigidTruck = data.DragCoefficientRigidTruck;
-			CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>();
-		}
+		//	DragCoefficientRigidTruck = data.DragCoefficientRigidTruck;
+		//	CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>();
+		//}
 
 		public string BasePath { get; internal set; }
 
@@ -193,5 +194,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public double AxleWeightShare { get; internal set; }
 
 		public bool TwinTyres { get; internal set; }
+
+		public string Wheels { get; internal set; }
 	}
 }

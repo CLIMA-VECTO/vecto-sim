@@ -6,6 +6,7 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Tests.Utils;
 
@@ -91,7 +92,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Test_VectoJob()
 		{
-			var jobData = VectoJobData.ReadFromFile(@"TestData\Jobs\24t Coach.vecto");
+			var reader = new EngineeringModeSimulationComponentFactory();
+			var jobData = reader.ReadVectoJobFile(@"TestData\Jobs\24t Coach.vecto");
 			var jobContainer = new JobContainer(jobData);
 			jobContainer.RunJobs();
 

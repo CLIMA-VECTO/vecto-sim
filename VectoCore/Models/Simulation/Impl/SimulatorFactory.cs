@@ -4,6 +4,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Factories;
+using TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -201,9 +202,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				_auxDict[auxID] = AuxiliaryData.ReadFromFile(auxFileName);
 			}
 
-			public void AddDriver(VectoJobData.Data.DataBody.StartStopData startStop,
-				VectoJobData.Data.DataBody.OverSpeedEcoRollData overSpeedEcoRoll,
-				VectoJobData.Data.DataBody.LACData lookAheadCoasting, string accelerationLimitingFile)
+			public void AddDriver(VectoJobData.StartStopData startStop,
+				VectoJobData.OverSpeedEcoRollData overSpeedEcoRoll,
+				VectoJobData.LACData lookAheadCoasting, string accelerationLimitingFile)
 			{
 				if (_engineOnly) {
 					return;
@@ -218,7 +219,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return;
 				}
 
-				var vehicleData = EngineeringModeSimulationComponentFactory.Instance().CreateVehicleData(vehicleFile);
+				IDataFileReader reader = new EngineeringModeSimulationComponentFactory();
+				var vehicleData = reader.ReadVehicleDataFile(vehicleFile);
 				//VehicleData.ReadFromFile(vehicleFile);
 				_vehicle = new Vehicle(_container, vehicleData);
 			}
