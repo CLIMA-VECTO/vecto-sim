@@ -126,6 +126,69 @@ namespace TUGraz.VectoCore.Tests.Models
 		[TestMethod]
 		public void AuxFanTechTest()
 		{
+			var fan = DeclarationData.Fan;
+
+			var defaultFan = "Crankshaft mounted - Electronically controlled visco clutch (Default)";
+			var expected = new Dictionary<string, int[]> {
+				{
+					"Crankshaft mounted - Electronically controlled visco clutch (Default)",
+					new[] { 618, 671, 516, 566, 1037, 0, 0, 0, 0, 0 }
+				}, {
+					"Crankshaft mounted - Bimetallic controlled visco clutch",
+					new[] { 818, 871, 676, 766, 1277, 0, 0, 0, 0, 0 }
+				}, {
+					"Crankshaft mounted - Discrete step clutch",
+					new[] { 668, 721, 616, 616, 1157, 0, 0, 0, 0, 0 }
+				}, {
+					"Crankshaft mounted - On/Off clutch",
+					new[] { 718, 771, 666, 666, 1237, 0, 0, 0, 0, 0 }
+				}, {
+					"Belt driven or driven via transm. - Electronically controlled visco clutch",
+					new[] { 889, 944, 733, 833, 1378, 0, 0, 0, 0, 0 }
+				}, {
+					"Belt driven or driven via transm. - Bimetallic controlled visco clutch",
+					new[] { 1089, 1144, 893, 1033, 1618, 0, 0, 0, 0, 0 }
+				}, {
+					"Belt driven or driven via transm. - Discrete step clutch",
+					new[] { 939, 994, 883, 883, 1498, 0, 0, 0, 0, 0 }
+				}, {
+					"Belt driven or driven via transm. - On/Off clutch",
+					new[] { 989, 1044, 933, 933, 1578, 0, 0, 0, 0, 0 }
+				}, {
+					"Hydraulic driven - Variable displacement pump",
+					new[] { 738, 955, 632, 717, 1672, 0, 0, 0, 0, 0 }
+				}, {
+					"Hydraulic driven - Constant displacement pump",
+					new[] { 1000, 1200, 800, 900, 2100, 0, 0, 0, 0, 0 }
+				}, {
+					"Hydraulic driven - Electronically controlled",
+					new[] { 700, 800, 600, 600, 1400, 0, 0, 0, 0, 0 }
+				}
+			};
+
+			var missions = new[] {
+				MissionType.LongHaul, MissionType.RegionalDelivery, MissionType.UrbanDelivery, MissionType.MunicipalUtility,
+				MissionType.Construction, MissionType.HeavyUrban, MissionType.Urban,
+				MissionType.Suburban, MissionType.Interurban, MissionType.Coach
+			};
+
+			Assert.AreEqual(missions.Length, Enum.GetValues(typeof(MissionType)).Length,
+				"there is something wrong in the mission list.");
+			Assert.IsTrue(expected.All(kv => kv.Value.Length == missions.Length),
+				"there is something wrong in the test values lists.");
+
+			for (var i = 0; i < missions.Length; i++) {
+				// default
+				Watt defaultValue = fan.Lookup(missions[i], "");
+				Assert.AreEqual(expected[defaultFan].Value[i], defaultValue.Double(), Tolerance);
+
+				// all fan techs
+				foreach (var expect in expected) {
+					Watt value = fan.Lookup(missions[i], expect.Key);
+					Assert.AreEqual(expect.Value[i], value.Double(), Tolerance);
+				}
+			}
+
 			Assert.Inconclusive();
 		}
 
