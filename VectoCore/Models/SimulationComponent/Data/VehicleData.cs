@@ -1,45 +1,12 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	public enum VehicleCategory
-	{
-		RigidTruck,
-		Tractor,
-		CityBus,
-		InterurbanBus,
-		Coach
-	}
-
-	public enum CrossWindCorrectionMode
-	{
-		NoCorrection,
-		SpeedDependent,
-		VAirBeta
-	}
-
-	public enum AxleConfiguration
-	{
-		AxleConfig4x2,
-		AxleConfig4x4,
-		AxleConfig6x2,
-		AxleConfig6x4,
-		AxleConfig6x6,
-		AxleConfig8x2,
-		AxleConfig8x4,
-		AxleConfig8x6,
-		AxleConfig8x8,
-	}
-
 	public class VehicleData : SimulationComponentData
 	{
 		//public static VehicleData ReadFromFile(string fileName)
@@ -180,18 +147,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			TotalRollResistanceCoefficient = RRC;
 			ReducedMassWheels = mRed0;
 		}
-	}
-
-	public class Axle
-	{
-		public KilogramSquareMeter Inertia { get; internal set; }
-
-		public double RollResistanceCoefficient { get; internal set; }
-
-		public Newton TyreTestLoad { get; internal set; }
-
-		public double AxleWeightShare { get; internal set; }
-
-		public bool TwinTyres { get; internal set; }
 	}
 }

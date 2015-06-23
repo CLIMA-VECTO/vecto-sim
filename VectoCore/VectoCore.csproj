@@ -122,12 +122,23 @@
     <Compile Include="Models\Connector\Ports\Impl\Response.cs" />
     <Compile Include="Models\Connector\Ports\IFvPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
-    <Compile Include="Models\DeclarationData.cs" />
+    <Compile Include="Models\SimulationComponent\Data\AccelerationCurve.cs" />
+    <Compile Include="Models\Declaration\DeclarationData.cs" />
+    <Compile Include="Models\Declaration\DeclarationPT1.cs" />
+    <Compile Include="Models\Declaration\ElectricSystem.cs" />
     <Compile Include="Models\Declaration\LookupData.cs" />
-    <Compile Include="Models\Declaration\Rims.cs" />
-    <Compile Include="Models\Declaration\Wheels.cs" />
+    <Compile Include="Models\Declaration\Declaration.cs" />
+    <Compile Include="Models\Declaration\DeclarationWheels.cs" />
+    <Compile Include="Models\Declaration\Mission.cs" />
+    <Compile Include="Models\Declaration\MissionType.cs" />
+    <Compile Include="Utils\RessourceHelper.cs" />
+    <Compile Include="Models\Declaration\Segment.cs" />
+    <Compile Include="Models\Declaration\DeclarationSegments.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryCycleDataAdapter.cs" />
+    <Compile Include="Models\Declaration\Axle.cs" />
+    <Compile Include="Models\Declaration\AxleConfiguration.cs" />
     <Compile Include="Models\SimulationComponent\Data\CombustionEngineData.cs" />
+    <Compile Include="Models\SimulationComponent\Data\CrossWindCorrectionMode.cs" />
     <Compile Include="Models\SimulationComponent\Data\DrivingCycleData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FullLoadCurve.cs" />
@@ -140,9 +151,10 @@
     <Compile Include="Models\SimulationComponent\Data\JsonDataHeader.cs" />
     <Compile Include="Models\SimulationComponent\Data\RetarderData.cs" />
     <Compile Include="Models\SimulationComponent\Data\RetarderLossMap.cs" />
+    <Compile Include="Models\Declaration\VehicleCategory.cs" />
     <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
-    <Compile Include="Models\SimulationComponent\Factories\DeclarationModeSimulationComponentFactory.cs" />
-    <Compile Include="Models\SimulationComponent\Factories\EngineeringModeSimulationComponentFactory.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\DeclarationModeFactory.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\EngineeringModeFactory.cs" />
     <Compile Include="Models\SimulationComponent\IClutch.cs" />
     <Compile Include="Models\SimulationComponent\IEngineOnlyDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriverDemandDrivingCycle.cs" />
@@ -160,6 +172,7 @@
     <Compile Include="Models\SimulationComponent\Impl\Driver.cs" />
     <Compile Include="Models\SimulationComponent\Data\DriverData.cs" />
     <Compile Include="Utils\Formulas.cs" />
+    <Compile Include="Utils\IEnumberableExtensionMethods.cs" />
     <Compile Include="Utils\IntExtensionMethods.cs" />
     <Compile Include="Utils\Physics.cs" />
     <Compile Include="Utils\SI.cs" />
@@ -184,10 +197,10 @@
     <Compile Include="Models\Simulation\Data\ModalResult.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Models\Simulation\IVectoSimulator.cs" />
+    <Compile Include="Models\Simulation\IVectoRun.cs" />
     <Compile Include="Models\Simulation\Data\ModalDataWriter.cs" />
     <Compile Include="Models\Simulation\Impl\SimulatorFactory.cs" />
-    <Compile Include="Models\Simulation\Impl\VectoSimulator.cs" />
+    <Compile Include="Models\Simulation\Impl\VectoRun.cs" />
     <Compile Include="Models\Simulation\Impl\JobContainer.cs" />
     <Compile Include="Models\Simulation\Impl\VehicleContainer.cs" />
     <Compile Include="Models\Simulation\Cockpit\ICockpit.cs" />
@@ -197,6 +210,7 @@
     <Compile Include="Models\Simulation\IVehicleContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\DataRowExtensionMethods.cs" />
+    <Compile Include="Utils\StringExtensionMethods.cs" />
     <Compile Include="Utils\VectoCSVFile.cs" />
     <Compile Include="Utils\VectoMath.cs" />
     <Compile Include="Utils\DelauneyMap.cs" />
@@ -207,6 +221,29 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="Resources\Declaration\Rims.csv" />
     <EmbeddedResource Include="Resources\Declaration\Wheels.csv" />
+    <EmbeddedResource Include="Resources\Declaration\SegmentTable.csv" />
+    <EmbeddedResource Include="Resources\Declaration\MissionCycles\HeavyUrban.vdri" />
+    <EmbeddedResource Include="Resources\Declaration\MissionCycles\Suburban.vdri" />
+    <EmbeddedResource Include="Resources\Declaration\MissionCycles\Urban.vdri" />
+    <EmbeddedResource Include="Resources\Declaration\MissionCycles\Coach.vdri" />
+    <EmbeddedResource Include="Resources\Declaration\MissionCycles\Construction.vdri" />
+    <EmbeddedResource Include="Resources\Declaration\MissionCycles\Interurban.vdri" />
+    <EmbeddedResource Include="Resources\Declaration\MissionCycles\LongHaul.vdri" />
+    <EmbeddedResource Include="Resources\Declaration\MissionCycles\MunicipalUtility.vdri" />
+    <EmbeddedResource Include="Resources\Declaration\MissionCycles\RegionalDelivery.vdri" />
+    <EmbeddedResource Include="Resources\Declaration\MissionCycles\UrbanDelivery.vdri" />
+    <EmbeddedResource Include="Resources\Declaration\PT1.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VACC\Truck.vacc" />
+    <EmbeddedResource Include="Resources\Declaration\VCDV\CoachBus.vcdv" />
+    <EmbeddedResource Include="Resources\Declaration\VCDV\RigidSolo.vcdv" />
+    <EmbeddedResource Include="Resources\Declaration\VCDV\RigidTrailer.vcdv" />
+    <EmbeddedResource Include="Resources\Declaration\VCDV\TractorSemitrailer.vcdv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\ES-Tech.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\Fan-Tech.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\HVAC-Table.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\PS-Table.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Table.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Tech.csv" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
