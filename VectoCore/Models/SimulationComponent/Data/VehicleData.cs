@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO;
+using TUGraz.VectoCore.FileIO.DeclarationFile;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
@@ -50,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		//	SetGenericData(data.Body);
 		//}
 
-		protected void SetGenericData(VehicleFileV5Declaration.DataBodyDecl data)
+		internal void SetGenericData(VehicleFileV5Declaration.DataBodyDecl data)
 		{
 			SavedInDeclarationMode = data.SavedInDeclarationMode;
 			VehicleCategory = data.VehicleCategory();

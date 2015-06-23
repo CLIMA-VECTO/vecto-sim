@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.FileIO.DeclarationFile
 {
-
 	internal class VehicleFileV5Declaration
 	{
 		[JsonProperty(Required = Required.Always)] public JsonDataHeader Header;

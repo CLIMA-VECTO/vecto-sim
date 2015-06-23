@@ -2,15 +2,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public enum AxleConfiguration
 	{
-		AxleConfig4x2,
-		AxleConfig4x4,
-		AxleConfig6x2,
-		AxleConfig6x4,
-		AxleConfig6x6,
-		AxleConfig8x2,
-		AxleConfig8x4,
-		AxleConfig8x6,
-		AxleConfig8x8,
+		AxleConfig_4x2,
+		AxleConfig_4x4,
+		AxleConfig_6x2,
+		AxleConfig_6x4,
+		AxleConfig_6x6,
+		AxleConfig_8x2,
+		AxleConfig_8x4,
+		AxleConfig_8x6,
+		AxleConfig_8x8,
 	}
 
 	public static class AxleConfigurationExtensions

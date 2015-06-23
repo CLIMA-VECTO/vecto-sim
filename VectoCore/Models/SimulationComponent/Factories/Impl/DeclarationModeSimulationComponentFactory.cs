@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO;
 using TUGraz.VectoCore.FileIO.DeclarationFile;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -52,16 +53,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 		{
 			var fileInfo = GetFileVersion(json);
 
-			if (!fileInfo.Item2) {
+			if (!fileInfo.SavedInDeclarationMode) {
 				throw new VectoException("File not saved in Declaration Mode!");
 			}
 
-			switch (fileInfo.Item1) {
+			switch (fileInfo.Version) {
 				case 5:
 					var data = JsonConvert.DeserializeObject<VehicleFileV5Declaration>(json);
 					return CreateVehicleData(data.Body, basePath);
 				default:
-					throw new UnsupportedFileVersionException("Unsupported Version of .vveh file. Got Version " + fileInfo.Item1);
+					throw new UnsupportedFileVersionException("Unsupported Version of .vveh file. Got Version " + fileInfo.Version);
 			}
 		}
 
@@ -101,7 +102,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 					RollResistanceCoefficient = axle.RollResistanceCoefficient,
 					//AxleWeightShare = axle.AxleWeightShare,
 					TyreTestLoad = DoubleExtensionMethods.SI<Newton>(axle.TyreTestLoad),
-					Wheels = axle.WheelsStr
+					//Wheels = axle.WheelsStr
 				}).ToList()
 			};
 

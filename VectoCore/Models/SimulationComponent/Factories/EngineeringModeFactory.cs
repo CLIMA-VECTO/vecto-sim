@@ -3,6 +3,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO;
+using TUGraz.VectoCore.FileIO.EngineeringFile;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -40,7 +41,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories
 		}
 
 
-		protected VehicleData CreateVehicleData(string basePath, VehicleFileV5Engineering.DataBodyEng data)
+		internal VehicleData CreateVehicleData(string basePath, VehicleFileV5Engineering.DataBodyEng data)
 		{
 			return new VehicleData {
 				BasePath = basePath,

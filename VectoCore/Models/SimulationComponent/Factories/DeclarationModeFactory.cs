@@ -2,6 +2,7 @@
 using System.IO;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO;
+using TUGraz.VectoCore.FileIO.DeclarationFile;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
@@ -37,7 +38,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories
 			}
 		}
 
-		protected VehicleData CreateVehicleData(string basePath, VehicleFileV5Declaration data)
+		internal VehicleData CreateVehicleData(string basePath, VehicleFileV5Declaration data)
 		{
 			//return new VehicleData {
 			//	SavedInDeclarationMode = data.SavedInDeclarationMode,

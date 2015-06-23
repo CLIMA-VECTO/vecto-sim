@@ -108,9 +108,11 @@
   <ItemGroup>
     <Compile Include="Exceptions\VectoExceptions.cs" />
     <Compile Include="Exceptions\VectoSimulationException.cs" />
+    <Compile Include="FileIO\DeclarationFile\JobFileDecl.cs" />
+    <Compile Include="FileIO\DeclarationFile\VehicleFileDecl.cs" />
+    <Compile Include="FileIO\EngineeringFile\JobFileEng.cs" />
+    <Compile Include="FileIO\EngineeringFile\VehicleFileEng.cs" />
     <Compile Include="FileIO\InputFileReader.cs" />
-    <Compile Include="FileIO\VehicleFileDeclaration.cs" />
-    <Compile Include="FileIO\VehicleFileEngineering.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandProvider.cs" />
     <Compile Include="Models\Connector\Ports\IDrivingCycleDemandPort.cs" />
@@ -131,6 +133,10 @@
     <Compile Include="Models\Declaration\DeclarationWheels.cs" />
     <Compile Include="Models\Declaration\Mission.cs" />
     <Compile Include="Models\Declaration\MissionType.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\Impl\DeclarationModeSimulationComponentFactory.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\Impl\EngineeringModeSimulationComponentFactory.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\ISimulationDataFactory.cs" />
+    <Compile Include="Models\SimulationComponent\Factories\SimulationDataFactory.cs" />
     <Compile Include="Utils\RessourceHelper.cs" />
     <Compile Include="Models\Declaration\Segment.cs" />
     <Compile Include="Models\Declaration\DeclarationSegments.cs" />

@@ -201,9 +201,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				_auxDict[auxID] = AuxiliaryData.ReadFromFile(auxFileName);
 			}
 
-			public void AddDriver(VectoJobData.Data.DataBody.StartStopData startStop,
-				VectoJobData.Data.DataBody.OverSpeedEcoRollData overSpeedEcoRoll,
-				VectoJobData.Data.DataBody.LACData lookAheadCoasting, string accelerationLimitingFile)
+			public void AddDriver(VectoJobData.StartStopData startStop,
+				VectoJobData.OverSpeedEcoRollData overSpeedEcoRoll,
+				VectoJobData.LACData lookAheadCoasting, string accelerationLimitingFile)
 			{
 				if (_engineOnly) {
 					return;
