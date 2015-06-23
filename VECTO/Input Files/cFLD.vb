@@ -87,101 +87,106 @@ Public Class cFLD
     ''' </summary>
     ''' <returns>True if successful.</returns>
     ''' <remarks></remarks>   
-    Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
-        Dim file As cFile_V3
-        Dim line As String()
-        Dim PT1set As Boolean
-        Dim FirstLine As Boolean
-        Dim nU As Double
-        Dim MsgSrc As String
+	Public Function ReadFile(ByVal TqOnly As Boolean, Optional ByVal ShowMsg As Boolean = True) As Boolean
+		Dim file As cFile_V3
+		Dim line As String()
+		Dim PT1set As Boolean
+		Dim FirstLine As Boolean
+		Dim nU As Double
+		Dim MsgSrc As String
 
-        MsgSrc = "Main/ReadInp/FLD"
+		MsgSrc = "Main/ReadInp/FLD"
 
-        'Reset
-        LTq = Nothing
-        LTqDrag = Nothing
-        LnU = Nothing
-        LPT1 = Nothing
-        iDim = -1
+		'Reset
+		LTq = Nothing
+		LTqDrag = Nothing
+		LnU = Nothing
+		LPT1 = Nothing
+		iDim = -1
 
-        'Stop if there's no file
-        If sFilePath = "" OrElse Not IO.File.Exists(sFilePath) Then
-            If ShowMsg Then WorkerMsg(tMsgID.Err, "FLD file '" & sFilePath & "' not found!", MsgSrc)
-            Return False
-        End If
+		'Stop if there's no file
+		If sFilePath = "" OrElse Not IO.File.Exists(sFilePath) Then
+			If ShowMsg Then WorkerMsg(tMsgID.Err, "FLD file '" & sFilePath & "' not found!", MsgSrc)
+			Return False
+		End If
 
-        'Open file
-        file = New cFile_V3
-        If Not file.OpenRead(sFilePath) Then
-            If ShowMsg Then WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
-            file = Nothing
-            Return False
-        End If
+		'Open file
+		file = New cFile_V3
+		If Not file.OpenRead(sFilePath) Then
+			If ShowMsg Then WorkerMsg(tMsgID.Err, "Failed to open file (" & sFilePath & ") !", MsgSrc)
+			file = Nothing
+			Return False
+		End If
 
-        'Skip Header
-        file.ReadLine()
+		'Skip Header
+		file.ReadLine()
 
-        'Initialize Lists
-        LTq = New System.Collections.Generic.List(Of Single)
-        LTqDrag = New System.Collections.Generic.List(Of Single)
-        LnU = New System.Collections.Generic.List(Of Single)
-        LPT1 = New System.Collections.Generic.List(Of Single)
+		'Initialize Lists
+		LTq = New System.Collections.Generic.List(Of Single)
+		LTqDrag = New System.Collections.Generic.List(Of Single)
+		LnU = New System.Collections.Generic.List(Of Single)
+		LPT1 = New System.Collections.Generic.List(Of Single)
 
-        FirstLine = True
-        Try
+		FirstLine = True
+		Try
 
-            Do While Not file.EndOfFile
+			Do While Not file.EndOfFile
 
-                'Read Line
-                line = file.ReadLine
+				'Read Line
+				line = file.ReadLine
 
-                'VECTO: M => Pe
-                nU = CDbl(line(0))
+				'VECTO: M => Pe
+				nU = CDbl(line(0))
 
-                LnU.Add(nU)
-                LTq.Add(CDbl(line(1)))
-                LTqDrag.Add(CDbl(line(2)))
+				LnU.Add(nU)
+				LTq.Add(CDbl(line(1)))
 
-                If FirstLine Then
-                    PT1set = (UBound(line) > 2)
-                    FirstLine = False
-                End If
+				If TqOnly Then
+					LTqDrag.Add(0)
+				Else
+					LTqDrag.Add(CDbl(line(2)))
+				End If
 
-                'If PT1 not defined, use default value (0)
-                If PT1set Then
-                    LPT1.Add(CSng(line(3)))
-                Else
-                    LPT1.Add(0)
-                End If
+				If FirstLine Then
+					PT1set = (Not TqOnly) AndAlso (UBound(line) > 2)
+					FirstLine = False
+				End If
 
-                'Line-counter up (was reset in ResetMe)
-                iDim += 1
+				'If PT1 not defined, use default value (0)
+				If PT1set Then
+					LPT1.Add(CSng(line(3)))
+				Else
+					LPT1.Add(0)
+				End If
 
-
-            Loop
-
-        Catch ex As Exception
-
-            If ShowMsg Then WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & iDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
-            GoTo lbEr
-
-        End Try
+				'Line-counter up (was reset in ResetMe)
+				iDim += 1
 
 
-        'Close file
-        file.Close()
+			Loop
 
-        Return True
+		Catch ex As Exception
+
+			If ShowMsg Then WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & iDim + 1 & " (" & sFilePath & ")", MsgSrc, sFilePath)
+			GoTo lbEr
+
+		End Try
 
 
-        'ERROR-label for clean Abort
+		'Close file
+		file.Close()
+
+		Return True
+
+
+		'ERROR-label for clean Abort
 lbEr:
-        file.Close()
-        file = Nothing
+		file.Close()
+		file = Nothing
 
-        Return False
+		Return False
 
-    End Function
+	End Function
 
     ''' <summary>
     ''' Returns motoring power [kW] for given engine speed
@@ -535,7 +540,20 @@ lbInt:
 
         Return Tm
 
-    End Function
+	End Function
+
+	Public Sub LimitToEng()
+		Dim i As Integer
+		Dim nU As Single
+		Dim TqEng As Single
+
+		For i = 0 To iDim
+			nU = LnU(i)
+			TqEng = ENG.FLD.Tq(nU)
+			If TqEng < LTq(i) Then LTq(i) = TqEng
+		Next
+
+	End Sub
 
     Public Function Init(ByVal Nidle As Single) As Boolean
         Dim Pmax As Single

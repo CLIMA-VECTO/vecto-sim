@@ -11,7 +11,7 @@
 Imports System.Collections.Generic
 
 Module VECTO_Global
-	Public Const VECTOvers As String = "2.1.4"
+	Public Const VECTOvers As String = "2.2 beta"
 	Public Const LicSigAppCode As String = "VECTO-Release-0093C61E0A2E4BFA9A7ED7E729C56AE4"
 	Public MyAppPath As String
 	Public MyConfPath As String
@@ -41,7 +41,6 @@ Module VECTO_Global
 	Public GBX As cGBX
 	Public MAP As cMAP
 	Public DRI As cDRI
-	Public FLD As List(Of cFLD)
 	Public MODdata As cMOD
 	Public Lic As vectolic.cLicense
 	Public VSUM As cVSUM

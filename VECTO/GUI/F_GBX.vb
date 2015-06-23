@@ -156,7 +156,8 @@ Public Class F_GBX
         lvi.SubItems.Add("-")
         lvi.SubItems.Add("0")
         lvi.SubItems.Add("0")
-        lvi.SubItems.Add("")
+		lvi.SubItems.Add("")
+		lvi.SubItems.Add("")
         Me.LvGears.Items.Add(lvi)
 
         'Me.ChSkipGears.Checked = False         'set by CbGStype.SelectedIndexChanged
@@ -240,7 +241,8 @@ Public Class F_GBX
             End If
             lv0.SubItems.Add(GBX0.Igetr(i))
             lv0.SubItems.Add(GBX0.GetrMap(i, True))
-            lv0.SubItems.Add(GBX0.gsFile(i, True))
+			lv0.SubItems.Add(GBX0.gsFile(i, True))
+			lv0.SubItems.Add(GBX0.FldFile(i, True))
 
             Me.LvGears.Items.Add(lv0)
         Next
@@ -309,7 +311,9 @@ Public Class F_GBX
             GBX0.GetrMaps.Add(New cSubPath)
             GBX0.GetrMap(i) = Me.LvGears.Items(i).SubItems(3).Text
             GBX0.gs_files.Add(New cSubPath)
-            GBX0.gsFile(i) = Me.LvGears.Items(i).SubItems(4).Text
+			GBX0.gsFile(i) = Me.LvGears.Items(i).SubItems(4).Text
+			GBX0.FldFiles.Add(New cSubPath)
+			GBX0.FldFile(i) = Me.LvGears.Items(i).SubItems(5).Text
         Next
 
         GBX0.gs_TorqueResv = fTextboxToNumString(Me.TbTqResv.Text)
@@ -519,18 +523,21 @@ Public Class F_GBX
         Do
 
             GearDia.ChIsTCgear.Enabled = (Me.ChTCon.Checked And Me.LvGears.SelectedIndices(0) > 0)
-            GearDia.PnShiftPoly.Enabled = (Not Cfg.DeclMode And Me.LvGears.SelectedIndices(0) > 0)
+			GearDia.PnShiftPoly.Enabled = (Not Cfg.DeclMode And Me.LvGears.SelectedIndices(0) > 0)
+			GearDia.PnFld.Enabled = (Me.LvGears.SelectedIndices(0) > 0)
             GearDia.GbxPath = fPATH(GbxFile)
-            GearDia.TbGear.Text = Me.LvGears.SelectedItems(0).SubItems(0).Text
+			GearDia.TbGear.Text = Me.LvGears.SelectedItems(0).SubItems(0).Text
             GearDia.TbRatio.Text = Me.LvGears.SelectedItems(0).SubItems(2).Text
             GearDia.TbMapPath.Text = Me.LvGears.SelectedItems(0).SubItems(3).Text
             If Me.LvGears.SelectedIndices(0) > 0 Then
                 GearDia.ChIsTCgear.Checked = (Me.ChTCon.Checked And Me.LvGears.SelectedItems(0).SubItems(1).Text = "on")
                 GearDia.TbShiftPolyFile.Text = Me.LvGears.SelectedItems(0).SubItems(4).Text
-            Else
-                GearDia.ChIsTCgear.Checked = False
-                GearDia.TbShiftPolyFile.Text = ""
-            End If
+				GearDia.TbFld.Text = Me.LvGears.SelectedItems(0).SubItems(5).Text
+			Else
+				GearDia.ChIsTCgear.Checked = False
+				GearDia.TbShiftPolyFile.Text = ""
+				GearDia.TbFld.Text = ""
+			End If
 
             If GearDia.ShowDialog = Windows.Forms.DialogResult.OK Then
 
@@ -546,7 +553,8 @@ Public Class F_GBX
 
                 Me.LvGears.SelectedItems(0).SubItems(2).Text = GearDia.TbRatio.Text
                 Me.LvGears.SelectedItems(0).SubItems(3).Text = GearDia.TbMapPath.Text
-                Me.LvGears.SelectedItems(0).SubItems(4).Text = GearDia.TbShiftPolyFile.Text
+				Me.LvGears.SelectedItems(0).SubItems(4).Text = GearDia.TbShiftPolyFile.Text
+				Me.LvGears.SelectedItems(0).SubItems(5).Text = GearDia.TbFld.Text
 
                 UpdatePic()
                 Change()
@@ -579,7 +587,8 @@ Public Class F_GBX
         End If
         lvi.SubItems.Add("")
         lvi.SubItems.Add("")
-        lvi.SubItems.Add("")
+		lvi.SubItems.Add("")
+		lvi.SubItems.Add("")
         Me.LvGears.Items.Add(lvi)
 
         lvi.EnsureVisible()
@@ -668,36 +677,47 @@ Public Class F_GBX
 
         Dim f As cFile_V3 = Nothing
         Dim path As String
-        Dim lM As List(Of Single)
-        Dim lup As List(Of Single)
-        Dim ldown As List(Of Single)
+		Dim lM As List(Of Single) = Nothing
+		Dim lup As List(Of Single) = Nothing
+		Dim ldown As List(Of Single) = Nothing
         Dim line As String() = Nothing
         Dim MyChart As System.Windows.Forms.DataVisualization.Charting.Chart
         Dim s As System.Windows.Forms.DataVisualization.Charting.Series
         Dim a As System.Windows.Forms.DataVisualization.Charting.ChartArea
         Dim img As Image
         Dim Gear As Integer
+		Dim fldOK As Boolean = False
+		Dim fldpath As String
+		Dim FLD0 As cFLD = Nothing
+		Dim ShiftOK As Boolean = False
 
         Me.PicBox.Image = Nothing
 
         Try
 
-            'Read Files
+			'Check Files
             If Me.LvGears.Items.Count > 1 Then
 
                 If Me.LvGears.SelectedItems.Count > 0 Then
                     path = fFileRepl(Me.LvGears.SelectedItems(0).SubItems(4).Text, fPATH(GbxFile))
-                    Gear = Me.LvGears.SelectedIndices(0)
-                Else
-                    path = fFileRepl(Me.LvGears.Items(1).SubItems(4).Text, fPATH(GbxFile))
-                    Gear = 1
+					fldpath = fFileRepl(Me.LvGears.SelectedItems(0).SubItems(5).Text, fPATH(GbxFile))
+					Gear = Me.LvGears.SelectedIndices(0)
+				Else
+					path = fFileRepl(Me.LvGears.Items(1).SubItems(4).Text, fPATH(GbxFile))
+					fldpath = fFileRepl(Me.LvGears.Items(1).SubItems(5).Text, fPATH(GbxFile))
+					Gear = 1
                 End If
 
                 f = New cFile_V3
-                If Not f.OpenRead(path) Then Exit Sub
+				ShiftOK = f.OpenRead(path)
 
-                'Header
-                f.ReadLine()
+				fldOK = fldpath.Trim <> ""
+
+				If fldOK Then
+					FLD0 = New cFLD
+					FLD0.FilePath = fldpath
+					fldOK = FLD0.ReadFile(True, False)
+				End If
 
             Else
 
@@ -708,86 +728,117 @@ Public Class F_GBX
         Catch ex As Exception
             Exit Sub
 
-        End Try
+		End Try
 
-        Try
-            lM = New List(Of Single)
-            lup = New List(Of Single)
-            ldown = New List(Of Single)
+		'Read ShiftPolygon
+		If ShiftOK Then
 
-            Do While Not f.EndOfFile
-                line = f.ReadLine
-                lM.Add(CSng(line(0)))
-                lup.Add(CSng(line(1)))
-                ldown.Add(CSng(line(2)))
-            Loop
+			'Header
+			f.ReadLine()
 
-            f.Close()
+			Try
+				lM = New List(Of Single)
+				lup = New List(Of Single)
+				ldown = New List(Of Single)
 
-        Catch ex As Exception
-            f.Close()
-            Exit Sub
-        End Try
+				Do While Not f.EndOfFile
+					line = f.ReadLine
+					lM.Add(CSng(line(0)))
+					lup.Add(CSng(line(1)))
+					ldown.Add(CSng(line(2)))
+				Loop
 
-        If lM.Count < 2 Then Exit Sub
+				f.Close()
 
-        'Create plot
-        MyChart = New System.Windows.Forms.DataVisualization.Charting.Chart
-        MyChart.Width = Me.PicBox.Width
-        MyChart.Height = Me.PicBox.Height
+			Catch ex As Exception
+				f.Close()
+				Exit Sub
+			End Try
 
-        a = New System.Windows.Forms.DataVisualization.Charting.ChartArea
+			If lM.Count < 2 Then ShiftOK = False
 
-        s = New System.Windows.Forms.DataVisualization.Charting.Series
-        s.Points.DataBindXY(lup, lM)
-        s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
-        s.BorderWidth = 2
-        s.Color = Color.DarkRed
-        s.Name = "Upshift curve"
-        MyChart.Series.Add(s)
+		End If
 
-        s = New System.Windows.Forms.DataVisualization.Charting.Series
-        s.Points.DataBindXY(ldown, lM)
-        s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
-        s.BorderWidth = 2
-        s.Color = Color.DarkRed
-        s.Name = "Downshift curve"
-        MyChart.Series.Add(s)
+		
 
-        a.Name = "main"
+		'Create plot
+		If Not ShiftOK And Not fldOK Then Exit Sub
 
-        a.AxisX.Title = "engine speed [1/min]"
-        a.AxisX.TitleFont = New Font("Helvetica", 10)
-        a.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
-        a.AxisX.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
-        a.AxisX.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
+		MyChart = New System.Windows.Forms.DataVisualization.Charting.Chart
+		MyChart.Width = Me.PicBox.Width
+		MyChart.Height = Me.PicBox.Height
 
-        a.AxisY.Title = "engine torque [Nm]"
-        a.AxisY.TitleFont = New Font("Helvetica", 10)
-        a.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
-        a.AxisY.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
-        a.AxisY.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
+		a = New System.Windows.Forms.DataVisualization.Charting.ChartArea
 
-        a.AxisX.Minimum = 300
-        a.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Solid
-        a.BorderWidth = 1
+		'Shiftpolygons from file
+		If ShiftOK Then
+			s = New System.Windows.Forms.DataVisualization.Charting.Series
+			s.Points.DataBindXY(lup, lM)
+			s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+			s.BorderWidth = 2
+			s.Color = Color.DarkRed
+			s.Name = "Upshift curve"
+			MyChart.Series.Add(s)
 
-        a.BackColor = Color.GhostWhite
+			s = New System.Windows.Forms.DataVisualization.Charting.Series
+			s.Points.DataBindXY(ldown, lM)
+			s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+			s.BorderWidth = 2
+			s.Color = Color.DarkRed
+			s.Name = "Downshift curve"
+			MyChart.Series.Add(s)
+		End If
 
-        MyChart.ChartAreas.Add(a)
+		'Fld
+		If fldOK Then
 
-        MyChart.Titles.Add("Gear " & Gear & " shift polygons")
-        MyChart.Titles(0).Font = New Font("Helvetica", 12)
+			s = New System.Windows.Forms.DataVisualization.Charting.Series
+			s.Points.DataBindXY(FLD0.LnU, FLD0.LTq)
+			s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+			s.BorderWidth = 2
+			s.Color = Color.DarkBlue
+			s.Name = "Full load"
+			MyChart.Series.Add(s)
 
-        MyChart.Update()
-
-        img = New Bitmap(MyChart.Width, MyChart.Height, Imaging.PixelFormat.Format32bppArgb)
-        MyChart.DrawToBitmap(img, New Rectangle(0, 0, Me.PicBox.Width, Me.PicBox.Height))
-
-        Me.PicBox.Image = img
+		End If
 
 
-    End Sub
+
+
+		a.Name = "main"
+
+		a.AxisX.Title = "engine speed [1/min]"
+		a.AxisX.TitleFont = New Font("Helvetica", 10)
+		a.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
+		a.AxisX.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
+		a.AxisX.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
+
+		a.AxisY.Title = "engine torque [Nm]"
+		a.AxisY.TitleFont = New Font("Helvetica", 10)
+		a.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
+		a.AxisY.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
+		a.AxisY.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
+
+		a.AxisX.Minimum = 300
+		a.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Solid
+		a.BorderWidth = 1
+
+		a.BackColor = Color.GhostWhite
+
+		MyChart.ChartAreas.Add(a)
+
+		MyChart.Titles.Add("Gear " & Gear & " shift polygons")
+		MyChart.Titles(0).Font = New Font("Helvetica", 12)
+
+		MyChart.Update()
+
+		img = New Bitmap(MyChart.Width, MyChart.Height, Imaging.PixelFormat.Format32bppArgb)
+		MyChart.DrawToBitmap(img, New Rectangle(0, 0, Me.PicBox.Width, Me.PicBox.Height))
+
+		Me.PicBox.Image = img
+
+
+	End Sub
 
 
 

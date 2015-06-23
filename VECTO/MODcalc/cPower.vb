@@ -242,7 +242,7 @@ Public Class cPower
 
 
 			'Full load / motoring
-			Pmin = FLD(Gear).Pdrag(nU)
+			Pmin = ENG.FLD.Pdrag(nU)
 
 			If Vact >= VEC.vMin / 3.6 Then
 
@@ -867,7 +867,7 @@ lbCheck:
 					i = 0
 					Do
 						PminX = Pmin
-						Pmin = FLD(Gear).Pdrag(nU)
+						Pmin = ENG.FLD.Pdrag(nU)
 
 						'Limit Power-drop to 75%
 						P = (MODdata.Pe(jz - 1) - MODdata.PauxSum(jz - 1)) - 0.75 * ((MODdata.Pe(jz - 1) - MODdata.PauxSum(jz - 1)) - Pmin)
@@ -1074,20 +1074,20 @@ lb_nOK:
 
 			Else
 
-				Pmin = FLD(Gear).Pdrag(nU)
+				Pmin = ENG.FLD.Pdrag(nU)
 
 				If jz = 0 Then
-					Pmax = FLD(Gear).Pfull(nU)
+					Pmax = GBX.FLD(Gear).Pfull(nU)
 				Else
-					Pmax = FLD(Gear).Pfull(nU, MODdata.Pe(jz - 1))
+					Pmax = GBX.FLD(Gear).Pfull(nU, MODdata.Pe(jz - 1))
 				End If
 
 				'If Pmax < 0 or Pmin > 0 then Abort with Error!
 				If Pmin >= 0 And P < 0 Then
-					WorkerMsg(tMsgID.Err, "Pe_drag > 0! n= " & nU & " [1/min]", MsgSrc & "/t= " & jz + 1, FLD(Gear).FilePath)
+					WorkerMsg(tMsgID.Err, "Pe_drag > 0! n= " & nU & " [1/min]", MsgSrc & "/t= " & jz + 1, ENG.FLD.FilePath)
 					Return False
 				ElseIf Pmax <= 0 And P > 0 Then
-					WorkerMsg(tMsgID.Err, "Pe_full < 0! n= " & nU & " [1/min]", MsgSrc & "/t= " & jz + 1, FLD(Gear).FilePath)
+					WorkerMsg(tMsgID.Err, "Pe_full < 0! n= " & nU & " [1/min]", MsgSrc & "/t= " & jz + 1, GBX.FLD(Gear).FilePath)
 					Return False
 				End If
 
@@ -1484,20 +1484,20 @@ lb_nOK:
 			If MODdata.nU(t) < ENG.Nidle - 100 Then
 				EngState0 = tEngState.Stopped
 			Else
-				Pmin = FLD(0).Pdrag(MODdata.nU(t))
+				Pmin = ENG.FLD.Pdrag(MODdata.nU(t))
 
 				If t = 0 Then
-					Pmax = FLD(0).Pfull(MODdata.nU(t))
+					Pmax = ENG.FLD.Pfull(MODdata.nU(t))
 				Else
-					Pmax = FLD(0).Pfull(MODdata.nU(t), MODdata.Pe(t - 1))
+					Pmax = ENG.FLD.Pfull(MODdata.nU(t), MODdata.Pe(t - 1))
 				End If
 
 				'If Pmax < 0 or Pmin >  0 then Abort with Error!
 				If Pmin >= 0 AndAlso MODdata.Pe(t) < 0 Then
-					WorkerMsg(tMsgID.Err, "Pe_drag > 0! n= " & MODdata.nU(t) & " [1/min]", MsgSrc & "/t= " & t + 1, FLD(0).FilePath)
+					WorkerMsg(tMsgID.Err, "Pe_drag > 0! n= " & MODdata.nU(t) & " [1/min]", MsgSrc & "/t= " & t + 1, ENG.FLD.FilePath)
 					Return False
 				ElseIf Pmax <= 0 AndAlso MODdata.Pe(t) > 0 Then
-					WorkerMsg(tMsgID.Err, "Pe_full < 0! n= " & MODdata.nU(t) & " [1/min]", MsgSrc & "/t= " & t + 1, FLD(0).FilePath)
+					WorkerMsg(tMsgID.Err, "Pe_full < 0! n= " & MODdata.nU(t) & " [1/min]", MsgSrc & "/t= " & t + 1, ENG.FLD.FilePath)
 					Return False
 				End If
 
@@ -1565,7 +1565,7 @@ lb_nOK:
 
 		Do
 			PminX = Pmin
-			Pmin = FLD(Gear).Pdrag(nU)
+			Pmin = ENG.FLD.Pdrag(nU)
 			'Leistungsabfall limitieren auf Pe(t-1) minus 75% von (Pe(t-1) - Pschlepp) |@@| Limit Power-drop to Pe(t-1) minus 75% of (Pe(t-1) - Pdrag)
 			'   aus Auswertung ETC des Motors mit dem dynamische Volllast parametriert wurde |@@| of the evaluated ETC of the Enginges with the dynamic parametrized Full-load
 			'   Einfluss auf Beschleunigungsvermögen gering (Einfluss durch Pe(t-1) bei dynamischer Volllast mit PT1) |@@| Influence at low acceleration (influence dynamic Full-load through Pe(t-1) with PT1)
@@ -1674,7 +1674,7 @@ lb_nOK:
 
 		vstep = 5
 		nU = fnU(v, Gear, False)
-		Pdrag = FLD(Gear).Pdrag(nU)
+		Pdrag = ENG.FLD.Pdrag(nU)
 
 		'Do not allow positive road gradients     
 		Grad = MODdata.Vh.fGrad(s)
@@ -1713,7 +1713,7 @@ lb_nOK:
 			End If
 
 			nU = fnU(v, Gear, False)
-			Pdrag = FLD(Gear).Pdrag(nU)
+			Pdrag = ENG.FLD.Pdrag(nU)
 
 			LastDiff = Diff
 
@@ -1815,11 +1815,11 @@ lb_nOK:
 				nU = fnU(Vact, Gear, Clutch = tEngClutch.Slipping)
 
 				'full load
-				Pmax = FLD(Gear).Pfull(nU)
+				Pmax = GBX.FLD(Gear).Pfull(nU)
 
 				'power demand - cut at full load / drag so that fGSnnUp and fGSnnDown don't extrapolate
 				Pe = Math.Min(fPeGearMod(Gear, t, Grad), Pmax)
-				Pe = Math.Max(Pe, FLD(Gear).Pdrag(nU))
+				Pe = Math.Max(Pe, ENG.FLD.Pdrag(nU))
 
 				'torque demand
 				Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
@@ -1849,10 +1849,10 @@ lb_nOK:
 				'rpm at StartSpeed  [m/s]
 				nU = GBX.gs_StartSpeed * 60.0 * GBX.Igetr(0) * GBX.Igetr(Gear) / (2 * VEH.rdyn * Math.PI / 1000)
 
-				If nU > FLD(Gear).fnUrated Then Continue For
+				If nU > GBX.FLD(Gear).fnUrated Then Continue For
 
 				'full load
-				Pmax = FLD(Gear).Pfull(nU)
+				Pmax = GBX.FLD(Gear).Pfull(nU)
 
 				'Max torque
 				MdMax = Pmax * 1000 / (nU * 2 * Math.PI / 60)
@@ -1864,7 +1864,7 @@ lb_nOK:
 				Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
 
 				'torque (limited to max)
-				TqX = Math.Min(Tq, FLD(Gear).Tmax)
+				TqX = Math.Min(Tq, GBX.FLD(Gear).Tmax)
 
 				'Up/Downshift rpms
 				nUup = GBX.Shiftpolygons(Gear).fGSnUup(TqX)
@@ -1962,7 +1962,7 @@ lb_nOK:
 		'Upshift
 		If LastGear < GBX.GearCount Then
 
-			TqNext = Math.Min(nPeToM(fnU(Vact, LastGear + 1, False), fPeGearMod(LastGear + 1, t, Grad)), FLD(LastGear + 1).Tq(fnU(Vact, LastGear + 1, False)))
+			TqNext = Math.Min(nPeToM(fnU(Vact, LastGear + 1, False), fPeGearMod(LastGear + 1, t, Grad)), GBX.FLD(LastGear + 1).Tq(fnU(Vact, LastGear + 1, False)))
 			nUup = GBX.Shiftpolygons(LastGear).fGSnUup(TqNext)
 
 			TCaccmin = Math.Min(DEV.TCaccmin, MODdata.Vh.a(t))
@@ -1972,11 +1972,11 @@ lb_nOK:
 				If DEV.TCshiftModeNew Then
 					If _
 						nUnext > nUup AndAlso
-						fPeGearMod(LastGear + 1, t, MODdata.Vh.V(t), TCaccmin, Grad) <= FLD(LastGear + 1).Pfull(nUnext) Then
+						fPeGearMod(LastGear + 1, t, MODdata.Vh.V(t), TCaccmin, Grad) <= GBX.FLD(LastGear + 1).Pfull(nUnext) Then
 						Return LastGear + 1
 					End If
 				Else
-					If nUnext > nUup AndAlso fPeGearMod(LastGear + 1, t, Grad) <= FLD(LastGear + 1).Pfull(nUnext) Then
+					If nUnext > nUup AndAlso fPeGearMod(LastGear + 1, t, Grad) <= GBX.FLD(LastGear + 1).Pfull(nUnext) Then
 						Return LastGear + 1
 					End If
 				End If
@@ -1988,14 +1988,14 @@ lb_nOK:
 
 					If DEV.TCshiftModeNew Then
 						If _
-						 fnUout(Vact, LastGear + 1) > Math.Min(700, iRatio * (FLD(LastGear).N80h - 150)) AndAlso
-						 FLD(LastGear + 1).Pfull(nU * iRatio) >= fPeGearMod(LastGear + 1, t, MODdata.Vh.V(t), TCaccmin, Grad) Then
+						 fnUout(Vact, LastGear + 1) > Math.Min(700, iRatio * (GBX.FLD(LastGear).N80h - 150)) AndAlso
+						 GBX.FLD(LastGear + 1).Pfull(nU * iRatio) >= fPeGearMod(LastGear + 1, t, MODdata.Vh.V(t), TCaccmin, Grad) Then
 							Return LastGear + 1
 						End If
 					Else
 						If _
-						fnUout(Vact, LastGear + 1) > Math.Min(700, iRatio * (FLD(LastGear).N80h - 150)) AndAlso
-						FLD(LastGear + 1).Pfull(nU * iRatio) > 0.7 * FLD(LastGear).Pfull(nU) Then
+						fnUout(Vact, LastGear + 1) > Math.Min(700, iRatio * (GBX.FLD(LastGear).N80h - 150)) AndAlso
+						GBX.FLD(LastGear + 1).Pfull(nU * iRatio) > 0.7 * GBX.FLD(LastGear).Pfull(nU) Then
 							Return LastGear + 1
 						End If
 					End If
@@ -2011,7 +2011,7 @@ lb_nOK:
 		If LastGear > 0 Then
 
 			'Up/Downshift rpms
-			TqCurrent = Math.Min(nPeToM(fnU(Vact, LastGear, False), fPeGearMod(LastGear, t, Grad)), FLD(LastGear).Tq(fnU(Vact, LastGear, False)))
+			TqCurrent = Math.Min(nPeToM(fnU(Vact, LastGear, False), fPeGearMod(LastGear, t, Grad)), GBX.FLD(LastGear).Tq(fnU(Vact, LastGear, False)))
 			nUdown = GBX.Shiftpolygons(LastGear).fGSnUdown(TqCurrent)
 
 			If MinusGearTC Then
@@ -2083,12 +2083,12 @@ lb_nOK:
 			nU = fnU(Vact, LastGear, Clutch = tEngClutch.Slipping)
 
 			'Current power demand with previous gear
-			Pe = Math.Min(fPeGearMod(LastGear, t, Grad), FLD(LastGear).Pfull(nU))
-			Pe = Math.Max(Pe, FLD(LastGear).Pdrag(nU))
+			Pe = Math.Min(fPeGearMod(LastGear, t, Grad), GBX.FLD(LastGear).Pfull(nU))
+			Pe = Math.Max(Pe, ENG.FLD.Pdrag(nU))
 
 			'Current torque demand with previous gear
 			Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
-			MdMax = FLD(LastGear).Pfull(nU, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
+			MdMax = GBX.FLD(LastGear).Pfull(nU, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
 
 			'Up/Downshift rpms
 			nnUp = GBX.Shiftpolygons(LastGear).fGSnUup(Tq)
@@ -2111,8 +2111,8 @@ lb_nOK:
 
 				'Continue only if rpm (for lower gear) is above idling
 				If nU >= ENG.Nidle Then
-					Pe = Math.Min(fPeGearMod(Gear - 1, t, Grad), FLD(Gear - 1).Pfull(nU))
-					Pe = Math.Max(Pe, FLD(Gear - 1).Pdrag(nU))
+					Pe = Math.Min(fPeGearMod(Gear - 1, t, Grad), GBX.FLD(Gear - 1).Pfull(nU))
+					Pe = Math.Max(Pe, ENG.FLD.Pdrag(nU))
 					Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
 					nnUp = GBX.Shiftpolygons(Gear - 1).fGSnUup(Tq)
 					nnDown = GBX.Shiftpolygons(Gear - 1).fGSnUdown(Tq)
@@ -2132,8 +2132,8 @@ lb_nOK:
 						'Continue only if rpm (for lower gear) is above idling
 						If nU < ENG.Nidle Then Exit Do
 
-						Pe = Math.Min(fPeGearMod(Gear - 1, t, Grad), FLD(Gear - 1).Pfull(nU))
-						Pe = Math.Max(Pe, FLD(Gear - 1).Pdrag(nU))
+						Pe = Math.Min(fPeGearMod(Gear - 1, t, Grad), GBX.FLD(Gear - 1).Pfull(nU))
+						Pe = Math.Max(Pe, ENG.FLD.Pdrag(nU))
 						Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
 						nnUp = GBX.Shiftpolygons(Gear - 1).fGSnUup(Tq)
 						nnDown = GBX.Shiftpolygons(Gear - 1).fGSnUdown(Tq)
@@ -2159,14 +2159,14 @@ lb_nOK:
 				'Calculate Shift-rpm for higher gear
 				nU = fnU(Vact, Gear + 1, False)
 
-				Pe = Math.Min(fPeGearMod(Gear + 1, t, Grad), FLD(Gear + 1).Pfull(nU))
-				Pe = Math.Max(Pe, FLD(Gear + 1).Pdrag(nU))
+				Pe = Math.Min(fPeGearMod(Gear + 1, t, Grad), GBX.FLD(Gear + 1).Pfull(nU))
+				Pe = Math.Max(Pe, ENG.FLD.Pdrag(nU))
 				Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
 				nnUp = GBX.Shiftpolygons(Gear + 1).fGSnUup(Tq)
 				nnDown = GBX.Shiftpolygons(Gear + 1).fGSnUdown(Tq)
 
 				'Max Torque
-				MdMax = FLD(Gear + 1).Pfull(nU, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
+				MdMax = GBX.FLD(Gear + 1).Pfull(nU, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
 
 				'Shift up as long as Torque reserve is okay and Gear < Max-Gear and rpm is above DownShift-rpm
 				Do While Gear < GBX.GearCount AndAlso 1 - Tq / MdMax >= GBX.gs_TorqueResv / 100 AndAlso nU > nnDown _
@@ -2184,14 +2184,14 @@ lb_nOK:
 					'Continue only if rpm (for higher gear) is below rated rpm
 					If nU > ENG.Nrated Then Exit Do
 
-					Pe = Math.Min(fPeGearMod(Gear + 1, t, Grad), FLD(Gear + 1).Pfull(nU))
-					Pe = Math.Max(Pe, FLD(Gear + 1).Pdrag(nU))
+					Pe = Math.Min(fPeGearMod(Gear + 1, t, Grad), GBX.FLD(Gear + 1).Pfull(nU))
+					Pe = Math.Max(Pe, ENG.FLD.Pdrag(nU))
 					Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
 					nnUp = GBX.Shiftpolygons(Gear + 1).fGSnUup(Tq)
 					nnDown = GBX.Shiftpolygons(Gear + 1).fGSnUdown(Tq)
 
 					'Max Torque
-					MdMax = FLD(Gear + 1).Pfull(nU, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
+					MdMax = GBX.FLD(Gear + 1).Pfull(nU, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
 
 				Loop
 
@@ -2211,14 +2211,14 @@ lb_nOK:
 
 				'Continue only if rpm (for higher gear) is below rated rpm
 				If nU > ENG.Nidle AndAlso nU <= ENG.Nrated Then
-					Pe = Math.Min(fPeGearMod(Gear + 1, t, Grad), FLD(Gear + 1).Pfull(nU))
-					Pe = Math.Max(Pe, FLD(Gear + 1).Pdrag(nU))
+					Pe = Math.Min(fPeGearMod(Gear + 1, t, Grad), GBX.FLD(Gear + 1).Pfull(nU))
+					Pe = Math.Max(Pe, ENG.FLD.Pdrag(nU))
 					Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
 					nnUp = GBX.Shiftpolygons(Gear + 1).fGSnUup(Tq)
 					nnDown = GBX.Shiftpolygons(Gear + 1).fGSnUdown(Tq)
 
 					'Max Torque
-					MdMax = FLD(Gear + 1).Pfull(nU, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
+					MdMax = GBX.FLD(Gear + 1).Pfull(nU, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
 
 					'Shift up as long as Torque reserve is okay and Gear < Max-Gear and rpm is above DownShift-rpm
 					Do While Gear < GBX.GearCount AndAlso 1 - Tq / MdMax >= GBX.gs_TorqueResv / 100 AndAlso nU > nnDown _
@@ -2236,14 +2236,14 @@ lb_nOK:
 						'Continue only if rpm (for higher gear) is below rated rpm
 						If nU > ENG.Nrated Then Exit Do
 
-						Pe = Math.Min(fPeGearMod(Gear + 1, t, Grad), FLD(Gear + 1).Pfull(nU))
-						Pe = Math.Max(Pe, FLD(Gear + 1).Pdrag(nU))
+						Pe = Math.Min(fPeGearMod(Gear + 1, t, Grad), GBX.FLD(Gear + 1).Pfull(nU))
+						Pe = Math.Max(Pe, ENG.FLD.Pdrag(nU))
 						Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
 						nnUp = GBX.Shiftpolygons(Gear + 1).fGSnUup(Tq)
 						nnDown = GBX.Shiftpolygons(Gear + 1).fGSnUdown(Tq)
 
 						'Max Torque
-						MdMax = FLD(Gear + 1).Pfull(nU, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
+						MdMax = GBX.FLD(Gear + 1).Pfull(nU, LastPeNorm) * 1000 / (nU * 2 * Math.PI / 60)
 
 					Loop
 
@@ -2259,8 +2259,8 @@ lb10:
 		'Current rpm 
 		nU = fnU(Vact, Gear, Clutch = tEngClutch.Slipping)
 		'Current power demand
-		Pe = Math.Min(fPeGearMod(Gear, t, Grad), FLD(Gear).Pfull(nU))
-		Pe = Math.Max(Pe, FLD(Gear).Pdrag(nU))
+		Pe = Math.Min(fPeGearMod(Gear, t, Grad), GBX.FLD(Gear).Pfull(nU))
+		Pe = Math.Max(Pe, ENG.FLD.Pdrag(nU))
 		'Current torque demand
 		Tq = Pe * 1000 / (nU * 2 * Math.PI / 60)
 

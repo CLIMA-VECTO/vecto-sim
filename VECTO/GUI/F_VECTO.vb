@@ -959,158 +959,130 @@ lbDlog:
         Dim ENG0 As cENG
         Dim GBX0 As cGBX
         Dim FLD0 As cFLD
-        Dim Shiftpoly As cGBX.cShiftPolygon
-        Dim MAP0 As cMAP
-        Dim OkCount As Integer
-        Dim i As Integer
-        Dim pmax As Single
+		Dim Shiftpoly As cGBX.cShiftPolygon
+		Dim MAP0 As cMAP
+		Dim OkCount As Integer
+		Dim i As Integer
+		Dim pmax As Single
 
-        Dim f As cFile_V3 = Nothing
-        Dim lM As List(Of Single)
-        Dim lup As List(Of Single)
-        Dim ldown As List(Of Single)
-        Dim line As String() = Nothing
+		Dim f As cFile_V3 = Nothing
+		Dim lM As List(Of Single)
+		Dim lup As List(Of Single)
+		Dim ldown As List(Of Single)
+		Dim line As String() = Nothing
 
-        Dim s0 As cSegmentTableEntry = Nothing
-        Dim HDVclass As String
-        Dim m0 As tMission
+		Dim s0 As cSegmentTableEntry = Nothing
+		Dim HDVclass As String
+		Dim m0 As tMission
 
-        Dim MyChart As System.Windows.Forms.DataVisualization.Charting.Chart
-        Dim s As System.Windows.Forms.DataVisualization.Charting.Series
-        Dim a As System.Windows.Forms.DataVisualization.Charting.ChartArea
-        Dim img As Image
+		Dim MyChart As System.Windows.Forms.DataVisualization.Charting.Chart
+		Dim s As System.Windows.Forms.DataVisualization.Charting.Series
+		Dim a As System.Windows.Forms.DataVisualization.Charting.ChartArea
+		Dim img As Image
 
-        Me.TbHVCclass.Text = ""
-        Me.TbVehCat.Text = ""
-        Me.TbMass.Text = ""
-        Me.TbAxleConf.Text = ""
-        Me.TbEngTxt.Text = ""
-        Me.TbGbxTxt.Text = ""
-        Me.PicVehicle.Image = Nothing
-        Me.PicBox.Image = Nothing
+		Dim EngOK As Boolean = False
 
-
-        VEH0.FilePath = fFileRepl(Me.TbVEH.Text, fPATH(VECTOfile))
-        If VEH0.ReadFile(False) Then
-
-            If Declaration.SegmentTable.SetRef(s0, VEH0.VehCat, VEH0.AxleConf, VEH0.MassMax) Then
-                HDVclass = s0.HDVclass
-
-                If Cfg.DeclMode Then
-                    Me.LvCycles.Items.Clear()
-                    For Each m0 In s0.Missions
-                        Me.LvCycles.Items.Add(Declaration.Missions(m0).NameStr)
-                    Next
-                End If
-
-            Else
-                HDVclass = "-"
-            End If
-
-            Me.PicVehicle.Image = Image.FromFile(Declaration.ConvPicPath(HDVclass, False))
-
-            Me.TbHVCclass.Text = "HDV Class " & HDVclass
-            Me.TbVehCat.Text = ConvVehCat(VEH0.VehCat, True)
-            Me.TbMass.Text = VEH0.MassMax & " t"
-            Me.TbAxleConf.Text = ConvAxleConf(VEH0.AxleConf)
-
-        End If
+		Me.TbHVCclass.Text = ""
+		Me.TbVehCat.Text = ""
+		Me.TbMass.Text = ""
+		Me.TbAxleConf.Text = ""
+		Me.TbEngTxt.Text = ""
+		Me.TbGbxTxt.Text = ""
+		Me.PicVehicle.Image = Nothing
+		Me.PicBox.Image = Nothing
 
 
-        OkCount = 0
+		VEH0.FilePath = fFileRepl(Me.TbVEH.Text, fPATH(VECTOfile))
+		If VEH0.ReadFile(False) Then
 
-        ENG0 = New cENG
-        ENG0.FilePath = fFileRepl(Me.TbENG.Text, fPATH(VECTOfile))
+			If Declaration.SegmentTable.SetRef(s0, VEH0.VehCat, VEH0.AxleConf, VEH0.MassMax) Then
+				HDVclass = s0.HDVclass
 
-        'Create plot
-        MyChart = New System.Windows.Forms.DataVisualization.Charting.Chart
-        MyChart.Width = Me.PicBox.Width
-        MyChart.Height = Me.PicBox.Height
+				If Cfg.DeclMode Then
+					Me.LvCycles.Items.Clear()
+					For Each m0 In s0.Missions
+						Me.LvCycles.Items.Add(Declaration.Missions(m0).NameStr)
+					Next
+				End If
 
-        a = New System.Windows.Forms.DataVisualization.Charting.ChartArea
+			Else
+				HDVclass = "-"
+			End If
 
-        If ENG0.ReadFile(False) Then
+			Me.PicVehicle.Image = Image.FromFile(Declaration.ConvPicPath(HDVclass, False))
 
-            FLD0 = New cFLD
+			Me.TbHVCclass.Text = "HDV Class " & HDVclass
+			Me.TbVehCat.Text = ConvVehCat(VEH0.VehCat, True)
+			Me.TbMass.Text = VEH0.MassMax & " t"
+			Me.TbAxleConf.Text = ConvAxleConf(VEH0.AxleConf)
 
-            For i = 0 To ENG0.fFLD.Count - 1
-
-                FLD0.FilePath = ENG0.fFLD(i).FullPath
-                If FLD0.ReadFile(False) Then
-
-                    s = New System.Windows.Forms.DataVisualization.Charting.Series
-                    s.Points.DataBindXY(FLD0.LnU, FLD0.LTq)
-                    s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
-                    s.BorderWidth = 2
-                    s.Color = Color.DarkBlue
-                    s.Name = "Full load (" & fFILE(FLD0.FilePath, True) & ")"
-                    MyChart.Series.Add(s)
-
-                    s = New System.Windows.Forms.DataVisualization.Charting.Series
-                    s.Points.DataBindXY(FLD0.LnU, FLD0.LTqDrag)
-                    s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
-                    s.BorderWidth = 2
-                    s.Color = Color.Blue
-                    s.Name = "Motoring (" & fFILE(FLD0.FilePath, True) & ")"
-                    MyChart.Series.Add(s)
-
-                    If Cfg.DeclMode Then
-
-                        If FLD0.Init(ENG0.Nidle) Then
-                            Shiftpoly = New cGBX.cShiftPolygon("", 0)
-                            Shiftpoly.SetGenericShiftPoly(FLD0, ENG0.Nidle)
-
-                            s = New System.Windows.Forms.DataVisualization.Charting.Series
-                            s.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
-                            s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
-                            s.BorderWidth = 2
-                            s.Color = Color.DarkRed
-                            s.Name = "Upshift curve"
-                            MyChart.Series.Add(s)
-
-                            s = New System.Windows.Forms.DataVisualization.Charting.Series
-                            s.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
-                            s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
-                            s.BorderWidth = 2
-                            s.Color = Color.DarkRed
-                            s.Name = "Downshift curve"
-                            MyChart.Series.Add(s)
-                        End If
-
-                    End If
-
-                    OkCount += 1
-
-                    pmax = FLD0.Pfull(FLD0.fnUrated)
+		End If
 
 
-                End If
+		OkCount = 0
+
+		ENG0 = New cENG
+		ENG0.FilePath = fFileRepl(Me.TbENG.Text, fPATH(VECTOfile))
+
+		'Create plot
+		MyChart = New System.Windows.Forms.DataVisualization.Charting.Chart
+		MyChart.Width = Me.PicBox.Width
+		MyChart.Height = Me.PicBox.Height
+
+		a = New System.Windows.Forms.DataVisualization.Charting.ChartArea
+
+		FLD0 = New cFLD
+
+		If ENG0.ReadFile(False) Then
+
+			EngOK = True
+			FLD0.FilePath = ENG0.PathFLD
+
+			If FLD0.ReadFile(False, False) Then
+
+				s = New System.Windows.Forms.DataVisualization.Charting.Series
+				s.Points.DataBindXY(FLD0.LnU, FLD0.LTq)
+				s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+				s.BorderWidth = 2
+				s.Color = Color.DarkBlue
+				s.Name = "Full load"
+				MyChart.Series.Add(s)
+
+				s = New System.Windows.Forms.DataVisualization.Charting.Series
+				s.Points.DataBindXY(FLD0.LnU, FLD0.LTqDrag)
+				s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+				s.BorderWidth = 2
+				s.Color = Color.Blue
+				s.Name = "Motoring"
+				MyChart.Series.Add(s)
+
+				OkCount += 1
+
+				pmax = FLD0.Pfull(FLD0.fnUrated)
+
+			End If
+
+			Me.TbEngTxt.Text = (ENG0.Displ / 1000).ToString("0.0") & " l " & pmax.ToString("#") & " kW  " & ENG0.ModelName
 
 
+			MAP0 = New cMAP
+			MAP0.FilePath = ENG0.PathMAP
 
-            Next
+			If MAP0.ReadFile(False) Then
 
-            Me.TbEngTxt.Text = (ENG0.Displ / 1000).ToString("0.0") & " l " & pmax.ToString("#") & " kW  " & ENG0.ModelName
+				s = New System.Windows.Forms.DataVisualization.Charting.Series
+				s.Points.DataBindXY(MAP0.nU, MAP0.Tq)
+				s.ChartType = DataVisualization.Charting.SeriesChartType.Point
+				s.MarkerSize = 3
+				s.Color = Color.Red
+				s.Name = "Map"
+				MyChart.Series.Add(s)
 
+				OkCount += 1
 
-            MAP0 = New cMAP
-            MAP0.FilePath = ENG0.PathMAP
+			End If
 
-            If MAP0.ReadFile(False) Then
-
-                s = New System.Windows.Forms.DataVisualization.Charting.Series
-                s.Points.DataBindXY(MAP0.nU, MAP0.Tq)
-                s.ChartType = DataVisualization.Charting.SeriesChartType.Point
-                s.MarkerSize = 3
-                s.Color = Color.Red
-                s.Name = "Map"
-                MyChart.Series.Add(s)
-
-                OkCount += 1
-
-            End If
-
-        End If
+		End If
 
         GBX0 = New cGBX
         GBX0.FilePath = fFileRepl(Me.TbGBX.Text, fPATH(VECTOfile))
@@ -1119,92 +1091,136 @@ lbDlog:
 
             Me.TbGbxTxt.Text = GBX0.GearCount & "-Speed " & GearboxConv(GBX0.gs_Type) & "  " & GBX0.ModelName
 
-            If Not Cfg.DeclMode Then
-                f = New cFile_V3
-                For i = 0 To GBX0.GearCount - 1
+			If Cfg.DeclMode Then
 
-                    lM = New List(Of Single)
-                    lup = New List(Of Single)
-                    ldown = New List(Of Single)
+				If EngOK Then
 
-                    If f.OpenRead(GBX0.gsFile(i)) Then
+					For i = 1 To GBX0.GearCount
 
-                        f.ReadLine()
+						FLD0.FilePath = GBX0.FldFile(i)
+						If FLD0.FilePath.Trim = "" Then FLD0.FilePath = ENG0.PathFLD
 
-                        Try
+						If FLD0.ReadFile(True, False) Then
 
-                            Do While Not f.EndOfFile
-                                line = f.ReadLine
-                                lM.Add(CSng(line(0)))
-                                lup.Add(CSng(line(1)))
-                                ldown.Add(CSng(line(2)))
-                            Loop
+							If FLD0.Init(ENG0.Nidle) Then
+								Shiftpoly = New cGBX.cShiftPolygon("", 0)
+								Shiftpoly.SetGenericShiftPoly(FLD0, ENG0.Nidle)
 
-                            s = New System.Windows.Forms.DataVisualization.Charting.Series
-                            s.Points.DataBindXY(lup, lM)
-                            s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
-                            s.BorderWidth = 2
-                            s.Color = Color.DarkRed
-                            s.Name = "Upshift curve"
-                            MyChart.Series.Add(s)
+								s = New System.Windows.Forms.DataVisualization.Charting.Series
+								s.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
+								s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+								s.BorderWidth = 2
+								s.Color = Color.DarkRed
+								s.Name = "Upshift curve (" & i & ")"
+								MyChart.Series.Add(s)
 
-                            s = New System.Windows.Forms.DataVisualization.Charting.Series
-                            s.Points.DataBindXY(ldown, lM)
-                            s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
-                            s.BorderWidth = 2
-                            s.Color = Color.DarkRed
-                            s.Name = "Downshift curve"
-                            MyChart.Series.Add(s)
-
-                            OkCount += 1
-
-                            f.Close()
-
-                        Catch ex As Exception
-                            f.Close()
-                        End Try
-
-                    End If
-
-                Next
-
-            End If
-
-        End If
-
-        If OkCount > 0 Then
-
-            a.Name = "main"
-
-            a.AxisX.Title = "engine speed [1/min]"
-            a.AxisX.TitleFont = New Font("Helvetica", 10)
-            a.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
-            a.AxisX.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
-            a.AxisX.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
-
-            a.AxisY.Title = "engine torque [Nm]"
-            a.AxisY.TitleFont = New Font("Helvetica", 10)
-            a.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
-            a.AxisY.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
-            a.AxisY.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
-
-            a.AxisX.Minimum = 300
-            a.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Solid
-            a.BorderWidth = 1
-
-            a.BackColor = Color.GhostWhite
-
-            MyChart.ChartAreas.Add(a)
-
-            MyChart.Update()
-
-            img = New Bitmap(MyChart.Width, MyChart.Height, Imaging.PixelFormat.Format32bppArgb)
-            MyChart.DrawToBitmap(img, New Rectangle(0, 0, Me.PicBox.Width, Me.PicBox.Height))
-
-            Me.PicBox.Image = img
+								s = New System.Windows.Forms.DataVisualization.Charting.Series
+								s.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
+								s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+								s.BorderWidth = 2
+								s.Color = Color.DarkRed
+								s.Name = "Downshift curve (" & i & ")"
+								MyChart.Series.Add(s)
+							End If
 
 
-        End If
+							OkCount += 1
+
+							pmax = FLD0.Pfull(FLD0.fnUrated)
+
+						End If
+
+					Next
+
+				End If
+
+			Else
+
+				f = New cFile_V3
+				For i = 1 To GBX0.GearCount
+
+					lM = New List(Of Single)
+					lup = New List(Of Single)
+					ldown = New List(Of Single)
+
+					If f.OpenRead(GBX0.gsFile(i)) Then
+
+						f.ReadLine()
+
+						Try
+
+							Do While Not f.EndOfFile
+								line = f.ReadLine
+								lM.Add(CSng(line(0)))
+								lup.Add(CSng(line(1)))
+								ldown.Add(CSng(line(2)))
+							Loop
+
+							s = New System.Windows.Forms.DataVisualization.Charting.Series
+							s.Points.DataBindXY(lup, lM)
+							s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+							s.BorderWidth = 2
+							s.Color = Color.DarkRed
+							s.Name = "Upshift curve"
+							MyChart.Series.Add(s)
+
+							s = New System.Windows.Forms.DataVisualization.Charting.Series
+							s.Points.DataBindXY(ldown, lM)
+							s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+							s.BorderWidth = 2
+							s.Color = Color.DarkRed
+							s.Name = "Downshift curve"
+							MyChart.Series.Add(s)
+
+							OkCount += 1
+
+							f.Close()
+
+						Catch ex As Exception
+							f.Close()
+						End Try
+
+					End If
+
+				Next
+
+			End If
+
+		End If
+
+		If OkCount > 0 Then
+
+			a.Name = "main"
+
+			a.AxisX.Title = "engine speed [1/min]"
+			a.AxisX.TitleFont = New Font("Helvetica", 10)
+			a.AxisX.LabelStyle.Font = New Font("Helvetica", 8)
+			a.AxisX.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
+			a.AxisX.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
+
+			a.AxisY.Title = "engine torque [Nm]"
+			a.AxisY.TitleFont = New Font("Helvetica", 10)
+			a.AxisY.LabelStyle.Font = New Font("Helvetica", 8)
+			a.AxisY.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
+			a.AxisY.MajorGrid.LineDashStyle = DataVisualization.Charting.ChartDashStyle.Dot
+
+			a.AxisX.Minimum = 300
+			a.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Solid
+			a.BorderWidth = 1
+
+			a.BackColor = Color.GhostWhite
+
+			MyChart.ChartAreas.Add(a)
+
+			MyChart.Update()
+
+			img = New Bitmap(MyChart.Width, MyChart.Height, Imaging.PixelFormat.Format32bppArgb)
+			MyChart.DrawToBitmap(img, New Rectangle(0, 0, Me.PicBox.Width, Me.PicBox.Height))
+
+			Me.PicBox.Image = img
+
+
+		End If
 
     End Sub
 

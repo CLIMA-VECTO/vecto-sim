@@ -53,7 +53,6 @@ Public Class cDeclaration
 	Private PT1dim As Integer
 
 
-	Public WHTCresults As Dictionary(Of tWHTCpart, Single)
 	Public WHTCcorrFactor As Single
 
 	Public Report As cReport
@@ -897,9 +896,9 @@ Public Class cDeclaration
 
 		CurrentMission = Missions(SegRef.Missions(CycleIndex))
 
-		WHTCcorrFactor = CurrentMission.WHTCWF(tWHTCpart.Urban) * ENG.WHTCurban / Declaration.WHTCresults(tWHTCpart.Urban) _
-			+ CurrentMission.WHTCWF(tWHTCpart.Rural) * ENG.WHTCrural / Declaration.WHTCresults(tWHTCpart.Rural) _
-			+ CurrentMission.WHTCWF(tWHTCpart.Motorway) * ENG.WHTCmw / Declaration.WHTCresults(tWHTCpart.Motorway)
+		WHTCcorrFactor = CurrentMission.WHTCWF(tWHTCpart.Urban) * ENG.WHTCurban _
+			+ CurrentMission.WHTCWF(tWHTCpart.Rural) * ENG.WHTCrural _
+			+ CurrentMission.WHTCWF(tWHTCpart.Motorway) * ENG.WHTCmw
 
 
 		If Not VEH.DeclInitCycle Then Return False
@@ -1119,105 +1118,6 @@ lbInt:
 	End Function
 
 
-	Public Function WHTCinit() As Boolean
-		Dim path As String
-		Dim file As New cFile_V3
-		Dim line As String()
-		Dim nU As Single
-		Dim Tq As Single
-		Dim MsgSrc As String
-
-		MsgSrc = "WHTCcor/Init"
-
-		path = MyDeclPath & "WHTC.csv"
-		If Not file.OpenRead(path) Then
-			WorkerMsg(tMsgID.Err, "Failed to load WHTC cycle!", MsgSrc)
-			Return False
-		End If
-
-		DRI = New cDRI
-		DRI.Values = New Dictionary(Of tDriComp, List(Of Double))
-		DRI.Values.Add(tDriComp.nU, New List(Of Double))
-		DRI.Values.Add(tDriComp.Pe, New List(Of Double))
-		DRI.Nvorg = True
-		DRI.Pvorg = True
-
-		'Skip header
-		file.ReadLine()
-
-		Do While Not file.EndOfFile
-			line = file.ReadLine
-
-			nU = line(1)
-			Tq = line(2)
-
-			'Denorm
-			nU = nU * 0.01 * (0.45 * FLD(0).Nlo + 0.45 * FLD(0).Npref + 0.1 * FLD(0).Nhi - ENG.Nidle) * 2.0327 + ENG.Nidle
-
-			If Tq < 0 Then
-				Tq = -90000000000.0
-			Else
-				Tq = Tq * 0.01 * (FLD(0).Tq(nU))
-			End If
-
-			DRI.Values(tDriComp.nU).Add(nU)
-			DRI.Values(tDriComp.Pe).Add(nMtoPe(nU, Tq))
-
-		Loop
-
-		DRI.tDim = DRI.Values(tDriComp.nU).Count - 1
-
-		Return True
-
-	End Function
-
-	Public Sub WHTCcorrCalc()
-		Dim sum As Double
-		Dim Psum As Double
-		Dim i As Integer
-		Dim FC As List(Of Single)
-		Dim MsgSrc As String
-
-		MsgSrc = "WHTCcor/Calc"
-
-		WHTCresults = New Dictionary(Of tWHTCpart, Single)
-
-		FC = MODdata.lFC
-
-
-		'Urban
-		sum = 0
-		Psum = 0
-		For i = 0 To 899
-			sum += FC(i)
-			Psum += Math.Max(0, MODdata.Pe(i))
-		Next
-		WHTCresults.Add(tWHTCpart.Urban, sum / Psum)
-		WorkerMsg(tMsgID.Normal, " > Urban: " & (sum / Psum).ToString("0.0") & " [g/kWh]", MsgSrc)
-
-		'Rural
-		sum = 0
-		Psum = 0
-		For i = 900 To 1379
-			sum += FC(i)
-			Psum += Math.Max(0, MODdata.Pe(i))
-		Next
-		WHTCresults.Add(tWHTCpart.Rural, sum / Psum)
-		WorkerMsg(tMsgID.Normal, " > Rural: " & (sum / Psum).ToString("0.0") & " [g/kWh]", MsgSrc)
-
-		'Motorway
-		sum = 0
-		Psum = 0
-		For i = 1380 To 1799
-			sum += FC(i)
-			Psum += Math.Max(0, MODdata.Pe(i))
-		Next
-		WHTCresults.Add(tWHTCpart.Motorway, sum / Psum)
-		WorkerMsg(tMsgID.Normal, " > Motorway: " & (sum / Psum).ToString("0.0") & " [g/kWh]", MsgSrc)
-
-
-	End Sub
-
 End Class
 
 Public Class cWheel
@@ -1369,7 +1269,7 @@ Public Class cReport
 			a = New System.Windows.Forms.DataVisualization.Charting.ChartArea
 
 			s = New System.Windows.Forms.DataVisualization.Charting.Series
-			s.Points.DataBindXY(FLD(0).LnU, FLD(0).LTq)
+			s.Points.DataBindXY(ENG.FLD.LnU, ENG.FLD.LTq)
 			s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
 			s.BorderWidth = 3
 			s.Color = Color.DarkBlue
@@ -1377,7 +1277,7 @@ Public Class cReport
 			MyChart.Series.Add(s)
 
 			s = New System.Windows.Forms.DataVisualization.Charting.Series
-			s.Points.DataBindXY(FLD(0).LnU, FLD(0).LTqDrag)
+			s.Points.DataBindXY(ENG.FLD.LnU, ENG.FLD.LTqDrag)
 			s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
 			s.BorderWidth = 3
 			s.Color = Color.Blue
