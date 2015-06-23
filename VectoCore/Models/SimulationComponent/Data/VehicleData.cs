@@ -1,46 +1,12 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO;
-using TUGraz.VectoCore.FileIO.DeclarationFile;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	public enum VehicleCategory
-	{
-		RigidTruck,
-		Tractor,
-		CityBus,
-		InterurbanBus,
-		Coach
-	}
-
-	public enum CrossWindCorrectionMode
-	{
-		NoCorrection,
-		SpeedDependent,
-		VAirBeta
-	}
-
-	public enum AxleConfiguration
-	{
-		AxleConfig_4x2,
-		AxleConfig_4x4,
-		AxleConfig_6x2,
-		AxleConfig_6x4,
-		AxleConfig_6x6,
-		AxleConfig_8x2,
-		AxleConfig_8x4,
-		AxleConfig_8x6,
-		AxleConfig_8x8,
-	}
-
 	public class VehicleData : SimulationComponentData
 	{
 		//public static VehicleData ReadFromFile(string fileName)
@@ -84,18 +50,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		//	SetGenericData(data.Body);
 		//}
 
-		//internal void SetGenericData(VehicleFileV5Declaration.DataBodyDecl data)
-		//{
-		//	SavedInDeclarationMode = data.SavedInDeclarationMode;
-		//	VehicleCategory = data.VehicleCategory();
-		//	GrossVehicleMassRating = data.GrossVehicleMassRating.SI<Kilogram>();
+		protected void SetGenericData(VehicleFileV5Declaration.DataBodyDecl data)
+		{
+			SavedInDeclarationMode = data.SavedInDeclarationMode;
+			VehicleCategory = data.VehicleCategory();
+			GrossVehicleMassRating = data.GrossVehicleMassRating.SI<Kilogram>();
 
-		//	DragCoefficient = data.DragCoefficient;
-		//	CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>();
+			DragCoefficient = data.DragCoefficient;
+			CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>();
 
-		//	DragCoefficientRigidTruck = data.DragCoefficientRigidTruck;
-		//	CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>();
-		//}
+			DragCoefficientRigidTruck = data.DragCoefficientRigidTruck;
+			CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>();
+		}
 
 		public string BasePath { get; internal set; }
 
@@ -181,20 +147,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			TotalRollResistanceCoefficient = RRC;
 			ReducedMassWheels = mRed0;
 		}
-	}
-
-	public class Axle
-	{
-		public KilogramSquareMeter Inertia { get; internal set; }
-
-		public double RollResistanceCoefficient { get; internal set; }
-
-		public Newton TyreTestLoad { get; internal set; }
-
-		public double AxleWeightShare { get; internal set; }
-
-		public bool TwinTyres { get; internal set; }
-
-		public string Wheels { get; internal set; }
 	}
 }

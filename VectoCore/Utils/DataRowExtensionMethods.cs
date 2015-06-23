@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using TUGraz.VectoCore.Exceptions;
@@ -26,13 +27,16 @@ namespace TUGraz.VectoCore.Utils
 
 		public static double ParseDouble(this DataRow row, string columnName)
 		{
+			if (!row.Table.Columns.Contains(columnName)) {
+				throw new KeyNotFoundException(string.Format("Column {0} was not found in DataRow.", columnName));
+			}
 			return row.ParseDouble(row.Table.Columns[columnName]);
 		}
 
 		public static double ParseDouble(this DataRow row, DataColumn column)
 		{
 			try {
-				return double.Parse(row.Field<string>(column), CultureInfo.InvariantCulture);
+				return row.Field<string>(column).ToDouble();
 			} catch (IndexOutOfRangeException e) {
 				throw new VectoException(string.Format("Field {0} was not found in DataRow.", column), e);
 			} catch (NullReferenceException e) {

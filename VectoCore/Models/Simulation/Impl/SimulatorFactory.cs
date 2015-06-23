@@ -4,7 +4,6 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Factories;
-using TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -14,9 +13,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private static IModalDataWriter _dataWriter;
 
 		/// <summary>
-		/// Creates a simulation job for time based engine only powertrain.
+		/// Creates a simulation run for time based engine only powertrain.
 		/// </summary>
-		public static IVectoSimulator CreateTimeBasedEngineOnlyJob(string engineFile, string cycleFile, string jobFileName,
+		public static IVectoRun CreateTimeBasedEngineOnlyRun(string engineFile, string cycleFile, string jobFileName,
 			string jobName, IModalDataWriter dataWriter, SummaryFileWriter sumWriter)
 		{
 			var sumWriterDecorator = new SumWriterDecoratorEngineOnly(sumWriter, jobFileName, jobName, cycleFile);
@@ -28,13 +27,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		/// <summary>
-		/// Creates powertrains and jobs from a VectoJobData Object.
+		/// Creates powertrains and runs from a VectoJobData Object.
 		/// </summary>
 		/// <param name="data">The data.</param>
 		/// <param name="sumWriter">The sum writer.</param>
 		/// <param name="jobNumber">The job number.</param>
 		/// <returns></returns>
-		public static IEnumerable<IVectoSimulator> CreateJobs(VectoJobData data, SummaryFileWriter sumWriter, int jobNumber)
+		public static IEnumerable<IVectoRun> CreateRuns(VectoJobData data, SummaryFileWriter sumWriter, int jobNumber)
 		{
 			for (var i = 0; i < data.Cycles.Count; i++) {
 				var cycleFile = data.Cycles[i];
@@ -105,12 +104,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				_container = new VehicleContainer(dataWriter, sumWriter);
 			}
 
-			public IVectoSimulator Build(string cycleFile)
+			public IVectoRun Build(string cycleFile)
 			{
 				return _engineOnly ? BuildEngineOnly(cycleFile) : BuildFullPowertrain(cycleFile);
 			}
 
-			private IVectoSimulator BuildFullPowertrain(string cycleFile)
+			private IVectoRun BuildFullPowertrain(string cycleFile)
 			{
 				//throw new NotImplementedException("FullPowertrain is not fully implemented yet.");
 				var cycleData = DrivingCycleData.ReadFromFileEngineOnly(cycleFile);
@@ -145,11 +144,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				// connect clutch --> aux
 				_clutch.InShaft().Connect(previousAux.OutShaft());
 
-				var simulator = new VectoSimulator(_container, cycle);
+				var simulator = new VectoRun(_container, cycle);
 				return simulator;
 			}
 
-			private IVectoSimulator BuildEngineOnly(string cycleFile)
+			private IVectoRun BuildEngineOnly(string cycleFile)
 			{
 				var cycleData = DrivingCycleData.ReadFromFileEngineOnly(cycleFile);
 				var cycle = new EngineOnlyDrivingCycle(_container, cycleData);
@@ -165,7 +164,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				cycle.InShaft().Connect(_gearBox.OutShaft());
 
-				var simulator = new VectoSimulator(_container, cycle);
+				var simulator = new VectoRun(_container, cycle);
 				return simulator;
 			}
 
@@ -202,9 +201,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				_auxDict[auxID] = AuxiliaryData.ReadFromFile(auxFileName);
 			}
 
-			public void AddDriver(VectoJobData.StartStopData startStop,
-				VectoJobData.OverSpeedEcoRollData overSpeedEcoRoll,
-				VectoJobData.LACData lookAheadCoasting, string accelerationLimitingFile)
+			public void AddDriver(VectoJobData.Data.DataBody.StartStopData startStop,
+				VectoJobData.Data.DataBody.OverSpeedEcoRollData overSpeedEcoRoll,
+				VectoJobData.Data.DataBody.LACData lookAheadCoasting, string accelerationLimitingFile)
 			{
 				if (_engineOnly) {
 					return;
@@ -219,8 +218,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					return;
 				}
 
-				IDataFileReader reader = new EngineeringModeSimulationComponentFactory();
-				var vehicleData = reader.ReadVehicleDataFile(vehicleFile);
+				var vehicleData = EngineeringModeFactory.Instance().CreateVehicleData(vehicleFile);
 				//VehicleData.ReadFromFile(vehicleFile);
 				_vehicle = new Vehicle(_container, vehicleData);
 			}

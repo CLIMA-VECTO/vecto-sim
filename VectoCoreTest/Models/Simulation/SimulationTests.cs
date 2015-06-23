@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void TestSimulationEngineOnly()
 		{
 			var resultFileName = "TestEngineOnly-result.vmod";
-			var job = CreateJob(resultFileName);
+			var job = CreateRun(resultFileName);
 
 			var container = job.GetContainer();
 
@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var actual = "TestEngineOnly_JobRun-result.vmod";
 			var expected = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
 
-			var job = CreateJob(actual);
+			var job = CreateRun(actual);
 			job.Run();
 
 			ResultFileHelper.TestModFile(expected, actual);
@@ -48,25 +48,25 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var actual = @"TestEngineOnly_SimulatorRun-result.vmod";
 			var expected = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
 
-			var job = CreateJob(actual);
+			var run = CreateRun(actual);
 
 			var sim = new JobContainer(new TestSumWriter());
-			sim.AddJob(job);
-			sim.RunJobs();
+			sim.AddRun(run);
+			sim.Execute();
 
 			ResultFileHelper.TestModFile(expected, actual);
 		}
 
-		public IVectoSimulator CreateJob(string resultFileName)
+		public IVectoRun CreateRun(string resultFileName)
 		{
 			var sumFileName = resultFileName.Substring(0, resultFileName.Length - 4) + "vsum";
 
 			var dataWriter = new ModalDataWriter(resultFileName, engineOnly: true);
 			var sumWriter = new SummaryFileWriter(sumFileName);
-			var job = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, jobFileName: "", jobName: "",
+			var run = SimulatorFactory.CreateTimeBasedEngineOnlyRun(EngineFile, CycleFile, jobFileName: "", jobName: "",
 				dataWriter: dataWriter, sumWriter: sumWriter);
 
-			return job;
+			return run;
 		}
 
 
@@ -81,9 +81,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var simulation = new JobContainer(new TestSumWriter());
 			foreach (var resultFile in resultFiles) {
-				simulation.AddJob(CreateJob(resultFile));
+				simulation.AddRun(CreateRun(resultFile));
 			}
-			simulation.RunJobs();
+			simulation.Execute();
 
 			ResultFileHelper.TestModFiles(resultFiles.Select(x => x + "_Coach Engine Only short.vmod"),
 				Enumerable.Repeat(@"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod", resultFiles.Length));
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var reader = new EngineeringModeSimulationComponentFactory();
 			var jobData = reader.ReadVectoJobFile(@"TestData\Jobs\24t Coach.vecto");
 			var jobContainer = new JobContainer(jobData);
-			jobContainer.RunJobs();
+			jobContainer.Execute();
 
 			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum", @"TestData\Jobs\24t Coach.vsum");
 			ResultFileHelper.TestModFiles(new[] {
