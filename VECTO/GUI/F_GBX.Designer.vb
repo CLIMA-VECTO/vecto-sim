@@ -54,6 +54,7 @@ Partial Class F_GBX
 		Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.TBI_getr = New System.Windows.Forms.TextBox()
 		Me.Label49 = New System.Windows.Forms.Label()
 		Me.Label33 = New System.Windows.Forms.Label()
@@ -106,7 +107,6 @@ Partial Class F_GBX
 		Me.Label32 = New System.Windows.Forms.Label()
 		Me.PnInertiaTI = New System.Windows.Forms.Panel()
 		Me.PicBox = New System.Windows.Forms.PictureBox()
-		Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ToolStrip1.SuspendLayout()
 		Me.StatusStrip1.SuspendLayout()
 		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -281,8 +281,13 @@ Partial Class F_GBX
 		'
 		'ColumnHeader5
 		'
-		Me.ColumnHeader5.Text = "Shift polygons"
+		Me.ColumnHeader5.Text = "Shift Polygons"
 		Me.ColumnHeader5.Width = 97
+		'
+		'ColumnHeader6
+		'
+		Me.ColumnHeader6.Text = "Full Load Curve"
+		Me.ColumnHeader6.Width = 89
 		'
 		'TBI_getr
 		'
@@ -777,11 +782,6 @@ Partial Class F_GBX
 		Me.PicBox.Size = New System.Drawing.Size(406, 372)
 		Me.PicBox.TabIndex = 48
 		Me.PicBox.TabStop = False
-		'
-		'ColumnHeader6
-		'
-		Me.ColumnHeader6.Text = "Full load curve"
-		Me.ColumnHeader6.Width = 89
 		'
 		'F_GBX
 		'

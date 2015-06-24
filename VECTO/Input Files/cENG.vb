@@ -142,7 +142,8 @@ Public Class cENG
     Public Sub New()
         MyPath = ""
         sFilePath = ""
-        fMAP = New cSubPath
+		fMAP = New cSubPath
+		fFLD = New cSubPath
         SetDefault()
     End Sub
 
@@ -159,6 +160,7 @@ Public Class cENG
         Pmax = 0
 
 		fMAP.Clear()
+		fFLD.Clear()
 
         WHTCurban = 0
         WHTCrural = 0
@@ -246,7 +248,6 @@ Public Class cENG
             Nidle = JSON.Content("Body")("IdlingSpeed")
             I_mot = JSON.Content("Body")("Inertia")
 
-			fFLD = New cSubPath
 			If FileVersion < 3 Then
 				fFLD.Init(MyPath, JSON.Content("Body")("FullLoadCurves")(0)("Path"))
 			Else

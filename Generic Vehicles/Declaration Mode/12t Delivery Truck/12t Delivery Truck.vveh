@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-    "Date": "29.07.2014 16:58:52",
-    "AppVersion": "2.0.4-beta",
-    "FileVersion": 5
+    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
+    "Date": "24.06.2015 09:07:37",
+    "AppVersion": "2.2 beta",
+    "FileVersion": 6
   },
   "Body": {
     "SavedInDeclMode": true,
@@ -16,8 +16,8 @@
     "CrossSecArea": 8.8,
     "rdyn": 406.9297,
     "Rim": "15° DC Rims",
-    "CdCorrMode": "CdOfV",
-    "CdCorrFile": "12t Delivery Truck.vcdv",
+    "CdCorrMode": "CdOfVdecl",
+    "CdCorrFile": "<NOFILE>",
     "Retarder": {
       "Type": "None",
       "Ratio": 1.0,
@@ -28,7 +28,7 @@
       "Axles": [
         {
           "Inertia": 6.0,
-          "Wheels": "245/70 R 19.5",
+          "Wheels": "245/70 R19.5",
           "AxleWeightShare": 0.0,
           "TwinTyres": false,
           "RRCISO": 0.008343465,
@@ -36,7 +36,7 @@
         },
         {
           "Inertia": 6.0,
-          "Wheels": "245/70 R 19.5",
+          "Wheels": "245/70 R19.5",
           "AxleWeightShare": 0.0,
           "TwinTyres": true,
           "RRCISO": 0.00943769,

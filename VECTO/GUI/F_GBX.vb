@@ -16,8 +16,8 @@ Imports System.Collections.Generic
 ''' <remarks></remarks>
 Public Class F_GBX
 
-    Private GbxFile As String = ""
-    Public AutoSendTo As Boolean = False
+	Private GbxFile As String = ""
+	Public AutoSendTo As Boolean = False
     Public JobDir As String = ""
     Private GearDia As F_GBX_GearDlog
 
@@ -690,6 +690,7 @@ Public Class F_GBX
 		Dim fldpath As String
 		Dim FLD0 As cFLD = Nothing
 		Dim ShiftOK As Boolean = False
+		Dim Shiftpoly As cGBX.cShiftPolygon
 
         Me.PicBox.Image = Nothing
 
@@ -698,18 +699,22 @@ Public Class F_GBX
 			'Check Files
             If Me.LvGears.Items.Count > 1 Then
 
-                If Me.LvGears.SelectedItems.Count > 0 Then
-                    path = fFileRepl(Me.LvGears.SelectedItems(0).SubItems(4).Text, fPATH(GbxFile))
+				If Me.LvGears.SelectedItems.Count > 0 AndAlso Me.LvGears.SelectedIndices(0) > 0 Then
+					path = fFileRepl(Me.LvGears.SelectedItems(0).SubItems(4).Text, fPATH(GbxFile))
 					fldpath = fFileRepl(Me.LvGears.SelectedItems(0).SubItems(5).Text, fPATH(GbxFile))
 					Gear = Me.LvGears.SelectedIndices(0)
 				Else
 					path = fFileRepl(Me.LvGears.Items(1).SubItems(4).Text, fPATH(GbxFile))
 					fldpath = fFileRepl(Me.LvGears.Items(1).SubItems(5).Text, fPATH(GbxFile))
 					Gear = 1
-                End If
+				End If
 
                 f = New cFile_V3
 				ShiftOK = f.OpenRead(path)
+
+				If fldpath.Trim = "" Then
+					If F_VECTO.Visible AndAlso F_VECTO.FLDfile <> "" Then fldpath = F_VECTO.FLDfile
+				End If
 
 				fldOK = fldpath.Trim <> ""
 
@@ -759,7 +764,7 @@ Public Class F_GBX
 
 		End If
 
-		
+
 
 		'Create plot
 		If Not ShiftOK And Not fldOK Then Exit Sub
@@ -799,6 +804,33 @@ Public Class F_GBX
 			s.Color = Color.DarkBlue
 			s.Name = "Full load"
 			MyChart.Series.Add(s)
+
+			If F_VECTO.Visible AndAlso F_VECTO.n_idle > 0 Then
+				If FLD0.Init(F_VECTO.n_idle) Then
+
+					Shiftpoly = New cGBX.cShiftPolygon("", 0)
+					Shiftpoly.SetGenericShiftPoly(FLD0, F_VECTO.n_idle)
+
+					s = New System.Windows.Forms.DataVisualization.Charting.Series
+					s.Points.DataBindXY(Shiftpoly.gs_nUup, Shiftpoly.gs_TqUp)
+					s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+					s.BorderWidth = 2
+					s.Color = Color.DarkRed
+					s.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Dash
+					s.Name = "Upshift curve (generic)"
+					MyChart.Series.Add(s)
+
+					s = New System.Windows.Forms.DataVisualization.Charting.Series
+					s.Points.DataBindXY(Shiftpoly.gs_nUdown, Shiftpoly.gs_TqDown)
+					s.ChartType = DataVisualization.Charting.SeriesChartType.FastLine
+					s.BorderWidth = 2
+					s.Color = Color.DarkRed
+					s.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Dash
+					s.Name = "Downshift curve (generic)"
+					MyChart.Series.Add(s)
+
+				End If
+			End If
 
 		End If
 

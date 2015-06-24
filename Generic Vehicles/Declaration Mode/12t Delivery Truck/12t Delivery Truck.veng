@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-    "Date": "29.07.2014 16:58:53",
-    "AppVersion": "2.0.4-beta",
-    "FileVersion": 2
+    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
+    "Date": "24.06.2015 09:20:06",
+    "AppVersion": "2.2 beta",
+    "FileVersion": 3
   },
   "Body": {
     "SavedInDeclMode": true,
@@ -11,15 +11,10 @@
     "Displacement": 7700.0,
     "IdlingSpeed": 600.0,
     "Inertia": 3.789,
-    "FullLoadCurves": [
-      {
-        "Path": "12t Delivery Truck.vfld",
-        "Gears": "0 - 99"
-      }
-    ],
+    "FullLoadCurve": "12t Delivery Truck.vfld",
     "FuelMap": "12t Delivery Truck.vmap",
-    "WHTC-Urban": 215.0,
-    "WHTC-Rural": 202.0,
-    "WHTC-Motorway": 204.0
+    "WHTC-Urban": 1.03,
+    "WHTC-Rural": 1.02,
+    "WHTC-Motorway": 1.01
   }
 }

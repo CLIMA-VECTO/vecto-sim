@@ -26,11 +26,17 @@ Public Class F_VECTO
 
     Private AuxDlog As F_VEH_AuxDlog
 
-    Private EStechs As New List(Of String)
+	Private EStechs As New List(Of String)
+
+	Public n_idle As Single
+	Public FLDfile As String
 
     'Initialise form
     Private Sub F02_GEN_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        Dim x As Int16
+		Dim x As Int16
+
+		n_idle = -1
+		FLDfile = ""
 
         AuxDlog = New F_VEH_AuxDlog
 
@@ -538,6 +544,9 @@ Public Class F_VECTO
 
         If ChangeCheckCancel() Then Exit Sub
 
+		n_idle = -1
+		FLDfile = ""
+
         'Files
         Me.TbVEH.Text = ""
         Me.TbENG.Text = ""
@@ -1034,6 +1043,9 @@ lbDlog:
 		FLD0 = New cFLD
 
 		If ENG0.ReadFile(False) Then
+
+			n_idle = ENG0.Nidle
+			FLDfile = ENG0.PathFLD
 
 			EngOK = True
 			FLD0.FilePath = ENG0.PathFLD

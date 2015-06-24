@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-    "Date": "29.07.2014 16:59:06",
-    "AppVersion": "2.0.4-beta",
-    "FileVersion": 4
+    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
+    "Date": "24.06.2015 09:43:54",
+    "AppVersion": "2.2 beta",
+    "FileVersion": 5
   },
   "Body": {
     "SavedInDeclMode": true,
@@ -19,73 +19,85 @@
         "Ratio": 14.93,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 11.64,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 9.02,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 7.04,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 5.64,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 4.4,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 3.39,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 2.65,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 2.05,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 1.6,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 1.28,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 1.0,
         "LossMap": "Direct Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "-"
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
       }
     ],
     "TqReserve": 20.0,

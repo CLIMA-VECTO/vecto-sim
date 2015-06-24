@@ -985,7 +985,7 @@ Public Class cDeclaration
 					Result = False
 				End If
 
-				ESsum -= AuxESpower(EStech)(CurrentMission.MissionID)
+				ESsum += AuxESpower(EStech)(CurrentMission.MissionID)
 
 			Next
 

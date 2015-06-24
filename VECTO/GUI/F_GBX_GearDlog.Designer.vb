@@ -42,6 +42,7 @@ Partial Class F_GBX_GearDlog
 		Me.BtBrowseFld = New System.Windows.Forms.Button()
 		Me.TbFld = New System.Windows.Forms.TextBox()
 		Me.PnFld = New System.Windows.Forms.Panel()
+		Me.Label6 = New System.Windows.Forms.Label()
 		Me.TableLayoutPanel1.SuspendLayout()
 		Me.PnShiftPoly.SuspendLayout()
 		Me.PnFld.SuspendLayout()
@@ -55,7 +56,7 @@ Partial Class F_GBX_GearDlog
 		Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
 		Me.TableLayoutPanel1.Controls.Add(Me.OK_Button, 0, 0)
 		Me.TableLayoutPanel1.Controls.Add(Me.Cancel_Button, 1, 0)
-		Me.TableLayoutPanel1.Location = New System.Drawing.Point(380, 202)
+		Me.TableLayoutPanel1.Location = New System.Drawing.Point(380, 217)
 		Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
 		Me.TableLayoutPanel1.RowCount = 1
 		Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
@@ -145,7 +146,7 @@ Partial Class F_GBX_GearDlog
 		'BtNext
 		'
 		Me.BtNext.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.BtNext.Location = New System.Drawing.Point(307, 205)
+		Me.BtNext.Location = New System.Drawing.Point(307, 220)
 		Me.BtNext.Name = "BtNext"
 		Me.BtNext.Size = New System.Drawing.Size(67, 23)
 		Me.BtNext.TabIndex = 9
@@ -226,13 +227,23 @@ Partial Class F_GBX_GearDlog
 		'
 		'PnFld
 		'
+		Me.PnFld.Controls.Add(Me.Label6)
 		Me.PnFld.Controls.Add(Me.TbFld)
 		Me.PnFld.Controls.Add(Me.BtBrowseFld)
 		Me.PnFld.Controls.Add(Me.Label5)
 		Me.PnFld.Location = New System.Drawing.Point(10, 144)
 		Me.PnFld.Name = "PnFld"
-		Me.PnFld.Size = New System.Drawing.Size(523, 50)
+		Me.PnFld.Size = New System.Drawing.Size(523, 65)
 		Me.PnFld.TabIndex = 15
+		'
+		'Label6
+		'
+		Me.Label6.AutoSize = True
+		Me.Label6.Location = New System.Drawing.Point(3, 42)
+		Me.Label6.Name = "Label6"
+		Me.Label6.Size = New System.Drawing.Size(344, 13)
+		Me.Label6.TabIndex = 14
+		Me.Label6.Text = "If no file is defined the Full Load Curve from the Engine File will be used."
 		'
 		'F_GBX_GearDlog
 		'
@@ -240,7 +251,7 @@ Partial Class F_GBX_GearDlog
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.CancelButton = Me.Cancel_Button
-		Me.ClientSize = New System.Drawing.Size(538, 243)
+		Me.ClientSize = New System.Drawing.Size(538, 258)
 		Me.Controls.Add(Me.PnFld)
 		Me.Controls.Add(Me.PnShiftPoly)
 		Me.Controls.Add(Me.ChIsTCgear)
@@ -289,5 +300,6 @@ Partial Class F_GBX_GearDlog
 	Friend WithEvents BtBrowseFld As System.Windows.Forms.Button
 	Friend WithEvents TbFld As System.Windows.Forms.TextBox
 	Friend WithEvents PnFld As System.Windows.Forms.Panel
+	Friend WithEvents Label6 As System.Windows.Forms.Label
 
 End Class

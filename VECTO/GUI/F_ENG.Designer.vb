@@ -385,7 +385,7 @@ Partial Class F_ENG
 		Me.GrWHTC.Size = New System.Drawing.Size(481, 91)
 		Me.GrWHTC.TabIndex = 9
 		Me.GrWHTC.TabStop = False
-		Me.GrWHTC.Text = "WHTC Test Results"
+		Me.GrWHTC.Text = "WHTC Correction"
 		'
 		'Label13
 		'

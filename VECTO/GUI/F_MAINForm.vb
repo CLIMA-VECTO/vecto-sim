@@ -444,7 +444,7 @@ Public Class F_MAINForm
 		CycleTabPage = Me.TabPageDRI
 
 		DEVpage = Me.TabPageDEV
-		Me.TabControl1.Controls.Remove(DEVpage)
+		'Me.TabControl1.Controls.Remove(DEVpage)
 
 		LastModeName = ""
 
@@ -524,6 +524,16 @@ Public Class F_MAINForm
 			End If
 		End If
 
+		If DEV.Enabled Then
+			If Not Cfg.DeclMode Then
+				If Not Me.TabControl1.TabPages.Contains(DEVpage) Then Me.TabControl1.TabPages.Insert(Me.TabControl1.TabPages.Count, DEVpage)
+				LoadDEVconfigs()
+			Else
+				If Me.TabControl1.TabPages.Contains(DEVpage) Then Me.TabControl1.Controls.Remove(DEVpage)
+				DEV.SetDefault()
+			End If
+		End If
+
 		Status(LastModeName & " Mode")
 
 		Me.LoadOptions()
@@ -538,9 +548,9 @@ Public Class F_MAINForm
 		Dim fwelcome As F_Welcome
 
 		'DEV Form
-		If DEV.Enabled Then
-			Me.TabControl1.TabPages.Insert(Me.TabControl1.TabPages.Count, DEVpage)
-		End If
+		'If DEV.Enabled And Not Cfg.DeclMode Then
+		'	Me.TabControl1.TabPages.Insert(Me.TabControl1.TabPages.Count, DEVpage)
+		'End If
 
 		'VECTO Init
 		Declaration.Init()
