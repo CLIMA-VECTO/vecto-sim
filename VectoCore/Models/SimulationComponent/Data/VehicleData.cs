@@ -10,63 +10,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class VehicleData : SimulationComponentData
 	{
-		//public static VehicleData ReadFromFile(string fileName)
-		//{
-		//	return ReadFromJson(File.ReadAllText(fileName), Path.GetDirectoryName(fileName));
-		//}
-
-
-		//public static VehicleData ReadFromJson(string json, string basePath = "")
-		//{
-		//	//var vehicleData = new VehicleData(basePath);
-
-		//	var fileInfo = GetFileVersion(json);
-		//	switch (fileInfo.Item1) {
-		//		case 5:
-		//			if (fileInfo.Item2) {
-		//				var data = JsonConvert.DeserializeObject<VehicleFileV5Declaration>(json);
-		//				return new VehicleData(basePath, data);
-		//			} else {
-		//				var data = JsonConvert.DeserializeObject<VehicleFileV5Engineering>(json);
-		//				return new VehicleData(basePath, data);
-		//			}
-		//			//vehicleData.Data = data;
-		//		default:
-		//			throw new UnsupportedFileVersionException("Unsupported Version of .vveh file. Got Version " + fileInfo.Item1);
-		//	}
-
-		//	//return null;
-		//}
-
-
-		//protected VehicleData(string basePath, VehicleFileV5Declaration data)
-		//{
-		//	BasePath = basePath;
-		//	SetGenericData(data.Body);
-		//}
-
-		//protected VehicleData(string basePath, VehicleFileV5Engineering data)
-		//{
-		//	BasePath = basePath;
-		//	SetGenericData(data.Body);
-		//}
-
-		internal void SetGenericData(VehicleFileV5Declaration.DataBodyDecl data)
-		{
-			SavedInDeclarationMode = data.SavedInDeclarationMode;
-			VehicleCategory = data.VehicleCategory();
-			GrossVehicleMassRating = data.GrossVehicleMassRating.SI<Kilogram>();
-
-			DragCoefficient = data.DragCoefficient;
-			CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>();
-
-			DragCoefficientRigidTruck = data.DragCoefficientRigidTruck;
-			CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>();
-		}
-
 		public string BasePath { get; internal set; }
 
-		public bool SavedInDeclarationMode { get; internal set; }
 
 		public VehicleCategory VehicleCategory { get; internal set; }
 

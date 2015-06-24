@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -36,6 +38,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 			get { return Instance()._electricSystem; }
 		}
 
+		public static Meter DynamicTyreRadius(string wheels, string rims)
+		{
+			var wheelsEntry = Wheels.Lookup(wheels);
+			var rimsEntry = Rims.Lookup(rims);
+
+			var correction = wheelsEntry.SizeClass != 0 ? rimsEntry.F_a : rimsEntry.F_b;
+
+			return wheelsEntry.TyreRadius * correction / (2 * Math.PI);
+		}
+
 		private DeclarationData()
 		{
 			_wheels = new DeclarationWheels();
@@ -48,6 +60,41 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private static DeclarationData Instance()
 		{
 			return _instance ?? (_instance = new DeclarationData());
+		}
+
+		public static class Constants
+		{
+			public static class Trailer
+			{
+				public const double RollResistanceCoefficient = 0.00555;
+				public const double TyreTestLoad = 37500;
+				public const bool TwinTyres = false;
+				public const string WheelsType = "385/65 R 22.5";
+			}
+
+			//			Public Const SSspeed As Single = 5
+			//Public Const SStime As Single = 5
+			//Public Const SSdelay As Single = 5
+			//Public Const LACa As Single = -0.5
+			//Public Const LACvmin As Single = 50
+			//Public Const Overspeed As Single = 5
+			//Public Const Underspeed As Single = 5
+			//Public Const ECvmin As Single = 50
+
+			//Public Const TqResv As Single = 20
+			//Public Const TqResvStart As Single = 20
+			//Public Const StartSpeed As Single = 2
+			//Public Const StartAcc As Single = 0.6
+			//Public Const GbInertia As Single = 0
+
+			//Public Const RRCTr As Single = 0.00555
+			//Public Const FzISOTr As Single = 37500
+
+			//Public Const AirDensity As Single = 1.188
+			//Public Const FuelDens As Single = 0.832
+			//Public Const CO2perFC As Single = 3.16
+
+			//Public Const AuxESeff As Single = 0.7
 		}
 	}
 }

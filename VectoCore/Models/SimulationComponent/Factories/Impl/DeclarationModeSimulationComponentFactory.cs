@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -9,6 +10,7 @@ using TUGraz.VectoCore.FileIO.DeclarationFile;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -16,17 +18,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 {
 	public class DeclarationModeSimulationComponentFactory : AbstractSimulationRunCreator
 	{
+		public const int PoweredAxle = 1;
+
 		internal DeclarationModeSimulationComponentFactory() {}
 
 		//public void SetJobFile(string fileName)
 		//{
-		//	var json = File.ReadAllText(fileName);
-		//	SetJobJson(json, Path.GetDirectoryName(fileName));
+		//	var file = File.ReadAllText(fileName);
+		//	SetJobJson(file, Path.GetDirectoryName(fileName));
 		//}
 
-		//public void SetJobJson(string json, string basePath)
+		//public void SetJobJson(string file, string basePath)
 		//{
-		//	var fileInfo = GetFileVersion(json);
+		//	var fileInfo = GetFileVersion(file);
 
 		//	if (!fileInfo.Item2) {
 		//		throw new VectoException("File not saved in Declaration Mode!");
@@ -39,7 +43,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 		//	}
 		//}
 
-		protected void checkForDeclarationMode(InputFileReader.VersionInfo info, string msg)
+		//protected RetarderData RetarderData;
+
+		protected void CheckForDeclarationMode(InputFileReader.VersionInfo info, string msg)
 		{
 			if (!info.SavedInDeclarationMode) {
 				throw new VectoException("File not saved in Declaration Mode! - " + msg);
@@ -48,17 +54,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 		public override IEnumerable<IVectoRun> NextRun()
 		{
+			var segment = GetVehicleClassification((dynamic) Vehicle);
+			foreach (var mission in segment.Missions) {
+				foreach (var loading in mission.Loadings) {
+					var jobData = new VectoJobData() {
+						VehicleData = CreateVehicleData((dynamic) Vehicle, mission, loading),
+						EngineData = CreateEngineData((dynamic) Engine),
+						GearboxData = CreateGearboxData((dynamic) Gearbox),
+					};
+					//var builder = new SimulatorFactory.SimulatorBuilder();
+				}
+			}
 			throw new NotImplementedException();
 		}
 
-		protected override void ReadJob(string json)
+		protected override void ReadJobFile(string file)
 		{
+			var json = File.ReadAllText(file);
 			var fileInfo = GetFileVersion(json);
-			checkForDeclarationMode(fileInfo, "Job");
+			CheckForDeclarationMode(fileInfo, "Job");
 
 			switch (fileInfo.Version) {
 				case 2:
 					Job = JsonConvert.DeserializeObject<VectoJobFileV2Declaration>(json);
+					Job.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
 					break;
 				default:
 					throw new UnsupportedFileVersionException("Unsupported version of job-file. Got version " + fileInfo.Version);
@@ -66,64 +85,112 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 		}
 
 
-		protected override void ReadVehicle(string json)
+		protected override void ReadVehicle(string file)
 		{
+			var json = File.ReadAllText(Job.BasePath + file);
 			var fileInfo = GetFileVersion(json);
-			checkForDeclarationMode(fileInfo, "Vehicle");
+			CheckForDeclarationMode(fileInfo, "Vehicle");
 
 			switch (fileInfo.Version) {
 				case 5:
 					Vehicle = JsonConvert.DeserializeObject<VehicleFileV5Declaration>(json);
 					break;
 				default:
-					throw new UnsupportedFileVersionException("Unsupported Version of .vveh file. Got Version " + fileInfo.Version);
+					throw new UnsupportedFileVersionException("Unsupported Version of vehicle-file. Got version " + fileInfo.Version);
 			}
 		}
 
-		protected override void ReadEngine(string json)
+		protected override void ReadEngine(string file)
 		{
-			throw new NotImplementedException();
+			var json = File.ReadAllText(Job.BasePath + file);
+			var fileInfo = GetFileVersion(json);
+			CheckForDeclarationMode(fileInfo, "Engine");
+
+			switch (fileInfo.Version) {
+				case 2:
+					Engine = JsonConvert.DeserializeObject<EngineFileV2Declaration>(json);
+					break;
+				default:
+					throw new UnsupportedFileVersionException("Unsopported Version of engine-file. Got version " + fileInfo.Version);
+			}
 		}
 
-		protected override void ReadGearbox(string json)
+		protected override void ReadGearbox(string file)
 		{
-			throw new NotImplementedException();
+			var json = File.ReadAllText(Job.BasePath + file);
+			var fileInfo = GetFileVersion(json);
+			CheckForDeclarationMode(fileInfo, "Gearbox");
+
+			switch (fileInfo.Version) {
+				case 4:
+					Gearbox = JsonConvert.DeserializeObject<GearboxFileV4Declaration>(json);
+					break;
+				default:
+					throw new UnsupportedFileVersionException("Unsopported Version of gearbox-file. Got version " + fileInfo.Version);
+			}
 		}
 
-		protected override void ReadRetarder(string json)
+
+		internal Segment GetVehicleClassification(VehicleFileV5Declaration.DataBodyDecl vehicle)
 		{
-			throw new NotImplementedException();
+			return new DeclarationSegments().Lookup(vehicle.VehicleCategory(), vehicle.AxleConfigurationType(),
+				vehicle.GrossVehicleMassRating.SI<Kilogram>(), vehicle.CurbWeight.SI<Kilogram>());
 		}
 
-		internal VehicleData CreateVehicleData(VehicleFileV5Declaration.DataBodyDecl data, string basePath)
+
+		internal VehicleData CreateVehicleData(VehicleFileV5Declaration vehicle, Mission mission, Kilogram loading)
 		{
-			var retVal = new VehicleData {
-				BasePath = basePath,
-				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				VehicleCategory = data.VehicleCategory(),
-				AxleConfiguration =
-					(AxleConfiguration) Enum.Parse(typeof (AxleConfiguration), "AxleConfig_" + data.AxleConfig.TypeStr),
-				// TODO: @@@quam better use of enum-prefix
-				CurbWeight = data.CurbWeight.SI<Kilogram>(),
-				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
-				//Loading = data.Loading.SI<Kilogram>(),
-				GrossVehicleMassRating = data.GrossVehicleMassRating.SI().Kilo.Kilo.Gramm.Cast<Kilogram>(),
-				DragCoefficient = data.DragCoefficient,
-				CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>(),
-				DragCoefficientRigidTruck = data.DragCoefficientRigidTruck,
-				CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>(),
-				//DynamicTyreRadius = data.DynamicTyreRadius.SI().Milli.Meter.Cast<Meter>(),
-				Rim = data.RimStr,
-				Retarder = new RetarderData(data.Retarder, basePath),
-				AxleData = data.AxleConfig.Axles.Select(axle => new Axle {
-					//Inertia = DoubleExtensionMethods.SI<KilogramSquareMeter>(axle.Inertia),
-					TwinTyres = axle.TwinTyres,
-					RollResistanceCoefficient = axle.RollResistanceCoefficient,
-					//AxleWeightShare = axle.AxleWeightShare,
-					TyreTestLoad = DoubleExtensionMethods.SI<Newton>(axle.TyreTestLoad),
-					//Wheels = axle.WheelsStr
-				}).ToList()
-			};
+			var data = vehicle.Body;
+			var retVal = SetGenericData(data);
+
+			retVal.BasePath = vehicle.BasePath;
+
+			retVal.CurbWeigthExtra = mission.MassExtra;
+			retVal.Loading = loading;
+			retVal.DynamicTyreRadius =
+				DeclarationData.DynamicTyreRadius(data.AxleConfig.Axles[PoweredAxle].WheelsStr, data.RimStr);
+
+			if (data.AxleConfig.Axles.Count < mission.AxleWeightDistribution.Length) {
+				throw new VectoException(
+					String.Format("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
+						data.AxleConfig.Axles.Count, mission.AxleWeightDistribution.Count()));
+			}
+			retVal.AxleData = new List<Axle>();
+			for (var i = 0; i < mission.AxleWeightDistribution.Length; i++) {
+				var axleInput = data.AxleConfig.Axles[i];
+				var axle = new Axle {
+					AxleWeightShare = mission.AxleWeightDistribution[i],
+					TwinTyres = axleInput.TwinTyres,
+					RollResistanceCoefficient = axleInput.RollResistanceCoefficient,
+					TyreTestLoad = DoubleExtensionMethods.SI<Newton>(axleInput.TyreTestLoad),
+					Inertia = DeclarationData.Wheels.Lookup(axleInput.WheelsStr).Inertia,
+				};
+				retVal.AxleData.Add(axle);
+			}
+
+			foreach (var tmp in mission.TrailerAxleWeightDistribution) {
+				retVal.AxleData.Add(new Axle() {
+					AxleWeightShare = tmp,
+					TwinTyres = DeclarationData.Constants.Trailer.TwinTyres,
+					RollResistanceCoefficient = DeclarationData.Constants.Trailer.RollResistanceCoefficient,
+					TyreTestLoad = DeclarationData.Constants.Trailer.TyreTestLoad.SI<Newton>(),
+					Inertia = DeclarationData.Wheels.Lookup(DeclarationData.Constants.Trailer.WheelsType).Inertia
+				});
+			}
+
+			return retVal;
+		}
+
+		internal CombustionEngineData CreateEngineData(EngineFileV2Declaration engine)
+		{
+			var retVal = new CombustionEngineData();
+
+			return retVal;
+		}
+
+		internal GearboxData CreateGearboxData(GearboxFileV4Declaration gearbox)
+		{
+			var retVal = new GearboxData();
 
 			return retVal;
 		}

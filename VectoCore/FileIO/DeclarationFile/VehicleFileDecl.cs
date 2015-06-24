@@ -36,10 +36,14 @@ namespace TUGraz.VectoCore.FileIO.DeclarationFile
 
 			[JsonProperty("Rim", Required = Required.Always)] public string RimStr;
 
-			[JsonProperty("Retarder", Required = Required.Always)] public RetarderData.Data Retarder;
+			[JsonProperty("Retarder", Required = Required.Always)] public RetarderData Retarder;
 
 			[JsonProperty(Required = Required.Always)] public AxleConfigData AxleConfig;
 
+			public AxleConfiguration AxleConfigurationType()
+			{
+				return (AxleConfiguration) Enum.Parse(typeof (AxleConfiguration), AxleConfig.TypeStr, true);
+			}
 
 			public class AxleConfigData
 			{
@@ -57,6 +61,15 @@ namespace TUGraz.VectoCore.FileIO.DeclarationFile
 				[JsonProperty(Required = Required.Always)] public bool TwinTyres;
 				[JsonProperty("RRCISO", Required = Required.Always)] public double RollResistanceCoefficient;
 				[JsonProperty("FzISO", Required = Required.Always)] public double TyreTestLoad;
+			}
+
+			public class RetarderData
+			{
+				[JsonProperty("Type", Required = Required.Always)] public string TypeStr;
+
+				[JsonProperty] public double Ratio;
+
+				[JsonProperty] public string File;
 			}
 		}
 	}

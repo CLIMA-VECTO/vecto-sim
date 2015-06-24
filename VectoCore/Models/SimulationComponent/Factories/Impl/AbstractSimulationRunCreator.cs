@@ -6,13 +6,16 @@ using Newtonsoft.Json.Serialization;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO;
 using TUGraz.VectoCore.FileIO.DeclarationFile;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 {
 	public abstract class AbstractSimulationRunCreator : InputFileReader
 	{
-		protected string JobBasePath = "";
+		//protected string JobBasePath = "";
 
 		protected VectoJobFile Job;
 
@@ -22,17 +25,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 		protected VectoEngineFile Engine;
 
-		public void SetJobFile(string filenname)
+		public void SetJobFile(string filename)
 		{
-			JobBasePath = Path.GetDirectoryName(filenname) + Path.DirectorySeparatorChar;
-			SetJobJson(File.ReadAllText(filenname));
-		}
-
-		public void SetJobJson(string json)
-		{
-			ReadJob(json);
+			//JobBasePath = Path.GetDirectoryName(filenname) + Path.DirectorySeparatorChar;
+			//SetJobJson(File.ReadAllText(filenname));
+			ReadJobFile(filename);
 			ProcessJob((dynamic) Job);
 		}
+
+		//public void SetJobJson(string file)
+		//{
+		//	ReadJobFile(file);
+		//	ProcessJob((dynamic) Job);
+		//}
 
 		public abstract IEnumerable<IVectoRun> NextRun();
 
@@ -44,24 +49,67 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 		protected void ProcessJob(VectoJobFileV2Declaration job)
 		{
-			ReadVehicle(File.ReadAllText(JobBasePath + job.Body.VehicleFile));
+			ReadVehicle(job.Body.VehicleFile);
 
-			ReadEngine(File.ReadAllText(JobBasePath + job.Body.EngineFile));
+			ReadEngine(job.Body.EngineFile);
 
-			ReadGearbox(File.ReadAllText(JobBasePath + job.Body.GearboxFile));
+			ReadGearbox(job.Body.GearboxFile);
 		}
 
-		// has to read the json string and create file-container
-		protected abstract void ReadJob(string json);
+		// has to read the file string and create file-container
+		protected abstract void ReadJobFile(string file);
 
-		// has to read the json string and create file-container
-		protected abstract void ReadVehicle(string json);
+		// has to read the file string and create file-container
+		protected abstract void ReadVehicle(string file);
 
-		protected abstract void ReadEngine(string json);
+		protected abstract void ReadEngine(string file);
 
-		protected abstract void ReadGearbox(string json);
+		protected abstract void ReadGearbox(string file);
 
+		protected internal Segment GetVehicleClassification(VectoVehicleFile vehicle)
+		{
+			throw new NotImplementedException("Vehicleclassification for base-class not possible!");
+		}
 
-		protected abstract void ReadRetarder(string json);
+		internal VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission segment, Kilogram loading)
+		{
+			throw new NotImplementedException("CreateVehicleData for base-class not possible!");
+		}
+
+		internal CombustionEngineData CreateEngineData(VectoEngineFile engine)
+		{
+			throw new NotImplementedException("CreateEngineData for base-class not possible!");
+		}
+
+		internal GearboxData CreateGearboxData(VectoGearboxFile gearbox)
+		{
+			throw new NotImplementedException("CreateGearboxData for base-class not possible!");
+		}
+
+		internal VehicleData SetGenericData(VehicleFileV5Declaration.DataBodyDecl data)
+		{
+			return new VehicleData {
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				VehicleCategory = data.VehicleCategory(),
+				AxleConfiguration =
+					(AxleConfiguration) Enum.Parse(typeof (AxleConfiguration), "AxleConfig_" + data.AxleConfig.TypeStr),
+				// TODO: @@@quam better use of enum-prefix
+				CurbWeight = data.CurbWeight.SI<Kilogram>(),
+				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
+				//Loading = data.Loading.SI<Kilogram>(),
+				GrossVehicleMassRating = data.GrossVehicleMassRating.SI().Kilo.Kilo.Gramm.Cast<Kilogram>(),
+				DragCoefficient = data.DragCoefficient,
+				CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>(),
+				DragCoefficientRigidTruck = data.DragCoefficientRigidTruck,
+				CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>(),
+				//TyreRadius = data.TyreRadius.SI().Milli.Meter.Cast<Meter>(),
+				Rim = data.RimStr,
+				Retarder = new RetarderData() {
+					LossMap = RetarderLossMap.ReadFromFile(data.Retarder.File),
+					Type =
+						(RetarderData.RetarderType) Enum.Parse(typeof (RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true)
+				}
+			};
+		}
 	}
 }

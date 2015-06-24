@@ -18,9 +18,9 @@ namespace TUGraz.VectoCore.FileIO.EngineeringFile
 	///  },
 	///  "Body": {
 	///    "SavedInDeclMode": false,
-	///    "VehicleFile": "24t Coach.vveh",
-	///    "EngineFile": "24t Coach.veng",
-	///    "GearboxFile": "24t Coach.vgbx",
+	///    "VehicleData": "24t Coach.vveh",
+	///    "EngineData": "24t Coach.veng",
+	///    "GearboxData": "24t Coach.vgbx",
 	///    "Cycles": [
 	///      "W:\\VECTO\\CITnet\\VECTO\\bin\\Debug\\Declaration\\MissionCycles\\LOT2_rural Engine Only.vdri"
 	///    ],

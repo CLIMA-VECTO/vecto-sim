@@ -30,28 +30,29 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_sumWriter = sumWriter;
 		}
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="JobContainer"/> class from a VectoJobData object.
-		/// </summary>
-		/// <param name="data">The data.</param>
-		public JobContainer(VectoJobData data)
-		{
-			var sumFileName = Path.GetFileNameWithoutExtension(data.JobFileName);
-			var sumFilePath = Path.GetDirectoryName(data.JobFileName);
-			_sumWriter = new SummaryFileWriter(string.Format("{0}.vsum", Path.Combine(sumFilePath, sumFileName)));
+		///// <summary>
+		///// Initializes a new instance of the <see cref="JobContainer"/> class from a VectoJobData object.
+		///// </summary>
+		///// <param name="data">The data.</param>
+		//public JobContainer(VectoJobData data)
+		//{
+		//	var sumFileName = Path.GetFileNameWithoutExtension(data.JobFileName);
+		//	var sumFilePath = Path.GetDirectoryName(data.JobFileName);
+		//	_sumWriter = new SummaryFileWriter(string.Format("{0}.vsum", Path.Combine(sumFilePath, sumFileName)));
 
-			AddRuns(data);
-		}
+		//	AddRuns(data);
+		//}
 
-		/// <summary>
-		/// Creates and Adds jobs from the VectoJobData object.
-		/// </summary>
-		/// <param name="data">The data.</param>
-		public void AddRuns(VectoJobData data)
-		{
-			_jobNumber++;
-			_runs.AddRange(SimulatorFactory.CreateRuns(data, _sumWriter, _jobNumber));
-		}
+		///// <summary>
+		///// Creates and Adds jobs from the VectoJobData object.
+		///// </summary>
+		///// <param name="data">The data.</param>
+		//public void AddRuns(VectoJobData data)
+		//{
+		//	_jobNumber++;
+			//_runs.AddRange(SimulatorFactory.CreateRuns(data, _sumWriter, _jobNumber));
+
+		//}
 
 		/// <summary>
 		/// Adds a custom created job.
@@ -61,6 +62,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			_jobNumber++;
 			_runs.Add(run);
+		}
+
+		public void AddRuns(IEnumerable<IVectoRun> runs)
+		{
+			_jobNumber++;
+			_runs.AddRange(runs);
 		}
 
 		/// <summary>

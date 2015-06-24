@@ -92,9 +92,15 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Test_VectoJob()
 		{
-			var reader = new EngineeringModeSimulationComponentFactory();
-			var jobData = reader.ReadVectoJobFile(@"TestData\Jobs\24t Coach.vecto");
-			var jobContainer = new JobContainer(jobData);
+//			var reader = new EngineeringModeSimulationComponentFactory();
+//			var jobData = reader.ReadVectoJobFile(@"TestData\Jobs\24t Coach.vecto");
+			var jobFile = @"TestData\Jobs\24t Coach.vecto";
+
+			var factory = new EngineeringModeSimulationComponentFactory();
+			factory.SetJobFile(jobFile);
+
+			var jobContainer = new JobContainer(new TestSumWriter());
+//			jobContainer.AddRuns(factory.NextRun());
 			jobContainer.Execute();
 
 			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum", @"TestData\Jobs\24t Coach.vsum");

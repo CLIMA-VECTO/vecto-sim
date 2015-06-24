@@ -108,11 +108,16 @@
   <ItemGroup>
     <Compile Include="Exceptions\VectoExceptions.cs" />
     <Compile Include="Exceptions\VectoSimulationException.cs" />
+    <Compile Include="FileIO\DeclarationFile\EngineFileDecl.cs" />
+    <Compile Include="FileIO\DeclarationFile\GearboxFileDecl.cs" />
     <Compile Include="FileIO\DeclarationFile\JobFileDecl.cs" />
     <Compile Include="FileIO\DeclarationFile\VehicleFileDecl.cs" />
+    <Compile Include="FileIO\EngineeringFile\EngineFileEng.cs" />
+    <Compile Include="FileIO\EngineeringFile\GearboxFileEng.cs" />
     <Compile Include="FileIO\EngineeringFile\JobFileEng.cs" />
     <Compile Include="FileIO\EngineeringFile\VehicleFileEng.cs" />
     <Compile Include="FileIO\InputFileReader.cs" />
+    <Compile Include="FileIO\JsonDataHeader.cs" />
     <Compile Include="FileIO\VectoFiles.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandProvider.cs" />
@@ -156,13 +161,10 @@
     <Compile Include="Models\SimulationComponent\Data\Gearbox\TransmissionLossMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\Gearbox\ShiftPolygon.cs" />
     <Compile Include="Models\SimulationComponent\Data\Gearbox\TorqueConverterData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\JsonDataHeader.cs" />
     <Compile Include="Models\SimulationComponent\Data\RetarderData.cs" />
     <Compile Include="Models\SimulationComponent\Data\RetarderLossMap.cs" />
     <Compile Include="Models\Declaration\VehicleCategory.cs" />
     <Compile Include="Models\SimulationComponent\Data\VehicleData.cs" />
-    <Compile Include="Models\SimulationComponent\Factories\DeclarationModeFactory.cs" />
-    <Compile Include="Models\SimulationComponent\Factories\EngineeringModeFactory.cs" />
     <Compile Include="Models\SimulationComponent\IClutch.cs" />
     <Compile Include="Models\SimulationComponent\IEngineOnlyDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriverDemandDrivingCycle.cs" />

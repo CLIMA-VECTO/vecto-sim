@@ -12,11 +12,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	[DataContract]
 	public class VectoJobData : SimulationComponentData
 	{
-		public string VehicleFile { get; internal set; }
+		public VehicleData VehicleData { get; internal set; }
 
-		public string EngineFile { get; internal set; }
+		public CombustionEngineData EngineData { get; internal set; }
 
-		public string GearboxFile { get; internal set; }
+		public GearboxData GearboxData { get; internal set; }
 
 		public IList<string> Cycles { get; internal set; }
 
@@ -26,11 +26,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public bool IsEngineOnly { get; internal set; }
 
-		public StartStopData StartStop { get; internal set; }
+		//public StartStopData StartStop { get; internal set; }
 
-		public LACData LookAheadCoasting { get; internal set; }
+		//public LACData LookAheadCoasting { get; internal set; }
 
-		public OverSpeedEcoRollData OverSpeedEcoRoll { get; internal set; }
+		//public OverSpeedEcoRollData OverSpeedEcoRoll { get; internal set; }
 
 		public string JobFileName { get; set; }
 

@@ -3,13 +3,19 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Gearbox : VectoSimulationComponent, IGearbox, ITnOutPort, ITnInPort
 	{
-		public Gearbox(IVehicleContainer container) : base(container) {}
+		protected GearboxData Data;
+
+		public Gearbox(IVehicleContainer container, GearboxData gearboxData) : base(container)
+		{
+			Data = gearboxData;
+		}
 
 		#region IInShaft
 

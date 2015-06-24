@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				select new WheelsEntry {
 					WheelType = row[0].ToString(),
 					Inertia = row.ParseDouble(1).SI<KilogramSquareMeter>(),
-					DynamicTyreRadius = row.ParseDouble(2).SI().Milli.Meter.Cast<Meter>(),
+					TyreRadius = row.ParseDouble(2).SI().Milli.Meter.Cast<Meter>(),
 					SizeClass = Int32.Parse(row[3].ToString())
 				}).ToDictionary(e => e.WheelType);
 		}
@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			public string WheelType;
 			public KilogramSquareMeter Inertia;
-			public Meter DynamicTyreRadius;
+			public Meter TyreRadius;
 			public int SizeClass;
 		}
 	}

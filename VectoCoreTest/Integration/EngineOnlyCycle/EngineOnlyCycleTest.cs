@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting.Web;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -25,7 +26,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
 			var vehicle = new VehicleContainer();
-			var engineData = CombustionEngineData.ReadFromFile(TestContext.DataRow["EngineFile"].ToString());
+			var engineData = new EngineeringModeSimulationComponentFactory().CreateEngineDataFromFile(EngineFile);
 
 			var aux = new DirectAuxiliary(vehicle, new AuxiliaryCycleDataAdapter(data));
 			var gearbox = new EngineOnlyGearbox(vehicle);
@@ -37,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			gearbox.InShaft().Connect(aux.OutShaft());
 			var port = aux.OutShaft();
 
-//			IVectoJob job = SimulationFactory.CreateTimeBasedEngineOnlyRun(TestContext.DataRow["EngineFile"].ToString(),
+//			IVectoJob job = SimulationFactory.CreateTimeBasedEngineOnlyRun(TestContext.DataRow["EngineData"].ToString(),
 //				TestContext.DataRow["CycleFile"].ToString(), "test2.csv");
 
 			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);

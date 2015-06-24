@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			var tmp = wheels.Lookup("285/70 R 19.5");
 
 			Assert.AreEqual(7.9, tmp.Inertia.Double(), Tolerance);
-			Assert.AreEqual(0.8943, tmp.DynamicTyreRadius.Double(), Tolerance);
+			Assert.AreEqual(0.8943, tmp.TyreRadius.Double(), Tolerance);
 			Assert.AreEqual(0, tmp.SizeClass);
 		}
 
@@ -158,7 +158,7 @@ namespace TUGraz.VectoCore.Tests.Models
 		{
 			//var factory = DeclarationModeFactory.Instance();
 			//var job = factory.ReadJobFile("12t Delivery Truck.vecto");
-			//var vehicleData = factory.ReadVehicleData(job.VehicleFile);
+			//var vehicleData = factory.ReadVehicleData(job.VehicleData);
 
 			//mock vehicleData
 			var vehicleData = new {
@@ -243,14 +243,14 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			//		// connect cycle --> driver --> vehicle --> wheels --> axleGear --> gearBox
 			//		//         --> retarder --> clutch --> aux --> ... --> aux_XXX --> directAux --> engine
-			//		var engineData = factory.ReadEngineData(job.EngineFile);
+			//		var engineData = factory.ReadEngineData(job.EngineData);
 			//		var engine = new CombustionEngine(container, engineData);
 
 			//		// todo AUX
 			//		// todo clutch
 			//		// todo retarder
 
-			//		var gearboxData = factory.ReadGearboxData(job.GearboxFile);
+			//		var gearboxData = factory.ReadGearboxData(job.GearboxData);
 			//		var gearbox = new Gearbox(container, gearboxData);
 			//		gearbox.InShaft().Connect(engine.OutShaft());
 

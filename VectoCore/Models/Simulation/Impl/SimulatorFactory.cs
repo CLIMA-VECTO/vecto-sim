@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using System.Collections.Generic;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -21,7 +23,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var sumWriterDecorator = new SumWriterDecoratorEngineOnly(sumWriter, jobFileName, jobName, cycleFile);
 			var builder = new SimulatorBuilder(dataWriter, sumWriterDecorator, engineOnly: true);
 
-			builder.AddEngine(engineFile);
+			// @@@TODO builder.AddEngine(engineFile);
 
 			return builder.Build(cycleFile);
 		}
@@ -46,17 +48,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var sumWriterDecorator = DecorateSumWriter(data.IsEngineOnly, sumWriter, data.JobFileName, jobName, cycleFile);
 				var builder = new SimulatorBuilder(_dataWriter, sumWriterDecorator, data.IsEngineOnly);
 
-				builder.AddEngine(data.EngineFile);
+				builder.AddEngine(data.EngineData);
 
 				if (!data.IsEngineOnly) {
-					builder.AddVehicle(data.VehicleFile);
-					builder.AddGearbox(data.GearboxFile);
+					builder.AddVehicle(data.VehicleData);
+					builder.AddGearbox(data.GearboxData);
 
 					foreach (var aux in data.Aux) {
 						builder.AddAuxiliary(aux.Path, aux.ID);
 					}
 
-					builder.AddDriver(data.StartStop, data.OverSpeedEcoRoll, data.LookAheadCoasting, data.AccelerationLimitingFile);
+					// @@@ TODO builder.AddDriver(data.StartStop, data.OverSpeedEcoRoll, data.LookAheadCoasting, data.AccelerationLimitingFile);
 				}
 				yield return builder.Build(cycleFile);
 			}
@@ -171,29 +173,36 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			public void AddCycle(string cycleFile) {}
 
-			public void AddEngine(string engineFile)
+			public void AddEngine(CombustionEngineData data)
 			{
-				var engineData = CombustionEngineData.ReadFromFile(engineFile);
-				_engine = new CombustionEngine(_container, engineData);
+				_engine = new CombustionEngine(_container, data);
 
-				AddClutch(engineFile);
+				AddClutch(data);
 			}
 
-			public void AddClutch(string engineFile)
+			public void AddClutch(CombustionEngineData engineData)
 			{
-				var engineData = CombustionEngineData.ReadFromFile(engineFile);
 				_clutch = new Clutch(_container, engineData);
 			}
 
-			public void AddGearbox(string gearboxFile)
+			public void AddGearbox(GearboxData gearboxData)
 			{
-				var gearboxData = GearboxData.ReadFromFile(gearboxFile);
 				_axleGear = new AxleGear(gearboxData.AxleGearData);
 
-				_dataWriter.HasTorqueConverter = gearboxData.HasTorqueConverter;
-
-				//todo init gearbox with gearbox data
-				_gearBox = new Gearbox(_container);
+				switch (gearboxData.Type) {
+					case GearboxData.GearboxType.ManualTransmision:
+						_gearBox = new Gearbox(_container, gearboxData);
+						break;
+					case GearboxData.GearboxType.AutomatedManualTransmission:
+						_gearBox = new Gearbox(_container, gearboxData);
+						break;
+/*					case GearboxData.GearboxType.AutomaticTransmission:
+						_dataWriter.HasTorqueConverter = gearboxData.HasTorqueConverter;
+						break;
+*/
+					default:
+						throw new VectoException(String.Format("Gearboxtype {0} not implemented", gearboxData.Type));
+				}
 			}
 
 			public void AddAuxiliary(string auxFileName, string auxID)
@@ -212,15 +221,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				_driver = new Driver(driverData);
 			}
 
-			public void AddVehicle(string vehicleFile)
+			public void AddVehicle(VehicleData data)
 			{
 				if (_engineOnly) {
 					return;
 				}
 
-				var vehicleData = EngineeringModeFactory.Instance().CreateVehicleData(vehicleFile);
-				//VehicleData.ReadFromFile(vehicleFile);
-				_vehicle = new Vehicle(_container, vehicleData);
+				_vehicle = new Vehicle(_container, data);
 			}
 
 			public void AddRetarder(string retarderFile)
