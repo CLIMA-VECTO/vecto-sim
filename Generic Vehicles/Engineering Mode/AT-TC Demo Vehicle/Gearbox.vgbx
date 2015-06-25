@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
     "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
-    "Date": "22.04.2015 15:19:44",
-    "AppVersion": "2.1",
-    "FileVersion": 4
+    "Date": "25.06.2015 11:23:52",
+    "AppVersion": "2.2 beta",
+    "FileVersion": 5
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -19,25 +19,29 @@
         "Ratio": 3.0,
         "Efficiency": "0.96",
         "TCactive": true,
-        "ShiftPolygon": "AT-Shift.vgbs"
+        "ShiftPolygon": "AT-Shift.vgbs",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 3.0,
         "Efficiency": "0.96",
         "TCactive": false,
-        "ShiftPolygon": "AT-Shift.vgbs"
+        "ShiftPolygon": "AT-Shift.vgbs",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 1.0,
         "Efficiency": "0.98",
         "TCactive": false,
-        "ShiftPolygon": "AT-Shift.vgbs"
+        "ShiftPolygon": "AT-Shift.vgbs",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 0.8,
         "Efficiency": "0.96",
         "TCactive": false,
-        "ShiftPolygon": "AT-Shift.vgbs"
+        "ShiftPolygon": "AT-Shift.vgbs",
+        "FullLoadCurve": "<NOFILE>"
       }
     ],
     "TqReserve": 5.0,
