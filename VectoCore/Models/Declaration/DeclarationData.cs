@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -72,6 +73,56 @@ namespace TUGraz.VectoCore.Models.Declaration
 				public const string WheelsType = "385/65 R 22.5";
 			}
 
+			public static class Gearbox
+			{
+				public const double TorqueReserve = 20;
+				public const double TorqueReserveStart = 20;
+				public const double StartSpeed = 2;
+				public const double StartAcceleration = 0.6;
+				public const double Inertia = 0;
+
+				public const double MinTimeBetweenGearshifts = 2;
+
+				public static Second TractionInterruption(GearboxData.GearboxType type)
+				{
+					switch (type) {
+						case GearboxData.GearboxType.ManualTransmision:
+							return 2.SI<Second>();
+						case GearboxData.GearboxType.AutomatedManualTransmission:
+							return 1.SI<Second>();
+						case GearboxData.GearboxType.AutomaticTransmission:
+							return 0.8.SI<Second>();
+					}
+					return 0.SI<Second>();
+				}
+
+				public static bool EarlyShiftGears(GearboxData.GearboxType type)
+				{
+					switch (type) {
+						case GearboxData.GearboxType.ManualTransmision:
+							return false;
+						case GearboxData.GearboxType.AutomatedManualTransmission:
+							return true;
+						case GearboxData.GearboxType.AutomaticTransmission:
+							return false;
+					}
+					return false;
+				}
+
+				public static bool SkipGears(GearboxData.GearboxType type)
+				{
+					switch (type) {
+						case GearboxData.GearboxType.ManualTransmision:
+							return true;
+						case GearboxData.GearboxType.AutomatedManualTransmission:
+							return true;
+						case GearboxData.GearboxType.AutomaticTransmission:
+							return false;
+					}
+					return false;
+				}
+			}
+
 			//			Public Const SSspeed As Single = 5
 			//Public Const SStime As Single = 5
 			//Public Const SSdelay As Single = 5
@@ -80,15 +131,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			//Public Const Overspeed As Single = 5
 			//Public Const Underspeed As Single = 5
 			//Public Const ECvmin As Single = 50
-
-			//Public Const TqResv As Single = 20
-			//Public Const TqResvStart As Single = 20
-			//Public Const StartSpeed As Single = 2
-			//Public Const StartAcc As Single = 0.6
-			//Public Const GbInertia As Single = 0
-
-			//Public Const RRCTr As Single = 0.00555
-			//Public Const FzISOTr As Single = 37500
 
 			//Public Const AirDensity As Single = 1.188
 			//Public Const FuelDens As Single = 0.832

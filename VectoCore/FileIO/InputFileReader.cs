@@ -6,7 +6,6 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.FileIO
 {
-
 	public class InputFileReader
 	{
 		protected ILog Log;
@@ -22,7 +21,7 @@ namespace TUGraz.VectoCore.FileIO
 			Log = LogManager.GetLogger(GetType());
 		}
 
-		protected VersionInfo GetFileVersion(string jsonStr)
+		protected static VersionInfo GetFileVersion(string jsonStr)
 		{
 			var data = new { Header = new { FileVersion = -1 }, Body = new { SavedInDeclMode = false } };
 			data = JsonConvert.DeserializeAnonymousType(jsonStr, data);

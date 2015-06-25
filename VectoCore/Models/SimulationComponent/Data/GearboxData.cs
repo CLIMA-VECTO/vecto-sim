@@ -22,6 +22,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			Custom
 		}
 
+		public string ModelName { get; internal set; }
+
 		public GearData AxleGearData { get; internal set; }
 
 		private readonly Dictionary<uint, GearData> _gearData = new Dictionary<uint, GearData>();

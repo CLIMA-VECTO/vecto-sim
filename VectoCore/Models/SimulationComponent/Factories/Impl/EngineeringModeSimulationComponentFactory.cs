@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Common.Logging;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
@@ -25,10 +26,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 		internal EngineeringModeSimulationComponentFactory() {}
 
 
-		protected void CheckForEngineeringMode(VersionInfo info, string msg)
+		protected static void CheckForEngineeringMode(VersionInfo info, string msg)
 		{
 			if (info.SavedInDeclarationMode) {
-				Log.WarnFormat("File was saved in Declaration Mode but is used for Engineering Mode!");
+				LogManager.GetLogger(typeof (EngineeringModeSimulationComponentFactory))
+					.WarnFormat("File was saved in Declaration Mode but is used for Engineering Mode!");
 			}
 		}
 
@@ -47,16 +49,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 			}
 		}
 
-		public void ReadEngineFile(string fileName)
-		{
-			throw new NotImplementedException();
-		}
-
-		public void ReadEngineJson(string jsonData, string basePath)
-		{
-			throw new NotImplementedException();
-		}
-
 
 		internal VectoJobData CreateVectoJobData(VectoJobFileV2Engineering data, string basePath)
 		{
@@ -64,39 +56,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 		}
 
 
-		internal VehicleData CreateVehicleData(VehicleFileV5Engineering.DataBodyEng data, string basePath)
+		internal VehicleData CreateVehicleData(VehicleFileV5Engineering vehicle)
 		{
-			return new VehicleData {
-				BasePath = basePath,
-				SavedInDeclarationMode = data.SavedInDeclarationMode,
-				VehicleCategory = data.VehicleCategory(),
-				AxleConfiguration =
-					(AxleConfiguration) Enum.Parse(typeof (AxleConfiguration), "AxleConfig_" + data.AxleConfig.TypeStr),
-				// TODO: @@@quam better use of enum-prefix
-				CurbWeight = data.CurbWeight.SI<Kilogram>(),
-				CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
-				Loading = data.Loading.SI<Kilogram>(),
-				GrossVehicleMassRating = data.GrossVehicleMassRating.SI().Kilo.Kilo.Gramm.Cast<Kilogram>(),
-				DragCoefficient = data.DragCoefficient,
-				CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>(),
-				DragCoefficientRigidTruck = data.DragCoefficientRigidTruck,
-				CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>(),
-				DynamicTyreRadius = data.DynamicTyreRadius.SI().Milli.Meter.Cast<Meter>(),
-				Rim = data.RimStr,
-				Retarder = new RetarderData() {
-					LossMap = RetarderLossMap.ReadFromFile(basePath + data.Retarder.File),
-					Type = (RetarderData.RetarderType) Enum.Parse(typeof (RetarderData), data.Retarder.TypeStr, true),
-					Ratio = data.Retarder.Ratio
-				},
-				AxleData = data.AxleConfig.Axles.Select(axle => new Axle {
-					Inertia = DoubleExtensionMethods.SI<KilogramSquareMeter>(axle.Inertia),
-					TwinTyres = axle.TwinTyres,
-					RollResistanceCoefficient = axle.RollResistanceCoefficient,
-					AxleWeightShare = axle.AxleWeightShare,
-					TyreTestLoad = DoubleExtensionMethods.SI<Newton>(axle.TyreTestLoad),
-					//Wheels = axle.WheelsStr
-				}).ToList()
-			};
+			var data = vehicle.Body;
+
+			var retVal = SetCommonVehicleData(data);
+
+			retVal.BasePath = vehicle.BasePath;
+			retVal.CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>();
+			retVal.Loading = data.Loading.SI<Kilogram>();
+			retVal.DynamicTyreRadius = data.DynamicTyreRadius.SI().Milli.Meter.Cast<Meter>();
+
+			retVal.AxleData = data.AxleConfig.Axles.Select(axle => new Axle {
+				Inertia = DoubleExtensionMethods.SI<KilogramSquareMeter>(axle.Inertia),
+				TwinTyres = axle.TwinTyres,
+				RollResistanceCoefficient = axle.RollResistanceCoefficient,
+				AxleWeightShare = axle.AxleWeightShare,
+				TyreTestLoad = DoubleExtensionMethods.SI<Newton>(axle.TyreTestLoad),
+				//Wheels = axle.WheelsStr
+			}).ToList();
+			return retVal;
 		}
 
 		public override IEnumerable<IVectoRun> NextRun()
@@ -104,10 +83,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 			throw new NotImplementedException();
 		}
 
-		public CombustionEngineData CreateEngineDataFromFile(string file)
+
+		public static VehicleData CreateVehicleDataFromFile(string file)
+		{
+			var data = DoReadVehicleFile(file);
+			return new EngineeringModeSimulationComponentFactory().CreateVehicleData((dynamic) data);
+		}
+
+		public static CombustionEngineData CreateEngineDataFromFile(string file)
 		{
 			var data = DoReadEngineFile(file);
-			return CreateEngineData((dynamic) data);
+			return new EngineeringModeSimulationComponentFactory().CreateEngineData((dynamic) data);
+		}
+
+		public static GearboxData CreateGearboxDataFromFile(string file)
+		{
+			var data = DoReadGearboxFile(file);
+			return new EngineeringModeSimulationComponentFactory().CreateGearboxData((dynamic) data);
 		}
 
 
@@ -132,9 +124,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 			Engine = DoReadEngineFile(file);
 		}
 
-		protected VectoEngineFile DoReadEngineFile(string file)
+		protected override void ReadGearbox(string file)
 		{
-			var json = File.ReadAllText(Job.BasePath + file);
+			Gearbox = DoReadGearboxFile(file);
+		}
+
+		protected static VectoEngineFile DoReadEngineFile(string file)
+		{
+			var json = File.ReadAllText(file);
 			var fileInfo = GetFileVersion(json);
 			CheckForEngineeringMode(fileInfo, "Engine");
 
@@ -146,10 +143,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 			}
 		}
 
-		protected override void ReadGearbox(string json)
+		protected static VectoGearboxFile DoReadGearboxFile(string file)
 		{
-			throw new NotImplementedException();
+			var json = File.ReadAllText(file);
+			var fileInfo = GetFileVersion(json);
+			CheckForEngineeringMode(fileInfo, "Gearbox");
+
+			switch (fileInfo.Version) {
+				case 4:
+					return JsonConvert.DeserializeObject<GearboxFileV4Engineering>(json);
+				default:
+					throw new UnsupportedFileVersionException("Unsopported Version of gearbox-file. Got version " + fileInfo.Version);
+			}
 		}
+
+		protected static VectoVehicleFile DoReadVehicleFile(string file)
+		{
+			var json = File.ReadAllText(file);
+			var fileInfo = GetFileVersion(json);
+			CheckForEngineeringMode(fileInfo, "Vehicle");
+
+			switch (fileInfo.Version) {
+				case 4:
+					return JsonConvert.DeserializeObject<VehicleFileV5Engineering>(json);
+				default:
+					throw new UnsupportedFileVersionException("Unsopported Version of vehicle-file. Got version " + fileInfo.Version);
+			}
+		}
+
 
 		internal CombustionEngineData CreateEngineData(EngineFileV2Engineering engine)
 		{

@@ -3,6 +3,7 @@ using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
@@ -17,9 +18,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void TestGearboxDataReadTest()
 		{
-			var gbxData = GearboxData.ReadFromFile(GearboxFile);
+			var gbxData = EngineeringModeSimulationComponentFactory.CreateGearboxDataFromFile(GearboxFile);
+				//GearboxData.ReadFromFile(GearboxFile);
 
-			Assert.AreEqual(GearboxData.GearboxType.AutomatedManualTransmission, gbxData.Type());
+			Assert.AreEqual(GearboxData.GearboxType.AutomatedManualTransmission, gbxData.Type);
 			Assert.AreEqual(1.0, gbxData.TractionInterruption.Double(), 0.0001);
 			Assert.AreEqual(9, gbxData.GearsCount());
 
@@ -44,7 +46,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var rdyn = double.Parse(TestContext.DataRow["rDyn"].ToString(), CultureInfo.InvariantCulture);
 			var speed = double.Parse(TestContext.DataRow["v"].ToString(), CultureInfo.InvariantCulture);
 
-			var gbxData = GearboxData.ReadFromFile(TestContext.DataRow["GearboxDataFile"].ToString());
+			var gbxData =
+				EngineeringModeSimulationComponentFactory.CreateGearboxDataFromFile(TestContext.DataRow["GearboxDataFile"].ToString());
 
 
 			var PvD = Double.Parse(TestContext.DataRow["PowerGbxOut"].ToString(), CultureInfo.InvariantCulture).SI<Watt>();
@@ -68,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void TestInputOutOfRange()
 		{
-			var gbxData = GearboxData.ReadFromFile(GearboxFile);
+			var gbxData = EngineeringModeSimulationComponentFactory.CreateGearboxDataFromFile(GearboxFile);
 
 
 			var angSpeed = 2700.RPMtoRad();
@@ -78,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
 				Assert.Fail("angular Speed too high");
 			} catch (Exception e) {
-				Assert.IsInstanceOfType(e, typeof(VectoSimulationException), "angular speed too high");
+				Assert.IsInstanceOfType(e, typeof (VectoSimulationException), "angular speed too high");
 			}
 
 			angSpeed = 1000.RPMtoRad();
@@ -87,7 +90,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
 				Assert.Fail("torque too high");
 			} catch (Exception e) {
-				Assert.IsInstanceOfType(e, typeof(VectoSimulationException), "torque too high");
+				Assert.IsInstanceOfType(e, typeof (VectoSimulationException), "torque too high");
 			}
 
 			angSpeed = 1000.RPMtoRad();
@@ -96,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
 				Assert.Fail("torque too low");
 			} catch (Exception e) {
-				Assert.IsInstanceOfType(e, typeof(VectoSimulationException), "torque too low");
+				Assert.IsInstanceOfType(e, typeof (VectoSimulationException), "torque too low");
 			}
 
 			angSpeed = -1000.RPMtoRad();
@@ -105,7 +108,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
 				Assert.Fail("negative angular speed");
 			} catch (Exception e) {
-				Assert.IsInstanceOfType(e, typeof(VectoSimulationException), "negative angular speed");
+				Assert.IsInstanceOfType(e, typeof (VectoSimulationException), "negative angular speed");
 			}
 		}
 

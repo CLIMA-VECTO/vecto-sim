@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 		internal VehicleData CreateVehicleData(VehicleFileV5Declaration vehicle, Mission mission, Kilogram loading)
 		{
 			var data = vehicle.Body;
-			var retVal = SetGenericData(data);
+			var retVal = SetCommonVehicleData(data);
 
 			retVal.BasePath = vehicle.BasePath;
 
@@ -190,7 +190,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 		internal GearboxData CreateGearboxData(GearboxFileV4Declaration gearbox)
 		{
-			var retVal = new GearboxData();
+			var retVal = SetcommonGearboxData(gearbox.Body);
+
+			if (retVal.Type == GearboxData.GearboxType.AutomaticTransmission) {
+				throw new VectoSimulationException("Automatic Transmission currently not supported in DeclarationMode!");
+			}
+			if (retVal.Type == GearboxData.GearboxType.Custom) {
+				throw new VectoSimulationException("Custom Transmission not supported in DeclarationMode!");
+			}
+			retVal.Inertia = DeclarationData.Constants.Gearbox.Inertia.SI<KilogramSquareMeter>();
+			retVal.TractionInterruption = DeclarationData.Constants.Gearbox.TractionInterruption(retVal.Type);
+			retVal.SkipGears = DeclarationData.Constants.Gearbox.SkipGears(retVal.Type);
+			retVal.EarlyShiftUp = DeclarationData.Constants.Gearbox.EarlyShiftGears((retVal.Type));
+
+			retVal.TorqueReserve = DeclarationData.Constants.Gearbox.TorqueReserve;
+			retVal.StartTorqueReserve = DeclarationData.Constants.Gearbox.TorqueReserveStart;
+			retVal.ShiftTime = DeclarationData.Constants.Gearbox.MinTimeBetweenGearshifts.SI<Second>();
+			retVal.StartSpeed = DeclarationData.Constants.Gearbox.StartSpeed.SI<MeterPerSecond>();
+			retVal.StartAcceleration = DeclarationData.Constants.Gearbox.StartAcceleration.SI<MeterPerSquareSecond>();
+
+			retVal.HasTorqueConverter = false;
+
+			//retVal.g
 
 			return retVal;
 		}

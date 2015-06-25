@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
 			var vehicle = new VehicleContainer();
-			var engineData = new EngineeringModeSimulationComponentFactory().CreateEngineDataFromFile(EngineFile);
+			var engineData = EngineeringModeSimulationComponentFactory.CreateEngineDataFromFile(EngineFile);
 
 			var aux = new DirectAuxiliary(vehicle, new AuxiliaryCycleDataAdapter(data));
 			var gearbox = new EngineOnlyGearbox(vehicle);
@@ -95,7 +95,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var vehicleContainer = new VehicleContainer();
 
 			var gearbox = new EngineOnlyGearbox(vehicleContainer);
-			var engine = new CombustionEngine(vehicleContainer, CombustionEngineData.ReadFromFile(EngineFile));
+			var engine = new CombustionEngine(vehicleContainer,
+				EngineeringModeSimulationComponentFactory.CreateEngineDataFromFile(EngineFile));
 
 			gearbox.InShaft().Connect(engine.OutShaft());
 

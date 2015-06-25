@@ -49,11 +49,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 		protected void ProcessJob(VectoJobFileV2Declaration job)
 		{
-			ReadVehicle(job.Body.VehicleFile);
+			ReadVehicle(Path.Combine(job.BasePath, job.Body.VehicleFile));
 
-			ReadEngine(job.Body.EngineFile);
+			ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));
 
-			ReadGearbox(job.Body.GearboxFile);
+			ReadGearbox(Path.Combine(job.BasePath, job.Body.GearboxFile));
 		}
 
 		// has to read the file string and create file-container
@@ -83,10 +83,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 		internal GearboxData CreateGearboxData(VectoGearboxFile gearbox)
 		{
-			throw new NotImplementedException("CreateGearboxData for base-class not possible!");
+			throw new NotImplementedException("CreateGearboxDataFromFile for base-class not possible!");
 		}
 
-		internal VehicleData SetGenericData(VehicleFileV5Declaration.DataBodyDecl data)
+		internal VehicleData SetCommonVehicleData(VehicleFileV5Declaration.DataBodyDecl data)
 		{
 			return new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
@@ -107,8 +107,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 				Retarder = new RetarderData() {
 					LossMap = RetarderLossMap.ReadFromFile(data.Retarder.File),
 					Type =
-						(RetarderData.RetarderType) Enum.Parse(typeof (RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true)
+						(RetarderData.RetarderType) Enum.Parse(typeof (RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
+					Ratio = data.Retarder.Ratio
 				}
+			};
+		}
+
+		internal GearboxData SetcommonGearboxData(GearboxFileV4Declaration.DataBodyDecl data)
+		{
+			return new GearboxData() {
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				ModelName = data.ModelName,
+				Type = (GearboxData.GearboxType) Enum.Parse(typeof (GearboxData.GearboxType), data.GearboxType, true),
 			};
 		}
 	}
