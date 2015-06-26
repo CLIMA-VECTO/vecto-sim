@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void TestFullLoadEngineSpeedRated()
 		{
 			var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD);
-			Assert.AreEqual(181.8444, (double)fldCurve.RatedSpeed(), Tolerance);
+			Assert.AreEqual(181.8444, (double) fldCurve.RatedSpeed(), Tolerance);
 		}
 
 		[TestMethod]
@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				var curve = FullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve insufficient columns.vfld");
 				Assert.Fail("this should not be reached.");
 			} catch (VectoException ex) {
-				Assert.AreEqual("FullLoadCurve Data File must consist of 4 columns.", ex.Message);
+				Assert.AreEqual("FullLoadCurve Data File must consist of at least 3 columns.", ex.Message);
 			}
 		}
 

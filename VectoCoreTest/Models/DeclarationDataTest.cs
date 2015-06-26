@@ -303,5 +303,15 @@ namespace TUGraz.VectoCore.Tests.Models
 			EqualAcceleration(data, -20, 1, -1);
 			EqualAcceleration(data, 140, 0.5, -0.5);
 		}
+
+		[TestMethod]
+		public void TestEngineInertia()
+		{
+			Assert.AreEqual(3.33, DeclarationData.Engine.EngineInertia(6000.SI().Cubic.Centi.Meter).Double(), Tolerance);
+			Assert.AreEqual(3.60, DeclarationData.Engine.EngineInertia(7000.SI().Cubic.Centi.Meter).Double(), Tolerance);
+			Assert.AreEqual(3.87, DeclarationData.Engine.EngineInertia(8000.SI().Cubic.Centi.Meter).Double(), Tolerance);
+			Assert.AreEqual(4.14, DeclarationData.Engine.EngineInertia(9000.SI().Cubic.Centi.Meter).Double(), Tolerance);
+			Assert.AreEqual(6.03, DeclarationData.Engine.EngineInertia(16000.SI().Cubic.Centi.Meter).Double(), Tolerance);
+		}
 	}
 }

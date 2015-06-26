@@ -63,80 +63,90 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return _instance ?? (_instance = new DeclarationData());
 		}
 
-		public static class Constants
+		//			Public Const SSspeed As Single = 5
+		//Public Const SStime As Single = 5
+		//Public Const SSdelay As Single = 5
+		//Public Const LACa As Single = -0.5
+		//Public Const LACvmin As Single = 50
+		//Public Const Overspeed As Single = 5
+		//Public Const Underspeed As Single = 5
+		//Public Const ECvmin As Single = 50
+
+		//Public Const AirDensity As Single = 1.188
+		//Public Const FuelDens As Single = 0.832
+		//Public Const CO2perFC As Single = 3.16
+
+		//Public Const AuxESeff As Single = 0.7
+
+		public static class Trailer
 		{
-			public static class Trailer
+			public const double RollResistanceCoefficient = 0.00555;
+			public const double TyreTestLoad = 37500;
+			public const bool TwinTyres = false;
+			public const string WheelsType = "385/65 R 22.5";
+		}
+
+		public static class Engine
+		{
+			public static readonly KilogramSquareMeter ClutchInertia = 1.3.SI<KilogramSquareMeter>();
+			public static readonly KilogramSquareMeter EngineBaseInertia = 0.41.SI<KilogramSquareMeter>();
+			public static readonly SI EngineDisplacementInertia = (0.27 * 1000).SI().Kilo.Gramm.Per.Meter; // [kg/m]
+
+			public static KilogramSquareMeter EngineInertia(SI displacement)
 			{
-				public const double RollResistanceCoefficient = 0.00555;
-				public const double TyreTestLoad = 37500;
-				public const bool TwinTyres = false;
-				public const string WheelsType = "385/65 R 22.5";
+				// VB Code:    Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
+				return (ClutchInertia + EngineBaseInertia + EngineDisplacementInertia * displacement).Cast<KilogramSquareMeter>();
+			}
+		}
+
+		public static class Gearbox
+		{
+			public const double TorqueReserve = 20;
+			public const double TorqueReserveStart = 20;
+			public const double StartSpeed = 2;
+			public const double StartAcceleration = 0.6;
+			public const double Inertia = 0;
+
+			public const double MinTimeBetweenGearshifts = 2;
+
+			public static Second TractionInterruption(GearboxData.GearboxType type)
+			{
+				switch (type) {
+					case GearboxData.GearboxType.MT:
+						return 2.SI<Second>();
+					case GearboxData.GearboxType.AMT:
+						return 1.SI<Second>();
+					case GearboxData.GearboxType.AT:
+						return 0.8.SI<Second>();
+				}
+				return 0.SI<Second>();
 			}
 
-			public static class Gearbox
+			public static bool EarlyShiftGears(GearboxData.GearboxType type)
 			{
-				public const double TorqueReserve = 20;
-				public const double TorqueReserveStart = 20;
-				public const double StartSpeed = 2;
-				public const double StartAcceleration = 0.6;
-				public const double Inertia = 0;
-
-				public const double MinTimeBetweenGearshifts = 2;
-
-				public static Second TractionInterruption(GearboxData.GearboxType type)
-				{
-					switch (type) {
-						case GearboxData.GearboxType.ManualTransmision:
-							return 2.SI<Second>();
-						case GearboxData.GearboxType.AutomatedManualTransmission:
-							return 1.SI<Second>();
-						case GearboxData.GearboxType.AutomaticTransmission:
-							return 0.8.SI<Second>();
-					}
-					return 0.SI<Second>();
+				switch (type) {
+					case GearboxData.GearboxType.MT:
+						return false;
+					case GearboxData.GearboxType.AMT:
+						return true;
+					case GearboxData.GearboxType.AT:
+						return false;
 				}
-
-				public static bool EarlyShiftGears(GearboxData.GearboxType type)
-				{
-					switch (type) {
-						case GearboxData.GearboxType.ManualTransmision:
-							return false;
-						case GearboxData.GearboxType.AutomatedManualTransmission:
-							return true;
-						case GearboxData.GearboxType.AutomaticTransmission:
-							return false;
-					}
-					return false;
-				}
-
-				public static bool SkipGears(GearboxData.GearboxType type)
-				{
-					switch (type) {
-						case GearboxData.GearboxType.ManualTransmision:
-							return true;
-						case GearboxData.GearboxType.AutomatedManualTransmission:
-							return true;
-						case GearboxData.GearboxType.AutomaticTransmission:
-							return false;
-					}
-					return false;
-				}
+				return false;
 			}
 
-			//			Public Const SSspeed As Single = 5
-			//Public Const SStime As Single = 5
-			//Public Const SSdelay As Single = 5
-			//Public Const LACa As Single = -0.5
-			//Public Const LACvmin As Single = 50
-			//Public Const Overspeed As Single = 5
-			//Public Const Underspeed As Single = 5
-			//Public Const ECvmin As Single = 50
-
-			//Public Const AirDensity As Single = 1.188
-			//Public Const FuelDens As Single = 0.832
-			//Public Const CO2perFC As Single = 3.16
-
-			//Public Const AuxESeff As Single = 0.7
+			public static bool SkipGears(GearboxData.GearboxType type)
+			{
+				switch (type) {
+					case GearboxData.GearboxType.MT:
+						return true;
+					case GearboxData.GearboxType.AMT:
+						return true;
+					case GearboxData.GearboxType.AT:
+						return false;
+				}
+				return false;
+			}
 		}
 	}
 }

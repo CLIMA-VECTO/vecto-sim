@@ -21,9 +21,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var gbxData = EngineeringModeSimulationComponentFactory.CreateGearboxDataFromFile(GearboxFile);
 				//GearboxData.ReadFromFile(GearboxFile);
 
-			Assert.AreEqual(GearboxData.GearboxType.AutomatedManualTransmission, gbxData.Type);
+			Assert.AreEqual(GearboxData.GearboxType.AMT, gbxData.Type);
 			Assert.AreEqual(1.0, gbxData.TractionInterruption.Double(), 0.0001);
-			Assert.AreEqual(9, gbxData.GearsCount());
+			Assert.AreEqual(8, gbxData.GearsCount());
 
 			Assert.AreEqual(3.240355, gbxData.AxleGearData.Ratio, 0.0001);
 			Assert.AreEqual(1.0, gbxData[7].Ratio, 0.0001);

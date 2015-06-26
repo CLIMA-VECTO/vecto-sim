@@ -12,9 +12,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private readonly Dictionary<Tuple<MissionType, string>, Watt> _data =
 			new Dictionary<Tuple<MissionType, string>, Watt>();
 
-		protected override string ResourceId
+		protected string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.ES-Tech.csv";
+
+
+		public ElectricSystem()
 		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.ES-Tech.csv"; }
+			ParseData(ReadCsvResource(ResourceId));
 		}
 
 		protected override void ParseData(DataTable table)
@@ -25,7 +28,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			foreach (DataRow row in table.Rows) {
 				var name = row.Field<string>("Technology");
-				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
+				foreach (MissionType mission in Enum.GetValues(typeof (MissionType))) {
 					_data[Tuple.Create(mission, name)] = row.ParseDouble(mission.ToString().ToLower()).SI<Watt>();
 				}
 			}

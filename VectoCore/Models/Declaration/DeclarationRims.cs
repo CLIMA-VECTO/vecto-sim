@@ -6,16 +6,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class DeclarationRims : LookupData<string, DeclarationRims.RimsEntry>
 	{
-		internal DeclarationRims()
+		protected string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Rims.csv";
+
+		public DeclarationRims()
 		{
-			var csvFile = ReadCsvFile(ResourceId);
-			ParseData(csvFile);
+			ParseData(ReadCsvResource(ResourceId));
 		}
 
-		protected override string ResourceId
-		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.Rims.csv"; }
-		}
 
 		protected override sealed void ParseData(DataTable table)
 		{

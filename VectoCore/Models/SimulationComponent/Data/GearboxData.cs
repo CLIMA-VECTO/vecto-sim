@@ -16,9 +16,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		public enum GearboxType
 		{
-			ManualTransmision,
-			AutomatedManualTransmission,
-			AutomaticTransmission,
+			MT, // Manual Transmission
+			AMT, // Automated Manual Transmission
+			AT, // Automatic Transmission
 			Custom
 		}
 
@@ -26,54 +26,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public GearData AxleGearData { get; internal set; }
 
-		private readonly Dictionary<uint, GearData> _gearData = new Dictionary<uint, GearData>();
-
-//		public static GearboxData ReadFromJson(string json, string basePath = "")
-//		{
-////			var lossMaps = new Dictionary<string, TransmissionLossMap>();
-
-//			var gearboxData = new GearboxData();
-
-//			var d = JsonConvert.DeserializeObject<Data>(json);
-//			if (d.Header.FileVersion > 4) {
-//				throw new UnsupportedFileVersionException("Unsupported Version of .vgbx file. Got Version: " + d.Header.FileVersion);
-//			}
-
-//			gearboxData._data = d;
-
-//			for (uint i = 0; i < d.Body.Gears.Count; i++) {
-//				var gearSettings = d.Body.Gears[(int)i];
-//				var lossMapPath = Path.Combine(basePath, gearSettings.LossMap);
-//				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
-
-//				var shiftPolygon = !String.IsNullOrEmpty(gearSettings.ShiftPolygon)
-//					? ShiftPolygon.ReadFromFile(Path.Combine(basePath, gearSettings.ShiftPolygon))
-//					: null;
-
-//				var gear = new GearData(lossMap, shiftPolygon, gearSettings.Ratio, gearSettings.TCactive);
-//				if (i == 0) {
-//					gearboxData.AxleGearData = gear;
-//				} else {
-//					gearboxData._gearData.Add(i, gear);
-//				}
-//			}
-
-//			switch (d.Body.GearboxTypeStr) {
-//				case "AMT":
-//					gearboxData._type = GearboxType.AutomatedManualTransmission;
-//					break;
-//				case "MT":
-//					gearboxData._type = GearboxType.ManualTransmision;
-//					break;
-//				case "AT":
-//					gearboxData._type = GearboxType.AutomaticTransmission;
-//					break;
-//				default:
-//					gearboxData._type = GearboxType.Custom;
-//					break;
-//			}
-//			return gearboxData;
-//		}
+		internal readonly Dictionary<uint, GearData> _gearData = new Dictionary<uint, GearData>();
 
 		// @@@quam: according to Raphael no longer required
 		//public void CalculateAverageEfficiency(CombustionEngineData engineData)

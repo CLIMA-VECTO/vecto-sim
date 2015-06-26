@@ -12,20 +12,28 @@ namespace TUGraz.VectoCore.Models.Declaration
 		protected LookupData()
 		{
 			Log = LogManager.GetLogger(GetType());
-			var csvFile = ReadCsvFile(ResourceId);
-			ParseData(csvFile);
+			//var csvFile = ReadCsvResource(ResourceId);
+			//ParseData(csvFile);
+			//ParseData(ReadData());
 		}
 
 		[NonSerialized] protected ILog Log;
 
-		protected abstract string ResourceId { get; }
+		//protected abstract string ResourceId { get; }
+
+		//protected abstract DataTable ReadData();
 		protected abstract void ParseData(DataTable table);
 
-		protected DataTable ReadCsvFile(string resourceId)
+		protected DataTable ReadCsvResource(string resourceId)
 		{
 			var myAssembly = Assembly.GetExecutingAssembly();
 			var file = myAssembly.GetManifestResourceStream(resourceId);
 			return VectoCSVFile.ReadStream(file);
+		}
+
+		protected DataTable ReadCsvFile(string fileName)
+		{
+			return VectoCSVFile.Read(fileName);
 		}
 	}
 

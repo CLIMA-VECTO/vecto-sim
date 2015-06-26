@@ -15,6 +15,8 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
@@ -60,7 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 		{
 			var data = vehicle.Body;
 
-			var retVal = SetCommonVehicleData(data);
+			var retVal = SetCommonVehicleData(vehicle);
 
 			retVal.BasePath = vehicle.BasePath;
 			retVal.CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>();
@@ -137,7 +139,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 			switch (fileInfo.Version) {
 				case 2:
-					return JsonConvert.DeserializeObject<EngineFileV2Engineering>(json);
+					var tmp = JsonConvert.DeserializeObject<EngineFileV2Engineering>(json);
+					tmp.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
+					return tmp;
 				default:
 					throw new UnsupportedFileVersionException("Unsopported Version of engine-file. Got version " + fileInfo.Version);
 			}
@@ -151,7 +155,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 			switch (fileInfo.Version) {
 				case 4:
-					return JsonConvert.DeserializeObject<GearboxFileV4Engineering>(json);
+					var tmp = JsonConvert.DeserializeObject<GearboxFileV4Engineering>(json);
+					tmp.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
+					return tmp;
 				default:
 					throw new UnsupportedFileVersionException("Unsopported Version of gearbox-file. Got version " + fileInfo.Version);
 			}
@@ -164,8 +170,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 			CheckForEngineeringMode(fileInfo, "Vehicle");
 
 			switch (fileInfo.Version) {
-				case 4:
-					return JsonConvert.DeserializeObject<VehicleFileV5Engineering>(json);
+				case 5:
+					var tmp = JsonConvert.DeserializeObject<VehicleFileV5Engineering>(json);
+					tmp.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
+					return tmp;
 				default:
 					throw new UnsupportedFileVersionException("Unsopported Version of vehicle-file. Got version " + fileInfo.Version);
 			}
@@ -174,15 +182,49 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 		internal CombustionEngineData CreateEngineData(EngineFileV2Engineering engine)
 		{
-			var retVal = new CombustionEngineData();
+			var retVal = SetCommonCombustionEngineData(engine);
+			retVal.Inertia = engine.Body.Inertia.SI<KilogramSquareMeter>();
+			foreach (var entry in engine.Body.FullLoadCurves) {
+				retVal.AddFullLoadCurve(entry.Gears, FullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, entry.Path), false));
+			}
 
 			return retVal;
 		}
 
 		internal GearboxData CreateGearboxData(GearboxFileV4Engineering gearbox)
 		{
-			var retVal = new GearboxData();
+			var retVal = SetCommonGearboxData(gearbox.Body);
 
+			var data = gearbox.Body;
+
+			retVal.Inertia = data.Inertia.SI<KilogramSquareMeter>();
+			retVal.TractionInterruption = data.TractionInterruption.SI<Second>();
+			retVal.SkipGears = data.SkipGears;
+			retVal.EarlyShiftUp = data.EarlyShiftUp;
+			retVal.TorqueReserve = data.TorqueReserve;
+			retVal.StartTorqueReserve = data.StartTorqueReserve;
+			retVal.ShiftTime = data.ShiftTime.SI<Second>();
+			retVal.StartSpeed = data.StartSpeed.SI<MeterPerSecond>();
+			retVal.StartAcceleration = data.StartAcceleration.SI<MeterPerSquareSecond>();
+
+			retVal.HasTorqueConverter = data.TorqueConverter.Enabled;
+
+			for (uint i = 0; i < gearbox.Body.Gears.Count; i++) {
+				var gearSettings = gearbox.Body.Gears[(int) i];
+				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
+				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
+
+				var shiftPolygon = !String.IsNullOrEmpty(gearSettings.ShiftPolygon)
+					? ShiftPolygon.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.ShiftPolygon))
+					: null;
+
+				var gear = new GearData(lossMap, shiftPolygon, gearSettings.Ratio, gearSettings.TCactive);
+				if (i == 0) {
+					retVal.AxleGearData = gear;
+				} else {
+					retVal._gearData.Add(i, gear);
+				}
+			}
 			return retVal;
 		}
 	}

@@ -12,6 +12,8 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
@@ -141,7 +143,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 		internal VehicleData CreateVehicleData(VehicleFileV5Declaration vehicle, Mission mission, Kilogram loading)
 		{
 			var data = vehicle.Body;
-			var retVal = SetCommonVehicleData(data);
+			var retVal = SetCommonVehicleData(vehicle);
 
 			retVal.BasePath = vehicle.BasePath;
 
@@ -171,10 +173,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 			foreach (var tmp in mission.TrailerAxleWeightDistribution) {
 				retVal.AxleData.Add(new Axle() {
 					AxleWeightShare = tmp,
-					TwinTyres = DeclarationData.Constants.Trailer.TwinTyres,
-					RollResistanceCoefficient = DeclarationData.Constants.Trailer.RollResistanceCoefficient,
-					TyreTestLoad = DeclarationData.Constants.Trailer.TyreTestLoad.SI<Newton>(),
-					Inertia = DeclarationData.Wheels.Lookup(DeclarationData.Constants.Trailer.WheelsType).Inertia
+					TwinTyres = DeclarationData.Trailer.TwinTyres,
+					RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
+					TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
+					Inertia = DeclarationData.Wheels.Lookup(DeclarationData.Trailer.WheelsType).Inertia
 				});
 			}
 
@@ -183,37 +185,60 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 		internal CombustionEngineData CreateEngineData(EngineFileV2Declaration engine)
 		{
-			var retVal = new CombustionEngineData();
+			var retVal = SetCommonCombustionEngineData(engine);
+			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement);
+			foreach (var entry in engine.Body.FullLoadCurves) {
+				retVal.AddFullLoadCurve(entry.Gears, FullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, entry.Path), true));
+			}
 
 			return retVal;
 		}
 
 		internal GearboxData CreateGearboxData(GearboxFileV4Declaration gearbox)
 		{
-			var retVal = SetcommonGearboxData(gearbox.Body);
+			var retVal = SetCommonGearboxData(gearbox.Body);
 
-			if (retVal.Type == GearboxData.GearboxType.AutomaticTransmission) {
+			if (retVal.Type == GearboxData.GearboxType.AT) {
 				throw new VectoSimulationException("Automatic Transmission currently not supported in DeclarationMode!");
 			}
 			if (retVal.Type == GearboxData.GearboxType.Custom) {
 				throw new VectoSimulationException("Custom Transmission not supported in DeclarationMode!");
 			}
-			retVal.Inertia = DeclarationData.Constants.Gearbox.Inertia.SI<KilogramSquareMeter>();
-			retVal.TractionInterruption = DeclarationData.Constants.Gearbox.TractionInterruption(retVal.Type);
-			retVal.SkipGears = DeclarationData.Constants.Gearbox.SkipGears(retVal.Type);
-			retVal.EarlyShiftUp = DeclarationData.Constants.Gearbox.EarlyShiftGears((retVal.Type));
+			retVal.Inertia = DeclarationData.Gearbox.Inertia.SI<KilogramSquareMeter>();
+			retVal.TractionInterruption = DeclarationData.Gearbox.TractionInterruption(retVal.Type);
+			retVal.SkipGears = DeclarationData.Gearbox.SkipGears(retVal.Type);
+			retVal.EarlyShiftUp = DeclarationData.Gearbox.EarlyShiftGears((retVal.Type));
 
-			retVal.TorqueReserve = DeclarationData.Constants.Gearbox.TorqueReserve;
-			retVal.StartTorqueReserve = DeclarationData.Constants.Gearbox.TorqueReserveStart;
-			retVal.ShiftTime = DeclarationData.Constants.Gearbox.MinTimeBetweenGearshifts.SI<Second>();
-			retVal.StartSpeed = DeclarationData.Constants.Gearbox.StartSpeed.SI<MeterPerSecond>();
-			retVal.StartAcceleration = DeclarationData.Constants.Gearbox.StartAcceleration.SI<MeterPerSquareSecond>();
+			retVal.TorqueReserve = DeclarationData.Gearbox.TorqueReserve;
+			retVal.StartTorqueReserve = DeclarationData.Gearbox.TorqueReserveStart;
+			retVal.ShiftTime = DeclarationData.Gearbox.MinTimeBetweenGearshifts.SI<Second>();
+			retVal.StartSpeed = DeclarationData.Gearbox.StartSpeed.SI<MeterPerSecond>();
+			retVal.StartAcceleration = DeclarationData.Gearbox.StartAcceleration.SI<MeterPerSquareSecond>();
 
 			retVal.HasTorqueConverter = false;
 
-			//retVal.g
+
+			for (uint i = 0; i < gearbox.Body.Gears.Count; i++) {
+				var gearSettings = gearbox.Body.Gears[(int) i];
+				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
+				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
+
+				var shiftPolygon = ComputeShiftPolygon();
+
+				var gear = new GearData(lossMap, shiftPolygon, gearSettings.Ratio, false);
+				if (i == 0) {
+					retVal.AxleGearData = gear;
+				} else {
+					retVal._gearData.Add(i, gear);
+				}
+			}
 
 			return retVal;
+		}
+
+		internal ShiftPolygon ComputeShiftPolygon()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

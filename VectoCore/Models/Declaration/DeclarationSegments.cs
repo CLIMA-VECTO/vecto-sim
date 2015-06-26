@@ -10,9 +10,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		private const string ResourceNamespace = "TUGraz.VectoCore.Resources.Declaration.";
 
-		protected override string ResourceId
+		protected const string ResourceId = ResourceNamespace + "SegmentTable.csv";
+
+		public DeclarationSegments()
 		{
-			get { return ResourceNamespace + "SegmentTable.csv"; }
+			ParseData(ReadCsvResource(ResourceId));
 		}
 
 		protected override void ParseData(DataTable table)
@@ -47,7 +49,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private static IEnumerable<Mission> CreateMissions(Kilogram grossVehicleMassRating, Kilogram curbWeight, DataRow row)
 		{
-			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
+			var missionTypes = Enum.GetValues(typeof (MissionType)).Cast<MissionType>();
 			foreach (var missionType in missionTypes.Where(m => row.Field<string>(m.ToString()) == "1")) {
 				string vcdvField;
 				string axleField;

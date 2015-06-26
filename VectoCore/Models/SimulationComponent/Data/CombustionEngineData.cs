@@ -66,6 +66,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return curve.Value;
 		}
 
+		internal void AddFullLoadCurve(string gears, FullLoadCurve fullLoadCurve)
+		{
+			var range = new Range(gears);
+			if (!_fullLoadCurves.ContainsKey(range)) {
+				_fullLoadCurves.Add(range, fullLoadCurve);
+			} else {
+				throw new VectoException(String.Format("FullLoadCurve for gears {0} already specified!", gears));
+			}
+		}
 
 		public class RangeConverter : TypeConverter
 		{

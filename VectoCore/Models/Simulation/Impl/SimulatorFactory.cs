@@ -190,13 +190,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				_axleGear = new AxleGear(gearboxData.AxleGearData);
 
 				switch (gearboxData.Type) {
-					case GearboxData.GearboxType.ManualTransmision:
+					case GearboxData.GearboxType.MT:
 						_gearBox = new Gearbox(_container, gearboxData);
 						break;
-					case GearboxData.GearboxType.AutomatedManualTransmission:
+					case GearboxData.GearboxType.AMT:
 						_gearBox = new Gearbox(_container, gearboxData);
 						break;
-/*					case GearboxData.GearboxType.AutomaticTransmission:
+/*					case GearboxData.GearboxType.AT:
 						_dataWriter.HasTorqueConverter = gearboxData.HasTorqueConverter;
 						break;
 */

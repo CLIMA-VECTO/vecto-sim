@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using TUGraz.VectoCore.Exceptions;
@@ -9,6 +10,7 @@ using TUGraz.VectoCore.FileIO.DeclarationFile;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
@@ -86,26 +88,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 			throw new NotImplementedException("CreateGearboxDataFromFile for base-class not possible!");
 		}
 
-		internal VehicleData SetCommonVehicleData(VehicleFileV5Declaration.DataBodyDecl data)
+		internal VehicleData SetCommonVehicleData(VehicleFileV5Declaration vehicle)
 		{
+			var data = ((dynamic) vehicle).Body;
 			return new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				VehicleCategory = data.VehicleCategory(),
 				AxleConfiguration =
 					(AxleConfiguration) Enum.Parse(typeof (AxleConfiguration), "AxleConfig_" + data.AxleConfig.TypeStr),
 				// TODO: @@@quam better use of enum-prefix
-				CurbWeight = data.CurbWeight.SI<Kilogram>(),
+				CurbWeight = SIConvert<Kilogram>(data.CurbWeight),
 				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
 				//Loading = data.Loading.SI<Kilogram>(),
-				GrossVehicleMassRating = data.GrossVehicleMassRating.SI().Kilo.Kilo.Gramm.Cast<Kilogram>(),
+				GrossVehicleMassRating = SIConvert<Kilogram>(data.GrossVehicleMassRating * 1000),
 				DragCoefficient = data.DragCoefficient,
-				CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>(),
+				CrossSectionArea = SIConvert<SquareMeter>(data.CrossSectionArea),
 				DragCoefficientRigidTruck = data.DragCoefficientRigidTruck,
-				CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>(),
+				CrossSectionAreaRigidTruck = SIConvert<SquareMeter>(data.CrossSectionAreaRigidTruck),
 				//TyreRadius = data.TyreRadius.SI().Milli.Meter.Cast<Meter>(),
 				Rim = data.RimStr,
 				Retarder = new RetarderData() {
-					LossMap = RetarderLossMap.ReadFromFile(data.Retarder.File),
+					LossMap = RetarderLossMap.ReadFromFile(Path.Combine(vehicle.BasePath, data.Retarder.File)),
 					Type =
 						(RetarderData.RetarderType) Enum.Parse(typeof (RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
 					Ratio = data.Retarder.Ratio
@@ -113,7 +116,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 			};
 		}
 
-		internal GearboxData SetcommonGearboxData(GearboxFileV4Declaration.DataBodyDecl data)
+		protected T1 SIConvert<T1>(double val) where T1 : SIBase<T1>
+		{
+			return val.SI<T1>();
+		}
+
+		internal CombustionEngineData SetCommonCombustionEngineData(EngineFileV2Declaration engine)
+		{
+			var data = ((dynamic) engine).Body;
+			var retVal = new CombustionEngineData() {
+				SavedInDeclarationMode = data.SavedInDeclarationMode,
+				ModelName = data.ModelName,
+				Displacement = SIConvert<>(data.Displacement * 0, 000001),
+				IdleSpeed = DoubleExtensionMethods.RPMtoRad(data.IdleSpeed),
+				ConsumptionMap = FuelConsumptionMap.ReadFromFile(Path.Combine(engine.BasePath, data.FuelMap)),
+				WHTCUrban = data.WHTCUrban.SI(),
+				WHTCMotorway = data.WHTCMotorway.SI(),
+				WHTCRural = data.WHTCRural.SI(),
+			};
+			return retVal;
+		}
+
+		internal GearboxData SetCommonGearboxData(GearboxFileV4Declaration.DataBodyDecl data)
 		{
 			return new GearboxData() {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using TUGraz.VectoCore.FileIO.DeclarationFile;
 using TUGraz.VectoCore.Utils;
 
@@ -53,6 +54,8 @@ namespace TUGraz.VectoCore.FileIO.EngineeringFile
 
 		public class DataBodyEng : DataBodyDecl
 		{
+			[JsonProperty(Required = Required.Always)] public new IList<GearDataEng> Gears;
+
 			/// <summary>
 			///		[kgm^2] Rotation inertia of the gearbox (constant for all gears)
 			/// </summary>

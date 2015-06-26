@@ -135,10 +135,11 @@
     <Compile Include="Models\Declaration\DeclarationPT1.cs" />
     <Compile Include="Models\Declaration\ElectricSystem.cs" />
     <Compile Include="Models\Declaration\LookupData.cs" />
-    <Compile Include="Models\Declaration\Declaration.cs" />
+    <Compile Include="Models\Declaration\DeclarationRims.cs" />
     <Compile Include="Models\Declaration\DeclarationWheels.cs" />
     <Compile Include="Models\Declaration\Mission.cs" />
     <Compile Include="Models\Declaration\MissionType.cs" />
+    <Compile Include="Models\SimulationComponent\Data\Engine\PT1Curve.cs" />
     <Compile Include="Models\SimulationComponent\Factories\Impl\AbstractSimulationRunCreator.cs" />
     <Compile Include="Models\SimulationComponent\Factories\Impl\DeclarationModeSimulationComponentFactory.cs" />
     <Compile Include="Models\SimulationComponent\Factories\Impl\EngineeringModeSimulationComponentFactory.cs" />
