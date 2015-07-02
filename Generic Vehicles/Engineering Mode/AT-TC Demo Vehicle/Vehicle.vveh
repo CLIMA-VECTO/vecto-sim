@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
     "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
-    "Date": "22.04.2015 15:19:41",
-    "AppVersion": "2.1",
-    "FileVersion": 5
+    "Date": "02.07.2015 13:55:50",
+    "AppVersion": "2.2 beta-2",
+    "FileVersion": 7
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -12,8 +12,7 @@
     "CurbWeightExtra": 0.0,
     "Loading": 2000.0,
     "MassMax": 18.0,
-    "Cd": 0.67,
-    "CrossSecArea": 8.0,
+    "CdA": 5.36,
     "rdyn": 465.0,
     "Rim": "-",
     "CdCorrMode": "Off",
