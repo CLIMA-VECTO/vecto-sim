@@ -264,10 +264,8 @@ Public Class F_VEH
 		Me.TbMass.Text = ""
 		Me.TbLoad.Text = ""
 		Me.TBrdyn.Text = ""
-		Me.TBcdTrTr.Text = ""
-		Me.TBAquersTrTr.Text = ""
-		Me.TBcwRig.Text = ""
-		Me.TBAquersRig.Text = ""
+		Me.TBcdA.Text = ""
+		Me.TBcdA2.Text = ""
 
 		Me.CbCdMode.SelectedIndex = 0
 		Me.TbCdFile.Text = ""
@@ -391,10 +389,8 @@ Public Class F_VEH
 
 		Me.CbAxleConfig.SelectedIndex = CType(VEH0.AxleConf, Integer)
 
-		Me.TBcdTrTr.Text = VEH0.Cd0
-		Me.TBAquersTrTr.Text = VEH0.Aquers
-		Me.TBcwRig.Text = VEH0.Cd02
-		Me.TBAquersRig.Text = VEH0.Aquers2
+		Me.TBcdA.Text = VEH0.CdA0
+		Me.TBcdA2.Text = VEH0.CdA02
 
 		DeclInit()
 
@@ -421,12 +417,10 @@ Public Class F_VEH
 		VEH0.MassExtra = CSng(fTextboxToNumString(Me.TbMassExtra.Text))
 		VEH0.Loading = CSng(fTextboxToNumString(Me.TbLoad.Text))
 
-		VEH0.Cd0 = CSng(fTextboxToNumString(Me.TBcdTrTr.Text))
-		VEH0.Aquers = CSng(fTextboxToNumString(Me.TBAquersTrTr.Text))
+		VEH0.CdA0 = CSng(fTextboxToNumString(Me.TBcdA.Text))
 
 		If Me.PnCdARig.Visible Then
-			VEH0.Cd02 = CSng(fTextboxToNumString(Me.TBcwRig.Text))
-			VEH0.Aquers2 = CSng(fTextboxToNumString(Me.TBAquersRig.Text))
+			VEH0.CdA02 = CSng(fTextboxToNumString(Me.TBcdA2.Text))
 		End If
 
 		VEH0.Rim = Me.CbRim.Text
@@ -540,132 +534,132 @@ Public Class F_VEH
 
 #Region "Retarder"
 
-    'Rt Type Change
-    Private Sub CbRtType_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbRtType.SelectedIndexChanged
-        Select Case Me.CbRtType.SelectedIndex
-            Case 1 'Primary
-                Me.LbRtRatio.Text = "Ratio to engine speed"
-                Me.TbRtPath.Enabled = True
-                Me.BtRtBrowse.Enabled = True
-                Me.PnRt.Enabled = True
-            Case 2 'Secondary
-                Me.LbRtRatio.Text = "Ratio to cardan shaft speed"
-                Me.TbRtPath.Enabled = True
-                Me.BtRtBrowse.Enabled = True
-                Me.PnRt.Enabled = True
-            Case Else '0 None
-                Me.LbRtRatio.Text = "Ratio"
-                Me.TbRtPath.Enabled = False
-                Me.BtRtBrowse.Enabled = False
-                Me.PnRt.Enabled = False
-        End Select
+	'Rt Type Change
+	Private Sub CbRtType_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbRtType.SelectedIndexChanged
+		Select Case Me.CbRtType.SelectedIndex
+			Case 1 'Primary
+				Me.LbRtRatio.Text = "Ratio to engine speed"
+				Me.TbRtPath.Enabled = True
+				Me.BtRtBrowse.Enabled = True
+				Me.PnRt.Enabled = True
+			Case 2 'Secondary
+				Me.LbRtRatio.Text = "Ratio to cardan shaft speed"
+				Me.TbRtPath.Enabled = True
+				Me.BtRtBrowse.Enabled = True
+				Me.PnRt.Enabled = True
+			Case Else '0 None
+				Me.LbRtRatio.Text = "Ratio"
+				Me.TbRtPath.Enabled = False
+				Me.BtRtBrowse.Enabled = False
+				Me.PnRt.Enabled = False
+		End Select
 
-        Change()
+		Change()
 
-    End Sub
+	End Sub
 
-    'Rt File Browse
-    Private Sub BtRtBrowse_Click(sender As System.Object, e As System.EventArgs) Handles BtRtBrowse.Click
+	'Rt File Browse
+	Private Sub BtRtBrowse_Click(sender As System.Object, e As System.EventArgs) Handles BtRtBrowse.Click
 
-        If fbRLM.OpenDialog(fFileRepl(Me.TbRtPath.Text, fPATH(VehFile))) Then TbRtPath.Text = fFileWoDir(fbRLM.Files(0), fPATH(VehFile))
+		If fbRLM.OpenDialog(fFileRepl(Me.TbRtPath.Text, fPATH(VehFile))) Then TbRtPath.Text = fFileWoDir(fbRLM.Files(0), fPATH(VehFile))
 
-    End Sub
+	End Sub
 
 #End Region
 
 #Region "Track changes"
 
-    Private Sub Change()
-        If Not Changed Then
-            Me.LbStatus.Text = "Unsaved changes in current file"
-            Changed = True
-        End If
-    End Sub
+	Private Sub Change()
+		If Not Changed Then
+			Me.LbStatus.Text = "Unsaved changes in current file"
+			Changed = True
+		End If
+	End Sub
 
-    ' "Save changes? "... Returns True if user aborts
-    Private Function ChangeCheckCancel() As Boolean
+	' "Save changes? "... Returns True if user aborts
+	Private Function ChangeCheckCancel() As Boolean
 
-        If Changed Then
-            Select Case MsgBox("Save changes ?", MsgBoxStyle.YesNoCancel)
-                Case MsgBoxResult.Yes
-                    Return Not SaveOrSaveAs(False)
-                Case MsgBoxResult.Cancel
-                    Return True
-                Case Else 'MsgBoxResult.No
-                    Changed = False
-                    Return False
-            End Select
+		If Changed Then
+			Select Case MsgBox("Save changes ?", MsgBoxStyle.YesNoCancel)
+				Case MsgBoxResult.Yes
+					Return Not SaveOrSaveAs(False)
+				Case MsgBoxResult.Cancel
+					Return True
+				Case Else 'MsgBoxResult.No
+					Changed = False
+					Return False
+			End Select
 
-        Else
+		Else
 
-            Return False
+			Return False
 
-        End If
+		End If
 
-    End Function
+	End Function
 
-    Private Sub TBmass_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbMass.TextChanged
-        SetMaxLoad()
-        Change()
-    End Sub
+	Private Sub TBmass_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbMass.TextChanged
+		SetMaxLoad()
+		Change()
+	End Sub
 
-    Private Sub TBston_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbLoad.TextChanged
-        Change()
-    End Sub
+	Private Sub TBston_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbLoad.TextChanged
+		Change()
+	End Sub
 
-    Private Sub TBDreifen_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBrdyn.TextChanged
-        Change()
-    End Sub
+	Private Sub TBDreifen_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBrdyn.TextChanged
+		Change()
+	End Sub
 
-    Private Sub CbRim_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbRim.SelectedIndexChanged
-        Change()
-        DeclInit()
-    End Sub
+	Private Sub CbRim_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbRim.SelectedIndexChanged
+		Change()
+		DeclInit()
+	End Sub
 
-    Private Sub TBcw_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBcdTrTr.TextChanged, TBcwRig.TextChanged
-        Change()
-    End Sub
+	Private Sub TBcw_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBcdA.TextChanged, TBcdA2.TextChanged
+		Change()
+	End Sub
 
-    Private Sub TBAquers_TextChanged(sender As System.Object, e As System.EventArgs) Handles TBAquersTrTr.TextChanged, TBAquersRig.TextChanged
-        Change()
-    End Sub
+	Private Sub TBAquers_TextChanged(sender As System.Object, e As System.EventArgs)
+		Change()
+	End Sub
 
 
-    Private Sub TbCdFile_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbCdFile.TextChanged
-        Change()
-    End Sub
+	Private Sub TbCdFile_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbCdFile.TextChanged
+		Change()
+	End Sub
 
-    Private Sub TbRtPath_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbRtPath.TextChanged
-        Change()
-    End Sub
+	Private Sub TbRtPath_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbRtPath.TextChanged
+		Change()
+	End Sub
 
-    Private Sub TbRtRatio_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbRtRatio.TextChanged
-        Change()
-    End Sub
+	Private Sub TbRtRatio_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbRtRatio.TextChanged
+		Change()
+	End Sub
 
-    Private Sub CbCat_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbCat.SelectedIndexChanged
-        Change()
-        SetHDVclass()
-        DeclInit()
-    End Sub
+	Private Sub CbCat_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbCat.SelectedIndexChanged
+		Change()
+		SetHDVclass()
+		DeclInit()
+	End Sub
 
-    Private Sub TbMassTrailer_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbMassExtra.TextChanged
-        SetMaxLoad()
-        Change()
-    End Sub
+	Private Sub TbMassTrailer_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbMassExtra.TextChanged
+		SetMaxLoad()
+		Change()
+	End Sub
 
-    Private Sub TbMassMax_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbMassMass.TextChanged
-        SetMaxLoad()
-        Change()
-        SetHDVclass()
-        DeclInit()
-    End Sub
+	Private Sub TbMassMax_TextChanged(sender As System.Object, e As System.EventArgs) Handles TbMassMass.TextChanged
+		SetMaxLoad()
+		Change()
+		SetHDVclass()
+		DeclInit()
+	End Sub
 
-    Private Sub CbAxleConfig_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbAxleConfig.SelectedIndexChanged
-        Change()
-        SetHDVclass()
-        DeclInit()
-    End Sub
+	Private Sub CbAxleConfig_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles CbAxleConfig.SelectedIndexChanged
+		Change()
+		SetHDVclass()
+		DeclInit()
+	End Sub
 
 #End Region
 

@@ -2384,19 +2384,19 @@ lb10:
 
 			Case tCdMode.ConstCd0
 				vair = v
-				CdA = VEH.Cd * VEH.CrossSecArea
+				CdA = VEH.CdA
 
 			Case tCdMode.CdOfVeng
 				vair = v
-				CdA = VEH.Cd(Vkmh) * VEH.CrossSecArea
+				CdA = VEH.CdA_Y(Vkmh) * VEH.CdA
 
 			Case tCdMode.CdOfVdecl
 				vair = v
-				CdA = VEH.CdA(Vkmh)
+				CdA = VEH.CdA_Y(Vkmh)
 
 			Case Else 'tCdType.CdOfBeta
 				vair = MODdata.Vh.VairVres(t)
-				CdA = VEH.Cd(Math.Abs(MODdata.Vh.VairBeta(t))) * VEH.CrossSecArea
+				CdA = VEH.CdA_Y(Math.Abs(MODdata.Vh.VairBeta(t))) * VEH.CdA
 
 		End Select
 

@@ -39,9 +39,7 @@ Partial Class F_VEH
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.TbLoad = New System.Windows.Forms.TextBox()
 		Me.Label3 = New System.Windows.Forms.Label()
-		Me.TBcdTrTr = New System.Windows.Forms.TextBox()
-		Me.Label4 = New System.Windows.Forms.Label()
-		Me.TBAquersTrTr = New System.Windows.Forms.TextBox()
+		Me.TBcdA = New System.Windows.Forms.TextBox()
 		Me.Label13 = New System.Windows.Forms.Label()
 		Me.TBrdyn = New System.Windows.Forms.TextBox()
 		Me.ButOK = New System.Windows.Forms.Button()
@@ -49,8 +47,6 @@ Partial Class F_VEH
 		Me.Label14 = New System.Windows.Forms.Label()
 		Me.Label31 = New System.Windows.Forms.Label()
 		Me.Label35 = New System.Windows.Forms.Label()
-		Me.Label37 = New System.Windows.Forms.Label()
-		Me.Label38 = New System.Windows.Forms.Label()
 		Me.CbCdMode = New System.Windows.Forms.ComboBox()
 		Me.TbCdFile = New System.Windows.Forms.TextBox()
 		Me.BtCdFileBrowse = New System.Windows.Forms.Button()
@@ -111,8 +107,7 @@ Partial Class F_VEH
 		Me.LbCdATr = New System.Windows.Forms.Label()
 		Me.PnCdARig = New System.Windows.Forms.Panel()
 		Me.LbCdARig = New System.Windows.Forms.Label()
-		Me.TBcwRig = New System.Windows.Forms.TextBox()
-		Me.TBAquersRig = New System.Windows.Forms.TextBox()
+		Me.TBcdA2 = New System.Windows.Forms.TextBox()
 		Me.PictureBox1 = New System.Windows.Forms.PictureBox()
 		Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
 		Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -120,6 +115,7 @@ Partial Class F_VEH
 		Me.PnAll = New System.Windows.Forms.Panel()
 		Me.PicVehicle = New System.Windows.Forms.PictureBox()
 		Me.Label8 = New System.Windows.Forms.Label()
+		Me.Label38 = New System.Windows.Forms.Label()
 		Me.GroupBox6.SuspendLayout()
 		Me.ToolStrip1.SuspendLayout()
 		Me.GroupBox7.SuspendLayout()
@@ -173,38 +169,20 @@ Partial Class F_VEH
 		'Label3
 		'
 		Me.Label3.AutoSize = True
-		Me.Label3.Location = New System.Drawing.Point(37, 55)
+		Me.Label3.Location = New System.Drawing.Point(36, 52)
 		Me.Label3.Name = "Label3"
-		Me.Label3.Size = New System.Drawing.Size(58, 13)
+		Me.Label3.Size = New System.Drawing.Size(37, 13)
 		Me.Label3.TabIndex = 8
-		Me.Label3.Text = "Drag Coef."
+		Me.Label3.Text = "cd x A"
 		'
-		'TBcdTrTr
+		'TBcdA
 		'
-		Me.TBcdTrTr.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+		Me.TBcdA.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TBcdTrTr.Location = New System.Drawing.Point(2, 24)
-		Me.TBcdTrTr.Name = "TBcdTrTr"
-		Me.TBcdTrTr.Size = New System.Drawing.Size(57, 20)
-		Me.TBcdTrTr.TabIndex = 0
-		'
-		'Label4
-		'
-		Me.Label4.AutoSize = True
-		Me.Label4.Location = New System.Drawing.Point(12, 81)
-		Me.Label4.Name = "Label4"
-		Me.Label4.Size = New System.Drawing.Size(83, 13)
-		Me.Label4.TabIndex = 10
-		Me.Label4.Text = "Cross Sec. Area"
-		'
-		'TBAquersTrTr
-		'
-		Me.TBAquersTrTr.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TBAquersTrTr.Location = New System.Drawing.Point(2, 50)
-		Me.TBAquersTrTr.Name = "TBAquersTrTr"
-		Me.TBAquersTrTr.Size = New System.Drawing.Size(57, 20)
-		Me.TBAquersTrTr.TabIndex = 1
+		Me.TBcdA.Location = New System.Drawing.Point(2, 24)
+		Me.TBcdA.Name = "TBcdA"
+		Me.TBcdA.Size = New System.Drawing.Size(57, 20)
+		Me.TBcdA.TabIndex = 0
 		'
 		'Label13
 		'
@@ -269,24 +247,6 @@ Partial Class F_VEH
 		Me.Label35.Size = New System.Drawing.Size(29, 13)
 		Me.Label35.TabIndex = 24
 		Me.Label35.Text = "[mm]"
-		'
-		'Label37
-		'
-		Me.Label37.AutoSize = True
-		Me.Label37.Location = New System.Drawing.Point(230, 53)
-		Me.Label37.Name = "Label37"
-		Me.Label37.Size = New System.Drawing.Size(16, 13)
-		Me.Label37.TabIndex = 24
-		Me.Label37.Text = "[-]"
-		'
-		'Label38
-		'
-		Me.Label38.AutoSize = True
-		Me.Label38.Location = New System.Drawing.Point(230, 79)
-		Me.Label38.Name = "Label38"
-		Me.Label38.Size = New System.Drawing.Size(24, 13)
-		Me.Label38.TabIndex = 24
-		Me.Label38.Text = "[m²]"
 		'
 		'CbCdMode
 		'
@@ -796,8 +756,6 @@ Partial Class F_VEH
 		Me.GrAirRes.Controls.Add(Me.PnCdATrTr)
 		Me.GrAirRes.Controls.Add(Me.PnCdARig)
 		Me.GrAirRes.Controls.Add(Me.Label3)
-		Me.GrAirRes.Controls.Add(Me.Label4)
-		Me.GrAirRes.Controls.Add(Me.Label37)
 		Me.GrAirRes.Controls.Add(Me.Label38)
 		Me.GrAirRes.Location = New System.Drawing.Point(278, 3)
 		Me.GrAirRes.Name = "GrAirRes"
@@ -809,9 +767,8 @@ Partial Class F_VEH
 		'PnCdATrTr
 		'
 		Me.PnCdATrTr.Controls.Add(Me.LbCdATr)
-		Me.PnCdATrTr.Controls.Add(Me.TBcdTrTr)
-		Me.PnCdATrTr.Controls.Add(Me.TBAquersTrTr)
-		Me.PnCdATrTr.Location = New System.Drawing.Point(97, 26)
+		Me.PnCdATrTr.Controls.Add(Me.TBcdA)
+		Me.PnCdATrTr.Location = New System.Drawing.Point(79, 25)
 		Me.PnCdATrTr.Name = "PnCdATrTr"
 		Me.PnCdATrTr.Size = New System.Drawing.Size(64, 78)
 		Me.PnCdATrTr.TabIndex = 27
@@ -828,9 +785,8 @@ Partial Class F_VEH
 		'PnCdARig
 		'
 		Me.PnCdARig.Controls.Add(Me.LbCdARig)
-		Me.PnCdARig.Controls.Add(Me.TBcwRig)
-		Me.PnCdARig.Controls.Add(Me.TBAquersRig)
-		Me.PnCdARig.Location = New System.Drawing.Point(164, 26)
+		Me.PnCdARig.Controls.Add(Me.TBcdA2)
+		Me.PnCdARig.Location = New System.Drawing.Point(146, 25)
 		Me.PnCdARig.Name = "PnCdARig"
 		Me.PnCdARig.Size = New System.Drawing.Size(64, 78)
 		Me.PnCdARig.TabIndex = 26
@@ -844,19 +800,12 @@ Partial Class F_VEH
 		Me.LbCdARig.TabIndex = 25
 		Me.LbCdARig.Text = "Rigid"
 		'
-		'TBcwRig
+		'TBcdA2
 		'
-		Me.TBcwRig.Location = New System.Drawing.Point(3, 24)
-		Me.TBcwRig.Name = "TBcwRig"
-		Me.TBcwRig.Size = New System.Drawing.Size(57, 20)
-		Me.TBcwRig.TabIndex = 0
-		'
-		'TBAquersRig
-		'
-		Me.TBAquersRig.Location = New System.Drawing.Point(3, 50)
-		Me.TBAquersRig.Name = "TBAquersRig"
-		Me.TBAquersRig.Size = New System.Drawing.Size(57, 20)
-		Me.TBAquersRig.TabIndex = 1
+		Me.TBcdA2.Location = New System.Drawing.Point(3, 24)
+		Me.TBcdA2.Name = "TBcdA2"
+		Me.TBcdA2.Size = New System.Drawing.Size(57, 20)
+		Me.TBcdA2.TabIndex = 0
 		'
 		'PictureBox1
 		'
@@ -917,6 +866,15 @@ Partial Class F_VEH
 		Me.Label8.TabIndex = 40
 		Me.Label8.Text = "HDV Class"
 		'
+		'Label38
+		'
+		Me.Label38.AutoSize = True
+		Me.Label38.Location = New System.Drawing.Point(212, 52)
+		Me.Label38.Name = "Label38"
+		Me.Label38.Size = New System.Drawing.Size(24, 13)
+		Me.Label38.TabIndex = 24
+		Me.Label38.Text = "[m²]"
+		'
 		'F_VEH
 		'
 		Me.AcceptButton = Me.ButOK
@@ -976,82 +934,77 @@ Partial Class F_VEH
 		Me.PerformLayout()
 
 	End Sub
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents TbMass As System.Windows.Forms.TextBox
-    Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents TbLoad As System.Windows.Forms.TextBox
-    Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents TBcdTrTr As System.Windows.Forms.TextBox
-    Friend WithEvents Label4 As System.Windows.Forms.Label
-    Friend WithEvents TBAquersTrTr As System.Windows.Forms.TextBox
-    Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents TBrdyn As System.Windows.Forms.TextBox
-    Friend WithEvents ButOK As System.Windows.Forms.Button
-    Friend WithEvents ButCancel As System.Windows.Forms.Button
-    Friend WithEvents Label14 As System.Windows.Forms.Label
-    Friend WithEvents Label31 As System.Windows.Forms.Label
-    Friend WithEvents Label35 As System.Windows.Forms.Label
-    Friend WithEvents Label37 As System.Windows.Forms.Label
-    Friend WithEvents Label38 As System.Windows.Forms.Label
-    Friend WithEvents CbCdMode As System.Windows.Forms.ComboBox
-    Friend WithEvents TbCdFile As System.Windows.Forms.TextBox
-    Friend WithEvents BtCdFileBrowse As System.Windows.Forms.Button
-    Friend WithEvents GroupBox6 As System.Windows.Forms.GroupBox
-    Friend WithEvents LbCdMode As System.Windows.Forms.Label
-    Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
-    Friend WithEvents ToolStripBtNew As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripBtOpen As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripBtSave As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripBtSaveAs As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents ToolStripBtSendTo As System.Windows.Forms.ToolStripButton
-    Friend WithEvents GroupBox7 As System.Windows.Forms.GroupBox
-    Friend WithEvents LbRtRatio As System.Windows.Forms.Label
-    Friend WithEvents TbRtRatio As System.Windows.Forms.TextBox
-    Friend WithEvents BtRtBrowse As System.Windows.Forms.Button
-    Friend WithEvents TbRtPath As System.Windows.Forms.TextBox
-    Friend WithEvents CbRtType As System.Windows.Forms.ComboBox
-    Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents Label45 As System.Windows.Forms.Label
-    Friend WithEvents PnRt As System.Windows.Forms.Panel
-    Friend WithEvents Label46 As System.Windows.Forms.Label
-    Friend WithEvents Label50 As System.Windows.Forms.Label
-    Friend WithEvents TbMassExtra As System.Windows.Forms.TextBox
-    Friend WithEvents GroupBox8 As System.Windows.Forms.GroupBox
-    Friend WithEvents ButAxlRem As System.Windows.Forms.Button
-    Friend WithEvents LvRRC As System.Windows.Forms.ListView
-    Friend WithEvents ColumnHeader7 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader8 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ButAxlAdd As System.Windows.Forms.Button
-    Friend WithEvents CbCat As System.Windows.Forms.ComboBox
-    Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents Label9 As System.Windows.Forms.Label
-    Friend WithEvents TbMassMass As System.Windows.Forms.TextBox
-    Friend WithEvents ColumnHeader9 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents StatusStrip1 As System.Windows.Forms.StatusStrip
-    Friend WithEvents LbStatus As System.Windows.Forms.ToolStripStatusLabel
-    Friend WithEvents CbAxleConfig As System.Windows.Forms.ComboBox
-    Friend WithEvents TbHDVclass As System.Windows.Forms.TextBox
-    Friend WithEvents Label11 As System.Windows.Forms.Label
-    Friend WithEvents TbLoadingMax As System.Windows.Forms.TextBox
-    Friend WithEvents Label22 As System.Windows.Forms.Label
-    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents GrAirRes As System.Windows.Forms.GroupBox
-    Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
-    Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
-    Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
-    Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents BtCdFileOpen As System.Windows.Forms.Button
-    Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents PnLoad As System.Windows.Forms.Panel
-    Friend WithEvents LbCdARig As System.Windows.Forms.Label
-    Friend WithEvents LbCdATr As System.Windows.Forms.Label
-    Friend WithEvents TBcwRig As System.Windows.Forms.TextBox
-    Friend WithEvents TBAquersRig As System.Windows.Forms.TextBox
-    Friend WithEvents PnCdARig As System.Windows.Forms.Panel
+	Friend WithEvents Label1 As System.Windows.Forms.Label
+	Friend WithEvents TbMass As System.Windows.Forms.TextBox
+	Friend WithEvents Label2 As System.Windows.Forms.Label
+	Friend WithEvents TbLoad As System.Windows.Forms.TextBox
+	Friend WithEvents Label3 As System.Windows.Forms.Label
+	Friend WithEvents TBcdA As System.Windows.Forms.TextBox
+	Friend WithEvents Label13 As System.Windows.Forms.Label
+	Friend WithEvents TBrdyn As System.Windows.Forms.TextBox
+	Friend WithEvents ButOK As System.Windows.Forms.Button
+	Friend WithEvents ButCancel As System.Windows.Forms.Button
+	Friend WithEvents Label14 As System.Windows.Forms.Label
+	Friend WithEvents Label31 As System.Windows.Forms.Label
+	Friend WithEvents Label35 As System.Windows.Forms.Label
+	Friend WithEvents CbCdMode As System.Windows.Forms.ComboBox
+	Friend WithEvents TbCdFile As System.Windows.Forms.TextBox
+	Friend WithEvents BtCdFileBrowse As System.Windows.Forms.Button
+	Friend WithEvents GroupBox6 As System.Windows.Forms.GroupBox
+	Friend WithEvents LbCdMode As System.Windows.Forms.Label
+	Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
+	Friend WithEvents ToolStripBtNew As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripBtOpen As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripBtSave As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripBtSaveAs As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
+	Friend WithEvents ToolStripBtSendTo As System.Windows.Forms.ToolStripButton
+	Friend WithEvents GroupBox7 As System.Windows.Forms.GroupBox
+	Friend WithEvents LbRtRatio As System.Windows.Forms.Label
+	Friend WithEvents TbRtRatio As System.Windows.Forms.TextBox
+	Friend WithEvents BtRtBrowse As System.Windows.Forms.Button
+	Friend WithEvents TbRtPath As System.Windows.Forms.TextBox
+	Friend WithEvents CbRtType As System.Windows.Forms.ComboBox
+	Friend WithEvents Label12 As System.Windows.Forms.Label
+	Friend WithEvents Label45 As System.Windows.Forms.Label
+	Friend WithEvents PnRt As System.Windows.Forms.Panel
+	Friend WithEvents Label46 As System.Windows.Forms.Label
+	Friend WithEvents Label50 As System.Windows.Forms.Label
+	Friend WithEvents TbMassExtra As System.Windows.Forms.TextBox
+	Friend WithEvents GroupBox8 As System.Windows.Forms.GroupBox
+	Friend WithEvents ButAxlRem As System.Windows.Forms.Button
+	Friend WithEvents LvRRC As System.Windows.Forms.ListView
+	Friend WithEvents ColumnHeader7 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColumnHeader8 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ButAxlAdd As System.Windows.Forms.Button
+	Friend WithEvents CbCat As System.Windows.Forms.ComboBox
+	Friend WithEvents Label5 As System.Windows.Forms.Label
+	Friend WithEvents Label9 As System.Windows.Forms.Label
+	Friend WithEvents TbMassMass As System.Windows.Forms.TextBox
+	Friend WithEvents ColumnHeader9 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents StatusStrip1 As System.Windows.Forms.StatusStrip
+	Friend WithEvents LbStatus As System.Windows.Forms.ToolStripStatusLabel
+	Friend WithEvents CbAxleConfig As System.Windows.Forms.ComboBox
+	Friend WithEvents TbHDVclass As System.Windows.Forms.TextBox
+	Friend WithEvents Label11 As System.Windows.Forms.Label
+	Friend WithEvents TbLoadingMax As System.Windows.Forms.TextBox
+	Friend WithEvents Label22 As System.Windows.Forms.Label
+	Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+	Friend WithEvents GrAirRes As System.Windows.Forms.GroupBox
+	Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
+	Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
+	Friend WithEvents ToolStripButton1 As System.Windows.Forms.ToolStripButton
+	Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
+	Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents BtCdFileOpen As System.Windows.Forms.Button
+	Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents PnLoad As System.Windows.Forms.Panel
+	Friend WithEvents LbCdARig As System.Windows.Forms.Label
+	Friend WithEvents LbCdATr As System.Windows.Forms.Label
+	Friend WithEvents TBcdA2 As System.Windows.Forms.TextBox
+	Friend WithEvents PnCdARig As System.Windows.Forms.Panel
     Friend WithEvents PnAll As System.Windows.Forms.Panel
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
@@ -1061,5 +1014,6 @@ Partial Class F_VEH
     Friend WithEvents PnWheelDiam As System.Windows.Forms.Panel
     Friend WithEvents PicVehicle As System.Windows.Forms.PictureBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
-    Friend WithEvents PnCdATrTr As System.Windows.Forms.Panel
+	Friend WithEvents PnCdATrTr As System.Windows.Forms.Panel
+	Friend WithEvents Label38 As System.Windows.Forms.Label
 End Class
