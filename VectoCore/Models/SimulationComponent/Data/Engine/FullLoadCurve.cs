@@ -262,11 +262,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 			protected bool Equals(FullLoadCurveEntry other)
 			{
-				Contract.Requires(other != null);
-				return EngineSpeed.Equals(other.EngineSpeed)
-						&& TorqueFullLoad.Equals(other.TorqueFullLoad)
-						&& TorqueDrag.Equals(other.TorqueDrag);
-//						&& PT1.Equals(other.PT1);
+				return Equals(EngineSpeed, other.EngineSpeed) && Equals(TorqueFullLoad, other.TorqueFullLoad) &&
+						Equals(TorqueDrag, other.TorqueDrag);
 			}
 
 			public override bool Equals(object obj)
@@ -277,16 +274,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				if (ReferenceEquals(this, obj)) {
 					return true;
 				}
-				return obj.GetType() == GetType() && Equals((FullLoadCurveEntry) obj);
+				if (obj.GetType() != this.GetType()) {
+					return false;
+				}
+				return Equals((FullLoadCurveEntry) obj);
 			}
 
 			public override int GetHashCode()
 			{
-				var hashCode = EngineSpeed.GetHashCode();
-				hashCode = (hashCode * 397) ^ TorqueFullLoad.GetHashCode();
-				hashCode = (hashCode * 397) ^ TorqueDrag.GetHashCode();
-				//hashCode = (hashCode * 397) ^ PT1.GetHashCode();
-				return hashCode;
+				unchecked {
+					var hashCode = (EngineSpeed != null ? EngineSpeed.GetHashCode() : 0);
+					hashCode = (hashCode * 397) ^ (TorqueFullLoad != null ? TorqueFullLoad.GetHashCode() : 0);
+					hashCode = (hashCode * 397) ^ (TorqueDrag != null ? TorqueDrag.GetHashCode() : 0);
+					return hashCode;
+				}
 			}
 
 			#endregion
@@ -296,7 +297,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		protected bool Equals(FullLoadCurve other)
 		{
-			return _fullLoadEntries.SequenceEqual(other._fullLoadEntries);
+			return Equals(_fullLoadEntries, other._fullLoadEntries) && Equals(_pt1Data, other._pt1Data);
 		}
 
 		public override bool Equals(object obj)
@@ -307,12 +308,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (ReferenceEquals(this, obj)) {
 				return true;
 			}
-			return obj.GetType() == GetType() && Equals((FullLoadCurve) obj);
+			if (obj.GetType() != this.GetType()) {
+				return false;
+			}
+			return Equals((FullLoadCurve) obj);
 		}
 
 		public override int GetHashCode()
 		{
-			return (_fullLoadEntries != null ? _fullLoadEntries.GetHashCode() : 0);
+			unchecked {
+				return ((_fullLoadEntries != null ? _fullLoadEntries.GetHashCode() : 0) * 397) ^
+						(_pt1Data != null ? _pt1Data.GetHashCode() : 0);
+			}
 		}
 
 		#endregion

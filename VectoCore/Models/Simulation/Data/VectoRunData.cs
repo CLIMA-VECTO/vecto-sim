@@ -5,12 +5,14 @@ using System.IO;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
 	[DataContract]
-	public class VectoJobData : SimulationComponentData
+	public class VectoRunData : SimulationComponentData
 	{
 		public VehicleData VehicleData { get; internal set; }
 
@@ -18,11 +20,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public GearboxData GearboxData { get; internal set; }
 
-		public IList<string> Cycles { get; internal set; }
+		public DrivingCycleData Cycle { get; internal set; }
 
 		public IList<AuxData> Aux { get; internal set; }
 
 		public string AccelerationLimitingFile { get; internal set; }
+
+		public DriverData DriverData { get; internal set; }
 
 		public bool IsEngineOnly { get; internal set; }
 
@@ -34,6 +38,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public string JobFileName { get; set; }
 
+		public string BasePath { get; set; }
+
 
 		public class AuxData
 		{
@@ -41,6 +47,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			public string Type;
 			public string Path;
 			public string Technology;
+
+			public AuxiliaryData Data;
 		}
 
 		public class StartStopData

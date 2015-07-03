@@ -1,28 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO;
 using TUGraz.VectoCore.FileIO.DeclarationFile;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
+namespace TUGraz.VectoCore.FileIO.Reader.Impl
 {
-	public class DeclarationModeSimulationComponentFactory : AbstractSimulationRunCreator
+	public class DeclarationModeSimulationDataReader : AbstractSimulationDataReader
 	{
 		public const int PoweredAxle = 1;
 
-		internal DeclarationModeSimulationComponentFactory() {}
+		internal DeclarationModeSimulationDataReader() {}
 
 		//public void SetJobFile(string fileName)
 		//{
@@ -54,20 +50,41 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 			}
 		}
 
-		public override IEnumerable<IVectoRun> NextRun()
+		public override IEnumerable<VectoRunData> NextRun()
 		{
 			var segment = GetVehicleClassification((dynamic) Vehicle);
 			foreach (var mission in segment.Missions) {
 				foreach (var loading in mission.Loadings) {
-					var jobData = new VectoJobData() {
+					var jobData = new VectoRunData() {
 						VehicleData = CreateVehicleData((dynamic) Vehicle, mission, loading),
 						EngineData = CreateEngineData((dynamic) Engine),
 						GearboxData = CreateGearboxData((dynamic) Gearbox),
+						// @@@ TODO: cycle
+						// @@@ TODO: auxiliaries
+						// @@@ TODO: ...
+						IsEngineOnly = false,
+						JobFileName = Job.JobFile,
 					};
-					//var builder = new SimulatorFactory.SimulatorBuilder();
+					yield return jobData;
+					//var builder = new SimulatorFactory.PowertrainBuilder();
 				}
 			}
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
+		}
+
+		protected override void ProcessJob(VectoJobFile vectoJob)
+		{
+			var declaration = vectoJob as VectoJobFileV2Declaration;
+			if (declaration == null) {
+				return;
+			}
+			var job = declaration;
+
+			ReadVehicle(Path.Combine(job.BasePath, job.Body.VehicleFile));
+
+			ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));
+
+			ReadGearbox(Path.Combine(job.BasePath, job.Body.GearboxFile));
 		}
 
 		protected override void ReadJobFile(string file)
@@ -89,7 +106,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 		protected override void ReadVehicle(string file)
 		{
-			var json = File.ReadAllText(Job.BasePath + file);
+			var json = File.ReadAllText(file);
 			var fileInfo = GetFileVersion(json);
 			CheckForDeclarationMode(fileInfo, "Vehicle");
 
@@ -104,7 +121,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 		protected override void ReadEngine(string file)
 		{
-			var json = File.ReadAllText(Job.BasePath + file);
+			var json = File.ReadAllText(file);
 			var fileInfo = GetFileVersion(json);
 			CheckForDeclarationMode(fileInfo, "Engine");
 
@@ -119,7 +136,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 		protected override void ReadGearbox(string file)
 		{
-			var json = File.ReadAllText(Job.BasePath + file);
+			var json = File.ReadAllText(file);
 			var fileInfo = GetFileVersion(json);
 			CheckForDeclarationMode(fileInfo, "Gearbox");
 

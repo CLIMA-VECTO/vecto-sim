@@ -5,9 +5,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class DriverData
 	{
-		public DriverData(VectoJobData.StartStopData startStop,
-			VectoJobData.OverSpeedEcoRollData overSpeedEcoRoll,
-			VectoJobData.LACData lookAheadCoasting, string accelerationLimitingFile)
+		public DriverData(VectoRunData.StartStopData startStop,
+			VectoRunData.OverSpeedEcoRollData overSpeedEcoRoll,
+			VectoRunData.LACData lookAheadCoasting, string accelerationLimitingFile)
 		{
 			throw new NotImplementedException();
 		}

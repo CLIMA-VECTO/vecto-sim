@@ -6,6 +6,7 @@ namespace TUGraz.VectoCore.FileIO
 	public abstract class VectoJobFile
 	{
 		[DataMember] internal string BasePath;
+		[DataMember] internal string JobFile;
 	}
 
 	public abstract class VectoVehicleFile

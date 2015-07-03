@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void TestClutch()
 		{
 			var vehicle = new VehicleContainer();
-			var engineData = EngineeringModeSimulationComponentFactory.CreateEngineDataFromFile(CoachEngine);
+			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
 			var gearbox = new DummyGearbox(vehicle);
 
 			var clutch = new Clutch(vehicle, engineData);

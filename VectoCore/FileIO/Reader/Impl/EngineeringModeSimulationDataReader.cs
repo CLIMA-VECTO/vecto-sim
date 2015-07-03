@@ -2,17 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Common.Logging;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO;
-using TUGraz.VectoCore.FileIO.DeclarationFile;
 using TUGraz.VectoCore.FileIO.EngineeringFile;
-using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -21,24 +15,39 @@ using TUGraz.VectoCore.Utils;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
+namespace TUGraz.VectoCore.FileIO.Reader.Impl
 {
-	public class EngineeringModeSimulationComponentFactory : AbstractSimulationRunCreator
+	public class EngineeringModeSimulationDataReader : AbstractSimulationDataReader
 	{
-		internal EngineeringModeSimulationComponentFactory() {}
+		internal EngineeringModeSimulationDataReader() {}
 
 
 		protected static void CheckForEngineeringMode(VersionInfo info, string msg)
 		{
 			if (info.SavedInDeclarationMode) {
-				LogManager.GetLogger(typeof (EngineeringModeSimulationComponentFactory))
+				LogManager.GetLogger(typeof (EngineeringModeSimulationDataReader))
 					.WarnFormat("File was saved in Declaration Mode but is used for Engineering Mode!");
 			}
 		}
 
+		protected override void ProcessJob(VectoJobFile vectoJob)
+		{
+			var declaration = vectoJob as VectoJobFileV2Engineering;
+			if (declaration == null) {
+				throw new VectoException("Unhandled Job File Format");
+			}
+			var job = declaration;
+
+			ReadVehicle(Path.Combine(job.BasePath, job.Body.VehicleFile));
+
+			ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));
+
+			ReadGearbox(Path.Combine(job.BasePath, job.Body.GearboxFile));
+		}
+
 		protected override void ReadVehicle(string file)
 		{
-			var json = File.ReadAllText(Job.BasePath + file);
+			var json = File.ReadAllText(file);
 			var fileInfo = GetFileVersion(json);
 			CheckForEngineeringMode(fileInfo, "Vehicle");
 
@@ -52,9 +61,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 		}
 
 
-		internal VectoJobData CreateVectoJobData(VectoJobFileV2Engineering data, string basePath)
+		internal VectoRunData CreateVectoJobData(VectoJobFileV2Engineering data, string basePath)
 		{
-			return new VectoJobData();
+			return new VectoRunData();
 		}
 
 
@@ -80,7 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 			return retVal;
 		}
 
-		public override IEnumerable<IVectoRun> NextRun()
+		public override IEnumerable<VectoRunData> NextRun()
 		{
 			throw new NotImplementedException();
 		}
@@ -89,19 +98,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 		public static VehicleData CreateVehicleDataFromFile(string file)
 		{
 			var data = DoReadVehicleFile(file);
-			return new EngineeringModeSimulationComponentFactory().CreateVehicleData((dynamic) data);
+			return new EngineeringModeSimulationDataReader().CreateVehicleData((dynamic) data);
 		}
 
 		public static CombustionEngineData CreateEngineDataFromFile(string file)
 		{
 			var data = DoReadEngineFile(file);
-			return new EngineeringModeSimulationComponentFactory().CreateEngineData((dynamic) data);
+			return new EngineeringModeSimulationDataReader().CreateEngineData((dynamic) data);
 		}
 
 		public static GearboxData CreateGearboxDataFromFile(string file)
 		{
 			var data = DoReadGearboxFile(file);
-			return new EngineeringModeSimulationComponentFactory().CreateGearboxData((dynamic) data);
+			return new EngineeringModeSimulationDataReader().CreateGearboxData((dynamic) data);
 		}
 
 

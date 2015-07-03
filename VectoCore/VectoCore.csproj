@@ -118,6 +118,10 @@
     <Compile Include="FileIO\EngineeringFile\VehicleFileEng.cs" />
     <Compile Include="FileIO\InputFileReader.cs" />
     <Compile Include="FileIO\JsonDataHeader.cs" />
+    <Compile Include="FileIO\Reader\Impl\AbstractSimulationDataReader.cs" />
+    <Compile Include="FileIO\Reader\Impl\DeclarationModeSimulationDataReader.cs" />
+    <Compile Include="FileIO\Reader\Impl\EngineeringModeSimulationDataReader.cs" />
+    <Compile Include="FileIO\Reader\ISimulationDataReader.cs" />
     <Compile Include="FileIO\VectoFiles.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandProvider.cs" />
@@ -140,11 +144,7 @@
     <Compile Include="Models\Declaration\Mission.cs" />
     <Compile Include="Models\Declaration\MissionType.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\PT1Curve.cs" />
-    <Compile Include="Models\SimulationComponent\Factories\Impl\AbstractSimulationRunCreator.cs" />
-    <Compile Include="Models\SimulationComponent\Factories\Impl\DeclarationModeSimulationComponentFactory.cs" />
-    <Compile Include="Models\SimulationComponent\Factories\Impl\EngineeringModeSimulationComponentFactory.cs" />
-    <Compile Include="Models\SimulationComponent\Factories\ISimulationDataFactory.cs" />
-    <Compile Include="Models\SimulationComponent\Factories\SimulationDataFactory.cs" />
+    <Compile Include="Models\Simulation\Impl\PowertrainBuilder.cs" />
     <Compile Include="Utils\RessourceHelper.cs" />
     <Compile Include="Models\Declaration\Segment.cs" />
     <Compile Include="Models\Declaration\DeclarationSegments.cs" />
@@ -179,7 +179,7 @@
     <Compile Include="Models\SimulationComponent\IPowerTrainComponent.cs" />
     <Compile Include="Models\Simulation\Data\ISummaryDataWriter.cs" />
     <Compile Include="Models\Simulation\Data\SummaryFileWriter.cs" />
-    <Compile Include="Models\Simulation\Data\VectoJobData.cs" />
+    <Compile Include="Models\Simulation\Data\VectoRunData.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Driver.cs" />
     <Compile Include="Models\SimulationComponent\Data\DriverData.cs" />
     <Compile Include="Utils\Formulas.cs" />

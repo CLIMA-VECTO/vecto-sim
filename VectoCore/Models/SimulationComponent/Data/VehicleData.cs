@@ -51,6 +51,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return retVal;
 		}
 
+		public Kilogram TotalCurbWeight()
+		{
+			var retVal = 0.SI<Kilogram>();
+			retVal += CurbWeight ?? 0.SI<Kilogram>();
+			retVal += CurbWeigthExtra ?? 0.SI<Kilogram>();
+			return retVal;
+		}
+
 		public Kilogram GrossVehicleMassRating { get; internal set; }
 
 		public double DragCoefficient { get; internal set; }

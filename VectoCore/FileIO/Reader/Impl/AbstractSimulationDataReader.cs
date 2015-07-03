@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO;
 using TUGraz.VectoCore.FileIO.DeclarationFile;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
+namespace TUGraz.VectoCore.FileIO.Reader.Impl
 {
-	public abstract class AbstractSimulationRunCreator : InputFileReader
+	public abstract class AbstractSimulationDataReader : InputFileReader, ISimulationDataReader
 	{
 		//protected string JobBasePath = "";
 
@@ -27,36 +23,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 		protected VectoEngineFile Engine;
 
+
 		public void SetJobFile(string filename)
 		{
-			//JobBasePath = Path.GetDirectoryName(filenname) + Path.DirectorySeparatorChar;
-			//SetJobJson(File.ReadAllText(filenname));
 			ReadJobFile(filename);
-			ProcessJob((dynamic) Job);
+			ProcessJob(Job);
 		}
 
-		//public void SetJobJson(string file)
-		//{
-		//	ReadJobFile(file);
-		//	ProcessJob((dynamic) Job);
-		//}
-
-		public abstract IEnumerable<IVectoRun> NextRun();
+		public abstract IEnumerable<VectoRunData> NextRun();
 
 
-		protected void ProcessJob(VectoJobFile job)
+		protected virtual void ProcessJob(VectoJobFile job)
 		{
-			throw new VectoException("Invalid JobFile Format");
+			throw new VectoException("Invalid JobFile Container");
 		}
 
-		protected void ProcessJob(VectoJobFileV2Declaration job)
-		{
-			ReadVehicle(Path.Combine(job.BasePath, job.Body.VehicleFile));
-
-			ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));
-
-			ReadGearbox(Path.Combine(job.BasePath, job.Body.GearboxFile));
-		}
 
 		// has to read the file string and create file-container
 		protected abstract void ReadJobFile(string file);
@@ -68,22 +49,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 
 		protected abstract void ReadGearbox(string file);
 
-		protected internal Segment GetVehicleClassification(VectoVehicleFile vehicle)
+
+		protected internal virtual Segment GetVehicleClassification(VectoVehicleFile vehicle)
 		{
 			throw new NotImplementedException("Vehicleclassification for base-class not possible!");
 		}
 
-		internal VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission segment, Kilogram loading)
+		internal virtual VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission segment, Kilogram loading)
 		{
 			throw new NotImplementedException("CreateVehicleData for base-class not possible!");
 		}
 
-		internal CombustionEngineData CreateEngineData(VectoEngineFile engine)
+		internal virtual CombustionEngineData CreateEngineData(VectoEngineFile engine)
 		{
 			throw new NotImplementedException("CreateEngineData for base-class not possible!");
 		}
 
-		internal GearboxData CreateGearboxData(VectoGearboxFile gearbox)
+		internal virtual GearboxData CreateGearboxData(VectoGearboxFile gearbox)
 		{
 			throw new NotImplementedException("CreateGearboxDataFromFile for base-class not possible!");
 		}
@@ -116,23 +98,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 			};
 		}
 
-		protected T1 SIConvert<T1>(double val) where T1 : SIBase<T1>
-		{
-			return val.SI<T1>();
-		}
-
 		internal CombustionEngineData SetCommonCombustionEngineData(EngineFileV2Declaration engine)
 		{
 			var data = ((dynamic) engine).Body;
 			var retVal = new CombustionEngineData() {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				ModelName = data.ModelName,
-				Displacement = SIConvert<>(data.Displacement * 0, 000001),
+				Displacement = SIConvert<CubicMeter>(data.Displacement * 0.000001), // convert vom ccm to m^3
 				IdleSpeed = DoubleExtensionMethods.RPMtoRad(data.IdleSpeed),
 				ConsumptionMap = FuelConsumptionMap.ReadFromFile(Path.Combine(engine.BasePath, data.FuelMap)),
-				WHTCUrban = data.WHTCUrban.SI(),
-				WHTCMotorway = data.WHTCMotorway.SI(),
-				WHTCRural = data.WHTCRural.SI(),
+				WHTCUrban = SIConvert<KilogramPerWattSecond>(data.WHTCUrban),
+				WHTCMotorway = SIConvert<KilogramPerWattSecond>(data.WHTCMotorway),
+				WHTCRural = SIConvert<KilogramPerWattSecond>(data.WHTCRural),
 			};
 			return retVal;
 		}
@@ -144,6 +121,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl
 				ModelName = data.ModelName,
 				Type = (GearboxData.GearboxType) Enum.Parse(typeof (GearboxData.GearboxType), data.GearboxType, true),
 			};
+		}
+
+		protected T1 SIConvert<T1>(double val) where T1 : SIBase<T1>
+		{
+			return val.SI<T1>();
 		}
 	}
 }

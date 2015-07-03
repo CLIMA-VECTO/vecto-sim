@@ -1,26 +1,24 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "4/24/2015 11:11:45 AM",
+    "Date": "7/3/2015 11:09:04 AM",
     "AppVersion": "2.0.4-beta3",
     "FileVersion": 2
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "../Components/24t Coach.vveh",
+    "VehicleFile": "<NOFILE>",
     "EngineFile": "../Components/24t Coach.veng",
-    "GearboxFile": "../Components/24t Coach.vgbx",
+    "GearboxFile": "<NOFILE>",
     "Cycles": [
-      "TestData/Cycles/Engine Only1.vdri",
-      "TestData/Cycles/Engine Only2.vdri",
-      "TestData/Cycles/Engine Only3.vdri"
+      "../Cycles/Coach Engine Only short.vdri"
     ],
-    "VACC": "TestData/Components/Coach.vacc",
+    "VACC": "<NOFILE>",
     "EngineOnlyMode": true,
     "StartStop": {
       "Enabled": false,
       "MaxSpeed": 5.0,
-      "MinTime": 0.0,
+      "MinTime": 5.0,
       "Delay": 0
     },
     "LAC": {
@@ -29,10 +27,10 @@
       "MinSpeed": 50.0
     },
     "OverSpeedEcoRoll": {
-      "Mode": "OverSpeed",
-      "MinSpeed": 70.0,
-      "OverSpeed": 5.0,
-      "UnderSpeed": 5.0
+      "Mode": "Off",
+      "MinSpeed": 0.0,
+      "OverSpeed": 0.0,
+      "UnderSpeed": 0.0
     }
   }
 }

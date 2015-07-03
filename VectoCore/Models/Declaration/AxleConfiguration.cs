@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		public static string GetName(this AxleConfiguration self)
 		{
-			return self.ToString().Substring(10);
+			return self.ToString().Substring(11);
 		}
 	}
 }

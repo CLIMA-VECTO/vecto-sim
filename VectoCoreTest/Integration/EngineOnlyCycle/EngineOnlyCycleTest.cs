@@ -1,10 +1,10 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Web;
+using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
 			var vehicle = new VehicleContainer();
-			var engineData = EngineeringModeSimulationComponentFactory.CreateEngineDataFromFile(EngineFile);
+			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
 
 			var aux = new DirectAuxiliary(vehicle, new AuxiliaryCycleDataAdapter(data));
 			var gearbox = new EngineOnlyGearbox(vehicle);
@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var gearbox = new EngineOnlyGearbox(vehicleContainer);
 			var engine = new CombustionEngine(vehicleContainer,
-				EngineeringModeSimulationComponentFactory.CreateEngineDataFromFile(EngineFile));
+				EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile));
 
 			gearbox.InShaft().Connect(engine.OutShaft());
 

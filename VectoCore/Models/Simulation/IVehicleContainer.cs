@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCore.Models.Simulation.Cockpit;
+﻿using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.SimulationComponent;
 
 namespace TUGraz.VectoCore.Models.Simulation
@@ -9,6 +10,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 	/// </summary>
 	public interface IVehicleContainer : ICockpit
 	{
+		IDrivingCycleOutPort GetCycleOutPort();
+
 		/// <summary>
 		/// Adds a component to the vehicle container.
 		/// </summary>

@@ -16,10 +16,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private TimeSpan _absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
 		private TimeSpan _dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
-		public VectoRun(IVehicleContainer container, IDrivingCycleOutPort cyclePort)
+		public VectoRun(IVehicleContainer container)
 		{
 			Container = container;
-			CyclePort = cyclePort;
+			CyclePort = container.GetCycleOutPort();
 		}
 
 		protected SummaryFileWriter SumWriter { get; set; }

@@ -2,8 +2,8 @@
 using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void TestGearboxDataReadTest()
 		{
-			var gbxData = EngineeringModeSimulationComponentFactory.CreateGearboxDataFromFile(GearboxFile);
+			var gbxData = EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(GearboxFile);
 				//GearboxData.ReadFromFile(GearboxFile);
 
 			Assert.AreEqual(GearboxData.GearboxType.AMT, gbxData.Type);
@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var speed = double.Parse(TestContext.DataRow["v"].ToString(), CultureInfo.InvariantCulture);
 
 			var gbxData =
-				EngineeringModeSimulationComponentFactory.CreateGearboxDataFromFile(TestContext.DataRow["GearboxDataFile"].ToString());
+				EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(TestContext.DataRow["GearboxDataFile"].ToString());
 
 
 			var PvD = Double.Parse(TestContext.DataRow["PowerGbxOut"].ToString(), CultureInfo.InvariantCulture).SI<Watt>();
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void TestInputOutOfRange()
 		{
-			var gbxData = EngineeringModeSimulationComponentFactory.CreateGearboxDataFromFile(GearboxFile);
+			var gbxData = EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(GearboxFile);
 
 
 			var angSpeed = 2700.RPMtoRad();

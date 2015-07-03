@@ -3,10 +3,10 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Tests.Utils;
 
@@ -17,6 +17,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	{
 		private const string EngineFile = @"TestData\Components\24t Coach.veng";
 		private const string CycleFile = @"TestData\Cycles\Coach Engine Only short.vdri";
+
+		private const string EngineOnlyJob = @"TestData\Jobs\EngineOnlyJob.vecto";
 
 		[TestMethod]
 		public void TestSimulationEngineOnly()
@@ -63,10 +65,18 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var dataWriter = new ModalDataWriter(resultFileName, engineOnly: true);
 			var sumWriter = new SummaryFileWriter(sumFileName);
-			var run = SimulatorFactory.CreateTimeBasedEngineOnlyRun(EngineFile, CycleFile, jobFileName: "", jobName: "",
-				dataWriter: dataWriter, sumWriter: sumWriter);
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode) {
+				SumWriter = sumWriter,	
+			};
+			factory.DataReader.SetJobFile(EngineOnlyJob);
 
-			return run;
+			var runs = factory.NextRun();
+			return runs.First();
+
+			//var run = SimulatorFactory.CreateTimeBasedEngineOnlyRun(EngineFile, CycleFile, jobFileName: "", jobName: "",
+			//	dataWriter: dataWriter, sumWriter: sumWriter);
+
+			//return run;
 		}
 
 
@@ -92,11 +102,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Test_VectoJob()
 		{
-//			var reader = new EngineeringModeSimulationComponentFactory();
+//			var reader = new EngineeringModeSimulationDataReader();
 //			var jobData = reader.ReadVectoJobFile(@"TestData\Jobs\24t Coach.vecto");
 			var jobFile = @"TestData\Jobs\24t Coach.vecto";
 
-			var factory = new EngineeringModeSimulationComponentFactory();
+			var factory = new EngineeringModeSimulationDataReader();
 			factory.SetJobFile(jobFile);
 
 			var jobContainer = new JobContainer(new TestSumWriter());

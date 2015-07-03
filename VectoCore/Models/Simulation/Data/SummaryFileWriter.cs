@@ -68,15 +68,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			_sumFileName = sumFileName;
 
 			_table = new DataTable();
-			_table.Columns.Add(JOB, typeof(string));
-			_table.Columns.Add(INPUTFILE, typeof(string));
-			_table.Columns.Add(CYCLE, typeof(string));
+			_table.Columns.Add(JOB, typeof (string));
+			_table.Columns.Add(INPUTFILE, typeof (string));
+			_table.Columns.Add(CYCLE, typeof (string));
 
 			_table.Columns.AddRange(new[] {
 				TIME, DISTANCE, SPEED, ALTITUDE, PPOS, PNEG, FC, FCAUXC, FCWHTCC, PBRAKE, EPOSICE, ENEGICE, EAIR, EROLL, EGRAD,
 				EACC, EAUX, EBRAKE, ETRANSM, ERETARDER, MASS, LOADING, A, APOS, ANEG, PACC, PDEC, PCRUISE, PSTOP, ETORQUECONV, CO2,
 				CO2T, FCFINAL, FCFINAL_LITER, FCFINAL_LITERPER100TKM, ACCNOISE
-			}.Select(x => new DataColumn(x, typeof(double))).ToArray());
+			}.Select(x => new DataColumn(x, typeof (double))).ToArray());
 		}
 
 		public void WriteEngineOnly(IModalDataWriter data, string jobFileName, string jobName, string cycleFileName)
@@ -102,8 +102,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 
 		public void WriteFullPowertrain(IModalDataWriter data, string jobFileName, string jobName, string cycleFileName,
-			double vehicleMass,
-			double vehicleLoading)
+			Kilogram vehicleMass,
+			Kilogram vehicleLoading)
 		{
 			_engineOnly = false;
 
@@ -141,8 +141,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			//}
 
 			//todo get data from vehicle file
-			row[MASS] = vehicleMass;
-			row[LOADING] = vehicleLoading;
+			row[MASS] = vehicleMass == null ? "" : vehicleMass.ToString();
+			row[LOADING] = vehicleLoading == null ? "" : vehicleLoading.ToString();
 
 			var dtValues = data.GetValues<double>(ModalResultField.simulationInterval).ToList();
 			var accValues = data.GetValues<double?>(ModalResultField.acc);
@@ -247,7 +247,7 @@ public class SumWriterDecoratorFullPowertrain : SummaryFileWriter, ISummaryDataW
 		_cycleFileName = cycleFileName;
 	}
 
-	public void Write(IModalDataWriter data, double vehicleMass = 0, double vehicleLoading = 0)
+	public void Write(IModalDataWriter data, Kilogram vehicleMass = null, Kilogram vehicleLoading = null)
 	{
 		_writer.WriteFullPowertrain(data, _jobFileName, _jobName, _cycleFileName, vehicleMass, vehicleLoading);
 	}
@@ -272,7 +272,7 @@ public class SumWriterDecoratorEngineOnly : SummaryFileWriter, ISummaryDataWrite
 		_cycleFileName = cycleFileName;
 	}
 
-	public void Write(IModalDataWriter data, double vehicleMass = 0, double vehicleLoading = 0)
+	public void Write(IModalDataWriter data, Kilogram vehicleMass = null, Kilogram vehicleLoading = null)
 	{
 		_writer.WriteEngineOnly(data, _jobFileName, _jobName, _cycleFileName);
 	}

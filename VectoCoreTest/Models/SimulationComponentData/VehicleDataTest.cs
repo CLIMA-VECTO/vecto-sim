@@ -1,7 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Factories;
-using TUGraz.VectoCore.Models.SimulationComponent.Factories.Impl;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
@@ -13,7 +11,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void ReadVehicleFileTest()
 		{
-			//IDataFileReader reader = new EngineeringModeSimulationComponentFactory();
+			//IDataFileReader reader = new EngineeringModeSimulationDataReader();
 			//var vehicleData = reader.ReadVehicleDataFile(VehicleDataFile);
 			//VehicleData.ReadFromFile(VehicleDataFile);
 

@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -15,9 +16,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private IEngineCockpit _engine;
 		private IGearboxCockpit _gearbox;
 		private IVehicleCockpit _vehicle;
-		private ILog _logger;
+
+		private IDrivingCycleOutPort _cycle;
+
 		private ISummaryDataWriter _sumWriter;
 		private IModalDataWriter _dataWriter;
+
+		private ILog _logger;
 
 		#region IGearCockpit
 
@@ -50,14 +55,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return _vehicle != null ? _vehicle.VehicleSpeed() : 0.SI<MeterPerSecond>();
 		}
 
-		public double VehicleMass()
+		public Kilogram VehicleMass()
 		{
-			return _vehicle != null ? _vehicle.VehicleMass() : 0;
+			return _vehicle != null ? _vehicle.VehicleMass() : 0.SI<Kilogram>();
 		}
 
-		public double VehicleLoading()
+		public Kilogram VehicleLoading()
 		{
-			return _vehicle != null ? _vehicle.VehicleLoading() : 0;
+			return _vehicle != null ? _vehicle.VehicleLoading() : 0.SI<Kilogram>();
+		}
+
+		public Kilogram TotalMass()
+		{
+			return _vehicle != null ? _vehicle.TotalMass() : 0.SI<Kilogram>();
 		}
 
 		#endregion
@@ -70,6 +80,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		#region IVehicleContainer
+
+		public IDrivingCycleOutPort GetCycleOutPort()
+		{
+			return _cycle;
+		}
 
 		public virtual void AddComponent(VectoSimulationComponent component)
 		{
@@ -88,6 +103,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var vehicle = component as IVehicleCockpit;
 			if (vehicle != null) {
 				_vehicle = vehicle;
+			}
+
+			var cycle = component as IDrivingCycleOutPort;
+			if (cycle != null) {
+				_cycle = cycle;
 			}
 		}
 
