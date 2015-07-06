@@ -194,33 +194,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			modalData.Finish();
 		}
 
-		[TestMethod]
-		public void TestEngineMemento()
-		{
-			var vehicle = new VehicleContainer();
-			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
-			var origin = new CombustionEngine(vehicle, engineData);
-
-			var data = Memento.Serialize(origin);
-
-			var restored = new CombustionEngine(vehicle, engineData);
-			Memento.Deserialize(restored, data);
-
-			Assert.AreEqual(origin, restored, "Serialized with Memento, Deserialized with Memento");
-
-			data = origin.Serialize();
-			restored = new CombustionEngine(vehicle, engineData);
-			Memento.Deserialize(restored, data);
-
-			Assert.AreEqual(origin, restored, "Serialized with Object, Deserialized with Memento");
-
-
-			data = origin.Serialize();
-			restored = new CombustionEngine(vehicle, engineData);
-			restored.Deserialize(data);
-
-			Assert.AreEqual(origin, restored, "Serialized with Object, Deserialized with Object");
-		}
 
 		[TestMethod, Ignore]
 		public void TestWriteToFile()

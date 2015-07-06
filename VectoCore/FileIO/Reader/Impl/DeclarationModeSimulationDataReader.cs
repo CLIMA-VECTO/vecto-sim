@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			var segment = GetVehicleClassification((dynamic) Vehicle);
 			foreach (var mission in segment.Missions) {
 				foreach (var loading in mission.Loadings) {
-					var jobData = new VectoRunData() {
+					var simulationRunData = new VectoRunData() {
 						VehicleData = CreateVehicleData((dynamic) Vehicle, mission, loading),
 						EngineData = CreateEngineData((dynamic) Engine),
 						GearboxData = CreateGearboxData((dynamic) Gearbox),
@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 						IsEngineOnly = false,
 						JobFileName = Job.JobFile,
 					};
-					yield return jobData;
+					yield return simulationRunData;
 					//var builder = new SimulatorFactory.PowertrainBuilder();
 				}
 			}

@@ -61,12 +61,6 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		}
 
 
-		internal VectoRunData CreateVectoJobData(VectoJobFileV2Engineering data, string basePath)
-		{
-			return new VectoRunData();
-		}
-
-
 		internal VehicleData CreateVehicleData(VehicleFileV5Engineering vehicle)
 		{
 			var data = vehicle.Body;
@@ -91,7 +85,21 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 		public override IEnumerable<VectoRunData> NextRun()
 		{
-			throw new NotImplementedException();
+			var job = Job as VectoJobFileV2Engineering;
+			if (job == null) {
+				Log.Warn("Job-file is null or unsupported version");
+				yield break;
+			}
+			foreach (var cycle in job.Body.Cycles) {
+				var simulationRunData = new VectoRunData() {
+					BasePath = job.BasePath,
+					JobFileName = job.JobFile,
+					EngineData = CreateEngineData((dynamic) Engine),
+					Cycle = DrivingCycleData.ReadFromFile(Path.Combine(job.BasePath, cycle), DrivingCycleData.CycleType.DistanceBased),
+					IsEngineOnly = false
+				};
+				yield return simulationRunData;
+			}
 		}
 
 
@@ -124,6 +132,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				case 2:
 					Job = JsonConvert.DeserializeObject<VectoJobFileV2Engineering>(json);
 					Job.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
+					Job.JobFile = Path.GetFileName(file);
 					break;
 				default:
 					throw new UnsupportedFileVersionException("Unsupported version of job-file. Got version " + fileInfo.Version);

@@ -106,6 +106,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\Constants.cs" />
     <Compile Include="Exceptions\VectoExceptions.cs" />
     <Compile Include="Exceptions\VectoSimulationException.cs" />
     <Compile Include="FileIO\DeclarationFile\EngineFileDecl.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="FileIO\Reader\Impl\AbstractSimulationDataReader.cs" />
     <Compile Include="FileIO\Reader\Impl\DeclarationModeSimulationDataReader.cs" />
     <Compile Include="FileIO\Reader\Impl\EngineeringModeSimulationDataReader.cs" />
+    <Compile Include="FileIO\Reader\Impl\EngineOnlySimulationDataReader.cs" />
     <Compile Include="FileIO\Reader\ISimulationDataReader.cs" />
     <Compile Include="FileIO\VectoFiles.cs" />
     <Compile Include="Models\Connector\Ports\IDriverDemandPort.cs" />
@@ -195,13 +197,11 @@
     <Compile Include="Models\SimulationComponent\Impl\DistanceBasedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DirectAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TimeBasedDrivingCycle.cs" />
-    <Compile Include="Utils\IMemento.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyGearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Gearbox.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Wheels.cs" />
     <Compile Include="Models\SimulationComponent\IWheels.cs" />
-    <Compile Include="Utils\Memento.cs" />
     <Compile Include="Models\SimulationComponent\VectoSimulationComponent.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyDrivingCycle.cs" />
     <Compile Include="Models\Simulation\Data\IModalDataWriter.cs" />

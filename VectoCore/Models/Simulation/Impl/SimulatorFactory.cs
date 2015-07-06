@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -32,7 +33,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					DataReader = new EngineeringModeSimulationDataReader();
 					break;
 				case FactoryMode.EngineOnlyMode:
-					throw new NotImplementedException();
+					DataReader = new EngineOnlySimulationDataReader();
+					break;
 			}
 		}
 
@@ -67,7 +69,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				IModalDataWriter modWriter = null;
 
 				if (_mode != FactoryMode.DeclarationMode) {
-					var modFileName = "";
+					var modFileName = Path.Combine(data.BasePath, data.JobFileName.Replace(Constants.FileExtensions.VectoJobFile, "") +
+						Constants.FileExtensions.ModDataFile);
 					modWriter = new ModalDataWriter(modFileName, _mode == FactoryMode.EngineOnlyMode);
 				}
 				var jobName = string.Format("{0}-{1}", JobNumber, i++);

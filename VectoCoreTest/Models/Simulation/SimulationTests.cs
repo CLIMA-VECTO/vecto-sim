@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation;
@@ -61,12 +62,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 		public IVectoRun CreateRun(string resultFileName)
 		{
-			var sumFileName = resultFileName.Substring(0, resultFileName.Length - 4) + "vsum";
+			var sumFileName = resultFileName.Substring(0, resultFileName.Length - 5) + Constants.FileExtensions.SumFile;
 
-			var dataWriter = new ModalDataWriter(resultFileName, engineOnly: true);
+			//var dataWriter = new ModalDataWriter(resultFileName, engineOnly: true);
 			var sumWriter = new SummaryFileWriter(sumFileName);
 			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode) {
-				SumWriter = sumWriter,	
+				SumWriter = sumWriter,
 			};
 			factory.DataReader.SetJobFile(EngineOnlyJob);
 
