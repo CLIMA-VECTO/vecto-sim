@@ -217,6 +217,9 @@
     <None Include="TestData\Jobs\12t Delivery Truck.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Jobs\EngineOnlyJob.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
