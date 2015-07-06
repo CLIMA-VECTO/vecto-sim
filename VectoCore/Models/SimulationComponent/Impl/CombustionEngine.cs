@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Component for a combustion engine.
 	/// </summary>
-	public class CombustionEngine : VectoSimulationComponent, ICombustionEngine, ITnOutPort, IMemento
+	public class CombustionEngine : VectoSimulationComponent, ICombustionEngine, ITnOutPort
 	{
 		public enum EngineOperationMode
 		{
@@ -401,25 +401,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				hashCode = (hashCode * 397) ^ (_currentState != null ? _currentState.GetHashCode() : 0);
 				return hashCode;
 			}
-		}
-
-		#endregion
-
-		#region IMemento
-
-		public string Serialize()
-		{
-			var mem = new { Data = _data, PreviousState = _previousState };
-			return Memento.Serialize(mem);
-		}
-
-		public void Deserialize(string data)
-		{
-			var mem = new { Data = _data, PreviousState = _previousState };
-			mem = Memento.Deserialize(data, mem);
-
-			_data = mem.Data;
-			_previousState = mem.PreviousState;
 		}
 
 		#endregion
