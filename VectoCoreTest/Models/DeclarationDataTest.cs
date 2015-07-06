@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -188,8 +187,6 @@ namespace TUGraz.VectoCore.Tests.Models
 					Assert.AreEqual(expect.Value[i], value.Double(), Tolerance);
 				}
 			}
-
-			Assert.Inconclusive();
 		}
 
 		[TestMethod]
