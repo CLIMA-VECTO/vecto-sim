@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -73,9 +71,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void TestEngineOnly_MultipleJobs()
 		{
 			var resultFiles = new[] {
-				@"TestEngineOnly-MultipleJobs-result1",
-				@"TestEngineOnly-MultipleJobs-result2",
-				@"TestEngineOnly-MultipleJobs-result3"
+				@"TestEngineOnly-MultipleJobs-result1_" + Path.GetFileNameWithoutExtension(CycleFile) + ".vmod",
+				@"TestEngineOnly-MultipleJobs-result2_" + Path.GetFileNameWithoutExtension(CycleFile) + ".vmod",
+				@"TestEngineOnly-MultipleJobs-result3_" + Path.GetFileNameWithoutExtension(CycleFile) + ".vmod"
 			};
 
 			var simulation = new JobContainer(new TestSumWriter());
@@ -84,8 +82,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			}
 			simulation.Execute();
 
-			ResultFileHelper.TestModFiles(resultFiles.Select(x => x + "_Coach Engine Only short.vmod"),
-				Enumerable.Repeat(@"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod", resultFiles.Length));
+			ResultFileHelper.TestModFiles(
+				Enumerable.Repeat(@"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod",
+					resultFiles.Length),
+				resultFiles);
 		}
 
 		[TestMethod]
@@ -95,7 +95,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(jobData);
 			jobContainer.Execute();
 
-			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum", @"TestData\Jobs\24t Coach.vsum");
+			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum",
+				@"TestData\Jobs\24t Coach.vsum");
 			ResultFileHelper.TestModFiles(new[] {
 				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only1.vmod",
 				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only2.vmod",
