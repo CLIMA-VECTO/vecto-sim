@@ -171,10 +171,8 @@ namespace TUGraz.VectoCore.Tests.Models
 				MissionType.Suburban, MissionType.Interurban, MissionType.Coach
 			};
 
-			Assert.AreEqual(missions.Length, Enum.GetValues(typeof(MissionType)).Length,
-				"there is something wrong in the mission list.");
-			Assert.IsTrue(expected.All(kv => kv.Value.Length == missions.Length),
-				"there is something wrong in the test values lists.");
+			Assert.AreEqual(missions.Length, Enum.GetValues(typeof(MissionType)).Length, "something wrong in the mission list.");
+			Assert.IsTrue(expected.All(kv => kv.Value.Length == missions.Length), "something wrong in the test values lists.");
 
 			for (var i = 0; i < missions.Length; i++) {
 				// default
@@ -192,6 +190,39 @@ namespace TUGraz.VectoCore.Tests.Models
 		[TestMethod]
 		public void AuxHVACTest()
 		{
+			var hvac = DeclarationData.HVAC;
+
+			var expected = new Dictionary<int, int[]> {
+				{ 1, new[] { 0, 150, 150, 0, 0, 0, 0, 0, 0, 0 } },
+				{ 2, new[] { 200, 200, 150, 0, 0, 0, 0, 0, 0, 0 } },
+				{ 3, new[] { 0, 200, 150, 0, 0, 0, 0, 0, 0, 0 } },
+				{ 4, new[] { 350, 200, 0, 300, 0, 0, 0, 0, 0, 0 } },
+				{ 5, new[] { 350, 200, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ 6, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ 7, new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } },
+				{ 8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ 9, new[] { 350, 200, 0, 300, 0, 0, 0, 0, 0, 0 } },
+				{ 10, new[] { 350, 200, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ 11, new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } },
+				{ 12, new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } },
+			};
+
+			var missions = new[] {
+				MissionType.LongHaul, MissionType.RegionalDelivery, MissionType.UrbanDelivery, MissionType.MunicipalUtility,
+				MissionType.Construction, MissionType.HeavyUrban, MissionType.Urban,
+				MissionType.Suburban, MissionType.Interurban, MissionType.Coach
+			};
+
+			Assert.AreEqual(missions.Length, Enum.GetValues(typeof(MissionType)).Length, "something wrong in the mission list.");
+			Assert.IsTrue(expected.All(kv => kv.Value.Length == missions.Length), "something wrong in the test values lists.");
+
+			for (var i = 0; i < missions.Length; i++) {
+				foreach (var expect in expected) {
+					Watt value = hvac.Lookup(missions[i], expect.Key);
+					Assert.AreEqual(expect.Value[i], value.Double(), Tolerance);
+				}
+			}
+
 			Assert.Inconclusive();
 		}
 
