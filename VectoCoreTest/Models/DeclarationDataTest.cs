@@ -262,14 +262,81 @@ namespace TUGraz.VectoCore.Tests.Models
 		}
 
 		[TestMethod]
-		public void AuxSPTableTest()
+		public void AuxSPTest()
 		{
-			Assert.Inconclusive();
-		}
+			var sp = DeclarationData.SteeringPump;
 
-		[TestMethod]
-		public void AuxSPTechTest()
-		{
+			var expected = new Dictionary<string, Dictionary<string, int[]>> {
+				{
+					"Fixed displacement", new Dictionary<string, int[]> {
+						{ "1", new[] { 0, 260, 270, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "2", new[] { 370, 320, 310, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "3", new[] { 0, 340, 350, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "4", new[] { 610, 530, 0, 530, 0, 0, 0, 0, 0, 0 } },
+						{ "5", new[] { 720, 630, 620, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "6", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "7", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "8", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "9", new[] { 720, 550, 0, 550, 0, 0, 0, 0, 0, 0 } },
+						{ "10", new[] { 570, 530, 0, 0, 0, 0, 0, 0, 0, 0 } }
+					}
+				}, {
+					"Variable displacement", new Dictionary<string, int[]> {
+						{ "1", new[] { 0, 156, 162, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "2", new[] { 222, 192, 186, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "3", new[] { 0, 204, 210, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "4", new[] { 366, 318, 0, 318, 0, 0, 0, 0, 0, 0 } },
+						{ "5", new[] { 432, 378, 372, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "6", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "7", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "8", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "9", new[] { 432, 330, 0, 330, 0, 0, 0, 0, 0, 0 } },
+						{ "10", new[] { 342, 318, 0, 0, 0, 0, 0, 0, 0, 0 } }
+					}
+				}, {
+					"Hydraulic supported by electric", new Dictionary<string, int[]> {
+						{ "1", new[] { 0, 225, 235, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "2", new[] { 322, 278, 269, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "3", new[] { 0, 295, 304, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "4", new[] { 531, 460, 0, 460, 0, 0, 0, 0, 0, 0 } },
+						{ "5", new[] { 627, 546, 540, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "6", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "7", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "8", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "9", new[] { 627, 478, 0, 478, 0, 0, 0, 0, 0, 0 } },
+						{ "10", new[] { 498, 461, 0, 0, 0, 0, 0, 0, 0, 0 } }
+					}
+				}
+			};
+
+			var missions = new[] {
+				MissionType.LongHaul,
+				MissionType.RegionalDelivery,
+				MissionType.UrbanDelivery,
+				MissionType.MunicipalUtility,
+				MissionType.Construction,
+				MissionType.HeavyUrban,
+				MissionType.Urban,
+				MissionType.Suburban,
+				MissionType.Interurban,
+				MissionType.Coach
+			};
+
+			Assert.AreEqual(missions.Length, Enum.GetValues(typeof(MissionType)).Length, "something wrong in the mission list.");
+
+			foreach (var expect in expected) {
+				var technology = expect.Key;
+				foreach (var hdvClasses in expect.Value) {
+					var hdvClass = hdvClasses.Key;
+					Assert.IsTrue(expected.All(kv => hdvClasses.Value.Length == missions.Length),
+						"something wrong in the test values lists.");
+					for (var i = 0; i < missions.Length; i++) {
+						Watt value = sp.Lookup(missions[i], hdvClass, technology);
+						Assert.AreEqual(hdvClasses.Value[i], value.Double(), Tolerance);
+					}
+				}
+			}
+
 			Assert.Inconclusive();
 		}
 
