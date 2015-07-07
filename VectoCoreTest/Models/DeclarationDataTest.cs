@@ -100,11 +100,11 @@ namespace TUGraz.VectoCore.Tests.Models
 			var es = DeclarationData.ElectricSystem;
 
 			var expected = new[] {
-				new { Mission = MissionType.LongHaul, Base = 1240, LED = 1290 },
-				new { Mission = MissionType.RegionalDelivery, Base = 1055, LED = 1105 },
-				new { Mission = MissionType.UrbanDelivery, Base = 974, LED = 1024 },
-				new { Mission = MissionType.MunicipalUtility, Base = 974, LED = 1024 },
-				new { Mission = MissionType.Construction, Base = 975, LED = 1025 },
+				new { Mission = MissionType.LongHaul, Base = 1240, LED = 1190 },
+				new { Mission = MissionType.RegionalDelivery, Base = 1055, LED = 1005 },
+				new { Mission = MissionType.UrbanDelivery, Base = 974, LED = 924 },
+				new { Mission = MissionType.MunicipalUtility, Base = 974, LED = 924 },
+				new { Mission = MissionType.Construction, Base = 975, LED = 925 },
 				new { Mission = MissionType.HeavyUrban, Base = 0, LED = 0 },
 				new { Mission = MissionType.Urban, Base = 0, LED = 0 },
 				new { Mission = MissionType.Suburban, Base = 0, LED = 0 },
