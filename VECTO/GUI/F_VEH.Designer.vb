@@ -108,6 +108,7 @@ Partial Class F_VEH
 		Me.PnCdARig = New System.Windows.Forms.Panel()
 		Me.LbCdARig = New System.Windows.Forms.Label()
 		Me.TBcdA2 = New System.Windows.Forms.TextBox()
+		Me.Label38 = New System.Windows.Forms.Label()
 		Me.PictureBox1 = New System.Windows.Forms.PictureBox()
 		Me.CmOpenFile = New System.Windows.Forms.ContextMenuStrip(Me.components)
 		Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -115,7 +116,6 @@ Partial Class F_VEH
 		Me.PnAll = New System.Windows.Forms.Panel()
 		Me.PicVehicle = New System.Windows.Forms.PictureBox()
 		Me.Label8 = New System.Windows.Forms.Label()
-		Me.Label38 = New System.Windows.Forms.Label()
 		Me.GroupBox6.SuspendLayout()
 		Me.ToolStrip1.SuspendLayout()
 		Me.GroupBox7.SuspendLayout()
@@ -164,7 +164,7 @@ Partial Class F_VEH
 		Me.TbLoad.Location = New System.Drawing.Point(166, 28)
 		Me.TbLoad.Name = "TbLoad"
 		Me.TbLoad.Size = New System.Drawing.Size(57, 20)
-		Me.TbLoad.TabIndex = 2
+		Me.TbLoad.TabIndex = 1
 		'
 		'Label3
 		'
@@ -198,7 +198,7 @@ Partial Class F_VEH
 		Me.TBrdyn.Location = New System.Drawing.Point(109, 4)
 		Me.TBrdyn.Name = "TBrdyn"
 		Me.TBrdyn.Size = New System.Drawing.Size(57, 20)
-		Me.TBrdyn.TabIndex = 5
+		Me.TBrdyn.TabIndex = 0
 		'
 		'ButOK
 		'
@@ -206,7 +206,7 @@ Partial Class F_VEH
 		Me.ButOK.Location = New System.Drawing.Point(394, 693)
 		Me.ButOK.Name = "ButOK"
 		Me.ButOK.Size = New System.Drawing.Size(75, 23)
-		Me.ButOK.TabIndex = 9
+		Me.ButOK.TabIndex = 5
 		Me.ButOK.Text = "Save"
 		Me.ButOK.UseVisualStyleBackColor = True
 		'
@@ -217,7 +217,7 @@ Partial Class F_VEH
 		Me.ButCancel.Location = New System.Drawing.Point(475, 693)
 		Me.ButCancel.Name = "ButCancel"
 		Me.ButCancel.Size = New System.Drawing.Size(75, 23)
-		Me.ButCancel.TabIndex = 10
+		Me.ButCancel.TabIndex = 6
 		Me.ButCancel.Text = "Cancel"
 		Me.ButCancel.UseVisualStyleBackColor = True
 		'
@@ -286,7 +286,7 @@ Partial Class F_VEH
 		Me.GroupBox6.Location = New System.Drawing.Point(6, 432)
 		Me.GroupBox6.Name = "GroupBox6"
 		Me.GroupBox6.Size = New System.Drawing.Size(538, 74)
-		Me.GroupBox6.TabIndex = 5
+		Me.GroupBox6.TabIndex = 4
 		Me.GroupBox6.TabStop = False
 		Me.GroupBox6.Text = "Cross Wind Correction"
 		'
@@ -297,7 +297,7 @@ Partial Class F_VEH
 		Me.BtCdFileOpen.Location = New System.Drawing.Point(509, 44)
 		Me.BtCdFileOpen.Name = "BtCdFileOpen"
 		Me.BtCdFileOpen.Size = New System.Drawing.Size(23, 23)
-		Me.BtCdFileOpen.TabIndex = 41
+		Me.BtCdFileOpen.TabIndex = 3
 		Me.BtCdFileOpen.TabStop = False
 		Me.BtCdFileOpen.UseVisualStyleBackColor = True
 		'
@@ -399,7 +399,7 @@ Partial Class F_VEH
 		Me.GroupBox7.Location = New System.Drawing.Point(6, 345)
 		Me.GroupBox7.Name = "GroupBox7"
 		Me.GroupBox7.Size = New System.Drawing.Size(538, 81)
-		Me.GroupBox7.TabIndex = 7
+		Me.GroupBox7.TabIndex = 3
 		Me.GroupBox7.TabStop = False
 		Me.GroupBox7.Text = "Retarder Losses"
 		'
@@ -411,7 +411,7 @@ Partial Class F_VEH
 		Me.PnRt.Location = New System.Drawing.Point(162, 12)
 		Me.PnRt.Name = "PnRt"
 		Me.PnRt.Size = New System.Drawing.Size(348, 34)
-		Me.PnRt.TabIndex = 11
+		Me.PnRt.TabIndex = 1
 		'
 		'Label45
 		'
@@ -446,7 +446,7 @@ Partial Class F_VEH
 		Me.BtRtBrowse.Location = New System.Drawing.Point(500, 52)
 		Me.BtRtBrowse.Name = "BtRtBrowse"
 		Me.BtRtBrowse.Size = New System.Drawing.Size(32, 23)
-		Me.BtRtBrowse.TabIndex = 2
+		Me.BtRtBrowse.TabIndex = 3
 		Me.BtRtBrowse.Text = "..."
 		Me.BtRtBrowse.UseVisualStyleBackColor = True
 		'
@@ -457,7 +457,7 @@ Partial Class F_VEH
 		Me.TbRtPath.Location = New System.Drawing.Point(5, 54)
 		Me.TbRtPath.Name = "TbRtPath"
 		Me.TbRtPath.Size = New System.Drawing.Size(489, 20)
-		Me.TbRtPath.TabIndex = 1
+		Me.TbRtPath.TabIndex = 2
 		'
 		'CbRtType
 		'
@@ -501,7 +501,7 @@ Partial Class F_VEH
 		Me.TbMassExtra.Location = New System.Drawing.Point(166, 2)
 		Me.TbMassExtra.Name = "TbMassExtra"
 		Me.TbMassExtra.Size = New System.Drawing.Size(57, 20)
-		Me.TbMassExtra.TabIndex = 1
+		Me.TbMassExtra.TabIndex = 0
 		'
 		'GroupBox8
 		'
@@ -515,7 +515,7 @@ Partial Class F_VEH
 		Me.GroupBox8.Location = New System.Drawing.Point(6, 133)
 		Me.GroupBox8.Name = "GroupBox8"
 		Me.GroupBox8.Size = New System.Drawing.Size(538, 206)
-		Me.GroupBox8.TabIndex = 4
+		Me.GroupBox8.TabIndex = 2
 		Me.GroupBox8.TabStop = False
 		Me.GroupBox8.Text = "Axles / Wheels"
 		'
@@ -527,7 +527,7 @@ Partial Class F_VEH
 		Me.PnWheelDiam.Location = New System.Drawing.Point(321, 163)
 		Me.PnWheelDiam.Name = "PnWheelDiam"
 		Me.PnWheelDiam.Size = New System.Drawing.Size(204, 33)
-		Me.PnWheelDiam.TabIndex = 48
+		Me.PnWheelDiam.TabIndex = 5
 		'
 		'CbRim
 		'
@@ -536,7 +536,7 @@ Partial Class F_VEH
 		Me.CbRim.Location = New System.Drawing.Point(131, 167)
 		Me.CbRim.Name = "CbRim"
 		Me.CbRim.Size = New System.Drawing.Size(184, 21)
-		Me.CbRim.TabIndex = 47
+		Me.CbRim.TabIndex = 4
 		'
 		'Label7
 		'
@@ -553,7 +553,7 @@ Partial Class F_VEH
 		Me.Label6.Location = New System.Drawing.Point(405, 132)
 		Me.Label6.Name = "Label6"
 		Me.Label6.Size = New System.Drawing.Size(121, 13)
-		Me.Label6.TabIndex = 45
+		Me.Label6.TabIndex = 3
 		Me.Label6.Text = "Double-Click to edit axle"
 		'
 		'ButAxlRem
@@ -633,7 +633,7 @@ Partial Class F_VEH
 		Me.CbAxleConfig.Location = New System.Drawing.Point(136, 80)
 		Me.CbAxleConfig.Name = "CbAxleConfig"
 		Me.CbAxleConfig.Size = New System.Drawing.Size(89, 21)
-		Me.CbAxleConfig.TabIndex = 3
+		Me.CbAxleConfig.TabIndex = 1
 		'
 		'CbCat
 		'
@@ -668,7 +668,7 @@ Partial Class F_VEH
 		Me.TbMassMass.Location = New System.Drawing.Point(153, 114)
 		Me.TbMassMass.Name = "TbMassMass"
 		Me.TbMassMass.Size = New System.Drawing.Size(42, 20)
-		Me.TbMassMass.TabIndex = 4
+		Me.TbMassMass.TabIndex = 2
 		'
 		'StatusStrip1
 		'
@@ -692,7 +692,7 @@ Partial Class F_VEH
 		Me.TbHDVclass.Name = "TbHDVclass"
 		Me.TbHDVclass.ReadOnly = True
 		Me.TbHDVclass.Size = New System.Drawing.Size(25, 20)
-		Me.TbHDVclass.TabIndex = 1
+		Me.TbHDVclass.TabIndex = 3
 		Me.TbHDVclass.TabStop = False
 		'
 		'Label11
@@ -710,7 +710,7 @@ Partial Class F_VEH
 		Me.TbLoadingMax.Name = "TbLoadingMax"
 		Me.TbLoadingMax.ReadOnly = True
 		Me.TbLoadingMax.Size = New System.Drawing.Size(57, 20)
-		Me.TbLoadingMax.TabIndex = 3
+		Me.TbLoadingMax.TabIndex = 2
 		Me.TbLoadingMax.TabStop = False
 		'
 		'Label22
@@ -731,7 +731,7 @@ Partial Class F_VEH
 		Me.GroupBox1.Location = New System.Drawing.Point(6, 3)
 		Me.GroupBox1.Name = "GroupBox1"
 		Me.GroupBox1.Size = New System.Drawing.Size(266, 124)
-		Me.GroupBox1.TabIndex = 2
+		Me.GroupBox1.TabIndex = 0
 		Me.GroupBox1.TabStop = False
 		Me.GroupBox1.Text = "Weight / Loading"
 		'
@@ -749,7 +749,7 @@ Partial Class F_VEH
 		Me.PnLoad.Location = New System.Drawing.Point(6, 43)
 		Me.PnLoad.Name = "PnLoad"
 		Me.PnLoad.Size = New System.Drawing.Size(256, 75)
-		Me.PnLoad.TabIndex = 25
+		Me.PnLoad.TabIndex = 1
 		'
 		'GrAirRes
 		'
@@ -760,7 +760,7 @@ Partial Class F_VEH
 		Me.GrAirRes.Location = New System.Drawing.Point(278, 3)
 		Me.GrAirRes.Name = "GrAirRes"
 		Me.GrAirRes.Size = New System.Drawing.Size(266, 124)
-		Me.GrAirRes.TabIndex = 3
+		Me.GrAirRes.TabIndex = 1
 		Me.GrAirRes.TabStop = False
 		Me.GrAirRes.Text = "Air Resistance"
 		'
@@ -771,7 +771,7 @@ Partial Class F_VEH
 		Me.PnCdATrTr.Location = New System.Drawing.Point(79, 25)
 		Me.PnCdATrTr.Name = "PnCdATrTr"
 		Me.PnCdATrTr.Size = New System.Drawing.Size(64, 78)
-		Me.PnCdATrTr.TabIndex = 27
+		Me.PnCdATrTr.TabIndex = 0
 		'
 		'LbCdATr
 		'
@@ -789,7 +789,7 @@ Partial Class F_VEH
 		Me.PnCdARig.Location = New System.Drawing.Point(146, 25)
 		Me.PnCdARig.Name = "PnCdARig"
 		Me.PnCdARig.Size = New System.Drawing.Size(64, 78)
-		Me.PnCdARig.TabIndex = 26
+		Me.PnCdARig.TabIndex = 1
 		'
 		'LbCdARig
 		'
@@ -806,6 +806,15 @@ Partial Class F_VEH
 		Me.TBcdA2.Name = "TBcdA2"
 		Me.TBcdA2.Size = New System.Drawing.Size(57, 20)
 		Me.TBcdA2.TabIndex = 0
+		'
+		'Label38
+		'
+		Me.Label38.AutoSize = True
+		Me.Label38.Location = New System.Drawing.Point(212, 52)
+		Me.Label38.Name = "Label38"
+		Me.Label38.Size = New System.Drawing.Size(24, 13)
+		Me.Label38.TabIndex = 24
+		Me.Label38.Text = "[m²]"
 		'
 		'PictureBox1
 		'
@@ -845,7 +854,7 @@ Partial Class F_VEH
 		Me.PnAll.Location = New System.Drawing.Point(6, 172)
 		Me.PnAll.Name = "PnAll"
 		Me.PnAll.Size = New System.Drawing.Size(552, 514)
-		Me.PnAll.TabIndex = 38
+		Me.PnAll.TabIndex = 4
 		'
 		'PicVehicle
 		'
@@ -865,15 +874,6 @@ Partial Class F_VEH
 		Me.Label8.Size = New System.Drawing.Size(58, 13)
 		Me.Label8.TabIndex = 40
 		Me.Label8.Text = "HDV Class"
-		'
-		'Label38
-		'
-		Me.Label38.AutoSize = True
-		Me.Label38.Location = New System.Drawing.Point(212, 52)
-		Me.Label38.Name = "Label38"
-		Me.Label38.Size = New System.Drawing.Size(24, 13)
-		Me.Label38.TabIndex = 24
-		Me.Label38.Text = "[m²]"
 		'
 		'F_VEH
 		'

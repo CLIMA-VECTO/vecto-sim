@@ -223,7 +223,7 @@ Partial Class F_GBX
 		Me.ButCancel.Location = New System.Drawing.Point(790, 569)
 		Me.ButCancel.Name = "ButCancel"
 		Me.ButCancel.Size = New System.Drawing.Size(75, 23)
-		Me.ButCancel.TabIndex = 9
+		Me.ButCancel.TabIndex = 7
 		Me.ButCancel.Text = "Cancel"
 		Me.ButCancel.UseVisualStyleBackColor = True
 		'
@@ -233,7 +233,7 @@ Partial Class F_GBX
 		Me.ButOK.Location = New System.Drawing.Point(709, 569)
 		Me.ButOK.Name = "ButOK"
 		Me.ButOK.Size = New System.Drawing.Size(75, 23)
-		Me.ButOK.TabIndex = 8
+		Me.ButOK.TabIndex = 6
 		Me.ButOK.Text = "Save"
 		Me.ButOK.UseVisualStyleBackColor = True
 		'
@@ -242,7 +242,7 @@ Partial Class F_GBX
 		Me.TbTracInt.Location = New System.Drawing.Point(303, 3)
 		Me.TbTracInt.Name = "TbTracInt"
 		Me.TbTracInt.Size = New System.Drawing.Size(40, 20)
-		Me.TbTracInt.TabIndex = 5
+		Me.TbTracInt.TabIndex = 1
 		'
 		'LvGears
 		'
@@ -254,7 +254,7 @@ Partial Class F_GBX
 		Me.LvGears.MultiSelect = False
 		Me.LvGears.Name = "LvGears"
 		Me.LvGears.Size = New System.Drawing.Size(429, 183)
-		Me.LvGears.TabIndex = 2
+		Me.LvGears.TabIndex = 0
 		Me.LvGears.TabStop = False
 		Me.LvGears.UseCompatibleStateImageBehavior = False
 		Me.LvGears.View = System.Windows.Forms.View.Details
@@ -294,7 +294,7 @@ Partial Class F_GBX
 		Me.TBI_getr.Location = New System.Drawing.Point(53, 3)
 		Me.TBI_getr.Name = "TBI_getr"
 		Me.TBI_getr.Size = New System.Drawing.Size(57, 20)
-		Me.TBI_getr.TabIndex = 4
+		Me.TBI_getr.TabIndex = 0
 		'
 		'Label49
 		'
@@ -364,7 +364,7 @@ Partial Class F_GBX
 		Me.BtRemGear.Location = New System.Drawing.Point(41, 207)
 		Me.BtRemGear.Name = "BtRemGear"
 		Me.BtRemGear.Size = New System.Drawing.Size(29, 23)
-		Me.BtRemGear.TabIndex = 3
+		Me.BtRemGear.TabIndex = 2
 		Me.BtRemGear.UseVisualStyleBackColor = True
 		'
 		'GrGearShift
@@ -379,7 +379,7 @@ Partial Class F_GBX
 		Me.GrGearShift.Location = New System.Drawing.Point(12, 377)
 		Me.GrGearShift.Name = "GrGearShift"
 		Me.GrGearShift.Size = New System.Drawing.Size(441, 182)
-		Me.GrGearShift.TabIndex = 6
+		Me.GrGearShift.TabIndex = 3
 		Me.GrGearShift.TabStop = False
 		Me.GrGearShift.Text = "Gear shift parameters"
 		'
@@ -391,7 +391,7 @@ Partial Class F_GBX
 		Me.PnTorqRes.Location = New System.Drawing.Point(230, 19)
 		Me.PnTorqRes.Name = "PnTorqRes"
 		Me.PnTorqRes.Size = New System.Drawing.Size(190, 32)
-		Me.PnTorqRes.TabIndex = 5
+		Me.PnTorqRes.TabIndex = 2
 		'
 		'Label2
 		'
@@ -419,7 +419,7 @@ Partial Class F_GBX
 		Me.TbTqResv.Location = New System.Drawing.Point(95, 6)
 		Me.TbTqResv.Name = "TbTqResv"
 		Me.TbTqResv.Size = New System.Drawing.Size(57, 20)
-		Me.TbTqResv.TabIndex = 3
+		Me.TbTqResv.TabIndex = 0
 		'
 		'ChShiftInside
 		'
@@ -429,7 +429,7 @@ Partial Class F_GBX
 		Me.ChShiftInside.Location = New System.Drawing.Point(9, 27)
 		Me.ChShiftInside.Name = "ChShiftInside"
 		Me.ChShiftInside.Size = New System.Drawing.Size(195, 17)
-		Me.ChShiftInside.TabIndex = 3
+		Me.ChShiftInside.TabIndex = 0
 		Me.ChShiftInside.Text = "Allow shift-up inside polygons (AMT)"
 		Me.ChShiftInside.UseVisualStyleBackColor = True
 		'
@@ -438,7 +438,7 @@ Partial Class F_GBX
 		Me.TbShiftTime.Location = New System.Drawing.Point(325, 51)
 		Me.TbShiftTime.Name = "TbShiftTime"
 		Me.TbShiftTime.Size = New System.Drawing.Size(57, 20)
-		Me.TbShiftTime.TabIndex = 6
+		Me.TbShiftTime.TabIndex = 3
 		'
 		'Label12
 		'
@@ -464,7 +464,7 @@ Partial Class F_GBX
 		Me.ChSkipGears.Location = New System.Drawing.Point(9, 53)
 		Me.ChSkipGears.Name = "ChSkipGears"
 		Me.ChSkipGears.Size = New System.Drawing.Size(132, 17)
-		Me.ChSkipGears.TabIndex = 4
+		Me.ChSkipGears.TabIndex = 1
 		Me.ChSkipGears.Text = "Skip Gears (MT, AMT)"
 		Me.ChSkipGears.UseVisualStyleBackColor = True
 		'
@@ -482,7 +482,7 @@ Partial Class F_GBX
 		Me.GroupBox2.Location = New System.Drawing.Point(6, 77)
 		Me.GroupBox2.Name = "GroupBox2"
 		Me.GroupBox2.Size = New System.Drawing.Size(429, 99)
-		Me.GroupBox2.TabIndex = 7
+		Me.GroupBox2.TabIndex = 4
 		Me.GroupBox2.TabStop = False
 		Me.GroupBox2.Text = "Start Gear"
 		'
@@ -586,7 +586,7 @@ Partial Class F_GBX
 		Me.GroupBox3.Location = New System.Drawing.Point(459, 440)
 		Me.GroupBox3.Name = "GroupBox3"
 		Me.GroupBox3.Size = New System.Drawing.Size(414, 119)
-		Me.GroupBox3.TabIndex = 7
+		Me.GroupBox3.TabIndex = 5
 		Me.GroupBox3.TabStop = False
 		Me.GroupBox3.Text = "Torque Converter"
 		'
@@ -640,7 +640,7 @@ Partial Class F_GBX
 		Me.TbTCinertia.Location = New System.Drawing.Point(47, 47)
 		Me.TbTCinertia.Name = "TbTCinertia"
 		Me.TbTCinertia.Size = New System.Drawing.Size(67, 20)
-		Me.TbTCinertia.TabIndex = 49
+		Me.TbTCinertia.TabIndex = 3
 		'
 		'Label1
 		'
@@ -698,7 +698,7 @@ Partial Class F_GBX
 		Me.TbTCrefrpm.Location = New System.Drawing.Point(268, 47)
 		Me.TbTCrefrpm.Name = "TbTCrefrpm"
 		Me.TbTCrefrpm.Size = New System.Drawing.Size(67, 20)
-		Me.TbTCrefrpm.TabIndex = 3
+		Me.TbTCrefrpm.TabIndex = 4
 		'
 		'ChTCon
 		'
@@ -736,7 +736,7 @@ Partial Class F_GBX
 		Me.BtAddGear.Location = New System.Drawing.Point(6, 207)
 		Me.BtAddGear.Name = "BtAddGear"
 		Me.BtAddGear.Size = New System.Drawing.Size(29, 23)
-		Me.BtAddGear.TabIndex = 3
+		Me.BtAddGear.TabIndex = 1
 		Me.BtAddGear.UseVisualStyleBackColor = True
 		'
 		'GroupBox4
@@ -748,7 +748,7 @@ Partial Class F_GBX
 		Me.GroupBox4.Location = New System.Drawing.Point(12, 135)
 		Me.GroupBox4.Name = "GroupBox4"
 		Me.GroupBox4.Size = New System.Drawing.Size(441, 236)
-		Me.GroupBox4.TabIndex = 46
+		Me.GroupBox4.TabIndex = 2
 		Me.GroupBox4.TabStop = False
 		Me.GroupBox4.Text = "Gears"
 		'
@@ -758,7 +758,7 @@ Partial Class F_GBX
 		Me.Label32.Location = New System.Drawing.Point(312, 212)
 		Me.Label32.Name = "Label32"
 		Me.Label32.Size = New System.Drawing.Size(123, 13)
-		Me.Label32.TabIndex = 35
+		Me.Label32.TabIndex = 3
 		Me.Label32.Text = "Double-Click to edit gear"
 		'
 		'PnInertiaTI
@@ -772,7 +772,7 @@ Partial Class F_GBX
 		Me.PnInertiaTI.Location = New System.Drawing.Point(469, 406)
 		Me.PnInertiaTI.Name = "PnInertiaTI"
 		Me.PnInertiaTI.Size = New System.Drawing.Size(398, 30)
-		Me.PnInertiaTI.TabIndex = 47
+		Me.PnInertiaTI.TabIndex = 4
 		'
 		'PicBox
 		'
