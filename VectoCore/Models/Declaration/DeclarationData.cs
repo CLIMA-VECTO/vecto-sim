@@ -15,6 +15,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private DeclarationPT1 _pt1;
 		private ElectricSystem _electricSystem;
 		private DeclarationFan _fan;
+		private DeclarationHVAC _hvac;
 
 		public static DeclarationWheels Wheels
 		{
@@ -46,9 +47,42 @@ namespace TUGraz.VectoCore.Models.Declaration
 			get { return Instance()._fan ?? (Instance()._fan = new DeclarationFan()); }
 		}
 
+		public static DeclarationHVAC HVAC
+		{
+			get { return Instance()._hvac ?? (Instance()._hvac = new DeclarationHVAC()); }
+		}
+
 		private static DeclarationData Instance()
 		{
 			return _instance ?? (_instance = new DeclarationData());
+		}
+	}
+
+	public class DeclarationHVAC : LookupData<MissionType, string, Watt>
+	{
+		private Dictionary<Tuple<MissionType, string>, Watt> _data = new Dictionary<Tuple<MissionType, string>, Watt>();
+
+		public override Watt Lookup(MissionType mission, string hdvClass)
+		{
+			return _data[Tuple.Create(mission, hdvClass)];
+		}
+
+		protected override string ResourceId
+		{
+			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.HVAC-Table.csv"; }
+		}
+
+		protected override void ParseData(DataTable table)
+		{
+			_data.Clear();
+			NormalizeTable(table);
+
+			foreach (DataRow row in table.Rows) {
+				var hdvClass = row.Field<string>("hdvclass/power");
+				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
+					_data[Tuple.Create(mission, hdvClass)] = row.ParseDouble(mission.ToString().ToLower()).SI<Watt>();
+				}
+			}
 		}
 	}
 
