@@ -204,7 +204,7 @@ namespace TUGraz.VectoCore.Tests.Models
 				{ "9", new[] { 350, 200, 0, 300, 0, 0, 0, 0, 0, 0 } },
 				{ "10", new[] { 350, 200, 0, 0, 0, 0, 0, 0, 0, 0 } },
 				{ "11", new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } },
-				{ "12", new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } },
+				{ "12", new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } }
 			};
 
 			var missions = new[] {
@@ -227,7 +227,38 @@ namespace TUGraz.VectoCore.Tests.Models
 		[TestMethod]
 		public void AuxPSTest()
 		{
-			Assert.Inconclusive();
+			var ps = DeclarationData.PneumaticSystem;
+
+			var expected = new Dictionary<string, int[]> {
+				{ "1", new[] { 0, 1300, 1240, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "2", new[] { 1180, 1280, 1320, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "3", new[] { 0, 1360, 1380, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "4", new[] { 1300, 1340, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "5", new[] { 1340, 1820, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "6", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "7", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "8", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "9", new[] { 1340, 1540, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "10", new[] { 1340, 1820, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "11", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "12", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
+			};
+
+			var missions = new[] {
+				MissionType.LongHaul, MissionType.RegionalDelivery, MissionType.UrbanDelivery, MissionType.MunicipalUtility,
+				MissionType.Construction, MissionType.HeavyUrban, MissionType.Urban,
+				MissionType.Suburban, MissionType.Interurban, MissionType.Coach
+			};
+
+			Assert.AreEqual(missions.Length, Enum.GetValues(typeof(MissionType)).Length, "something wrong in the mission list.");
+			Assert.IsTrue(expected.All(kv => kv.Value.Length == missions.Length), "something wrong in the test values lists.");
+
+			for (var i = 0; i < missions.Length; i++) {
+				foreach (var expect in expected) {
+					Watt value = ps.Lookup(missions[i], expect.Key);
+					Assert.AreEqual(expect.Value[i], value.Double(), Tolerance);
+				}
+			}
 		}
 
 		[TestMethod]
