@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new VehicleContainer();
 			var gbxData = EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile);
 			//GearData gearData = new GearData();
-			var axleGear = new AxleGear(gbxData.AxleGearData);
+			var axleGear = new AxleGear(vehicle, gbxData.AxleGearData);
 
 			var mockPort = new MockTnOutPort();
 			axleGear.InShaft().Connect(mockPort);

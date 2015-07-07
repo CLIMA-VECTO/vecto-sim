@@ -113,6 +113,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			switch (fileInfo.Version) {
 				case 5:
 					Vehicle = JsonConvert.DeserializeObject<VehicleFileV5Declaration>(json);
+					Vehicle.BasePath = Path.GetDirectoryName(file);
 					break;
 				default:
 					throw new UnsupportedFileVersionException("Unsupported Version of vehicle-file. Got version " + fileInfo.Version);
@@ -128,6 +129,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			switch (fileInfo.Version) {
 				case 2:
 					Engine = JsonConvert.DeserializeObject<EngineFileV2Declaration>(json);
+					Engine.BasePath = Path.GetDirectoryName(file);
 					break;
 				default:
 					throw new UnsupportedFileVersionException("Unsopported Version of engine-file. Got version " + fileInfo.Version);

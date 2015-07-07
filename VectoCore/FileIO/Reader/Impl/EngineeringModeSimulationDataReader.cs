@@ -54,13 +54,181 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			switch (fileInfo.Version) {
 				case 5:
 					Vehicle = JsonConvert.DeserializeObject<VehicleFileV5Engineering>(json);
+					Vehicle.BasePath = Path.GetDirectoryName(file);
 					break;
 				default:
 					throw new UnsupportedFileVersionException("Unsupported Version of .vveh file. Got Version " + fileInfo.Version);
 			}
 		}
 
+		/// <summary>
+		/// Iterate over all cycles defined in the JobFile and create a container with all data required for creating a simulation run
+		/// </summary>
+		/// <returns>VectoRunData instance for initializing the powertrain.</returns>
+		public override IEnumerable<VectoRunData> NextRun()
+		{
+			var job = Job as VectoJobFileV2Engineering;
+			if (job == null) {
+				Log.Warn("Job-file is null or unsupported version");
+				yield break;
+			}
+			foreach (var cycle in job.Body.Cycles) {
+				var simulationRunData = new VectoRunData() {
+					BasePath = job.BasePath,
+					JobFileName = job.JobFile,
+					EngineData = CreateEngineData((dynamic) Engine),
+					GearboxData = CreateGearboxData((dynamic) Gearbox),
+					VehicleData = CreateVehicleData((dynamic) Vehicle),
+					//DriverData = new DriverData(),
+					//Aux = 
+					Cycle = DrivingCycleData.ReadFromFile(Path.Combine(job.BasePath, cycle), DrivingCycleData.CycleType.DistanceBased),
+					IsEngineOnly = false
+				};
+				yield return simulationRunData;
+			}
+		}
 
+		/// <summary>
+		/// create VehicleData instance directly from a file
+		/// </summary>
+		/// <param name="file">filename</param>
+		/// <returns>VehicleData instance</returns>
+		public static VehicleData CreateVehicleDataFromFile(string file)
+		{
+			var data = DoReadVehicleFile(file);
+			return new EngineeringModeSimulationDataReader().CreateVehicleData((dynamic) data);
+		}
+
+		/// <summary>
+		/// Create CombustionEngineData instance directly from a file
+		/// </summary>
+		/// <param name="file">filename</param>
+		/// <returns>CombustionengineData instance</returns>
+		public static CombustionEngineData CreateEngineDataFromFile(string file)
+		{
+			var data = DoReadEngineFile(file);
+			return new EngineeringModeSimulationDataReader().CreateEngineData((dynamic) data);
+		}
+
+		/// <summary>
+		/// Create gearboxdata instance directly from a file
+		/// </summary>
+		/// <param name="file">filename</param>
+		/// <returns>GearboxData instance</returns>
+		public static GearboxData CreateGearboxDataFromFile(string file)
+		{
+			var data = DoReadGearboxFile(file);
+			return new EngineeringModeSimulationDataReader().CreateGearboxData((dynamic) data);
+		}
+
+		/// <summary>
+		/// initialize Job member (deserialize Job-file)
+		/// </summary>
+		/// <param name="file">file</param>
+		protected override void ReadJobFile(string file)
+		{
+			var json = File.ReadAllText(file);
+			var fileInfo = GetFileVersion(json);
+			CheckForEngineeringMode(fileInfo, "Job");
+
+			switch (fileInfo.Version) {
+				case 2:
+					Job = JsonConvert.DeserializeObject<VectoJobFileV2Engineering>(json);
+					Job.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
+					Job.JobFile = Path.GetFileName(file);
+					break;
+				default:
+					throw new UnsupportedFileVersionException("Unsupported version of job-file. Got version " + fileInfo.Version);
+			}
+		}
+
+		/// <summary>
+		/// initialize Engine member (deserialize Engine-file)
+		/// </summary>
+		/// <param name="file"></param>
+		protected override void ReadEngine(string file)
+		{
+			Engine = DoReadEngineFile(file);
+		}
+
+		/// <summary>
+		/// initialize Gearbox member (deserialize Gearbox-file)
+		/// </summary>
+		/// <param name="file"></param>
+		protected override void ReadGearbox(string file)
+		{
+			Gearbox = DoReadGearboxFile(file);
+		}
+
+		/// <summary>
+		/// De-serialize engine-file (JSON)
+		/// </summary>
+		/// <param name="file"></param>
+		/// <returns></returns>
+		protected static VectoEngineFile DoReadEngineFile(string file)
+		{
+			var json = File.ReadAllText(file);
+			var fileInfo = GetFileVersion(json);
+			CheckForEngineeringMode(fileInfo, "Engine");
+
+			switch (fileInfo.Version) {
+				case 2:
+					var tmp = JsonConvert.DeserializeObject<EngineFileV2Engineering>(json);
+					tmp.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
+					return tmp;
+				default:
+					throw new UnsupportedFileVersionException("Unsopported Version of engine-file. Got version " + fileInfo.Version);
+			}
+		}
+
+		/// <summary>
+		/// De-serialize gearbox-file (JSON)
+		/// </summary>
+		/// <param name="file"></param>
+		/// <returns></returns>
+		protected static VectoGearboxFile DoReadGearboxFile(string file)
+		{
+			var json = File.ReadAllText(file);
+			var fileInfo = GetFileVersion(json);
+			CheckForEngineeringMode(fileInfo, "Gearbox");
+
+			switch (fileInfo.Version) {
+				case 4:
+					var tmp = JsonConvert.DeserializeObject<GearboxFileV4Engineering>(json);
+					tmp.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
+					return tmp;
+				default:
+					throw new UnsupportedFileVersionException("Unsopported Version of gearbox-file. Got version " + fileInfo.Version);
+			}
+		}
+
+		/// <summary>
+		/// De-serialize vehicle-file (JSON)
+		/// </summary>
+		/// <param name="file"></param>
+		/// <returns></returns>
+		protected static VectoVehicleFile DoReadVehicleFile(string file)
+		{
+			var json = File.ReadAllText(file);
+			var fileInfo = GetFileVersion(json);
+			CheckForEngineeringMode(fileInfo, "Vehicle");
+
+			switch (fileInfo.Version) {
+				case 5:
+					var tmp = JsonConvert.DeserializeObject<VehicleFileV5Engineering>(json);
+					tmp.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
+					return tmp;
+				default:
+					throw new UnsupportedFileVersionException("Unsopported Version of vehicle-file. Got version " + fileInfo.Version);
+			}
+		}
+
+		/// <summary>
+		/// convert datastructure representing file-contents into internal datastructure
+		/// Vehicle, file-format version 5
+		/// </summary>
+		/// <param name="vehicle">VehicleFileV5 container</param>
+		/// <returns>VehicleData instance</returns>
 		internal VehicleData CreateVehicleData(VehicleFileV5Engineering vehicle)
 		{
 			var data = vehicle.Body;
@@ -83,121 +251,12 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			return retVal;
 		}
 
-		public override IEnumerable<VectoRunData> NextRun()
-		{
-			var job = Job as VectoJobFileV2Engineering;
-			if (job == null) {
-				Log.Warn("Job-file is null or unsupported version");
-				yield break;
-			}
-			foreach (var cycle in job.Body.Cycles) {
-				var simulationRunData = new VectoRunData() {
-					BasePath = job.BasePath,
-					JobFileName = job.JobFile,
-					EngineData = CreateEngineData((dynamic) Engine),
-					Cycle = DrivingCycleData.ReadFromFile(Path.Combine(job.BasePath, cycle), DrivingCycleData.CycleType.DistanceBased),
-					IsEngineOnly = false
-				};
-				yield return simulationRunData;
-			}
-		}
-
-
-		public static VehicleData CreateVehicleDataFromFile(string file)
-		{
-			var data = DoReadVehicleFile(file);
-			return new EngineeringModeSimulationDataReader().CreateVehicleData((dynamic) data);
-		}
-
-		public static CombustionEngineData CreateEngineDataFromFile(string file)
-		{
-			var data = DoReadEngineFile(file);
-			return new EngineeringModeSimulationDataReader().CreateEngineData((dynamic) data);
-		}
-
-		public static GearboxData CreateGearboxDataFromFile(string file)
-		{
-			var data = DoReadGearboxFile(file);
-			return new EngineeringModeSimulationDataReader().CreateGearboxData((dynamic) data);
-		}
-
-
-		protected override void ReadJobFile(string file)
-		{
-			var json = File.ReadAllText(file);
-			var fileInfo = GetFileVersion(json);
-			CheckForEngineeringMode(fileInfo, "Job");
-
-			switch (fileInfo.Version) {
-				case 2:
-					Job = JsonConvert.DeserializeObject<VectoJobFileV2Engineering>(json);
-					Job.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
-					Job.JobFile = Path.GetFileName(file);
-					break;
-				default:
-					throw new UnsupportedFileVersionException("Unsupported version of job-file. Got version " + fileInfo.Version);
-			}
-		}
-
-		protected override void ReadEngine(string file)
-		{
-			Engine = DoReadEngineFile(file);
-		}
-
-		protected override void ReadGearbox(string file)
-		{
-			Gearbox = DoReadGearboxFile(file);
-		}
-
-		protected static VectoEngineFile DoReadEngineFile(string file)
-		{
-			var json = File.ReadAllText(file);
-			var fileInfo = GetFileVersion(json);
-			CheckForEngineeringMode(fileInfo, "Engine");
-
-			switch (fileInfo.Version) {
-				case 2:
-					var tmp = JsonConvert.DeserializeObject<EngineFileV2Engineering>(json);
-					tmp.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
-					return tmp;
-				default:
-					throw new UnsupportedFileVersionException("Unsopported Version of engine-file. Got version " + fileInfo.Version);
-			}
-		}
-
-		protected static VectoGearboxFile DoReadGearboxFile(string file)
-		{
-			var json = File.ReadAllText(file);
-			var fileInfo = GetFileVersion(json);
-			CheckForEngineeringMode(fileInfo, "Gearbox");
-
-			switch (fileInfo.Version) {
-				case 4:
-					var tmp = JsonConvert.DeserializeObject<GearboxFileV4Engineering>(json);
-					tmp.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
-					return tmp;
-				default:
-					throw new UnsupportedFileVersionException("Unsopported Version of gearbox-file. Got version " + fileInfo.Version);
-			}
-		}
-
-		protected static VectoVehicleFile DoReadVehicleFile(string file)
-		{
-			var json = File.ReadAllText(file);
-			var fileInfo = GetFileVersion(json);
-			CheckForEngineeringMode(fileInfo, "Vehicle");
-
-			switch (fileInfo.Version) {
-				case 5:
-					var tmp = JsonConvert.DeserializeObject<VehicleFileV5Engineering>(json);
-					tmp.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
-					return tmp;
-				default:
-					throw new UnsupportedFileVersionException("Unsopported Version of vehicle-file. Got version " + fileInfo.Version);
-			}
-		}
-
-
+		/// <summary>
+		/// convert datastructure representing the file-contents into internal data structure
+		/// Engine, file-format version 2
+		/// </summary>
+		/// <param name="engine">Engin-Data file (Engineering mode)</param>
+		/// <returns></returns>
 		internal CombustionEngineData CreateEngineData(EngineFileV2Engineering engine)
 		{
 			var retVal = SetCommonCombustionEngineData(engine);
@@ -209,6 +268,13 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			return retVal;
 		}
 
+
+		/// <summary>
+		/// convert datastructure representing the file-contents into internal data structure
+		/// Gearbox, File-format Version 4
+		/// </summary>
+		/// <param name="gearbox"></param>
+		/// <returns></returns>
 		internal GearboxData CreateGearboxData(GearboxFileV4Engineering gearbox)
 		{
 			var retVal = SetCommonGearboxData(gearbox.Body);

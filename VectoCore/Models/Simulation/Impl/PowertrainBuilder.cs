@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -15,15 +17,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	{
 		private readonly bool _engineOnly;
 		private readonly VehicleContainer _container;
-		//private ICombustionEngine _engine;
-		//private IGearbox _gearBox;
-		//private IVehicle _vehicle;
-		//private IWheels _wheels;
-		//private IDriver _driver;
-		//private readonly Dictionary<string, AuxiliaryData> _auxDict = new Dictionary<string, AuxiliaryData>();
-		//private IPowerTrainComponent _retarder;
-		//private IClutch _clutch;
-		//private IPowerTrainComponent _axleGear;
+
 
 		public PowertrainBuilder(IModalDataWriter dataWriter, ISummaryDataWriter sumWriter, bool engineOnly)
 		{
@@ -38,48 +32,97 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildFullPowertrain(VectoRunData data)
 		{
-			//throw new NotImplementedException("FullPowertrain is not fully implemented yet.");
-
 			//todo: make distinction between time based and distance based driving cycle!
-			var cycle = new TimeBasedDrivingCycle(_container, data.Cycle);
-
-			var axleGear = new AxleGear(data.GearboxData.AxleGearData);
-			var wheels = new Wheels(_container, data.VehicleData.DynamicTyreRadius);
-			var driver = new Driver(_container, data.DriverData);
-			var vehicle = new Vehicle(_container, data.VehicleData);
-			var gearBox = new Gearbox(_container, data.GearboxData);
-			var clutch = new Clutch(_container, data.EngineData);
-			var retarder = new Retarder(_container, data.VehicleData.Retarder.LossMap);
-			var engine = new CombustionEngine(_container, data.EngineData);
-
+			var cycle = new DistanceBasedDrivingCycle(_container, data.Cycle);
 
 			// connect cycle --> driver --> vehicle --> wheels --> axleGear --> gearBox --> retarder --> clutch
-			cycle.InShaft().Connect(driver.OutShaft());
-			driver.InShaft().Connect(vehicle.OutShaft());
-			vehicle.InPort().Connect(wheels.OutPort());
-			wheels.InShaft().Connect(axleGear.OutShaft());
-			axleGear.InShaft().Connect(gearBox.OutShaft());
-			gearBox.InShaft().Connect(retarder.OutShaft());
-			retarder.InShaft().Connect(clutch.OutShaft());
+			dynamic tmp = AddComponent(cycle, new Driver(_container, data.DriverData));
+			tmp = AddComponent(tmp, new Vehicle(_container, data.VehicleData));
+			tmp = AddComponent(tmp, new Wheels(_container, data.VehicleData.DynamicTyreRadius));
+			tmp = AddComponent(tmp, new AxleGear(_container, data.GearboxData.AxleGearData));
+
+			switch (data.VehicleData.Retarder.Type) {
+				case RetarderData.RetarderType.Primary:
+					tmp = AddComponent(tmp, new Retarder(_container, data.VehicleData.Retarder.LossMap));
+					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					break;
+				case RetarderData.RetarderType.Secondary:
+					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					tmp = AddComponent(tmp, new Retarder(_container, data.VehicleData.Retarder.LossMap));
+					break;
+				case RetarderData.RetarderType.None:
+					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					break;
+			}
+
+			tmp = AddComponent(tmp, new Clutch(_container, data.EngineData));
+
+			// connect cluch --> aux --> ... --> aux_XXX --> directAux
+			if (data.Aux != null) {
+				foreach (var auxData in data.Aux) {
+					var auxCycleData = new AuxiliaryCycleDataAdapter(data.Cycle, auxData.ID);
+					IAuxiliary auxiliary = new MappingAuxiliary(_container, auxCycleData, auxData.Data);
+					tmp = AddComponent(tmp, auxiliary);
+				}
+			}
 
 			// connect directAux --> engine
 			IAuxiliary directAux = new DirectAuxiliary(_container, new AuxiliaryCycleDataAdapter(data.Cycle));
-			directAux.InShaft().Connect(engine.OutShaft());
+			tmp = AddComponent(tmp, directAux);
 
-			// connect aux --> ... --> aux_XXX --> directAux
-			var previousAux = directAux;
-			foreach (var auxData in data.Aux) {
-				var auxCycleData = new AuxiliaryCycleDataAdapter(data.Cycle, auxData.ID);
-				IAuxiliary auxiliary = new MappingAuxiliary(_container, auxCycleData, auxData.Data);
-				auxiliary.InShaft().Connect(previousAux.OutShaft());
-				previousAux = auxiliary;
-			}
-
-			// connect clutch --> aux
-			clutch.InShaft().Connect(previousAux.OutShaft());
+			AddComponent(tmp, new CombustionEngine(_container, data.EngineData));
 
 			return _container;
 		}
+
+		protected IGearbox GetGearbox(VehicleContainer container, GearboxData data)
+		{
+			switch (data.Type) {
+				case GearboxData.GearboxType.AT:
+					throw new VectoSimulationException("Unsupported Geabox type: Automatic Transmission (AT)");
+				case GearboxData.GearboxType.Custom:
+					throw new VectoSimulationException("Custom Gearbox not supported");
+				default:
+					return new Gearbox(container, data);
+			}
+		}
+
+		protected virtual IDriver AddComponent(IDrivingCycleDemandDrivingCycle prev, IDriver next)
+		{
+			prev.InShaft().Connect(next.OutShaft());
+			return next;
+		}
+
+		protected virtual IVehicle AddComponent(IDriver prev, IVehicle next)
+		{
+			prev.InShaft().Connect(next.OutShaft());
+			return next;
+		}
+
+		protected virtual IWheels AddComponent(IRoadPortInProvider prev, IWheels next)
+		{
+			prev.InPort().Connect(next.OutPort());
+			return next;
+		}
+
+
+		protected virtual IPowerTrainComponent AddComponent(IWheels prev, IPowerTrainComponent next)
+		{
+			prev.InShaft().Connect(next.OutShaft());
+			return next;
+		}
+
+		protected virtual IPowerTrainComponent AddComponent(IPowerTrainComponent prev, IPowerTrainComponent next)
+		{
+			prev.InShaft().Connect(next.OutShaft());
+			return next;
+		}
+
+		protected virtual void AddComponent(IPowerTrainComponent prev, IOutShaft next)
+		{
+			prev.InShaft().Connect(next.OutShaft());
+		}
+
 
 		private VehicleContainer BuildEngineOnly(VectoRunData data)
 		{
@@ -96,72 +139,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			cycle.InShaft().Connect(gearBox.OutShaft());
 
 			return _container;
-			//var simulator = new VectoRun(_container, cycle);
-			//return simulator;
 		}
-
-
-//		public void AddCycle(string cycleFile) {}
-
-//		public void AddEngine(CombustionEngineData data)
-//		{
-//			_engine = new CombustionEngine(_container, data);
-
-//			AddClutch(data);
-//		}
-
-//		public void AddClutch(CombustionEngineData engineData)
-//		{
-//			_clutch = new Clutch(_container, engineData);
-//		}
-
-		public IGearbox AddGearbox(GearboxData gearboxData)
-		{
-			//_axleGear = new AxleGear(gearboxData.AxleGearData);
-
-			switch (gearboxData.Type) {
-				case GearboxData.GearboxType.MT:
-					return new Gearbox(_container, gearboxData);
-				case GearboxData.GearboxType.AMT:
-					return new Gearbox(_container, gearboxData);
-				/*					case GearboxData.GearboxType.AT:
-								_dataWriter.HasTorqueConverter = gearboxData.HasTorqueConverter;
-								break;
-		*/
-				default:
-					throw new VectoException(String.Format("Gearboxtype {0} not implemented", gearboxData.Type));
-			}
-		}
-
-//		public void AddAuxiliary(string auxFileName, string auxID)
-//		{
-//			_auxDict[auxID] = AuxiliaryData.ReadFromFile(auxFileName);
-//		}
-
-//		public void AddDriver(VectoRunData.StartStopData startStop,
-//			VectoRunData.OverSpeedEcoRollData overSpeedEcoRoll,
-//			VectoRunData.LACData lookAheadCoasting, string accelerationLimitingFile)
-//		{
-//			if (_engineOnly) {
-//				return;
-//			}
-//			var driverData = new DriverData(startStop, overSpeedEcoRoll, lookAheadCoasting, accelerationLimitingFile);
-//			_driver = new Driver(driverData);
-//		}
-
-//		public void AddVehicle(VehicleData data)
-//		{
-//			if (_engineOnly) {
-//				return;
-//			}
-
-//			_vehicle = new Vehicle(_container, data);
-//		}
-
-//		public void AddRetarder(string retarderFile)
-//		{
-//			var retarderData = RetarderLossMap.ReadFromFile(retarderFile);
-//			_retarder = new Retarder(_container, retarderData);
-//		}
 	}
 }

@@ -11,9 +11,7 @@
     "EngineFile": "../Components/24t Coach.veng",
     "GearboxFile": "../Components/24t Coach.vgbx",
     "Cycles": [
-      "TestData/Cycles/Engine Only1.vdri",
-      "TestData/Cycles/Engine Only2.vdri",
-      "TestData/Cycles/Engine Only3.vdri"
+      "../Cycles/Coach_24t_xshort.vdri"
     ],
     "VACC": "TestData/Components/Coach.vacc",
     "EngineOnlyMode": true,
