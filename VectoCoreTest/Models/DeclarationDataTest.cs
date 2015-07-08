@@ -21,11 +21,11 @@ namespace TUGraz.VectoCore.Tests.Models
 		{
 			var wheels = DeclarationData.Wheels;
 
-			var tmp = wheels.Lookup("285/70 R 19.5");
+			var tmp = wheels.Lookup("285/70 R19.5");
 
 			Assert.AreEqual(7.9, tmp.Inertia.Double(), Tolerance);
 			Assert.AreEqual(0.8943, tmp.DynamicTyreRadius.Double(), Tolerance);
-			Assert.AreEqual(0, tmp.SizeClass);
+			Assert.AreEqual("b", tmp.SizeClass);
 		}
 
 		[TestMethod]
@@ -354,8 +354,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			var longHaulMission = segment.Missions[0];
 			Assert.AreEqual(MissionType.LongHaul, longHaulMission.MissionType);
 
-			Assert.IsNotNull(longHaulMission.CrossWindCorrectionFile);
-			Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(longHaulMission.CrossWindCorrectionFile).ReadLine()));
+			Assert.AreEqual("RigidSolo", longHaulMission.CrossWindCorrection);
 
 			Assert.IsTrue(new[] { 0.4, 0.6 }.SequenceEqual(longHaulMission.AxleWeightDistribution));
 			Assert.IsTrue(new double[] { }.SequenceEqual(longHaulMission.TrailerAxleWeightDistribution));
@@ -372,8 +371,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			var regionalDeliveryMission = segment.Missions[1];
 			Assert.AreEqual(MissionType.RegionalDelivery, regionalDeliveryMission.MissionType);
 
-			Assert.IsNotNull(regionalDeliveryMission.CrossWindCorrectionFile);
-			Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(regionalDeliveryMission.CrossWindCorrectionFile).ReadLine()));
+			Assert.AreEqual("RigidSolo", regionalDeliveryMission.CrossWindCorrection);
 
 			Assert.IsTrue(new[] { 0.45, 0.55 }.SequenceEqual(regionalDeliveryMission.AxleWeightDistribution));
 			Assert.IsTrue(new double[] { }.SequenceEqual(regionalDeliveryMission.TrailerAxleWeightDistribution));
@@ -390,8 +388,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			var urbanDeliveryMission = segment.Missions[2];
 			Assert.AreEqual(MissionType.UrbanDelivery, urbanDeliveryMission.MissionType);
 
-			Assert.IsNotNull(urbanDeliveryMission.CrossWindCorrectionFile);
-			Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(urbanDeliveryMission.CrossWindCorrectionFile).ReadLine()));
+			Assert.AreEqual("RigidSolo", urbanDeliveryMission.CrossWindCorrection);
 
 			Assert.IsTrue(new[] { 0.45, 0.55 }.SequenceEqual(urbanDeliveryMission.AxleWeightDistribution));
 			Assert.IsTrue(new double[] { }.SequenceEqual(urbanDeliveryMission.TrailerAxleWeightDistribution));

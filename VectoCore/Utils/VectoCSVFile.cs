@@ -122,7 +122,6 @@ namespace TUGraz.VectoCore.Utils
 			Contract.Requires(line != null);
 
 			line = Regex.Replace(line, @"\[.*?\]", "");
-			line = Regex.Replace(line, @"\(.*?\)", "");
 			line = line.Replace("<", "");
 			line = line.Replace(">", "");
 			return line.Split(Delimiter).Select(col => col.Trim());

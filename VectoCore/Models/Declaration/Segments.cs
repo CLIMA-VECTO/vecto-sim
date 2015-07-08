@@ -29,17 +29,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public override Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight)
 		{
-			var row = SegmentTable.Rows.Cast<DataRow>().First(r => r.Field<string>("tvehcat") == vehicleCategory.ToString()
-																	&& r.Field<string>("taxleconf") == axleConfiguration.GetName()
-																	&& r.ParseDouble("gvw_min").SI<Ton>() <= grossVehicleMassRating
-																	&& r.ParseDouble("gvw_max").SI<Ton>() > grossVehicleMassRating);
+			var row =
+				SegmentTable.Rows.Cast<DataRow>().First(r => r.Field<string>("valid") == "1"
+															&& r.Field<string>("vehiclecategory") == vehicleCategory.ToString()
+															&& r.Field<string>("axleconf.") == axleConfiguration.GetName()
+															&& r.ParseDouble("gvw_min").SI<Ton>() <= grossVehicleMassRating
+															&& r.ParseDouble("gvw_max").SI<Ton>() > grossVehicleMassRating);
 			var segment = new Segment {
 				GrossVehicleWeightMin = row.ParseDouble("gvw_min").SI().Ton.Cast<Kilogram>(),
 				GrossVehicleWeightMax = row.ParseDouble("gvw_max").SI().Ton.Cast<Kilogram>(),
 				VehicleCategory = vehicleCategory,
 				AxleConfiguration = axleConfiguration,
-				VehicleClass = row.Field<string>("hdv_class"),
-				AccelerationFile = RessourceHelper.ReadStream(ResourceNamespace + "VACC." + row.Field<string>("vacc")),
+				VehicleClass = row.Field<string>("hdvclass"),
+				AccelerationFile = RessourceHelper.ReadStream(ResourceNamespace + "VACC." + row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(grossVehicleMassRating, curbWeight, row).ToArray()
 			};
 			return segment;
@@ -54,32 +56,37 @@ namespace TUGraz.VectoCore.Models.Declaration
 				string trailerField;
 
 				if (missionType == MissionType.LongHaul) {
-					vcdvField = "vcdv-longhaul";
-					axleField = "rigid/truckaxles-longhaul";
+					vcdvField = "crosswindcorrection-longhaul";
+					axleField = "truckaxles-longhaul";
 					trailerField = "traileraxles-longhaul";
 				} else {
-					vcdvField = "vcdv-other";
-					axleField = "rigid/truckaxles-other";
+					vcdvField = "crosswindcorrection-other";
+					axleField = "truckaxles-other";
 					trailerField = "traileraxles-other";
 				}
 
 				var mission = new Mission {
 					MissionType = missionType,
-					CrossWindCorrectionFile = RessourceHelper.ReadStream(ResourceNamespace + "VCDV." + row.Field<string>(vcdvField)),
+					CrossWindCorrection = row.Field<string>(vcdvField),
 					MassExtra = row.ParseDouble("massextra-" + missionType.ToString().ToLower()).SI<Kilogram>(),
 					CycleFile = RessourceHelper.ReadStream(ResourceNamespace + "MissionCycles." + missionType + ".vdri"),
 					AxleWeightDistribution = row.Field<string>(axleField).Split('/').ToDouble().Select(x => x / 100.0).ToArray()
 				};
 
 				var trailerAxles = row.Field<string>(trailerField).Split('/');
-				var count = int.Parse(trailerAxles[1]);
-				var weightPercent = trailerAxles[0].ToDouble();
+				var count = 0;
+				var weightPercent = 0.0;
+
+				if (trailerAxles[0] != "-") {
+					count = int.Parse(trailerAxles[1]);
+					weightPercent = trailerAxles[0].ToDouble();
+				}
 				mission.TrailerAxleWeightDistribution = Enumerable.Repeat(weightPercent / count / 100.0, count).ToArray();
 
 				mission.MinLoad = 0.SI<Kilogram>();
 				mission.MaxLoad = grossVehicleMassRating - mission.MassExtra - curbWeight;
 
-				var refLoadField = row.Field<string>("refload-" + missionType.ToString().ToLower());
+				var refLoadField = row.Field<string>("payload-" + missionType.ToString().ToLower());
 				mission.RefLoad = CalculateRefLoad(grossVehicleMassRating, refLoadField, missionType);
 
 				yield return mission;
