@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
@@ -11,7 +12,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
 	public class ShiftPolygon : SimulationComponentData
 	{
-		private List<ShiftPolygonEntry> _entries;
+		private List<ShiftPolygonEntry> _upshiftPolygon;
+		private List<ShiftPolygonEntry> _downshifPolygon;
+
+		internal ShiftPolygon(List<ShiftPolygonEntry> downshift, List<ShiftPolygonEntry> upshift)
+		{
+			_upshiftPolygon = upshift;
+			_downshifPolygon = downshift;
+		}
 
 		public static ShiftPolygon ReadFromFile(string fileName)
 		{
@@ -25,23 +33,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				throw new VectoException("ShiftPolygon must consist of at least tow lines with numeric values (below file header)");
 			}
 
-			List<ShiftPolygonEntry> entries;
+			List<ShiftPolygonEntry> entriesDown, entriesUp;
 			if (HeaderIsValid(data.Columns)) {
-				entries = CreateFromColumnNames(data);
+				entriesDown = CreateFromColumnNames(data, Fields.AngluarSpeedDown);
+				entriesUp = CreateFromColumnNames(data, Fields.AngularSpeedUp);
 			} else {
 				var log = LogManager.GetLogger<ShiftPolygon>();
 				log.WarnFormat(
 					"ShiftPolygon: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index",
 					Fields.Torque, Fields.AngularSpeedUp, Fields.AngluarSpeedDown,
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
-				entries = CreateFromColumnIndizes(data);
+				entriesDown = CreateFromColumnIndizes(data, 1);
+				entriesUp = CreateFromColumnIndizes(data, 2);
 			}
-			return new ShiftPolygon { _entries = entries };
+			return new ShiftPolygon(entriesDown, entriesUp);
 		}
 
-		public ShiftPolygonEntry this[int i]
+		public ReadOnlyCollection<ShiftPolygonEntry> Upshift
 		{
-			get { return _entries[i]; }
+			get { return _upshiftPolygon.AsReadOnly(); }
+		}
+
+		public ReadOnlyCollection<ShiftPolygonEntry> Downshift
+		{
+			get { return _downshifPolygon.AsReadOnly(); }
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
@@ -50,24 +65,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 					columns.Contains((Fields.AngluarSpeedDown));
 		}
 
-		private static List<ShiftPolygonEntry> CreateFromColumnNames(DataTable data)
+		private static List<ShiftPolygonEntry> CreateFromColumnNames(DataTable data, string columnName)
 		{
 			return (from DataRow row in data.Rows
 				select new ShiftPolygonEntry {
 					Torque = row.ParseDouble(Fields.Torque).SI<NewtonMeter>(),
-					AngularSpeedDown = row.ParseDouble(Fields.AngluarSpeedDown).RPMtoRad(),
-					AngularSpeedUp = row.ParseDouble(Fields.AngularSpeedUp).RPMtoRad()
+					AngularSpeed = row.ParseDouble(columnName).RPMtoRad(),
 				}).ToList();
 		}
 
-		private static List<ShiftPolygonEntry> CreateFromColumnIndizes(DataTable data)
+		private static List<ShiftPolygonEntry> CreateFromColumnIndizes(DataTable data, int column)
 		{
 			return (from DataRow row in data.Rows
 				select
 					new ShiftPolygonEntry {
 						Torque = row.ParseDouble(0).SI<NewtonMeter>(),
-						AngularSpeedDown = row.ParseDouble(1).RPMtoRad(),
-						AngularSpeedUp = row.ParseDouble(2).RPMtoRad()
+						AngularSpeed = row.ParseDouble(column).RPMtoRad(),
 					}).ToList();
 		}
 
@@ -97,14 +110,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			public NewtonMeter Torque { get; set; }
 
 			/// <summary>
-			///		[1/s] angular velocity threshold for downshift 
+			///		[1/s] angular velocity threshold
 			/// </summary>
-			public PerSecond AngularSpeedDown { get; set; }
-
-			/// <summary>
-			///		[1/s] angular velocity threshold for upshift
-			/// </summary>
-			public PerSecond AngularSpeedUp { get; set; }
+			public PerSecond AngularSpeed { get; set; }
 		}
 	}
 }

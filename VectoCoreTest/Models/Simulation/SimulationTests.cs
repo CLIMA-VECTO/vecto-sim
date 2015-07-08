@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			};
 			factory.DataReader.SetJobFile(EngineOnlyJob);
 
-			var runs = factory.NextRun();
+			var runs = factory.SimulationRuns();
 			return runs.First();
 
 			//var run = SimulatorFactory.CreateTimeBasedEngineOnlyRun(EngineFile, CycleFile, jobFileName: "", jobName: "",
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			factory.SetJobFile(jobFile);
 
 			var jobContainer = new JobContainer(new TestSumWriter());
-//			jobContainer.AddRuns(factory.NextRun());
+//			jobContainer.AddRuns(factory.Runs());
 			jobContainer.Execute();
 
 			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum", @"TestData\Jobs\24t Coach.vsum");

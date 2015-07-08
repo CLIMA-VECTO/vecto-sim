@@ -12,7 +12,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected ITnOutPort Next;
 
-		protected GearboxData Data;
+		internal GearboxData Data;
 
 		public Gearbox(IVehicleContainer container, GearboxData gearboxData) : base(container)
 		{

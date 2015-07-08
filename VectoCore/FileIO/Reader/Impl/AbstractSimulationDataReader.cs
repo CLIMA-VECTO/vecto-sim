@@ -73,12 +73,10 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		internal VehicleData SetCommonVehicleData(VehicleFileV5Declaration vehicle)
 		{
 			var data = ((dynamic) vehicle).Body;
-			return new VehicleData {
+			var retVal = new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				VehicleCategory = data.VehicleCategory(),
-				AxleConfiguration =
-					(AxleConfiguration) Enum.Parse(typeof (AxleConfiguration), "AxleConfig_" + data.AxleConfig.TypeStr),
-				// TODO: @@@quam better use of enum-prefix
+				AxleConfiguration = vehicle.Body.AxleConfigurationType(),
 				CurbWeight = SIConvert<Kilogram>(data.CurbWeight),
 				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
 				//Loading = data.Loading.SI<Kilogram>(),
@@ -89,13 +87,19 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				CrossSectionAreaRigidTruck = SIConvert<SquareMeter>(data.CrossSectionAreaRigidTruck),
 				//TyreRadius = data.TyreRadius.SI().Milli.Meter.Cast<Meter>(),
 				Rim = data.RimStr,
-				Retarder = new RetarderData() {
-					LossMap = RetarderLossMap.ReadFromFile(Path.Combine(vehicle.BasePath, data.Retarder.File)),
-					Type =
-						(RetarderData.RetarderType) Enum.Parse(typeof (RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
-					Ratio = data.Retarder.Ratio
-				}
 			};
+
+			var retarder = new RetarderData() {
+				Type =
+					(RetarderData.RetarderType) Enum.Parse(typeof (RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
+			};
+			if (retarder.Type != RetarderData.RetarderType.None) {
+				retarder.LossMap = RetarderLossMap.ReadFromFile(Path.Combine(vehicle.BasePath, data.Retarder.File));
+				retarder.Ratio = data.Retarder.Ratio;
+			}
+			retVal.Retarder = retarder;
+
+			return retVal;
 		}
 
 		internal CombustionEngineData SetCommonCombustionEngineData(EngineFileV2Declaration engine)

@@ -31,10 +31,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public override Segment Lookup(VehicleCategory vehicleCategory, AxleConfiguration axleConfiguration,
 			Kilogram grossVehicleMassRating, Kilogram curbWeight)
 		{
-			var row = SegmentTable.Rows.Cast<DataRow>().First(r => r.Field<string>("tvehcat") == vehicleCategory.ToString()
-																	&& r.Field<string>("taxleconf") == axleConfiguration.GetName()
-																	&& r.ParseDouble("gvw_min").SI<Ton>() <= grossVehicleMassRating
-																	&& r.ParseDouble("gvw_max").SI<Ton>() > grossVehicleMassRating);
+			var row =
+				SegmentTable.Rows.Cast<DataRow>()
+					.First(r => r.Field<string>("valid") == "1" && r.Field<string>("tvehcat") == vehicleCategory.ToString()
+								&& r.Field<string>("taxleconf") == axleConfiguration.GetName()
+								&& r.ParseDouble("gvw_min").SI<Ton>() <= grossVehicleMassRating
+								&& r.ParseDouble("gvw_max").SI<Ton>() > grossVehicleMassRating);
 			var segment = new Segment {
 				GrossVehicleWeightMin = row.ParseDouble("gvw_min").SI().Ton.Cast<Kilogram>(),
 				GrossVehicleWeightMax = row.ParseDouble("gvw_max").SI().Ton.Cast<Kilogram>(),

@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// Creates powertrain and initializes it with the component's data.
 		/// </summary>
 		/// <returns>new VectoRun Instance</returns>
-		public IEnumerable<IVectoRun> NextRun()
+		public IEnumerable<IVectoRun> SimulationRuns()
 		{
 			var i = 0;
 			foreach (var data in DataReader.NextRun()) {
@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				yield return new VectoRun(builder.Build(data));
 			}
 			//_runCreator.SetJobFile(jobFile);
-			//foreach (var data in _runCreator.NextRun()) {
+			//foreach (var data in _runCreator.Runs()) {
 			//	//for (var i = 0; i < data.Cycles.Count; i++) {
 			//	var cycleName = data.Cycle;
 			//	var jobName = string.Format("{0}-{1}", jobNumber, i);

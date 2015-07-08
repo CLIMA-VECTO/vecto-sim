@@ -12,15 +12,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class VehicleContainer : IVehicleContainer
 	{
-		private readonly IList<VectoSimulationComponent> _components = new List<VectoSimulationComponent>();
-		private IEngineCockpit _engine;
-		private IGearboxCockpit _gearbox;
-		private IVehicleCockpit _vehicle;
+		internal readonly IList<VectoSimulationComponent> _components = new List<VectoSimulationComponent>();
+		internal IEngineCockpit _engine;
+		internal IGearboxCockpit _gearbox;
+		internal IVehicleCockpit _vehicle;
 
-		private IDrivingCycleOutPort _cycle;
+		internal IDrivingCycleOutPort _cycle;
 
-		private ISummaryDataWriter _sumWriter;
-		private IModalDataWriter _dataWriter;
+		internal ISummaryDataWriter _sumWriter;
+		internal IModalDataWriter _dataWriter;
 
 		private ILog _logger;
 

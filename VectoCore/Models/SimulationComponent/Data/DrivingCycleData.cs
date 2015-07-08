@@ -238,7 +238,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
-		private class DistanceBasedDataParser : IDataParser
+		internal class DistanceBasedDataParser : IDataParser
 		{
 			public IEnumerable<DrivingCycleEntry> Parse(DataTable table)
 			{

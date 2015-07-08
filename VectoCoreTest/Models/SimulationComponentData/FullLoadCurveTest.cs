@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
@@ -9,8 +10,20 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 	[TestClass]
 	public class FullLoadCurveTest
 	{
+		private const string CoachEngine = @"TestData\Components\24t Coach.veng";
+
 		private const string CoachEngineFLD = @"TestData\Components\24t Coach.vfld";
 		private const double Tolerance = 0.0001;
+
+
+		[TestMethod]
+		public void TestFullLoadCurveDerivedProperties()
+		{
+			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
+
+			var preferredSpeed = engineData.GetFullLoadCurve(1).PreferredSpeed;
+			Assert.AreEqual(130.691151551712, preferredSpeed.Double(), 0.0001);
+		}
 
 		[TestMethod]
 		public void TestFullLoadStaticTorque()
@@ -26,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void TestFullLoadEngineSpeedRated()
 		{
 			var fldCurve = FullLoadCurve.ReadFromFile(CoachEngineFLD);
-			Assert.AreEqual(181.8444, (double) fldCurve.RatedSpeed(), Tolerance);
+			Assert.AreEqual(181.8444, fldCurve.RatedSpeed.Double(), Tolerance);
 		}
 
 		[TestMethod]

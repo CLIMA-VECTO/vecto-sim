@@ -42,7 +42,8 @@ namespace TUGraz.VectoCore.FileIO.DeclarationFile
 
 			public AxleConfiguration AxleConfigurationType()
 			{
-				return (AxleConfiguration) Enum.Parse(typeof (AxleConfiguration), AxleConfig.TypeStr, true);
+				// TODO: @@@quam better use of enum-prefix
+				return (AxleConfiguration) Enum.Parse(typeof (AxleConfiguration), "AxleConfig_" + AxleConfig.TypeStr, true);
 			}
 
 			public class AxleConfigData

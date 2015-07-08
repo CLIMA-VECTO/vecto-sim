@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void TestGearboxDataReadTest()
 		{
 			var gbxData = EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(GearboxFile);
-				//GearboxData.ReadFromFile(GearboxFile);
+			//GearboxData.ReadFromFile(GearboxFile);
 
 			Assert.AreEqual(GearboxData.GearboxType.AMT, gbxData.Type);
 			Assert.AreEqual(1.0, gbxData.TractionInterruption.Double(), 0.0001);
@@ -28,9 +28,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(3.240355, gbxData.AxleGearData.Ratio, 0.0001);
 			Assert.AreEqual(1.0, gbxData[7].Ratio, 0.0001);
 
-			Assert.AreEqual(-400, gbxData[1].ShiftPolygon[0].Torque.Double(), 0.0001);
-			Assert.AreEqual(560.RPMtoRad().Double(), gbxData[1].ShiftPolygon[0].AngularSpeedDown.Double(), 0.0001);
-			Assert.AreEqual(1289.RPMtoRad().Double(), gbxData[1].ShiftPolygon[0].AngularSpeedUp.Double(), 0.0001);
+			Assert.AreEqual(-400, gbxData[1].ShiftPolygon.Downshift[0].Torque.Double(), 0.0001);
+			Assert.AreEqual(560.RPMtoRad().Double(), gbxData[1].ShiftPolygon.Downshift[0].AngularSpeed.Double(), 0.0001);
+			Assert.AreEqual(1289.RPMtoRad().Double(), gbxData[1].ShiftPolygon.Upshift[0].AngularSpeed.Double(), 0.0001);
 
 			Assert.AreEqual(200.RPMtoRad().Double(), gbxData[1].LossMap[15].InputSpeed.Double(), 0.0001);
 			Assert.AreEqual(-350, gbxData[1].LossMap[15].InputTorque.Double(), 0.0001);

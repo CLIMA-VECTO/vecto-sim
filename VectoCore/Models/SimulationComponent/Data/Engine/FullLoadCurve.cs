@@ -20,6 +20,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		private List<FullLoadCurveEntry> _fullLoadEntries;
 		private LookupData<PerSecond, Second> _pt1Data;
 
+		private Watt _maxPower;
+
+		private PerSecond _ratedSpeed;
+		private PerSecond _preferredSpeed;
+		private PerSecond _engineSpeedLo; // 55% of Pmax
+		private PerSecond _engineSpeedHi; // 70% of Pmax
+		private PerSecond _n95hSpeed; // 95% of Pmax
+
 		public static FullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
 		{
 			var data = VectoCSVFile.Read(fileName);
@@ -91,6 +99,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				}).ToList();
 		}
 
+		public CombustionEngineData EngineData { get; internal set; }
+
 		/// <summary>
 		///     [rad/s] => [Nm]
 		/// </summary>
@@ -150,11 +160,79 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return _pt1Data.Lookup(angularVelocity);
 		}
 
+
 		/// <summary>
 		///		Get the engine's rated speed from the given full-load curve (i.e. engine speed with max. power)
 		/// </summary>
 		/// <returns>[1/s]</returns>
-		public PerSecond RatedSpeed()
+		public PerSecond RatedSpeed
+		{
+			get
+			{
+				if (_ratedSpeed == null) {
+					ComputeRatedSpeed();
+				}
+				return _ratedSpeed;
+			}
+		}
+
+		public Watt MaxPower
+		{
+			get
+			{
+				if (_maxPower == null) {
+					ComputeRatedSpeed();
+				}
+				return _maxPower;
+			}
+		}
+
+		/// <summary>
+		///		Get the engine's preferred speed from the given full-load curve (i.e. Speed at 51% torque/speed-integral between idling and N95h.)
+		/// </summary>
+		public PerSecond PreferredSpeed
+		{
+			get
+			{
+				if (_preferredSpeed == null) {
+					ComputePreferredSpeed();
+				}
+				return _preferredSpeed;
+			}
+		}
+
+		public PerSecond N95hSpeed
+		{
+			get { return _n95hSpeed ?? (_n95hSpeed = FindEngineSpeedForPower(0.95 * MaxPower).Last()); }
+		}
+
+
+		public PerSecond LoSpeed
+		{
+			get { return _engineSpeedLo ?? (_engineSpeedLo = FindEngineSpeedForPower(0.55 * MaxPower).First()); }
+		}
+
+		public PerSecond HiSpeed
+		{
+			get { return _engineSpeedHi ?? (_engineSpeedHi = FindEngineSpeedForPower(0.7 * MaxPower).Last()); }
+		}
+
+
+		public NewtonMeter MaxLoadTorque
+		{
+			get { return _fullLoadEntries.Max(x => x.TorqueFullLoad); }
+		}
+
+		public NewtonMeter MaxDragTorque
+		{
+			get { return _fullLoadEntries.Min(x => x.TorqueDrag); }
+		}
+
+		/// <summary>
+		///		Compute the engine's rated speed from the given full-load curve (i.e. engine speed with max. power)
+		/// </summary>
+		/// <returns>[1/s]</returns>
+		private void ComputeRatedSpeed()
 		{
 			var max = new Tuple<PerSecond, Watt>(0.SI<PerSecond>(), 0.SI<Watt>());
 			for (var idx = 1; idx < _fullLoadEntries.Count; idx++) {
@@ -164,9 +242,59 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				}
 			}
 
-			return max.Item1;
+			_ratedSpeed = max.Item1;
+			_maxPower = max.Item2;
 		}
 
+
+		private void ComputePreferredSpeed()
+		{
+			var maxArea = ComputeArea(EngineData.IdleSpeed, N95hSpeed);
+
+			var area = 0.0;
+			var idx = 0;
+			while (++idx < _fullLoadEntries.Count) {
+				var additionalArea = ComputeArea(_fullLoadEntries[idx - 1].EngineSpeed, _fullLoadEntries[idx].EngineSpeed);
+				if (area + additionalArea > 0.51 * maxArea) {
+					var deltaArea = 0.51 * maxArea - area;
+					_preferredSpeed = ComputeEngineSpeedForSegmentArea(_fullLoadEntries[idx - 1], _fullLoadEntries[idx], deltaArea);
+					return;
+				}
+				area += additionalArea;
+			}
+			Log.WarnFormat("Could not compute preferred speed, check FullLoadCurve! N95h: {0}, maxArea: {1}", N95hSpeed, maxArea);
+		}
+
+		private PerSecond ComputeEngineSpeedForSegmentArea(FullLoadCurveEntry p1, FullLoadCurveEntry p2, double area)
+		{
+			var k = (p2.TorqueFullLoad - p1.TorqueFullLoad) / (p2.EngineSpeed - p1.EngineSpeed);
+			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;
+
+			if (k.Double().IsEqual(0.0)) {
+				// rectangle
+				return (p1.EngineSpeed + (area / d.Double()));
+			}
+
+			var a = k.Double() / 2.0;
+			var b = d.Double();
+			var c = (k * p1.EngineSpeed * p1.EngineSpeed + 2 * p1.EngineSpeed * d).Double();
+
+			var D = b * b - 4 * a * c;
+
+			var retVal = new List<PerSecond>();
+			if (D < 0) {
+				Log.InfoFormat("No real solution found for requested area: P: {0}, p1: {1}, p2: {2}", area, p1, p2);
+				return null;
+			} else if (D > 0) {
+				// two solutions possible
+				retVal.Add((-b + Math.Sqrt(D) / (2 * a)).SI<PerSecond>());
+				retVal.Add((-b - Math.Sqrt(D) / (2 * a)).SI<PerSecond>());
+			} else {
+				// only one solution possible
+				retVal.Add((-b / (4 * a * c)).SI<PerSecond>());
+			}
+			return retVal.First(x => x >= p1.EngineSpeed && x <= p2.EngineSpeed);
+		}
 
 		/// <summary>
 		///     [rad/s] => index. Get item index for angularVelocity.
@@ -187,6 +315,73 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				idx = angularVelocity > _fullLoadEntries[0].EngineSpeed ? _fullLoadEntries.Count - 1 : 1;
 			}
 			return idx;
+		}
+
+		private List<PerSecond> FindEngineSpeedForPower(Watt power)
+		{
+			var retVal = new List<PerSecond>();
+			for (var idx = 1; idx < _fullLoadEntries.Count; idx++) {
+				var solutions = FindEngineSpeedForPower(_fullLoadEntries[idx - 1], _fullLoadEntries[idx], power);
+				retVal.AddRange(solutions);
+			}
+			retVal.Sort();
+			return retVal;
+		}
+
+		private List<PerSecond> FindEngineSpeedForPower(FullLoadCurveEntry p1, FullLoadCurveEntry p2, Watt power)
+		{
+			var k = (p2.TorqueFullLoad - p1.TorqueFullLoad) / (p2.EngineSpeed - p1.EngineSpeed);
+			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;
+
+			var retVal = new List<PerSecond>();
+			if (k.Double().IsEqual(0, 0.0001)) {
+				// constant torque, solve linear equation
+				retVal.Add((power.Double() / d.Double()).SI<PerSecond>());
+			} else {
+				// non-constant torque, solve quadratic equation
+				var a = k.Double();
+				var b = d.Double();
+				var c = -power.Double();
+
+				var D = b * b - 4 * a * c;
+				if (D < 0) {
+					Log.InfoFormat("No real solution found for requested power demand: P: {0}, p1: {1}, p2: {2}", power, p1, p2);
+				} else if (D > 0) {
+					// two solutions possible
+					retVal.Add(((-b + Math.Sqrt(D)) / (2 * a)).SI<PerSecond>());
+					retVal.Add(((-b - Math.Sqrt(D)) / (2 * a)).SI<PerSecond>());
+				} else {
+					// only one solution possible
+					retVal.Add((-b / (2 * a)).SI<PerSecond>());
+				}
+			}
+			retVal = retVal.Where(x => x >= p1.EngineSpeed && x <= p2.EngineSpeed).ToList();
+			return retVal;
+		}
+
+		private double ComputeArea(PerSecond lowEngineSpeed, PerSecond highEngineSpeed)
+		{
+			var startSegment = FindIndex(lowEngineSpeed);
+			var endSegment = FindIndex(highEngineSpeed);
+
+			var area = 0.0;
+			if (lowEngineSpeed < _fullLoadEntries[startSegment].EngineSpeed) {
+				// add part of the first segment
+				area += ((_fullLoadEntries[startSegment].EngineSpeed - lowEngineSpeed) *
+						(FullLoadStationaryTorque(lowEngineSpeed) + _fullLoadEntries[startSegment].TorqueFullLoad) / 2.0).Double();
+			}
+			for (var i = startSegment + 1; i <= endSegment; i++) {
+				var speedHigh = _fullLoadEntries[i].EngineSpeed;
+				var torqueHigh = _fullLoadEntries[i].TorqueFullLoad;
+				if (highEngineSpeed < _fullLoadEntries[i].EngineSpeed) {
+					// add part of the last segment
+					speedHigh = highEngineSpeed;
+					torqueHigh = FullLoadStationaryTorque(highEngineSpeed);
+				}
+				area += ((speedHigh - _fullLoadEntries[i - 1].EngineSpeed) *
+						(torqueHigh + _fullLoadEntries[i - 1].TorqueFullLoad) / 2.0).Double();
+			}
+			return area;
 		}
 
 		private Tuple<PerSecond, Watt> FindMaxPower(FullLoadCurveEntry p1, FullLoadCurveEntry p2)

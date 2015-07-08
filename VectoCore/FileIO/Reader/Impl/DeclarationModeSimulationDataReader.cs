@@ -46,22 +46,31 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		protected void CheckForDeclarationMode(InputFileReader.VersionInfo info, string msg)
 		{
 			if (!info.SavedInDeclarationMode) {
-				throw new VectoException("File not saved in Declaration Mode! - " + msg);
+				// throw new VectoException("File not saved in Declaration Mode! - " + msg);
+				Log.WarnFormat("File not saved in Declaration Mode! - {0}", msg);
 			}
 		}
 
 		public override IEnumerable<VectoRunData> NextRun()
 		{
-			var segment = GetVehicleClassification((dynamic) Vehicle);
+			var segment = GetVehicleClassification(((dynamic) Vehicle).Body);
 			foreach (var mission in segment.Missions) {
 				foreach (var loading in mission.Loadings) {
+					var engineData = CreateEngineData((dynamic) Engine);
+					var parser = new DrivingCycleData.DistanceBasedDataParser();
+					var data = VectoCSVFile.ReadStream(mission.CycleFile);
+					var cycleEntries = parser.Parse(data).ToList();
 					var simulationRunData = new VectoRunData() {
 						VehicleData = CreateVehicleData((dynamic) Vehicle, mission, loading),
-						EngineData = CreateEngineData((dynamic) Engine),
-						GearboxData = CreateGearboxData((dynamic) Gearbox),
-						// @@@ TODO: cycle
+						EngineData = engineData,
+						GearboxData = CreateGearboxData((dynamic) Gearbox, engineData),
 						// @@@ TODO: auxiliaries
 						// @@@ TODO: ...
+						Cycle = new DrivingCycleData() {
+							Name = "Dummy",
+							SavedInDeclarationMode = true,
+							Entries = cycleEntries
+						},
 						IsEngineOnly = false,
 						JobFileName = Job.JobFile,
 					};
@@ -97,6 +106,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				case 2:
 					Job = JsonConvert.DeserializeObject<VectoJobFileV2Declaration>(json);
 					Job.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
+					Job.JobFile = Path.GetFileName(file);
 					break;
 				default:
 					throw new UnsupportedFileVersionException("Unsupported version of job-file. Got version " + fileInfo.Version);
@@ -145,6 +155,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			switch (fileInfo.Version) {
 				case 4:
 					Gearbox = JsonConvert.DeserializeObject<GearboxFileV4Declaration>(json);
+					Gearbox.BasePath = Path.GetDirectoryName(file);
 					break;
 				default:
 					throw new UnsupportedFileVersionException("Unsopported Version of gearbox-file. Got version " + fileInfo.Version);
@@ -155,7 +166,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		internal Segment GetVehicleClassification(VehicleFileV5Declaration.DataBodyDecl vehicle)
 		{
 			return new DeclarationSegments().Lookup(vehicle.VehicleCategory(), vehicle.AxleConfigurationType(),
-				vehicle.GrossVehicleMassRating.SI<Kilogram>(), vehicle.CurbWeight.SI<Kilogram>());
+				vehicle.GrossVehicleMassRating.SI<Ton>().Cast<Kilogram>(), vehicle.CurbWeight.SI<Kilogram>());
 		}
 
 
@@ -165,6 +176,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			var retVal = SetCommonVehicleData(vehicle);
 
 			retVal.BasePath = vehicle.BasePath;
+
+			retVal.GrossVehicleMassRating = vehicle.Body.GrossVehicleMassRating.SI<Ton>().Cast<Kilogram>();
 
 			retVal.CurbWeigthExtra = mission.MassExtra;
 			retVal.Loading = loading;
@@ -213,7 +226,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			return retVal;
 		}
 
-		internal GearboxData CreateGearboxData(GearboxFileV4Declaration gearbox)
+		internal GearboxData CreateGearboxData(GearboxFileV4Declaration gearbox, CombustionEngineData engine)
 		{
 			var retVal = SetCommonGearboxData(gearbox.Body);
 
@@ -242,22 +255,48 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
 				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
 
-				var shiftPolygon = ComputeShiftPolygon();
 
-				var gear = new GearData(lossMap, shiftPolygon, gearSettings.Ratio, false);
 				if (i == 0) {
-					retVal.AxleGearData = gear;
+					retVal.AxleGearData = new GearData(lossMap, null, gearSettings.Ratio, false);
 				} else {
-					retVal._gearData.Add(i, gear);
+					var shiftPolygon = ComputeShiftPolygon(engine, i);
+					retVal._gearData.Add(i, new GearData(lossMap, shiftPolygon, gearSettings.Ratio, false));
 				}
 			}
 
 			return retVal;
 		}
 
-		internal ShiftPolygon ComputeShiftPolygon()
+		internal ShiftPolygon ComputeShiftPolygon(CombustionEngineData engine, uint gear)
 		{
-			throw new NotImplementedException();
+			var fullLoadCurve = engine.GetFullLoadCurve(gear);
+			var idleSpeed = engine.IdleSpeed;
+
+			var maxTorque = fullLoadCurve.MaxLoadTorque;
+
+			var entriesDown = new List<ShiftPolygon.ShiftPolygonEntry>();
+			var entriesUp = new List<ShiftPolygon.ShiftPolygonEntry>();
+
+			entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = idleSpeed, Torque = 0.SI<NewtonMeter>() });
+
+			var tq1 = maxTorque * idleSpeed / (fullLoadCurve.PreferredSpeed + fullLoadCurve.LoSpeed - idleSpeed);
+			entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = idleSpeed, Torque = tq1 });
+
+			var speed1 = (fullLoadCurve.PreferredSpeed + fullLoadCurve.LoSpeed) / 2;
+			entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = speed1, Torque = maxTorque });
+
+
+			entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() {
+				AngularSpeed = fullLoadCurve.PreferredSpeed,
+				Torque = 0.SI<NewtonMeter>()
+			});
+
+			tq1 = maxTorque * (fullLoadCurve.PreferredSpeed - idleSpeed) / (fullLoadCurve.N95hSpeed - idleSpeed);
+			entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = fullLoadCurve.PreferredSpeed, Torque = tq1 });
+
+			entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = fullLoadCurve.N95hSpeed, Torque = maxTorque });
+
+			return new ShiftPolygon(entriesDown, entriesUp);
 		}
 	}
 }
