@@ -277,7 +277,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				if (ReferenceEquals(this, obj)) {
 					return true;
 				}
-				return obj.GetType() == GetType() && Equals((FullLoadCurveEntry)obj);
+				return obj.GetType() == GetType() && Equals((FullLoadCurveEntry) obj);
 			}
 
 			public override int GetHashCode()
@@ -307,7 +307,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (ReferenceEquals(this, obj)) {
 				return true;
 			}
-			return obj.GetType() == GetType() && Equals((FullLoadCurve)obj);
+			return obj.GetType() == GetType() && Equals((FullLoadCurve) obj);
 		}
 
 		public override int GetHashCode()

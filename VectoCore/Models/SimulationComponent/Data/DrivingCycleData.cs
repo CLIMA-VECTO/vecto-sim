@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public const string EngineSpeed = "n";
 
 			/// <summary>
-            ///     [-]	Gear input. Overwrites the gear shift model.
+			///     [-]	Gear input. Overwrites the gear shift model.
 			/// </summary>
 			public const string Gear = "gear";
 
@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public PerSecond EngineSpeed { get; set; }
 
 			/// <summary>
-            ///     [-]	Gear input. Overwrites the gear shift model.
+			///     [-]	Gear input. Overwrites the gear shift model.
 			/// </summary>
 			public double Gear { get; set; }
 
