@@ -16,8 +16,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		protected static Tuple<int, bool> GetFileVersion(string jsonStr)
 		{
 			dynamic json = JsonConvert.DeserializeObject(jsonStr);
-			return new Tuple<int, bool>(Int32.Parse(json.Header.FileVersion.ToString()),
-				Boolean.Parse(json.Body.SavedInDeclMode.ToString()));
+			return new Tuple<int, bool>(int.Parse(json.Header.FileVersion.ToString()),
+				bool.Parse(json.Body.SavedInDeclMode.ToString()));
 		}
 	}
 }

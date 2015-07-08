@@ -3,6 +3,7 @@ using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
@@ -46,8 +47,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 
 			var gbxData = GearboxData.ReadFromFile(TestContext.DataRow["GearboxDataFile"].ToString());
 
-
-			var PvD = Double.Parse(TestContext.DataRow["PowerGbxOut"].ToString(), CultureInfo.InvariantCulture).SI<Watt>();
+			var PvD = double.Parse(TestContext.DataRow["PowerGbxOut"].ToString(), CultureInfo.InvariantCulture).SI<Watt>();
 
 			var torqueToWheels = Formulas.PowerToTorque(PvD, SpeedToAngularSpeed(speed, rdyn));
 			var torqueFromEngine = 0.SI<NewtonMeter>();
@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var powerEngine = Formulas.TorqueToPower(torqueFromEngine, angSpeed);
 			var loss = powerEngine - PvD;
 
-			Assert.AreEqual(Double.Parse(TestContext.DataRow["GbxPowerLoss"].ToString(), CultureInfo.InvariantCulture),
+			Assert.AreEqual(double.Parse(TestContext.DataRow["GbxPowerLoss"].ToString(), CultureInfo.InvariantCulture),
 				loss.Double(), 0.1,
 				TestContext.DataRow["TestName"].ToString());
 		}
@@ -70,43 +70,17 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var gbxData = GearboxData.ReadFromFile(GearboxFile);
 
+			AssertHelper.Exception<VectoSimulationException>(
+				() => gbxData.AxleGearData.LossMap.GearboxInTorque(2700.RPMtoRad(), 100.SI<NewtonMeter>()));
 
-			var angSpeed = 2700.RPMtoRad();
-			var torqueToWheels = 100.SI<NewtonMeter>();
+			AssertHelper.Exception<VectoSimulationException>(
+				() => gbxData.AxleGearData.LossMap.GearboxInTorque(1000.RPMtoRad(), 50000.SI<NewtonMeter>()));
 
-			try {
-				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
-				Assert.Fail("angular Speed too high");
-			} catch (Exception e) {
-				Assert.IsInstanceOfType(e, typeof(VectoSimulationException), "angular speed too high");
-			}
+			AssertHelper.Exception<VectoSimulationException>(
+				() => gbxData.AxleGearData.LossMap.GearboxInTorque(1000.RPMtoRad(), -10000.SI<NewtonMeter>()));
 
-			angSpeed = 1000.RPMtoRad();
-			torqueToWheels = 50000.SI<NewtonMeter>();
-			try {
-				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
-				Assert.Fail("torque too high");
-			} catch (Exception e) {
-				Assert.IsInstanceOfType(e, typeof(VectoSimulationException), "torque too high");
-			}
-
-			angSpeed = 1000.RPMtoRad();
-			torqueToWheels = -10000.SI<NewtonMeter>();
-			try {
-				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
-				Assert.Fail("torque too low");
-			} catch (Exception e) {
-				Assert.IsInstanceOfType(e, typeof(VectoSimulationException), "torque too low");
-			}
-
-			angSpeed = -1000.RPMtoRad();
-			torqueToWheels = 500.SI<NewtonMeter>();
-			try {
-				gbxData.AxleGearData.LossMap.GearboxInTorque(angSpeed, torqueToWheels);
-				Assert.Fail("negative angular speed");
-			} catch (Exception e) {
-				Assert.IsInstanceOfType(e, typeof(VectoSimulationException), "negative angular speed");
-			}
+			AssertHelper.Exception<VectoSimulationException>(
+				() => gbxData.AxleGearData.LossMap.GearboxInTorque(-1000.RPMtoRad(), 500.SI<NewtonMeter>()));
 		}
 
 		protected PerSecond SpeedToAngularSpeed(double v, double r)

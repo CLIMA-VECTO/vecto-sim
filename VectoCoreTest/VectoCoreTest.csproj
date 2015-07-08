@@ -83,6 +83,7 @@
     <Compile Include="Models\SimulationComponent\WheelsTest.cs" />
     <Compile Include="Models\SimulationComponent\VehicleTest.cs" />
     <Compile Include="Models\Simulation\DrivingCycleTests.cs" />
+    <Compile Include="Utils\AssertHelper.cs" />
     <Compile Include="Utils\ResultFileHelper.cs" />
     <Compile Include="Utils\MockPorts.cs" />
     <Compile Include="Models\Simulation\SimulationTests.cs" />

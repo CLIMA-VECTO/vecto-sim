@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data

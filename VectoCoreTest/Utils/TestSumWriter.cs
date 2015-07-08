@@ -1,6 +1,6 @@
 ﻿using TUGraz.VectoCore.Models.Simulation.Data;
 
-namespace TUGraz.VectoCore.Tests.Models.Simulation
+namespace TUGraz.VectoCore.Tests.Utils
 {
 	public class TestSumWriter : SummaryFileWriter, ISummaryDataWriter
 	{

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Linq;
 using TUGraz.VectoCore.Utils;
 
@@ -19,7 +18,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					WheelType = row[0].ToString(),
 					Inertia = row.ParseDouble(1).SI<KilogramSquareMeter>(),
 					DynamicTyreRadius = row.ParseDouble(2).SI().Milli.Meter.Cast<Meter>(),
-					SizeClass = Int32.Parse(row[3].ToString())
+					SizeClass = int.Parse(row[3].ToString())
 				}).ToDictionary(e => e.WheelType);
 		}
 

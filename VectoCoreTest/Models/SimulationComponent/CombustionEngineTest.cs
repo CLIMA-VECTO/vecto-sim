@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -23,24 +22,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public static void ClassInitialize(TestContext ctx)
 		{
 			AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
-		}
-
-		/// <summary>
-		/// Assert an expected Exception.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="func"></param>
-		/// <param name="message"></param>
-		public static void AssertException<T>(Action func, string message = null) where T : Exception
-		{
-			try {
-				func();
-				Assert.Fail("Expected Exception {0}, but no exception occured.", typeof(T));
-			} catch (T ex) {
-				if (message != null) {
-					Assert.AreEqual(message, ex.Message);
-				}
-			}
 		}
 
 		[TestMethod]
@@ -79,7 +60,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new VehicleContainer();
 			var engineData = CombustionEngineData.ReadFromFile(CoachEngine);
 			var engine = new CombustionEngine(vehicle, engineData);
-			var gearbox = new EngineOnlyGearbox(vehicle);
+			new EngineOnlyGearbox(vehicle);
 			var port = engine.OutShaft();
 
 			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
@@ -108,7 +89,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			absTime += dt;
 
 			var power = new[] { 569.3641, 4264.177 };
-			;
 			for (var i = 0; i < 2; i++) {
 				port.Request(absTime, dt, Formulas.PowerToTorque(power[i].SI<Watt>(), engineSpeed), engineSpeed);
 				engine.CommitSimulationStep(dataWriter);
@@ -131,7 +111,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			Assert.AreEqual(-7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
 			dataWriter.CommitSimulationStep(absTime, dt);
-			absTime += dt;
 
 			dataWriter.Data.WriteToFile(@"test1.csv");
 		}
@@ -156,9 +135,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//var modalData = new ModalDataWriter(string.Format("load_jump_{0}.csv", TestContext.DataRow["TestName"].ToString()));
 			var modalData = new TestModalDataWriter();
 
-			var idlePower = Double.Parse(TestContext.DataRow["initialIdleLoad"].ToString()).SI<Watt>();
+			var idlePower = double.Parse(TestContext.DataRow["initialIdleLoad"].ToString()).SI<Watt>();
 
-			var angularSpeed = Double.Parse(TestContext.DataRow["rpm"].ToString()).RPMtoRad();
+			var angularSpeed = double.Parse(TestContext.DataRow["rpm"].ToString()).RPMtoRad();
 
 			var t = TimeSpan.FromSeconds(0);
 			var dt = TimeSpan.FromSeconds(0.1);
@@ -172,7 +151,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			// dt = TimeSpan.FromSeconds(double.Parse(TestContext.DataRow["dt"].ToString(), CultureInfo.InvariantCulture));
 			// dt = TimeSpan.FromSeconds(expectedResults.Rows[i].ParseDouble(0)) - t;
 			var engineLoadPower = engineData.GetFullLoadCurve(0).FullLoadStationaryPower(angularSpeed);
-			idlePower = Double.Parse(TestContext.DataRow["finalIdleLoad"].ToString()).SI<Watt>();
+			idlePower = double.Parse(TestContext.DataRow["finalIdleLoad"].ToString()).SI<Watt>();
 			for (; t.TotalSeconds < 25; t += dt, i++) {
 				dt = TimeSpan.FromSeconds(expectedResults.Rows[i + 1].ParseDouble(0) - expectedResults.Rows[i].ParseDouble(0));
 				if (t >= TimeSpan.FromSeconds(10)) {
@@ -185,7 +164,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				// todo: compare results...
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.TotalSeconds, 0.001, "Time");
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), modalData.GetDouble(ModalResultField.Pe_full), 0.1,
-					String.Format("Load in timestep {0}", t));
+					string.Format("Load in timestep {0}", t));
 				modalData.CommitSimulationStep();
 			}
 			modalData.Finish();
@@ -257,9 +236,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(58.6430628670095, idle.Double(), 0.000001);
 			Assert.IsTrue(idle.HasEqualUnit(0.SI<PerSecond>()));
 
-			var flc0 = engineData.GetFullLoadCurve(0);
-
-			AssertException<KeyNotFoundException>(() => { var flc10000 = engineData.GetFullLoadCurve(1000); });
+			engineData.GetFullLoadCurve(0);
+			AssertHelper.Exception<KeyNotFoundException>(() => engineData.GetFullLoadCurve(1000));
 		}
 	}
 }

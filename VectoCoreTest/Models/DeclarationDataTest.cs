@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models
@@ -15,19 +15,6 @@ namespace TUGraz.VectoCore.Tests.Models
 	public class DeclarationDataTest
 	{
 		public const double Tolerance = 0.0001;
-
-		public static void AssertException<T>(Action func, string message = null) where T : Exception
-		{
-			try {
-				func();
-				Assert.Fail("Expected an exception.");
-			} catch (T ex) {
-				if (!string.IsNullOrEmpty(message)) {
-					Assert.AreEqual(message, ex.Message);
-				}
-			}
-		}
-
 
 		[TestMethod]
 		public void WheelDataTest()
@@ -83,8 +70,8 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			// EXTRAPOLATE 
 			Assert.AreEqual(0.11, pt1.Lookup(3000.RPMtoRad()).Double(), Tolerance);
-			AssertException<VectoException>(() => pt1.Lookup(200.RPMtoRad()));
-			AssertException<VectoException>(() => pt1.Lookup(0.RPMtoRad()));
+			AssertHelper.Exception<VectoException>(() => pt1.Lookup(200.RPMtoRad()));
+			AssertHelper.Exception<VectoException>(() => pt1.Lookup(0.RPMtoRad()));
 		}
 
 
@@ -95,7 +82,7 @@ namespace TUGraz.VectoCore.Tests.Models
 		}
 
 		[TestMethod]
-		public void AuxESTechTest()
+		public void AuxElectricSystemTest()
 		{
 			var es = DeclarationData.ElectricSystem;
 
@@ -115,10 +102,10 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			foreach (var expectation in expected) {
 				var baseConsumption = es.Lookup(expectation.Mission, technologies: new string[] { });
-				var withLEDs = es.Lookup(expectation.Mission, technologies: new[] { "LED lights" });
+				var leds = es.Lookup(expectation.Mission, technologies: new[] { "LED lights" });
 
 				Assert.AreEqual(expectation.Base, baseConsumption.Double(), Tolerance);
-				Assert.AreEqual(expectation.LED, withLEDs.Double(), Tolerance);
+				Assert.AreEqual(expectation.LED, leds.Double(), Tolerance);
 			}
 		}
 
@@ -188,9 +175,9 @@ namespace TUGraz.VectoCore.Tests.Models
 		}
 
 		[TestMethod]
-		public void AuxHVACTest()
+		public void AuxHeatingVentilationAirConditionTest()
 		{
-			var hvac = DeclarationData.HVAC;
+			var hvac = DeclarationData.HeatingVentilationAirConditioning;
 
 			var expected = new Dictionary<string, int[]> {
 				{ "1", new[] { 0, 150, 150, 0, 0, 0, 0, 0, 0, 0 } },
@@ -225,7 +212,7 @@ namespace TUGraz.VectoCore.Tests.Models
 		}
 
 		[TestMethod]
-		public void AuxPSTest()
+		public void AuxPneumaticSystemTest()
 		{
 			var ps = DeclarationData.PneumaticSystem;
 
@@ -262,7 +249,7 @@ namespace TUGraz.VectoCore.Tests.Models
 		}
 
 		[TestMethod]
-		public void AuxSPTest()
+		public void AuxSteeringPumpTest()
 		{
 			var sp = DeclarationData.SteeringPump;
 
@@ -357,7 +344,7 @@ namespace TUGraz.VectoCore.Tests.Models
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
 
 
-			Assert.AreEqual("2", segment.HDVClass);
+			Assert.AreEqual("2", segment.VehicleClass);
 
 			var data = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
 			TestAcceleration(data);

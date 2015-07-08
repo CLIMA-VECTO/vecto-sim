@@ -5,7 +5,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class HVAC : LookupData<MissionType, string, Watt>
+	public class HeatingVentilationAirConditioning : LookupData<MissionType, string, Watt>
 	{
 		private readonly Dictionary<Tuple<MissionType, string>, Watt> _data =
 			new Dictionary<Tuple<MissionType, string>, Watt>();

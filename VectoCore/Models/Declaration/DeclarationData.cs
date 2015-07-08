@@ -9,7 +9,7 @@
 		private PT1 _pt1;
 		private ElectricSystem _electricSystem;
 		private Fan _fan;
-		private HVAC _hvac;
+		private HeatingVentilationAirConditioning _heatingVentilationAirConditioning;
 		private PneumaticSystem _pneumaticSystem;
 		private SteeringPump _steeringPump;
 
@@ -43,9 +43,13 @@
 			get { return Instance()._fan ?? (Instance()._fan = new Fan()); }
 		}
 
-		public static HVAC HVAC
+		public static HeatingVentilationAirConditioning HeatingVentilationAirConditioning
 		{
-			get { return Instance()._hvac ?? (Instance()._hvac = new HVAC()); }
+			get
+			{
+				return Instance()._heatingVentilationAirConditioning ??
+						(Instance()._heatingVentilationAirConditioning = new HeatingVentilationAirConditioning());
+			}
 		}
 
 		public static PneumaticSystem PneumaticSystem

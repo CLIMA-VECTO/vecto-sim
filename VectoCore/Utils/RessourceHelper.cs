@@ -1,7 +1,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace TUGraz.VectoCore.Models
+namespace TUGraz.VectoCore.Utils
 {
 	public static class RessourceHelper
 	{

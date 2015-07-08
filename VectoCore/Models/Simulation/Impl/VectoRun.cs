@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data;
-using System.IO;
 using Common.Logging;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;

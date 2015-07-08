@@ -3,7 +3,6 @@ using System.Data;
 using System.Linq;
 using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data

@@ -6,7 +6,6 @@ using System.Linq;
 using Common.Logging;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine

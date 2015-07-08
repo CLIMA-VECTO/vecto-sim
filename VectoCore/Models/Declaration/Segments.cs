@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				GrossVehicleWeightMax = row.ParseDouble("gvw_max").SI().Ton.Cast<Kilogram>(),
 				VehicleCategory = vehicleCategory,
 				AxleConfiguration = axleConfiguration,
-				HDVClass = row.Field<string>("hdv_class"),
+				VehicleClass = row.Field<string>("hdv_class"),
 				AccelerationFile = RessourceHelper.ReadStream(ResourceNamespace + "VACC." + row.Field<string>("vacc")),
 				Missions = CreateMissions(grossVehicleMassRating, curbWeight, row).ToArray()
 			};

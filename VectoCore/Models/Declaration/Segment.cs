@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -11,7 +10,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public Kilogram GrossVehicleWeightMin { get; set; }
 		public Kilogram GrossVehicleWeightMax { get; set; }
 
-		public string HDVClass { get; internal set; }
+		public string VehicleClass { get; internal set; }
 		public Stream AccelerationFile { get; internal set; }
 		public Mission[] Missions { get; internal set; }
 	}

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -100,7 +98,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				var lossMapPath = Path.Combine(basePath, gearSettings.LossMap);
 				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
 
-				var shiftPolygon = !String.IsNullOrEmpty(gearSettings.ShiftPolygon)
+				var shiftPolygon = !string.IsNullOrEmpty(gearSettings.ShiftPolygon)
 					? ShiftPolygon.ReadFromFile(Path.Combine(basePath, gearSettings.ShiftPolygon))
 					: null;
 
