@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			} catch (T ex) {
 				if (!string.IsNullOrEmpty(message)) {
 					Assert.AreEqual(message, ex.Message,
-						string.Format("Expected Exception message: {0}, but got message: {}", message, ex.Message));
+						string.Format("Expected Exception message: {0}, but got message: {1}", message, ex.Message));
 				}
 			}
 		}
