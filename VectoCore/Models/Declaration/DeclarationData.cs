@@ -1,42 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using TUGraz.VectoCore.Utils;
-
-namespace TUGraz.VectoCore.Models.Declaration
+﻿namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class DeclarationData
 	{
 		private static DeclarationData _instance;
-		private DeclarationSegments _segments;
-		private DeclarationRims _rims;
-		private DeclarationWheels _wheels;
-		private DeclarationPT1 _pt1;
+		private Segments _segments;
+		private Rims _rims;
+		private Wheels _wheels;
+		private PT1 _pt1;
 		private ElectricSystem _electricSystem;
-		private DeclarationFan _fan;
-		private DeclarationHVAC _hvac;
-		private DeclarationPneumaticSystem _pneumaticSystem;
-		private DeclarationSteeringPump _steeringPump;
+		private Fan _fan;
+		private HVAC _hvac;
+		private PneumaticSystem _pneumaticSystem;
+		private SteeringPump _steeringPump;
 
-		public static DeclarationWheels Wheels
+		public static Wheels Wheels
 		{
-			get { return Instance()._wheels ?? (Instance()._wheels = new DeclarationWheels()); }
+			get { return Instance()._wheels ?? (Instance()._wheels = new Wheels()); }
 		}
 
-		public static DeclarationRims Rims
+		public static Rims Rims
 		{
-			get { return Instance()._rims ?? (Instance()._rims = new DeclarationRims()); }
+			get { return Instance()._rims ?? (Instance()._rims = new Rims()); }
 		}
 
-		public static DeclarationSegments Segments
+		public static Segments Segments
 		{
-			get { return Instance()._segments ?? (Instance()._segments = new DeclarationSegments()); }
+			get { return Instance()._segments ?? (Instance()._segments = new Segments()); }
 		}
 
-		public static DeclarationPT1 PT1
+		public static PT1 PT1
 		{
-			get { return Instance()._pt1 ?? (Instance()._pt1 = new DeclarationPT1()); }
+			get { return Instance()._pt1 ?? (Instance()._pt1 = new PT1()); }
 		}
 
 		public static ElectricSystem ElectricSystem
@@ -44,153 +38,29 @@ namespace TUGraz.VectoCore.Models.Declaration
 			get { return Instance()._electricSystem ?? (Instance()._electricSystem = new ElectricSystem()); }
 		}
 
-		public static DeclarationFan Fan
+		public static Fan Fan
 		{
-			get { return Instance()._fan ?? (Instance()._fan = new DeclarationFan()); }
+			get { return Instance()._fan ?? (Instance()._fan = new Fan()); }
 		}
 
-		public static DeclarationHVAC HVAC
+		public static HVAC HVAC
 		{
-			get { return Instance()._hvac ?? (Instance()._hvac = new DeclarationHVAC()); }
+			get { return Instance()._hvac ?? (Instance()._hvac = new HVAC()); }
 		}
 
-		public static DeclarationPneumaticSystem PneumaticSystem
+		public static PneumaticSystem PneumaticSystem
 		{
-			get { return Instance()._pneumaticSystem ?? (Instance()._pneumaticSystem = new DeclarationPneumaticSystem()); }
+			get { return Instance()._pneumaticSystem ?? (Instance()._pneumaticSystem = new PneumaticSystem()); }
 		}
 
-		public static DeclarationSteeringPump SteeringPump
+		public static SteeringPump SteeringPump
 		{
-			get { return Instance()._steeringPump ?? (Instance()._steeringPump = new DeclarationSteeringPump()); }
+			get { return Instance()._steeringPump ?? (Instance()._steeringPump = new SteeringPump()); }
 		}
 
 		private static DeclarationData Instance()
 		{
 			return _instance ?? (_instance = new DeclarationData());
-		}
-	}
-
-	public class DeclarationSteeringPump : LookupData<MissionType, string, string, Watt>
-	{
-		private readonly Dictionary<Tuple<MissionType, string, string>, Watt> _data =
-			new Dictionary<Tuple<MissionType, string, string>, Watt>();
-
-
-
-
-		public override Watt Lookup(MissionType mission, string hdvClass, string technology)
-		{
-			return _data[Tuple.Create(mission, hdvClass, technology)];
-		}
-
-		protected override string ResourceId
-		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Table.csv"; }
-		}
-
-		protected override void ParseData(DataTable table)
-		{
-			_data.Clear();
-			NormalizeTable(table);
-
-			foreach (DataRow row in table.Rows) {
-				var hdvClass = row.Field<string>("hdvclass/powerdemandpershare");
-				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
-					_data[Tuple.Create(mission, hdvClass)] = row.ParseDouble(mission.ToString().ToLower()).SI<Watt>();
-				}
-			}
-		}
-	}
-
-	public class DeclarationPneumaticSystem : LookupData<MissionType, string, Watt>
-	{
-		private readonly Dictionary<Tuple<MissionType, string>, Watt> _data =
-			new Dictionary<Tuple<MissionType, string>, Watt>();
-
-		public override Watt Lookup(MissionType mission, string hdvClass)
-		{
-			return _data[Tuple.Create(mission, hdvClass)];
-		}
-
-		protected override string ResourceId
-		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.PS-Table.csv"; }
-		}
-
-		protected override void ParseData(DataTable table)
-		{
-			_data.Clear();
-			NormalizeTable(table);
-
-			foreach (DataRow row in table.Rows) {
-				var hdvClass = row.Field<string>("hdvclass/power");
-				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
-					_data[Tuple.Create(mission, hdvClass)] = row.ParseDouble(mission.ToString().ToLower()).SI<Watt>();
-				}
-			}
-		}
-	}
-
-	public class DeclarationHVAC : LookupData<MissionType, string, Watt>
-	{
-		private readonly Dictionary<Tuple<MissionType, string>, Watt> _data =
-			new Dictionary<Tuple<MissionType, string>, Watt>();
-
-		public override Watt Lookup(MissionType mission, string hdvClass)
-		{
-			return _data[Tuple.Create(mission, hdvClass)];
-		}
-
-		protected override string ResourceId
-		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.HVAC-Table.csv"; }
-		}
-
-		protected override void ParseData(DataTable table)
-		{
-			_data.Clear();
-			NormalizeTable(table);
-
-			foreach (DataRow row in table.Rows) {
-				var hdvClass = row.Field<string>("hdvclass/power");
-				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
-					_data[Tuple.Create(mission, hdvClass)] = row.ParseDouble(mission.ToString().ToLower()).SI<Watt>();
-				}
-			}
-		}
-	}
-
-	public class DeclarationFan : LookupData<MissionType, string, Watt>
-	{
-		private readonly Dictionary<Tuple<MissionType, string>, Watt> _data =
-			new Dictionary<Tuple<MissionType, string>, Watt>();
-
-		private const string DefaultTechnology = "Crankshaft mounted - Electronically controlled visco clutch (Default)";
-
-		protected override string ResourceId
-		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.Fan-Tech.csv"; }
-		}
-
-		protected override void ParseData(DataTable table)
-		{
-			NormalizeTable(table);
-
-			_data.Clear();
-			foreach (DataRow row in table.Rows) {
-				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
-					_data[Tuple.Create(mission, row.Field<string>("Technology"))] =
-						row.ParseDouble(mission.ToString().ToLower()).SI<Watt>();
-				}
-			}
-		}
-
-		public override Watt Lookup(MissionType mission, string technology)
-		{
-			if (string.IsNullOrWhiteSpace(technology.Trim())) {
-				technology = DefaultTechnology;
-			}
-			return _data[Tuple.Create(mission, technology)];
 		}
 	}
 }

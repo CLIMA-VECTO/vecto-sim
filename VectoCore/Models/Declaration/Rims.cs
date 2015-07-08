@@ -4,9 +4,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class DeclarationRims : LookupData<string, DeclarationRims.RimsEntry>
+	public class Rims : LookupData<string, Rims.RimsEntry>
 	{
-		internal DeclarationRims()
+		internal Rims()
 		{
 			var csvFile = ReadCsvFile(ResourceId);
 			ParseData(csvFile);

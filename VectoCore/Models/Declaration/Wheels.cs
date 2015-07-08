@@ -5,7 +5,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class DeclarationWheels : LookupData<string, DeclarationWheels.WheelsEntry>
+	public class Wheels : LookupData<string, Wheels.WheelsEntry>
 	{
 		protected override string ResourceId
 		{

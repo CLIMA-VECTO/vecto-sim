@@ -336,8 +336,6 @@ namespace TUGraz.VectoCore.Tests.Models
 					}
 				}
 			}
-
-			Assert.Inconclusive();
 		}
 
 		[TestMethod]
@@ -443,7 +441,7 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			//		// todo axleGear
 
-			//		var wheels = new DeclarationWheels(container, 0.SI<Meter>());
+			//		var wheels = new Wheels(container, 0.SI<Meter>());
 
 			//		var missionVehicleData = new VehicleData(vehicleData, loading, mission.AxleWeightDistribution);
 			//		var vehicle = new Vehicle(container, missionVehicleData);

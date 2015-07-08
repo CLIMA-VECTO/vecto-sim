@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 	public abstract class LookupData<TKey, TValue> : LookupData
 	{
-		protected Dictionary<TKey, TValue> Data;
+		protected Dictionary<TKey, TValue> Data = new Dictionary<TKey, TValue>();
 
 		public virtual TValue Lookup(TKey key)
 		{

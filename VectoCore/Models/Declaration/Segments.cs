@@ -6,7 +6,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class DeclarationSegments : LookupData<VehicleCategory, AxleConfiguration, Kilogram, Kilogram, Segment>
+	public class Segments : LookupData<VehicleCategory, AxleConfiguration, Kilogram, Kilogram, Segment>
 	{
 		private const string ResourceNamespace = "TUGraz.VectoCore.Resources.Declaration.";
 
