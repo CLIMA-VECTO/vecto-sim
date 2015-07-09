@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -58,7 +59,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				foreach (var loading in mission.Loadings) {
 					var engineData = CreateEngineData((dynamic) Engine);
 					var parser = new DrivingCycleData.DistanceBasedDataParser();
-					var data = VectoCSVFile.ReadStream(mission.CycleFile);
+					DataTable data = VectoCSVFile.ReadStream(mission.CycleFile);
 					var cycleEntries = parser.Parse(data).ToList();
 					var simulationRunData = new VectoRunData() {
 						VehicleData = CreateVehicleData((dynamic) Vehicle, mission, loading),
