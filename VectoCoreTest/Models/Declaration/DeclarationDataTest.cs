@@ -1,45 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Tests.Models
+namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
 	[TestClass]
 	public class DeclarationDataTest
 	{
-		public const double Tolerance = 0.0001;
-
-		public static void AssertException<T>(Action func, string message = null) where T : Exception
-		{
-			try {
-				func();
-				Assert.Fail("Expected an exception.");
-			} catch (T ex) {
-				if (!string.IsNullOrEmpty(message)) {
-					Assert.AreEqual(message, ex.Message);
-				}
-			}
-		}
-
+		private const double Tolerance = 0.0001;
+		private MissionType[] missions = Enum.GetValues(typeof(MissionType)).Cast<MissionType>().ToArray();
 
 		[TestMethod]
 		public void WheelDataTest()
 		{
 			var wheels = DeclarationData.Wheels;
 
-			var tmp = wheels.Lookup("285/70 R 19.5");
+			var tmp = wheels.Lookup("285/70 R19.5");
 
 			Assert.AreEqual(7.9, tmp.Inertia.Double(), Tolerance);
 			Assert.AreEqual(0.8943, tmp.TyreRadius.Double(), Tolerance);
-			Assert.AreEqual(0, tmp.SizeClass);
+			Assert.AreEqual("b", tmp.SizeClass);
 		}
 
 		[TestMethod]
@@ -84,8 +71,8 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			// EXTRAPOLATE 
 			Assert.AreEqual(0.11, pt1.Lookup(3000.RPMtoRad()).Double(), Tolerance);
-			AssertException<VectoException>(() => pt1.Lookup(200.RPMtoRad()));
-			AssertException<VectoException>(() => pt1.Lookup(0.RPMtoRad()));
+			AssertHelper.Exception<VectoException>(() => pt1.Lookup(200.RPMtoRad()));
+			AssertHelper.Exception<VectoException>(() => pt1.Lookup(0.RPMtoRad()));
 		}
 
 
@@ -96,16 +83,50 @@ namespace TUGraz.VectoCore.Tests.Models
 		}
 
 		[TestMethod]
-		public void AuxESTechTest()
+		public void WHTCWeightingTest()
+		{
+			var whtc = DeclarationData.WHTCCorrection;
+
+			var factors = new {
+				urban = new[] { 0.11, 0.17, 0.69, 0.98, 0.62, 1.0, 1.0, 1.0, 0.45, 0.0 },
+				rural = new[] { 0.0, 0.3, 0.27, 0.0, 0.32, 0.0, 0.0, 0.0, 0.36, 0.22 },
+				motorway = new[] { 0.89, 0.53, 0.04, 0.02, 0.06, 0.0, 0.0, 0.0, 0.19, 0.78 }
+			};
+
+			var r = new Random();
+			for (var i = 0; i < missions.Length; i++) {
+				var urban = r.NextDouble() * 2;
+				var rural = r.NextDouble() * 2;
+				var motorway = r.NextDouble() * 2;
+				var whtcValue = whtc.Lookup(missions[i], urban, rural, motorway);
+				Assert.AreEqual(urban * factors.urban[i] + rural * factors.rural[i] + motorway * factors.motorway[i], whtcValue);
+			}
+		}
+
+		[TestMethod]
+		public void VCDVTest()
+		{
+			Assert.Inconclusive();
+		}
+
+		[TestMethod]
+		public void DefaultTCTest()
+		{
+			Assert.Inconclusive();
+		}
+
+
+		[TestMethod]
+		public void AuxElectricSystemTest()
 		{
 			var es = DeclarationData.ElectricSystem;
 
 			var expected = new[] {
-				new { Mission = MissionType.LongHaul, Base = 1240, LED = 1290 },
-				new { Mission = MissionType.RegionalDelivery, Base = 1055, LED = 1105 },
-				new { Mission = MissionType.UrbanDelivery, Base = 974, LED = 1024 },
-				new { Mission = MissionType.MunicipalUtility, Base = 974, LED = 1024 },
-				new { Mission = MissionType.Construction, Base = 975, LED = 1025 },
+				new { Mission = MissionType.LongHaul, Base = 1240, LED = 1190 },
+				new { Mission = MissionType.RegionalDelivery, Base = 1055, LED = 1005 },
+				new { Mission = MissionType.UrbanDelivery, Base = 974, LED = 924 },
+				new { Mission = MissionType.MunicipalUtility, Base = 974, LED = 924 },
+				new { Mission = MissionType.Construction, Base = 975, LED = 925 },
 				new { Mission = MissionType.HeavyUrban, Base = 0, LED = 0 },
 				new { Mission = MissionType.Urban, Base = 0, LED = 0 },
 				new { Mission = MissionType.Suburban, Base = 0, LED = 0 },
@@ -116,41 +137,183 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			foreach (var expectation in expected) {
 				var baseConsumption = es.Lookup(expectation.Mission, technologies: new string[] { });
-				var withLEDs = es.Lookup(expectation.Mission, technologies: new[] { "LED lights" });
+				var leds = es.Lookup(expectation.Mission, technologies: new[] { "LED lights" });
 
 				Assert.AreEqual(expectation.Base, baseConsumption.Double(), Tolerance);
-				Assert.AreEqual(expectation.LED, withLEDs.Double(), Tolerance);
+				Assert.AreEqual(expectation.LED, leds.Double(), Tolerance);
 			}
 		}
 
 		[TestMethod]
 		public void AuxFanTechTest()
 		{
-			Assert.Inconclusive();
+			var fan = DeclarationData.Fan;
+
+			const string defaultFan = "Crankshaft mounted - Electronically controlled visco clutch (Default)";
+			var expected = new Dictionary<string, int[]> {
+				{
+					"Crankshaft mounted - Electronically controlled visco clutch (Default)",
+					new[] { 618, 671, 516, 566, 1037, 0, 0, 0, 0, 0 }
+				}, {
+					"Crankshaft mounted - Bimetallic controlled visco clutch",
+					new[] { 818, 871, 676, 766, 1277, 0, 0, 0, 0, 0 }
+				}, {
+					"Crankshaft mounted - Discrete step clutch",
+					new[] { 668, 721, 616, 616, 1157, 0, 0, 0, 0, 0 }
+				}, {
+					"Crankshaft mounted - On/Off clutch",
+					new[] { 718, 771, 666, 666, 1237, 0, 0, 0, 0, 0 }
+				}, {
+					"Belt driven or driven via transm. - Electronically controlled visco clutch",
+					new[] { 889, 944, 733, 833, 1378, 0, 0, 0, 0, 0 }
+				}, {
+					"Belt driven or driven via transm. - Bimetallic controlled visco clutch",
+					new[] { 1089, 1144, 893, 1033, 1618, 0, 0, 0, 0, 0 }
+				}, {
+					"Belt driven or driven via transm. - Discrete step clutch",
+					new[] { 939, 994, 883, 883, 1498, 0, 0, 0, 0, 0 }
+				}, {
+					"Belt driven or driven via transm. - On/Off clutch",
+					new[] { 989, 1044, 933, 933, 1578, 0, 0, 0, 0, 0 }
+				}, {
+					"Hydraulic driven - Variable displacement pump",
+					new[] { 738, 955, 632, 717, 1672, 0, 0, 0, 0, 0 }
+				}, {
+					"Hydraulic driven - Constant displacement pump",
+					new[] { 1000, 1200, 800, 900, 2100, 0, 0, 0, 0, 0 }
+				}, {
+					"Hydraulic driven - Electronically controlled",
+					new[] { 700, 800, 600, 600, 1400, 0, 0, 0, 0, 0 }
+				}
+			};
+
+			for (var i = 0; i < missions.Length; i++) {
+				// default tech
+				Watt defaultValue = fan.Lookup(missions[i], "");
+				Assert.AreEqual(expected[defaultFan][i], defaultValue.Double(), Tolerance);
+
+				// all fan techs
+				foreach (var expect in expected) {
+					Watt value = fan.Lookup(missions[i], expect.Key);
+					Assert.AreEqual(expect.Value[i], value.Double(), Tolerance);
+				}
+			}
 		}
 
 		[TestMethod]
-		public void AuxHVACTest()
+		public void AuxHeatingVentilationAirConditionTest()
 		{
-			Assert.Inconclusive();
+			var hvac = DeclarationData.HeatingVentilationAirConditioning;
+
+			var expected = new Dictionary<string, int[]> {
+				{ "1", new[] { 0, 150, 150, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "2", new[] { 200, 200, 150, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "3", new[] { 0, 200, 150, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "4", new[] { 350, 200, 0, 300, 0, 0, 0, 0, 0, 0 } },
+				{ "5", new[] { 350, 200, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "6", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "7", new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } },
+				{ "8", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "9", new[] { 350, 200, 0, 300, 0, 0, 0, 0, 0, 0 } },
+				{ "10", new[] { 350, 200, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "11", new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } },
+				{ "12", new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } }
+			};
+
+			for (var i = 0; i < missions.Length; i++) {
+				foreach (var expect in expected) {
+					Watt value = hvac.Lookup(missions[i], expect.Key);
+					Assert.AreEqual(expect.Value[i], value.Double(), Tolerance);
+				}
+			}
 		}
 
 		[TestMethod]
-		public void AuxPSTest()
+		public void AuxPneumaticSystemTest()
 		{
-			Assert.Inconclusive();
+			var ps = DeclarationData.PneumaticSystem;
+
+			var expected = new Dictionary<string, int[]> {
+				{ "1", new[] { 0, 1300, 1240, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "2", new[] { 1180, 1280, 1320, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "3", new[] { 0, 1360, 1380, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "4", new[] { 1300, 1340, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "5", new[] { 1340, 1820, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "6", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "7", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "8", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "9", new[] { 1340, 1540, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "10", new[] { 1340, 1820, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "11", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ "12", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
+			};
+
+			for (var i = 0; i < missions.Length; i++) {
+				foreach (var expect in expected) {
+					Watt value = ps.Lookup(missions[i], expect.Key);
+					Assert.AreEqual(expect.Value[i], value.Double(), Tolerance);
+				}
+			}
 		}
 
 		[TestMethod]
-		public void AuxSPTableTest()
+		public void AuxSteeringPumpTest()
 		{
-			Assert.Inconclusive();
-		}
+			var sp = DeclarationData.SteeringPump;
 
-		[TestMethod]
-		public void AuxSPTechTest()
-		{
-			Assert.Inconclusive();
+			var expected = new Dictionary<string, Dictionary<string, int[]>> {
+				{
+					"Fixed displacement", new Dictionary<string, int[]> {
+						{ "1", new[] { 0, 260, 270, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "2", new[] { 370, 320, 310, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "3", new[] { 0, 340, 350, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "4", new[] { 610, 530, 0, 530, 0, 0, 0, 0, 0, 0 } },
+						{ "5", new[] { 720, 630, 620, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "6", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "7", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "8", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "9", new[] { 720, 550, 0, 550, 0, 0, 0, 0, 0, 0 } },
+						{ "10", new[] { 570, 530, 0, 0, 0, 0, 0, 0, 0, 0 } }
+					}
+				}, {
+					"Variable displacement", new Dictionary<string, int[]> {
+						{ "1", new[] { 0, 156, 162, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "2", new[] { 222, 192, 186, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "3", new[] { 0, 204, 210, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "4", new[] { 366, 318, 0, 318, 0, 0, 0, 0, 0, 0 } },
+						{ "5", new[] { 432, 378, 372, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "6", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "7", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "8", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "9", new[] { 432, 330, 0, 330, 0, 0, 0, 0, 0, 0 } },
+						{ "10", new[] { 342, 318, 0, 0, 0, 0, 0, 0, 0, 0 } }
+					}
+				}, {
+					"Hydraulic supported by electric", new Dictionary<string, int[]> {
+						{ "1", new[] { 0, 225, 235, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "2", new[] { 322, 278, 269, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "3", new[] { 0, 295, 304, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "4", new[] { 531, 460, 0, 460, 0, 0, 0, 0, 0, 0 } },
+						{ "5", new[] { 627, 546, 540, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "6", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "7", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "8", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ "9", new[] { 627, 478, 0, 478, 0, 0, 0, 0, 0, 0 } },
+						{ "10", new[] { 498, 461, 0, 0, 0, 0, 0, 0, 0, 0 } }
+					}
+				}
+			};
+
+			foreach (var expect in expected) {
+				var technology = expect.Key;
+				foreach (var hdvClasses in expect.Value) {
+					var hdvClass = hdvClasses.Key;
+					for (var i = 0; i < missions.Length; i++) {
+						Watt value = sp.Lookup(missions[i], hdvClass, technology);
+						Assert.AreEqual(hdvClasses.Value[i], value.Double(), Tolerance);
+					}
+				}
+			}
 		}
 
 		[TestMethod]
@@ -172,7 +335,7 @@ namespace TUGraz.VectoCore.Tests.Models
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
 
 
-			Assert.AreEqual("2", segment.HDVClass);
+			Assert.AreEqual("2", segment.VehicleClass);
 
 			var data = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
 			TestAcceleration(data);
@@ -182,8 +345,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			var longHaulMission = segment.Missions[0];
 			Assert.AreEqual(MissionType.LongHaul, longHaulMission.MissionType);
 
-			Assert.IsNotNull(longHaulMission.CrossWindCorrectionFile);
-			Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(longHaulMission.CrossWindCorrectionFile).ReadLine()));
+			Assert.AreEqual("RigidSolo", longHaulMission.CrossWindCorrection);
 
 			Assert.IsTrue(new[] { 0.4, 0.6 }.SequenceEqual(longHaulMission.AxleWeightDistribution));
 			Assert.IsTrue(new double[] { }.SequenceEqual(longHaulMission.TrailerAxleWeightDistribution));
@@ -200,8 +362,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			var regionalDeliveryMission = segment.Missions[1];
 			Assert.AreEqual(MissionType.RegionalDelivery, regionalDeliveryMission.MissionType);
 
-			Assert.IsNotNull(regionalDeliveryMission.CrossWindCorrectionFile);
-			Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(regionalDeliveryMission.CrossWindCorrectionFile).ReadLine()));
+			Assert.AreEqual("RigidSolo", regionalDeliveryMission.CrossWindCorrection);
 
 			Assert.IsTrue(new[] { 0.45, 0.55 }.SequenceEqual(regionalDeliveryMission.AxleWeightDistribution));
 			Assert.IsTrue(new double[] { }.SequenceEqual(regionalDeliveryMission.TrailerAxleWeightDistribution));
@@ -218,8 +379,7 @@ namespace TUGraz.VectoCore.Tests.Models
 			var urbanDeliveryMission = segment.Missions[2];
 			Assert.AreEqual(MissionType.UrbanDelivery, urbanDeliveryMission.MissionType);
 
-			Assert.IsNotNull(urbanDeliveryMission.CrossWindCorrectionFile);
-			Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(urbanDeliveryMission.CrossWindCorrectionFile).ReadLine()));
+			Assert.AreEqual("RigidSolo", urbanDeliveryMission.CrossWindCorrection);
 
 			Assert.IsTrue(new[] { 0.45, 0.55 }.SequenceEqual(urbanDeliveryMission.AxleWeightDistribution));
 			Assert.IsTrue(new double[] { }.SequenceEqual(urbanDeliveryMission.TrailerAxleWeightDistribution));
@@ -256,7 +416,7 @@ namespace TUGraz.VectoCore.Tests.Models
 
 			//		// todo axleGear
 
-			//		var wheels = new DeclarationWheels(container, 0.SI<Meter>());
+			//		var wheels = new Wheels(container, 0.SI<Meter>());
 
 			//		var missionVehicleData = new VehicleData(vehicleData, loading, mission.AxleWeightDistribution);
 			//		var vehicle = new Vehicle(container, missionVehicleData);

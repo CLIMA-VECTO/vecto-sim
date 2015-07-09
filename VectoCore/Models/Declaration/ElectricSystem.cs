@@ -22,9 +22,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected override void ParseData(DataTable table)
 		{
-			foreach (DataColumn col in table.Columns) {
-				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLower().Replace(" ", "");
-			}
+			NormalizeTable(table);
 
 			foreach (DataRow row in table.Rows) {
 				var name = row.Field<string>("Technology");
@@ -39,11 +37,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var sum = _data[Tuple.Create(missionType, BaseLine)];
 
 			foreach (var s in technologies) {
-				if (_data.ContainsKey(Tuple.Create(missionType, s))) {
-					// todo: ask raphael why these technologies have to be subtracted?
-					sum -= _data[Tuple.Create(missionType, s)];
+				Watt w;
+				if (_data.TryGetValue(Tuple.Create(missionType, s), out w)) {
+					sum += w;
 				} else {
-					Log.Warn("electric system technology not found.");
+					Log.Error(string.Format("electric system technology not found: {0}", s));
 				}
 			}
 			return sum;

@@ -7,7 +7,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	public class Mission
 	{
 		public MissionType MissionType { get; set; }
-		public Stream CrossWindCorrectionFile { get; set; }
+		public string CrossWindCorrection { get; set; }
 		public double[] AxleWeightDistribution { get; set; }
 		public double[] TrailerAxleWeightDistribution { get; set; }
 

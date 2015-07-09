@@ -1,6 +1,6 @@
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data
+namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class Axle
 	{

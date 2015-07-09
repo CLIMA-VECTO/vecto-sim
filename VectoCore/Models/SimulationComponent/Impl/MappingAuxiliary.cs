@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (_outPort == null) {
 				Log.ErrorFormat("{0} cannot handle incoming request - no outport available", absTime);
 				throw new VectoSimulationException(
-					String.Format("{0} cannot handle incoming request - no outport available",
+					string.Format("{0} cannot handle incoming request - no outport available",
 						absTime.TotalSeconds));
 			}
 

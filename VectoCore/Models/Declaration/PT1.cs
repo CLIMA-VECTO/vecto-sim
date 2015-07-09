@@ -6,7 +6,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class DeclarationPT1 : LookupData<PerSecond, Second>
+	public class PT1 : LookupData<PerSecond, Second>
 	{
 		private List<KeyValuePair<PerSecond, Second>> _entries;
 

@@ -1,6 +1,3 @@
-using System;
-using System.Diagnostics.Contracts;
-
 namespace TUGraz.VectoCore.Utils
 {
 	public static class IntExtensionMethods
@@ -34,5 +31,16 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return SIBase<T>.Create(d);
 		}
+
+        /// <summary>
+        /// Modulo functions which also works on negative Numbers (not like the built-in %-operator which just returns the remainder).
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static int Mod(this int a, int b)
+        {
+            return (a %= b) < 0 ? a + b : a;
+        }
 	}
 }

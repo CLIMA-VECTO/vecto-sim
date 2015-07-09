@@ -12,7 +12,7 @@
 
 		public double AverageEfficiency { get; set; }
 
-		public GearData(TransmissionLossMap lossMap, Gearbox.ShiftPolygon shiftPolygon, double ratio,
+		public GearData(TransmissionLossMap lossMap, ShiftPolygon shiftPolygon, double ratio,
 			bool torqueconverterActive)
 		{
 			LossMap = lossMap;

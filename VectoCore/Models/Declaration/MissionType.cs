@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace TUGraz.VectoCore.Models
+﻿namespace TUGraz.VectoCore.Models.Declaration
 {
 	public enum MissionType
 	{
