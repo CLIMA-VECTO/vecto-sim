@@ -71,7 +71,7 @@
     <Compile Include="Dummy\FactoryTest.cs" />
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
-    <Compile Include="Models\DeclarationDataTest.cs" />
+    <Compile Include="Models\Declaration\DeclarationDataTest.cs" />
     <Compile Include="Models\SimulationComponentData\AccelerationCurveTest.cs" />
     <Compile Include="Models\SimulationComponentData\FuelConsumptionMapTest.cs" />
     <Compile Include="Models\SimulationComponentData\FullLoadCurveTest.cs" />
@@ -84,6 +84,7 @@
     <Compile Include="Models\SimulationComponent\WheelsTest.cs" />
     <Compile Include="Models\SimulationComponent\VehicleTest.cs" />
     <Compile Include="Models\Simulation\DrivingCycleTests.cs" />
+    <Compile Include="Utils\AssertHelper.cs" />
     <Compile Include="Utils\ResultFileHelper.cs" />
     <Compile Include="Utils\MockPorts.cs" />
     <Compile Include="Models\Simulation\SimulationTests.cs" />
@@ -291,9 +292,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\DeclarationData\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

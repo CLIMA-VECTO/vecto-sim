@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			_auxiliaryId = column;
 			if (_auxiliaryId != null && !_drivingCycle.Entries.First().AuxiliarySupplyPower.ContainsKey(_auxiliaryId)) {
 				Log.ErrorFormat("driving cycle data does not contain column {0}", column);
-				throw new VectoException(String.Format("driving cycle does not contain column {0}", column));
+				throw new VectoException(string.Format("driving cycle does not contain column {0}", column));
 			}
 		}
 
@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				CurrentCycleEntry = _nextCycleEntry.Current;
 				_nextCycleEntry.MoveNext();
 			}
-			return String.IsNullOrEmpty(_auxiliaryId)
+			return string.IsNullOrEmpty(_auxiliaryId)
 				? CurrentCycleEntry.AdditionalAuxPowerDemand
 				: CurrentCycleEntry.AuxiliarySupplyPower[_auxiliaryId];
 		}

@@ -6,15 +6,13 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class DeclarationPT1 : LookupData<PerSecond, Second>
+	public class PT1 : LookupData<PerSecond, Second>
 	{
 		private List<KeyValuePair<PerSecond, Second>> _entries;
 
-		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.PT1.csv";
-
-		public DeclarationPT1()
+		protected override string ResourceId
 		{
-			ParseData(ReadCsvResource(ResourceId));
+			get { return "TUGraz.VectoCore.Resources.Declaration.PT1.csv"; }
 		}
 
 		protected override void ParseData(DataTable table)

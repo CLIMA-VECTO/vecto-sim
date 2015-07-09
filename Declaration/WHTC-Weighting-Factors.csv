@@ -1,0 +1,4 @@
+﻿Part,Long haul,Regional delivery,Urban delivery,Municipal utility,Construction,Heavy Urban,Urban,Suburban,Interurban,Coach
+Urban,11,17,69,98,62,100,100,100,45,0
+Rural,0,30,27,0,32,0,0,0,36,22
+Motorway,89,53,4,2,6,0,0,0,19,78

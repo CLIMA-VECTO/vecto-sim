@@ -1,14 +1,19 @@
 using System.IO;
 using System.Reflection;
+using TUGraz.VectoCore.Exceptions;
 
-namespace TUGraz.VectoCore.Models
+namespace TUGraz.VectoCore.Utils
 {
 	public static class RessourceHelper
 	{
 		public static Stream ReadStream(string resourceName)
 		{
 			var assembly = Assembly.GetExecutingAssembly();
-			return assembly.GetManifestResourceStream(resourceName);
+			var resource = assembly.GetManifestResourceStream(resourceName);
+			if (resource == null) {
+				throw new VectoException("Resource file not found: " + resourceName);
+			}
+			return resource;
 		}
 	}
 }

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -100,7 +102,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public static SI SI(this double self)
 		{
-			return (SI)self;
+			return (SI) self;
 		}
 
 		/// <summary>
@@ -112,6 +114,11 @@ namespace TUGraz.VectoCore.Utils
 		public static T SI<T>(this double self) where T : SIBase<T>
 		{
 			return SIBase<T>.Create(self);
+		}
+
+		public static IEnumerable<T> SI<T>(this IEnumerable<double> self) where T : SIBase<T>
+		{
+			return self.Select(x => x.SI<T>());
 		}
 	}
 }

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
 using Common.Logging;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
@@ -63,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 					TorqueLoss = row.ParseDouble(Fields.TorqeLoss).SI<NewtonMeter>(),
 					Efficiency =
 						(!hasEfficiency || row[Fields.Efficiency] == DBNull.Value || row[Fields.Efficiency] != null)
-							? Double.NaN
+							? double.NaN
 							: row.ParseDouble(Fields.Efficiency)
 				}).ToList();
 		}
@@ -109,7 +107,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 					0.SI<NewtonMeter>());
 			} catch (Exception e) {
 				throw new VectoSimulationException(
-					String.Format("Failed to interpolate in TransmissionLossMap. angularVelocity: {0}, torque: {1}", angularVelocity,
+					string.Format("Failed to interpolate in TransmissionLossMap. angularVelocity: {0}, torque: {1}", angularVelocity,
 						gbxOutTorque), e);
 			}
 		}
@@ -117,8 +115,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		/// <summary>
 		///		Compute the available torque at the output of the gear(box) (towards wheels)
 		/// </summary>
-		/// <param name="angularVelocity">[1/s] angular speed of the shaft</param>
-		/// <param name="gbxInTorque">[Nm] torque provided by the engine at the gearbox' input shaft</param>
 		/// <returns>[Nm] torque provided to the next component (towards the wheels)</returns>
 		//public NewtonMeter GearboxOutTorque(PerSecond angularVelocity, NewtonMeter gbxInTorque)
 		//{

@@ -1,8 +1,8 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
@@ -90,12 +90,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void Test_FileRead_WrongFileFormat_InsufficientColumns()
 		{
+<<<<<<< HEAD
 			try {
 				var curve = FullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve insufficient columns.vfld");
 				Assert.Fail("this should not be reached.");
 			} catch (VectoException ex) {
 				Assert.AreEqual("FullLoadCurve Data File must consist of at least 3 columns.", ex.Message);
 			}
+=======
+			AssertHelper.Exception<VectoException>(
+				() => FullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve insufficient columns.vfld"),
+				"FullLoadCurve Data File must consist of 4 columns.");
+>>>>>>> a5dcad0c91dc731752c42c6834479f598ecee201
 		}
 
 		/// <summary>
@@ -125,14 +131,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void Test_FileRead_InsufficientEntries()
 		{
-			try {
-				FullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve insufficient entries.vfld");
-				Assert.Fail("this should not be reached.");
-			} catch (VectoException ex) {
-				Assert.AreEqual(
-					"FullLoadCurve must consist of at least two lines with numeric values (below file header)",
-					ex.Message);
-			}
+			AssertHelper.Exception<VectoException>(
+				() => FullLoadCurve.ReadFromFile(@"TestData\Components\FullLoadCurve insufficient entries.vfld"),
+				"FullLoadCurve must consist of at least two lines with numeric values (below file header)");
 		}
 	}
 }

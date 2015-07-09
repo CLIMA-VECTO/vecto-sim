@@ -1,11 +1,10 @@
 ﻿using System;
-using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -55,7 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (_outPort == null) {
 				Log.ErrorFormat("{0} cannot handle incoming request - no outport available", absTime);
 				throw new VectoSimulationException(
-					String.Format("{0} cannot handle incoming request - no outport available",
+					string.Format("{0} cannot handle incoming request - no outport available",
 						absTime.TotalSeconds));
 			}
 
