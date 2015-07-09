@@ -1,4 +1,6 @@
-﻿namespace TUGraz.VectoCore.Models.Declaration
+﻿using System.Data;
+
+namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class DeclarationData
 	{
@@ -12,6 +14,7 @@
 		private HeatingVentilationAirConditioning _heatingVentilationAirConditioning;
 		private PneumaticSystem _pneumaticSystem;
 		private SteeringPump _steeringPump;
+		private WHTCCorrection _whtcCorrection;
 
 		public static Wheels Wheels
 		{
@@ -62,9 +65,32 @@
 			get { return Instance()._steeringPump ?? (Instance()._steeringPump = new SteeringPump()); }
 		}
 
+		public static WHTCCorrection WHTCCorrection
+		{
+			get { return Instance()._whtcCorrection ?? (Instance()._whtcCorrection = new WHTCCorrection()); }
+		}
+
 		private static DeclarationData Instance()
 		{
 			return _instance ?? (_instance = new DeclarationData());
+		}
+	}
+
+	public class WHTCCorrection : LookupData<MissionType, double, double, double, double>
+	{
+		public override double Lookup(MissionType key1, double key2, double key3, double key4)
+		{
+			throw new System.NotImplementedException();
+		}
+
+		protected override string ResourceId
+		{
+			get { throw new System.NotImplementedException(); }
+		}
+
+		protected override void ParseData(DataTable table)
+		{
+			throw new System.NotImplementedException();
 		}
 	}
 }

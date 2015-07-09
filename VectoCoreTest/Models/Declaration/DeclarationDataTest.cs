@@ -9,12 +9,13 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Tests.Models
+namespace TUGraz.VectoCore.Tests.Models.Declaration
 {
 	[TestClass]
 	public class DeclarationDataTest
 	{
-		public const double Tolerance = 0.0001;
+		private const double Tolerance = 0.0001;
+		private MissionType[] missions = Enum.GetValues(typeof(MissionType)).Cast<MissionType>().ToArray();
 
 		[TestMethod]
 		public void WheelDataTest()
@@ -80,6 +81,42 @@ namespace TUGraz.VectoCore.Tests.Models
 		{
 			Assert.Inconclusive();
 		}
+
+		[TestMethod]
+		public void WHTCWeightingTest()
+		{
+			var whtc = DeclarationData.WHTCCorrection;
+
+			var factors = new {
+				urban = new[] { 0.11, 0.17, 0.69, 0.98, 0.62, 1.0, 1.0, 1.0, 0.45, 0.0 },
+				rural = new[] { 0.0, 0.3, 0.27, 0.0, 0.32, 0.0, 0.0, 0.0, 0.36, 0.22 },
+				motorway = new[] { 0.89, 0.53, 0.04, 0.02, 0.06, 0.0, 0.0, 0.0, 0.19, 0.78 }
+			};
+
+			var r = new Random();
+			for (var i = 0; i < missions.Length; i++) {
+				var urban = r.NextDouble() * 2;
+				var rural = r.NextDouble() * 2;
+				var motorway = r.NextDouble() * 2;
+				double whtcValue = whtc.Lookup(missions[i], urban, rural, motorway);
+				Assert.AreEqual(urban * factors.urban[i] + rural * factors.rural[i] + motorway * factors.motorway[i], whtcValue);
+			}
+
+			Assert.Inconclusive();
+		}
+
+		[TestMethod]
+		public void VCDVTest()
+		{
+			Assert.Inconclusive();
+		}
+
+		[TestMethod]
+		public void DefaultTCTest()
+		{
+			Assert.Inconclusive();
+		}
+
 
 		[TestMethod]
 		public void AuxElectricSystemTest()
@@ -152,17 +189,8 @@ namespace TUGraz.VectoCore.Tests.Models
 				}
 			};
 
-			var missions = new[] {
-				MissionType.LongHaul, MissionType.RegionalDelivery, MissionType.UrbanDelivery, MissionType.MunicipalUtility,
-				MissionType.Construction, MissionType.HeavyUrban, MissionType.Urban,
-				MissionType.Suburban, MissionType.Interurban, MissionType.Coach
-			};
-
-			Assert.AreEqual(missions.Length, Enum.GetValues(typeof(MissionType)).Length, "something wrong in the mission list.");
-			Assert.IsTrue(expected.All(kv => kv.Value.Length == missions.Length), "something wrong in the test values lists.");
-
 			for (var i = 0; i < missions.Length; i++) {
-				// default
+				// default tech
 				Watt defaultValue = fan.Lookup(missions[i], "");
 				Assert.AreEqual(expected[defaultFan][i], defaultValue.Double(), Tolerance);
 
@@ -194,15 +222,6 @@ namespace TUGraz.VectoCore.Tests.Models
 				{ "12", new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } }
 			};
 
-			var missions = new[] {
-				MissionType.LongHaul, MissionType.RegionalDelivery, MissionType.UrbanDelivery, MissionType.MunicipalUtility,
-				MissionType.Construction, MissionType.HeavyUrban, MissionType.Urban,
-				MissionType.Suburban, MissionType.Interurban, MissionType.Coach
-			};
-
-			Assert.AreEqual(missions.Length, Enum.GetValues(typeof(MissionType)).Length, "something wrong in the mission list.");
-			Assert.IsTrue(expected.All(kv => kv.Value.Length == missions.Length), "something wrong in the test values lists.");
-
 			for (var i = 0; i < missions.Length; i++) {
 				foreach (var expect in expected) {
 					Watt value = hvac.Lookup(missions[i], expect.Key);
@@ -230,15 +249,6 @@ namespace TUGraz.VectoCore.Tests.Models
 				{ "11", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
 				{ "12", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
 			};
-
-			var missions = new[] {
-				MissionType.LongHaul, MissionType.RegionalDelivery, MissionType.UrbanDelivery, MissionType.MunicipalUtility,
-				MissionType.Construction, MissionType.HeavyUrban, MissionType.Urban,
-				MissionType.Suburban, MissionType.Interurban, MissionType.Coach
-			};
-
-			Assert.AreEqual(missions.Length, Enum.GetValues(typeof(MissionType)).Length, "something wrong in the mission list.");
-			Assert.IsTrue(expected.All(kv => kv.Value.Length == missions.Length), "something wrong in the test values lists.");
 
 			for (var i = 0; i < missions.Length; i++) {
 				foreach (var expect in expected) {
@@ -296,27 +306,10 @@ namespace TUGraz.VectoCore.Tests.Models
 				}
 			};
 
-			var missions = new[] {
-				MissionType.LongHaul,
-				MissionType.RegionalDelivery,
-				MissionType.UrbanDelivery,
-				MissionType.MunicipalUtility,
-				MissionType.Construction,
-				MissionType.HeavyUrban,
-				MissionType.Urban,
-				MissionType.Suburban,
-				MissionType.Interurban,
-				MissionType.Coach
-			};
-
-			Assert.AreEqual(missions.Length, Enum.GetValues(typeof(MissionType)).Length, "something wrong in the mission list.");
-
 			foreach (var expect in expected) {
 				var technology = expect.Key;
 				foreach (var hdvClasses in expect.Value) {
 					var hdvClass = hdvClasses.Key;
-					Assert.IsTrue(expected.All(kv => hdvClasses.Value.Length == missions.Length),
-						"something wrong in the test values lists.");
 					for (var i = 0; i < missions.Length; i++) {
 						Watt value = sp.Lookup(missions[i], hdvClass, technology);
 						Assert.AreEqual(hdvClasses.Value[i], value.Double(), Tolerance);
