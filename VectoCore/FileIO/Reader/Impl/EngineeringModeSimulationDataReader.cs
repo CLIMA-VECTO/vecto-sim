@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		protected static void CheckForEngineeringMode(VersionInfo info, string msg)
 		{
 			if (info.SavedInDeclarationMode) {
-				LogManager.GetLogger(typeof (EngineeringModeSimulationDataReader))
+				LogManager.GetLogger(typeof(EngineeringModeSimulationDataReader))
 					.WarnFormat("File was saved in Declaration Mode but is used for Engineering Mode!");
 			}
 		}
@@ -83,6 +83,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					VehicleData = dao.CreateVehicleData(Vehicle),
 					//DriverData = new DriverData(),
 					//Aux = 
+					// TODO: distance or time-based cycle!
 					Cycle = DrivingCycleData.ReadFromFile(Path.Combine(job.BasePath, cycle), DrivingCycleData.CycleType.DistanceBased),
 					IsEngineOnly = false
 				};

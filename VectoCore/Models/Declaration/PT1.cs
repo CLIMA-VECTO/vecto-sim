@@ -10,9 +10,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		private List<KeyValuePair<PerSecond, Second>> _entries;
 
-		protected override string ResourceId
+		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.PT1.csv";
+
+		public PT1()
 		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.PT1.csv"; }
+			ParseData(ReadCsvResource(ResourceId));
 		}
 
 		protected override void ParseData(DataTable table)

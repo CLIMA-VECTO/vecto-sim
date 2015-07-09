@@ -10,10 +10,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		private const string ResourceNamespace = "TUGraz.VectoCore.Resources.Declaration.";
 
-		protected override string ResourceId
+		public Segments()
 		{
-			get { return ResourceNamespace + "SegmentTable.csv"; }
+			ParseData(ReadCsvResource(ResourceNamespace + "SegmentTable.csv"));
 		}
+
 
 		protected override void ParseData(DataTable table)
 		{

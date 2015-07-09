@@ -22,6 +22,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		//protected abstract string ResourceId { get; }
 
 		//protected abstract DataTable ReadData();
+
 		protected abstract void ParseData(DataTable table);
 
 		protected DataTable ReadCsvResource(string resourceId)
@@ -35,20 +36,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			return VectoCSVFile.Read(fileName);
 		}
+
+		protected static DataTable NormalizeTable(DataTable table)
+		{
+			foreach (DataColumn col in table.Columns) {
+				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLower().Replace(" ", "");
+			}
+			return table;
+		}
 	}
 
 
 	public abstract class LookupData<TKey, TValue> : LookupData
 	{
-		protected Dictionary<TKey, TValue> Data;
+		protected Dictionary<TKey, TValue> Data = new Dictionary<TKey, TValue>();
 
 		public virtual TValue Lookup(TKey key)
 		{
-			var retVal = default(TValue);
-			if (Data.ContainsKey(key)) {
-				retVal = Data[key];
-			}
-			return retVal;
+			return Data[key];
 		}
 	}
 

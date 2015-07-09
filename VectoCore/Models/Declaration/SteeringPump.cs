@@ -13,6 +13,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private readonly Dictionary<Tuple<MissionType, string>, Watt[]> _data =
 			new Dictionary<Tuple<MissionType, string>, Watt[]>();
 
+		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Table.csv";
+
+		public SteeringPump()
+		{
+			ParseData(ReadCsvResource(ResourceId));
+		}
+
 		public override Watt Lookup(MissionType mission, string hdvClass, string technology)
 		{
 			var shares = _data[Tuple.Create(mission, hdvClass)];
@@ -22,12 +29,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				sum += shares[i] * factors[i];
 			}
 			return sum;
-		}
-
-
-		protected override string ResourceId
-		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Table.csv"; }
 		}
 
 		protected override void ParseData(DataTable table)
@@ -48,10 +49,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public class SteeringPumpTechnologies : LookupData<string, double[]>
 		{
-			protected override string ResourceId
+			protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Tech.csv";
+
+			public SteeringPumpTechnologies()
 			{
-				get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Tech.csv"; }
+				ParseData(ReadCsvResource(ResourceId));
 			}
+
 
 			protected override void ParseData(DataTable table)
 			{

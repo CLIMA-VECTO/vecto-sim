@@ -12,10 +12,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private const string DefaultTechnology = "Crankshaft mounted - Electronically controlled visco clutch (Default)";
 
-		protected override string ResourceId
+		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.Fan-Tech.csv";
+
+		public Fan()
 		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.Fan-Tech.csv"; }
+			ParseData(ReadCsvResource(ResourceId));
 		}
+
 
 		protected override void ParseData(DataTable table)
 		{

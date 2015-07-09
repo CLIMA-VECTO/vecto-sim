@@ -10,14 +10,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private readonly Dictionary<Tuple<MissionType, string>, Watt> _data =
 			new Dictionary<Tuple<MissionType, string>, Watt>();
 
+		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.HVAC-Table.csv";
+
+		public HeatingVentilationAirConditioning()
+		{
+			ParseData(ReadCsvResource(ResourceId));
+		}
+
 		public override Watt Lookup(MissionType mission, string hdvClass)
 		{
 			return _data[Tuple.Create(mission, hdvClass)];
-		}
-
-		protected override string ResourceId
-		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.VAUX.HVAC-Table.csv"; }
 		}
 
 		protected override void ParseData(DataTable table)

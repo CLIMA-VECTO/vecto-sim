@@ -68,7 +68,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Dummy\FactoryTest.cs" />
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
     <Compile Include="Models\Declaration\DeclarationDataTest.cs" />
@@ -292,7 +291,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Dummy\" />
+    <Folder Include="Models\DeclarationData\" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 			LookupData<PerSecond, Second> tmp;
 			if (declarationMode) {
-				tmp = new DeclarationPT1();
+				tmp = new PT1();
 			} else {
 				tmp = PT1Curve.ReadFromFile(fileName);
 			}
@@ -472,7 +472,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				if (obj.GetType() != this.GetType()) {
 					return false;
 				}
-				return Equals((FullLoadCurveEntry) obj);
+				return Equals((FullLoadCurveEntry)obj);
 			}
 
 			public override int GetHashCode()
@@ -506,7 +506,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (obj.GetType() != this.GetType()) {
 				return false;
 			}
-			return Equals((FullLoadCurve) obj);
+			return Equals((FullLoadCurve)obj);
 		}
 
 		public override int GetHashCode()

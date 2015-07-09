@@ -10,16 +10,19 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		private Dictionary<MissionType, WHTCCorrectionEntry> _data = new Dictionary<MissionType, WHTCCorrectionEntry>();
 
+		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.WHTC-Weighting-Factors.csv";
+
+		public WHTCCorrection()
+		{
+			ParseData(ReadCsvResource(ResourceId));
+		}
+
 		public override double Lookup(MissionType mission, double rural, double urban, double motorway)
 		{
 			var entry = _data[mission];
 			return rural * entry.Rural + urban * entry.Urban + motorway * entry.Motorway;
 		}
 
-		protected override string ResourceId
-		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.WHTC-Weighting-Factors.csv"; }
-		}
 
 		protected override void ParseData(DataTable table)
 		{

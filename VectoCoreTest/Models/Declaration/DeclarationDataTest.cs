@@ -326,7 +326,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			//mock vehicleData
 			var vehicleData = new {
 				VehicleCategory = VehicleCategory.RigidTruck,
-				AxleConfiguration = AxleConfiguration.AxleConfig4x2,
+				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
 				GrossVehicleMassRating = 11900.SI<Kilogram>(),
 				CurbWeight = 5850.SI<Kilogram>()
 			};

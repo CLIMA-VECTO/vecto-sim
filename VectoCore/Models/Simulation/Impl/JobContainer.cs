@@ -30,34 +30,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			_sumWriter = sumWriter;
 		}
 
-		///// <summary>
-		///// Initializes a new instance of the <see cref="JobContainer"/> class from a VectoRunData object.
-		///// </summary>
-		///// <param name="data">The data.</param>
-		//public JobContainer(VectoRunData data)
-		//{
-		//	var sumFileName = Path.GetFileNameWithoutExtension(data.JobFileName);
-		//	var sumFilePath = Path.GetDirectoryName(data.JobFileName);
-		//	_sumWriter = new SummaryFileWriter(string.Format("{0}.vsum", Path.Combine(sumFilePath, sumFileName)));
-
-		//	AddRuns(data);
-		//}
-
-		///// <summary>
-		///// Creates and Adds jobs from the VectoRunData object.
-		///// </summary>
-		///// <param name="data">The data.</param>
-		//public void AddRuns(VectoRunData data)
-		//{
-		//	_jobNumber++;
-		//_runs.AddRange(SimulatorFactory.CreateRuns(data, _sumWriter, _jobNumber));
-
-		//}
-
-		/// <summary>
-		/// Adds a custom created job.
-		/// </summary>
-		/// <param name="run">The run.</param>
 		public void AddRun(IVectoRun run)
 		{
 			_jobNumber++;
@@ -68,6 +40,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			_jobNumber++;
 			_runs.AddRange(runs);
+		}
+
+		public void AddRuns(SimulatorFactory factory)
+		{
+			factory.SumWriter = _sumWriter;
+			factory.JobNumber = _jobNumber++;
+			_runs.AddRange(factory.SimulationRuns());
 		}
 
 		/// <summary>

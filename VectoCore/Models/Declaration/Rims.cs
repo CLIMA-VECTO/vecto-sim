@@ -6,16 +6,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class Rims : LookupData<string, Rims.RimsEntry>
 	{
-		internal Rims()
+		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Rims.csv";
+
+		public Rims()
 		{
-			var csvFile = ReadCsvFile(ResourceId);
-			ParseData(csvFile);
+			ParseData(ReadCsvResource(ResourceId));
 		}
 
-		protected override string ResourceId
-		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.Rims.csv"; }
-		}
 
 		protected override sealed void ParseData(DataTable table)
 		{

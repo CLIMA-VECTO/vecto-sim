@@ -1,6 +1,5 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VisualStudio.TestTools.UnitTesting.Web;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -26,7 +25,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
 			var vehicle = new VehicleContainer();
-			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+			var engineData =
+				EngineeringModeSimulationDataReader.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
 
 			var aux = new DirectAuxiliary(vehicle, new AuxiliaryCycleDataAdapter(data));
 			var gearbox = new EngineOnlyGearbox(vehicle);
@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			gearbox.InShaft().Connect(aux.OutShaft());
 			var port = aux.OutShaft();
 
-//			IVectoJob job = SimulationFactory.CreateTimeBasedEngineOnlyRun(TestContext.DataRow["EngineData"].ToString(),
+//			IVectoJob job = SimulationFactory.CreateTimeBasedEngineOnlyRun(TestContext.DataRow["EngineFile"].ToString(),
 //				TestContext.DataRow["CycleFile"].ToString(), "test2.csv");
 
 			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
@@ -66,25 +66,25 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 					for (var j = 0; j < results.Length; j++) {
 						var field = results[j];
 						//						if (!Double.IsNaN(dataWriter.GetDouble(field)))
-						Assert.AreEqual((double) row[field.GetName()], dataWriter.GetDouble(field),
+						Assert.AreEqual((double)row[field.GetName()], dataWriter.GetDouble(field),
 							0.0001,
-							String.Format("t: {0}  field: {1}", i, field));
+							string.Format("t: {0}  field: {1}", i, field));
 					}
 					if (row[ModalResultField.FC.GetName()] is double &&
-						!Double.IsNaN(Double.Parse(row[ModalResultField.FC.GetName()].ToString()))) {
-						Assert.AreEqual((double) row[ModalResultField.FC.GetName()],
+						!double.IsNaN(double.Parse(row[ModalResultField.FC.GetName()].ToString()))) {
+						Assert.AreEqual((double)row[ModalResultField.FC.GetName()],
 							dataWriter.GetDouble(ModalResultField.FC), 0.01,
 							"t: {0}  field: {1}", i, ModalResultField.FC);
 					} else {
-						Assert.IsTrue(Double.IsNaN(dataWriter.GetDouble(ModalResultField.FC)),
-							String.Format("t: {0}", i));
+						Assert.IsTrue(double.IsNaN(dataWriter.GetDouble(ModalResultField.FC)),
+							string.Format("t: {0}", i));
 					}
 				}
 
 				dataWriter.CommitSimulationStep(absTime, dt);
 				absTime += dt;
 			}
-			dataWriter.Data.WriteToFile(String.Format("result_{0}.csv", TestContext.DataRow["TestName"].ToString()));
+			dataWriter.Data.WriteToFile(string.Format("result_{0}.csv", TestContext.DataRow["TestName"].ToString()));
 		}
 
 		[TestMethod]

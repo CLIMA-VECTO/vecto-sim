@@ -6,9 +6,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class Wheels : LookupData<string, Wheels.WheelsEntry>
 	{
-		protected override string ResourceId
+		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Wheels.csv";
+
+		public Wheels()
 		{
-			get { return "TUGraz.VectoCore.Resources.Declaration.Wheels.csv"; }
+			ParseData(ReadCsvResource(ResourceId));
 		}
 
 		protected override sealed void ParseData(DataTable table)

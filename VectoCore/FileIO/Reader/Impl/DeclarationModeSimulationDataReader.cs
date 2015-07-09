@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			//	EnumHelper.ParseAxleConfigurationType(vehicle.AxleConfig.TypeStr),
 			//	vehicle.GrossVehicleMassRating.SI<Ton>().Cast<Kilogram>(), vehicle.CurbWeight.SI<Kilogram>());
 
-			return new DeclarationSegments().Lookup(category, axles, grossMassRating, curbWeight);
+			return DeclarationData.Segments.Lookup(category, axles, grossMassRating, curbWeight);
 		}
 	}
 }

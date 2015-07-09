@@ -3,11 +3,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
-<<<<<<< HEAD
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
-=======
-using TUGraz.VectoCore.Models.SimulationComponent.Factories;
->>>>>>> a5dcad0c91dc731752c42c6834479f598ecee201
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
