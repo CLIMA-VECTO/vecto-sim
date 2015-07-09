@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
@@ -57,6 +59,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			_pt1 = new DeclarationPT1();
 			_electricSystem = new ElectricSystem();
 		}
+
+		public static int PoweredAxle()
+		{
+			return 1;
+		}
+
 
 		private static DeclarationData Instance()
 		{
@@ -146,6 +154,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 						return false;
 				}
 				return false;
+			}
+
+			internal static ShiftPolygon ComputeShiftPolygon(CombustionEngineData engine, uint gear)
+			{
+				var fullLoadCurve = engine.GetFullLoadCurve(gear);
+				var idleSpeed = engine.IdleSpeed;
+
+				var maxTorque = fullLoadCurve.MaxLoadTorque;
+
+				var entriesDown = new List<ShiftPolygon.ShiftPolygonEntry>();
+				var entriesUp = new List<ShiftPolygon.ShiftPolygonEntry>();
+
+				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = idleSpeed, Torque = 0.SI<NewtonMeter>() });
+
+				var tq1 = maxTorque * idleSpeed / (fullLoadCurve.PreferredSpeed + fullLoadCurve.LoSpeed - idleSpeed);
+				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = idleSpeed, Torque = tq1 });
+
+				var speed1 = (fullLoadCurve.PreferredSpeed + fullLoadCurve.LoSpeed) / 2;
+				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = speed1, Torque = maxTorque });
+
+
+				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() {
+					AngularSpeed = fullLoadCurve.PreferredSpeed,
+					Torque = 0.SI<NewtonMeter>()
+				});
+
+				tq1 = maxTorque * (fullLoadCurve.PreferredSpeed - idleSpeed) / (fullLoadCurve.N95hSpeed - idleSpeed);
+				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = fullLoadCurve.PreferredSpeed, Torque = tq1 });
+
+				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = fullLoadCurve.N95hSpeed, Torque = maxTorque });
+
+				return new ShiftPolygon(entriesDown, entriesUp);
 			}
 		}
 	}

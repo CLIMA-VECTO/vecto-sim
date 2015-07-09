@@ -119,6 +119,9 @@
     <Compile Include="FileIO\EngineeringFile\VehicleFileEng.cs" />
     <Compile Include="FileIO\InputFileReader.cs" />
     <Compile Include="FileIO\JsonDataHeader.cs" />
+    <Compile Include="FileIO\Reader\DataObjectAdaper\AbstractSimulationDataAdapter.cs" />
+    <Compile Include="FileIO\Reader\DataObjectAdaper\DeclarationDataAdapter.cs" />
+    <Compile Include="FileIO\Reader\DataObjectAdaper\EngineeringDataAdapter.cs" />
     <Compile Include="FileIO\Reader\Impl\AbstractSimulationDataReader.cs" />
     <Compile Include="FileIO\Reader\Impl\DeclarationModeSimulationDataReader.cs" />
     <Compile Include="FileIO\Reader\Impl\EngineeringModeSimulationDataReader.cs" />

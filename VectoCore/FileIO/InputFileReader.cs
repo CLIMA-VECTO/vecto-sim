@@ -1,8 +1,5 @@
-﻿using System;
-using System.CodeDom;
-using Common.Logging;
+﻿using Common.Logging;
 using Newtonsoft.Json;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.FileIO
 {

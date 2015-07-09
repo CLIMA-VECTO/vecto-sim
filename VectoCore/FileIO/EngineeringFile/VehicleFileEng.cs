@@ -24,20 +24,20 @@ namespace TUGraz.VectoCore.FileIO.EngineeringFile
 			[JsonProperty("CdCorrFile")] public string CrossWindCorrectionFile;
 
 
-			[JsonProperty(Required = Required.Always)] public new AxleConfigData AxleConfig;
+			//[JsonProperty(Required = Required.Always)] public new AxleConfigData AxleConfig;
 
 
-			public new class AxleConfigData
-			{
-				[JsonProperty("Type", Required = Required.Always)] public string TypeStr;
-				[JsonProperty(Required = Required.Always)] public IList<AxleDataEng> Axles;
-			}
+			//public new class AxleConfigData
+			//{
+			//	[JsonProperty("Type", Required = Required.Always)] public string TypeStr;
+			//	[JsonProperty(Required = Required.Always)] public IList<AxleDataEng> Axles;
+			//}
 
-			public class AxleDataEng : AxleDataDecl
-			{
-				[JsonProperty] public double Inertia;
-				[JsonProperty] public double AxleWeightShare;
-			}
+			//public class AxleDataEng : AxleDataDecl
+			//{
+			//	[JsonProperty] public double Inertia;
+			//	[JsonProperty] public double AxleWeightShare;
+			//}
 		}
 	}
 }

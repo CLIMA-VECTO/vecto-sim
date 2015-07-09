@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.EngineeringFile;
+using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -20,12 +21,12 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				Log.Warn("Job-file is null or unsupported version");
 				yield break;
 			}
-
+			var dao = new EngineeringDataAdapter();
 			foreach (var cycle in job.Body.Cycles) {
 				var simulationRunData = new VectoRunData() {
 					BasePath = job.BasePath,
 					JobFileName = job.JobFile,
-					EngineData = CreateEngineData((dynamic) Engine),
+					EngineData = dao.CreateEngineData(Engine),
 					Cycle = DrivingCycleData.ReadFromFileEngineOnly(Path.Combine(job.BasePath, cycle)),
 					IsEngineOnly = true
 				};

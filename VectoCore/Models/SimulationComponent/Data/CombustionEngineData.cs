@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		/// <summary>
 		///     [m^3]
 		/// </summary>
-		public SI Displacement { get; internal set; }
+		public CubicMeter Displacement { get; internal set; }
 
 		/// <summary>
 		///     [rad/s]

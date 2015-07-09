@@ -7,6 +7,7 @@ using Common.Logging;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.EngineeringFile;
+using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
@@ -72,13 +73,14 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				Log.Warn("Job-file is null or unsupported version");
 				yield break;
 			}
+			var dao = new EngineeringDataAdapter();
 			foreach (var cycle in job.Body.Cycles) {
 				var simulationRunData = new VectoRunData() {
 					BasePath = job.BasePath,
 					JobFileName = job.JobFile,
-					EngineData = CreateEngineData((dynamic) Engine),
-					GearboxData = CreateGearboxData((dynamic) Gearbox),
-					VehicleData = CreateVehicleData((dynamic) Vehicle),
+					EngineData = dao.CreateEngineData(Engine),
+					GearboxData = dao.CreateGearboxData(Gearbox, null),
+					VehicleData = dao.CreateVehicleData(Vehicle),
 					//DriverData = new DriverData(),
 					//Aux = 
 					Cycle = DrivingCycleData.ReadFromFile(Path.Combine(job.BasePath, cycle), DrivingCycleData.CycleType.DistanceBased),
@@ -96,7 +98,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		public static VehicleData CreateVehicleDataFromFile(string file)
 		{
 			var data = DoReadVehicleFile(file);
-			return new EngineeringModeSimulationDataReader().CreateVehicleData((dynamic) data);
+			return new EngineeringDataAdapter().CreateVehicleData(data);
 		}
 
 		/// <summary>
@@ -107,7 +109,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		public static CombustionEngineData CreateEngineDataFromFile(string file)
 		{
 			var data = DoReadEngineFile(file);
-			return new EngineeringModeSimulationDataReader().CreateEngineData((dynamic) data);
+			return new EngineeringDataAdapter().CreateEngineData(data);
 		}
 
 		/// <summary>
@@ -118,7 +120,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		public static GearboxData CreateGearboxDataFromFile(string file)
 		{
 			var data = DoReadGearboxFile(file);
-			return new EngineeringModeSimulationDataReader().CreateGearboxData((dynamic) data);
+			return new EngineeringDataAdapter().CreateGearboxData(data, null);
 		}
 
 		/// <summary>
@@ -221,95 +223,6 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				default:
 					throw new UnsupportedFileVersionException("Unsopported Version of vehicle-file. Got version " + fileInfo.Version);
 			}
-		}
-
-		/// <summary>
-		/// convert datastructure representing file-contents into internal datastructure
-		/// Vehicle, file-format version 5
-		/// </summary>
-		/// <param name="vehicle">VehicleFileV5 container</param>
-		/// <returns>VehicleData instance</returns>
-		internal VehicleData CreateVehicleData(VehicleFileV5Engineering vehicle)
-		{
-			var data = vehicle.Body;
-
-			var retVal = SetCommonVehicleData(vehicle);
-
-			retVal.BasePath = vehicle.BasePath;
-			retVal.CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>();
-			retVal.Loading = data.Loading.SI<Kilogram>();
-			retVal.DynamicTyreRadius = data.DynamicTyreRadius.SI().Milli.Meter.Cast<Meter>();
-
-			retVal.AxleData = data.AxleConfig.Axles.Select(axle => new Axle {
-				Inertia = DoubleExtensionMethods.SI<KilogramSquareMeter>(axle.Inertia),
-				TwinTyres = axle.TwinTyres,
-				RollResistanceCoefficient = axle.RollResistanceCoefficient,
-				AxleWeightShare = axle.AxleWeightShare,
-				TyreTestLoad = DoubleExtensionMethods.SI<Newton>(axle.TyreTestLoad),
-				//Wheels = axle.WheelsStr
-			}).ToList();
-			return retVal;
-		}
-
-		/// <summary>
-		/// convert datastructure representing the file-contents into internal data structure
-		/// Engine, file-format version 2
-		/// </summary>
-		/// <param name="engine">Engin-Data file (Engineering mode)</param>
-		/// <returns></returns>
-		internal CombustionEngineData CreateEngineData(EngineFileV2Engineering engine)
-		{
-			var retVal = SetCommonCombustionEngineData(engine);
-			retVal.Inertia = engine.Body.Inertia.SI<KilogramSquareMeter>();
-			foreach (var entry in engine.Body.FullLoadCurves) {
-				retVal.AddFullLoadCurve(entry.Gears, FullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, entry.Path), false));
-			}
-
-			return retVal;
-		}
-
-
-		/// <summary>
-		/// convert datastructure representing the file-contents into internal data structure
-		/// Gearbox, File-format Version 4
-		/// </summary>
-		/// <param name="gearbox"></param>
-		/// <returns></returns>
-		internal GearboxData CreateGearboxData(GearboxFileV4Engineering gearbox)
-		{
-			var retVal = SetCommonGearboxData(gearbox.Body);
-
-			var data = gearbox.Body;
-
-			retVal.Inertia = data.Inertia.SI<KilogramSquareMeter>();
-			retVal.TractionInterruption = data.TractionInterruption.SI<Second>();
-			retVal.SkipGears = data.SkipGears;
-			retVal.EarlyShiftUp = data.EarlyShiftUp;
-			retVal.TorqueReserve = data.TorqueReserve;
-			retVal.StartTorqueReserve = data.StartTorqueReserve;
-			retVal.ShiftTime = data.ShiftTime.SI<Second>();
-			retVal.StartSpeed = data.StartSpeed.SI<MeterPerSecond>();
-			retVal.StartAcceleration = data.StartAcceleration.SI<MeterPerSquareSecond>();
-
-			retVal.HasTorqueConverter = data.TorqueConverter.Enabled;
-
-			for (uint i = 0; i < gearbox.Body.Gears.Count; i++) {
-				var gearSettings = gearbox.Body.Gears[(int) i];
-				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
-				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
-
-				var shiftPolygon = !String.IsNullOrEmpty(gearSettings.ShiftPolygon)
-					? ShiftPolygon.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.ShiftPolygon))
-					: null;
-
-				var gear = new GearData(lossMap, shiftPolygon, gearSettings.Ratio, gearSettings.TCactive);
-				if (i == 0) {
-					retVal.AxleGearData = gear;
-				} else {
-					retVal._gearData.Add(i, gear);
-				}
-			}
-			return retVal;
 		}
 	}
 }
