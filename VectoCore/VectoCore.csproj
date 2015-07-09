@@ -126,6 +126,7 @@
     <Compile Include="Models\Declaration\HVAC.cs" />
     <Compile Include="Models\Declaration\PneumaticSystem.cs" />
     <Compile Include="Models\Declaration\SteeringPump.cs" />
+    <Compile Include="Models\Declaration\WHTCCorrection.cs" />
     <Compile Include="Models\SimulationComponent\Data\AccelerationCurve.cs" />
     <Compile Include="Models\Declaration\DeclarationData.cs" />
     <Compile Include="Models\Declaration\PT1.cs" />
@@ -213,7 +214,7 @@
     <Compile Include="Models\Simulation\Cockpit\IVehicleCockpit.cs" />
     <Compile Include="Models\Simulation\IVehicleContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\DataRowExtensionMethods.cs" />
+    <Compile Include="Utils\DataTableExtensionMethods.cs" />
     <Compile Include="Utils\StringExtensionMethods.cs" />
     <Compile Include="Utils\VectoCSVFile.cs" />
     <Compile Include="Utils\VectoMath.cs" />

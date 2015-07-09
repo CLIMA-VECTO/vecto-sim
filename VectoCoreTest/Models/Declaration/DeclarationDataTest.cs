@@ -98,11 +98,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				var urban = r.NextDouble() * 2;
 				var rural = r.NextDouble() * 2;
 				var motorway = r.NextDouble() * 2;
-				double whtcValue = whtc.Lookup(missions[i], urban, rural, motorway);
+				var whtcValue = whtc.Lookup(missions[i], urban, rural, motorway);
 				Assert.AreEqual(urban * factors.urban[i] + rural * factors.rural[i] + motorway * factors.motorway[i], whtcValue);
 			}
-
-			Assert.Inconclusive();
 		}
 
 		[TestMethod]

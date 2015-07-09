@@ -6,7 +6,7 @@ using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
 {
-	public static class DataRowExtensionMethods
+	public static class DataTableExtensionMethods
 	{
 		public static double ParseDoubleOrGetDefault(this DataRow row, string columnName,
 			double defaultValue = default(double))
@@ -52,6 +52,11 @@ namespace TUGraz.VectoCore.Utils
 			} catch (Exception e) {
 				throw new VectoException(string.Format("Field {0}: {1}", column, e.Message), e);
 			}
+		}
+
+		public static IEnumerable<T> Values<T>(this DataColumn column)
+		{
+			return column.Table.AsEnumerable().Select(r => r.Field<T>(column));
 		}
 	}
 }

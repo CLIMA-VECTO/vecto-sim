@@ -70,7 +70,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
-    <Compile Include="Models\DeclarationData\DeclarationDataTest.cs" />
+    <Compile Include="Models\Declaration\DeclarationDataTest.cs" />
     <Compile Include="Models\SimulationComponentData\AccelerationCurveTest.cs" />
     <Compile Include="Models\SimulationComponentData\FuelConsumptionMapTest.cs" />
     <Compile Include="Models\SimulationComponentData\FullLoadCurveTest.cs" />

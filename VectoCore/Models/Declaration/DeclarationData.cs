@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-namespace TUGraz.VectoCore.Models.Declaration
+﻿namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class DeclarationData
 	{
@@ -73,24 +71,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private static DeclarationData Instance()
 		{
 			return _instance ?? (_instance = new DeclarationData());
-		}
-	}
-
-	public class WHTCCorrection : LookupData<MissionType, double, double, double, double>
-	{
-		public override double Lookup(MissionType key1, double key2, double key3, double key4)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		protected override string ResourceId
-		{
-			get { throw new System.NotImplementedException(); }
-		}
-
-		protected override void ParseData(DataTable table)
-		{
-			throw new System.NotImplementedException();
 		}
 	}
 }

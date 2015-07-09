@@ -32,11 +32,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return VectoCSVFile.ReadStream(file);
 		}
 
-		protected void NormalizeTable(DataTable table)
+		protected static DataTable NormalizeTable(DataTable table)
 		{
 			foreach (DataColumn col in table.Columns) {
 				table.Columns[col.ColumnName].ColumnName = col.ColumnName.ToLower().Replace(" ", "");
 			}
+			return table;
 		}
 	}
 
