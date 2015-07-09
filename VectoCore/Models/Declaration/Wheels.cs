@@ -8,7 +8,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Wheels.csv";
 
-		public DeclarationWheels()
+		public Wheels()
 		{
 			ParseData(ReadCsvResource(ResourceId));
 		}

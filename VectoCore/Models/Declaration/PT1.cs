@@ -12,7 +12,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.PT1.csv";
 
-		public DeclarationPT1()
+		public PT1()
 		{
 			ParseData(ReadCsvResource(ResourceId));
 		}

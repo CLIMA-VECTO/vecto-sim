@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
+
 namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class DeclarationData
@@ -45,7 +46,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		public static Meter DynamicTyreRadius(string wheels, string rims)
-		public static Fan Fan
 		{
 			var wheelsEntry = Wheels.Lookup(wheels);
 			var rimsEntry = Rims.Lookup(rims);
@@ -55,6 +55,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return wheelsEntry.TyreRadius * correction / (2 * Math.PI);
 		}
 
+		public static Fan Fan
 		{
 			get { return Instance()._fan ?? (Instance()._fan = new Fan()); }
 		}

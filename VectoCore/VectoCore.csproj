@@ -142,6 +142,7 @@
     <Compile Include="Models\Declaration\Fan.cs" />
     <Compile Include="Models\Declaration\HVAC.cs" />
     <Compile Include="Models\Declaration\PneumaticSystem.cs" />
+    <Compile Include="Models\Declaration\Rims.cs" />
     <Compile Include="Models\Declaration\SteeringPump.cs" />
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
     <Compile Include="Models\SimulationComponent\Data\AccelerationCurve.cs" />
