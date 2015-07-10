@@ -35,7 +35,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 															&& r.Field<string>("vehiclecategory") == vehicleCategory.ToString()
 															&& r.Field<string>("axleconf.") == axleConfiguration.GetName()
 															&& r.ParseDouble("gvw_min").SI<Ton>() <= grossVehicleMassRating
-															&& r.ParseDouble("gvw_max").SI<Ton>() > grossVehicleMassRating);
+															&& r.ParseDouble("gvw_max").SI<Ton>() > grossVehicleMassRating
+					);
 			var segment = new Segment {
 				GrossVehicleWeightMin = row.ParseDouble("gvw_min").SI().Ton.Cast<Kilogram>(),
 				GrossVehicleWeightMax = row.ParseDouble("gvw_max").SI().Ton.Cast<Kilogram>(),
