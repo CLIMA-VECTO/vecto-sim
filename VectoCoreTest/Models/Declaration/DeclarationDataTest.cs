@@ -14,8 +14,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	[TestClass]
 	public class DeclarationDataTest
 	{
-		private const double Tolerance = 0.0001;
-		private MissionType[] missions = Enum.GetValues(typeof(MissionType)).Cast<MissionType>().ToArray();
+		public const double Tolerance = 0.0001;
+		public readonly MissionType[] Missions = Enum.GetValues(typeof(MissionType)).Cast<MissionType>().ToArray();
 
 		[TestMethod]
 		public void WheelDataTest()
@@ -75,13 +75,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertHelper.Exception<VectoException>(() => pt1.Lookup(0.RPMtoRad()));
 		}
 
-
-		[TestMethod]
-		public void WHTCTest()
-		{
-			Assert.Inconclusive();
-		}
-
 		[TestMethod]
 		public void WHTCWeightingTest()
 		{
@@ -94,11 +87,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var r = new Random();
-			for (var i = 0; i < missions.Length; i++) {
+			for (var i = 0; i < Missions.Length; i++) {
 				var urban = r.NextDouble() * 2;
 				var rural = r.NextDouble() * 2;
 				var motorway = r.NextDouble() * 2;
-				var whtcValue = whtc.Lookup(missions[i], urban, rural, motorway);
+				var whtcValue = whtc.Lookup(Missions[i], urban, rural, motorway);
 				Assert.AreEqual(urban * factors.urban[i] + rural * factors.rural[i] + motorway * factors.motorway[i], whtcValue);
 			}
 		}
@@ -115,6 +108,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.Inconclusive();
 		}
 
+		[TestMethod]
+		public void WHTCTest()
+		{
+			Assert.Inconclusive();
+		}
 
 		[TestMethod]
 		public void AuxElectricSystemTest()
@@ -187,14 +185,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				}
 			};
 
-			for (var i = 0; i < missions.Length; i++) {
+			for (var i = 0; i < Missions.Length; i++) {
 				// default tech
-				Watt defaultValue = fan.Lookup(missions[i], "");
+				Watt defaultValue = fan.Lookup(Missions[i], "");
 				Assert.AreEqual(expected[defaultFan][i], defaultValue.Double(), Tolerance);
 
 				// all fan techs
 				foreach (var expect in expected) {
-					Watt value = fan.Lookup(missions[i], expect.Key);
+					Watt value = fan.Lookup(Missions[i], expect.Key);
 					Assert.AreEqual(expect.Value[i], value.Double(), Tolerance);
 				}
 			}
@@ -220,9 +218,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				{ "12", new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } }
 			};
 
-			for (var i = 0; i < missions.Length; i++) {
+			for (var i = 0; i < Missions.Length; i++) {
 				foreach (var expect in expected) {
-					Watt value = hvac.Lookup(missions[i], expect.Key);
+					Watt value = hvac.Lookup(Missions[i], expect.Key);
 					Assert.AreEqual(expect.Value[i], value.Double(), Tolerance);
 				}
 			}
@@ -248,9 +246,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				{ "12", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
 			};
 
-			for (var i = 0; i < missions.Length; i++) {
+			for (var i = 0; i < Missions.Length; i++) {
 				foreach (var expect in expected) {
-					Watt value = ps.Lookup(missions[i], expect.Key);
+					Watt value = ps.Lookup(Missions[i], expect.Key);
 					Assert.AreEqual(expect.Value[i], value.Double(), Tolerance);
 				}
 			}
@@ -308,8 +306,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				var technology = expect.Key;
 				foreach (var hdvClasses in expect.Value) {
 					var hdvClass = hdvClasses.Key;
-					for (var i = 0; i < missions.Length; i++) {
-						Watt value = sp.Lookup(missions[i], hdvClass, technology);
+					for (var i = 0; i < Missions.Length; i++) {
+						Watt value = sp.Lookup(Missions[i], hdvClass, technology);
 						Assert.AreEqual(hdvClasses.Value[i], value.Double(), Tolerance);
 					}
 				}
