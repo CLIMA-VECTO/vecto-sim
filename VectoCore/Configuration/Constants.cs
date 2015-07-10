@@ -11,6 +11,8 @@
 			public const string VectoJobFile = ".vecto";
 
 			public const string EngineDataFile = ".veng";
+
+			public const string CycleFile = ".vdri";
 		}
 	}
 }

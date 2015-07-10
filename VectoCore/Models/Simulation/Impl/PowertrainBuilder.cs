@@ -32,9 +32,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildFullPowertrain(VectoRunData data)
 		{
-			//todo: make distinction between time based and distance based driving cycle!
-			var cycle = new DistanceBasedDrivingCycle(_container, data.Cycle);
-
+			IDrivingCycleDemandDrivingCycle cycle;
+			if (_engineOnly) {
+				cycle = new TimeBasedDrivingCycle(_container, data.Cycle);
+			} else {
+				//todo: make distinction between time based and distance based driving cycle!
+				cycle = new DistanceBasedDrivingCycle(_container, data.Cycle);
+			}
 			// connect cycle --> driver --> vehicle --> wheels --> axleGear --> gearBox --> retarder --> clutch
 			dynamic tmp = AddComponent(cycle, new Driver(_container, data.DriverData));
 			tmp = AddComponent(tmp, new Vehicle(_container, data.VehicleData));

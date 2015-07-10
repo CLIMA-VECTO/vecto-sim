@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using Common.Logging;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
@@ -46,7 +48,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			log.Info(string.Format("Data loaded. Number of Entries: {0}", entries.Count));
 
-			var cycle = new DrivingCycleData { Entries = entries };
+			var cycle = new DrivingCycleData {
+				Entries = entries,
+				Name = Path.GetFileNameWithoutExtension(fileName)
+			};
 			return cycle;
 		}
 

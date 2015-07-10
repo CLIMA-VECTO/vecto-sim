@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					//Aux = 
 					// TODO: distance or time-based cycle!
 					Cycle = DrivingCycleData.ReadFromFile(Path.Combine(job.BasePath, cycle), DrivingCycleData.CycleType.DistanceBased),
-					IsEngineOnly = false
+					IsEngineOnly = IsEngineOnly
 				};
 				yield return simulationRunData;
 			}
@@ -224,6 +224,11 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				default:
 					throw new UnsupportedFileVersionException("Unsopported Version of vehicle-file. Got version " + fileInfo.Version);
 			}
+		}
+
+		public override bool IsEngineOnly
+		{
+			get { return false; }
 		}
 	}
 }

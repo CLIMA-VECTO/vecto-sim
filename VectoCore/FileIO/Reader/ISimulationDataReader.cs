@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.FileIO.Reader
@@ -9,6 +10,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 
 		IEnumerable<VectoRunData> NextRun();
 
+		bool IsEngineOnly { get; }
 		//	void SetJobJson(string jsonData, string basePath);
 	}
 

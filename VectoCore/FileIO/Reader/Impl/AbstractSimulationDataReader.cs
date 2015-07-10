@@ -30,6 +30,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			ProcessJob(Job);
 		}
 
+		public abstract bool IsEngineOnly { get; }
+
 		public abstract IEnumerable<VectoRunData> NextRun();
 
 

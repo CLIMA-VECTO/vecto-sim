@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 							SavedInDeclarationMode = true,
 							Entries = cycleEntries
 						},
-						IsEngineOnly = false,
+						IsEngineOnly = IsEngineOnly,
 						JobFileName = Job.JobFile,
 					};
 					yield return simulationRunData;
@@ -149,6 +149,11 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			//	vehicle.GrossVehicleMassRating.SI<Ton>().Cast<Kilogram>(), vehicle.CurbWeight.SI<Kilogram>());
 
 			return DeclarationData.Segments.Lookup(category, axles, grossMassRating, curbWeight);
+		}
+
+		public override bool IsEngineOnly
+		{
+			get { return false; }
 		}
 	}
 }

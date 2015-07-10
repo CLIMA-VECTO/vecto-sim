@@ -69,43 +69,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				IModalDataWriter modWriter = null;
 
 				if (_mode != FactoryMode.DeclarationMode) {
-					var modFileName = Path.Combine(data.BasePath, data.JobFileName.Replace(Constants.FileExtensions.VectoJobFile, "") +
-																Constants.FileExtensions.ModDataFile);
-					modWriter = new ModalDataWriter(modFileName, _mode == FactoryMode.EngineOnlyMode);
+					var modFileName = Path.Combine(data.BasePath,
+						data.JobFileName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}" +
+						Constants.FileExtensions.ModDataFile);
+					modWriter = new ModalDataWriter(string.Format(modFileName, data.Cycle.Name), DataReader.IsEngineOnly);
 				}
 				var jobName = string.Format("{0}-{1}", JobNumber, i++);
 				var sumWriterDecorator = DecorateSumWriter(data.IsEngineOnly, SumWriter, data.JobFileName, jobName, data.Cycle.Name);
-				var builder = new PowertrainBuilder(modWriter, sumWriterDecorator, data.IsEngineOnly);
+				var builder = new PowertrainBuilder(modWriter, sumWriterDecorator, DataReader.IsEngineOnly);
 
 				yield return new VectoRun(builder.Build(data));
 			}
-			//_runCreator.SetJobFile(jobFile);
-			//foreach (var data in _runCreator.Runs()) {
-			//	//for (var i = 0; i < data.Cycles.Count; i++) {
-			//	var cycleName = data.Cycle;
-			//	var jobName = string.Format("{0}-{1}", jobNumber, i);
-			//	var modFileName = string.Format("{0}_{1}.vmod", Path.GetFileNameWithoutExtension(data.JobFileName),
-			//		Path.GetFileNameWithoutExtension(cycleName));
-
-			//	_dataWriter = new ModalDataWriter(modFileName, data.IsEngineOnly);
-
-			//	var sumWriterDecorator = DecorateSumWriter(data.IsEngineOnly, sumWriter, data.JobFileName, jobName, cycleName);
-			//	var builder = new PowertrainBuilder(_dataWriter, sumWriterDecorator, data.IsEngineOnly);
-
-			//	builder.AddEngine(data.EngineData);
-
-			//	if (!data.IsEngineOnly) {
-			//		builder.AddVehicle(data.VehicleData);
-			//		builder.AddGearbox(data.GearboxData);
-
-			//		foreach (var aux in data.Aux) {
-			//			builder.AddAuxiliary(aux.Path, aux.ID);
-			//		}
-
-			//		// @@@ TODO builder.AddDriver(data.StartStop, data.OverSpeedEcoRoll, data.LookAheadCoasting, data.AccelerationLimitingFile);
-			//	}
-			//	yield return builder.Build(cycleName);
-			//}
 		}
 
 		/// <summary>

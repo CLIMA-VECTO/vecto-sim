@@ -70,28 +70,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			return factory.SimulationRuns().First();
 		}
 
-
-		[TestMethod]
-		public void TestEngineOnly_MultipleJobs()
-		{
-			var resultFiles = new[] {
-				@"TestEngineOnly-MultipleJobs-result1_" + Path.GetFileNameWithoutExtension(CycleFile) + ".vmod",
-				@"TestEngineOnly-MultipleJobs-result2_" + Path.GetFileNameWithoutExtension(CycleFile) + ".vmod",
-				@"TestEngineOnly-MultipleJobs-result3_" + Path.GetFileNameWithoutExtension(CycleFile) + ".vmod"
-			};
-
-			var simulation = new JobContainer(new TestSumWriter());
-			foreach (var resultFile in resultFiles) {
-				simulation.AddRun(CreateRun(resultFile));
-			}
-			simulation.Execute();
-
-			ResultFileHelper.TestModFiles(
-				Enumerable.Repeat(@"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod",
-					resultFiles.Length),
-				resultFiles);
-		}
-
 		[TestMethod]
 		public void Test_VectoJob()
 		{
