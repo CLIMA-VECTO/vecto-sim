@@ -1,29 +1,26 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Linq;
-using TUGraz.VectoCore.Resources.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class Rims : LookupData<Rims.RimsEntry>
+	public class Rims : LookupData<string, Rims.RimsEntry>
 	{
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Rims.csv";
+		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.Rims.csv";
 
-		internal Rims()
+		public Rims()
 		{
-			var csvFile = ReadCsvFile(ResourceId);
-			ParseData(csvFile);
+			ParseData(ReadCsvResource(ResourceId));
 		}
 
 
 		protected override sealed void ParseData(DataTable table)
 		{
-			_data = (from DataRow row in table.Rows
+			Data = (from DataRow row in table.Rows
 				select new RimsEntry {
 					RimsType = row[0].ToString(),
 					F_a = row.ParseDouble(1),
-					F_b = row.ParseDouble(2),
+					F_b = row.ParseDouble(2)
 				}).ToDictionary(e => e.RimsType);
 		}
 

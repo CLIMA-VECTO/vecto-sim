@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace TUGraz.VectoCore.Exceptions
 {
@@ -29,6 +30,10 @@ namespace TUGraz.VectoCore.Exceptions
 	{
 		public UnsupportedFileVersionException(string message) : base(message) {}
 		public UnsupportedFileVersionException(string message, Exception inner) : base(message, inner) {}
+
+		public UnsupportedFileVersionException(string filename, int version, Exception inner = null)
+			: base(string.Format("Unsupported Version of {0} file. Got Version {1}",
+				Path.GetExtension(filename), version), inner) {}
 	}
 
 	/// <summary>

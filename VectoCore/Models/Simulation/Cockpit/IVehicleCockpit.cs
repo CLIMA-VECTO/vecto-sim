@@ -13,8 +13,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Cockpit
 		/// <returns></returns>
 		MeterPerSecond VehicleSpeed();
 
-		double VehicleMass();
+		Kilogram VehicleMass();
 
-		double VehicleLoading();
+		Kilogram VehicleLoading();
+
+		Kilogram TotalMass();
 	}
 }

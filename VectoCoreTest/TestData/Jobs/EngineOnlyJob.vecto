@@ -1,0 +1,36 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "7/3/2015 11:09:04 AM",
+    "AppVersion": "2.0.4-beta3",
+    "FileVersion": 2
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehicleFile": "<NOFILE>",
+    "EngineFile": "../Components/24t Coach.veng",
+    "GearboxFile": "<NOFILE>",
+    "Cycles": [
+      "../Cycles/Coach Engine Only short.vdri"
+    ],
+    "VACC": "<NOFILE>",
+    "EngineOnlyMode": true,
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 5.0,
+      "Delay": 0
+    },
+    "LAC": {
+      "Enabled": true,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "Off",
+      "MinSpeed": 0.0,
+      "OverSpeed": 0.0,
+      "UnderSpeed": 0.0
+    }
+  }
+}

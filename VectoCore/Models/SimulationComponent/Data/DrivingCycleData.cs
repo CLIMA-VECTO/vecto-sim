@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using Common.Logging;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
@@ -17,7 +19,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			DistanceBased
 		}
 
-		public List<DrivingCycleEntry> Entries { get; set; }
+		public List<DrivingCycleEntry> Entries { get; internal set; }
+
+		public string Name { get; internal set; }
 
 		public static DrivingCycleData ReadFromFileEngineOnly(string fileName)
 		{
@@ -44,7 +48,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			log.Info(string.Format("Data loaded. Number of Entries: {0}", entries.Count));
 
-			var cycle = new DrivingCycleData { Entries = entries };
+			var cycle = new DrivingCycleData {
+				Entries = entries,
+				Name = Path.GetFileNameWithoutExtension(fileName)
+			};
 			return cycle;
 		}
 
@@ -103,7 +110,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public const string EngineSpeed = "n";
 
 			/// <summary>
-            ///     [-]	Gear input. Overwrites the gear shift model.
+			///     [-]	Gear input. Overwrites the gear shift model.
 			/// </summary>
 			public const string Gear = "gear";
 
@@ -181,7 +188,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public PerSecond EngineSpeed { get; set; }
 
 			/// <summary>
-            ///     [-]	Gear input. Overwrites the gear shift model.
+			///     [-]	Gear input. Overwrites the gear shift model.
 			/// </summary>
 			public double Gear { get; set; }
 
@@ -236,7 +243,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			}
 		}
 
-		private class DistanceBasedDataParser : IDataParser
+		internal class DistanceBasedDataParser : IDataParser
 		{
 			public IEnumerable<DrivingCycleEntry> Parse(DataTable table)
 			{

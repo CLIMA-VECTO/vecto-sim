@@ -7,7 +7,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Vehicle : VectoSimulationComponent, IVehicle
+	public class Vehicle : VectoSimulationComponent, IVehicle, IFvInPort, IDriverDemandOutPort
 	{
 		private IFvOutPort _nextInstance;
 
@@ -93,6 +93,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			return (_data.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Double())).Cast<Newton>();
 		}
+
+		public MeterPerSecond VehicleSpeed()
+		{
+			return _previousState.Velocity;
+		}
+
+		public Kilogram VehicleMass()
+		{
+			return _data.TotalCurbWeight();
+		}
+
+		public Kilogram VehicleLoading()
+		{
+			return _data.Loading;
+		}
+
+		public Kilogram TotalMass()
+		{
+			return _data.TotalVehicleWeight();
+		}
+
 
 		public class VehicleState
 		{

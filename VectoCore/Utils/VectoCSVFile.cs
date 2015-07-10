@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Utils
 				// Valid Columns found => header was valid => skip header line
 				lines = lines.Skip(1).ToArray();
 			} else {
-				var log = LogManager.GetLogger(typeof (VectoCSVFile));
+				var log = LogManager.GetLogger(typeof(VectoCSVFile));
 				log.Warn("No valid Data Header found. Interpreting the first line as data line.");
 				// set the validColumns to: {"0", "1", "2", "3", ...} for all columns in first line.
 				validColumns = GetColumns(lines.First()).Select((_, index) => index.ToString()).ToArray();
@@ -92,13 +92,13 @@ namespace TUGraz.VectoCore.Utils
 			for (var i = 0; i < lines.Length; i++) {
 				var line = lines[i];
 
-					var cells = line.Split(Delimiter);
+				var cells = line.Split(Delimiter);
 				if (!ignoreEmptyColumns && cells.Length != table.Columns.Count) {
 					throw new CSVReadException(string.Format("Line {0}: The number of values is not correct.", i));
 				}
 
 				try {
-						table.Rows.Add(line.Split(Delimiter));
+					table.Rows.Add(line.Split(Delimiter));
 				} catch (InvalidCastException e) {
 					throw new CSVReadException(
 						string.Format("Line {0}: The data format of a value is not correct. {1}", i, e.Message), e);
@@ -122,7 +122,6 @@ namespace TUGraz.VectoCore.Utils
 			Contract.Requires(line != null);
 
 			line = Regex.Replace(line, @"\[.*?\]", "");
-			line = Regex.Replace(line, @"\(.*?\)", "");
 			line = line.Replace("<", "");
 			line = line.Replace(">", "");
 			return line.Split(Delimiter).Select(col => col.Trim());

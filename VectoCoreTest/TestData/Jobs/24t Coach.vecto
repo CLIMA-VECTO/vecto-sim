@@ -7,13 +7,13 @@
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "TestData/Components/24t Coach.vveh",
-    "EngineFile": "TestData/Components/24t Coach.veng",
-    "GearboxFile": "TestData/Components/24t Coach.vgbx",
+    "VehicleFile": "../Components/24t Coach.vveh",
+    "EngineFile": "../Components/24t Coach.veng",
+    "GearboxFile": "../Components/24t Coach.vgbx",
     "Cycles": [
-      "TestData/Cycles/Engine Only1.vdri",
-      "TestData/Cycles/Engine Only2.vdri",
-      "TestData/Cycles/Engine Only3.vdri"
+      "../Cycles/Engine Only1.vdri",
+      "../Cycles/Engine Only2.vdri",
+      "../Cycles/Engine Only3.vdri"
     ],
     "VACC": "TestData/Components/Coach.vacc",
     "EngineOnlyMode": true,

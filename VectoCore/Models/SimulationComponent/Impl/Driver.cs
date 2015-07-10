@@ -1,25 +1,30 @@
 using System;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Driver : IDriver, IDrivingCycleDemandOutPort, IDriverDemandInPort
+	public class Driver : VectoSimulationComponent, IDriver, IDrivingCycleDemandOutPort, IDriverDemandInPort
 	{
-		public Driver(DriverData driverData)
+		protected IDriverDemandOutPort _other;
+
+		public Driver(VehicleContainer container, DriverData driverData) : base(container)
 		{
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
 		}
 
 		public IDriverDemandInPort InShaft()
 		{
-			throw new NotImplementedException();
+			return this;
 		}
 
 		public void Connect(IDriverDemandOutPort other)
 		{
-			throw new NotImplementedException();
+			_other = other;
 		}
 
 		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond velocity, Radian gradient)
@@ -35,7 +40,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IDrivingCycleDemandOutPort OutShaft()
 		{
-			throw new NotImplementedException();
+			return this;
 		}
+
+		public override void CommitSimulationStep(IModalDataWriter writer) {}
 	}
 }

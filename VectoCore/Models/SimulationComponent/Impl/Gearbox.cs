@@ -3,19 +3,27 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Gearbox : VectoSimulationComponent, IGearbox, ITnOutPort, ITnInPort
 	{
-		public Gearbox(IVehicleContainer container) : base(container) {}
+		protected ITnOutPort Next;
+
+		internal GearboxData Data;
+
+		public Gearbox(IVehicleContainer container, GearboxData gearboxData) : base(container)
+		{
+			Data = gearboxData;
+		}
 
 		#region IInShaft
 
 		public ITnInPort InShaft()
 		{
-			throw new NotImplementedException();
+			return this;
 		}
 
 		#endregion
@@ -24,7 +32,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public ITnOutPort OutShaft()
 		{
-			throw new NotImplementedException();
+			return this;
 		}
 
 		#endregion
@@ -51,7 +59,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		void ITnInPort.Connect(ITnOutPort other)
 		{
-			throw new NotImplementedException();
+			Next = other;
 		}
 
 		#endregion

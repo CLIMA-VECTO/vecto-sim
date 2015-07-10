@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IRoadPortOutProvider
 
-		IFvOutPort IRoadPortOutProvider.OutPort()
+		public IFvOutPort OutPort()
 		{
 			return this;
 		}
@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IInShaft
 
-		ITnInPort IInShaft.InShaft()
+		public ITnInPort InShaft()
 		{
 			return this;
 		}
@@ -39,8 +39,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		IResponse IFvOutPort.Request(TimeSpan absTime, TimeSpan dt, Newton force, MeterPerSecond velocity)
 		{
-			NewtonMeter torque = (force * _dynamicWheelRadius).Cast<NewtonMeter>();
-			var angularVelocity = (velocity / _dynamicWheelRadius).Cast<PerSecond>();
+			var torque = force * _dynamicWheelRadius;
+			var angularVelocity = velocity / _dynamicWheelRadius;
 			return _outPort.Request(absTime, dt, torque, angularVelocity);
 		}
 
