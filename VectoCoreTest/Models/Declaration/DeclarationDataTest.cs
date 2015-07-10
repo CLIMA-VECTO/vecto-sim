@@ -97,8 +97,19 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		[TestMethod]
-		public void VCDVTest()
+		public void AirDragTest()
 		{
+			var airDrag = DeclarationData.AirDrag;
+
+			//declaration
+			var Categories = Enum.GetValues(typeof(VehicleCategory)).Cast<VehicleCategory>().ToArray();
+
+			//todo: insert real test values
+			var expectedForCategory = new[] { 0, 0, 0, 0, 0 };
+			for (var i = 0; i < Categories.Length; i++) {
+				Assert.AreEqual(expectedForCategory[i], airDrag.Lookup(Categories[i]));
+			}
+
 			Assert.Inconclusive();
 		}
 
