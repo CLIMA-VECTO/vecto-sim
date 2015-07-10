@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -82,6 +86,60 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return (Cd * _data.CrossSectionArea * Physics.AirDensity / 2 * vAir * vAir).Cast<Newton>();
 		}
+
+		protected void CalculateAirResistanceCurve()
+		{
+			// todo: get from vehicle or move whole procedure to vehicle
+			var cdA0Actual = 0;
+
+			var values = DeclarationData.AirDrag.Lookup(_data.VehicleCategory);
+
+			var betas = new List<double>();
+			var deltaCdAs = new List<double>();
+			for (var beta = 0; beta <= 12; beta++) {
+				betas.Add(beta);
+				var deltaCdA = values.A1 * beta + values.A2 * beta * beta + values.A3 * beta * beta * beta;
+				deltaCdAs.Add(deltaCdA);
+			}
+
+			var cdX = new List<double> { 0 };
+			var cdY = new List<double> { 0 };
+
+			for (var vVeh = 60; vVeh <= 100; vVeh += 5) {
+				var cdASum = 0.0;
+				for (var alpha = 0; alpha <= 180; alpha += 10) {
+					var vWindX = Physics.BaseWindSpeed * Math.Cos(alpha * Math.PI / 180);
+					var vWindY = Physics.BaseWindSpeed * Math.Sin(alpha * Math.PI / 180);
+					var vAirX = vVeh + vWindX;
+					var vAirY = vWindY;
+					var vAir = VectoMath.Sqrt<MeterPerSecond>(vAirX * vAirX + vAirY * vAirY);
+					var beta = Math.Atan((vAirY / vAirX).Double()) * 180 / Math.PI;
+
+					var k = 1;
+					if (betas.First() < beta) {
+						k = 0;
+						while (betas[k] < beta && k < betas.Count) {
+							k++;
+						}
+					}
+
+					var deltaCdA = VectoMath.Interpolate(betas[k - 1], betas[k], deltaCdAs[k - 1], deltaCdAs[k], beta);
+
+					var cdA = cdA0Actual + deltaCdA;
+
+					var share = 10 / 180;
+					if (vVeh == 0 || vVeh == 180) {
+						share /= 2;
+					}
+					cdASum += share * cdA * (vAir * vAir / (vVeh * vVeh)).Double();
+				}
+				cdX.Add(vVeh);
+				cdY.Add(cdASum);
+			}
+
+			cdY[0] = cdY[1];
+		}
+
 
 		protected Newton AccelerationForce(MeterPerSquareSecond accelleration)
 		{

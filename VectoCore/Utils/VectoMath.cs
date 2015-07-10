@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public static T Sqrt<T>(SI si) where T : SIBase<T>
 		{
-			si.Sqrt().Cast<T>();
+			return si.Sqrt().Cast<T>();
 		}
 	}
 }

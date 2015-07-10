@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -219,77 +217,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = fullLoadCurve.N95hSpeed, Torque = maxTorque });
 
 				return new ShiftPolygon(entriesDown, entriesUp);
-			}
-		}
-	}
-
-	internal class AirDrag : LookupData<VehicleCategory, double>
-	{
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VCDV.parameters.csv";
-
-		public AirDrag()
-		{
-			ParseData(ReadCsvResource(ResourceId));
-		}
-
-
-		protected override void ParseData(DataTable table)
-		{
-			// todo: constant!!
-			var vWind = 3.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>();
-
-			// todo: get from vehicle or move whole procedure to vehicle
-			var cdA0Actual = 0;
-
-			Data.Clear();
-			foreach (DataRow row in table.Rows) {
-				var cat = row.Field<string>("Parameters");
-				var values = new { a1 = row.ParseDouble("a1"), a2 = row.ParseDouble("a2"), a3 = row.ParseDouble("a3") };
-
-				var betas = new List<double>();
-				var deltaCdAs = new List<double>();
-				for (var beta = 0; beta <= 12; beta++) {
-					betas.Add(beta);
-					var deltaCdA = values.a1 * beta + values.a2 * beta * beta + values.a3 * beta * beta * beta;
-					deltaCdAs.Add(deltaCdA);
-				}
-
-				var cdX = new List<double> { 0 };
-				var cdY = new List<double> { 0 };
-
-				for (var vVeh = 60; vVeh <= 100; vVeh += 5) {
-					var cdASum = 0.0;
-					for (var alpha = 0; alpha <= 180; alpha += 10) {
-						var vWindX = vWind * Math.Cos(alpha * Math.PI / 180);
-						var vWindY = vWind * Math.Sin(alpha * Math.PI / 180);
-						var vAirX = vVeh + vWindX;
-						var vAirY = vWindY;
-						var vAir = VectoMath.Sqrt<MeterPerSecond>(vAirX * vAirX + vAirY * vAirY);
-						var beta = Math.Atan((vAirY / vAirX).Double()) * 180 / Math.PI;
-
-						var k = 1;
-						if (betas.First() < beta) {
-							k = 0;
-							while (betas[k] < beta && k < betas.Count) {
-								k++;
-							}
-						}
-
-						var deltaCdA = VectoMath.Interpolate(betas[k - 1], betas[k], deltaCdAs[k - 1], deltaCdAs[k], beta);
-
-						var cdA = cdA0Actual + deltaCdA;
-
-						var share = 10 / 180;
-						if (vVeh == 0 || vVeh == 180) {
-							share /= 2;
-						}
-						cdASum += share * cdA * (vAir * vAir / (vVeh * vVeh)).Double();
-					}
-					cdX.Add(vVeh);
-					cdY.Add(cdASum);
-				}
-
-				cdY[0] = cdY[1];
 			}
 		}
 	}
