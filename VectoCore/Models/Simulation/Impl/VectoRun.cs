@@ -11,8 +11,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	/// </summary>
 	public abstract class VectoRun : IVectoRun
 	{
-		protected TimeSpan _absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-		protected TimeSpan _dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+		protected TimeSpan AbsTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
+
+		protected TimeSpan dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
 		public VectoRun(IVehicleContainer container)
 		{
@@ -39,12 +40,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			LogManager.GetLogger(GetType()).Info("VectoJob started running.");
 			IResponse response;
+
+
 			do {
 				response = DoSimulationStep();
-				Container.CommitSimulationStep(_absTime.TotalSeconds, _dt.TotalSeconds);
+				Container.CommitSimulationStep(AbsTime.TotalSeconds, dt.TotalSeconds);
 
 				// set _dt to difference to next full second.
-				_absTime += _dt;
+				AbsTime += dt;
 			} while (response is ResponseSuccess);
 
 			Container.FinishSimulation();
@@ -53,5 +56,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 		protected abstract IResponse DoSimulationStep();
+
+		protected abstract IResponse Initialize();
 	}
 }

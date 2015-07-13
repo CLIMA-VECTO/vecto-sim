@@ -53,10 +53,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			_currentState.Velocity = _previousState.Velocity +
 									(accelleration * (dt.TotalSeconds / 2.0).SI<Second>()).Cast<MeterPerSecond>();
-			var force = RollingResistance(gradient) + AirDragResistance() + AccelerationForce(accelleration) +
-						SlopeResistance(gradient);
 
-			return _nextInstance.Request(absTime, dt, force, _currentState.Velocity);
+			// DriverAcceleration = vehicleAccelerationForce - RollingResistance - AirDragResistance - SlopeResistance
+			var vehicleAccelerationForce = DriverAcceleration(accelleration) + RollingResistance(gradient) +
+											AirDragResistance() +
+											SlopeResistance(gradient);
+
+			return _nextInstance.Request(absTime, dt, vehicleAccelerationForce, _currentState.Velocity);
 		}
 
 		protected Newton RollingResistance(Radian gradient)
@@ -83,7 +86,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return (Cd * _data.CrossSectionArea * Physics.AirDensity / 2 * vAir * vAir).Cast<Newton>();
 		}
 
-		protected Newton AccelerationForce(MeterPerSquareSecond accelleration)
+		protected Newton DriverAcceleration(MeterPerSquareSecond accelleration)
 		{
 			return ((_data.TotalVehicleWeight() + _data.ReducedMassWheels) * accelleration).Cast<Newton>();
 		}

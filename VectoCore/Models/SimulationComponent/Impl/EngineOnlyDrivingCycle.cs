@@ -1,9 +1,11 @@
 using System;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
@@ -40,6 +42,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#endregion
 
 		#region ISimulationOutPort
+
+		public IResponse Request(TimeSpan absTime, Meter ds)
+		{
+			throw new VectoSimulationException("Engine-Only Simulation can not handle distance request");
+		}
 
 		IResponse ISimulationOutPort.Request(TimeSpan absTime, TimeSpan dt)
 		{

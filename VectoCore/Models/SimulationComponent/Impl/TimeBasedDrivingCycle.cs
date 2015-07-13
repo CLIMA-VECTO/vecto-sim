@@ -43,7 +43,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ISimulationOutPort
 
-		IResponse ISimulationOutPort.Request(TimeSpan absTime, TimeSpan dt)
+		IResponse ISimulationOutPort.Request(TimeSpan absTime, Meter ds)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IResponse Request(TimeSpan absTime, TimeSpan dt)
 		{
 			//todo: change to variable time steps
 			var index = (int)Math.Floor(absTime.TotalSeconds);

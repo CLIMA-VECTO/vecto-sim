@@ -1,5 +1,8 @@
 ﻿using System;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -9,21 +12,34 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected override Connector.Ports.IResponse DoSimulationStep()
 		{
-			_dt = TimeSpan.FromSeconds(1) - TimeSpan.FromMilliseconds(_dt.Milliseconds);
+			//_dt = TimeSpan.FromSeconds(1) - TimeSpan.FromMilliseconds(_dt.Milliseconds);
 
-			var response = CyclePort.Request(_absTime, _dt);
-			while (response is ResponseFailTimeInterval) {
-				_dt = (response as ResponseFailTimeInterval).DeltaT;
-				response = CyclePort.Request(_absTime, _dt);
+			// estimate distance to be traveled within the next TargetTimeInterval
+			var ds = (Container.VehicleSpeed() * Constants.SimulationSettings.TargetTimeInterval).Cast<Meter>();
+
+			if (ds.Double().IsEqual(0)) {
+				ds = Constants.SimulationSettings.DriveOffDistance;
 			}
+
+			var response = CyclePort.Request(AbsTime, ds);
+
+			//while (response is ResponseFailTimeInterval) {
+			//	_dt = (response as ResponseFailTimeInterval).DeltaT;
+			//	response = CyclePort.Request(_absTime, _dt);
+			//}
 
 			if (response is ResponseCycleFinished) {
 				return response;
 			}
 
-			var time = (_absTime + TimeSpan.FromTicks(_dt.Ticks / 2)).TotalSeconds;
-			var simulationInterval = _dt.TotalSeconds;
+			AbsTime = (AbsTime + TimeSpan.FromTicks(response.SimulationInterval.Ticks / 2));
+			dt = response.SimulationInterval;
 			return response;
+		}
+
+		protected override IResponse Initialize()
+		{
+			//CyclePort;
 		}
 	}
 }

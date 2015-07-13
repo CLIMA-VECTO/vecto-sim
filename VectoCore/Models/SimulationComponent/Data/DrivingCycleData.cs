@@ -46,13 +46,43 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var data = VectoCSVFile.Read(fileName);
 			var entries = parser.Parse(data).ToList();
 
-			log.Info(string.Format("Data loaded. Number of Entries: {0}", entries.Count));
+			var filtered = new List<DrivingCycleEntry>();
+			var current = entries.First();
+			current.Altitude = 0;
+			filtered.Add(current);
+			foreach (var entry in entries) {
+				if (!CycleEntriesAreEqual(current, entry)) {
+					entry.Altitude = (entry.Distance - current.Distance) * Math.Sin(current.RoadGradient * Math.PI / 180);
+					filtered.Add(entry);
+					current = entry;
+				}
+			}
+
+			log.Info(string.Format("Data loaded. Number of Entries: {0}, filtered Entries: {1}", entries.Count, filtered.Count));
 
 			var cycle = new DrivingCycleData {
-				Entries = entries,
+				Entries = filtered,
 				Name = Path.GetFileNameWithoutExtension(fileName)
 			};
 			return cycle;
+		}
+
+		private static bool CycleEntriesAreEqual(DrivingCycleEntry first, DrivingCycleEntry second)
+		{
+			var retVal = first.VehicleSpeed == second.VehicleSpeed;
+			retVal = retVal && first.RoadGradient.IsEqual(second.RoadGradient);
+			retVal = retVal && first.StoppingTime.IsEqual(0) && second.StoppingTime.IsEqual(0);
+			retVal = retVal && first.AdditionalAuxPowerDemand == second.AdditionalAuxPowerDemand;
+			retVal = retVal && first.AuxiliarySupplyPower.Count == second.AuxiliarySupplyPower.Count;
+
+			foreach (var key in first.AuxiliarySupplyPower.Keys) {
+				if (!second.AuxiliarySupplyPower.ContainsKey(key)) {
+					return false;
+				}
+				retVal = retVal && first.AuxiliarySupplyPower[key] == second.AuxiliarySupplyPower[key];
+			}
+
+			return retVal;
 		}
 
 		private static IDataParser CreateDataParser(CycleType type)
@@ -166,6 +196,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			///     [%]	Optional.
 			/// </summary>
 			public double RoadGradient { get; set; }
+
+			/// <summary>
+			///		[m] relative altitude of the driving cycle over distance
+			/// </summary>
+			public double Altitude { get; set; }
 
 			/// <summary>
 			///     [s]	Required for distance-based cycles. Not used in time based
