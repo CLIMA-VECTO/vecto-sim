@@ -4,6 +4,34 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Models.Connector.Ports
 {
 	/// <summary>
+	/// Defines a method to acquire an Tn in port.
+	/// </summary>
+	public interface ITnInProvider
+	{
+		/// <summary>
+		/// Returns the inport to connect it to another outport.
+		/// </summary>
+		/// <returns></returns>
+		ITnInPort InPort();
+	}
+
+	/// <summary>
+	/// Defines a method to acquire an Tn out port.
+	/// </summary>
+	public interface ITnOutProvider
+	{
+		/// <summary>
+		/// Returns the outport to send requests to.
+		/// </summary>
+		/// <returns></returns>
+		ITnOutPort OutPort();
+	}
+
+
+	//========================================================================
+
+
+	/// <summary>
 	/// Defines a connect method to connect the inport to an outport.
 	/// </summary>
 	public interface ITnInPort

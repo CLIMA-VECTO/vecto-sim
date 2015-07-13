@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			vehicle.InPort().Connect(mockPort);
 
-			var requestPort = vehicle.OutShaft();
+			var requestPort = vehicle.OutPort();
 
 			var absTime = TimeSpan.FromSeconds(0);
 			var dt = TimeSpan.FromSeconds(1);

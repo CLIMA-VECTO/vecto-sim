@@ -23,8 +23,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var nextRequest = new MockTnOutPort();
 
-			retarder.InShaft().Connect(nextRequest);
-			var outPort = retarder.OutShaft();
+			retarder.InPort().Connect(nextRequest);
+			var outPort = retarder.OutPort();
 
 			var absTime = TimeSpan.FromSeconds(0);
 			var dt = TimeSpan.FromSeconds(0);

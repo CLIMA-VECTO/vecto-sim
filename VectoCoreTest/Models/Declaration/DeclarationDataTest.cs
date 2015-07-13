@@ -412,7 +412,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			//		var gearboxData = factory.ReadGearboxData(job.GearboxFile);
 			//		var gearbox = new Gearbox(container, gearboxData);
-			//		gearbox.InShaft().Connect(engine.OutShaft());
+			//		gearbox.InPort().Connect(engine.OutPort());
 
 			//		// todo axleGear
 
@@ -424,11 +424,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			//		var driverData = new DriverData();
 			//		var driver = new Driver(driverData);
-			//		driver.InShaft().Connect(vehicle.OutShaft());
+			//		driver.InPort().Connect(vehicle.OutPort());
 
 			//		var cycleData = DrivingCycleData.ReadFromFileEngineOnly(mission.CycleFile);
-			//		var cycle = new DistanceBasedDrivingCycle(container, cycleData);
-			//		cycle.InShaft().Connect(driver.OutShaft());
+			//		var cycle = new DistanceBasedSimulation(container, cycleData);
+			//		cycle.InPort().Connect(driver.OutPort());
 
 			//		var simulator = new VectoRun(container, cycle);
 			//		runs.Add(simulator);

@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var axleGear = new AxleGear(vehicle, gbxData.AxleGearData);
 
 			var mockPort = new MockTnOutPort();
-			axleGear.InShaft().Connect(mockPort);
+			axleGear.InPort().Connect(mockPort);
 
 			var absTime = TimeSpan.FromSeconds(0);
 			var dt = TimeSpan.FromSeconds(1);

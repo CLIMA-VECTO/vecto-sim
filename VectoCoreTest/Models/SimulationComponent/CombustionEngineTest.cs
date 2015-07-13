@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			try {
 				func();
-				Assert.Fail("Expected Exception {0}, but no exception occured.", typeof (T));
+				Assert.Fail("Expected Exception {0}, but no exception occured.", typeof(T));
 			} catch (T ex) {
 				if (message != null) {
 					Assert.AreEqual(message, ex.Message);
@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
 			var engine = new CombustionEngine(vehicle, engineData);
 
-			var port = engine.OutShaft();
+			var port = engine.OutPort();
 			Assert.IsNotNull(port);
 		}
 
@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			new EngineOnlyGearbox(vehicle);
 
-			var port = engine.OutShaft();
+			var port = engine.OutPort();
 
 			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
 			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
 			var engine = new CombustionEngine(vehicle, engineData);
 			var gearbox = new EngineOnlyGearbox(vehicle);
-			var port = engine.OutShaft();
+			var port = engine.OutPort();
 
 			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
 			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
@@ -150,11 +150,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					TestContext.DataRow["EngineFile"].ToString());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 
-			gearbox.InShaft().Connect(engine.OutShaft());
+			gearbox.InPort().Connect(engine.OutPort());
 
 			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
 
-			var requestPort = gearbox.OutShaft();
+			var requestPort = gearbox.OutPort();
 
 			//var modalData = new ModalDataWriter(string.Format("load_jump_{0}.csv", TestContext.DataRow["TestName"].ToString()));
 			var modalData = new TestModalDataWriter();

@@ -10,38 +10,38 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	///     Class representing one EngineOnly Driving Cycle
 	/// </summary>
-	public class EngineOnlyDrivingCycle : VectoSimulationComponent, IEngineOnlyDrivingCycle, ITnInPort,
-		IDrivingCycleOutPort
+	public class EngineOnlySimulation : VectoSimulationComponent, IEngineOnlySimulation, ITnInPort,
+		ISimulationOutPort
 	{
 		protected DrivingCycleData Data;
 		private ITnOutPort _outPort;
 
-		public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+		public EngineOnlySimulation(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
 		}
 
-		#region IInShaft
+		#region ITnInProvider
 
-		public ITnInPort InShaft()
+		public ITnInPort InPort()
 		{
 			return this;
 		}
 
 		#endregion
 
-		#region IDrivingCycleOutProvider
+		#region ISimulationOutProvider
 
-		public IDrivingCycleOutPort OutShaft()
+		public ISimulationOutPort OutPort()
 		{
 			return this;
 		}
 
 		#endregion
 
-		#region IDrivingCycleOutPort
+		#region ISimulationOutPort
 
-		IResponse IDrivingCycleOutPort.Request(TimeSpan absTime, TimeSpan dt)
+		IResponse ISimulationOutPort.Request(TimeSpan absTime, TimeSpan dt)
 		{
 			//todo: change to variable time steps
 			var index = (int)Math.Floor(absTime.TotalSeconds);

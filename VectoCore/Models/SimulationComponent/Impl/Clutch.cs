@@ -41,13 +41,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//throw new NotImplementedException();
 		}
 
-		public ITnInPort InShaft()
+		public ITnInPort InPort()
 		{
 			return this;
 		}
 
 
-		public ITnOutPort OutShaft()
+		public ITnOutPort OutPort()
 		{
 			return this;
 		}

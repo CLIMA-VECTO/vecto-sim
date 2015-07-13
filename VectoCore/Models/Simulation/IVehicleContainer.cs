@@ -10,7 +10,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 	/// </summary>
 	public interface IVehicleContainer : ICockpit
 	{
-		IDrivingCycleOutPort GetCycleOutPort();
+		ISimulationOutPort GetCycleOutPort();
 
 		/// <summary>
 		/// Adds a component to the vehicle container.

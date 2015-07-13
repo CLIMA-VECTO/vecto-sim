@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 	}
 
-	public class MockDrivingCycleDemandOutPort : IDrivingCycleDemandOutPort
+	public class MockDrivingCycleOutPort : IDrivingCycleOutPort
 	{
 		public TimeSpan AbsTime { get; set; }
 		public TimeSpan Dt { get; set; }

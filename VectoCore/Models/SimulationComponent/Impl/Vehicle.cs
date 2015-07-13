@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return this;
 		}
 
-		public IDriverDemandOutPort OutShaft()
+		public IDriverDemandOutPort OutPort()
 		{
 			return this;
 		}

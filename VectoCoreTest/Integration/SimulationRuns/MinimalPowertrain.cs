@@ -40,14 +40,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var vehicleContainer = new VehicleContainer();
 
-			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
+			var cycle = new DistanceBasedSimulation(vehicleContainer, cycleData);
 
 			dynamic tmp = AddComponent(cycle, new MockDriver(vehicleContainer));
 			tmp = AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
 			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
 
-			var run = new VectoRun(vehicleContainer);
+			var run = new DistanceRun(vehicleContainer);
 
 			run.Run();
 		}
@@ -55,40 +55,40 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 		// ========================
 
-		protected virtual IDriver AddComponent(IDrivingCycleDemandDrivingCycle prev, IDriver next)
+		protected virtual IDriver AddComponent(IDrivingCycle prev, IDriver next)
 		{
-			prev.InShaft().Connect(next.OutShaft());
+			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
 		protected virtual IVehicle AddComponent(IDriver prev, IVehicle next)
 		{
-			prev.InShaft().Connect(next.OutShaft());
+			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-		protected virtual IWheels AddComponent(IRoadPortInProvider prev, IWheels next)
+		protected virtual IWheels AddComponent(IFvInProvider prev, IWheels next)
 		{
 			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
 
-		protected virtual void AddComponent(IWheels prev, IOutShaft next)
+		protected virtual void AddComponent(IWheels prev, ITnOutProvider next)
 		{
-			prev.InShaft().Connect(next.OutShaft());
+			prev.InPort().Connect(next.OutPort());
 			//return next;
 		}
 
 		protected virtual IPowerTrainComponent AddComponent(IPowerTrainComponent prev, IPowerTrainComponent next)
 		{
-			prev.InShaft().Connect(next.OutShaft());
+			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-		protected virtual void AddComponent(IPowerTrainComponent prev, IOutShaft next)
+		protected virtual void AddComponent(IPowerTrainComponent prev, ITnOutProvider next)
 		{
-			prev.InShaft().Connect(next.OutShaft());
+			prev.InPort().Connect(next.OutPort());
 		}
 	}
 }

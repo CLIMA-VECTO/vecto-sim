@@ -9,51 +9,51 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	///     Class representing one Distance Based Driving Cycle
 	/// </summary>
-	public class DistanceBasedDrivingCycle : VectoSimulationComponent, IDrivingCycleDemandDrivingCycle,
-		IDrivingCycleOutPort,
-		IDrivingCycleDemandInPort
+	public class DistanceBasedSimulation : VectoSimulationComponent, IDrivingCycle,
+		ISimulationOutPort,
+		IDrivingCycleInPort
 	{
 		protected TimeSpan AbsTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
 		protected DrivingCycleData Data;
 		protected double Distance = 0;
 		protected TimeSpan Dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
-		private IDrivingCycleDemandOutPort _outPort;
+		private IDrivingCycleOutPort _outPort;
 
-		public DistanceBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+		public DistanceBasedSimulation(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
 		}
 
-		#region IDrivingCycleDemandInProvider
+		#region IDrivingCycleInProvider
 
-		public IDrivingCycleDemandInPort InShaft()
+		public IDrivingCycleInPort InPort()
 		{
 			return this;
 		}
 
 		#endregion
 
-		#region IDrivingCycleOutProvider
+		#region ISimulationOutProvider
 
-		public IDrivingCycleOutPort OutShaft()
+		public ISimulationOutPort OutPort()
 		{
 			return this;
 		}
 
 		#endregion
 
-		#region IDrivingCycleDemandInPort
+		#region IDrivingCycleInPort
 
-		void IDrivingCycleDemandInPort.Connect(IDrivingCycleDemandOutPort other)
+		void IDrivingCycleInPort.Connect(IDrivingCycleOutPort other)
 		{
 			_outPort = other;
 		}
 
 		#endregion
 
-		#region IDrivingCycleOutPort
+		#region ISimulationOutPort
 
-		IResponse IDrivingCycleOutPort.Request(TimeSpan absTime, TimeSpan dt)
+		IResponse ISimulationOutPort.Request(TimeSpan absTime, TimeSpan dt)
 		{
 			//todo: Distance calculation and comparison!!!
 			throw new NotImplementedException("Distance based Cycle is not yet implemented.");

@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			IWheels wheels = new Wheels(container, vehicleData.DynamicTyreRadius);
 			var mockPort = new MockTnOutPort();
 
-			wheels.InShaft().Connect(mockPort);
+			wheels.InPort().Connect(mockPort);
 
 			var requestPort = wheels.OutPort();
 

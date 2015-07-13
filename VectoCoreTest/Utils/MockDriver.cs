@@ -7,7 +7,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockDriver : VectoSimulationComponent, IDriver, IDrivingCycleDemandOutPort, IDriverDemandInPort
+	public class MockDriver : VectoSimulationComponent, IDriver, IDrivingCycleOutPort, IDriverDemandInPort
 	{
 		private IDriverDemandOutPort _next;
 
@@ -16,12 +16,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public override void CommitSimulationStep(IModalDataWriter writer) {}
 
 
-		public IDrivingCycleDemandOutPort OutShaft()
+		public IDrivingCycleOutPort OutPort()
 		{
 			return this;
 		}
 
-		public IDriverDemandInPort InShaft()
+		public IDriverDemandInPort InPort()
 		{
 			return this;
 		}

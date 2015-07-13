@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal IGearboxCockpit _gearbox;
 		internal IVehicleCockpit _vehicle;
 
-		internal IDrivingCycleOutPort _cycle;
+		internal ISimulationOutPort _cycle;
 
 		internal ISummaryDataWriter _sumWriter;
 		internal IModalDataWriter _dataWriter;
@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IVehicleContainer
 
-		public IDrivingCycleOutPort GetCycleOutPort()
+		public ISimulationOutPort GetCycleOutPort()
 		{
 			return _cycle;
 		}
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				_vehicle = vehicle;
 			}
 
-			var cycle = component as IDrivingCycleOutPort;
+			var cycle = component as ISimulationOutPort;
 			if (cycle != null) {
 				_cycle = cycle;
 			}
