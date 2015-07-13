@@ -1,3 +1,5 @@
+using System;
+
 namespace TUGraz.VectoCore.Utils
 {
 	public static class IntExtensionMethods
@@ -32,15 +34,20 @@ namespace TUGraz.VectoCore.Utils
 			return SIBase<T>.Create(d);
 		}
 
-        /// <summary>
-        /// Modulo functions which also works on negative Numbers (not like the built-in %-operator which just returns the remainder).
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        public static int Mod(this int a, int b)
-        {
-            return (a %= b) < 0 ? a + b : a;
-        }
+		public static double ToRadian(this int self)
+		{
+			return self * Math.PI / 180.0;
+		}
+
+		/// <summary>
+		/// Modulo functions which also works on negative Numbers (not like the built-in %-operator which just returns the remainder).
+		/// </summary>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <returns></returns>
+		public static int Mod(this int a, int b)
+		{
+			return (a %= b) < 0 ? a + b : a;
+		}
 	}
 }

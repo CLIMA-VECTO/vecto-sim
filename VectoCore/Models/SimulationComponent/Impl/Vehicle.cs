@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Declaration;
@@ -73,73 +75,97 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Newton AirDragResistance()
 		{
-			// TODO different types of cross-wind correction...
 			var vAir = _currentState.Velocity;
-			var Cd = _data.DragCoefficient;
-			switch (_data.CrossWindCorrection) {
+
+			// todo: different CdA in different file versions!
+			var CdA = _data.CrossSectionArea * _data.DragCoefficient;
+
+			switch (_data.CrossWindCorrectionMode) {
+				case CrossWindCorrectionMode.NoCorrection:
+					break;
+
 				case CrossWindCorrectionMode.SpeedDependent:
-					//Cd = 
+					var values = DeclarationData.AirDrag.Lookup(_data.VehicleCategory);
+					var curve = CalculateAirResistanceCurve(values);
+					CdA *= AirDragInterpolate(curve, _currentState.Velocity);
 					break;
+
+				//todo
+				//case tCdMode.CdOfVdecl
+				//	  CdA = AirDragInterpolate(curve, _currentState.Velocity);
+				//	  break;
+
 				case CrossWindCorrectionMode.VAirBeta:
-					break;
+					//todo
+					//vAir = DrivingCycleEntry.AirSpeedRelativeToVehicle;
+					//CdA *= AirDragInterpolate(Math.Abs(DrivingCycleEntry.WindYawAngle))
+					throw new NotImplementedException("VAirBeta is not implemented");
+				//break;
 			}
 
-			return (Cd * _data.CrossSectionArea * Physics.AirDensity / 2 * vAir * vAir).Cast<Newton>();
+			return (CdA * Physics.AirDensity / 2 * vAir * vAir).Cast<Newton>();
 		}
 
-		protected void CalculateAirResistanceCurve()
+		private double AirDragInterpolate(IEnumerable<Point> curve, MeterPerSecond x)
+		{
+			var p = curve.GetSection(c => c.X < x);
+
+			if (x < p.Item1.X || p.Item2.X < x) {
+				Log.Error(_data.CrossWindCorrectionMode == CrossWindCorrectionMode.VAirBeta
+					? string.Format("CdExtrapol β = {0}", x)
+					: string.Format("CdExtrapol v = {0}", x));
+			}
+
+			return VectoMath.Interpolate(p.Item1.X, p.Item2.X, p.Item1.Y, p.Item2.Y, x);
+		}
+
+		public class Point
+		{
+			public MeterPerSecond X;
+			public double Y;
+		}
+
+		protected Point[] CalculateAirResistanceCurve(AirDrag.AirDragEntry values)
 		{
 			// todo: get from vehicle or move whole procedure to vehicle
 			var cdA0Actual = 0;
 
-			var values = DeclarationData.AirDrag.Lookup(_data.VehicleCategory);
-
-			var betas = new List<double>();
-			var deltaCdAs = new List<double>();
+			var betaValues = new Dictionary<int, double>();
 			for (var beta = 0; beta <= 12; beta++) {
-				betas.Add(beta);
 				var deltaCdA = values.A1 * beta + values.A2 * beta * beta + values.A3 * beta * beta * beta;
-				deltaCdAs.Add(deltaCdA);
+				betaValues[beta] = deltaCdA;
 			}
 
-			var cdX = new List<double> { 0 };
-			var cdY = new List<double> { 0 };
+			var points = new List<Point> { new Point { X = 0.SI<MeterPerSecond>(), Y = 0 } };
+
+			const int STEP = 10;
+			const double PARTITION = STEP / 180.0;
+			const double HALF_PARTITION = PARTITION / 2.0;
 
 			for (var vVeh = 60; vVeh <= 100; vVeh += 5) {
 				var cdASum = 0.0;
-				for (var alpha = 0; alpha <= 180; alpha += 10) {
-					var vWindX = Physics.BaseWindSpeed * Math.Cos(alpha * Math.PI / 180);
-					var vWindY = Physics.BaseWindSpeed * Math.Sin(alpha * Math.PI / 180);
+				for (var alpha = 0; alpha <= 180; alpha += STEP) {
+					var vWindX = Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
+					var vWindY = Physics.BaseWindSpeed * Math.Sin(alpha.ToRadian());
 					var vAirX = vVeh + vWindX;
 					var vAirY = vWindY;
 					var vAir = VectoMath.Sqrt<MeterPerSecond>(vAirX * vAirX + vAirY * vAirY);
-					var beta = Math.Atan((vAirY / vAirX).Double()) * 180 / Math.PI;
+					var beta = Math.Atan((vAirY / vAirX).Double()).ToDegree();
 
-					var k = 1;
-					if (betas.First() < beta) {
-						k = 0;
-						while (betas[k] < beta && k < betas.Count) {
-							k++;
-						}
-					}
-
-					var deltaCdA = VectoMath.Interpolate(betas[k - 1], betas[k], deltaCdAs[k - 1], deltaCdAs[k], beta);
-
+					var sec = betaValues.GetSection(b => b.Key < beta);
+					var deltaCdA = VectoMath.Interpolate(sec.Item1.Key, sec.Item2.Key, sec.Item1.Value, sec.Item2.Value, beta);
 					var cdA = cdA0Actual + deltaCdA;
 
-					var share = 10 / 180;
-					if (vVeh == 0 || vVeh == 180) {
-						share /= 2;
-					}
-					cdASum += share * cdA * (vAir * vAir / (vVeh * vVeh)).Double();
+					var degreeShare = ((vVeh != 0 && vVeh != 180) ? PARTITION : HALF_PARTITION);
+
+					cdASum += degreeShare * cdA * (vAir * vAir / (vVeh * vVeh)).Scalar();
 				}
-				cdX.Add(vVeh);
-				cdY.Add(cdASum);
+				points.Add(new Point { X = vVeh.SI<MeterPerSecond>(), Y = cdASum });
 			}
 
-			cdY[0] = cdY[1];
+			points[0].Y = points[1].Y;
+			return points.ToArray();
 		}
-
 
 		protected Newton AccelerationForce(MeterPerSquareSecond accelleration)
 		{

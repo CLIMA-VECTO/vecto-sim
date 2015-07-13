@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO;
-using TUGraz.VectoCore.FileIO.DeclarationFile;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
@@ -68,8 +66,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public double DragCoefficientRigidTruck { get; internal set; }
 
 		public SquareMeter CrossSectionAreaRigidTruck { get; internal set; }
-
-		public CrossWindCorrectionMode CrossWindCorrection { get; internal set; }
 
 		public Meter DynamicTyreRadius { get; internal set; }
 

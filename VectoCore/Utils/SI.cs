@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -11,6 +12,27 @@ using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
 {
+	public class Scalar : SIBase<Scalar>
+	{
+		static Scalar()
+		{
+			Constructors.Add(typeof(Scalar), val => new Scalar(val));
+		}
+
+		private Scalar(double val) : base(new SI(val)) {}
+
+		public static implicit operator double(Scalar self)
+		{
+			return self.Val;
+		}
+
+		public static implicit operator Scalar(double val)
+		{
+			return new Scalar(val);
+		}
+	}
+
+
 	public class Newton : SIBase<Newton>
 	{
 		static Newton()
@@ -1026,5 +1048,14 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		#endregion
+
+		public Scalar Scalar()
+		{
+			var si = ToBasicUnits();
+			if (si.Numerator.Length == 0 && si.Denominator.Length == 0) {
+				return Val.SI<Scalar>();
+			}
+			throw new InvalidCastException("The SI Unit is not a scalar.");
+		}
 	}
 }

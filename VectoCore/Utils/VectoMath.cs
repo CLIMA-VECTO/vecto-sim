@@ -24,6 +24,19 @@ namespace TUGraz.VectoCore.Utils
 			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1).Cast<TResult>();
 		}
 
+
+		public static double Interpolate<T>(T x1, T x2, double y1, double y2, T xint)
+			where T : SI
+		{
+			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1).Double();
+		}
+
+		public static TResult Interpolate<TResult>(double x1, double x2, TResult y1, TResult y2, double xint)
+			where TResult : SIBase<TResult>
+		{
+			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1).Cast<TResult>();
+		}
+
 		/// <summary>
 		/// Linearly interpolates a value between two points.
 		/// </summary>
