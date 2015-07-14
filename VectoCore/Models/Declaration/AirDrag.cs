@@ -7,7 +7,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class AirDrag : LookupData<string, AirDrag.AirDragEntry>
 	{
-		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VCDV.parameters.csv";
+		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VCDV.parameters.csv";
 
 		public AirDrag()
 		{
@@ -44,6 +44,35 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public double A1 { get; set; }
 			public double A2 { get; set; }
 			public double A3 { get; set; }
+
+			protected bool Equals(AirDragEntry other)
+			{
+				return A1.Equals(other.A1) && A2.Equals(other.A2) && A3.Equals(other.A3);
+			}
+
+			public override bool Equals(object obj)
+			{
+				if (ReferenceEquals(null, obj)) {
+					return false;
+				}
+				if (ReferenceEquals(this, obj)) {
+					return true;
+				}
+				if (obj.GetType() != this.GetType()) {
+					return false;
+				}
+				return Equals((AirDragEntry)obj);
+			}
+
+			public override int GetHashCode()
+			{
+				unchecked {
+					var hashCode = A1.GetHashCode();
+					hashCode = (hashCode * 397) ^ A2.GetHashCode();
+					hashCode = (hashCode * 397) ^ A3.GetHashCode();
+					return hashCode;
+				}
+			}
 		}
 	}
 }

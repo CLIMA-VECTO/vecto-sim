@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public static TResult Interpolate<T, TResult>(T x1, T x2, TResult y1, TResult y2, T xint) where T : SI
 			where TResult : SIBase<TResult>
-		{
+		{ 
 			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1).Cast<TResult>();
 		}
 

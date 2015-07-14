@@ -90,15 +90,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CdA *= AirDragInterpolate(curve, _currentState.Velocity);
 					break;
 
-				//todo
+				// todo ask raphael: What is the air cd decl mode?
 				//case tCdMode.CdOfVdecl
 				//	  CdA = AirDragInterpolate(curve, _currentState.Velocity);
 				//	  break;
 
 				case CrossWindCorrectionMode.VAirBeta:
-					//todo
-					//vAir = DrivingCycleEntry.AirSpeedRelativeToVehicle;
-					//CdA *= AirDragInterpolate(Math.Abs(DrivingCycleEntry.WindYawAngle))
+					//todo: get data from driving cycle
+					//vAir = DrivingCycleData.DrivingCycleEntry.AirSpeedRelativeToVehicle;
+					//CdA *= AirDragInterpolate(Math.Abs(DrivingCycleData.DrivingCycleEntry.WindYawAngle))
 					throw new NotImplementedException("VAirBeta is not implemented");
 				//break;
 			}
@@ -138,13 +138,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var points = new List<Point> { new Point { X = 0.SI<MeterPerSecond>(), Y = 0 } };
 
-			const int STEP = 10;
-			const double PARTITION = STEP / 180.0;
-			const double HALF_PARTITION = PARTITION / 2.0;
-
 			for (var vVeh = 60; vVeh <= 100; vVeh += 5) {
 				var cdASum = 0.0;
-				for (var alpha = 0; alpha <= 180; alpha += STEP) {
+				for (var alpha = 0; alpha <= 180; alpha += 10) {
 					var vWindX = Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
 					var vWindY = Physics.BaseWindSpeed * Math.Sin(alpha.ToRadian());
 					var vAirX = vVeh + vWindX;
@@ -156,7 +152,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var deltaCdA = VectoMath.Interpolate(sec.Item1.Key, sec.Item2.Key, sec.Item1.Value, sec.Item2.Value, beta);
 					var cdA = cdA0Actual + deltaCdA;
 
-					var degreeShare = ((vVeh != 0 && vVeh != 180) ? PARTITION : HALF_PARTITION);
+					var degreeShare = ((vVeh != 0 && vVeh != 180) ? 10.0 / 180.0 : 5.0 / 180.0);
 
 					cdASum += degreeShare * cdA * (vAir * vAir / (vVeh * vVeh)).Scalar();
 				}

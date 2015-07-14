@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		}
 
 		[TestMethod]
-		public void WHTCWeightingTest()
+		public void WHTCTest()
 		{
 			var whtc = DeclarationData.WHTCCorrection;
 
@@ -101,28 +101,80 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var airDrag = DeclarationData.AirDrag;
 
-			//declaration
-			var Categories = Enum.GetValues(typeof(VehicleCategory)).Cast<VehicleCategory>().ToArray();
+			var expected = new Dictionary<string, AirDrag.AirDragEntry> {
+				{ "RigidSolo", new AirDrag.AirDragEntry { A1 = 0.013526, A2 = 0.017746, A3 = -0.000666 } },
+				{ "RigidTrailer", new AirDrag.AirDragEntry { A1 = 0.017125, A2 = 0.072275, A3 = -0.004148 } },
+				{ "TractorSemitrailer", new AirDrag.AirDragEntry { A1 = 0.034767, A2 = 0.039367, A3 = -0.001897 } },
+				{ "CoachBus", new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 } }
+			};
 
-			//todo: insert real test values
-			var expectedForCategory = new[] { 0, 0, 0, 0, 0 };
-			for (var i = 0; i < Categories.Length; i++) {
-				Assert.AreEqual(expectedForCategory[i], airDrag.Lookup(Categories[i]));
+			foreach (var kv in expected) {
+				Assert.AreEqual(kv.Value, airDrag.Lookup(kv.Key));
 			}
 
-			Assert.Inconclusive();
+			var expectedCat = new Dictionary<VehicleCategory, AirDrag.AirDragEntry> {
+				{ VehicleCategory.RigidTruck, new AirDrag.AirDragEntry { A1 = 0.013526, A2 = 0.017746, A3 = -0.000666 } },
+				{ VehicleCategory.Tractor, new AirDrag.AirDragEntry { A1 = 0.034767, A2 = 0.039367, A3 = -0.001897 } },
+				{ VehicleCategory.CityBus, new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 } },
+				{ VehicleCategory.Coach, new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 } },
+				{ VehicleCategory.InterurbanBus, new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 } }
+			};
+
+			foreach (var kv in expectedCat) {
+				Assert.AreEqual(kv.Value, airDrag.Lookup(kv.Key));
+			}
 		}
 
 		[TestMethod]
 		public void DefaultTCTest()
 		{
-			Assert.Inconclusive();
-		}
+			var tc = DeclarationData.TorqueConverter;
 
-		[TestMethod]
-		public void WHTCTest()
-		{
-			Assert.Inconclusive();
+			var expected = new[] {
+				// fixed points
+				new { nu = 1.000, mu = 1.000, torque = 0.00 },
+				new { nu = 1.005, mu = 1.000, torque = 0.00 },
+				new { nu = 1.100, mu = 1.000, torque = -40.34 },
+				new { nu = 1.222, mu = 1.000, torque = -80.34 },
+				new { nu = 1.375, mu = 1.000, torque = -136.11 },
+				new { nu = 1.571, mu = 1.000, torque = -216.52 },
+				new { nu = 1.833, mu = 1.000, torque = -335.19 },
+				new { nu = 2.200, mu = 1.000, torque = -528.77 },
+				new { nu = 2.750, mu = 1.000, torque = -883.40 },
+				new { nu = 4.400, mu = 1.000, torque = -2462.17 },
+				new { nu = 11.000, mu = 1.000, torque = -16540.98 },
+
+				// interpolated points
+				new { nu = 1.0025, mu = 1.0, torque = 0.0 },
+				new { nu = 1.0525, mu = 1.0, torque = -20.17 },
+				new { nu = 1.161, mu = 1.0, torque = -60.34 },
+				new { nu = 1.2985, mu = 1.0, torque = -108.225 },
+				new { nu = 1.2985, mu = 1.0, torque = -108.225 },
+				new { nu = 1.473, mu = 1.0, torque = -176.315 },
+				new { nu = 1.702, mu = 1.0, torque = -275.855 },
+				new { nu = 2.0165, mu = 1.0, torque = -431.98 },
+				new { nu = 2.475, mu = 1.0, torque = -706.085 },
+				new { nu = 3.575, mu = 1.0, torque = -1672.785 },
+				new { nu = 7.7, mu = 1.0, torque = -9501.575 },
+
+				// extrapolated points
+				new { nu = 0.5, mu = 1.0, torque = 0.0 },
+				new { nu = 12.0, mu = 1.0, torque = -18674.133 }, // = (12-4.4)*(-16540.98- -2462.17)/(11-4.4)+ -2462.17
+			};
+
+			var referenceSpeed = 150.SI<PerSecond>();
+
+			var r = new Random();
+
+			foreach (var exp in expected) {
+				var mu = tc.LookupMu(exp.nu);
+				Assert.AreEqual(mu, exp.mu);
+
+				var angularSpeed = r.Next(700).SI<PerSecond>();
+				var torque = tc.LookupTorque(exp.nu, angularSpeed, referenceSpeed);
+				Assert.AreEqual(exp.torque * Math.Pow(angularSpeed.Double() / referenceSpeed.Double(), 2), torque.Double(),
+					Tolerance);
+			}
 		}
 
 		[TestMethod]
