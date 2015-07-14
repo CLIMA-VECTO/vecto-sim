@@ -11,6 +11,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 	{
 		private IDriverDemandOutPort _next;
 
+		public RequestData LastRequest;
+
 		public MockDriver(IVehicleContainer container) : base(container) {}
 
 		public override void CommitSimulationStep(IModalDataWriter writer) {}
@@ -26,8 +28,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return this;
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond velocity, Radian gradient)
+		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
+			LastRequest = new RequestData() { AbsTime = absTime, dt = dt, Gradient = gradient, TargetVelocity = targetVelocity };
 			var acc = 0.SI<MeterPerSquareSecond>();
 			return _next.Request(absTime, dt, acc, 0.SI<Radian>());
 		}
@@ -35,6 +38,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public void Connect(IDriverDemandOutPort other)
 		{
 			_next = other;
+		}
+
+		public class RequestData
+		{
+			public TimeSpan AbsTime;
+			public TimeSpan dt;
+			public MeterPerSecond TargetVelocity;
+			public Radian Gradient;
 		}
 	}
 }

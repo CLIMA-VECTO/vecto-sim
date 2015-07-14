@@ -34,10 +34,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			IDrivingCycle cycle;
 			if (_engineOnly) {
-				cycle = new TimeBasedSimulation(_container, data.Cycle);
+				cycle = new TimeBasedDrivingCycle(_container, data.Cycle);
 			} else {
 				//todo: make distinction between time based and distance based driving cycle!
-				cycle = new DistanceBasedSimulation(_container, data.Cycle);
+				cycle = new DistanceBasedDrivingCycle(_container, data.Cycle);
 			}
 			// connect cycle --> driver --> vehicle --> wheels --> axleGear --> gearBox --> retarder --> clutch
 			dynamic tmp = AddComponent(cycle, new Driver(_container, data.DriverData));

@@ -109,7 +109,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = new VehicleContainer();
 
 			var cycleData = DrivingCycleData.ReadFromFileTimeBased(@"TestData\Cycles\Coach First Cycle only.vdri");
-			var cycle = new TimeBasedSimulation(container, cycleData);
+			var cycle = new TimeBasedDrivingCycle(container, cycleData);
 
 			var outPort = new MockDrivingCycleOutPort();
 
@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = new VehicleContainer(new TestModalDataWriter(), new TestSumWriter());
 
 			var cycleData = DrivingCycleData.ReadFromFileTimeBased(@"TestData\Cycles\Cycle time field missing.vdri");
-			var cycle = new TimeBasedSimulation(container, cycleData);
+			var cycle = new TimeBasedDrivingCycle(container, cycleData);
 
 			var outPort = new MockDrivingCycleOutPort();
 

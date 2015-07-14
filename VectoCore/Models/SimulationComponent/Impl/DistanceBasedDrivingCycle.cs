@@ -12,7 +12,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	///     Class representing one Distance Based Driving Cycle
 	/// </summary>
-	public class DistanceBasedSimulation : VectoSimulationComponent, IDrivingCycle,
+	public class DistanceBasedDrivingCycle : VectoSimulationComponent, IDrivingCycle,
 		ISimulationOutPort,
 		IDrivingCycleInPort
 	{
@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private IDrivingCycleOutPort _outPort;
 
-		public DistanceBasedSimulation(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+		public DistanceBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
 		}
@@ -61,23 +61,33 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			//todo: Distance calculation and comparison!!!
 
+			var currentCycleEntry = Data.Entries[_currentState.CycleIndex];
+			if (currentCycleEntry.Distance.IsEqual(_currentState.Distance.Value())) {
+				// exactly on an entry in the cycle...
+				if (!currentCycleEntry.StoppingTime.IsEqual(0)) {
+					if (!currentCycleEntry.VehicleTargetSpeed.IsEqual(0)) {
+						Log.WarnFormat("Stopping Time requested in cycle but target-velocity not zero. distance: {0}, target speed: {1}",
+							currentCycleEntry.StoppingTime, currentCycleEntry.VehicleTargetSpeed);
+					}
+				}
+			}
 			//Data.
 
 			throw new NotImplementedException("Distance based Cycle is not yet implemented.");
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt)
+		IResponse ISimulationOutPort.Request(TimeSpan absTime, TimeSpan dt)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IResponse Initialize()
+		IResponse ISimulationOutPort.Initialize()
 		{
 			var first = Data.Entries.First();
 			_previousState = new DrivingCycleState() {
 				AbsTime = TimeSpan.FromSeconds(0),
-				Distance = first.Distance.SI<Meter>(),
-				Altitude = first.Altitude.SI<Meter>(),
+				Distance = first.Distance,
+				Altitude = first.Altitude,
 				CycleIndex = 0,
 			};
 			return new ResponseSuccess();

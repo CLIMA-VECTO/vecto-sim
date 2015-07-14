@@ -235,15 +235,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.StationaryFullLoadPower = Formulas.TorqueToPower(_currentState.StationaryFullLoadTorque,
 				angularVelocity);
 
-			double pt1 = _data.GetFullLoadCurve(gear).PT1(angularVelocity).Double();
+			double pt1 = _data.GetFullLoadCurve(gear).PT1(angularVelocity).Value();
 
 //			var dynFullPowerCalculated = (1 / (pt1 + 1)) *
 //										(_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower);
 			var tStarPrev = pt1 *
-							Math.Log(1 / (1 - (_previousState.EnginePower / _currentState.StationaryFullLoadPower).Double()), Math.E)
+							Math.Log(1 / (1 - (_previousState.EnginePower / _currentState.StationaryFullLoadPower).Value()), Math.E)
 								.SI<Second>();
 			var tStar = tStarPrev + _previousState.dt.TotalSeconds.SI<Second>();
-			var dynFullPowerCalculated = _currentState.StationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Double()));
+			var dynFullPowerCalculated = _currentState.StationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
 			_currentState.DynamicFullLoadPower = (dynFullPowerCalculated < _currentState.StationaryFullLoadPower)
 				? dynFullPowerCalculated
 				: _currentState.StationaryFullLoadPower;

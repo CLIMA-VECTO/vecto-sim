@@ -11,14 +11,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	///     Class representing one Time Based Driving Cycle
 	/// </summary>
-	public class TimeBasedSimulation : VectoSimulationComponent, IDrivingCycle,
+	public class TimeBasedDrivingCycle : VectoSimulationComponent, IDrivingCycle,
 		IDrivingCycleInPort,
 		ISimulationOutPort
 	{
 		protected DrivingCycleData Data;
 		private IDrivingCycleOutPort _outPort;
 
-		public TimeBasedSimulation(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+		public TimeBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
 		}
@@ -56,15 +56,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseCycleFinished();
 			}
 
-			return _outPort.Request(absTime, dt, Data.Entries[index].VehicleSpeed,
-				Data.Entries[index].RoadGradient.SI().GradientPercent.Cast<Radian>());
+			return _outPort.Request(absTime, dt, Data.Entries[index].VehicleTargetSpeed,
+				Data.Entries[index].RoadGradient);
+		}
+
+		public IResponse Initialize()
+		{
+			// nothing to initialize here...
+			// TODO: _outPort.initialize();
+			throw new NotImplementedException();
 		}
 
 		#endregion
 
 		#region IDrivingCycleInPort
 
-		void IDrivingCycleInPort.Connect(IDrivingCycleOutPort other)
+		void IDrivingCycleInPort.
+			Connect(IDrivingCycleOutPort
+				other)
 		{
 			_outPort = other;
 		}
@@ -73,7 +82,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		public override void CommitSimulationStep(IModalDataWriter writer) {}
+		public override
+			void CommitSimulationStep
+			(IModalDataWriter
+				writer) {}
 
 		#endregion
 	}

@@ -59,6 +59,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _outPort.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
 		}
 
+		public IResponse Initialize()
+		{
+			// nothing to initialize here...
+			// TODO: _outPort.initialize();
+			throw new NotImplementedException();
+		}
+
 		#endregion
 
 		#region ITnInPort

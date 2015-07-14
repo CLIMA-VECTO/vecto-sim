@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var vehicleContainer = new VehicleContainer();
 
-			var cycle = new DistanceBasedSimulation(vehicleContainer, cycleData);
+			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
 
 			dynamic tmp = AddComponent(cycle, new MockDriver(vehicleContainer));
 			tmp = AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));

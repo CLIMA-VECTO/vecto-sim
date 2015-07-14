@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public static SI SI(this double self)
 		{
-			return (SI) self;
+			return (SI)self;
 		}
 
 		/// <summary>

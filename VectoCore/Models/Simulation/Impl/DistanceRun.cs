@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// estimate distance to be traveled within the next TargetTimeInterval
 			var ds = (Container.VehicleSpeed() * Constants.SimulationSettings.TargetTimeInterval).Cast<Meter>();
 
-			if (ds.Double().IsEqual(0)) {
+			if (ds.IsEqual(0)) {
 				ds = Constants.SimulationSettings.DriveOffDistance;
 			}
 
@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected override IResponse Initialize()
 		{
-			//CyclePort;
+			throw new NotImplementedException();
 		}
 	}
 }

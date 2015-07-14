@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Newton RollingResistance(Radian gradient)
 		{
-			return (Math.Cos(gradient.Double()) * _data.TotalVehicleWeight() *
+			return (Math.Cos(gradient.Value()) * _data.TotalVehicleWeight() *
 					Physics.GravityAccelleration *
 					_data.TotalRollResistanceCoefficient).Cast<Newton>();
 		}
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Newton SlopeResistance(Radian gradient)
 		{
-			return (_data.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Double())).Cast<Newton>();
+			return (_data.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value())).Cast<Newton>();
 		}
 
 		public MeterPerSecond VehicleSpeed()
