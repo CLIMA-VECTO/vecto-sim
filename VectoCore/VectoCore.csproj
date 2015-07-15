@@ -261,8 +261,9 @@
     <EmbeddedResource Include="Resources\Declaration\VAUX\PS-Table.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Table.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Tech.csv" />
-    <None Include="Resources\Declaration\VCDV\parameters.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VCDV\parameters.csv" />
     <EmbeddedResource Include="Resources\Declaration\WHTC-Weighting-Factors.csv" />
+    <EmbeddedResource Include="Resources\Declaration\DefaultTC.vtcc" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
