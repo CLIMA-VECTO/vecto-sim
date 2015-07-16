@@ -170,10 +170,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				var mu = tc.LookupMu(exp.nu);
 				Assert.AreEqual(mu, exp.mu);
 
-				var angularSpeed = r.Next(700).SI<PerSecond>();
+				var angularSpeed = r.Next(1000).SI<PerSecond>();
 				var torque = tc.LookupTorque(exp.nu, angularSpeed, referenceSpeed);
-				Assert.AreEqual(exp.torque * Math.Pow(angularSpeed.Double() / referenceSpeed.Double(), 2), torque.Double(),
-					Tolerance);
+				AssertHelper.AreEqual(exp.torque * Math.Pow(angularSpeed.Double() / referenceSpeed.Double(), 2), torque.Double());
 			}
 		}
 
