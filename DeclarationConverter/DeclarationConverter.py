@@ -17,10 +17,9 @@ import os
 import shutil
 
 __author__ = "Michael Krisper"
-__copyright__ = ""
-__license__ = ""
-__version__ = "1.0.0"
 __email__ = "michael.krisper@tugraz.at"
+__date__ = "2015-07-15"
+__version__ = "1.0.0"
 
 SOURCE = "../Declaration"
 DESTINATION = os.path.abspath("../VectoCore/Resources/Declaration")
