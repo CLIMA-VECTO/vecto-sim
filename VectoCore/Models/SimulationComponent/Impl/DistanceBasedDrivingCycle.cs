@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 			retVal = DriveDistance(absTime, ds);
-			//throw new NotImplementedException("Distance based Cycle is not yet implemented.");
+			throw new NotImplementedException("Distance based Cycle is not yet implemented.");
 		}
 
 		private IResponse DriveDistance(TimeSpan absTime, Meter ds)
@@ -134,7 +134,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		protected IResponse ProcessResponse(IResponse response) {}
+		protected IResponse ProcessResponse(IResponse response)
+		{
+			throw new NotImplementedException();
+		}
 
 		#region VectoSimulationComponent
 

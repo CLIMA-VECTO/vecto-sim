@@ -81,8 +81,6 @@ namespace TUGraz.VectoCore.FileIO.EngineeringFile
 
 			public class AuxDataEng : DataBodyDecl.AuxDataDecl
 			{
-				[JsonProperty(Required = Required.Always)] public string ID;
-				[JsonProperty(Required = Required.Always)] public string Type;
 				[JsonProperty(Required = Required.Always)] public string Path;
 			}
 

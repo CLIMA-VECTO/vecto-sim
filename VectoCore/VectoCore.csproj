@@ -154,6 +154,7 @@
     <Compile Include="Models\Simulation\Impl\DistanceRun.cs" />
     <Compile Include="Models\Simulation\Impl\PowertrainBuilder.cs" />
     <Compile Include="Utils\DataTableExtensionMethods.cs" />
+    <Compile Include="Utils\EnumHelper.cs" />
     <Compile Include="Utils\RessourceHelper.cs" />
     <Compile Include="Models\Declaration\Segment.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryCycleDataAdapter.cs" />
