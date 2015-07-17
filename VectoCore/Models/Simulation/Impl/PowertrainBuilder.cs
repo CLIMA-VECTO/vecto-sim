@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -64,14 +61,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// connect cluch --> aux --> ... --> aux_XXX --> directAux
 			if (data.Aux != null) {
 				foreach (var auxData in data.Aux) {
-					var auxCycleData = new AuxiliaryCycleDataAdapter(data.Cycle, auxData.ID);
-					IAuxiliary auxiliary = new MappingAuxiliary(_container, auxCycleData, auxData.Data);
+					IAuxiliary auxiliary;
+					if (auxData.IsConstant) {
+						auxiliary = new DirectAuxiliary(_container, new AuxiliaryConstantDemand(auxData.PowerDemand));
+					} else {
+						var auxCycleData = new AuxiliaryCycleDemandAdapter(data.Cycle, auxData.ID);
+						auxiliary = new MappingAuxiliary(_container, auxCycleData, auxData.Data);
+					}
 					tmp = AddComponent(tmp, auxiliary);
 				}
 			}
 
 			// connect directAux --> engine
-			IAuxiliary directAux = new DirectAuxiliary(_container, new AuxiliaryCycleDataAdapter(data.Cycle));
+			IAuxiliary directAux = new DirectAuxiliary(_container, new AuxiliaryCycleDemandAdapter(data.Cycle));
 			tmp = AddComponent(tmp, directAux);
 
 			AddComponent(tmp, new CombustionEngine(_container, data.EngineData));
@@ -135,7 +137,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var engine = new CombustionEngine(_container, data.EngineData);
 			var gearBox = new EngineOnlyGearbox(_container);
 
-			IAuxiliary addAux = new DirectAuxiliary(_container, new AuxiliaryCycleDataAdapter(data.Cycle));
+			IAuxiliary addAux = new DirectAuxiliary(_container, new AuxiliaryCycleDemandAdapter(data.Cycle));
 			addAux.InPort().Connect(engine.OutPort());
 
 			gearBox.InPort().Connect(addAux.OutPort());

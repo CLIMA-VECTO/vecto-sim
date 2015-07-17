@@ -10,11 +10,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class DirectAuxiliary : VectoSimulationComponent, IAuxiliary, ITnInPort, ITnOutPort
 	{
-		private readonly IAuxiliaryCycleData _demand;
+		private readonly IAuxiliaryDemand _demand;
 		private ITnOutPort _outPort;
 		private Watt _powerDemand;
 
-		public DirectAuxiliary(IVehicleContainer container, IAuxiliaryCycleData demand)
+		public DirectAuxiliary(IVehicleContainer container, IAuxiliaryDemand demand)
 			: base(container)
 		{
 			_demand = demand;

@@ -3,7 +3,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	public interface IAuxiliaryCycleData
+	public interface IAuxiliaryDemand
 	{
 		Watt GetPowerDemand(TimeSpan absTime, TimeSpan dt);
 	}

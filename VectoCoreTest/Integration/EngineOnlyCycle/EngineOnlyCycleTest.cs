@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var engineData =
 				EngineeringModeSimulationDataReader.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
 
-			var aux = new DirectAuxiliary(vehicle, new AuxiliaryCycleDataAdapter(data));
+			var aux = new DirectAuxiliary(vehicle, new AuxiliaryCycleDemandAdapter(data));
 			var gearbox = new EngineOnlyGearbox(vehicle);
 
 

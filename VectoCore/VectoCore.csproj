@@ -152,13 +152,14 @@
     <Compile Include="Models\Declaration\Mission.cs" />
     <Compile Include="Models\Declaration\MissionType.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\PT1Curve.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\AuxiliaryData.cs" />
     <Compile Include="Models\Simulation\Impl\DistanceRun.cs" />
     <Compile Include="Models\Simulation\Impl\PowertrainBuilder.cs" />
     <Compile Include="Utils\DataTableExtensionMethods.cs" />
     <Compile Include="Utils\EnumHelper.cs" />
     <Compile Include="Utils\RessourceHelper.cs" />
     <Compile Include="Models\Declaration\Segment.cs" />
-    <Compile Include="Models\SimulationComponent\Data\AuxiliaryCycleDataAdapter.cs" />
+    <Compile Include="Models\SimulationComponent\Data\AuxiliaryDemandAdapter.cs" />
     <Compile Include="Models\Declaration\Axle.cs" />
     <Compile Include="Models\Declaration\AxleConfiguration.cs" />
     <Compile Include="Models\SimulationComponent\Data\CombustionEngineData.cs" />
@@ -166,7 +167,7 @@
     <Compile Include="Models\SimulationComponent\Data\DrivingCycleData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMap.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FullLoadCurve.cs" />
-    <Compile Include="Models\SimulationComponent\Data\IAuxiliaryCycleData.cs" />
+    <Compile Include="Models\SimulationComponent\Data\IAuxiliaryDemand.cs" />
     <Compile Include="Models\SimulationComponent\Data\GearboxData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Gearbox\GearData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Gearbox\TransmissionLossMap.cs" />

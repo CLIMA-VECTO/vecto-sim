@@ -8,31 +8,14 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class AuxiliaryData
-	{
-		public double EfficiencyToSupply { get; set; }
-		public double TransitionRatio { get; set; }
-		public double EfficiencyToEngine { get; set; }
-
-		public Watt GetPowerDemand(PerSecond nAuxiliary, Watt powerAuxOut)
-		{
-			throw new NotImplementedException();
-		}
-
-		public static AuxiliaryData ReadFromFile(string filePath)
-		{
-			throw new NotImplementedException();
-		}
-	}
-
 	public class MappingAuxiliary : VectoSimulationComponent, IAuxiliary, ITnInPort, ITnOutPort
 	{
-		private readonly IAuxiliaryCycleData _demand;
+		private readonly IAuxiliaryDemand _demand;
 		private AuxiliaryData _data;
 		private ITnOutPort _outPort;
 		private Watt _powerDemand;
 
-		public MappingAuxiliary(IVehicleContainer container, IAuxiliaryCycleData demand, AuxiliaryData data)
+		public MappingAuxiliary(IVehicleContainer container, IAuxiliaryDemand demand, AuxiliaryData data)
 			: base(container)
 		{
 			_demand = demand;

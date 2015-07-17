@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
@@ -42,6 +43,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			public string Path;
 			public string Technology;
 			public string[] TechList;
+			public Watt PowerDemand;
+			public bool IsConstant;
 
 			public AuxiliaryData Data;
 		}

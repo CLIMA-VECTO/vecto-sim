@@ -7,7 +7,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	public class AuxiliaryCycleDataAdapter : IAuxiliaryCycleData
+	public class AuxiliaryCycleDemandAdapter : IAuxiliaryDemand
 	{
 		private readonly string _auxiliaryId;
 		private readonly DrivingCycleData _drivingCycle;
@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		private readonly ILog Log;
 
-		public AuxiliaryCycleDataAdapter(DrivingCycleData inputData, string column = null)
+		public AuxiliaryCycleDemandAdapter(DrivingCycleData inputData, string column = null)
 		{
 			Log = LogManager.GetLogger(GetType());
 			_drivingCycle = inputData;
@@ -40,6 +40,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return string.IsNullOrEmpty(_auxiliaryId)
 				? CurrentCycleEntry.AdditionalAuxPowerDemand
 				: CurrentCycleEntry.AuxiliarySupplyPower[_auxiliaryId];
+		}
+	}
+
+	public class AuxiliaryConstantDemand : IAuxiliaryDemand
+	{
+		/// <summary>
+		/// Actually Watt Per Second [W/s]
+		/// </summary>
+		private readonly Watt _powerDemand;
+
+		public AuxiliaryConstantDemand(Watt powerDemand)
+		{
+			_powerDemand = powerDemand;
+		}
+
+
+		public Watt GetPowerDemand(TimeSpan ignored, TimeSpan ignored2)
+		{
+			return _powerDemand;
 		}
 	}
 }
