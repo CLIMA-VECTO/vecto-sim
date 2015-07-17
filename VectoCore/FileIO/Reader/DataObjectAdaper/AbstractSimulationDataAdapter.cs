@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			var retVal = new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				VehicleCategory = data.VehicleCategory(),
-				AxleConfiguration = EnumHelper.ParseAxleConfigurationType(data.AxleConfig.TypeStr),
+				AxleConfiguration = AxleConfigurationHelper.Parse(data.AxleConfig.TypeStr),
 				CurbWeight = data.CurbWeight.SI<Kilogram>(),
 				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
 				//Loading = data.Loading.SI<Kilogram>(),
@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 			var retarder = new RetarderData() {
 				Type =
-					(RetarderData.RetarderType) Enum.Parse(typeof (RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
+					(RetarderData.RetarderType)Enum.Parse(typeof(RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
 			};
 			if (retarder.Type != RetarderData.RetarderType.None) {
 				retarder.LossMap = RetarderLossMap.ReadFromFile(Path.Combine(basePath, data.Retarder.File));
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			return new GearboxData() {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				ModelName = data.ModelName,
-				Type = (GearboxData.GearboxType) Enum.Parse(typeof (GearboxData.GearboxType), data.GearboxType, true),
+				Type = (GearboxData.GearboxType)Enum.Parse(typeof(GearboxData.GearboxType), data.GearboxType, true),
 			};
 		}
 	}

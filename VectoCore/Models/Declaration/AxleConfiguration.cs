@@ -1,4 +1,4 @@
-using System;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -15,19 +15,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 		AxleConfig_8x8,
 	}
 
-	public static class AxleConfigurationExtensions
+	public static class AxleConfigurationHelper
 	{
+		private const string Prefix = "AxleConfig_";
+
 		public static string GetName(this AxleConfiguration self)
 		{
-			return self.ToString().Substring(11);
+			return self.ToString().Replace(Prefix, "");
 		}
-	}
 
-	public static class EnumHelper
-	{
-		public static AxleConfiguration ParseAxleConfigurationType(string typeString)
+		public static AxleConfiguration Parse(string typeString)
 		{
-			return (AxleConfiguration) Enum.Parse(typeof (AxleConfiguration), "AxleConfig_" + typeString, true);
+			return EnumHelper.Parse<AxleConfiguration>(Prefix + typeString);
 		}
 	}
 }

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
-using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
@@ -47,6 +41,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			public string Type;
 			public string Path;
 			public string Technology;
+			public string[] TechList;
 
 			public AuxiliaryData Data;
 		}
