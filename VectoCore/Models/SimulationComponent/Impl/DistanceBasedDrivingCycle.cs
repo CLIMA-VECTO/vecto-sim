@@ -134,15 +134,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		protected IResponse ProcessResponse(IResponse response) {}
-
 		#region VectoSimulationComponent
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
+		protected override void DoCommitSimulationStep(IModalDataWriter writer)
 		{
 			_previousState = _currentState;
-			_currentState = new DrivingCycleState();
-			throw new NotImplementedException("Distance based Cycle is not yet implemented.");
+			_currentState = _currentState.Clone();
+			// todo: write something?
 		}
 
 		#endregion

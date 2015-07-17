@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				angularVelocity * _gearData.Ratio);
 		}
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
+		protected override void DoCommitSimulationStep(IModalDataWriter writer)
 		{
 			// nothing to commit
 		}

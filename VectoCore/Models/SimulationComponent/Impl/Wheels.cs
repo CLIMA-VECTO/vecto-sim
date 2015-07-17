@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
+		protected override void DoCommitSimulationStep(IModalDataWriter writer)
 		{
 			throw new NotImplementedException();
 		}

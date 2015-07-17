@@ -43,6 +43,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return this;
 		}
 
-		public override void CommitSimulationStep(IModalDataWriter writer) {}
+		protected override void DoCommitSimulationStep(IModalDataWriter writer) {}
 	}
 }

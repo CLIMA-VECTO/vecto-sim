@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _clutchState;
 		}
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
+		protected override void DoCommitSimulationStep(IModalDataWriter writer)
 		{
 			//todo: implement!
 			//throw new NotImplementedException();

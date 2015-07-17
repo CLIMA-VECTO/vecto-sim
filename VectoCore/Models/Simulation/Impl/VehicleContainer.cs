@@ -119,9 +119,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				component.CommitSimulationStep(_dataWriter);
 			}
 
-			_dataWriter[ModalResultField.time] = time;
-			_dataWriter[ModalResultField.simulationInterval] = simulationInterval;
-			_dataWriter.CommitSimulationStep();
+			if (_dataWriter != null) {
+				_dataWriter[ModalResultField.time] = time;
+				_dataWriter[ModalResultField.simulationInterval] = simulationInterval;
+				_dataWriter.CommitSimulationStep();
+			}
 		}
 
 		public void FinishSimulation()

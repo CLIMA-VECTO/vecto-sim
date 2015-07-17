@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
+		protected override void DoCommitSimulationStep(IModalDataWriter writer)
 		{
 			writer[ModalResultField.PaEng] = (double)_currentState.EnginePowerLoss;
 			writer[ModalResultField.Pe_drag] = (double)_currentState.FullDragPower;
