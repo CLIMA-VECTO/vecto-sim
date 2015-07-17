@@ -14,8 +14,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 	[TestClass]
 	public class DeclarationDataTest
 	{
-		private const double Tolerance = 0.0001;
-		private MissionType[] missions = Enum.GetValues(typeof(MissionType)).Cast<MissionType>().ToArray();
+		public const double Tolerance = 0.0001;
+		public readonly MissionType[] Missions = Enum.GetValues(typeof(MissionType)).Cast<MissionType>().ToArray();
 
 		[TestMethod]
 		public void WheelDataTest()
@@ -75,15 +75,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			AssertHelper.Exception<VectoException>(() => pt1.Lookup(0.RPMtoRad()));
 		}
 
-
 		[TestMethod]
 		public void WHTCTest()
-		{
-			Assert.Inconclusive();
-		}
-
-		[TestMethod]
-		public void WHTCWeightingTest()
 		{
 			var whtc = DeclarationData.WHTCCorrection;
 
@@ -94,27 +87,94 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			};
 
 			var r = new Random();
-			for (var i = 0; i < missions.Length; i++) {
+			for (var i = 0; i < Missions.Length; i++) {
 				var urban = r.NextDouble() * 2;
 				var rural = r.NextDouble() * 2;
 				var motorway = r.NextDouble() * 2;
-				var whtcValue = whtc.Lookup(missions[i], urban, rural, motorway);
+				var whtcValue = whtc.Lookup(Missions[i], urban, rural, motorway);
 				Assert.AreEqual(urban * factors.urban[i] + rural * factors.rural[i] + motorway * factors.motorway[i], whtcValue);
 			}
 		}
 
 		[TestMethod]
-		public void VCDVTest()
+		public void AirDragTest()
 		{
-			Assert.Inconclusive();
+			var airDrag = DeclarationData.AirDrag;
+
+			var expected = new Dictionary<string, AirDrag.AirDragEntry> {
+				{ "RigidSolo", new AirDrag.AirDragEntry { A1 = 0.013526, A2 = 0.017746, A3 = -0.000666 } },
+				{ "RigidTrailer", new AirDrag.AirDragEntry { A1 = 0.017125, A2 = 0.072275, A3 = -0.004148 } },
+				{ "TractorSemitrailer", new AirDrag.AirDragEntry { A1 = 0.034767, A2 = 0.039367, A3 = -0.001897 } },
+				{ "CoachBus", new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 } }
+			};
+
+			foreach (var kv in expected) {
+				Assert.AreEqual(kv.Value, airDrag.Lookup(kv.Key));
+			}
+
+			var expectedCat = new Dictionary<VehicleCategory, AirDrag.AirDragEntry> {
+				{ VehicleCategory.RigidTruck, new AirDrag.AirDragEntry { A1 = 0.013526, A2 = 0.017746, A3 = -0.000666 } },
+				{ VehicleCategory.Tractor, new AirDrag.AirDragEntry { A1 = 0.034767, A2 = 0.039367, A3 = -0.001897 } },
+				{ VehicleCategory.CityBus, new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 } },
+				{ VehicleCategory.Coach, new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 } },
+				{ VehicleCategory.InterurbanBus, new AirDrag.AirDragEntry { A1 = -0.000794, A2 = 0.02109, A3 = -0.00109 } }
+			};
+
+			foreach (var kv in expectedCat) {
+				Assert.AreEqual(kv.Value, airDrag.Lookup(kv.Key));
+			}
 		}
 
 		[TestMethod]
 		public void DefaultTCTest()
 		{
-			Assert.Inconclusive();
-		}
+			var tc = DeclarationData.TorqueConverter;
 
+			var expected = new[] {
+				// fixed points
+				new { nu = 1.000, mu = 1.000, torque = 0.00 },
+				new { nu = 1.005, mu = 1.000, torque = 0.00 },
+				new { nu = 1.100, mu = 1.000, torque = -40.34 },
+				new { nu = 1.222, mu = 1.000, torque = -80.34 },
+				new { nu = 1.375, mu = 1.000, torque = -136.11 },
+				new { nu = 1.571, mu = 1.000, torque = -216.52 },
+				new { nu = 1.833, mu = 1.000, torque = -335.19 },
+				new { nu = 2.200, mu = 1.000, torque = -528.77 },
+				new { nu = 2.750, mu = 1.000, torque = -883.40 },
+				new { nu = 4.400, mu = 1.000, torque = -2462.17 },
+				new { nu = 11.000, mu = 1.000, torque = -16540.98 },
+
+				// interpolated points
+				new { nu = 1.0025, mu = 1.0, torque = 0.0 },
+				new { nu = 1.0525, mu = 1.0, torque = -20.17 },
+				new { nu = 1.161, mu = 1.0, torque = -60.34 },
+				new { nu = 1.2985, mu = 1.0, torque = -108.225 },
+				new { nu = 1.2985, mu = 1.0, torque = -108.225 },
+				new { nu = 1.473, mu = 1.0, torque = -176.315 },
+				new { nu = 1.702, mu = 1.0, torque = -275.855 },
+				new { nu = 2.0165, mu = 1.0, torque = -431.98 },
+				new { nu = 2.475, mu = 1.0, torque = -706.085 },
+				new { nu = 3.575, mu = 1.0, torque = -1672.785 },
+				new { nu = 7.7, mu = 1.0, torque = -9501.575 },
+
+				// extrapolated points
+				new { nu = 0.5, mu = 1.0, torque = 0.0 },
+				new { nu = 12.0, mu = 1.0, torque = -18674.133 }, // = (12-4.4)*(-16540.98- -2462.17)/(11-4.4)+ -2462.17
+			};
+
+			var referenceSpeed = 150.SI<PerSecond>();
+
+			var r = new Random();
+
+			foreach (var exp in expected) {
+				var mu = tc.LookupMu(exp.nu);
+				Assert.AreEqual(mu, exp.mu);
+
+				var angularSpeed = r.Next(1000).SI<PerSecond>();
+				var torque = tc.LookupTorque(exp.nu, angularSpeed, referenceSpeed);
+				AssertHelper.AreEqual(exp.torque * Math.Pow(angularSpeed.Value() / referenceSpeed.Value(), 2), torque.Value());
+			}
+		}
 
 		[TestMethod]
 		public void AuxElectricSystemTest()
@@ -187,14 +247,14 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				}
 			};
 
-			for (var i = 0; i < missions.Length; i++) {
+			for (var i = 0; i < Missions.Length; i++) {
 				// default tech
-				Watt defaultValue = fan.Lookup(missions[i], "");
+				Watt defaultValue = fan.Lookup(Missions[i], "");
 				Assert.AreEqual(expected[defaultFan][i], defaultValue.Value(), Tolerance);
 
 				// all fan techs
 				foreach (var expect in expected) {
-					Watt value = fan.Lookup(missions[i], expect.Key);
+					Watt value = fan.Lookup(Missions[i], expect.Key);
 					Assert.AreEqual(expect.Value[i], value.Value(), Tolerance);
 				}
 			}
@@ -220,9 +280,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				{ "12", new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } }
 			};
 
-			for (var i = 0; i < missions.Length; i++) {
+			for (var i = 0; i < Missions.Length; i++) {
 				foreach (var expect in expected) {
-					Watt value = hvac.Lookup(missions[i], expect.Key);
+					Watt value = hvac.Lookup(Missions[i], expect.Key);
 					Assert.AreEqual(expect.Value[i], value.Value(), Tolerance);
 				}
 			}
@@ -248,9 +308,9 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				{ "12", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
 			};
 
-			for (var i = 0; i < missions.Length; i++) {
+			for (var i = 0; i < Missions.Length; i++) {
 				foreach (var expect in expected) {
-					Watt value = ps.Lookup(missions[i], expect.Key);
+					Watt value = ps.Lookup(Missions[i], expect.Key);
 					Assert.AreEqual(expect.Value[i], value.Value(), Tolerance);
 				}
 			}
@@ -308,8 +368,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				var technology = expect.Key;
 				foreach (var hdvClasses in expect.Value) {
 					var hdvClass = hdvClasses.Key;
-					for (var i = 0; i < missions.Length; i++) {
-						Watt value = sp.Lookup(missions[i], hdvClass, technology);
+					for (var i = 0; i < Missions.Length; i++) {
+						Watt value = sp.Lookup(Missions[i], hdvClass, technology);
 						Assert.AreEqual(hdvClasses.Value[i], value.Value(), Tolerance);
 					}
 				}

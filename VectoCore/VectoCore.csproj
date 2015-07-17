@@ -134,6 +134,7 @@
     <Compile Include="Models\Connector\Ports\Impl\Response.cs" />
     <Compile Include="Models\Connector\Ports\IFvPort.cs" />
     <Compile Include="Models\Connector\Ports\ITnPort.cs" />
+    <Compile Include="Models\Declaration\AirDrag.cs" />
     <Compile Include="Models\Declaration\Fan.cs" />
     <Compile Include="Models\Declaration\HVAC.cs" />
     <Compile Include="Models\Declaration\PneumaticSystem.cs" />
@@ -258,9 +259,8 @@
     <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Table.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\SP-Tech.csv" />
     <EmbeddedResource Include="Resources\Declaration\DefaultTC.vtcc" />
-    <None Include="Resources\Declaration\VCDV\parameters.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VCDV\parameters.csv" />
     <EmbeddedResource Include="Resources\Declaration\WHTC-Weighting-Factors.csv" />
-    <EmbeddedResource Include="Resources\Declaration\WHTC.csv" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

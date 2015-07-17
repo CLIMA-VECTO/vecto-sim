@@ -20,9 +20,31 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public static TResult Interpolate<T, TResult>(T x1, T x2, TResult y1, TResult y2, T xint) where T : SI
 			where TResult : SIBase<TResult>
+		{ 
+			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1).Cast<TResult>();
+		}
+
+
+		public static double Interpolate<T>(T x1, T x2, double y1, double y2, T xint)
+			where T : SI
+		{
+			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1).Value();
+		}
+
+		public static TResult Interpolate<TResult>(double x1, double x2, TResult y1, TResult y2, double xint)
+			where TResult : SIBase<TResult>
 		{
 			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1).Cast<TResult>();
 		}
+
+		/// <summary>
+		/// Linearly interpolates a value between two points.
+		/// </summary>
+		public static double Interpolate(double x1, double x2, double y1, double y2, double xint)
+		{
+			return ((xint - x1) * (y2 - y1) / (x2 - x1) + y1);
+		}
+
 
 		/// <summary>
 		/// Returns the absolute value.
@@ -54,6 +76,11 @@ namespace TUGraz.VectoCore.Utils
 		public static T Max<T>(T c1, T c2) where T : IComparable
 		{
 			return c1.CompareTo(c2) >= 0 ? c1 : c2;
+		}
+
+		public static T Sqrt<T>(SI si) where T : SIBase<T>
+		{
+			return si.Sqrt().Cast<T>();
 		}
 	}
 }

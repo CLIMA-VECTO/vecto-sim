@@ -95,6 +95,16 @@ namespace TUGraz.VectoCore.Utils
 			return self.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
 		}
 
+		public static double ToRadian(this double self)
+		{
+			return self * Math.PI / 180.0;
+		}
+
+		public static double ToDegree(this double self)
+		{
+			return self * 180.0 / Math.PI;
+		}
+
 		/// <summary>
 		/// Creates an SI object for the number (unit-less: [-]).
 		/// </summary>

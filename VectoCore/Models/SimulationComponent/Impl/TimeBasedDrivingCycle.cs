@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// TODO!!
 			var dx = 0.SI<Meter>();
-			return _outPort.Request(absTime, dx, Data.Entries[index].VehicleTargetSpeed,
+			return _outPort.Request(absTime, dt, Data.Entries[index].VehicleTargetSpeed,
 				Data.Entries[index].RoadGradient);
 		}
 
