@@ -1,13 +1,12 @@
 ﻿using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -17,11 +16,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		private const string EngineFile = @"TestData\Components\24t Coach.veng";
 		private const string CycleFile = @"TestData\Cycles\Coach Engine Only short.vdri";
 
+		private const string EngineOnlyJob = @"TestData\Jobs\EngineOnlyJob.vecto";
+
 		[TestMethod]
 		public void TestSimulationEngineOnly()
 		{
 			var resultFileName = "TestEngineOnly-result.vmod";
-			var job = CreateJob(resultFileName);
+			var job = CreateRun(resultFileName);
 
 			var container = job.GetContainer();
 
@@ -35,7 +36,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var actual = "TestEngineOnly_JobRun-result.vmod";
 			var expected = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
 
-			var job = CreateJob(actual);
+			var job = CreateRun(actual);
 			job.Run();
 
 			ResultFileHelper.TestModFile(expected, actual);
@@ -47,55 +48,42 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var actual = @"TestEngineOnly_SimulatorRun-result.vmod";
 			var expected = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
 
-			var job = CreateJob(actual);
+			var run = CreateRun(actual);
 
 			var sim = new JobContainer(new TestSumWriter());
-			sim.AddJob(job);
-			sim.RunJobs();
+			sim.AddRun(run);
+			sim.Execute();
 
 			ResultFileHelper.TestModFile(expected, actual);
 		}
 
-		public IVectoSimulator CreateJob(string resultFileName)
+		public IVectoRun CreateRun(string resultFileName)
 		{
-			var sumFileName = resultFileName.Substring(0, resultFileName.Length - 4) + "vsum";
+			var sumFileName = resultFileName.Substring(0, resultFileName.Length - 5) + Constants.FileExtensions.SumFile;
 
 			var dataWriter = new ModalDataWriter(resultFileName, engineOnly: true);
 			var sumWriter = new SummaryFileWriter(sumFileName);
-			var job = SimulatorFactory.CreateTimeBasedEngineOnlyJob(EngineFile, CycleFile, jobFileName: "", jobName: "",
-				dataWriter: dataWriter, sumWriter: sumWriter);
 
-			return job;
-		}
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode) { SumWriter = sumWriter };
+			factory.DataReader.SetJobFile(EngineOnlyJob);
 
-
-		[TestMethod]
-		public void TestEngineOnly_MultipleJobs()
-		{
-			var resultFiles = new[] {
-				@"TestEngineOnly-MultipleJobs-result1",
-				@"TestEngineOnly-MultipleJobs-result2",
-				@"TestEngineOnly-MultipleJobs-result3"
-			};
-
-			var simulation = new JobContainer(new TestSumWriter());
-			foreach (var resultFile in resultFiles) {
-				simulation.AddJob(CreateJob(resultFile));
-			}
-			simulation.RunJobs();
-
-			ResultFileHelper.TestModFiles(resultFiles.Select(x => x + "_Coach Engine Only short.vmod"),
-				Enumerable.Repeat(@"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod", resultFiles.Length));
+			return factory.SimulationRuns().First();
 		}
 
 		[TestMethod]
 		public void Test_VectoJob()
 		{
-			var jobData = VectoJobData.ReadFromFile(@"TestData\Jobs\24t Coach.vecto");
-			var jobContainer = new JobContainer(jobData);
-			jobContainer.RunJobs();
+			var sumWriter = new SummaryFileWriter(@"24t Coach.vsum");
+			var jobContainer = new JobContainer(sumWriter);
 
-			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum", @"TestData\Jobs\24t Coach.vsum");
+			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode);
+			runsFactory.DataReader.SetJobFile(@"TestData\Jobs\24t Coach.vecto");
+
+			jobContainer.AddRuns(runsFactory);
+			jobContainer.Execute();
+
+			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum",
+				@"TestData\Jobs\24t Coach.vsum");
 			ResultFileHelper.TestModFiles(new[] {
 				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only1.vmod",
 				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only2.vmod",

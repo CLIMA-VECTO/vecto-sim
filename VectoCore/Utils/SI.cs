@@ -20,6 +20,11 @@ namespace TUGraz.VectoCore.Utils
 
 		[JsonConstructor]
 		private Newton(double val) : base(new SI(val).Newton) {}
+
+		public static NewtonMeter operator *(Newton newton, Meter meter)
+		{
+			return ((newton as SI) * meter).Cast<NewtonMeter>();
+		}
 	}
 
 	public class Radian : SIBase<Radian>
@@ -65,6 +70,18 @@ namespace TUGraz.VectoCore.Utils
 		protected Meter(double val) : base(new SI(val).Meter) {}
 	}
 
+	public class Ton : SIBase<Ton>
+	{
+		static Ton()
+		{
+			Constructors.Add(typeof (Ton), val => new Ton(val));
+		}
+
+		[JsonConstructor]
+		protected Ton(double val) : base(new SI(val).Ton) {}
+	}
+
+
 	public class Kilogram : SIBase<Kilogram>
 	{
 		static Kilogram()
@@ -87,6 +104,17 @@ namespace TUGraz.VectoCore.Utils
 		private SquareMeter(double val) : base(new SI(val).Square.Meter) {}
 	}
 
+	public class CubicMeter : SIBase<CubicMeter>
+	{
+		static CubicMeter()
+		{
+			Constructors.Add(typeof (CubicMeter), val => new CubicMeter(val));
+		}
+
+		[JsonConstructor]
+		private CubicMeter(double val) : base(new SI(val).Cubic.Meter) {}
+	}
+
 	public class KilogramSquareMeter : SIBase<KilogramSquareMeter>
 	{
 		static KilogramSquareMeter()
@@ -96,6 +124,17 @@ namespace TUGraz.VectoCore.Utils
 
 		[JsonConstructor]
 		protected KilogramSquareMeter(double val) : base(new SI(val).Kilo.Gramm.Square.Meter) {}
+	}
+
+	public class KilogramPerWattSecond : SIBase<KilogramPerWattSecond>
+	{
+		static KilogramPerWattSecond()
+		{
+			Constructors.Add(typeof (KilogramPerWattSecond), val => new KilogramPerWattSecond(val));
+		}
+
+		[JsonConstructor]
+		protected KilogramPerWattSecond(double val) : base(new SI(val).Kilo.Gramm.Per.Watt.Second) {}
 	}
 
 	public class Watt : SIBase<Watt>
@@ -139,6 +178,12 @@ namespace TUGraz.VectoCore.Utils
 
 		[JsonConstructor]
 		private MeterPerSecond(double val) : base(new SI(val).Meter.Per.Second) {}
+
+
+		public static PerSecond operator /(MeterPerSecond meterPerSecond, Meter meter)
+		{
+			return ((meterPerSecond as SI) / meter).Cast<PerSecond>();
+		}
 	}
 
 
@@ -177,6 +222,11 @@ namespace TUGraz.VectoCore.Utils
 		public static Second operator /(NewtonMeter newtonMeter, Watt watt)
 		{
 			return ((newtonMeter as SI) / watt).Cast<Second>();
+		}
+
+		public static Newton operator /(NewtonMeter newtonMeter, Meter meter)
+		{
+			return ((newtonMeter as SI) / meter).Cast<Newton>();
 		}
 	}
 
@@ -305,11 +355,8 @@ namespace TUGraz.VectoCore.Utils
 			min,
 			c,
 			h,
-
-			/// <summary>
-			/// Milli
-			/// </summary>
-			milli
+			milli,
+			t
 		}
 
 		/// <summary>
@@ -474,6 +521,11 @@ namespace TUGraz.VectoCore.Utils
 					denominator.Add(Unit.s);
 					denominator.Add(Unit.s);
 					break;
+				case Unit.t:
+					numerator.Add(Unit.k);
+					numerator.Add(Unit.k);
+					numerator.Add(Unit.g);
+					break;
 				default:
 					numerator.Add(unit);
 					break;
@@ -546,6 +598,15 @@ namespace TUGraz.VectoCore.Utils
 		public SI Gramm
 		{
 			get { return new SI(new SI(this, toUnit: Unit.k), 0.001, Unit.g, Unit.g); }
+		}
+
+		/// <summary>
+		///  [t] (to basic unit: [kg])
+		/// </summary>
+		[DebuggerHidden]
+		public SI Ton
+		{
+			get { return new SI(new SI(this, toUnit: Unit.k), 1000, Unit.t, Unit.g); }
 		}
 
 

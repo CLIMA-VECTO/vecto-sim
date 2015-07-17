@@ -1,3 +1,5 @@
+using TUGraz.VectoCore.Utils;
+
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
 	/// <summary>
@@ -11,7 +13,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <param name="data">The modal data.</param>
 		/// <param name="vehicleMass">The vehicle mass.</param>
 		/// <param name="vehicleLoading">The vehicle loading.</param>
-		void Write(IModalDataWriter data, double vehicleMass = 0, double vehicleLoading = 0);
+		void Write(IModalDataWriter data, Kilogram vehicleMass = null, Kilogram vehicleLoading = null);
 
 		/// <summary>
 		/// Writes the data to the sum file.

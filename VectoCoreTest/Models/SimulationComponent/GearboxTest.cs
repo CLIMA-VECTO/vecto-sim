@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -19,9 +20,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void AxleGearTest()
 		{
 			var vehicle = new VehicleContainer();
-			var gbxData = GearboxData.ReadFromFile(GearboxDataFile);
+			var gbxData = EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile);
 			//GearData gearData = new GearData();
-			var axleGear = new AxleGear(gbxData.AxleGearData);
+			var axleGear = new AxleGear(vehicle, gbxData.AxleGearData);
 
 			var mockPort = new MockTnOutPort();
 			axleGear.InShaft().Connect(mockPort);

@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			: base(cockpit)
 		{
 			_idleSpeed = engineData.IdleSpeed;
-			_ratedSpeed = engineData.GetFullLoadCurve(0).RatedSpeed();
+			_ratedSpeed = engineData.GetFullLoadCurve(0).RatedSpeed;
 		}
 
 		public ClutchState State()

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using NLog.LayoutRenderers;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -16,7 +15,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	/// Component for a combustion engine.
 	/// </summary>
-	public class CombustionEngine : VectoSimulationComponent, ICombustionEngine, ITnOutPort, IMemento
+	public class CombustionEngine : VectoSimulationComponent, ICombustionEngine, ITnOutPort
 	{
 		public enum EngineOperationMode
 		{
@@ -84,7 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.EnginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
 			var requestedEnginePower = requestedPower + _currentState.EnginePowerLoss;
 
-			if (engineSpeed < (double) _data.IdleSpeed - EngineIdleSpeedStopThreshold) {
+			if (engineSpeed < (double)_data.IdleSpeed - EngineIdleSpeedStopThreshold) {
 				_currentState.OperationMode = EngineOperationMode.Stopped;
 				//todo: _currentState.EnginePowerLoss = enginePowerLoss;
 			}
@@ -116,15 +115,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override void CommitSimulationStep(IModalDataWriter writer)
 		{
-			writer[ModalResultField.PaEng] = (double) _currentState.EnginePowerLoss;
-			writer[ModalResultField.Pe_drag] = (double) _currentState.FullDragPower;
-			writer[ModalResultField.Pe_full] = (double) _currentState.DynamicFullLoadPower;
-			writer[ModalResultField.Pe_eng] = (double) _currentState.EnginePower;
+			writer[ModalResultField.PaEng] = (double)_currentState.EnginePowerLoss;
+			writer[ModalResultField.Pe_drag] = (double)_currentState.FullDragPower;
+			writer[ModalResultField.Pe_full] = (double)_currentState.DynamicFullLoadPower;
+			writer[ModalResultField.Pe_eng] = (double)_currentState.EnginePower;
 
-			writer[ModalResultField.Tq_drag] = (double) _currentState.FullDragTorque;
-			writer[ModalResultField.Tq_full] = (double) _currentState.DynamicFullLoadTorque;
-			writer[ModalResultField.Tq_eng] = (double) _currentState.EngineTorque;
-			writer[ModalResultField.n] = (double) _currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute;
+			writer[ModalResultField.Tq_drag] = (double)_currentState.FullDragTorque;
+			writer[ModalResultField.Tq_full] = (double)_currentState.DynamicFullLoadTorque;
+			writer[ModalResultField.Tq_eng] = (double)_currentState.EngineTorque;
+			writer[ModalResultField.n] = (double)_currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute;
 
 			try {
 				writer[ModalResultField.FC] =
@@ -135,7 +134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} catch (VectoException ex) {
 				Log.WarnFormat("t: {0} - {1} n: {2} Tq: {3}", _currentState.AbsTime.TotalSeconds, ex.Message,
 					_currentState.EngineSpeed, _currentState.EngineTorque);
-				writer[ModalResultField.FC] = Double.NaN;
+				writer[ModalResultField.FC] = double.NaN;
 			}
 
 			_previousState = _currentState;
@@ -153,11 +152,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Contract.Requires(requestedEnginePower.HasEqualUnit(new SI().Watt));
 
 			if (_currentState.FullDragPower >= 0 && requestedEnginePower < 0) {
-				throw new VectoSimulationException(String.Format("t: {0}  P_engine_drag > 0! n: {1} [1/min] ",
+				throw new VectoSimulationException(string.Format("t: {0}  P_engine_drag > 0! n: {1} [1/min] ",
 					_currentState.AbsTime, _currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute));
 			}
 			if (_currentState.DynamicFullLoadPower <= 0 && requestedEnginePower > 0) {
-				throw new VectoSimulationException(String.Format("t: {0}  P_engine_full < 0! n: {1} [1/min] ",
+				throw new VectoSimulationException(string.Format("t: {0}  P_engine_full < 0! n: {1} [1/min] ",
 					_currentState.AbsTime, _currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute));
 			}
 		}
@@ -360,7 +359,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public override int GetHashCode()
 			{
 				unchecked {
-					var hashCode = (int) OperationMode;
+					var hashCode = (int)OperationMode;
 					hashCode = (hashCode * 397) ^ (EnginePower != null ? EnginePower.GetHashCode() : 0);
 					hashCode = (hashCode * 397) ^ (EngineSpeed != null ? EngineSpeed.GetHashCode() : 0);
 					hashCode = (hashCode * 397) ^ (EnginePowerLoss != null ? EnginePowerLoss.GetHashCode() : 0);
@@ -382,7 +381,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (ReferenceEquals(this, obj)) {
 				return true;
 			}
-			return obj.GetType() == GetType() && Equals((CombustionEngine) obj);
+			return obj.GetType() == GetType() && Equals((CombustionEngine)obj);
 		}
 
 		protected bool Equals(CombustionEngine other)
@@ -401,25 +400,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				hashCode = (hashCode * 397) ^ (_currentState != null ? _currentState.GetHashCode() : 0);
 				return hashCode;
 			}
-		}
-
-		#endregion
-
-		#region IMemento
-
-		public string Serialize()
-		{
-			var mem = new { Data = _data, PreviousState = _previousState };
-			return Memento.Serialize(mem);
-		}
-
-		public void Deserialize(string data)
-		{
-			var mem = new { Data = _data, PreviousState = _previousState };
-			mem = Memento.Deserialize(data, mem);
-
-			_data = mem.Data;
-			_previousState = mem.PreviousState;
 		}
 
 		#endregion

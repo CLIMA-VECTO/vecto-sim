@@ -1,104 +1,17 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO;
+using TUGraz.VectoCore.FileIO.DeclarationFile;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	public enum VehicleCategory
-	{
-		RigidTruck,
-		Tractor,
-		CityBus,
-		InterurbanBus,
-		Coach
-	}
-
-	public enum CrossWindCorrectionMode
-	{
-		NoCorrection,
-		SpeedDependent,
-		VAirBeta
-	}
-
-	public enum AxleConfiguration
-	{
-		AxleConfig4x2,
-		AxleConfig4x4,
-		AxleConfig6x2,
-		AxleConfig6x4,
-		AxleConfig6x6,
-		AxleConfig8x2,
-		AxleConfig8x4,
-		AxleConfig8x6,
-		AxleConfig8x8,
-	}
-
 	public class VehicleData : SimulationComponentData
 	{
-		//public static VehicleData ReadFromFile(string fileName)
-		//{
-		//	return ReadFromJson(File.ReadAllText(fileName), Path.GetDirectoryName(fileName));
-		//}
-
-
-		//public static VehicleData ReadFromJson(string json, string basePath = "")
-		//{
-		//	//var vehicleData = new VehicleData(basePath);
-
-		//	var fileInfo = GetFileVersion(json);
-		//	switch (fileInfo.Item1) {
-		//		case 5:
-		//			if (fileInfo.Item2) {
-		//				var data = JsonConvert.DeserializeObject<VehicleFileV5Declaration>(json);
-		//				return new VehicleData(basePath, data);
-		//			} else {
-		//				var data = JsonConvert.DeserializeObject<VehicleFileV5Engineering>(json);
-		//				return new VehicleData(basePath, data);
-		//			}
-		//			//vehicleData.Data = data;
-		//		default:
-		//			throw new UnsupportedFileVersionException("Unsupported Version of .vveh file. Got Version " + fileInfo.Item1);
-		//	}
-
-		//	//return null;
-		//}
-
-
-		//protected VehicleData(string basePath, VehicleFileV5Declaration data)
-		//{
-		//	BasePath = basePath;
-		//	SetGenericData(data.Body);
-		//}
-
-		//protected VehicleData(string basePath, VehicleFileV5Engineering data)
-		//{
-		//	BasePath = basePath;
-		//	SetGenericData(data.Body);
-		//}
-
-		protected void SetGenericData(VehicleFileV5Declaration.DataBodyDecl data)
-		{
-			SavedInDeclarationMode = data.SavedInDeclarationMode;
-			VehicleCategory = data.VehicleCategory();
-			GrossVehicleMassRating = data.GrossVehicleMassRating.SI<Kilogram>();
-
-			DragCoefficient = data.DragCoefficient;
-			CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>();
-
-			DragCoefficientRigidTruck = data.DragCoefficientRigidTruck;
-			CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>();
-		}
-
 		public string BasePath { get; internal set; }
 
-		public bool SavedInDeclarationMode { get; internal set; }
 
 		public VehicleCategory VehicleCategory { get; internal set; }
 
@@ -135,6 +48,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			retVal += CurbWeight ?? 0.SI<Kilogram>();
 			retVal += CurbWeigthExtra ?? 0.SI<Kilogram>();
 			retVal += Loading ?? 0.SI<Kilogram>();
+			return retVal;
+		}
+
+		public Kilogram TotalCurbWeight()
+		{
+			var retVal = 0.SI<Kilogram>();
+			retVal += CurbWeight ?? 0.SI<Kilogram>();
+			retVal += CurbWeigthExtra ?? 0.SI<Kilogram>();
 			return retVal;
 		}
 
@@ -180,18 +101,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			TotalRollResistanceCoefficient = RRC;
 			ReducedMassWheels = mRed0;
 		}
-	}
-
-	public class Axle
-	{
-		public KilogramSquareMeter Inertia { get; internal set; }
-
-		public double RollResistanceCoefficient { get; internal set; }
-
-		public Newton TyreTestLoad { get; internal set; }
-
-		public double AxleWeightShare { get; internal set; }
-
-		public bool TwinTyres { get; internal set; }
 	}
 }
