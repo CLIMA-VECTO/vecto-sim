@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -10,8 +8,6 @@ using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.FileIO.Reader.Impl
@@ -43,14 +39,14 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					var parser = new DrivingCycleData.DistanceBasedDataParser();
 					var data = VectoCSVFile.ReadStream(mission.CycleFile);
 					var cycleEntries = parser.Parse(data).ToList();
-					var simulationRunData = new VectoRunData() {
+					var simulationRunData = new VectoRunData {
 						VehicleData = dao.CreateVehicleData(Vehicle, mission, loading),
 						EngineData = engineData,
 						GearboxData = dao.CreateGearboxData(Gearbox, engineData),
-						// @@@ TODO: auxiliaries
+						Aux = Aux,
 						// @@@ TODO: ...
-						Cycle = new DrivingCycleData() {
-							Name = "Dummy",
+						Cycle = new DrivingCycleData {
+							Name = mission.ToString(),
 							SavedInDeclarationMode = true,
 							Entries = cycleEntries
 						},
@@ -76,6 +72,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));
 
 			ReadGearbox(Path.Combine(job.BasePath, job.Body.GearboxFile));
+
+			ReadAuxiliary(job.Body.Aux);
 		}
 
 		protected override void ReadJobFile(string file)
@@ -94,7 +92,6 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					throw new UnsupportedFileVersionException("Unsupported version of job-file. Got version " + fileInfo.Version);
 			}
 		}
-
 
 		protected override void ReadVehicle(string file)
 		{
@@ -142,6 +139,17 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				default:
 					throw new UnsupportedFileVersionException("Unsopported Version of gearbox-file. Got version " + fileInfo.Version);
 			}
+		}
+
+		private void ReadAuxiliary(IEnumerable<VectoJobFileV2Declaration.DataBodyDecl.AuxDataDecl> auxList)
+		{
+			Aux = auxList.Select(aux =>
+				new VectoRunData.AuxData {
+					ID = aux.ID,
+					Type = aux.Type,
+					Technology = aux.Technology,
+					TechList = aux.TechList.ToArray()
+				}).ToArray();
 		}
 
 

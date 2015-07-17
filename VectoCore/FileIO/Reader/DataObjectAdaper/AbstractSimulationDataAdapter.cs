@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			var retVal = new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				VehicleCategory = data.VehicleCategory(),
-				AxleConfiguration = EnumHelper.ParseAxleConfigurationType(data.AxleConfig.TypeStr),
+				AxleConfiguration = AxleConfigurationHelper.Parse(data.AxleConfig.TypeStr),
 				CurbWeight = data.CurbWeight.SI<Kilogram>(),
 				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
 				//Loading = data.Loading.SI<Kilogram>(),

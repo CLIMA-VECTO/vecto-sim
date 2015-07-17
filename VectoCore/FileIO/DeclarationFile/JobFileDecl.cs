@@ -5,68 +5,81 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 namespace TUGraz.VectoCore.FileIO.DeclarationFile
 {
 	/// <summary>
-	///     A class which represents the json data format for serializing and deserializing the Job Data files.
-	/// </summary>
-	/// <summary>
-	///     Represents the Vecto Job File. Fileformat: .vecto
+	/// A class which represents the json data format for serializing and deserializing the Job Data files.
+	/// Fileformat: .vecto
 	/// </summary>
 	/// <code>
-	///{
-	///  "Header": {
-	///    "CreatedBy": " ()",
-	///    "Date": "3/4/2015 2:09:13 PM",
-	///    "AppVersion": "2.0.4-beta3",
-	///    "FileVersion": 2
-	///  },
-	///  "Body": {
-	///    "SavedInDeclMode": false,
-	///    "VehicleData": "24t Coach.vveh",
-	///    "EngineData": "24t Coach.veng",
-	///    "GearboxData": "24t Coach.vgbx",
-	///    "Cycles": [
-	///      "W:\\VECTO\\CITnet\\VECTO\\bin\\Debug\\Declaration\\MissionCycles\\LOT2_rural Engine Only.vdri"
-	///    ],
-	///    "Aux": [
-	///      {
-	///        "ID": "ALT1",
-	///        "Type": "Alternator",
-	///        "Path": "24t_Coach_ALT.vaux",
-	///        "Technology": ""
-	///      },
-	///      {
-	///        "ID": "ALT2",
-	///        "Type": "Alternator",
-	///        "Path": "24t_Coach_ALT.vaux",
-	///        "Technology": ""
-	///      },
-	///      {
-	///        "ID": "ALT3",
-	///        "Type": "Alternator",
-	///        "Path": "24t_Coach_ALT.vaux",
-	///        "Technology": ""
-	///      }
-	///    ],
-	///    "AccelerationLimitingFile": "Coach.vacc",
-	///    "IsEngineOnly": true,
-	///    "StartStop": {
-	///      "Enabled": false,
-	///      "MaxSpeed": 5.0,
-	///      "MinTime": 0.0,
-	///      "Delay": 0
-	///    },
-	///    "LookAheadCoasting": {
-	///      "Enabled": true,
-	///      "Dec": -0.5,
-	///      "MinSpeed": 50.0
-	///    },
-	///    "OverSpeedEcoRoll": {
-	///      "Mode": "OverSpeed",
-	///      "MinSpeed": 70.0,
-	///      "OverSpeed": 5.0,
-	///      "UnderSpeed": 5.0
-	///    }
-	///  }
-	///}
+	/// {
+	///   "Header": {
+	///     "CreatedBy": " ()",
+	///     "Date": "3/4/2015 12:31:06 PM",
+	///     "AppVersion": "2.0.4-beta3",
+	///     "FileVersion": 2
+	///   },
+	///   "Body": {
+	///     "SavedInDeclMode": true,
+	///     "VehicleFile": "../Components/12t Delivery Truck.vveh",
+	///     "EngineFile": "../Components/12t Delivery Truck.veng",
+	///     "GearboxFile": "../Components/12t Delivery Truck.vgbx",
+	///     "Cycles": [
+	///       "Long Haul",
+	///       "Regional Delivery",
+	///       "Urban Delivery"
+	///     ],
+	///     "Aux": [
+	///       {
+	///         "ID": "FAN",
+	///         "Type": "Fan",
+	///         "Path": "<NOFILE>",
+	///         "Technology": ""
+	///       },
+	///       {
+	///         "ID": "STP",
+	///         "Type": "Steering pump",
+	///         "Path": "<NOFILE>",
+	///         "Technology": ""
+	///       },
+	///       {
+	///         "ID": "AC",
+	///         "Type": "HVAC",
+	///         "Path": "<NOFILE>",
+	///         "Technology": ""
+	///       },
+	///       {
+	///         "ID": "ES",
+	///         "Type": "Electric System",
+	///         "Path": "<NOFILE>",
+	///         "Technology": "",
+	///         "TechList": []
+	///       },
+	///       {
+	///         "ID": "PS",
+	///         "Type": "Pneumatic System",
+	///         "Path": "<NOFILE>",
+	///         "Technology": ""
+	///       }
+	///     ],
+	///     "VACC": "<NOFILE>",
+	///     "EngineOnlyMode": true,
+	///     "StartStop": {
+	///       "Enabled": false,
+	///       "MaxSpeed": 5.0,
+	///       "MinTime": 5.0,
+	///       "Delay": 5
+	///     },
+	///     "LAC": {
+	///       "Enabled": true,
+	///       "Dec": -0.5,
+	///       "MinSpeed": 50.0
+	///     },
+	///     "OverSpeedEcoRoll": {
+	///       "Mode": "OverSpeed",
+	///       "MinSpeed": 50.0,
+	///       "OverSpeed": 5.0,
+	///       "UnderSpeed": 5.0
+	///     }
+	///   }
+	/// }
 	/// </code>
 	public class VectoJobFileV2Declaration : VectoJobFile
 	{
@@ -91,10 +104,11 @@ namespace TUGraz.VectoCore.FileIO.DeclarationFile
 
 			public class AuxDataDecl
 			{
-				//[JsonProperty(Required = Required.Always)] public string ID;
-				//[JsonProperty(Required = Required.Always)] public string Type;
+				[JsonProperty(Required = Required.Always)] public string ID;
+				[JsonProperty(Required = Required.Always)] public string Type;
 				//[JsonProperty(Required = Required.Always)] public string Path;
 				[JsonProperty(Required = Required.Always)] public string Technology;
+				[JsonProperty] public IList<string> TechList;
 			}
 
 			public class StartStopDataDecl
