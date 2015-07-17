@@ -16,7 +16,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public MockDriver(IVehicleContainer container) : base(container) {}
 
-		public override void CommitSimulationStep(IModalDataWriter writer) {}
+		protected override void DoWriteModalResults(IModalDataWriter writer)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void DoCommitSimulationStep() {}
 
 
 		public IDrivingCycleOutPort OutPort()

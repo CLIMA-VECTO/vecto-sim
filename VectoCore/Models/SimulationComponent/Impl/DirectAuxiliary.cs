@@ -67,10 +67,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		protected override void DoCommitSimulationStep(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
 			writer[ModalResultField.Paux] = (double)_powerDemand;
 		}
+
+		protected override void DoCommitSimulationStep() {}
 
 		#endregion
 	}

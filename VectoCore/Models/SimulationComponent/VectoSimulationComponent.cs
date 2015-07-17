@@ -29,16 +29,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		public void CommitSimulationStep(IModalDataWriter writer)
 		{
 			if (writer != null) {
-				DoCommitSimulationStep(writer);
+				DoWriteModalResults(writer);
 			}
+			DoCommitSimulationStep();
 		}
+
+		protected abstract void DoWriteModalResults(IModalDataWriter writer);
 
 		/// <summary>
 		/// Commits the simulation step.
 		/// Writes the moddata into the data writer.
 		/// Commits the internal state of the object if needed.
 		/// </summary>
-		/// <param name="writer">a data writer to write the data into.</param>
-		protected abstract void DoCommitSimulationStep(IModalDataWriter writer);
+		protected abstract void DoCommitSimulationStep();
 	}
 }

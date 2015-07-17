@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		protected override void DoCommitSimulationStep(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
 			writer[ModalResultField.PaEng] = (double)_currentState.EnginePowerLoss;
 			writer[ModalResultField.Pe_drag] = (double)_currentState.FullDragPower;
@@ -136,7 +136,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					_currentState.EngineSpeed, _currentState.EngineTorque);
 				writer[ModalResultField.FC] = double.NaN;
 			}
+		}
 
+		protected override void DoCommitSimulationStep()
+		{
 			_previousState = _currentState;
 			_currentState = new EngineState();
 		}

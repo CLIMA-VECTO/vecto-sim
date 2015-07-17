@@ -21,10 +21,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_lossMap = lossMap;
 		}
 
-		protected override void DoCommitSimulationStep(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
 			writer[ModalResultField.PlossRetarder] = _lossMap;
 		}
+
+		protected override void DoCommitSimulationStep() {}
 
 		public ITnInPort InPort()
 		{

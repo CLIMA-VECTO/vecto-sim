@@ -43,7 +43,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_nextInstance = other;
 		}
 
-		protected override void DoCommitSimulationStep(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataWriter writer)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void DoCommitSimulationStep()
 		{
 			_previousState = _currentState;
 			_currentState = new VehicleState();
