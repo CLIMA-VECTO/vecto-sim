@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -29,10 +30,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			cycle.OutPort().Initialize();
 
-			cycle.OutPort().Request(TimeSpan.FromSeconds(0), 1.SI<Meter>());
+			var response = cycle.OutPort().Request(TimeSpan.FromSeconds(0), 1.SI<Meter>());
 
-			Assert.AreEqual(18, driver.LastRequest.TargetVelocity.Value(), Tolerance);
-			Assert.AreEqual(0, driver.LastRequest.Gradient.Value(), Tolerance);
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+			Assert.AreEqual(0, driver.LastRequest.TargetVelocity.Value(), Tolerance);
+			Assert.AreEqual(0.028416069495827, driver.LastRequest.Gradient.Value(), 1E-12);
 		}
 	}
 }

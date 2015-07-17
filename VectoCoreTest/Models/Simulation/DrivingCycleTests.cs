@@ -125,9 +125,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			Assert.AreEqual(absTime, outPort.AbsTime);
-			Assert.AreEqual(dt, outPort.Dt);
+			//Assert.AreEqual(dt, outPort.Ds);
 			Assert.AreEqual(0.SI<MeterPerSecond>(), outPort.Velocity);
-			Assert.AreEqual((-0.020237973).SI().GradientPercent.Cast<Radian>(), outPort.Gradient);
+			Assert.AreEqual(-0.000202379727237.SI<Radian>().Value(), outPort.Gradient.Value(), 1E-15);
 		}
 
 		[TestMethod]
@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			while (cycleOut.Request(absTime, dt) is ResponseSuccess) {
 				Assert.AreEqual(absTime, outPort.AbsTime);
-				Assert.AreEqual(dt, outPort.Dt);
+				Assert.AreEqual(dt, outPort.Ds);
 
 				var time = (absTime + TimeSpan.FromTicks(dt.Ticks / 2)).TotalSeconds;
 				var simulationInterval = dt.TotalSeconds;

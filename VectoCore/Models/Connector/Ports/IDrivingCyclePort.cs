@@ -51,9 +51,19 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		/// Requests the Outport with the given velocity [m/s] and road gradient [rad].
 		/// </summary>
 		/// <param name="absTime">[s]</param>
-		/// <param name="dt">[s]</param>
+		/// <param name="ds"></param>
 		/// <param name="targetVelocity">[m/s]</param>
 		/// <param name="gradient">[rad]</param>
+		IResponse Request(TimeSpan absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient);
+
+		/// <summary>
+		/// Requests the outport to simulate the given time interval 
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="dt"></param>
+		/// <param name="targetVelocity"></param>
+		/// <param name="gradient"></param>
+		/// <returns></returns>
 		IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond targetVelocity, Radian gradient);
 	}
 }

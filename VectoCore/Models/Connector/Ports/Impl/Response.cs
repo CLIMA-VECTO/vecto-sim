@@ -1,4 +1,5 @@
 using System;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 {
@@ -32,5 +33,10 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	public class ResponseFailTimeInterval : AbstractResponse
 	{
 		public TimeSpan DeltaT { get; set; }
+	}
+
+	public class ResponseDrivingCycleDistanceExceeded : AbstractResponse
+	{
+		public Meter MaxDistance { get; set; }
 	}
 }

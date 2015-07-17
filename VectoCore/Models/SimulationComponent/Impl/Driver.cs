@@ -27,13 +27,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_other = other;
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond targetVelocity, Radian gradient)
+		public IResponse Request(TimeSpan absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			throw new NotImplementedException();
 		}
 
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSquareSecond accelleration, Radian gradient)
+		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond accelleration, Radian gradient)
 		{
 			throw new NotImplementedException();
 		}

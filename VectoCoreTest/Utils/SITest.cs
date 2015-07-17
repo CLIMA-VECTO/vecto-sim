@@ -141,12 +141,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.AreEqual((5 * 2).SI(), x * 2.0);
 
 
-			var y = 2.SI();
-			Assert.AreEqual((2 * 5).SI(), y * x);
+			//var y = 2.SI();
+			//Assert.AreEqual((2 * 5).SI(), y * x);
 
-			var percent = 10.SI<Radian>().ConvertTo().GradientPercent;
-			Assert.AreEqual(67.975.ToString("F3") + " [Percent]", percent.ToString("F3"));
-			Assert.AreEqual(67.975, percent.Value(), 0.001);
+			//var percent = 10.SI<Radian>().ConvertTo().GradientPercent;
+			//Assert.AreEqual(67.975.ToString("F3") + " [Percent]", percent.ToString("F3"));
+			//Assert.AreEqual(67.975, percent.Value(), 0.001);
+
+			Assert.AreEqual(45.0 / 180.0 * Math.PI, 1.SI().GradientPercent.Cast<Radian>().Value(), 0.000001);
 		}
 
 		[TestMethod]

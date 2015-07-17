@@ -28,6 +28,8 @@ namespace TUGraz.VectoCore.Configuration
 			/// simulation interval if the vehicle stands still
 			/// </summary>
 			public static readonly Meter DriveOffDistance = 1.SI<Meter>();
+
+			public const double DrivingCycleRoadGradientTolerance = 0.25;
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -28,11 +29,18 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return this;
 		}
 
+		public IResponse Request(TimeSpan absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		{
+			LastRequest = new RequestData() { AbsTime = absTime, ds = ds, Gradient = gradient, TargetVelocity = targetVelocity };
+			var acc = 0.SI<MeterPerSquareSecond>();
+			return new ResponseSuccess(); //_next.Request(absTime, TimeSpan.FromSeconds(0), acc, 0.SI<Radian>());
+		}
+
 		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			LastRequest = new RequestData() { AbsTime = absTime, dt = dt, Gradient = gradient, TargetVelocity = targetVelocity };
 			var acc = 0.SI<MeterPerSquareSecond>();
-			return _next.Request(absTime, dt, acc, 0.SI<Radian>());
+			return new ResponseSuccess(); //_next.Request(absTime, dt, acc, gradient);
 		}
 
 		public void Connect(IDriverDemandOutPort other)
@@ -43,6 +51,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public class RequestData
 		{
 			public TimeSpan AbsTime;
+			public Meter ds;
 			public TimeSpan dt;
 			public MeterPerSecond TargetVelocity;
 			public Radian Gradient;
