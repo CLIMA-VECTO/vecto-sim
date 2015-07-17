@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return this;
 		}
 
-		public IDriverDemandOutPort OutShaft()
+		public IDriverDemandOutPort OutPort()
 		{
 			return this;
 		}
@@ -53,15 +53,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			_currentState.Velocity = _previousState.Velocity +
 									(accelleration * (dt.TotalSeconds / 2.0).SI<Second>()).Cast<MeterPerSecond>();
-			var force = RollingResistance(gradient) + AirDragResistance() + AccelerationForce(accelleration) +
-						SlopeResistance(gradient);
 
-			return _nextInstance.Request(absTime, dt, force, _currentState.Velocity);
+			// DriverAcceleration = vehicleAccelerationForce - RollingResistance - AirDragResistance - SlopeResistance
+			var vehicleAccelerationForce = DriverAcceleration(accelleration) + RollingResistance(gradient) +
+											AirDragResistance() +
+											SlopeResistance(gradient);
+
+			return _nextInstance.Request(absTime, dt, vehicleAccelerationForce, _currentState.Velocity);
 		}
 
 		protected Newton RollingResistance(Radian gradient)
 		{
-			return (Math.Cos(gradient.Double()) * _data.TotalVehicleWeight() *
+			return (Math.Cos(gradient.Value()) * _data.TotalVehicleWeight() *
 					Physics.GravityAccelleration *
 					_data.TotalRollResistanceCoefficient).Cast<Newton>();
 		}
@@ -83,7 +86,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return (Cd * _data.CrossSectionArea * Physics.AirDensity / 2 * vAir * vAir).Cast<Newton>();
 		}
 
-		protected Newton AccelerationForce(MeterPerSquareSecond accelleration)
+		protected Newton DriverAcceleration(MeterPerSquareSecond accelleration)
 		{
 			return ((_data.TotalVehicleWeight() + _data.ReducedMassWheels) * accelleration).Cast<Newton>();
 		}
@@ -91,7 +94,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Newton SlopeResistance(Radian gradient)
 		{
-			return (_data.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Double())).Cast<Newton>();
+			return (_data.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value())).Cast<Newton>();
 		}
 
 		public MeterPerSecond VehicleSpeed()

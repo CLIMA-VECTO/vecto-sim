@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns>torque [Nm]</returns>
 		public static NewtonMeter PowerToTorque(Watt power, PerSecond angularVelocity)
 		{
-			if (Math.Abs(angularVelocity.Double()) < 1E-10) {
+			if (Math.Abs(angularVelocity.Value()) < 1E-10) {
 				throw new VectoSimulationException("Can not compute Torque for 0 angular Velocity!");
 			}
 			return power / angularVelocity;

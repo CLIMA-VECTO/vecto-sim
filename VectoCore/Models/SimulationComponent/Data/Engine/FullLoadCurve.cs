@@ -270,14 +270,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			var k = (p2.TorqueFullLoad - p1.TorqueFullLoad) / (p2.EngineSpeed - p1.EngineSpeed);
 			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;
 
-			if (k.Double().IsEqual(0.0)) {
+			if (k.IsEqual(0.0)) {
 				// rectangle
-				return (p1.EngineSpeed + (area / d.Double()));
+				return (p1.EngineSpeed + (area / d.Value()));
 			}
 
-			var a = k.Double() / 2.0;
-			var b = d.Double();
-			var c = (k * p1.EngineSpeed * p1.EngineSpeed + 2 * p1.EngineSpeed * d).Double();
+			var a = k.Value() / 2.0;
+			var b = d.Value();
+			var c = (k * p1.EngineSpeed * p1.EngineSpeed + 2 * p1.EngineSpeed * d).Value();
 
 			var D = b * b - 4 * a * c;
 
@@ -334,14 +334,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;
 
 			var retVal = new List<PerSecond>();
-			if (k.Double().IsEqual(0, 0.0001)) {
+			if (k.IsEqual(0, 0.0001)) {
 				// constant torque, solve linear equation
-				retVal.Add((power.Double() / d.Double()).SI<PerSecond>());
+				retVal.Add((power.Value() / d.Value()).SI<PerSecond>());
 			} else {
 				// non-constant torque, solve quadratic equation
-				var a = k.Double();
-				var b = d.Double();
-				var c = -power.Double();
+				var a = k.Value();
+				var b = d.Value();
+				var c = -power.Value();
 
 				var D = b * b - 4 * a * c;
 				if (D < 0) {
@@ -368,7 +368,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (lowEngineSpeed < _fullLoadEntries[startSegment].EngineSpeed) {
 				// add part of the first segment
 				area += ((_fullLoadEntries[startSegment].EngineSpeed - lowEngineSpeed) *
-						(FullLoadStationaryTorque(lowEngineSpeed) + _fullLoadEntries[startSegment].TorqueFullLoad) / 2.0).Double();
+						(FullLoadStationaryTorque(lowEngineSpeed) + _fullLoadEntries[startSegment].TorqueFullLoad) / 2.0).Value();
 			}
 			for (var i = startSegment + 1; i <= endSegment; i++) {
 				var speedHigh = _fullLoadEntries[i].EngineSpeed;
@@ -379,7 +379,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 					torqueHigh = FullLoadStationaryTorque(highEngineSpeed);
 				}
 				area += ((speedHigh - _fullLoadEntries[i - 1].EngineSpeed) *
-						(torqueHigh + _fullLoadEntries[i - 1].TorqueFullLoad) / 2.0).Double();
+						(torqueHigh + _fullLoadEntries[i - 1].TorqueFullLoad) / 2.0).Value();
 			}
 			return area;
 		}

@@ -13,8 +13,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void EqualAcceleration(double velocity, double acceleration, double deceleration)
 		{
 			var entry = Data.Lookup(velocity.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>());
-			Assert.AreEqual(entry.Acceleration.Double(), acceleration, Tolerance);
-			Assert.AreEqual(entry.Deceleration.Double(), deceleration, Tolerance);
+			Assert.AreEqual(entry.Acceleration.Value(), acceleration, Tolerance);
+			Assert.AreEqual(entry.Deceleration.Value(), deceleration, Tolerance);
 		}
 
 		[TestMethod]

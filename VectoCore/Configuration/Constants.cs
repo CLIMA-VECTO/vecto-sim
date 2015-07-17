@@ -1,4 +1,6 @@
-﻿namespace TUGraz.VectoCore.Configuration
+﻿using TUGraz.VectoCore.Utils;
+
+namespace TUGraz.VectoCore.Configuration
 {
 	public class Constants
 	{
@@ -13,6 +15,21 @@
 			public const string EngineDataFile = ".veng";
 
 			public const string CycleFile = ".vdri";
+		}
+
+		public class SimulationSettings
+		{
+			/// <summary>
+			/// base time interval for the simulation. the distance is estimated to reach this time interval as good as possible
+			/// </summary>
+			public static readonly Second TargetTimeInterval = 0.5.SI<Second>();
+
+			/// <summary>
+			/// simulation interval if the vehicle stands still
+			/// </summary>
+			public static readonly Meter DriveOffDistance = 1.SI<Meter>();
+
+			public const double DrivingCycleRoadGradientTolerance = 0.25;
 		}
 	}
 }

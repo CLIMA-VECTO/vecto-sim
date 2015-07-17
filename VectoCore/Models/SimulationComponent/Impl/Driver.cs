@@ -8,7 +8,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Driver : VectoSimulationComponent, IDriver, IDrivingCycleDemandOutPort, IDriverDemandInPort
+	public class Driver : VectoSimulationComponent, IDriver, IDrivingCycleOutPort, IDriverDemandInPort
 	{
 		protected IDriverDemandOutPort _other;
 
@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//throw new NotImplementedException();
 		}
 
-		public IDriverDemandInPort InShaft()
+		public IDriverDemandInPort InPort()
 		{
 			return this;
 		}
@@ -27,18 +27,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_other = other;
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond velocity, Radian gradient)
+		public IResponse Request(TimeSpan absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			throw new NotImplementedException();
 		}
 
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSquareSecond accelleration, Radian gradient)
+		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond accelleration, Radian gradient)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IDrivingCycleDemandOutPort OutShaft()
+		public IDrivingCycleOutPort OutPort()
 		{
 			return this;
 		}

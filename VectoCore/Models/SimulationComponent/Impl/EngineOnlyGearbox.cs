@@ -13,18 +13,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private ITnOutPort _outPort;
 		public EngineOnlyGearbox(IVehicleContainer cockpit) : base(cockpit) {}
 
-		#region IInShaft
+		#region ITnInProvider
 
-		public ITnInPort InShaft()
+		public ITnInPort InPort()
 		{
 			return this;
 		}
 
-		#endregion IOutShaft
+		#endregion ITnOutProvider
 
-		#region IOutShaft
+		#region ITnOutProvider
 
-		public ITnOutPort OutShaft()
+		public ITnOutPort OutPort()
 		{
 			return this;
 		}

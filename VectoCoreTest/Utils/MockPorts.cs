@@ -25,21 +25,34 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 	}
 
-	public class MockDrivingCycleDemandOutPort : IDrivingCycleDemandOutPort
+	public class MockDrivingCycleOutPort : IDrivingCycleOutPort
 	{
 		public TimeSpan AbsTime { get; set; }
+		public Meter Ds { get; set; }
+
 		public TimeSpan Dt { get; set; }
 		public MeterPerSecond Velocity { get; set; }
 		public Radian Gradient { get; set; }
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond velocity, Radian gradient)
+		public IResponse Request(TimeSpan absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		{
+			AbsTime = absTime;
+			Ds = ds;
+			Velocity = targetVelocity;
+			Gradient = gradient;
+			LogManager.GetLogger(GetType()).DebugFormat("Request: absTime: {0}, ds: {1}, velocity: {2}, gradient: {3}",
+				absTime, ds, targetVelocity, gradient);
+			return new ResponseSuccess();
+		}
+
+		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			AbsTime = absTime;
 			Dt = dt;
-			Velocity = velocity;
+			Velocity = targetVelocity;
 			Gradient = gradient;
-			LogManager.GetLogger(GetType()).DebugFormat("Request: absTime: {0}, dt: {1}, velocity: {2}, gradient: {3}",
-				absTime, dt, velocity, gradient);
+			LogManager.GetLogger(GetType()).DebugFormat("Request: absTime: {0}, ds: {1}, velocity: {2}, gradient: {3}",
+				absTime, dt, targetVelocity, gradient);
 			return new ResponseSuccess();
 		}
 	}

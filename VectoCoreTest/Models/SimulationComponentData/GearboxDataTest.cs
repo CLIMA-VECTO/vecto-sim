@@ -21,19 +21,19 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var gbxData = EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(GearboxFile);
 
 			Assert.AreEqual(GearboxData.GearboxType.AMT, gbxData.Type);
-			Assert.AreEqual(1.0, gbxData.TractionInterruption.Double(), 0.0001);
+			Assert.AreEqual(1.0, gbxData.TractionInterruption.Value(), 0.0001);
 			Assert.AreEqual(8, gbxData.GearsCount());
 
 			Assert.AreEqual(3.240355, gbxData.AxleGearData.Ratio, 0.0001);
 			Assert.AreEqual(1.0, gbxData[7].Ratio, 0.0001);
 
-			Assert.AreEqual(-400, gbxData[1].ShiftPolygon.Downshift[0].Torque.Double(), 0.0001);
-			Assert.AreEqual(560.RPMtoRad().Double(), gbxData[1].ShiftPolygon.Downshift[0].AngularSpeed.Double(), 0.0001);
-			Assert.AreEqual(1289.RPMtoRad().Double(), gbxData[1].ShiftPolygon.Upshift[0].AngularSpeed.Double(), 0.0001);
+			Assert.AreEqual(-400, gbxData[1].ShiftPolygon.Downshift[0].Torque.Value(), 0.0001);
+			Assert.AreEqual(560.RPMtoRad().Value(), gbxData[1].ShiftPolygon.Downshift[0].AngularSpeed.Value(), 0.0001);
+			Assert.AreEqual(1289.RPMtoRad().Value(), gbxData[1].ShiftPolygon.Upshift[0].AngularSpeed.Value(), 0.0001);
 
-			Assert.AreEqual(200.RPMtoRad().Double(), gbxData[1].LossMap[15].InputSpeed.Double(), 0.0001);
-			Assert.AreEqual(-350, gbxData[1].LossMap[15].InputTorque.Double(), 0.0001);
-			Assert.AreEqual(13.072, gbxData[1].LossMap[15].TorqueLoss.Double(), 0.0001);
+			Assert.AreEqual(200.RPMtoRad().Value(), gbxData[1].LossMap[15].InputSpeed.Value(), 0.0001);
+			Assert.AreEqual(-350, gbxData[1].LossMap[15].InputTorque.Value(), 0.0001);
+			Assert.AreEqual(13.072, gbxData[1].LossMap[15].TorqueLoss.Value(), 0.0001);
 		}
 
 		[TestMethod]
@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var loss = powerEngine - PvD;
 
 			Assert.AreEqual(Double.Parse(TestContext.DataRow["GbxPowerLoss"].ToString(), CultureInfo.InvariantCulture),
-				loss.Double(), 0.1,
+				loss.Value(), 0.1,
 				TestContext.DataRow["TestName"].ToString());
 		}
 
@@ -71,8 +71,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void TestInputOutOfRange()
 		{
 			var gbxData = EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(GearboxFile);
-
-
 		}
 
 		protected PerSecond SpeedToAngularSpeed(double v, double r)

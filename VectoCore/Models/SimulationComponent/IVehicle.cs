@@ -3,5 +3,5 @@ using TUGraz.VectoCore.Models.Simulation.Cockpit;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
-	public interface IVehicle : IRoadPortInProvider, IDriverDemandOutProvider, IVehicleCockpit {}
+	public interface IVehicle : IFvInProvider, IDriverDemandOutProvider, IVehicleCockpit {}
 }

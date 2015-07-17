@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_dynamicWheelRadius = rdyn;
 		}
 
-		#region IRoadPortOutProvider
+		#region IFvOutProvider
 
 		public IFvOutPort OutPort()
 		{
@@ -26,9 +26,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		#region IInShaft
+		#region ITnInProvider
 
-		public ITnInPort InShaft()
+		public ITnInPort InPort()
 		{
 			return this;
 		}

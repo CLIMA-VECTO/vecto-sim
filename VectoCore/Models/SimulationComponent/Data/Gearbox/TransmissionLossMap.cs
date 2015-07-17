@@ -84,8 +84,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_lossMap = new DelauneyMap();
 			//_reverseLossMap = new DelauneyMap();
 			foreach (var entry in _entries) {
-				_lossMap.AddPoint(entry.InputSpeed.Double(), (entry.InputTorque.Double() - entry.TorqueLoss.Double()) * gearRatio,
-					entry.InputTorque.Double());
+				_lossMap.AddPoint(entry.InputSpeed.Value(), (entry.InputTorque.Value() - entry.TorqueLoss.Value()) * gearRatio,
+					entry.InputTorque.Value());
 				// @@@quam: according to Raphael, not needed for now...
 				//_reverseLossMap.AddPoint(entry.InputSpeed.Double(), entry.InputTorque.Double(),
 				//	entry.InputTorque.Double() - entry.TorqueLoss.Double());
@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public NewtonMeter GearboxInTorque(PerSecond angularVelocity, NewtonMeter gbxOutTorque)
 		{
 			try {
-				return VectoMath.Max(_lossMap.Interpolate(angularVelocity.Double(), gbxOutTorque.Double()).SI<NewtonMeter>(),
+				return VectoMath.Max(_lossMap.Interpolate(angularVelocity.Value(), gbxOutTorque.Value()).SI<NewtonMeter>(),
 					0.SI<NewtonMeter>());
 			} catch (Exception e) {
 				throw new VectoSimulationException(

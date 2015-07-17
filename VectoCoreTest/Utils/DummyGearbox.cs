@@ -15,12 +15,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public DummyGearbox(IVehicleContainer cockpit) : base(cockpit) {}
 
-		public ITnInPort InShaft()
+		public ITnInPort InPort()
 		{
 			return this;
 		}
 
-		public ITnOutPort OutShaft()
+		public ITnOutPort OutPort()
 		{
 			return this;
 		}

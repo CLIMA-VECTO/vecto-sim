@@ -24,8 +24,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			var tmp = wheels.Lookup("285/70 R19.5");
 
-			Assert.AreEqual(7.9, tmp.Inertia.Double(), Tolerance);
-			Assert.AreEqual(0.8943, tmp.DynamicTyreRadius.Double(), Tolerance);
+			Assert.AreEqual(7.9, tmp.Inertia.Value(), Tolerance);
+			Assert.AreEqual(0.8943, tmp.DynamicTyreRadius.Value(), Tolerance);
 			Assert.AreEqual("b", tmp.SizeClass);
 		}
 
@@ -46,31 +46,31 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var pt1 = DeclarationData.PT1;
 
 			// FIXED POINTS
-			Assert.AreEqual(0, pt1.Lookup(400.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.47, pt1.Lookup(800.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.58, pt1.Lookup(1000.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.53, pt1.Lookup(1200.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.46, pt1.Lookup(1400.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.43, pt1.Lookup(1500.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.22, pt1.Lookup(1750.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.2, pt1.Lookup(1800.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.11, pt1.Lookup(2000.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.11, pt1.Lookup(2500.RPMtoRad()).Double(), Tolerance);
+			Assert.AreEqual(0, pt1.Lookup(400.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.47, pt1.Lookup(800.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.58, pt1.Lookup(1000.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.53, pt1.Lookup(1200.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.46, pt1.Lookup(1400.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.43, pt1.Lookup(1500.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.22, pt1.Lookup(1750.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.2, pt1.Lookup(1800.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.11, pt1.Lookup(2000.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.11, pt1.Lookup(2500.RPMtoRad()).Value(), Tolerance);
 
 			// INTERPOLATE
-			Assert.AreEqual(0.235, pt1.Lookup(600.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.525, pt1.Lookup(900.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.555, pt1.Lookup(1100.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.495, pt1.Lookup(1300.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.445, pt1.Lookup(1450.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.325, pt1.Lookup(1625.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.21, pt1.Lookup(1775.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.155, pt1.Lookup(1900.RPMtoRad()).Double(), Tolerance);
-			Assert.AreEqual(0.11, pt1.Lookup(2250.RPMtoRad()).Double(), Tolerance);
+			Assert.AreEqual(0.235, pt1.Lookup(600.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.525, pt1.Lookup(900.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.555, pt1.Lookup(1100.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.495, pt1.Lookup(1300.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.445, pt1.Lookup(1450.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.325, pt1.Lookup(1625.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.21, pt1.Lookup(1775.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.155, pt1.Lookup(1900.RPMtoRad()).Value(), Tolerance);
+			Assert.AreEqual(0.11, pt1.Lookup(2250.RPMtoRad()).Value(), Tolerance);
 
 
 			// EXTRAPOLATE 
-			Assert.AreEqual(0.11, pt1.Lookup(3000.RPMtoRad()).Double(), Tolerance);
+			Assert.AreEqual(0.11, pt1.Lookup(3000.RPMtoRad()).Value(), Tolerance);
 			AssertHelper.Exception<VectoException>(() => pt1.Lookup(200.RPMtoRad()));
 			AssertHelper.Exception<VectoException>(() => pt1.Lookup(0.RPMtoRad()));
 		}
@@ -139,8 +139,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				var baseConsumption = es.Lookup(expectation.Mission, technologies: new string[] { });
 				var leds = es.Lookup(expectation.Mission, technologies: new[] { "LED lights" });
 
-				Assert.AreEqual(expectation.Base, baseConsumption.Double(), Tolerance);
-				Assert.AreEqual(expectation.LED, leds.Double(), Tolerance);
+				Assert.AreEqual(expectation.Base, baseConsumption.Value(), Tolerance);
+				Assert.AreEqual(expectation.LED, leds.Value(), Tolerance);
 			}
 		}
 
@@ -190,12 +190,12 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			for (var i = 0; i < missions.Length; i++) {
 				// default tech
 				Watt defaultValue = fan.Lookup(missions[i], "");
-				Assert.AreEqual(expected[defaultFan][i], defaultValue.Double(), Tolerance);
+				Assert.AreEqual(expected[defaultFan][i], defaultValue.Value(), Tolerance);
 
 				// all fan techs
 				foreach (var expect in expected) {
 					Watt value = fan.Lookup(missions[i], expect.Key);
-					Assert.AreEqual(expect.Value[i], value.Double(), Tolerance);
+					Assert.AreEqual(expect.Value[i], value.Value(), Tolerance);
 				}
 			}
 		}
@@ -223,7 +223,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			for (var i = 0; i < missions.Length; i++) {
 				foreach (var expect in expected) {
 					Watt value = hvac.Lookup(missions[i], expect.Key);
-					Assert.AreEqual(expect.Value[i], value.Double(), Tolerance);
+					Assert.AreEqual(expect.Value[i], value.Value(), Tolerance);
 				}
 			}
 		}
@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			for (var i = 0; i < missions.Length; i++) {
 				foreach (var expect in expected) {
 					Watt value = ps.Lookup(missions[i], expect.Key);
-					Assert.AreEqual(expect.Value[i], value.Double(), Tolerance);
+					Assert.AreEqual(expect.Value[i], value.Value(), Tolerance);
 				}
 			}
 		}
@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 					var hdvClass = hdvClasses.Key;
 					for (var i = 0; i < missions.Length; i++) {
 						Watt value = sp.Lookup(missions[i], hdvClass, technology);
-						Assert.AreEqual(hdvClasses.Value[i], value.Double(), Tolerance);
+						Assert.AreEqual(hdvClasses.Value[i], value.Value(), Tolerance);
 					}
 				}
 			}
@@ -412,7 +412,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			//		var gearboxData = factory.ReadGearboxData(job.GearboxFile);
 			//		var gearbox = new Gearbox(container, gearboxData);
-			//		gearbox.InShaft().Connect(engine.OutShaft());
+			//		gearbox.InPort().Connect(engine.OutPort());
 
 			//		// todo axleGear
 
@@ -424,11 +424,11 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 			//		var driverData = new DriverData();
 			//		var driver = new Driver(driverData);
-			//		driver.InShaft().Connect(vehicle.OutShaft());
+			//		driver.InPort().Connect(vehicle.OutPort());
 
 			//		var cycleData = DrivingCycleData.ReadFromFileEngineOnly(mission.CycleFile);
-			//		var cycle = new DistanceBasedDrivingCycle(container, cycleData);
-			//		cycle.InShaft().Connect(driver.OutShaft());
+			//		var cycle = new DistanceBasedSimulation(container, cycleData);
+			//		cycle.InPort().Connect(driver.OutPort());
 
 			//		var simulator = new VectoRun(container, cycle);
 			//		runs.Add(simulator);
@@ -439,8 +439,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		public void EqualAcceleration(AccelerationCurveData data, double velocity, double acceleration, double deceleration)
 		{
 			var entry = data.Lookup(velocity.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>());
-			Assert.AreEqual(entry.Acceleration.Double(), acceleration, Tolerance);
-			Assert.AreEqual(entry.Deceleration.Double(), deceleration, Tolerance);
+			Assert.AreEqual(entry.Acceleration.Value(), acceleration, Tolerance);
+			Assert.AreEqual(entry.Deceleration.Value(), deceleration, Tolerance);
 		}
 
 		public void TestAcceleration(AccelerationCurveData data)

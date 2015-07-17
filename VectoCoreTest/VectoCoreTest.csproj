@@ -46,6 +46,7 @@
     <Reference Include="Common.Logging.NLog31">
       <HintPath>..\packages\Common.Logging.NLog31.3.0.0\lib\net40\Common.Logging.NLog31.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.2.0.0\lib\net45\NLog.dll</HintPath>
     </Reference>
@@ -70,6 +71,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
+    <Compile Include="Integration\SimulationRuns\MinimalPowertrain.cs" />
     <Compile Include="Models\Declaration\DeclarationDataTest.cs" />
     <Compile Include="Models\SimulationComponentData\AccelerationCurveTest.cs" />
     <Compile Include="Models\SimulationComponentData\FuelConsumptionMapTest.cs" />
@@ -78,12 +80,14 @@
     <Compile Include="Models\SimulationComponentData\VehicleDataTest.cs" />
     <Compile Include="Models\SimulationComponent\ClutchTest.cs" />
     <Compile Include="Models\SimulationComponent\CombustionEngineTest.cs" />
+    <Compile Include="Models\SimulationComponent\DistanceBasedDrivingCycleTest.cs" />
     <Compile Include="Models\SimulationComponent\GearboxTest.cs" />
     <Compile Include="Models\SimulationComponent\RetarderTest.cs" />
     <Compile Include="Models\SimulationComponent\WheelsTest.cs" />
     <Compile Include="Models\SimulationComponent\VehicleTest.cs" />
     <Compile Include="Models\Simulation\DrivingCycleTests.cs" />
     <Compile Include="Utils\AssertHelper.cs" />
+    <Compile Include="Utils\MockDriver.cs" />
     <Compile Include="Utils\ResultFileHelper.cs" />
     <Compile Include="Utils\MockPorts.cs" />
     <Compile Include="Models\Simulation\SimulationTests.cs" />

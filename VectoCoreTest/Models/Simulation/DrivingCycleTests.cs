@@ -20,11 +20,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = new VehicleContainer(dataWriter, sumWriter);
 
 			var cycleData = DrivingCycleData.ReadFromFileEngineOnly(@"TestData\Cycles\Coach Engine Only.vdri");
-			var cycle = new EngineOnlyDrivingCycle(container, cycleData);
+			var cycle = new EngineOnlySimulation(container, cycleData);
 
 			var outPort = new MockTnOutPort();
-			var inPort = cycle.InShaft();
-			var cycleOut = cycle.OutShaft();
+			var inPort = cycle.InPort();
+			var cycleOut = cycle.OutPort();
 
 			inPort.Connect(outPort);
 
@@ -50,21 +50,21 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = new VehicleContainer();
 
 			var cycleData = DrivingCycleData.ReadFromFileEngineOnly(@"TestData\Cycles\Coach Engine Only Paux_var-dt.vdri");
-			var cycle = new EngineOnlyDrivingCycle(container, cycleData);
+			var cycle = new EngineOnlySimulation(container, cycleData);
 
 			var outPort = new MockTnOutPort();
-			var inPort = cycle.InShaft();
+			var inPort = cycle.InPort();
 
 			inPort.Connect(outPort);
 
 			var absTime = TimeSpan.FromSeconds(10);
 			var dt = TimeSpan.FromSeconds(1);
 
-			var response = cycle.OutShaft().Request(absTime, dt);
+			var response = cycle.OutPort().Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseFailTimeInterval));
 
 			dt = TimeSpan.FromSeconds(0.25);
-			response = cycle.OutShaft().Request(absTime, dt);
+			response = cycle.OutPort().Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			var dataWriter = new TestModalDataWriter();
@@ -79,13 +79,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			dt = TimeSpan.FromSeconds(1);
 			absTime = TimeSpan.FromSeconds(500);
-			response = cycle.OutShaft().Request(absTime, dt);
+			response = cycle.OutPort().Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseFailTimeInterval));
 
 			dt = TimeSpan.FromSeconds(0.25);
 
 			for (int i = 0; i < 2; i++) {
-				response = cycle.OutShaft().Request(absTime, dt);
+				response = cycle.OutPort().Request(absTime, dt);
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 				dataWriter = new TestModalDataWriter();
@@ -111,10 +111,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var cycleData = DrivingCycleData.ReadFromFileTimeBased(@"TestData\Cycles\Coach First Cycle only.vdri");
 			var cycle = new TimeBasedDrivingCycle(container, cycleData);
 
-			var outPort = new MockDrivingCycleDemandOutPort();
+			var outPort = new MockDrivingCycleOutPort();
 
-			var inPort = cycle.InShaft();
-			var cycleOut = cycle.OutShaft();
+			var inPort = cycle.InPort();
+			var cycleOut = cycle.OutPort();
 
 			inPort.Connect(outPort);
 
@@ -125,9 +125,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			Assert.AreEqual(absTime, outPort.AbsTime);
-			Assert.AreEqual(dt, outPort.Dt);
+			//Assert.AreEqual(dt, outPort.Ds);
 			Assert.AreEqual(0.SI<MeterPerSecond>(), outPort.Velocity);
-			Assert.AreEqual((-0.020237973).SI().GradientPercent.Cast<Radian>(), outPort.Gradient);
+			Assert.AreEqual(-0.000202379727237.SI<Radian>().Value(), outPort.Gradient.Value(), 1E-15);
 		}
 
 		[TestMethod]
@@ -138,10 +138,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var cycleData = DrivingCycleData.ReadFromFileTimeBased(@"TestData\Cycles\Cycle time field missing.vdri");
 			var cycle = new TimeBasedDrivingCycle(container, cycleData);
 
-			var outPort = new MockDrivingCycleDemandOutPort();
+			var outPort = new MockDrivingCycleOutPort();
 
-			var inPort = cycle.InShaft();
-			var cycleOut = cycle.OutShaft();
+			var inPort = cycle.InPort();
+			var cycleOut = cycle.OutPort();
 
 			inPort.Connect(outPort);
 
@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			while (cycleOut.Request(absTime, dt) is ResponseSuccess) {
 				Assert.AreEqual(absTime, outPort.AbsTime);
-				Assert.AreEqual(dt, outPort.Dt);
+				Assert.AreEqual(dt, outPort.Ds);
 
 				var time = (absTime + TimeSpan.FromTicks(dt.Ticks / 2)).TotalSeconds;
 				var simulationInterval = dt.TotalSeconds;

@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			try {
 				func();
-				Assert.Fail("Expected Exception {0}, but no exception occured.", typeof (T));
+				Assert.Fail("Expected Exception {0}, but no exception occured.", typeof(T));
 			} catch (T ex) {
 				if (message != null) {
 					Assert.AreEqual(message, ex.Message);
@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
 			var engine = new CombustionEngine(vehicle, engineData);
 
-			var port = engine.OutShaft();
+			var port = engine.OutPort();
 			Assert.IsNotNull(port);
 		}
 
@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			new EngineOnlyGearbox(vehicle);
 
-			var port = engine.OutShaft();
+			var port = engine.OutPort();
 
 			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
 			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
 			var engine = new CombustionEngine(vehicle, engineData);
 			var gearbox = new EngineOnlyGearbox(vehicle);
-			var port = engine.OutShaft();
+			var port = engine.OutPort();
 
 			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
 			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
@@ -150,11 +150,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					TestContext.DataRow["EngineFile"].ToString());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 
-			gearbox.InShaft().Connect(engine.OutShaft());
+			gearbox.InPort().Connect(engine.OutPort());
 
 			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
 
-			var requestPort = gearbox.OutShaft();
+			var requestPort = gearbox.OutPort();
 
 			//var modalData = new ModalDataWriter(string.Format("load_jump_{0}.csv", TestContext.DataRow["TestName"].ToString()));
 			var modalData = new TestModalDataWriter();
@@ -210,27 +210,27 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
 			var motorway = engineData.WHTCMotorway;
-			Assert.AreEqual(motorway.Double(), 0);
+			Assert.AreEqual(motorway.Value(), 0);
 			Assert.IsTrue(motorway.HasEqualUnit(new SI().Kilo.Gramm.Per.Watt.Second.ConvertTo()));
 
 			var rural = engineData.WHTCRural;
-			Assert.AreEqual(rural.Double(), 0);
+			Assert.AreEqual(rural.Value(), 0);
 			Assert.IsTrue(rural.HasEqualUnit(new SI().Kilo.Gramm.Per.Watt.Second.ConvertTo()));
 
 			var urban = engineData.WHTCUrban;
-			Assert.AreEqual(urban.Double(), 0);
+			Assert.AreEqual(urban.Value(), 0);
 			Assert.IsTrue(urban.HasEqualUnit(new SI().Kilo.Gramm.Per.Watt.Second.ConvertTo()));
 
 			var displace = engineData.Displacement;
-			Assert.AreEqual(0.01273, displace.Double());
+			Assert.AreEqual(0.01273, displace.Value());
 			Assert.IsTrue(displace.HasEqualUnit(new SI().Cubic.Meter));
 
 			var inert = engineData.Inertia;
-			Assert.AreEqual(3.8, inert.Double(), 0.00001);
+			Assert.AreEqual(3.8, inert.Value(), 0.00001);
 			Assert.IsTrue(inert.HasEqualUnit(new SI().Kilo.Gramm.Square.Meter));
 
 			var idle = engineData.IdleSpeed;
-			Assert.AreEqual(58.6430628670095, idle.Double(), 0.000001);
+			Assert.AreEqual(58.6430628670095, idle.Value(), 0.000001);
 			Assert.IsTrue(idle.HasEqualUnit(0.SI<PerSecond>()));
 
 			var flc0 = engineData.GetFullLoadCurve(0);

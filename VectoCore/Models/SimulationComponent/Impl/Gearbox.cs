@@ -19,18 +19,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Data = gearboxData;
 		}
 
-		#region IInShaft
+		#region ITnInProvider
 
-		public ITnInPort InShaft()
+		public ITnInPort InPort()
 		{
 			return this;
 		}
 
 		#endregion
 
-		#region IOutShaft
+		#region ITnOutProvider
 
-		public ITnOutPort OutShaft()
+		public ITnOutPort OutPort()
 		{
 			return this;
 		}
