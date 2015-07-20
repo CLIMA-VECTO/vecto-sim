@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			//Assert.AreEqual(67.975.ToString("F3") + " [Percent]", percent.ToString("F3"));
 			//Assert.AreEqual(67.975, percent.Value(), 0.001);
 
-			Assert.AreEqual(45.0 / 180.0 * Math.PI, 1.SI().GradientPercent.Cast<Radian>().Value(), 0.000001);
+			Assert.AreEqual(45.0 / 180.0 * Math.PI, VectoMath.InclinationToAngle(1).Value(), 0.000001);
 		}
 
 		[TestMethod]

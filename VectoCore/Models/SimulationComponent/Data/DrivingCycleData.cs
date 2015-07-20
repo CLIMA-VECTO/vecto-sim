@@ -54,16 +54,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				var distance = current.Distance;
 				var altitude = current.Altitude;
 				foreach (var entry in entries) {
-					altitude += (entry.Distance - distance) * Math.Sin(entry.RoadGradient.Value());
-					distance = entry.Distance;
+					entry.Altitude = altitude;
 					if (!CycleEntriesAreEqual(current, entry)) {
 						entry.Altitude = altitude;
 						filtered.Add(entry);
 						current = entry;
 					}
+					if (entry.StoppingTime.IsEqual(0) && !entry.VehicleTargetSpeed.IsEqual(0)) {
+						altitude += (entry.Distance - distance) * entry.RoadGradientPercent / 100.0;
+					}
+					distance = entry.Distance;
 				}
 				log.Info(string.Format("Data loaded. Number of Entries: {0}, filtered Entries: {1}", entries.Count, filtered.Count));
 				entries = filtered;
+
+				AdjustDistanceAfterStop(entries);
 			}
 
 			var cycle = new DrivingCycleData {
@@ -73,8 +78,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return cycle;
 		}
 
+		private static void AdjustDistanceAfterStop(List<DrivingCycleEntry> entries)
+		{
+			var currentIt = entries.GetEnumerator();
+			var nextIt = entries.GetEnumerator();
+			nextIt.MoveNext();
+			while (currentIt.MoveNext() && nextIt.MoveNext()) {
+				if (currentIt.Current != null && !currentIt.Current.StoppingTime.IsEqual(0)) {
+					if (nextIt.Current != null) {
+						nextIt.Current.Distance = currentIt.Current.Distance;
+					}
+				}
+			}
+		}
+
 		private static bool CycleEntriesAreEqual(DrivingCycleEntry first, DrivingCycleEntry second)
 		{
+			if (first.Distance.IsEqual(second.Distance)) {
+				return true;
+			}
 			var retVal = first.VehicleTargetSpeed == second.VehicleTargetSpeed;
 			retVal = retVal &&
 					first.RoadGradient.IsEqual(second.RoadGradient, Constants.SimulationSettings.DrivingCycleRoadGradientTolerance);

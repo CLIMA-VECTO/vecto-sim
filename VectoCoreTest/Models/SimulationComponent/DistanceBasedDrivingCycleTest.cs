@@ -30,12 +30,23 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			cycle.OutPort().Initialize();
 
-			var response = cycle.OutPort().Request(TimeSpan.FromSeconds(0), 1.SI<Meter>());
+			var absTime = TimeSpan.FromSeconds(0);
+			var response = cycle.OutPort().Request(absTime, 1.SI<Meter>());
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			Assert.AreEqual(0, driver.LastRequest.TargetVelocity.Value(), Tolerance);
 			Assert.AreEqual(0.028416069495827, driver.LastRequest.Gradient.Value(), 1E-12);
+			Assert.AreEqual(40, driver.LastRequest.dt.TotalSeconds, Tolerance);
+
+			vehicleContainer.CommitSimulationStep(absTime.TotalSeconds, response.SimulationInterval.TotalSeconds);
+			absTime += response.SimulationInterval;
+
+
+			response = cycle.OutPort().Request(absTime, 1.SI<Meter>());
+
+			Assert.AreEqual(5.SI<MeterPerSecond>().Value(), driver.LastRequest.TargetVelocity.Value(), Tolerance);
+			Assert.AreEqual(0.02667562971628240, driver.LastRequest.Gradient.Value(), 1E-12);
 		}
 	}
 }
