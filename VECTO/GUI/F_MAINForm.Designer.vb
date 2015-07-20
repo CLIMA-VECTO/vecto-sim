@@ -119,6 +119,7 @@ Partial Class F_MAINForm
 		Me.ToolStripDrDnBtInfo = New System.Windows.Forms.ToolStripDropDownButton()
 		Me.UserManualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.UpdateNotesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+		Me.ReportBugViaCITnetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
 		Me.CreateActivationFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.AboutVECTOToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
@@ -933,7 +934,7 @@ Partial Class F_MAINForm
 		'
 		'ToolStripDrDnBtInfo
 		'
-		Me.ToolStripDrDnBtInfo.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserManualToolStripMenuItem, Me.UpdateNotesToolStripMenuItem, Me.ToolStripSeparator3, Me.CreateActivationFileToolStripMenuItem, Me.AboutVECTOToolStripMenuItem1})
+		Me.ToolStripDrDnBtInfo.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserManualToolStripMenuItem, Me.UpdateNotesToolStripMenuItem, Me.ReportBugViaCITnetToolStripMenuItem, Me.ToolStripSeparator3, Me.CreateActivationFileToolStripMenuItem, Me.AboutVECTOToolStripMenuItem1})
 		Me.ToolStripDrDnBtInfo.Image = Global.VECTO.My.Resources.Resources.Help_icon
 		Me.ToolStripDrDnBtInfo.ImageTransparentColor = System.Drawing.Color.Magenta
 		Me.ToolStripDrDnBtInfo.Name = "ToolStripDrDnBtInfo"
@@ -943,30 +944,36 @@ Partial Class F_MAINForm
 		'UserManualToolStripMenuItem
 		'
 		Me.UserManualToolStripMenuItem.Name = "UserManualToolStripMenuItem"
-		Me.UserManualToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
+		Me.UserManualToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
 		Me.UserManualToolStripMenuItem.Text = "User Manual"
 		'
 		'UpdateNotesToolStripMenuItem
 		'
 		Me.UpdateNotesToolStripMenuItem.Name = "UpdateNotesToolStripMenuItem"
-		Me.UpdateNotesToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
+		Me.UpdateNotesToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
 		Me.UpdateNotesToolStripMenuItem.Text = "Release Notes"
+		'
+		'ReportBugViaCITnetToolStripMenuItem
+		'
+		Me.ReportBugViaCITnetToolStripMenuItem.Name = "ReportBugViaCITnetToolStripMenuItem"
+		Me.ReportBugViaCITnetToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
+		Me.ReportBugViaCITnetToolStripMenuItem.Text = "Report Bug via CITnet"
 		'
 		'ToolStripSeparator3
 		'
 		Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-		Me.ToolStripSeparator3.Size = New System.Drawing.Size(183, 6)
+		Me.ToolStripSeparator3.Size = New System.Drawing.Size(186, 6)
 		'
 		'CreateActivationFileToolStripMenuItem
 		'
 		Me.CreateActivationFileToolStripMenuItem.Name = "CreateActivationFileToolStripMenuItem"
-		Me.CreateActivationFileToolStripMenuItem.Size = New System.Drawing.Size(186, 22)
+		Me.CreateActivationFileToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
 		Me.CreateActivationFileToolStripMenuItem.Text = "Create Activation File"
 		'
 		'AboutVECTOToolStripMenuItem1
 		'
 		Me.AboutVECTOToolStripMenuItem1.Name = "AboutVECTOToolStripMenuItem1"
-		Me.AboutVECTOToolStripMenuItem1.Size = New System.Drawing.Size(186, 22)
+		Me.AboutVECTOToolStripMenuItem1.Size = New System.Drawing.Size(189, 22)
 		Me.AboutVECTOToolStripMenuItem1.Text = "About VECTO"
 		'
 		'CmDEV
@@ -1139,6 +1146,7 @@ End Sub
     Friend WithEvents RbDev As System.Windows.Forms.RadioButton
     Friend WithEvents RbDecl As System.Windows.Forms.RadioButton
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents Label1 As System.Windows.Forms.Label
+	Friend WithEvents Label1 As System.Windows.Forms.Label
+	Friend WithEvents ReportBugViaCITnetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

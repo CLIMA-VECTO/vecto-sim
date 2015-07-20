@@ -133,6 +133,12 @@
     <Compile Include="GUI\F_Graph_ChEdit.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="GUI\F_JIRA.Designer.vb">
+      <DependentUpon>F_JIRA.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\F_JIRA.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GUI\F_Welcome.Designer.vb">
       <DependentUpon>F_Welcome.vb</DependentUpon>
     </Compile>
@@ -281,6 +287,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\F_Graph_ChEdit.resx">
       <DependentUpon>F_Graph_ChEdit.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\F_JIRA.resx">
+      <DependentUpon>F_JIRA.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\F_Welcome.resx">
       <DependentUpon>F_Welcome.vb</DependentUpon>

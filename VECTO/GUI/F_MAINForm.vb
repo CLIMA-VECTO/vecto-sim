@@ -1303,6 +1303,10 @@ lbFound:
 		End If
 	End Sub
 
+	Private Sub ReportBugViaCITnetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReportBugViaCITnetToolStripMenuItem.Click
+		F_JIRA.ShowDialog()
+	End Sub
+
 	Private Sub CreateActivationFileToolStripMenuItem_Click(sender As System.Object, e As System.EventArgs) _
 		Handles CreateActivationFileToolStripMenuItem.Click
 		If MsgBox("Create Activation File ?", MsgBoxStyle.YesNo) = MsgBoxResult.Yes Then
@@ -2447,4 +2451,5 @@ Lb1:
 	End Sub
 
 #End Region
+
 End Class
