@@ -655,10 +655,6 @@ namespace TUGraz.VectoCore.Utils
 			get { return new SI(this); }
 		}
 
-		public SI GradientPercent
-		{
-			get { return new SI(this, factor: Math.Atan(Val) / Val, fromUnit: Unit.Percent); }
-		}
 
 		/// <summary>
 		///     Converts to/from Radiant

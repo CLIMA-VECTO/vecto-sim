@@ -205,6 +205,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public Radian RoadGradient { get; set; }
 
 			/// <summary>
+			///    [%]  Optional.
+			/// </summary>
+			public double RoadGradientPercent { get; set; }
+
+			/// <summary>
 			///		[m] relative altitude of the driving cycle over distance
 			/// </summary>
 			public Meter Altitude { get; set; }
@@ -294,7 +299,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				return table.Rows.Cast<DataRow>().Select(row => new DrivingCycleEntry {
 					Distance = row.ParseDouble(Fields.Distance).SI<Meter>(),
 					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
-					RoadGradient = (row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0).SI().GradientPercent.Cast<Radian>(),
+					RoadGradientPercent = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
+					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
 					StoppingTime = (row.ParseDouble(Fields.StoppingTime)).SI<Second>(),
 					AdditionalAuxPowerDemand =
 						row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
@@ -356,7 +362,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				var entries = table.Rows.Cast<DataRow>().Select((row, index) => new DrivingCycleEntry {
 					Time = row.ParseDoubleOrGetDefault(Fields.Time, index).SI<Second>(),
 					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
-					RoadGradient = (row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0).SI().GradientPercent.Cast<Radian>(),
+					RoadGradientPercent = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
+					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
 					AdditionalAuxPowerDemand =
 						row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
 					Gear = row.ParseDoubleOrGetDefault(Fields.Gear),

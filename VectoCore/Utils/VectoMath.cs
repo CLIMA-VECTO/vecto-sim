@@ -55,5 +55,15 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return c1.CompareTo(c2) >= 0 ? c1 : c2;
 		}
+
+		/// <summary>
+		///		converts the given inclination in percent (0-1+) into Radians
+		/// </summary>
+		/// <param name="inclinationPercent"></param>
+		/// <returns></returns>
+		public static Radian InclinationToAngle(double inclinationPercent)
+		{
+			return Math.Atan(inclinationPercent).SI<Radian>();
+		}
 	}
 }

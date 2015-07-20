@@ -29,7 +29,11 @@ namespace TUGraz.VectoCore.Configuration
 			/// </summary>
 			public static readonly Meter DriveOffDistance = 1.SI<Meter>();
 
-			public const double DrivingCycleRoadGradientTolerance = 0.25;
+			/// <summary>
+			/// threshold for changes in the road gradient. changes below this threshold will be considered to be equal for filtering out the driving cycle.
+			/// altitude computation is done before filtering! 
+			/// </summary>
+			public static readonly double DrivingCycleRoadGradientTolerance = VectoMath.InclinationToAngle(0.25 / 100.0).Value();
 		}
 	}
 }
