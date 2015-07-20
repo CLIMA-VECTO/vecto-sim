@@ -956,8 +956,8 @@ Partial Class F_MAINForm
 		'ReportBugViaCITnetToolStripMenuItem
 		'
 		Me.ReportBugViaCITnetToolStripMenuItem.Name = "ReportBugViaCITnetToolStripMenuItem"
-		Me.ReportBugViaCITnetToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
-		Me.ReportBugViaCITnetToolStripMenuItem.Text = "Report Bug via CITnet"
+		Me.ReportBugViaCITnetToolStripMenuItem.Size = New System.Drawing.Size(222, 22)
+		Me.ReportBugViaCITnetToolStripMenuItem.Text = "Report Bug via CITnet / JIRA"
 		'
 		'ToolStripSeparator3
 		'
