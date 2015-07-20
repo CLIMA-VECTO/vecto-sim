@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -79,9 +80,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0.02667562971628240, driver.LastRequest.Gradient.Value(), 1E-12);
 			Assert.AreEqual(2 + startDistance, cycle.CurrentState.Distance.Value(), Tolerance);
 
-			vehicleContainer.CommitSimulationStep(absTime.TotalSeconds, response.SimulationInterval.TotalSeconds);
-			absTime += response.SimulationInterval;
-
+			try {
+				vehicleContainer.CommitSimulationStep(absTime.TotalSeconds, response.SimulationInterval.TotalSeconds);
+				absTime += response.SimulationInterval;
+				Assert.Fail();
+			} catch (VectoSimulationException e) {
+				Assert.AreEqual("Previous request did not succeed!", e.Message);
+			}
 			response = cycle.OutPort().Request(absTime, tmp.MaxDistance);
 
 			Assert.AreEqual(5.SI<MeterPerSecond>().Value(), driver.LastRequest.TargetVelocity.Value(), Tolerance);
