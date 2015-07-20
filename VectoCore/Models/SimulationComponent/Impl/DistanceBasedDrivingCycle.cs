@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retVal = DoHandleRequest(absTime, ds);
 
 			CurrentState.Response = retVal;
-			//var success = retVal as ResponseSuccess;
+
 			//switch (retVal.ResponseType) {}
 			return retVal;
 		}
