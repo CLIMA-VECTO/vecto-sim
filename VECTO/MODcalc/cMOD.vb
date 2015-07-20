@@ -656,10 +656,10 @@ Public Class cMOD
 						s.Append(Sepp & "0" & Sepp & "0")
 					Else
 						If t = 0 Then
-							s.Append(Sepp & nPeToM(.nU(t), FLD(Gear).Pfull(.nU(t))) & Sepp & nPeToM(.nU(t), FLD(Gear).Pdrag(.nU(t))))
+							s.Append(Sepp & nPeToM(.nU(t), GBX.FLD(Gear).Pfull(.nU(t))) & Sepp & nPeToM(.nU(t), ENG.FLD.Pdrag(.nU(t))))
 						Else
 							s.Append(
-								Sepp & nPeToM(.nU(t), FLD(Gear).Pfull(.nU(t), .Pe(t - 1))) & Sepp & nPeToM(.nU(t), FLD(Gear).Pdrag(.nU(t))))
+								Sepp & nPeToM(.nU(t), GBX.FLD(Gear).Pfull(.nU(t), .Pe(t - 1))) & Sepp & nPeToM(.nU(t), ENG.FLD.Pdrag(.nU(t))))
 						End If
 					End If
 
@@ -679,9 +679,9 @@ Public Class cMOD
 					s.Append(Sepp & "-" & Sepp & "-")
 				Else
 					If t = 0 Then
-						s.Append(Sepp & FLD(Gear).Pfull(.nU(t)) & Sepp & FLD(Gear).Pdrag(.nU(t)))
+						s.Append(Sepp & GBX.FLD(Gear).Pfull(.nU(t)) & Sepp & ENG.FLD.Pdrag(.nU(t)))
 					Else
-						s.Append(Sepp & FLD(Gear).Pfull(.nU(t), .Pe(t - 1)) & Sepp & FLD(Gear).Pdrag(.nU(t)))
+						s.Append(Sepp & GBX.FLD(Gear).Pfull(.nU(t), .Pe(t - 1)) & Sepp & ENG.FLD.Pdrag(.nU(t)))
 					End If
 				End If
 

@@ -11,7 +11,7 @@
 Imports System.Collections.Generic
 
 Public Class cGBX
-	Private Const FormatVersion As Short = 4
+	Private Const FormatVersion As Short = 5
 	Private FileVersion As Short
 
 	Private MyPath As String
@@ -33,6 +33,8 @@ Public Class cGBX
 	Public gs_files As List(Of cSubPath)
 	Public Shiftpolygons As List(Of cShiftPolygon)
 
+	Public FldFiles As List(Of cSubPath)
+	Public FLD As List(Of cFLD)
 
 	Public gs_TorqueResv As Single
 	Public gs_SkipGears As Boolean
@@ -115,6 +117,8 @@ Public Class cGBX
 		IsTCgear = New List(Of Boolean)
 		GetrMaps = New List(Of cSubPath)
 		gs_files = New List(Of cSubPath)
+		FldFiles = New List(Of cSubPath)
+		FLD = New List(Of cFLD)
 
 		GetrEffDef = New List(Of Boolean)
 		GetrEff = New List(Of Single)
@@ -178,6 +182,7 @@ Public Class cGBX
 			If i > 0 Then
 				dic0.Add("TCactive", IsTCgear(i))
 				dic0.Add("ShiftPolygon", gs_files(i).PathOrDummy)
+				dic0.Add("FullLoadCurve", FldFiles(i).PathOrDummy)
 			End If
 
 			ls.Add(dic0)
@@ -248,16 +253,23 @@ Public Class cGBX
 
 
 				gs_files.Add(New cSubPath)
+				FldFiles.Add(New cSubPath)
 
 				If i = 0 Then
 					IsTCgear.Add(False)
 					gs_files(i).Init(MyPath, sKey.NoFile)
+					FldFiles(i).Init(MyPath, sKey.NoFile)
 				Else
 					IsTCgear.Add(dic("TCactive"))
 					If FileVersion < 2 Then
 						gs_files(i).Init(MyPath, JSON.Content("Body")("ShiftPolygons"))
 					Else
 						gs_files(i).Init(MyPath, dic("ShiftPolygon"))
+					End If
+					If FileVersion < 5 Then
+						FldFiles(i).Init(MyPath, sKey.NoFile)
+					Else
+						FldFiles(i).Init(MyPath, dic("FullLoadCurve"))
 					End If
 				End If
 
@@ -314,7 +326,7 @@ Public Class cGBX
 		TCon = (gs_Type = tGearbox.Automatic)
 
 		For i = 1 To GearCount()
-			Shiftpolygons(i).SetGenericShiftPoly()
+			Shiftpolygons(i).SetGenericShiftPoly(FLD(i), ENG.Nidle)
 		Next
 
 
@@ -690,6 +702,9 @@ Public Class cGBX
 
 	Public Function GSinit() As Boolean
 		Dim i As Integer
+		Dim MsgSrc As String
+
+		MsgSrc = "GBX/Init"
 
 		'Set Gearbox Type-specific settings
 		If gs_Type <> tGearbox.Custom Then
@@ -708,6 +723,33 @@ Public Class cGBX
 				If Not Shiftpolygons(i).ReadFile() Then Return False
 			End If
 		Next
+
+		'Fld
+		For i = 0 To GearCount()
+
+			FLD.Add(New cFLD)
+
+			If FldFile(i) = "" Then
+				FLD(i).FilePath = ENG.FLD.FilePath
+			Else
+				FLD(i).FilePath = FldFile(i)
+			End If
+
+			Try
+				If Not FLD(i).ReadFile(True) Then Return False 'Error message in ReadFile
+			Catch ex As Exception
+				WorkerMsg(tMsgID.Err, "File read error! (" & FldFile(i) & ")", MsgSrc, FldFile(i))
+				Return False
+			End Try
+
+			'If Engine full load is lower than gear's max torque then limit to engine
+			FLD(i).LimitToEng()
+
+
+			If Not FLD(i).Init(ENG.Nidle) Then Return False
+
+		Next
+
 
 		Return True
 	End Function
@@ -1193,6 +1235,19 @@ Public Class cGBX
 		End Set
 	End Property
 
+	Public Property FldFile(ByVal x As Short, Optional ByVal Original As Boolean = False) As String
+		Get
+			If Original Then
+				Return FldFiles(x).OriginalPath
+			Else
+				Return FldFiles(x).FullPath
+			End If
+		End Get
+		Set(value As String)
+			FldFiles(x).Init(MyPath, value)
+		End Set
+	End Property
+
 
 	Public Property TCfile(Optional ByVal Original As Boolean = False) As String
 		Get
@@ -1210,7 +1265,6 @@ Public Class cGBX
 
 	Public Class cShiftPolygon
 		Private Filepath As String
-		Public MyGear As Integer
 
 		Public gs_TqUp As New List(Of Single)
 		Public gs_TqDown As New List(Of Single)
@@ -1221,7 +1275,6 @@ Public Class cGBX
 
 		Public Sub New(ByVal Path As String, ByVal Gear As Integer)
 			Filepath = Path
-			MyGear = Gear
 		End Sub
 
 		Public Function ReadFile() As Boolean
@@ -1255,7 +1308,7 @@ Public Class cGBX
 			gs_TqDown.Clear()
 			gs_nUdown.Clear()
 			gs_nUup.Clear()
-			gs_Dup = - 1
+			gs_Dup = -1
 
 			'Read file
 			Try
@@ -1284,7 +1337,7 @@ Public Class cGBX
 		End Function
 
 
-		Public Sub SetGenericShiftPoly(Optional ByRef fld0 As cFLD = Nothing, Optional ByVal nidle As Single = - 1)
+		Public Sub SetGenericShiftPoly(ByVal fld0 As cFLD, ByVal nidle As Single)
 			Dim Tmax As Single
 
 			'Clear lists
@@ -1293,17 +1346,14 @@ Public Class cGBX
 			gs_nUdown.Clear()
 			gs_nUup.Clear()
 
-			If fld0 Is Nothing Then fld0 = FLD(MyGear)
-			If nidle < 0 Then nidle = ENG.Nidle
-
 			Tmax = fld0.Tmax
 
 			gs_nUdown.Add(nidle)
 			gs_nUdown.Add(nidle)
-			gs_nUdown.Add((fld0.Npref + fld0.Nlo)/2)
+			gs_nUdown.Add((fld0.Npref + fld0.Nlo) / 2)
 
 			gs_TqDown.Add(0)
-			gs_TqDown.Add(Tmax*nidle/(fld0.Npref + fld0.Nlo - nidle))
+			gs_TqDown.Add(Tmax * nidle / (fld0.Npref + fld0.Nlo - nidle))
 			gs_TqDown.Add(Tmax)
 
 			gs_nUup.Add(fld0.Npref)
@@ -1311,7 +1361,7 @@ Public Class cGBX
 			gs_nUup.Add(fld0.N95h)
 
 			gs_TqUp.Add(0)
-			gs_TqUp.Add(Tmax*(fld0.Npref - nidle)/(fld0.N95h - nidle))
+			gs_TqUp.Add(Tmax * (fld0.Npref - nidle) / (fld0.N95h - nidle))
 			gs_TqUp.Add(Tmax)
 
 			gs_Ddown = 2
@@ -1333,9 +1383,9 @@ Public Class cGBX
 			Loop
 
 
-			lbInt:
+lbInt:
 			'Interpolation
-			Return (Tq - gs_TqDown(i - 1))*(gs_nUdown(i) - gs_nUdown(i - 1))/(gs_TqDown(i) - gs_TqDown(i - 1)) + gs_nUdown(i - 1)
+			Return (Tq - gs_TqDown(i - 1)) * (gs_nUdown(i) - gs_nUdown(i - 1)) / (gs_TqDown(i) - gs_TqDown(i - 1)) + gs_nUdown(i - 1)
 		End Function
 
 		Public Function fGSnUup(ByVal Tq As Single) As Single
@@ -1353,9 +1403,9 @@ Public Class cGBX
 			Loop
 
 
-			lbInt:
+lbInt:
 			'Interpolation
-			Return (Tq - gs_TqUp(i - 1))*(gs_nUup(i) - gs_nUup(i - 1))/(gs_TqUp(i) - gs_TqUp(i - 1)) + gs_nUup(i - 1)
+			Return (Tq - gs_TqUp(i - 1)) * (gs_nUup(i) - gs_nUup(i - 1)) / (gs_TqUp(i) - gs_TqUp(i - 1)) + gs_nUup(i - 1)
 		End Function
 	End Class
 End Class

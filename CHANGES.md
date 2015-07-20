@@ -4,6 +4,20 @@
 TODO
 * Traction interruption: No engine rev down - hold rpm until new gear engaged (Allison)
 
+### VECTO 2.2
+* Bugfix: Error in Declaration Mode Pneumatic System aux power calculation ([kW] were interpreted as [W])
+* Bugfix: Error in Declaration Mode Electric System aux power calculation
+* Moved gear-specific Full Load Curves to Gearbox File
+* Combined Drag Coefficient * Cross Sectional Area in one input parameter
+* Updated .vgbx file format (Added gear-specific Full Load Curves)
+* Updated .veng file format (Removed gear-specific Full Load Curves)
+* Updated .vveh file format (Combined Drag Coefficient * Cross Sectional Area in one parameter)
+* Updated Generic Vehicles (new file formats)
+* Removed WHTC Correction Factor Calculation. Now in external tool, VECTO-Engine.
+* Test Options are now only available in Engineering Mode
+* Gearbox Editor now shows generic and user-defined shift polygons (if available)
+* Various small updates in GUI
+
 ### VECTO 2.1.4
 * Bugfixes in start gear and (A)MT shift model
 * Updated Coach .vcdv file for higher speeds to avoid extrapolation

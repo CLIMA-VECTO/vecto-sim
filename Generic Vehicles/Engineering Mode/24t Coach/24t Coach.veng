@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-    "Date": "29.07.2014 16:59:15",
-    "AppVersion": "2.0.4-beta",
-    "FileVersion": 2
+    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
+    "Date": "25.06.2015 11:23:22",
+    "AppVersion": "2.2 beta",
+    "FileVersion": 3
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -11,12 +11,7 @@
     "Displacement": 12730.0,
     "IdlingSpeed": 560.0,
     "Inertia": 3.8,
-    "FullLoadCurves": [
-      {
-        "Path": "24t Coach.vfld",
-        "Gears": "0 - 99"
-      }
-    ],
+    "FullLoadCurve": "24t Coach.vfld",
     "FuelMap": "24t Coach.vmap",
     "WHTC-Urban": 0.0,
     "WHTC-Rural": 0.0,

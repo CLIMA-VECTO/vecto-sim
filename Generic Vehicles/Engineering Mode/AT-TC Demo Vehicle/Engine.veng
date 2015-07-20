@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
     "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
-    "Date": "22.04.2015 15:19:42",
-    "AppVersion": "2.1",
-    "FileVersion": 2
+    "Date": "25.06.2015 11:23:46",
+    "AppVersion": "2.2 beta",
+    "FileVersion": 3
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -11,12 +11,7 @@
     "Displacement": 7700.0,
     "IdlingSpeed": 600.0,
     "Inertia": 3.8,
-    "FullLoadCurves": [
-      {
-        "Path": "FullLoad.vfld",
-        "Gears": "0-99"
-      }
-    ],
+    "FullLoadCurve": "FullLoad.vfld",
     "FuelMap": "FCMap.vmap",
     "WHTC-Urban": 0.0,
     "WHTC-Rural": 0.0,

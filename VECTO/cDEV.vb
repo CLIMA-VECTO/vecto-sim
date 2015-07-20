@@ -165,6 +165,15 @@ Public Class cDEV
 		TCaccmin = MyOptions("TCaccMin").SingleVal
 	End Sub
 
+	Public Sub SetDefault()
+		Dim opt0 As cDEVoption
+
+		For Each opt0 In MyOptions.Values
+			opt0.SetDefault()
+		Next
+
+	End Sub
+
 	'Demo for Delegate Function
 	Public Function TestFunction() As String
 		Return "OK...?"
@@ -378,6 +387,24 @@ Public Class cDEVoption
 		sValTextDef = sValText
 	End Sub
 
+	Public Sub SetDefault()
+		Dim si As String = sValTextDef
+
+		If MyConfType = tDEVconfType.tSelection Then
+			Try
+				If sValTextDef(0) = "(" AndAlso sValTextDef.Contains(")") Then
+					si = sValTextDef.Substring(1, sValTextDef.IndexOf(")") - 1)
+				End If
+			Catch ex As Exception
+				Exit Sub
+			End Try
+		End If
+
+		StringToVal(si)
+
+
+	End Sub
+
 	Public Sub DoAction()
 		sValText = ActionDelegate.Invoke()
 	End Sub
@@ -392,7 +419,7 @@ Public Class cDEVoption
 		Try
 			Select Case MyConfType
 				Case tDEVconfType.tAction
-					'??? Darf nicht sein |@@| May not be
+
 					Return False
 
 				Case tDEVconfType.tBoolean

@@ -13,7 +13,7 @@ Imports System.Collections.Generic
 Public Class cVEH
 
     'V2 MassMax is now saved in [t] instead of [kg]
-	Private Const FormatVersion As Short = 6
+	Private Const FormatVersion As Short = 7
     Private FileVersion As Short
 
     Private sFilePath As String
@@ -23,14 +23,9 @@ Public Class cVEH
     Public Loading As Single
     Private siFr0 As Single
 
-    Public Cd0 As Single
-    Public Aquers As Single
-
-    Public Cd02 As Single
-    Public Aquers2 As Single
-
-    Private Cd0Act As Single
-    Private AquersAct As Single
+	Public CdA0 As Single
+	Public CdA02 As Single
+	Private CdA0Act As Single
 
     Public CdMode As tCdMode
     Public CdFile As cSubPath
@@ -104,12 +99,9 @@ Public Class cVEH
         Mass = 0
         MassExtra = 0
         Loading = 0
-        Cd0 = 0
-        Aquers = 0
-        Cd0Act = Cd0
-        AquersAct = Aquers
-        Cd02 = 0
-        Aquers2 = 0
+		CdA0 = 0
+		CdA0Act = CdA0
+		CdA02 = 0
         CdFile.Clear()
         CdMode = tCdMode.ConstCd0
         CdX.Clear()
@@ -181,22 +173,27 @@ Public Class cVEH
             MassMax = JSON.Content("Body")("MassMax")
             If FileVersion < 2 Then MassMax /= 1000
 
-            Cd0 = JSON.Content("Body")("Cd")
-            Aquers = JSON.Content("Body")("CrossSecArea")
+			If FileVersion < 7 Then
+				CdA0 = CSng(JSON.Content("Body")("Cd")) * CSng(JSON.Content("Body")("CrossSecArea"))
+			Else
+				CdA0 = JSON.Content("Body")("CdA")
+			End If
 
-            Cd02 = Cd0
-            Aquers2 = Aquers
+			CdA02 = CdA0
 
-            If FileVersion < 4 Then
-                If Not JSON.Content("Body")("CdRigid") Is Nothing Then Cd02 = JSON.Content("Body")("CdRigid")
-                If Not JSON.Content("Body")("CrossSecAreaRigid") Is Nothing Then Aquers2 = JSON.Content("Body")("CrossSecAreaRigid")
-            Else
-                If Not JSON.Content("Body")("Cd2") Is Nothing Then Cd02 = JSON.Content("Body")("Cd2")
-                If Not JSON.Content("Body")("CrossSecArea2") Is Nothing Then Aquers2 = JSON.Content("Body")("CrossSecArea2")
-            End If
+			If FileVersion < 4 Then
+				If Not JSON.Content("Body")("CdRigid") Is Nothing AndAlso Not JSON.Content("Body")("CrossSecAreaRigid") Is Nothing Then
+					CdA02 = CSng(JSON.Content("Body")("CdRigid")) * CSng(JSON.Content("Body")("CrossSecAreaRigid"))
+				End If
+			ElseIf FileVersion < 7 Then
+				If Not JSON.Content("Body")("Cd2") Is Nothing AndAlso Not JSON.Content("Body")("CrossSecArea2") Is Nothing Then
+					CdA02 = CSng(JSON.Content("Body")("Cd2")) * CSng(JSON.Content("Body")("CrossSecArea2"))
+				End If
+			Else
+				If Not JSON.Content("Body")("CdA2") Is Nothing Then CdA02 = JSON.Content("Body")("CdA2")
+			End If
 
-            Cd0Act = Cd0
-            AquersAct = Aquers
+			CdA0Act = CdA0
 
             If FileVersion < 3 Then
                 Itemp = JSON.Content("Body")("WheelsInertia")
@@ -294,13 +291,11 @@ Public Class cVEH
         dic.Add("Loading", Loading)
         dic.Add("MassMax", MassMax)
 
-        dic.Add("Cd", Cd0)
-        dic.Add("CrossSecArea", Aquers)
+		dic.Add("CdA", CdA0)
 
-        If Cd02 > 0 And Aquers2 > 0 Then
-            dic.Add("Cd2", Cd02)
-            dic.Add("CrossSecArea2", Aquers2)
-        End If
+		If CdA02 > 0 Then
+			dic.Add("CdA2", CdA02)
+		End If
 
         dic.Add("rdyn", rdyn)
         dic.Add("Rim", Rim)
@@ -415,17 +410,14 @@ Public Class cVEH
 		If Declaration.SegRef.TrailerOnlyInLongHaul Then
 
 			If MissionID = tMission.LongHaul Then
-				Cd0Act = Cd0
-				AquersAct = Aquers
+				CdA0Act = CdA0
 			Else
-				Cd0Act = Cd02
-				AquersAct = Aquers2
+				CdA0Act = CdA02
 			End If
 
 		Else
 
-			Cd0Act = Cd0
-			AquersAct = Aquers
+			CdA0Act = CdA0
 
 		End If
 
@@ -645,7 +637,6 @@ Public Class cVEH
 		Dim vveh As Single
 		Dim alpha As Single
 		Dim beta As Single
-		Dim CdA0 As Single
 		Dim CdA As Single
 		Dim CdAsum As Single
 		Dim Vwind As Single
@@ -659,7 +650,6 @@ Public Class cVEH
 		Dim DeltaCdA As Single
 		Dim share As Single
 
-		CdA0 = Cd0Act * AquersAct
 		Vwind = cDeclaration.Vwind * 3.6
 
 		Try
@@ -709,7 +699,7 @@ Public Class cVEH
 				End If
 				DeltaCdA = (beta - lBeta(k - 1)) * (lDeltaCdA(k) - lDeltaCdA(k - 1)) / (lBeta(k) - lBeta(k - 1)) + lDeltaCdA(k - 1)
 
-				CdA = CdA0 + DeltaCdA
+				CdA = CdA0Act + DeltaCdA
 
 				If j = 0 OrElse j = 180 Then
 					share = 5 / 180
@@ -734,57 +724,50 @@ Public Class cVEH
 
 	End Function
 
-    Public Function Cd(ByVal x As Single) As Single
-        Return CdIntpol(x) * Cd0Act
+	Public Function CdA_Y(ByVal x As Single) As Single
+		Return CdIntpol(x)
 	End Function
 
-	Public Function CdA(ByVal vveh As Single) As Single
-		Return CdIntpol(vveh)
+
+	Public Function CdA() As Single
+		Return CdA0Act
 	End Function
 
-    Public Function Cd() As Single
-        Return Cd0Act
-    End Function
+	Private Function CdIntpol(ByVal x As Single) As Single
+		Dim i As Int32
 
-    Public Function CrossSecArea() As Single
-        Return AquersAct
-    End Function
+		'Extrapolation for x < x(1)
+		If CdX(0) >= x Then
+			If CdX(0) > x Then
+				If CdMode = tCdMode.CdOfBeta Then
+					MODdata.ModErrors.CdExtrapol = "β= " & x
+				Else
+					MODdata.ModErrors.CdExtrapol = "v= " & x
+				End If
+			End If
+			i = 1
+			GoTo lbInt
+		End If
 
-    Private Function CdIntpol(ByVal x As Single) As Single
-        Dim i As Int32
+		i = 0
+		Do While CdX(i) < x And i < CdDim
+			i += 1
+		Loop
 
-        'Extrapolation for x < x(1)
-        If CdX(0) >= x Then
-            If CdX(0) > x Then
-                If CdMode = tCdMode.CdOfBeta Then
-                    MODdata.ModErrors.CdExtrapol = "β= " & x
-                Else
-                    MODdata.ModErrors.CdExtrapol = "v= " & x
-                End If
-            End If
-            i = 1
-            GoTo lbInt
-        End If
-
-        i = 0
-        Do While CdX(i) < x And i < CdDim
-            i += 1
-        Loop
-
-        'Extrapolation for x > x(imax)
-        If CdX(i) < x Then
-            If CdMode = tCdMode.CdOfBeta Then
-                MODdata.ModErrors.CdExtrapol = "β= " & x
-            Else
-                MODdata.ModErrors.CdExtrapol = "v= " & x
-            End If
-        End If
+		'Extrapolation for x > x(imax)
+		If CdX(i) < x Then
+			If CdMode = tCdMode.CdOfBeta Then
+				MODdata.ModErrors.CdExtrapol = "β= " & x
+			Else
+				MODdata.ModErrors.CdExtrapol = "v= " & x
+			End If
+		End If
 
 lbInt:
-        'Interpolation
-        Return (x - CdX(i - 1)) * (CdY(i) - CdY(i - 1)) / (CdX(i) - CdX(i - 1)) + CdY(i - 1)
+		'Interpolation
+		Return (x - CdX(i - 1)) * (CdY(i) - CdY(i - 1)) / (CdX(i) - CdX(i - 1)) + CdY(i - 1)
 
-    End Function
+	End Function
 
 #End Region
 
