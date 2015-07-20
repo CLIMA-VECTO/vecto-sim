@@ -67,19 +67,19 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			var lookAheadData = new DriverData.LACData() {
 				Enabled = data.LookAheadCoasting.Enabled,
 				Deceleration = DoubleExtensionMethods.SI<MeterPerSquareSecond>(data.LookAheadCoasting.Dec),
-				MinSpeed = data.LookAheadCoasting.MinSpeed.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
+				MinSpeed = data.LookAheadCoasting.MinSpeed.KMPHtoMeterPerSecond(),
 			};
 			var overspeedData = new DriverData.OverSpeedEcoRollData() {
-				Mode = EnumHelper.ParseDriverMode(data.OverSpeedEcoRoll.Mode),
-				MinSpeed = data.OverSpeedEcoRoll.MinSpeed.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
-				OverSpeed = data.OverSpeedEcoRoll.OverSpeed.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
-				UnderSpeed = data.OverSpeedEcoRoll.UnderSpeed.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
+				Mode = DriverData.ParseDriverMode(data.OverSpeedEcoRoll.Mode),
+				MinSpeed = data.OverSpeedEcoRoll.MinSpeed.KMPHtoMeterPerSecond(),
+				OverSpeed = data.OverSpeedEcoRoll.OverSpeed.KMPHtoMeterPerSecond(),
+				UnderSpeed = data.OverSpeedEcoRoll.UnderSpeed.KMPHtoMeterPerSecond(),
 			};
 			var startstopData = new VectoRunData.StartStopData() {
 				Enabled = data.StartStop.Enabled,
 				Delay = data.StartStop.Delay.SI<Second>(),
 				MinTime = data.StartStop.MinTime.SI<Second>(),
-				MaxSpeed = data.StartStop.MaxSpeed.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
+				MaxSpeed = data.StartStop.MaxSpeed.KMPHtoMeterPerSecond(),
 			};
 			var retVal = new DriverData() {
 				AccelerationCurve = accelerationData,

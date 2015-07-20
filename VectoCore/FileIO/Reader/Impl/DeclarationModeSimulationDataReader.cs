@@ -30,9 +30,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			var tmpVehicle = dao.CreateVehicleData(Vehicle);
 			var segment = GetVehicleClassification(tmpVehicle.VehicleCategory, tmpVehicle.AxleConfiguration,
 				tmpVehicle.GrossVehicleMassRating, tmpVehicle.CurbWeight);
-			var accelerationCurve = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
-			var driverdata = new DriverData(new VectoRunData.StartStopData(), new DriverData.OverSpeedEcoRollData(),
-				new DriverData.LACData(), accelerationCurve);
+			var driverdata = dao.CreateDriverData(Job);
+			driverdata.AccelerationCurve = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
 			foreach (var mission in segment.Missions) {
 				foreach (var loading in mission.Loadings) {
 					var engineData = dao.CreateEngineData(Engine);

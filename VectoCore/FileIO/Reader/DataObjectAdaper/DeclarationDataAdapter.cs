@@ -6,6 +6,7 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.DeclarationFile;
 using TUGraz.VectoCore.FileIO.EngineeringFile;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -51,7 +52,51 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			throw new VectoException("Unsupported GearboxData File Instance");
 		}
 
+		public override DriverData CreateDriverData(VectoJobFile job)
+		{
+			var fileV2Decl = job as VectoJobFileV2Declaration;
+			if (fileV2Decl != null) {
+				return CreateDriverData(fileV2Decl);
+			}
+			throw new VectoException("Unsupported Job File Instance");
+		}
+
 		//==========================
+
+
+		public DriverData CreateDriverData(VectoJobFileV2Declaration job)
+		{
+			var data = job.Body;
+
+			var lookAheadData = new DriverData.LACData() {
+				Enabled = DeclarationData.Driver.LookAhead.Enabled,
+				Deceleration = DeclarationData.Driver.LookAhead.Deceleration,
+				MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed
+			};
+			var overspeedData = new DriverData.OverSpeedEcoRollData() {
+				Mode = DriverData.ParseDriverMode(data.OverSpeedEcoRoll.Mode),
+				MinSpeed = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed,
+				OverSpeed = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed,
+				UnderSpeed = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed
+			};
+			if (!DeclarationData.Driver.OverSpeedEcoRoll.AllowedModes.Contains(overspeedData.Mode)) {
+				throw new VectoSimulationException(
+					String.Format("Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}", overspeedData.Mode));
+			}
+			var startstopData = new VectoRunData.StartStopData() {
+				Enabled = data.StartStop.Enabled,
+				Delay = DeclarationData.Driver.StartStop.Delay,
+				MinTime = DeclarationData.Driver.StartStop.MinTime,
+				MaxSpeed = DeclarationData.Driver.StartStop.MaxSpeed,
+			};
+			var retVal = new DriverData() {
+				LookAheadCoasting = lookAheadData,
+				OverSpeedEcoRoll = overspeedData,
+				StartStop = startstopData,
+			};
+			return retVal;
+		}
+
 
 		internal VehicleData CreateVehicleData(VehicleFileV5Declaration vehicle, Mission mission, Kilogram loading)
 		{
@@ -134,7 +179,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 
 			for (uint i = 0; i < gearbox.Body.Gears.Count; i++) {
-				var gearSettings = gearbox.Body.Gears[(int) i];
+				var gearSettings = gearbox.Body.Gears[(int)i];
 				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
 				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
 

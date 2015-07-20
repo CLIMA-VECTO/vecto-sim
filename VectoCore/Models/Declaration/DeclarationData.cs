@@ -111,6 +111,35 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		//Public Const AuxESeff As Single = 0.7
 
+		public static class Driver
+		{
+			public static class LookAhead
+			{
+				public const Boolean Enabled = true;
+				public static readonly MeterPerSquareSecond Deceleration = 0.5.SI<MeterPerSquareSecond>();
+				public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
+			}
+
+			public static class OverSpeedEcoRoll
+			{
+				public static readonly IList<DriverData.DriverMode> AllowedModes = new List<DriverData.DriverMode>() {
+					DriverData.DriverMode.EcoRoll,
+					DriverData.DriverMode.Overspeed
+				};
+
+				public static readonly MeterPerSecond MinSpeed = 50.KMPHtoMeterPerSecond();
+				public static readonly MeterPerSecond OverSpeed = 5.KMPHtoMeterPerSecond();
+				public static readonly MeterPerSecond UnderSpeed = 5.KMPHtoMeterPerSecond();
+			}
+
+			public static class StartStop
+			{
+				public static readonly MeterPerSecond MaxSpeed = 5.KMPHtoMeterPerSecond();
+				public static readonly Second Delay = 5.SI<Second>();
+				public static readonly Second MinTime = 5.SI<Second>();
+			}
+		}
+
 		public static class Trailer
 		{
 			public const double RollResistanceCoefficient = 0.00555;

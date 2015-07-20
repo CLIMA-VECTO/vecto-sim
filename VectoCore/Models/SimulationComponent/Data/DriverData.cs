@@ -19,6 +19,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public LACData LookAheadCoasting;
 		public AccelerationCurveData AccelerationCurve;
 
+		public static DriverMode ParseDriverMode(string mode)
+		{
+			return EnumHelper.Parse<DriverMode>(mode.Replace("-", ""));
+		}
 
 		public class OverSpeedEcoRollData
 		{

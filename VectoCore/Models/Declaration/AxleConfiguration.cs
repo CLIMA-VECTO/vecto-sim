@@ -1,3 +1,4 @@
+using System;
 using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
@@ -28,11 +29,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public static AxleConfiguration Parse(string typeString)
 		{
 			return EnumHelper.Parse<AxleConfiguration>(Prefix + typeString);
-		}
-
-		public static DriverData.DriverMode ParseDriverMode(string driverString)
-		{
-			return (DriverData.DriverMode)Enum.Parse(typeof(DriverData.DriverMode), driverString.Replace("-", ""), true);
 		}
 	}
 }
