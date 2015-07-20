@@ -8,6 +8,7 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
@@ -54,24 +55,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public class StartStopData
 		{
 			public bool Enabled;
-			public double MaxSpeed;
-			public double MinTime;
-			public double Delay;
-		}
-
-		public class LACData
-		{
-			public bool Enabled;
-			public double Dec;
-			public double MinSpeed;
-		}
-
-		public class OverSpeedEcoRollData
-		{
-			public string Mode;
-			public double MinSpeed;
-			public double OverSpeed;
-			public double UnderSpeed;
+			public MeterPerSecond MaxSpeed;
+			public Second MinTime;
+			public Second Delay;
 		}
 	}
 }

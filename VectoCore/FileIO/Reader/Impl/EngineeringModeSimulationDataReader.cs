@@ -20,6 +20,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 {
 	public class EngineeringModeSimulationDataReader : AbstractSimulationDataReader
 	{
+		protected DriverData Driver;
+
 		internal EngineeringModeSimulationDataReader() {}
 
 

@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 			var retarder = new RetarderData() {
 				Type =
-					(RetarderData.RetarderType) Enum.Parse(typeof (RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
+					(RetarderData.RetarderType)Enum.Parse(typeof(RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
 			};
 			if (retarder.Type != RetarderData.RetarderType.None) {
 				retarder.LossMap = RetarderLossMap.ReadFromFile(Path.Combine(basePath, data.Retarder.File));
@@ -71,8 +71,10 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			return new GearboxData() {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				ModelName = data.ModelName,
-				Type = (GearboxData.GearboxType) Enum.Parse(typeof (GearboxData.GearboxType), data.GearboxType, true),
+				Type = (GearboxData.GearboxType)Enum.Parse(typeof(GearboxData.GearboxType), data.GearboxType, true),
 			};
 		}
+
+		public abstract DriverData CreateDriverData(VectoJobFile job);
 	}
 }

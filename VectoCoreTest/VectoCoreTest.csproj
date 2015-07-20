@@ -81,6 +81,7 @@
     <Compile Include="Models\SimulationComponent\ClutchTest.cs" />
     <Compile Include="Models\SimulationComponent\CombustionEngineTest.cs" />
     <Compile Include="Models\SimulationComponent\DistanceBasedDrivingCycleTest.cs" />
+    <Compile Include="Models\SimulationComponent\DriverTest.cs" />
     <Compile Include="Models\SimulationComponent\GearboxTest.cs" />
     <Compile Include="Models\SimulationComponent\RetarderTest.cs" />
     <Compile Include="Models\SimulationComponent\WheelsTest.cs" />

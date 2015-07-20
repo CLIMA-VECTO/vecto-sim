@@ -1,4 +1,5 @@
 using System;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -27,7 +28,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 	{
 		public static AxleConfiguration ParseAxleConfigurationType(string typeString)
 		{
-			return (AxleConfiguration) Enum.Parse(typeof (AxleConfiguration), "AxleConfig_" + typeString, true);
+			return (AxleConfiguration)Enum.Parse(typeof(AxleConfiguration), "AxleConfig_" + typeString, true);
+		}
+
+		public static DriverData.DriverMode ParseDriverMode(string driverString)
+		{
+			return (DriverData.DriverMode)Enum.Parse(typeof(DriverData.DriverMode), driverString.Replace("-", ""), true);
 		}
 	}
 }
