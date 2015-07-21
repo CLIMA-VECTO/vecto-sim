@@ -225,7 +225,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
 		/// </summary>
-		[ModalResultField(typeof(double))] Paux_xxx,
+		[ModalResultField(typeof(double))] Paux_,
 
 		/// <summary>
 		///     [-]	    Torque converter speed ratio

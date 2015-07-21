@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 					index = (key > _entries[0].Key) ? _entries.Count - 1 : 1;
 				}
 			}
-
+			
 			return new AccelerationEntry {
 				Acceleration =
 					VectoMath.Interpolate(_entries[index - 1].Key, _entries[index].Key, _entries[index - 1].Value.Acceleration,

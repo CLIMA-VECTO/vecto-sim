@@ -21,6 +21,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public ModalResults Data { get; set; }
 		public DataRow CurrentRow { get; set; }
 
+		object IModalDataWriter.this[string auxId]
+		{
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
+		}
+
 		public bool HasTorqueConverter { get; set; }
 
 		public void CommitSimulationStep()
@@ -39,6 +45,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public IEnumerable<T> GetValues<T>(ModalResultField key)
 		{
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>((int)key));
+		}
+
+		Dictionary<string, DataColumn> IModalDataWriter.Auxiliaries { get; set; }
+		public void AddAuxiliary(string id)
+		{
+			throw new NotImplementedException();
 		}
 
 		public Dictionary<string, IList<Watt>> Auxiliaries { get; set; }

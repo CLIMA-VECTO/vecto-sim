@@ -15,7 +15,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public const string DirectAuxiliaryId = "";
 
 		private readonly Dictionary<string, Func<PerSecond, Watt>> _auxDict = new Dictionary<string, Func<PerSecond, Watt>>();
-
 		private readonly Dictionary<string, Watt> _powerDemands = new Dictionary<string, Watt>();
 
 		private ITnOutPort _outPort;
@@ -71,13 +70,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override void CommitSimulationStep(IModalDataWriter writer)
 		{
+			var sum = 0.SI<Watt>();
 			foreach (var kv in _powerDemands) {
-				if (string.IsNullOrWhiteSpace(kv.Key)) {
-					writer[ModalResultField.Paux] = kv.Value;
-				} else {
-					writer.Auxiliaries[kv.Key].Add(kv.Value);
+				sum += kv.Value;
+				// todo: aux write directauxiliary somewhere to moddata .... probably Padd column??
+				if (!string.IsNullOrWhiteSpace(kv.Key)) {
+					writer[kv.Key] = kv.Value;
 				}
 			}
+			writer[ModalResultField.Paux] = sum.Value();
 		}
 
 		#endregion

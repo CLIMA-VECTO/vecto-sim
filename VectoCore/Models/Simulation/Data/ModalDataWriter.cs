@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			HasTorqueConverter = false;
 			ModFileName = modFileName;
 			Data = new ModalResults();
-			Auxiliaries = new Dictionary<string, IList<Watt>>();
+			Auxiliaries = new Dictionary<string, DataColumn>();
 			CurrentRow = Data.NewRow();
 			_engineOnly = engineOnly;
 		}
@@ -83,10 +83,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 						ModalResultField.TC_n_Out
 					});
 				}
-
-				//todo: auxiliaries
 			}
-			VectoCSVFile.Write(ModFileName, new DataView(Data).ToTable(false, dataColumns.Select(x => x.GetName()).ToArray()));
+
+			var columns = dataColumns.Select(x => x.GetName()).Concat(Auxiliaries.Values.Select(c => c.ColumnName)).ToArray();
+			VectoCSVFile.Write(ModFileName, new DataView(Data).ToTable(false, columns));
 		}
 
 
@@ -107,6 +107,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			set { CurrentRow[(int)key] = value; }
 		}
 
-		public Dictionary<string, IList<Watt>> Auxiliaries { get; set; }
+		public object this[string auxId]
+		{
+			get { return CurrentRow[Auxiliaries[auxId]]; }
+			set { CurrentRow[Auxiliaries[auxId]] = value; }
+		}
+
+
+		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
+
+		public void AddAuxiliary(string id)
+		{
+			Auxiliaries[id] = Data.Columns.Add(ModalResultField.Paux_ + id, typeof(double));
+		}
 	}
 }

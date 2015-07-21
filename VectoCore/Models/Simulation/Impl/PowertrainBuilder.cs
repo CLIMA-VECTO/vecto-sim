@@ -14,11 +14,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	{
 		private readonly bool _engineOnly;
 		private readonly VehicleContainer _container;
+		private readonly IModalDataWriter _dataWriter;
 
 
 		public PowertrainBuilder(IModalDataWriter dataWriter, ISummaryDataWriter sumWriter, bool engineOnly)
 		{
 			_engineOnly = engineOnly;
+			_dataWriter = dataWriter;
 			_container = new VehicleContainer(dataWriter, sumWriter);
 		}
 
@@ -75,17 +77,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 							aux.AddMapping(auxData.ID, cycle, auxData.Data);
 							break;
 					}
+					_dataWriter.AddAuxiliary(auxData.ID);
 				}
 				tmp = AddComponent(tmp, aux);
 			}
-
 			// connect aux --> engine
 			AddComponent(tmp, new CombustionEngine(_container, data.EngineData));
 
 			return _container;
 		}
 
-		protected IGearbox GetGearbox(VehicleContainer container, GearboxData data)
+		protected
+			IGearbox GetGearbox
+			(VehicleContainer container, GearboxData data)
 		{
 			switch (data.Type) {
 				case GearboxData.GearboxType.AT:
@@ -97,44 +101,59 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		protected virtual IDriver AddComponent(IDrivingCycle prev, IDriver next)
+		protected virtual
+			IDriver AddComponent
+			(IDrivingCycle prev, IDriver next)
 		{
 			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-		protected virtual IVehicle AddComponent(IDriver prev, IVehicle next)
+		protected virtual
+			IVehicle AddComponent
+			(IDriver prev, IVehicle next)
 		{
 			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-		protected virtual IWheels AddComponent(IFvInProvider prev, IWheels next)
+		protected virtual
+			IWheels AddComponent
+			(IFvInProvider prev, IWheels next)
 		{
 			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
 
-		protected virtual IPowerTrainComponent AddComponent(IWheels prev, IPowerTrainComponent next)
+		protected virtual
+			IPowerTrainComponent AddComponent
+			(IWheels prev, IPowerTrainComponent next)
 		{
 			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-		protected virtual IPowerTrainComponent AddComponent(IPowerTrainComponent prev, IPowerTrainComponent next)
+		protected virtual
+			IPowerTrainComponent AddComponent
+			(IPowerTrainComponent prev, IPowerTrainComponent next)
 		{
 			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-		protected virtual void AddComponent(IPowerTrainComponent prev, ITnOutProvider next)
+		protected virtual
+			void AddComponent
+			(IPowerTrainComponent prev, ITnOutProvider next)
 		{
 			prev.InPort().Connect(next.OutPort());
 		}
 
 
-		private VehicleContainer BuildEngineOnly(VectoRunData data)
+		private
+			VehicleContainer BuildEngineOnly
+			(VectoRunData
+				data)
 		{
 			var cycle = new EngineOnlySimulation(_container, data.Cycle);
 

@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			var sum = 0.0;
 			foreach (var aux in data.Auxiliaries) {
-				var currentSum = aux.Value.Sum().Value();
+				var currentSum = (double)data.Compute("Sum(" + aux.Value.ColumnName + ")", "");
 				row["Eaux_" + aux.Key + " [kwh]"] = currentSum;
 				sum += currentSum;
 			}
