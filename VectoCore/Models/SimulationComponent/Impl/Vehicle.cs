@@ -54,10 +54,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState = new VehicleState();
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSquareSecond accelleration, Radian gradient)
+		public IResponse Request(Second absTime, Second dt, MeterPerSquareSecond accelleration, Radian gradient)
 		{
-			_currentState.Velocity = _previousState.Velocity +
-									(accelleration * (dt.TotalSeconds / 2.0).SI<Second>()).Cast<MeterPerSecond>();
+			_currentState.Velocity = _previousState.Velocity + (accelleration * (dt / 2.0)).Cast<MeterPerSecond>();
 
 			// DriverAcceleration = vehicleAccelerationForce - RollingResistance - AirDragResistance - SlopeResistance
 			var vehicleAccelerationForce = DriverAcceleration(accelleration) + RollingResistance(gradient) +

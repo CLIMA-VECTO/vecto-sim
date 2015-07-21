@@ -5,7 +5,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 {
 	public abstract class AbstractResponse : IResponse
 	{
-		public TimeSpan SimulationInterval { get; set; }
+		public Second SimulationInterval { get; set; }
 
 		public abstract ResponseType ResponseType { get; }
 	}
@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseFailTimeInterval : AbstractResponse
 	{
-		public TimeSpan DeltaT { get; set; }
+		public Second DeltaT { get; set; }
 
 		public override ResponseType ResponseType
 		{

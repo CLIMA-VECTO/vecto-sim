@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			_outPort = other;
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed)
 		{
 			throw new NotImplementedException();
 		}

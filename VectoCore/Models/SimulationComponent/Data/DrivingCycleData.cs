@@ -439,7 +439,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public IEnumerable<DrivingCycleEntry> Parse(DataTable table)
 			{
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
-				var absTime = new TimeSpan(0, 0, 0);
+				var absTime = 0.SI<Second>();
 
 				foreach (DataRow row in table.Rows) {
 					var entry = new DrivingCycleEntry {
@@ -464,8 +464,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 									entry.EngineSpeed);
 						}
 					}
-					entry.Time = absTime.TotalSeconds.SI<Second>();
-					absTime += new TimeSpan(0, 0, 1);
+					entry.Time = absTime;
+					absTime += 1.SI<Second>();
 
 					yield return entry;
 				}

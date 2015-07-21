@@ -53,6 +53,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		/// <param name="dt">[s]</param>
 		/// <param name="acceleration">[m/s^2]</param>
 		/// <param name="gradient">[rad]</param>
-		IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSquareSecond acceleration, Radian gradient);
+		IResponse Request(Second absTime, Second dt, MeterPerSquareSecond acceleration, Radian gradient);
 	}
 }

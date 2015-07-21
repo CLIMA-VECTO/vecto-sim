@@ -43,15 +43,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ISimulationOutPort
 
-		public IResponse Request(TimeSpan absTime, Meter ds)
+		public IResponse Request(Second absTime, Meter ds)
 		{
 			throw new VectoSimulationException("Engine-Only Simulation can not handle distance request");
 		}
 
-		IResponse ISimulationOutPort.Request(TimeSpan absTime, TimeSpan dt)
+		IResponse ISimulationOutPort.Request(Second absTime, Second dt)
 		{
 			//todo: change to variable time steps
-			var index = (int)Math.Floor(absTime.TotalSeconds);
+			var index = (int)Math.Floor(absTime.Value());
 			if (index >= Data.Entries.Count) {
 				return new ResponseCycleFinished();
 			}

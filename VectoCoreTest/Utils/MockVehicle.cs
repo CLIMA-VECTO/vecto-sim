@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			NextComponent = other;
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSquareSecond acceleration, Radian gradient)
+		public IResponse Request(Second absTime, Second dt, MeterPerSquareSecond acceleration, Radian gradient)
 		{
 			LastRequest = new RequestData() {
 				abstime = absTime,
@@ -68,8 +68,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public class RequestData
 		{
-			public TimeSpan abstime;
-			public TimeSpan dt;
+			public Second abstime;
+			public Second dt;
 			public MeterPerSquareSecond acceleration;
 			public Radian gradient;
 		}

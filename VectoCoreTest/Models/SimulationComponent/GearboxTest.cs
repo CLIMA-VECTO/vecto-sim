@@ -27,8 +27,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var mockPort = new MockTnOutPort();
 			axleGear.InPort().Connect(mockPort);
 
-			var absTime = TimeSpan.FromSeconds(0);
-			var dt = TimeSpan.FromSeconds(1);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			var rdyn = 520;
 			var speed = 20.320;

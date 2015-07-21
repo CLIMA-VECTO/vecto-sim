@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IFvOutPort
 
-		IResponse IFvOutPort.Request(TimeSpan absTime, TimeSpan dt, Newton force, MeterPerSecond velocity)
+		IResponse IFvOutPort.Request(Second absTime, Second dt, Newton force, MeterPerSecond velocity)
 		{
 			var torque = force * _dynamicWheelRadius;
 			var angularVelocity = velocity / _dynamicWheelRadius;

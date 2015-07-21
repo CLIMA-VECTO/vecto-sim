@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_nextComponent = other;
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond angularVelocity)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity)
 		{
 			return _nextComponent.Request(absTime, dt,
 				_gearData.LossMap.GearboxInTorque(angularVelocity * _gearData.Ratio, torque),

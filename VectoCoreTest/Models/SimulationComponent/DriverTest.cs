@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			driver.Connect(vehicle.OutPort());
 
 			vehicle.MyVehicleSpeed = 0.SI<MeterPerSecond>();
-			var absTime = TimeSpan.FromSeconds(0);
+			var absTime = 0.SI<Second>();
 			var ds = 1.SI<Meter>();
 			var gradient = 0.SI<Radian>();
 
@@ -50,25 +50,24 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 				Assert.IsInstanceOfType(tmpResponse, typeof(ResponseSuccess));
 				Assert.AreEqual(Math.Round(accelerations[i], 4), vehicle.LastRequest.acceleration.Value(), Tolerance);
-				Assert.AreEqual(Math.Round(simulationIntervals[i], 4), tmpResponse.SimulationInterval.TotalSeconds, Tolerance);
+				Assert.AreEqual(Math.Round(simulationIntervals[i], 4), tmpResponse.SimulationInterval.Value(), Tolerance);
 
-				vehicleContainer.CommitSimulationStep(absTime.TotalSeconds, tmpResponse.SimulationInterval.TotalSeconds);
+				vehicleContainer.CommitSimulationStep(absTime, tmpResponse.SimulationInterval);
 				absTime += tmpResponse.SimulationInterval;
-				vehicle.MyVehicleSpeed +=
-					(tmpResponse.SimulationInterval.TotalSeconds.SI<Second>() * vehicle.LastRequest.acceleration).Cast<MeterPerSecond>();
+				vehicle.MyVehicleSpeed += (tmpResponse.SimulationInterval * vehicle.LastRequest.acceleration).Cast<MeterPerSecond>();
 			}
 
 			// full acceleration would exceed target velocity, driver should limit acceleration such that target velocity is reached...
 			var response = driver.OutPort().Request(absTime, ds, targetVelocity, gradient);
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
-			Assert.AreEqual(0.8923 /*0.899715479*/, vehicle.LastRequest.acceleration.Value(), Tolerance);
-			Assert.AreEqual(0.203734517, response.SimulationInterval.TotalSeconds, Tolerance);
+			Assert.AreEqual(0.899715479, vehicle.LastRequest.acceleration.Value(), Tolerance);
+			Assert.AreEqual(0.203734517, response.SimulationInterval.Value(), Tolerance);
 
-			vehicleContainer.CommitSimulationStep(absTime.TotalSeconds, response.SimulationInterval.TotalSeconds);
+			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 			vehicle.MyVehicleSpeed +=
-				(response.SimulationInterval.TotalSeconds.SI<Second>() * vehicle.LastRequest.acceleration).Cast<MeterPerSecond>();
+				(response.SimulationInterval * vehicle.LastRequest.acceleration).Cast<MeterPerSecond>();
 
 			Assert.AreEqual(targetVelocity.Value(), vehicle.MyVehicleSpeed.Value(), Tolerance);
 
@@ -79,7 +78,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 			Assert.AreEqual(0, vehicle.LastRequest.acceleration.Value(), Tolerance);
-			Assert.AreEqual(0.2, response.SimulationInterval.TotalSeconds, Tolerance);
+			Assert.AreEqual(0.2, response.SimulationInterval.Value(), Tolerance);
 		}
 	}
 }

@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 
-		public void CommitSimulationStep(double time, double simulationInterval)
+		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
 			_logger.Info("VehicleContainer committing simulation.");
 			foreach (var component in _components) {

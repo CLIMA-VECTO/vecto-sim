@@ -43,22 +43,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ISimulationOutPort
 
-		IResponse ISimulationOutPort.Request(TimeSpan absTime, Meter ds)
+		IResponse ISimulationOutPort.Request(Second absTime, Meter ds)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt)
+		public IResponse Request(Second absTime, Second dt)
 		{
 			//todo: change to variable time steps
-			var index = (int)Math.Floor(absTime.TotalSeconds);
+			var index = (int)Math.Floor(absTime.Value());
 			if (index >= Data.Entries.Count) {
 				return new ResponseCycleFinished();
 			}
 
 			// TODO!!
 			var dx = 0.SI<Meter>();
-			return _outPort.Request(absTime, dx, Data.Entries[index].VehicleTargetSpeed,
+			return _outPort.Request((Second)absTime, dx, Data.Entries[index].VehicleTargetSpeed,
 				Data.Entries[index].RoadGradient);
 		}
 

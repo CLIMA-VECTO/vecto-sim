@@ -1,5 +1,6 @@
 using System;
 using System.Security.Cryptography.X509Certificates;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports
 {
@@ -18,7 +19,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 	/// </summary>
 	public interface IResponse
 	{
-		TimeSpan SimulationInterval { get; set; }
+		Second SimulationInterval { get; set; }
 
 		ResponseType ResponseType { get; }
 	}

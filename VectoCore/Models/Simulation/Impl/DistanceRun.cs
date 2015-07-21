@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				ds = Constants.SimulationSettings.DriveOffDistance;
 			}
 
-			var response = CyclePort.Request(AbsTime, ds);
+			var response = CyclePort.Request((Second)AbsTime, ds);
 
 			//while (response is ResponseFailTimeInterval) {
 			//	_dt = (response as ResponseFailTimeInterval).DeltaT;
@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				return response;
 			}
 
-			AbsTime = (AbsTime + TimeSpan.FromTicks(response.SimulationInterval.Ticks / 2));
+			AbsTime = (AbsTime + response.SimulationInterval / 2);
 			dt = response.SimulationInterval;
 			return response;
 		}

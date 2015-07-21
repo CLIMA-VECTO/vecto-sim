@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Next = other;
 		}
 
-		public IResponse Request(TimeSpan absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			var retVal = DoHandleRequest(absTime, ds, targetVelocity, gradient);
 
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond targetVelocity, Radian gradient)
+		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			var retVal = DoHandleRequest(absTime, dt, targetVelocity, gradient);
 
@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected IResponse DoHandleRequest(TimeSpan absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		protected IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			var currentSpeed = Cockpit.VehicleSpeed();
 
@@ -73,24 +73,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				requiredAcceleration = maxAcceleration.Deceleration;
 			}
 
-			var solutions = VectoMath.QuadraticEquationSolver(requiredAcceleration.Value() / 2.0, currentSpeed.Value(),
-				-ds.Value());
-			solutions = solutions.Where(x => x >= 0).ToList();
+			var dt = (ds / currentSpeed).Cast<Second>();
+			if (!requiredAcceleration.IsEqual(0)) {
+				// we need to accelerate / decelerate. solve quadratic equation...
+				// ds = acceleration / 2 * dt^2 + currentSpeed * dt   => solve for dt
+				var solutions = VectoMath.QuadraticEquationSolver(requiredAcceleration.Value() / 2.0, currentSpeed.Value(),
+					-ds.Value());
+				solutions = solutions.Where(x => x >= 0).ToList();
 
-			if (solutions.Count == 0) {
-				Log.WarnFormat(
-					"Could not find solution for computing required time interval to drive distance {0}. currentSpeed: {1}, targetSpeed: {2}, acceleration: {3}",
-					ds, currentSpeed, targetVelocity, requiredAcceleration);
-				return new ResponseFailTimeInterval();
+				if (solutions.Count != 1) {
+					Log.WarnFormat(
+						"Could not find single solution for computing required time interval to drive distance {0}. currentSpeed: {1}, targetSpeed: {2}, acceleration: {3}",
+						ds, currentSpeed, targetVelocity, requiredAcceleration);
+					return new ResponseFailTimeInterval();
+				}
+				dt = solutions.First().SI<Second>();
 			}
-			var dt = TimeSpan.FromSeconds(solutions.First());
 			var retVal = Next.Request(absTime, dt, requiredAcceleration, gradient);
 			retVal.SimulationInterval = dt;
 			return retVal;
 		}
 
 
-		protected IResponse DoHandleRequest(TimeSpan absTime, TimeSpan dt, MeterPerSecond targetVelocity, Radian gradient)
+		protected IResponse DoHandleRequest(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			if (!targetVelocity.IsEqual(0) || !Cockpit.VehicleSpeed().IsEqual(0)) {
 				throw new NotImplementedException("TargetVelocity or VehicleVelocity is not zero!");

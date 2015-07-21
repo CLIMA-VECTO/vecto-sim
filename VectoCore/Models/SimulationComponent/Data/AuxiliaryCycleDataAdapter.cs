@@ -31,9 +31,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		protected DrivingCycleData.DrivingCycleEntry CurrentCycleEntry { get; set; }
 
-		public Watt GetPowerDemand(TimeSpan absTime, TimeSpan dt)
+		public Watt GetPowerDemand(Second absTime, Second dt)
 		{
-			if (_nextCycleEntry.Current.Time <= absTime.TotalSeconds) {
+			if (_nextCycleEntry.Current.Time <= absTime) {
 				CurrentCycleEntry = _nextCycleEntry.Current;
 				_nextCycleEntry.MoveNext();
 			}

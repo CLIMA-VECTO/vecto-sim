@@ -34,19 +34,20 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return this;
 		}
 
-		public IResponse Request(TimeSpan absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			LastRequest = new RequestData() { AbsTime = absTime, ds = ds, Gradient = gradient, TargetVelocity = targetVelocity };
 			var acc = 0.SI<MeterPerSquareSecond>();
-			var dt = TimeSpan.FromSeconds(1);
-			return new ResponseSuccess() {SimulationInterval = dt}; //_next.Request(absTime, TimeSpan.FromSeconds(0), acc, 0.SI<Radian>());
+			var dt = 1.SI<Second>();
+			return new ResponseSuccess() { SimulationInterval = dt };
+			//_next.Request(absTime, TimeSpan.FromSeconds(0), acc, 0.SI<Radian>());
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond targetVelocity, Radian gradient)
+		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			LastRequest = new RequestData() { AbsTime = absTime, dt = dt, Gradient = gradient, TargetVelocity = targetVelocity };
 			var acc = 0.SI<MeterPerSquareSecond>();
-			return new ResponseSuccess() {SimulationInterval = dt}; //_next.Request(absTime, dt, acc, gradient);
+			return new ResponseSuccess() { SimulationInterval = dt }; //_next.Request(absTime, dt, acc, gradient);
 		}
 
 		public void Connect(IDriverDemandOutPort other)
@@ -56,9 +57,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public class RequestData
 		{
-			public TimeSpan AbsTime;
+			public Second AbsTime;
 			public Meter ds;
-			public TimeSpan dt;
+			public Second dt;
 			public MeterPerSecond TargetVelocity;
 			public Radian Gradient;
 		}

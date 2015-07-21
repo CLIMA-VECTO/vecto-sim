@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ISimulationOutPort
 
-		IResponse ISimulationOutPort.Request(TimeSpan absTime, Meter ds)
+		IResponse ISimulationOutPort.Request(Second absTime, Meter ds)
 		{
 			var retVal = DoHandleRequest(absTime, ds);
 
@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		private IResponse DoHandleRequest(TimeSpan absTime, Meter ds)
+		private IResponse DoHandleRequest(Second absTime, Meter ds)
 		{
 			//var currentCycleEntry = Data.Entries[_previousState.CycleIndex];
 			//var nextCycleEntry = Data.Entries[_previousState.CycleIndex + 1];
@@ -83,15 +83,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (CycleIntervalIterator.LeftSample.Distance.IsEqual(PreviousState.Distance.Value())) {
 				// exactly on an entry in the cycle...
 				if (!CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(0)
-					&& CycleIntervalIterator.LeftSample.StoppingTime.Value() > PreviousState.WaitTime.TotalSeconds) {
+					&& CycleIntervalIterator.LeftSample.StoppingTime > PreviousState.WaitTime) {
 					// stop for certain time unless we've already waited long enough...
 					if (!CycleIntervalIterator.LeftSample.VehicleTargetSpeed.IsEqual(0)) {
 						Log.WarnFormat("Stopping Time requested in cycle but target-velocity not zero. distance: {0}, target speed: {1}",
 							CycleIntervalIterator.LeftSample.StoppingTime, CycleIntervalIterator.LeftSample.VehicleTargetSpeed);
 						throw new VectoSimulationException("Stopping Time only allowed when target speed is zero!");
 					}
-					var dt = TimeSpan.FromSeconds(CycleIntervalIterator.LeftSample.StoppingTime.Value()) -
-							PreviousState.WaitTime;
+					var dt = CycleIntervalIterator.LeftSample.StoppingTime.Value() - PreviousState.WaitTime;
 					return DriveTimeInterval(absTime, dt);
 				}
 			}
@@ -108,16 +107,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return DriveDistance(absTime, ds);
 		}
 
-		private IResponse DriveTimeInterval(TimeSpan absTime, TimeSpan dt)
+		private IResponse DriveTimeInterval(Second absTime, Second dt)
 		{
 			CurrentState.AbsTime = PreviousState.AbsTime + dt;
 			CurrentState.WaitTime = PreviousState.WaitTime + dt;
 
-			return _outPort.Request(absTime, dt,
+			return _outPort.Request((Second)absTime, (Second)dt,
 				CycleIntervalIterator.LeftSample.VehicleTargetSpeed, ComputeGradient());
 		}
 
-		private IResponse DriveDistance(TimeSpan absTime, Meter ds)
+		private IResponse DriveDistance(Second absTime, Meter ds)
 		{
 			CurrentState.Distance = PreviousState.Distance + ds;
 
@@ -143,7 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return gradient;
 		}
 
-		IResponse ISimulationOutPort.Request(TimeSpan absTime, TimeSpan dt)
+		IResponse ISimulationOutPort.Request(Second absTime, Second dt)
 		{
 			throw new NotImplementedException();
 		}
@@ -152,8 +151,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var first = Data.Entries.First();
 			PreviousState = new DrivingCycleState() {
-				AbsTime = TimeSpan.FromSeconds(0),
-				WaitTime = TimeSpan.FromSeconds(0),
+				AbsTime = 0.SI<Second>(),
+				WaitTime = 0.SI<Second>(),
 				Distance = first.Distance,
 				Altitude = first.Altitude,
 			};
@@ -178,7 +177,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState = CurrentState.Clone();
 
 			if (!CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(0) &&
-				CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(CurrentState.WaitTime.TotalSeconds)) {
+				CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(CurrentState.WaitTime)) {
 				// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
 				CycleIntervalIterator.MoveNext();
 			}
@@ -261,16 +260,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					VehicleTargetSpeed = VehicleTargetSpeed,
 					Altitude = Altitude,
 					// WaitTime is not cloned on purpose!
-					WaitTime = TimeSpan.FromSeconds(0),
+					WaitTime = 0.SI<Second>(),
 					Response = null
 				};
 			}
 
-			public TimeSpan AbsTime;
+			public Second AbsTime;
 
 			public Meter Distance;
 
-			public TimeSpan WaitTime;
+			public Second WaitTime;
 
 			public MeterPerSecond VehicleTargetSpeed;
 
