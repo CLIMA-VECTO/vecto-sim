@@ -1,6 +1,7 @@
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -30,7 +31,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			stream.ReadLine(); // skip header "Efficiency auxiliary to supply [-]"
 			auxData.EfficiencyToSupply = stream.ReadLine().ToDouble();
 
-			var table = VectoCSVFile.ReadStream(stream.BaseStream);
+			var m = new MemoryStream(Encoding.UTF8.GetBytes(stream.ReadToEnd()));
+			var table = VectoCSVFile.ReadStream(m);
 
 			var data = table.Rows.Cast<DataRow>().Select(row => new {
 				AuxiliarySpeed = row.ParseDouble("Auxiliary speed").RPMtoRad(),

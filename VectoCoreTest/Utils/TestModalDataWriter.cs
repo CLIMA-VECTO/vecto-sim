@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -16,15 +17,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			Data = new ModalResults();
 			CurrentRow = Data.NewRow();
+			Auxiliaries = new Dictionary<string, DataColumn>();
 		}
 
 		public ModalResults Data { get; set; }
 		public DataRow CurrentRow { get; set; }
 
-		object IModalDataWriter.this[string auxId]
+		public object this[string auxId]
 		{
-			get { throw new NotImplementedException(); }
-			set { throw new NotImplementedException(); }
+			get { return CurrentRow[Auxiliaries[auxId]]; }
+			set { CurrentRow[Auxiliaries[auxId]] = value; }
 		}
 
 		public bool HasTorqueConverter { get; set; }
@@ -47,13 +49,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>((int)key));
 		}
 
-		Dictionary<string, DataColumn> IModalDataWriter.Auxiliaries { get; set; }
+		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
+
 		public void AddAuxiliary(string id)
 		{
-			throw new NotImplementedException();
+			Auxiliaries[id] = Data.Columns.Add(ModalResultField.Paux_ + id, typeof(double));
 		}
-
-		public Dictionary<string, IList<Watt>> Auxiliaries { get; set; }
 
 		public object this[ModalResultField key]
 		{

@@ -153,7 +153,9 @@
     <None Include="TestData\Components\Direct Gear.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Components\24t_Coach_ALT.vaux" />
+    <None Include="TestData\Components\24t_Coach_ALT.vaux">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Components\Coach.vacc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

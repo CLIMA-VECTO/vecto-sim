@@ -107,7 +107,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Test_AuxMapping()
 		{
+			const string auxId = "ALT1";
+
 			var dataWriter = new TestModalDataWriter();
+			dataWriter.AddAuxiliary(auxId);
+
 			var sumWriter = new TestSumWriter();
 			var container = new VehicleContainer(dataWriter, sumWriter);
 			var data = DrivingCycleData.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
@@ -119,7 +123,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			aux.InPort().Connect(port);
 
 			var auxData = MappingAuxiliaryData.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux");
-			aux.AddMapping("ALT1", cycle, auxData);
+
+			aux.AddMapping(auxId, cycle, auxData);
 
 			var speed = 1400.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();
@@ -128,6 +133,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			Assert.AreEqual(speed, port.AngularVelocity);
 			Assert.IsTrue(port.Torque > torque);
+
+			//todo: test different torques and speeds
+			//todo: test different points in cycle
+
 			Assert.Inconclusive();
 		}
 

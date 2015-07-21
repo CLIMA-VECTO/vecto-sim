@@ -95,14 +95,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void AddMapping(string auxId, IDrivingCycleCockpit cycle, MappingAuxiliaryData data)
 		{
-			if (!cycle.CycleData().LeftSample.AuxiliarySupplyPower.ContainsKey(auxId)) {
+			if (!cycle.CycleData().LeftSample.AuxiliarySupplyPower.ContainsKey("Aux_" + auxId)) {
 				var error = string.Format("driving cycle does not contain column for auxiliary: {0}", auxId);
 				LogManager.GetLogger(GetType()).ErrorFormat(error);
 				throw new VectoException(error);
 			}
 
 			_auxDict[auxId] = speed => {
-				var powerSupply = cycle.CycleData().LeftSample.AuxiliarySupplyPower[auxId];
+				var powerSupply = cycle.CycleData().LeftSample.AuxiliarySupplyPower["Aux_" + auxId];
 
 				var nAuxiliary = speed * data.TransitionRatio;
 				var powerAuxOut = powerSupply / data.EfficiencyToSupply;

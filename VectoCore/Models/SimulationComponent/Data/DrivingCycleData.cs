@@ -280,7 +280,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				var auxCols = row.Table.Columns.Cast<DataColumn>().
 					Where(col => col.ColumnName.StartsWith(Fields.AuxiliarySupplyPower));
 
-				return auxCols.ToDictionary(key => key.ColumnName.Substring(Fields.AuxiliarySupplyPower.Length - 1),
+				return auxCols.ToDictionary(key => key.ColumnName,
 					value => row.ParseDouble(value).SI().Kilo.Watt.Cast<Watt>());
 			}
 		}
