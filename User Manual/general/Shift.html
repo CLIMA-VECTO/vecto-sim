@@ -5,15 +5,21 @@
 
 
 
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Gear Shift Model</title></head>
-<body>
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Gear Shift Model</title></head><body>
 <big><big><big><span style="font-family: Verdana; font-weight: bold;">Gear Shift Model</span></big></big></big><br>
 <hr style="width: 100%; height: 0px;">
 
 <div style="margin-left: 40px;">The Gear Shift Model is based on shift
 curves that define the engine speed for up- and down- shifting as a
 function of engine torque. As soon as the engine operation point passes
-one of the shift curves a gear change is initiated.<br>The shift polygons are saved in the <a href="../fileformat/VGBS.html">Shift Polygons Input File (.vgbs)</a> and have to be added to the <a href="../GUI/GBX-Editor.html">Gearbox File</a>. In <a href="calc_Declaration.html">Declaration Mode</a> the shift polygons are generated automatically based on the full load curve.<br><br><img style="width: 500px; height: 392px;" alt="" src="pics/Shift.png"><br><span style="font-style: italic;">Example shift polygons</span><br><br>In the Gearbox File two additional parameters are defined:<br><ul><li><span style="font-weight: bold;">Torque Reserve</span> [%] -&nbsp;Required
+one of the shift curves a gear change is initiated.<br>The shift polygons are saved in the <a href="../fileformat/VGBS.html">Shift Polygons Input File (.vgbs)</a> and have to be added to the <a href="../GUI/GBX-Editor.html">Gearbox File</a>.<br>
+<br>
+In <a href="calc_Declaration.html">Declaration Mode</a> the shift
+polygons are generated automatically based on the full load curve of
+each gear. If the engine's full load torque is lower than the gear's,
+then the engine's full load is used to prevent unreasonable shifting
+with small engines.<br><br><img style="width: 500px; height: 392px;" alt="" src="pics/Shift.png"><br><span style="font-style: italic;">Example shift polygons</span><br><br>In the Gearbox File two additional parameters are defined:<br><ul><li><span style="font-weight: bold;">Torque Reserve</span> [%] -&nbsp;Required
 for the "<span style="font-weight: bold;">Early Upshift</span>" and "<span style="font-weight: bold;">Skip
 Gears</span>" options, see below.<span style="font-weight: bold;"></span></li><li><span style="font-weight: bold;">Minimum shift time</span> [s] - Limits
 the time between two gear shifts in whole seconds. This rule will be
