@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -30,25 +31,27 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			var tmpVehicle = dao.CreateVehicleData(Vehicle);
 			var segment = GetVehicleClassification(tmpVehicle.VehicleCategory, tmpVehicle.AxleConfiguration,
 				tmpVehicle.GrossVehicleMassRating, tmpVehicle.CurbWeight);
+
+			var cycleParser = new DrivingCycleData.DistanceBasedDataParser();
+
 			foreach (var mission in segment.Missions) {
+				var cycleData = VectoCSVFile.ReadStream(mission.CycleFile);
 				foreach (var loading in mission.Loadings) {
 					var engineData = dao.CreateEngineData(Engine);
-					var parser = new DrivingCycleData.DistanceBasedDataParser();
-					var data = VectoCSVFile.ReadStream(mission.CycleFile);
-					var cycleEntries = parser.Parse(data).ToList();
+					var cycle = new DrivingCycleData {
+						Name = mission.ToString(),
+						SavedInDeclarationMode = true,
+						Entries = cycleParser.Parse(cycleData).ToList()
+					};
+
 					var simulationRunData = new VectoRunData {
 						VehicleData = dao.CreateVehicleData(Vehicle, mission, loading),
 						EngineData = engineData,
 						GearboxData = dao.CreateGearboxData(Gearbox, engineData),
-						Aux = Aux,
-						// @@@ TODO: ...
-						Cycle = new DrivingCycleData {
-							Name = mission.ToString(),
-							SavedInDeclarationMode = true,
-							Entries = cycleEntries
-						},
+						Aux = dao.CreateAuxiliaryData(Aux, mission.MissionType, segment.VehicleClass),
+						Cycle = cycle,
 						IsEngineOnly = IsEngineOnly,
-						JobFileName = Job.JobFile,
+						JobFileName = Job.JobFile
 					};
 					yield return simulationRunData;
 				}
@@ -117,7 +120,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					Engine.BasePath = Path.GetDirectoryName(file);
 					break;
 				default:
-					throw new UnsupportedFileVersionException("Unsopported Version of engine-file. Got version " + fileInfo.Version);
+					throw new UnsupportedFileVersionException("Unsupported Version of engine-file. Got version " + fileInfo.Version);
 			}
 		}
 
@@ -133,21 +136,31 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					Gearbox.BasePath = Path.GetDirectoryName(file);
 					break;
 				default:
-					throw new UnsupportedFileVersionException("Unsopported Version of gearbox-file. Got version " + fileInfo.Version);
+					throw new UnsupportedFileVersionException("Unsupported Version of gearbox-file. Got version " + fileInfo.Version);
 			}
 		}
 
-		private void ReadAuxiliary(IEnumerable<VectoJobFileV2Declaration.DataBodyDecl.AuxDataDecl> auxList)
+		private void ReadAuxiliary(IEnumerable<VectoJobFileV2Declaration.DataBodyDecl.AuxDataDecl> auxiliaries)
 		{
-			Aux = auxList.Select(aux =>
-				new VectoRunData.AuxData {
-					ID = aux.ID,
-					Type = aux.Type,
-					Technology = aux.Technology,
-					TechList = aux.TechList.ToArray()
-				}).ToArray();
-		}
+			// get all constant auxiliaries defined in Declaration mode
+			// todo: catch exception when auxiliaries are not found
+			// todo: catch exception when to much auxiliaries are present
+			var aux = DeclarationData.AuxiliaryIDs().Select(id => {
+				var a = auxiliaries.First(decl => decl.ID == id);
+				return new VectoRunData.AuxData {
+					ID = a.ID,
+					Type = AuxiliaryTypeHelper.Parse(a.Type),
+					Technology = a.Technology,
+					TechList = a.TechList.ToArray(),
+					DemandType = AuxiliaryDemandType.Constant
+				};
+			});
 
+			// add a direct auxiliary
+			aux = aux.Concat(new VectoRunData.AuxData { DemandType = AuxiliaryDemandType.Direct }.ToEnumerable());
+
+			Aux = aux.ToArray();
+		}
 
 		internal Segment GetVehicleClassification(VehicleCategory category, AxleConfiguration axles, Kilogram grossMassRating,
 			Kilogram curbWeight)

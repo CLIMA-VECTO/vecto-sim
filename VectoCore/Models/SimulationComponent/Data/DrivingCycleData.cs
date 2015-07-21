@@ -138,7 +138,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			///     [kW]	"Aux_xxx" Supply Power input for each auxiliary defined in the .vecto file , where xxx matches the ID of the
 			///     corresponding Auxiliary. ID's are not case sensitive and must not contain space or special characters.
 			/// </summary>
-			// todo: implement additional aux as dictionary!
 			public const string AuxiliarySupplyPower = "Aux_";
 
 			/// <summary>
@@ -269,19 +268,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		}
 
 		/// <summary>
-		///     Reader for Auxiliary Supply Power.
+		/// Reader for Auxiliary Supply Power. Is used by Distance, Time, and EngineOnly based Data Parser.
 		/// </summary>
 		private static class AuxSupplyPowerReader
 		{
 			/// <summary>
-			///     [W]. Reads Auxiliary Supply Power (defined by Fields.AuxiliarySupplyPower-Prefix).
+			/// [W]. Reads Auxiliary Supply Power (defined by Fields.AuxiliarySupplyPower-Prefix).
 			/// </summary>
 			public static Dictionary<string, Watt> Read(DataRow row)
 			{
-				return row.Table.Columns.Cast<DataColumn>().
-					Where(col => col.ColumnName.StartsWith(Fields.AuxiliarySupplyPower)).
-					ToDictionary(col => col.ColumnName.Substring(Fields.AuxiliarySupplyPower.Length - 1),
-						col => row.ParseDouble(col).SI().Kilo.Watt.Cast<Watt>());
+				var auxCols = row.Table.Columns.Cast<DataColumn>().
+					Where(col => col.ColumnName.StartsWith(Fields.AuxiliarySupplyPower));
+
+				return auxCols.ToDictionary(key => key.ColumnName.Substring(Fields.AuxiliarySupplyPower.Length - 1),
+					value => row.ParseDouble(value).SI().Kilo.Watt.Cast<Watt>());
 			}
 		}
 

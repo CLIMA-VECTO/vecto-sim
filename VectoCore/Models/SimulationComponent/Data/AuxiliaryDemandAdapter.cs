@@ -1,64 +1,51 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	public class AuxiliaryCycleDemandAdapter : IAuxiliaryDemand
+	public class AuxiliaryDemand : IAuxiliaryDemand
 	{
-		private readonly string _auxiliaryId;
-		private readonly DrivingCycleData _drivingCycle;
-		private readonly IEnumerator<DrivingCycleData.DrivingCycleEntry> _nextCycleEntry;
+		private readonly Func<Watt> _getPower;
 
-		private readonly ILog Log;
-
-		public AuxiliaryCycleDemandAdapter(DrivingCycleData inputData, string column = null)
-		{
-			Log = LogManager.GetLogger(GetType());
-			_drivingCycle = inputData;
-			_nextCycleEntry = _drivingCycle.Entries.GetEnumerator();
-			_nextCycleEntry.MoveNext();
-			CurrentCycleEntry = _drivingCycle.Entries.First();
-			_auxiliaryId = column;
-			if (_auxiliaryId != null && !_drivingCycle.Entries.First().AuxiliarySupplyPower.ContainsKey(_auxiliaryId)) {
-				Log.ErrorFormat("driving cycle data does not contain column {0}", column);
-				throw new VectoException(string.Format("driving cycle does not contain column {0}", column));
-			}
-		}
-
-		protected DrivingCycleData.DrivingCycleEntry CurrentCycleEntry { get; set; }
-
-		public Watt GetPowerDemand(TimeSpan absTime, TimeSpan dt)
-		{
-			if (_nextCycleEntry.Current.Time <= absTime.TotalSeconds) {
-				CurrentCycleEntry = _nextCycleEntry.Current;
-				_nextCycleEntry.MoveNext();
-			}
-			return string.IsNullOrEmpty(_auxiliaryId)
-				? CurrentCycleEntry.AdditionalAuxPowerDemand
-				: CurrentCycleEntry.AuxiliarySupplyPower[_auxiliaryId];
-		}
-	}
-
-	public class AuxiliaryConstantDemand : IAuxiliaryDemand
-	{
 		/// <summary>
-		/// Actually Watt Per Second [W/s]
+		/// Creates a demand adapter which takes a specific aux column data from the cycle as base.
 		/// </summary>
-		private readonly Watt _powerDemand;
-
-		public AuxiliaryConstantDemand(Watt powerDemand)
+		/// <param name="drivingCycle"></param>
+		/// <param name="auxiliaryId"></param>
+		public AuxiliaryDemand(IDrivingCycleCockpit drivingCycle, string auxiliaryId)
 		{
-			_powerDemand = powerDemand;
+			if (!drivingCycle.CycleData().LeftSample.AuxiliarySupplyPower.ContainsKey(auxiliaryId)) {
+				var error = string.Format("driving cycle does not contain column for auxiliary: {0}", auxiliaryId);
+				LogManager.GetLogger(GetType()).ErrorFormat(error);
+				throw new VectoException(error);
+			}
+
+			_getPower = () => drivingCycle.CycleData().LeftSample.AuxiliarySupplyPower[auxiliaryId];
 		}
 
-
-		public Watt GetPowerDemand(TimeSpan ignored, TimeSpan ignored2)
+		/// <summary>
+		/// Creates a demand adapter which takes the single Additional Aux Power Demand Data as base.
+		/// </summary>
+		/// <param name="drivingCycle"></param>
+		public AuxiliaryDemand(IDrivingCycleCockpit drivingCycle)
 		{
-			return _powerDemand;
+			_getPower = () => drivingCycle.CycleData().LeftSample.AdditionalAuxPowerDemand;
+		}
+
+		/// <summary>
+		/// Creates a demand adapter which uses a constant power value as base.
+		/// </summary>
+		/// <param name="constantPowerDemand"></param>
+		public AuxiliaryDemand(Watt constantPowerDemand)
+		{
+			_getPower = () => constantPowerDemand;
+		}
+
+		public Watt GetPowerDemand()
+		{
+			return _getPower();
 		}
 	}
 }

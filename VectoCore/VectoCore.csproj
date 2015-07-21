@@ -123,6 +123,7 @@
     <Compile Include="FileIO\Reader\DataObjectAdaper\DeclarationDataAdapter.cs" />
     <Compile Include="FileIO\Reader\DataObjectAdaper\EngineeringDataAdapter.cs" />
     <Compile Include="FileIO\Reader\Impl\AbstractSimulationDataReader.cs" />
+    <Compile Include="FileIO\Reader\Impl\AuxiliaryTypeHelper.cs" />
     <Compile Include="FileIO\Reader\Impl\DeclarationModeSimulationDataReader.cs" />
     <Compile Include="FileIO\Reader\Impl\EngineeringModeSimulationDataReader.cs" />
     <Compile Include="FileIO\Reader\Impl\EngineOnlySimulationDataReader.cs" />
@@ -142,8 +143,11 @@
     <Compile Include="Models\Declaration\Rims.cs" />
     <Compile Include="Models\Declaration\Segments.cs" />
     <Compile Include="Models\Declaration\SteeringPump.cs" />
+    <Compile Include="Models\Declaration\TorqueConverter.cs" />
+    <Compile Include="Models\Declaration\VehicleClass.cs" />
     <Compile Include="Models\Declaration\Wheels.cs" />
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
+    <Compile Include="Models\SimulationComponent\Data\CycleData.cs" />
     <Compile Include="Models\SimulationComponent\Data\AccelerationCurve.cs" />
     <Compile Include="Models\Declaration\DeclarationData.cs" />
     <Compile Include="Models\Declaration\ElectricSystem.cs" />
@@ -152,7 +156,10 @@
     <Compile Include="Models\Declaration\Mission.cs" />
     <Compile Include="Models\Declaration\MissionType.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\PT1Curve.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\AuxiliaryData.cs" />
+    <Compile Include="Models\SimulationComponent\IDrivingCycleCockpit.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\MappingAuxiliaryData.cs" />
+    <Compile Include="Models\Simulation\Data\AuxiliaryDemandType.cs" />
+    <Compile Include="Models\SimulationComponent\Data\AuxiliaryType.cs" />
     <Compile Include="Models\Simulation\Impl\DistanceRun.cs" />
     <Compile Include="Models\Simulation\Impl\PowertrainBuilder.cs" />
     <Compile Include="Utils\DataTableExtensionMethods.cs" />
@@ -199,7 +206,7 @@
     <Compile Include="Utils\Physics.cs" />
     <Compile Include="Utils\SI.cs" />
     <Compile Include="Models\SimulationComponent\Data\SimulationComponentData.cs" />
-    <Compile Include="Models\SimulationComponent\IAuxiliary.cs" />
+    <Compile Include="Models\SimulationComponent\Data\IAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\ICombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\IGearbox.cs" />
     <Compile Include="Models\Connector\Ports\ISimulationPort.cs" />

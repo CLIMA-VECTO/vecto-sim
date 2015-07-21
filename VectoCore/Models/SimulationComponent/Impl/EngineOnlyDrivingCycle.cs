@@ -12,7 +12,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	///     Class representing one EngineOnly Driving Cycle
 	/// </summary>
-	public class EngineOnlySimulation : VectoSimulationComponent, IEngineOnlySimulation, ITnInPort,
+	public class EngineOnlySimulation : VectoSimulationComponent, IDrivingCycleCockpit, IEngineOnlySimulation, ITnInPort,
 		ISimulationOutPort
 	{
 		protected DrivingCycleData Data;
@@ -82,5 +82,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override void CommitSimulationStep(IModalDataWriter writer) {}
 
 		#endregion
+
+		public CycleData CycleData()
+		{
+			//todo EngineOnlyDrivingCycle.CycleData
+			throw new NotImplementedException();
+		}
 	}
 }

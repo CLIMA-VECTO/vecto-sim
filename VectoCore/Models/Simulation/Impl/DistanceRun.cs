@@ -10,7 +10,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	{
 		public DistanceRun(IVehicleContainer container) : base(container) {}
 
-		protected override Connector.Ports.IResponse DoSimulationStep()
+		protected override IResponse DoSimulationStep()
 		{
 			//_dt = TimeSpan.FromSeconds(1) - TimeSpan.FromMilliseconds(_dt.Milliseconds);
 

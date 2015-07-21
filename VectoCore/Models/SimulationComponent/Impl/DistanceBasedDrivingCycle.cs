@@ -178,5 +178,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public int CycleIndex;
 		}
+
+		public CycleData CycleData()
+		{
+			// TODO DistanceBasedDrivingCycle.CycleData
+			throw new NotImplementedException();
+		}
 	}
 }

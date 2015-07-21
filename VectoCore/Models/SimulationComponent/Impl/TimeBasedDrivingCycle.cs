@@ -90,5 +90,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				writer) {}
 
 		#endregion
+
+		public CycleData CycleData()
+		{
+			// Todo: TimeBasedDrivingCycle.CycleData
+			throw new NotImplementedException();
+		}
 	}
 }

@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public DrivingCycleData Cycle { get; internal set; }
 
-		public IList<AuxData> Aux { get; internal set; }
+		public IEnumerable<AuxData> Aux { get; internal set; }
 
 		public string AccelerationLimitingFile { get; internal set; }
 
@@ -39,14 +39,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public class AuxData
 		{
 			public string ID;
-			public string Type;
+			public AuxiliaryType Type;
 			public string Path;
 			public string Technology;
 			public string[] TechList;
 			public Watt PowerDemand;
-			public bool IsConstant;
-
-			public AuxiliaryData Data;
+			public AuxiliaryDemandType DemandType;
+			public MappingAuxiliaryData Data;
 		}
 
 		public class StartStopData

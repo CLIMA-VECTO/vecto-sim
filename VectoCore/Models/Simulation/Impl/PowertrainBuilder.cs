@@ -1,3 +1,4 @@
+using System;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -36,11 +37,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				//todo: make distinction between time based and distance based driving cycle!
 				cycle = new DistanceBasedDrivingCycle(_container, data.Cycle);
 			}
-			// connect cycle --> driver --> vehicle --> wheels --> axleGear --> gearBox --> retarder --> clutch
-			dynamic tmp = AddComponent(cycle, new Driver(_container, data.DriverData));
-			tmp = AddComponent(tmp, new Vehicle(_container, data.VehicleData));
-			tmp = AddComponent(tmp, new Wheels(_container, data.VehicleData.DynamicTyreRadius));
-			tmp = AddComponent(tmp, new AxleGear(_container, data.GearboxData.AxleGearData));
+			// cycle --> driver --> vehicle --> wheels --> axleGear --> retarder --> gearBox
+			var driver = AddComponent(cycle, new Driver(_container, data.DriverData));
+			var vehicle = AddComponent(driver, new Vehicle(_container, data.VehicleData));
+			var wheels = AddComponent(vehicle, new Wheels(_container, data.VehicleData.DynamicTyreRadius));
+			var tmp = AddComponent(wheels, new AxleGear(_container, data.GearboxData.AxleGearData));
 
 			switch (data.VehicleData.Retarder.Type) {
 				case RetarderData.RetarderType.Primary:
@@ -56,26 +57,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 			}
 
+			// gearbox --> clutch
 			tmp = AddComponent(tmp, new Clutch(_container, data.EngineData));
 
-			// connect cluch --> aux --> ... --> aux_XXX --> directAux
+			// clutch --> direct aux --> ... --> aux_XXX --> directAux
 			if (data.Aux != null) {
 				foreach (var auxData in data.Aux) {
-					IAuxiliary auxiliary;
-					if (auxData.IsConstant) {
-						auxiliary = new DirectAuxiliary(_container, new AuxiliaryConstantDemand(auxData.PowerDemand));
-					} else {
-						var auxCycleData = new AuxiliaryCycleDemandAdapter(data.Cycle, auxData.ID);
-						auxiliary = new MappingAuxiliary(_container, auxCycleData, auxData.Data);
+					switch (auxData.DemandType) {
+						case AuxiliaryDemandType.Constant:
+							tmp = AddComponent(tmp, new DirectAuxiliary(_container, new AuxiliaryDemand(auxData.PowerDemand)));
+							break;
+						case AuxiliaryDemandType.Direct:
+							tmp = AddComponent(tmp, new DirectAuxiliary(_container, new AuxiliaryDemand(cycle)));
+							break;
+						case AuxiliaryDemandType.Mapping:
+							tmp = AddComponent(tmp, new MappingAuxiliary(_container, new AuxiliaryDemand(cycle, auxData.ID), auxData.Data));
+							break;
 					}
-					tmp = AddComponent(tmp, auxiliary);
 				}
 			}
 
-			// connect directAux --> engine
-			IAuxiliary directAux = new DirectAuxiliary(_container, new AuxiliaryCycleDemandAdapter(data.Cycle));
-			tmp = AddComponent(tmp, directAux);
-
+			// connect aux --> engine
 			AddComponent(tmp, new CombustionEngine(_container, data.EngineData));
 
 			return _container;
@@ -134,15 +136,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var cycle = new EngineOnlySimulation(_container, data.Cycle);
 
+			var gearbox = new EngineOnlyGearbox(_container);
+			cycle.InPort().Connect(gearbox.OutPort());
+
+
+			var directAux = new DirectAuxiliary(_container, new AuxiliaryDemand(cycle));
+			gearbox.InPort().Connect(directAux.OutPort());
+
 			var engine = new CombustionEngine(_container, data.EngineData);
-			var gearBox = new EngineOnlyGearbox(_container);
-
-			IAuxiliary addAux = new DirectAuxiliary(_container, new AuxiliaryCycleDemandAdapter(data.Cycle));
-			addAux.InPort().Connect(engine.OutPort());
-
-			gearBox.InPort().Connect(addAux.OutPort());
-
-			cycle.InPort().Connect(gearBox.OutPort());
+			directAux.InPort().Connect(engine.OutPort());
 
 			return _container;
 		}

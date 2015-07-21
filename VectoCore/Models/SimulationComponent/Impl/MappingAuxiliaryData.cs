@@ -3,7 +3,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class AuxiliaryData
+	public class MappingAuxiliaryData
 	{
 		public double EfficiencyToSupply { get; set; }
 		public double TransitionRatio { get; set; }
@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new NotImplementedException();
 		}
 
-		public static AuxiliaryData ReadFromFile(string filePath)
+		public static MappingAuxiliaryData ReadFromFile(string filePath)
 		{
 			throw new NotImplementedException();
 		}

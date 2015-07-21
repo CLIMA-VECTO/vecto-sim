@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.DeclarationFile;
-using TUGraz.VectoCore.FileIO.EngineeringFile;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -134,7 +135,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 
 			for (uint i = 0; i < gearbox.Body.Gears.Count; i++) {
-				var gearSettings = gearbox.Body.Gears[(int) i];
+				var gearSettings = gearbox.Body.Gears[(int)i];
 				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
 				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
 
@@ -148,6 +149,38 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			}
 
 			return retVal;
+		}
+
+		public IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(IEnumerable<VectoRunData.AuxData> auxList,
+			MissionType mission, VehicleClass hvdClass)
+		{
+			foreach (var auxData in auxList) {
+				var aux = new VectoRunData.AuxData { DemandType = AuxiliaryDemandType.Constant };
+
+				switch (aux.Type) {
+					case AuxiliaryType.Fan:
+						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology);
+						aux.ID = Constants.Auxiliaries.IDs.Fan;
+						break;
+					case AuxiliaryType.SteeringPump:
+						aux.PowerDemand = DeclarationData.SteeringPump.Lookup(mission, hvdClass, auxData.Technology);
+						aux.ID = Constants.Auxiliaries.IDs.SteeringPump;
+						break;
+					case AuxiliaryType.HeatingVentilationAirCondition:
+						aux.PowerDemand = DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, hvdClass);
+						aux.ID = Constants.Auxiliaries.IDs.HeatingVentilationAirCondition;
+						break;
+					case AuxiliaryType.PneumaticSystem:
+						aux.PowerDemand = DeclarationData.PneumaticSystem.Lookup(mission, hvdClass);
+						aux.ID = Constants.Auxiliaries.IDs.PneumaticSystem;
+						break;
+					case AuxiliaryType.ElectricSystem:
+						aux.PowerDemand = DeclarationData.ElectricSystem.Lookup(mission, auxData.TechList);
+						aux.ID = Constants.Auxiliaries.IDs.ElectricSystem;
+						break;
+				}
+				yield return aux;
+			}
 		}
 	}
 }

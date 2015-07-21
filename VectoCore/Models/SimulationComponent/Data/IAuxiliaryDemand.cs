@@ -3,8 +3,14 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
+	/// <summary>
+	/// Interface for getting an power demand of an auxiliary.
+	/// </summary>
 	public interface IAuxiliaryDemand
 	{
-		Watt GetPowerDemand(TimeSpan absTime, TimeSpan dt);
+		/// <summary>
+		/// Returns the current power demand
+		/// </summary>
+		Watt GetPowerDemand();
 	}
 }

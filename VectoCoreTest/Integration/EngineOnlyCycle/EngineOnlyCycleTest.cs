@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var engineData =
 				EngineeringModeSimulationDataReader.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
 
-			var aux = new DirectAuxiliary(vehicle, new AuxiliaryCycleDemandAdapter(data));
+			var aux = new DirectAuxiliary(vehicle, new MockAuxiliaryDemand(data));
 			var gearbox = new EngineOnlyGearbox(vehicle);
 
 
@@ -37,9 +37,6 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			aux.InPort().Connect(engine.OutPort());
 			gearbox.InPort().Connect(aux.OutPort());
 			var port = aux.OutPort();
-
-//			IVectoJob job = SimulationFactory.CreateTimeBasedEngineOnlyRun(TestContext.DataRow["EngineFile"].ToString(),
-//				TestContext.DataRow["CycleFile"].ToString(), "test2.csv");
 
 			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
 			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
@@ -51,9 +48,6 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 				ModalResultField.n, ModalResultField.PaEng, ModalResultField.Tq_drag, ModalResultField.Pe_drag,
 				ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.Tq_full, ModalResultField.Pe_full
 			};
-			//, ModalResultField.FC };
-			//var siFactor = new[] { 1, 1000, 1, 1000, 1000, 1, 1, 1000, 1 };
-			//var tolerances = new[] { 0.0001, 0.1, 0.0001, 0.1, 0.1, 0.001, 0.001, 0.1, 0.01 };
 			foreach (var cycle in data.Entries) {
 				port.Request(absTime, dt, cycle.EngineTorque, cycle.EngineSpeed);
 				foreach (var sc in vehicle.SimulationComponents()) {
@@ -65,7 +59,6 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 				if (i > 2) {
 					for (var j = 0; j < results.Length; j++) {
 						var field = results[j];
-						//						if (!Double.IsNaN(dataWriter.GetDouble(field)))
 						Assert.AreEqual((double)row[field.GetName()], dataWriter.GetDouble(field),
 							0.0001,
 							string.Format("t: {0}  field: {1}", i, field));

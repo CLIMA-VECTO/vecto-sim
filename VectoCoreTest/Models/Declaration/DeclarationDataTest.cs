@@ -265,19 +265,19 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var hvac = DeclarationData.HeatingVentilationAirConditioning;
 
-			var expected = new Dictionary<string, int[]> {
-				{ "1", new[] { 0, 150, 150, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "2", new[] { 200, 200, 150, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "3", new[] { 0, 200, 150, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "4", new[] { 350, 200, 0, 300, 0, 0, 0, 0, 0, 0 } },
-				{ "5", new[] { 350, 200, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "6", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "7", new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } },
-				{ "8", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "9", new[] { 350, 200, 0, 300, 0, 0, 0, 0, 0, 0 } },
-				{ "10", new[] { 350, 200, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "11", new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } },
-				{ "12", new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } }
+			var expected = new Dictionary<VehicleClass, int[]> {
+				{ VehicleClass.Class1, new[] { 0, 150, 150, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class2, new[] { 200, 200, 150, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class3, new[] { 0, 200, 150, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class4, new[] { 350, 200, 0, 300, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class5, new[] { 350, 200, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class6, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class7, new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class9, new[] { 350, 200, 0, 300, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class10, new[] { 350, 200, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class11, new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class12, new[] { 0, 0, 0, 0, 200, 0, 0, 0, 0, 0 } }
 			};
 
 			for (var i = 0; i < Missions.Length; i++) {
@@ -293,19 +293,19 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var ps = DeclarationData.PneumaticSystem;
 
-			var expected = new Dictionary<string, int[]> {
-				{ "1", new[] { 0, 1300, 1240, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "2", new[] { 1180, 1280, 1320, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "3", new[] { 0, 1360, 1380, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "4", new[] { 1300, 1340, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "5", new[] { 1340, 1820, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "6", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "7", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "8", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "9", new[] { 1340, 1540, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "10", new[] { 1340, 1820, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "11", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-				{ "12", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
+			var expected = new Dictionary<VehicleClass, int[]> {
+				{ VehicleClass.Class1, new[] { 0, 1300, 1240, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class2, new[] { 1180, 1280, 1320, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class3, new[] { 0, 1360, 1380, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class4, new[] { 1300, 1340, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class5, new[] { 1340, 1820, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class6, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class7, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class9, new[] { 1340, 1540, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class10, new[] { 1340, 1820, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class11, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+				{ VehicleClass.Class12, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } }
 			};
 
 			for (var i = 0; i < Missions.Length; i++) {
@@ -321,45 +321,45 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		{
 			var sp = DeclarationData.SteeringPump;
 
-			var expected = new Dictionary<string, Dictionary<string, int[]>> {
+			var expected = new Dictionary<string, Dictionary<VehicleClass, int[]>> {
 				{
-					"Fixed displacement", new Dictionary<string, int[]> {
-						{ "1", new[] { 0, 260, 270, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "2", new[] { 370, 320, 310, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "3", new[] { 0, 340, 350, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "4", new[] { 610, 530, 0, 530, 0, 0, 0, 0, 0, 0 } },
-						{ "5", new[] { 720, 630, 620, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "6", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "7", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "8", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "9", new[] { 720, 550, 0, 550, 0, 0, 0, 0, 0, 0 } },
-						{ "10", new[] { 570, 530, 0, 0, 0, 0, 0, 0, 0, 0 } }
+					"Fixed displacement", new Dictionary<VehicleClass, int[]> {
+						{ VehicleClass.Class1, new[] { 0, 260, 270, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class2, new[] { 370, 320, 310, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class3, new[] { 0, 340, 350, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class4, new[] { 610, 530, 0, 530, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class5, new[] { 720, 630, 620, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class6, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class7, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class9, new[] { 720, 550, 0, 550, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class10, new[] { 570, 530, 0, 0, 0, 0, 0, 0, 0, 0 } }
 					}
 				}, {
-					"Variable displacement", new Dictionary<string, int[]> {
-						{ "1", new[] { 0, 156, 162, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "2", new[] { 222, 192, 186, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "3", new[] { 0, 204, 210, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "4", new[] { 366, 318, 0, 318, 0, 0, 0, 0, 0, 0 } },
-						{ "5", new[] { 432, 378, 372, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "6", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "7", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "8", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "9", new[] { 432, 330, 0, 330, 0, 0, 0, 0, 0, 0 } },
-						{ "10", new[] { 342, 318, 0, 0, 0, 0, 0, 0, 0, 0 } }
+					"Variable displacement", new Dictionary<VehicleClass, int[]> {
+						{ VehicleClass.Class1, new[] { 0, 156, 162, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class2, new[] { 222, 192, 186, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class3, new[] { 0, 204, 210, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class4, new[] { 366, 318, 0, 318, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class5, new[] { 432, 378, 372, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class6, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class7, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class9, new[] { 432, 330, 0, 330, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class10, new[] { 342, 318, 0, 0, 0, 0, 0, 0, 0, 0 } }
 					}
 				}, {
-					"Hydraulic supported by electric", new Dictionary<string, int[]> {
-						{ "1", new[] { 0, 225, 235, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "2", new[] { 322, 278, 269, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "3", new[] { 0, 295, 304, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "4", new[] { 531, 460, 0, 460, 0, 0, 0, 0, 0, 0 } },
-						{ "5", new[] { 627, 546, 540, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "6", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "7", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "8", new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
-						{ "9", new[] { 627, 478, 0, 478, 0, 0, 0, 0, 0, 0 } },
-						{ "10", new[] { 498, 461, 0, 0, 0, 0, 0, 0, 0, 0 } }
+					"Hydraulic supported by electric", new Dictionary<VehicleClass, int[]> {
+						{ VehicleClass.Class1, new[] { 0, 225, 235, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class2, new[] { 322, 278, 269, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class3, new[] { 0, 295, 304, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class4, new[] { 531, 460, 0, 460, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class5, new[] { 627, 546, 540, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class6, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class7, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class8, new[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class9, new[] { 627, 478, 0, 478, 0, 0, 0, 0, 0, 0 } },
+						{ VehicleClass.Class10, new[] { 498, 461, 0, 0, 0, 0, 0, 0, 0, 0 } }
 					}
 				}
 			};
@@ -395,7 +395,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 				vehicleData.GrossVehicleMassRating, vehicleData.CurbWeight);
 
 
-			Assert.AreEqual("2", segment.VehicleClass);
+			Assert.AreEqual(VehicleClass.Class2, segment.VehicleClass);
 
 			var data = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
 			TestAcceleration(data);

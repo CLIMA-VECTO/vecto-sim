@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						absTime.TotalSeconds));
 			}
 
-			_powerDemand = _demand.GetPowerDemand(absTime, dt);
+			_powerDemand = _demand.GetPowerDemand();
 			var tq = Formulas.PowerToTorque(_powerDemand, engineSpeed);
 			return _outPort.Request(absTime, dt, torque + tq, engineSpeed);
 		}

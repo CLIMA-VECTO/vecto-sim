@@ -2,9 +2,30 @@
 
 namespace TUGraz.VectoCore.Configuration
 {
-	public class Constants
+	public static class Constants
 	{
-		public class FileExtensions
+		public static class Auxiliaries
+		{
+			public static class IDs
+			{
+				public const string Fan = "FAN";
+				public const string SteeringPump = "STP";
+				public const string ElectricSystem = "ES";
+				public const string HeatingVentilationAirCondition = "AS";
+				public const string PneumaticSystem = "PS";
+			}
+
+			public static class Names
+			{
+				public const string Fan = "Fan";
+				public const string SteeringPump = "Steering pump";
+				public const string ElectricSystem = "Electric System";
+				public const string HeatingVentilationAirCondition = "HVAC";
+				public const string PneumaticSystem = "Pneumatic System";
+			}
+		}
+
+		public static class FileExtensions
 		{
 			public const string ModDataFile = ".vmod";
 
@@ -17,7 +38,7 @@ namespace TUGraz.VectoCore.Configuration
 			public const string CycleFile = ".vdri";
 		}
 
-		public class SimulationSettings
+		public static class SimulationSettings
 		{
 			/// <summary>
 			/// base time interval for the simulation. the distance is estimated to reach this time interval as good as possible

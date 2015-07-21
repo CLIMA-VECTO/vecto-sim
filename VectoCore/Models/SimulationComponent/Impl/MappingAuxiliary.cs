@@ -11,11 +11,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class MappingAuxiliary : VectoSimulationComponent, IAuxiliary, ITnInPort, ITnOutPort
 	{
 		private readonly IAuxiliaryDemand _demand;
-		private AuxiliaryData _data;
+		private MappingAuxiliaryData _data;
 		private ITnOutPort _outPort;
 		private Watt _powerDemand;
 
-		public MappingAuxiliary(IVehicleContainer container, IAuxiliaryDemand demand, AuxiliaryData data)
+		public MappingAuxiliary(IVehicleContainer container, IAuxiliaryDemand demand, MappingAuxiliaryData data)
 			: base(container)
 		{
 			_demand = demand;
@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						absTime.TotalSeconds));
 			}
 
-			var power_supply = _demand.GetPowerDemand(absTime, dt);
+			var power_supply = _demand.GetPowerDemand();
 			var power_aux_out = power_supply / _data.EfficiencyToSupply;
 
 			var n_auxiliary = angularVelocity * _data.TransitionRatio;
