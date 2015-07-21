@@ -272,26 +272,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 			if (k.IsEqual(0.0)) {
 				// rectangle
+				// area = M * n
 				return (p1.EngineSpeed + (area / d.Value()));
 			}
 
-			var a = k.Value() / 2.0;
-			var b = d.Value();
-			var c = (k * p1.EngineSpeed * p1.EngineSpeed + 2 * p1.EngineSpeed * d).Value();
-
-			var D = b * b - 4 * a * c;
-
-			var retVal = new List<PerSecond>();
-			if (D < 0) {
+			// non-constant torque, M(n) = k * n + d
+			// area = M(n1) * n + (M(n1) + M(n2))/2 => solve for n
+			var retVal = VectoMath.QuadraticEquationSolver(k.Value() / 2.0, d.Value(),
+				(k * p1.EngineSpeed * p1.EngineSpeed + 2 * p1.EngineSpeed * d).Value());
+			if (retVal.Count == 0) {
 				Log.InfoFormat("No real solution found for requested area: P: {0}, p1: {1}, p2: {2}", area, p1, p2);
-				return null;
-			} else if (D > 0) {
-				// two solutions possible
-				retVal.Add((-b + Math.Sqrt(D) / (2 * a)).SI<PerSecond>());
-				retVal.Add((-b - Math.Sqrt(D) / (2 * a)).SI<PerSecond>());
-			} else {
-				// only one solution possible
-				retVal.Add((-b / (4 * a * c)).SI<PerSecond>());
 			}
 			return retVal.First(x => x >= p1.EngineSpeed && x <= p2.EngineSpeed);
 		}
@@ -336,23 +326,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			var retVal = new List<PerSecond>();
 			if (k.IsEqual(0, 0.0001)) {
 				// constant torque, solve linear equation
+				// power = M * n
 				retVal.Add((power.Value() / d.Value()).SI<PerSecond>());
 			} else {
-				// non-constant torque, solve quadratic equation
-				var a = k.Value();
-				var b = d.Value();
-				var c = -power.Value();
-
-				var D = b * b - 4 * a * c;
-				if (D < 0) {
+				// non-constant torque, solve quadratic equation for engine speed (n)
+				// power = M(n) * n = (k * n + d) * n =  k * n^2 + d * n
+				retVal = VectoMath.QuadraticEquationSolver(k.Value(), d.Value(), -power.Value());
+				if (retVal.Count == 0) {
 					Log.InfoFormat("No real solution found for requested power demand: P: {0}, p1: {1}, p2: {2}", power, p1, p2);
-				} else if (D > 0) {
-					// two solutions possible
-					retVal.Add(((-b + Math.Sqrt(D)) / (2 * a)).SI<PerSecond>());
-					retVal.Add(((-b - Math.Sqrt(D)) / (2 * a)).SI<PerSecond>());
-				} else {
-					// only one solution possible
-					retVal.Add((-b / (2 * a)).SI<PerSecond>());
 				}
 			}
 			retVal = retVal.Where(x => x >= p1.EngineSpeed && x <= p2.EngineSpeed).ToList();

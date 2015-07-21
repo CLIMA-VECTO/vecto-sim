@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -64,6 +65,24 @@ namespace TUGraz.VectoCore.Utils
 		public static Radian InclinationToAngle(double inclinationPercent)
 		{
 			return Math.Atan(inclinationPercent).SI<Radian>();
+		}
+
+		public static List<PerSecond> QuadraticEquationSolver(double a, double b, double c)
+		{
+			var retVal = new List<PerSecond>();
+			var D = b * b - 4 * a * c;
+
+			if (D < 0) {
+				return retVal;
+			} else if (D > 0) {
+				// two solutions possible
+				retVal.Add((-b + Math.Sqrt(D) / (2 * a)).SI<PerSecond>());
+				retVal.Add((-b - Math.Sqrt(D) / (2 * a)).SI<PerSecond>());
+			} else {
+				// only one solution possible
+				retVal.Add((-b / (4 * a * c)).SI<PerSecond>());
+			}
+			return retVal;
 		}
 	}
 }
