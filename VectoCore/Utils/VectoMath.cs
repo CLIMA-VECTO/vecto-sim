@@ -67,20 +67,20 @@ namespace TUGraz.VectoCore.Utils
 			return Math.Atan(inclinationPercent).SI<Radian>();
 		}
 
-		public static List<PerSecond> QuadraticEquationSolver(double a, double b, double c)
+		public static List<double> QuadraticEquationSolver(double a, double b, double c)
 		{
-			var retVal = new List<PerSecond>();
+			var retVal = new List<double>();
 			var D = b * b - 4 * a * c;
 
 			if (D < 0) {
 				return retVal;
 			} else if (D > 0) {
 				// two solutions possible
-				retVal.Add((-b + Math.Sqrt(D) / (2 * a)).SI<PerSecond>());
-				retVal.Add((-b - Math.Sqrt(D) / (2 * a)).SI<PerSecond>());
+				retVal.Add((-b + Math.Sqrt(D)) / (2 * a));
+				retVal.Add((-b - Math.Sqrt(D)) / (2 * a));
 			} else {
 				// only one solution possible
-				retVal.Add((-b / (4 * a * c)).SI<PerSecond>());
+				retVal.Add((-b / (4 * a * c)));
 			}
 			return retVal;
 		}
