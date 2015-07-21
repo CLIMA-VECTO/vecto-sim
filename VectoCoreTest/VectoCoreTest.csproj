@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
+    <Compile Include="Models\Simulation\AuxTests.cs" />
     <Compile Include="Utils\MockAuxiliaryDemand.cs" />
     <Compile Include="Integration\SimulationRuns\MinimalPowertrain.cs" />
     <Compile Include="Models\Declaration\DeclarationDataTest.cs" />
