@@ -18,6 +18,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			HasTorqueConverter = false;
 			ModFileName = modFileName;
 			Data = new ModalResults();
+			Auxiliaries = new Dictionary<string, Watt>();
 			CurrentRow = Data.NewRow();
 			_engineOnly = engineOnly;
 		}
@@ -105,5 +106,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			get { return CurrentRow[(int)key]; }
 			set { CurrentRow[(int)key] = value; }
 		}
+
+		public Dictionary<string, Watt> Auxiliaries { get; set; }
 	}
 }

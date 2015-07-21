@@ -1,22 +1,32 @@
 using System.Collections.Generic;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockAuxiliaryDemand : IAuxiliaryDemand
+	public class MockDrivingCycle : IDrivingCycleCockpit
 	{
-		private List<DrivingCycleData.DrivingCycleEntry>.Enumerator _it;
+		private List<DrivingCycleData.DrivingCycleEntry>.Enumerator _left;
+		private List<DrivingCycleData.DrivingCycleEntry>.Enumerator _right;
 
-		public MockAuxiliaryDemand(DrivingCycleData data)
+		public MockDrivingCycle(DrivingCycleData data)
 		{
-			_it = data.Entries.GetEnumerator();
+			_left = data.Entries.GetEnumerator();
+			_right = data.Entries.GetEnumerator();
+			_right.MoveNext();
 		}
 
-		public Watt GetPowerDemand()
+		public CycleData CycleData()
 		{
-			_it.MoveNext();
-			return _it.Current.AdditionalAuxPowerDemand;
+			_left.MoveNext();
+			_right.MoveNext();
+			return new CycleData {
+				AbsTime = 0.SI<Second>(),
+				AbsDistance = 0.SI<Meter>(),
+				LeftSample = _left.Current,
+				RightSample = _right.Current
+			};
 		}
 	}
 }

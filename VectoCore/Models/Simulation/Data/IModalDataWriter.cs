@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
@@ -23,5 +24,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		object Compute(string expression, string filter);
 
 		IEnumerable<T> GetValues<T>(ModalResultField key);
+
+		Dictionary<string, Watt> Auxiliaries { get; set; }
 	}
 }

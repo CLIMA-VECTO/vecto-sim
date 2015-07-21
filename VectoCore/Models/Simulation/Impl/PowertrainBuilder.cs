@@ -60,21 +60,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			// gearbox --> clutch
 			tmp = AddComponent(tmp, new Clutch(_container, data.EngineData));
 
+
 			// clutch --> direct aux --> ... --> aux_XXX --> directAux
 			if (data.Aux != null) {
+				var aux = new Auxiliary(_container);
 				foreach (var auxData in data.Aux) {
 					switch (auxData.DemandType) {
 						case AuxiliaryDemandType.Constant:
-							tmp = AddComponent(tmp, new DirectAuxiliary(_container, new AuxiliaryDemand(auxData.PowerDemand)));
+							aux.AddConstant(auxData.ID, auxData.PowerDemand);
 							break;
 						case AuxiliaryDemandType.Direct:
-							tmp = AddComponent(tmp, new DirectAuxiliary(_container, new AuxiliaryDemand(cycle)));
+							aux.AddDirect(cycle);
 							break;
 						case AuxiliaryDemandType.Mapping:
-							tmp = AddComponent(tmp, new MappingAuxiliary(_container, new AuxiliaryDemand(cycle, auxData.ID), auxData.Data));
+							aux.AddMapping(auxData.ID, cycle, auxData.Data);
 							break;
 					}
 				}
+				tmp = AddComponent(tmp, aux);
 			}
 
 			// connect aux --> engine
@@ -140,7 +143,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			cycle.InPort().Connect(gearbox.OutPort());
 
 
-			var directAux = new DirectAuxiliary(_container, new AuxiliaryDemand(cycle));
+			var directAux = new Auxiliary(_container);
+			directAux.AddDirect(cycle);
 			gearbox.InPort().Connect(directAux.OutPort());
 
 			var engine = new CombustionEngine(_container, data.EngineData);

@@ -22,13 +22,15 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 		public void TestEngineOnlyDrivingCycle()
 		{
 			var data = DrivingCycleData.ReadFromFileEngineOnly(TestContext.DataRow["CycleFile"].ToString());
+			var cycle = new MockDrivingCycle(data);
 			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
 			var vehicle = new VehicleContainer();
 			var engineData =
 				EngineeringModeSimulationDataReader.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
 
-			var aux = new DirectAuxiliary(vehicle, new MockAuxiliaryDemand(data));
+			var aux = new Auxiliary(vehicle);
+			aux.AddDirect(cycle);
 			var gearbox = new EngineOnlyGearbox(vehicle);
 
 
@@ -48,8 +50,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 				ModalResultField.n, ModalResultField.PaEng, ModalResultField.Tq_drag, ModalResultField.Pe_drag,
 				ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.Tq_full, ModalResultField.Pe_full
 			};
-			foreach (var cycle in data.Entries) {
-				port.Request(absTime, dt, cycle.EngineTorque, cycle.EngineSpeed);
+			foreach (var cycleEntry in data.Entries) {
+				port.Request(absTime, dt, cycleEntry.EngineTorque, cycleEntry.EngineSpeed);
 				foreach (var sc in vehicle.SimulationComponents()) {
 					sc.CommitSimulationStep(dataWriter);
 				}
@@ -60,8 +62,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 					for (var j = 0; j < results.Length; j++) {
 						var field = results[j];
 						Assert.AreEqual((double)row[field.GetName()], dataWriter.GetDouble(field),
-							0.0001,
-							string.Format("t: {0}  field: {1}", i, field));
+							0.0001, string.Format("t: {0}  field: {1}", i, field));
 					}
 					if (row[ModalResultField.FC.GetName()] is double &&
 						!double.IsNaN(double.Parse(row[ModalResultField.FC.GetName()].ToString()))) {

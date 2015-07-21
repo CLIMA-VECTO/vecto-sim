@@ -1,6 +1,4 @@
-﻿using TUGraz.VectoCore.Models.Connector.Ports;
-
-namespace TUGraz.VectoCore.Models.SimulationComponent
+﻿namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	/// <summary>
 	/// Defines interfaces for auxiliary components.

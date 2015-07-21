@@ -123,7 +123,6 @@
     <Compile Include="FileIO\Reader\DataObjectAdaper\DeclarationDataAdapter.cs" />
     <Compile Include="FileIO\Reader\DataObjectAdaper\EngineeringDataAdapter.cs" />
     <Compile Include="FileIO\Reader\Impl\AbstractSimulationDataReader.cs" />
-    <Compile Include="FileIO\Reader\Impl\AuxiliaryTypeHelper.cs" />
     <Compile Include="FileIO\Reader\Impl\DeclarationModeSimulationDataReader.cs" />
     <Compile Include="FileIO\Reader\Impl\EngineeringModeSimulationDataReader.cs" />
     <Compile Include="FileIO\Reader\Impl\EngineOnlySimulationDataReader.cs" />
@@ -166,7 +165,6 @@
     <Compile Include="Utils\EnumHelper.cs" />
     <Compile Include="Utils\RessourceHelper.cs" />
     <Compile Include="Models\Declaration\Segment.cs" />
-    <Compile Include="Models\SimulationComponent\Data\AuxiliaryDemandAdapter.cs" />
     <Compile Include="Models\Declaration\Axle.cs" />
     <Compile Include="Models\Declaration\AxleConfiguration.cs" />
     <Compile Include="Models\SimulationComponent\Data\CombustionEngineData.cs" />
@@ -188,7 +186,6 @@
     <Compile Include="Models\SimulationComponent\IEngineOnlyDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\IDriver.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\MappingAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Vehicle.cs" />
     <Compile Include="Models\SimulationComponent\IVehicle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Clutch.cs" />
@@ -211,7 +208,7 @@
     <Compile Include="Models\SimulationComponent\IGearbox.cs" />
     <Compile Include="Models\Connector\Ports\ISimulationPort.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DistanceBasedDrivingCycle.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\DirectAuxiliary.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\Auxiliary.cs" />
     <Compile Include="Models\SimulationComponent\Impl\TimeBasedDrivingCycle.cs" />
     <Compile Include="Models\SimulationComponent\Impl\CombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyGearbox.cs" />
