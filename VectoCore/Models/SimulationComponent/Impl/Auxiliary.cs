@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_powerDemands[kv.Key] = demand;
 			}
 
-			return _outPort.Request(absTime, dt, torque + powerDemand * engineSpeed, engineSpeed);
+			return _outPort.Request(absTime, dt, torque + powerDemand / engineSpeed, engineSpeed);
 		}
 
 		#endregion
