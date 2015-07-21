@@ -1,6 +1,9 @@
 using System;
+using System.CodeDom;
+using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -56,14 +59,41 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected IResponse DoHandleRequest(TimeSpan absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			return null;
+			var currentSpeed = Cockpit.VehicleSpeed();
+
+			var requiredAverageSpeed = (targetVelocity + currentSpeed) / 2.0;
+			var requiredAcceleration =
+				(((targetVelocity - currentSpeed) * requiredAverageSpeed) / ds).Cast<MeterPerSquareSecond>();
+			var maxAcceleration = DriverData.AccelerationCurve.Lookup(currentSpeed);
+
+			if (requiredAcceleration > maxAcceleration.Acceleration) {
+				requiredAcceleration = maxAcceleration.Acceleration;
+			}
+			if (requiredAcceleration < maxAcceleration.Deceleration) {
+				requiredAcceleration = maxAcceleration.Deceleration;
+			}
+
+			var solutions = VectoMath.QuadraticEquationSolver(requiredAcceleration.Value() / 2.0, currentSpeed.Value(),
+				-ds.Value());
+			solutions = solutions.Where(x => x >= 0).ToList();
+
+			if (solutions.Count == 0) {
+				Log.WarnFormat(
+					"Could not find solution for computing required time interval to drive distance {0}. currentSpeed: {1}, targetSpeed: {2}, acceleration: {3}",
+					ds, currentSpeed, targetVelocity, requiredAcceleration);
+				return new ResponseFailTimeInterval();
+			}
+			var dt = TimeSpan.FromSeconds(solutions.First());
+			var retVal = Next.Request(absTime, dt, requiredAcceleration, gradient);
+			retVal.SimulationInterval = dt;
+			return retVal;
 		}
 
 
 		protected IResponse DoHandleRequest(TimeSpan absTime, TimeSpan dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			if (!targetVelocity.IsEqual(0) || !Cockpit.VehicleSpeed().IsEqual(0)) {
-				throw new VectoException("TargetVelocity or VehicleVelocity is not zero!");
+				throw new NotImplementedException("TargetVelocity or VehicleVelocity is not zero!");
 			}
 			return Next.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
 		}

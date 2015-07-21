@@ -89,6 +89,7 @@
     <Compile Include="Models\Simulation\DrivingCycleTests.cs" />
     <Compile Include="Utils\AssertHelper.cs" />
     <Compile Include="Utils\MockDriver.cs" />
+    <Compile Include="Utils\MockVehicle.cs" />
     <Compile Include="Utils\ResultFileHelper.cs" />
     <Compile Include="Utils\MockPorts.cs" />
     <Compile Include="Models\Simulation\SimulationTests.cs" />
