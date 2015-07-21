@@ -59,6 +59,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		protected SummaryFileWriter() {}
 
+		private string[] _auxColumns;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SummaryFileWriter"/> class.
 		/// </summary>
@@ -68,15 +70,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			_sumFileName = sumFileName;
 
 			_table = new DataTable();
-			_table.Columns.Add(JOB, typeof (string));
-			_table.Columns.Add(INPUTFILE, typeof (string));
-			_table.Columns.Add(CYCLE, typeof (string));
+			_table.Columns.Add(JOB, typeof(string));
+			_table.Columns.Add(INPUTFILE, typeof(string));
+			_table.Columns.Add(CYCLE, typeof(string));
 
 			_table.Columns.AddRange(new[] {
 				TIME, DISTANCE, SPEED, ALTITUDE, PPOS, PNEG, FC, FCAUXC, FCWHTCC, PBRAKE, EPOSICE, ENEGICE, EAIR, EROLL, EGRAD,
 				EACC, EAUX, EBRAKE, ETRANSM, ERETARDER, MASS, LOADING, A, APOS, ANEG, PACC, PDEC, PCRUISE, PSTOP, ETORQUECONV, CO2,
 				CO2T, FCFINAL, FCFINAL_LITER, FCFINAL_LITERPER100TKM, ACCNOISE
-			}.Select(x => new DataColumn(x, typeof (double))).ToArray());
+			}.Select(x => new DataColumn(x, typeof(double))).ToArray());
 		}
 
 		public void WriteEngineOnly(IModalDataWriter data, string jobFileName, string jobName, string cycleFileName)
@@ -92,12 +94,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			row[FCAUXC] = data.Compute("Avg([FC-AUXc])", "");
 			row[FCWHTCC] = data.Compute("Avg([FC-WHTCc])", "");
 
-			//todo auxiliaries
-			//foreach (var auxCol in data.Auxiliaries) {
-			//    row["Eaux_" + auxCol.jobName + " [kwh]"] = data.Compute("Sum(aux_" + auxCol.jobName + ")", "");
-			//}
+			WriteAuxiliaries(data, row);
+
 
 			_table.Rows.Add(row);
+		}
+
+		private void WriteAuxiliaries(IModalDataWriter data, DataRow row)
+		{
+			_auxColumns = data.Auxiliaries.Select(kv => "Eaux_" + kv.Key + " [kwh]").ToArray();
+
+			var sum = 0.0;
+			foreach (var aux in data.Auxiliaries) {
+				var currentSum = aux.Value.Sum().Value();
+				row["Eaux_" + aux.Key + " [kwh]"] = currentSum;
+				sum += currentSum;
+			}
+			row[EAUX] = sum;
 		}
 
 
@@ -135,10 +148,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			//row["∆altitude [m]"] = Data.Rows[Data.Rows.Count - 1].Field<double>("altitude") -
 			//						Data.Rows[0].Field<double>("altitude");
 
-			//todo auxiliaries
-			//foreach (var auxCol in data.Auxiliaries) {
-			//    row["Eaux_" + auxCol.jobName + " [kwh]"] = data.Compute("Sum(aux_" + auxCol.jobName + ")", "");
-			//}
+			WriteAuxiliaries(data, row);
 
 			//todo get data from vehicle file
 			row[MASS] = vehicleMass == null ? "" : vehicleMass.ToString();
@@ -211,7 +221,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public virtual void Finish()
 		{
-			//todo aux
 			string[] dataColumns;
 			if (_engineOnly) {
 				dataColumns = new[] { JOB, INPUTFILE, CYCLE, TIME, PPOS, PNEG, FC, FCAUXC, FCWHTCC };
@@ -223,7 +232,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				};
 			}
 
-			VectoCSVFile.Write(_sumFileName, new DataView(_table).ToTable(false, dataColumns));
+			VectoCSVFile.Write(_sumFileName, new DataView(_table).ToTable(false, dataColumns.Concat(_auxColumns).ToArray()));
 		}
 	}
 }

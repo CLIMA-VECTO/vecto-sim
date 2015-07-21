@@ -19,6 +19,11 @@ namespace TUGraz.VectoCore.Utils
 			yield return item;
 		}
 
+		public static T Sum<T>(this IEnumerable<T> list) where T : SIBase<T>
+		{
+			return list.Aggregate((sum, current) => sum + current);
+		}
+
 		public static Func<bool> Once()
 		{
 			var once = 0;

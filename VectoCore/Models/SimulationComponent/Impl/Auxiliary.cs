@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (string.IsNullOrWhiteSpace(kv.Key)) {
 					writer[ModalResultField.Paux] = kv.Value;
 				} else {
-					writer.Auxiliaries[kv.Key] = kv.Value;
+					writer.Auxiliaries[kv.Key].Add(kv.Value);
 				}
 			}
 		}

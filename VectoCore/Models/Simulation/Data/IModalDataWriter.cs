@@ -25,6 +25,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		IEnumerable<T> GetValues<T>(ModalResultField key);
 
-		Dictionary<string, Watt> Auxiliaries { get; set; }
+		Dictionary<string, IList<Watt>> Auxiliaries { get; set; }
 	}
 }

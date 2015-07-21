@@ -379,10 +379,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 		[TestMethod]
 		public void SegmentTest()
 		{
-			//var factory = DeclarationModeFactory.Instance();
-			//var job = factory.ReadJobFile("12t Delivery Truck.vecto");
-			//var vehicleData = factory.ReadVehicleData(job.VehicleFile);
-
 			//mock vehicleData
 			var vehicleData = new {
 				VehicleCategory = VehicleCategory.RigidTruck,
@@ -452,48 +448,6 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.AreEqual(0.3941 * vehicleData.GrossVehicleMassRating - 1705.9, urbanDeliveryMission.RefLoad);
 			Assert.AreEqual(vehicleData.GrossVehicleMassRating - urbanDeliveryMission.MassExtra - vehicleData.CurbWeight,
 				urbanDeliveryMission.MaxLoad);
-
-
-			//// FACTORY
-			//var runs = new List<IVectoRun>();
-
-			//foreach (var mission in segment.Missions) {
-			//	foreach (var loading in mission.Loadings) {
-			//		var container = new VehicleContainer();
-
-			//		// connect cycle --> driver --> vehicle --> wheels --> axleGear --> gearBox
-			//		//         --> retarder --> clutch --> aux --> ... --> aux_XXX --> directAux --> engine
-			//		var engineData = factory.ReadEngineData(job.EngineFile);
-			//		var engine = new CombustionEngine(container, engineData);
-
-			//		// todo AUX
-			//		// todo clutch
-			//		// todo retarder
-
-			//		var gearboxData = factory.ReadGearboxData(job.GearboxFile);
-			//		var gearbox = new Gearbox(container, gearboxData);
-			//		gearbox.InPort().Connect(engine.OutPort());
-
-			//		// todo axleGear
-
-			//		var wheels = new Wheels(container, 0.SI<Meter>());
-
-			//		var missionVehicleData = new VehicleData(vehicleData, loading, mission.AxleWeightDistribution);
-			//		var vehicle = new Vehicle(container, missionVehicleData);
-			//		vehicle.InPort().Connect(wheels.OutPort());
-
-			//		var driverData = new DriverData();
-			//		var driver = new Driver(driverData);
-			//		driver.InPort().Connect(vehicle.OutPort());
-
-			//		var cycleData = DrivingCycleData.ReadFromFileEngineOnly(mission.CycleFile);
-			//		var cycle = new DistanceBasedSimulation(container, cycleData);
-			//		cycle.InPort().Connect(driver.OutPort());
-
-			//		var simulator = new VectoRun(container, cycle);
-			//		runs.Add(simulator);
-			//	}
-			//}
 		}
 
 		public void EqualAcceleration(AccelerationCurveData data, double velocity, double acceleration, double deceleration)

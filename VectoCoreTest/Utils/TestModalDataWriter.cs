@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>((int)key));
 		}
 
-		public Dictionary<string, Watt> Auxiliaries { get; set; }
+		public Dictionary<string, IList<Watt>> Auxiliaries { get; set; }
 
 		public object this[ModalResultField key]
 		{
