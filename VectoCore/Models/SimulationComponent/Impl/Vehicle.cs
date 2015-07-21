@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private double AirDragInterpolate(IEnumerable<Point> curve, MeterPerSecond x)
 		{
-			var p = curve.GetSection(c => c.X < x);
+			var p = curve.GetSamples(c => c.X < x);
 
 			if (x < p.Item1.X || p.Item2.X < x) {
 				Log.Error(_data.CrossWindCorrectionMode == CrossWindCorrectionMode.VAirBeta
@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var vAir = VectoMath.Sqrt<MeterPerSecond>(vAirX * vAirX + vAirY * vAirY);
 					var beta = Math.Atan((vAirY / vAirX).Value()).ToDegree();
 
-					var sec = betaValues.GetSection(b => b.Key < beta);
+					var sec = betaValues.GetSamples(b => b.Key < beta);
 					var deltaCdA = VectoMath.Interpolate(sec.Item1.Key, sec.Item2.Key, sec.Item1.Value, sec.Item2.Value, beta);
 					var cdA = cdA0Actual + deltaCdA;
 

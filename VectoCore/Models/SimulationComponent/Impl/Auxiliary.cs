@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -13,6 +12,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Auxiliary : VectoSimulationComponent, IAuxiliary, ITnInPort, ITnOutPort
 	{
+		public const string DirectAuxiliaryId = "";
+
 		private readonly Dictionary<string, Func<PerSecond, Watt>> _auxDict = new Dictionary<string, Func<PerSecond, Watt>>();
 
 		private readonly Dictionary<string, Watt> _powerDemands = new Dictionary<string, Watt>();
@@ -88,7 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void AddDirect(IDrivingCycleCockpit cycle)
 		{
-			_auxDict[""] = ignored => cycle.CycleData().LeftSample.AdditionalAuxPowerDemand;
+			_auxDict[DirectAuxiliaryId] = ignored => cycle.CycleData().LeftSample.AdditionalAuxPowerDemand;
 		}
 
 		public void AddMapping(string auxId, IDrivingCycleCockpit cycle, MappingAuxiliaryData data)
@@ -102,8 +103,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_auxDict[auxId] = speed => {
 				var powerSupply = cycle.CycleData().LeftSample.AuxiliarySupplyPower[auxId];
 
-				var powerAuxOut = powerSupply / data.EfficiencyToSupply;
 				var nAuxiliary = speed * data.TransitionRatio;
+				var powerAuxOut = powerSupply / data.EfficiencyToSupply;
 				var powerAuxIn = data.GetPowerDemand(nAuxiliary, powerAuxOut);
 				return powerAuxIn / data.EfficiencyToEngine;
 			};

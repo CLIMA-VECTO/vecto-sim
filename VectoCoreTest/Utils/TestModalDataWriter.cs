@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -39,6 +40,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>((int)key));
 		}
+
+		public Dictionary<string, Watt> Auxiliaries { get; set; }
 
 		public object this[ModalResultField key]
 		{

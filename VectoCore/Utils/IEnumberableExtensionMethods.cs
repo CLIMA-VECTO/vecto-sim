@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.Utils
 		/// Get the two adjacent items where the predicate is true.
 		/// If the predicate never gets true, the last 2 elements are returned.
 		/// </summary>
-		public static Tuple<T, T> GetSection<T>(this IEnumerable<T> self, Func<T, bool> skip, out int index)
+		public static Tuple<T, T> GetSamples<T>(this IEnumerable<T> self, Func<T, bool> skip, out int index)
 		{
 			var list = self.ToList();
 			var skipList = list.Select((arg1, i) => new { skip = skip(arg1) && i < list.Count - 1, i, value = arg1 });
@@ -42,10 +42,10 @@ namespace TUGraz.VectoCore.Utils
 		/// Get the two adjacent items where the predicate is true.
 		/// If the predicate never gets true, the last 2 elements are returned.
 		/// </summary>
-		public static Tuple<T, T> GetSection<T>(this IEnumerable<T> self, Func<T, bool> predicate)
+		public static Tuple<T, T> GetSamples<T>(this IEnumerable<T> self, Func<T, bool> predicate)
 		{
 			int unused;
-			return self.GetSection(predicate, out unused);
+			return self.GetSamples(predicate, out unused);
 		}
 	}
 }
