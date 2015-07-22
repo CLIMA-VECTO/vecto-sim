@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Declaration;
@@ -23,7 +24,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void TestWheelsAndEngine()
 		{
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
-			var cycleData = DrivingCycleData.ReadFromFileDistanceBased(CycleFile);
+			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CycleFile);
 
 			var vehicleData = new VehicleData() {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,

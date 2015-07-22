@@ -87,7 +87,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					DriverData = driver,
 					//Aux = 
 					// TODO: distance or time-based cycle!
-					Cycle = DrivingCycleData.ReadFromFile(Path.Combine(job.BasePath, cycle), DrivingCycleData.CycleType.DistanceBased),
+					Cycle =
+						DrivingCycleDataReader.ReadFromFile(Path.Combine(job.BasePath, cycle), DrivingCycleData.CycleType.DistanceBased),
 					IsEngineOnly = IsEngineOnly
 				};
 				yield return simulationRunData;

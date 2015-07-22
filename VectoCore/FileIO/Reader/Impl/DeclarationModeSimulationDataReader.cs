@@ -35,20 +35,13 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			foreach (var mission in segment.Missions) {
 				foreach (var loading in mission.Loadings) {
 					var engineData = dao.CreateEngineData(Engine);
-					var parser = new DrivingCycleData.DistanceBasedDataParser();
-					var data = VectoCSVFile.ReadStream(mission.CycleFile);
-					var cycleEntries = parser.Parse(data).ToList();
 					var simulationRunData = new VectoRunData {
 						VehicleData = dao.CreateVehicleData(Vehicle, mission, loading),
 						EngineData = engineData,
 						GearboxData = dao.CreateGearboxData(Gearbox, engineData),
 						Aux = Aux,
 						// @@@ TODO: ...
-						Cycle = new DrivingCycleData {
-							Name = mission.ToString(),
-							SavedInDeclarationMode = true,
-							Entries = cycleEntries
-						},
+						Cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, DrivingCycleData.CycleType.DistanceBased),
 						DriverData = driverdata,
 						IsEngineOnly = IsEngineOnly,
 						JobFileName = Job.JobFile,

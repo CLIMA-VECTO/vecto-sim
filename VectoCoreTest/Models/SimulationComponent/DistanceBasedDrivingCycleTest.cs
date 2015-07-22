@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -22,7 +23,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void TestDistanceRequest()
 		{
-			var cycleData = DrivingCycleData.ReadFromFile(ShortCycle, DrivingCycleData.CycleType.DistanceBased);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(ShortCycle, DrivingCycleData.CycleType.DistanceBased);
 
 			var vehicleContainer = new VehicleContainer();
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);

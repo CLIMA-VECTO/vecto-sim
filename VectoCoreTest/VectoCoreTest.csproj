@@ -74,6 +74,7 @@
     <Compile Include="Integration\SimulationRuns\MinimalPowertrain.cs" />
     <Compile Include="Models\Declaration\DeclarationDataTest.cs" />
     <Compile Include="Models\SimulationComponentData\AccelerationCurveTest.cs" />
+    <Compile Include="Models\SimulationComponentData\DistanceCycleDataTest.cs" />
     <Compile Include="Models\SimulationComponentData\FuelConsumptionMapTest.cs" />
     <Compile Include="Models\SimulationComponentData\FullLoadCurveTest.cs" />
     <Compile Include="Models\SimulationComponentData\GearboxDataTest.cs" />

@@ -122,6 +122,7 @@
     <Compile Include="FileIO\Reader\DataObjectAdaper\AbstractSimulationDataAdapter.cs" />
     <Compile Include="FileIO\Reader\DataObjectAdaper\DeclarationDataAdapter.cs" />
     <Compile Include="FileIO\Reader\DataObjectAdaper\EngineeringDataAdapter.cs" />
+    <Compile Include="FileIO\Reader\DrivingCycleDataReader.cs" />
     <Compile Include="FileIO\Reader\Impl\AbstractSimulationDataReader.cs" />
     <Compile Include="FileIO\Reader\Impl\DeclarationModeSimulationDataReader.cs" />
     <Compile Include="FileIO\Reader\Impl\EngineeringModeSimulationDataReader.cs" />
