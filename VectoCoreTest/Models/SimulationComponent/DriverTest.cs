@@ -126,6 +126,19 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				absTime += tmpResponse.SimulationInterval;
 				vehicle.MyVehicleSpeed += (tmpResponse.SimulationInterval * vehicle.LastRequest.acceleration).Cast<MeterPerSecond>();
 			}
+
+			var response = driver.OutPort().Request(absTime, ds, targetVelocity, gradient);
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.AreEqual(-0.308576594, vehicle.LastRequest.acceleration.Value(), Tolerance);
+			Assert.AreEqual(2.545854078, response.SimulationInterval.Value(), Tolerance);
+
+			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+			absTime += response.SimulationInterval;
+			vehicle.MyVehicleSpeed +=
+				(response.SimulationInterval * vehicle.LastRequest.acceleration).Cast<MeterPerSecond>();
+
+			Assert.AreEqual(targetVelocity.Value(), vehicle.MyVehicleSpeed.Value(), Tolerance);
 		}
 	}
 }
