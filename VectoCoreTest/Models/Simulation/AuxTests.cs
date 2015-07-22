@@ -50,6 +50,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			container.FinishSimulation();
 			sumWriter.Finish();
+
+
+			Assert.Inconclusive();
 		}
 
 

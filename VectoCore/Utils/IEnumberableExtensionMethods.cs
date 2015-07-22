@@ -19,6 +19,24 @@ namespace TUGraz.VectoCore.Utils
 			yield return item;
 		}
 
+		public static IEnumerable<TResult> ZipAll<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first,
+			IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector)
+		{
+			var firstEnum = first.GetEnumerator();
+			var secondEnum = second.GetEnumerator();
+			while (true) {
+				var firstHadNext = firstEnum.MoveNext();
+				var secondHadNext = secondEnum.MoveNext();
+				if (firstHadNext && secondHadNext) {
+					yield return resultSelector(firstEnum.Current, secondEnum.Current);
+				} else if (firstHadNext != secondHadNext) {
+					throw new IndexOutOfRangeException("The argument enumerables must have the same length.");
+				} else {
+					yield break;
+				}
+			}
+		}
+
 		public static T Sum<T>(this IEnumerable<T> list) where T : SIBase<T>
 		{
 			return list.Aggregate((sum, current) => sum + current);

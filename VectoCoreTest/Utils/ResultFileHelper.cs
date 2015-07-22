@@ -1,10 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -13,24 +13,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public static void TestModFile(string expectedFile, string actualFile)
 		{
 			TestModFiles(new[] { expectedFile }, new[] { actualFile });
-		}
-
-		public static IEnumerable<TResult> ZipAll<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first,
-			IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector)
-		{
-			var firstEnum = first.GetEnumerator();
-			var secondEnum = second.GetEnumerator();
-			while (true) {
-				var firstHadNext = firstEnum.MoveNext();
-				var secondHadNext = secondEnum.MoveNext();
-				if (firstHadNext && secondHadNext) {
-					yield return resultSelector(firstEnum.Current, secondEnum.Current);
-				} else if (firstHadNext != secondHadNext) {
-					throw new IndexOutOfRangeException("The argument enumerables must have the same length.");
-				} else {
-					yield break;
-				}
-			}
 		}
 
 		public static void TestModFiles(IEnumerable<string> expectedFiles, IEnumerable<string> actualFiles)
