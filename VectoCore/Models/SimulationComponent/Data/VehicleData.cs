@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				RRC += axle.AxleWeightShare * axle.RollResistanceCoefficient *
 						Math.Pow(
 							(axle.AxleWeightShare * TotalVehicleWeight() * Physics.GravityAccelleration / axle.TyreTestLoad /
-							nrWheels).Double(), Physics.RollResistanceExponent - 1);
+							nrWheels).Value(), Physics.RollResistanceExponent - 1);
 				mRed0 += nrWheels * (axle.Inertia / DynamicTyreRadius / DynamicTyreRadius).Cast<Kilogram>();
 			}
 			TotalRollResistanceCoefficient = RRC;

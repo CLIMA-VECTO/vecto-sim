@@ -5,6 +5,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public interface IAuxiliaryCycleData
 	{
-		Watt GetPowerDemand(TimeSpan absTime, TimeSpan dt);
+		Watt GetPowerDemand(Second absTime, Second dt);
 	}
 }

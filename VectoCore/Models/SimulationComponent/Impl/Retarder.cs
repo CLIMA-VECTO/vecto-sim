@@ -21,17 +21,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_lossMap = lossMap;
 		}
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
 			writer[ModalResultField.PlossRetarder] = _lossMap;
 		}
 
-		public ITnInPort InShaft()
+		protected override void DoCommitSimulationStep() {}
+
+		public ITnInPort InPort()
 		{
 			return this;
 		}
 
-		public ITnOutPort OutShaft()
+		public ITnOutPort OutPort()
 		{
 			return this;
 		}
@@ -41,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_nextComponent = other;
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond angularVelocity)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity)
 		{
 			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity);
 			//_retarderLoss = Formulas.TorqueToPower(torqueLoss, angularVelocity);

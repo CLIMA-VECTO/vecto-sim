@@ -24,20 +24,20 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			IWheels wheels = new Wheels(container, vehicleData.DynamicTyreRadius);
 			var mockPort = new MockTnOutPort();
 
-			wheels.InShaft().Connect(mockPort);
+			wheels.InPort().Connect(mockPort);
 
 			var requestPort = wheels.OutPort();
 
-			var absTime = TimeSpan.FromSeconds(0);
-			var dt = TimeSpan.FromSeconds(1);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			var force = 5000.SI<Newton>();
 			var velocity = 20.SI<MeterPerSecond>();
 
 			var retVal = requestPort.Request(absTime, dt, force, velocity);
 
-			Assert.AreEqual(2600.0, mockPort.Torque.Double(), 0.0001);
-			Assert.AreEqual(38.4615384615, mockPort.AngularVelocity.Double(), 0.0001);
+			Assert.AreEqual(2600.0, mockPort.Torque.Value(), 0.0001);
+			Assert.AreEqual(38.4615384615, mockPort.AngularVelocity.Value(), 0.0001);
 		}
 	}
 }

@@ -28,18 +28,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			vehicle.InPort().Connect(mockPort);
 
-			var requestPort = vehicle.OutShaft();
+			var requestPort = vehicle.OutPort();
 
-			var absTime = TimeSpan.FromSeconds(0);
-			var dt = TimeSpan.FromSeconds(1);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			var accell = -0.256231159.SI<MeterPerSquareSecond>();
 			var gradient = Math.Atan(0.00366547048).SI<Radian>();
 
 			var retVal = requestPort.Request(absTime, dt, accell, gradient);
 
-			Assert.AreEqual(-2549.07832743748, mockPort.Force.Double(), 0.0001);
-			Assert.AreEqual(17.0824194205, mockPort.Velocity.Double(), 0.0001);
+			Assert.AreEqual(-2549.07832743748, mockPort.Force.Value(), 0.0001);
+			Assert.AreEqual(17.0824194205, mockPort.Velocity.Value(), 0.0001);
 		}
 	}
 }

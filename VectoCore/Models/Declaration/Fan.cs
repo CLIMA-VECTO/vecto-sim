@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			_data.Clear();
 			foreach (DataRow row in table.Rows) {
-				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
+				foreach (var mission in EnumHelper.GetValues<MissionType>()) {
 					_data[Tuple.Create(mission, row.Field<string>("Technology"))] =
 						row.ParseDouble(mission.ToString().ToLower()).SI<Watt>();
 				}

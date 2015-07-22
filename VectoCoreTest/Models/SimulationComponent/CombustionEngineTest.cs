@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			try {
 				func();
-				Assert.Fail("Expected Exception {0}, but no exception occured.", typeof (T));
+				Assert.Fail("Expected Exception {0}, but no exception occured.", typeof(T));
 			} catch (T ex) {
 				if (message != null) {
 					Assert.AreEqual(message, ex.Message);
@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
 			var engine = new CombustionEngine(vehicle, engineData);
 
-			var port = engine.OutShaft();
+			var port = engine.OutPort();
 			Assert.IsNotNull(port);
 		}
 
@@ -64,10 +64,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			new EngineOnlyGearbox(vehicle);
 
-			var port = engine.OutShaft();
+			var port = engine.OutPort();
 
-			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 			var torque = 400.SI<NewtonMeter>();
 			var engineSpeed = 1500.RPMtoRad();
 
@@ -81,10 +81,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
 			var engine = new CombustionEngine(vehicle, engineData);
 			var gearbox = new EngineOnlyGearbox(vehicle);
-			var port = engine.OutShaft();
+			var port = engine.OutPort();
 
-			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			var torque = 0.SI<NewtonMeter>();
 			var engineSpeed = 600.RPMtoRad();
@@ -150,11 +150,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					TestContext.DataRow["EngineFile"].ToString());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 
-			gearbox.InShaft().Connect(engine.OutShaft());
+			gearbox.InPort().Connect(engine.OutPort());
 
 			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
 
-			var requestPort = gearbox.OutShaft();
+			var requestPort = gearbox.OutPort();
 
 			//var modalData = new ModalDataWriter(string.Format("load_jump_{0}.csv", TestContext.DataRow["TestName"].ToString()));
 			var modalData = new TestModalDataWriter();
@@ -163,10 +163,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var angularSpeed = Double.Parse(TestContext.DataRow["rpm"].ToString()).RPMtoRad();
 
-			var t = TimeSpan.FromSeconds(0);
-			var dt = TimeSpan.FromSeconds(0.1);
+			var t = 0.SI<Second>();
+			var dt = 0.1.SI<Second>();
 
-			for (; t.TotalSeconds < 2; t += dt) {
+			for (; t < 2; t += dt) {
 				requestPort.Request(t, dt, Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
 				engine.CommitSimulationStep(modalData);
 			}
@@ -176,17 +176,17 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			// dt = TimeSpan.FromSeconds(expectedResults.Rows[i].ParseDouble(0)) - t;
 			var engineLoadPower = engineData.GetFullLoadCurve(0).FullLoadStationaryPower(angularSpeed);
 			idlePower = Double.Parse(TestContext.DataRow["finalIdleLoad"].ToString()).SI<Watt>();
-			for (; t.TotalSeconds < 25; t += dt, i++) {
-				dt = TimeSpan.FromSeconds(expectedResults.Rows[i + 1].ParseDouble(0) - expectedResults.Rows[i].ParseDouble(0));
-				if (t >= TimeSpan.FromSeconds(10)) {
+			for (; t < 25; t += dt, i++) {
+				dt = (expectedResults.Rows[i + 1].ParseDouble(0) - expectedResults.Rows[i].ParseDouble(0)).SI<Second>();
+				if (t >= 10.SI<Second>()) {
 					engineLoadPower = idlePower;
 				}
 				requestPort.Request(t, dt, Formulas.PowerToTorque(engineLoadPower, angularSpeed), angularSpeed);
-				modalData[ModalResultField.time] = t.TotalSeconds;
-				modalData[ModalResultField.simulationInterval] = dt.TotalSeconds;
+				modalData[ModalResultField.time] = t.Value();
+				modalData[ModalResultField.simulationInterval] = dt.Value();
 				engine.CommitSimulationStep(modalData);
 				// todo: compare results...
-				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.TotalSeconds, 0.001, "Time");
+				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.Value(), 0.001, "Time");
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), modalData.GetDouble(ModalResultField.Pe_full), 0.1,
 					String.Format("Load in timestep {0}", t));
 				modalData.CommitSimulationStep();
@@ -210,27 +210,27 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
 			var motorway = engineData.WHTCMotorway;
-			Assert.AreEqual(motorway.Double(), 0);
+			Assert.AreEqual(motorway.Value(), 0);
 			Assert.IsTrue(motorway.HasEqualUnit(new SI().Kilo.Gramm.Per.Watt.Second.ConvertTo()));
 
 			var rural = engineData.WHTCRural;
-			Assert.AreEqual(rural.Double(), 0);
+			Assert.AreEqual(rural.Value(), 0);
 			Assert.IsTrue(rural.HasEqualUnit(new SI().Kilo.Gramm.Per.Watt.Second.ConvertTo()));
 
 			var urban = engineData.WHTCUrban;
-			Assert.AreEqual(urban.Double(), 0);
+			Assert.AreEqual(urban.Value(), 0);
 			Assert.IsTrue(urban.HasEqualUnit(new SI().Kilo.Gramm.Per.Watt.Second.ConvertTo()));
 
 			var displace = engineData.Displacement;
-			Assert.AreEqual(0.01273, displace.Double());
+			Assert.AreEqual(0.01273, displace.Value());
 			Assert.IsTrue(displace.HasEqualUnit(new SI().Cubic.Meter));
 
 			var inert = engineData.Inertia;
-			Assert.AreEqual(3.8, inert.Double(), 0.00001);
+			Assert.AreEqual(3.8, inert.Value(), 0.00001);
 			Assert.IsTrue(inert.HasEqualUnit(new SI().Kilo.Gramm.Square.Meter));
 
 			var idle = engineData.IdleSpeed;
-			Assert.AreEqual(58.6430628670095, idle.Double(), 0.000001);
+			Assert.AreEqual(58.6430628670095, idle.Value(), 0.000001);
 			Assert.IsTrue(idle.HasEqualUnit(0.SI<PerSecond>()));
 
 			var flc0 = engineData.GetFullLoadCurve(0);

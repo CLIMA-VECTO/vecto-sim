@@ -20,18 +20,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_demand = demand;
 		}
 
-		#region IInShaft
+		#region ITnInProvider
 
-		public ITnInPort InShaft()
+		public ITnInPort InPort()
 		{
 			return this;
 		}
 
 		#endregion
 
-		#region IOutShaft
+		#region ITnOutProvider
 
-		public ITnOutPort OutShaft()
+		public ITnOutPort OutPort()
 		{
 			return this;
 		}
@@ -49,13 +49,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
+		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed)
 		{
 			if (_outPort == null) {
 				Log.ErrorFormat("{0} cannot handle incoming request - no outport available", absTime);
 				throw new VectoSimulationException(
 					string.Format("{0} cannot handle incoming request - no outport available",
-						absTime.TotalSeconds));
+						absTime));
 			}
 
 			_powerDemand = _demand.GetPowerDemand(absTime, dt);
@@ -67,10 +67,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
 			writer[ModalResultField.Paux] = (double)_powerDemand;
 		}
+
+		protected override void DoCommitSimulationStep() {}
 
 		#endregion
 	}

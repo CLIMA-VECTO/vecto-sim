@@ -34,15 +34,15 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			var engine = new CombustionEngine(vehicle, engineData);
 
-			aux.InShaft().Connect(engine.OutShaft());
-			gearbox.InShaft().Connect(aux.OutShaft());
-			var port = aux.OutShaft();
+			aux.InPort().Connect(engine.OutPort());
+			gearbox.InPort().Connect(aux.OutPort());
+			var port = aux.OutPort();
 
 //			IVectoJob job = SimulationFactory.CreateTimeBasedEngineOnlyRun(TestContext.DataRow["EngineFile"].ToString(),
 //				TestContext.DataRow["CycleFile"].ToString(), "test2.csv");
 
-			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			var dataWriter = new TestModalDataWriter();
 
@@ -98,15 +98,15 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var engine = new CombustionEngine(vehicleContainer,
 				EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile));
 
-			gearbox.InShaft().Connect(engine.OutShaft());
+			gearbox.InPort().Connect(engine.OutPort());
 
-			var absTime = new TimeSpan();
-			var dt = TimeSpan.FromSeconds(1);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			var angularVelocity = 644.4445.RPMtoRad();
 			var power = 2329.973.SI<Watt>();
 
-			gearbox.OutShaft().Request(absTime, dt, Formulas.PowerToTorque(power, angularVelocity), angularVelocity);
+			gearbox.OutPort().Request(absTime, dt, Formulas.PowerToTorque(power, angularVelocity), angularVelocity);
 
 			foreach (var sc in vehicleContainer.SimulationComponents()) {
 				sc.CommitSimulationStep(dataWriter);

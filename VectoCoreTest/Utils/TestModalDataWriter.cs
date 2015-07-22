@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
@@ -46,11 +47,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 			set { CurrentRow[key.GetName()] = value; }
 		}
 
-		public void CommitSimulationStep(TimeSpan absTime, TimeSpan simulationInterval)
+		public void CommitSimulationStep(Second absTime, Second simulationInterval)
 		{
-			CurrentRow[ModalResultField.time.GetName()] =
-				(absTime + TimeSpan.FromTicks(simulationInterval.Ticks / 2)).TotalSeconds;
-			CurrentRow[ModalResultField.simulationInterval.GetName()] = simulationInterval.TotalSeconds;
+			CurrentRow[ModalResultField.time.GetName()] = (absTime + simulationInterval / 2).Value();
+			CurrentRow[ModalResultField.simulationInterval.GetName()] = simulationInterval.Value();
 			CommitSimulationStep();
 		}
 

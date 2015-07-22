@@ -4,6 +4,7 @@ using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.EngineeringFile;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -46,8 +47,48 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			throw new VectoException("Unsupported GearboxData File Instance");
 		}
 
+		public override DriverData CreateDriverData(VectoJobFile job)
+		{
+			var filev2Eng = job as VectoJobFileV2Engineering;
+			if (filev2Eng != null) {
+				return CreateDriverData(filev2Eng);
+			}
+			throw new VectoException("Unsupported Job File Instance");
+		}
+
 		//=================================
 
+
+		internal DriverData CreateDriverData(VectoJobFileV2Engineering job)
+		{
+			var data = job.Body;
+
+			var accelerationData = AccelerationCurveData.ReadFromFile(data.AccelerationCurve);
+			var lookAheadData = new DriverData.LACData() {
+				Enabled = data.LookAheadCoasting.Enabled,
+				Deceleration = DoubleExtensionMethods.SI<MeterPerSquareSecond>(data.LookAheadCoasting.Dec),
+				MinSpeed = data.LookAheadCoasting.MinSpeed.KMPHtoMeterPerSecond(),
+			};
+			var overspeedData = new DriverData.OverSpeedEcoRollData() {
+				Mode = DriverData.ParseDriverMode(data.OverSpeedEcoRoll.Mode),
+				MinSpeed = data.OverSpeedEcoRoll.MinSpeed.KMPHtoMeterPerSecond(),
+				OverSpeed = data.OverSpeedEcoRoll.OverSpeed.KMPHtoMeterPerSecond(),
+				UnderSpeed = data.OverSpeedEcoRoll.UnderSpeed.KMPHtoMeterPerSecond(),
+			};
+			var startstopData = new VectoRunData.StartStopData() {
+				Enabled = data.StartStop.Enabled,
+				Delay = data.StartStop.Delay.SI<Second>(),
+				MinTime = data.StartStop.MinTime.SI<Second>(),
+				MaxSpeed = data.StartStop.MaxSpeed.KMPHtoMeterPerSecond(),
+			};
+			var retVal = new DriverData() {
+				AccelerationCurve = accelerationData,
+				LookAheadCoasting = lookAheadData,
+				OverSpeedEcoRoll = overspeedData,
+				StartStop = startstopData,
+			};
+			return retVal;
+		}
 
 		/// <summary>
 		/// convert datastructure representing file-contents into internal datastructure
@@ -121,7 +162,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.HasTorqueConverter = data.TorqueConverter.Enabled;
 
 			for (uint i = 0; i < gearbox.Body.Gears.Count; i++) {
-				var gearSettings = gearbox.Body.Gears[(int) i];
+				var gearSettings = gearbox.Body.Gears[(int)i];
 				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
 				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
 

@@ -46,13 +46,72 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var data = VectoCSVFile.Read(fileName);
 			var entries = parser.Parse(data).ToList();
 
-			log.Info(string.Format("Data loaded. Number of Entries: {0}", entries.Count));
+			if (type == CycleType.DistanceBased) {
+				var filtered = new List<DrivingCycleEntry>();
+				var current = entries.First();
+				current.Altitude = 0.SI<Meter>();
+				filtered.Add(current);
+				var distance = current.Distance;
+				var altitude = current.Altitude;
+				foreach (var entry in entries) {
+					entry.Altitude = altitude;
+					if (!CycleEntriesAreEqual(current, entry)) {
+						entry.Altitude = altitude;
+						filtered.Add(entry);
+						current = entry;
+					}
+					if (entry.StoppingTime.IsEqual(0) && !entry.VehicleTargetSpeed.IsEqual(0)) {
+						altitude += (entry.Distance - distance) * entry.RoadGradientPercent / 100.0;
+					}
+					distance = entry.Distance;
+				}
+				log.Info(string.Format("Data loaded. Number of Entries: {0}, filtered Entries: {1}", entries.Count, filtered.Count));
+				entries = filtered;
+
+				AdjustDistanceAfterStop(entries);
+			}
 
 			var cycle = new DrivingCycleData {
 				Entries = entries,
 				Name = Path.GetFileNameWithoutExtension(fileName)
 			};
 			return cycle;
+		}
+
+		private static void AdjustDistanceAfterStop(List<DrivingCycleEntry> entries)
+		{
+			var currentIt = entries.GetEnumerator();
+			var nextIt = entries.GetEnumerator();
+			nextIt.MoveNext();
+			while (currentIt.MoveNext() && nextIt.MoveNext()) {
+				if (currentIt.Current != null && !currentIt.Current.StoppingTime.IsEqual(0)) {
+					if (nextIt.Current != null) {
+						nextIt.Current.Distance = currentIt.Current.Distance;
+					}
+				}
+			}
+		}
+
+		private static bool CycleEntriesAreEqual(DrivingCycleEntry first, DrivingCycleEntry second)
+		{
+			if (first.Distance.IsEqual(second.Distance)) {
+				return true;
+			}
+			var retVal = first.VehicleTargetSpeed == second.VehicleTargetSpeed;
+			retVal = retVal &&
+					first.RoadGradient.IsEqual(second.RoadGradient, Constants.SimulationSettings.DrivingCycleRoadGradientTolerance);
+			retVal = retVal && first.StoppingTime.IsEqual(0) && second.StoppingTime.IsEqual(0);
+			retVal = retVal && first.AdditionalAuxPowerDemand == second.AdditionalAuxPowerDemand;
+			retVal = retVal && first.AuxiliarySupplyPower.Count == second.AuxiliarySupplyPower.Count;
+
+			foreach (var key in first.AuxiliarySupplyPower.Keys) {
+				if (!second.AuxiliarySupplyPower.ContainsKey(key)) {
+					return false;
+				}
+				retVal = retVal && first.AuxiliarySupplyPower[key] == second.AuxiliarySupplyPower[key];
+			}
+
+			return retVal;
 		}
 
 		private static IDataParser CreateDataParser(CycleType type)
@@ -149,29 +208,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			///     [m]	Travelled distance used for distance-based cycles. If "t"
 			///     is also defined this column will be ignored.
 			/// </summary>
-			public double Distance { get; set; }
+			public Meter Distance { get; set; }
 
 			/// <summary>
 			///     [s]	Used for time-based cycles. If neither this nor the distance
 			///     "s" is defined the data will be interpreted as 1Hz.
 			/// </summary>
-			public double Time { get; set; }
+			public Second Time { get; set; }
 
 			/// <summary>
 			///     [m/s]	Required except for Engine Only Mode calculations.
 			/// </summary>
-			public MeterPerSecond VehicleSpeed { get; set; }
+			public MeterPerSecond VehicleTargetSpeed { get; set; }
 
 			/// <summary>
-			///     [%]	Optional.
+			///     [rad]	Optional.
 			/// </summary>
-			public double RoadGradient { get; set; }
+			public Radian RoadGradient { get; set; }
+
+			/// <summary>
+			///    [%]  Optional.
+			/// </summary>
+			public double RoadGradientPercent { get; set; }
+
+			/// <summary>
+			///		[m] relative altitude of the driving cycle over distance
+			/// </summary>
+			public Meter Altitude { get; set; }
 
 			/// <summary>
 			///     [s]	Required for distance-based cycles. Not used in time based
 			///     cycles. "stop" defines the time the vehicle spends in stop phases.
 			/// </summary>
-			public double StoppingTime { get; set; }
+			public Second StoppingTime { get; set; }
 
 			/// <summary>
 			///     [W]	Supply Power input for each auxiliary defined in the
@@ -250,9 +319,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
 
 				return table.Rows.Cast<DataRow>().Select(row => new DrivingCycleEntry {
-					Distance = row.ParseDouble(Fields.Distance),
-					VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
-					RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
+					Distance = row.ParseDouble(Fields.Distance).SI<Meter>(),
+					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
+					RoadGradientPercent = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
+					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
+					StoppingTime = (row.ParseDouble(Fields.StoppingTime)).SI<Second>(),
 					AdditionalAuxPowerDemand =
 						row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
 					EngineSpeed =
@@ -311,9 +382,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
 
 				var entries = table.Rows.Cast<DataRow>().Select((row, index) => new DrivingCycleEntry {
-					Time = row.ParseDoubleOrGetDefault(Fields.Time, index),
-					VehicleSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
-					RoadGradient = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
+					Time = row.ParseDoubleOrGetDefault(Fields.Time, index).SI<Second>(),
+					VehicleTargetSpeed = row.ParseDouble(Fields.VehicleSpeed).SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
+					RoadGradientPercent = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
+					RoadGradient = VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
 					AdditionalAuxPowerDemand =
 						row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
 					Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
@@ -367,7 +439,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			public IEnumerable<DrivingCycleEntry> Parse(DataTable table)
 			{
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
-				var absTime = new TimeSpan(0, 0, 0);
+				var absTime = 0.SI<Second>();
 
 				foreach (DataRow row in table.Rows) {
 					var entry = new DrivingCycleEntry {
@@ -392,8 +464,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 									entry.EngineSpeed);
 						}
 					}
-					entry.Time = absTime.TotalSeconds;
-					absTime += new TimeSpan(0, 0, 1);
+					entry.Time = absTime;
+					absTime += 1.SI<Second>();
 
 					yield return entry;
 				}

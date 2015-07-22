@@ -35,24 +35,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _clutchState;
 		}
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataWriter writer)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void DoCommitSimulationStep()
 		{
 			//todo: implement!
-			//throw new NotImplementedException();
+			throw new NotImplementedException();
 		}
 
-		public ITnInPort InShaft()
+		public ITnInPort InPort()
 		{
 			return this;
 		}
 
 
-		public ITnOutPort OutShaft()
+		public ITnOutPort OutPort()
 		{
 			return this;
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond angularVelocity)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity)
 		{
 			var torqueIn = torque;
 			var engineSpeedIn = angularVelocity;

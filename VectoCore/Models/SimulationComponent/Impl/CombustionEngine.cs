@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private const double MaxPowerExceededThreshold = 1.05;
 		private const double ZeroThreshold = 0.0001;
 		private const double FullLoadMargin = 0.01;
-		[NonSerialized] private readonly List<TimeSpan> _enginePowerCorrections = new List<TimeSpan>();
+		[NonSerialized] private readonly List<Second> _enginePowerCorrections = new List<Second>();
 
 		/// <summary>
 		///     Current state is computed in request method
@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_previousState.OperationMode = EngineOperationMode.Idle;
 			_previousState.EnginePower = 0.SI<Watt>();
 			_previousState.EngineSpeed = _data.IdleSpeed;
-			_previousState.dt = TimeSpan.FromSeconds(0.1);
+			_previousState.dt = 1.SI<Second>();
 		}
 
 		#region IEngineCockpit
@@ -62,9 +62,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		#region IOutShaft
+		#region ITnOutProvider
 
-		public ITnOutPort OutShaft()
+		public ITnOutPort OutPort()
 		{
 			return this;
 		}
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
+		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed)
 		{
 			_currentState.dt = dt;
 			_currentState.EngineSpeed = engineSpeed;
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
 			writer[ModalResultField.PaEng] = (double)_currentState.EnginePowerLoss;
 			writer[ModalResultField.Pe_drag] = (double)_currentState.FullDragPower;
@@ -132,11 +132,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							.ConvertTo()
 							.Gramm.Per.Hour;
 			} catch (VectoException ex) {
-				Log.WarnFormat("t: {0} - {1} n: {2} Tq: {3}", _currentState.AbsTime.TotalSeconds, ex.Message,
+				Log.WarnFormat("t: {0} - {1} n: {2} Tq: {3}", _currentState.AbsTime, ex.Message,
 					_currentState.EngineSpeed, _currentState.EngineTorque);
 				writer[ModalResultField.FC] = double.NaN;
 			}
+		}
 
+		protected override void DoCommitSimulationStep()
+		{
 			_previousState = _currentState;
 			_currentState = new EngineState();
 		}
@@ -223,9 +226,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="gear"></param>
 		/// <param name="angularVelocity">[rad/s]</param>
 		/// <param name="dt">[s]</param>
-		protected void ComputeFullLoadPower(uint gear, PerSecond angularVelocity, TimeSpan dt)
+		protected void ComputeFullLoadPower(uint gear, PerSecond angularVelocity, Second dt)
 		{
-			if (dt.Ticks == 0) {
+			if (dt.IsEqual(0)) {
 				throw new VectoException("ComputeFullLoadPower cannot compute for simulation interval length 0.");
 			}
 
@@ -235,15 +238,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.StationaryFullLoadPower = Formulas.TorqueToPower(_currentState.StationaryFullLoadTorque,
 				angularVelocity);
 
-			double pt1 = _data.GetFullLoadCurve(gear).PT1(angularVelocity).Double();
+			double pt1 = _data.GetFullLoadCurve(gear).PT1(angularVelocity).Value();
 
 //			var dynFullPowerCalculated = (1 / (pt1 + 1)) *
 //										(_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower);
 			var tStarPrev = pt1 *
-							Math.Log(1 / (1 - (_previousState.EnginePower / _currentState.StationaryFullLoadPower).Double()), Math.E)
+							Math.Log(1 / (1 - (_previousState.EnginePower / _currentState.StationaryFullLoadPower).Value()), Math.E)
 								.SI<Second>();
-			var tStar = tStarPrev + _previousState.dt.TotalSeconds.SI<Second>();
-			var dynFullPowerCalculated = _currentState.StationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Double()));
+			var tStar = tStarPrev + _previousState.dt;
+			var dynFullPowerCalculated = _currentState.StationaryFullLoadPower * (1 - Math.Exp((-tStar / pt1).Value()));
 			_currentState.DynamicFullLoadPower = (dynFullPowerCalculated < _currentState.StationaryFullLoadPower)
 				? dynFullPowerCalculated
 				: _currentState.StationaryFullLoadPower;
@@ -279,7 +282,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			/// <summary>
 			///     [s]
 			/// </summary>
-			public TimeSpan AbsTime { get; set; }
+			public Second AbsTime { get; set; }
 
 			/// <summary>
 			///     [W]
@@ -331,7 +334,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			/// </summary>
 			public NewtonMeter EngineTorque { get; set; }
 
-			public TimeSpan dt { get; set; }
+			public Second dt { get; set; }
 
 			#region Equality members
 

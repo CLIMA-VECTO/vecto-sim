@@ -15,12 +15,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public DummyGearbox(IVehicleContainer cockpit) : base(cockpit) {}
 
-		public ITnInPort InShaft()
+		public ITnInPort InPort()
 		{
 			return this;
 		}
 
-		public ITnOutPort OutShaft()
+		public ITnOutPort OutPort()
 		{
 			return this;
 		}
@@ -35,12 +35,17 @@ namespace TUGraz.VectoCore.Tests.Utils
 			_outPort = other;
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed)
 		{
 			throw new NotImplementedException();
 		}
 
 
-		public override void CommitSimulationStep(IModalDataWriter writer) {}
+		protected override void DoWriteModalResults(IModalDataWriter writer)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void DoCommitSimulationStep() {}
 	}
 }

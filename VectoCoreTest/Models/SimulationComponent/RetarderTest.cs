@@ -23,29 +23,29 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var nextRequest = new MockTnOutPort();
 
-			retarder.InShaft().Connect(nextRequest);
-			var outPort = retarder.OutShaft();
+			retarder.InPort().Connect(nextRequest);
+			var outPort = retarder.OutPort();
 
-			var absTime = TimeSpan.FromSeconds(0);
-			var dt = TimeSpan.FromSeconds(0);
+			var absTime = 0.SI<Second>();
+			var dt = 0.SI<Second>();
 
 			// --------
 			outPort.Request(absTime, dt, 0.SI<NewtonMeter>(), 10.RPMtoRad());
 
-			Assert.AreEqual(10.RPMtoRad().Double(), (double)nextRequest.AngularVelocity, Delta);
+			Assert.AreEqual(10.RPMtoRad().Value(), (double)nextRequest.AngularVelocity, Delta);
 			Assert.AreEqual(10.002, (double)nextRequest.Torque, Delta);
 
 			// --------
 			outPort.Request(absTime, dt, 100.SI<NewtonMeter>(), 1000.RPMtoRad());
 
-			Assert.AreEqual(1000.RPMtoRad().Double(), (double)nextRequest.AngularVelocity, Delta);
+			Assert.AreEqual(1000.RPMtoRad().Value(), (double)nextRequest.AngularVelocity, Delta);
 			Assert.AreEqual(112, (double)nextRequest.Torque, Delta);
 
 			// --------
 
 			outPort.Request(absTime, dt, 50.SI<NewtonMeter>(), 1550.RPMtoRad());
 
-			Assert.AreEqual(1550.RPMtoRad().Double(), (double)nextRequest.AngularVelocity, Delta);
+			Assert.AreEqual(1550.RPMtoRad().Value(), (double)nextRequest.AngularVelocity, Delta);
 			Assert.AreEqual(50 + 14.81, (double)nextRequest.Torque, Delta);
 		}
 	}
