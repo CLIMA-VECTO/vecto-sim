@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 		public void TestEngineOnlyDrivingCycle()
 		{
 			var data = DrivingCycleData.ReadFromFileEngineOnly(TestContext.DataRow["CycleFile"].ToString());
-			var cycle = new MockDrivingCycle(data);
+			var cycle = new MockDrivingCycle(null, data);
 			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
 			var vehicle = new VehicleContainer();
@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
 			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
 
-			var dataWriter = new TestModalDataWriter();
+			var dataWriter = new MockModalDataWriter();
 
 			var i = 0;
 			var results = new[] {
@@ -84,7 +84,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 		[TestMethod]
 		public void AssembleEngineOnlyPowerTrain()
 		{
-			var dataWriter = new TestModalDataWriter();
+			var dataWriter = new MockModalDataWriter();
 
 			var vehicleContainer = new VehicleContainer();
 

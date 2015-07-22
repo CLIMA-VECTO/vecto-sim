@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 						toleranceFactor));
 				return;
 			}
-			Assert.IsTrue(Math.Abs(expected / actual) < 1 + toleranceFactor,
+			Assert.IsTrue(Math.Abs(expected / actual - 1) < toleranceFactor,
 				string.Format("AssertHelper.AreRelativeEqual failed. Expected: {0}, Actual: {1}, Tolerance: {2}", expected, actual,
 					toleranceFactor));
 		}

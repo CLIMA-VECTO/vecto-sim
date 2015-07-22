@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void TestEngineOnly()
 		{
-			var dataWriter = new TestModalDataWriter();
+			var dataWriter = new MockModalDataWriter();
 			var sumWriter = new TestSumWriter();
 			var container = new VehicleContainer(dataWriter, sumWriter);
 
@@ -67,7 +67,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			response = cycle.OutPort().Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
-			var dataWriter = new TestModalDataWriter();
+			var dataWriter = new MockModalDataWriter();
 			container.CommitSimulationStep(absTime.TotalSeconds, dt.TotalSeconds);
 
 			Assert.AreEqual(absTime, outPort.AbsTime);
@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				response = cycle.OutPort().Request(absTime, dt);
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
-				dataWriter = new TestModalDataWriter();
+				dataWriter = new MockModalDataWriter();
 				container.CommitSimulationStep(absTime.TotalSeconds, dt.TotalSeconds);
 
 				Assert.AreEqual(absTime, outPort.AbsTime);
@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Test_TimeBased_TimeFieldMissing()
 		{
-			var container = new VehicleContainer(new TestModalDataWriter(), new TestSumWriter());
+			var container = new VehicleContainer(new MockModalDataWriter(), new TestSumWriter());
 
 			var cycleData = DrivingCycleData.ReadFromFileTimeBased(@"TestData\Cycles\Cycle time field missing.vdri");
 			var cycle = new TimeBasedDrivingCycle(container, cycleData);
@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			inPort.Connect(outPort);
 
-			var dataWriter = new TestModalDataWriter();
+			var dataWriter = new MockModalDataWriter();
 			var absTime = new TimeSpan();
 			var dt = TimeSpan.FromSeconds(1);
 

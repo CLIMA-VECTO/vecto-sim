@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var torque = 0.SI<NewtonMeter>();
 			var engineSpeed = 600.RPMtoRad();
-			var dataWriter = new TestModalDataWriter();
+			var dataWriter = new MockModalDataWriter();
 
 			for (var i = 0; i < 21; i++) {
 				port.Request(absTime, dt, torque, engineSpeed);
@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var requestPort = gearbox.OutPort();
 
 			//var modalData = new ModalDataWriter(string.Format("load_jump_{0}.csv", TestContext.DataRow["TestName"].ToString()));
-			var modalData = new TestModalDataWriter();
+			var modalData = new MockModalDataWriter();
 
 			var idlePower = Double.Parse(TestContext.DataRow["initialIdleLoad"].ToString()).SI<Watt>();
 

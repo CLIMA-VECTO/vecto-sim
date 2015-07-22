@@ -2,18 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
 	/// <summary>
 	///     Fake Data Writer Class for Tests.
 	/// </summary>
-	internal class TestModalDataWriter : IModalDataWriter
+	internal class MockModalDataWriter : IModalDataWriter
 	{
-		public TestModalDataWriter()
+		public MockModalDataWriter()
 		{
 			Data = new ModalResults();
 			CurrentRow = Data.NewRow();
