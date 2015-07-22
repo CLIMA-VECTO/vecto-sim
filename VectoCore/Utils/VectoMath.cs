@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.Utils
 				retVal.Add((-b - Math.Sqrt(D)) / (2 * a));
 			} else {
 				// only one solution possible
-				retVal.Add((-b / (4 * a * c)));
+				retVal.Add((-b / (2 * a)));
 			}
 			return retVal;
 		}
