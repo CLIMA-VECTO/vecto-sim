@@ -81,12 +81,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					-ds.Value());
 				solutions = solutions.Where(x => x >= 0).ToList();
 
-				if (solutions.Count != 1) {
+				if (solutions.Count == 0) {
 					Log.WarnFormat(
-						"Could not find single solution for computing required time interval to drive distance {0}. currentSpeed: {1}, targetSpeed: {2}, acceleration: {3}",
+						"Could not find solution for computing required time interval to drive distance {0}. currentSpeed: {1}, targetSpeed: {2}, acceleration: {3}",
 						ds, currentSpeed, targetVelocity, requiredAcceleration);
 					return new ResponseFailTimeInterval();
 				}
+				// if there are 2 positive solutions (i.e. when decelerating), take the smaller time interval
+				// (the second solution means that you reach negative speed 
+				solutions.Sort();
 				dt = solutions.First().SI<Second>();
 			}
 			var retVal = Next.Request(absTime, dt, requiredAcceleration, gradient);
