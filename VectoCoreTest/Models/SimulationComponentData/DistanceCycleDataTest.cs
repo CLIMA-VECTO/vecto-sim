@@ -22,7 +22,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var stream = RessourceHelper.ReadStream(ResourceNamespace + "MissionCycles." + missionType + ".vdri");
 
 			var cycleData = DrivingCycleDataReader.ReadFromStream(stream, DrivingCycleData.CycleType.DistanceBased);
-			//foreach (var entry as)
+			foreach (var entry in cycleData.Entries) {
+				var tmp = entry.Altitude;
+			}
 		}
 	}
 }
