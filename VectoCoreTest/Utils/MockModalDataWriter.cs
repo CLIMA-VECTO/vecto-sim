@@ -7,7 +7,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 namespace TUGraz.VectoCore.Tests.Utils
 {
 	/// <summary>
-	///     Fake Data Writer Class for Tests.
+	/// Fake Data Writer Class for Tests.
 	/// </summary>
 	internal class MockModalDataWriter : IModalDataWriter
 	{

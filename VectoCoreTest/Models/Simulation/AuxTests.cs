@@ -13,35 +13,16 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 	public class AuxTests
 	{
 		[TestMethod]
-		public void Aux_WriteModFileSumFile1()
-		{
-			var sumWriter = new SummaryFileWriter(@"24t Coach.vsum");
-			var jobContainer = new JobContainer(sumWriter);
-
-			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode);
-			runsFactory.DataReader.SetJobFile(@"TestData\Jobs\24t Coach.vecto");
-
-			jobContainer.AddRuns(runsFactory);
-			jobContainer.Execute();
-
-			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum", @"TestData\Jobs\24t Coach.vsum");
-			ResultFileHelper.TestModFiles(new[] {
-				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only1.vmod",
-				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only2.vmod",
-				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only3.vmod"
-			}, new[] { "24t Coach_Engine Only1.vmod", "24t Coach_Engine Only2.vmod", "24t Coach_Engine Only3.vmod" });
-			Assert.Inconclusive();
-		}
-
-		[TestMethod]
 		public void AuxWriteModFileSumFile()
 		{
-			var dataWriter = new MockModalDataWriter();
+			var dataWriter = new ModalDataWriter(@"24t Coach AUX.vmod", true);
 			dataWriter.AddAuxiliary("ALT1");
 			dataWriter.AddAuxiliary("CONSTANT");
 
-			var sumWriter = new TestSumWriter();
-			var container = new VehicleContainer(dataWriter, sumWriter);
+			var sumWriter = new SummaryFileWriter(@"24t Coach AUX.vsum");
+			var deco = new SumWriterDecoratorEngineOnly(sumWriter, "", "", "");
+
+			var container = new VehicleContainer(dataWriter, deco);
 			var data = DrivingCycleData.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
 				DrivingCycleData.CycleType.TimeBased);
 
@@ -64,14 +45,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			for (var i = 0; i < data.Entries.Count; i++) {
 				aux.OutPort().Request(t, t, torque, speed);
-				cycle.CommitSimulationStep(dataWriter);
+				container.CommitSimulationStep(0, 0);
 			}
 
 			container.FinishSimulation();
-
 			sumWriter.Finish();
-
-			Assert.Inconclusive();
 		}
 
 

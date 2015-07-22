@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		protected SummaryFileWriter() {}
 
-		private string[] _auxColumns;
+		private IList<string> _auxColumns = new List<string>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SummaryFileWriter"/> class.
@@ -96,18 +96,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			WriteAuxiliaries(data, row);
 
-
 			_table.Rows.Add(row);
 		}
 
 		private void WriteAuxiliaries(IModalDataWriter data, DataRow row)
 		{
-			_auxColumns = data.Auxiliaries.Select(kv => "Eaux_" + kv.Key + " [kwh]").ToArray();
+			_auxColumns = _auxColumns.Union(data.Auxiliaries.Select(kv => "Eaux_" + kv.Key + " [kwh]")).ToList();
 
 			var sum = 0.0;
 			foreach (var aux in data.Auxiliaries) {
+				var colName = "Eaux_" + aux.Key + " [kwh]";
+				if (!_table.Columns.Contains(colName)) {
+					_table.Columns.Add(colName, typeof(double));
+				}
+
 				var currentSum = (double)data.Compute("Sum(" + aux.Value.ColumnName + ")", "");
-				row["Eaux_" + aux.Key + " [kwh]"] = currentSum;
+				row[colName] = currentSum;
 				sum += currentSum;
 			}
 			row[EAUX] = sum;
@@ -115,8 +119,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 
 		public void WriteFullPowertrain(IModalDataWriter data, string jobFileName, string jobName, string cycleFileName,
-			Kilogram vehicleMass,
-			Kilogram vehicleLoading)
+			Kilogram vehicleMass, Kilogram vehicleLoading)
 		{
 			_engineOnly = false;
 
