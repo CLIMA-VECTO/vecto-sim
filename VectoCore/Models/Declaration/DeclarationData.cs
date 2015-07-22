@@ -210,9 +210,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return false;
 			}
 
-			internal static ShiftPolygon ComputeShiftPolygon(CombustionEngineData engine, uint gear)
+			internal static ShiftPolygon ComputeShiftPolygon(GearFullLoadCurve gear, CombustionEngineData engine)
 			{
-				var fullLoadCurve = engine.GetFullLoadCurve(gear);
+				// TODO: How to compute shift-polygons exactly? (merge with engine full load?)
+				var fullLoadCurve = engine.FullLoadCurve;
 				var idleSpeed = engine.IdleSpeed;
 
 				var maxTorque = fullLoadCurve.MaxLoadTorque;

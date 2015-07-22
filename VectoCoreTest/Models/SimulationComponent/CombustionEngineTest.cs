@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var i = 0;
 			// dt = TimeSpan.FromSeconds(double.Parse(TestContext.DataRow["dt"].ToString(), CultureInfo.InvariantCulture));
 			// dt = TimeSpan.FromSeconds(expectedResults.Rows[i].ParseDouble(0)) - t;
-			var engineLoadPower = engineData.GetFullLoadCurve(0).FullLoadStationaryPower(angularSpeed);
+			var engineLoadPower = engineData.FullLoadCurve.FullLoadStationaryPower(angularSpeed);
 			idlePower = Double.Parse(TestContext.DataRow["finalIdleLoad"].ToString()).SI<Watt>();
 			for (; t < 25; t += dt, i++) {
 				dt = (expectedResults.Rows[i + 1].ParseDouble(0) - expectedResults.Rows[i].ParseDouble(0)).SI<Second>();
@@ -232,10 +232,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var idle = engineData.IdleSpeed;
 			Assert.AreEqual(58.6430628670095, idle.Value(), 0.000001);
 			Assert.IsTrue(idle.HasEqualUnit(0.SI<PerSecond>()));
-
-			var flc0 = engineData.GetFullLoadCurve(0);
-
-			AssertException<KeyNotFoundException>(() => { var flc10000 = engineData.GetFullLoadCurve(1000); });
 		}
 	}
 }

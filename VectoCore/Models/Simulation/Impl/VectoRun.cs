@@ -45,7 +45,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			do {
 				response = DoSimulationStep();
-				Container.CommitSimulationStep(AbsTime, dt);
+				if (response.ResponseType == ResponseType.Success) {
+					Container.CommitSimulationStep(AbsTime, dt);
+				}
 
 				// set _dt to difference to next full second.
 				AbsTime += dt;

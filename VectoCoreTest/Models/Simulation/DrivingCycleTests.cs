@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			while (cycleOut.Request(absTime, dt) is ResponseSuccess) {
 				Assert.AreEqual(absTime, outPort.AbsTime);
-				Assert.AreEqual(dt, outPort.Ds);
+				Assert.AreEqual(dt, outPort.Dt);
 
 				var time = absTime + dt / 2;
 				var simulationInterval = dt;

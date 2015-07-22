@@ -196,8 +196,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			CheckForEngineeringMode(fileInfo, "Engine");
 
 			switch (fileInfo.Version) {
-				case 2:
-					var tmp = JsonConvert.DeserializeObject<EngineFileV2Engineering>(json);
+				case 3:
+					var tmp = JsonConvert.DeserializeObject<EngineFileV3Engineering>(json);
 					tmp.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
 					return tmp;
 				default:
@@ -217,8 +217,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			CheckForEngineeringMode(fileInfo, "Gearbox");
 
 			switch (fileInfo.Version) {
-				case 4:
-					var tmp = JsonConvert.DeserializeObject<GearboxFileV4Engineering>(json);
+				case 5:
+					var tmp = JsonConvert.DeserializeObject<GearboxFileV5Engineering>(json);
 					tmp.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
 					return tmp;
 				default:

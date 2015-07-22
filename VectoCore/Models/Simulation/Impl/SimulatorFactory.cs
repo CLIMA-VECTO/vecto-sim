@@ -78,7 +78,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var sumWriterDecorator = DecorateSumWriter(data.IsEngineOnly, SumWriter, data.JobFileName, jobName, data.Cycle.Name);
 				var builder = new PowertrainBuilder(modWriter, sumWriterDecorator, DataReader.IsEngineOnly);
 
-				yield return new DistanceRun(builder.Build(data));
+				VectoRun run;
+				if (data.IsEngineOnly) {
+					run = new TimeRun(builder.Build(data));
+				} else {
+					run = new DistanceRun(builder.Build(data));
+				}
+
+				yield return run;
 			}
 		}
 

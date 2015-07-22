@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// TODO!!
 			var dx = 0.SI<Meter>();
-			return _outPort.Request((Second)absTime, dx, Data.Entries[index].VehicleTargetSpeed,
+			return _outPort.Request(absTime, dt, Data.Entries[index].VehicleTargetSpeed,
 				Data.Entries[index].RoadGradient);
 		}
 
@@ -86,10 +86,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			throw new NotImplementedException();
+			// TODO: write data...
 		}
 
-		protected override void DoCommitSimulationStep() {}
+		protected override void DoCommitSimulationStep()
+		{
+			// TODO: commit step
+		}
 
 		#endregion
 	}

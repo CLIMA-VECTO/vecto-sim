@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 		public override CombustionEngineData CreateEngineData(VectoEngineFile engine)
 		{
-			var fileV2Decl = engine as EngineFileV2Declaration;
+			var fileV2Decl = engine as EngineFileV3Declaration;
 			if (fileV2Decl != null) {
 				return CreateEngineData(fileV2Decl);
 			}
@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 		public override GearboxData CreateGearboxData(VectoGearboxFile gearbox, CombustionEngineData engine)
 		{
-			var fileV5Decl = gearbox as GearboxFileV4Declaration;
+			var fileV5Decl = gearbox as GearboxFileV5Declaration;
 			if (fileV5Decl != null) {
 				return CreateGearboxData(fileV5Decl, engine);
 			}
@@ -143,18 +143,17 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal CombustionEngineData CreateEngineData(EngineFileV2Declaration engine)
+		internal CombustionEngineData CreateEngineData(EngineFileV3Declaration engine)
 		{
 			var retVal = SetCommonCombustionEngineData(engine.Body, engine.BasePath);
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement);
-			foreach (var entry in engine.Body.FullLoadCurves) {
-				retVal.AddFullLoadCurve(entry.Gears, FullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, entry.Path), true));
-			}
+			retVal.FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, engine.Body.FullLoadCurve),
+				true);
 
 			return retVal;
 		}
 
-		internal GearboxData CreateGearboxData(GearboxFileV4Declaration gearbox, CombustionEngineData engine)
+		internal GearboxData CreateGearboxData(GearboxFileV5Declaration gearbox, CombustionEngineData engine)
 		{
 			var retVal = SetCommonGearboxData(gearbox.Body);
 
@@ -181,17 +180,29 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			for (uint i = 0; i < gearbox.Body.Gears.Count; i++) {
 				var gearSettings = gearbox.Body.Gears[(int)i];
 				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
-				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
+				var lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
 
 
 				if (i == 0) {
-					retVal.AxleGearData = new GearData(lossMap, null, gearSettings.Ratio, false);
+					retVal.AxleGearData = new GearData() {
+						LossMap = lossMap,
+						Ratio = gearSettings.Ratio,
+						TorqueConverterActive = false
+					};
 				} else {
-					var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(engine, i);
-					retVal._gearData.Add(i, new GearData(lossMap, shiftPolygon, gearSettings.Ratio, false));
+					var fullLoad = !String.IsNullOrEmpty(gearSettings.FullLoadCurve) && gearSettings.FullLoadCurve.Equals("<NOFILE>")
+						? GearFullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
+						: null;
+					var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(fullLoad, engine);
+
+					retVal._gearData.Add(i, new GearData() {
+						LossMap = lossMap,
+						ShiftPolygon = shiftPolygon,
+						Ratio = gearSettings.Ratio,
+						TorqueConverterActive = false
+					});
 				}
 			}
-
 			return retVal;
 		}
 	}

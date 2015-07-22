@@ -120,8 +120,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			if (_dataWriter != null) {
-				_dataWriter[ModalResultField.time] = time;
-				_dataWriter[ModalResultField.simulationInterval] = simulationInterval;
+				_dataWriter[ModalResultField.time] = time.Value();
+				_dataWriter[ModalResultField.simulationInterval] = simulationInterval.Value();
 				_dataWriter.CommitSimulationStep();
 			}
 		}

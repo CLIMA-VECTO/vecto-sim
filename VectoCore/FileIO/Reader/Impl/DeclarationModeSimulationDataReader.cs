@@ -115,8 +115,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			CheckForDeclarationMode(fileInfo, "Engine");
 
 			switch (fileInfo.Version) {
-				case 2:
-					Engine = JsonConvert.DeserializeObject<EngineFileV2Declaration>(json);
+				case 3:
+					Engine = JsonConvert.DeserializeObject<EngineFileV3Declaration>(json);
 					Engine.BasePath = Path.GetDirectoryName(file);
 					break;
 				default:
@@ -131,8 +131,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			CheckForDeclarationMode(fileInfo, "Gearbox");
 
 			switch (fileInfo.Version) {
-				case 4:
-					Gearbox = JsonConvert.DeserializeObject<GearboxFileV4Declaration>(json);
+				case 5:
+					Gearbox = JsonConvert.DeserializeObject<GearboxFileV5Declaration>(json);
 					Gearbox.BasePath = Path.GetDirectoryName(file);
 					break;
 				default:

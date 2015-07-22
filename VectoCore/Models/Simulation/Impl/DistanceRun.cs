@@ -10,10 +10,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	{
 		public DistanceRun(IVehicleContainer container) : base(container) {}
 
-		protected override Connector.Ports.IResponse DoSimulationStep()
+		protected override IResponse DoSimulationStep()
 		{
-			//_dt = TimeSpan.FromSeconds(1) - TimeSpan.FromMilliseconds(_dt.Milliseconds);
-
 			// estimate distance to be traveled within the next TargetTimeInterval
 			var ds = (Container.VehicleSpeed() * Constants.SimulationSettings.TargetTimeInterval).Cast<Meter>();
 
@@ -21,7 +19,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				ds = Constants.SimulationSettings.DriveOffDistance;
 			}
 
-			var response = CyclePort.Request((Second)AbsTime, ds);
+			var response = CyclePort.Request(AbsTime, ds);
 
 			//while (response is ResponseFailTimeInterval) {
 			//	_dt = (response as ResponseFailTimeInterval).DeltaT;
@@ -32,7 +30,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				return response;
 			}
 
-			AbsTime = (AbsTime + response.SimulationInterval / 2);
+			AbsTime = AbsTime + response.SimulationInterval;
 			dt = response.SimulationInterval;
 			return response;
 		}

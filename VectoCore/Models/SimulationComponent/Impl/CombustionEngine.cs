@@ -88,12 +88,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//todo: _currentState.EnginePowerLoss = enginePowerLoss;
 			}
 
-			var currentGear = Cockpit.Gear();
-
-			_currentState.FullDragTorque = _data.GetFullLoadCurve(currentGear).DragLoadStationaryTorque(engineSpeed);
+			_currentState.FullDragTorque = _data.FullLoadCurve.DragLoadStationaryTorque(engineSpeed);
 			_currentState.FullDragPower = Formulas.TorqueToPower(_currentState.FullDragTorque, engineSpeed);
 
-			ComputeFullLoadPower(currentGear, engineSpeed, dt);
+			ComputeFullLoadPower(engineSpeed, dt);
 
 			ValidatePowerDemand(requestedEnginePower);
 
@@ -115,22 +113,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			writer[ModalResultField.PaEng] = (double)_currentState.EnginePowerLoss;
-			writer[ModalResultField.Pe_drag] = (double)_currentState.FullDragPower;
-			writer[ModalResultField.Pe_full] = (double)_currentState.DynamicFullLoadPower;
-			writer[ModalResultField.Pe_eng] = (double)_currentState.EnginePower;
+			writer[ModalResultField.PaEng] = _currentState.EnginePowerLoss.Value();
+			writer[ModalResultField.Pe_drag] = _currentState.FullDragPower.Value();
+			writer[ModalResultField.Pe_full] = _currentState.DynamicFullLoadPower.Value();
+			writer[ModalResultField.Pe_eng] = _currentState.EnginePower.Value();
 
-			writer[ModalResultField.Tq_drag] = (double)_currentState.FullDragTorque;
-			writer[ModalResultField.Tq_full] = (double)_currentState.DynamicFullLoadTorque;
-			writer[ModalResultField.Tq_eng] = (double)_currentState.EngineTorque;
-			writer[ModalResultField.n] = (double)_currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute;
+			writer[ModalResultField.Tq_drag] = _currentState.FullDragTorque.Value();
+			writer[ModalResultField.Tq_full] = _currentState.DynamicFullLoadTorque.Value();
+			writer[ModalResultField.Tq_eng] = _currentState.EngineTorque.Value();
+			writer[ModalResultField.n] = _currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute.Value();
 
 			try {
 				writer[ModalResultField.FC] =
-					(double)
-						_data.ConsumptionMap.GetFuelConsumption(_currentState.EngineTorque, _currentState.EngineSpeed)
-							.ConvertTo()
-							.Gramm.Per.Hour;
+					_data.ConsumptionMap.GetFuelConsumption(_currentState.EngineTorque, _currentState.EngineSpeed)
+						.ConvertTo()
+						.Gramm.Per.Hour.Value();
 			} catch (VectoException ex) {
 				Log.WarnFormat("t: {0} - {1} n: {2} Tq: {3}", _currentState.AbsTime, ex.Message,
 					_currentState.EngineSpeed, _currentState.EngineTorque);
@@ -223,10 +220,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		///     computes full load power from gear [-], angularVelocity [rad/s] and dt [s].
 		/// </summary>
-		/// <param name="gear"></param>
 		/// <param name="angularVelocity">[rad/s]</param>
 		/// <param name="dt">[s]</param>
-		protected void ComputeFullLoadPower(uint gear, PerSecond angularVelocity, Second dt)
+		protected void ComputeFullLoadPower(PerSecond angularVelocity, Second dt)
 		{
 			if (dt.IsEqual(0)) {
 				throw new VectoException("ComputeFullLoadPower cannot compute for simulation interval length 0.");
@@ -234,11 +230,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//_currentState.StationaryFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
 			_currentState.StationaryFullLoadTorque =
-				_data.GetFullLoadCurve(gear).FullLoadStationaryTorque(angularVelocity);
+				_data.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
 			_currentState.StationaryFullLoadPower = Formulas.TorqueToPower(_currentState.StationaryFullLoadTorque,
 				angularVelocity);
 
-			double pt1 = _data.GetFullLoadCurve(gear).PT1(angularVelocity).Value();
+			double pt1 = _data.FullLoadCurve.PT1(angularVelocity).Value();
 
 //			var dynFullPowerCalculated = (1 / (pt1 + 1)) *
 //										(_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower);
