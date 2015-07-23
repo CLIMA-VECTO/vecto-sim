@@ -240,6 +240,12 @@
     <None Include="TestData\Jobs\EngineOnlyJob.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Results\Auxiliaries.vmod">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Results\Auxiliaries.vsum">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Results\EngineFullLoadJumps\EngineFLJ_1000rpm_10Hz.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

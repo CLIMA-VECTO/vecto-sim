@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -15,31 +16,34 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxWriteModFileSumFile()
 		{
-			var dataWriter = new ModalDataWriter(@"24t Coach AUX.vmod", true);
-			dataWriter.AddAuxiliary("ALT1");
-			dataWriter.AddAuxiliary("CONSTANT");
+			var dataWriter = new ModalDataWriter(@"TestData\Results\24t Coach AUX.vmod", false);
+			dataWriter.AddAuxiliary("FAN");
+			dataWriter.AddAuxiliary("PS");
+			dataWriter.AddAuxiliary("STP");
+			dataWriter.AddAuxiliary("ES");
+			dataWriter.AddAuxiliary("AC");
 
-			var sumWriter = new SummaryFileWriter(@"24t Coach AUX.vsum");
-			var deco = new SumWriterDecoratorEngineOnly(sumWriter, "", "", "");
+			var sumWriter = new SummaryFileWriter(@"TestData\Results\24t Coach AUX.vsum");
+			var deco = new SumWriterDecoratorFullPowertrain(sumWriter, "", "", "");
 
 			var container = new VehicleContainer(dataWriter, deco);
 			var data = DrivingCycleData.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
 				DrivingCycleData.CycleType.TimeBased);
 
-			var cycle = new MockDrivingCycle(container, data);
 			var port = new MockTnOutPort();
 
 			var aux = new Auxiliary(container);
 			aux.InPort().Connect(port);
 
-			var auxData = MappingAuxiliaryData.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux");
+			aux.AddConstant("FAN", DeclarationData.Fan.Lookup(MissionType.LongHaul, ""));
+			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(MissionType.LongHaul, VehicleClass.Class3));
+			aux.AddConstant("STP",
+				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, VehicleClass.Class3, "Fixed displacement"));
+			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(MissionType.LongHaul, new string[0]));
+			aux.AddConstant("AC",
+				DeclarationData.HeatingVentilationAirConditioning.Lookup(MissionType.LongHaul, VehicleClass.Class3));
 
-			aux.AddMapping("ALT1", cycle, auxData);
-			aux.AddDirect(cycle);
-			var constPower = 1200.SI<Watt>();
-			aux.AddConstant("CONSTANT", constPower);
-
-			var speed = 578.22461991.RPMtoRad();
+			var speed = 1400.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();
 			var t = new TimeSpan();
 
@@ -51,8 +55,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			container.FinishSimulation();
 			sumWriter.Finish();
 
-
-			Assert.Inconclusive();
+			ResultFileHelper.TestModFile(@"TestData\Results\Auxiliaries.vmod", @"TestData\Results\24t Coach AUX.vmod");
+			ResultFileHelper.TestSumFile(@"TestData\Results\Auxiliaries.vsum", @"TestData\Results\24t Coach AUX.vsum");
 		}
 
 

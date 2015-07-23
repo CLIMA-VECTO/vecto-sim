@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			writer[ModalResultField.n] = (double)_currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute;
 
 			try {
-				writer[ModalResultField.FC] =
+				writer[ModalResultField.FCMap] =
 					(double)
 						_data.ConsumptionMap.GetFuelConsumption(_currentState.EngineTorque, _currentState.EngineSpeed)
 							.ConvertTo()
@@ -134,7 +134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} catch (VectoException ex) {
 				Log.WarnFormat("t: {0} - {1} n: {2} Tq: {3}", _currentState.AbsTime.TotalSeconds, ex.Message,
 					_currentState.EngineSpeed, _currentState.EngineTorque);
-				writer[ModalResultField.FC] = double.NaN;
+				writer[ModalResultField.FCMap] = double.NaN;
 			}
 
 			_previousState = _currentState;

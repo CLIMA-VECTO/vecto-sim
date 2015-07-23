@@ -22,19 +22,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 				Assert.IsTrue(File.Exists(result.actualFile), "MOD File is missing: " + result);
 				Assert.IsTrue(File.Exists(result.expectedFile), "Expected File is missing: " + result);
 
-				var expected = ModalResults.ReadFromFile(result.expectedFile);
-				var actual = ModalResults.ReadFromFile(result.actualFile);
+				var expected = VectoCSVFile.Read(result.expectedFile);
+				var actual = VectoCSVFile.Read(result.actualFile);
 
 				Assert.AreEqual(expected.Rows.Count, actual.Rows.Count,
 					string.Format("Moddata: Row count differs.\nExpected {0} Rows in {1}\nGot {2} Rows in {3}", expected.Rows.Count,
 						result.expectedFile, actual.Rows.Count, result.actualFile));
 
-				Assert.AreEqual(expected.Columns.Count, actual.Columns.Count,
-					string.Format("Moddata: Columns count differs.\nExpected {0} Columns in {1}\nGot {2} Columns in {3}",
-						expected.Columns.Count, result.expectedFile, actual.Columns.Count, result.actualFile));
-
-				var actualCols = actual.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList();
-				var expectedCols = expected.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToList();
+				var actualCols = actual.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
+				var expectedCols = expected.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
 
 				Assert.IsTrue(expectedCols.SequenceEqual(actualCols),
 					string.Format("Moddata: Columns differ:\nExpected: {0}\nActual: {1}", string.Join(", ", expectedCols),

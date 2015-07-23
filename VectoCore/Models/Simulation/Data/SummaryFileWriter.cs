@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
@@ -21,9 +22,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private const string ALTITUDE = "∆altitude [m]";
 		private const string PPOS = "Ppos [kW]";
 		private const string PNEG = "Pneg [kW]";
-		private const string FC = "FC [g/h]";
+		private const string FCMAP = "FC-Map [g/h]";
+		private const string FCMAPKM = "FC-Map [g/km]";
 		private const string FCAUXC = "FC-AUXc [g/h]";
+		private const string FCAUXCKM = "FC-AUXc [g/km]";
 		private const string FCWHTCC = "FC-WHTCc [g/h]";
+		private const string FCWHTCCKM = "FC-WHTCc [g/km]";
+		private const string PWHEELPOS = "PwheelPos [kW]";
 		private const string PBRAKE = "Pbrake [kW]";
 		private const string EPOSICE = "EposICE [kWh]";
 		private const string ENEGICE = "EnegICE [kWh]";
@@ -37,9 +42,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private const string ERETARDER = "Eretarder [kWh]";
 		private const string MASS = "Mass [kg]";
 		private const string LOADING = "Loading [kg]";
-		private const string A = "a [m/s2]";
-		private const string APOS = "a_pos [m/s2]";
-		private const string ANEG = "a_neg [m/s2]";
+		private const string A = "a [m/s^2]";
+		private const string APOS = "a_pos [m/s^2]";
+		private const string ANEG = "a_neg [m/s^2]";
 		private const string PACC = "pAcc [%]";
 		private const string PDEC = "pDec [%]";
 		private const string PCRUISE = "pCruise [%]";
@@ -48,8 +53,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private const string CO2 = "CO2 [g/km]";
 		private const string CO2T = "CO2 [g/tkm]";
 		private const string FCFINAL = "FC-Final [g/km]";
-		private const string FCFINAL_LITER = "FC-Final [l/km]";
-		private const string FCFINAL_LITERPER100TKM = "FC-Final [l/tkm]";
+		private const string FCFINAL_LITER = "FC-Final [l/100km]";
+		private const string FCFINAL_LITERPER100TKM = "FC-Final [l/100tkm]";
 		private const string ACCNOISE = "Acc.Noise [m/s^2]";
 		// ReSharper restore InconsistentNaming
 
@@ -75,13 +80,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			_table.Columns.Add(CYCLE, typeof(string));
 
 			_table.Columns.AddRange(new[] {
-				TIME, DISTANCE, SPEED, ALTITUDE, PPOS, PNEG, FC, FCAUXC, FCWHTCC, PBRAKE, EPOSICE, ENEGICE, EAIR, EROLL, EGRAD,
-				EACC, EAUX, EBRAKE, ETRANSM, ERETARDER, MASS, LOADING, A, APOS, ANEG, PACC, PDEC, PCRUISE, PSTOP, ETORQUECONV, CO2,
+				TIME, DISTANCE, SPEED, ALTITUDE, PPOS, PNEG, FCMAP, FCMAPKM, FCAUXC, FCAUXCKM, FCWHTCC, FCWHTCCKM, PWHEELPOS, PBRAKE,
+				EPOSICE,
+				ENEGICE, EAIR, EROLL, EGRAD, EACC, EAUX, EBRAKE, ETRANSM, ERETARDER, MASS, LOADING, A, APOS, ANEG, PACC, PDEC,
+				PCRUISE, PSTOP, ETORQUECONV, CO2,
 				CO2T, FCFINAL, FCFINAL_LITER, FCFINAL_LITERPER100TKM, ACCNOISE
 			}.Select(x => new DataColumn(x, typeof(double))).ToArray());
 		}
 
-		public void WriteEngineOnly(IModalDataWriter data, string jobFileName, string jobName, string cycleFileName)
+		protected internal void WriteEngineOnly(IModalDataWriter data, string jobFileName, string jobName,
+			string cycleFileName)
 		{
 			var row = _table.NewRow();
 			row[JOB] = jobName;
@@ -90,7 +98,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			row[TIME] = data.Compute("Max(time)", "");
 			row[PPOS] = data.Compute("Avg(Pe_eng)", "Pe_eng > 0");
 			row[PNEG] = data.Compute("Avg(Pe_eng)", "Pe_eng < 0");
-			row[FC] = data.Compute("Avg(FC)", "");
+			row[FCMAP] = data.Compute("Avg(FC)", "");
 			row[FCAUXC] = data.Compute("Avg([FC-AUXc])", "");
 			row[FCWHTCC] = data.Compute("Avg([FC-WHTCc])", "");
 
@@ -105,7 +113,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			var sum = 0.0;
 			foreach (var aux in data.Auxiliaries) {
-				var colName = "Eaux_" + aux.Key + " [kwh]";
+				var colName = "Eaux_" + aux.Key + " [kWh]";
 				if (!_table.Columns.Contains(colName)) {
 					_table.Columns.Add(colName, typeof(double));
 				}
@@ -118,7 +126,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		}
 
 
-		public void WriteFullPowertrain(IModalDataWriter data, string jobFileName, string jobName, string cycleFileName,
+		protected internal void WriteFullPowertrain(IModalDataWriter data, string jobFileName, string jobName,
+			string cycleFileName,
 			Kilogram vehicleMass, Kilogram vehicleLoading)
 		{
 			_engineOnly = false;
@@ -132,9 +141,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			row[SPEED] = data.Compute("Avg(v_act)", "");
 			row[PPOS] = data.Compute("Avg(Pe_eng)", "Pe_eng > 0");
 			row[PNEG] = data.Compute("Avg(Pe_eng)", "Pe_eng < 0");
-			row[FC] = data.Compute("Avg(FC)", "");
-			row[FCAUXC] = data.Compute("Avg([FC-AUXc])", "");
-			row[FCWHTCC] = data.Compute("Avg([FC-WHTCc])", "");
+			row[FCMAP] = data.Compute("Avg(FCMap)", "");
+			row[FCAUXC] = data.Compute("Avg(FCAUXc)", "");
+			row[FCWHTCC] = data.Compute("Avg(FCWHTCc)", "");
 			row[PBRAKE] = data.Compute("Avg(Pbrake)", "");
 			row[EPOSICE] = data.Compute("Avg(Pe_eng)", "Pe_eng > 0");
 			row[ENEGICE] = data.Compute("Avg(Pe_eng)", "Pe_eng < 0");
@@ -143,9 +152,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			row[EGRAD] = data.Compute("Sum(Pgrad)", "");
 			row[EAUX] = data.Compute("Sum(Paux)", "");
 			row[EBRAKE] = data.Compute("Sum(Pbrake)", "");
-			row[ETRANSM] = data.Compute("Sum([Ploss Diff]) + Sum([Ploss GB])", "");
-			row[ERETARDER] = data.Compute("Sum([Ploss Retarder])", "");
-			row[EACC] = data.Compute("Sum(Pa)+Sum([Pa GB])", ""); // TODO +PaEng?
+			row[ETRANSM] = data.Compute("Sum(PlossDiff) + Sum(PlossGB)", "");
+			row[ERETARDER] = data.Compute("Sum(PlossRetarder)", "");
+			row[EACC] = data.Compute("Sum(PaEng)+Sum(PaGB)", "");
 
 			//todo altitude - calculate when reading the cycle file, add column for altitude
 			//row["∆altitude [m]"] = Data.Rows[Data.Rows.Count - 1].Field<double>("altitude") -
@@ -154,13 +163,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			WriteAuxiliaries(data, row);
 
 			//todo get data from vehicle file
-			row[MASS] = vehicleMass == null ? "" : vehicleMass.ToString();
-			row[LOADING] = vehicleLoading == null ? "" : vehicleLoading.ToString();
+			row[MASS] = vehicleMass == null ? "" : vehicleMass.Value().ToString(CultureInfo.InvariantCulture);
+			row[LOADING] = vehicleLoading == null ? "" : vehicleLoading.Value().ToString(CultureInfo.InvariantCulture);
 
 			var dtValues = data.GetValues<double>(ModalResultField.simulationInterval).ToList();
 			var accValues = data.GetValues<double?>(ModalResultField.acc);
 			var accelerations = CalculateAverageOverSeconds(dtValues, accValues).ToList();
-			row[A] = accelerations.Average();
+			if (accelerations.Any()) {
+				row[A] = accelerations.Average();
+			}
 
 			var acceleration3SecondAverage = Calculate3SecondAverage(accelerations).ToList();
 
@@ -180,7 +191,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			_table.Rows.Add(row);
 		}
 
-		private static IEnumerable<double> Calculate3SecondAverage(List<double> accelerations)
+		private static IEnumerable<double> Calculate3SecondAverage(IReadOnlyList<double> accelerations)
 		{
 			if (accelerations.Count >= 3) {
 				var runningAverage = (accelerations[0] + accelerations[1] + accelerations[2]) / 3.0;
@@ -224,18 +235,23 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public virtual void Finish()
 		{
-			string[] dataColumns;
+			var dataColumns = new List<string>();
+
 			if (_engineOnly) {
-				dataColumns = new[] { JOB, INPUTFILE, CYCLE, TIME, PPOS, PNEG, FC, FCAUXC, FCWHTCC };
+				dataColumns.AddRange(new[] { JOB, INPUTFILE, CYCLE, TIME, PPOS, PNEG, FCMAP, FCAUXC, FCWHTCC });
 			} else {
-				dataColumns = new[] {
-					JOB, INPUTFILE, CYCLE, TIME, PPOS, PNEG, DISTANCE, SPEED, ALTITUDE, PBRAKE, EPOSICE, ENEGICE, EAIR, EROLL, EGRAD,
-					EACC, EAUX, EBRAKE, ETRANSM, ERETARDER, ETORQUECONV, MASS, LOADING, FC, FCAUXC, FCWHTCC, CO2, CO2T, FCFINAL,
-					FCFINAL_LITER, FCFINAL_LITERPER100TKM, A, APOS, ANEG, ACCNOISE, PACC, PDEC, PCRUISE, PSTOP
-				};
+				dataColumns.AddRange(new[] { JOB, INPUTFILE, CYCLE, TIME, DISTANCE, SPEED, ALTITUDE });
+
+				dataColumns.AddRange(_auxColumns);
+
+				dataColumns.AddRange(new[] {
+					PPOS, PNEG, FCMAP, FCMAPKM, FCAUXC, FCAUXCKM, FCWHTCC, FCWHTCCKM, CO2, CO2T, FCFINAL, FCFINAL_LITERPER100TKM,
+					FCFINAL_LITER, PWHEELPOS, PBRAKE, EPOSICE, ENEGICE, EAIR, EROLL, EGRAD, EACC, EAUX, EBRAKE, ETRANSM,
+					ERETARDER, ETORQUECONV, MASS, LOADING, A, APOS, ANEG, ACCNOISE, PACC, PDEC, PCRUISE, PSTOP
+				});
 			}
 
-			VectoCSVFile.Write(_sumFileName, new DataView(_table).ToTable(false, dataColumns.Concat(_auxColumns).ToArray()));
+			VectoCSVFile.Write(_sumFileName, new DataView(_table).ToTable(false, dataColumns.ToArray()));
 		}
 	}
 }

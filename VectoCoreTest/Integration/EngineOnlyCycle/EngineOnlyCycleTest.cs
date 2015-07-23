@@ -64,13 +64,13 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 						Assert.AreEqual((double)row[field.GetName()], dataWriter.GetDouble(field),
 							0.0001, string.Format("t: {0}  field: {1}", i, field));
 					}
-					if (row[ModalResultField.FC.GetName()] is double &&
-						!double.IsNaN(double.Parse(row[ModalResultField.FC.GetName()].ToString()))) {
-						Assert.AreEqual((double)row[ModalResultField.FC.GetName()],
-							dataWriter.GetDouble(ModalResultField.FC), 0.01,
-							"t: {0}  field: {1}", i, ModalResultField.FC);
+					if (row[ModalResultField.FCMap.GetName()] is double &&
+						!double.IsNaN(double.Parse(row[ModalResultField.FCMap.GetName()].ToString()))) {
+						Assert.AreEqual((double)row[ModalResultField.FCMap.GetName()],
+							dataWriter.GetDouble(ModalResultField.FCMap), 0.01,
+							"t: {0}  field: {1}", i, ModalResultField.FCMap);
 					} else {
-						Assert.IsTrue(double.IsNaN(dataWriter.GetDouble(ModalResultField.FC)),
+						Assert.IsTrue(double.IsNaN(dataWriter.GetDouble(ModalResultField.FCMap)),
 							string.Format("t: {0}", i));
 					}
 				}

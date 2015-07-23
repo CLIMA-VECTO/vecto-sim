@@ -37,7 +37,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			if (!_engineOnly) {
 				dataColumns.AddRange(new[] {
-					ModalResultField.time,
 					ModalResultField.dist,
 					ModalResultField.v_act,
 					ModalResultField.v_targ,
@@ -77,7 +76,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 				if (HasTorqueConverter) {
 					dataColumns.AddRange(new[] {
-						ModalResultField.TCν,
+						ModalResultField.TCv,
 						ModalResultField.TCmu,
 						ModalResultField.TC_M_Out,
 						ModalResultField.TC_n_Out
@@ -85,8 +84,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				}
 			}
 
-			var columns = dataColumns.Select(x => x.GetName()).Concat(Auxiliaries.Values.Select(c => c.ColumnName)).ToArray();
-			VectoCSVFile.Write(ModFileName, new DataView(Data).ToTable(false, columns));
+			var strCols = dataColumns.Select(x => x.GetName())
+				.Concat((Auxiliaries.Values.Select(c => c.ColumnName)))
+				.Concat(new[] { ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc }.Select(x => x.GetName()));
+
+			VectoCSVFile.Write(ModFileName, new DataView(Data).ToTable(false, strCols.ToArray()));
 		}
 
 
