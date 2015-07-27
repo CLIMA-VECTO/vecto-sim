@@ -90,6 +90,7 @@
     <Compile Include="Models\SimulationComponent\WheelsTest.cs" />
     <Compile Include="Models\SimulationComponent\VehicleTest.cs" />
     <Compile Include="Models\Simulation\DrivingCycleTests.cs" />
+    <Compile Include="Models\Simulation\PowerTrainBuilderTest.cs" />
     <Compile Include="Utils\AssertHelper.cs" />
     <Compile Include="Utils\MockDriver.cs" />
     <Compile Include="Utils\MockVehicle.cs" />

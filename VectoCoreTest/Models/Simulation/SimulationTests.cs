@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var jobContainer = new JobContainer(sumWriter);
 
 			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode);
-			runsFactory.DataReader.SetJobFile(@"TestData\Jobs\24t Coach.vecto");
+			runsFactory.DataReader.SetJobFile(@"TestData\Jobs\24t Coach EngineOnly.vecto");
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();

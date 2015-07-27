@@ -12,7 +12,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	[TestClass]
 	public class DriverTest
 	{
-		public const string JobFile = @"TestData\Jobs\24t Coach.vecto";
+		public const string JobFile = @"TestData\Jobs\24t Coach EngineOnly.vecto";
 
 		public const double Tolerance = 0.001;
 
