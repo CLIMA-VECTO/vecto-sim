@@ -153,6 +153,7 @@
     <Compile Include="Models\Declaration\MissionType.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\PT1Curve.cs" />
     <Compile Include="Models\SimulationComponent\Data\GearFullLoadCurve.cs" />
+    <Compile Include="Models\Simulation\Cockpit\IMileageCounter.cs" />
     <Compile Include="Models\Simulation\Impl\DistanceRun.cs" />
     <Compile Include="Models\Simulation\Impl\PowertrainBuilder.cs" />
     <Compile Include="Models\Simulation\Impl\TimeRun.cs" />

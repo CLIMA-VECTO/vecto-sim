@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     Simulation interval around the current time step. [s]
 		/// </summary>
-		[ModalResultField(typeof(SI), "simulation_interval", "simulation_interval [s]")] simulationInterval,
+		[ModalResultField(typeof(SI), "simulation_interval", "dt [s]")] simulationInterval,
 
 		/// <summary>
 		///     Engine speed [1/min].
@@ -166,7 +166,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [%]	    Road gradient.
 		/// </summary>
-		[ModalResultField(typeof(SI))] grad,
+		[ModalResultField(typeof(double))] grad,
 
 		/// <summary>
 		///     [-]	 GearData. "0" = clutch opened / neutral. "0.5" = lock-up clutch is open (AT with torque converter only, see

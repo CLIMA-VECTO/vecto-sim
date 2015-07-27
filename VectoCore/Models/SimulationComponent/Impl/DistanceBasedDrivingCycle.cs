@@ -111,17 +111,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			CurrentState.AbsTime = PreviousState.AbsTime + dt;
 			CurrentState.WaitTime = PreviousState.WaitTime + dt;
+			CurrentState.Gradient = ComputeGradient();
 
-			return _outPort.Request(absTime, dt, CycleIntervalIterator.LeftSample.VehicleTargetSpeed, ComputeGradient());
+			return _outPort.Request(absTime, dt, CycleIntervalIterator.LeftSample.VehicleTargetSpeed, CurrentState.Gradient);
 		}
 
 		private IResponse DriveDistance(Second absTime, Meter ds)
 		{
 			CurrentState.Distance = PreviousState.Distance + ds;
-
 			CurrentState.VehicleTargetSpeed = CycleIntervalIterator.LeftSample.VehicleTargetSpeed;
+			CurrentState.Gradient = ComputeGradient();
 
-			return _outPort.Request(absTime, ds, CurrentState.VehicleTargetSpeed, ComputeGradient());
+			return _outPort.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
 		}
 
 		private Radian ComputeGradient()
@@ -164,7 +165,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		protected override void DoWriteModalResults(IModalDataWriter writer) {}
+		protected override void DoWriteModalResults(IModalDataWriter writer)
+		{
+			writer[ModalResultField.v_targ] = CurrentState.VehicleTargetSpeed;
+			writer[ModalResultField.grad] = Math.Tan(CurrentState.Gradient.Value()) * 100;
+		}
 
 		protected override void DoCommitSimulationStep()
 		{
@@ -273,6 +278,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public MeterPerSecond VehicleTargetSpeed;
 
 			public Meter Altitude;
+
+			public Radian Gradient;
 
 			public IResponse Response;
 		}

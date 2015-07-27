@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -16,6 +17,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal IEngineCockpit _engine;
 		internal IGearboxCockpit _gearbox;
 		internal IVehicleCockpit _vehicle;
+
+		internal IMileageCounter _milageCounter;
 
 		internal ISimulationOutPort _cycle;
 
@@ -109,6 +112,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (cycle != null) {
 				_cycle = cycle;
 			}
+
+			var milage = component as IMileageCounter;
+			if (milage != null) {
+				_milageCounter = milage;
+			}
 		}
 
 
@@ -120,7 +128,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			if (_dataWriter != null) {
-				_dataWriter[ModalResultField.time] = time;
+				_dataWriter[ModalResultField.time] = time + simulationInterval / 2;
 				_dataWriter[ModalResultField.simulationInterval] = simulationInterval;
 				_dataWriter.CommitSimulationStep();
 			}
@@ -139,6 +147,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public IReadOnlyCollection<VectoSimulationComponent> SimulationComponents()
 		{
 			return new ReadOnlyCollection<VectoSimulationComponent>(_components);
+		}
+
+		public Meter Distance()
+		{
+			return _milageCounter.Distance();
 		}
 	}
 }

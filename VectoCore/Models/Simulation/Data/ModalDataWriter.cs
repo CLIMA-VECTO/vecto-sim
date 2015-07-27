@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			if (!_engineOnly) {
 				dataColumns.AddRange(new[] {
-					//ModalResultField.time,
+					ModalResultField.simulationInterval,
 					ModalResultField.dist,
 					ModalResultField.v_act,
 					ModalResultField.v_targ,

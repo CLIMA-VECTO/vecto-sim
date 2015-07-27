@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 
@@ -932,10 +934,10 @@ namespace TUGraz.VectoCore.Utils
 		public virtual string ToString(string format)
 		{
 			if (string.IsNullOrEmpty(format)) {
-				format = "";
+				format = "F4";
 			}
 
-			return string.Format("{0:" + format + "} [{2}]", Val, format, GetUnitString());
+			return string.Format(CultureInfo.InvariantCulture, "{0:" + format + "} [{2}]", Val, format, GetUnitString());
 		}
 
 		#endregion
@@ -1019,5 +1021,14 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		#endregion
+
+		public virtual string ToOutpuFormat(uint deciamls = 4, double outputFactor = 1.0, bool showUnit = false)
+		{
+			var fmt = new StringBuilder("{0:F").Append(deciamls).Append("}");
+			if (showUnit) {
+				fmt.Append(" [{2}]");
+			}
+			return string.Format(CultureInfo.InvariantCulture, fmt.ToString(), Val * outputFactor, GetUnitString());
+		}
 	}
 }

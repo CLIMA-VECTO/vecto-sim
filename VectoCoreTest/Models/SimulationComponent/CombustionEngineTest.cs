@@ -182,8 +182,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					engineLoadPower = idlePower;
 				}
 				requestPort.Request(t, dt, Formulas.PowerToTorque(engineLoadPower, angularSpeed), angularSpeed);
-				modalData[ModalResultField.time] = t.Value();
-				modalData[ModalResultField.simulationInterval] = dt.Value();
+				modalData[ModalResultField.time] = t;
+				modalData[ModalResultField.simulationInterval] = dt;
 				engine.CommitSimulationStep(modalData);
 				// todo: compare results...
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.Value(), 0.001, "Time");

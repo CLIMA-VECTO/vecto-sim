@@ -154,11 +154,8 @@ namespace TUGraz.VectoCore.Utils
 			foreach (DataRow row in table.Rows) {
 				var formattedList = new List<string>();
 				foreach (var item in row.ItemArray) {
-					var formattable = item as IFormattable;
-					var formattedValue = formattable != null
-						? formattable.ToString("", CultureInfo.InvariantCulture)
-						: item.ToString();
-					formattedList.Add(formattedValue);
+					var si = item as SI;
+					formattedList.Add(si != null ? si.ToOutpuFormat() : string.Format(CultureInfo.InvariantCulture, "{0}", item));
 				}
 				sb.AppendLine(string.Join(Delimiter.ToString(), formattedList));
 			}

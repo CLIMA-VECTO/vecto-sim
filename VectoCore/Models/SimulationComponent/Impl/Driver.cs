@@ -97,6 +97,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				solutions.Sort();
 				dt = solutions.First().SI<Second>();
 			}
+			CurrentState.Acceleration = requiredAcceleration;
+
 			var retVal = Next.Request(absTime, dt, requiredAcceleration, gradient);
 			retVal.SimulationInterval = dt;
 			return retVal;
@@ -121,7 +123,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			// todo??
+			writer[ModalResultField.acc] = CurrentState.Acceleration;
 		}
 
 		protected override void DoCommitSimulationStep()
@@ -134,6 +136,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class DriverState
 		{
+			public MeterPerSquareSecond Acceleration;
 			public IResponse Response;
 		}
 	}

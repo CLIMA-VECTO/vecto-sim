@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -22,7 +23,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public const string CycleFile = @"TestData\Integration\MinimalPowerTrain\Coach_24t_xshort.vdri";
 		public const string EngineFile = @"TestData\Integration\MinimalPowerTrain\24t Coach.veng";
 
-		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
+		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
 
 		[TestMethod]
 		public void TestWheelsAndEngine()
@@ -82,17 +83,27 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+			absTime += response.SimulationInterval;
 
 			gbx.CurrentGear = 1;
+			var ds = Constants.SimulationSettings.DriveOffDistance;
+			while (vehicleContainer.Distance().Value() < 825) {
+				response = cyclePort.Request(absTime, ds);
 
-			for (int i = 0; i < 10; i++) {
-				absTime += response.SimulationInterval;
-
-				response = cyclePort.Request(absTime, 1.SI<Meter>());
-
+				switch (response.ResponseType) {
+					case ResponseType.DrivingCycleDistanceExceeded:
+						var rsp = response as ResponseDrivingCycleDistanceExceeded;
+						ds = rsp.MaxDistance;
+						continue;
+				}
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
+				ds = vehicleContainer.VehicleSpeed().IsEqual(0)
+					? Constants.SimulationSettings.DriveOffDistance
+					: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed()).Cast<Meter>();
+
 				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+				absTime += response.SimulationInterval;
 			}
 
 			modalWriter.Finish();
