@@ -46,6 +46,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 						IsEngineOnly = IsEngineOnly,
 						JobFileName = Job.JobFile,
 					};
+					simulationRunData.VehicleData.VehicleClass = segment.VehicleClass;
 					yield return simulationRunData;
 				}
 			}
@@ -140,7 +141,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					ID = aux.ID,
 					Type = aux.Type,
 					Technology = aux.Technology,
-					TechList = aux.TechList.ToArray()
+					TechList = aux.TechList == null ? null : aux.TechList.ToArray()
 				}).ToArray();
 		}
 

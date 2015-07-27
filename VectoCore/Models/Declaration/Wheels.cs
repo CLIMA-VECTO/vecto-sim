@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			Data = (from DataRow row in table.Rows
 				select new WheelsEntry {
-					WheelType = row.Field<string>(0),
+					WheelType = row.Field<string>(0).Replace(" ", ""),
 					Inertia = row.ParseDouble(1).SI<KilogramSquareMeter>(),
 					DynamicTyreRadius = row.ParseDouble(2).SI().Milli.Meter.Cast<Meter>(),
 					SizeClass = row.Field<string>(3)

@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 					TwinTyres = axleInput.TwinTyres,
 					RollResistanceCoefficient = axleInput.RollResistanceCoefficient,
 					TyreTestLoad = axleInput.TyreTestLoad.SI<Newton>(),
-					Inertia = DeclarationData.Wheels.Lookup(axleInput.WheelsStr).Inertia,
+					Inertia = DeclarationData.Wheels.Lookup(axleInput.WheelsStr.Replace(" ", "")).Inertia,
 				};
 				retVal.AxleData.Add(axle);
 			}
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement);
 			retVal.FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, engine.Body.FullLoadCurve),
 				true);
-
+			retVal.FullLoadCurve.EngineData = retVal;
 			return retVal;
 		}
 
@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 						TorqueConverterActive = false
 					};
 				} else {
-					var fullLoad = !String.IsNullOrEmpty(gearSettings.FullLoadCurve) && gearSettings.FullLoadCurve.Equals("<NOFILE>")
+					var fullLoad = !String.IsNullOrEmpty(gearSettings.FullLoadCurve) && !gearSettings.FullLoadCurve.Equals("<NOFILE>")
 						? GearFullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
 						: null;
 					var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(fullLoad, engine);

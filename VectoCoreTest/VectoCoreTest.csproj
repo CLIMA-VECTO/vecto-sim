@@ -70,6 +70,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Exceptions\ExceptionTests.cs" />
+    <Compile Include="FileIO\JsonTest.cs" />
+    <Compile Include="FileIO\SimulationDataReaderTest.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
     <Compile Include="Integration\SimulationRuns\MinimalPowertrain.cs" />
     <Compile Include="Models\Declaration\DeclarationDataTest.cs" />

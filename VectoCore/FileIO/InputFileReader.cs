@@ -24,10 +24,5 @@ namespace TUGraz.VectoCore.FileIO
 			data = JsonConvert.DeserializeAnonymousType(jsonStr, data);
 			return new VersionInfo { SavedInDeclarationMode = data.Body.SavedInDeclMode, Version = data.Header.FileVersion };
 		}
-
-		protected T Deserialize<T>(string json)
-		{
-			return JsonConvert.DeserializeObject<T>(json);
-		}
 	}
 }

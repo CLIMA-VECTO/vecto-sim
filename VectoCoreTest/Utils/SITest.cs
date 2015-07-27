@@ -52,6 +52,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.IsTrue(siStandardDiv.HasEqualUnit(new SI()));
 			Assert.AreEqual(600.0 / 60 * 2 * Math.PI * 1500 * 1500, siStandardMult.Value());
 
+			var force = torque / 100.SI<Meter>();
+			Assert.IsInstanceOfType(force, typeof(Newton));
+			Assert.AreEqual(15, force.Value());
+
 
 			//add
 			var angularVelocity2 = 400.SI<RoundsPerMinute>().Cast<PerSecond>();

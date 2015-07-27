@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.Inertia = engine.Body.Inertia.SI<KilogramSquareMeter>();
 			retVal.FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, engine.Body.FullLoadCurve),
 				false);
-
+			retVal.FullLoadCurve.EngineData = retVal;
 			return retVal;
 		}
 

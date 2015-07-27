@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		private const string ResourceNamespace = "TUGraz.VectoCore.Resources.Declaration.";
 
 
-		[TestMethod]
+		[TestMethod, Ignore]
 		public void CycleAltitudeTest()
 		{
 			var missionType = "LongHaul";
