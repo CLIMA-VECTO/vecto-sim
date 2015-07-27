@@ -1,125 +1,1274 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html><head>
-
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>VECTO Changelog</title></head><body>
-
-<div style="text-align: center;"><div style="text-align: left;"><span style="font-family: Verdana;"><big><big><big><span style="font-weight: bold;">Changelog</span></big></big></big></span><br><hr style="width: 100%; height: 0px;"><br><span style="font-family: Verdana;"></span></div><span style="font-family: Verdana;"></span>
-
-<div style="text-align: left;"><span style="font-family: Tahoma;">VECTO 2.0<br>
-</span>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <!DOCTYPE html><html><head><meta charset="utf-8"><style>body {
+    width: 80%;
+  }
+  
+  body .markdown-body
+  {
+    padding: 30px;
+  }
+  
+  @font-face {
+    font-family: fontawesome-mini;
+    src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+  }
+  
+  @font-face {
+    font-family: octicons-anchor;
+    src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+  }
+  
+  .markdown-body {
+    font-family: sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    color: #333333;
+    overflow: hidden;
+    font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    word-wrap: break-word;
+  }
+  
+  .markdown-body a {
+    background: transparent;
+  }
+  
+  .markdown-body a:active,
+  .markdown-body a:hover {
+    outline: 0;
+  }
+  
+  .markdown-body b,
+  .markdown-body strong {
+    font-weight: bold;
+  }
+  
+  .markdown-body mark {
+    background: #ff0;
+    color: #000;
+    font-style: italic;
+    font-weight: bold;
+  }
+  
+  .markdown-body sub,
+  .markdown-body sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+  .markdown-body sup {
+    top: -0.5em;
+  }
+  .markdown-body sub {
+    bottom: -0.25em;
+  }
+  
+  .markdown-body h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+  }
+  
+  .markdown-body img {
+    border: 0;
+  }
+  
+  .markdown-body hr {
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 0;
+  }
+  
+  .markdown-body pre {
+    overflow: auto;
+  }
+  
+  .markdown-body code,
+  .markdown-body kbd,
+  .markdown-body pre,
+  .markdown-body samp {
+    font-family: monospace, monospace;
+    font-size: 1em;
+  }
+  
+  .markdown-body input {
+    color: inherit;
+    font: inherit;
+    margin: 0;
+  }
+  
+  .markdown-body html input[disabled] {
+    cursor: default;
+  }
+  
+  .markdown-body input {
+    line-height: normal;
+  }
+  
+  .markdown-body input[type="checkbox"] {
+    box-sizing: border-box;
+    padding: 0;
+  }
+  
+  .markdown-body table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  
+  .markdown-body td,
+  .markdown-body th {
+    padding: 0;
+  }
+  
+  .markdown-body .codehilitetable {
+    border: 0;
+    border-spacing: 0;
+  }
+  
+  .markdown-body .codehilitetable tr {
+    border: 0;
+  }
+  
+  .markdown-body .codehilitetable pre,
+  .markdown-body .codehilitetable div.codehilite {
+    margin: 0;
+  }
+  
+  .markdown-body .linenos,
+  .markdown-body .code,
+  .markdown-body .codehilitetable td {
+    border: 0;
+    padding: 0;
+  }
+  
+  .markdown-body td:not(.linenos) .linenodiv {
+    padding: 0 !important;
+  }
+  
+  .markdown-body .code {
+    width: 100%;
+  }
+  
+  .markdown-body .linenos div pre,
+  .markdown-body .linenodiv pre,
+  .markdown-body .linenodiv {
+    border: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+  }
+  
+  .markdown-body .code div pre,
+  .markdown-body .code div {
+    border: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -webkit-border-top-right-radius: 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    -moz-border-radius-topright: 3px;
+    -moz-border-radius-bottomright: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+  }
+  
+  .markdown-body * {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  .markdown-body input {
+    font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+    line-height: 1.4;
+  }
+  
+  .markdown-body a {
+    color: #4183c4;
+    text-decoration: none;
+  }
+  
+  .markdown-body a:hover,
+  .markdown-body a:focus,
+  .markdown-body a:active {
+    text-decoration: underline;
+  }
+  
+  .markdown-body hr {
+    height: 0;
+    margin: 15px 0;
+    overflow: hidden;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .markdown-body hr:before,
+  .markdown-body hr:after {
+    display: table;
+    content: " ";
+  }
+  
+  .markdown-body hr:after {
+    clear: both;
+  }
+  
+  .markdown-body h1,
+  .markdown-body h2,
+  .markdown-body h3,
+  .markdown-body h4,
+  .markdown-body h5,
+  .markdown-body h6 {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    line-height: 1.1;
+  }
+  
+  .markdown-body h1 {
+    font-size: 30px;
+  }
+  
+  .markdown-body h2 {
+    font-size: 21px;
+  }
+  
+  .markdown-body h3 {
+    font-size: 16px;
+  }
+  
+  .markdown-body h4 {
+    font-size: 14px;
+  }
+  
+  .markdown-body h5 {
+    font-size: 12px;
+  }
+  
+  .markdown-body h6 {
+    font-size: 11px;
+  }
+  
+  .markdown-body blockquote {
+    margin: 0;
+  }
+  
+  .markdown-body ul,
+  .markdown-body ol {
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  
+  .markdown-body ol ol,
+  .markdown-body ul ol {
+    list-style-type: lower-roman;
+  }
+  
+  .markdown-body ul ul ol,
+  .markdown-body ul ol ol,
+  .markdown-body ol ul ol,
+  .markdown-body ol ol ol {
+    list-style-type: lower-alpha;
+  }
+  
+  .markdown-body dd {
+    margin-left: 0;
+  }
+  
+  .markdown-body code,
+  .markdown-body pre,
+  .markdown-body samp {
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 12px;
+  }
+  
+  .markdown-body pre {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  
+  .markdown-body kbd {
+    background-color: #e7e7e7;
+    background-image: -moz-linear-gradient(#fefefe, #e7e7e7);
+    background-image: -webkit-linear-gradient(#fefefe, #e7e7e7);
+    background-image: linear-gradient(#fefefe, #e7e7e7);
+    background-repeat: repeat-x;
+    border-radius: 2px;
+    border: 1px solid #cfcfcf;
+    color: #000;
+    padding: 3px 5px;
+    line-height: 10px;
+    font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    display: inline-block;
+  }
+  
+  .markdown-body>*:first-child {
+    margin-top: 0 !important;
+  }
+  
+  .markdown-body>*:last-child {
+    margin-bottom: 0 !important;
+  }
+  
+  .markdown-body .headeranchor-link {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    display: block;
+    padding-right: 6px;
+    padding-left: 30px;
+    margin-left: -30px;
+  }
+  
+  .markdown-body .headeranchor-link:focus {
+    outline: none;
+  }
+  
+  .markdown-body h1,
+  .markdown-body h2,
+  .markdown-body h3,
+  .markdown-body h4,
+  .markdown-body h5,
+  .markdown-body h6 {
+    position: relative;
+    margin-top: 1em;
+    margin-bottom: 16px;
+    font-weight: bold;
+    line-height: 1.4;
+  }
+  
+  .markdown-body h1 .headeranchor,
+  .markdown-body h2 .headeranchor,
+  .markdown-body h3 .headeranchor,
+  .markdown-body h4 .headeranchor,
+  .markdown-body h5 .headeranchor,
+  .markdown-body h6 .headeranchor {
+    display: none;
+    color: #000;
+    vertical-align: middle;
+  }
+  
+  .markdown-body h1:hover .headeranchor-link,
+  .markdown-body h2:hover .headeranchor-link,
+  .markdown-body h3:hover .headeranchor-link,
+  .markdown-body h4:hover .headeranchor-link,
+  .markdown-body h5:hover .headeranchor-link,
+  .markdown-body h6:hover .headeranchor-link {
+    height: 1em;
+    padding-left: 8px;
+    margin-left: -30px;
+    line-height: 1;
+    text-decoration: none;
+  }
+  
+  .markdown-body h1:hover .headeranchor-link .headeranchor,
+  .markdown-body h2:hover .headeranchor-link .headeranchor,
+  .markdown-body h3:hover .headeranchor-link .headeranchor,
+  .markdown-body h4:hover .headeranchor-link .headeranchor,
+  .markdown-body h5:hover .headeranchor-link .headeranchor,
+  .markdown-body h6:hover .headeranchor-link .headeranchor {
+    display: inline-block;
+  }
+  
+  .markdown-body h1 {
+    padding-bottom: 0px;
+    font-size: 2.25em;
+    line-height: 1.2;
+    border-bottom: 1px solid black;
+  }
+  
+  .markdown-body h2 {
+    padding-bottom: 0px;
+    font-size: 1.75em;
+    line-height: 1.225;
+    border-bottom: 1px solid black;
+  }
+  
+  .markdown-body h3 {
+    font-size: 1.5em;
+    line-height: 1.43;
+  }
+  
+  .markdown-body h4 {
+    font-size: 1.25em;
+  }
+  
+  .markdown-body h5 {
+    font-size: 1em;
+    border-bottom: 1px solid black;
+  }
+  
+  .markdown-body h6 {
+    font-size: 1em;
+    color: #777;
+  }
+  
+  .markdown-body p,
+  .markdown-body blockquote,
+  .markdown-body ul,
+  .markdown-body ol,
+  .markdown-body dl,
+  .markdown-body table,
+  .markdown-body pre,
+  .markdown-body .admonition {
+    margin-top: 0;
+    margin-bottom: 16px;
+  }
+  
+  .markdown-body hr {
+    height: 4px;
+    padding: 0;
+    margin: 16px 0;
+    background-color: #e7e7e7;
+    border: 0 none;
+  }
+  
+  .markdown-body ul,
+  .markdown-body ol {
+    padding-left: 2em;
+  }
+  
+  .markdown-body ul ul,
+  .markdown-body ul ol,
+  .markdown-body ol ol,
+  .markdown-body ol ul {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  
+  .markdown-body li>p {
+    margin-top: 16px;
+  }
+  
+  .markdown-body dl {
+    padding: 0;
+  }
+  
+  .markdown-body dl dt {
+    padding: 0;
+    margin-top: 16px;
+    font-size: 1em;
+    font-style: italic;
+    font-weight: bold;
+  }
+  
+  .markdown-body dl dd {
+    padding: 0 16px;
+    margin-bottom: 16px;
+  }
+  
+  .markdown-body blockquote {
+    padding: 0 15px;
+    color: #777;
+    border-left: 4px solid #ddd;
+  }
+  
+  .markdown-body blockquote>:first-child {
+    margin-top: 0;
+  }
+  
+  .markdown-body blockquote>:last-child {
+    margin-bottom: 0;
+  }
+  
+  .markdown-body table {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    word-break: normal;
+    word-break: keep-all;
+  }
+  
+  .markdown-body table th {
+    font-weight: bold;
+  }
+  
+  .markdown-body table th,
+  .markdown-body table td {
+    padding: 6px 13px;
+    border: 1px solid #ddd;
+  }
+  
+  .markdown-body table tr {
+    background-color: #fff;
+    border-top: 1px solid #ccc;
+  }
+  
+  .markdown-body table tr:nth-child(2n) {
+    background-color: #f8f8f8;
+  }
+  
+  .markdown-body img {
+    max-width: 100%;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  
+  .markdown-body code,
+  .markdown-body samp {
+    padding: 0;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    margin: 0;
+    font-size: 85%;
+    background-color: rgba(0,0,0,0.04);
+    border-radius: 3px;
+  }
+  
+  .markdown-body code:before,
+  .markdown-body code:after {
+    letter-spacing: -0.2em;
+    content: "\00a0";
+  }
+  
+  .markdown-body pre>code {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+  
+  .markdown-body .codehilite {
+    margin-bottom: 16px;
+  }
+  
+  .markdown-body .codehilite pre,
+  .markdown-body pre {
+    padding: 16px;
+    overflow: auto;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #f7f7f7;
+    border-radius: 3px;
+  }
+  
+  .markdown-body .codehilite pre {
+    margin-bottom: 0;
+    word-break: normal;
+  }
+  
+  .markdown-body pre {
+    word-wrap: normal;
+  }
+  
+  .markdown-body pre code {
+    display: inline;
+    max-width: initial;
+    padding: 0;
+    margin: 0;
+    overflow: initial;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
+  
+  .markdown-body pre code:before,
+  .markdown-body pre code:after {
+    content: normal;
+  }
+  
+  /* Admonition */
+  .markdown-body .admonition {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    position: relative;
+    border-radius: 3px;
+    border: 1px solid #e0e0e0;
+    border-left: 6px solid #333;
+    padding: 10px 10px 10px 30px;
+  }
+  
+  .markdown-body .admonition table {
+    color: #333;
+  }
+  
+  .markdown-body .admonition p {
+    padding: 0;
+  }
+  
+  .markdown-body .admonition-title {
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .markdown-body .admonition>.admonition-title {
+    color: #333;
+  }
+  
+  .markdown-body .attention>.admonition-title {
+    color: #a6d796;
+  }
+  
+  .markdown-body .caution>.admonition-title {
+    color: #d7a796;
+  }
+  
+  .markdown-body .hint>.admonition-title {
+    color: #96c6d7;
+  }
+  
+  .markdown-body .danger>.admonition-title {
+    color: #c25f77;
+  }
+  
+  .markdown-body .question>.admonition-title {
+    color: #96a6d7;
+  }
+  
+  .markdown-body .note>.admonition-title {
+    color: #d7c896;
+  }
+  
+  .markdown-body .admonition:before,
+  .markdown-body .attention:before,
+  .markdown-body .caution:before,
+  .markdown-body .hint:before,
+  .markdown-body .danger:before,
+  .markdown-body .question:before,
+  .markdown-body .note:before {
+    font: normal normal 16px fontawesome-mini;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    line-height: 1.5;
+    color: #333;
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding-top: 10px;
+    padding-left: 10px;
+  }
+  
+  .markdown-body .admonition:before {
+    content: "\f056\00a0";
+    color: 333;
+  }
+  
+  .markdown-body .attention:before {
+    content: "\f058\00a0";
+    color: #a6d796;
+  }
+  
+  .markdown-body .caution:before {
+    content: "\f06a\00a0";
+    color: #d7a796;
+  }
+  
+  .markdown-body .hint:before {
+    content: "\f05a\00a0";
+    color: #96c6d7;
+  }
+  
+  .markdown-body .danger:before {
+    content: "\f057\00a0";
+    color: #c25f77;
+  }
+  
+  .markdown-body .question:before {
+    content: "\f059\00a0";
+    color: #96a6d7;
+  }
+  
+  .markdown-body .note:before {
+    content: "\f040\00a0";
+    color: #d7c896;
+  }
+  
+  .markdown-body .admonition::after {
+    content: normal;
+  }
+  
+  .markdown-body .attention {
+    border-left: 6px solid #a6d796;
+  }
+  
+  .markdown-body .caution {
+    border-left: 6px solid #d7a796;
+  }
+  
+  .markdown-body .hint {
+    border-left: 6px solid #96c6d7;
+  }
+  
+  .markdown-body .danger {
+    border-left: 6px solid #c25f77;
+  }
+  
+  .markdown-body .question {
+    border-left: 6px solid #96a6d7;
+  }
+  
+  .markdown-body .note {
+    border-left: 6px solid #d7c896;
+  }
+  
+  .markdown-body .admonition>*:first-child {
+    margin-top: 0 !important;
+  }
+  
+  .markdown-body .admonition>*:last-child {
+    margin-bottom: 0 !important;
+  }
+  
+  /* progress bar*/
+  .markdown-body .progress {
+    display: block;
+    width: 300px;
+    margin: 10px 0;
+    height: 24px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #ededed;
+    position: relative;
+    box-shadow: inset -1px 1px 3px rgba(0, 0, 0, .1);
+  }
+  
+  .markdown-body .progress-label {
+    position: absolute;
+    text-align: center;
+    font-weight: bold;
+    width: 100%; margin: 0;
+    line-height: 24px;
+    color: #333;
+    text-shadow: 1px 1px 0 #fefefe, -1px -1px 0 #fefefe, -1px 1px 0 #fefefe, 1px -1px 0 #fefefe, 0 1px 0 #fefefe, 0 -1px 0 #fefefe, 1px 0 0 #fefefe, -1px 0 0 #fefefe, 1px 1px 2px #000;
+    -webkit-font-smoothing: antialiased !important;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  
+  .markdown-body .progress-bar {
+    height: 24px;
+    float: left;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #96c6d7;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(0, 0, 0, .1);
+    background-size: 30px 30px;
+    background-image: -webkit-linear-gradient(
+      135deg, rgba(255, 255, 255, .4) 27%,
+      transparent 27%,
+      transparent 52%, rgba(255, 255, 255, .4) 52%,
+      rgba(255, 255, 255, .4) 77%,
+      transparent 77%, transparent
+    );
+    background-image: -moz-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, .4) 27%, transparent 27%,
+      transparent 52%, rgba(255, 255, 255, .4) 52%,
+      rgba(255, 255, 255, .4) 77%, transparent 77%,
+      transparent
+    );
+    background-image: -ms-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, .4) 27%, transparent 27%,
+      transparent 52%, rgba(255, 255, 255, .4) 52%,
+      rgba(255, 255, 255, .4) 77%, transparent 77%,
+      transparent
+    );
+    background-image: -o-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, .4) 27%, transparent 27%,
+      transparent 52%, rgba(255, 255, 255, .4) 52%,
+      rgba(255, 255, 255, .4) 77%, transparent 77%,
+      transparent
+    );
+    background-image: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, .4) 27%, transparent 27%,
+      transparent 52%, rgba(255, 255, 255, .4) 52%,
+      rgba(255, 255, 255, .4) 77%, transparent 77%,
+      transparent
+    );
+  }
+  
+  .markdown-body .progress-100plus .progress-bar {
+    background-color: #a6d796;
+  }
+  
+  .markdown-body .progress-80plus .progress-bar {
+    background-color: #c6d796;
+  }
+  
+  .markdown-body .progress-60plus .progress-bar {
+    background-color: #d7c896;
+  }
+  
+  .markdown-body .progress-40plus .progress-bar {
+    background-color: #d7a796;
+  }
+  
+  .markdown-body .progress-20plus .progress-bar {
+    background-color: #d796a6;
+  }
+  
+  .markdown-body .progress-0plus .progress-bar {
+    background-color: #c25f77;
+  }
+  
+  .markdown-body .candystripe-animate .progress-bar{
+    -webkit-animation: animate-stripes 3s linear infinite;
+    -moz-animation: animate-stripes 3s linear infinite;
+    animation: animate-stripes 3s linear infinite;
+  }
+  
+  @-webkit-keyframes animate-stripes {
+    0% {
+      background-position: 0 0;
+    }
+  
+    100% {
+      background-position: 60px 0;
+    }
+  }
+  
+  @-moz-keyframes animate-stripes {
+    0% {
+      background-position: 0 0;
+    }
+  
+    100% {
+      background-position: 60px 0;
+    }
+  }
+  
+  @keyframes animate-stripes {
+    0% {
+      background-position: 0 0;
+    }
+  
+    100% {
+      background-position: 60px 0;
+    }
+  }
+  
+  .markdown-body .gloss .progress-bar {
+    box-shadow:
+      inset 0 4px 12px rgba(255, 255, 255, .7),
+      inset 0 -12px 0 rgba(0, 0, 0, .05);
+  }
+  
+  /* Multimarkdown Critic Blocks */
+  .markdown-body .critic_mark {
+    background: #ff0;
+  }
+  
+  .markdown-body .critic_delete {
+    color: #c82829;
+    text-decoration: line-through;
+  }
+  
+  .markdown-body .critic_insert {
+    color: #718c00 ;
+    text-decoration: underline;
+  }
+  
+  .markdown-body .critic_comment {
+    color: #8e908c;
+    font-style: italic;
+  }
+  
+  .markdown-body .headeranchor {
+    font: normal normal 16px octicons-anchor;
+    line-height: 1;
+    display: inline-block;
+    text-decoration: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  .headeranchor:before {
+    content: '\f05c';
+  }
+  
+  .markdown-body .task-list-item {
+    list-style-type: none;
+  }
+  
+  .markdown-body .task-list-item+.task-list-item {
+    margin-top: 3px;
+  }
+  
+  .markdown-body .task-list-item input {
+    margin: 0 4px 0.25em -20px;
+    vertical-align: middle;
+  }
+  
+  /* Media */
+  @media only screen and (min-width: 480px) {
+    .markdown-body {
+      font-size:14px;
+    }
+  }
+  
+  @media only screen and (min-width: 768px) {
+    .markdown-body {
+      font-size:16px;
+    }
+  }
+  
+  @media print {
+    .markdown-body * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+    }
+  
+    .markdown-body {
+      font-size:12pt;
+      max-width:100%;
+      outline:none;
+      border: 0;
+    }
+  
+    .markdown-body a,
+    .markdown-body a:visited {
+      text-decoration: underline;
+    }
+  
+    .markdown-body .headeranchor-link {
+      display: none;
+    }
+  
+    .markdown-body a[href]:after {
+      content: " (" attr(href) ")";
+    }
+  
+    .markdown-body abbr[title]:after {
+      content: " (" attr(title) ")";
+    }
+  
+    .markdown-body .ir a:after,
+    .markdown-body a[href^="javascript:"]:after,
+    .markdown-body a[href^="#"]:after {
+      content: "";
+    }
+  
+    .markdown-body pre {
+      white-space: pre;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  
+    .markdown-body pre,
+    .markdown-body blockquote {
+      border: 1px solid #999;
+      padding-right: 1em;
+      page-break-inside: avoid;
+    }
+  
+    .markdown-body .progress,
+    .markdown-body .progress-bar {
+      -moz-box-shadow: none;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+    }
+  
+    .markdown-body .progress {
+      border: 1px solid #ddd;
+    }
+  
+    .markdown-body .progress-bar {
+      height: 22px;
+      border-right: 1px solid #ddd;
+    }
+  
+    .markdown-body tr,
+    .markdown-body img {
+      page-break-inside: avoid;
+    }
+  
+    .markdown-body img {
+      max-width: 100% !important;
+    }
+  
+    .markdown-body p,
+    .markdown-body h2,
+    .markdown-body h3 {
+      orphans: 3;
+      widows: 3;
+    }
+  
+    .markdown-body h2,
+    .markdown-body h3 {
+      page-break-after: avoid;
+    }
+  }
+  </style><title>ENG-Editor</title></head><body><article class="markdown-body">
+</head>
+<body>
+<h1 id="changelog">Changelog</h1>
+<h2 id="vecto-2.1.2">VECTO 2.1.2</h2>
 <ul>
-  <li><span style="font-family: Tahoma;">Updated CSV file format. Now only one header with units included.</span></li>
-  <li><span style="font-family: Tahoma;">Changed input file comment symbol form "c" to "#".</span></li>
-  <li><span style="font-family: Tahoma;">Replaced old Demo/Default Data with "Demo Vehicles"</span></li>
-  <li><span style="font-family: Tahoma;">Updated User Manual</span></li>
-  <li><span style="font-family: Tahoma;">Declaration Mode</span></li>
-  <li><span style="font-family: Tahoma;">Updated GUI including Charts</span></li>
-  <li><span style="font-family: Tahoma;">New internal Graph for VMOD files (replaces GRAPHi)</span></li>
-  <li><span style="font-family: Tahoma;">Shift polygons can be set separately for each gear</span></li>
-  <li><span style="font-family: Tahoma;">Removed rated power (not used anymore)</span></li>
-  <li><span style="font-family: Tahoma;">Removed rated engine speed form engine file. Now calculated form vfld file.</span></li>
+<li>Improved TC iteration for higher precision</li>
+<li>Extended possible TC speed ratio</li>
 </ul>
-<span style="font-family: Tahoma;">VECTO 1.4.RC8<br>
-</span>
+<h2 id="vecto-2.1.1">VECTO 2.1.1</h2>
 <ul>
-  <li><span style="font-family: Tahoma;">Bugfix: Eco Roll didn't go into motoring operation when Overspeed-Limit was reached (could cause higher FC than Overspeed Mode)</span></li>
-  <li><span style="font-family: Tahoma;">Minor update in demo data (12t motoring curve)</span></li>
+<li>Bugfix: Incorrect torque calculation in AT/TC model caused early up-shifts</li>
+<li>Updated C-to-C shift strategy with acc_min rule (see V2.1)</li>
 </ul>
-<span style="font-family: Tahoma;">VECTO 1.4.RC7<br>
-</span>
+<h2 id="vecto-2.1">VECTO 2.1</h2>
 <ul>
-  <li><span style="font-family: Tahoma;">Bugfix: Error in road gradient resulted in altitude error</span></li>
-  <li><span style="font-family: Tahoma;">Speed reduction in smaller
-steps to get closer to full load curve (before speed was sometimes
-reduced too much and caused problem with gear shifting)</span></li>
-  <li><span style="font-family: Tahoma;">Updates in demo data</span></li>
-</ul>
-<span style="font-family: Tahoma;">VECTO 1.4.RC6<br>
-</span>
+<li>Automatic Transmission / Torque Converter Model
 <ul>
-  <li><span style="font-family: Tahoma;">Bugfix in torque converter calculation</span></li>
+<li>Limit engine rpm in torque converter operation acc. &gt; acc_min</li>
+<li>Shift up (C-to-L, L-to-L) if acc. &gt; acc_min and next-gear-rpm &gt; threshold</li>
+<li>C-to-C up-shift condition based on N80h engine speed (instead of N95h)</li>
+</ul></li>
+<li>Pwheel-Input (SiCo Mode)</li>
+<li>FC [g/h] is always saved in output (in addition to [g/km]), not only</li>
+<li>in Engine Only mode</li>
+<li>GUI: Corrected air density unit in GUI</li>
+<li>Bugfix: Format error in .vmod header</li>
 </ul>
-<span style="font-family: Tahoma;">VECTO 1.4.RC5<br>
-</span>
+<h2 id="vecto-2.0.4-beta4_test-test-release">VECTO 2.0.4-beta4_Test (Test Release)</h2>
 <ul>
-  <li><span style="font-family: Tahoma;">Bugfix: Gears using torque converter and transmission loss maps may cause invalid "out of engine operation range" errors</span></li>
-  <li><span style="font-family: Tahoma;">Null values for FzISO will abort calculation</span></li>
-  <li><span style="font-family: Tahoma;">Exact road gradient
-calculation (sin(arctan(grad)*m*g) instead of grad*m*g) and road
-gradient influence on roll resistance (cos(arctan(grad)*m*g instead of
-m*g)</span></li>
-  <li><span style="font-family: Tahoma;">Torque converter update: rpms over rated speed are not allowed.</span></li>
-  <li><span style="font-family: Tahoma;">Fixed Wheels inertia in Demo Data</span></li>
+<li>Transmission loss extrapolation Errors are now Warnings in Engineering Mode.</li>
+<li>Bugfix: Error in TC Iteration caused crash</li>
+<li>Bugfix: Minimizing Graph window caused crash</li>
+<li>Fixed error in cycle conversion</li>
+<li>Errors if full load curve is too &quot;short&quot;</li>
 </ul>
-<span style="font-family: Tahoma;">VECTO 1.4.RC4<br>
-</span>
+<h2 id="vecto-2.0.4-beta3">VECTO 2.0.4-beta3</h2>
 <ul>
-  <li><span style="font-family: Tahoma;">Bugfix: FC interpolation failed when load points matched map points exactly.</span></li>
-  <li><span style="font-family: Tahoma;">Bugfix: Invalid "FC= -10000!" errors when outside of FC-Map</span></li>
-  <li><span style="font-family: Tahoma;">Bugfix: Vehicle stand-still at end of cycle was ignored (distance-based cycles only)</span></li>
-  <li><span style="font-family: Tahoma;">FC extrapolation will not abort calculation. Invalid FC values are marked in output as "ERROR".</span></li>
-  <li><span style="font-family: Tahoma;">No abortion if transmission
-output and input torque have different signs (In&gt;0, Out&lt;0).
-(Caused "Transmission Loss Map invalid" error messages)</span></li>
-  <li><span style="font-family: Tahoma;">Eco-Roll revised. New rules:</span></li>
-  <ul>
-    <li><span style="font-family: Tahoma;">Engages if Pwheel &lt; 0</span></li>
-    <li><span style="font-family: Tahoma;">Disengages if Underspeed is reached.</span></li>
-  </ul>
-  <li><span style="font-family: Tahoma;">Look-Ahead Coasting now uses
-real coasting also if road gradient &gt; 0 which means the coasting
-deceleration can be so high that no braking is necessary. In this case
-the braking phase will be omitted and the total deceleration time can
-be shorter than expected by the given target coasting deceleration.</span></li>
-  <li><span style="font-family: Tahoma;">"Minimum (actual) speed" instead of "Min. Target Speed" for Eco-Roll, Overspeed and Look Ahead Coasting</span></li>
-  <li><span style="font-family: Tahoma;">Major update in Gearbox/Toque Converter:</span></li>
-  <ul>
-    <li><span style="font-family: Tahoma;">Torque converter can be defined in multiple gears</span></li>
-    <li><span style="font-family: Tahoma;">Same gear numbers in output as in GBX file, i.e. first gear with TC is not "TC" or "0.5" but simply "1"</span></li>
-    <li><span style="font-family: Tahoma;">"Minimum time between two gear shifts" now also limits torque converter shifts</span></li>
-    <li><span style="font-family: Tahoma;">Unlimited number of gears and new gear list in GUI without fixed gear number</span></li>
-    <li><span style="font-family: Tahoma;">Improved gear shift model for torque converter</span></li>
-    <li><span style="font-family: Tahoma;">Driving Cycle Preprocessing
-and Gear Shift Model now use approximated efficiency values based in
-the transmission loss maps. Reduces calculation time significantly with
-little to no impact on fuel consumption.</span></li>
-  </ul>
-  <li><span style="font-family: Tahoma;">Full load and drag curves (.vfld) can be defined for each gear separately.</span></li>
-  <li><span style="font-family: Tahoma;">Bugfix: Distance Correction
-didn't work right with Look Ahead Coasting. Now distance error is
-acceptable but at the cost of partly interrupted coasting phases.
-Should be revised in future updates.</span></li>
-  <li><span style="font-family: Tahoma;">Engine Only Mode: Engine motoring points can be defined explicitly in load cycle with "&lt;DRAG&gt;"</span></li>
-  <li><span style="font-family: Tahoma;">When speed is under 5km/h and engine in motoring operating then gearbox shifts to Neutral</span></li>
-  <li><span style="font-family: Tahoma;">Load-dependent rolling resistance coefficient</span></li>
-  <li><span style="font-family: Tahoma;">Start-Stop activation delay time can be defined in job file</span></li>
-  <li><span style="font-family: Tahoma;">File signing features added:</span></li>
-  <ul>
-    <li><span style="font-family: Tahoma;">After each calculation a
-signature file (.vsig) is created which includes signatures for all
-input and result files. The file itself is also signed.</span></li>
-    <li><span style="font-family: Tahoma;">Signature files can be verified or manually created under "Tools" &gt; "Sign or Verify Files"</span></li>
-  </ul>
-  <li><span style="font-family: Tahoma;">Changes in header and new parameters in modal results (.vmod):</span></li>
-  <ul>
-    <li><span style="font-family: Tahoma;">engine speed =&gt; n</span></li>
-    <li><span style="font-family: Tahoma;">torque =&gt; Tq_eng</span></li>
-    <li><span style="font-family: Tahoma;">Pe =&gt; Pe_eng</span></li>
-    <li><span style="font-family: Tahoma;">New: Tq_clutch = torque at clutch (before clutch, engine-side)</span></li>
-    <li><span style="font-family: Tahoma;">New: Tq_full = full load torque</span></li>
-    <li><span style="font-family: Tahoma;">New: Tq_drag = drag torque</span></li>
-    <li><span style="font-family: Tahoma;">Removed: Pe_norm, n_norm </span></li>
-  </ul>
-  <li><span style="font-family: Tahoma;">Changes in summary results (.vsum)</span></li>
-  <ul>
-    <li><span style="font-family: Tahoma;">Total altitude change instead of average gradient</span></li>
-    <li><span style="font-family: Tahoma;">Auxiliary energy consumption for each auxiliary </span></li>
-  </ul>
-  <li><span style="font-family: Tahoma;">Removed: Pe_norm, n_norm </span></li>
-  <li><span style="font-family: Tahoma;">Same job file list for BATCH and STANDARD (Job file list does not change when switching mode)</span></li>
-  <li><span style="font-family: Tahoma;">Updated some error messages (units)</span></li>
-  <li><span style="font-family: Tahoma;">Driving Cycle stop times corrected (No more zero stop times).</span></li>
+<li>Bugfix: VECTO didn't check if the full load curve covers the speed range up to nhi. Now it will abort if the full load curve is &quot;too short&quot;</li>
+<li>Update in Torque Convert model: Allowed engine speed range up to n95h (before: Pmax-speed)</li>
+<li>Bugfix: Rare crashes caused by gear shift model</li>
+<li>Bugfix: Error in engine inertia power calculation</li>
+<li>Torque Converter losses in modal results</li>
+<li>Implemented speed profile cleaning for very small values. (Caused shifting back to first gear when decelerating.)</li>
+<li>DEV Option for advanced CSV format output (units line, additional info)</li>
 </ul>
-<span style="font-family: Tahoma;">VECTO 1.3.1.1<br></span><ul><li><span style="font-family: Tahoma;">Fixed error in power calculation (rotatory part of acceleration force)</span></li></ul><span style="font-family: Tahoma;"></span><span style="font-family: Tahoma;">VECTO 1.3.1<br></span><ul><li><span style="font-family: Tahoma;">Fixed assembly information</span></li></ul><span style="font-family: Tahoma;">VECTO 1.3</span><br><span style="font-family: Tahoma;"></span></div><ul style="text-align: left;"><li><span style="font-family: Tahoma;">Some file-specific error messages link to files</span></li><li><span style="font-family: Tahoma;">Eco-Roll, Overspeed, Look Ahead Coasting</span></li></ul><div style="text-align: left;"><span style="font-family: Tahoma;"></span><span style="font-family: Tahoma;">VECTO 1.2</span><br><span style="font-family: Tahoma;"></span></div><ul style="text-align: left;"><li><span style="font-family: Tahoma;">Engine Start/Stop implemented</span></li><li><span style="font-family: Tahoma;">Bugfix: Fixed error in FC interpolation (invalid extrapolation errors)</span></li><li><span style="font-family: Tahoma;">FC Extrapolation will abort the calculation</span></li><li><span style="font-family: Tahoma;">Transmission Type selection in Gearbox (.vgbx) file.</span></li><ul><li><span style="font-family: Tahoma;">Enables/Disables transmission type-specific options </span></li></ul><ul><li><span style="font-family: Tahoma;">In Proof-Of-Concept mode "Custom" type is available with all options enabled.</span></li></ul><li><span style="font-family: Tahoma;">Automatic Transmission mode with Torque converter: Input parameters in Gearbox file !!still being tested!!</span></li><li><span style="font-family: Tahoma;">Option to open files with GRAPHi or user-defined tool</span></li><li><span style="font-family: Tahoma;">User Manual updated</span></li><li><span style="font-family: Tahoma;">Bugfix: Files with relative paths were not located correctly</span></li><li><span style="font-family: Tahoma;">Corrected comment line for wheels inertia and axle config in .vveh file</span></li><li><span style="font-family: Tahoma;">Changed RRC unit in GUI from [-] to [N/N]</span></li><li><span style="font-family: Tahoma;">Tranmission Loss Maps are not converted to n,Pe-Maps anymore. Should fix non-linear interpolation effects.</span></li><li><span style="font-family: Tahoma;">Engine Only Mode</span></li></ul><div style="text-align: left;"><span style="font-family: Tahoma;">VECTO 1.1</span><br><span style="font-family: Tahoma;"></span></div><ul style="text-align: left;"><li><span style="font-family: Tahoma;">Speed values below 0.09km/h are set to 0km/h</span></li><li><span style="font-family: Tahoma;">New gear shift model</span></li><ul><li><span style="font-family: Tahoma;">Replaces old gear shift model!</span></li></ul><ul><li><span style="font-family: Tahoma;">New parameters in .vgbx file including path to gear shift polygons file</span></li></ul><ul><li><span style="font-family: Tahoma;">Old gear shift model parameters removed from .vecto file</span></li></ul><li><span style="font-family: Tahoma;">Command Line Arguments processing (see User Manual):</span></li><ul><li><span style="font-family: Tahoma;">Changed prefix form "/" to "-"</span></li></ul><ul><li><span style="font-family: Tahoma;">Bugfix: Argument "-run" was not processed</span></li></ul><ul><li><span style="font-family: Tahoma;">Job files and driving cycles can be added via command line</span></li></ul><ul><li><span style="font-family: Tahoma;">Files without path are expected in the Working Directory</span></li></ul><li><span style="font-family: Tahoma;">User Manual update for command line arguments</span></li><li><span style="font-family: Tahoma;">Various fixes in GUI</span></li><li><span style="font-family: Tahoma;">Bugfix: Error in Cycle Conversion (distance- to time-based) when using Aux Power Input.</span></li><li><span style="font-family: Tahoma;">Distance Correction is now active only in acceleration and cruise phases.</span></li><li><span style="font-family: Tahoma;">Fixed cycles starting with vehicle speed = 0. In V1.0 the first and second time step were averaged to speed values &gt; 0.</span></li><li><span style="font-family: Tahoma;">Demo data updated for new gear shift model</span></li><li><span style="font-family: Tahoma;">New independent licensing dll replaces TUG's version</span></li></ul><span style="font-family: Tahoma;"></span>
-</div>
-</body></html>
+<h2 id="vecto-2.0.4-beta2">VECTO 2.0.4-beta2</h2>
+<ul>
+<li>Bugfix: VECTO freezed if torque converter creeping was not possible due to low full load torque. Now it will abort with error message.</li>
+<li>Bugfix: Small fixes in torque converter model</li>
+</ul>
+<h2 id="vecto-2.0.4-beta1">VECTO 2.0.4-beta1</h2>
+<ul>
+<li>Updated CSV format of some declaration config files</li>
+<li>Various bugfixes in AT model</li>
+<li>rdyn validation</li>
+<li>Fixed bug in map interpolation</li>
+<li>Added ..\Developer Guide\Segment Table Description.xlsx</li>
+<li>Fixed bug that caused engine power &gt; full load</li>
+</ul>
+<h2 id="vecto-2.0.4-beta">VECTO 2.0.4-beta</h2>
+<ul>
+<li>AT update for 1C2C gearboxes</li>
+<li>Warning when opening or running files if file was created in different mode (Declaration/Engineering Mode)</li>
+</ul>
+<h2 id="vecto-2.0.3-beta0">VECTO 2.0.3-beta0</h2>
+<ul>
+<li>Implemented engine-side TC inertia input parameter in GBX file</li>
+<li>Updated User Manual for TC inertia</li>
+<li>Relabeled &quot;OK&quot; buttons to &quot;Save&quot; in input file editors</li>
+</ul>
+<h2 id="vecto-2.0.2-beta2">VECTO 2.0.2-beta2</h2>
+<ul>
+<li>AT/TC Update</li>
+<li>Various smaller fixes</li>
+</ul>
+<h2 id="vecto-2.0.2-beta1">VECTO 2.0.2-beta1</h2>
+<ul>
+<li>AT/TC Update</li>
+<li>Engine inertia power demand (PaEng) is now always calculated based on the previous engine speed rather than vehicle acceleration.</li>
+<li>Various smaller fixes</li>
+</ul>
+<h2 id="vecto-2.0.1-beta1-hotfix.vecto-33">VECTO 2.0.1-beta1-hotfix.VECTO-33</h2>
+<ul>
+<li>Fixed VECTO-34</li>
+<li>Updated .vsum(.json)
+<ul>
+<li>Added l/100km and CO2 results. (Fixed VECTO-33)</li>
+<li>Added FC-Final.</li>
+<li>Added Loading. (json)</li>
+<li>Added missing fuel parameters. (json)</li>
+</ul></li>
+<li>Updated README.md</li>
+</ul>
+<h2 id="vecto-2.0.1-beta1">VECTO 2.0.1-beta1</h2>
+<ul>
+<li>Updated Segment Table header</li>
+<li>Fixed Eco Roll (VECTO-30)</li>
+<li>Fixed Cycles in VECTO Editor being overwritten in Engineering Mode (VECTO-31)</li>
+</ul>
+<h2 id="vecto-2.0.1-beta0">VECTO 2.0.1-beta0</h2>
+<ul>
+<li>Update Notes &gt; Release Notes</li>
+<li>Segment Table header</li>
+</ul>
+<h2 id="vecto-2.0">VECTO 2.0</h2>
+<ul>
+<li>Updated CSV file format. Now only one header with units included.</li>
+<li>Changed input file comment symbol form &quot;c&quot; to &quot;#&quot;.</li>
+<li>Replaced old Demo/Default Data with &quot;Demo Vehicles&quot;</li>
+<li>Updated User Manual</li>
+<li>Declaration Mode</li>
+<li>Updated GUI including Charts</li>
+<li>New internal Graph for VMOD files (replaces GRAPHi)</li>
+<li>Shift polygons can be set separately for each gear</li>
+<li>Removed rated power (not used anymore)</li>
+<li>Removed rated engine speed form engine file. Now calculated form vfld file.</li>
+</ul>
+<h2 id="vecto-1.4.rc8">VECTO 1.4.RC8</h2>
+<ul>
+<li>Bugfix: Eco Roll didn't go into motoring operation when Overspeed-Limit was reached (could cause higher FC than Overspeed Mode)</li>
+<li>Minor update in demo data (12t motoring curve)</li>
+</ul>
+<h2 id="vecto-1.4.rc7">VECTO 1.4.RC7</h2>
+<ul>
+<li>Bugfix: Error in road gradient resulted in altitude error</li>
+<li>Speed reduction in smaller steps to get closer to full load curve (before speed was sometimes reduced too much and caused problem with gear shifting)</li>
+<li>Updates in demo data</li>
+</ul>
+<h2 id="vecto-1.4.rc6">VECTO 1.4.RC6</h2>
+<ul>
+<li>Bugfix in torque converter calculation</li>
+</ul>
+<h2 id="vecto-1.4.rc5">VECTO 1.4.RC5</h2>
+<ul>
+<li>Bugfix: Gears using torque converter and transmission loss maps may cause invalid &quot;out of engine operation range&quot; errors</li>
+<li>Null values for FzISO will abort calculation</li>
+<li>Exact road gradient calculation (sin(arctan(grad)*m*g) instead of grad*m*g) and road gradient influence on roll resistance (cos(arctan(grad)*m*g instead of m*g)</li>
+<li>Torque converter update: rpms over rated speed are not allowed.</li>
+<li>Fixed Wheels inertia in Demo Data</li>
+</ul>
+<h2 id="vecto-1.4.rc4">VECTO 1.4.RC4</h2>
+<ul>
+<li>Bugfix: FC interpolation failed when load points matched map points exactly.</li>
+<li>Bugfix: Invalid &quot;FC= -10000!&quot; errors when outside of FC-Map</li>
+<li>Bugfix: Vehicle stand-still at end of cycle was ignored (distance-based cycles only)</li>
+<li>FC extrapolation will not abort calculation. Invalid FC values are marked in output as &quot;ERROR&quot;.</li>
+<li>No abortion if transmission output and input torque have different signs</li>
+<li>(In&gt;0, Out&lt;0). (Caused &quot;Transmission Loss Map invalid&quot; error messages)</li>
+<li>Eco-Roll revised. New rules:
+<ul>
+<li>Engages if Pwheel &lt; 0</li>
+<li>Disengages if Underspeed is reached.</li>
+</ul></li>
+<li>Look-Ahead Coasting now uses real coasting also if road gradient &gt; 0 which means the coasting deceleration can be so high that no braking is necessary. In this case the braking phase will be omitted and the total deceleration time can be shorter than expected by the given target coasting deceleration.</li>
+<li>&quot;Minimum (actual) speed&quot; instead of &quot;Min. Target Speed&quot; for Eco-Roll,</li>
+<li>Overspeed and Look Ahead Coasting</li>
+<li>Major update in Gearbox/Toque Converter:
+<ul>
+<li>Torque converter can be defined in multiple gears</li>
+<li>Same gear numbers in output as in GBX file, i.e. first gear with TC is not &quot;TC&quot; or &quot;0.5&quot; but simply &quot;1&quot;</li>
+<li>&quot;Minimum time between two gear shifts&quot; now also limits torque converter shifts</li>
+<li>Unlimited number of gears and new gear list in GUI without fixed gear number</li>
+<li>Improved gear shift model for torque converter</li>
+<li>Driving Cycle Preprocessing and Gear Shift Model now use approximated efficiency values based in the transmission loss maps. Reduces calculation time significantly with little to no impact on fuel consumption.</li>
+</ul></li>
+<li>Full load and drag curves (.vfld) can be defined for each gear separately.</li>
+<li>Bugfix: Distance Correction didn't work right with Look Ahead Coasting. Now distance error is acceptable but at the cost of partly interrupted coasting phases. Should be revised in future updates.</li>
+<li>Engine Only Mode: Engine motoring points can be defined explicitly in load cycle with &quot;&lt;DRAG&gt;&quot;</li>
+<li>When speed is under 5km/h and engine in motoring operating then gearbox shifts to Neutral</li>
+<li>Load-dependent rolling resistance coefficient</li>
+<li>Start-Stop activation delay time can be defined in job file</li>
+<li>File signing features added:
+<ul>
+<li>After each calculation a signature file (.vsig) is created which includes signatures for all input and result files. The file itself is also signed.</li>
+<li>Signature files can be verified or manually created under &quot;Tools&quot; &gt; &quot;Sign or Verify Files&quot;</li>
+</ul></li>
+<li>Changes in header and new parameters in modal results (.vmod):
+<ul>
+<li>engine speed =&gt; n</li>
+<li>torque =&gt; Tq_eng</li>
+<li>Pe =&gt; Pe_eng</li>
+<li>New: Tq_clutch = torque at clutch (before clutch, engine-side)</li>
+<li>New: Tq_full = full load torque</li>
+<li>New: Tq_drag = drag torque</li>
+<li>Removed: Pe_norm, n_norm -Changes in summary results (.vsum)</li>
+<li>Total altitude change instead of average gradient</li>
+<li>Auxiliary energy consumption for each auxiliary</li>
+</ul></li>
+<li>Removed: Pe_norm, n_norm</li>
+<li>Same job file list for BATCH and STANDARD (Job file list does not change when switching mode)</li>
+<li>Updated some error messages (units)</li>
+<li>Driving Cycle stop times corrected (No more zero stop times).</li>
+</ul>
+<h2 id="vecto-1.3.1.1">VECTO 1.3.1.1</h2>
+<ul>
+<li>Fixed error in power calculation (rotatory part of acceleration force)</li>
+</ul>
+<h2 id="vecto-1.3.1">VECTO 1.3.1</h2>
+<ul>
+<li>Fixed assembly information</li>
+</ul>
+<h2 id="vecto-1.3">VECTO 1.3</h2>
+<ul>
+<li>Some file-specific error messages link to files</li>
+<li>Eco-Roll, Overspeed, Look Ahead Coasting</li>
+</ul>
+<h2 id="vecto-1.2">VECTO 1.2</h2>
+<ul>
+<li>Engine Start/Stop implemented</li>
+<li>Bugfix: Fixed error in FC interpolation (invalid extrapolation errors)</li>
+<li>FC Extrapolation will abort the calculation</li>
+<li>Transmission Type selection in Gearbox (.vgbx) file.
+<ul>
+<li>Enables/Disables transmission type-specific options</li>
+<li>In Proof-Of-Concept mode &quot;Custom&quot; type is available with all options enabled.</li>
+</ul></li>
+<li>Automatic Transmission mode with Torque converter: Input parameters in Gearbox file !!still being tested!!</li>
+<li>Option to open files with GRAPHi or user-defined tool</li>
+<li>User Manual updated</li>
+<li>Bugfix: Files with relative paths were not located correctly</li>
+<li>Corrected comment line for wheels inertia and axle config in .vveh file</li>
+<li>Changed RRC unit in GUI from [-] to [N/N]</li>
+<li>Tranmission Loss Maps are not converted to n,Pe-Maps anymore. Should fix non-linear interpolation effects.</li>
+<li>Engine Only Mode</li>
+</ul>
+<h2 id="vecto-1.1">VECTO 1.1</h2>
+<ul>
+<li>Speed values below 0.09km/h are set to 0km/h</li>
+<li>New gear shift model
+<ul>
+<li>Replaces old gear shift model!</li>
+<li>New parameters in .vgbx file including path to gear shift polygons file</li>
+<li>Old gear shift model parameters removed from .vecto file</li>
+</ul></li>
+<li>Command Line Arguments processing (see User Manual):
+<ul>
+<li>Changed prefix form &quot;/&quot; to &quot;-&quot;</li>
+<li>Bugfix: Argument &quot;-run&quot; was not processed</li>
+<li>Job files and driving cycles can be added via command line</li>
+<li>Files without path are expected in the Working Directory</li>
+</ul></li>
+<li>User Manual update for command line arguments</li>
+<li>Various fixes in GUI</li>
+<li>Bugfix: Error in Cycle Conversion (distance- to time-based) when using Aux Power Input.</li>
+<li>Distance Correction is now active only in acceleration and cruise phases.</li>
+<li>Fixed cycles starting with vehicle speed = 0. In V1.0 the first and second time step were averaged to speed values &gt; 0.</li>
+<li>Demo data updated for new gear shift model</li>
+<li>New independent licensing dll replaces TUG's version</li>
+</ul>
+</body>
+</html>
