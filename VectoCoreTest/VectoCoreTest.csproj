@@ -236,6 +236,9 @@
     <None Include="TestData\Jobs\12t Delivery Truck.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Jobs\24t Coach.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Jobs\EngineOnlyJob.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -251,7 +254,7 @@
     <None Include="TestData\Results\EngineOnlyCycles\24tCoach_EngineOnlyFullLoad.vmod">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Jobs\24t Coach.vecto">
+    <None Include="TestData\Jobs\24t Coach EngineOnly.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Results\EngineOnlyCycles\24t Coach.vsum">

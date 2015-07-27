@@ -35,11 +35,15 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 		protected override void ProcessJob(VectoJobFile vectoJob)
 		{
-			var declaration = vectoJob as VectoJobFileV2Engineering;
-			if (declaration == null) {
+			var engineering = vectoJob as VectoJobFileV2Engineering;
+			if (engineering == null) {
 				throw new VectoException("Unhandled Job File Format");
 			}
-			var job = declaration;
+			var job = engineering;
+
+			if (job.Body.EngineOnlyMode) {
+				throw new VectoException("Job File has been saved in EngineOnlyMode!");
+			}
 
 			ReadVehicle(Path.Combine(job.BasePath, job.Body.VehicleFile));
 

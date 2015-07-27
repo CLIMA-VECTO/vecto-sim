@@ -63,7 +63,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		{
 			var data = job.Body;
 
-			var accelerationData = AccelerationCurveData.ReadFromFile(data.AccelerationCurve);
+			var accelerationData = AccelerationCurveData.ReadFromFile(Path.Combine(job.BasePath, data.AccelerationCurve));
 			var lookAheadData = new DriverData.LACData() {
 				Enabled = data.LookAheadCoasting.Enabled,
 				Deceleration = DoubleExtensionMethods.SI<MeterPerSquareSecond>(data.LookAheadCoasting.Dec),
