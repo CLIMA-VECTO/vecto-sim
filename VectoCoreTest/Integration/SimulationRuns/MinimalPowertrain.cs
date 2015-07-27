@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			gbx.CurrentGear = 1;
 			var ds = Constants.SimulationSettings.DriveOffDistance;
-			while (vehicleContainer.Distance().Value() < 825) {
+			while (vehicleContainer.Distance().Value() < 2000) {
 				response = cyclePort.Request(absTime, ds);
 
 				switch (response.ResponseType) {
@@ -98,12 +98,15 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				}
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
+
+				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+				absTime += response.SimulationInterval;
+
 				ds = vehicleContainer.VehicleSpeed().IsEqual(0)
 					? Constants.SimulationSettings.DriveOffDistance
 					: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed()).Cast<Meter>();
 
-				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
-				absTime += response.SimulationInterval;
+				modalWriter.Finish();
 			}
 
 			modalWriter.Finish();
