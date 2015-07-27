@@ -944,13 +944,13 @@ Partial Class F_MAINForm
 		'UserManualToolStripMenuItem
 		'
 		Me.UserManualToolStripMenuItem.Name = "UserManualToolStripMenuItem"
-		Me.UserManualToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
+		Me.UserManualToolStripMenuItem.Size = New System.Drawing.Size(222, 22)
 		Me.UserManualToolStripMenuItem.Text = "User Manual"
 		'
 		'UpdateNotesToolStripMenuItem
 		'
 		Me.UpdateNotesToolStripMenuItem.Name = "UpdateNotesToolStripMenuItem"
-		Me.UpdateNotesToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
+		Me.UpdateNotesToolStripMenuItem.Size = New System.Drawing.Size(222, 22)
 		Me.UpdateNotesToolStripMenuItem.Text = "Release Notes"
 		'
 		'ReportBugViaCITnetToolStripMenuItem
@@ -962,18 +962,18 @@ Partial Class F_MAINForm
 		'ToolStripSeparator3
 		'
 		Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
-		Me.ToolStripSeparator3.Size = New System.Drawing.Size(186, 6)
+		Me.ToolStripSeparator3.Size = New System.Drawing.Size(219, 6)
 		'
 		'CreateActivationFileToolStripMenuItem
 		'
 		Me.CreateActivationFileToolStripMenuItem.Name = "CreateActivationFileToolStripMenuItem"
-		Me.CreateActivationFileToolStripMenuItem.Size = New System.Drawing.Size(189, 22)
+		Me.CreateActivationFileToolStripMenuItem.Size = New System.Drawing.Size(222, 22)
 		Me.CreateActivationFileToolStripMenuItem.Text = "Create Activation File"
 		'
 		'AboutVECTOToolStripMenuItem1
 		'
 		Me.AboutVECTOToolStripMenuItem1.Name = "AboutVECTOToolStripMenuItem1"
-		Me.AboutVECTOToolStripMenuItem1.Size = New System.Drawing.Size(189, 22)
+		Me.AboutVECTOToolStripMenuItem1.Size = New System.Drawing.Size(222, 22)
 		Me.AboutVECTOToolStripMenuItem1.Text = "About VECTO"
 		'
 		'CmDEV
