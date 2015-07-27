@@ -23,6 +23,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 				absTime, dt, torque, angularVelocity);
 			return new ResponseSuccess();
 		}
+
+		public IResponse Initialize()
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 	public class MockDrivingCycleOutPort : IDrivingCycleOutPort
@@ -55,6 +60,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 				absTime, dt, targetVelocity, gradient);
 			return new ResponseSuccess();
 		}
+
+		public IResponse Initialize()
+		{
+			throw new NotImplementedException();
+		}
 	}
 
 	public class MockFvOutPort : IFvOutPort
@@ -74,6 +84,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			LogManager.GetLogger(GetType())
 				.DebugFormat("Request: abstime: {0}, dt: {1}, force: {2}, velocity: {3}", absTime, dt, force, velocity);
 			return new ResponseSuccess();
+		}
+
+		public IResponse Initialize()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

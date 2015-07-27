@@ -40,10 +40,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
+		public IResponse Initialize()
+		{
+			throw new NotImplementedException();
+		}
+
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			throw new NotImplementedException();
+			// noting to write
 		}
 
 		protected override void DoCommitSimulationStep() {}

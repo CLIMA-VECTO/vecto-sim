@@ -3,7 +3,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -19,6 +21,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 	{
 		public const string CycleFile = @"TestData\Cycles\Coach_24t_xshort.vdri";
 		public const string EngineFile = @"TestData\Components\24t Coach.veng";
+
+		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
 
 		[TestMethod]
 		public void TestWheelsAndEngine()
@@ -39,18 +43,59 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				SavedInDeclarationMode = false,
 			};
 
-			var vehicleContainer = new VehicleContainer();
+			var driverData = new DriverData() {
+				AccelerationCurve = AccelerationCurveData.ReadFromFile(AccelerationFile),
+				LookAheadCoasting = new DriverData.LACData() {
+					Enabled = false,
+				},
+				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData() {
+					Mode = DriverData.DriverMode.Off
+				},
+				StartStop = new VectoRunData.StartStopData() {
+					Enabled = false,
+				}
+			};
+
+			var modalWriter = new TestModalDataWriter();
+			var sumWriter = new TestSumWriter();
+			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
 
-			dynamic tmp = AddComponent(cycle, new MockDriver(vehicleContainer));
+			dynamic tmp = AddComponent(cycle, new Driver(vehicleContainer, driverData));
 			tmp = AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
 			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
 
-			var run = new DistanceRun(vehicleContainer);
+			var gbx = new DummyGearbox(vehicleContainer);
 
-			run.Run();
+			var cyclePort = cycle.OutPort();
+
+			cyclePort.Initialize();
+
+			gbx.CurrentGear = 0;
+
+			var absTime = 0.SI<Second>();
+			var response = cyclePort.Request(absTime, 1.SI<Meter>());
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+
+			gbx.CurrentGear = 1;
+
+			for (int i = 0; i < 10; i++) {
+				absTime += response.SimulationInterval;
+
+				response = cyclePort.Request(absTime, 1.SI<Meter>());
+
+				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+			}
+			//var run = new DistanceRun(vehicleContainer);
+			//run.Run();
 		}
 
 
@@ -75,10 +120,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		}
 
 
-		protected virtual void AddComponent(IWheels prev, ITnOutProvider next)
+		protected virtual ITnOutProvider AddComponent(IWheels prev, ITnOutProvider next)
 		{
 			prev.InPort().Connect(next.OutPort());
-			//return next;
+			return next;
 		}
 
 		protected virtual IPowerTrainComponent AddComponent(IPowerTrainComponent prev, IPowerTrainComponent next)

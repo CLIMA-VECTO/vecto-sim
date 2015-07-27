@@ -37,13 +37,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			throw new NotImplementedException();
+			// TODO: @@@
+			writer[ModalResultField.Pe_clutch] = 0;
 		}
 
 		protected override void DoCommitSimulationStep()
 		{
 			//todo: implement!
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
 		}
 
 		public ITnInPort InPort()
@@ -86,6 +87,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			return _nextComponent.Request(absTime, dt, torqueIn, engineSpeedIn);
+		}
+
+		public IResponse Initialize()
+		{
+			return _nextComponent.Initialize();
 		}
 
 		public void Connect(ITnOutPort other)

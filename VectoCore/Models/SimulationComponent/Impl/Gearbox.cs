@@ -53,6 +53,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new NotImplementedException();
 		}
 
+		public IResponse Initialize()
+		{
+			return Next.Initialize();
+		}
+
 		#endregion
 
 		#region ITnInPort

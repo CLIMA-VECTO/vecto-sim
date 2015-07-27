@@ -56,6 +56,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
+		public IResponse Initialize()
+		{
+			return Next.Initialize();
+		}
+
 
 		protected IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
@@ -103,7 +108,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!targetVelocity.IsEqual(0) || !Cockpit.VehicleSpeed().IsEqual(0)) {
 				throw new NotImplementedException("TargetVelocity or VehicleVelocity is not zero!");
 			}
-			return Next.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
+			var retVal = Next.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
+			retVal.SimulationInterval = dt;
+			return retVal;
 		}
 
 

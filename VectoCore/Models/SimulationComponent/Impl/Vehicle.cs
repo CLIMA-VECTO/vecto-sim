@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			throw new NotImplementedException();
+			writer[ModalResultField.v_act] = (_previousState.Velocity + _currentState.Velocity) / 2;
 		}
 
 		protected override void DoCommitSimulationStep()
@@ -64,6 +64,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 											SlopeResistance(gradient);
 
 			return _nextInstance.Request(absTime, dt, vehicleAccelerationForce, _currentState.Velocity);
+		}
+
+		public IResponse Initialize()
+		{
+			return _nextInstance.Initialize();
 		}
 
 		protected Newton RollingResistance(Radian gradient)

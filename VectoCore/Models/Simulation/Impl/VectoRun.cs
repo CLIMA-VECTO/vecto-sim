@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected Second dt = 1.SI<Second>();
 
-		public VectoRun(IVehicleContainer container)
+		protected VectoRun(IVehicleContainer container)
 		{
 			Container = container;
 			CyclePort = container.GetCycleOutPort();
@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			LogManager.GetLogger(GetType()).Info("VectoJob started running.");
 			IResponse response;
 
-
+			Initialize();
 			do {
 				response = DoSimulationStep();
 				if (response.ResponseType == ResponseType.Success) {

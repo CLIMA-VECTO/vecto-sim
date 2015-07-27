@@ -66,6 +66,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return new ResponseSuccess();
 		}
 
+		public IResponse Initialize()
+		{
+			throw new NotImplementedException();
+		}
+
 		public class RequestData
 		{
 			public Second abstime;

@@ -112,8 +112,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.AbsTime = PreviousState.AbsTime + dt;
 			CurrentState.WaitTime = PreviousState.WaitTime + dt;
 
-			return _outPort.Request((Second)absTime, (Second)dt,
-				CycleIntervalIterator.LeftSample.VehicleTargetSpeed, ComputeGradient());
+			return _outPort.Request(absTime, dt, CycleIntervalIterator.LeftSample.VehicleTargetSpeed, ComputeGradient());
 		}
 
 		private IResponse DriveDistance(Second absTime, Meter ds)
@@ -157,8 +156,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Altitude = first.Altitude,
 			};
 			CurrentState = PreviousState.Clone();
-			return new ResponseSuccess();
-			//TODO: return _outPort.Initialize();
+			//return new ResponseSuccess();
+			return _outPort.Initialize();
 		}
 
 		#endregion

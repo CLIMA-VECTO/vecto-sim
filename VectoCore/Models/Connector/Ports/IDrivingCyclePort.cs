@@ -65,5 +65,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		/// <param name="gradient"></param>
 		/// <returns></returns>
 		IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient);
+
+		IResponse Initialize();
 	}
 }

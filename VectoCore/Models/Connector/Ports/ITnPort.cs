@@ -55,5 +55,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		/// <param name="torque">[Nm]</param>
 		/// <param name="angularVelocity">[rad/s]</param>
 		IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity);
+
+		IResponse Initialize();
 	}
 }

@@ -50,6 +50,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return new ResponseSuccess() { SimulationInterval = dt }; //_next.Request(absTime, dt, acc, gradient);
 		}
 
+		public IResponse Initialize()
+		{
+			return new ResponseSuccess();
+		}
+
 		public void Connect(IDriverDemandOutPort other)
 		{
 			_next = other;

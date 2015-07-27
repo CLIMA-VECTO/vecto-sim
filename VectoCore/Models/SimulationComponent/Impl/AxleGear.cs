@@ -39,6 +39,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				angularVelocity * _gearData.Ratio);
 		}
 
+		public IResponse Initialize()
+		{
+			return _nextComponent.Initialize();
+		}
+
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
 			// nothing to write

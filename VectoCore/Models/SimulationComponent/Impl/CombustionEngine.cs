@@ -83,7 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.EnginePowerLoss = InertiaPowerLoss(torque, engineSpeed);
 			var requestedEnginePower = requestedPower + _currentState.EnginePowerLoss;
 
-			if (engineSpeed < (double)_data.IdleSpeed - EngineIdleSpeedStopThreshold) {
+			if (engineSpeed < _data.IdleSpeed.Value() - EngineIdleSpeedStopThreshold) {
 				_currentState.OperationMode = EngineOperationMode.Stopped;
 				//todo: _currentState.EnginePowerLoss = enginePowerLoss;
 			}
@@ -104,6 +104,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				_currentState.EngineSpeed);
 
 			//todo: use ResponseOverloadFail in case of overload
+			return new ResponseSuccess();
+		}
+
+		public IResponse Initialize()
+		{
+			// Todo: @@@quam
+			_previousState = new EngineState() {
+				EngineSpeed = _data.IdleSpeed,
+				EnginePower = 0.SI<Watt>(),
+				dt = 1.SI<Second>(),
+			};
+			//_currentState
 			return new ResponseSuccess();
 		}
 

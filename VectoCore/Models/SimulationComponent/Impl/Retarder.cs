@@ -52,5 +52,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return _nextComponent.Request(absTime, dt, torque + retarderTorqueLoss, angularVelocity);
 		}
+
+		public IResponse Initialize()
+		{
+			return _nextComponent.Initialize();
+		}
 	}
 }

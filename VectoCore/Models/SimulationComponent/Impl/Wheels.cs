@@ -44,6 +44,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _outPort.Request(absTime, dt, torque, angularVelocity);
 		}
 
+		public IResponse Initialize()
+		{
+			return _outPort.Initialize();
+		}
+
 		#endregion
 
 		#region ITnInPort
@@ -59,12 +64,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			throw new NotImplementedException();
+			// noting to write...
 		}
 
 		protected override void DoCommitSimulationStep()
 		{
-			throw new NotImplementedException();
+			// nothing to commit
 		}
 
 		#endregion
