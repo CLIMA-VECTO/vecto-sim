@@ -30,28 +30,25 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			var tmpVehicle = dao.CreateVehicleData(Vehicle);
 			var segment = GetVehicleClassification(tmpVehicle.VehicleCategory, tmpVehicle.AxleConfiguration,
 				tmpVehicle.GrossVehicleMassRating, tmpVehicle.CurbWeight);
-
-			var cycleParser = new DrivingCycleData.DistanceBasedDataParser();
-
+			var driverdata = dao.CreateDriverData(Job);
+			driverdata.AccelerationCurve = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
 			foreach (var mission in segment.Missions) {
-				var cycleData = VectoCSVFile.ReadStream(mission.CycleFile);
 				foreach (var loading in mission.Loadings) {
 					var engineData = dao.CreateEngineData(Engine);
-					var cycle = new DrivingCycleData {
-						Name = mission.ToString(),
-						SavedInDeclarationMode = true,
-						Entries = cycleParser.Parse(cycleData).ToList()
-					};
+					var parser = new DrivingCycleDataReader();
+					var data = VectoCSVFile.ReadStream(mission.CycleFile);
 
 					var simulationRunData = new VectoRunData {
 						VehicleData = dao.CreateVehicleData(Vehicle, mission, loading),
 						EngineData = engineData,
 						GearboxData = dao.CreateGearboxData(Gearbox, engineData),
 						Aux = dao.CreateAuxiliaryData(Aux, mission.MissionType, segment.VehicleClass),
-						Cycle = cycle,
+						Cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, DrivingCycleData.CycleType.DistanceBased),
+						DriverData = driverdata,
 						IsEngineOnly = IsEngineOnly,
-						JobFileName = Job.JobFile
+						JobFileName = Job.JobFile,
 					};
+					simulationRunData.VehicleData.VehicleClass = segment.VehicleClass;
 					yield return simulationRunData;
 				}
 			}
@@ -114,8 +111,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			CheckForDeclarationMode(fileInfo, "Engine");
 
 			switch (fileInfo.Version) {
-				case 2:
-					Engine = JsonConvert.DeserializeObject<EngineFileV2Declaration>(json);
+				case 3:
+					Engine = JsonConvert.DeserializeObject<EngineFileV3Declaration>(json);
 					Engine.BasePath = Path.GetDirectoryName(file);
 					break;
 				default:
@@ -130,12 +127,12 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			CheckForDeclarationMode(fileInfo, "Gearbox");
 
 			switch (fileInfo.Version) {
-				case 4:
-					Gearbox = JsonConvert.DeserializeObject<GearboxFileV4Declaration>(json);
+				case 5:
+					Gearbox = JsonConvert.DeserializeObject<GearboxFileV5Declaration>(json);
 					Gearbox.BasePath = Path.GetDirectoryName(file);
 					break;
 				default:
-					throw new UnsupportedFileVersionException("Unsupported Version of gearbox-file. Got version " + fileInfo.Version);
+					throw new UnsupportedFileVersionException("Unsopported Version of gearbox-file. Got version " + fileInfo.Version);
 			}
 		}
 

@@ -32,7 +32,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			};
 		}
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataWriter writer) {}
+
+		protected override void DoCommitSimulationStep()
 		{
 			_left.MoveNext();
 			_right.MoveNext();

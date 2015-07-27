@@ -28,8 +28,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var requestPort = wheels.OutPort();
 
-			var absTime = TimeSpan.FromSeconds(0);
-			var dt = TimeSpan.FromSeconds(1);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			var force = 5000.SI<Newton>();
 			var velocity = 20.SI<MeterPerSecond>();

@@ -43,15 +43,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ISimulationOutPort
 
-		IResponse ISimulationOutPort.Request(TimeSpan absTime, Meter ds)
+		IResponse ISimulationOutPort.Request(Second absTime, Meter ds)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt)
+		public IResponse Request(Second absTime, Second dt)
 		{
 			//todo: change to variable time steps
-			var index = (int)Math.Floor(absTime.TotalSeconds);
+			var index = (int)Math.Floor(absTime.Value());
 			if (index >= Data.Entries.Count) {
 				return new ResponseCycleFinished();
 			}
@@ -84,10 +84,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		public override
-			void CommitSimulationStep
-			(IModalDataWriter
-				writer) {}
+		protected override void DoWriteModalResults(IModalDataWriter writer)
+		{
+			// TODO: write data...
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			// TODO: commit step
+		}
 
 		#endregion
 

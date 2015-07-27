@@ -66,8 +66,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var port = engine.OutPort();
 
-			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 			var torque = 400.SI<NewtonMeter>();
 			var engineSpeed = 1500.RPMtoRad();
 
@@ -83,8 +83,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var gearbox = new EngineOnlyGearbox(vehicle);
 			var port = engine.OutPort();
 
-			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			var torque = 0.SI<NewtonMeter>();
 			var engineSpeed = 600.RPMtoRad();
@@ -163,10 +163,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var angularSpeed = Double.Parse(TestContext.DataRow["rpm"].ToString()).RPMtoRad();
 
-			var t = TimeSpan.FromSeconds(0);
-			var dt = TimeSpan.FromSeconds(0.1);
+			var t = 0.SI<Second>();
+			var dt = 0.1.SI<Second>();
 
-			for (; t.TotalSeconds < 2; t += dt) {
+			for (; t < 2; t += dt) {
 				requestPort.Request(t, dt, Formulas.PowerToTorque(idlePower, angularSpeed), angularSpeed);
 				engine.CommitSimulationStep(modalData);
 			}
@@ -174,19 +174,19 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var i = 0;
 			// dt = TimeSpan.FromSeconds(double.Parse(TestContext.DataRow["dt"].ToString(), CultureInfo.InvariantCulture));
 			// dt = TimeSpan.FromSeconds(expectedResults.Rows[i].ParseDouble(0)) - t;
-			var engineLoadPower = engineData.GetFullLoadCurve(0).FullLoadStationaryPower(angularSpeed);
+			var engineLoadPower = engineData.FullLoadCurve.FullLoadStationaryPower(angularSpeed);
 			idlePower = Double.Parse(TestContext.DataRow["finalIdleLoad"].ToString()).SI<Watt>();
-			for (; t.TotalSeconds < 25; t += dt, i++) {
-				dt = TimeSpan.FromSeconds(expectedResults.Rows[i + 1].ParseDouble(0) - expectedResults.Rows[i].ParseDouble(0));
-				if (t >= TimeSpan.FromSeconds(10)) {
+			for (; t < 25; t += dt, i++) {
+				dt = (expectedResults.Rows[i + 1].ParseDouble(0) - expectedResults.Rows[i].ParseDouble(0)).SI<Second>();
+				if (t >= 10.SI<Second>()) {
 					engineLoadPower = idlePower;
 				}
 				requestPort.Request(t, dt, Formulas.PowerToTorque(engineLoadPower, angularSpeed), angularSpeed);
-				modalData[ModalResultField.time] = t.TotalSeconds;
-				modalData[ModalResultField.simulationInterval] = dt.TotalSeconds;
+				modalData[ModalResultField.time] = t;
+				modalData[ModalResultField.simulationInterval] = dt;
 				engine.CommitSimulationStep(modalData);
 				// todo: compare results...
-				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.TotalSeconds, 0.001, "Time");
+				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.Value(), 0.001, "Time");
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), modalData.GetDouble(ModalResultField.Pe_full), 0.1,
 					String.Format("Load in timestep {0}", t));
 				modalData.CommitSimulationStep();
@@ -232,10 +232,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var idle = engineData.IdleSpeed;
 			Assert.AreEqual(58.6430628670095, idle.Value(), 0.000001);
 			Assert.IsTrue(idle.HasEqualUnit(0.SI<PerSecond>()));
-
-			var flc0 = engineData.GetFullLoadCurve(0);
-
-			AssertException<KeyNotFoundException>(() => { var flc10000 = engineData.GetFullLoadCurve(1000); });
 		}
 	}
 }

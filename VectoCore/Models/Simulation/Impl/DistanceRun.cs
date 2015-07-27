@@ -12,8 +12,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected override IResponse DoSimulationStep()
 		{
-			//_dt = TimeSpan.FromSeconds(1) - TimeSpan.FromMilliseconds(_dt.Milliseconds);
-
 			// estimate distance to be traveled within the next TargetTimeInterval
 			var ds = (Container.VehicleSpeed() * Constants.SimulationSettings.TargetTimeInterval).Cast<Meter>();
 
@@ -32,14 +30,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				return response;
 			}
 
-			AbsTime = (AbsTime + TimeSpan.FromTicks(response.SimulationInterval.Ticks / 2));
+			AbsTime = AbsTime + response.SimulationInterval;
 			dt = response.SimulationInterval;
 			return response;
 		}
 
 		protected override IResponse Initialize()
 		{
-			throw new NotImplementedException();
+			return CyclePort.Initialize();
 		}
 	}
 }

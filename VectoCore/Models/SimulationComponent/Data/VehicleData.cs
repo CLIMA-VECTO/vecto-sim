@@ -13,6 +13,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public VehicleCategory VehicleCategory { get; internal set; }
 
+		public VehicleClass VehicleClass { get; internal set; }
+
 		public CrossWindCorrectionMode CrossWindCorrectionMode { get; internal set; }
 
 		public RetarderData Retarder { get; internal set; }

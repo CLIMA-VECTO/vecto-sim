@@ -16,7 +16,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public MockDriver(IVehicleContainer container) : base(container) {}
 
-		public override void CommitSimulationStep(IModalDataWriter writer) {}
+		protected override void DoWriteModalResults(IModalDataWriter writer)
+		{
+			throw new NotImplementedException();
+		}
+
+		protected override void DoCommitSimulationStep() {}
 
 
 		public IDrivingCycleOutPort OutPort()
@@ -29,18 +34,25 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return this;
 		}
 
-		public IResponse Request(TimeSpan absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			LastRequest = new RequestData() { AbsTime = absTime, ds = ds, Gradient = gradient, TargetVelocity = targetVelocity };
 			var acc = 0.SI<MeterPerSquareSecond>();
-			return new ResponseSuccess(); //_next.Request(absTime, TimeSpan.FromSeconds(0), acc, 0.SI<Radian>());
+			var dt = 1.SI<Second>();
+			return new ResponseSuccess() { SimulationInterval = dt };
+			//_next.Request(absTime, TimeSpan.FromSeconds(0), acc, 0.SI<Radian>());
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, MeterPerSecond targetVelocity, Radian gradient)
+		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			LastRequest = new RequestData() { AbsTime = absTime, dt = dt, Gradient = gradient, TargetVelocity = targetVelocity };
 			var acc = 0.SI<MeterPerSquareSecond>();
-			return new ResponseSuccess(); //_next.Request(absTime, dt, acc, gradient);
+			return new ResponseSuccess() { SimulationInterval = dt }; //_next.Request(absTime, dt, acc, gradient);
+		}
+
+		public IResponse Initialize()
+		{
+			return new ResponseSuccess();
 		}
 
 		public void Connect(IDriverDemandOutPort other)
@@ -50,9 +62,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public class RequestData
 		{
-			public TimeSpan AbsTime;
+			public Second AbsTime;
 			public Meter ds;
-			public TimeSpan dt;
+			public Second dt;
 			public MeterPerSecond TargetVelocity;
 			public Radian Gradient;
 		}

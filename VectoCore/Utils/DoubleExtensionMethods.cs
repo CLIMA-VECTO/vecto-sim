@@ -95,6 +95,11 @@ namespace TUGraz.VectoCore.Utils
 			return self.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
 		}
 
+		public static MeterPerSecond KMPHtoMeterPerSecond(this double self)
+		{
+			return self.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>();
+		}
+
 		public static double ToRadian(this double self)
 		{
 			return self * Math.PI / 180.0;
@@ -104,6 +109,7 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return self * 180.0 / Math.PI;
 		}
+
 
 		/// <summary>
 		/// Creates an SI object for the number (unit-less: [-]).

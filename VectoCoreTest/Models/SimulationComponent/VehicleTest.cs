@@ -30,8 +30,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var requestPort = vehicle.OutPort();
 
-			var absTime = TimeSpan.FromSeconds(0);
-			var dt = TimeSpan.FromSeconds(1);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			var accell = -0.256231159.SI<MeterPerSquareSecond>();
 			var gradient = Math.Atan(0.00366547048).SI<Radian>();

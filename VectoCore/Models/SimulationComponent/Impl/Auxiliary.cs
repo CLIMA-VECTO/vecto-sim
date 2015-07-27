@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond engineSpeed)
+		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed)
 		{
 			_powerDemands.Clear();
 			var powerDemand = 0.SI<Watt>();
@@ -64,11 +64,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _outPort.Request(absTime, dt, torque + powerDemand / engineSpeed, engineSpeed);
 		}
 
+		public IResponse Initialize()
+		{
+			throw new NotImplementedException();
+		}
+
 		#endregion
 
 		#region VectoSimulationComponent
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
 			var sum = 0.SI<Watt>();
 			foreach (var kv in _powerDemands) {
@@ -80,6 +85,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			writer[ModalResultField.Paux] = sum.Value();
 		}
+
+		protected override void DoCommitSimulationStep() {}
 
 		#endregion
 

@@ -14,6 +14,12 @@ namespace TUGraz.VectoCore.Utils
 			return d.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
 		}
 
+		public static MeterPerSecond KMPHtoMeterPerSecond(this int d)
+		{
+			return d.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>();
+		}
+
+
 		/// <summary>
 		/// Gets the SI representation of the number (unit-less).
 		/// </summary>

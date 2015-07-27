@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal CombustionEngineData SetCommonCombustionEngineData(EngineFileV2Declaration.DataBodyDecl data, string basePath)
+		internal CombustionEngineData SetCommonCombustionEngineData(EngineFileV3Declaration.DataBodyDecl data, string basePath)
 		{
 			var retVal = new CombustionEngineData() {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal GearboxData SetCommonGearboxData(GearboxFileV4Declaration.DataBodyDecl data)
+		internal GearboxData SetCommonGearboxData(GearboxFileV5Declaration.DataBodyDecl data)
 		{
 			return new GearboxData() {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
@@ -74,5 +74,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				Type = (GearboxData.GearboxType)Enum.Parse(typeof(GearboxData.GearboxType), data.GearboxType, true),
 			};
 		}
+
+		public abstract DriverData CreateDriverData(VectoJobFile job);
 	}
 }

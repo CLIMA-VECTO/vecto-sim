@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 		public override CombustionEngineData CreateEngineData(VectoEngineFile engine)
 		{
-			var fileV2Decl = engine as EngineFileV2Declaration;
+			var fileV2Decl = engine as EngineFileV3Declaration;
 			if (fileV2Decl != null) {
 				return CreateEngineData(fileV2Decl);
 			}
@@ -45,14 +45,58 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 		public override GearboxData CreateGearboxData(VectoGearboxFile gearbox, CombustionEngineData engine)
 		{
-			var fileV5Decl = gearbox as GearboxFileV4Declaration;
+			var fileV5Decl = gearbox as GearboxFileV5Declaration;
 			if (fileV5Decl != null) {
 				return CreateGearboxData(fileV5Decl, engine);
 			}
 			throw new VectoException("Unsupported GearboxData File Instance");
 		}
 
+		public override DriverData CreateDriverData(VectoJobFile job)
+		{
+			var fileV2Decl = job as VectoJobFileV2Declaration;
+			if (fileV2Decl != null) {
+				return CreateDriverData(fileV2Decl);
+			}
+			throw new VectoException("Unsupported Job File Instance");
+		}
+
 		//==========================
+
+
+		public DriverData CreateDriverData(VectoJobFileV2Declaration job)
+		{
+			var data = job.Body;
+
+			var lookAheadData = new DriverData.LACData() {
+				Enabled = DeclarationData.Driver.LookAhead.Enabled,
+				Deceleration = DeclarationData.Driver.LookAhead.Deceleration,
+				MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed
+			};
+			var overspeedData = new DriverData.OverSpeedEcoRollData() {
+				Mode = DriverData.ParseDriverMode(data.OverSpeedEcoRoll.Mode),
+				MinSpeed = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed,
+				OverSpeed = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed,
+				UnderSpeed = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed
+			};
+			if (!DeclarationData.Driver.OverSpeedEcoRoll.AllowedModes.Contains(overspeedData.Mode)) {
+				throw new VectoSimulationException(
+					String.Format("Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}", overspeedData.Mode));
+			}
+			var startstopData = new VectoRunData.StartStopData() {
+				Enabled = data.StartStop.Enabled,
+				Delay = DeclarationData.Driver.StartStop.Delay,
+				MinTime = DeclarationData.Driver.StartStop.MinTime,
+				MaxSpeed = DeclarationData.Driver.StartStop.MaxSpeed,
+			};
+			var retVal = new DriverData() {
+				LookAheadCoasting = lookAheadData,
+				OverSpeedEcoRoll = overspeedData,
+				StartStop = startstopData,
+			};
+			return retVal;
+		}
+
 
 		internal VehicleData CreateVehicleData(VehicleFileV5Declaration vehicle, Mission mission, Kilogram loading)
 		{
@@ -81,7 +125,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 					TwinTyres = axleInput.TwinTyres,
 					RollResistanceCoefficient = axleInput.RollResistanceCoefficient,
 					TyreTestLoad = axleInput.TyreTestLoad.SI<Newton>(),
-					Inertia = DeclarationData.Wheels.Lookup(axleInput.WheelsStr).Inertia,
+					Inertia = DeclarationData.Wheels.Lookup(axleInput.WheelsStr.Replace(" ", "")).Inertia,
 				};
 				retVal.AxleData.Add(axle);
 			}
@@ -99,18 +143,17 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal CombustionEngineData CreateEngineData(EngineFileV2Declaration engine)
+		internal CombustionEngineData CreateEngineData(EngineFileV3Declaration engine)
 		{
 			var retVal = SetCommonCombustionEngineData(engine.Body, engine.BasePath);
 			retVal.Inertia = DeclarationData.Engine.EngineInertia(retVal.Displacement);
-			foreach (var entry in engine.Body.FullLoadCurves) {
-				retVal.AddFullLoadCurve(entry.Gears, FullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, entry.Path), true));
-			}
-
+			retVal.FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, engine.Body.FullLoadCurve),
+				true);
+			retVal.FullLoadCurve.EngineData = retVal;
 			return retVal;
 		}
 
-		internal GearboxData CreateGearboxData(GearboxFileV4Declaration gearbox, CombustionEngineData engine)
+		internal GearboxData CreateGearboxData(GearboxFileV5Declaration gearbox, CombustionEngineData engine)
 		{
 			var retVal = SetCommonGearboxData(gearbox.Body);
 
@@ -137,17 +180,29 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			for (uint i = 0; i < gearbox.Body.Gears.Count; i++) {
 				var gearSettings = gearbox.Body.Gears[(int)i];
 				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
-				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
+				var lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
 
 
 				if (i == 0) {
-					retVal.AxleGearData = new GearData(lossMap, null, gearSettings.Ratio, false);
+					retVal.AxleGearData = new GearData() {
+						LossMap = lossMap,
+						Ratio = gearSettings.Ratio,
+						TorqueConverterActive = false
+					};
 				} else {
-					var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(engine, i);
-					retVal._gearData.Add(i, new GearData(lossMap, shiftPolygon, gearSettings.Ratio, false));
+					var fullLoad = !String.IsNullOrEmpty(gearSettings.FullLoadCurve) && !gearSettings.FullLoadCurve.Equals("<NOFILE>")
+						? GearFullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
+						: null;
+					var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(fullLoad, engine);
+
+					retVal._gearData.Add(i, new GearData() {
+						LossMap = lossMap,
+						ShiftPolygon = shiftPolygon,
+						Ratio = gearSettings.Ratio,
+						TorqueConverterActive = false
+					});
 				}
 			}
-
 			return retVal;
 		}
 

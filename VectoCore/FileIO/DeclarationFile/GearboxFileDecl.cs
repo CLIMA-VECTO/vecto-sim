@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.FileIO.DeclarationFile
 	///		...
 	///		]
 	/// }
-	public class GearboxFileV4Declaration : VectoGearboxFile
+	public class GearboxFileV5Declaration : VectoGearboxFile
 	{
 		[JsonProperty(Required = Required.Always)] public JsonDataHeader Header;
 		[JsonProperty(Required = Required.Always)] public DataBodyDecl Body;
@@ -53,6 +53,7 @@ namespace TUGraz.VectoCore.FileIO.DeclarationFile
 		{
 			[JsonProperty(Required = Required.Always)] public double Ratio;
 			[JsonProperty(Required = Required.Always)] public string LossMap;
+			[JsonProperty] public string FullLoadCurve;
 		}
 	}
 }

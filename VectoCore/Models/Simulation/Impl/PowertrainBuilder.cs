@@ -35,8 +35,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (_engineOnly) {
 				cycle = new TimeBasedDrivingCycle(_container, data.Cycle);
 			} else {
-				//todo: make distinction between time based and distance based driving cycle!
-				cycle = new DistanceBasedDrivingCycle(_container, data.Cycle);
+				if (data.IsEngineOnly) {
+					cycle = new TimeBasedDrivingCycle(_container, data.Cycle);
+				} else {
+					//todo: make distinction between time based and distance based driving cycle!
+					cycle = new DistanceBasedDrivingCycle(_container, data.Cycle);
+				}
 			}
 			// cycle --> driver --> vehicle --> wheels --> axleGear --> retarder --> gearBox
 			var driver = AddComponent(cycle, new Driver(_container, data.DriverData));

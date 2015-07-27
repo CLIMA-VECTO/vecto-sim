@@ -28,9 +28,9 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		/// <param name="absTime">The absolute time of the simulation.</param>
 		/// <param name="ds"></param>
 		/// <returns></returns>
-		IResponse Request(TimeSpan absTime, Meter ds);
+		IResponse Request(Second absTime, Meter ds);
 
-		IResponse Request(TimeSpan absTime, TimeSpan dt);
+		IResponse Request(Second absTime, Second dt);
 
 		IResponse Initialize();
 	}

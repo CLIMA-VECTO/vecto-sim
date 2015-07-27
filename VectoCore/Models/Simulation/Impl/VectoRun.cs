@@ -3,6 +3,7 @@ using Common.Logging;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
@@ -11,11 +12,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	/// </summary>
 	public abstract class VectoRun : IVectoRun
 	{
-		protected TimeSpan AbsTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
+		protected Second AbsTime = 0.SI<Second>();
 
-		protected TimeSpan dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+		protected Second dt = 1.SI<Second>();
 
-		public VectoRun(IVehicleContainer container)
+		protected VectoRun(IVehicleContainer container)
 		{
 			Container = container;
 			CyclePort = container.GetCycleOutPort();
@@ -41,10 +42,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			LogManager.GetLogger(GetType()).Info("VectoJob started running.");
 			IResponse response;
 
-
+			Initialize();
 			do {
 				response = DoSimulationStep();
-				Container.CommitSimulationStep(AbsTime.TotalSeconds, dt.TotalSeconds);
+				if (response.ResponseType == ResponseType.Success) {
+					Container.CommitSimulationStep(AbsTime, dt);
+				}
 
 				// set _dt to difference to next full second.
 				AbsTime += dt;

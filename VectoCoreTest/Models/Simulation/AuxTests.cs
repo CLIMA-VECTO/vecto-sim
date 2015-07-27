@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -27,7 +28,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var deco = new SumWriterDecoratorFullPowertrain(sumWriter, "", "", "");
 
 			var container = new VehicleContainer(dataWriter, deco);
-			var data = DrivingCycleData.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
 				DrivingCycleData.CycleType.TimeBased);
 
 			var port = new MockTnOutPort();
@@ -45,11 +46,11 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var speed = 1400.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();
-			var t = new TimeSpan();
+			var t = 0.SI<Second>();
 
 			for (var i = 0; i < data.Entries.Count; i++) {
 				aux.OutPort().Request(t, t, torque, speed);
-				container.CommitSimulationStep(0, 0);
+				container.CommitSimulationStep(t, t);
 			}
 
 			container.FinishSimulation();
@@ -75,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var speed = 2358.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();
-			var t = new TimeSpan();
+			var t = 0.SI<Second>();
 			aux.OutPort().Request(t, t, torque, speed);
 			Assert.AreEqual(speed, port.AngularVelocity);
 			var newTorque = torque + constPower / speed;
@@ -102,7 +103,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var dataWriter = new MockModalDataWriter();
 			var sumWriter = new TestSumWriter();
 			var container = new VehicleContainer(dataWriter, sumWriter);
-			var data = DrivingCycleData.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
 				DrivingCycleData.CycleType.TimeBased);
 			var cycle = new MockDrivingCycle(container, data);
 			var port = new MockTnOutPort();
@@ -114,7 +115,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var speed = 2358.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();
 
-			var t = new TimeSpan();
+			var t = 0.SI<Second>();
 
 			var expected = new[] { 6100, 3100, 2300, 4500, 6100 };
 			foreach (var e in expected) {
@@ -136,7 +137,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var sumWriter = new TestSumWriter();
 			var container = new VehicleContainer(dataWriter, sumWriter);
-			var data = DrivingCycleData.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
 				DrivingCycleData.CycleType.TimeBased);
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
 			// ALT1.aux file: nAuxiliary speed 2358: 0, 0.38, 0.49, 0.64, ...
@@ -160,7 +161,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var speed = 578.22461991.RPMtoRad(); // = 2358 (nAuxiliary) * ratio
 			var torque = 500.SI<NewtonMeter>();
-			var t = new TimeSpan();
+			var t = 0.SI<Second>();
 			var expected = new[] {
 				1200 + 6100 + 72.9166666666667, // = 1000 * 0.07 (nAuxiliary=2358 and psupply=0) / 0.98 (efficiency_supply)
 				1200 + 3100 + 677.083333333333, // = 1000 * 0.65 (nAuxiliary=2358 and psupply=0.38) / 0.98 (efficiency_supply)
@@ -194,7 +195,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var sumWriter = new TestSumWriter();
 			var container = new VehicleContainer(dataWriter, sumWriter);
-			var data = DrivingCycleData.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
+			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
 				DrivingCycleData.CycleType.TimeBased);
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
 			// ALT1.aux file: nAuxiliary speed 2358: 0, 0.38, 0.49, 0.64, ...
@@ -215,7 +216,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var speed = 578.22461991.RPMtoRad(); // = 2358 (nAuxiliary) * ratio
 			var torque = 500.SI<NewtonMeter>();
-			var t = new TimeSpan();
+			var t = 0.SI<Second>();
 			var expected = new[] {
 				72.9166666666667, // = 1000 * 0.07 (pmech from aux file at nAuxiliary=2358 and psupply=0) / 0.98 (efficiency_supply)
 				677.083333333333, // = 1000 * 0.65 (nAuxiliary=2358 and psupply=0.38) / 0.98

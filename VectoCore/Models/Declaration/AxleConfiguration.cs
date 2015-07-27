@@ -1,4 +1,6 @@
+using System;
 using TUGraz.VectoCore.Utils;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {

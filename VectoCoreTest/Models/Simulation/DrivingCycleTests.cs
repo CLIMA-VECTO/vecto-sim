@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -19,7 +20,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var sumWriter = new TestSumWriter();
 			var container = new VehicleContainer(dataWriter, sumWriter);
 
-			var cycleData = DrivingCycleData.ReadFromFileEngineOnly(@"TestData\Cycles\Coach Engine Only.vdri");
+			var cycleData = DrivingCycleDataReader.ReadFromFileEngineOnly(@"TestData\Cycles\Coach Engine Only.vdri");
 			var cycle = new EngineOnlySimulation(container, cycleData);
 
 			var outPort = new MockTnOutPort();
@@ -28,14 +29,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			inPort.Connect(outPort);
 
-			var absTime = new TimeSpan();
-			var dt = TimeSpan.FromSeconds(1);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			var response = cycleOut.Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
-			var time = (absTime + TimeSpan.FromTicks(dt.Ticks / 2)).TotalSeconds;
-			var simulationInterval = dt.TotalSeconds;
+			var time = absTime + dt / 2;
+			var simulationInterval = dt;
 			container.CommitSimulationStep(time, simulationInterval);
 
 			Assert.AreEqual(absTime, outPort.AbsTime);
@@ -49,7 +50,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var container = new VehicleContainer();
 
-			var cycleData = DrivingCycleData.ReadFromFileEngineOnly(@"TestData\Cycles\Coach Engine Only Paux_var-dt.vdri");
+			var cycleData = DrivingCycleDataReader.ReadFromFileEngineOnly(@"TestData\Cycles\Coach Engine Only Paux_var-dt.vdri");
 			var cycle = new EngineOnlySimulation(container, cycleData);
 
 			var outPort = new MockTnOutPort();
@@ -57,18 +58,18 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			inPort.Connect(outPort);
 
-			var absTime = TimeSpan.FromSeconds(10);
-			var dt = TimeSpan.FromSeconds(1);
+			var absTime = 10.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			var response = cycle.OutPort().Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseFailTimeInterval));
 
-			dt = TimeSpan.FromSeconds(0.25);
+			dt = 0.25.SI<Second>();
 			response = cycle.OutPort().Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			var dataWriter = new MockModalDataWriter();
-			container.CommitSimulationStep(absTime.TotalSeconds, dt.TotalSeconds);
+			container.CommitSimulationStep(absTime, dt);
 
 			Assert.AreEqual(absTime, outPort.AbsTime);
 			Assert.AreEqual(dt, outPort.Dt);
@@ -77,19 +78,19 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			// ========================
 
-			dt = TimeSpan.FromSeconds(1);
-			absTime = TimeSpan.FromSeconds(500);
-			response = cycle.OutPort().Request(absTime, dt);
+			dt = 1.SI<Second>();
+			absTime = 500.SI<Second>();
+			response = cycle.OutPort().Request((Second)absTime, (Second)dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseFailTimeInterval));
 
-			dt = TimeSpan.FromSeconds(0.25);
+			dt = 0.25.SI<Second>();
 
 			for (int i = 0; i < 2; i++) {
-				response = cycle.OutPort().Request(absTime, dt);
+				response = cycle.OutPort().Request((Second)absTime, (Second)dt);
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 				dataWriter = new MockModalDataWriter();
-				container.CommitSimulationStep(absTime.TotalSeconds, dt.TotalSeconds);
+				container.CommitSimulationStep(absTime, dt);
 
 				Assert.AreEqual(absTime, outPort.AbsTime);
 				Assert.AreEqual(dt, outPort.Dt);
@@ -108,7 +109,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var container = new VehicleContainer();
 
-			var cycleData = DrivingCycleData.ReadFromFileTimeBased(@"TestData\Cycles\Coach First Cycle only.vdri");
+			var cycleData = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach First Cycle only.vdri");
 			var cycle = new TimeBasedDrivingCycle(container, cycleData);
 
 			var outPort = new MockDrivingCycleOutPort();
@@ -118,8 +119,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			inPort.Connect(outPort);
 
-			var absTime = new TimeSpan();
-			var dt = TimeSpan.FromSeconds(1);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			var response = cycleOut.Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
@@ -135,7 +136,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var container = new VehicleContainer(new MockModalDataWriter(), new TestSumWriter());
 
-			var cycleData = DrivingCycleData.ReadFromFileTimeBased(@"TestData\Cycles\Cycle time field missing.vdri");
+			var cycleData = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Cycle time field missing.vdri");
 			var cycle = new TimeBasedDrivingCycle(container, cycleData);
 
 			var outPort = new MockDrivingCycleOutPort();
@@ -146,15 +147,15 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			inPort.Connect(outPort);
 
 			var dataWriter = new MockModalDataWriter();
-			var absTime = new TimeSpan();
-			var dt = TimeSpan.FromSeconds(1);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			while (cycleOut.Request(absTime, dt) is ResponseSuccess) {
 				Assert.AreEqual(absTime, outPort.AbsTime);
 				Assert.AreEqual(dt, outPort.Dt);
 
-				var time = (absTime + TimeSpan.FromTicks(dt.Ticks / 2)).TotalSeconds;
-				var simulationInterval = dt.TotalSeconds;
+				var time = absTime + dt / 2;
+				var simulationInterval = dt;
 				container.CommitSimulationStep(time, simulationInterval);
 
 				absTime += dt;

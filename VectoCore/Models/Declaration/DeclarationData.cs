@@ -52,10 +52,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static Meter DynamicTyreRadius(string wheels, string rims)
 		{
-			var wheelsEntry = Wheels.Lookup(wheels);
+			var wheelsEntry = Wheels.Lookup(wheels.Replace(" ", ""));
 			var rimsEntry = Rims.Lookup(rims);
 
-			var correction = wheelsEntry.SizeClass != "a" ? rimsEntry.F_a : rimsEntry.F_b;
+			var correction = wheelsEntry.SizeClass != "a" ? rimsEntry.F_b : rimsEntry.F_a;
 
 			return wheelsEntry.DynamicTyreRadius * correction / (2 * Math.PI);
 		}
@@ -124,6 +124,35 @@ namespace TUGraz.VectoCore.Models.Declaration
 		//Public Const CO2perFC As Single = 3.16
 
 		//Public Const AuxESeff As Single = 0.7
+
+		public static class Driver
+		{
+			public static class LookAhead
+			{
+				public const Boolean Enabled = true;
+				public static readonly MeterPerSquareSecond Deceleration = 0.5.SI<MeterPerSquareSecond>();
+				public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
+			}
+
+			public static class OverSpeedEcoRoll
+			{
+				public static readonly IList<DriverData.DriverMode> AllowedModes = new List<DriverData.DriverMode>() {
+					DriverData.DriverMode.EcoRoll,
+					DriverData.DriverMode.Overspeed
+				};
+
+				public static readonly MeterPerSecond MinSpeed = 50.KMPHtoMeterPerSecond();
+				public static readonly MeterPerSecond OverSpeed = 5.KMPHtoMeterPerSecond();
+				public static readonly MeterPerSecond UnderSpeed = 5.KMPHtoMeterPerSecond();
+			}
+
+			public static class StartStop
+			{
+				public static readonly MeterPerSecond MaxSpeed = 5.KMPHtoMeterPerSecond();
+				public static readonly Second Delay = 5.SI<Second>();
+				public static readonly Second MinTime = 5.SI<Second>();
+			}
+		}
 
 		public static class Trailer
 		{
@@ -195,9 +224,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return false;
 			}
 
-			internal static ShiftPolygon ComputeShiftPolygon(CombustionEngineData engine, uint gear)
+			internal static ShiftPolygon ComputeShiftPolygon(GearFullLoadCurve gear, CombustionEngineData engine)
 			{
-				var fullLoadCurve = engine.GetFullLoadCurve(gear);
+				// TODO: How to compute shift-polygons exactly? (merge with engine full load?)
+				var fullLoadCurve = engine.FullLoadCurve;
 				var idleSpeed = engine.IdleSpeed;
 
 				var maxTorque = fullLoadCurve.MaxLoadTorque;

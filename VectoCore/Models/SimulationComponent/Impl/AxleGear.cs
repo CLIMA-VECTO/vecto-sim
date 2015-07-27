@@ -32,14 +32,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_nextComponent = other;
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond angularVelocity)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity)
 		{
 			return _nextComponent.Request(absTime, dt,
 				_gearData.LossMap.GearboxInTorque(angularVelocity * _gearData.Ratio, torque),
 				angularVelocity * _gearData.Ratio);
 		}
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
+		public IResponse Initialize()
+		{
+			return _nextComponent.Initialize();
+		}
+
+		protected override void DoWriteModalResults(IModalDataWriter writer)
+		{
+			// nothing to write
+		}
+
+		protected override void DoCommitSimulationStep()
 		{
 			// nothing to commit
 		}

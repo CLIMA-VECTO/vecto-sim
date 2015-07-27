@@ -1,5 +1,6 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -21,7 +22,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 		[TestMethod]
 		public void TestEngineOnlyDrivingCycle()
 		{
-			var data = DrivingCycleData.ReadFromFileEngineOnly(TestContext.DataRow["CycleFile"].ToString());
+			var data = DrivingCycleDataReader.ReadFromFileEngineOnly(TestContext.DataRow["CycleFile"].ToString());
 			var cycle = new MockDrivingCycle(null, data);
 			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
@@ -40,8 +41,11 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			gearbox.InPort().Connect(aux.OutPort());
 			var port = aux.OutPort();
 
-			var absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-			var dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+//			IVectoJob job = SimulationFactory.CreateTimeBasedEngineOnlyRun(TestContext.DataRow["EngineFile"].ToString(),
+//				TestContext.DataRow["CycleFile"].ToString(), "test2.csv");
+
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			var dataWriter = new MockModalDataWriter();
 
@@ -50,6 +54,9 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 				ModalResultField.n, ModalResultField.PaEng, ModalResultField.Tq_drag, ModalResultField.Pe_drag,
 				ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.Tq_full, ModalResultField.Pe_full
 			};
+			//, ModalResultField.FC };
+			//var siFactor = new[] { 1, 1000, 1, 1000, 1000, 1, 1, 1000, 1 };
+			//var tolerances = new[] { 0.0001, 0.1, 0.0001, 0.1, 0.1, 0.001, 0.001, 0.1, 0.01 };
 			foreach (var cycleEntry in data.Entries) {
 				port.Request(absTime, dt, cycleEntry.EngineTorque, cycleEntry.EngineSpeed);
 				foreach (var sc in vehicle.SimulationComponents()) {
@@ -94,8 +101,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 
 			gearbox.InPort().Connect(engine.OutPort());
 
-			var absTime = new TimeSpan();
-			var dt = TimeSpan.FromSeconds(1);
+			var absTime = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			var angularVelocity = 644.4445.RPMtoRad();
 			var power = 2329.973.SI<Watt>();

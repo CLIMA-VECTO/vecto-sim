@@ -26,8 +26,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			retarder.InPort().Connect(nextRequest);
 			var outPort = retarder.OutPort();
 
-			var absTime = TimeSpan.FromSeconds(0);
-			var dt = TimeSpan.FromSeconds(0);
+			var absTime = 0.SI<Second>();
+			var dt = 0.SI<Second>();
 
 			// --------
 			outPort.Request(absTime, dt, 0.SI<NewtonMeter>(), 10.RPMtoRad());
