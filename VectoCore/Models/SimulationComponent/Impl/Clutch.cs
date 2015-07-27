@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
 			// TODO: @@@
-			writer[ModalResultField.Pe_clutch] = 0;
+			writer[ModalResultField.Pe_clutch] = 0.SI<Watt>();
 		}
 
 		protected override void DoCommitSimulationStep()

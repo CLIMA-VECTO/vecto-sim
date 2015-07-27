@@ -125,21 +125,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			writer[ModalResultField.PaEng] = _currentState.EnginePowerLoss.Value();
-			writer[ModalResultField.Pe_drag] = _currentState.FullDragPower.Value();
-			writer[ModalResultField.Pe_full] = _currentState.DynamicFullLoadPower.Value();
-			writer[ModalResultField.Pe_eng] = _currentState.EnginePower.Value();
+			writer[ModalResultField.PaEng] = _currentState.EnginePowerLoss;
+			writer[ModalResultField.Pe_drag] = _currentState.FullDragPower;
+			writer[ModalResultField.Pe_full] = _currentState.DynamicFullLoadPower;
+			writer[ModalResultField.Pe_eng] = _currentState.EnginePower;
 
-			writer[ModalResultField.Tq_drag] = _currentState.FullDragTorque.Value();
-			writer[ModalResultField.Tq_full] = _currentState.DynamicFullLoadTorque.Value();
-			writer[ModalResultField.Tq_eng] = _currentState.EngineTorque.Value();
-			writer[ModalResultField.n] = _currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute.Value();
+			writer[ModalResultField.Tq_drag] = _currentState.FullDragTorque;
+			writer[ModalResultField.Tq_full] = _currentState.DynamicFullLoadTorque;
+			writer[ModalResultField.Tq_eng] = _currentState.EngineTorque;
+			writer[ModalResultField.n] = _currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute;
 
 			try {
 				writer[ModalResultField.FC] =
 					_data.ConsumptionMap.GetFuelConsumption(_currentState.EngineTorque, _currentState.EngineSpeed)
 						.ConvertTo()
-						.Gramm.Per.Hour.Value();
+						.Gramm.Per.Hour;
 			} catch (VectoException ex) {
 				Log.WarnFormat("t: {0} - {1} n: {2} Tq: {3}", _currentState.AbsTime, ex.Message,
 					_currentState.EngineSpeed, _currentState.EngineTorque);

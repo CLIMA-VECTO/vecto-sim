@@ -19,8 +19,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 	[TestClass]
 	public class MinimalPowertrain
 	{
-		public const string CycleFile = @"TestData\Cycles\Coach_24t_xshort.vdri";
-		public const string EngineFile = @"TestData\Components\24t Coach.veng";
+		public const string CycleFile = @"TestData\Integration\MinimalPowerTrain\Coach_24t_xshort.vdri";
+		public const string EngineFile = @"TestData\Integration\MinimalPowerTrain\24t Coach.veng";
 
 		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
 
@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				}
 			};
 
-			var modalWriter = new TestModalDataWriter();
+			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain.vmod", false); //new TestModalDataWriter();
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 
@@ -94,6 +94,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			}
+
+			modalWriter.Finish();
 			//var run = new DistanceRun(vehicleContainer);
 			//run.Run();
 		}

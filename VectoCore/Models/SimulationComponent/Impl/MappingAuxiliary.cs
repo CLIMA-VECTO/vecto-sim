@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			writer[ModalResultField.Paux_xxx] = (double)_powerDemand;
+			writer[ModalResultField.Paux_xxx] = _powerDemand;
 		}
 
 		protected override void DoCommitSimulationStep() {}
