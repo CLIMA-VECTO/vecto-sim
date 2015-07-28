@@ -1,11 +1,11 @@
 ﻿using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.Simulation.Cockpit
+namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
 	/// <summary>
 	/// Defines a method to access shared data of the vehicle.
 	/// </summary>
-	public interface IVehicleCockpit
+	public interface IVehicleInfo
 	{
 		/// <summary>
 		/// Returns the current vehicle speed.

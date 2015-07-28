@@ -4,9 +4,10 @@ using System.Globalization;
 using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -14,11 +15,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	public class VehicleContainer : IVehicleContainer
 	{
 		internal readonly IList<VectoSimulationComponent> _components = new List<VectoSimulationComponent>();
-		internal IEngineCockpit _engine;
-		internal IGearboxCockpit _gearbox;
-		internal IVehicleCockpit _vehicle;
+		internal IEngineInfo _engine;
+		internal IGearboxInfo _gearbox;
+		internal IVehicleInfo _vehicle;
 
 		internal IMileageCounter _milageCounter;
+
+		internal IRoadLookAhead _road;
 
 		internal ISimulationOutPort _cycle;
 
@@ -93,17 +96,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			_components.Add(component);
 
-			var engine = component as IEngineCockpit;
+			var engine = component as IEngineInfo;
 			if (engine != null) {
 				_engine = engine;
 			}
 
-			var gearbox = component as IGearboxCockpit;
+			var gearbox = component as IGearboxInfo;
 			if (gearbox != null) {
 				_gearbox = gearbox;
 			}
 
-			var vehicle = component as IVehicleCockpit;
+			var vehicle = component as IVehicleInfo;
 			if (vehicle != null) {
 				_vehicle = vehicle;
 			}
@@ -116,6 +119,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var milage = component as IMileageCounter;
 			if (milage != null) {
 				_milageCounter = milage;
+			}
+
+			var road = component as IRoadLookAhead;
+			if (road != null) {
+				_road = road;
 			}
 		}
 
@@ -152,6 +160,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public Meter Distance()
 		{
 			return _milageCounter.Distance();
+		}
+
+		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter distance)
+		{
+			return _road.LookAhead(distance);
+		}
+
+		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
+		{
+			return _road.LookAhead(time);
 		}
 	}
 }

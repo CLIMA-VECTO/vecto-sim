@@ -5,8 +5,8 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IEngineCockpit
 
-		PerSecond IEngineCockpit.EngineSpeed()
+		PerSecond IEngineInfo.EngineSpeed()
 		{
 			return _previousState.EngineSpeed;
 		}
@@ -95,11 +95,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			ValidatePowerDemand(requestedEnginePower);
 
-			requestedEnginePower = LimitEnginePower(requestedEnginePower);
+			_currentState.EnginePower = LimitEnginePower(requestedEnginePower);
 
-			UpdateEngineState(requestedEnginePower);
+			if (!_currentState.EnginePower.IsEqual(requestedEnginePower)) {
+				return new ResponseFailOverload() { Delta = (_currentState.EnginePower - requestedEnginePower).Value() };
+			}
 
-			_currentState.EnginePower = requestedEnginePower; //todo + _currentState.EnginePowerLoss;
+			UpdateEngineState(_currentState.EnginePower);
+
+			// = requestedEnginePower; //todo + _currentState.EnginePowerLoss;
 			_currentState.EngineTorque = Formulas.PowerToTorque(_currentState.EnginePower,
 				_currentState.EngineSpeed);
 

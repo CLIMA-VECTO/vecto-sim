@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			var currentSpeed = Cockpit.VehicleSpeed();
+			var currentSpeed = DataBus.VehicleSpeed();
 
 			var requiredAverageSpeed = (targetVelocity + currentSpeed) / 2.0;
 			var requiredAcceleration =
@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected IResponse DoHandleRequest(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			if (!targetVelocity.IsEqual(0) || !Cockpit.VehicleSpeed().IsEqual(0)) {
+			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed().IsEqual(0)) {
 				throw new NotImplementedException("TargetVelocity or VehicleVelocity is not zero!");
 			}
 			var retVal = Next.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);

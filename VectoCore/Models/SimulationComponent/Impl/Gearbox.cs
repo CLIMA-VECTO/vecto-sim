@@ -1,8 +1,8 @@
 ﻿using System;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IGearboxCockpit
 
-		uint IGearboxCockpit.Gear()
+		uint IGearboxInfo.Gear()
 		{
 			throw new NotImplementedException();
 		}

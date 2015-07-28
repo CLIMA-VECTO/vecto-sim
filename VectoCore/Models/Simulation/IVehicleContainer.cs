@@ -1,5 +1,5 @@
 ﻿using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Simulation.Cockpit;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Utils;
 
@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 	/// Defines Methods for adding components, commiting a simulation step and finishing the simulation.
 	/// Also defines interfaces for all cockpit access to data.
 	/// </summary>
-	public interface IVehicleContainer : ICockpit
+	public interface IVehicleContainer : IDataBus
 	{
 		ISimulationOutPort GetCycleOutPort();
 
