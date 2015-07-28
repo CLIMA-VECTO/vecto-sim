@@ -292,8 +292,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public CycleData CycleData()
 		{
-			// TODO DistanceBasedDrivingCycle.CycleData
-			throw new NotImplementedException();
+			return new CycleData {
+				AbsTime = CurrentState.AbsTime,
+				AbsDistance = CurrentState.Distance,
+				LeftSample = CycleIntervalIterator.LeftSample,
+				RightSample = CycleIntervalIterator.RightSample
+			};
 		}
 	}
 }

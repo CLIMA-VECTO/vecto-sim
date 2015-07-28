@@ -10,7 +10,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	/// </summary>
 	public static class AuxSupplyPowerReader
 	{
-		private const string AuxSupplyPowerField = "Paux_";
+		private const string AuxSupplyPowerField = "Aux_";
 
 		/// <summary>
 		/// [W]. Reads Auxiliary Supply Power (defined by Fields.AuxiliarySupplyPower-Prefix).

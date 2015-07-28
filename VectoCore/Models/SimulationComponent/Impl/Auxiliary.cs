@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize()
 		{
-			throw new NotImplementedException();
+			return _outPort.Initialize();
 		}
 
 		#endregion
@@ -80,10 +80,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				sum += kv.Value;
 				// todo: aux write directauxiliary somewhere to moddata .... probably Padd column??
 				if (!string.IsNullOrWhiteSpace(kv.Key)) {
-					writer[kv.Key] = kv.Value.Value();
+					writer[kv.Key] = kv.Value;
 				}
 			}
-			writer[ModalResultField.Paux] = sum.Value();
+			writer[ModalResultField.Paux] = sum;
 		}
 
 		protected override void DoCommitSimulationStep() {}

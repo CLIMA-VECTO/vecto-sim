@@ -38,21 +38,25 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public void Finish() {}
 
-		public object Compute(string expression, string filter)
-		{
-			return Data.Compute(expression, filter);
-		}
-
 		public IEnumerable<T> GetValues<T>(ModalResultField key)
 		{
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>((int)key));
+		}
+
+		public IEnumerable<T> GetValues<T>(DataColumn col)
+		{
+			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
 		}
 
 		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
 
 		public void AddAuxiliary(string id)
 		{
-			Auxiliaries[id] = Data.Columns.Add(ModalResultField.Paux_ + id, typeof(double));
+			var auxColName = ModalResultField.Paux_ + id;
+			if (!Data.Columns.Contains(auxColName)) {
+				Auxiliaries[id] = Data.Columns.Add(auxColName, typeof(Watt));
+			}
+			Auxiliaries[id] = Data.Columns[auxColName];
 		}
 
 		public object this[ModalResultField key]

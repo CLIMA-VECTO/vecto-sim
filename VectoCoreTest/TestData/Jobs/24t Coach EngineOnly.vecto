@@ -15,7 +15,7 @@
       "../Cycles/Engine Only2.vdri",
       "../Cycles/Engine Only3.vdri"
     ],
-    "VACC": "TestData/Components/Coach.vacc",
+    "VACC": "../Components/Coach.vacc",
     "EngineOnlyMode": true,
     "StartStop": {
       "Enabled": false,

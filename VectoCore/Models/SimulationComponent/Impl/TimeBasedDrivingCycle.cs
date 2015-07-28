@@ -98,8 +98,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public CycleData CycleData()
 		{
-			// Todo: TimeBasedDrivingCycle.CycleData
-			throw new NotImplementedException();
+			//todo: leftsample, rightsample
+			return new CycleData {
+				AbsTime = 0.SI<Second>(),
+				AbsDistance = 0.SI<Meter>(),
+				LeftSample = null,
+				RightSample = null
+			};
 		}
 	}
 }

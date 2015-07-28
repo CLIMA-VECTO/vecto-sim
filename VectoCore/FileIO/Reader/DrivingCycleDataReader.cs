@@ -223,23 +223,6 @@ namespace TUGraz.VectoCore.FileIO.Reader
 			IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table);
 		}
 
-		/// <summary>
-		///     Reader for Auxiliary Supply Power.
-		/// </summary>
-		private static class AuxSupplyPowerReader
-		{
-			/// <summary>
-			///     [W]. Reads Auxiliary Supply Power (defined by Fields.AuxiliarySupplyPower-Prefix).
-			/// </summary>
-			public static Dictionary<string, Watt> Read(DataRow row)
-			{
-				return row.Table.Columns.Cast<DataColumn>().
-					Where(col => col.ColumnName.StartsWith(Fields.AuxiliarySupplyPower)).
-					ToDictionary(col => col.ColumnName.Substring(Fields.AuxiliarySupplyPower.Length - 1),
-						col => row.ParseDouble(col).SI().Kilo.Watt.Cast<Watt>());
-			}
-		}
-
 		internal class DistanceBasedDataParser : IDataParser
 		{
 			public IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)

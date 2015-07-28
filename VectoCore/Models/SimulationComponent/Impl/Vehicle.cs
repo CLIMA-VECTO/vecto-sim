@@ -50,6 +50,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			writer[ModalResultField.v_act] = (_previousState.Velocity + _currentState.Velocity) / 2;
 			writer[ModalResultField.dist] = (_previousState.Distance - _currentState.Distance) / 2;
+
+			// hint: take care to use correct velocity when writing the P... values in moddata
 		}
 
 		protected override void DoCommitSimulationStep()
@@ -89,7 +91,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Newton AirDragResistance()
 		{
-			var vAir = _currentState.Velocity;
+			var vAverage = (_previousState.Velocity + _currentState.Velocity) / 2;
+
+			var vAir = vAverage;
 
 			// todo: different CdA in different file versions!
 			var CdA = _data.CrossSectionArea * _data.DragCoefficient;
@@ -101,12 +105,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case CrossWindCorrectionMode.SpeedDependent:
 					var values = DeclarationData.AirDrag.Lookup(_data.VehicleCategory);
 					var curve = CalculateAirResistanceCurve(values);
-					CdA *= AirDragInterpolate(curve, _currentState.Velocity);
+					CdA *= AirDragInterpolate(curve, vAverage);
 					break;
 
 				// todo ask raphael: What is the air cd decl mode?
 				//case tCdMode.CdOfVdecl
-				//	  CdA = AirDragInterpolate(curve, _currentState.Velocity);
+				//	  CdA = AirDragInterpolate(curve, vAverage);
 				//	  break;
 
 				case CrossWindCorrectionMode.VAirBeta:

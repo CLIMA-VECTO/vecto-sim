@@ -61,9 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize()
 		{
-			// nothing to initialize here...
-			// TODO: _outPort.initialize();
-			throw new NotImplementedException();
+			return _outPort.Initialize();
 		}
 
 		#endregion

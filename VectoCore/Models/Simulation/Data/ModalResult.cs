@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom;
 using System.ComponentModel;
 using System.Data;
 using System.Reflection;
@@ -39,10 +40,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 						}
 
 						if (col.ColumnName.StartsWith(ModalResultField.Paux_.ToString()) && !modalResults.Columns.Contains(col.ColumnName)) {
-							modalResults.Columns.Add(col.ColumnName, typeof(double));
+							modalResults.Columns.Add(col.ColumnName, typeof(SI));
 						}
 
-						newRow.SetField(col.ColumnName, row.ParseDoubleOrGetDefault(col.ColumnName));
+						if (typeof(SI).IsAssignableFrom(modalResults.Columns[col.ColumnName].DataType)) {
+							newRow.SetField(col.ColumnName, row.ParseDoubleOrGetDefault(col.ColumnName).SI());
+						} else {
+							newRow.SetField(col.ColumnName, row.ParseDoubleOrGetDefault(col.ColumnName));
+						}
 					}
 					modalResults.Rows.Add(newRow);
 				} catch (VectoException ex) {
@@ -123,7 +128,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [kW]	Rotational acceleration power: Engine.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pa Eng [kW]")] PaEng,
+		[ModalResultField(typeof(SI), name: "Pa Eng", caption: "Pa Eng [kW]")] PaEng,
 
 		/// <summary>
 		///     [kW]	Total auxiliary power demand .
@@ -133,17 +138,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [g/h]	Fuel consumption from FC map..
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "FC-Map [g/h]")] FCMap,
+		[ModalResultField(typeof(SI), name: "FC-Map", caption: "FC-Map [g/h]")] FCMap,
 
 		/// <summary>
 		///     [g/h]	Fuel consumption after Auxiliary-Start/Stop Correction. (Based on FC.)
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "FC-AUXc [g/h]")] FCAUXc,
+		[ModalResultField(typeof(SI), name: "FC-AUXc", caption: "FC-AUXc [g/h]")] FCAUXc,
 
 		/// <summary>
 		///     [g/h]	Fuel consumption after WHTC Correction. (Based on FC-AUXc.)
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "FC-WHTCc [g/h]")] FCWHTCc,
+		[ModalResultField(typeof(SI), name: "FC-WHTCc", caption: "FC-WHTCc [g/h]")] FCWHTCc,
 
 		/// <summary>
 		///     [km]	Travelled distance.
@@ -179,27 +184,27 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [kW]	Gearbox losses.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Ploss GB [kW]")] PlossGB,
+		[ModalResultField(typeof(SI), name: "Ploss GB", caption: "Ploss GB [kW]")] PlossGB,
 
 		/// <summary>
 		///     [kW]	Losses in differential / axle transmission.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Ploss Diff [kW]")] PlossDiff,
+		[ModalResultField(typeof(SI), name: "Ploss Diff", caption: "Ploss Diff [kW]")] PlossDiff,
 
 		/// <summary>
 		///     [kW]	Retarder losses.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pa GB [kW]")] PlossRetarder,
+		[ModalResultField(typeof(SI), name: "Ploss Retarder", caption: "Ploss Retarder [kW]")] PlossRetarder,
 
 		/// <summary>
 		///     [kW]	Rotational acceleration power: Gearbox.
 		/// </summary>
-		[ModalResultField(typeof(SI), "Pa GB")] PaGB,
+		[ModalResultField(typeof(SI), name: "Pa GB", caption: "Pa GB [kW]")] PaGB,
 
 		/// <summary>
 		///     [kW]	Vehicle acceleration power.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pa Veh [kW]")] PaVeh,
+		[ModalResultField(typeof(SI), name: "Pa Veh", caption: "Pa Veh [kW]")] PaVeh,
 
 		/// <summary>
 		///     [kW]	Rolling resistance power demand.
@@ -234,12 +239,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [-]	    Torque converter speed ratio
 		/// </summary>
-		[ModalResultField(typeof(SI))] TCv,
+		[ModalResultField(typeof(SI), name: "TCν")] TCv,
 
 		/// <summary>
 		///     [-]	    Torque converter torque ratio
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "TCµ")] TCmu,
+		[ModalResultField(typeof(SI), name: "TCµ")] TCmu,
 
 		/// <summary>
 		///     [Nm]	Torque converter output torque

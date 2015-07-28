@@ -889,25 +889,25 @@ namespace TUGraz.VectoCore.Utils
 		public static bool operator <(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
-			return si1.Val < d;
+			return si1 != null && si1.Val < d;
 		}
 
 		public static bool operator >(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
-			return si1.Val > d;
+			return si1 != null && si1.Val > d;
 		}
 
 		public static bool operator <=(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
-			return si1.Val <= d;
+			return si1 != null && si1.Val <= d;
 		}
 
 		public static bool operator >=(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
-			return si1.Val >= d;
+			return si1 != null && si1.Val >= d;
 		}
 
 		#endregion
@@ -1056,7 +1056,6 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		#endregion
-
 
 		public Scalar Scalar()
 		{

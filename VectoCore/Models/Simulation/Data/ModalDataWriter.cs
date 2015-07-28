@@ -93,16 +93,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		}
 
 
-		public object Compute(string expression, string filter)
+		public IEnumerable<T> GetValues<T>(DataColumn col)
 		{
-			return Data.Compute(expression, filter);
+			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
 		}
 
 		public IEnumerable<T> GetValues<T>(ModalResultField key)
 		{
-			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>((int)key));
+			return GetValues<T>(Data.Columns[(int)key]);
 		}
-
 
 		public object this[ModalResultField key]
 		{
@@ -121,7 +120,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public void AddAuxiliary(string id)
 		{
-			Auxiliaries[id] = Data.Columns.Add(ModalResultField.Paux_ + id, typeof(double));
+			Auxiliaries[id] = Data.Columns.Add(ModalResultField.Paux_ + id, typeof(SI));
 		}
 	}
 }

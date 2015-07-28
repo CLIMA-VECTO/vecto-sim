@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.Configuration
 				public const string Fan = "FAN";
 				public const string SteeringPump = "STP";
 				public const string ElectricSystem = "ES";
-				public const string HeatingVentilationAirCondition = "AS";
+				public const string HeatingVentilationAirCondition = "AC";
 				public const string PneumaticSystem = "PS";
 			}
 

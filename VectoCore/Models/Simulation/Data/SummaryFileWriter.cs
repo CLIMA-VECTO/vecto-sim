@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -95,12 +96,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			row[JOB] = jobName;
 			row[INPUTFILE] = jobFileName;
 			row[CYCLE] = cycleFileName;
-			row[TIME] = data.Compute("Max(time)", "");
-			row[PPOS] = data.Compute("Avg(Pe_eng)", "Pe_eng > 0");
-			row[PNEG] = data.Compute("Avg(Pe_eng)", "Pe_eng < 0");
-			row[FCMAP] = data.Compute("Avg(FC)", "");
-			row[FCAUXC] = data.Compute("Avg([FC-AUXc])", "");
-			row[FCWHTCC] = data.Compute("Avg([FC-WHTCc])", "");
+			row[TIME] = data.GetValues<SI>(ModalResultField.time).Max();
+			row[PPOS] = data.GetValues<SI>(ModalResultField.Pe_eng).Where(x => x > 0).ToDouble().Average();
+			row[PNEG] = data.GetValues<SI>(ModalResultField.Pe_eng).Where(x => x < 0).ToDouble().Average();
+			row[FCMAP] = data.GetValues<SI>(ModalResultField.FCMap).ToDouble().Average();
+			row[FCAUXC] = data.GetValues<SI>(ModalResultField.FCAUXc).ToDouble().Average();
+			row[FCWHTCC] = data.GetValues<SI>(ModalResultField.FCWHTCc).ToDouble().Average();
 
 			WriteAuxiliaries(data, row);
 
@@ -111,14 +112,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		{
 			_auxColumns = _auxColumns.Union(data.Auxiliaries.Select(kv => "Eaux_" + kv.Key + " [kwh]")).ToList();
 
-			var sum = 0.0;
+			double? sum = 0.0;
 			foreach (var aux in data.Auxiliaries) {
 				var colName = "Eaux_" + aux.Key + " [kWh]";
 				if (!_table.Columns.Contains(colName)) {
 					_table.Columns.Add(colName, typeof(double));
 				}
 
-				var currentSum = (double)data.Compute("Sum(" + aux.Value.ColumnName + ")", "");
+				var currentSum = data.Sum(aux.Value);
 				row[colName] = currentSum;
 				sum += currentSum;
 			}
@@ -136,25 +137,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			row[JOB] = jobName;
 			row[INPUTFILE] = jobFileName;
 			row[CYCLE] = cycleFileName;
-			row[TIME] = data.Compute("Max(time)", "");
-			row[DISTANCE] = data.Compute("Max(dist)", "");
-			row[SPEED] = data.Compute("Avg(v_act)", "");
-			row[PPOS] = data.Compute("Avg(Pe_eng)", "Pe_eng > 0");
-			row[PNEG] = data.Compute("Avg(Pe_eng)", "Pe_eng < 0");
-			row[FCMAP] = data.Compute("Avg(FCMap)", "");
-			row[FCAUXC] = data.Compute("Avg(FCAUXc)", "");
-			row[FCWHTCC] = data.Compute("Avg(FCWHTCc)", "");
-			row[PBRAKE] = data.Compute("Avg(Pbrake)", "");
-			row[EPOSICE] = data.Compute("Avg(Pe_eng)", "Pe_eng > 0");
-			row[ENEGICE] = data.Compute("Avg(Pe_eng)", "Pe_eng < 0");
-			row[EAIR] = data.Compute("Sum(Pair)", "");
-			row[EROLL] = data.Compute("Sum(Proll)", "");
-			row[EGRAD] = data.Compute("Sum(Pgrad)", "");
-			row[EAUX] = data.Compute("Sum(Paux)", "");
-			row[EBRAKE] = data.Compute("Sum(Pbrake)", "");
-			row[ETRANSM] = data.Compute("Sum(PlossDiff) + Sum(PlossGB)", "");
-			row[ERETARDER] = data.Compute("Sum(PlossRetarder)", "");
-			row[EACC] = data.Compute("Sum(PaEng)+Sum(PaGB)", "");
+			row[TIME] = data.Max(ModalResultField.time).DefaultIfNull();
+			row[DISTANCE] = data.Max(ModalResultField.dist).DefaultIfNull();
+			row[SPEED] = data.Average(ModalResultField.v_act).DefaultIfNull();
+			row[PPOS] = data.Average(ModalResultField.Pe_eng, x => x > 0).DefaultIfNull();
+			row[PNEG] = data.Average(ModalResultField.Pe_eng, x => x < 0).DefaultIfNull();
+			row[FCMAP] = data.Average(ModalResultField.FCMap).DefaultIfNull();
+			row[FCAUXC] = data.Average(ModalResultField.FCAUXc).DefaultIfNull();
+			row[FCWHTCC] = data.Average(ModalResultField.FCWHTCc).DefaultIfNull();
+			row[PBRAKE] = data.Average(ModalResultField.Pbrake).DefaultIfNull();
+			row[EPOSICE] = data.Average(ModalResultField.Pe_eng, x => x > 0).DefaultIfNull();
+			row[ENEGICE] = data.Average(ModalResultField.Pe_eng, x => x < 0).DefaultIfNull();
+			row[EAIR] = data.Sum(ModalResultField.Pair).DefaultIfNull();
+			row[EROLL] = data.Sum(ModalResultField.Proll).DefaultIfNull();
+			row[EGRAD] = data.Sum(ModalResultField.Pgrad).DefaultIfNull();
+			row[EAUX] = data.Sum(ModalResultField.Paux).DefaultIfNull();
+			row[EBRAKE] = data.Sum(ModalResultField.Pbrake).DefaultIfNull();
+			row[ETRANSM] = (data.Sum(ModalResultField.PlossDiff) + data.Sum(ModalResultField.PlossGB)).DefaultIfNull();
+			row[ERETARDER] = data.Sum(ModalResultField.PlossRetarder).DefaultIfNull();
+			row[EACC] = (data.Sum(ModalResultField.PaEng) + data.Sum(ModalResultField.PaGB)).DefaultIfNull();
 
 			//todo altitude - calculate when reading the cycle file, add column for altitude
 			//row["∆altitude [m]"] = Data.Rows[Data.Rows.Count - 1].Field<double>("altitude") -
@@ -166,32 +167,32 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			row[MASS] = vehicleMass == null ? "" : vehicleMass.Value().ToString(CultureInfo.InvariantCulture);
 			row[LOADING] = vehicleLoading == null ? "" : vehicleLoading.Value().ToString(CultureInfo.InvariantCulture);
 
-			var dtValues = data.GetValues<double>(ModalResultField.simulationInterval).ToList();
-			var accValues = data.GetValues<double?>(ModalResultField.acc);
+			var dtValues = data.GetValues<SI>(ModalResultField.simulationInterval).ToList();
+			var accValues = data.GetValues<SI>(ModalResultField.acc);
 			var accelerations = CalculateAverageOverSeconds(dtValues, accValues).ToList();
 			if (accelerations.Any()) {
-				row[A] = accelerations.Average();
+				row[A] = accelerations.ToDouble().Average();
 			}
 
 			var acceleration3SecondAverage = Calculate3SecondAverage(accelerations).ToList();
 
-			row[APOS] = acceleration3SecondAverage.Where(x => x > 0.125).DefaultIfEmpty(0).Average();
-			row[ANEG] = acceleration3SecondAverage.Where(x => x < -0.125).DefaultIfEmpty(0).Average();
+			row[APOS] = acceleration3SecondAverage.Average(x => x > 0.125).DefaultIfNull();
+			row[ANEG] = acceleration3SecondAverage.Average(x => x < -0.125).DefaultIfNull();
 			row[PACC] = 100.0 * acceleration3SecondAverage.Count(x => x > 0.125) / acceleration3SecondAverage.Count;
 			row[PDEC] = 100.0 * acceleration3SecondAverage.Count(x => x < -0.125) / acceleration3SecondAverage.Count;
 			row[PCRUISE] = 100.0 * acceleration3SecondAverage.Count(x => x < 0.125 && x > -0.125) /
 							acceleration3SecondAverage.Count;
 
-			var pStopTime = data.GetValues<double?>(ModalResultField.v_act)
+			var pStopTime = data.GetValues<SI>(ModalResultField.v_act)
 				.Zip(dtValues, (velocity, dt) => new { velocity, dt })
 				.Where(x => x.velocity < 0.1)
-				.Sum(x => x.dt);
-			row[PSTOP] = 100.0 * pStopTime / dtValues.Sum();
+				.Sum(x => x.dt.Value());
+			row[PSTOP] = 100.0 * pStopTime / dtValues.ToDouble().Sum();
 
 			_table.Rows.Add(row);
 		}
 
-		private static IEnumerable<double> Calculate3SecondAverage(IReadOnlyList<double> accelerations)
+		private static IEnumerable<SI> Calculate3SecondAverage(IReadOnlyList<SI> accelerations)
 		{
 			if (accelerations.Count >= 3) {
 				var runningAverage = (accelerations[0] + accelerations[1] + accelerations[2]) / 3.0;
@@ -204,11 +205,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		}
 
 
-		private static IEnumerable<double> CalculateAverageOverSeconds(IEnumerable<double> dtValues,
-			IEnumerable<double?> accValues)
+		private static IEnumerable<SI> CalculateAverageOverSeconds(IEnumerable<SI> dtValues,
+			IEnumerable<SI> accValues)
 		{
-			var dtSum = 0.0;
-			var accSum = 0.0;
+			var dtSum = 0.SI().Second;
+			var accSum = 0.SI().Meter.Per.Second;
 			var acceleration = dtValues.Zip(accValues, (dt, acc) => new { dt, acc }).ToList();
 			foreach (var x in acceleration.ToList()) {
 				var currentX = x;
@@ -216,13 +217,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				while (dtSum + currentX.dt >= 1) {
 					var splitX = new { dt = 1 - dtSum, currentX.acc };
 					yield return accSum;
-					accSum = 0.0;
-					dtSum = 0.0;
+					dtSum = 0.SI<Second>();
+					accSum = 0.SI<MeterPerSecond>();
 
 					currentX = new { dt = currentX.dt - splitX.dt, currentX.acc };
 				}
 				if (currentX.dt > 0) {
-					accSum += currentX.dt * currentX.acc ?? 0.0;
+					accSum += currentX.dt * currentX.acc ?? 0.SI();
 					dtSum += currentX.dt;
 				}
 			}

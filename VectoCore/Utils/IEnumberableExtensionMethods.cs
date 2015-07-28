@@ -11,6 +11,11 @@ namespace TUGraz.VectoCore.Utils
 			return self.Select(StringExtensionMethods.ToDouble);
 		}
 
+		public static IEnumerable<double> ToDouble(this IEnumerable<SI> self)
+		{
+			return self.Select(x => x.Value());
+		}
+
 		/// <summary>
 		/// Wraps this object instance into an IEnumerable.
 		/// </summary>

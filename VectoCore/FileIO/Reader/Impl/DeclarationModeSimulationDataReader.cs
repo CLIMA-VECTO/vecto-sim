@@ -35,8 +35,6 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			foreach (var mission in segment.Missions) {
 				foreach (var loading in mission.Loadings) {
 					var engineData = dao.CreateEngineData(Engine);
-					var parser = new DrivingCycleDataReader();
-					var data = VectoCSVFile.ReadStream(mission.CycleFile);
 
 					var simulationRunData = new VectoRunData {
 						VehicleData = dao.CreateVehicleData(Vehicle, mission, loading),
@@ -46,7 +44,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 						Cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, DrivingCycleData.CycleType.DistanceBased),
 						DriverData = driverdata,
 						IsEngineOnly = IsEngineOnly,
-						JobFileName = Job.JobFile,
+						JobFileName = Job.JobFile
 					};
 					simulationRunData.VehicleData.VehicleClass = segment.VehicleClass;
 					yield return simulationRunData;
@@ -132,28 +130,25 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					Gearbox.BasePath = Path.GetDirectoryName(file);
 					break;
 				default:
-					throw new UnsupportedFileVersionException("Unsopported Version of gearbox-file. Got version " + fileInfo.Version);
+					throw new UnsupportedFileVersionException("Unsupported Version of gearbox-file. Got version " + fileInfo.Version);
 			}
 		}
 
 		private void ReadAuxiliary(IEnumerable<VectoJobFileV2Declaration.DataBodyDecl.AuxDataDecl> auxiliaries)
 		{
-			// get all constant auxiliaries defined in Declaration mode
-			// todo: catch exception when auxiliaries are not found
-			// todo: catch exception when to much auxiliaries are present
 			var aux = DeclarationData.AuxiliaryIDs().Select(id => {
 				var a = auxiliaries.First(decl => decl.ID == id);
 				return new VectoRunData.AuxData {
 					ID = a.ID,
 					Type = AuxiliaryTypeHelper.Parse(a.Type),
 					Technology = a.Technology,
-					TechList = a.TechList.ToArray(),
+					TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
 					DemandType = AuxiliaryDemandType.Constant
 				};
 			});
 
 			// add a direct auxiliary
-			aux = aux.Concat(new VectoRunData.AuxData { DemandType = AuxiliaryDemandType.Direct }.ToEnumerable());
+			aux = aux.Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable());
 
 			Aux = aux.ToArray();
 		}

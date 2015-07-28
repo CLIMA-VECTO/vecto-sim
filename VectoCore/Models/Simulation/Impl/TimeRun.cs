@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected override IResponse Initialize()
 		{
-			throw new System.NotImplementedException();
+			return CyclePort.Initialize();
 		}
 	}
 }

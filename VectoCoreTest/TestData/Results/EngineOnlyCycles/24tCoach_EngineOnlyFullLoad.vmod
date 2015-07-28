@@ -1,4 +1,4 @@
-time [s], simulation_interval [s], n [1/min], Tq_eng [Nm], Tq_clutch [Nm], Tq_full [Nm], Tq_drag [Nm], Pe_eng [kW], Pe_full [kW], Pe_drag [kW], Pe_clutch [kW], Pa [Eng], Paux [kW], FC [g/h], FC-AUXc [g/h], FC-WHTCc [g/h], dist, v_act, v_targ, acc, grad, Gear, Ploss GB, Ploss Diff, Ploss Retarder, Pa GB, Pa Veh, Proll, Pair, Pgrad, Pwheel, Pbrake, Paux_xxx, TCν, TCµ, TC_M_Out, TC_n_Out
+time [s], simulation_interval [s], n [1/min], Tq_eng [Nm], Tq_clutch [Nm], Tq_full [Nm], Tq_drag [Nm], Pe_eng [kW], Pe_full [kW], Pe_drag [kW], Pe_clutch [kW], Pa Eng [kW], Paux [kW], FC-Map [g/h], FC-AUXc [g/h], FC-WHTCc [g/h], dist, v_act, v_targ, acc, grad, Gear, Ploss GB, Ploss Diff, Ploss Retarder, Pa GB, Pa Veh, Proll, Pair, Pgrad, Pwheel, Pbrake, Paux_xxx, TCν, TCµ, TC_M_Out, TC_n_Out
 0.5,1,600,15.386822685582,,196.810428690233,-148,966.782582222265,12365.9639384619,-9299.11425462579,,966.782582222265,0,1605.0978813996,,,,,,,,,,,,,,,,,,,,,,,
 1.5,1,600,0,,1042.76767257274,-148,0,65519.0251911089,-9299.11425462579,,0,0,1459,,,,,,,,,,,,,,,,,,,,,,,
 2.5,1,600,0,,1039.86147716225,-148,0,65336.4235480788,-9299.11425462579,,0,0,1459,,,,,,,,,,,,,,,,,,,,,,,
