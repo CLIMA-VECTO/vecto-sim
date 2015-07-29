@@ -47,10 +47,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var speed = 1400.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();
 			var t = 0.SI<Second>();
+			var dt = 1.SI<Second>();
 
 			for (var i = 0; i < data.Entries.Count; i++) {
 				aux.OutPort().Request(t, t, torque, speed);
-				container.CommitSimulationStep(t, t);
+				container.CommitSimulationStep(t, dt);
+				t += dt;
 			}
 
 			container.FinishSimulation();

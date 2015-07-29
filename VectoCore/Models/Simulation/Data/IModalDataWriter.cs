@@ -46,49 +46,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 	public static class ModalDataWriterExtensions
 	{
-		public static double? Max(this IModalDataWriter data, ModalResultField field)
+		public static SI Max(this IModalDataWriter data, ModalResultField field)
 		{
-			var val = data.GetValues<SI>(field).Max();
-			if (val != null) {
-				return val.Value();
-			}
-			return null;
+			return data.GetValues<SI>(field).Max();
+		}
+		
+		public static SI Average(this IModalDataWriter data, ModalResultField field, Func<SI, bool> filter = null)
+		{
+			return data.GetValues<SI>(field).Average(filter);
 		}
 
-		public static double? Average(this IModalDataWriter data, ModalResultField field, Func<SI, bool> filter = null)
+		public static SI Sum(this IModalDataWriter data, ModalResultField field, Func<SI, bool> filter = null)
 		{
-			var val = data.GetValues<SI>(field).Where(filter ?? (x => x != null)).ToList();
-			if (val.Any()) {
-				return val.ToDouble().Average();
-			}
-			return null;
+			return data.GetValues<SI>(field).Where(filter ?? (x => x != null)).Sum();
 		}
 
-		public static double? Sum(this IModalDataWriter data, ModalResultField field, Func<SI, bool> filter = null)
+		public static SI Sum(this IModalDataWriter data, DataColumn col, Func<SI, bool> filter = null)
 		{
-			var val = data.GetValues<SI>(field).Where(filter ?? (x => x != null)).ToList();
-			if (val.Any()) {
-				return val.ToDouble().Sum();
-			}
-			return null;
+			return data.GetValues<SI>(col).Where(filter ?? (x => x != null)).Sum();
 		}
 
-		public static double? Sum(this IModalDataWriter data, DataColumn col, Func<SI, bool> filter = null)
+		public static SI Average(this IEnumerable<SI> self, Func<SI, bool> filter = null)
 		{
-			var val = data.GetValues<SI>(col).Where(filter ?? (x => x != null)).ToList();
-			if (val.Any()) {
-				return val.ToDouble().Sum();
-			}
-			return null;
-		}
-
-		public static double? Average(this IEnumerable<SI> self, Func<SI, bool> filter = null)
-		{
-			var val = self.Where(filter ?? (x => x != null)).ToList();
-			if (val.Any()) {
-				return val.ToDouble().Average();
-			}
-			return null;
+			var values = self.Where(filter ?? (x => x != null)).ToList();
+			return values.Any() ? values.Sum() / values.Count : null;
 		}
 
 		public static object DefaultIfNull(this object self)
