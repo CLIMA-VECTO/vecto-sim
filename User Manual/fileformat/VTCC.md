@@ -30,7 +30,7 @@ The torque converter characteristics must also be defined for speed ratios of mo
 File Format
 -----------
 
-The file uses the [VECTO CSV format](index.html).
+The file uses the [VECTO CSV format](#csv-format).
 
 Format:
 :	-   Three columns

@@ -1,17 +1,14 @@
-
 Auxiliary Dialog
 ================
 
-
 ![](pics/VECTO-Editor_Aux.png)
-
 
 Description
 -----------
 
-The Auxiliary Dialog is used to configure auxiliaries. Auxiliary efficieny is defined using an [Auxiliary Input File (.vaux)](../fileformat/VAUX.html). See [Auxiliaries](../general/Auxiliaries.html) for details on how the power demand for each auxiliary is calculated.
+The Auxiliary Dialog is used to configure auxiliaries. Auxiliary efficieny is defined using an [Auxiliary Input File (.vaux)](#auxiliary-input-file-.vaux). See [Auxiliaries](#auxiliaries) for details on how the power demand for each auxiliary is calculated.
 
-In [Declaration Mode](../general/calc_Declaration.html) only the Technology for each auxiliary has to be selected.
+In [Declaration Mode](#declaration-mode) only the Technology for each auxiliary has to be selected.
 
 
 Settings
@@ -23,14 +20,14 @@ Type
 ID
 :	The ID string is required to link the auxiliary to the corresponding supply power definition in the driving cycle. The ID must not contain space or special characters text and numbers only). The ID is not case sensitive (e.g. "ALT" will link to "Alt" or "alt", etc.)
 ***Example*** *: Auxiliary "ALT" is linked to the column "&lt;AUX\_ALT&gt;" in the driving cylce.*
-See [Auxiliaries](../general/Auxiliaries.html) for details.
+See [Auxiliaries](#auxiliaries) for details.
 
 Input File
-:	Path to the [Auxiliary File (.vaux)](../fileformat/VAUX.html).
+:	Path to the [Auxiliary File (.vaux)](#auxiliary-input-file-.vaux).
 
 Controls
 --------
 
-![ok](../pics/misc/OK.png) ***Save and close***
+![ok](pics/OK.png) ***Save and close***
 
-![cancel](../pics/misc/Cancel.png) ***Close without saving***
+![cancel](pics/Cancel.png) ***Close without saving***

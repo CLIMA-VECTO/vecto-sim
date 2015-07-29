@@ -1,7 +1,7 @@
 Modal Results (.vmod)
 =====================
 
-Modal results are only created if enabled in the [Options](../GUI/mainform.html) tab. One file is created for each calculation and stored in the same directory as the .vecto file.
+Modal results are only created if enabled in the [Options](#main-form) tab. One file is created for each calculation and stored in the same directory as the .vecto file.
 
 ***Quantities:***
 
@@ -22,7 +22,7 @@ Modal results are only created if enabled in the [Options](../GUI/mainform.html)
 | Pe_full         | [kW]     | Engine full load power. |
 | Pe_drag         | [kW]     | Engine drag power. |
 | Pe_clutch       | [kW]     | Engine power at clutch (equals **Pe** minus loss due to rotational inertia **Pa Eng**). |
-| Gear            | [-]      | Gear. "0" = clutch opened / neutral. "0.5" = lock-up clutch is open (AT with torque converter only, see [Gearbox](../GUI/GBX-Editor.html)) |
+| Gear            | [-]      | Gear. "0" = clutch opened / neutral.|
 | Ploss GB        | [kW]     | Gearbox losses. |
 | Ploss Diff      | [kW]     | Losses in differential / axle transmission. |
 | Ploss Retrader  | [kW]     | Retarder losses. |
@@ -35,10 +35,10 @@ Modal results are only created if enabled in the [Options](../GUI/mainform.html)
 | Paux            | [kW]     | Total auxiliary power demand. |
 | Pwheel          | [kW]     | Total power demand at wheel = sum of rolling, air, acceleration and road gradient resistance. |
 | Pbrake          | [kW]     | Brake power. Drag power is included in **Pe**. |
-| Paux_xxx        | [kW]     | Power demand of Auxiliary with ID xxx. See also [Aux Dialog](../GUI/VECTO-Editor_Aux.html) and [Driving Cycle](../GUI/VDRI.html). |
-| FC              | [g/h]    | Fuel consumption from FC map.. |
-| FC-AUXc         | [g/h]    | Fuel consumption after [Auxiliary-Start/Stop Correction](../general/FC.html). (Based on FC.) |
-| FC-WHTCc        | [g/h]    | Fuel consumption after [WHTC Correction](../general/FC.html). (Based on FC-AUXc.) |
+| Paux_xxx        | [kW]     | Power demand of Auxiliary with ID xxx. See also [Aux Dialog](#auxiliary-dialog) and [Driving Cycle](#driving-cycle-.vdri). |
+| FC-Map            | [g/h]    | Fuel consumption from FC map. |
+| FC-AUXc         | [g/h]    | Fuel consumption after [Auxiliary-Start/Stop Correction](#fuel-consumption-calculation). (Based on FC.) |
+| FC-WHTCc        | [g/h]    | Fuel consumption after [WHTC Correction](#fuel-consumption-calculation). (Based on FC-AUXc.) |
 | TCv             | [-]      | Torque converter speed ratio |
 | TCµ             | [-]      | Torque converter torque ratio |
 | TC_M_Out        | [Nm]     | Torque converter output torque |

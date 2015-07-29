@@ -7,7 +7,7 @@ Graph Window
 Description
 -----------
 
-The Graph Window allows to visualise [modal results files (.vmod)](../fileformat/VMOD.html). Multiple windows can be open at the same time to display different files.
+The Graph Window allows to visualise [modal results files (.vmod)](#modal-results-.vmod). Multiple windows can be open at the same time to display different files.
 
 Note that the graph does **not** update automatically if the results file has changed.
 
@@ -15,7 +15,7 @@ Note that the graph does **not** update automatically if the results file has ch
 Channels
 --------
 
-Use the ![add](../pics/icons/plus-circle-icon.png) and ![remove](../pics/icons/minus-circle-icon.png) buttons to add or remove channels. Doubleclick entries to edit existing channels.
+Use the ![add](pics/plus-circle-icon.png) and ![remove](pics/minus-circle-icon.png) buttons to add or remove channels. Doubleclick entries to edit existing channels.
 
 Each channel can be plotted either on the left or on the right Y Axis. Use the checkbox to disable channels in the graph.
 
@@ -41,8 +41,8 @@ Reset button
 Controls
 --------
 
-![open](../pics/icons/Open-icon.png) ***Open a .vmod file***
+![open](pics/Open-icon.png) ***Open a .vmod file***
 
-![](../pics/icons/application-add-icon.png) ***Open a new Graph Window***
+![](pics/application-add-icon.png) ***Open a new Graph Window***
 
-![](../pics/icons/Refresh-icon.png) ***Reload the currently open file***
+![](pics/Refresh-icon.png) ***Reload the currently open file***

@@ -1,5 +1,0 @@
----
-title: VECTO User Manual
-...
-
-

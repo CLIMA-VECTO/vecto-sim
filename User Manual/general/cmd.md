@@ -1,4 +1,3 @@
-
 Command Line Arguments
 ======================
 
@@ -47,4 +46,4 @@ Opening files
 If the file has one of the following extensions it is opened with the associated editor dialog: .vecto, .vgbx, .veng, .vveh. Note: if more than one .vecto file is provided they will be loaded in the file list (replacing the pre-loaded list\*) instead.
 
 
- *pre-loaded files: When VECTO starts it loads the file lists (.vecto, .vdri) of the last session, see [Application Files](../fileformat/App.html). These files can be changes manually if VECTO is not running.
+ *pre-loaded files: When VECTO starts it loads the file lists (.vecto, .vdri) of the last session, see [Application Files](#application-files). These files can be changes manually if VECTO is not running.

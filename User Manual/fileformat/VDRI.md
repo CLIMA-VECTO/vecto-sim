@@ -7,26 +7,27 @@ Important Notes
 ---------------
 
 - For distance-based cycles there is a minimum distance-step of 1[m] required. The calculation will abort if larger steps are used.
-- Time-based cycles can be defined in any given time resolution, including variable time steps. If the time identifier "<t>" is not used the data will be interpreted in 1[s] resolution (1Hz).
+- Time-based cycles can be defined in any given time resolution, including variable time steps. If the time identifier "\<t\>" is not used the data will be interpreted in 1[s] resolution (1Hz).
 
 Supported Identifiers
 ---------------------
 
 | Identifier | Quantity | Unit   | Description                                     
 | ---------- | -------- | ------ | ------------------------------------------------
-| \<s\> 		 | Distance	| [m]    | Travelled distance used for distance-based cycles. If \<t\> is also defined this column will be ignored.
-| \<t\>        | Time     | [s]    | Used for time-based cycles. If neither this nor the distance \<s\> is defined the data will be interpreted as 1Hz.
-| \<v\> | Vehicle Speed   | [km/h] | Required except for [Engine Only Mode](../general/EngOnlyMode.html) calculations.
+| **\<s\>** 		 | Distance	| [m]    | Travelled distance used for distance-based cycles. If \<t\> is also defined this column will be ignored.
+| **\<t\>**        | Time     | [s]    | Used for time-based cycles. If neither this nor the distance \<s\> is defined the data will be interpreted as 1Hz.
+| **\<v\>** | Vehicle Speed   | [km/h] | Required except for [Engine Only Mode](#engine-only-mode) and [P~wheel~-Input](#pwheel-input-sico-mode) calculations.
 | **\<grad\>** | Road Gradient | \[%\] | Optional.
 | **\<stop\>** | Stopping Time | \[s\] | Required for distance-based cycles. Not used in time based cycles. \<stop\> defines the time the vehicle spends in stop phases.
-| **\<Aux_xxx\>** | Auxiliary Supply Power | \[kW\] | Supply Power input for each auxiliary defined in the [.vecto file](../GUI/VECTO-Editor.html) where xxx matches the ID of the corresponding [Auxiliary](../GUI/VECTO-Editor_Aux.html). ID's are not case sensitive and must not contain space or special characters.
+| **\<Aux_xxx\>** | Auxiliary Supply Power | \[kW\] | Supply Power input for each auxiliary defined in the [.vecto file](#job-editor) where xxx matches the ID of the corresponding [Auxiliary](#auxiliary-dialog). ID's are not case sensitive and must not contain space or special characters.
 | **\<n\>** | Engine Speed | \[rpm\] | If \<n\> is defined VECTO uses that instead of the calculated engine speed value.
 | **\<gear\>** | Gear	| \[-\] | Gear input. Overwrites the gear shift model.
-| **\<Padd\>** | Additional Aux Power Demand | \[kW\]	| This power input will be directly added to the engine power in addition to possible other auxiliaries. Also used in [Engine Only Mode](../general/EngOnlyMode.html).
-| **\<vair_res\>** | Air speed relative to vehicle | \[km/h\] | Only required if [**Cross Wind Correction**](../general/cd.html) is set to **Vair & Beta Input**.
-| **\<vair_beta\>** | Wind Yaw Angle | \[°\] | Only required if [**Cross Wind Correction**](../general/cd.html) is set to **Vair & Beta Input**.
-| **\<Pe\>** | Engine power | \[kW\] | Effective engine power at clutch. Only required in [Engine Only Mode](../general/EngOnlyMode.html). Alternatively torque <Me> can be defined. Use **\<DRAG>** to define motoring operation.
-| **\<Pwheel\>** | Power at wheels | \[kW\] | Overwrites power calculation. Requires Gear and Engine Speed input.
+| **\<Padd\>** | Additional Aux Power Demand | \[kW\]	| This power input will be directly added to the engine power in addition to possible other auxiliaries. Also used in [Engine Only Mode](#engine-only-mode).
+| **\<vair_res\>** | Air speed relative to vehicle | \[km/h\] | Only required if [**Cross Wind Correction**](#cross-wind-correction) is set to **Vair & Beta Input**.
+| **\<vair_beta\>** | Wind Yaw Angle | \[°\] | Only required if [**Cross Wind Correction**](#cross-wind-correction) is set to **Vair & Beta Input**.
+| **\<Pe\>** | Engine power | \[kW\] | Effective engine power at clutch. Only required in [Engine Only Mode](#engine-only-mode). Alternatively torque <Me> can be defined. Use **\<DRAG>** to define motoring operation.
+| **\<Me\>** | Engine torque | \[Nm\] | Effective engine torque at clutch. Only required in [Engine Only Mode](#engine-only-mode). Alternatively power <Pe> can be defined. Use **\<DRAG\>** to define motoring operation.
+| **\<Pwheel\>** | Power at wheels | \[kW\] | Overwrites power calculation. Requires Gear and Engine Speed input.Cycle must be time based.
 
 Examples
 --------
@@ -77,5 +78,3 @@ The demo data provided with VECTO contains several .vdri files that may be used 
 |16|26.56975|-0.057649533|1709.25 | 22.5  | -8   |0.476     |4.999156225
 |17|31.6701 |-0.056915608|1966.75 | 32.22 | -11  |0.504     |5.889710204
 |18|36.98445|-0.06826105 |2250    | 38.232| -5   |0.504     |6.917938049
-
-

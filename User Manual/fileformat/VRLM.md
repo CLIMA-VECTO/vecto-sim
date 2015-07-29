@@ -1,12 +1,12 @@
 Retarder Loss Torque Input File (.vrlm)
 =======================================
 
-This file is used to define retarder idling losses. It can be used for primary and secondary retarders and must be set in the [Vehicle File](../GUI/VEH-Editor.html).
+This file is used to define retarder idling losses. It can be used for primary and secondary retarders and must be set in the [Vehicle File](#vehicle-editor).
 
 File Format
 -----------
 
-The file uses the [VECTO CSV format](index.html).
+The file uses the [VECTO CSV format](#csv-format).
 
 Format:
 : -   Two columns

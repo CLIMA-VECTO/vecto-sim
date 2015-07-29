@@ -1,12 +1,12 @@
 Fuel Consumption Map (.vmap)
 ============================
 
-The FC map is used to interpolate the base fuel consumption before corrections are applied. For details see [Fuel Consumption Calculation](../general/FC.html).
+The FC map is used to interpolate the base fuel consumption before corrections are applied. For details see [Fuel Consumption Calculation](#fuel-consumption-calculation).
 
 File Format
 -----------
 
-The file uses the [VECTO CSV format](index.html).
+The file uses the [VECTO CSV format](#csv-format).
 
 Format:
 : -   Three columns

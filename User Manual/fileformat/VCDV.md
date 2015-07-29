@@ -2,12 +2,12 @@ Speed Dependent Cross Wind Correction Input File (.vcdv)
 ========================================================
 
 
-The file is needed for speed dependent [Cross Wind Correction](../general/cd.html).
+The file is needed for speed dependent [Cross Wind Correction](#cross-wind-correction).
 
  File Format
 ------------
 
-The file uses the [VECTO CSV format](index.html).
+The file uses the [VECTO CSV format](#csv-format).
 
 Format:
 : -   Two columns

@@ -2,7 +2,7 @@ Standard Mode
 =============
 
 
-This is the default calculation mode in VECTO. It is active when both [Batch](calc_BATCH.html) and [Declaration](calc_Declaration.html) Mode are disabled.  In this mode a predefined list of job files (.vecto) is run. Each job file defines a vehicle and a list of driving cycles.
+This is the default calculation mode in VECTO. It is active when both [Batch](#batch-mode) and [Declaration](#declaration-mode) Mode are disabled.  In this mode a predefined list of job files (.vecto) is run. Each job file defines a vehicle and a list of driving cycles.
 
 Requirements
 ------------

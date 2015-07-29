@@ -1,7 +1,13 @@
-REM for /R "." %%f in (*.md) do pandoc -s -f markdown -t latex "%%f" -o "%%~dpf%%~nf.pdf"
-REM for /R "." %%f in (*.md) do pandoc -s -f markdown -t docbook "%%f" -o "%%~dpf%%~nf.db"
-for /R "." %%f in (*.md) do pandoc -f markdown --mathjax -t html -H header.txt "%%f" -o "%%~dpf%%~nf.html"
-REM for /R "." %%f in (*.md) do pandoc -s -f markdown -t docx "%%f" -o "%%~dpf%%~nf.docx"
-REM for /R "." %%f in (*.md) do pandoc -s -f markdown -t asciidoc "%%f" -o "%%~dpf%%~nf.adoc"
-REM for /R "." %%f in (*.md) do pandoc -s -f markdown -t latex "%%f" -o "%%~dpf%%~nf.tex"
-REM for /R "." %%f in (*.md) do pandoc -s -f markdown -t mediawiki "%%f" -o "%%~dpf%%~nf.mw"
+@echo off
+
+xcopy pics output\html\pics /Y
+
+setlocal enabledelayedexpansion enableextensions
+set LIST=
+for /f %%f in (files.txt) do set LIST=!LIST! "%%f"
+
+pandoc %LIST% -s -S --toc --toc-depth=2 --katex=katex/katex.min.js --katex-stylesheet=katex/katex.min.css -c style.css -o output\html\help.html
+
+REM pandoc -s -S --toc --toc-depth=2 -N %LIST% -o help.docx
+REM pandoc -s -S --toc --toc-depth=2 -N %LIST% -o help.pdf
+REM pandoc -s -S --toc --toc-depth=2 -N %LIST% -o help.latex

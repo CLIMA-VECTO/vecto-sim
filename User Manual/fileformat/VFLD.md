@@ -1,12 +1,12 @@
 Full Load and Drag Curves (.vfld)
 =================================
 
-This file contains the full load and drag curves and the PT1 values for the [transient full load calculation](../general/PT1.html).
+This file contains the full load and drag curves and the PT1 values for the [transient full load calculation](#transient-full-load).
 
 File Format
 -----------
 
-The file uses the [VECTO CSV format](index.html).
+The file uses the [VECTO CSV format](#csv-format).
 
 Format:
 : -   Four columns

@@ -2,7 +2,7 @@ Overspeed / Eco-Roll
 ====================
 
 
-Both functions control the vehicle's behaviour on uneven road sections (slope ≠ 0) and can be configured in the [Job File](../GUI/VECTO-Editor.html)'s Driver Assist Tab. Overspeed is designed to model an average driver's behaviour without the aid of driver assistance systems. Eco-Roll  represents an optional driver assistance feature. For this reason vehicles without Eco-Roll should always have the Overspeed function enabled.
+Both functions control the vehicle's behaviour on uneven road sections (slope ≠ 0) and can be configured in the [Job File](#job-editor)'s Driver Assist Tab. Overspeed is designed to model an average driver's behaviour without the aid of driver assistance systems. Eco-Roll  represents an optional driver assistance feature. For this reason vehicles without Eco-Roll should always have the Overspeed function enabled.
 
 
 Overspeed
@@ -16,7 +16,7 @@ Overspeed activates as soon as the total power demand at the wheels (Pwheel) fal
 *Example with target (purple) and actual speed (orange) on the top left axis, slope (brown) on the top right axis. The bottom graph shows engine power (blue), motoring curve (orange) and mechanical brake power (green). In this example Overspeed is allowed until the vehicle's speed exceeds target speed by 5 \[km/h\].*
 
 
-Parameters in [Job File](../GUI/VECTO-Editor.html):
+Parameters in [Job File](#job-editor):
 :	-   **Minimum speed \[km/h\]**. Below this speed the function is disabled.
 -   **Max. Overspeed \[km/h\]** (relative to target speed)
 
@@ -30,7 +30,7 @@ Instead of using the engine brake (with no fuel consumption) Eco-Roll shifts to 
 
 *Example of Eco-Roll. Target (purple) and actual speed (orange) on the top left axis, slope (brown) on the top right axis. The bottom graph shows engine power (blue), motoring curve (orange) and mechanical brake power (green). The engine is idling while the vehicle rolls freely and braking when the upper speed limit is reached.*
 
-Parameters in [Job File](../GUI/VECTO-Editor.html):
+Parameters in [Job File](#job-editor):
 : -   **Minimum speed \[km/h\]** Below this speed the function is disabled.
 -   **Max. Overspeed \[km/h\]** (relative to target speed)
 -   **Max. Underspeed \[km/h\]** (relative to target speed)
