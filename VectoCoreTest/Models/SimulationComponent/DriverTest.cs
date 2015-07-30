@@ -1,11 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
+using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
+using Wheels = TUGraz.VectoCore.Models.SimulationComponent.Impl.Wheels;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 {
@@ -14,7 +23,68 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	{
 		public const string JobFile = @"TestData\Jobs\24t Coach EngineOnly.vecto";
 
+		public const string EngineFile = @"TestData\Components\24t Coach.veng";
+
+		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
+
+
 		public const double Tolerance = 0.001;
+
+
+		[TestMethod]
+		public void DriverOverloadTest()
+		{
+			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+
+			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
+
+			var driverData = CreateDriverData();
+
+			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain.vmod", false); //new TestModalDataWriter();
+			var sumWriter = new TestSumWriter();
+			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
+
+			var driver = new Driver(vehicleContainer, driverData);
+
+			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
+			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
+
+			var gbx = new DummyGearbox(vehicleContainer);
+			gbx.CurrentGear = 1;
+
+			var driverPort = driver.OutPort();
+
+			driverPort.Initialize(0.SI<MeterPerSecond>(), 0.SI<Radian>());
+
+			var absTime = 0.SI<Second>();
+
+			var response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.SI<Radian>());
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+			absTime += response.SimulationInterval;
+
+			Assert.AreEqual(0.900, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+
+			response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.SI<Radian>());
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+			absTime += response.SimulationInterval;
+
+			Assert.AreEqual(0.7990, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+
+			/// change vehicle weight
+			vehicleData.Loading = 70000.SI<Kilogram>();
+
+			response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.05.SI<Radian>());
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+		}
 
 		[TestMethod]
 		public void DriverAccelerationTest()
@@ -139,6 +209,104 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				(response.SimulationInterval * vehicle.LastRequest.acceleration).Cast<MeterPerSecond>();
 
 			Assert.AreEqual(targetVelocity.Value(), vehicle.MyVehicleSpeed.Value(), Tolerance);
+		}
+
+
+		//==================
+
+		private static VehicleData CreateVehicleData(Kilogram loading)
+		{
+			var axles = new List<Axle>() {
+				new Axle() {
+					AxleWeightShare = 0.4375,
+					Inertia = 21.66667.SI<KilogramSquareMeter>(),
+					RollResistanceCoefficient = 0.0055,
+					TwinTyres = false,
+					TyreTestLoad = 62538.75.SI<Newton>()
+				},
+				new Axle() {
+					AxleWeightShare = 0.375,
+					Inertia = 10.83333.SI<KilogramSquareMeter>(),
+					RollResistanceCoefficient = 0.0065,
+					TwinTyres = false,
+					TyreTestLoad = 52532.55.SI<Newton>()
+				},
+				new Axle() {
+					AxleWeightShare = 0.1875,
+					Inertia = 21.66667.SI<KilogramSquareMeter>(),
+					RollResistanceCoefficient = 0.0055,
+					TwinTyres = false,
+					TyreTestLoad = 62538.75.SI<Newton>()
+				}
+			};
+			return new VehicleData() {
+				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				CrossSectionArea = 3.2634.SI<SquareMeter>(),
+				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
+				DragCoefficient = 1,
+				CurbWeight = 15700.SI<Kilogram>(),
+				CurbWeigthExtra = 0.SI<Kilogram>(),
+				Loading = loading,
+				DynamicTyreRadius = 0.52.SI<Meter>(),
+				Retarder = new RetarderData() { Type = RetarderData.RetarderType.None },
+				AxleData = axles,
+				SavedInDeclarationMode = false,
+			};
+		}
+
+		private static DriverData CreateDriverData()
+		{
+			return new DriverData() {
+				AccelerationCurve = AccelerationCurveData.ReadFromFile(AccelerationFile),
+				LookAheadCoasting = new DriverData.LACData() {
+					Enabled = false,
+				},
+				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData() {
+					Mode = VectoCore.Models.SimulationComponent.Data.DriverData.DriverMode.Off
+				},
+				StartStop = new VectoRunData.StartStopData() {
+					Enabled = false,
+				}
+			};
+		}
+
+
+		// ========================
+
+		protected virtual IDriver AddComponent(IDrivingCycle prev, IDriver next)
+		{
+			prev.InPort().Connect(next.OutPort());
+			return next;
+		}
+
+		protected virtual IVehicle AddComponent(IDriver prev, IVehicle next)
+		{
+			prev.InPort().Connect(next.OutPort());
+			return next;
+		}
+
+		protected virtual IWheels AddComponent(IFvInProvider prev, IWheels next)
+		{
+			prev.InPort().Connect(next.OutPort());
+			return next;
+		}
+
+
+		protected virtual ITnOutProvider AddComponent(IWheels prev, ITnOutProvider next)
+		{
+			prev.InPort().Connect(next.OutPort());
+			return next;
+		}
+
+		protected virtual IPowerTrainComponent AddComponent(IPowerTrainComponent prev, IPowerTrainComponent next)
+		{
+			prev.InPort().Connect(next.OutPort());
+			return next;
+		}
+
+		protected virtual void AddComponent(IPowerTrainComponent prev, ITnOutProvider next)
+		{
+			prev.InPort().Connect(next.OutPort());
 		}
 	}
 }

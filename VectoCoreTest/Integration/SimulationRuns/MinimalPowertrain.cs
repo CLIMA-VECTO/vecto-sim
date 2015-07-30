@@ -10,6 +10,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -20,8 +21,11 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 	[TestClass]
 	public class MinimalPowertrain
 	{
-		public const string CycleFile = @"TestData\Integration\MinimalPowerTrain\Coach_24t_xshort.vdri";
+		public const string CycleFile = @"TestData\Integration\MinimalPowerTrain\1-Gear-Test-dist.vdri";
 		public const string EngineFile = @"TestData\Integration\MinimalPowerTrain\24t Coach.veng";
+		public const string GearboxFile = @"TestData\Integration\MinimalPowerTrain\24t Coach-1Gear.vgbx";
+		public const string GbxLossMap = @"TestData\Integration\MinimalPowerTrain\NoLossGbxMap.vtlm";
+
 
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
 
@@ -31,7 +35,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
 			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CycleFile);
 
-			var vehicleData = CreateVehicleData(0.SI<Kilogram>());
+			var axleGearData = CreateAxleGearData();
+
+			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 
 			var driverData = CreateDriverData();
 
@@ -44,6 +50,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			dynamic tmp = AddComponent(cycle, new Driver(vehicleContainer, driverData));
 			tmp = AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
 			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
 			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
 
@@ -92,12 +99,21 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			//run.Run();
 		}
 
+		private GearData CreateAxleGearData()
+		{
+			return new GearData() {
+				Ratio = 3.0 * 3.5,
+				LossMap = TransmissionLossMap.ReadFromFile(GbxLossMap, 3.0 * 3.5)
+			};
+		}
+
 
 		[TestMethod]
 		public void TestWheelsAndEngineOverload()
 		{
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
 			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CycleFile);
+
 
 			var vehicleData = CreateVehicleData(50000.SI<Kilogram>());
 
@@ -162,16 +178,40 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 		private static VehicleData CreateVehicleData(Kilogram loading)
 		{
+			var axles = new List<Axle>() {
+				new Axle() {
+					AxleWeightShare = 0.4375,
+					Inertia = 21.66667.SI<KilogramSquareMeter>(),
+					RollResistanceCoefficient = 0.0055,
+					TwinTyres = false,
+					TyreTestLoad = 62538.75.SI<Newton>()
+				},
+				new Axle() {
+					AxleWeightShare = 0.375,
+					Inertia = 10.83333.SI<KilogramSquareMeter>(),
+					RollResistanceCoefficient = 0.0065,
+					TwinTyres = false,
+					TyreTestLoad = 52532.55.SI<Newton>()
+				},
+				new Axle() {
+					AxleWeightShare = 0.1875,
+					Inertia = 21.66667.SI<KilogramSquareMeter>(),
+					RollResistanceCoefficient = 0.0055,
+					TwinTyres = false,
+					TyreTestLoad = 62538.75.SI<Newton>()
+				}
+			};
 			return new VehicleData() {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				CrossSectionArea = 0.SI<SquareMeter>(),
+				CrossSectionArea = 3.2634.SI<SquareMeter>(),
 				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
-				CurbWeight = 1000.SI<Kilogram>(),
+				DragCoefficient = 1,
+				CurbWeight = 15700.SI<Kilogram>(),
 				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,
-				DynamicTyreRadius = 0.56.SI<Meter>(),
+				DynamicTyreRadius = 0.52.SI<Meter>(),
 				Retarder = new RetarderData() { Type = RetarderData.RetarderType.None },
-				AxleData = new List<Axle>(),
+				AxleData = axles,
 				SavedInDeclarationMode = false,
 			};
 		}
