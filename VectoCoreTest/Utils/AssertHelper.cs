@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			}
 
 			if (expected.IsEqual(0.0)) {
-				Assert.AreEqual(actual, 0.0, DoubleExtensionMethods.Tolerance,
+				Assert.AreEqual(expected, actual, DoubleExtensionMethods.Tolerance,
 					string.Format("Actual value is different. Difference: {3} Expected: {0}, Actual: {1}, Tolerance: {2}{4}",
 						expected, actual, toleranceFactor, expected - actual, message));
 				return;

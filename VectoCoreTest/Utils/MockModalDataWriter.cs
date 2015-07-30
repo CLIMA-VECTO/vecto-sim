@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -70,11 +69,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 			CurrentRow[ModalResultField.time.GetName()] = (absTime + simulationInterval / 2);
 			CurrentRow[ModalResultField.simulationInterval.GetName()] = simulationInterval;
 			CommitSimulationStep();
-		}
-
-		public T Field<T>(ModalResultField key)
-		{
-			return CurrentRow.Field<T>(key.GetName());
 		}
 	}
 }

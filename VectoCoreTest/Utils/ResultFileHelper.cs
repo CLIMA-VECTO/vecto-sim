@@ -9,12 +9,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 {
 	public static class ResultFileHelper
 	{
-		public static void TestModFile(string expectedFile, string actualFile)
+		public static void TestModFile(string expectedFile, string actualFile, string[] testColumns = null)
 		{
-			TestModFiles(new[] { expectedFile }, new[] { actualFile });
+			TestModFiles(new[] { expectedFile }, new[] { actualFile }, testColumns);
 		}
 
-		public static void TestModFiles(IEnumerable<string> expectedFiles, IEnumerable<string> actualFiles)
+		public static void TestModFiles(IEnumerable<string> expectedFiles, IEnumerable<string> actualFiles,
+			string[] testColumns = null)
 		{
 			var resultFiles = expectedFiles.ZipAll(actualFiles, (expectedFile, actualFile) => new { expectedFile, actualFile });
 			foreach (var result in resultFiles) {
@@ -35,7 +36,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 					string.Format("Moddata: Columns differ:\nExpected: {0}\nActual: {1}", string.Join(", ", expectedCols),
 						string.Join(", ", actualCols)));
 
-				// todo: Test Contents of MOD File.
+				//todo initial state
+				for (var i = 0; i < expected.Rows.Count; i++) {
+					var expectedRow = expected.Rows[i];
+					var actualRow = actual.Rows[i];
+
+					foreach (var field in testColumns ?? new string[0]) {
+						AssertHelper.AreRelativeEqual(expectedRow.ParseDoubleOrGetDefault(field), actualRow.ParseDoubleOrGetDefault(field),
+							string.Format("t: {0}  field: {1}", i, field));
+					}
+				}
 			}
 		}
 

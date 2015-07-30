@@ -120,7 +120,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public void AddAuxiliary(string id)
 		{
-			Auxiliaries[id] = Data.Columns.Add(ModalResultField.Paux_ + id, typeof(SI));
+			var col = Data.Columns.Add(ModalResultField.Paux_ + id, typeof(SI));
+			col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] = ModalResultField.Paux_.GetAttribute().Decimals;
+			col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
+				ModalResultField.Paux_.GetAttribute().OutputFactor;
+			col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] = ModalResultField.Paux_.GetAttribute().ShowUnit;
+
+			Auxiliaries[id] = col;
 		}
 	}
 }

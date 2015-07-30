@@ -1067,13 +1067,14 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 
-		public virtual string ToOutpuFormat(uint deciamls = 4, double outputFactor = 1.0, bool showUnit = false)
+		public virtual string ToOutputFormat(uint? decimals = null, double? outputFactor = null, bool? showUnit = null)
 		{
-			var fmt = new StringBuilder("{0:F").Append(deciamls).Append("}");
-			if (showUnit) {
-				fmt.Append(" [{2}]");
-			}
-			return string.Format(CultureInfo.InvariantCulture, fmt.ToString(), Val * outputFactor, GetUnitString());
+			decimals = decimals ?? 4;
+			outputFactor = outputFactor ?? 1.0;
+			showUnit = showUnit ?? false;
+
+			var format = string.Format("{{0:F{0}}}" + (showUnit.Value ? " [{2}]" : ""), decimals);
+			return string.Format(CultureInfo.InvariantCulture, format, Val * outputFactor, GetUnitString());
 		}
 	}
 }

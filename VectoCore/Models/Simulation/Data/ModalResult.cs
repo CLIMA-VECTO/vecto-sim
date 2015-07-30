@@ -11,10 +11,21 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	[DesignerCategory("")] // Full qualified attribute needed to disable design view in VisualStudio
 	public class ModalResults : DataTable
 	{
+		public static class ExtendedPropertyNames
+		{
+			public const string Decimals = "decimals";
+			public const string OutputFactor = "outputFactor";
+			public const string ShowUnit = "showUnit";
+		}
+
+
 		public ModalResults()
 		{
 			foreach (var value in EnumHelper.GetValues<ModalResultField>()) {
-				var col = new DataColumn(value.GetName(), value.GetDataType()) { Caption = value.GetCaption() };
+				var col = new DataColumn(value.GetName(), value.GetAttribute().DataType) { Caption = value.GetCaption() };
+				col.ExtendedProperties[ExtendedPropertyNames.Decimals] = value.GetAttribute().Decimals;
+				col.ExtendedProperties[ExtendedPropertyNames.OutputFactor] = value.GetAttribute().OutputFactor;
+				col.ExtendedProperties[ExtendedPropertyNames.ShowUnit] = value.GetAttribute().ShowUnit;
 				Columns.Add(col);
 			}
 		}
@@ -83,7 +94,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     Engine speed [1/min].
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "n [1/min]")] n,
+		[ModalResultField(typeof(SI), caption: "n [1/min]", outputFactor: 60 / (2 * Math.PI))] n,
 
 		/// <summary>
 		///     [Nm]	Engine torque.
@@ -108,47 +119,47 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [kW]	Engine power.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pe_eng [kW]")] Pe_eng,
+		[ModalResultField(typeof(SI), caption: "Pe_eng [kW]", outputFactor: 1e-3)] Pe_eng,
 
 		/// <summary>
 		///     [kW]	Engine full load power.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pe_full [kW]")] Pe_full,
+		[ModalResultField(typeof(SI), caption: "Pe_full [kW]", outputFactor: 1e-3)] Pe_full,
 
 		/// <summary>
 		///     [kW]	Engine drag power.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pe_drag [kW]")] Pe_drag,
+		[ModalResultField(typeof(SI), caption: "Pe_drag [kW]", outputFactor: 1e-3)] Pe_drag,
 
 		/// <summary>
 		///     [kW]	Engine power at clutch (equals Pe minus loss due to rotational inertia Pa Eng).
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pe_clutch [kW]")] Pe_clutch,
+		[ModalResultField(typeof(SI), caption: "Pe_clutch [kW]", outputFactor: 1e-3)] Pe_clutch,
 
 		/// <summary>
 		///     [kW]	Rotational acceleration power: Engine.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Pa Eng", caption: "Pa Eng [kW]")] PaEng,
+		[ModalResultField(typeof(SI), name: "Pa Eng", caption: "Pa Eng [kW]", outputFactor: 1e-3)] PaEng,
 
 		/// <summary>
 		///     [kW]	Total auxiliary power demand .
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Paux [kW]")] Paux,
+		[ModalResultField(typeof(SI), caption: "Paux [kW]", outputFactor: 1e-3)] Paux,
 
 		/// <summary>
 		///     [g/h]	Fuel consumption from FC map..
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-Map", caption: "FC-Map [g/h]")] FCMap,
+		[ModalResultField(typeof(SI), name: "FC-Map", caption: "FC-Map [g/h]", outputFactor: 3600)] FCMap,
 
 		/// <summary>
 		///     [g/h]	Fuel consumption after Auxiliary-Start/Stop Correction. (Based on FC.)
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-AUXc", caption: "FC-AUXc [g/h]")] FCAUXc,
+		[ModalResultField(typeof(SI), name: "FC-AUXc", caption: "FC-AUXc [g/h]", outputFactor: 3600)] FCAUXc,
 
 		/// <summary>
 		///     [g/h]	Fuel consumption after WHTC Correction. (Based on FC-AUXc.)
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-WHTCc", caption: "FC-WHTCc [g/h]")] FCWHTCc,
+		[ModalResultField(typeof(SI), name: "FC-WHTCc", caption: "FC-WHTCc [g/h]", outputFactor: 3600)] FCWHTCc,
 
 		/// <summary>
 		///     [km]	Travelled distance.
@@ -158,7 +169,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [km/h]	Actual vehicle speed.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "v_act [km/h]")] v_act,
+		[ModalResultField(typeof(SI), caption: "v_act [km/h]", outputFactor: 3.6)] v_act,
 
 		/// <summary>
 		///     [km/h]	Target vehicle speed.
@@ -184,57 +195,57 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [kW]	Gearbox losses.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Ploss GB", caption: "Ploss GB [kW]")] PlossGB,
+		[ModalResultField(typeof(SI), name: "Ploss GB", caption: "Ploss GB [kW]", outputFactor: 1e-3)] PlossGB,
 
 		/// <summary>
 		///     [kW]	Losses in differential / axle transmission.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Ploss Diff", caption: "Ploss Diff [kW]")] PlossDiff,
+		[ModalResultField(typeof(SI), name: "Ploss Diff", caption: "Ploss Diff [kW]", outputFactor: 1e-3)] PlossDiff,
 
 		/// <summary>
 		///     [kW]	Retarder losses.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Ploss Retarder", caption: "Ploss Retarder [kW]")] PlossRetarder,
+		[ModalResultField(typeof(SI), name: "Ploss Retarder", caption: "Ploss Retarder [kW]", outputFactor: 1e-3)] PlossRetarder,
 
 		/// <summary>
 		///     [kW]	Rotational acceleration power: Gearbox.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Pa GB", caption: "Pa GB [kW]")] PaGB,
+		[ModalResultField(typeof(SI), name: "Pa GB", caption: "Pa GB [kW]", outputFactor: 1e-3)] PaGB,
 
 		/// <summary>
 		///     [kW]	Vehicle acceleration power.
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "Pa Veh", caption: "Pa Veh [kW]")] PaVeh,
+		[ModalResultField(typeof(SI), name: "Pa Veh", caption: "Pa Veh [kW]", outputFactor: 1e-3)] PaVeh,
 
 		/// <summary>
 		///     [kW]	Rolling resistance power demand.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Proll [kW]")] Proll,
+		[ModalResultField(typeof(SI), caption: "Proll [kW]", outputFactor: 1e-3)] Proll,
 
 		/// <summary>
 		///     [kW]	Air resistance power demand.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pair [kW]")] Pair,
+		[ModalResultField(typeof(SI), caption: "Pair [kW]", outputFactor: 1e-3)] Pair,
 
 		/// <summary>
 		///     [kW]	Power demand due to road gradient.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pgrad [kW]")] Pgrad,
+		[ModalResultField(typeof(SI), caption: "Pgrad [kW]", outputFactor: 1e-3)] Pgrad,
 
 		/// <summary>
 		///     [kW]	Total power demand at wheel = sum of rolling, air, acceleration and road gradient resistance.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pwheel [kW]")] Pwheel,
+		[ModalResultField(typeof(SI), caption: "Pwheel [kW]", outputFactor: 1e-3)] Pwheel,
 
 		/// <summary>
 		///     [kW]	Brake power. Drag power is included in Pe.
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Pbrake [kW]")] Pbrake,
+		[ModalResultField(typeof(SI), caption: "Pbrake [kW]", outputFactor: 1e-3)] Pbrake,
 
 		/// <summary>
 		///     [kW]	Power demand of Auxiliary with ID xxx. See also Aux Dialog and Driving Cycle.
 		/// </summary>
-		[ModalResultField(typeof(SI))] Paux_,
+		[ModalResultField(typeof(SI), outputFactor: 1e-3)] Paux_,
 
 		/// <summary>
 		///     [-]	    Torque converter speed ratio
@@ -254,43 +265,45 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [1/min]	Torque converter output speed
 		/// </summary>
-		[ModalResultField(typeof(SI))] TC_n_Out
+		[ModalResultField(typeof(SI))] TC_n_Out,
 	}
 
 
 	[AttributeUsage(AttributeTargets.Field)]
-	internal class ModalResultFieldAttribute : Attribute
+	public class ModalResultFieldAttribute : Attribute
 	{
-		internal ModalResultFieldAttribute(Type fieldType, string name = null, string caption = null)
+		internal ModalResultFieldAttribute(Type dataType, string name = null, string caption = null, uint decimals = 4,
+			double outputFactor = 1, bool showUnit = false)
 		{
-			FieldType = fieldType;
+			DataType = dataType;
 			Name = name;
 			Caption = caption;
+			Decimals = decimals;
+			OutputFactor = outputFactor;
+			ShowUnit = showUnit;
 		}
 
-		public Type FieldType { get; private set; }
+		public bool ShowUnit { get; private set; }
+		public double OutputFactor { get; private set; }
+		public uint Decimals { get; private set; }
+		public Type DataType { get; private set; }
 		public string Name { get; private set; }
-		public string Caption { get; set; }
+		public string Caption { get; private set; }
 	}
 
 	public static class ModalResultFieldExtensionMethods
 	{
-		public static Type GetDataType(this ModalResultField field)
-		{
-			return GetAttr(field).FieldType;
-		}
-
 		public static string GetName(this ModalResultField field)
 		{
-			return GetAttr(field).Name ?? field.ToString();
+			return GetAttribute(field).Name ?? field.ToString();
 		}
 
 		public static string GetCaption(this ModalResultField field)
 		{
-			return GetAttr(field).Caption ?? field.GetName();
+			return GetAttribute(field).Caption ?? GetAttribute(field).Name ?? field.ToString();
 		}
 
-		private static ModalResultFieldAttribute GetAttr(ModalResultField field)
+		public static ModalResultFieldAttribute GetAttribute(this ModalResultField field)
 		{
 			return (ModalResultFieldAttribute)Attribute.GetCustomAttribute(ForValue(field), typeof(ModalResultFieldAttribute));
 		}

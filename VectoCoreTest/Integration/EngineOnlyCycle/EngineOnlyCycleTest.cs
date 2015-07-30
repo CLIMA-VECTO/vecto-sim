@@ -1,4 +1,6 @@
 using System.Data;
+using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
@@ -24,8 +26,6 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var data = DrivingCycleDataReader.ReadFromFileEngineOnly(TestContext.DataRow["CycleFile"].ToString());
 			var container = new VehicleContainer();
 			var cycle = new MockDrivingCycle(container, data);
-			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
-
 			var vehicle = new VehicleContainer();
 			var engineData =
 				EngineeringModeSimulationDataReader.CreateEngineDataFromFile(TestContext.DataRow["EngineFile"].ToString());
@@ -33,7 +33,6 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var aux = new Auxiliary(vehicle);
 			aux.AddDirect(cycle);
 			var gearbox = new EngineOnlyGearbox(vehicle);
-
 
 			var engine = new CombustionEngine(vehicle, engineData);
 
@@ -44,34 +43,22 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();
 
-			var dataWriter = new MockModalDataWriter();
-
-			var i = 0;
-			var results = new[] {
-				ModalResultField.n, ModalResultField.PaEng, ModalResultField.Tq_drag, ModalResultField.Pe_drag,
-				ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.Tq_full, ModalResultField.Pe_full,
-				ModalResultField.FCMap
-			};
+			var modFile = Path.GetRandomFileName() + ".vmod";
+			var dataWriter = new ModalDataWriter(modFile, true);
 
 			foreach (var cycleEntry in data.Entries) {
 				port.Request(absTime, dt, cycleEntry.EngineTorque, cycleEntry.EngineSpeed);
 				foreach (var sc in vehicle.SimulationComponents()) {
+					dataWriter[ModalResultField.time] = absTime + dt / 2;
 					sc.CommitSimulationStep(dataWriter);
 				}
 
-				// TODO: handle initial state of engine
-				var row = expectedResults.Rows[i++];
-				if (i > 2) {
-					foreach (var field in results) {
-						AssertHelper.AreRelativeEqual(row.Field<SI>(field.GetName()).Value(), dataWriter.Field<SI>(field).Value(),
-							string.Format("t: {0}  field: {1}", i, field));
-					}
-				}
-
-				dataWriter.CommitSimulationStep(absTime, dt);
+				dataWriter.CommitSimulationStep();
 				absTime += dt;
 			}
-			dataWriter.Data.WriteToFile(string.Format("result_{0}.csv", TestContext.DataRow["TestName"]));
+			dataWriter.Finish();
+
+			ResultFileHelper.TestModFile(TestContext.DataRow["ModalResultFile"].ToString(), modFile);
 		}
 
 		[TestMethod]
