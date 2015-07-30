@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static VehicleClass Parse(string text)
 		{
-			return EnumHelper.Parse<VehicleClass>(text.Replace(Prefix, ""));
+			return text.Replace(Prefix, "").Parse<VehicleClass>();
 		}
 
 		public static string ToString(VehicleClass hdvClass)

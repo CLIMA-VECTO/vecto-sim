@@ -230,16 +230,16 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
 
 				return table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
-					Distance = DataTableExtensionMethods.ParseDouble(row, Fields.Distance).SI<Meter>(),
+					Distance = row.ParseDouble(Fields.Distance).SI<Meter>(),
 					VehicleTargetSpeed =
-						DataTableExtensionMethods.ParseDouble(row, Fields.VehicleSpeed)
+						row.ParseDouble(Fields.VehicleSpeed)
 							.SI()
 							.Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
 					RoadGradientPercent = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
 					RoadGradient =
 						VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
 					StoppingTime =
-						(DataTableExtensionMethods.ParseDouble(row, Fields.StoppingTime)).SI<Second>(),
+						(row.ParseDouble(Fields.StoppingTime)).SI<Second>(),
 					AdditionalAuxPowerDemand =
 						row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
 					EngineSpeed =
@@ -271,7 +271,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				foreach (
 					var col in
 						header.Where(
-							col => !(Enumerable.Contains(allowedCols, col) || col.StartsWith(Fields.AuxiliarySupplyPower)))
+							col => !(allowedCols.Contains(col) || col.StartsWith(Fields.AuxiliarySupplyPower)))
 					) {
 					throw new VectoException(String.Format("Column '{0}' is not allowed.", col));
 				}
@@ -303,7 +303,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				var entries = table.Rows.Cast<DataRow>().Select((row, index) => new DrivingCycleData.DrivingCycleEntry {
 					Time = row.ParseDoubleOrGetDefault(Fields.Time, index).SI<Second>(),
 					VehicleTargetSpeed =
-						DataTableExtensionMethods.ParseDouble(row, Fields.VehicleSpeed)
+						row.ParseDouble(Fields.VehicleSpeed)
 							.SI()
 							.Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
 					RoadGradientPercent = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
@@ -341,7 +341,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				foreach (
 					var col in
 						header.Where(
-							col => !(Enumerable.Contains(allowedCols, col) || col.StartsWith(Fields.AuxiliarySupplyPower)))
+							col => !(allowedCols.Contains(col) || col.StartsWith(Fields.AuxiliarySupplyPower)))
 					) {
 					throw new VectoException(String.Format("Column '{0}' is not allowed.", col));
 				}
@@ -376,19 +376,19 @@ namespace TUGraz.VectoCore.FileIO.Reader
 						AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
 					};
 					if (row.Table.Columns.Contains(Fields.EngineTorque)) {
-						if (DataRowExtensions.Field<string>(row, Fields.EngineTorque).Equals("<DRAG>")) {
+						if (row.Field<string>(Fields.EngineTorque).Equals("<DRAG>")) {
 							entry.Drag = true;
 						} else {
 							entry.EngineTorque =
-								DataTableExtensionMethods.ParseDouble(row, Fields.EngineTorque).SI<NewtonMeter>();
+								row.ParseDouble(Fields.EngineTorque).SI<NewtonMeter>();
 						}
 					} else {
-						if (DataRowExtensions.Field<string>(row, Fields.EnginePower).Equals("<DRAG>")) {
+						if (row.Field<string>(Fields.EnginePower).Equals("<DRAG>")) {
 							entry.Drag = true;
 						} else {
 							entry.EngineTorque =
 								Formulas.PowerToTorque(
-									DataTableExtensionMethods.ParseDouble(row, Fields.EnginePower)
+									row.ParseDouble(Fields.EnginePower)
 										.SI()
 										.Kilo.Watt.Cast<Watt>(),
 									entry.EngineSpeed);
@@ -410,7 +410,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 					Fields.AdditionalAuxPowerDemand
 				};
 
-				foreach (var col in header.Where(col => !Enumerable.Contains(allowedCols, col))) {
+				foreach (var col in header.Where(col => !allowedCols.Contains(col))) {
 					throw new VectoException(String.Format("Column '{0}' is not allowed.", col));
 				}
 

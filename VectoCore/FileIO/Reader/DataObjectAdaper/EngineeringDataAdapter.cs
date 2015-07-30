@@ -69,7 +69,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			var accelerationData = AccelerationCurveData.ReadFromFile(Path.Combine(job.BasePath, data.AccelerationCurve));
 			var lookAheadData = new DriverData.LACData() {
 				Enabled = data.LookAheadCoasting.Enabled,
-				Deceleration = DoubleExtensionMethods.SI<MeterPerSquareSecond>(data.LookAheadCoasting.Dec),
+				Deceleration = data.LookAheadCoasting.Dec.SI<MeterPerSquareSecond>(),
 				MinSpeed = data.LookAheadCoasting.MinSpeed.KMPHtoMeterPerSecond(),
 			};
 			var overspeedData = new DriverData.OverSpeedEcoRollData() {
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius.SI().Milli.Meter.Cast<Meter>();
 
 			retVal.AxleData = data.AxleConfig.Axles.Select(axle => new Axle {
-				Inertia = DoubleExtensionMethods.SI<KilogramSquareMeter>(axle.Inertia),
+				Inertia = axle.Inertia.SI<KilogramSquareMeter>(),
 				TwinTyres = axle.TwinTyres,
 				RollResistanceCoefficient = axle.RollResistanceCoefficient,
 				AxleWeightShare = axle.AxleWeightShare,
