@@ -273,22 +273,22 @@ namespace TUGraz.VectoCore.FileIO.Reader
 						header.Where(
 							col => !(allowedCols.Contains(col) || col.StartsWith(Fields.AuxiliarySupplyPower)))
 					) {
-					throw new VectoException(String.Format("Column '{0}' is not allowed.", col));
+					throw new VectoException(string.Format("Column '{0}' is not allowed.", col));
 				}
 
 				if (!header.Contains(Fields.VehicleSpeed)) {
-					throw new VectoException(String.Format((string)"Column '{0}' is missing.",
+					throw new VectoException(string.Format((string)"Column '{0}' is missing.",
 						(object)Fields.VehicleSpeed));
 				}
 
 				if (!header.Contains(Fields.Distance)) {
-					throw new VectoException(String.Format((string)"Column '{0}' is missing.", (object)Fields.Distance));
+					throw new VectoException(string.Format((string)"Column '{0}' is missing.", (object)Fields.Distance));
 				}
 
 				if (header.Contains(Fields.AirSpeedRelativeToVehicle) ^
 					header.Contains(Fields.WindYawAngle)) {
 					throw new VectoException(
-						String.Format("Both Columns '{0}' and '{1}' must be defined, or none of them.",
+						string.Format("Both Columns '{0}' and '{1}' must be defined, or none of them.",
 							Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle));
 				}
 			}
@@ -343,18 +343,18 @@ namespace TUGraz.VectoCore.FileIO.Reader
 						header.Where(
 							col => !(allowedCols.Contains(col) || col.StartsWith(Fields.AuxiliarySupplyPower)))
 					) {
-					throw new VectoException(String.Format("Column '{0}' is not allowed.", col));
+					throw new VectoException(string.Format("Column '{0}' is not allowed.", col));
 				}
 
 				if (!header.Contains(Fields.VehicleSpeed)) {
-					throw new VectoException(String.Format((string)"Column '{0}' is missing.",
+					throw new VectoException(string.Format((string)"Column '{0}' is missing.",
 						(object)Fields.VehicleSpeed));
 				}
 
 				if (header.Contains(Fields.AirSpeedRelativeToVehicle) ^
 					header.Contains(Fields.WindYawAngle)) {
 					throw new VectoException(
-						String.Format("Both Columns '{0}' and '{1}' must be defined, or none of them.",
+						string.Format("Both Columns '{0}' and '{1}' must be defined, or none of them.",
 							Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle));
 				}
 			}
@@ -411,17 +411,17 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				};
 
 				foreach (var col in header.Where(col => !allowedCols.Contains(col))) {
-					throw new VectoException(String.Format("Column '{0}' is not allowed.", col));
+					throw new VectoException(string.Format("Column '{0}' is not allowed.", col));
 				}
 
 				if (!header.Contains(Fields.EngineSpeed)) {
-					throw new VectoException(String.Format((string)"Column '{0}' is missing.",
+					throw new VectoException(string.Format((string)"Column '{0}' is missing.",
 						(object)Fields.EngineSpeed));
 				}
 
 				if (!(header.Contains(Fields.EngineTorque) || header.Contains(Fields.EnginePower))) {
 					throw new VectoException(
-						String.Format("Columns missing: Either column '{0}' or column '{1}' must be defined.",
+						string.Format("Columns missing: Either column '{0}' or column '{1}' must be defined.",
 							Fields.EngineTorque, Fields.EnginePower));
 				}
 

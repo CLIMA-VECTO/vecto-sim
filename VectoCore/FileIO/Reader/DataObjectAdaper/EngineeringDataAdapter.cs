@@ -168,10 +168,10 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
 				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
 
-				var shiftPolygon = !String.IsNullOrEmpty(gearSettings.ShiftPolygon)
+				var shiftPolygon = !string.IsNullOrEmpty(gearSettings.ShiftPolygon)
 					? ShiftPolygon.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.ShiftPolygon))
 					: null;
-				var fullLoad = !String.IsNullOrEmpty(gearSettings.FullLoadCurve) && !gearSettings.FullLoadCurve.Equals("<NOFILE>")
+				var fullLoad = !string.IsNullOrEmpty(gearSettings.FullLoadCurve) && !gearSettings.FullLoadCurve.Equals("<NOFILE>")
 					? GearFullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
 					: null;
 

@@ -129,7 +129,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			public static class LookAhead
 			{
-				public const Boolean Enabled = true;
+				public const bool Enabled = true;
 				public static readonly MeterPerSquareSecond Deceleration = 0.5.SI<MeterPerSquareSecond>();
 				public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
 			}

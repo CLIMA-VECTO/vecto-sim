@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			};
 			if (!DeclarationData.Driver.OverSpeedEcoRoll.AllowedModes.Contains(overspeedData.Mode)) {
 				throw new VectoSimulationException(
-					String.Format("Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}", overspeedData.Mode));
+					string.Format("Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}", overspeedData.Mode));
 			}
 			var startstopData = new VectoRunData.StartStopData() {
 				Enabled = data.StartStop.Enabled,
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 			if (data.AxleConfig.Axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException(
-					String.Format("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
+					string.Format("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
 						data.AxleConfig.Axles.Count, mission.AxleWeightDistribution.Count()));
 			}
 			retVal.AxleData = new List<Axle>();
@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 						TorqueConverterActive = false
 					};
 				} else {
-					var fullLoad = !String.IsNullOrEmpty(gearSettings.FullLoadCurve) && !gearSettings.FullLoadCurve.Equals("<NOFILE>")
+					var fullLoad = !string.IsNullOrEmpty(gearSettings.FullLoadCurve) && !gearSettings.FullLoadCurve.Equals("<NOFILE>")
 						? GearFullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
 						: null;
 					var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(fullLoad, engine);

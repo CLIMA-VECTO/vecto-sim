@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 				EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(TestContext.DataRow["GearboxDataFile"].ToString());
 
 
-			var PvD = Double.Parse(TestContext.DataRow["PowerGbxOut"].ToString(), CultureInfo.InvariantCulture).SI<Watt>();
+			var PvD = double.Parse(TestContext.DataRow["PowerGbxOut"].ToString(), CultureInfo.InvariantCulture).SI<Watt>();
 
 			var torqueToWheels = Formulas.PowerToTorque(PvD, SpeedToAngularSpeed(speed, rdyn));
 			var torqueFromEngine = 0.SI<NewtonMeter>();
@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var powerEngine = Formulas.TorqueToPower(torqueFromEngine, angSpeed);
 			var loss = powerEngine - PvD;
 
-			Assert.AreEqual(Double.Parse(TestContext.DataRow["GbxPowerLoss"].ToString(), CultureInfo.InvariantCulture),
+			Assert.AreEqual(double.Parse(TestContext.DataRow["GbxPowerLoss"].ToString(), CultureInfo.InvariantCulture),
 				loss.Value(), 0.1,
 				TestContext.DataRow["TestName"].ToString());
 		}
