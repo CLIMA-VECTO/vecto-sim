@@ -1,0 +1,68 @@
+﻿{
+  "Header": {
+    "FileVersion": "1.1",
+    "LicenseOwner": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
+    "Mode": "auto",
+    "Date": "27.07.2015 09:26:16 (UTC)"
+  },
+  "Body": {
+    "FileList": [
+      {
+        "Path": "24t Coach-1Gear.vsum",
+        "SHA1-Hash": "m0FX3dk8l1QioBlGHy34JNa98ug="
+      },
+      {
+        "Path": "24t Coach-1Gear.vsum.json",
+        "SHA1-Hash": "+Fp9TAYC9lZJwRBpvmtFPCAFCvs="
+      },
+      {
+        "Path": "24t Coach-1Gear_1-Gear-Test.vmod",
+        "SHA1-Hash": "9vC8w8NWQKb11hjG2c6SNiFUGoE="
+      },
+      {
+        "Path": "24t Coach-1Gear.vecto",
+        "SHA1-Hash": "OQ8J/VueMPEnNBreR2pNklekSm8="
+      },
+      {
+        "Path": "24t Coach.vveh",
+        "SHA1-Hash": "i4zbJBJP7IPoC97jDI7H0kpM0Os="
+      },
+      {
+        "Path": "24t Coach.veng",
+        "SHA1-Hash": "ceBYAg9XjW8hWvrAGdfBLUJh2Ls="
+      },
+      {
+        "Path": "24t Coach.vfld",
+        "SHA1-Hash": "OnYKqFYHelm7kWFh+WJvXjAscHY="
+      },
+      {
+        "Path": "24t Coach.vmap",
+        "SHA1-Hash": "4t2ZF58XNWcwEcSENlwgaqP238s="
+      },
+      {
+        "Path": "24t Coach-1Gear.vgbx",
+        "SHA1-Hash": "cmikP75z+YrDi0wl79tFK1leAuo="
+      },
+      {
+        "Path": "unlimited.vacc",
+        "SHA1-Hash": "EC49DpaY34ie93qVLzyIuwatnAc="
+      },
+      {
+        "Path": "1-Gear-Test.vdri",
+        "SHA1-Hash": "kmylEPhGQf923yiPYHRlj4gKWes="
+      }
+    ],
+    "PublicKey": {
+      "DSAKeyValue": {
+        "P": "sO4u4Yn/VuCtr3ZkYwUt3/2JQCVnSoT1PtZDyOymJ8YpfWbrHf/g5a01d384b2N3GOCE83fN3bmEazpo/h7RcM8H3Mdf4lnf1/v4zF6MBfDqtwkovcICeiZ7IZEmkshUvShia8CQwI/dfTm+HZ0hdf0XV3eDv6TyI6m3hwMNWwU=",
+        "Q": "yRoeine3CrmhO2soD4lQ3DyeX3U=",
+        "G": "mCxUYadpabGewi4zCnchtU6DGzKtEFD9udav6lZ6apE7Nh0S8M8vnDD1c1wPYRh2Pqkw7hLTveIfJARgVw6U+0PbP2+bHeewFHFZhFwgMiu41/drbVg4tNfY9QduZdKsetrGAaPAVj1QtPkqLMaVOqo4ryvNb8znyIgGWBgYknI=",
+        "Y": "PS5l/UBGbV7CD0EqSn7BzA6xWCir9bH9kbOuKCKK2282sfP+JY6tj38rP3YbgdgGtq4HTWqUjTd5m6Fb0dYtz5zF0JmrCliLsysh3o4arqGPW0yHKHEGe0w80Pnqya1m0ejSBdi6HX8D1ANHrQ27W7JLd9dDuGNdX4ZsmSf//9o=",
+        "J": "4TrYj7JHpvH+E05hlGKaJ5uAOoeeMVW/s3z9BiKVEZv+B2q4vZwKQx8gQogEQxmsQncNwplGXDm0kqDg4ComXqfVPvtWxvCTrmB3FwwwAWa6uNZq6eRz6iLD9MwM83XWEcK5ZRWSbyjgqHJ0",
+        "Seed": "/d20w3RIFZCLoXIf+NJvO64vRBA=",
+        "PgenCounter": "AeY="
+      }
+    },
+    "Signature": "kKZ9u0BH/8kLitrDtB9BAU0+6Ketanu1xVrSE3Pk6NCdSBvAnQODmw=="
+  }
+}

@@ -15,10 +15,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class CombustionEngineData : SimulationComponentData
 	{
-		private readonly Dictionary<Range, FullLoadCurve> _fullLoadCurves =
-			new Dictionary<Range, FullLoadCurve>();
-
-
 		public string ModelName { get; internal set; }
 
 
@@ -56,30 +52,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public FuelConsumptionMap ConsumptionMap { get; internal set; }
 
 
-		public FullLoadCurve GetFullLoadCurve(uint gear)
-		{
-			var curve = _fullLoadCurves.FirstOrDefault(kv => kv.Key.Contains(gear));
-			if (curve.Key == null) {
-				throw new KeyNotFoundException(string.Format("GearData '{0}' was not found in the FullLoadCurves.", gear));
-			}
-
-			return curve.Value;
-		}
-
-		internal void AddFullLoadCurve(string gears, FullLoadCurve fullLoadCurve)
-		{
-			var range = new Range(gears);
-			if (!_fullLoadCurves.ContainsKey(range)) {
-				fullLoadCurve.EngineData = this;
-				_fullLoadCurves.Add(range, fullLoadCurve);
-			} else {
-				throw new VectoException(String.Format("FullLoadCurve for gears {0} already specified!", gears));
-			}
-		}
+		public EngineFullLoadCurve FullLoadCurve { get; internal set; }
 
 		protected bool Equals(CombustionEngineData other)
 		{
-			return Equals(_fullLoadCurves, other._fullLoadCurves) && string.Equals(ModelName, other.ModelName) &&
+			return Equals(FullLoadCurve, other.FullLoadCurve) && string.Equals(ModelName, other.ModelName) &&
 					Equals(Displacement, other.Displacement) && Equals(IdleSpeed, other.IdleSpeed) && Equals(Inertia, other.Inertia) &&
 					Equals(WHTCUrban, other.WHTCUrban) && Equals(WHTCRural, other.WHTCRural) &&
 					Equals(WHTCMotorway, other.WHTCMotorway) && Equals(ConsumptionMap, other.ConsumptionMap);
@@ -96,13 +73,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (obj.GetType() != this.GetType()) {
 				return false;
 			}
-			return Equals((CombustionEngineData) obj);
+			return Equals((CombustionEngineData)obj);
 		}
 
 		public override int GetHashCode()
 		{
 			unchecked {
-				var hashCode = (_fullLoadCurves != null ? _fullLoadCurves.GetHashCode() : 0);
+				var hashCode = (FullLoadCurve != null ? FullLoadCurve.GetHashCode() : 0);
 				hashCode = (hashCode * 397) ^ (ModelName != null ? ModelName.GetHashCode() : 0);
 				hashCode = (hashCode * 397) ^ (Displacement != null ? Displacement.GetHashCode() : 0);
 				hashCode = (hashCode * 397) ^ (IdleSpeed != null ? IdleSpeed.GetHashCode() : 0);
@@ -120,18 +97,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
 			{
-				return sourceType == typeof (string) || base.CanConvertFrom(context, sourceType);
+				return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
 			}
 
 			public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
 			{
-				return value.GetType() == typeof (string)
-					? new Range((string) value)
+				return value.GetType() == typeof(string)
+					? new Range((string)value)
 					: base.ConvertFrom(context, culture, value);
 			}
 		}
 
-		[TypeConverter(typeof (RangeConverter))]
+		[TypeConverter(typeof(RangeConverter))]
 		private class Range
 		{
 			private readonly uint _end;
@@ -174,13 +151,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				if (obj.GetType() != GetType()) {
 					return false;
 				}
-				return Equals((Range) obj);
+				return Equals((Range)obj);
 			}
 
 			public override int GetHashCode()
 			{
 				unchecked {
-					return (int) ((_start * 397) ^ _end);
+					return (int)((_start * 397) ^ _end);
 				}
 			}
 

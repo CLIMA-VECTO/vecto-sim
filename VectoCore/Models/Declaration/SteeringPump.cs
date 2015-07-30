@@ -6,26 +6,27 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public class SteeringPump : LookupData<MissionType, string, string, Watt>
+	public class SteeringPump : LookupData<MissionType, VehicleClass, string, Watt>
 	{
 		private readonly SteeringPumpTechnologies _technologies = new SteeringPumpTechnologies();
 
-		private readonly Dictionary<Tuple<MissionType, string>, Watt[]> _data =
-			new Dictionary<Tuple<MissionType, string>, Watt[]>();
+		private readonly Dictionary<Tuple<MissionType, VehicleClass>, Watt[]> _data =
+			new Dictionary<Tuple<MissionType, VehicleClass>, Watt[]>();
 
-		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Table.csv";
+		private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Table.csv";
 
 		public SteeringPump()
 		{
 			ParseData(ReadCsvResource(ResourceId));
 		}
 
-		public override Watt Lookup(MissionType mission, string hdvClass, string technology)
+		public override Watt Lookup(MissionType mission, VehicleClass hdvClass, string technology)
 		{
 			var shares = _data[Tuple.Create(mission, hdvClass)];
-			var sum = 0.SI<Watt>();
 			var factors = _technologies.Lookup(technology);
-			for (var i = 0; i < 4; i++) {
+
+			var sum = 0.SI<Watt>();
+			for (var i = 0; i < factors.Length; i++) {
 				sum += shares[i] * factors[i];
 			}
 			return sum;
@@ -37,8 +38,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			NormalizeTable(table);
 
 			foreach (DataRow row in table.Rows) {
-				var hdvClass = row.Field<string>("hdvclass/powerdemandpershare");
-				foreach (MissionType mission in Enum.GetValues(typeof(MissionType))) {
+				var hdvClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass/powerdemandpershare"));
+				foreach (var mission in EnumHelper.GetValues<MissionType>()) {
 					var values = row.Field<string>(mission.ToString().ToLower()).Split('/').ToDouble();
 					values = values.Concat(Enumerable.Repeat(0.0, 3));
 
@@ -47,24 +48,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
-		public class SteeringPumpTechnologies : LookupData<string, double[]>
+		private class SteeringPumpTechnologies : LookupData<string, double[]>
 		{
-			protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Tech.csv";
+			private const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.VAUX.SP-Tech.csv";
 
 			public SteeringPumpTechnologies()
 			{
 				ParseData(ReadCsvResource(ResourceId));
 			}
 
-
 			protected override void ParseData(DataTable table)
 			{
-				Data.Clear();
-				foreach (DataRow row in table.Rows) {
-					var tech = row.Field<string>("Scaling Factors");
-					var factors = new[] { row.ParseDouble("U"), row.ParseDouble("F"), row.ParseDouble("B"), row.ParseDouble("S") };
-					Data[tech] = factors;
-				}
+				Data = table.Rows.Cast<DataRow>().ToDictionary(
+					key => key.Field<string>("Scaling Factors"),
+					value => new[] { value.ParseDouble("U"), value.ParseDouble("F"), value.ParseDouble("B"), value.ParseDouble("S") });
 			}
 
 			public override double[] Lookup(string tech)

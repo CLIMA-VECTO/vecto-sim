@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			var retVal = new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				VehicleCategory = data.VehicleCategory(),
-				AxleConfiguration = EnumHelper.ParseAxleConfigurationType(data.AxleConfig.TypeStr),
+				AxleConfiguration = AxleConfigurationHelper.Parse(data.AxleConfig.TypeStr),
 				CurbWeight = data.CurbWeight.SI<Kilogram>(),
 				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
 				//Loading = data.Loading.SI<Kilogram>(),
@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 			var retarder = new RetarderData() {
 				Type =
-					(RetarderData.RetarderType) Enum.Parse(typeof (RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
+					(RetarderData.RetarderType)Enum.Parse(typeof(RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
 			};
 			if (retarder.Type != RetarderData.RetarderType.None) {
 				retarder.LossMap = RetarderLossMap.ReadFromFile(Path.Combine(basePath, data.Retarder.File));
@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal CombustionEngineData SetCommonCombustionEngineData(EngineFileV2Declaration.DataBodyDecl data, string basePath)
+		internal CombustionEngineData SetCommonCombustionEngineData(EngineFileV3Declaration.DataBodyDecl data, string basePath)
 		{
 			var retVal = new CombustionEngineData() {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
@@ -66,13 +66,15 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		internal GearboxData SetCommonGearboxData(GearboxFileV4Declaration.DataBodyDecl data)
+		internal GearboxData SetCommonGearboxData(GearboxFileV5Declaration.DataBodyDecl data)
 		{
 			return new GearboxData() {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				ModelName = data.ModelName,
-				Type = (GearboxData.GearboxType) Enum.Parse(typeof (GearboxData.GearboxType), data.GearboxType, true),
+				Type = (GearboxData.GearboxType)Enum.Parse(typeof(GearboxData.GearboxType), data.GearboxType, true),
 			};
 		}
+
+		public abstract DriverData CreateDriverData(VectoJobFile job);
 	}
 }

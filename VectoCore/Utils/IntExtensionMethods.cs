@@ -1,3 +1,5 @@
+using System;
+
 namespace TUGraz.VectoCore.Utils
 {
 	public static class IntExtensionMethods
@@ -11,6 +13,12 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return d.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
 		}
+
+		public static MeterPerSecond KMPHtoMeterPerSecond(this int d)
+		{
+			return d.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>();
+		}
+
 
 		/// <summary>
 		/// Gets the SI representation of the number (unit-less).
@@ -32,15 +40,20 @@ namespace TUGraz.VectoCore.Utils
 			return SIBase<T>.Create(d);
 		}
 
-        /// <summary>
-        /// Modulo functions which also works on negative Numbers (not like the built-in %-operator which just returns the remainder).
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        public static int Mod(this int a, int b)
-        {
-            return (a %= b) < 0 ? a + b : a;
-        }
+		public static double ToRadian(this int self)
+		{
+			return self * Math.PI / 180.0;
+		}
+
+		/// <summary>
+		/// Modulo functions which also works on negative Numbers (not like the built-in %-operator which just returns the remainder).
+		/// </summary>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <returns></returns>
+		public static int Mod(this int a, int b)
+		{
+			return (a %= b) < 0 ? a + b : a;
+		}
 	}
 }

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Data.SqlTypes;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -17,11 +14,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	{
 		private readonly bool _engineOnly;
 		private readonly VehicleContainer _container;
+		private readonly IModalDataWriter _dataWriter;
 
 
 		public PowertrainBuilder(IModalDataWriter dataWriter, ISummaryDataWriter sumWriter, bool engineOnly)
 		{
 			_engineOnly = engineOnly;
+			_dataWriter = dataWriter;
 			_container = new VehicleContainer(dataWriter, sumWriter);
 		}
 
@@ -32,18 +31,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildFullPowertrain(VectoRunData data)
 		{
-			IDrivingCycleDemandDrivingCycle cycle;
+			IDrivingCycle cycle;
 			if (_engineOnly) {
 				cycle = new TimeBasedDrivingCycle(_container, data.Cycle);
 			} else {
-				//todo: make distinction between time based and distance based driving cycle!
-				cycle = new DistanceBasedDrivingCycle(_container, data.Cycle);
+				if (data.IsEngineOnly) {
+					cycle = new TimeBasedDrivingCycle(_container, data.Cycle);
+				} else {
+					//todo: make distinction between time based and distance based driving cycle!
+					cycle = new DistanceBasedDrivingCycle(_container, data.Cycle);
+				}
 			}
-			// connect cycle --> driver --> vehicle --> wheels --> axleGear --> gearBox --> retarder --> clutch
-			dynamic tmp = AddComponent(cycle, new Driver(_container, data.DriverData));
-			tmp = AddComponent(tmp, new Vehicle(_container, data.VehicleData));
-			tmp = AddComponent(tmp, new Wheels(_container, data.VehicleData.DynamicTyreRadius));
-			tmp = AddComponent(tmp, new AxleGear(_container, data.GearboxData.AxleGearData));
+			// cycle --> driver --> vehicle --> wheels --> axleGear --> retarder --> gearBox
+			var driver = AddComponent(cycle, new Driver(_container, data.DriverData));
+			var vehicle = AddComponent(driver, new Vehicle(_container, data.VehicleData));
+			var wheels = AddComponent(vehicle, new Wheels(_container, data.VehicleData.DynamicTyreRadius));
+			var tmp = AddComponent(wheels, new AxleGear(_container, data.GearboxData.AxleGearData));
 
 			switch (data.VehicleData.Retarder.Type) {
 				case RetarderData.RetarderType.Primary:
@@ -59,27 +62,38 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					break;
 			}
 
+			// gearbox --> clutch
 			tmp = AddComponent(tmp, new Clutch(_container, data.EngineData));
 
-			// connect cluch --> aux --> ... --> aux_XXX --> directAux
+
+			// clutch --> direct aux --> ... --> aux_XXX --> directAux
 			if (data.Aux != null) {
+				var aux = new Auxiliary(_container);
 				foreach (var auxData in data.Aux) {
-					var auxCycleData = new AuxiliaryCycleDataAdapter(data.Cycle, auxData.ID);
-					IAuxiliary auxiliary = new MappingAuxiliary(_container, auxCycleData, auxData.Data);
-					tmp = AddComponent(tmp, auxiliary);
+					switch (auxData.DemandType) {
+						case AuxiliaryDemandType.Constant:
+							aux.AddConstant(auxData.ID, auxData.PowerDemand);
+							break;
+						case AuxiliaryDemandType.Direct:
+							aux.AddDirect(cycle);
+							break;
+						case AuxiliaryDemandType.Mapping:
+							aux.AddMapping(auxData.ID, cycle, auxData.Data);
+							break;
+					}
+					_dataWriter.AddAuxiliary(auxData.ID);
 				}
+				tmp = AddComponent(tmp, aux);
 			}
-
-			// connect directAux --> engine
-			IAuxiliary directAux = new DirectAuxiliary(_container, new AuxiliaryCycleDataAdapter(data.Cycle));
-			tmp = AddComponent(tmp, directAux);
-
+			// connect aux --> engine
 			AddComponent(tmp, new CombustionEngine(_container, data.EngineData));
 
 			return _container;
 		}
 
-		protected IGearbox GetGearbox(VehicleContainer container, GearboxData data)
+		protected
+			IGearbox GetGearbox
+			(VehicleContainer container, GearboxData data)
 		{
 			switch (data.Type) {
 				case GearboxData.GearboxType.AT:
@@ -91,56 +105,72 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		protected virtual IDriver AddComponent(IDrivingCycleDemandDrivingCycle prev, IDriver next)
+		protected virtual
+			IDriver AddComponent
+			(IDrivingCycle prev, IDriver next)
 		{
-			prev.InShaft().Connect(next.OutShaft());
+			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-		protected virtual IVehicle AddComponent(IDriver prev, IVehicle next)
+		protected virtual
+			IVehicle AddComponent
+			(IDriver prev, IVehicle next)
 		{
-			prev.InShaft().Connect(next.OutShaft());
+			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-		protected virtual IWheels AddComponent(IRoadPortInProvider prev, IWheels next)
+		protected virtual
+			IWheels AddComponent
+			(IFvInProvider prev, IWheels next)
 		{
 			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
 
-		protected virtual IPowerTrainComponent AddComponent(IWheels prev, IPowerTrainComponent next)
+		protected virtual
+			IPowerTrainComponent AddComponent
+			(IWheels prev, IPowerTrainComponent next)
 		{
-			prev.InShaft().Connect(next.OutShaft());
+			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-		protected virtual IPowerTrainComponent AddComponent(IPowerTrainComponent prev, IPowerTrainComponent next)
+		protected virtual
+			IPowerTrainComponent AddComponent
+			(IPowerTrainComponent prev, IPowerTrainComponent next)
 		{
-			prev.InShaft().Connect(next.OutShaft());
+			prev.InPort().Connect(next.OutPort());
 			return next;
 		}
 
-		protected virtual void AddComponent(IPowerTrainComponent prev, IOutShaft next)
+		protected virtual
+			void AddComponent
+			(IPowerTrainComponent prev, ITnOutProvider next)
 		{
-			prev.InShaft().Connect(next.OutShaft());
+			prev.InPort().Connect(next.OutPort());
 		}
 
 
-		private VehicleContainer BuildEngineOnly(VectoRunData data)
+		private
+			VehicleContainer BuildEngineOnly
+			(VectoRunData
+				data)
 		{
-			var cycle = new EngineOnlyDrivingCycle(_container, data.Cycle);
+			var cycle = new EngineOnlySimulation(_container, data.Cycle);
+
+			var gearbox = new EngineOnlyGearbox(_container);
+			cycle.InPort().Connect(gearbox.OutPort());
+
+
+			var directAux = new Auxiliary(_container);
+			directAux.AddDirect(cycle);
+			gearbox.InPort().Connect(directAux.OutPort());
 
 			var engine = new CombustionEngine(_container, data.EngineData);
-			var gearBox = new EngineOnlyGearbox(_container);
-
-			IAuxiliary addAux = new DirectAuxiliary(_container, new AuxiliaryCycleDataAdapter(data.Cycle));
-			addAux.InShaft().Connect(engine.OutShaft());
-
-			gearBox.InShaft().Connect(addAux.OutShaft());
-
-			cycle.InShaft().Connect(gearBox.OutShaft());
+			directAux.InPort().Connect(engine.OutPort());
 
 			return _container;
 		}

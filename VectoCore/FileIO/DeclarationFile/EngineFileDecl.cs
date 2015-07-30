@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.FileIO.DeclarationFile
 	///  }
 	/// }
 	/// </code>
-	internal class EngineFileV2Declaration : VectoEngineFile
+	internal class EngineFileV3Declaration : VectoEngineFile
 	{
 		[JsonProperty(Required = Required.Always)] public JsonDataHeader Header;
 		[JsonProperty(Required = Required.Always)] public DataBodyDecl Body;
@@ -60,7 +60,8 @@ namespace TUGraz.VectoCore.FileIO.DeclarationFile
 			/// </summary>
 			[JsonProperty("IdlingSpeed", Required = Required.Always)] public double IdleSpeed;
 
-			[JsonProperty(Required = Required.Always)] public IList<DataFullLoadCurve> FullLoadCurves;
+			//[JsonProperty(Required = Required.Always)] public IList<DataFullLoadCurve> FullLoadCurves;
+			[JsonProperty(Required = Required.Always)] public string FullLoadCurve;
 
 			/// <summary>
 			///     The Fuel Consumption Map is used to calculate the base Fuel Consumption (FC) value.

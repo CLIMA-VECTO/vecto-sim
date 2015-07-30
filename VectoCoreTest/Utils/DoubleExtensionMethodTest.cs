@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public void DoubleExtensions_SI()
 		{
 			var val = 600.RPMtoRad();
-			Assert.AreEqual(600 / 60 * 2 * Math.PI, val.Double());
+			Assert.AreEqual(600 / 60 * 2 * Math.PI, val.Value());
 
 			Assert.IsTrue(0.SI<PerSecond>().HasEqualUnit(val));
 
@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			val = val / 2;
 			Assert.AreEqual(val, val2);
 			Assert.AreEqual(600.SI().Rounds.Per.Minute.Cast<PerSecond>(), val2);
-			Assert.AreEqual(600.SI().Rounds.Per.Minute.Cast<PerSecond>().Double(), val2.Double());
+			Assert.AreEqual(600.SI().Rounds.Per.Minute.Cast<PerSecond>().Value(), val2.Value());
 		}
 
 		[TestMethod]

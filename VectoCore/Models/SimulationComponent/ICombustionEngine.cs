@@ -6,5 +6,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	/// <summary>
 	/// Defines Interfaces for a combustion engine.
 	/// </summary>
-	public interface ICombustionEngine : IOutShaft, IEngineCockpit {}
+	public interface ICombustionEngine : ITnOutProvider, IEngineCockpit {}
 }

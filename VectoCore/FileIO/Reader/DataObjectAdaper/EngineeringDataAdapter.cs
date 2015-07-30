@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.EngineeringFile;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
@@ -30,7 +34,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 		public override CombustionEngineData CreateEngineData(VectoEngineFile engine)
 		{
-			var fileV2Eng = engine as EngineFileV2Engineering;
+			var fileV2Eng = engine as EngineFileV3Engineering;
 			if (fileV2Eng != null) {
 				return CreateEngineData(fileV2Eng);
 			}
@@ -39,15 +43,55 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 		public override GearboxData CreateGearboxData(VectoGearboxFile gearbox, CombustionEngineData engine)
 		{
-			var fileV5Eng = gearbox as GearboxFileV4Engineering;
+			var fileV5Eng = gearbox as GearboxFileV5Engineering;
 			if (fileV5Eng != null) {
 				return CreateGearboxData(fileV5Eng);
 			}
 			throw new VectoException("Unsupported GearboxData File Instance");
 		}
 
+		public override DriverData CreateDriverData(VectoJobFile job)
+		{
+			var filev2Eng = job as VectoJobFileV2Engineering;
+			if (filev2Eng != null) {
+				return CreateDriverData(filev2Eng);
+			}
+			throw new VectoException("Unsupported Job File Instance");
+		}
+
 		//=================================
 
+
+		internal DriverData CreateDriverData(VectoJobFileV2Engineering job)
+		{
+			var data = job.Body;
+
+			var accelerationData = AccelerationCurveData.ReadFromFile(Path.Combine(job.BasePath, data.AccelerationCurve));
+			var lookAheadData = new DriverData.LACData() {
+				Enabled = data.LookAheadCoasting.Enabled,
+				Deceleration = data.LookAheadCoasting.Dec.SI<MeterPerSquareSecond>(),
+				MinSpeed = data.LookAheadCoasting.MinSpeed.KMPHtoMeterPerSecond(),
+			};
+			var overspeedData = new DriverData.OverSpeedEcoRollData() {
+				Mode = DriverData.ParseDriverMode(data.OverSpeedEcoRoll.Mode),
+				MinSpeed = data.OverSpeedEcoRoll.MinSpeed.KMPHtoMeterPerSecond(),
+				OverSpeed = data.OverSpeedEcoRoll.OverSpeed.KMPHtoMeterPerSecond(),
+				UnderSpeed = data.OverSpeedEcoRoll.UnderSpeed.KMPHtoMeterPerSecond(),
+			};
+			var startstopData = new VectoRunData.StartStopData() {
+				Enabled = data.StartStop.Enabled,
+				Delay = data.StartStop.Delay.SI<Second>(),
+				MinTime = data.StartStop.MinTime.SI<Second>(),
+				MaxSpeed = data.StartStop.MaxSpeed.KMPHtoMeterPerSecond(),
+			};
+			var retVal = new DriverData() {
+				AccelerationCurve = accelerationData,
+				LookAheadCoasting = lookAheadData,
+				OverSpeedEcoRoll = overspeedData,
+				StartStop = startstopData,
+			};
+			return retVal;
+		}
 
 		/// <summary>
 		/// convert datastructure representing file-contents into internal datastructure
@@ -67,7 +111,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius.SI().Milli.Meter.Cast<Meter>();
 
 			retVal.AxleData = data.AxleConfig.Axles.Select(axle => new Axle {
-				Inertia = DoubleExtensionMethods.SI<KilogramSquareMeter>(axle.Inertia),
+				Inertia = axle.Inertia.SI<KilogramSquareMeter>(),
 				TwinTyres = axle.TwinTyres,
 				RollResistanceCoefficient = axle.RollResistanceCoefficient,
 				AxleWeightShare = axle.AxleWeightShare,
@@ -84,14 +128,13 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		/// </summary>
 		/// <param name="engine">Engin-Data file (Engineering mode)</param>
 		/// <returns></returns>
-		internal CombustionEngineData CreateEngineData(EngineFileV2Engineering engine)
+		internal CombustionEngineData CreateEngineData(EngineFileV3Engineering engine)
 		{
 			var retVal = SetCommonCombustionEngineData(engine.Body, engine.BasePath);
 			retVal.Inertia = engine.Body.Inertia.SI<KilogramSquareMeter>();
-			foreach (var entry in engine.Body.FullLoadCurves) {
-				retVal.AddFullLoadCurve(entry.Gears, FullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, entry.Path), false));
-			}
-
+			retVal.FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, engine.Body.FullLoadCurve),
+				false);
+			retVal.FullLoadCurve.EngineData = retVal;
 			return retVal;
 		}
 
@@ -102,7 +145,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		/// </summary>
 		/// <param name="gearbox"></param>
 		/// <returns></returns>
-		internal GearboxData CreateGearboxData(GearboxFileV4Engineering gearbox)
+		internal GearboxData CreateGearboxData(GearboxFileV5Engineering gearbox)
 		{
 			var retVal = SetCommonGearboxData(gearbox.Body);
 
@@ -121,15 +164,24 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.HasTorqueConverter = data.TorqueConverter.Enabled;
 
 			for (uint i = 0; i < gearbox.Body.Gears.Count; i++) {
-				var gearSettings = gearbox.Body.Gears[(int) i];
+				var gearSettings = gearbox.Body.Gears[(int)i];
 				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
 				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
 
-				var shiftPolygon = !String.IsNullOrEmpty(gearSettings.ShiftPolygon)
+				var shiftPolygon = !string.IsNullOrEmpty(gearSettings.ShiftPolygon)
 					? ShiftPolygon.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.ShiftPolygon))
 					: null;
+				var fullLoad = !string.IsNullOrEmpty(gearSettings.FullLoadCurve) && !gearSettings.FullLoadCurve.Equals("<NOFILE>")
+					? GearFullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
+					: null;
 
-				var gear = new GearData(lossMap, shiftPolygon, gearSettings.Ratio, gearSettings.TCactive);
+				var gear = new GearData() {
+					LossMap = lossMap,
+					ShiftPolygon = shiftPolygon,
+					FullLoadCurve = fullLoad,
+					Ratio = gearSettings.Ratio,
+					TorqueConverterActive = gearSettings.TCactive
+				};
 				if (i == 0) {
 					retVal.AxleGearData = gear;
 				} else {

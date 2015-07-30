@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					BasePath = job.BasePath,
 					JobFileName = job.JobFile,
 					EngineData = dao.CreateEngineData(Engine),
-					Cycle = DrivingCycleData.ReadFromFileEngineOnly(Path.Combine(job.BasePath, cycle)),
+					Cycle = DrivingCycleDataReader.ReadFromFileEngineOnly(Path.Combine(job.BasePath, cycle)),
 					IsEngineOnly = IsEngineOnly
 				};
 				yield return simulationRunData;

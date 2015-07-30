@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Utils
 		{
 			try {
 				var lines = new List<string>();
-				using (StreamReader reader = new StreamReader(stream)) {
+				using (var reader = new StreamReader(stream)) {
 					while (!reader.EndOfStream) {
 						lines.Add(reader.ReadLine());
 					}
@@ -152,14 +152,18 @@ namespace TUGraz.VectoCore.Utils
 			sb.AppendLine(string.Join(Delimiter.ToString(), header));
 
 			foreach (DataRow row in table.Rows) {
-				var formattedList = new List<string>();
-				foreach (var item in row.ItemArray) {
-					var formattable = item as IFormattable;
-					var formattedValue = formattable != null
-						? formattable.ToString("", CultureInfo.InvariantCulture)
-						: item.ToString();
-					formattedList.Add(formattedValue);
-				}
+				var formattedList = table.Columns.Cast<DataColumn>().Select(col => {
+					var item = row[col];
+					var decimals = (uint?)col.ExtendedProperties["decimals"];
+					var outputFactor = (double?)col.ExtendedProperties["outputFactor"];
+					var showUnit = (bool?)col.ExtendedProperties["showUnit"];
+
+					var si = item as SI;
+					return (si != null
+						? si.ToOutputFormat(decimals, outputFactor, showUnit)
+						: string.Format(CultureInfo.InvariantCulture, "{0}", item));
+				});
+
 				sb.AppendLine(string.Join(Delimiter.ToString(), formattedList));
 			}
 

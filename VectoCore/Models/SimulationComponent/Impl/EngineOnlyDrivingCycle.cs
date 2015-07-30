@@ -1,55 +1,77 @@
 using System;
+using System.Collections.Generic;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	/// <summary>
 	///     Class representing one EngineOnly Driving Cycle
 	/// </summary>
-	public class EngineOnlyDrivingCycle : VectoSimulationComponent, IEngineOnlyDrivingCycle, ITnInPort,
-		IDrivingCycleOutPort
+	public class EngineOnlySimulation : VectoSimulationComponent, IDrivingCycleCockpit, IEngineOnlySimulation, ITnInPort,
+		ISimulationOutPort
 	{
 		protected DrivingCycleData Data;
 		private ITnOutPort _outPort;
+		private IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
+		private IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
 
-		public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+
+		public EngineOnlySimulation(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
+			LeftSample = Data.Entries.GetEnumerator();
+			LeftSample.MoveNext();
+
+			RightSample = Data.Entries.GetEnumerator();
+			RightSample.MoveNext();
+			RightSample.MoveNext();
 		}
 
-		#region IInShaft
+		#region ITnInProvider
 
-		public ITnInPort InShaft()
+		public ITnInPort InPort()
 		{
 			return this;
 		}
 
 		#endregion
 
-		#region IDrivingCycleOutProvider
+		#region ISimulationOutProvider
 
-		public IDrivingCycleOutPort OutShaft()
+		public ISimulationOutPort OutPort()
 		{
 			return this;
 		}
 
 		#endregion
 
-		#region IDrivingCycleOutPort
+		#region ISimulationOutPort
 
-		IResponse IDrivingCycleOutPort.Request(TimeSpan absTime, TimeSpan dt)
+		public IResponse Request(Second absTime, Meter ds)
+		{
+			throw new VectoSimulationException("Engine-Only Simulation can not handle distance request");
+		}
+
+		IResponse ISimulationOutPort.Request(Second absTime, Second dt)
 		{
 			//todo: change to variable time steps
-			var index = (int)Math.Floor(absTime.TotalSeconds);
+			var index = (int)Math.Floor(absTime.Value());
 			if (index >= Data.Entries.Count) {
 				return new ResponseCycleFinished();
 			}
 
 			return _outPort.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
+		}
+
+		public IResponse Initialize()
+		{
+			return _outPort.Initialize();
 		}
 
 		#endregion
@@ -65,8 +87,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		public override void CommitSimulationStep(IModalDataWriter writer) {}
+		protected override void DoWriteModalResults(IModalDataWriter writer) {}
+
+		protected override void DoCommitSimulationStep()
+		{
+			LeftSample.MoveNext();
+			RightSample.MoveNext();
+		}
 
 		#endregion
+
+		public CycleData CycleData()
+		{
+			return new CycleData {
+				AbsTime = LeftSample.Current.Time,
+				AbsDistance = null,
+				LeftSample = LeftSample.Current,
+				RightSample = RightSample.Current,
+			};
+		}
 	}
 }

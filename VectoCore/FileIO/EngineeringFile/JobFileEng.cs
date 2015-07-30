@@ -75,14 +75,14 @@ namespace TUGraz.VectoCore.FileIO.EngineeringFile
 		{
 			[JsonProperty(Required = Required.Always)] public IList<string> Cycles;
 			[JsonProperty] public new IList<AuxDataEng> Aux = new List<AuxDataEng>();
+			[JsonProperty("VACC", Required = Required.Always)] public string AccelerationCurve;
+			[JsonProperty] public bool EngineOnlyMode;
 			[JsonProperty(Required = Required.Always)] public new StartStopDataDeclEng StartStop;
-			[JsonProperty(Required = Required.Always)] public LACDataEng LAC;
+			[JsonProperty("LAC", Required = Required.Always)] public LACDataEng LookAheadCoasting;
 			[JsonProperty(Required = Required.Always)] public new OverSpeedEcoRollDataEng OverSpeedEcoRoll;
 
 			public class AuxDataEng : DataBodyDecl.AuxDataDecl
 			{
-				[JsonProperty(Required = Required.Always)] public string ID;
-				[JsonProperty(Required = Required.Always)] public string Type;
 				[JsonProperty(Required = Required.Always)] public string Path;
 			}
 
