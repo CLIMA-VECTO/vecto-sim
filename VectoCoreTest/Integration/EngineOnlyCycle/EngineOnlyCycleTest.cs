@@ -1,11 +1,9 @@
-using System;
 using System.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -43,9 +41,6 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			gearbox.InPort().Connect(aux.OutPort());
 			var port = aux.OutPort();
 
-//			IVectoJob job = SimulationFactory.CreateTimeBasedEngineOnlyRun(TestContext.DataRow["EngineFile"].ToString(),
-//				TestContext.DataRow["CycleFile"].ToString(), "test2.csv");
-
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();
 
@@ -54,11 +49,10 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var i = 0;
 			var results = new[] {
 				ModalResultField.n, ModalResultField.PaEng, ModalResultField.Tq_drag, ModalResultField.Pe_drag,
-				ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.Tq_full, ModalResultField.Pe_full
+				ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.Tq_full, ModalResultField.Pe_full,
+				ModalResultField.FCMap
 			};
-			//, ModalResultField.FC };
-			//var siFactor = new[] { 1, 1000, 1, 1000, 1000, 1, 1, 1000, 1 };
-			//var tolerances = new[] { 0.0001, 0.1, 0.0001, 0.1, 0.1, 0.001, 0.001, 0.1, 0.01 };
+
 			foreach (var cycleEntry in data.Entries) {
 				port.Request(absTime, dt, cycleEntry.EngineTorque, cycleEntry.EngineSpeed);
 				foreach (var sc in vehicle.SimulationComponents()) {
@@ -68,17 +62,9 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 				// TODO: handle initial state of engine
 				var row = expectedResults.Rows[i++];
 				if (i > 2) {
-					for (var j = 0; j < results.Length; j++) {
-						var field = results[j];
-						Assert.AreEqual(row.Field<SI>(field.GetName()).Value(), dataWriter.Field<SI>(field).Value(), 0.0001,
+					foreach (var field in results) {
+						AssertHelper.AreRelativeEqual(row.Field<SI>(field.GetName()).Value(), dataWriter.Field<SI>(field).Value(),
 							string.Format("t: {0}  field: {1}", i, field));
-					}
-					if (double.IsNaN(row.Field<SI>(ModalResultField.FCMap.GetName()).Value())) {
-						Assert.IsTrue(double.IsNaN(dataWriter.Field<SI>(ModalResultField.FCMap).Value()));
-					} else {
-						Assert.AreEqual(row.Field<SI>(ModalResultField.FCMap.GetName()).Value(),
-							dataWriter.Field<SI>(ModalResultField.FCMap).Value(),
-							0.01, "t: {0}  field: {1}", i, ModalResultField.FCMap);
 					}
 				}
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Utils;
 
@@ -29,18 +30,32 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AreRelativeEqual(expected.Value(), actual.Value());
 		}
 
-		public static void AreRelativeEqual(double expected, double actual,
+		[DebuggerHidden]
+		public static void AreRelativeEqual(double expected, double actual, string message = null,
 			double toleranceFactor = DoubleExtensionMethods.Tolerance)
 		{
-			if (actual.IsEqual(0.0)) {
-				Assert.AreEqual(expected, 0.0, DoubleExtensionMethods.Tolerance,
-					string.Format("AssertHelper.AreRelativeEqual failed. Expected: {0}, Actual: {1}, Tolerance: {2}", expected, actual,
-						toleranceFactor));
+			if (!string.IsNullOrWhiteSpace(message)) {
+				message = "\n" + message;
+			} else {
+				message = "";
+			}
+
+			if (double.IsNaN(expected)) {
+				Assert.IsTrue(double.IsNaN(actual),
+					string.Format("Actual value is not NaN. Expected: {0}, Actual: {1}{2}", expected, actual, message));
 				return;
 			}
-			Assert.IsTrue(Math.Abs(expected / actual - 1) < toleranceFactor,
-				string.Format("AssertHelper.AreRelativeEqual failed. Expected: {0}, Actual: {1}, Tolerance: {2}", expected, actual,
-					toleranceFactor));
+
+			if (expected.IsEqual(0.0)) {
+				Assert.AreEqual(actual, 0.0, DoubleExtensionMethods.Tolerance,
+					string.Format("Actual value is different. Difference: {3} Expected: {0}, Actual: {1}, Tolerance: {2}{4}",
+						expected, actual, toleranceFactor, expected - actual, message));
+				return;
+			}
+
+			Assert.IsTrue(Math.Abs(actual / expected - 1) < toleranceFactor,
+				string.Format("Actual value is different. Difference: {3} Expected: {0}, Actual: {1}, Tolerance: {2}{4}",
+					expected, actual, toleranceFactor, expected - actual, message));
 		}
 	}
 }

@@ -92,12 +92,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void AddConstant(string auxId, Watt powerDemand)
 		{
-			_auxDict[auxId] = ignored => powerDemand;
+			_auxDict[auxId] = speed => powerDemand;
 		}
 
 		public void AddDirect(IDrivingCycleCockpit cycle)
 		{
-			_auxDict[DirectAuxiliaryId] = ignored => cycle.CycleData().LeftSample.AdditionalAuxPowerDemand;
+			_auxDict[DirectAuxiliaryId] = speed => cycle.CycleData().LeftSample.AdditionalAuxPowerDemand;
 		}
 
 		public void AddMapping(string auxId, IDrivingCycleCockpit cycle, MappingAuxiliaryData data)
