@@ -29,6 +29,41 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
 
+
+		[TestMethod]
+		public void TestWheelsAndEngineInitialize()
+		{
+			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+
+			var vehicleData = CreateVehicleData(50000.SI<Kilogram>());
+
+			var driverData = CreateDriverData();
+
+			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrainOverload.vmod", false); //new TestModalDataWriter();
+			var sumWriter = new TestSumWriter();
+			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
+
+			var driver = new Driver(vehicleContainer, driverData);
+			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
+			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
+
+			var gbx = new DummyGearbox(vehicleContainer);
+
+			var driverPort = driver.OutPort();
+
+			gbx.CurrentGear = 1;
+
+			var response = driverPort.Initialize(18.KMPHtoMeterPerSecond(), VectoMath.InclinationToAngle(0.5 / 100));
+
+
+			var absTime = 0.SI<Second>();
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+		}
+
+
 		[TestMethod]
 		public void TestWheelsAndEngine()
 		{
