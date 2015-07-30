@@ -277,12 +277,12 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				}
 
 				if (!header.Contains(Fields.VehicleSpeed)) {
-					throw new VectoException(string.Format((string)"Column '{0}' is missing.",
-						(object)Fields.VehicleSpeed));
+					throw new VectoException(string.Format("Column '{0}' is missing.",
+						Fields.VehicleSpeed));
 				}
 
 				if (!header.Contains(Fields.Distance)) {
-					throw new VectoException(string.Format((string)"Column '{0}' is missing.", (object)Fields.Distance));
+					throw new VectoException(string.Format("Column '{0}' is missing.", Fields.Distance));
 				}
 
 				if (header.Contains(Fields.AirSpeedRelativeToVehicle) ^
@@ -347,8 +347,8 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				}
 
 				if (!header.Contains(Fields.VehicleSpeed)) {
-					throw new VectoException(string.Format((string)"Column '{0}' is missing.",
-						(object)Fields.VehicleSpeed));
+					throw new VectoException(string.Format("Column '{0}' is missing.",
+						Fields.VehicleSpeed));
 				}
 
 				if (header.Contains(Fields.AirSpeedRelativeToVehicle) ^
@@ -415,8 +415,8 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				}
 
 				if (!header.Contains(Fields.EngineSpeed)) {
-					throw new VectoException(string.Format((string)"Column '{0}' is missing.",
-						(object)Fields.EngineSpeed));
+					throw new VectoException(string.Format("Column '{0}' is missing.",
+						Fields.EngineSpeed));
 				}
 
 				if (!(header.Contains(Fields.EngineTorque) || header.Contains(Fields.EnginePower))) {

@@ -80,13 +80,13 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			dt = 1.SI<Second>();
 			absTime = 500.SI<Second>();
-			response = cycle.OutPort().Request((Second)absTime, (Second)dt);
+			response = cycle.OutPort().Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseFailTimeInterval));
 
 			dt = 0.25.SI<Second>();
 
 			for (int i = 0; i < 2; i++) {
-				response = cycle.OutPort().Request((Second)absTime, (Second)dt);
+				response = cycle.OutPort().Request(absTime, dt);
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 				dataWriter = new MockModalDataWriter();
