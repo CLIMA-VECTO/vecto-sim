@@ -5,5 +5,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	/// <summary>
 	/// Defines interfaces for a  driver demand driving cycle.
 	/// </summary>
-	public interface IDrivingCycle : IDrivingCycleCockpit, ISimulationOutProvider, IDrivingCycleInProvider {}
+	public interface IDrivingCycle : IDrivingCycleInfo, ISimulationOutProvider, IDrivingCycleInProvider {}
 }

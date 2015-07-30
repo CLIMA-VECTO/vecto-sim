@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	///     Class representing one EngineOnly Driving Cycle
 	/// </summary>
-	public class EngineOnlySimulation : VectoSimulationComponent, IDrivingCycleCockpit, IEngineOnlySimulation, ITnInPort,
+	public class EngineOnlySimulation : VectoSimulationComponent, IDrivingCycleInfo, IEngineOnlySimulation, ITnInPort,
 		ISimulationOutPort
 	{
 		protected DrivingCycleData Data;
@@ -71,7 +71,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize()
 		{
-			return _outPort.Initialize();
+			var index = 0;
+			return _outPort.Initialize(Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
 		}
 
 		#endregion

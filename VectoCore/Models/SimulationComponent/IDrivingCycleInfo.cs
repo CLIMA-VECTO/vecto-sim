@@ -6,7 +6,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	/// Defines a method to access shared data of the driving cycle.
 	/// </summary>
 	/// 
-	public interface IDrivingCycleCockpit
+	public interface IDrivingCycleInfo
 	{
 		/// <summary>
 		/// Returns the data samples for the current position in the cycle.
