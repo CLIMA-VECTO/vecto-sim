@@ -126,9 +126,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			Assert.AreEqual(absTime, outPort.AbsTime);
-			//Assert.AreEqual(dt, outPort.Ds);
 			Assert.AreEqual(0.SI<MeterPerSecond>(), outPort.Velocity);
-			Assert.AreEqual(-0.000202379727237.SI<Radian>().Value(), outPort.Gradient.Value(), 1E-15);
+			AssertHelper.AreRelativeEqual(-0.000202379727237.SI<Radian>(), outPort.Gradient);
 		}
 
 		[TestMethod]

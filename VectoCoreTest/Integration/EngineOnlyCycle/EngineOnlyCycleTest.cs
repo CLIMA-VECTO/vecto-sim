@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 		public void TestEngineOnlyDrivingCycle()
 		{
 			var data = DrivingCycleDataReader.ReadFromFileEngineOnly(TestContext.DataRow["CycleFile"].ToString());
-			var container = new VehicleContainer(null, null);
+			var container = new VehicleContainer();
 			var cycle = new MockDrivingCycle(container, data);
 			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
