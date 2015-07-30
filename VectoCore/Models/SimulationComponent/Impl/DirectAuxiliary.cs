@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed)
+		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
 		{
 			if (_outPort == null) {
 				Log.ErrorFormat("{0} cannot handle incoming request - no outport available", absTime);
@@ -60,12 +60,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			_powerDemand = _demand.GetPowerDemand(absTime, dt);
 			var tq = Formulas.PowerToTorque(_powerDemand, engineSpeed);
-			return _outPort.Request(absTime, dt, torque + tq, engineSpeed);
+			return _outPort.Request(absTime, dt, torque + tq, engineSpeed, dryRun);
 		}
 
-		public IResponse Initialize()
+		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			return _outPort.Initialize();
+			_powerDemand = _demand.GetPowerDemand(0.SI<Second>(), 0.SI<Second>());
+			var tq = Formulas.PowerToTorque(_powerDemand, engineSpeed);
+			return _outPort.Initialize(torque + tq, engineSpeed);
 		}
 
 		#endregion

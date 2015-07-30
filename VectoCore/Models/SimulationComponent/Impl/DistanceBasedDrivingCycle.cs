@@ -158,7 +158,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 			CurrentState = PreviousState.Clone();
 			//return new ResponseSuccess();
-			return _outPort.Initialize();
+			return _outPort.Initialize(CycleIntervalIterator.LeftSample.VehicleTargetSpeed,
+				CycleIntervalIterator.LeftSample.RoadGradient);
 		}
 
 		#endregion
@@ -208,11 +209,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSampleIt;
 			protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSampleIt;
 
+			//protected uint currentCycleIndex;
+
 			public DrivingCycleEnumerator(DrivingCycleData data)
 			{
 				LeftSampleIt = data.Entries.GetEnumerator();
 				RightSampleIt = data.Entries.GetEnumerator();
 				RightSampleIt.MoveNext();
+				//currentCycleIndex = 0;
 			}
 
 			public DrivingCycleData.DrivingCycleEntry Current

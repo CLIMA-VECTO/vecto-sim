@@ -48,14 +48,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed)
+		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
 		{
 			throw new NotImplementedException();
 		}
 
-		public IResponse Initialize()
+		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			return Next.Initialize();
+			// todo: add gearbox losses
+			return Next.Initialize(torque, engineSpeed);
 		}
 
 		#endregion

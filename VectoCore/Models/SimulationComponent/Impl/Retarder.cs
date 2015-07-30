@@ -43,19 +43,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_nextComponent = other;
 		}
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
 			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity);
 			//_retarderLoss = Formulas.TorqueToPower(torqueLoss, angularVelocity);
 			//var requestedPower = Formulas.TorqueToPower(torque, angularVelocity);
 			//requestedPower += _retarderLoss;
 
-			return _nextComponent.Request(absTime, dt, torque + retarderTorqueLoss, angularVelocity);
+			return _nextComponent.Request(absTime, dt, torque + retarderTorqueLoss, angularVelocity, dryRun);
 		}
 
-		public IResponse Initialize()
+		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
-			return _nextComponent.Initialize();
+			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity);
+			return _nextComponent.Initialize(torque + retarderTorqueLoss, angularVelocity);
 		}
 	}
 }

@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity)
+		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
 		{
 			if (_outPort == null) {
 				Log.ErrorFormat("{0} cannot handle incoming request - no outport available", absTime);
@@ -77,23 +77,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						absTime));
 			}
 
-			var power_supply = _demand.GetPowerDemand(absTime, dt);
-			var power_aux_out = power_supply / _data.EfficiencyToSupply;
+			var torqueAux = GetPowerDemand(absTime, dt, angularVelocity);
 
-			var n_auxiliary = angularVelocity * _data.TransitionRatio;
-
-			var power_aux_in = _data.GetPowerDemand(n_auxiliary, power_aux_out);
-			var power_aux = power_aux_in / _data.EfficiencyToEngine;
-
-			_powerDemand = power_aux;
-
-			var torque_aux = Formulas.PowerToTorque(power_aux, angularVelocity);
-			return _outPort.Request(absTime, dt, torque + torque_aux, angularVelocity);
+			return _outPort.Request(absTime, dt, torque + torqueAux, angularVelocity);
 		}
 
-		public IResponse Initialize()
+		private NewtonMeter GetPowerDemand(Second absTime, Second dt, PerSecond angularVelocity)
 		{
-			return _outPort.Initialize();
+			var powerSupply = _demand.GetPowerDemand(absTime, dt);
+			var powerAuxOut = powerSupply / _data.EfficiencyToSupply;
+
+			var nAuxiliary = angularVelocity * _data.TransitionRatio;
+
+			var powerAuxIn = _data.GetPowerDemand(nAuxiliary, powerAuxOut);
+			var powerAux = powerAuxIn / _data.EfficiencyToEngine;
+
+			_powerDemand = powerAux;
+
+			var torqueAux = Formulas.PowerToTorque(powerAux, angularVelocity);
+			return torqueAux;
+		}
+
+		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+		{
+			var torqueAux = GetPowerDemand(0.SI<Second>(), 0.SI<Second>(), angularVelocity);
+
+			return _outPort.Initialize(torque + torqueAux, angularVelocity);
 		}
 
 		#endregion

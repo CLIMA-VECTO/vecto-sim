@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -73,7 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed)
+		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
 		{
 			_currentState.dt = dt;
 			_currentState.EngineSpeed = engineSpeed;
@@ -97,8 +98,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			_currentState.EnginePower = LimitEnginePower(requestedEnginePower);
 
-			if (!_currentState.EnginePower.IsEqual(requestedEnginePower)) {
-				return new ResponseFailOverload() { Delta = (_currentState.EnginePower - requestedEnginePower).Value() };
+			if (dryRun) {
+				return new ResponseDryRun() {
+					DeltaFullLoad = (requestedEnginePower - _currentState.DynamicFullLoadPower).Value(),
+					DeltaDragLoad = (requestedEnginePower - _currentState.FullDragPower).Value()
+				};
+			}
+
+			if (!_currentState.EnginePower.IsEqual(requestedEnginePower, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
+				return new ResponseFailOverload() { Delta = (requestedEnginePower - _currentState.EnginePower).Value() };
 			}
 
 			UpdateEngineState(_currentState.EnginePower);
@@ -107,19 +115,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.EngineTorque = Formulas.PowerToTorque(_currentState.EnginePower,
 				_currentState.EngineSpeed);
 
-			//todo: use ResponseOverloadFail in case of overload
 			return new ResponseSuccess();
 		}
 
-		public IResponse Initialize()
+		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			// Todo: @@@quam
 			_previousState = new EngineState() {
-				EngineSpeed = _data.IdleSpeed,
-				EnginePower = 0.SI<Watt>(),
+				EngineSpeed = engineSpeed,
 				dt = 1.SI<Second>(),
+				EnginePowerLoss = InertiaPowerLoss(torque, engineSpeed),
+				StationaryFullLoadTorque =
+					_data.FullLoadCurve.FullLoadStationaryTorque(engineSpeed),
+				StationaryFullLoadPower = Formulas.TorqueToPower(_previousState.StationaryFullLoadTorque,
+					engineSpeed),
+				DynamicFullLoadTorque = _previousState.StationaryFullLoadTorque,
+				DynamicFullLoadPower = _previousState.StationaryFullLoadPower,
+				FullDragTorque = _data.FullLoadCurve.DragLoadStationaryTorque(engineSpeed),
+				FullDragPower = Formulas.TorqueToPower(_previousState.FullDragTorque, engineSpeed),
+				EnginePower = Formulas.TorqueToPower(torque, engineSpeed) + _previousState.EnginePowerLoss,
+				EngineTorque = Formulas.PowerToTorque(_previousState.EnginePower, _previousState.EngineSpeed)
 			};
-			//_currentState
+
 			return new ResponseSuccess();
 		}
 
