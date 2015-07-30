@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -8,18 +7,25 @@ using TUGraz.VectoCore.Utils;
 namespace TUGraz.VectoCore.Tests.Utils
 {
 	/// <summary>
-	///     Fake Data Writer Class for Tests.
+	/// Fake Data Writer Class for Tests.
 	/// </summary>
-	internal class TestModalDataWriter : IModalDataWriter
+	internal class MockModalDataWriter : IModalDataWriter
 	{
-		public TestModalDataWriter()
+		public MockModalDataWriter()
 		{
 			Data = new ModalResults();
 			CurrentRow = Data.NewRow();
+			Auxiliaries = new Dictionary<string, DataColumn>();
 		}
 
 		public ModalResults Data { get; set; }
 		public DataRow CurrentRow { get; set; }
+
+		public object this[string auxId]
+		{
+			get { return CurrentRow[Auxiliaries[auxId]]; }
+			set { CurrentRow[Auxiliaries[auxId]] = value; }
+		}
 
 		public bool HasTorqueConverter { get; set; }
 
@@ -31,14 +37,25 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public void Finish() {}
 
-		public object Compute(string expression, string filter)
-		{
-			return Data.Compute(expression, filter);
-		}
-
 		public IEnumerable<T> GetValues<T>(ModalResultField key)
 		{
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>((int)key));
+		}
+
+		public IEnumerable<T> GetValues<T>(DataColumn col)
+		{
+			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
+		}
+
+		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
+
+		public void AddAuxiliary(string id)
+		{
+			var auxColName = ModalResultField.Paux_ + id;
+			if (!Data.Columns.Contains(auxColName)) {
+				Auxiliaries[id] = Data.Columns.Add(auxColName, typeof(Watt));
+			}
+			Auxiliaries[id] = Data.Columns[auxColName];
 		}
 
 		public object this[ModalResultField key]
@@ -52,11 +69,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 			CurrentRow[ModalResultField.time.GetName()] = (absTime + simulationInterval / 2);
 			CurrentRow[ModalResultField.simulationInterval.GetName()] = simulationInterval;
 			CommitSimulationStep();
-		}
-
-		public double GetDouble(ModalResultField key)
-		{
-			return CurrentRow.Field<double>(key.GetName());
 		}
 	}
 }

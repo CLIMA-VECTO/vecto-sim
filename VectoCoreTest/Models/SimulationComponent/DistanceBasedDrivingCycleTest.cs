@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			absTime += response.SimulationInterval;
 
 
-			response = cycle.OutPort().Request((Second)absTime, 1.SI<Meter>());
+			response = cycle.OutPort().Request(absTime, 1.SI<Meter>());
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
@@ -59,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			absTime += response.SimulationInterval;
 
 
-			response = cycle.OutPort().Request((Second)absTime, 1.SI<Meter>());
+			response = cycle.OutPort().Request(absTime, 1.SI<Meter>());
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			absTime += response.SimulationInterval;
 
 
-			response = cycle.OutPort().Request((Second)absTime, 300.SI<Meter>());
+			response = cycle.OutPort().Request(absTime, 300.SI<Meter>());
 
 			Assert.IsInstanceOfType(response, typeof(ResponseDrivingCycleDistanceExceeded));
 			var tmp = response as ResponseDrivingCycleDistanceExceeded;
@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			} catch (VectoSimulationException e) {
 				Assert.AreEqual("Previous request did not succeed!", e.Message);
 			}
-			response = cycle.OutPort().Request((Second)absTime, tmp.MaxDistance);
+			response = cycle.OutPort().Request(absTime, tmp.MaxDistance);
 
 			Assert.AreEqual(5.SI<MeterPerSecond>().Value(), driver.LastRequest.TargetVelocity.Value(), Tolerance);
 			Assert.AreEqual(0.02667562971628240, driver.LastRequest.Gradient.Value(), 1E-12);

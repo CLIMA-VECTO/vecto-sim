@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Tests.FileIO
 			Assert.AreEqual(AxleConfiguration.AxleConfig_4x2, runData.VehicleData.AxleConfiguration);
 			Assert.AreEqual(0.4069297458, runData.VehicleData.DynamicTyreRadius.Value(), Tolerance);
 
-			Assert.AreEqual("2", runData.VehicleData.VehicleClass);
+			Assert.AreEqual(VehicleClass.Class2, runData.VehicleData.VehicleClass);
 			Assert.AreEqual(2, runData.VehicleData.AxleData.Count);
 			Assert.AreEqual(6, runData.VehicleData.AxleData[0].Inertia.Value(), Tolerance);
 

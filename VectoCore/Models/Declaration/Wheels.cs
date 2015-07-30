@@ -13,6 +13,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 			ParseData(ReadCsvResource(ResourceId));
 		}
 
+		public override WheelsEntry Lookup(string key)
+		{
+			return base.Lookup(key.Replace(" ", ""));
+		}
+
 		protected override sealed void ParseData(DataTable table)
 		{
 			Data = (from DataRow row in table.Rows

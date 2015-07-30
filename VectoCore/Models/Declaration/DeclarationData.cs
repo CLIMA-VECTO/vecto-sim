@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using NLog.Targets.Wrappers;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -20,6 +22,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private PneumaticSystem _pneumaticSystem;
 		private SteeringPump _steeringPump;
 		private WHTCCorrection _whtcCorrection;
+		private AirDrag _airDrag;
+		private TorqueConverter _torqueConverter;
 
 		public static Wheels Wheels
 		{
@@ -85,6 +89,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 			get { return Instance()._whtcCorrection ?? (Instance()._whtcCorrection = new WHTCCorrection()); }
 		}
 
+		public static AirDrag AirDrag
+		{
+			get { return Instance()._airDrag ?? (Instance()._airDrag = new AirDrag()); }
+		}
+
+		public static TorqueConverter TorqueConverter
+		{
+			get { return Instance()._torqueConverter ?? (Instance()._torqueConverter = new TorqueConverter()); }
+		}
+
 		public static int PoweredAxle()
 		{
 			return 1;
@@ -115,7 +129,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			public static class LookAhead
 			{
-				public const Boolean Enabled = true;
+				public const bool Enabled = true;
 				public static readonly MeterPerSquareSecond Deceleration = 0.5.SI<MeterPerSquareSecond>();
 				public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
 			}
@@ -242,6 +256,15 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				return new ShiftPolygon(entriesDown, entriesUp);
 			}
+		}
+
+		public static string[] AuxiliaryIDs()
+		{
+			return new[] {
+				Constants.Auxiliaries.IDs.Fan, Constants.Auxiliaries.IDs.SteeringPump,
+				Constants.Auxiliaries.IDs.HeatingVentilationAirCondition, Constants.Auxiliaries.IDs.ElectricSystem,
+				Constants.Auxiliaries.IDs.PneumaticSystem
+			};
 		}
 	}
 }

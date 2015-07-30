@@ -105,6 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 			return DriveDistance(absTime, ds);
+			throw new NotImplementedException("Distance based Cycle is not yet implemented.");
 		}
 
 		private IResponse DriveTimeInterval(Second absTime, Second dt)
@@ -163,6 +164,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
+
+		protected IResponse ProcessResponse(IResponse response)
+		{
+			throw new NotImplementedException();
+		}
 
 		#region VectoSimulationComponent
 
@@ -293,6 +299,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Radian Gradient;
 
 			public IResponse Response;
+		}
+
+		public CycleData CycleData()
+		{
+			return new CycleData {
+				AbsTime = CurrentState.AbsTime,
+				AbsDistance = CurrentState.Distance,
+				LeftSample = CycleIntervalIterator.LeftSample,
+				RightSample = CycleIntervalIterator.RightSample
+			};
 		}
 	}
 }

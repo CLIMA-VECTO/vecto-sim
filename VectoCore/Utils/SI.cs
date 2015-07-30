@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -13,6 +14,27 @@ using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
 {
+	public class Scalar : SIBase<Scalar>
+	{
+		static Scalar()
+		{
+			Constructors.Add(typeof(Scalar), val => new Scalar(val));
+		}
+
+		private Scalar(double val) : base(new SI(val)) {}
+
+		public static implicit operator double(Scalar self)
+		{
+			return self.Val;
+		}
+
+		public static implicit operator Scalar(double val)
+		{
+			return new Scalar(val);
+		}
+	}
+
+
 	public class Newton : SIBase<Newton>
 	{
 		static Newton()
@@ -555,6 +577,19 @@ namespace TUGraz.VectoCore.Utils
 			return new SI(Math.Abs(Val), this);
 		}
 
+		/// <summary>
+		/// Returns the absolute value.
+		/// </summary>
+		public SI Sqrt()
+		{
+			var si = ToBasicUnits();
+			var numerator = si.Numerator.Where((u, i) => i % 2 == 0);
+			var denominator = si.Denominator.Where((u, i) => i % 2 == 0);
+			var root = new SI(Math.Sqrt(si.Val), numerator, denominator);
+			Contract.Requires(root * root == this);
+			return root;
+		}
+
 		#region Unit Definitions
 
 		/// <summary>
@@ -854,25 +889,25 @@ namespace TUGraz.VectoCore.Utils
 		public static bool operator <(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
-			return si1.Val < d;
+			return si1 != null && si1.Val < d;
 		}
 
 		public static bool operator >(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
-			return si1.Val > d;
+			return si1 != null && si1.Val > d;
 		}
 
 		public static bool operator <=(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
-			return si1.Val <= d;
+			return si1 != null && si1.Val <= d;
 		}
 
 		public static bool operator >=(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
-			return si1.Val >= d;
+			return si1 != null && si1.Val >= d;
 		}
 
 		#endregion
@@ -1022,13 +1057,24 @@ namespace TUGraz.VectoCore.Utils
 
 		#endregion
 
-		public virtual string ToOutpuFormat(uint deciamls = 4, double outputFactor = 1.0, bool showUnit = false)
+		public Scalar Scalar()
 		{
-			var fmt = new StringBuilder("{0:F").Append(deciamls).Append("}");
-			if (showUnit) {
-				fmt.Append(" [{2}]");
+			var si = ToBasicUnits();
+			if (si.Numerator.Length == 0 && si.Denominator.Length == 0) {
+				return Val.SI<Scalar>();
 			}
-			return string.Format(CultureInfo.InvariantCulture, fmt.ToString(), Val * outputFactor, GetUnitString());
+			throw new InvalidCastException("The SI Unit is not a scalar.");
+		}
+
+
+		public virtual string ToOutputFormat(uint? decimals = null, double? outputFactor = null, bool? showUnit = null)
+		{
+			decimals = decimals ?? 4;
+			outputFactor = outputFactor ?? 1.0;
+			showUnit = showUnit ?? false;
+
+			var format = string.Format("{{0:F{0}}}" + (showUnit.Value ? " [{2}]" : ""), decimals);
+			return string.Format(CultureInfo.InvariantCulture, format, Val * outputFactor, GetUnitString());
 		}
 	}
 }

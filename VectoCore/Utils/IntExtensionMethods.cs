@@ -1,3 +1,5 @@
+using System;
+
 namespace TUGraz.VectoCore.Utils
 {
 	public static class IntExtensionMethods
@@ -36,6 +38,11 @@ namespace TUGraz.VectoCore.Utils
 		public static T SI<T>(this int d) where T : SIBase<T>
 		{
 			return SIBase<T>.Create(d);
+		}
+
+		public static double ToRadian(this int self)
+		{
+			return self * Math.PI / 180.0;
 		}
 
 		/// <summary>

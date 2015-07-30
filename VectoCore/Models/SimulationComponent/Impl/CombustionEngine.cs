@@ -156,14 +156,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			writer[ModalResultField.n] = _currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute;
 
 			try {
-				writer[ModalResultField.FC] =
+				writer[ModalResultField.FCMap] =
 					_data.ConsumptionMap.GetFuelConsumption(_currentState.EngineTorque, _currentState.EngineSpeed)
 						.ConvertTo()
 						.Gramm.Per.Hour;
 			} catch (VectoException ex) {
 				Log.WarnFormat("t: {0} - {1} n: {2} Tq: {3}", _currentState.AbsTime, ex.Message,
 					_currentState.EngineSpeed, _currentState.EngineTorque);
-				writer[ModalResultField.FC] = double.NaN;
+				writer[ModalResultField.FCMap] = double.NaN.SI();
 			}
 		}
 

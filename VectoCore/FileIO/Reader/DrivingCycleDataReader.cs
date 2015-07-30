@@ -223,23 +223,6 @@ namespace TUGraz.VectoCore.FileIO.Reader
 			IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table);
 		}
 
-		/// <summary>
-		///     Reader for Auxiliary Supply Power.
-		/// </summary>
-		private static class AuxSupplyPowerReader
-		{
-			/// <summary>
-			///     [W]. Reads Auxiliary Supply Power (defined by Fields.AuxiliarySupplyPower-Prefix).
-			/// </summary>
-			public static Dictionary<string, Watt> Read(DataRow row)
-			{
-				return row.Table.Columns.Cast<DataColumn>().
-					Where(col => col.ColumnName.StartsWith(Fields.AuxiliarySupplyPower)).
-					ToDictionary(col => col.ColumnName.Substring(Fields.AuxiliarySupplyPower.Length - 1),
-						col => row.ParseDouble(col).SI().Kilo.Watt.Cast<Watt>());
-			}
-		}
-
 		internal class DistanceBasedDataParser : IDataParser
 		{
 			public IEnumerable<DrivingCycleData.DrivingCycleEntry> Parse(DataTable table)
@@ -247,16 +230,16 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				ValidateHeader(table.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToArray());
 
 				return table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
-					Distance = DataTableExtensionMethods.ParseDouble(row, Fields.Distance).SI<Meter>(),
+					Distance = row.ParseDouble(Fields.Distance).SI<Meter>(),
 					VehicleTargetSpeed =
-						DataTableExtensionMethods.ParseDouble(row, Fields.VehicleSpeed)
+						row.ParseDouble(Fields.VehicleSpeed)
 							.SI()
 							.Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
 					RoadGradientPercent = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
 					RoadGradient =
 						VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
 					StoppingTime =
-						(DataTableExtensionMethods.ParseDouble(row, Fields.StoppingTime)).SI<Second>(),
+						(row.ParseDouble(Fields.StoppingTime)).SI<Second>(),
 					AdditionalAuxPowerDemand =
 						row.ParseDoubleOrGetDefault(Fields.AdditionalAuxPowerDemand).SI().Kilo.Watt.Cast<Watt>(),
 					EngineSpeed =
@@ -288,24 +271,24 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				foreach (
 					var col in
 						header.Where(
-							col => !(Enumerable.Contains(allowedCols, col) || col.StartsWith(Fields.AuxiliarySupplyPower)))
+							col => !(allowedCols.Contains(col) || col.StartsWith(Fields.AuxiliarySupplyPower)))
 					) {
-					throw new VectoException(String.Format("Column '{0}' is not allowed.", col));
+					throw new VectoException(string.Format("Column '{0}' is not allowed.", col));
 				}
 
 				if (!header.Contains(Fields.VehicleSpeed)) {
-					throw new VectoException(String.Format((string)"Column '{0}' is missing.",
-						(object)Fields.VehicleSpeed));
+					throw new VectoException(string.Format("Column '{0}' is missing.",
+						Fields.VehicleSpeed));
 				}
 
 				if (!header.Contains(Fields.Distance)) {
-					throw new VectoException(String.Format((string)"Column '{0}' is missing.", (object)Fields.Distance));
+					throw new VectoException(string.Format("Column '{0}' is missing.", Fields.Distance));
 				}
 
 				if (header.Contains(Fields.AirSpeedRelativeToVehicle) ^
 					header.Contains(Fields.WindYawAngle)) {
 					throw new VectoException(
-						String.Format("Both Columns '{0}' and '{1}' must be defined, or none of them.",
+						string.Format("Both Columns '{0}' and '{1}' must be defined, or none of them.",
 							Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle));
 				}
 			}
@@ -320,7 +303,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				var entries = table.Rows.Cast<DataRow>().Select((row, index) => new DrivingCycleData.DrivingCycleEntry {
 					Time = row.ParseDoubleOrGetDefault(Fields.Time, index).SI<Second>(),
 					VehicleTargetSpeed =
-						DataTableExtensionMethods.ParseDouble(row, Fields.VehicleSpeed)
+						row.ParseDouble(Fields.VehicleSpeed)
 							.SI()
 							.Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
 					RoadGradientPercent = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
@@ -358,20 +341,20 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				foreach (
 					var col in
 						header.Where(
-							col => !(Enumerable.Contains(allowedCols, col) || col.StartsWith(Fields.AuxiliarySupplyPower)))
+							col => !(allowedCols.Contains(col) || col.StartsWith(Fields.AuxiliarySupplyPower)))
 					) {
-					throw new VectoException(String.Format("Column '{0}' is not allowed.", col));
+					throw new VectoException(string.Format("Column '{0}' is not allowed.", col));
 				}
 
 				if (!header.Contains(Fields.VehicleSpeed)) {
-					throw new VectoException(String.Format((string)"Column '{0}' is missing.",
-						(object)Fields.VehicleSpeed));
+					throw new VectoException(string.Format("Column '{0}' is missing.",
+						Fields.VehicleSpeed));
 				}
 
 				if (header.Contains(Fields.AirSpeedRelativeToVehicle) ^
 					header.Contains(Fields.WindYawAngle)) {
 					throw new VectoException(
-						String.Format("Both Columns '{0}' and '{1}' must be defined, or none of them.",
+						string.Format("Both Columns '{0}' and '{1}' must be defined, or none of them.",
 							Fields.AirSpeedRelativeToVehicle, Fields.WindYawAngle));
 				}
 			}
@@ -393,19 +376,19 @@ namespace TUGraz.VectoCore.FileIO.Reader
 						AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
 					};
 					if (row.Table.Columns.Contains(Fields.EngineTorque)) {
-						if (DataRowExtensions.Field<string>(row, Fields.EngineTorque).Equals("<DRAG>")) {
+						if (row.Field<string>(Fields.EngineTorque).Equals("<DRAG>")) {
 							entry.Drag = true;
 						} else {
 							entry.EngineTorque =
-								DataTableExtensionMethods.ParseDouble(row, Fields.EngineTorque).SI<NewtonMeter>();
+								row.ParseDouble(Fields.EngineTorque).SI<NewtonMeter>();
 						}
 					} else {
-						if (DataRowExtensions.Field<string>(row, Fields.EnginePower).Equals("<DRAG>")) {
+						if (row.Field<string>(Fields.EnginePower).Equals("<DRAG>")) {
 							entry.Drag = true;
 						} else {
 							entry.EngineTorque =
 								Formulas.PowerToTorque(
-									DataTableExtensionMethods.ParseDouble(row, Fields.EnginePower)
+									row.ParseDouble(Fields.EnginePower)
 										.SI()
 										.Kilo.Watt.Cast<Watt>(),
 									entry.EngineSpeed);
@@ -427,18 +410,18 @@ namespace TUGraz.VectoCore.FileIO.Reader
 					Fields.AdditionalAuxPowerDemand
 				};
 
-				foreach (var col in header.Where(col => !Enumerable.Contains(allowedCols, col))) {
-					throw new VectoException(String.Format("Column '{0}' is not allowed.", col));
+				foreach (var col in header.Where(col => !allowedCols.Contains(col))) {
+					throw new VectoException(string.Format("Column '{0}' is not allowed.", col));
 				}
 
 				if (!header.Contains(Fields.EngineSpeed)) {
-					throw new VectoException(String.Format((string)"Column '{0}' is missing.",
-						(object)Fields.EngineSpeed));
+					throw new VectoException(string.Format("Column '{0}' is missing.",
+						Fields.EngineSpeed));
 				}
 
 				if (!(header.Contains(Fields.EngineTorque) || header.Contains(Fields.EnginePower))) {
 					throw new VectoException(
-						String.Format("Columns missing: Either column '{0}' or column '{1}' must be defined.",
+						string.Format("Columns missing: Either column '{0}' or column '{1}' must be defined.",
 							Fields.EngineTorque, Fields.EnginePower));
 				}
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -10,8 +9,6 @@ using TUGraz.VectoCore.FileIO.EngineeringFile;
 using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
@@ -50,7 +47,25 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));
 
 			ReadGearbox(Path.Combine(job.BasePath, job.Body.GearboxFile));
+
+			ReadAuxiliary(engineering.Body.Aux);
 		}
+
+		private void ReadAuxiliary(IEnumerable<VectoJobFileV2Engineering.DataBodyEng.AuxDataEng> auxiliaries)
+		{
+			var aux = auxiliaries.Select(a => new VectoRunData.AuxData {
+				ID = a.ID,
+				Technology = a.Technology,
+				TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
+				DemandType = AuxiliaryDemandType.Mapping
+			});
+
+			// add a direct auxiliary
+			aux = aux.Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable());
+
+			Aux = aux.ToArray();
+		}
+
 
 		protected override void ReadVehicle(string file)
 		{
@@ -89,7 +104,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					GearboxData = dao.CreateGearboxData(Gearbox, null),
 					VehicleData = dao.CreateVehicleData(Vehicle),
 					DriverData = driver,
-					//Aux = 
+					Aux = Aux,
 					// TODO: distance or time-based cycle!
 					Cycle =
 						DrivingCycleDataReader.ReadFromFile(Path.Combine(job.BasePath, cycle), DrivingCycleData.CycleType.DistanceBased),

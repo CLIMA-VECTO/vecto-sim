@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var torque = 0.SI<NewtonMeter>();
 			var engineSpeed = 600.RPMtoRad();
-			var dataWriter = new TestModalDataWriter();
+			var dataWriter = new MockModalDataWriter();
 
 			for (var i = 0; i < 21; i++) {
 				port.Request(absTime, dt, torque, engineSpeed);
@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			port.Request(absTime, dt, Formulas.PowerToTorque(2329.973.SI<Watt>(), engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
 
-			Assert.AreEqual(1152.40304, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+			Assert.AreEqual(1152.40304, ((SI)dataWriter[ModalResultField.PaEng]).Value(), 0.001);
 
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			engine.CommitSimulationStep(dataWriter);
 
 
-			Assert.AreEqual(7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+			Assert.AreEqual(7108.32, ((SI)dataWriter[ModalResultField.PaEng]).Value(), 0.001);
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
 
@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			port.Request(absTime, dt, Formulas.PowerToTorque(1351.656.SI<Watt>(), engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
 
-			Assert.AreEqual(-7108.32, dataWriter.GetDouble(ModalResultField.PaEng), 0.001);
+			Assert.AreEqual(-7108.32, ((SI)dataWriter[ModalResultField.PaEng]).Value(), 0.001);
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
 
@@ -157,11 +157,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var requestPort = gearbox.OutPort();
 
 			//var modalData = new ModalDataWriter(string.Format("load_jump_{0}.csv", TestContext.DataRow["TestName"].ToString()));
-			var modalData = new TestModalDataWriter();
+			var modalData = new MockModalDataWriter();
 
-			var idlePower = Double.Parse(TestContext.DataRow["initialIdleLoad"].ToString()).SI<Watt>();
+			var idlePower = double.Parse(TestContext.DataRow["initialIdleLoad"].ToString()).SI<Watt>();
 
-			var angularSpeed = Double.Parse(TestContext.DataRow["rpm"].ToString()).RPMtoRad();
+			var angularSpeed = double.Parse(TestContext.DataRow["rpm"].ToString()).RPMtoRad();
 
 			var t = 0.SI<Second>();
 			var dt = 0.1.SI<Second>();
@@ -175,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			// dt = TimeSpan.FromSeconds(double.Parse(TestContext.DataRow["dt"].ToString(), CultureInfo.InvariantCulture));
 			// dt = TimeSpan.FromSeconds(expectedResults.Rows[i].ParseDouble(0)) - t;
 			var engineLoadPower = engineData.FullLoadCurve.FullLoadStationaryPower(angularSpeed);
-			idlePower = Double.Parse(TestContext.DataRow["finalIdleLoad"].ToString()).SI<Watt>();
+			idlePower = double.Parse(TestContext.DataRow["finalIdleLoad"].ToString()).SI<Watt>();
 			for (; t < 25; t += dt, i++) {
 				dt = (expectedResults.Rows[i + 1].ParseDouble(0) - expectedResults.Rows[i].ParseDouble(0)).SI<Second>();
 				if (t >= 10.SI<Second>()) {
@@ -187,8 +187,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				engine.CommitSimulationStep(modalData);
 				// todo: compare results...
 				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(0), t.Value(), 0.001, "Time");
-				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), modalData.GetDouble(ModalResultField.Pe_full), 0.1,
-					String.Format("Load in timestep {0}", t));
+				Assert.AreEqual(expectedResults.Rows[i].ParseDouble(1), ((SI)modalData[ModalResultField.Pe_full]).Value(), 0.1,
+					string.Format("Load in timestep {0}", t));
 				modalData.CommitSimulationStep();
 			}
 			modalData.Finish();

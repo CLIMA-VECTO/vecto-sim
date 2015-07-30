@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.IO;
-using System.Linq;
-using Common.Logging;
-using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data
@@ -111,5 +105,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 			public bool Drag { get; set; }
 		}
+
+		#region DataParser
+
+		private interface IDataParser
+		{
+			IEnumerable<DrivingCycleEntry> Parse(DataTable table);
+		}
+
+		#endregion
 	}
 }

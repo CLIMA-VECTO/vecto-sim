@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -12,15 +13,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	///     Class representing one EngineOnly Driving Cycle
 	/// </summary>
-	public class EngineOnlySimulation : VectoSimulationComponent, IEngineOnlySimulation, ITnInPort,
+	public class EngineOnlySimulation : VectoSimulationComponent, IDrivingCycleCockpit, IEngineOnlySimulation, ITnInPort,
 		ISimulationOutPort
 	{
 		protected DrivingCycleData Data;
 		private ITnOutPort _outPort;
+		private IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
+		private IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
+
 
 		public EngineOnlySimulation(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
+			LeftSample = Data.Entries.GetEnumerator();
+			LeftSample.MoveNext();
+
+			RightSample = Data.Entries.GetEnumerator();
+			RightSample.MoveNext();
+			RightSample.MoveNext();
 		}
 
 		#region ITnInProvider
@@ -61,9 +71,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize()
 		{
-			// nothing to initialize here...
-			// TODO: _outPort.initialize();
-			throw new NotImplementedException();
+			return _outPort.Initialize();
 		}
 
 		#endregion
@@ -81,8 +89,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer) {}
 
-		protected override void DoCommitSimulationStep() {}
+		protected override void DoCommitSimulationStep()
+		{
+			LeftSample.MoveNext();
+			RightSample.MoveNext();
+		}
 
 		#endregion
+
+		public CycleData CycleData()
+		{
+			return new CycleData {
+				AbsTime = LeftSample.Current.Time,
+				AbsDistance = null,
+				LeftSample = LeftSample.Current,
+				RightSample = RightSample.Current,
+			};
+		}
 	}
 }

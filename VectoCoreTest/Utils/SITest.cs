@@ -106,32 +106,32 @@ namespace TUGraz.VectoCore.Tests.Utils
 		{
 			var si = new SI();
 			Assert.AreEqual(0.0, si.Value());
-			Assert.AreEqual("0 [-]", si.ToString());
+			Assert.AreEqual("0.0000 [-]", si.ToString());
 			Assert.IsTrue(si.HasEqualUnit(new SI()));
 
 			var si2 = 5.SI().Watt;
-			Assert.AreEqual("5 [W]", si2.ToString());
+			Assert.AreEqual("5.0000 [W]", si2.ToString());
 
 			var si3 = 2.SI().Radian.Per.Second;
-			Assert.AreEqual("2 [1/s]", si3.ToString());
+			Assert.AreEqual("2.0000 [1/s]", si3.ToString());
 
 			var si4 = si2 * si3;
-			Assert.AreEqual("10 [W/s]", si4.ToString());
+			Assert.AreEqual("10.0000 [W/s]", si4.ToString());
 			Assert.IsTrue(si4.HasEqualUnit(new SI().Watt.Per.Second));
-			Assert.AreEqual("10 [kgmm/ssss]", si4.ToBasicUnits().ToString());
+			Assert.AreEqual("10.0000 [kgmm/ssss]", si4.ToBasicUnits().ToString());
 
 
 			var kg = 5.SI().Kilo.Gramm;
 			Assert.AreEqual(5.0, kg.Value());
-			Assert.AreEqual("5 [kg]", kg.ToString());
+			Assert.AreEqual("5.0000 [kg]", kg.ToString());
 
 			kg = kg.ConvertTo().Kilo.Gramm.Clone();
 			Assert.AreEqual(5.0, kg.Value());
-			Assert.AreEqual("5 [kg]", kg.ToString());
+			Assert.AreEqual("5.0000 [kg]", kg.ToString());
 
 			kg = kg.ConvertTo().Gramm.Clone();
 			Assert.AreEqual(5000, kg.Value());
-			Assert.AreEqual("5000 [g]", kg.ToString());
+			Assert.AreEqual("5000.0000 [g]", kg.ToString());
 
 			var x = 5.SI();
 			Assert.AreEqual((2.0 / 5.0).SI(), 2 / x);
@@ -156,7 +156,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		[TestMethod]
-		[SuppressMessage("ReSharper", "SuggestVarOrType_SimpleTypes")]
 		public void SI_Test_Addition_Subtraction()
 		{
 			var v1 = 600.SI<NewtonMeter>();
@@ -173,7 +172,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.IsFalse(v2 >= v1);
 
 			Assert.AreEqual(1, new SI().CompareTo(null));
-			Assert.AreEqual(1, new SI().CompareTo("bla"));
+			Assert.AreEqual(1, new SI().CompareTo("not an SI"));
 			Assert.AreEqual(-1, new SI().Meter.CompareTo(new SI().Kilo.Meter.Per.Hour));
 			Assert.AreEqual(1, new SI().Newton.Meter.CompareTo(new SI().Meter));
 

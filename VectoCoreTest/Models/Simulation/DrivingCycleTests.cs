@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void TestEngineOnly()
 		{
-			var dataWriter = new TestModalDataWriter();
+			var dataWriter = new MockModalDataWriter();
 			var sumWriter = new TestSumWriter();
 			var container = new VehicleContainer(dataWriter, sumWriter);
 
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			response = cycle.OutPort().Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
-			var dataWriter = new TestModalDataWriter();
+			var dataWriter = new MockModalDataWriter();
 			container.CommitSimulationStep(absTime, dt);
 
 			Assert.AreEqual(absTime, outPort.AbsTime);
@@ -80,16 +80,16 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			dt = 1.SI<Second>();
 			absTime = 500.SI<Second>();
-			response = cycle.OutPort().Request((Second)absTime, (Second)dt);
+			response = cycle.OutPort().Request(absTime, dt);
 			Assert.IsInstanceOfType(response, typeof(ResponseFailTimeInterval));
 
 			dt = 0.25.SI<Second>();
 
 			for (int i = 0; i < 2; i++) {
-				response = cycle.OutPort().Request((Second)absTime, (Second)dt);
+				response = cycle.OutPort().Request(absTime, dt);
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
-				dataWriter = new TestModalDataWriter();
+				dataWriter = new MockModalDataWriter();
 				container.CommitSimulationStep(absTime, dt);
 
 				Assert.AreEqual(absTime, outPort.AbsTime);
@@ -126,15 +126,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			Assert.AreEqual(absTime, outPort.AbsTime);
-			//Assert.AreEqual(dt, outPort.Ds);
 			Assert.AreEqual(0.SI<MeterPerSecond>(), outPort.Velocity);
-			Assert.AreEqual(-0.000202379727237.SI<Radian>().Value(), outPort.Gradient.Value(), 1E-15);
+			AssertHelper.AreRelativeEqual(-0.000202379727237.SI<Radian>(), outPort.Gradient);
 		}
 
 		[TestMethod]
 		public void Test_TimeBased_TimeFieldMissing()
 		{
-			var container = new VehicleContainer(new TestModalDataWriter(), new TestSumWriter());
+			var container = new VehicleContainer(new MockModalDataWriter(), new TestSumWriter());
 
 			var cycleData = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Cycle time field missing.vdri");
 			var cycle = new TimeBasedDrivingCycle(container, cycleData);
@@ -146,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			inPort.Connect(outPort);
 
-			var dataWriter = new TestModalDataWriter();
+			var dataWriter = new MockModalDataWriter();
 			var absTime = 0.SI<Second>();
 			var dt = 1.SI<Second>();
 

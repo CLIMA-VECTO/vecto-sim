@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			reader.SetJobFile(JobFile);
 			var runData = reader.NextRun().First();
 
-			var writer = new TestModalDataWriter();
+			var writer = new MockModalDataWriter();
 			var sumWriter = new TestSumWriter();
 			var builder = new PowertrainBuilder(writer, sumWriter, false);
 

@@ -35,16 +35,16 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			foreach (var mission in segment.Missions) {
 				foreach (var loading in mission.Loadings) {
 					var engineData = dao.CreateEngineData(Engine);
+
 					var simulationRunData = new VectoRunData {
 						VehicleData = dao.CreateVehicleData(Vehicle, mission, loading),
 						EngineData = engineData,
 						GearboxData = dao.CreateGearboxData(Gearbox, engineData),
-						Aux = Aux,
-						// @@@ TODO: ...
+						Aux = dao.CreateAuxiliaryData(Aux, mission.MissionType, segment.VehicleClass),
 						Cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, DrivingCycleData.CycleType.DistanceBased),
 						DriverData = driverdata,
 						IsEngineOnly = IsEngineOnly,
-						JobFileName = Job.JobFile,
+						JobFileName = Job.JobFile
 					};
 					simulationRunData.VehicleData.VehicleClass = segment.VehicleClass;
 					yield return simulationRunData;
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					Engine.BasePath = Path.GetDirectoryName(file);
 					break;
 				default:
-					throw new UnsupportedFileVersionException("Unsopported Version of engine-file. Got version " + fileInfo.Version);
+					throw new UnsupportedFileVersionException("Unsupported Version of engine-file. Got version " + fileInfo.Version);
 			}
 		}
 
@@ -130,21 +130,28 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					Gearbox.BasePath = Path.GetDirectoryName(file);
 					break;
 				default:
-					throw new UnsupportedFileVersionException("Unsopported Version of gearbox-file. Got version " + fileInfo.Version);
+					throw new UnsupportedFileVersionException("Unsupported Version of gearbox-file. Got version " + fileInfo.Version);
 			}
 		}
 
-		private void ReadAuxiliary(IEnumerable<VectoJobFileV2Declaration.DataBodyDecl.AuxDataDecl> auxList)
+		private void ReadAuxiliary(IEnumerable<VectoJobFileV2Declaration.DataBodyDecl.AuxDataDecl> auxiliaries)
 		{
-			Aux = auxList.Select(aux =>
-				new VectoRunData.AuxData {
-					ID = aux.ID,
-					Type = aux.Type,
-					Technology = aux.Technology,
-					TechList = aux.TechList == null ? null : aux.TechList.ToArray()
-				}).ToArray();
-		}
+			var aux = DeclarationData.AuxiliaryIDs().Select(id => {
+				var a = auxiliaries.First(decl => decl.ID == id);
+				return new VectoRunData.AuxData {
+					ID = a.ID,
+					Type = AuxiliaryTypeHelper.Parse(a.Type),
+					Technology = a.Technology,
+					TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
+					DemandType = AuxiliaryDemandType.Constant
+				};
+			});
 
+			// add a direct auxiliary
+			aux = aux.Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable());
+
+			Aux = aux.ToArray();
+		}
 
 		internal Segment GetVehicleClassification(VehicleCategory category, AxleConfiguration axles, Kilogram grossMassRating,
 			Kilogram curbWeight)

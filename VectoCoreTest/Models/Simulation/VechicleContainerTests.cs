@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
@@ -15,7 +14,6 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void VechicleContainerHasEngine()
 		{
 			var vehicle = new VehicleContainer();
-			//var engineData = CombustionEngineData.ReadFromFile(EngineFile);
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
 			var engine = new CombustionEngine(vehicle, engineData);
 

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.EngineeringFile;
 using TUGraz.VectoCore.Models.Declaration;
@@ -8,6 +10,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
@@ -66,7 +69,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			var accelerationData = AccelerationCurveData.ReadFromFile(Path.Combine(job.BasePath, data.AccelerationCurve));
 			var lookAheadData = new DriverData.LACData() {
 				Enabled = data.LookAheadCoasting.Enabled,
-				Deceleration = DoubleExtensionMethods.SI<MeterPerSquareSecond>(data.LookAheadCoasting.Dec),
+				Deceleration = data.LookAheadCoasting.Dec.SI<MeterPerSquareSecond>(),
 				MinSpeed = data.LookAheadCoasting.MinSpeed.KMPHtoMeterPerSecond(),
 			};
 			var overspeedData = new DriverData.OverSpeedEcoRollData() {
@@ -108,7 +111,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius.SI().Milli.Meter.Cast<Meter>();
 
 			retVal.AxleData = data.AxleConfig.Axles.Select(axle => new Axle {
-				Inertia = DoubleExtensionMethods.SI<KilogramSquareMeter>(axle.Inertia),
+				Inertia = axle.Inertia.SI<KilogramSquareMeter>(),
 				TwinTyres = axle.TwinTyres,
 				RollResistanceCoefficient = axle.RollResistanceCoefficient,
 				AxleWeightShare = axle.AxleWeightShare,
@@ -165,10 +168,10 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
 				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
 
-				var shiftPolygon = !String.IsNullOrEmpty(gearSettings.ShiftPolygon)
+				var shiftPolygon = !string.IsNullOrEmpty(gearSettings.ShiftPolygon)
 					? ShiftPolygon.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.ShiftPolygon))
 					: null;
-				var fullLoad = !String.IsNullOrEmpty(gearSettings.FullLoadCurve) && !gearSettings.FullLoadCurve.Equals("<NOFILE>")
+				var fullLoad = !string.IsNullOrEmpty(gearSettings.FullLoadCurve) && !gearSettings.FullLoadCurve.Equals("<NOFILE>")
 					? GearFullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
 					: null;
 
