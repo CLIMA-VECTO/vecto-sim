@@ -72,9 +72,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			CommitSimulationStep();
 		}
 
-		public double GetDouble(ModalResultField key)
+		public T Field<T>(ModalResultField key)
 		{
-			return CurrentRow.Field<double>(key.GetName());
+			return CurrentRow.Field<T>(key.GetName());
 		}
 	}
 }

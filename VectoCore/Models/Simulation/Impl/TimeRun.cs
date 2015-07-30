@@ -10,15 +10,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected override IResponse DoSimulationStep()
 		{
-			var dt = 1.SI<Second>();
-
 			var response = CyclePort.Request(AbsTime, dt);
 
 			if (response is ResponseCycleFinished) {
 				return response;
 			}
-
-			AbsTime = AbsTime + dt;
 			return response;
 		}
 

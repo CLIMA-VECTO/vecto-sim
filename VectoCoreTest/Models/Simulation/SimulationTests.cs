@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation;
@@ -33,7 +32,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void TestEngineOnly_JobRun()
 		{
-			var actual = "TestEngineOnly_JobRun-result.vmod";
+			var actual = @"TestData\Jobs\EngineOnlyJob_Coach Engine Only short.vmod";
 			var expected = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
 
 			var job = CreateRun(actual);
@@ -45,7 +44,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void TestEngineOnly_SimulatorRun()
 		{
-			var actual = @"TestEngineOnly_SimulatorRun-result.vmod";
+			var actual = @"TestData\Jobs\EngineOnlyJob_Coach Engine Only short.vmod";
 			var expected = @"TestData\Results\EngineOnlyCycles\24tCoach_EngineOnly short.vmod";
 
 			var run = CreateRun(actual);
@@ -82,13 +81,18 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
 
-			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum",
-				@"TestData\Jobs\24t Coach.vsum");
+			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum", @"24t Coach.vsum");
+
 			ResultFileHelper.TestModFiles(new[] {
 				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only1.vmod",
 				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only2.vmod",
 				@"TestData\Results\EngineOnlyCycles\24t Coach_Engine Only3.vmod"
-			}, new[] { "24t Coach_Engine Only1.vmod", "24t Coach_Engine Only2.vmod", "24t Coach_Engine Only3.vmod" });
+			}, new[] {
+				@"TestData\Jobs\24t Coach EngineOnly_Engine Only1.vmod",
+				@"TestData\Jobs\24t Coach EngineOnly_Engine Only2.vmod",
+				@"TestData\Jobs\24t Coach EngineOnly_Engine Only3.vmod"
+			})
+				;
 		}
 	}
 }

@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		{
 			return data.GetValues<SI>(field).Max();
 		}
-		
+
 		public static SI Average(this IModalDataWriter data, ModalResultField field, Func<SI, bool> filter = null)
 		{
 			return data.GetValues<SI>(field).Average(filter);
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public static SI Average(this IEnumerable<SI> self, Func<SI, bool> filter = null)
 		{
-			var values = self.Where(filter ?? (x => x != null)).ToList();
+			var values = self.Where(filter ?? (x => x != null && !double.IsNaN(x.Value()))).ToList();
 			return values.Any() ? values.Sum() / values.Count : null;
 		}
 

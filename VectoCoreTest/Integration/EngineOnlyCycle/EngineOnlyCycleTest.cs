@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
@@ -23,7 +24,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 		public void TestEngineOnlyDrivingCycle()
 		{
 			var data = DrivingCycleDataReader.ReadFromFileEngineOnly(TestContext.DataRow["CycleFile"].ToString());
-			var cycle = new MockDrivingCycle(null, data);
+			var container = new VehicleContainer(null, null);
+			var cycle = new MockDrivingCycle(container, data);
 			var expectedResults = ModalResults.ReadFromFile(TestContext.DataRow["ModalResultFile"].ToString());
 
 			var vehicle = new VehicleContainer();
@@ -68,24 +70,22 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 				if (i > 2) {
 					for (var j = 0; j < results.Length; j++) {
 						var field = results[j];
-						Assert.AreEqual((double)row[field.GetName()], dataWriter.GetDouble(field),
-							0.0001, string.Format("t: {0}  field: {1}", i, field));
+						Assert.AreEqual(row.Field<SI>(field.GetName()).Value(), dataWriter.Field<SI>(field).Value(), 0.0001,
+							string.Format("t: {0}  field: {1}", i, field));
 					}
-					if (row[ModalResultField.FCMap.GetName()] is double &&
-						!double.IsNaN(double.Parse(row[ModalResultField.FCMap.GetName()].ToString()))) {
-						Assert.AreEqual((double)row[ModalResultField.FCMap.GetName()],
-							dataWriter.GetDouble(ModalResultField.FCMap), 0.01,
-							"t: {0}  field: {1}", i, ModalResultField.FCMap);
+					if (double.IsNaN(row.Field<SI>(ModalResultField.FCMap.GetName()).Value())) {
+						Assert.IsTrue(double.IsNaN(dataWriter.Field<SI>(ModalResultField.FCMap).Value()));
 					} else {
-						Assert.IsTrue(double.IsNaN(dataWriter.GetDouble(ModalResultField.FCMap)),
-							string.Format("t: {0}", i));
+						Assert.AreEqual(row.Field<SI>(ModalResultField.FCMap.GetName()).Value(),
+							dataWriter.Field<SI>(ModalResultField.FCMap).Value(),
+							0.01, "t: {0}  field: {1}", i, ModalResultField.FCMap);
 					}
 				}
 
 				dataWriter.CommitSimulationStep(absTime, dt);
 				absTime += dt;
 			}
-			dataWriter.Data.WriteToFile(string.Format("result_{0}.csv", TestContext.DataRow["TestName"].ToString()));
+			dataWriter.Data.WriteToFile(string.Format("result_{0}.csv", TestContext.DataRow["TestName"]));
 		}
 
 		[TestMethod]
