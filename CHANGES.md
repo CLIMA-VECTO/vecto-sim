@@ -1,12 +1,75 @@
 
 ### VECTO x.x (current source)
 
+TODO
+* Traction interruption: No engine rev down - hold rpm until new gear engaged (Allison)
 
+### VECTO 2.2
+* Bugfix: Error in Declaration Mode Pneumatic System aux power calculation ([kW] were interpreted as [W])
+* Bugfix: Error in Declaration Mode Electric System aux power calculation
+* Moved gear-specific Full Load Curves to Gearbox File
+* Combined Drag Coefficient * Cross Sectional Area in one input parameter
+* Updated .vgbx file format (Added gear-specific Full Load Curves)
+* Updated .veng file format (Removed gear-specific Full Load Curves)
+* Updated .vveh file format (Combined Drag Coefficient * Cross Sectional Area in one parameter)
+* Updated Generic Vehicles (new file formats)
+* Removed WHTC Correction Factor Calculation. Now in external tool, VECTO-Engine.
+* Test Options are now only available in Engineering Mode
+* Gearbox Editor now shows generic and user-defined shift polygons (if available)
+* Various small updates in GUI
+
+### VECTO 2.1.4
+* Bugfixes in start gear and (A)MT shift model
+* Updated Coach .vcdv file for higher speeds to avoid extrapolation
+* Renamed output "FC" to "FC-Map" for better clarification
+* Same header for g/h and g/km output
+* Reduced minimum turbine speed for 1C-to-2C AT up-shift condition from 900 to 700rpm.
+* Updated cross wind correction parameters to current White Book values
+
+### VECTO 2.1.3
+* PwheelPos output in VSUM file.
+* Implemented new Cd*A(v) method
+* Bugfix in TC model
+* Bugfix: Unit error in Cd(v) methods caused incorrect Delta-Cd value being used
+
+### VECTO 2.1.2
+* Improved TC iteration for higher precision
+* Extended possible TC speed ratio 
+
+### VECTO 2.1.1
+* Bugfix: Incorrect torque calculation in AT/TC model caused early up-shifts
+* Updated C-to-C shift strategy with acc_min rule (see V2.1)
+
+### VECTO 2.1
+* Limit engine rpm in torque converter operation acc. > acc_min
+* Shift up (C-to-L, L-to-L) if acc. > acc_min and next-gear-rpm > threshold
+* C-to-C up-shift condition based on N80h engine speed (instead of N95h)
+* Pwheel-Input (SiCo Mode)
+* FC [g/h] is always saved in output (in addition to [g/km]), not only in Engine Only mode
+* Updated DEV options for AT update
+* "DEV" tab is now "Test"
+* GUI: Corrected air density unit in GUI
+* Bugfix: Format error in .vmod header
+
+### VECTO 2.0.4-beta4_Test (Test Release)
+* Transmission loss extrapolation Errors are now Warnings in Engineering Mode.
+* Bugfix: Error in TC Iteration caused crash
+* Bugfix: Minimizing Graph window caused crash
+* Fixed error in cycle conversion
+* Errors if full load curve is too "short"
+
+### VECTO 2.0.4-beta3
+* Bugfix: VECTO didn't check if the full load curve covers the speed range up to nhi. Now it will abort if the full load curve is "too short"
+* Update in Torque Convert model: Allowed engine speed range up to n95h (before: Pmax-speed)
+* Bugfix: Rare crashes caused by gear shift model
+* Bugfix: Error in engine inertia power calculation
+* Torque Converter losses in modal results
+* Implemented speed profile cleaning for very small values. (Caused shifting back to first gear when decelerating.)
+* DEV Option for advanced CSV format output (units line, additional info)
 
 ### VECTO 2.0.4-beta2
 * Bugfix: VECTO freezed if torque converter creeping was not possible due to low full load torque. Now it will abort with error message.
 * Bugfix: Small fixes in torque converter model
-
 
 ### VECTO 2.0.4-beta1
 * Updated CSV format of some declaration config files
