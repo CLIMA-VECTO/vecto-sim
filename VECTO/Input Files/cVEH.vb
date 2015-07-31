@@ -13,7 +13,7 @@ Imports System.Collections.Generic
 Public Class cVEH
 
     'V2 MassMax is now saved in [t] instead of [kg]
-    Private Const FormatVersion As Short = 5
+	Private Const FormatVersion As Short = 7
     Private FileVersion As Short
 
     Private sFilePath As String
@@ -23,14 +23,9 @@ Public Class cVEH
     Public Loading As Single
     Private siFr0 As Single
 
-    Public Cd0 As Single
-    Public Aquers As Single
-
-    Public Cd02 As Single
-    Public Aquers2 As Single
-
-    Private Cd0Act As Single
-    Private AquersAct As Single
+	Public CdA0 As Single
+	Public CdA02 As Single
+	Private CdA0Act As Single
 
     Public CdMode As tCdMode
     Public CdFile As cSubPath
@@ -76,7 +71,7 @@ Public Class cVEH
         MyFileList = New List(Of String)
 
         '.vcdv  / .vcdb
-        If Me.CdMode <> tCdMode.ConstCd0 Then MyFileList.Add(Me.CdFile.FullPath)
+		If Me.CdMode = tCdMode.CdOfVeng Or Me.CdMode = tCdMode.CdOfBeta Then MyFileList.Add(Me.CdFile.FullPath)
 
         'Retarder
         If Me.RtType <> tRtType.None Then MyFileList.Add(Me.RtFile.FullPath)
@@ -104,12 +99,9 @@ Public Class cVEH
         Mass = 0
         MassExtra = 0
         Loading = 0
-        Cd0 = 0
-        Aquers = 0
-        Cd0Act = Cd0
-        AquersAct = Aquers
-        Cd02 = 0
-        Aquers2 = 0
+		CdA0 = 0
+		CdA0Act = CdA0
+		CdA02 = 0
         CdFile.Clear()
         CdMode = tCdMode.ConstCd0
         CdX.Clear()
@@ -181,22 +173,27 @@ Public Class cVEH
             MassMax = JSON.Content("Body")("MassMax")
             If FileVersion < 2 Then MassMax /= 1000
 
-            Cd0 = JSON.Content("Body")("Cd")
-            Aquers = JSON.Content("Body")("CrossSecArea")
+			If FileVersion < 7 Then
+				CdA0 = CSng(JSON.Content("Body")("Cd")) * CSng(JSON.Content("Body")("CrossSecArea"))
+			Else
+				CdA0 = JSON.Content("Body")("CdA")
+			End If
 
-            Cd02 = Cd0
-            Aquers2 = Aquers
+			CdA02 = CdA0
 
-            If FileVersion < 4 Then
-                If Not JSON.Content("Body")("CdRigid") Is Nothing Then Cd02 = JSON.Content("Body")("CdRigid")
-                If Not JSON.Content("Body")("CrossSecAreaRigid") Is Nothing Then Aquers2 = JSON.Content("Body")("CrossSecAreaRigid")
-            Else
-                If Not JSON.Content("Body")("Cd2") Is Nothing Then Cd02 = JSON.Content("Body")("Cd2")
-                If Not JSON.Content("Body")("CrossSecArea2") Is Nothing Then Aquers2 = JSON.Content("Body")("CrossSecArea2")
-            End If
+			If FileVersion < 4 Then
+				If Not JSON.Content("Body")("CdRigid") Is Nothing AndAlso Not JSON.Content("Body")("CrossSecAreaRigid") Is Nothing Then
+					CdA02 = CSng(JSON.Content("Body")("CdRigid")) * CSng(JSON.Content("Body")("CrossSecAreaRigid"))
+				End If
+			ElseIf FileVersion < 7 Then
+				If Not JSON.Content("Body")("Cd2") Is Nothing AndAlso Not JSON.Content("Body")("CrossSecArea2") Is Nothing Then
+					CdA02 = CSng(JSON.Content("Body")("Cd2")) * CSng(JSON.Content("Body")("CrossSecArea2"))
+				End If
+			Else
+				If Not JSON.Content("Body")("CdA2") Is Nothing Then CdA02 = JSON.Content("Body")("CdA2")
+			End If
 
-            Cd0Act = Cd0
-            AquersAct = Aquers
+			CdA0Act = CdA0
 
             If FileVersion < 3 Then
                 Itemp = JSON.Content("Body")("WheelsInertia")
@@ -229,7 +226,8 @@ Public Class cVEH
                     a0.Wheels = "-"
                 Else
                     a0.Inertia = CSng(dic("Inertia"))
-                    a0.Wheels = CStr(dic("Wheels"))
+					a0.Wheels = CStr(dic("Wheels"))
+					If FileVersion < 6 Then a0.Wheels = a0.Wheels.Replace("R ", "R")
                 End If
 
                 a0.Share = CSng(dic("AxleWeightShare"))
@@ -293,13 +291,11 @@ Public Class cVEH
         dic.Add("Loading", Loading)
         dic.Add("MassMax", MassMax)
 
-        dic.Add("Cd", Cd0)
-        dic.Add("CrossSecArea", Aquers)
+		dic.Add("CdA", CdA0)
 
-        If Cd02 > 0 And Aquers2 > 0 Then
-            dic.Add("Cd2", Cd02)
-            dic.Add("CrossSecArea2", Aquers2)
-        End If
+		If CdA02 > 0 Then
+			dic.Add("CdA2", CdA02)
+		End If
 
         dic.Add("rdyn", rdyn)
         dic.Add("Rim", Rim)
@@ -340,108 +336,105 @@ Public Class cVEH
     End Function
 
 
-    Public Function DeclInit() As Boolean
-        Dim al As List(Of Single)
-        Dim i As Integer
-        Dim a As Single
-        Dim a0 As cAxle
-        Dim MissionID As tMission
-        Dim MsgSrc As String
+	Public Function DeclInitCycle() As Boolean
+		Dim al As List(Of Single)
+		Dim i As Integer
+		Dim a As Single
+		Dim a0 As cAxle
+		Dim MissionID As tMission
+		Dim MsgSrc As String
 
-        MsgSrc = "VEH/DeclInit"
+		MsgSrc = "VEH/DeclInit"
 
-        MissionID = Declaration.CurrentMission.MissionID
+		MissionID = Declaration.CurrentMission.MissionID
 
-        MassExtra = Declaration.SegRef.GetBodyTrWeight(MissionID)
-
-
-        al = Declaration.SegRef.AxleShares(MissionID)
-
-        If al.Count > Axles.Count Then
-            WorkerMsg(tMsgID.Err, "Invalid number of axles! Defined: " & Axles.Count & ", required: " & al.Count, MsgSrc)
-            Return False
-        End If
-
-        i = -1
-        For Each a In al
-            i += 1
-            Axles(i).Share = a / 100
-        Next
-
-        'Remove non-Truck axles
-        Do While Axles.Count > al.Count
-            Axles.RemoveAt(Axles.Count - 1)
-        Loop
+		MassExtra = Declaration.SegRef.GetBodyTrWeight(MissionID)
 
 
-        '(Semi-) Trailer
-        If Not Declaration.SegRef.TrailerOnlyInLongHaul OrElse MissionID = tMission.LongHaul Then
-            al = Declaration.SegRef.AxleSharesTr(MissionID)
-            For Each a In al
+		al = Declaration.SegRef.AxleShares(MissionID)
 
-                a0 = New cAxle
+		If al.Count > Axles.Count Then
+			WorkerMsg(tMsgID.Err, "Invalid number of axles! Defined: " & Axles.Count & ", required: " & al.Count, MsgSrc)
+			Return False
+		End If
 
-                a0.Inertia = 0   'Defined later
-                a0.Wheels = "385/65 R 22.5"
+		i = -1
+		For Each a In al
+			i += 1
+			Axles(i).Share = a / 100
+		Next
 
-                a0.Share = a / 100
-                a0.TwinTire = False
-                a0.RRC = cDeclaration.RRCTr
-                a0.FzISO = cDeclaration.FzISOTr
-
-                Axles.Add(a0)
-
-            Next
-        End If
-
-        'Wheels Inertias
-        For Each a0 In Axles
-            a0.Inertia = Declaration.WheelsInertia(a0.Wheels)
-
-            If a0.Inertia < 0 Then
-                WorkerMsg(tMsgID.Err, "Selected wheels (" & a0.Wheels & ") are not supported!", MsgSrc)
-                Return False
-            End If
-
-        Next
+		'Remove non-Truck axles
+		Do While Axles.Count > al.Count
+			Axles.RemoveAt(Axles.Count - 1)
+		Loop
 
 
+		'(Semi-) Trailer
+		If Not Declaration.SegRef.TrailerOnlyInLongHaul OrElse MissionID = tMission.LongHaul Then
+			al = Declaration.SegRef.AxleSharesTr(MissionID)
+			For Each a In al
 
-        CdMode = tCdMode.CdOfV
+				a0 = New cAxle
 
-        CdFile.Init(MyPath, Declaration.SegRef.VCDVfile(MissionID))
+				a0.Inertia = 0	 'Defined later
+				a0.Wheels = cDeclaration.TyreTr
 
-        If Declaration.SegRef.TrailerOnlyInLongHaul Then
+				a0.Share = a / 100
+				a0.TwinTire = False
+				a0.RRC = cDeclaration.RRCTr
+				a0.FzISO = cDeclaration.FzISOTr
 
-            If MissionID = tMission.LongHaul Then
-                Cd0Act = Cd0
-                AquersAct = Aquers
-            Else
-                Cd0Act = Cd02
-                AquersAct = Aquers2
-            End If
+				Axles.Add(a0)
 
-        Else
+			Next
+		End If
 
-            Cd0Act = Cd0
-            AquersAct = Aquers
+		'Wheels Inertias
+		For Each a0 In Axles
+			a0.Inertia = Declaration.WheelsInertia(a0.Wheels)
 
-        End If
+			If a0.Inertia < 0 Then
+				WorkerMsg(tMsgID.Err, "Selected wheels (" & a0.Wheels & ") are not supported!", MsgSrc)
+				Return False
+			End If
 
-        If Axles.Count < 2 Then
-            rdyn = -1
-        Else
-            rdyn = Declaration.rdyn(Axles(1).Wheels, Rim)
-        End If
+		Next
 
-        If rdyn < 0 Then
-            WorkerMsg(tMsgID.Err, "Failed to calculate dynamic tire radius! Check wheels/rims", MsgSrc)
-            Return False
-        End If
+		CdMode = tCdMode.CdOfVdecl
+		If Not Declaration.SegRef.VCDVparam.ContainsKey(MissionID) Then
+			WorkerMsg(tMsgID.Err, "No Cross Wind Correction parameters defined for current vehicle & mission profile!", MsgSrc)
+			Return False
+		End If
 
-        Return True
+		If Declaration.SegRef.TrailerOnlyInLongHaul Then
 
-    End Function
+			If MissionID = tMission.LongHaul Then
+				CdA0Act = CdA0
+			Else
+				CdA0Act = CdA02
+			End If
+
+		Else
+
+			CdA0Act = CdA0
+
+		End If
+
+		If Axles.Count < 2 Then
+			rdyn = -1
+		Else
+			rdyn = Declaration.rdyn(Axles(1).Wheels, Rim)
+		End If
+
+		If rdyn < 0 Then
+			WorkerMsg(tMsgID.Err, "Failed to calculate dynamic tire radius! Check wheels/rims", MsgSrc)
+			Return False
+		End If
+
+		Return True
+
+	End Function
 
     Public Function DeclInitLoad(ByVal LoadingID As tLoading) As Boolean
         Dim lmax As Single
@@ -588,94 +581,193 @@ Public Class cVEH
         End If
 
         'If Cd-value is constant then do nothing
-        If CdMode = tCdMode.ConstCd0 Then Return True
+		If CdMode = tCdMode.ConstCd0 Then Return True
 
-        'Read Inputfile
-        file = New cFile_V3
+		'Declaration Mode
+		If CdMode = tCdMode.CdOfVdecl Then Return CdofVdeclInit()
 
-        If Not file.OpenRead(CdFile.FullPath) Then
-            WorkerMsg(tMsgID.Err, "Failed to read Cd input file! (" & CdFile.FullPath & ")", MsgSrc)
-            Return False
-        End If
 
-        'Skip Header
-        file.ReadLine()
+		'Read Inputfile
+		file = New cFile_V3
 
-        CdDim = -1
-        Do While Not file.EndOfFile
+		If Not file.OpenRead(CdFile.FullPath) Then
+			WorkerMsg(tMsgID.Err, "Failed to read Cd input file! (" & CdFile.FullPath & ")", MsgSrc)
+			Return False
+		End If
 
-            CdDim += 1
-            line = file.ReadLine
+		'Skip Header
+		file.ReadLine()
 
-            Try
-                CdX.Add(CSng(line(0)))
-                CdY.Add(CSng(line(1)))
-            Catch ex As Exception
-                WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & CdDim + 1 & " (" & CdFile.FullPath & ")", MsgSrc, CdFile.FullPath)
-                file.Close()
-                Return False
-            End Try
+		CdX.Clear()
+		CdY.Clear()
+		CdDim = -1
+		Do While Not file.EndOfFile
 
-        Loop
+			CdDim += 1
+			line = file.ReadLine
 
-        file.Close()
+			Try
+				CdX.Add(CSng(line(0)))
+				CdY.Add(CSng(line(1)))
+			Catch ex As Exception
+				WorkerMsg(tMsgID.Err, "Error during file read! Line number: " & CdDim + 1 & " (" & CdFile.FullPath & ")", MsgSrc, CdFile.FullPath)
+				file.Close()
+				Return False
+			End Try
 
-        If CdDim < 1 Then
-            WorkerMsg(tMsgID.Err, "Cd input file invalid! Two or more lines required! (" & CdFile.FullPath & ")", MsgSrc, CdFile.FullPath)
-            Return False
-        End If
+		Loop
 
-        Return True
+		file.Close()
 
-    End Function
+		If CdDim < 1 Then
+			WorkerMsg(tMsgID.Err, "Cd input file invalid! Two or more lines required! (" & CdFile.FullPath & ")", MsgSrc, CdFile.FullPath)
+			Return False
+		End If
 
-    Public Function Cd(ByVal x As Single) As Single
-        Return CdIntpol(x) * Cd0Act
-    End Function
+		Return True
 
-    Public Function Cd() As Single
-        Return Cd0Act
-    End Function
+	End Function
 
-    Public Function CrossSecArea() As Single
-        Return AquersAct
-    End Function
+	Private Function CdofVdeclInit() As Boolean
+		Dim lBeta As New List(Of Single)
+		Dim lDeltaCdA As New List(Of Single)
+		Dim i As Integer
+		Dim j As Integer
+		Dim k As Integer
+		Dim vveh As Single
+		Dim alpha As Single
+		Dim beta As Single
+		Dim CdA As Single
+		Dim CdAsum As Single
+		Dim Vwind As Single
+		Dim VwindX As Single
+		Dim VwindY As Single
+		Dim vair As Single
+		Dim vairX As Single
+		Dim vairY As Single
+		Dim a As List(Of Single)
+		Dim iDim As Integer
+		Dim DeltaCdA As Single
+		Dim share As Single
 
-    Private Function CdIntpol(ByVal x As Single) As Single
-        Dim i As Int32
+		Vwind = cDeclaration.Vwind * 3.6
 
-        'Extrapolation for x < x(1)
-        If CdX(0) >= x Then
-            If CdX(0) > x Then
-                If CdMode = tCdMode.CdOfBeta Then
-                    MODdata.ModErrors.CdExtrapol = "β= " & x
-                Else
-                    MODdata.ModErrors.CdExtrapol = "v= " & x
-                End If
-            End If
-            i = 1
-            GoTo lbInt
-        End If
+		Try
+			If Cfg.DeclMode Then
+				a = Declaration.SegRef.VCDVparam(Declaration.CurrentMission.MissionID)
+			Else
+				a = Declaration.VCDVparamPerCat(VEH.VehCat)
+			End If
+		Catch ex As Exception
+			Return False
+		End Try
 
-        i = 0
-        Do While CdX(i) < x And i < CdDim
-            i += 1
-        Loop
+		For i = 0 To 12
+			beta = CSng(i)
+			lBeta.Add(beta)
+			lDeltaCdA.Add(a(0) * beta + a(1) * beta ^ 2 + a(2) * beta ^ 3)
+		Next
 
-        'Extrapolation for x > x(imax)
-        If CdX(i) < x Then
-            If CdMode = tCdMode.CdOfBeta Then
-                MODdata.ModErrors.CdExtrapol = "β= " & x
-            Else
-                MODdata.ModErrors.CdExtrapol = "v= " & x
-            End If
-        End If
+		iDim = lBeta.Count - 1
+
+		CdX.Clear()
+		CdY.Clear()
+		CdDim = -1
+
+		CdX.Add(0)
+		CdY.Add(0)
+		For i = 60 To 100 Step 5
+			vveh = CSng(i)
+
+			CdAsum = 0
+			For j = 0 To 180 Step 10
+				alpha = CSng(j)
+				VwindX = Vwind * Math.Cos(alpha * Math.PI / 180)
+				VwindY = Vwind * Math.Sin(alpha * Math.PI / 180)
+				vairX = vveh + VwindX
+				vairY = VwindY
+				vair = Math.Sqrt(vairX ^ 2 + vairY ^ 2)
+				beta = Math.Atan(vairY / vairX) * 180 / Math.PI
+
+				If lBeta(0) >= beta Then
+					k = 1
+				Else
+					k = 0
+					Do While lBeta(k) < beta And k < iDim
+						k += 1
+					Loop
+				End If
+				DeltaCdA = (beta - lBeta(k - 1)) * (lDeltaCdA(k) - lDeltaCdA(k - 1)) / (lBeta(k) - lBeta(k - 1)) + lDeltaCdA(k - 1)
+
+				CdA = CdA0Act + DeltaCdA
+
+				If j = 0 OrElse j = 180 Then
+					share = 5 / 180
+				Else
+					share = 10 / 180
+				End If
+
+				CdAsum += share * CdA * (vair ^ 2 / vveh ^ 2)
+
+			Next
+
+			CdX.Add(vveh)
+			CdY.Add(CdAsum)
+
+		Next
+
+		CdY(0) = CdY(1)
+		CdDim = CdX.Count - 1
+
+		Return True
+
+
+	End Function
+
+	Public Function CdA_Y(ByVal x As Single) As Single
+		Return CdIntpol(x)
+	End Function
+
+
+	Public Function CdA() As Single
+		Return CdA0Act
+	End Function
+
+	Private Function CdIntpol(ByVal x As Single) As Single
+		Dim i As Int32
+
+		'Extrapolation for x < x(1)
+		If CdX(0) >= x Then
+			If CdX(0) > x Then
+				If CdMode = tCdMode.CdOfBeta Then
+					MODdata.ModErrors.CdExtrapol = "β= " & x
+				Else
+					MODdata.ModErrors.CdExtrapol = "v= " & x
+				End If
+			End If
+			i = 1
+			GoTo lbInt
+		End If
+
+		i = 0
+		Do While CdX(i) < x And i < CdDim
+			i += 1
+		Loop
+
+		'Extrapolation for x > x(imax)
+		If CdX(i) < x Then
+			If CdMode = tCdMode.CdOfBeta Then
+				MODdata.ModErrors.CdExtrapol = "β= " & x
+			Else
+				MODdata.ModErrors.CdExtrapol = "v= " & x
+			End If
+		End If
 
 lbInt:
-        'Interpolation
-        Return (x - CdX(i - 1)) * (CdY(i) - CdY(i - 1)) / (CdX(i) - CdX(i - 1)) + CdY(i - 1)
+		'Interpolation
+		Return (x - CdX(i - 1)) * (CdY(i) - CdY(i - 1)) / (CdX(i) - CdX(i - 1)) + CdY(i - 1)
 
-    End Function
+	End Function
 
 #End Region
 

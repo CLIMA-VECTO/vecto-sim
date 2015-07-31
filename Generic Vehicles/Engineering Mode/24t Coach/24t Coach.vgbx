@@ -1,9 +1,9 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
-    "Date": "29.07.2014 16:59:17",
-    "AppVersion": "2.0.4-beta",
-    "FileVersion": 4
+    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
+    "Date": "25.06.2015 11:23:31",
+    "AppVersion": "2.2 beta",
+    "FileVersion": 5
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -19,49 +19,57 @@
         "Ratio": 6.38,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "ShiftPolygons.vgbs"
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 4.63,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "ShiftPolygons.vgbs"
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 3.44,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "ShiftPolygons.vgbs"
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 2.59,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "ShiftPolygons.vgbs"
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 1.86,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "ShiftPolygons.vgbs"
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 1.35,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "ShiftPolygons.vgbs"
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 1.0,
         "LossMap": "Direct Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "ShiftPolygons.vgbs"
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
       },
       {
         "Ratio": 0.76,
         "LossMap": "Indirect Gear.vtlm",
         "TCactive": false,
-        "ShiftPolygon": "ShiftPolygons.vgbs"
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
       }
     ],
     "TqReserve": 20.0,
