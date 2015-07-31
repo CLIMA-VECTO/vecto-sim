@@ -29,13 +29,16 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
 
+		public const double Tolerance = 0.001;
 
 		[TestMethod]
 		public void TestWheelsAndEngineInitialize()
 		{
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
 
-			var vehicleData = CreateVehicleData(50000.SI<Kilogram>());
+			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
+
+			var axleGearData = CreateAxleGearData();
 
 			var driverData = CreateDriverData();
 
@@ -46,8 +49,11 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driver = new Driver(vehicleContainer, driverData);
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
+
 			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
-			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
+			var engine = new CombustionEngine(vehicleContainer, engineData);
+			AddComponent(tmp, engine);
 
 			var gbx = new DummyGearbox(vehicleContainer);
 
@@ -55,12 +61,21 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			gbx.CurrentGear = 1;
 
-			var response = driverPort.Initialize(18.KMPHtoMeterPerSecond(), VectoMath.InclinationToAngle(0.5 / 100));
+			var response = driverPort.Initialize(18.KMPHtoMeterPerSecond(), VectoMath.InclinationToAngle(2.842372037 / 100));
 
 
 			var absTime = 0.SI<Second>();
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+//			time [s] , dist [m] , v_act [km/h] , v_targ [km/h] , acc [m/s²] , grad [%] , n [1/min] , Tq_eng [Nm] , Tq_clutch [Nm] , Tq_full [Nm] , Tq_drag [Nm] , Pe_eng [kW] , Pe_full [kW] , Pe_drag [kW] , Pe_clutch [kW] , Pa Eng [kW] , Paux [kW] , Gear [-] , Ploss GB [kW] , Ploss Diff [kW] , Ploss Retarder [kW] , Pa GB [kW] , Pa Veh [kW] , Proll [kW] , Pair [kW] , Pgrad [kW] , Pwheel [kW] , Pbrake [kW] , FC-Map [g/h] , FC-AUXc [g/h] , FC-WHTCc [g/h]
+//			1.5      , 5        , 18           , 18            , 0          , 2.842372 , 964.1117  , 323.7562    , 323.7562       , 2208.664     , -158.0261    , 32.68693    , 222.9902     , -15.95456    , 32.68693       , 0           , 0         , 1        , 0             , 0               , 0                   , 0          , 0           , 5.965827   , 0.2423075 , 26.47879   , 32.68693    , 0           , 7574.113     , -             , -
+
+			AssertHelper.AreRelativeEqual(964.1117.RPMtoRad().Value(), vehicleContainer.Engine.EngineSpeed().Value());
+			Assert.AreEqual(2208.664, engine._previousState.StationaryFullLoadTorque.Value(), Tolerance);
+			Assert.AreEqual(-158.0261, engine._previousState.FullDragTorque.Value(), Tolerance);
+
+			Assert.AreEqual(323.7562, engine._previousState.EngineTorque.Value(), Tolerance);
 		}
 
 
@@ -225,7 +240,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					AxleWeightShare = 0.375,
 					Inertia = 10.83333.SI<KilogramSquareMeter>(),
 					RollResistanceCoefficient = 0.0065,
-					TwinTyres = false,
+					TwinTyres = true,
 					TyreTestLoad = 52532.55.SI<Newton>()
 				},
 				new Axle() {
@@ -237,7 +252,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				}
 			};
 			return new VehicleData() {
-				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
+				AxleConfiguration = AxleConfiguration.AxleConfig_6x2,
 				CrossSectionArea = 3.2634.SI<SquareMeter>(),
 				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
 				DragCoefficient = 1,

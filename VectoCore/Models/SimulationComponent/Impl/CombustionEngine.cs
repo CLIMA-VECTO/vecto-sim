@@ -38,10 +38,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		///     Current state is computed in request method
 		/// </summary>
-		private EngineState _currentState = new EngineState();
+		internal EngineState _currentState = new EngineState();
 
 		private CombustionEngineData _data;
-		private EngineState _previousState = new EngineState();
+		internal EngineState _previousState = new EngineState();
 
 		public CombustionEngine(IVehicleContainer cockpit, CombustionEngineData data)
 			: base(cockpit)
@@ -123,18 +123,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_previousState = new EngineState() {
 				EngineSpeed = engineSpeed,
 				dt = 1.SI<Second>(),
-				EnginePowerLoss = InertiaPowerLoss(torque, engineSpeed),
+				EnginePowerLoss = 0.SI<Watt>(),
 				StationaryFullLoadTorque =
 					_data.FullLoadCurve.FullLoadStationaryTorque(engineSpeed),
-				StationaryFullLoadPower = Formulas.TorqueToPower(_previousState.StationaryFullLoadTorque,
-					engineSpeed),
-				DynamicFullLoadTorque = _previousState.StationaryFullLoadTorque,
-				DynamicFullLoadPower = _previousState.StationaryFullLoadPower,
 				FullDragTorque = _data.FullLoadCurve.DragLoadStationaryTorque(engineSpeed),
-				FullDragPower = Formulas.TorqueToPower(_previousState.FullDragTorque, engineSpeed),
-				EnginePower = Formulas.TorqueToPower(torque, engineSpeed) + _previousState.EnginePowerLoss,
-				EngineTorque = Formulas.PowerToTorque(_previousState.EnginePower, _previousState.EngineSpeed)
+				EngineTorque = torque,
+				EnginePower = Formulas.TorqueToPower(torque, engineSpeed)
 			};
+			_previousState.StationaryFullLoadPower = Formulas.TorqueToPower(_previousState.StationaryFullLoadTorque,
+				engineSpeed);
+			_previousState.DynamicFullLoadTorque = _previousState.StationaryFullLoadTorque;
+			_previousState.DynamicFullLoadPower = _previousState.StationaryFullLoadPower;
+			_previousState.FullDragPower = Formulas.TorqueToPower(_previousState.FullDragTorque, engineSpeed);
 
 			return new ResponseSuccess();
 		}

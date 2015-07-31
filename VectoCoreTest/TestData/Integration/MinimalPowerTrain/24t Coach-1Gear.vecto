@@ -1,8 +1,8 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
-    "Date": "27.07.2015 11:26:02",
-    "AppVersion": "2.2",
+    "CreatedBy": " ()",
+    "Date": "7/31/2015 8:06:26 AM",
+    "AppVersion": "2.2 beta-2",
     "FileVersion": 2
   },
   "Body": {
@@ -11,7 +11,8 @@
     "EngineFile": "24t Coach.veng",
     "GearboxFile": "24t Coach-1Gear.vgbx",
     "Cycles": [
-      "Coach_24t_xshort.vdri"
+      "Coach_24t_xshort.vdri",
+      "Coach_24t_InitTest.vdri"
     ],
     "VACC": "Coach.vacc",
     "EngineOnlyMode": false,
