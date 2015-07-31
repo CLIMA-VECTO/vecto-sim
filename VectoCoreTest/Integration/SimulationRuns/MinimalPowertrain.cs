@@ -31,6 +31,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 		public const double Tolerance = 0.001;
 
+
 		[TestMethod]
 		public void TestWheelsAndEngineInitialize()
 		{
@@ -149,7 +150,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			//run.Run();
 		}
 
-		private GearData CreateAxleGearData()
+		private static GearData CreateAxleGearData()
 		{
 			return new GearData() {
 				Ratio = 3.0 * 3.5,

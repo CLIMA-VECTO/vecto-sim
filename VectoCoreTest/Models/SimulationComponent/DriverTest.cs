@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -30,6 +31,60 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		public const double Tolerance = 0.001;
 
+
+		[TestMethod]
+		public void DriverCoastingTest()
+		{
+			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+
+			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
+
+			var driverData = CreateDriverData();
+
+			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain_Coasting.vmod", false); //new TestModalDataWriter();
+			var sumWriter = new TestSumWriter();
+			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
+
+			var driver = new Driver(vehicleContainer, driverData);
+			var engine = new CombustionEngine(vehicleContainer, engineData);
+
+			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
+			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			AddComponent(tmp, engine);
+
+			var gbx = new DummyGearbox(vehicleContainer);
+			gbx.CurrentGear = 1;
+
+			var driverPort = driver.OutPort();
+
+			driverPort.Initialize(5.SI<MeterPerSecond>(), 0.SI<Radian>());
+
+			var absTime = 0.SI<Second>();
+
+			var response = driver.DoCoast(absTime, 1.SI<Meter>(), 0.SI<Radian>());
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+			absTime += response.SimulationInterval;
+
+			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed().Value(), Tolerance);
+			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
+			Assert.AreEqual(engine._previousState.FullDragPower.Value(), engine._previousState.EnginePower.Value(),
+				Constants.SimulationSettings.EngineFLDPowerTolerance);
+
+			while (vehicleContainer.VehicleSpeed() > 1) {
+				response = driver.DoCoast(absTime, 1.SI<Meter>(), 0.SI<Radian>());
+
+				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+				absTime += response.SimulationInterval;
+				modalWriter.Finish();
+			}
+			modalWriter.Finish();
+		}
 
 		[TestMethod]
 		public void DriverOverloadTest()

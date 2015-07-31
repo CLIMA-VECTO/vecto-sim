@@ -67,6 +67,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return Next.Initialize(vehicleSpeed, roadGradient);
 		}
 
+		internal IResponse DoCoast(Second absTime, Meter ds, Radian gradient)
+		{
+			ComputeAcceleration(ds, 0.SI<MeterPerSecond>());
+
+			if (CurrentState.dt.IsEqual(0)) {
+				return new ResponseFailTimeInterval();
+			}
+
+			var response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);
+
+			SearchOperatingPoint(absTime, ds, gradient, response, true);
+
+			var retVal = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
+			CurrentState.Response = retVal;
+			switch (retVal.ResponseType) {
+				case ResponseType.Success:
+					retVal.SimulationInterval = CurrentState.dt;
+					return retVal;
+			}
+
+			return new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
+		}
+
 
 		protected IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
@@ -82,7 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						retVal.SimulationInterval = CurrentState.dt;
 						return retVal;
 					case ResponseType.FailOverload:
-						SearchOperatingPoint(absTime, ds, targetVelocity, gradient, retVal);
+						SearchOperatingPoint(absTime, ds, gradient, retVal);
 						break;
 				}
 			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
@@ -90,8 +113,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
 		}
 
-		private void SearchOperatingPoint(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
-			IResponse response)
+		private void SearchOperatingPoint(Second absTime, Meter ds, Radian gradient,
+			IResponse response, bool coasting = false)
 		{
 			var exceeded = new List<double>();
 			var acceleration = new List<double>();
@@ -104,7 +127,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						delta = ((ResponseFailOverload)response).Delta;
 						break;
 					case ResponseType.DryRun:
-						delta = ((ResponseDryRun)response).DeltaFullLoad;
+						delta = coasting ? -((ResponseDryRun)response).DeltaDragLoad : ((ResponseDryRun)response).DeltaFullLoad;
 						break;
 					default:
 						throw new VectoSimulationException("Unknown response type");
@@ -121,7 +144,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.Acceleration += searchInterval;
 				}
 				searchInterval /= 2.0;
-				CurrentState.dt = ComputeTimeInterval(ds, targetVelocity, CurrentState.Acceleration);
+				CurrentState.dt = ComputeTimeInterval(ds, CurrentState.Acceleration);
 
 				response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);
 				//factor *= 2;
@@ -145,10 +168,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			CurrentState.Acceleration = requiredAcceleration;
-			CurrentState.dt = ComputeTimeInterval(ds, targetVelocity, CurrentState.Acceleration);
+			CurrentState.dt = ComputeTimeInterval(ds, CurrentState.Acceleration);
 		}
 
-		private Second ComputeTimeInterval(Meter ds, MeterPerSecond targetVelocity, MeterPerSquareSecond acceleration)
+		private Second ComputeTimeInterval(Meter ds, MeterPerSquareSecond acceleration)
 		{
 			var currentSpeed = DataBus.VehicleSpeed();
 
@@ -164,8 +187,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (solutions.Count == 0) {
 				Log.WarnFormat(
-					"Could not find solution for computing required time interval to drive distance {0}. currentSpeed: {1}, targetSpeed: {2}, acceleration: {3}",
-					ds, currentSpeed, targetVelocity, acceleration);
+					"Could not find solution for computing required time interval to drive distance {0}. currentSpeed: {1}, acceleration: {3}",
+					ds, currentSpeed, acceleration);
 				return 0.SI<Second>();
 			}
 			// if there are 2 positive solutions (i.e. when decelerating), take the smaller time interval
@@ -201,6 +224,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (CurrentState.Response.ResponseType != ResponseType.Success) {
 				throw new VectoSimulationException("Previois request did not succeed!");
 			}
+			CurrentState.RetryCount = 0;
+			CurrentState.Response = null;
 		}
 
 
