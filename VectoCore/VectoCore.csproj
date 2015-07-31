@@ -158,7 +158,7 @@
     <Compile Include="Models\Declaration\MissionType.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\PT1Curve.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\MappingAuxiliaryData.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\AuxiliaryData.cs" />
     <Compile Include="Models\Simulation\Data\AuxiliaryDemandType.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryType.cs" />
     <Compile Include="Models\SimulationComponent\Data\GearFullLoadCurve.cs" />

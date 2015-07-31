@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -28,8 +29,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var deco = new SumWriterDecoratorFullPowertrain(sumWriter, "", "", "");
 
 			var container = new VehicleContainer(dataWriter, deco);
-			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
-				DrivingCycleData.CycleType.TimeBased);
+			var data = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based short.vdri");
 
 			var port = new MockTnOutPort();
 
@@ -105,8 +105,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var dataWriter = new MockModalDataWriter();
 			var sumWriter = new TestSumWriter();
 			var container = new VehicleContainer(dataWriter, sumWriter);
-			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
-				DrivingCycleData.CycleType.TimeBased);
+			var data = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based short.vdri");
 			var cycle = new MockDrivingCycle(container, data);
 			var port = new MockTnOutPort();
 			var aux = new Auxiliary(container);
@@ -139,8 +138,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var sumWriter = new TestSumWriter();
 			var container = new VehicleContainer(dataWriter, sumWriter);
-			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
-				DrivingCycleData.CycleType.TimeBased);
+			var data = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based short.vdri");
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
 			// ALT1.aux file: nAuxiliary speed 2358: 0, 0.38, 0.49, 0.64, ...
 			// ALT1 in cycle file: 0, 0.3724 (=0.38*0.96), 0.4802 (=0.49*0.96), 0.6272 (0.64*0.96), ...
@@ -151,7 +149,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var aux = new Auxiliary(container);
 			aux.InPort().Connect(port);
 
-			var auxData = MappingAuxiliaryData.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux");
+			var auxData = AuxiliaryData.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux");
 			// ratio = 4.078
 			// efficiency_engine = 0.96
 			// efficiency_supply = 0.98
@@ -197,8 +195,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var sumWriter = new TestSumWriter();
 			var container = new VehicleContainer(dataWriter, sumWriter);
-			var data = DrivingCycleDataReader.ReadFromFile(@"TestData\Cycles\Coach time based short.vdri",
-				DrivingCycleData.CycleType.TimeBased);
+			var data = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based short.vdri");
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
 			// ALT1.aux file: nAuxiliary speed 2358: 0, 0.38, 0.49, 0.64, ...
 			// ALT1 in cycle file: 0, 0.3724 (=0.38*0.96), 0.4802 (=0.49*0.96), 0.6272 (0.64*0.96), ...
@@ -209,7 +206,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var aux = new Auxiliary(container);
 			aux.InPort().Connect(port);
 
-			var auxData = MappingAuxiliaryData.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux");
+			var auxData = AuxiliaryData.ReadFromFile(@"TestData\Components\24t_Coach_ALT.vaux");
 			// ratio = 4.078
 			// efficiency_engine = 0.96
 			// efficiency_supply = 0.98
@@ -246,13 +243,20 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxColumnMissing()
 		{
-			Assert.Inconclusive();
+			var container = new VehicleContainer();
+			var data = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based short.vdri");
+			var cycle = new MockDrivingCycle(container, data);
+
+			var aux = new Auxiliary(container);
+			AssertHelper.Exception<VectoException>(() => aux.AddMapping("NONEXISTING_AUX", cycle, null),
+				"driving cycle does not contain column for auxiliary: NONEXISTING_AUX");
 		}
 
 		[TestMethod]
 		public void AuxFileMissing()
 		{
-			Assert.Inconclusive();
+			AssertHelper.Exception<VectoException>(() => AuxiliaryData.ReadFromFile(@"NOT_EXISTING_AUX_FILE.vaux"),
+				"Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
 		}
 
 		[TestMethod]
