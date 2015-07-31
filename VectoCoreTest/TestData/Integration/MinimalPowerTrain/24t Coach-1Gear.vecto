@@ -1,0 +1,36 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
+    "Date": "27.07.2015 11:26:02",
+    "AppVersion": "2.2",
+    "FileVersion": 2
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehicleFile": "24t Coach.vveh",
+    "EngineFile": "24t Coach.veng",
+    "GearboxFile": "24t Coach-1Gear.vgbx",
+    "Cycles": [
+      "Coach_24t_xshort.vdri"
+    ],
+    "VACC": "Coach.vacc",
+    "EngineOnlyMode": false,
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 0.0,
+      "Delay": 0
+    },
+    "LAC": {
+      "Enabled": false,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "Off",
+      "MinSpeed": 70.0,
+      "OverSpeed": 5.0,
+      "UnderSpeed": 5.0
+    }
+  }
+}

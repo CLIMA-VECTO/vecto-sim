@@ -18,6 +18,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			HasTorqueConverter = false;
 			ModFileName = modFileName;
 			Data = new ModalResults();
+			Auxiliaries = new Dictionary<string, DataColumn>();
 			CurrentRow = Data.NewRow();
 			_engineOnly = engineOnly;
 		}
@@ -36,7 +37,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			if (!_engineOnly) {
 				dataColumns.AddRange(new[] {
-					ModalResultField.time,
+					ModalResultField.simulationInterval,
 					ModalResultField.dist,
 					ModalResultField.v_act,
 					ModalResultField.v_targ,
@@ -76,34 +77,56 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 				if (HasTorqueConverter) {
 					dataColumns.AddRange(new[] {
-						ModalResultField.TCν,
+						ModalResultField.TCv,
 						ModalResultField.TCmu,
 						ModalResultField.TC_M_Out,
 						ModalResultField.TC_n_Out
 					});
 				}
-
-				//todo: auxiliaries
 			}
-			VectoCSVFile.Write(ModFileName, new DataView(Data).ToTable(false, dataColumns.Select(x => x.GetName()).ToArray()));
+
+			var strCols = dataColumns.Select(x => x.GetName())
+				.Concat((Auxiliaries.Values.Select(c => c.ColumnName)))
+				.Concat(new[] { ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc }.Select(x => x.GetName()));
+
+			VectoCSVFile.Write(ModFileName, new DataView(Data).ToTable(false, strCols.ToArray()));
 		}
 
 
-		public object Compute(string expression, string filter)
+		public IEnumerable<T> GetValues<T>(DataColumn col)
 		{
-			return Data.Compute(expression, filter);
+			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>(col));
 		}
 
 		public IEnumerable<T> GetValues<T>(ModalResultField key)
 		{
-			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>((int)key));
+			return GetValues<T>(Data.Columns[(int)key]);
 		}
-
 
 		public object this[ModalResultField key]
 		{
 			get { return CurrentRow[(int)key]; }
 			set { CurrentRow[(int)key] = value; }
+		}
+
+		public object this[string auxId]
+		{
+			get { return CurrentRow[Auxiliaries[auxId]]; }
+			set { CurrentRow[Auxiliaries[auxId]] = value; }
+		}
+
+
+		public Dictionary<string, DataColumn> Auxiliaries { get; set; }
+
+		public void AddAuxiliary(string id)
+		{
+			var col = Data.Columns.Add(ModalResultField.Paux_ + id, typeof(SI));
+			col.ExtendedProperties[ModalResults.ExtendedPropertyNames.Decimals] = ModalResultField.Paux_.GetAttribute().Decimals;
+			col.ExtendedProperties[ModalResults.ExtendedPropertyNames.OutputFactor] =
+				ModalResultField.Paux_.GetAttribute().OutputFactor;
+			col.ExtendedProperties[ModalResults.ExtendedPropertyNames.ShowUnit] = ModalResultField.Paux_.GetAttribute().ShowUnit;
+
+			Auxiliaries[id] = col;
 		}
 	}
 }

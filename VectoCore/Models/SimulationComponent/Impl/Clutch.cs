@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			: base(cockpit)
 		{
 			_idleSpeed = engineData.IdleSpeed;
-			_ratedSpeed = engineData.GetFullLoadCurve(0).RatedSpeed;
+			_ratedSpeed = engineData.FullLoadCurve.RatedSpeed;
 		}
 
 		public ClutchState State()
@@ -35,24 +35,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _clutchState;
 		}
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataWriter writer)
+		{
+			// TODO: @@@
+			writer[ModalResultField.Pe_clutch] = 0.SI<Watt>();
+		}
+
+		protected override void DoCommitSimulationStep()
 		{
 			//todo: implement!
 			//throw new NotImplementedException();
 		}
 
-		public ITnInPort InShaft()
+		public ITnInPort InPort()
 		{
 			return this;
 		}
 
 
-		public ITnOutPort OutShaft()
+		public ITnOutPort OutPort()
 		{
 			return this;
 		}
 
-		public IResponse Request(TimeSpan absTime, TimeSpan dt, NewtonMeter torque, PerSecond angularVelocity)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity)
 		{
 			var torqueIn = torque;
 			var engineSpeedIn = angularVelocity;
@@ -81,6 +87,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			return _nextComponent.Request(absTime, dt, torqueIn, engineSpeedIn);
+		}
+
+		public IResponse Initialize()
+		{
+			return _nextComponent.Initialize();
 		}
 
 		public void Connect(ITnOutPort other)

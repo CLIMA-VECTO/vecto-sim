@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -10,8 +9,6 @@ using TUGraz.VectoCore.FileIO.EngineeringFile;
 using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
@@ -20,6 +17,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 {
 	public class EngineeringModeSimulationDataReader : AbstractSimulationDataReader
 	{
+		protected DriverData Driver;
+
 		internal EngineeringModeSimulationDataReader() {}
 
 
@@ -33,18 +32,40 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 		protected override void ProcessJob(VectoJobFile vectoJob)
 		{
-			var declaration = vectoJob as VectoJobFileV2Engineering;
-			if (declaration == null) {
+			var engineering = vectoJob as VectoJobFileV2Engineering;
+			if (engineering == null) {
 				throw new VectoException("Unhandled Job File Format");
 			}
-			var job = declaration;
+			var job = engineering;
+
+			if (job.Body.EngineOnlyMode) {
+				throw new VectoException("Job File has been saved in EngineOnlyMode!");
+			}
 
 			ReadVehicle(Path.Combine(job.BasePath, job.Body.VehicleFile));
 
 			ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));
 
 			ReadGearbox(Path.Combine(job.BasePath, job.Body.GearboxFile));
+
+			ReadAuxiliary(engineering.Body.Aux);
 		}
+
+		private void ReadAuxiliary(IEnumerable<VectoJobFileV2Engineering.DataBodyEng.AuxDataEng> auxiliaries)
+		{
+			var aux = auxiliaries.Select(a => new VectoRunData.AuxData {
+				ID = a.ID,
+				Technology = a.Technology,
+				TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
+				DemandType = AuxiliaryDemandType.Mapping
+			});
+
+			// add a direct auxiliary
+			aux = aux.Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable());
+
+			Aux = aux.ToArray();
+		}
+
 
 		protected override void ReadVehicle(string file)
 		{
@@ -74,6 +95,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				yield break;
 			}
 			var dao = new EngineeringDataAdapter();
+			var driver = dao.CreateDriverData(job);
 			foreach (var cycle in job.Body.Cycles) {
 				var simulationRunData = new VectoRunData() {
 					BasePath = job.BasePath,
@@ -81,10 +103,11 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					EngineData = dao.CreateEngineData(Engine),
 					GearboxData = dao.CreateGearboxData(Gearbox, null),
 					VehicleData = dao.CreateVehicleData(Vehicle),
-					//DriverData = new DriverData(),
-					//Aux = 
+					DriverData = driver,
+					Aux = Aux,
 					// TODO: distance or time-based cycle!
-					Cycle = DrivingCycleData.ReadFromFile(Path.Combine(job.BasePath, cycle), DrivingCycleData.CycleType.DistanceBased),
+					Cycle =
+						DrivingCycleDataReader.ReadFromFile(Path.Combine(job.BasePath, cycle), DrivingCycleData.CycleType.DistanceBased),
 					IsEngineOnly = IsEngineOnly
 				};
 				yield return simulationRunData;
@@ -100,6 +123,12 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		{
 			var data = DoReadVehicleFile(file);
 			return new EngineeringDataAdapter().CreateVehicleData(data);
+		}
+
+		public static DriverData CreateDriverDataFromFile(string file)
+		{
+			var data = DoReadJobFile(file);
+			return new EngineeringDataAdapter().CreateDriverData(data);
 		}
 
 		/// <summary>
@@ -124,25 +153,14 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			return new EngineeringDataAdapter().CreateGearboxData(data, null);
 		}
 
+
 		/// <summary>
-		/// initialize Job member (deserialize Job-file)
+		/// initialize vecto job member (deserialize Vecot-file
 		/// </summary>
-		/// <param name="file">file</param>
+		/// <param name="file"></param>
 		protected override void ReadJobFile(string file)
 		{
-			var json = File.ReadAllText(file);
-			var fileInfo = GetFileVersion(json);
-			CheckForEngineeringMode(fileInfo, "Job");
-
-			switch (fileInfo.Version) {
-				case 2:
-					Job = JsonConvert.DeserializeObject<VectoJobFileV2Engineering>(json);
-					Job.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
-					Job.JobFile = Path.GetFileName(file);
-					break;
-				default:
-					throw new UnsupportedFileVersionException("Unsupported version of job-file. Got version " + fileInfo.Version);
-			}
+			Job = DoReadJobFile(file);
 		}
 
 		/// <summary>
@@ -163,6 +181,29 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			Gearbox = DoReadGearboxFile(file);
 		}
 
+		//==============================================================
+
+		/// <summary>
+		/// initialize Job member (deserialize Job-file)
+		/// </summary>
+		/// <param name="file">file</param>
+		protected static VectoJobFile DoReadJobFile(string file)
+		{
+			var json = File.ReadAllText(file);
+			var fileInfo = GetFileVersion(json);
+			CheckForEngineeringMode(fileInfo, "Job");
+
+			switch (fileInfo.Version) {
+				case 2:
+					var tmp = JsonConvert.DeserializeObject<VectoJobFileV2Engineering>(json);
+					tmp.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
+					tmp.JobFile = Path.GetFileName(file);
+					return tmp;
+				default:
+					throw new UnsupportedFileVersionException("Unsupported version of job-file. Got version " + fileInfo.Version);
+			}
+		}
+
 		/// <summary>
 		/// De-serialize engine-file (JSON)
 		/// </summary>
@@ -175,8 +216,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			CheckForEngineeringMode(fileInfo, "Engine");
 
 			switch (fileInfo.Version) {
-				case 2:
-					var tmp = JsonConvert.DeserializeObject<EngineFileV2Engineering>(json);
+				case 3:
+					var tmp = JsonConvert.DeserializeObject<EngineFileV3Engineering>(json);
 					tmp.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
 					return tmp;
 				default:
@@ -196,8 +237,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			CheckForEngineeringMode(fileInfo, "Gearbox");
 
 			switch (fileInfo.Version) {
-				case 4:
-					var tmp = JsonConvert.DeserializeObject<GearboxFileV4Engineering>(json);
+				case 5:
+					var tmp = JsonConvert.DeserializeObject<GearboxFileV5Engineering>(json);
 					tmp.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
 					return tmp;
 				default:

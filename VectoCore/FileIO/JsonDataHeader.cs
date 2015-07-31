@@ -7,7 +7,7 @@ namespace TUGraz.VectoCore.FileIO
 		[JsonProperty(Required = Required.Always)] public string AppVersion;
 		[JsonProperty(Required = Required.Always)] public string CreatedBy;
 		[JsonProperty(Required = Required.Always)] public string Date;
-		[JsonProperty(Required = Required.Always)] public double FileVersion;
+		[JsonProperty(Required = Required.Always)] public uint FileVersion;
 
 		#region Equality members
 
@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.FileIO
 			if (obj.GetType() != GetType()) {
 				return false;
 			}
-			return Equals((JsonDataHeader) obj);
+			return Equals((JsonDataHeader)obj);
 		}
 
 		public override int GetHashCode()

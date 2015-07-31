@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO;
-using TUGraz.VectoCore.FileIO.DeclarationFile;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
@@ -14,6 +12,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 
 		public VehicleCategory VehicleCategory { get; internal set; }
+
+		public VehicleClass VehicleClass { get; internal set; }
 
 		public CrossWindCorrectionMode CrossWindCorrectionMode { get; internal set; }
 
@@ -69,8 +69,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public SquareMeter CrossSectionAreaRigidTruck { get; internal set; }
 
-		public CrossWindCorrectionMode CrossWindCorrection { get; internal set; }
-
 		public Meter DynamicTyreRadius { get; internal set; }
 
 		public Kilogram ReducedMassWheels { get; private set; }
@@ -95,7 +93,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				RRC += axle.AxleWeightShare * axle.RollResistanceCoefficient *
 						Math.Pow(
 							(axle.AxleWeightShare * TotalVehicleWeight() * Physics.GravityAccelleration / axle.TyreTestLoad /
-							nrWheels).Double(), Physics.RollResistanceExponent - 1);
+							nrWheels).Value(), Physics.RollResistanceExponent - 1);
 				mRed0 += nrWheels * (axle.Inertia / DynamicTyreRadius / DynamicTyreRadius).Cast<Kilogram>();
 			}
 			TotalRollResistanceCoefficient = RRC;

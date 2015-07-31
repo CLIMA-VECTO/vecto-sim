@@ -1,21 +1,45 @@
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using System.Text;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
 {
+	public class Scalar : SIBase<Scalar>
+	{
+		static Scalar()
+		{
+			Constructors.Add(typeof(Scalar), val => new Scalar(val));
+		}
+
+		private Scalar(double val) : base(new SI(val)) {}
+
+		public static implicit operator double(Scalar self)
+		{
+			return self.Val;
+		}
+
+		public static implicit operator Scalar(double val)
+		{
+			return new Scalar(val);
+		}
+	}
+
+
 	public class Newton : SIBase<Newton>
 	{
 		static Newton()
 		{
-			Constructors.Add(typeof (Newton), val => new Newton(val));
+			Constructors.Add(typeof(Newton), val => new Newton(val));
 		}
 
 		[JsonConstructor]
@@ -31,7 +55,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static Radian()
 		{
-			Constructors.Add(typeof (Radian), val => new Radian(val));
+			Constructors.Add(typeof(Radian), val => new Radian(val));
 		}
 
 		[JsonConstructor]
@@ -43,7 +67,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static MeterPerSquareSecond()
 		{
-			Constructors.Add(typeof (MeterPerSquareSecond), val => new MeterPerSquareSecond(val));
+			Constructors.Add(typeof(MeterPerSquareSecond), val => new MeterPerSquareSecond(val));
 		}
 
 		protected MeterPerSquareSecond(double val) : base(new SI(val).Meter.Per.Square.Second) {}
@@ -53,7 +77,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static Second()
 		{
-			Constructors.Add(typeof (Second), val => new Second(val));
+			Constructors.Add(typeof(Second), val => new Second(val));
 		}
 
 		[JsonConstructor]
@@ -64,7 +88,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static Meter()
 		{
-			Constructors.Add(typeof (Meter), val => new Meter(val));
+			Constructors.Add(typeof(Meter), val => new Meter(val));
 		}
 
 		protected Meter(double val) : base(new SI(val).Meter) {}
@@ -74,7 +98,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static Ton()
 		{
-			Constructors.Add(typeof (Ton), val => new Ton(val));
+			Constructors.Add(typeof(Ton), val => new Ton(val));
 		}
 
 		[JsonConstructor]
@@ -86,7 +110,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static Kilogram()
 		{
-			Constructors.Add(typeof (Kilogram), val => new Kilogram(val));
+			Constructors.Add(typeof(Kilogram), val => new Kilogram(val));
 		}
 
 		[JsonConstructor]
@@ -97,7 +121,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static SquareMeter()
 		{
-			Constructors.Add(typeof (SquareMeter), val => new SquareMeter(val));
+			Constructors.Add(typeof(SquareMeter), val => new SquareMeter(val));
 		}
 
 		[JsonConstructor]
@@ -108,7 +132,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static CubicMeter()
 		{
-			Constructors.Add(typeof (CubicMeter), val => new CubicMeter(val));
+			Constructors.Add(typeof(CubicMeter), val => new CubicMeter(val));
 		}
 
 		[JsonConstructor]
@@ -119,7 +143,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static KilogramSquareMeter()
 		{
-			Constructors.Add(typeof (KilogramSquareMeter), val => new KilogramSquareMeter(val));
+			Constructors.Add(typeof(KilogramSquareMeter), val => new KilogramSquareMeter(val));
 		}
 
 		[JsonConstructor]
@@ -130,7 +154,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static KilogramPerWattSecond()
 		{
-			Constructors.Add(typeof (KilogramPerWattSecond), val => new KilogramPerWattSecond(val));
+			Constructors.Add(typeof(KilogramPerWattSecond), val => new KilogramPerWattSecond(val));
 		}
 
 		[JsonConstructor]
@@ -141,7 +165,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static Watt()
 		{
-			Constructors.Add(typeof (Watt), val => new Watt(val));
+			Constructors.Add(typeof(Watt), val => new Watt(val));
 		}
 
 		[JsonConstructor]
@@ -162,7 +186,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static PerSecond()
 		{
-			Constructors.Add(typeof (PerSecond), val => new PerSecond(val));
+			Constructors.Add(typeof(PerSecond), val => new PerSecond(val));
 		}
 
 		[JsonConstructor]
@@ -173,7 +197,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static MeterPerSecond()
 		{
-			Constructors.Add(typeof (MeterPerSecond), val => new MeterPerSecond(val));
+			Constructors.Add(typeof(MeterPerSecond), val => new MeterPerSecond(val));
 		}
 
 		[JsonConstructor]
@@ -191,7 +215,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static RoundsPerMinute()
 		{
-			Constructors.Add(typeof (RoundsPerMinute), val => new RoundsPerMinute(val));
+			Constructors.Add(typeof(RoundsPerMinute), val => new RoundsPerMinute(val));
 		}
 
 		[JsonConstructor]
@@ -203,7 +227,7 @@ namespace TUGraz.VectoCore.Utils
 	{
 		static NewtonMeter()
 		{
-			Constructors.Add(typeof (NewtonMeter), val => new NewtonMeter(val));
+			Constructors.Add(typeof(NewtonMeter), val => new NewtonMeter(val));
 		}
 
 		[JsonConstructor]
@@ -237,8 +261,8 @@ namespace TUGraz.VectoCore.Utils
 
 		public static T Create(double val)
 		{
-			RuntimeHelpers.RunClassConstructor(typeof (T).TypeHandle);
-			return Constructors[typeof (T)](val);
+			RuntimeHelpers.RunClassConstructor(typeof(T).TypeHandle);
+			return Constructors[typeof(T)](val);
 		}
 
 		protected SIBase(Type type, Func<double, T> constructor)
@@ -535,12 +559,12 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		///     Gets the basic double value.
 		/// </summary>
-		public double Double()
+		public double Value()
 		{
 			return Val;
 		}
 
-		public SI Value()
+		public SI Clone()
 		{
 			return new SI(Val, Numerator, Denominator);
 		}
@@ -551,6 +575,19 @@ namespace TUGraz.VectoCore.Utils
 		public SI Abs()
 		{
 			return new SI(Math.Abs(Val), this);
+		}
+
+		/// <summary>
+		/// Returns the absolute value.
+		/// </summary>
+		public SI Sqrt()
+		{
+			var si = ToBasicUnits();
+			var numerator = si.Numerator.Where((u, i) => i % 2 == 0);
+			var denominator = si.Denominator.Where((u, i) => i % 2 == 0);
+			var root = new SI(Math.Sqrt(si.Val), numerator, denominator);
+			Contract.Requires(root * root == this);
+			return root;
 		}
 
 		#region Unit Definitions
@@ -655,10 +692,6 @@ namespace TUGraz.VectoCore.Utils
 			get { return new SI(this); }
 		}
 
-		public SI GradientPercent
-		{
-			get { return new SI(this, factor: Math.Atan(Val) / Val, fromUnit: Unit.Percent); }
-		}
 
 		/// <summary>
 		///     Converts to/from Radiant
@@ -856,25 +889,25 @@ namespace TUGraz.VectoCore.Utils
 		public static bool operator <(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
-			return si1.Val < d;
+			return si1 != null && si1.Val < d;
 		}
 
 		public static bool operator >(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
-			return si1.Val > d;
+			return si1 != null && si1.Val > d;
 		}
 
 		public static bool operator <=(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
-			return si1.Val <= d;
+			return si1 != null && si1.Val <= d;
 		}
 
 		public static bool operator >=(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
-			return si1.Val >= d;
+			return si1 != null && si1.Val >= d;
 		}
 
 		#endregion
@@ -936,10 +969,10 @@ namespace TUGraz.VectoCore.Utils
 		public virtual string ToString(string format)
 		{
 			if (string.IsNullOrEmpty(format)) {
-				format = "";
+				format = "F4";
 			}
 
-			return string.Format("{0:" + format + "} [{2}]", Val, format, GetUnitString());
+			return string.Format(CultureInfo.InvariantCulture, "{0:" + format + "} [{2}]", Val, format, GetUnitString());
 		}
 
 		#endregion
@@ -969,6 +1002,16 @@ namespace TUGraz.VectoCore.Utils
 			}
 			var other = obj as SI;
 			return other != null && Val.Equals(other.Val) && HasEqualUnit(other);
+		}
+
+		public bool IsEqual(SI si, double tolerance = DoubleExtensionMethods.Tolerance)
+		{
+			return HasEqualUnit(si) && Val.IsEqual(si.Val, tolerance);
+		}
+
+		public bool IsEqual(double val, double tolerance = DoubleExtensionMethods.Tolerance)
+		{
+			return Val.IsEqual(val, tolerance);
 		}
 
 		public override int GetHashCode()
@@ -1013,5 +1056,25 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		#endregion
+
+		public Scalar Scalar()
+		{
+			var si = ToBasicUnits();
+			if (si.Numerator.Length == 0 && si.Denominator.Length == 0) {
+				return Val.SI<Scalar>();
+			}
+			throw new InvalidCastException("The SI Unit is not a scalar.");
+		}
+
+
+		public virtual string ToOutputFormat(uint? decimals = null, double? outputFactor = null, bool? showUnit = null)
+		{
+			decimals = decimals ?? 4;
+			outputFactor = outputFactor ?? 1.0;
+			showUnit = showUnit ?? false;
+
+			var format = string.Format("{{0:F{0}}}" + (showUnit.Value ? " [{2}]" : ""), decimals);
+			return string.Format(CultureInfo.InvariantCulture, format, Val * outputFactor, GetUnitString());
+		}
 	}
 }

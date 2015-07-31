@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.FileIO.EngineeringFile
 	///		...
 	///		]
 	/// }
-	public class GearboxFileV4Engineering : GearboxFileV4Declaration
+	public class GearboxFileV5Engineering : GearboxFileV5Declaration
 	{
 		[JsonProperty(Required = Required.Always)] public new DataBodyEng Body;
 

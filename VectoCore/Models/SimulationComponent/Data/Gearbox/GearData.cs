@@ -2,23 +2,16 @@
 {
 	public class GearData
 	{
-		public ShiftPolygon ShiftPolygon { get; protected set; }
+		public ShiftPolygon ShiftPolygon { get; internal set; }
 
-		public TransmissionLossMap LossMap { get; protected set; }
+		public TransmissionLossMap LossMap { get; internal set; }
 
-		public double Ratio { get; protected set; }
+		public GearFullLoadCurve FullLoadCurve { get; internal set; }
 
-		public bool TorqueConverterActive { get; protected set; } // TODO: think about refactoring...
+		public double Ratio { get; internal set; }
 
-		public double AverageEfficiency { get; set; }
+		public bool TorqueConverterActive { get; internal set; } // TODO: think about refactoring...
 
-		public GearData(TransmissionLossMap lossMap, ShiftPolygon shiftPolygon, double ratio,
-			bool torqueconverterActive)
-		{
-			LossMap = lossMap;
-			ShiftPolygon = shiftPolygon;
-			Ratio = ratio;
-			TorqueConverterActive = torqueconverterActive;
-		}
+		// public double AverageEfficiency { get; internal set; }
 	}
 }

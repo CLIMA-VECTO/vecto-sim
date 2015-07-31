@@ -3,7 +3,7 @@ using TUGraz.VectoCore.FileIO.DeclarationFile;
 
 namespace TUGraz.VectoCore.FileIO.EngineeringFile
 {
-	internal class EngineFileV2Engineering : EngineFileV2Declaration
+	internal class EngineFileV3Engineering : EngineFileV3Declaration
 	{
 		[JsonProperty(Required = Required.Always)] public new DataBodyEng Body;
 

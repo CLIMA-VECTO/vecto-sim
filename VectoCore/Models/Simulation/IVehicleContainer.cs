@@ -1,6 +1,7 @@
 ﻿using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation
 {
@@ -10,7 +11,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 	/// </summary>
 	public interface IVehicleContainer : ICockpit
 	{
-		IDrivingCycleOutPort GetCycleOutPort();
+		ISimulationOutPort GetCycleOutPort();
 
 		/// <summary>
 		/// Adds a component to the vehicle container.
@@ -21,7 +22,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// <summary>
 		/// Commits the current simulation step.
 		/// </summary>
-		void CommitSimulationStep(double time, double simulationInterval);
+		void CommitSimulationStep(Second time, Second simulationInterval);
 
 		/// <summary>
 		/// Finishes the simulation.

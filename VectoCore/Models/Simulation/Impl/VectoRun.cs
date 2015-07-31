@@ -3,18 +3,20 @@ using Common.Logging;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	/// <summary>
 	/// Simulator for one vecto simulation job.
 	/// </summary>
-	public class VectoRun : IVectoRun
+	public abstract class VectoRun : IVectoRun
 	{
-		private TimeSpan _absTime = new TimeSpan(seconds: 0, minutes: 0, hours: 0);
-		private TimeSpan _dt = new TimeSpan(seconds: 1, minutes: 0, hours: 0);
+		protected Second AbsTime = 0.SI<Second>();
 
-		public VectoRun(IVehicleContainer container)
+		protected Second dt = 1.SI<Second>();
+
+		protected VectoRun(IVehicleContainer container)
 		{
 			Container = container;
 			CyclePort = container.GetCycleOutPort();
@@ -26,7 +28,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected string JobName { get; set; }
 
-		protected IDrivingCycleOutPort CyclePort { get; set; }
+		protected ISimulationOutPort CyclePort { get; set; }
 		protected IModalDataWriter DataWriter { get; set; }
 		protected IVehicleContainer Container { get; set; }
 
@@ -39,31 +41,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			LogManager.GetLogger(GetType()).Info("VectoJob started running.");
 			IResponse response;
+
+			Initialize();
 			do {
-				response = CyclePort.Request(_absTime, _dt);
-				while (response is ResponseFailTimeInterval) {
-					_dt = (response as ResponseFailTimeInterval).DeltaT;
-					response = CyclePort.Request(_absTime, _dt);
+				response = DoSimulationStep();
+				if (response.ResponseType == ResponseType.Success) {
+					Container.CommitSimulationStep(AbsTime, dt);
 				}
-
-				if (response is ResponseCycleFinished) {
-					break;
-				}
-
-				var time = (_absTime + TimeSpan.FromTicks(_dt.Ticks / 2)).TotalSeconds;
-				var simulationInterval = _dt.TotalSeconds;
-
-
-				Container.CommitSimulationStep(time, simulationInterval);
 
 				// set _dt to difference to next full second.
-				_absTime += _dt;
-				_dt = TimeSpan.FromSeconds(1) - TimeSpan.FromMilliseconds(_dt.Milliseconds);
+				AbsTime += dt;
 			} while (response is ResponseSuccess);
 
 			Container.FinishSimulation();
 
 			LogManager.GetLogger(GetType()).Info("VectoJob finished.");
 		}
+
+		protected abstract IResponse DoSimulationStep();
+
+		protected abstract IResponse Initialize();
 	}
 }

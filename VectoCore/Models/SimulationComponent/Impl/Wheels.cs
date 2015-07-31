@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_dynamicWheelRadius = rdyn;
 		}
 
-		#region IRoadPortOutProvider
+		#region IFvOutProvider
 
 		public IFvOutPort OutPort()
 		{
@@ -26,9 +26,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		#region IInShaft
+		#region ITnInProvider
 
-		public ITnInPort InShaft()
+		public ITnInPort InPort()
 		{
 			return this;
 		}
@@ -37,11 +37,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IFvOutPort
 
-		IResponse IFvOutPort.Request(TimeSpan absTime, TimeSpan dt, Newton force, MeterPerSecond velocity)
+		IResponse IFvOutPort.Request(Second absTime, Second dt, Newton force, MeterPerSecond velocity)
 		{
 			var torque = force * _dynamicWheelRadius;
 			var angularVelocity = velocity / _dynamicWheelRadius;
 			return _outPort.Request(absTime, dt, torque, angularVelocity);
+		}
+
+		public IResponse Initialize()
+		{
+			return _outPort.Initialize();
 		}
 
 		#endregion
@@ -57,9 +62,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		public override void CommitSimulationStep(IModalDataWriter writer)
+		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			throw new NotImplementedException();
+			// noting to write...
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			// nothing to commit
 		}
 
 		#endregion
