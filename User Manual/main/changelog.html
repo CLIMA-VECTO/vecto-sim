@@ -8,6 +8,45 @@
 <big><big><big><span style="font-weight: bold;">Changelog</span></big></big></big>
 <br><hr style="width: 100%; height: 0px;"><br>
 
+
+VECTO 2.2<br>
+<ul>
+<li>Bugfix: Error in Declaration Mode Pneumatic System aux power calculation ([kW] were interpreted as [W])</li>
+<li>Bugfix: Error in Declaration Mode Electric System aux power calculation</li>
+<li>Moved gear-specific Full Load Curves to Gearbox File</li>
+<li>Combined Drag Coefficient * Cross Sectional Area in one input parameter</li>
+<li>Updated .vgbx file format (Added gear-specific Full Load Curves)</li>
+<li>Updated .veng file format (Removed gear-specific Full Load Curves)</li>
+<li>Updated .vveh file format (Combined Drag Coefficient * Cross Sectional Area in one parameter)</li>
+<li>Updated Generic Vehicles (new file formats)</li>
+<li>Removed WHTC Correction Factor Calculation. Now in external tool, VECTO-Engine.</li>
+<li>Test Options are now only available in Engineering Mode</li>
+<li>Gearbox Editor now shows generic and user-defined shift polygons (if available)</li>
+<li>Various small updates in GUI</li>
+<li>Added 'Create JIRA Issue' dialog</li>
+</ul>
+<br>
+
+VECTO 2.1.4<br>
+<ul>
+<li>Bugfixes in start gear and (A)MT shift model</li>
+<li>Updated Coach .vcdv file for higher speeds to avoid extrapolation</li>
+<li>Renamed output "FC" to "FC-Map" for better clarification</li>
+<li>Same header for g/h and g/km output</li>
+<li>Reduced minimum turbine speed for 1C-to-2C AT up-shift condition from 900 to 700rpm.</li>
+<li>Updated cross wind correction parameters to current White Book values</li>
+</ul>
+<br>
+
+VECTO 2.1.3<br>
+<ul>
+<li>PwheelPos output in VSUM file.</li>
+<li>Implemented new Cd*A(v) method</li>
+<li>Bugfix in TC model</li>
+<li>Bugfix: Unit error in Cd(v) methods caused incorrect Delta-Cd value being used</li>
+</ul>
+<br>
+
 VECTO 2.1.2<br>
 <ul>
 <li>Improved TC iteration for higher precision</li>
