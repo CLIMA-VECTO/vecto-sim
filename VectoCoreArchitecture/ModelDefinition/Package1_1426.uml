@@ -278,10 +278,21 @@
       </class>
     </packageHasNamedElement>
     <packageHasNamedElement>
+      <packageMoniker
+        Id="a79895b7-78a9-44a6-ba1e-6e8d01b610aa"
+        LastKnownName="DeclarationFile"
+        LastKnownLocation="Package_1817.uml" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="873eea29-851e-4c0f-a515-b468cab14cd4"
+        LastKnownName="EngineeringFile"
+        LastKnownLocation="Package2_1817.uml" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
       <class
         Id="9938898d-e522-479c-be3e-b7d413531019"
         name="JsonDataHeader"
-        visibility="Private"
         isAbstract="false"
         isLeaf="false"
         isActiveClass="false">
@@ -594,8 +605,8 @@
             </appliedStereotypesInternal>
             <type_NamedElement>
               <classMoniker
-                Id="7b973014-7fe3-46bf-a939-792ab5051df1"
-                LastKnownName="Double"
+                Id="cfcbbd6f-9851-4da9-9926-5c00b65ddb6c"
+                LastKnownName="UInt32"
                 LastKnownLocation="Package5_1315.uml" />
             </type_NamedElement>
           </property>
@@ -878,7 +889,7 @@
             </ownedParameters>
           </operation>
           <operation
-            Id="d1e06d56-288a-4f64-a26e-34030c60fe4a"
+            Id="07abbea5-139b-475d-bc27-8044889160d6"
             name="JsonDataHeader"
             isLeaf="false"
             isStatic="false"
@@ -887,54 +898,54 @@
             isQuery="false">
             <referencesInternal>
               <reference
-                Id="b1c73836-06b3-47fc-b2f2-ceeb9e7f82da"
+                Id="f7604250-9044-42ec-8680-1749a32ba028"
                 handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DJsonDataHeader Member%3D.ctor"
                 tag="ViewCode" />
             </referencesInternal>
             <appliedStereotypesInternal>
               <stereotypeInstance
-                Id="179e95c3-913b-4930-ac1b-9b8915d90b52"
+                Id="64a2f1a0-34eb-41c3-8509-7d03b53dafce"
                 name="method"
                 profile="CSharpProfile">
                 <propertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="f795b447-1011-4c55-ac46-6e0e0ab3b75b">
+                    Id="8322c942-08e0-43e4-b4dd-52a9ac13c21c">
                     <propertyInstance
-                      Id="39d4ae6e-edf4-49c4-87f4-5947f97d6a42"
+                      Id="9d330f6e-9a4d-4799-9676-cc2e10ad2121"
                       name="ClrAttributes" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="df59c009-ad70-4115-8a27-93669c167414">
+                    Id="1ea20986-4402-4da7-aad6-9089526ee8be">
                     <propertyInstance
-                      Id="83137264-fc18-49cf-9c65-68b3a34c1ff4"
+                      Id="c6821d24-89dc-40f4-b053-0c44ff88594b"
                       name="IsPartial"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="b1042421-4096-4521-8c08-6d5d0244cd97">
+                    Id="c5873a9b-4563-4f71-b636-a5bfc8b711f0">
                     <propertyInstance
-                      Id="a1f3b1d6-f901-4a60-8b64-b5ff110b95f0"
+                      Id="40d71daf-f6bc-4c25-8b49-61cc36b0cfa0"
                       name="IsUnsafe"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="4999900e-0a10-4235-8a07-280b4e8ba430">
+                    Id="397e8b7c-0ad6-4deb-938d-c4e4c269e3e7">
                     <propertyInstance
-                      Id="3b1950d0-b8c9-428f-b2ea-2fbd8dd63039"
+                      Id="1cbf4e8f-9bcc-4063-8997-1d7310ad5050"
                       name="Inheritance"
                       value="none" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="006197dc-bf46-4ba3-a133-8fefe293be43">
+                    Id="2433b97d-ba6f-4b90-964c-6aceb697a2ab">
                     <propertyInstance
-                      Id="f46bdc65-bc20-4b73-9692-455de77f72eb"
+                      Id="bfed49c5-8d5f-45d6-9bed-6d43503d8f46"
                       name="PackageVisibility"
                       value="internal" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="9a0206c3-931b-42d0-9f86-b4b6dcd67251">
+                    Id="4524e7af-253f-45dc-a48a-f2cd863b6e76">
                     <propertyInstance
-                      Id="b7db1b36-9d9a-4c9b-a4e0-39de7578a436"
+                      Id="4a779aa1-fd15-4131-bbfe-8ca6d42afffc"
                       name="params"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
@@ -944,18 +955,6 @@
           </operation>
         </ownedOperationsInternal>
       </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <packageMoniker
-        Id="a79895b7-78a9-44a6-ba1e-6e8d01b610aa"
-        LastKnownName="DeclarationFile"
-        LastKnownLocation="Package_1817.uml" />
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <packageMoniker
-        Id="873eea29-851e-4c0f-a515-b468cab14cd4"
-        LastKnownName="EngineeringFile"
-        LastKnownLocation="Package2_1817.uml" />
     </packageHasNamedElement>
   </packagedElements>
 </package>

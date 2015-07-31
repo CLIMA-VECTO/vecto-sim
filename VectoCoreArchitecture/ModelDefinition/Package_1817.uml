@@ -4111,6 +4111,86 @@
             </propertyInstances>
           </stereotypeInstance>
         </appliedStereotypesInternal>
+        <targetEnds>
+          <association
+            Id="4e440051-ba0b-4613-8daf-d792befedf2d"
+            isDerived="false"
+            sourceEndRoleName="VectoJobFile"
+            targetEndRoleName="JsonDataHeader"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="9938898d-e522-479c-be3e-b7d413531019"
+              LastKnownName="JsonDataHeader"
+              LastKnownLocation="Package1_1426.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="f364dbd2-05cd-4a60-bb3d-cecaf0303075"
+                  name="VectoJobFile"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="ccb4b924-2b7e-412b-adcb-d7f481ef02a2"
+                  name="JsonDataHeader"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="36e8c76c-bab0-40a9-9aec-b490b647e14a"
+            isDerived="false"
+            sourceEndRoleName="VectoJobFile"
+            targetEndRoleName="DataBodyDecl"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="7fdffb1c-ade3-4752-b6a2-9c3a99e0d04c"
+              LastKnownName="DataBodyDecl"
+              LastKnownLocation="Package_1817.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="874ed12e-c4b5-4ba1-8786-7dcf7a3ce24c"
+                  name="VectoJobFile"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="b3dc83de-674b-4be5-8400-b3ec38665a8a"
+                  name="DataBodyDecl"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
         <ownedAttributesInternal>
           <property
             Id="2950f732-a108-44f0-a74c-2c0f4437156f"
@@ -4372,6 +4452,47 @@
             </propertyInstances>
           </stereotypeInstance>
         </appliedStereotypesInternal>
+        <targetEnds>
+          <association
+            Id="f85de37b-aa05-4d32-baa4-463c641f56c7"
+            isDerived="false"
+            sourceEndRoleName="VectoVehicleFile"
+            targetEndRoleName="JsonDataHeader"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="9938898d-e522-479c-be3e-b7d413531019"
+              LastKnownName="JsonDataHeader"
+              LastKnownLocation="Package1_1426.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="2d269e69-eac8-424b-9ec4-a19b2fadc6ba"
+                  name="VectoVehicleFile"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="0b8584e4-12e6-4364-9005-bd345a691ab4"
+                  name="JsonDataHeader"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
         <ownedAttributesInternal>
           <property
             Id="7bb79888-437e-4f53-a51b-48c0469db18f"
@@ -4566,6 +4687,47 @@
             </propertyInstances>
           </stereotypeInstance>
         </appliedStereotypesInternal>
+        <targetEnds>
+          <association
+            Id="f70268ae-7486-4a5d-b969-7a6702fdda05"
+            isDerived="false"
+            sourceEndRoleName="VectoEngineFile"
+            targetEndRoleName="JsonDataHeader"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="9938898d-e522-479c-be3e-b7d413531019"
+              LastKnownName="JsonDataHeader"
+              LastKnownLocation="Package1_1426.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="11147317-9af4-4df4-9522-f82afb7955f8"
+                  name="VectoEngineFile"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="fd1c91b9-aef8-4c9d-93a7-78b50f4c37a0"
+                  name="JsonDataHeader"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
         <ownedAttributesInternal>
           <property
             Id="0c45174c-2d3d-4ef4-b4fb-aeb57aaf0483"
@@ -4760,6 +4922,47 @@
             </propertyInstances>
           </stereotypeInstance>
         </appliedStereotypesInternal>
+        <targetEnds>
+          <association
+            Id="5fbccc1e-d7fd-4480-afe4-83541f792ef6"
+            isDerived="false"
+            sourceEndRoleName="VectoGearboxFile"
+            targetEndRoleName="JsonDataHeader"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="9938898d-e522-479c-be3e-b7d413531019"
+              LastKnownName="JsonDataHeader"
+              LastKnownLocation="Package1_1426.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="7659c231-ae6d-4d7f-8476-024cde14c62d"
+                  name="VectoGearboxFile"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="a4587aae-fbc0-464a-8922-49677261dd18"
+                  name="JsonDataHeader"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
         <ownedAttributesInternal>
           <property
             Id="89824c50-c20c-4c21-890c-1750baf31499"
