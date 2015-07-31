@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
   dslVersion="1.0.0.0"
   Id="992dee42-a6e6-4cd0-b463-961d04d1e2ec"
   name="Engine"
@@ -10,4 +10,142 @@
       handle="viewcode://./CodeSchema_Namespace?Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data.Engine"
       tag="ViewCode" />
   </referencesInternal>
+  <packagedElements>
+    <packageHasNamedElement>
+      <class
+        Id="07285ca1-d308-450d-a05f-04a446dde3f2"
+        name="FuelConsumptionMap"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="e3b36d90-3cc6-440e-8180-dcf617aef724"
+            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data.Engine Type%3DFuelConsumptionMap"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="626394c3-3921-4f2c-8f6d-200c39185021"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="7cc740f8-fa24-4e68-a9b3-102116329fc3">
+                <propertyInstance
+                  Id="8d664c4d-42ba-4fba-918e-a0de97e14efe"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="684b84d8-45e0-48db-a93b-94775e124e23">
+                <propertyInstance
+                  Id="52e7c7e8-7085-4721-92cb-ac907cb51502"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="701918f0-bdec-4dac-8c91-bbcfd8af0d70">
+                <propertyInstance
+                  Id="8599c2fc-c722-4b85-b472-a2ce1e6bb708"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="645d68eb-cb9b-475e-a1bb-b4cb79f1a608">
+                <propertyInstance
+                  Id="2ec1b0bb-f907-4603-a1e5-41f4ba61324d"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="f6b50584-75e5-4457-afea-c8d31e689af9">
+                <propertyInstance
+                  Id="27d961c7-3b9d-4ebf-af5e-d19abcfb8832"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+        <generalsInternal>
+          <generalization
+            Id="f1ad0982-d640-4ab6-955e-fcddce6ca099"
+            isSubstitutable="false">
+            <classMoniker
+              Id="4e38be6a-c910-456c-8182-4fd6db271a29"
+              LastKnownName="SimulationComponentData"
+              LastKnownLocation="Package3_1315.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="af055835-0382-4621-8255-b6b9c78c52b4"
+        name="EngineFullLoadCurve"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="57e337db-c1f4-40ae-943d-960f7ee12a7f"
+            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data.Engine Type%3DEngineFullLoadCurve"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="7e397cee-6e95-487c-8d3d-eda4aa61b24d"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="2490d814-27d5-46dd-8b12-d1d7af191533">
+                <propertyInstance
+                  Id="20c83474-1fb6-44c4-85ab-4ef7f5319c15"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="a97dc61b-4a7a-41ec-b49e-ccb220e2e538">
+                <propertyInstance
+                  Id="a0b4c2e2-5734-45b2-8e42-4966cf25a93c"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="d3c37774-a81f-41a4-bfee-d372d11367a0">
+                <propertyInstance
+                  Id="35889e29-eb4d-4a59-a6fe-27f460f7cdf0"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="64c13fcc-2dab-4487-893b-ea2bc10f3103">
+                <propertyInstance
+                  Id="9c09e4fb-146b-4dea-9974-2bdcf0d8c896"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="08d584db-07b5-4089-9ab1-b746658ca2ba">
+                <propertyInstance
+                  Id="7f9a7599-10a5-4770-a357-f2bf38540698"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+        <generalsInternal>
+          <generalization
+            Id="1b3042bc-3c96-44f2-bfcb-864f96397d76"
+            isSubstitutable="false">
+            <classMoniker
+              Id="4e38be6a-c910-456c-8182-4fd6db271a29"
+              LastKnownName="SimulationComponentData"
+              LastKnownLocation="Package3_1315.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+  </packagedElements>
 </package>

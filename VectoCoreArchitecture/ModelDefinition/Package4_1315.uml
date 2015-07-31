@@ -1967,18 +1967,6 @@
       </Interface>
     </packageHasNamedElement>
     <packageHasNamedElement>
-      <undefinedType
-        Id="475be125-ad4e-4882-9157-a3560fc18f16"
-        name="T">
-        <referencesInternal>
-          <reference
-            Id="49728f33-6cb6-4ef1-850c-bb1f0c2ae063"
-            handle="viewcode://./CodeSchema_GenericParameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Simulation.Data Type%3DModalDataWriter Member%3D(Name%3DGetValues GenericParameterCount%3D1 OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Simulation.Data Type%3DModalResultField)]) ParameterIdentifier%3D0"
-            tag="ViewCode" />
-        </referencesInternal>
-      </undefinedType>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
       <class
         Id="db309bb1-004f-466f-98dc-8f8a15a3bf72"
         name="ModalResults"
@@ -2113,72 +2101,6 @@
           </generalization>
         </generalsInternal>
         <targetEnds>
-          <association
-            Id="f87abb1c-6acb-40b7-b801-7723dcf0ba5c"
-            isDerived="false"
-            sourceEndRoleName="VectoRunData"
-            targetEndRoleName="EngineData"
-            isLeaf="false"
-            isAbstract="false">
-            <classMoniker
-              Id="8f1653e1-038a-4c36-bb53-1d50a69749a1"
-              LastKnownName="CombustionEngineData"
-              LastKnownLocation="Package3_1315.uml" />
-            <description>Property EngineData references type CombustionEngineData.</description>
-            <relationshipOwnedElementsInternal>
-              <associationHasOwnedEnds>
-                <memberEnd
-                  Id="d79baf44-b4e7-4f84-a11d-a73f37075cf9"
-                  name="VectoRunData"
-                  isLeaf="false"
-                  isStatic="false"
-                  isReadOnly="false"
-                  isDerived="false"
-                  isDerivedUnion="false"
-                  aggregation="None"
-                  isComposite="false"
-                  isNavigableOwned="false">
-                  <lowerValueInternal>
-                    <literalString
-                      Id="1e89600d-36d2-4068-9053-1789653207d4"
-                      name="Lower"
-                      value="*" />
-                  </lowerValueInternal>
-                  <upperValueInternal>
-                    <literalString
-                      Id="2a473d7b-3f14-48e0-b1a5-d86edbdb0b2f"
-                      name="Upper"
-                      value="*" />
-                  </upperValueInternal>
-                </memberEnd>
-              </associationHasOwnedEnds>
-              <associationHasOwnedEnds>
-                <memberEnd
-                  Id="d7e6bdb2-5e6e-47d9-bd7d-a356b58f98af"
-                  name="EngineData"
-                  isLeaf="false"
-                  isStatic="false"
-                  isReadOnly="false"
-                  isDerived="false"
-                  isDerivedUnion="false"
-                  aggregation="None"
-                  isComposite="false">
-                  <lowerValueInternal>
-                    <literalString
-                      Id="882b16a3-8baf-4da7-bffa-2ffb9a869470"
-                      name="Lower"
-                      value="1" />
-                  </lowerValueInternal>
-                  <upperValueInternal>
-                    <literalString
-                      Id="c37bf9c4-04cd-4e50-b9a6-afc0d6ea24ef"
-                      name="Upper"
-                      value="1" />
-                  </upperValueInternal>
-                </memberEnd>
-              </associationHasOwnedEnds>
-            </relationshipOwnedElementsInternal>
-          </association>
           <association
             Id="b0a926de-0ec1-42a6-997e-e088ac447e4c"
             isDerived="false"

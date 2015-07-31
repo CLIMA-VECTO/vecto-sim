@@ -20196,6 +20196,24 @@
                   <elementDefinition Id="b630d07c-8ef2-4196-8d3b-bef343906be9" />
                 </generalization>
               </generalsInternal>
+              <targetEnds>
+                <association Id="994571f4-2755-475c-9b5b-94f4cfc3011a" isDerived="false" sourceEndRoleName="Vehicle" targetEndRoleName="VehicleData" isLeaf="false" isAbstract="false">
+                  <classMoniker Id="cd175a73-b2c2-4600-ae89-6465442dfe8f" LastKnownName="VehicleData" />
+                  <relationshipOwnedElementsInternal>
+                    <associationHasOwnedEnds>
+                      <memberEnd Id="1893212c-e9c9-44a6-b4ae-eb1a053276ab" name="Vehicle" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                        <elementDefinition Id="4a52bb8b-199b-4d88-ac8d-0200546088aa" />
+                      </memberEnd>
+                    </associationHasOwnedEnds>
+                    <associationHasOwnedEnds>
+                      <memberEnd Id="16d9963a-a92b-476c-96b2-dfc9af6d390f" name="VehicleData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                        <elementDefinition Id="6652c0f6-173d-42f8-887d-5e8c3e1ef12f" />
+                      </memberEnd>
+                    </associationHasOwnedEnds>
+                  </relationshipOwnedElementsInternal>
+                  <elementDefinition Id="bedaa1f9-8280-4fec-aa55-b35ffdca1b4c" />
+                </association>
+              </targetEnds>
               <ownedAttributesInternal>
                 <property Id="ec60b3e3-5875-4479-8b3c-a65a14340527" name="_nextInstance" visibility="Private" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
                   <referencesInternal>

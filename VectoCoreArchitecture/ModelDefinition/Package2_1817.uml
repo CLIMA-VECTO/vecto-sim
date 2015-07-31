@@ -632,7 +632,7 @@
         <referencesInternal>
           <reference
             Id="39b19d47-eda8-4b9b-9281-86444c1a9332"
-            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV4Engineering)"
+            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV5Engineering)"
             tag="ViewCode" />
         </referencesInternal>
         <appliedStereotypesInternal>
@@ -690,7 +690,7 @@
         </generalsInternal>
         <ownedAttributesInternal>
           <property
-            Id="dc412eb1-8ee3-4697-8f7a-a3e438e6db2a"
+            Id="49f461d7-9da8-43fa-a7a3-29502345f396"
             name="Gears"
             isLeaf="false"
             isStatic="false"
@@ -701,47 +701,47 @@
             isComposite="false">
             <referencesInternal>
               <reference
-                Id="ddac04f5-5e39-41d8-9fb7-c792dc3db14e"
-                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV4Engineering) Member%3DGears"
+                Id="e773403a-9fb4-4071-a31a-f2510e861d86"
+                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV5Engineering) Member%3DGears"
                 tag="ViewCode" />
             </referencesInternal>
             <appliedStereotypesInternal>
               <stereotypeInstance
-                Id="79a4a64a-d2c3-4001-9f02-ca536ab1add8"
+                Id="9b721760-92fa-43f8-8be2-5aa041f35169"
                 name="field"
                 profile="CSharpProfile">
                 <propertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="20105dd4-c365-4395-bc47-3b1507fad0ae">
+                    Id="bc557017-370f-4e92-9447-21b2a1986d94">
                     <propertyInstance
-                      Id="5611f091-f4f9-469e-b3e6-85abb020f445"
+                      Id="196ac6cb-b888-40bf-8b75-4913e06966b9"
                       name="ClrAttributes" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="dcbdd87f-fc91-4c05-90b6-f8c0b69a9cab">
+                    Id="95066c01-041c-4d64-bd07-666c20dfa35e">
                     <propertyInstance
-                      Id="891f329d-88f2-4ec9-94ce-6dbec24833e3"
+                      Id="78067b18-5551-4802-afff-9a1c0444b49d"
                       name="IsConst"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="6cbb04b0-8794-4082-9343-021042f82671">
+                    Id="d7a7b3a0-17ba-4642-b0dc-5fac75f1ad68">
                     <propertyInstance
-                      Id="6e88fedd-81dc-4dc2-9c07-8daca371bc4f"
+                      Id="039446e8-6345-4caa-a54a-245e9232b92e"
                       name="IsNullable"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="821149db-7490-404a-94a4-7ee177b3fd88">
+                    Id="1075a8fc-5696-46d5-96f8-cb47d6345f2b">
                     <propertyInstance
-                      Id="6cca8ffe-091c-4bad-bc43-f00f00fc8f68"
+                      Id="4d2ec05a-2b9b-4003-b36b-16326659ec6a"
                       name="IsVolatile"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="591daa28-d1c7-4d06-b48a-75f193a0eb56">
+                    Id="36ac0dbc-4109-4e8b-964d-eb8ef0766611">
                     <propertyInstance
-                      Id="830074cd-1383-4a5c-994d-e9e623e8d733"
+                      Id="586b5799-1890-446e-85e7-eb3e7cc329eb"
                       name="PackageVisibility"
                       value="internal" />
                   </stereotypeInstanceHasPropertyInstances>
@@ -750,13 +750,13 @@
             </appliedStereotypesInternal>
             <type_NamedElement>
               <interfaceMoniker
-                Id="471eb5e8-e9c8-4a02-bbde-879437dcde39"
-                LastKnownName="IList&lt;GearboxFileV4Engineering‎‎.GearDataEng‎&gt;"
+                Id="5c88433a-a67b-4f83-b96d-f6be62c76db8"
+                LastKnownName="IList&lt;GearboxFileV5Engineering‎‎.GearDataEng‎&gt;"
                 LastKnownLocation="Package8_1315.uml" />
             </type_NamedElement>
           </property>
           <property
-            Id="f947354b-aff1-4205-aa6f-c318519a4645"
+            Id="62e3085b-7fc0-48db-b6fc-5fe7df0a23be"
             name="Inertia"
             isLeaf="false"
             isStatic="false"
@@ -767,47 +767,47 @@
             isComposite="false">
             <referencesInternal>
               <reference
-                Id="17716559-0214-4f3f-800c-8d76d052b7eb"
-                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV4Engineering) Member%3DInertia"
+                Id="1b816d9f-e830-4ebc-a685-ade06c0dadd2"
+                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV5Engineering) Member%3DInertia"
                 tag="ViewCode" />
             </referencesInternal>
             <appliedStereotypesInternal>
               <stereotypeInstance
-                Id="5a343509-95bc-45fc-bc46-ad22cc978ef9"
+                Id="83d9700a-addd-468b-adfc-37068692cff9"
                 name="field"
                 profile="CSharpProfile">
                 <propertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="a680a26f-5907-486f-afd9-b2dec21e26aa">
+                    Id="4e1806a9-c2db-4fdb-bb0a-454d2e708ebd">
                     <propertyInstance
-                      Id="93e4fdfa-76e4-4b48-bfa0-b3c498510a08"
+                      Id="a8aa1038-7998-4f62-90bd-1ae1230ce6ee"
                       name="ClrAttributes" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="0b7497db-a6dd-420e-a57b-98aaf1e8180d">
+                    Id="f204a8d6-9fe3-493e-9e0f-73ddc064ad07">
                     <propertyInstance
-                      Id="906e72f1-f189-403b-84a1-6da795fe4f10"
+                      Id="ed7c9dc7-e2ef-46f2-9886-b524adecbe23"
                       name="IsConst"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="7d388c77-dcc6-4102-b946-8c5089c8fcc9">
+                    Id="c99a22d0-fd99-402f-a223-00682e86ca34">
                     <propertyInstance
-                      Id="bfcf6d4b-ca6b-4194-92c7-d6edb61ff3a0"
+                      Id="2e28414a-a7a4-47dd-85d9-1aa6afb3bc69"
                       name="IsNullable"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="8a715da6-56ff-4dd4-8cd9-dab438ad3b92">
+                    Id="754e91f9-8bf1-4720-afb6-4832fa5cfb41">
                     <propertyInstance
-                      Id="875b2f99-b5ec-4aee-a169-ae40a1e08525"
+                      Id="959b055a-2bde-42e9-9334-04bc05cfca3f"
                       name="IsVolatile"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="4fcd2302-d446-4b30-a89a-a8b0fdedfa77">
+                    Id="5656d8e0-f14e-472d-924a-6c59bf23bb13">
                     <propertyInstance
-                      Id="bfc08228-3547-4741-ac9b-e4cdad0ce415"
+                      Id="b5dc95f6-4a7a-4b2f-a409-ccc036d3f8d2"
                       name="PackageVisibility"
                       value="internal" />
                   </stereotypeInstanceHasPropertyInstances>
@@ -822,7 +822,7 @@
             </type_NamedElement>
           </property>
           <property
-            Id="35308d2e-f6bd-4298-8a1c-5f6f594d5a48"
+            Id="0e45e076-b23c-403c-b5c7-d3010e27b805"
             name="TractionInterruption"
             isLeaf="false"
             isStatic="false"
@@ -833,47 +833,47 @@
             isComposite="false">
             <referencesInternal>
               <reference
-                Id="bf117e7a-dbba-4c60-8667-2ad7d796d507"
-                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV4Engineering) Member%3DTractionInterruption"
+                Id="5ee10726-107b-4dbe-b185-4c459681aebe"
+                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV5Engineering) Member%3DTractionInterruption"
                 tag="ViewCode" />
             </referencesInternal>
             <appliedStereotypesInternal>
               <stereotypeInstance
-                Id="dfd78f5b-d352-43c6-bb44-2f1abc26765a"
+                Id="d37bb483-fe35-446d-8294-e8ddb618569e"
                 name="field"
                 profile="CSharpProfile">
                 <propertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="65ab8d33-4e59-49f7-a31e-458a937a35ba">
+                    Id="b606e494-c59a-45d9-8ab9-54d30a37f911">
                     <propertyInstance
-                      Id="71503d4d-551c-47f5-b345-7cf03c687402"
+                      Id="9adb89b6-0d35-4ed9-85fe-f409bf5dc9b0"
                       name="ClrAttributes" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="eb752c79-1d1f-4e6e-b081-26868ee8f942">
+                    Id="e66508f3-cf63-47d9-9a6f-fc936a80c7e3">
                     <propertyInstance
-                      Id="c33031ee-9e56-4fdb-9376-3e6fddf50cad"
+                      Id="f0bf66d3-b500-4ec7-938f-7ec53fbf3d8c"
                       name="IsConst"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="c5bed23b-fa08-424c-80a3-a63d554e6a8f">
+                    Id="34e2f63e-557b-423d-bc05-a544836a9396">
                     <propertyInstance
-                      Id="268d77aa-cf15-46a6-a16d-9be600abe70f"
+                      Id="9a52c33c-bc02-4db9-8af0-5c581d45d3c4"
                       name="IsNullable"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="1aa8976d-1fb5-474b-a5d0-97652e4c7d9f">
+                    Id="65584e9b-dc56-4ec6-81e8-0095ce6874ff">
                     <propertyInstance
-                      Id="0747dc23-1b7e-4638-a902-fbbe6a7dd62f"
+                      Id="d20c1ba8-9a39-4050-b8bc-d15fb58f2add"
                       name="IsVolatile"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="cebaa783-6f1d-447e-8bc0-b0a60b7b2d2b">
+                    Id="001c9faa-813b-4878-8191-ee046a4dba47">
                     <propertyInstance
-                      Id="4604b465-f7f9-4aee-9c36-897d986b1e80"
+                      Id="cc7525be-1a33-4a85-bdf9-45dddd34048b"
                       name="PackageVisibility"
                       value="internal" />
                   </stereotypeInstanceHasPropertyInstances>
@@ -888,7 +888,7 @@
             </type_NamedElement>
           </property>
           <property
-            Id="87949cdf-ef7c-4eac-aa47-98a62e91c7fc"
+            Id="c6d80e0d-c8d4-42ef-8baf-1e44f4875130"
             name="TorqueReserve"
             isLeaf="false"
             isStatic="false"
@@ -899,47 +899,47 @@
             isComposite="false">
             <referencesInternal>
               <reference
-                Id="ab8deff3-fca9-44fb-877e-fa89d119e187"
-                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV4Engineering) Member%3DTorqueReserve"
+                Id="7530ce5a-3e17-4b2b-b26e-304c8c6d3fd9"
+                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV5Engineering) Member%3DTorqueReserve"
                 tag="ViewCode" />
             </referencesInternal>
             <appliedStereotypesInternal>
               <stereotypeInstance
-                Id="5a5f80cc-6275-4d3c-80b5-e2494a156d1a"
+                Id="51f2c8c5-c27d-4050-8c02-27f3fc9cd491"
                 name="field"
                 profile="CSharpProfile">
                 <propertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="49ac4b33-f27f-4200-ab5a-98e78e49394d">
+                    Id="9cb222c8-ae1c-4a2b-8b91-ed31774fda87">
                     <propertyInstance
-                      Id="f0b359de-77bf-491d-9dfd-48788107eb2d"
+                      Id="d6b74b40-e84a-4330-82b7-817c8bdba197"
                       name="ClrAttributes" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="fffe205b-9043-4a98-8992-2cbf901b4f3a">
+                    Id="7a50a955-8cb7-4d9b-9ac5-29e5c7e02247">
                     <propertyInstance
-                      Id="d93a2bf5-77a5-46b0-b613-bf6819f2ffbd"
+                      Id="69b74be9-70b8-4259-af5c-8dd59fa83079"
                       name="IsConst"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="955664f5-3e2e-4aba-b414-c689b761eafe">
+                    Id="7cc2952e-cb74-43b0-95e6-395aeaca9554">
                     <propertyInstance
-                      Id="adcff7f8-7b06-47bd-a61a-42c9ef29f74a"
+                      Id="b9b2f910-1007-42ad-ade6-d85e75140d7c"
                       name="IsNullable"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="a09984b5-a1f7-4c2b-9197-94e120e978a7">
+                    Id="fb2b5551-6c77-455d-883e-5ec203c0f410">
                     <propertyInstance
-                      Id="7d3b352e-908d-4622-af55-6fc739170e3a"
+                      Id="5c6416c4-1959-42a2-8869-59bd01a6a404"
                       name="IsVolatile"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="ee118628-23a5-41b0-8cf6-eaf8386d1a63">
+                    Id="21a462ad-240d-48cf-af05-34c4f44c5ad2">
                     <propertyInstance
-                      Id="8f59ee8c-49c0-4ff6-8519-c44e9963f510"
+                      Id="d41677e2-3f1e-438d-baa1-0a1e7262a344"
                       name="PackageVisibility"
                       value="internal" />
                   </stereotypeInstanceHasPropertyInstances>
@@ -954,7 +954,7 @@
             </type_NamedElement>
           </property>
           <property
-            Id="63a1882c-be84-4f75-b5bc-8999cd221949"
+            Id="3345643d-d309-4646-90d5-9ffbca9e42a7"
             name="SkipGears"
             isLeaf="false"
             isStatic="false"
@@ -965,47 +965,47 @@
             isComposite="false">
             <referencesInternal>
               <reference
-                Id="afac37ae-115f-403c-b2f2-0154bdb36724"
-                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV4Engineering) Member%3DSkipGears"
+                Id="21563132-01d4-44be-b187-6f6995541230"
+                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV5Engineering) Member%3DSkipGears"
                 tag="ViewCode" />
             </referencesInternal>
             <appliedStereotypesInternal>
               <stereotypeInstance
-                Id="a371772e-af1d-4bbd-8cb4-7e54a53c3125"
+                Id="d3b327b5-c6c3-4d6f-b76f-ef0454b94cd9"
                 name="field"
                 profile="CSharpProfile">
                 <propertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="0747fad7-f926-4872-afd2-ba330a5995dd">
+                    Id="e1bb43de-cf65-4b65-9f85-d340b8120335">
                     <propertyInstance
-                      Id="0a03f0ac-4759-4d3a-b91b-73c4df86be12"
+                      Id="1ec2dcf3-8020-46eb-b94f-ee029df99759"
                       name="ClrAttributes" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="929dc3c1-f696-4a4c-90c2-57d81d3d9b19">
+                    Id="6160ec1f-871e-4ca1-bc1b-bdef46c5c038">
                     <propertyInstance
-                      Id="9b0dcb8a-66f1-4948-8d71-efc53e281dcb"
+                      Id="39de94bd-f61c-4044-9528-941bef7876f1"
                       name="IsConst"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="80ee61e5-cfe6-4660-aedb-557947319563">
+                    Id="fe7040b2-b98a-44d8-b3f2-46ff0fb663ba">
                     <propertyInstance
-                      Id="d8845d5b-70ca-414e-a23a-6f7635e3dde4"
+                      Id="a992814c-6788-49dd-84cd-61fd21eeccf3"
                       name="IsNullable"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="86e89151-0b14-48c4-a6cd-71b0b36abb92">
+                    Id="3d7309dd-a963-47ed-b26a-f5b62eb8fefa">
                     <propertyInstance
-                      Id="b3376d7e-2cf3-4a24-b60a-6d2c38b317b6"
+                      Id="b3dc2c34-259c-45ce-9589-e4a9ac0a2c0f"
                       name="IsVolatile"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="0b885dd1-8f10-48ad-b8cd-03b200ca98c3">
+                    Id="9f756ac9-5eb5-40ed-8eaa-e26001047cc9">
                     <propertyInstance
-                      Id="7d865b63-9c81-4a37-8d22-825b217c89a5"
+                      Id="0839e968-d344-40c4-a0fb-011ba42b9da9"
                       name="PackageVisibility"
                       value="internal" />
                   </stereotypeInstanceHasPropertyInstances>
@@ -1020,7 +1020,7 @@
             </type_NamedElement>
           </property>
           <property
-            Id="317caf7f-66df-4d94-84ed-f52623b0e2a2"
+            Id="520c5c6f-c241-49d1-8597-2a308ecc53e8"
             name="ShiftTime"
             isLeaf="false"
             isStatic="false"
@@ -1031,47 +1031,47 @@
             isComposite="false">
             <referencesInternal>
               <reference
-                Id="b9bb7396-5536-496e-a324-cb2c5eeabc53"
-                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV4Engineering) Member%3DShiftTime"
+                Id="45ff88a7-1d05-4f66-aac5-49bdace56fa8"
+                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV5Engineering) Member%3DShiftTime"
                 tag="ViewCode" />
             </referencesInternal>
             <appliedStereotypesInternal>
               <stereotypeInstance
-                Id="ba11aa42-7bdb-464b-8428-54abc1cff0d1"
+                Id="408c50d5-46e0-4b48-ba46-2e4cef803d30"
                 name="field"
                 profile="CSharpProfile">
                 <propertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="0f2dcd0c-27f4-4314-9a06-2cf14ebf3dba">
+                    Id="9d2a83b0-2e89-4c76-baae-645538468d2b">
                     <propertyInstance
-                      Id="8dfcd31c-2467-4432-bb75-d8d92b162a54"
+                      Id="32b56d0b-5218-4cd7-94ef-803121686380"
                       name="ClrAttributes" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="39314501-debd-4ef1-a8dd-3c3d3b2a5247">
+                    Id="a8cb8a9e-c9d0-426d-b9d3-927bb602d05c">
                     <propertyInstance
-                      Id="d45832dc-3251-437c-afff-49e22c3e0419"
+                      Id="d0bbabf1-fb5f-495a-9132-a16cdcefc85d"
                       name="IsConst"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="79489eb4-090b-474b-b0e2-7c9f95c1a6d9">
+                    Id="fb00b9bd-dc6f-4ff2-a54e-9c4f8897f6ec">
                     <propertyInstance
-                      Id="376737d6-da92-4e27-9f42-9f97631f5531"
+                      Id="dfdb795a-e312-4c94-9256-39ebf2f8ed9e"
                       name="IsNullable"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="f0602b21-7ed8-4911-b9c2-db3d5f94f39c">
+                    Id="2f7f2eb4-2d69-4e20-abe0-1094469048ed">
                     <propertyInstance
-                      Id="8c5276dd-1b27-423c-953b-c410fc86c0ce"
+                      Id="6a6dd424-5c44-4af4-9915-5da80912b085"
                       name="IsVolatile"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="3c250aab-3559-4d5f-9803-abd661357b51">
+                    Id="333f820c-c23c-4522-abec-031b16aacb5f">
                     <propertyInstance
-                      Id="fde54bde-b491-46cb-9ce7-e513eee9573a"
+                      Id="fb4d04c3-8e8e-4f3c-b517-8aed7d2bbd01"
                       name="PackageVisibility"
                       value="internal" />
                   </stereotypeInstanceHasPropertyInstances>
@@ -1086,7 +1086,7 @@
             </type_NamedElement>
           </property>
           <property
-            Id="e99aa5c1-5a83-4fd6-89fa-0599d4f00d81"
+            Id="19ff5810-a1e8-4301-811f-de3c1d331a61"
             name="EarlyShiftUp"
             isLeaf="false"
             isStatic="false"
@@ -1097,47 +1097,47 @@
             isComposite="false">
             <referencesInternal>
               <reference
-                Id="fdb7cf6a-487f-4626-8db1-ac0208abc72a"
-                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV4Engineering) Member%3DEarlyShiftUp"
+                Id="cbec0141-d5ed-4f70-9e02-4db9e2fd91d1"
+                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV5Engineering) Member%3DEarlyShiftUp"
                 tag="ViewCode" />
             </referencesInternal>
             <appliedStereotypesInternal>
               <stereotypeInstance
-                Id="e3783dbc-3afd-411b-8715-95ef5df3db13"
+                Id="25518261-7f25-420f-93eb-2dbd7337c9d3"
                 name="field"
                 profile="CSharpProfile">
                 <propertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="1592a879-c50f-4390-88b6-aff12c1f7e89">
+                    Id="c2dd95cf-7c38-4e93-9701-4e54e5be078a">
                     <propertyInstance
-                      Id="a1d37514-6d8f-4107-bd55-afffe39e2b46"
+                      Id="5cd88349-e555-4237-88d4-c5fd733ac8e4"
                       name="ClrAttributes" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="bd1a84be-8763-4623-993d-008b577b8bf3">
+                    Id="9bf91d97-9abd-4a19-900b-1de746b55203">
                     <propertyInstance
-                      Id="466261b0-f1d7-4a36-9fc0-02aad594c5cd"
+                      Id="1a5779f6-287b-43ee-b77d-f9300b6c81ca"
                       name="IsConst"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="91e96698-8d73-49be-be44-8aba44429384">
+                    Id="0374041a-7503-48b0-904c-00117065c745">
                     <propertyInstance
-                      Id="4dd9a301-c96e-47ea-b3c9-52cafbd76d9b"
+                      Id="c836d72d-aecb-42ce-a739-e02a2935d91e"
                       name="IsNullable"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="f7329f15-2430-469e-bd3d-656f198ce7e3">
+                    Id="a18eedd0-de1a-43a0-a7a7-66ee1803d438">
                     <propertyInstance
-                      Id="2b6dae2e-4b1e-48c4-80aa-a930c23f194e"
+                      Id="db311fe1-05c1-4083-a3a3-72a05d59c8da"
                       name="IsVolatile"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="39cdc42b-9f66-40d6-b165-5e4699cdb278">
+                    Id="337fca27-9b73-4618-b7dd-e5d951c6c051">
                     <propertyInstance
-                      Id="24527236-f5de-46ee-93d9-3210bf9e5433"
+                      Id="fb548bf1-30b9-425c-a90c-f50d88e1a3b4"
                       name="PackageVisibility"
                       value="internal" />
                   </stereotypeInstanceHasPropertyInstances>
@@ -1152,7 +1152,7 @@
             </type_NamedElement>
           </property>
           <property
-            Id="f6973a10-204a-4dc4-a351-4cc606650446"
+            Id="b005243b-d802-4cb2-8eab-0140881ce178"
             name="StartTorqueReserve"
             isLeaf="false"
             isStatic="false"
@@ -1163,47 +1163,47 @@
             isComposite="false">
             <referencesInternal>
               <reference
-                Id="f199ae61-d280-4a20-8d25-d268194d9a5e"
-                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV4Engineering) Member%3DStartTorqueReserve"
+                Id="a0fde994-2e92-4565-a645-d302bbc212d6"
+                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV5Engineering) Member%3DStartTorqueReserve"
                 tag="ViewCode" />
             </referencesInternal>
             <appliedStereotypesInternal>
               <stereotypeInstance
-                Id="f1dd8083-5ab9-47ab-8b21-8563f936abbc"
+                Id="6bfb155f-8033-457b-b274-b2d82c4159d4"
                 name="field"
                 profile="CSharpProfile">
                 <propertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="4651a88d-f4ca-4e8b-bf19-5b5a38edec2b">
+                    Id="cee7731b-75bb-49d6-be61-eac308be344d">
                     <propertyInstance
-                      Id="cdac7341-c333-4280-b448-c18518febe18"
+                      Id="08688d9d-9ca7-499e-ac85-8c7526f57767"
                       name="ClrAttributes" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="4b7cc206-44ff-4141-a603-05391618340b">
+                    Id="2af6ac9c-35e7-4408-a512-8f0c5a72d353">
                     <propertyInstance
-                      Id="2126103e-a75f-4535-ba55-0628cde1673d"
+                      Id="bfc817f7-d62e-44af-a0d6-01983f5ea773"
                       name="IsConst"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="36a8c356-1b75-4fa0-924f-5beb4a6be80a">
+                    Id="365726cc-c0ac-4051-937f-2f889d676c82">
                     <propertyInstance
-                      Id="8196bbe6-e9b2-441a-b689-dca3cda23132"
+                      Id="ff020331-346d-4bca-a88b-ac052f2f7bf3"
                       name="IsNullable"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="33cd5272-8be3-413d-8e34-5b4b23662569">
+                    Id="23348e7b-04ec-4427-87de-12d5b7f89378">
                     <propertyInstance
-                      Id="169cb303-26dc-4f29-99d2-4bedb8651b49"
+                      Id="0d3108fd-68e4-4365-b079-e5b600c1d3a7"
                       name="IsVolatile"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="08951b79-b6ff-4a68-8cd8-41909bbb09fa">
+                    Id="a587d263-d7f8-4bc2-abdc-87781e447746">
                     <propertyInstance
-                      Id="ab79dc56-45ca-4ea5-b7de-c10d462ec0f4"
+                      Id="b0169c8c-ba58-4122-b7ca-6f43c914c7f2"
                       name="PackageVisibility"
                       value="internal" />
                   </stereotypeInstanceHasPropertyInstances>
@@ -1218,7 +1218,7 @@
             </type_NamedElement>
           </property>
           <property
-            Id="bf41835b-8f30-4136-93b8-d222c7969b5e"
+            Id="eae4a64a-7398-4f0f-9cfb-e98006f0236e"
             name="StartSpeed"
             isLeaf="false"
             isStatic="false"
@@ -1229,47 +1229,47 @@
             isComposite="false">
             <referencesInternal>
               <reference
-                Id="4ecf3e07-0489-4f94-b56a-8e5c7e02059c"
-                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV4Engineering) Member%3DStartSpeed"
+                Id="ef1af64a-b61b-4471-85ea-980dcf442117"
+                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV5Engineering) Member%3DStartSpeed"
                 tag="ViewCode" />
             </referencesInternal>
             <appliedStereotypesInternal>
               <stereotypeInstance
-                Id="5965e118-9b3a-4354-a439-33d9e4d657b5"
+                Id="c5a64906-2349-4939-aa79-4a4f3151b78e"
                 name="field"
                 profile="CSharpProfile">
                 <propertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="5ccdac36-5d33-4159-8416-c117fe0fd387">
+                    Id="a532fae0-b3d9-4be5-9b98-12a1dfe560ac">
                     <propertyInstance
-                      Id="d1c828d3-f28a-4fe0-8b8b-107c72625158"
+                      Id="a7b61b6e-3553-4db2-abeb-fae0baa0e630"
                       name="ClrAttributes" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="eecd2f66-b866-44fa-bf55-b0ebac019680">
+                    Id="5560c30b-85b2-43b3-a8ee-c9ff7991876a">
                     <propertyInstance
-                      Id="c11be747-dba4-4224-9d81-d878dd7ca835"
+                      Id="7c779bad-759d-43d0-a665-3e314c856d4f"
                       name="IsConst"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="edc5f4bf-9fdb-4cb0-bba7-980cb0694677">
+                    Id="1bb95dfc-1649-49b8-8357-682189fa51ba">
                     <propertyInstance
-                      Id="25574f36-eb9e-45ad-b289-703ab1c97415"
+                      Id="7eb55260-029c-4a60-9d22-99d2c28d5607"
                       name="IsNullable"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="7e642cdb-5cac-4a70-a7d6-d526b8d1dbe3">
+                    Id="e6de1706-2181-44d2-8c8b-33e38e17be0c">
                     <propertyInstance
-                      Id="3016984e-4358-48d4-8298-71f7c39db7b2"
+                      Id="6b168f0e-2a36-460f-8b14-d9068574f197"
                       name="IsVolatile"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="c18c89d4-9633-4d28-8a2b-e8d8b2ca7a41">
+                    Id="c6084d0a-928c-49d1-9553-d034e0948d59">
                     <propertyInstance
-                      Id="492e74a6-2322-4785-bd66-eb236bbda91a"
+                      Id="7a436d0e-e3b5-449f-a407-ef2f871ce90d"
                       name="PackageVisibility"
                       value="internal" />
                   </stereotypeInstanceHasPropertyInstances>
@@ -1284,7 +1284,7 @@
             </type_NamedElement>
           </property>
           <property
-            Id="2ab80d4f-388a-4b52-9b4b-263766028148"
+            Id="64deec0d-26fa-4fc4-9cc4-45d6c606e239"
             name="StartAcceleration"
             isLeaf="false"
             isStatic="false"
@@ -1295,47 +1295,47 @@
             isComposite="false">
             <referencesInternal>
               <reference
-                Id="a5c881a7-32bf-4411-bedc-34ae06ac3442"
-                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV4Engineering) Member%3DStartAcceleration"
+                Id="c3718888-dee5-42c1-bd7f-8fba8ea2ca6d"
+                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV5Engineering) Member%3DStartAcceleration"
                 tag="ViewCode" />
             </referencesInternal>
             <appliedStereotypesInternal>
               <stereotypeInstance
-                Id="284f0006-c6b2-473a-86fc-31e58e471542"
+                Id="3ad2ce00-ca53-4f85-8a82-d6ad472c8df4"
                 name="field"
                 profile="CSharpProfile">
                 <propertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="ec48031d-fe22-4c4a-aed8-57cd62edbc27">
+                    Id="06f02bb8-a453-4733-afe7-5d8c4f44b93f">
                     <propertyInstance
-                      Id="3f9523ba-8fc2-4198-a4e3-112de838d3aa"
+                      Id="d822e68b-a994-4029-88c0-4554f2cd1b7b"
                       name="ClrAttributes" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="eb373fa1-198e-4b7f-a6e5-ceb2ac414cf7">
+                    Id="da2134b8-f98f-47ac-aa29-c79639e7e4da">
                     <propertyInstance
-                      Id="230086f9-e9c4-4178-ac92-bad6f90b8295"
+                      Id="d064716d-ef1e-4a27-8e01-e5ecae4d9933"
                       name="IsConst"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="57a54334-6a71-4e0d-ad20-78b564ef91bd">
+                    Id="a41800fa-4495-4cc5-a314-8e750c6d391b">
                     <propertyInstance
-                      Id="efaef483-8ce1-4168-a115-571b6c717d6c"
+                      Id="a73c5665-f839-43be-9810-f716af0e9822"
                       name="IsNullable"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="59c29f22-2bb1-4e74-853b-cdfc33a662ad">
+                    Id="37f911d3-fc08-4c29-805c-52dad44e4f3d">
                     <propertyInstance
-                      Id="05c34b1b-2f8b-4a9b-877d-762a98037694"
+                      Id="9e8c0f0a-795b-4cfa-a300-9c9c0af3b72f"
                       name="IsVolatile"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="f2661f7b-129f-4779-aa11-bbfa66e8c71f">
+                    Id="3926d33a-19be-4cfc-85e8-4ad207621a20">
                     <propertyInstance
-                      Id="bdc21269-1805-4817-9513-3711bfe40f03"
+                      Id="fde2ddc6-0494-406c-a47a-7d528c949d21"
                       name="PackageVisibility"
                       value="internal" />
                   </stereotypeInstanceHasPropertyInstances>
@@ -1350,7 +1350,7 @@
             </type_NamedElement>
           </property>
           <property
-            Id="be99465a-9758-4f68-8cf6-1c7a9df63989"
+            Id="0f217b9a-ba52-40ea-b0d8-9f8338b0e279"
             name="TorqueConverter"
             isLeaf="false"
             isStatic="false"
@@ -1361,47 +1361,47 @@
             isComposite="false">
             <referencesInternal>
               <reference
-                Id="9b00be4d-bcfe-41be-82f4-f9079fd714f0"
-                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV4Engineering) Member%3DTorqueConverter"
+                Id="b928f4e2-d56b-4221-b6c4-b54856f4c923"
+                handle="viewcode://./CodeSchema_Field?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV5Engineering) Member%3DTorqueConverter"
                 tag="ViewCode" />
             </referencesInternal>
             <appliedStereotypesInternal>
               <stereotypeInstance
-                Id="95e7e183-774c-4fa1-a00c-862dbcf75973"
+                Id="1d664eda-4b5e-46da-b4cf-379748b08567"
                 name="field"
                 profile="CSharpProfile">
                 <propertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="bb7584e9-b11c-4382-8c83-a00708820045">
+                    Id="98f6d0e0-f010-4780-97d9-da5ca9af152e">
                     <propertyInstance
-                      Id="a02297b3-18eb-4994-b67a-069acb93e550"
+                      Id="0e967913-2b19-4823-aefa-1b0b051a01d6"
                       name="ClrAttributes" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="3f56df9b-87a4-4d0a-9e0d-02a4062830b2">
+                    Id="10d0c3b2-94ca-4380-bfc3-fcaaa23d1cfc">
                     <propertyInstance
-                      Id="4e6d17d6-35da-4d12-a320-288a6356fefb"
+                      Id="3bed438e-e40b-4a86-b4d5-4ff93930c6ff"
                       name="IsConst"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="e738ce07-d48e-4138-94bf-f04ec463018f">
+                    Id="ab9374da-7b69-406b-ad82-c4fd43c60811">
                     <propertyInstance
-                      Id="91c3f08f-bf12-490f-95b7-1fc517f4d8e4"
+                      Id="5a7a4a7e-7f0f-4eac-a2db-082fc1b3969a"
                       name="IsNullable"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="e6b2f65e-072d-4d5f-b34e-bbba592d7e24">
+                    Id="e7da2eea-a9a2-42ad-8da7-7a8bbeaceebe">
                     <propertyInstance
-                      Id="3c34f5d9-5e73-499f-b598-cc0f08377851"
+                      Id="f8b73752-3855-44a2-84e6-fb1becf9da5d"
                       name="IsVolatile"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="a1892efe-10b0-4351-8556-4fbcfe42ea85">
+                    Id="930bf6f2-f37e-4d0d-9075-61b48906fb65">
                     <propertyInstance
-                      Id="a652e608-b26d-4cc0-a85a-ed8c7c713257"
+                      Id="0d4fef5a-22e7-443a-b177-bcecff693840"
                       name="PackageVisibility"
                       value="internal" />
                   </stereotypeInstanceHasPropertyInstances>
@@ -1418,7 +1418,7 @@
         </ownedAttributesInternal>
         <ownedOperationsInternal>
           <operation
-            Id="da935491-0f00-4f72-9ffd-e995d3407ab4"
+            Id="6291abcb-790f-4284-865b-3a7d7e53ce2c"
             name="DataBodyEng"
             isLeaf="false"
             isStatic="false"
@@ -1427,54 +1427,54 @@
             isQuery="false">
             <referencesInternal>
               <reference
-                Id="21148c33-d3fc-452b-95d7-059fe1c506d5"
-                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV4Engineering) Member%3D.ctor"
+                Id="decca55d-9986-44d5-8ea5-c9ea0a37cd09"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DDataBodyEng ParentType%3DGearboxFileV5Engineering) Member%3D.ctor"
                 tag="ViewCode" />
             </referencesInternal>
             <appliedStereotypesInternal>
               <stereotypeInstance
-                Id="ab45bd4e-2a7d-4b0d-a6fd-8db2a8528ea5"
+                Id="134b37db-401f-4f25-94b9-deac65e99a98"
                 name="method"
                 profile="CSharpProfile">
                 <propertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="ea64e801-adf8-4d07-a690-05625d1b072e">
+                    Id="06d13a4c-de9a-4c3d-9f68-d1fb9ed5da7b">
                     <propertyInstance
-                      Id="ac536810-b100-473f-9c1e-2856a7399202"
+                      Id="69f5c9b6-35f3-4d12-b293-13e4f1c52312"
                       name="ClrAttributes" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="359a3237-0583-4de7-baff-02d863557f14">
+                    Id="81ded151-17a1-40e2-bed1-a6203944cb55">
                     <propertyInstance
-                      Id="377f3bf0-719c-4d4e-9319-45f3ca944238"
+                      Id="c9fb3611-e697-4a1f-b191-63e4f625ebb1"
                       name="IsPartial"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="f087a2d9-b291-428d-8e9a-56a1de25d6d6">
+                    Id="85864a45-e681-40d8-b3ea-852c71f79068">
                     <propertyInstance
-                      Id="6302e93e-9526-48c2-8d98-ffe00c9ae652"
+                      Id="f97bc057-5967-4ae8-877e-5f63376512a2"
                       name="IsUnsafe"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="0467187b-4ba2-49a7-9008-e2211bc22460">
+                    Id="cc1df308-582b-414c-adb3-7f423a7a8dfa">
                     <propertyInstance
-                      Id="d53b2229-1bd4-4972-a1fc-0a4de410c342"
+                      Id="494fd92f-1c63-4e83-b6d1-6018ba86db8c"
                       name="Inheritance"
                       value="none" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="58172dc2-a1d4-45ea-8b10-70eb65c6eb89">
+                    Id="013baac2-2588-45d7-98b6-9364b464d49e">
                     <propertyInstance
-                      Id="046cb519-aed9-4521-bfe4-f39502392e4a"
+                      Id="f2806fda-97b9-439a-ac62-816df2b2746c"
                       name="PackageVisibility"
                       value="internal" />
                   </stereotypeInstanceHasPropertyInstances>
                   <stereotypeInstanceHasPropertyInstances
-                    Id="c1d48304-3a8a-4f57-9b83-8d2cb2955b39">
+                    Id="d60ef367-a7b0-47c4-95c6-4f30d5dff629">
                     <propertyInstance
-                      Id="68775bad-0d58-47cf-9ba5-42f618e5e8fc"
+                      Id="ca6bf257-89dd-4acf-9bf1-f52900c99c64"
                       name="params"
                       value="false" />
                   </stereotypeInstanceHasPropertyInstances>
@@ -1496,7 +1496,7 @@
         <referencesInternal>
           <reference
             Id="a38d0253-6d0b-4617-b23b-67b841a09fa5"
-            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DTorqueConverterDataEng ParentType%3DGearboxFileV4Engineering)"
+            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DTorqueConverterDataEng ParentType%3DGearboxFileV5Engineering)"
             tag="ViewCode" />
         </referencesInternal>
         <appliedStereotypesInternal>
@@ -1887,7 +1887,7 @@
         <referencesInternal>
           <reference
             Id="7024f4eb-b319-4f5d-beac-d197c2bfab32"
-            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DGearDataEng ParentType%3DGearboxFileV4Engineering)"
+            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3D(Name%3DGearDataEng ParentType%3DGearboxFileV5Engineering)"
             tag="ViewCode" />
         </referencesInternal>
         <appliedStereotypesInternal>

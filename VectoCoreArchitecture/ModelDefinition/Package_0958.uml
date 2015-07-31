@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+  dslVersion="1.0.0.0"
+  Id="71245c6a-398d-4f66-a292-79b01e7f09a7"
+  name="DataBus"
+  visibility="Private" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <referencesInternal>
+    <reference
+      Id="b0973ca1-e66e-4239-86db-aa2c7bd76f74"
+      handle="viewcode://./CodeSchema_Namespace?Namespace%3DTUGraz.VectoCore.Models.Simulation.DataBus"
+      tag="ViewCode" />
+  </referencesInternal>
+  <packagedElements>
+    <packageHasNamedElement>
+      <Interface
+        Id="5537895d-dc64-4412-87ae-5e356626555f"
+        name="IMileageCounter"
+        isAbstract="false"
+        isLeaf="false">
+        <referencesInternal>
+          <reference
+            Id="a16f6993-d9b9-41e8-891f-539283ae78d3"
+            handle="viewcode://./CodeSchema_Interface?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Simulation.DataBus Type%3DIMileageCounter"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="6843ce35-d541-4163-954e-04217c5c98d9"
+            name="interface"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="178d77e6-e66a-4640-8111-a730ba679504">
+                <propertyInstance
+                  Id="d140a050-b72b-4a3b-abb4-6ba547a89034"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="c2e405c3-e767-4119-a281-f8e2ffcb8b09">
+                <propertyInstance
+                  Id="4cb411ae-c5bf-4ac1-a452-87164cb1bade"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="2930a984-c160-42ae-86ad-482a0472debd">
+                <propertyInstance
+                  Id="898d6706-1b7e-438e-a98f-4043770c18e2"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="37da9deb-65c8-4801-adff-687d9caa4740">
+                <propertyInstance
+                  Id="b75adb52-22e4-47b2-bc33-ca046a78426a"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </Interface>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="4b0b9d9a-a589-464f-92a8-d0692d76efc5"
+        name="IRoadLookAhead"
+        isAbstract="false"
+        isLeaf="false">
+        <referencesInternal>
+          <reference
+            Id="988eafe9-f104-4c9c-9c84-d1373635e870"
+            handle="viewcode://./CodeSchema_Interface?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Simulation.DataBus Type%3DIRoadLookAhead"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="310d3999-f979-4d12-bfbc-23d19387a886"
+            name="interface"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="04ed3ef6-18bc-479d-9057-3fdbdc8f4dca">
+                <propertyInstance
+                  Id="2eecd3d2-6071-46f1-8433-c63e5ebe3615"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="4542a721-3d40-497e-8b09-0d506e591373">
+                <propertyInstance
+                  Id="7b12d166-579b-4c96-8352-ce14b43fef29"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="bb7b84a3-6bac-403d-8fad-0af15d29f512">
+                <propertyInstance
+                  Id="f7524dd7-bd13-4382-9640-2ef375637a60"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="c3007b0c-d199-4c0b-9a3b-47e14697230b">
+                <propertyInstance
+                  Id="55046c4c-6c71-4ed8-b6e6-948565b60f93"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </Interface>
+    </packageHasNamedElement>
+  </packagedElements>
+</package>

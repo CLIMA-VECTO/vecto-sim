@@ -2789,5 +2789,105 @@
         </ownedOperations>
       </Interface>
     </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="09bd2ca0-5aec-46fa-a193-6f40d97ecb00"
+        name="ISimulationOutPort"
+        isAbstract="false"
+        isLeaf="false">
+        <referencesInternal>
+          <reference
+            Id="90352a4f-c0af-4b42-917c-b065e16174cf"
+            handle="viewcode://./CodeSchema_Interface?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Connector.Ports Type%3DISimulationOutPort"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="c72e1556-c380-483b-9baf-b8935a4eb636"
+            name="interface"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="9e075b63-0b91-489b-9d07-72b7434ab3ba">
+                <propertyInstance
+                  Id="34f515d4-bc48-4c0c-9c62-7865d1fa2b2c"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="e8961cdc-6f72-43e0-b1d8-7410d8a34b58">
+                <propertyInstance
+                  Id="9932fb18-53b6-4c1e-829f-7ca792b3b94b"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="f4479559-9544-4f89-ae42-b7f4a4e74757">
+                <propertyInstance
+                  Id="622bc428-fb23-4399-be10-a8bd50a2c41a"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="5c03faf7-3814-4ac0-befc-01f95dc86bb6">
+                <propertyInstance
+                  Id="0e97235b-311b-4bbc-8c31-a6657b169c68"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </Interface>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="8e7c95a2-0936-440d-8316-0c8bf46bb7f7"
+        name="IDrivingCycleInPort"
+        isAbstract="false"
+        isLeaf="false">
+        <referencesInternal>
+          <reference
+            Id="fb1412fc-5f88-409b-98f7-edf941c9fa82"
+            handle="viewcode://./CodeSchema_Interface?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Connector.Ports Type%3DIDrivingCycleInPort"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="c6c9f983-797b-4014-8561-9070e174b7b1"
+            name="interface"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="b29bcb70-c01d-405a-a2fb-d3c285eb6546">
+                <propertyInstance
+                  Id="0d44ce1d-9adc-4ac3-afbe-1258abf2fa69"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="310b0052-5c47-4db9-96dc-1dabcc54e327">
+                <propertyInstance
+                  Id="2274e388-db92-46aa-a471-7cef564fbdb9"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="6110f1e9-392d-401e-aede-2f42049cb015">
+                <propertyInstance
+                  Id="380e2a34-14d0-4777-a565-ec71405fb3df"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="6afbf9cc-4e3f-4bee-9f7a-fa6db06a51aa">
+                <propertyInstance
+                  Id="c730fab8-d9e8-4732-a0fe-1e7658a91ba0"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </Interface>
+    </packageHasNamedElement>
   </packagedElements>
 </package>

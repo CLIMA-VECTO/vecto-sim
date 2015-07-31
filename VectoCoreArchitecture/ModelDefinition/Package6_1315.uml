@@ -2195,10 +2195,10 @@
                   Id="98d8ab07-b1c8-48fa-b97c-7ff97ecbf226"
                   direction="Return">
                   <type_NamedElement>
-                    <undefinedTypeMoniker
-                      Id="b8f2aaeb-2fcf-4d55-94cc-ccb7af94db79"
+                    <classMoniker
+                      Id="c26e76f8-4036-40dd-b826-4a20940df7c0"
                       LastKnownName="TResult"
-                      LastKnownLocation="Package6_1315.uml" />
+                      LastKnownLocation="Package5_1315.uml" />
                   </type_NamedElement>
                 </parameter>
               </operationHasOwnedParameters>
@@ -2252,10 +2252,10 @@
                       tag="ViewCode" />
                   </referencesInternal>
                   <type_NamedElement>
-                    <undefinedTypeMoniker
-                      Id="b8f2aaeb-2fcf-4d55-94cc-ccb7af94db79"
+                    <classMoniker
+                      Id="c26e76f8-4036-40dd-b826-4a20940df7c0"
                       LastKnownName="TResult"
-                      LastKnownLocation="Package6_1315.uml" />
+                      LastKnownLocation="Package5_1315.uml" />
                   </type_NamedElement>
                 </parameter>
               </operationHasOwnedParameters>
@@ -2271,10 +2271,10 @@
                       tag="ViewCode" />
                   </referencesInternal>
                   <type_NamedElement>
-                    <undefinedTypeMoniker
-                      Id="b8f2aaeb-2fcf-4d55-94cc-ccb7af94db79"
+                    <classMoniker
+                      Id="c26e76f8-4036-40dd-b826-4a20940df7c0"
                       LastKnownName="TResult"
-                      LastKnownLocation="Package6_1315.uml" />
+                      LastKnownLocation="Package5_1315.uml" />
                   </type_NamedElement>
                 </parameter>
               </operationHasOwnedParameters>
@@ -2600,18 +2600,6 @@
           </operation>
         </ownedOperationsInternal>
       </class>
-    </packageHasNamedElement>
-    <packageHasNamedElement>
-      <undefinedType
-        Id="b8f2aaeb-2fcf-4d55-94cc-ccb7af94db79"
-        name="TResult">
-        <referencesInternal>
-          <reference
-            Id="2aec3da1-bf0e-457a-bd46-cc7cc3f3fd4c"
-            handle="viewcode://./CodeSchema_GenericParameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DVectoMath Member%3D(Name%3DInterpolate GenericParameterCount%3D2 OverloadingParameters%3D[(ParameterIdentifier%3D0)%2C(ParameterIdentifier%3D0)%2C(ParameterIdentifier%3D1)%2C(ParameterIdentifier%3D1)%2C(ParameterIdentifier%3D0)]) ParameterIdentifier%3D1"
-            tag="ViewCode" />
-        </referencesInternal>
-      </undefinedType>
     </packageHasNamedElement>
     <packageHasNamedElement>
       <class

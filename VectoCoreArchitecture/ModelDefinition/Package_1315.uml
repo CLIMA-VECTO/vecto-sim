@@ -85,7 +85,7 @@
             isSubstitutable="false">
             <interfaceMoniker
               Id="b5369ef2-53be-474a-b7ae-d1e22c21bc69"
-              LastKnownName="IEngineCockpit"
+              LastKnownName="IEngineInfo"
               LastKnownLocation="Package_1320.uml" />
           </generalization>
         </generalsInternal>
@@ -530,7 +530,7 @@
             isSubstitutable="false">
             <interfaceMoniker
               Id="a1f0ad20-7cb9-47ae-b788-4c64b9cab5ec"
-              LastKnownName="IVehicleCockpit"
+              LastKnownName="IVehicleInfo"
               LastKnownLocation="Package_1320.uml" />
           </generalization>
         </generalsInternal>
@@ -598,7 +598,7 @@
             isSubstitutable="false">
             <interfaceMoniker
               Id="79a658b1-b882-44ef-a566-26601c4e84ac"
-              LastKnownName="IGearboxCockpit"
+              LastKnownName="IGearboxInfo"
               LastKnownLocation="Package_1320.uml" />
           </generalization>
         </generalsInternal>
@@ -1059,6 +1059,14 @@
             <interfaceMoniker
               Id="f1d3f382-1294-44a7-bf13-f1fb16516900"
               LastKnownName="IDriverDemandInProvider"
+              LastKnownLocation="Package2_1314.uml" />
+          </generalization>
+          <generalization
+            Id="225effe2-c361-41b8-81b4-98f13bb317bf"
+            isSubstitutable="false">
+            <interfaceMoniker
+              Id="a3a27c50-119d-4281-84df-2d9fa4c13082"
+              LastKnownName="IDrivingCycleOutProvider"
               LastKnownLocation="Package2_1314.uml" />
           </generalization>
         </generalsInternal>
@@ -18544,6 +18552,47 @@
               LastKnownLocation="Package_1315.uml" />
           </generalization>
         </generalsInternal>
+        <targetEnds>
+          <association
+            Id="bedaa1f9-8280-4fec-aa55-b35ffdca1b4c"
+            isDerived="false"
+            sourceEndRoleName="Vehicle"
+            targetEndRoleName="VehicleData"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="1fc159e7-4795-40d3-ae47-4800aaa20378"
+              LastKnownName="VehicleData"
+              LastKnownLocation="Package_1315.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="4a52bb8b-199b-4d88-ac8d-0200546088aa"
+                  name="Vehicle"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="6652c0f6-173d-42f8-887d-5e8c3e1ef12f"
+                  name="VehicleData"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
         <ownedAttributesInternal>
           <property
             Id="6839aaa8-02c6-4424-9da0-7568fa45a700"
@@ -24201,6 +24250,29 @@
               </operationHasOwnedParameters>
             </ownedParameters>
           </operation>
+          <operation
+            Id="91d0fb91-0fbd-4ef9-9be3-5492973d9c53"
+            name="OutShaft"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="6295d8eb-d295-4151-b1c2-ff6714e22df7"
+                  direction="Return">
+                  <type_NamedElement>
+                    <interfaceMoniker
+                      Id="28cea752-95bf-4d9f-922c-7e4f017e4f98"
+                      LastKnownName="IDrivingCycleOutPort"
+                      LastKnownLocation="Package2_1314.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
         </ownedOperationsInternal>
       </class>
     </packageHasNamedElement>
@@ -26319,6 +26391,116 @@
           </operation>
         </ownedOperationsInternal>
       </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="f14fa5bc-0c8f-4baa-a6f2-1d2c54dff75b"
+        name="IDrivingCycleInfo"
+        isAbstract="false"
+        isLeaf="false">
+        <referencesInternal>
+          <reference
+            Id="77438780-4d3f-4e3b-8429-e81b77e62167"
+            handle="viewcode://./CodeSchema_Interface?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent Type%3DIDrivingCycleInfo"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="b5b8c18a-40ef-4194-91d6-1aebf3b6ee8a"
+            name="interface"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="a5e30a1c-3f16-4bae-b9f1-c52d40abd0f3">
+                <propertyInstance
+                  Id="ee85d16f-8ef6-48f2-b143-4baaa7397de1"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="96e96604-c214-4720-9b15-d6a4034ed123">
+                <propertyInstance
+                  Id="c4a1042f-0a4e-4a1d-854e-847bfe791763"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="83ce3df4-0436-4d87-8b54-75b881976a6d">
+                <propertyInstance
+                  Id="c4e4402f-279f-4989-b23b-878555c1159e"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="833e5289-125a-48ea-af7a-8a6bea0b32fe">
+                <propertyInstance
+                  Id="7305f767-824c-40e4-8069-0bba034cbda5"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </Interface>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <Interface
+        Id="62f35c84-77d4-4530-9e4c-d778d26837a9"
+        name="IDrivingCycle"
+        isAbstract="false"
+        isLeaf="false">
+        <referencesInternal>
+          <reference
+            Id="c6b01f92-0b76-41ac-b1c2-ee560ca6d46b"
+            handle="viewcode://./CodeSchema_Interface?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent Type%3DIDrivingCycle"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="d01b53cb-232c-4716-b02e-c22747f2cfaf"
+            name="interface"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="d1a9313f-6ecc-4412-b114-41a1eff23bea">
+                <propertyInstance
+                  Id="d34b14b9-52d9-4c2d-834e-2b0b683cd158"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="cb85a420-894e-45f9-ab66-f8e912080f2f">
+                <propertyInstance
+                  Id="8311ee4b-ea7b-4f99-b2b0-54a276e531e2"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="5b87ef4f-7aa7-44a5-a841-9b4f18170e8d">
+                <propertyInstance
+                  Id="64d0e34a-bb6d-4172-8d22-3bda26e4ea91"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="c2dc4134-db85-4da6-92b9-f0c37ce33230">
+                <propertyInstance
+                  Id="76a8602c-b82b-412a-99b7-c5bc98850a27"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+        <generalsInternal>
+          <generalization
+            Id="1c020ec4-f352-4ab6-80a7-17097fd00c95"
+            isSubstitutable="false">
+            <interfaceMoniker
+              Id="f14fa5bc-0c8f-4baa-a6f2-1d2c54dff75b"
+              LastKnownName="IDrivingCycleInfo"
+              LastKnownLocation="Package_1315.uml" />
+          </generalization>
+        </generalsInternal>
+      </Interface>
     </packageHasNamedElement>
   </packagedElements>
 </package>
