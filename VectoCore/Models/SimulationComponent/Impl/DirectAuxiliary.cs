@@ -1,17 +1,24 @@
-using System;
+﻿using System;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class EngineOnlyGearbox : VectoSimulationComponent, IGearbox, ITnInPort, ITnOutPort
+	public class DirectAuxiliary : VectoSimulationComponent, IAuxiliary, ITnInPort, ITnOutPort
 	{
+		private readonly IAuxiliaryCycleData _demand;
 		private ITnOutPort _outPort;
-		public EngineOnlyGearbox(IVehicleContainer cockpit) : base(cockpit) {}
+		private Watt _powerDemand;
+
+		public DirectAuxiliary(IVehicleContainer container, IAuxiliaryCycleData demand)
+			: base(container)
+		{
+			_demand = demand;
+		}
 
 		#region ITnInProvider
 
@@ -20,22 +27,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return this;
 		}
 
-		#endregion ITnOutProvider
+		#endregion
 
 		#region ITnOutProvider
 
 		public ITnOutPort OutPort()
 		{
 			return this;
-		}
-
-		#endregion
-
-		#region IGearboxCockpit
-
-		uint IGearboxInfo.Gear()
-		{
-			return 0;
 		}
 
 		#endregion
@@ -59,19 +57,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					string.Format("{0} cannot handle incoming request - no outport available",
 						absTime));
 			}
-			return _outPort.Request(absTime, dt, torque, engineSpeed, dryRun);
+
+			_powerDemand = _demand.GetPowerDemand(absTime, dt);
+			var tq = Formulas.PowerToTorque(_powerDemand, engineSpeed);
+			return _outPort.Request(absTime, dt, torque + tq, engineSpeed, dryRun);
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			return _outPort.Initialize(torque, engineSpeed);
+			_powerDemand = _demand.GetPowerDemand(0.SI<Second>(), 0.SI<Second>());
+			var tq = Formulas.PowerToTorque(_powerDemand, engineSpeed);
+			return _outPort.Initialize(torque + tq, engineSpeed);
 		}
 
 		#endregion
 
 		#region VectoSimulationComponent
 
-		protected override void DoWriteModalResults(IModalDataWriter writer) {}
+		protected override void DoWriteModalResults(IModalDataWriter writer)
+		{
+			writer[ModalResultField.Paux] = _powerDemand;
+		}
 
 		protected override void DoCommitSimulationStep() {}
 

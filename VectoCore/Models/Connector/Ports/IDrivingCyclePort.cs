@@ -66,6 +66,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		/// <returns></returns>
 		IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient);
 
-		IResponse Initialize();
+		IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient);
 	}
 }

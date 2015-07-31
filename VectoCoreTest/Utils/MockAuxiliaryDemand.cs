@@ -7,7 +7,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockDrivingCycle : VectoSimulationComponent, IDrivingCycleCockpit
+	public class MockDrivingCycle : VectoSimulationComponent, IDrivingCycleInfo
 	{
 		private List<DrivingCycleData.DrivingCycleEntry>.Enumerator _left;
 		private List<DrivingCycleData.DrivingCycleEntry>.Enumerator _right;
@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public CycleData CycleData()
 		{
-			return new CycleData {
+			return new CycleData() {
 				AbsTime = 0.SI<Second>(),
 				AbsDistance = 0.SI<Meter>(),
 				LeftSample = _left.Current,

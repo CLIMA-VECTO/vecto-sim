@@ -50,7 +50,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed)
+		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
+		{
+			var powerDemand = ComputePowerDemand(engineSpeed);
+
+			return _outPort.Request(absTime, dt, torque + powerDemand / engineSpeed, engineSpeed);
+		}
+
+		private Watt ComputePowerDemand(PerSecond engineSpeed)
 		{
 			_powerDemands.Clear();
 			var powerDemand = 0.SI<Watt>();
@@ -60,13 +67,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				powerDemand += demand;
 				_powerDemands[kv.Key] = demand;
 			}
-
-			return _outPort.Request(absTime, dt, torque + powerDemand / engineSpeed, engineSpeed);
+			return powerDemand;
 		}
 
-		public IResponse Initialize()
+		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			return _outPort.Initialize();
+			var powerDemand = ComputePowerDemand(engineSpeed);
+			return _outPort.Initialize(torque + powerDemand / engineSpeed, engineSpeed);
 		}
 
 		#endregion
@@ -95,12 +102,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_auxDict[auxId] = speed => powerDemand;
 		}
 
-		public void AddDirect(IDrivingCycleCockpit cycle)
+		public void AddDirect(IDrivingCycleInfo cycle)
 		{
 			_auxDict[DirectAuxiliaryId] = speed => cycle.CycleData().LeftSample.AdditionalAuxPowerDemand;
 		}
 
-		public void AddMapping(string auxId, IDrivingCycleCockpit cycle, MappingAuxiliaryData data)
+		public void AddMapping(string auxId, IDrivingCycleInfo cycle, MappingAuxiliaryData data)
 		{
 			if (!cycle.CycleData().LeftSample.AuxiliarySupplyPower.ContainsKey("Aux_" + auxId)) {
 				var error = string.Format("driving cycle does not contain column for auxiliary: {0}", auxId);
