@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+  dslVersion="1.0.0.0"
+  Id="61cdd715-963e-492b-a055-b5f84842142f"
+  name="VectoCore"
+  visibility="Private" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <referencesInternal>
+    <reference
+      Id="ab6d80eb-f945-406a-830c-02274b2914ed"
+      handle="viewcode://./CodeSchema_Namespace?Namespace%3DTUGraz.VectoCore"
+      tag="ViewCode" />
+  </referencesInternal>
+  <packagedElements>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="d8801666-4b3a-430e-b5b2-36cf275beba7"
+        LastKnownName="Models"
+        LastKnownLocation="Package4_1314.uml" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="3ccdaca1-717e-4e2d-bbf1-fd7f9ee7ff38"
+        LastKnownName="Utils"
+        LastKnownLocation="Package6_1315.uml" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <packageMoniker
+        Id="a8a4c697-7f83-4981-a12b-7421b3921f4c"
+        LastKnownName="FileIO"
+        LastKnownLocation="Package1_1426.uml" />
+    </packageHasNamedElement>
+  </packagedElements>
+</package>

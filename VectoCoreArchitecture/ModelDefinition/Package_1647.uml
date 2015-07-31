@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+  dslVersion="1.0.0.0"
+  Id="b5738497-5a16-4585-b28a-8806120994d5"
+  name="Gearbox"
+  visibility="Private" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <referencesInternal>
+    <reference
+      Id="470a5aec-3578-4f35-94c4-d4726a53c913"
+      handle="viewcode://./CodeSchema_Namespace?Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox"
+      tag="ViewCode" />
+  </referencesInternal>
+  <packagedElements>
+    <packageHasNamedElement>
+      <class
+        Id="bb9b4a3f-af3d-48da-897d-871398c4c3ea"
+        name="GearData"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="c8450df6-80cb-4f06-93bd-f5f5b06384e3"
+            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox Type%3DGearData"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="30dece92-d1fd-4f78-bfd7-65d6fb199d40"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="9c0570d4-34bc-434b-b0f7-47a1a86b1b1c">
+                <propertyInstance
+                  Id="8320c9d0-3f76-42b9-91b0-75a429a49cfe"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="64f37ea5-3ac9-4af6-ae6e-ac16c1aa4ace">
+                <propertyInstance
+                  Id="1cda931f-6983-416d-83c2-2a40ad8ac186"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="a25d6181-9f4d-4a52-b401-c0e49c725255">
+                <propertyInstance
+                  Id="2a435021-5aa3-40e6-85cd-bfd64b3a250b"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="549f1e1c-16a6-4134-8e1a-cc984670a96d">
+                <propertyInstance
+                  Id="df9b02b8-be8f-4b0f-b768-8bd1c3da3759"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="e5f10f05-74a2-4bc1-86db-a8c788e6542c">
+                <propertyInstance
+                  Id="4d2e7f03-8dc5-41d7-9087-15ba0cc8af99"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+      </class>
+    </packageHasNamedElement>
+  </packagedElements>
+</package>
