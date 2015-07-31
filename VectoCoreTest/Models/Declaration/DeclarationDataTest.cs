@@ -172,7 +172,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				var angularSpeed = r.Next(1000).SI<PerSecond>();
 				var torque = tc.LookupTorque(exp.nu, angularSpeed, referenceSpeed);
-				AssertHelper.AreRelativeEqual(exp.torque * Math.Pow(angularSpeed.Value() / referenceSpeed.Value(), 2), torque.Value());
+				AssertHelper.AreRelativeEqual(exp.torque * Math.Pow(angularSpeed.Value() / referenceSpeed.Value(), 2),
+					torque.Value());
 			}
 		}
 
@@ -182,25 +183,25 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			var es = DeclarationData.ElectricSystem;
 
 			var expected = new[] {
-				new { Mission = MissionType.LongHaul, Base = 1240, LED = 1190 },
-				new { Mission = MissionType.RegionalDelivery, Base = 1055, LED = 1005 },
-				new { Mission = MissionType.UrbanDelivery, Base = 974, LED = 924 },
-				new { Mission = MissionType.MunicipalUtility, Base = 974, LED = 924 },
-				new { Mission = MissionType.Construction, Base = 975, LED = 925 },
-				new { Mission = MissionType.HeavyUrban, Base = 0, LED = 0 },
-				new { Mission = MissionType.Urban, Base = 0, LED = 0 },
-				new { Mission = MissionType.Suburban, Base = 0, LED = 0 },
-				new { Mission = MissionType.Interurban, Base = 0, LED = 0 },
-				new { Mission = MissionType.Coach, Base = 0, LED = 0 }
+				new { Mission = MissionType.LongHaul, Base = 1240.SI<Watt>(), LED = 1190.SI<Watt>(), Efficiency = 0.7 },
+				new { Mission = MissionType.RegionalDelivery, Base = 1055.SI<Watt>(), LED = 1005.SI<Watt>(), Efficiency = 0.7 },
+				new { Mission = MissionType.UrbanDelivery, Base = 974.SI<Watt>(), LED = 924.SI<Watt>(), Efficiency = 0.7 },
+				new { Mission = MissionType.MunicipalUtility, Base = 974.SI<Watt>(), LED = 924.SI<Watt>(), Efficiency = 0.7 },
+				new { Mission = MissionType.Construction, Base = 975.SI<Watt>(), LED = 925.SI<Watt>(), Efficiency = 0.7 },
+				new { Mission = MissionType.HeavyUrban, Base = 0.SI<Watt>(), LED = 0.SI<Watt>(), Efficiency = 1.0 },
+				new { Mission = MissionType.Urban, Base = 0.SI<Watt>(), LED = 0.SI<Watt>(), Efficiency = 1.0 },
+				new { Mission = MissionType.Suburban, Base = 0.SI<Watt>(), LED = 0.SI<Watt>(), Efficiency = 1.0 },
+				new { Mission = MissionType.Interurban, Base = 0.SI<Watt>(), LED = 0.SI<Watt>(), Efficiency = 1.0 },
+				new { Mission = MissionType.Coach, Base = 0.SI<Watt>(), LED = 0.SI<Watt>(), Efficiency = 1.0 }
 			};
 			Assert.AreEqual(expected.Length, Enum.GetValues(typeof(MissionType)).Length);
 
 			foreach (var expectation in expected) {
-				var baseConsumption = es.Lookup(expectation.Mission, technologies: new string[] { });
+				var baseConsumption = es.Lookup(expectation.Mission, technologies: null);
 				var leds = es.Lookup(expectation.Mission, technologies: new[] { "LED lights" });
 
-				Assert.AreEqual(expectation.Base, baseConsumption.Value(), Tolerance);
-				Assert.AreEqual(expectation.LED, leds.Value(), Tolerance);
+				AssertHelper.AreRelativeEqual(expectation.Base / expectation.Efficiency, baseConsumption);
+				AssertHelper.AreRelativeEqual(expectation.LED / expectation.Efficiency, leds);
 			}
 		}
 

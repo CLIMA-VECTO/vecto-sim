@@ -1,14 +1,12 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
-using TUGraz.VectoCore.Tests.Utils;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
 {
@@ -18,31 +16,35 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxWriteModFileSumFile()
 		{
-			var dataWriter = new ModalDataWriter(@"TestData\Results\24t Coach AUX.vmod", false);
+			var dataWriter = new ModalDataWriter(@"40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod", false);
 			dataWriter.AddAuxiliary("FAN");
 			dataWriter.AddAuxiliary("PS");
 			dataWriter.AddAuxiliary("STP");
 			dataWriter.AddAuxiliary("ES");
 			dataWriter.AddAuxiliary("AC");
 
-			var sumWriter = new SummaryFileWriter(@"TestData\Results\24t Coach AUX.vsum");
+			var sumWriter = new SummaryFileWriter(@"40t_Long_Haul_Truck.vsum");
 			var deco = new SumWriterDecoratorFullPowertrain(sumWriter, "", "", "");
 
 			var container = new VehicleContainer(dataWriter, deco);
-			var data = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based short.vdri");
+			var data = DrivingCycleDataReader.ReadFromFileDistanceBased(@"TestData\Cycles\LongHaul_short.vdri");
 
 			var port = new MockTnOutPort();
 
 			var aux = new Auxiliary(container);
 			aux.InPort().Connect(port);
 
-			aux.AddConstant("FAN", DeclarationData.Fan.Lookup(MissionType.LongHaul, ""));
-			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(MissionType.LongHaul, VehicleClass.Class3));
+			var hdvClass = VehicleClass.Class5;
+			var mission = MissionType.LongHaul;
+
+			aux.AddConstant("FAN",
+				DeclarationData.Fan.Lookup(MissionType.LongHaul, "Hydraulic driven - Constant displacement pump"));
+			aux.AddConstant("PS", DeclarationData.PneumaticSystem.Lookup(mission, hdvClass));
 			aux.AddConstant("STP",
-				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, VehicleClass.Class3, "Fixed displacement"));
-			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(MissionType.LongHaul, new string[0]));
+				DeclarationData.SteeringPump.Lookup(MissionType.LongHaul, hdvClass, "Variable displacement"));
+			aux.AddConstant("ES", DeclarationData.ElectricSystem.Lookup(mission, null));
 			aux.AddConstant("AC",
-				DeclarationData.HeatingVentilationAirConditioning.Lookup(MissionType.LongHaul, VehicleClass.Class3));
+				DeclarationData.HeatingVentilationAirConditioning.Lookup(mission, hdvClass));
 
 			var speed = 1400.RPMtoRad();
 			var torque = 500.SI<NewtonMeter>();
@@ -50,7 +52,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var dt = 1.SI<Second>();
 
 			for (var i = 0; i < data.Entries.Count; i++) {
-				aux.OutPort().Request(t, t, torque, speed);
+				aux.OutPort().Request(t, dt, torque, speed);
 				container.CommitSimulationStep(t, dt);
 				t += dt;
 			}
@@ -58,10 +60,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			container.FinishSimulation();
 			sumWriter.Finish();
 
-			ResultFileHelper.TestModFile(@"TestData\Results\Auxiliaries.vmod", @"TestData\Results\24t Coach AUX.vmod");
-			ResultFileHelper.TestSumFile(@"TestData\Results\Auxiliaries.vsum", @"TestData\Results\24t Coach AUX.vsum");
-		}
+			//todo: add aux columns to test
+			var testColumns = new[] { "Paux_FAN", "Paux_STP", "Paux_AC", "Paux_ES", "Paux_PS", "Paux" };
 
+			ResultFileHelper.TestModFile(@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod",
+				@"40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod", testColumns);
+			ResultFileHelper.TestSumFile(@"40t_Long_Haul_Truck.vsum",
+				@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck.vsum");
+		}
 
 		[TestMethod]
 		public void AuxConstant()
