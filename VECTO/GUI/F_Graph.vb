@@ -169,6 +169,8 @@ Public Class F_Graph
         Dim i As Integer
         Dim img As Image
 
+        If Me.WindowState = FormWindowState.Minimized Then Exit Sub
+
         If Me.ListView1.CheckedItems.Count = 0 Then
             Me.PictureBox1.Image = Nothing
             Exit Sub

@@ -18,7 +18,7 @@ Imports System.Windows.Forms
 Public Class F_GBX_GearDlog
 
     Public NextGear As Boolean
-    Public GbxPath As String
+	Public GbxPath As String
 
     'Save and Close
     Private Sub OK_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OK_Button.Click
@@ -65,10 +65,16 @@ Public Class F_GBX_GearDlog
     End Sub
 
     'Browse for shift polygons file
-    Private Sub BtShiftPolyBrowse_Click(sender As System.Object, e As System.EventArgs) Handles BtShiftPolyBrowse.Click
-        If fbGBS.OpenDialog(fFileRepl(Me.TbShiftPolyFile.Text, GbxPath)) Then
-            Me.TbShiftPolyFile.Text = fFileWoDir(fbGBS.Files(0), GbxPath)
-        End If
-    End Sub
+	Private Sub BtShiftPolyBrowse_Click(sender As System.Object, e As System.EventArgs) Handles BtShiftPolyBrowse.Click
+		If fbGBS.OpenDialog(fFileRepl(Me.TbShiftPolyFile.Text, GbxPath)) Then
+			Me.TbShiftPolyFile.Text = fFileWoDir(fbGBS.Files(0), GbxPath)
+		End If
+	End Sub
+
+	Private Sub BtBrowseFld_Click(sender As Object, e As EventArgs) Handles BtBrowseFld.Click
+		If fbFLD.OpenDialog(fFileRepl(Me.TbFld.Text, GbxPath)) Then
+			Me.TbFld.Text = fFileWoDir(fbFLD.Files(0), GbxPath)
+		End If
+	End Sub
 
 End Class
