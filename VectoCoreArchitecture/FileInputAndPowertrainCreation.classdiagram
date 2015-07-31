@@ -11037,172 +11037,6 @@
           </stereotypeInstance>
         </appliedStereotypesInternal>
         <elementDefinition Id="fcad8ea5-8fd5-485d-81e2-eff3f6888981" />
-        <targetEnds>
-          <association Id="b6aac638-0738-48de-96d2-dffb9428059e" isDerived="false" sourceEndRoleName="VectoRunData" targetEndRoleName="VehicleData" isLeaf="false" isAbstract="false">
-            <classMoniker Id="3a121d7b-4cfc-4e1b-b628-f3dd05d533a0" LastKnownName="VehicleData" />
-            <description>Property VehicleData references type VehicleData.</description>
-            <relationshipOwnedElementsInternal>
-              <associationHasOwnedEnds>
-                <memberEnd Id="88f6e823-883d-4543-b505-fab2ff053354" name="VectoRunData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
-                  <lowerValueInternal>
-                    <literalString Id="4d496ef1-dcdd-4855-a10a-ab6e1520e962" name="Lower" value="*">
-                      <elementDefinition Id="d8a9fded-c281-4da3-9a52-f0a5ccddbed5" />
-                    </literalString>
-                  </lowerValueInternal>
-                  <upperValueInternal>
-                    <literalString Id="7718e89e-002e-4d6a-aee2-0079d0873459" name="Upper" value="*">
-                      <elementDefinition Id="ece8e74c-77ca-4beb-b1b7-123de7fe305f" />
-                    </literalString>
-                  </upperValueInternal>
-                  <elementDefinition Id="33a880e3-bf50-4965-b6f5-1e5f139d4d1d" />
-                </memberEnd>
-              </associationHasOwnedEnds>
-              <associationHasOwnedEnds>
-                <memberEnd Id="079eb7f6-d0e9-4adb-b90e-5e55f77441cd" name="VehicleData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
-                  <lowerValueInternal>
-                    <literalString Id="830894de-646a-44d9-ac3e-7a33775021ad" name="Lower" value="1">
-                      <elementDefinition Id="f24c19b2-4888-4829-a497-93fb5824684e" />
-                    </literalString>
-                  </lowerValueInternal>
-                  <upperValueInternal>
-                    <literalString Id="c005f090-2962-400b-b320-c7996e4d07c8" name="Upper" value="1">
-                      <elementDefinition Id="3409d6f2-abf4-47d0-90c5-b5bcc08c2d95" />
-                    </literalString>
-                  </upperValueInternal>
-                  <elementDefinition Id="87bef004-200b-43c7-a5b4-255d582d4c6a" />
-                </memberEnd>
-              </associationHasOwnedEnds>
-            </relationshipOwnedElementsInternal>
-            <elementDefinition Id="2064d963-b60f-4a36-8e4f-c3e30b3238a8" />
-          </association>
-          <association Id="9f76f9fd-9510-485b-a0a9-e622ceafca6f" isDerived="false" sourceEndRoleName="VectoRunData" targetEndRoleName="GearboxData" isLeaf="false" isAbstract="false">
-            <classMoniker Id="e39a08de-34ee-434d-bf49-7cf05cc9800b" LastKnownName="GearboxData" />
-            <description>Property GearboxData references type GearboxData.</description>
-            <relationshipOwnedElementsInternal>
-              <associationHasOwnedEnds>
-                <memberEnd Id="4ed9451b-e5c0-40f5-9bf9-aa2f6a3e28b1" name="VectoRunData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
-                  <lowerValueInternal>
-                    <literalString Id="71fb0837-20e7-462a-a506-d92ceb339e2e" name="Lower" value="*">
-                      <elementDefinition Id="6491c9e7-2241-4827-aa32-c2b135994eb0" />
-                    </literalString>
-                  </lowerValueInternal>
-                  <upperValueInternal>
-                    <literalString Id="69d3295f-1628-4c6e-8263-e304747b0981" name="Upper" value="*">
-                      <elementDefinition Id="306de421-b1c4-4fe9-b1d8-953c05b54472" />
-                    </literalString>
-                  </upperValueInternal>
-                  <elementDefinition Id="3c67f82f-2aef-4521-898d-30a97e5bdec4" />
-                </memberEnd>
-              </associationHasOwnedEnds>
-              <associationHasOwnedEnds>
-                <memberEnd Id="33b68579-2fbb-475b-a5cb-b183258447fd" name="GearboxData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
-                  <lowerValueInternal>
-                    <literalString Id="ef24dc23-8f48-480b-9219-a14e1ca7e4a5" name="Lower" value="1">
-                      <elementDefinition Id="99c4b399-8ae7-47af-8077-46bd395dab64" />
-                    </literalString>
-                  </lowerValueInternal>
-                  <upperValueInternal>
-                    <literalString Id="ea556351-9c88-44de-af32-7f488b530f6e" name="Upper" value="1">
-                      <elementDefinition Id="7e874768-45cd-4823-b5f8-b01644cbbe91" />
-                    </literalString>
-                  </upperValueInternal>
-                  <elementDefinition Id="5181d9ee-9625-4095-9c73-a55ad7113acf" />
-                </memberEnd>
-              </associationHasOwnedEnds>
-            </relationshipOwnedElementsInternal>
-            <elementDefinition Id="54937c6a-fd09-493f-a597-07c6cd6b4548" />
-          </association>
-          <association Id="54f75710-69f8-4559-963d-350932cf3a30" isDerived="false" sourceEndRoleName="VectoRunData" targetEndRoleName="Cycle" isLeaf="false" isAbstract="false">
-            <classMoniker Id="6ead1fd3-3513-47b2-af08-009172c53f5e" LastKnownName="DrivingCycleData" />
-            <description>Property Cycle references type DrivingCycleData.</description>
-            <relationshipOwnedElementsInternal>
-              <associationHasOwnedEnds>
-                <memberEnd Id="2bfade54-2ab1-4d7a-a389-9128a4e30b53" name="VectoRunData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
-                  <lowerValueInternal>
-                    <literalString Id="fd3637b5-1349-4e86-b5de-d258fd2b1796" name="Lower" value="*">
-                      <elementDefinition Id="d4fe20ba-6fc4-48ba-9303-c8591bbcbd5c" />
-                    </literalString>
-                  </lowerValueInternal>
-                  <upperValueInternal>
-                    <literalString Id="17849b02-ae31-46c8-829b-3d5021da2f4b" name="Upper" value="*">
-                      <elementDefinition Id="42483743-8b5b-425d-b301-dcc005c8d0f6" />
-                    </literalString>
-                  </upperValueInternal>
-                  <elementDefinition Id="486ba54d-8996-4100-a62d-f8bb1a9c95d3" />
-                </memberEnd>
-              </associationHasOwnedEnds>
-              <associationHasOwnedEnds>
-                <memberEnd Id="f452fb32-2323-4fcc-a236-194baa617ff8" name="Cycle" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
-                  <lowerValueInternal>
-                    <literalString Id="0eee7d38-50fb-4c16-8da9-8a9d93c7d013" name="Lower" value="1">
-                      <elementDefinition Id="d9d47fbf-ac31-4390-8420-e5dd5b950c3e" />
-                    </literalString>
-                  </lowerValueInternal>
-                  <upperValueInternal>
-                    <literalString Id="9f3dc80a-b794-46e2-b462-311a4bfd02c4" name="Upper" value="1">
-                      <elementDefinition Id="3e54a097-abc7-4556-8d0b-6cb09940c4f0" />
-                    </literalString>
-                  </upperValueInternal>
-                  <elementDefinition Id="09faf534-6c2c-4768-bf11-ce6cb8dc57f9" />
-                </memberEnd>
-              </associationHasOwnedEnds>
-            </relationshipOwnedElementsInternal>
-            <elementDefinition Id="32e255d7-14bf-4530-80bc-b1cfbe3c35c8" />
-          </association>
-          <association Id="212f238e-d252-4502-89f9-2a720046c8ae" isDerived="false" sourceEndRoleName="VectoRunData" targetEndRoleName="DriverData" isLeaf="false" isAbstract="false">
-            <classMoniker Id="71d79f05-75c4-4e6d-afed-89ef1ad9e9df" LastKnownName="DriverData" />
-            <description>Property DriverData references type DriverData.</description>
-            <relationshipOwnedElementsInternal>
-              <associationHasOwnedEnds>
-                <memberEnd Id="555be582-5405-4e04-91b0-caafa8b545c5" name="VectoRunData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
-                  <lowerValueInternal>
-                    <literalString Id="20f07b47-2bda-419c-b8f5-8f1054e8883d" name="Lower" value="*">
-                      <elementDefinition Id="78b09163-b40c-4593-8d04-bbb0178eef53" />
-                    </literalString>
-                  </lowerValueInternal>
-                  <upperValueInternal>
-                    <literalString Id="ae636c4e-5a67-447e-b692-a699f521ff89" name="Upper" value="*">
-                      <elementDefinition Id="30bdd4b9-80c7-478e-a0d1-78b1025d2460" />
-                    </literalString>
-                  </upperValueInternal>
-                  <elementDefinition Id="6b251265-4205-4dce-b7da-618c9f70e547" />
-                </memberEnd>
-              </associationHasOwnedEnds>
-              <associationHasOwnedEnds>
-                <memberEnd Id="9b32b13e-6d5e-46e4-9d41-083c814a5c10" name="DriverData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
-                  <lowerValueInternal>
-                    <literalString Id="39824b6a-9673-4a3d-b4dc-66e70bfb60c7" name="Lower" value="1">
-                      <elementDefinition Id="395c772e-38bf-404a-855f-6402267d9f37" />
-                    </literalString>
-                  </lowerValueInternal>
-                  <upperValueInternal>
-                    <literalString Id="9fc991ae-2d1d-4c12-a1f7-4ad3f8f0356b" name="Upper" value="1">
-                      <elementDefinition Id="4cdc8f7f-d32c-4b41-bb6a-841b2373e743" />
-                    </literalString>
-                  </upperValueInternal>
-                  <elementDefinition Id="390842b0-7bf2-4f8a-beab-3ab73080a144" />
-                </memberEnd>
-              </associationHasOwnedEnds>
-            </relationshipOwnedElementsInternal>
-            <elementDefinition Id="eea14270-73db-4f9b-8b80-ec72f74745b5" />
-          </association>
-          <association Id="66babcf4-0af4-4c62-a939-d9f66097abd8" isDerived="false" sourceEndRoleName="VectoRunData" targetEndRoleName="AuxiliaryData" isLeaf="false" isAbstract="false">
-            <classMoniker Id="b849feeb-48bf-4d4c-846b-837510854aab" LastKnownName="AuxiliaryData" />
-            <relationshipOwnedElementsInternal>
-              <associationHasOwnedEnds>
-                <memberEnd Id="11bffae4-efc4-4a0e-ac2c-e99912ff5ca0" name="VectoRunData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
-                  <elementDefinition Id="0275de0d-b75f-4f52-b78b-3ed48b32c08b" />
-                </memberEnd>
-              </associationHasOwnedEnds>
-              <associationHasOwnedEnds>
-                <memberEnd Id="c4ca553e-3423-4447-80a5-4d6403aa42ad" name="AuxiliaryData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
-                  <elementDefinition Id="b6d6fb3c-604e-48c7-b44d-5c97ff340e41" />
-                </memberEnd>
-              </associationHasOwnedEnds>
-            </relationshipOwnedElementsInternal>
-            <elementDefinition Id="198ecbc3-a653-49b6-aebd-b1a77658b5cb" />
-          </association>
-        </targetEnds>
         <ownedAttributesInternal>
           <property Id="dc95816c-2ce0-496e-b3bc-74bebc31af40" name="VehicleData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
             <referencesInternal>
@@ -11920,6 +11754,24 @@
           </stereotypeInstance>
         </appliedStereotypesInternal>
         <elementDefinition Id="46973c13-d6ad-41e2-896e-0b14647bcd25" />
+        <targetEnds>
+          <association Id="d837d79c-19a9-4ed1-af8d-da9e0a54fe0b" isDerived="false" sourceEndRoleName="DrivingCycleData" targetEndRoleName="VectoRunData" isLeaf="false" isAbstract="false">
+            <classMoniker Id="3a375cac-c433-422a-9f21-f01e5dc0271d" LastKnownName="VectoRunData" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="5997a02f-e03c-44de-8bf0-1a33e1d38a0a" name="DrivingCycleData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="18fc0d6c-d768-4e8e-859e-ea89f4ea879e" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="43129553-65a8-4543-8892-6a165bf51acf" name="VectoRunData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="a6ccb293-1eb6-4c5a-b341-bdae135f432c" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="354afeeb-693c-42b5-9974-456807fa039b" />
+          </association>
+        </targetEnds>
         <ownedAttributesInternal>
           <property Id="6937f978-1f0b-4dda-a933-462446015459" name="Entries" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
             <referencesInternal>
@@ -12540,6 +12392,24 @@
           </stereotypeInstance>
         </appliedStereotypesInternal>
         <elementDefinition Id="40d91768-4cfb-4b95-ade3-243ea20e028f" />
+        <targetEnds>
+          <association Id="9cab1077-1e5d-4343-b14a-e8c4fc4a4b30" isDerived="false" sourceEndRoleName="VehicleData" targetEndRoleName="VectoRunData" isLeaf="false" isAbstract="false">
+            <classMoniker Id="3a375cac-c433-422a-9f21-f01e5dc0271d" LastKnownName="VectoRunData" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="9b143195-0fb5-4454-9b73-27c758fb3394" name="VehicleData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="b6a4a194-d9c5-45ff-8ec1-039809a3af4d" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="e4dd2920-5305-4694-9cf7-d20d69797496" name="VectoRunData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="c4c54542-f835-40f8-a28f-96f6e95358cd" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="7f1e0b04-958d-4b6d-96ad-87f6358554ec" />
+          </association>
+        </targetEnds>
         <ownedAttributesInternal>
           <property Id="65c78373-6f31-4c6e-bc70-892f107352ff" name="BasePath" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
             <referencesInternal>
@@ -14023,6 +13893,24 @@
           </stereotypeInstance>
         </appliedStereotypesInternal>
         <elementDefinition Id="8b5ae4e9-713d-4a09-9e2f-40ecdb827a34" />
+        <targetEnds>
+          <association Id="ce61f68f-6120-4203-83ee-577855c3e116" isDerived="false" sourceEndRoleName="GearboxData" targetEndRoleName="VectoRunData" isLeaf="false" isAbstract="false">
+            <classMoniker Id="3a375cac-c433-422a-9f21-f01e5dc0271d" LastKnownName="VectoRunData" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="2d941a9b-46b8-4676-a312-8427298e9114" name="GearboxData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="b1ef8d58-7082-4607-b54f-3bd41d36c243" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="063c6f56-cf90-4a4b-b306-425762a690bd" name="VectoRunData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="6518169e-f9ae-4d13-a3cc-35023bad8c2f" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="4536e139-bf05-410c-9b04-5fcb5c42a141" />
+          </association>
+        </targetEnds>
         <ownedAttributesInternal>
           <property Id="8472175e-6055-4228-b339-8882aea9debb" name="ModelName" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
             <referencesInternal>
@@ -15118,6 +15006,24 @@
           </stereotypeInstance>
         </appliedStereotypesInternal>
         <elementDefinition Id="d269b480-bca9-4acd-9eda-fc737ea894a5" />
+        <targetEnds>
+          <association Id="b9d566f9-cdfb-4878-8048-312c5b832e59" isDerived="false" sourceEndRoleName="AuxiliaryData" targetEndRoleName="VectoRunData" isLeaf="false" isAbstract="false">
+            <classMoniker Id="3a375cac-c433-422a-9f21-f01e5dc0271d" LastKnownName="VectoRunData" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="ad29e1d8-9f30-43d9-adc8-7777bde66dcd" name="AuxiliaryData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="c7059322-9569-4aa8-9085-9e6c086d4d51" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="21a997b2-0777-4be6-90ad-b6a6fd8d885b" name="VectoRunData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="5e1baaee-9d13-4f04-b29c-60beb2b543b3" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="ef3917ca-654b-46d7-9cbc-5a46b249a894" />
+          </association>
+        </targetEnds>
         <ownedAttributesInternal>
           <property Id="6e03be20-1f2e-41a1-98ee-fb334f30772e" name="EfficiencyToSupply" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
             <referencesInternal>
@@ -15571,6 +15477,24 @@
           </stereotypeInstance>
         </appliedStereotypesInternal>
         <elementDefinition Id="762dc6c3-0e90-457f-b14a-7dbda01548af" />
+        <targetEnds>
+          <association Id="f5e0457f-5d44-4708-90de-53bbcac4b3cf" isDerived="false" sourceEndRoleName="DriverData" targetEndRoleName="VectoRunData" isLeaf="false" isAbstract="false">
+            <classMoniker Id="3a375cac-c433-422a-9f21-f01e5dc0271d" LastKnownName="VectoRunData" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd Id="dd5b283e-a86a-4c1c-8c1d-5223fa52f2c9" name="DriverData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false" isNavigableOwned="false">
+                  <elementDefinition Id="d8414e65-b7d9-4794-a647-003685910116" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd Id="a52e0f60-a62b-413f-ba2d-6763b937da11" name="VectoRunData" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
+                  <elementDefinition Id="dfe62726-00fe-4a8b-965b-5ef9d7c32bde" />
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+            <elementDefinition Id="d36381d1-6897-44df-9349-f92480ae180a" />
+          </association>
+        </targetEnds>
         <ownedOperationsInternal>
           <operation Id="63c21305-d20d-452f-bb67-db9793b695d3" name="DriverData" isLeaf="false" isStatic="false" isAbstract="false" concurrency="Sequential" isQuery="false">
             <referencesInternal>

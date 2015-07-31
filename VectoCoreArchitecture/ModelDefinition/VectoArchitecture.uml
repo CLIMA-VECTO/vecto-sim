@@ -12276,7 +12276,7 @@ Start Step 3...</body>
             <type_NamedElement>
               <interfaceMoniker
                 Id="b5369ef2-53be-474a-b7ae-d1e22c21bc69"
-                LastKnownName="IEngineCockpit"
+                LastKnownName="IEngineInfo"
                 LastKnownLocation="Package_1320.uml" />
             </type_NamedElement>
           </property>
@@ -12343,7 +12343,7 @@ Start Step 3...</body>
             <type_NamedElement>
               <interfaceMoniker
                 Id="79a658b1-b882-44ef-a566-26601c4e84ac"
-                LastKnownName="IGearboxCockpit"
+                LastKnownName="IGearboxInfo"
                 LastKnownLocation="Package_1320.uml" />
             </type_NamedElement>
           </property>
@@ -12410,7 +12410,7 @@ Start Step 3...</body>
             <type_NamedElement>
               <interfaceMoniker
                 Id="a1f0ad20-7cb9-47ae-b788-4c64b9cab5ec"
-                LastKnownName="IVehicleCockpit"
+                LastKnownName="IVehicleInfo"
                 LastKnownLocation="Package_1320.uml" />
             </type_NamedElement>
           </property>

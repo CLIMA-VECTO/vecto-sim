@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner" xmlns:dm9="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
   dslVersion="1.0.0.0"
   Id="b0206019-0e88-4e4d-bed6-966671e5581c"
   name="Cockpit"
@@ -65,7 +65,7 @@
             isSubstitutable="false">
             <interfaceMoniker
               Id="a1f0ad20-7cb9-47ae-b788-4c64b9cab5ec"
-              LastKnownName="IVehicleCockpit"
+              LastKnownName="IVehicleInfo"
               LastKnownLocation="Package_1320.uml" />
           </generalization>
           <generalization
@@ -73,7 +73,7 @@
             isSubstitutable="false">
             <interfaceMoniker
               Id="79a658b1-b882-44ef-a566-26601c4e84ac"
-              LastKnownName="IGearboxCockpit"
+              LastKnownName="IGearboxInfo"
               LastKnownLocation="Package_1320.uml" />
           </generalization>
           <generalization
@@ -81,7 +81,7 @@
             isSubstitutable="false">
             <interfaceMoniker
               Id="b5369ef2-53be-474a-b7ae-d1e22c21bc69"
-              LastKnownName="IEngineCockpit"
+              LastKnownName="IEngineInfo"
               LastKnownLocation="Package_1320.uml" />
           </generalization>
         </generalsInternal>
@@ -90,7 +90,7 @@
     <packageHasNamedElement>
       <Interface
         Id="a1f0ad20-7cb9-47ae-b788-4c64b9cab5ec"
-        name="IVehicleCockpit"
+        name="IVehicleInfo"
         isAbstract="false"
         isLeaf="false">
         <referencesInternal>
@@ -458,7 +458,7 @@
     <packageHasNamedElement>
       <Interface
         Id="79a658b1-b882-44ef-a566-26601c4e84ac"
-        name="IGearboxCockpit"
+        name="IGearboxInfo"
         isAbstract="false"
         isLeaf="false">
         <referencesInternal>
@@ -589,7 +589,7 @@
     <packageHasNamedElement>
       <Interface
         Id="b5369ef2-53be-474a-b7ae-d1e22c21bc69"
-        name="IEngineCockpit"
+        name="IEngineInfo"
         isAbstract="false"
         isLeaf="false">
         <referencesInternal>

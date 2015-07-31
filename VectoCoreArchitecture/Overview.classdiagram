@@ -4404,7 +4404,7 @@
                   </appliedStereotypesInternal>
                   <elementDefinition Id="76418716-f048-429a-bab9-6bd31f8a6dd3" />
                   <type_NamedElement>
-                    <referencedTypeMoniker Id="02bec912-78e6-4b54-82da-2eebff22d4e1" LastKnownName="IEngineCockpit" />
+                    <referencedTypeMoniker Id="02bec912-78e6-4b54-82da-2eebff22d4e1" LastKnownName="IEngineInfo" />
                   </type_NamedElement>
                 </property>
                 <property Id="ae2eb5ec-2c16-40ca-899f-e747f8a59eae" name="_gearbox" visibility="Package" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
@@ -4452,7 +4452,7 @@
                   </appliedStereotypesInternal>
                   <elementDefinition Id="a7b36236-0d97-443c-92a5-f466d2ccac47" />
                   <type_NamedElement>
-                    <referencedTypeMoniker Id="26db8af8-ff31-4855-9247-8555c8ec3cb4" LastKnownName="IGearboxCockpit" />
+                    <referencedTypeMoniker Id="26db8af8-ff31-4855-9247-8555c8ec3cb4" LastKnownName="IGearboxInfo" />
                   </type_NamedElement>
                 </property>
                 <property Id="175147c7-2e15-4fb2-9526-50ccf85b49fa" name="_vehicle" visibility="Package" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
@@ -4500,7 +4500,7 @@
                   </appliedStereotypesInternal>
                   <elementDefinition Id="9f9423cd-4238-48fe-89c7-4bb84d6e1f94" />
                   <type_NamedElement>
-                    <referencedTypeMoniker Id="e2f0659a-8e9c-4b2b-80c2-a1ba122219e2" LastKnownName="IVehicleCockpit" />
+                    <referencedTypeMoniker Id="e2f0659a-8e9c-4b2b-80c2-a1ba122219e2" LastKnownName="IVehicleInfo" />
                   </type_NamedElement>
                 </property>
                 <property Id="1159ad4b-3336-4e99-ab80-6e5976ea9a86" name="_cycle" visibility="Package" isLeaf="false" isStatic="false" isReadOnly="false" isDerived="false" isDerivedUnion="false" aggregation="None" isComposite="false">
@@ -15962,7 +15962,7 @@
               <elementDefinition Id="73c2fd70-49e4-4dea-b4b8-1df3906d4ea6" />
               <generalsInternal>
                 <generalization Id="c7e82475-0fc0-4762-a108-ea6d4b69404c" isSubstitutable="false">
-                  <interfaceMoniker Id="44c937c7-7125-4968-85a6-6b035c8458f5" LastKnownName="IGearboxCockpit" />
+                  <interfaceMoniker Id="44c937c7-7125-4968-85a6-6b035c8458f5" LastKnownName="IGearboxInfo" />
                   <elementDefinition Id="1de7a3c6-37c9-44c5-a473-bf4136586f3f" />
                 </generalization>
               </generalsInternal>
@@ -16009,7 +16009,7 @@
               <elementDefinition Id="8f855aba-1ce7-4f09-af2f-87bc7ff37281" />
               <generalsInternal>
                 <generalization Id="8c051524-0d3d-44fd-aff6-33253dd7e90a" isSubstitutable="false">
-                  <interfaceMoniker Id="abb5e42b-c7d3-4cf6-ba34-8ce679074477" LastKnownName="IEngineCockpit" />
+                  <interfaceMoniker Id="abb5e42b-c7d3-4cf6-ba34-8ce679074477" LastKnownName="IEngineInfo" />
                   <elementDefinition Id="46f1d015-b201-4dd3-98e0-40613d22226c" />
                 </generalization>
               </generalsInternal>
@@ -20129,7 +20129,7 @@
               <elementDefinition Id="567a2cb4-78fa-447b-abdb-78cd1965d5dc" />
               <generalsInternal>
                 <generalization Id="cff3c187-978f-4c9c-b998-5eb0efd790fa" isSubstitutable="false">
-                  <interfaceMoniker Id="fcdc90f8-cb35-4b36-b566-21f67561939d" LastKnownName="IVehicleCockpit" />
+                  <interfaceMoniker Id="fcdc90f8-cb35-4b36-b566-21f67561939d" LastKnownName="IVehicleInfo" />
                   <elementDefinition Id="49e1a334-e2b0-4764-b95d-dd0bbac89592" />
                 </generalization>
               </generalsInternal>
@@ -26035,22 +26035,22 @@
               <elementDefinition Id="5dcabc72-51e3-41e6-b0c3-faad36b7eea8" />
               <generalsInternal>
                 <generalization Id="3af3dcf1-5a9d-4416-a19e-426b62073f17" isSubstitutable="false">
-                  <interfaceMoniker Id="fcdc90f8-cb35-4b36-b566-21f67561939d" LastKnownName="IVehicleCockpit" />
+                  <interfaceMoniker Id="fcdc90f8-cb35-4b36-b566-21f67561939d" LastKnownName="IVehicleInfo" />
                   <elementDefinition Id="a015d786-bc53-481d-a971-4a76b20930ad" />
                 </generalization>
                 <generalization Id="fd0e1928-0bc7-4154-a294-cdea0a82b696" isSubstitutable="false">
-                  <interfaceMoniker Id="44c937c7-7125-4968-85a6-6b035c8458f5" LastKnownName="IGearboxCockpit" />
+                  <interfaceMoniker Id="44c937c7-7125-4968-85a6-6b035c8458f5" LastKnownName="IGearboxInfo" />
                   <elementDefinition Id="c2374846-2641-4784-a9f4-be8b181aefd4" />
                 </generalization>
                 <generalization Id="e91134b3-31b1-4833-89c6-a2f8e606bb3b" isSubstitutable="false">
-                  <interfaceMoniker Id="abb5e42b-c7d3-4cf6-ba34-8ce679074477" LastKnownName="IEngineCockpit" />
+                  <interfaceMoniker Id="abb5e42b-c7d3-4cf6-ba34-8ce679074477" LastKnownName="IEngineInfo" />
                   <elementDefinition Id="2959c9c7-42dd-4bbe-a11c-cc566e0e78bd" />
                 </generalization>
               </generalsInternal>
             </Interface>
           </packageHasNamedElement>
           <packageHasNamedElement>
-            <Interface Id="abb5e42b-c7d3-4cf6-ba34-8ce679074477" name="IEngineCockpit" isAbstract="false" isLeaf="false">
+            <Interface Id="abb5e42b-c7d3-4cf6-ba34-8ce679074477" name="IEngineInfo" isAbstract="false" isLeaf="false">
               <referencesInternal>
                 <reference Id="c8039485-17d9-4d0e-9adf-4a554e50307d" handle="viewcode://./CodeSchema_Interface?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Simulation.Cockpit Type%3DIEngineCockpit" tag="ViewCode">
                   <elementDefinition Id="ae002fb0-1d11-4f10-a6ea-69ae53b669d4" />
@@ -26154,7 +26154,7 @@
             </Interface>
           </packageHasNamedElement>
           <packageHasNamedElement>
-            <Interface Id="44c937c7-7125-4968-85a6-6b035c8458f5" name="IGearboxCockpit" isAbstract="false" isLeaf="false">
+            <Interface Id="44c937c7-7125-4968-85a6-6b035c8458f5" name="IGearboxInfo" isAbstract="false" isLeaf="false">
               <referencesInternal>
                 <reference Id="c4a67519-ad95-4ae6-9ca6-19912abd2d13" handle="viewcode://./CodeSchema_Interface?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Simulation.Cockpit Type%3DIGearboxCockpit" tag="ViewCode">
                   <elementDefinition Id="95e15992-611b-4d01-b4a0-7637f0d3a489" />
@@ -26258,7 +26258,7 @@
             </Interface>
           </packageHasNamedElement>
           <packageHasNamedElement>
-            <Interface Id="fcdc90f8-cb35-4b36-b566-21f67561939d" name="IVehicleCockpit" isAbstract="false" isLeaf="false">
+            <Interface Id="fcdc90f8-cb35-4b36-b566-21f67561939d" name="IVehicleInfo" isAbstract="false" isLeaf="false">
               <referencesInternal>
                 <reference Id="74241151-868b-45ab-b105-8c773527a906" handle="viewcode://./CodeSchema_Interface?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Simulation.Cockpit Type%3DIVehicleCockpit" tag="ViewCode">
                   <elementDefinition Id="186563fa-e777-4496-9194-21f5d8becb64" />
@@ -28115,17 +28115,17 @@
       </referencedType>
     </packageHasNamedElement>
     <packageHasNamedElement>
-      <referencedType Id="02bec912-78e6-4b54-82da-2eebff22d4e1" name="IEngineCockpit" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::TUGraz::VectoCore::Models::Simulation::Cockpit::IEngineCockpit">
+      <referencedType Id="02bec912-78e6-4b54-82da-2eebff22d4e1" name="IEngineInfo" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::TUGraz::VectoCore::Models::Simulation::Cockpit::IEngineInfo">
         <elementDefinition Id="b5369ef2-53be-474a-b7ae-d1e22c21bc69" />
       </referencedType>
     </packageHasNamedElement>
     <packageHasNamedElement>
-      <referencedType Id="26db8af8-ff31-4855-9247-8555c8ec3cb4" name="IGearboxCockpit" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::TUGraz::VectoCore::Models::Simulation::Cockpit::IGearboxCockpit">
+      <referencedType Id="26db8af8-ff31-4855-9247-8555c8ec3cb4" name="IGearboxInfo" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::TUGraz::VectoCore::Models::Simulation::Cockpit::IGearboxInfo">
         <elementDefinition Id="79a658b1-b882-44ef-a566-26601c4e84ac" />
       </referencedType>
     </packageHasNamedElement>
     <packageHasNamedElement>
-      <referencedType Id="e2f0659a-8e9c-4b2b-80c2-a1ba122219e2" name="IVehicleCockpit" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::TUGraz::VectoCore::Models::Simulation::Cockpit::IVehicleCockpit">
+      <referencedType Id="e2f0659a-8e9c-4b2b-80c2-a1ba122219e2" name="IVehicleInfo" isAbstract="false" isLeaf="false" cachedFullName="VectoArchitecture::TUGraz::VectoCore::Models::Simulation::Cockpit::IVehicleInfo">
         <elementDefinition Id="a1f0ad20-7cb9-47ae-b788-4c64b9cab5ec" />
       </referencedType>
     </packageHasNamedElement>

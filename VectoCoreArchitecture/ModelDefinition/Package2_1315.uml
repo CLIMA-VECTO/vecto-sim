@@ -324,6 +324,45 @@
               </associationHasOwnedEnds>
             </relationshipOwnedElementsInternal>
           </association>
+          <association
+            Id="ef3917ca-654b-46d7-9cbc-5a46b249a894"
+            isDerived="false"
+            sourceEndRoleName="AuxiliaryData"
+            targetEndRoleName="VectoRunData"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="fcad8ea5-8fd5-485d-81e2-eff3f6888981"
+              LastKnownName="VectoRunData"
+              LastKnownLocation="Package4_1315.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="c7059322-9569-4aa8-9085-9e6c086d4d51"
+                  name="AuxiliaryData"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="5e1baaee-9d13-4f04-b29c-60beb2b543b3"
+                  name="VectoRunData"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
         </targetEnds>
         <ownedAttributesInternal>
           <property

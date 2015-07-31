@@ -335,6 +335,45 @@
               </associationHasOwnedEnds>
             </relationshipOwnedElementsInternal>
           </association>
+          <association
+            Id="354afeeb-693c-42b5-9974-456807fa039b"
+            isDerived="false"
+            sourceEndRoleName="DrivingCycleData"
+            targetEndRoleName="VectoRunData"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="fcad8ea5-8fd5-485d-81e2-eff3f6888981"
+              LastKnownName="VectoRunData"
+              LastKnownLocation="Package4_1315.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="18fc0d6c-d768-4e8e-859e-ea89f4ea879e"
+                  name="DrivingCycleData"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="a6ccb293-1eb6-4c5a-b341-bdae135f432c"
+                  name="VectoRunData"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
         </targetEnds>
         <ownedAttributesInternal>
           <property
@@ -2423,6 +2462,45 @@
                       value="1" />
                   </upperValueInternal>
                 </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="7f1e0b04-958d-4b6d-96ad-87f6358554ec"
+            isDerived="false"
+            sourceEndRoleName="VehicleData"
+            targetEndRoleName="VectoRunData"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="fcad8ea5-8fd5-485d-81e2-eff3f6888981"
+              LastKnownName="VectoRunData"
+              LastKnownLocation="Package4_1315.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="b6a4a194-d9c5-45ff-8ec1-039809a3af4d"
+                  name="VehicleData"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="c4c54542-f835-40f8-a28f-96f6e95358cd"
+                  name="VectoRunData"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
               </associationHasOwnedEnds>
             </relationshipOwnedElementsInternal>
           </association>
@@ -4970,6 +5048,45 @@
               </associationHasOwnedEnds>
             </relationshipOwnedElementsInternal>
           </association>
+          <association
+            Id="4536e139-bf05-410c-9b04-5fcb5c42a141"
+            isDerived="false"
+            sourceEndRoleName="GearboxData"
+            targetEndRoleName="VectoRunData"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="fcad8ea5-8fd5-485d-81e2-eff3f6888981"
+              LastKnownName="VectoRunData"
+              LastKnownLocation="Package4_1315.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="b1ef8d58-7082-4607-b54f-3bd41d36c243"
+                  name="GearboxData"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="6518169e-f9ae-4d13-a3cc-35023bad8c2f"
+                  name="VectoRunData"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
         </targetEnds>
         <ownedAttributesInternal>
           <property
@@ -6382,6 +6499,47 @@
             </propertyInstances>
           </stereotypeInstance>
         </appliedStereotypesInternal>
+        <targetEnds>
+          <association
+            Id="d36381d1-6897-44df-9349-f92480ae180a"
+            isDerived="false"
+            sourceEndRoleName="DriverData"
+            targetEndRoleName="VectoRunData"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="fcad8ea5-8fd5-485d-81e2-eff3f6888981"
+              LastKnownName="VectoRunData"
+              LastKnownLocation="Package4_1315.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="d8414e65-b7d9-4794-a647-003685910116"
+                  name="DriverData"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="dfe62726-00fe-4a8b-965b-5ef9d7c32bde"
+                  name="VectoRunData"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
         <ownedOperationsInternal>
           <operation
             Id="a84274e8-e664-4cba-8a34-98f6cacdb299"
