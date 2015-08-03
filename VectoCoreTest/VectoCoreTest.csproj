@@ -73,6 +73,8 @@
     <Compile Include="FileIO\JsonTest.cs" />
     <Compile Include="FileIO\SimulationDataReaderTest.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
+    <Compile Include="Models\SimulationComponentData\AuxiliaryTypeHelperTest.cs" />
+    <Compile Include="Models\SimulationComponentData\CombustionEngineDataTest.cs" />
     <Compile Include="Models\Simulation\AuxTests.cs" />
     <Compile Include="Utils\MockAuxiliaryDemand.cs" />
     <Compile Include="Integration\SimulationRuns\MinimalPowertrain.cs" />
