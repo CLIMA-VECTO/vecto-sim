@@ -1,4 +1,5 @@
 ﻿using System;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -13,7 +14,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private readonly PerSecond _ratedSpeed;
 		private ITnOutPort _nextComponent;
 		private const double ClutchEff = 1;
-		private const double CluchNormSpeed = 0.03;
 		private ClutchState _clutchState = ClutchState.ClutchClosed;
 
 		public enum ClutchState
@@ -94,12 +94,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} else {
 				var engineSpeedNorm = (angularVelocity - _idleSpeed) /
 									(_ratedSpeed - _idleSpeed);
-				if (engineSpeedNorm < CluchNormSpeed) {
+				if (engineSpeedNorm < Constants.SimulationSettings.CluchNormSpeed) {
 					_clutchState = ClutchState.ClutchSlipping;
 
 					var engineSpeed0 = VectoMath.Max(_idleSpeed, angularVelocity);
-					var clutchSpeedNorm = CluchNormSpeed /
-										((_idleSpeed + CluchNormSpeed * (_ratedSpeed - _idleSpeed)) / _ratedSpeed);
+					var clutchSpeedNorm = Constants.SimulationSettings.CluchNormSpeed /
+										((_idleSpeed + Constants.SimulationSettings.CluchNormSpeed * (_ratedSpeed - _idleSpeed)) / _ratedSpeed);
 					engineSpeedIn =
 						((clutchSpeedNorm * engineSpeed0 / _ratedSpeed) * (_ratedSpeed - _idleSpeed) + _idleSpeed).Radian
 							.Cast<PerSecond>();
