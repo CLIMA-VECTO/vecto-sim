@@ -105,7 +105,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 			return DriveDistance(absTime, ds);
-			throw new NotImplementedException("Distance based Cycle is not yet implemented.");
 		}
 
 		private IResponse DriveTimeInterval(Second absTime, Second dt)

@@ -16,10 +16,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var ds = (Container.VehicleSpeed() * Constants.SimulationSettings.TargetTimeInterval).Cast<Meter>();
 
 			if (ds.IsEqual(0)) {
+				// vehicle stands still, drive a certain distance...
 				ds = Constants.SimulationSettings.DriveOffDistance;
 			}
 
-			var response = CyclePort.Request(AbsTime, ds);
+			IResponse response;
+			var requestDone = false;
+
+			do {
+				response = CyclePort.Request(AbsTime, ds);
+				switch (response.ResponseType) {
+					case ResponseType.Success:
+						requestDone = true;
+						break;
+					case ResponseType.CycleFinished:
+						requestDone = true;
+						break;
+					case ResponseType.DrivingCycleDistanceExceeded:
+						break;
+				}
+			} while (!requestDone);
 
 			//while (response is ResponseFailTimeInterval) {
 			//	_dt = (response as ResponseFailTimeInterval).DeltaT;

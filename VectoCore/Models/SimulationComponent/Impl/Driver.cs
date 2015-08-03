@@ -77,7 +77,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);
 
-			SearchOperatingPoint(absTime, ds, gradient, response, true);
+			var distance = SearchOperatingPoint(absTime, ds, gradient, response, true);
+			if (!ds.IsEqual(distance)) {
+				return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = distance, SimulationInterval = CurrentState.dt };
+			}
 
 			var retVal = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
 			CurrentState.Response = retVal;
@@ -113,15 +116,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
 		}
 
-		private void SearchOperatingPoint(Second absTime, Meter ds, Radian gradient,
+		private Meter SearchOperatingPoint(Second absTime, Meter ds, Radian gradient,
 			IResponse response, bool coasting = false)
 		{
-			var exceeded = new List<double>();
-			var acceleration = new List<double>();
+			var exceeded = new List<double>(); // only used while testing
+			var acceleration = new List<double>(); // only used while testing
 			var searchInterval = CurrentState.Acceleration.Value() / 2.0;
+			Meter computedDs;
 
 			do {
 				var delta = 0.0;
+				computedDs = ds;
 				switch (response.ResponseType) {
 					case ResponseType.FailOverload:
 						delta = ((ResponseFailOverload)response).Delta;
@@ -136,7 +141,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				exceeded.Add(delta);
 				acceleration.Add(CurrentState.Acceleration.Value());
 				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
-					return;
+					return computedDs;
 				}
 				if (delta > 0) {
 					CurrentState.Acceleration -= searchInterval;
@@ -144,11 +149,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.Acceleration += searchInterval;
 				}
 				searchInterval /= 2.0;
-				CurrentState.dt = ComputeTimeInterval(ds, CurrentState.Acceleration);
-
+				ComputeTimeInterval(CurrentState.Acceleration, ref computedDs, out CurrentState.dt);
 				response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);
-				//factor *= 2;
 			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
+			return computedDs;
 		}
 
 		private void ComputeAcceleration(Meter ds, MeterPerSecond targetVelocity)
@@ -168,33 +172,42 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			CurrentState.Acceleration = requiredAcceleration;
-			CurrentState.dt = ComputeTimeInterval(ds, CurrentState.Acceleration);
+			ComputeTimeInterval(CurrentState.Acceleration, ref ds, out CurrentState.dt);
 		}
 
-		private Second ComputeTimeInterval(Meter ds, MeterPerSquareSecond acceleration)
+		private void ComputeTimeInterval(MeterPerSquareSecond acceleration, ref Meter ds, out Second dt)
 		{
 			var currentSpeed = DataBus.VehicleSpeed();
 
 			if (acceleration.IsEqual(0)) {
-				return (ds / currentSpeed).Cast<Second>();
+				dt = (ds / currentSpeed).Cast<Second>();
+				return;
 			}
 
 			// we need to accelerate / decelerate. solve quadratic equation...
 			// ds = acceleration / 2 * dt^2 + currentSpeed * dt   => solve for dt
 			var solutions = VectoMath.QuadraticEquationSolver(acceleration.Value() / 2.0, currentSpeed.Value(),
 				-ds.Value());
-			solutions = solutions.Where(x => x >= 0).ToList();
 
 			if (solutions.Count == 0) {
-				Log.WarnFormat(
-					"Could not find solution for computing required time interval to drive distance {0}. currentSpeed: {1}, acceleration: {3}",
-					ds, currentSpeed, acceleration);
-				return 0.SI<Second>();
+				// no real-valued solutions, required distance can not be reached (vehicle stopped?), adapt ds...
+				dt = -(currentSpeed / acceleration).Cast<Second>();
+				var stopDistance = (currentSpeed * dt + acceleration / 2 * dt * dt).Cast<Meter>();
+				if (stopDistance > ds) {
+					Log.WarnFormat(
+						"Could not find solution for computing required time interval to drive distance {0}. currentSpeed: {1}, acceleration: {2}",
+						ds, currentSpeed, acceleration);
+					dt = 0.SI<Second>();
+					return;
+				}
+				ds = stopDistance;
+				return;
 			}
+			solutions = solutions.Where(x => x >= 0).ToList();
 			// if there are 2 positive solutions (i.e. when decelerating), take the smaller time interval
 			// (the second solution means that you reach negative speed 
 			solutions.Sort();
-			return solutions.First().SI<Second>();
+			dt = solutions.First().SI<Second>();
 		}
 
 
