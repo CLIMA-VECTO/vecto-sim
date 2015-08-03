@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -122,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.900, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.908, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 
 			response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.SI<Radian>());
 
@@ -131,14 +132,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.7990, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.7973, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 
-			/// change vehicle weight
+			// change vehicle weight, cannot reach minimum acceleration...
 			vehicleData.Loading = 70000.SI<Kilogram>();
 
-			response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.05.SI<Radian>());
-
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			try {
+				response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.05.SI<Radian>());
+				Assert.Fail();
+			} catch (VectoSimulationException e) {
+				Assert.AreEqual("Could not achieve minimum acceleration", e.Message);
+			}
+			//Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 		}
 
 		[TestMethod]

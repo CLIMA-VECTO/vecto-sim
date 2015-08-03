@@ -148,6 +148,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				} else {
 					CurrentState.Acceleration += searchInterval;
 				}
+				// check for minimum acceleration, add some safety margin due to search
+				if (CurrentState.Acceleration < Constants.SimulationSettings.MinimumAcceleration / 5.0 &&
+					searchInterval < Constants.SimulationSettings.MinimumAcceleration.Value() / 20.0) {
+					throw new VectoSimulationException("Could not achieve minimum acceleration");
+				}
 				searchInterval /= 2.0;
 				ComputeTimeInterval(CurrentState.Acceleration, ref computedDs, out CurrentState.dt);
 				response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);

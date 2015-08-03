@@ -211,60 +211,60 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class DrivingCycleEnumerator : IEnumerator<DrivingCycleData.DrivingCycleEntry>
 		{
-			protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSampleIt;
-			protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSampleIt;
+			//protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSampleIt;
+			//protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSampleIt;
 
-			//protected uint currentCycleIndex;
+			protected int CurrentCycleIndex;
+			protected DrivingCycleData Data;
 
 			public DrivingCycleEnumerator(DrivingCycleData data)
 			{
-				LeftSampleIt = data.Entries.GetEnumerator();
-				RightSampleIt = data.Entries.GetEnumerator();
-				RightSampleIt.MoveNext();
-				//currentCycleIndex = 0;
+				//LeftSampleIt = data.Entries.GetEnumerator();
+				//RightSampleIt = data.Entries.GetEnumerator();
+				//RightSampleIt.MoveNext();
+				CurrentCycleIndex = 0;
+				Data = data;
 			}
 
 			public DrivingCycleData.DrivingCycleEntry Current
 			{
-				get { return LeftSampleIt.Current; }
+				get { return LeftSample; }
 			}
 
 			public DrivingCycleData.DrivingCycleEntry Next
 			{
-				get { return RightSampleIt.Current; }
+				get { return RightSample; }
 			}
 
 			public DrivingCycleData.DrivingCycleEntry LeftSample
 			{
-				get { return LeftSampleIt.Current; }
+				get { return Data.Entries[CurrentCycleIndex]; }
 			}
 
 			public DrivingCycleData.DrivingCycleEntry RightSample
 			{
-				get { return RightSampleIt.Current; }
+				get { return CurrentCycleIndex + 1 >= Data.Entries.Count ? null : Data.Entries[CurrentCycleIndex + 1]; }
 			}
 
-			public void Dispose()
-			{
-				LeftSampleIt.Dispose();
-				RightSampleIt.Dispose();
-			}
+			public void Dispose() {}
 
 			object System.Collections.IEnumerator.Current
 			{
-				get { return LeftSampleIt.Current; }
+				get { return LeftSample; }
 			}
 
 			public bool MoveNext()
 			{
-				return LeftSampleIt.MoveNext() && RightSampleIt.MoveNext();
+				if (CurrentCycleIndex >= Data.Entries.Count - 1) {
+					return false;
+				}
+				CurrentCycleIndex++;
+				return true;
 			}
 
 			public void Reset()
 			{
-				LeftSampleIt.Reset();
-				RightSampleIt.Reset();
-				RightSampleIt.MoveNext();
+				CurrentCycleIndex = 0;
 			}
 		}
 

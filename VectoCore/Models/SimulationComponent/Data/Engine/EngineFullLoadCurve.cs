@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				log.WarnFormat(
 					"FullLoadCurve: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index.",
 					Fields.EngineSpeed, Fields.TorqueFullLoad, Fields.TorqueDrag,
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
+					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
 
 				entriesFld = CreateFromColumnIndizes(data);
 			}
