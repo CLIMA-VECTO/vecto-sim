@@ -22,8 +22,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Vehicle(VehicleContainer container, VehicleData data) : base(container)
 		{
 			_data = data;
-			_previousState = new VehicleState { Velocity = 0.SI<MeterPerSecond>() };
-			_currentState = new VehicleState();
+			_previousState = new VehicleState() { Distance = 0.SI<Meter>(), Velocity = 0.SI<MeterPerSecond>() };
+			_currentState = new VehicleState() { Distance = 0.SI<Meter>(), Velocity = 0.SI<MeterPerSecond>() };
 		}
 
 		public Vehicle(VehicleContainer container, VehicleData data, double initialVelocity) : this(container, data)
@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
 			writer[ModalResultField.v_act] = (_previousState.Velocity + _currentState.Velocity) / 2;
-			writer[ModalResultField.dist] = (_previousState.Distance - _currentState.Distance) / 2;
+			writer[ModalResultField.dist] = _currentState.Distance;
 
 			// hint: take care to use correct velocity when writing the P... values in moddata
 		}
@@ -65,7 +65,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			_currentState.Velocity = (_previousState.Velocity + (accelleration * dt)).Cast<MeterPerSecond>();
 			_currentState.dt = dt;
-			_currentState.Distance = ((_previousState.Velocity + _currentState.Velocity) / 2 * _currentState.dt).Cast<Meter>();
+			_currentState.Distance = _previousState.Distance +
+									((_previousState.Velocity + _currentState.Velocity) / 2 * _currentState.dt).Cast<Meter>();
 
 			// DriverAcceleration = vehicleAccelerationForce - RollingResistance - AirDragResistance - SlopeResistance
 			var vehicleAccelerationForce = DriverAcceleration(accelleration) + RollingResistance(gradient) +

@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData =
 				EngineeringModeSimulationDataReader.CreateEngineDataFromFile(
 					TestContext.DataRow["EngineFile"].ToString());
-			var engine = new CombustionEngine(vehicleContainer, engineData);
+			var engine = new EngineOnlyCombustionEngine(vehicleContainer, engineData);
 
 			gearbox.InPort().Connect(engine.OutPort());
 

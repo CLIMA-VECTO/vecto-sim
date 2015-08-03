@@ -33,7 +33,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Data = cycle;
 			CycleIntervalIterator = new DrivingCycleEnumerator(Data);
-			CycleIntervalIterator.MoveNext();
 		}
 
 		#region IDrivingCycleInProvider

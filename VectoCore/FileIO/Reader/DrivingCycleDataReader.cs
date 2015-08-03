@@ -69,16 +69,28 @@ namespace TUGraz.VectoCore.FileIO.Reader
 			filtered.Add(current);
 			var distance = current.Distance;
 			var altitude = current.Altitude;
-			foreach (var entry in entries) {
+			//foreach (var entry in entries) {
+			for (var i = 0; i < entries.Count; i++) {
+				var entry = entries[i];
+				if (i > 0) {
+					altitude += (entry.Distance - distance) * entries[i - 1].RoadGradientPercent / 100.0;
+				}
 				entry.Altitude = altitude;
 				if (!CycleEntriesAreEqual(current, entry)) {
 					entry.Altitude = altitude;
 					filtered.Add(entry);
 					current = entry;
 				}
-				if (entry.StoppingTime.IsEqual(0) && !entry.VehicleTargetSpeed.IsEqual(0)) {
-					altitude += (entry.Distance - distance) * entry.RoadGradientPercent / 100.0;
+				if (!entry.StoppingTime.IsEqual(0) && entry.VehicleTargetSpeed.IsEqual(0)) {
+					// vehicle stops. duplicate current distance entry with 0 waiting time
+					var tmp = new DrivingCycleData.DrivingCycleEntry(entry) {
+						StoppingTime = 0.SI<Second>(),
+						VehicleTargetSpeed = i < entries.Count - 1 ? entries[i + 1].VehicleTargetSpeed : 0.SI<MeterPerSecond>()
+					};
+					filtered.Add(tmp);
+					current = tmp;
 				}
+
 				distance = entry.Distance;
 			}
 			log.Info(string.Format("Data loaded. Number of Entries: {0}, filtered Entries: {1}", entries.Count, filtered.Count));

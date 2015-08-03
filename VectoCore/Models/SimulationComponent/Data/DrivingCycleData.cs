@@ -22,6 +22,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public class DrivingCycleEntry
 		{
+			public DrivingCycleEntry() {}
+
+			public DrivingCycleEntry(DrivingCycleEntry entry)
+			{
+				Distance = entry.Distance;
+				Time = entry.Time;
+				VehicleTargetSpeed = entry.VehicleTargetSpeed;
+				RoadGradient = entry.RoadGradient;
+				Altitude = entry.Altitude;
+				StoppingTime = entry.StoppingTime;
+				EngineSpeed = entry.EngineSpeed;
+				Gear = entry.Gear;
+				AdditionalAuxPowerDemand = entry.AdditionalAuxPowerDemand;
+				AirSpeedRelativeToVehicle = entry.AirSpeedRelativeToVehicle;
+				WindYawAngle = entry.WindYawAngle;
+				EngineTorque = entry.EngineTorque;
+				Drag = entry.Drag;
+				AuxiliarySupplyPower = new Dictionary<string, Watt>(entry.AuxiliarySupplyPower);
+			}
+
 			/// <summary>
 			///     [m]	Travelled distance used for distance-based cycles. If "t"
 			///     is also defined this column will be ignored.
