@@ -6,6 +6,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -21,6 +22,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected IDriverDemandOutPort Next;
 
 		protected DriverData DriverData;
+
+		public enum DrivingBehavior
+		{
+			Stopped,
+			Accelerating,
+			Coasting,
+			Breaking,
+			//EcoRoll,
+			//OverSpeed,
+		}
 
 		public Driver(VehicleContainer container, DriverData driverData) : base(container)
 		{
@@ -51,6 +62,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
+		{
+			return Next.Initialize(vehicleSpeed, roadGradient);
+		}
 
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
@@ -60,37 +75,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//switch (retVal.ResponseType) {}
 			return retVal;
-		}
-
-		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
-		{
-			return Next.Initialize(vehicleSpeed, roadGradient);
-		}
-
-		internal IResponse DoCoast(Second absTime, Meter ds, Radian gradient)
-		{
-			ComputeAcceleration(ds, 0.SI<MeterPerSecond>());
-
-			if (CurrentState.dt.IsEqual(0)) {
-				return new ResponseFailTimeInterval();
-			}
-
-			var response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);
-
-			var distance = SearchOperatingPoint(absTime, ds, gradient, response, true);
-			if (!ds.IsEqual(distance)) {
-				return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = distance, SimulationInterval = CurrentState.dt };
-			}
-
-			var retVal = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
-			CurrentState.Response = retVal;
-			switch (retVal.ResponseType) {
-				case ResponseType.Success:
-					retVal.SimulationInterval = CurrentState.dt;
-					return retVal;
-			}
-
-			return new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
 		}
 
 
@@ -112,6 +96,48 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						break;
 				}
 			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
+
+			return new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
+		}
+
+		protected DrivingBehavior DecideDrivingBehavior()
+		{
+			// distance until halt: s = - v * v / (2 * a)
+			var lookaheadDistance =
+				(-DataBus.VehicleSpeed() * DataBus.VehicleSpeed() / (2 * DeclarationData.Driver.LookAhead.Deceleration)).Cast<Meter>
+					();
+			var lookaheadData = DataBus.LookAhead(1.2 * lookaheadDistance);
+
+			return DrivingBehavior.Stopped;
+		}
+
+		protected internal Meter ComputeDecelerationDistance(MeterPerSecond targetSpeed)
+		{
+			return DriverData.AccelerationCurve.ComputeAccelerationDistance(DataBus.VehicleSpeed(), targetSpeed);
+		}
+
+		protected internal IResponse DoCoast(Second absTime, Meter ds, Radian gradient)
+		{
+			ComputeAcceleration(ds, 0.SI<MeterPerSecond>());
+
+			if (CurrentState.dt.IsEqual(0)) {
+				return new ResponseFailTimeInterval();
+			}
+
+			var response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);
+
+			var distance = SearchOperatingPoint(absTime, ds, gradient, response, true);
+			if (!ds.IsEqual(distance)) {
+				return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = distance, SimulationInterval = CurrentState.dt };
+			}
+
+			var retVal = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
+			CurrentState.Response = retVal;
+			switch (retVal.ResponseType) {
+				case ResponseType.Success:
+					retVal.SimulationInterval = CurrentState.dt;
+					return retVal;
+			}
 
 			return new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
 		}
@@ -253,6 +279,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public MeterPerSquareSecond Acceleration;
 			public IResponse Response;
 			public int RetryCount;
+			public DrivingBehavior activity;
 		}
 	}
 }

@@ -162,9 +162,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return MilageCounter.Distance();
 		}
 
-		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter distance)
+		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
-			return Road.LookAhead(distance);
+			return Road.LookAhead(lookaheadDistance);
 		}
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)

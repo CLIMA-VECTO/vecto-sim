@@ -20,6 +20,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class DistanceBasedDrivingCycle : VectoSimulationComponent, IDrivingCycle,
 		ISimulationOutPort, IDrivingCycleInPort, IRoadLookAhead
 	{
+		protected const double LookaheadTimeSafetyMargin = 1.5;
 		protected DrivingCycleData Data;
 
 		internal DrivingCycleState PreviousState = null;
@@ -198,31 +199,49 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter distance)
+		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
-			throw new NotImplementedException();
+			var retVal = new List<DrivingCycleData.DrivingCycleEntry>();
+
+			var cycleIterator = CycleIntervalIterator.Clone();
+
+			do {
+				retVal.Add(cycleIterator.LeftSample);
+			} while (cycleIterator.MoveNext() && cycleIterator.LeftSample.Distance < PreviousState.Distance + lookaheadDistance);
+			return retVal;
 		}
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
-			throw new NotImplementedException();
+			return LookAhead((LookaheadTimeSafetyMargin * DataBus.VehicleSpeed() * time).Cast<Meter>());
+		}
+
+		public CycleData CycleData()
+		{
+			return new CycleData {
+				AbsTime = CurrentState.AbsTime,
+				AbsDistance = CurrentState.Distance,
+				LeftSample = CycleIntervalIterator.LeftSample,
+				RightSample = CycleIntervalIterator.RightSample
+			};
 		}
 
 		public class DrivingCycleEnumerator : IEnumerator<DrivingCycleData.DrivingCycleEntry>
 		{
-			//protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSampleIt;
-			//protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSampleIt;
-
 			protected int CurrentCycleIndex;
 			protected DrivingCycleData Data;
 
 			public DrivingCycleEnumerator(DrivingCycleData data)
 			{
-				//LeftSampleIt = data.Entries.GetEnumerator();
-				//RightSampleIt = data.Entries.GetEnumerator();
-				//RightSampleIt.MoveNext();
 				CurrentCycleIndex = 0;
 				Data = data;
+			}
+
+			public DrivingCycleEnumerator Clone()
+			{
+				return new DrivingCycleEnumerator(Data) {
+					CurrentCycleIndex = CurrentCycleIndex,
+				};
 			}
 
 			public DrivingCycleData.DrivingCycleEntry Current
@@ -297,16 +316,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Radian Gradient;
 
 			public IResponse Response;
-		}
-
-		public CycleData CycleData()
-		{
-			return new CycleData {
-				AbsTime = CurrentState.AbsTime,
-				AbsDistance = CurrentState.Distance,
-				LeftSample = CycleIntervalIterator.LeftSample,
-				RightSample = CycleIntervalIterator.RightSample
-			};
 		}
 	}
 }
