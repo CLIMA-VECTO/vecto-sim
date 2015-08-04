@@ -245,6 +245,9 @@
     <None Include="TestData\EngineFullLoadJumps.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\MinimalPowerTrain\1-Gear-StopTest-dist.vdri">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\MinimalPowerTrain\1-Gear-Test-dist.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

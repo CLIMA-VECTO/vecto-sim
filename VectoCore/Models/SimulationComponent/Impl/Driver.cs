@@ -2,6 +2,7 @@ using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -27,6 +28,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Stopped,
 			Accelerating,
+			Drive,
 			Coasting,
 			Breaking,
 			//EcoRoll,
@@ -80,6 +82,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
+			var tmp = GetNextDrivingAction(targetVelocity);
+			var currentDistance = DataBus.Distance();
+			if (tmp.Key < currentDistance + ds) {
+				return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = tmp.Key - currentDistance };
+			}
+
+			var nextAction = DrivingBehavior.Drive;
+			if (tmp.Key.IsEqual(currentDistance + ds)) {
+				nextAction = tmp.Value;
+			}
+
+			switch (nextAction) {
+				case DrivingBehavior.Accelerating:
+					return DriveOrAccelerate(absTime, ds, targetVelocity, gradient);
+				case DrivingBehavior.Drive:
+					return DriveOrAccelerate(absTime, ds, targetVelocity, gradient);
+				case DrivingBehavior.Coasting:
+					return DoCoast(absTime, ds, gradient);
+				case DrivingBehavior.Breaking:
+					break;
+			}
+			throw new VectoSimulationException("unhandled driving action " + nextAction);
+		}
+
+		private IResponse DriveOrAccelerate(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		{
 			ComputeAcceleration(ds, targetVelocity);
 			if (CurrentState.dt.IsEqual(0)) {
 				return new ResponseFailTimeInterval();
@@ -100,15 +128,33 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
 		}
 
-		protected DrivingBehavior DecideDrivingBehavior()
+		protected KeyValuePair<Meter, DrivingBehavior> GetNextDrivingAction(MeterPerSecond targetSpeed)
 		{
 			// distance until halt: s = - v * v / (2 * a)
+			var currentSpeed = DataBus.VehicleSpeed();
+
+
 			var lookaheadDistance =
-				(-DataBus.VehicleSpeed() * DataBus.VehicleSpeed() / (2 * DeclarationData.Driver.LookAhead.Deceleration)).Cast<Meter>
-					();
+				(-currentSpeed * currentSpeed / (2 * DeclarationData.Driver.LookAhead.Deceleration)).Cast<Meter>();
 			var lookaheadData = DataBus.LookAhead(1.2 * lookaheadDistance);
 
-			return DrivingBehavior.Stopped;
+			var nextActions = new List<KeyValuePair<Meter, DrivingBehavior>>();
+			for (var i = 0; i < lookaheadData.Count; i++) {
+				var entry = lookaheadData[i];
+				if (entry.VehicleTargetSpeed < currentSpeed) {
+					var breakingDistance = ComputeDecelerationDistance(entry.VehicleTargetSpeed);
+					nextActions.Add(new KeyValuePair<Meter, DrivingBehavior>(entry.Distance - breakingDistance,
+						DrivingBehavior.Breaking));
+					nextActions.Add(new KeyValuePair<Meter, DrivingBehavior>(entry.Distance - lookaheadDistance,
+						DrivingBehavior.Coasting));
+				}
+				if (entry.VehicleTargetSpeed > currentSpeed) {
+					nextActions.Add(new KeyValuePair<Meter, DrivingBehavior>(entry.Distance, DrivingBehavior.Accelerating));
+				}
+			}
+			nextActions.Sort((x, y) => x.Value.CompareTo(y.Value));
+
+			return nextActions.First();
 		}
 
 		protected internal Meter ComputeDecelerationDistance(MeterPerSecond targetSpeed)

@@ -206,8 +206,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var cycleIterator = CycleIntervalIterator.Clone();
 
 			do {
-				retVal.Add(cycleIterator.LeftSample);
-			} while (cycleIterator.MoveNext() && cycleIterator.LeftSample.Distance < PreviousState.Distance + lookaheadDistance);
+				retVal.Add(cycleIterator.RightSample);
+			} while (cycleIterator.MoveNext() && cycleIterator.RightSample.Distance < PreviousState.Distance + lookaheadDistance);
 			return retVal;
 		}
 

@@ -22,6 +22,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 	public class MinimalPowertrain
 	{
 		public const string CycleFile = @"TestData\Integration\MinimalPowerTrain\1-Gear-Test-dist.vdri";
+		public const string CycleFileStop = @"TestData\Integration\MinimalPowerTrain\1-Gear-StopTest-dist.vdri";
 		public const string EngineFile = @"TestData\Integration\MinimalPowerTrain\24t Coach.veng";
 		public const string GearboxFile = @"TestData\Integration\MinimalPowerTrain\24t Coach-1Gear.vgbx";
 		public const string GbxLossMap = @"TestData\Integration\MinimalPowerTrain\NoLossGbxMap.vtlm";
@@ -148,6 +149,69 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			modalWriter.Finish();
 			//var run = new DistanceRun(vehicleContainer);
 			//run.Run();
+		}
+
+		[TestMethod]
+		public void TestWheelsAndEngineLookahead()
+		{
+			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CycleFileStop);
+
+			var axleGearData = CreateAxleGearData();
+
+			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
+
+			var driverData = CreateDriverData();
+
+			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain_Stop.vmod", false); //new TestModalDataWriter();
+			var sumWriter = new TestSumWriter();
+			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
+
+			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
+
+			dynamic tmp = AddComponent(cycle, new Driver(vehicleContainer, driverData));
+			tmp = AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
+			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
+			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
+
+			var gbx = new DummyGearbox(vehicleContainer);
+
+			var cyclePort = cycle.OutPort();
+
+			cyclePort.Initialize();
+
+			gbx.CurrentGear = 0;
+
+			var absTime = 0.SI<Second>();
+
+			gbx.CurrentGear = 1;
+			IResponse response;
+			var ds = Constants.SimulationSettings.DriveOffDistance;
+			while (vehicleContainer.Distance().Value() < 20) {
+				response = cyclePort.Request(absTime, ds);
+
+				switch (response.ResponseType) {
+					case ResponseType.DrivingCycleDistanceExceeded:
+						var rsp = response as ResponseDrivingCycleDistanceExceeded;
+						ds = rsp.MaxDistance;
+						continue;
+				}
+				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+
+				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+				absTime += response.SimulationInterval;
+
+				ds = vehicleContainer.VehicleSpeed().IsEqual(0)
+					? Constants.SimulationSettings.DriveOffDistance
+					: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed()).Cast<Meter>();
+
+				modalWriter.Finish();
+			}
+
+			modalWriter.Finish();
 		}
 
 		private static GearData CreateAxleGearData()
