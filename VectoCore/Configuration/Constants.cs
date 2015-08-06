@@ -66,6 +66,8 @@ namespace TUGraz.VectoCore.Configuration
 			public const double CluchNormSpeed = 0.03;
 
 			public static readonly MeterPerSquareSecond MinimumAcceleration = 0.1.SI<MeterPerSquareSecond>();
+
+			public static Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
 		}
 	}
 }

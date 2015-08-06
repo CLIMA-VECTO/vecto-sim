@@ -18,6 +18,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal IEngineInfo Engine;
 		internal IGearboxInfo Gearbox;
 		internal IVehicleInfo Vehicle;
+		internal IBreaks Breaks;
 
 		internal IMileageCounter MilageCounter;
 
@@ -121,6 +122,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				MilageCounter = milage;
 			}
 
+			var breaks = component as IBreaks;
+			if (breaks != null) {
+				Breaks = breaks;
+			}
+
 			var road = component as IRoadLookAhead;
 			if (road != null) {
 				Road = road;
@@ -170,6 +176,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
 			return Road.LookAhead(time);
+		}
+
+		public Watt BreakPower
+		{
+			get { return Breaks.BreakPower; }
+			set { Breaks.BreakPower = value; }
 		}
 	}
 }

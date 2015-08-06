@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using Common.Logging;
 using Newtonsoft.Json;
+using NLog.Fluent;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
@@ -103,8 +104,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public NewtonMeter GearboxInTorque(PerSecond angularVelocity, NewtonMeter gbxOutTorque)
 		{
 			try {
-				return VectoMath.Max(_lossMap.Interpolate(angularVelocity.Value(), gbxOutTorque.Value()).SI<NewtonMeter>(),
-					0.SI<NewtonMeter>());
+				var gbxInTorque = _lossMap.Interpolate(angularVelocity.Value(), gbxOutTorque.Value()).SI<NewtonMeter>();
+				LogManager.GetLogger(this.GetType()).DebugFormat("GearboxLoss: {0}", gbxInTorque);
+				// Torque at input of the geabox must be greater than or equal to the torque at the output
+				// (i.e. no 'torque-gain' in the transmission due to interpolation etc.)
+				return VectoMath.Max(gbxInTorque, gbxOutTorque);
 			} catch (Exception e) {
 				throw new VectoSimulationException(
 					string.Format("Failed to interpolate in TransmissionLossMap. angularVelocity: {0}, torque: {1}", angularVelocity,

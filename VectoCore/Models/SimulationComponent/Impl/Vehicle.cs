@@ -63,6 +63,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, MeterPerSquareSecond accelleration, Radian gradient,
 			bool dryRun = false)
 		{
+			Log.DebugFormat("from Wheels: acceleration: {0}", accelleration);
 			_currentState.Velocity = (_previousState.Velocity + (accelleration * dt)).Cast<MeterPerSecond>();
 			_currentState.dt = dt;
 			_currentState.Distance = _previousState.Distance +
@@ -87,9 +88,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Newton RollingResistance(Radian gradient)
 		{
-			return (Math.Cos(gradient.Value()) * _data.TotalVehicleWeight() *
-					Physics.GravityAccelleration *
-					_data.TotalRollResistanceCoefficient).Cast<Newton>();
+			var retVal = (Math.Cos(gradient.Value()) * _data.TotalVehicleWeight() *
+						Physics.GravityAccelleration *
+						_data.TotalRollResistanceCoefficient).Cast<Newton>();
+			Log.DebugFormat("RollingResistance: {0}", retVal);
+			return retVal;
 		}
 
 
@@ -125,7 +128,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				//break;
 			}
 
-			return (CdA * Physics.AirDensity / 2 * vAir * vAir).Cast<Newton>();
+			var retVal = (CdA * Physics.AirDensity / 2 * vAir * vAir).Cast<Newton>();
+			Log.DebugFormat("AirDragResistance: {0}", retVal);
+			return retVal;
 		}
 
 		private double AirDragInterpolate(IEnumerable<Point> curve, MeterPerSecond x)
@@ -187,13 +192,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Newton DriverAcceleration(MeterPerSquareSecond accelleration)
 		{
-			return ((_data.TotalVehicleWeight() + _data.ReducedMassWheels) * accelleration).Cast<Newton>();
+			var retVal = ((_data.TotalVehicleWeight() + _data.ReducedMassWheels) * accelleration).Cast<Newton>();
+			Log.DebugFormat("DriverAcceleration: {0}", retVal);
+			return retVal;
 		}
 
 
 		protected Newton SlopeResistance(Radian gradient)
 		{
-			return (_data.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value())).Cast<Newton>();
+			var retVal = (_data.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value())).Cast<Newton>();
+			Log.DebugFormat("SlopeResistance: {0}", retVal);
+			return retVal;
 		}
 
 		public MeterPerSecond VehicleSpeed()

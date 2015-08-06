@@ -84,6 +84,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
 			out PerSecond engineSpeedIn)
 		{
+			Log.DebugFormat("from Wheels: torque: {0}, angularVelocity: {1}, power {2}", torque, angularVelocity,
+				Formulas.TorqueToPower(torque, angularVelocity));
 			torqueIn = torque;
 			engineSpeedIn = angularVelocity;
 
@@ -109,6 +111,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					_clutchState = ClutchState.ClutchClosed;
 				}
 			}
+			Log.DebugFormat("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, engineSpeedIn,
+				Formulas.TorqueToPower(torqueIn, engineSpeedIn));
 		}
 	}
 }

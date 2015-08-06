@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// </summary>
 	public class ResponseFailOverload : AbstractResponse
 	{
-		public double Delta { get; set; }
+		public Watt Delta { get; set; }
 		public double Gradient { get; set; }
 
 		public override ResponseType ResponseType
@@ -71,8 +71,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 	internal class ResponseDryRun : AbstractResponse
 	{
-		public double DeltaFullLoad { get; set; }
-		public double DeltaDragLoad { get; set; }
+		public Watt DeltaFullLoad { get; set; }
+		public Watt DeltaDragLoad { get; set; }
 
 		public override ResponseType ResponseType
 		{
