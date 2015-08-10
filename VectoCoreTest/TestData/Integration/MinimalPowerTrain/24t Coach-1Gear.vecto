@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "7/31/2015 8:06:26 AM",
+    "Date": "8/10/2015 4:19:34 PM",
     "AppVersion": "2.2 beta-2",
     "FileVersion": 2
   },
@@ -11,8 +11,8 @@
     "EngineFile": "24t Coach.veng",
     "GearboxFile": "24t Coach-1Gear.vgbx",
     "Cycles": [
-      "Coach_24t_xshort.vdri",
-      "Coach_24t_InitTest.vdri"
+      "Coach_24t_InitTest.vdri",
+      "1-Gear-Test-dist.vdri"
     ],
     "VACC": "Coach.vacc",
     "EngineOnlyMode": false,

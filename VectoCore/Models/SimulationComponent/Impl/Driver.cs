@@ -260,6 +260,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						return retVal;
 					case ResponseType.FailOverload:
 						SearchOperatingPoint(absTime, ref ds, gradient, retVal);
+						Log.DebugFormat("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}", CurrentState.dt,
+							CurrentState.Acceleration);
+
 						break;
 				}
 			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
@@ -399,7 +402,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				exceeded.Add(delta);
 				acceleration.Add(CurrentState.Acceleration.Value());
 				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
-					Log.DebugFormat("found operating point in {0} iterations, delta: {1}", exceeded.Count, delta);
+					Log.DebugFormat("found operating point in {0} iterations. Engine Power req: {2},  delta: {1}", exceeded.Count,
+						delta, response.EnginePowerRequest);
 					return true;
 				}
 				if (delta > 0) {
@@ -544,13 +548,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.RetryCount = 0;
 			CurrentState.Response = null;
 
-			if (CurrentState.DrivingAction.NextTargetSpeed != null && DataBus.VehicleSpeed().IsEqual(CurrentState.DrivingAction.NextTargetSpeed))
-			{
-				Log.DebugFormat("reached target Speed {0} - set Driving action to {1}", CurrentState.DrivingAction.NextTargetSpeed, DrivingBehavior.Drive);
+			if (CurrentState.DrivingAction.NextTargetSpeed != null &&
+				DataBus.VehicleSpeed().IsEqual(CurrentState.DrivingAction.NextTargetSpeed)) {
+				Log.DebugFormat("reached target Speed {0} - set Driving action to {1}", CurrentState.DrivingAction.NextTargetSpeed,
+					DrivingBehavior.Drive);
 				CurrentState.DrivingAction.Action = DrivingBehavior.Drive;
 			}
-			if (DataBus.VehicleSpeed().IsEqual(0))
-			{
+			if (DataBus.VehicleSpeed().IsEqual(0)) {
 				Log.DebugFormat("vehicle stopped {0} - set Driving action to {1}", DataBus.VehicleSpeed(), DrivingBehavior.Stopped);
 				CurrentState.DrivingAction.Action = DrivingBehavior.Stopped;
 			}
