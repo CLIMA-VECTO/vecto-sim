@@ -380,7 +380,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var exceeded = new List<Watt>(); // only used while testing
 			var acceleration = new List<double>(); // only used while testing
-			var searchInterval = CurrentState.Acceleration.Value() / 2.0;
+			var searchInterval = CurrentState.Acceleration / 2.0;
 			Meter originalDs = ds;
 
 			do {
@@ -413,7 +413,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				// check for minimum acceleration, add some safety margin due to search
 				if (Math.Abs(CurrentState.Acceleration.Value()) < Constants.SimulationSettings.MinimumAcceleration.Value() / 5.0 &&
-					Math.Abs(searchInterval) < Constants.SimulationSettings.MinimumAcceleration.Value() / 20.0) {
+					searchInterval.Abs() < Constants.SimulationSettings.MinimumAcceleration / 20.0) {
 					throw new VectoSimulationException("Could not achieve minimum acceleration");
 				}
 				searchInterval /= 2.0;
