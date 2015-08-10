@@ -77,12 +77,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var fldCurve = EngineFullLoadCurve.ReadFromFile(CoachEngineFLD);
 			fldCurve.EngineData = new CombustionEngineData() { IdleSpeed = 560.RPMtoRad() };
-			Assert.AreEqual(130.691151551712, fldCurve.PreferredSpeed.Value(), Tolerance);
-			Assert.AreEqual(194.515816596908, fldCurve.N95hSpeed.Value(), Tolerance);
-			Assert.AreEqual(94.2463966015023, fldCurve.LoSpeed.Value(), Tolerance);
-			Assert.AreEqual(219.084329211505, fldCurve.HiSpeed.Value(), Tolerance);
-			Assert.AreEqual(2300, fldCurve.MaxLoadTorque.Value(), Tolerance);
-			Assert.AreEqual(-320, fldCurve.MaxDragTorque.Value(), Tolerance);
+			AssertHelper.AreRelativeEqual(130.691151551712.SI<PerSecond>(), fldCurve.PreferredSpeed);
+			AssertHelper.AreRelativeEqual(194.515816596908.SI<PerSecond>(), fldCurve.N95hSpeed);
+			AssertHelper.AreRelativeEqual(94.2463966015023.SI<PerSecond>(), fldCurve.LoSpeed);
+			AssertHelper.AreRelativeEqual(219.084329211505.SI<PerSecond>(), fldCurve.HiSpeed);
+			AssertHelper.AreRelativeEqual(2300.SI<NewtonMeter>(), fldCurve.MaxLoadTorque);
+			AssertHelper.AreRelativeEqual(-320.SI<NewtonMeter>(), fldCurve.MaxDragTorque);
 		}
 
 		/// <summary>

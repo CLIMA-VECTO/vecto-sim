@@ -23,16 +23,25 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		[DebuggerHidden]
-		public static void AreRelativeEqual(SI expected, SI actual)
+		public static void AreRelativeEqual(SI expected, SI actual,
+			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
 		{
 			Assert.IsTrue(actual.HasEqualUnit(expected),
 				string.Format("Wrong SI Units: expected: {0}, actual: {1}", expected.ToBasicUnits(), actual.ToBasicUnits()));
-			AreRelativeEqual(expected.Value(), actual.Value());
+			AreRelativeEqual(expected.Value(), actual.Value(), toleranceFactor: toleranceFactor);
+		}
+
+		[DebuggerHidden]
+		public static void AreRelativeEqual(Scalar expected, Scalar actual,
+			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
+		{
+			Assert.IsTrue(expected.HasEqualUnit(new SI()) && actual.HasEqualUnit(new SI()), "Units of Scalars must be empty.");
+			AreRelativeEqual(expected.Value(), actual.Value(), toleranceFactor: toleranceFactor);
 		}
 
 		[DebuggerHidden]
 		public static void AreRelativeEqual(double expected, double actual, string message = null,
-			double toleranceFactor = DoubleExtensionMethods.Tolerance)
+			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
 		{
 			if (!string.IsNullOrWhiteSpace(message)) {
 				message = "\n" + message;

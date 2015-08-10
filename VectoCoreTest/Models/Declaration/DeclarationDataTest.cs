@@ -172,8 +172,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				var angularSpeed = r.Next(1000).SI<PerSecond>();
 				var torque = tc.LookupTorque(exp.nu, angularSpeed, referenceSpeed);
-				AssertHelper.AreRelativeEqual(exp.torque * Math.Pow(angularSpeed.Value() / referenceSpeed.Value(), 2),
-					torque.Value());
+				AssertHelper.AreRelativeEqual(
+					exp.torque.SI<NewtonMeter>() * Math.Pow((angularSpeed / referenceSpeed).Cast<Scalar>(), 2), torque);
 			}
 		}
 

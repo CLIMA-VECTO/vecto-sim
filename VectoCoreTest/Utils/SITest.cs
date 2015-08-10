@@ -358,6 +358,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			AssertHelper.AreRelativeEqual(36.SI().Square.Newton.Meter, 6.SI<NewtonMeter>() * 6.SI<NewtonMeter>());
 			AssertHelper.AreRelativeEqual(36.SI().Newton.Newton.Meter.Meter, 6.SI<NewtonMeter>() * 6.SI<NewtonMeter>());
+
+			AssertHelper.AreRelativeEqual(3.SI().Meter.Per.Second, 3.SI<Newton>().Second.Per.Kilo.Gramm);
 		}
 
 		[TestMethod]
@@ -372,6 +374,57 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			AssertHelper.Exception<VectoException>(() => 36.SI().Second.Sqrt(),
 				"The squareroot cannot be calculated because the Unit-Exponents are not even: [s]");
+		}
+
+		[TestMethod]
+		public void SI_Equality()
+		{
+			Assert.AreEqual(3.SI(), 3.SI());
+			Assert.AreEqual(3.SI<NewtonMeter>(), 3.SI<NewtonMeter>());
+
+
+			Assert.IsFalse(3.SI<NewtonMeter>().IsEqual(4.SI<NewtonMeter>()));
+			Assert.IsFalse(3.SI<NewtonMeter>().IsEqual(3.SI<Meter>()));
+
+			Assert.IsTrue(3.SI().IsEqual(4, 10));
+
+			var x = 4.SI();
+			var y = x;
+			var z = 4.SI();
+			Assert.IsTrue(x.Equals(y));
+
+			Assert.IsFalse(3.SI().Equals(null));
+			Assert.IsFalse(3.SI().IsEqual(4.SI()));
+			Assert.IsTrue(z.Equals(x));
+			Assert.IsFalse(3.SI().Equals(3.SI<Newton>()));
+
+			var newton1 = 3.SI<Newton>();
+			var newton2 = 3.SI<Newton>();
+			Assert.IsTrue(newton1.Equals(newton2));
+
+
+			Assert.IsTrue(3.SI().IsEqual(3.SI()));
+			Assert.IsTrue(3.SI().IsEqual(3));
+
+			Assert.IsFalse(3.SI().IsEqual(2.9.SI()));
+			Assert.IsFalse(3.SI().IsEqual(2.9));
+
+			// just calling to test wether the functions are not throwing an exception.
+			3.SI().GetHashCode();
+			3.0.SI().GetHashCode();
+			4.SI<NewtonMeter>().GetHashCode();
+		}
+
+		[TestMethod]
+		public void SI_Output()
+		{
+			Assert.AreEqual("3.0000", 3.SI().ToOutputFormat());
+			Assert.AreEqual("3.0000 [-]", 3.SI().ToOutputFormat(showUnit: true));
+			Assert.AreEqual("3.5000", 3.5.SI().ToOutputFormat());
+			Assert.AreEqual("3.5000", 3.5.SI<Newton>().ToOutputFormat());
+			Assert.AreEqual("3.50 [N]", 3.5.SI<Newton>().ToOutputFormat(2, showUnit: true));
+			Assert.AreEqual("18.00 [m/s]", 5.SI<MeterPerSecond>().ToOutputFormat(2, 3.6, true));
+			Assert.AreEqual("18.0000", 5.SI<MeterPerSecond>().ToOutputFormat(outputFactor: 3.6));
 		}
 	}
 }

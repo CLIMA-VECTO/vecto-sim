@@ -294,51 +294,61 @@ namespace TUGraz.VectoCore.Utils
 
 		#region Operators
 
+		[DebuggerHidden]
 		public static T operator +(SIBase<T> si1, SIBase<T> si2)
 		{
 			return (si1 as SI) + si2;
 		}
 
+		[DebuggerHidden]
 		public static T operator +(SIBase<T> si1, SI si2)
 		{
 			return ((si1 as SI) + si2).Cast<T>();
 		}
 
+		[DebuggerHidden]
 		public static T operator +(SI si1, SIBase<T> si2)
 		{
 			return (si1 + (si2 as SI)).Cast<T>();
 		}
 
+		[DebuggerHidden]
 		public static T operator -(SIBase<T> si1)
 		{
 			return (-(si1 as SI)).Cast<T>();
 		}
 
+		[DebuggerHidden]
 		public static T operator -(SIBase<T> si1, SIBase<T> si2)
 		{
 			return ((si1 as SI) - (si2 as SI)).Cast<T>();
 		}
 
+		[DebuggerHidden]
 		public static T operator -(SIBase<T> si1, SI si2)
 		{
 			return ((si1 as SI) - si2).Cast<T>();
 		}
 
+		[DebuggerHidden]
 		public static T operator -(SI si1, SIBase<T> si2)
 		{
 			return (si1 - (si2 as SI)).Cast<T>();
 		}
 
+		[DebuggerHidden]
 		public static T operator *(double d, SIBase<T> si)
 		{
 			return (d * (si as SI)).Cast<T>();
 		}
 
+		[DebuggerHidden]
 		public static T operator *(SIBase<T> si, double d)
 		{
 			return ((si as SI) * d).Cast<T>();
 		}
 
+		[DebuggerHidden]
 		public static T operator /(SIBase<T> si, double d)
 		{
 			return ((si as SI) / d).Cast<T>();
@@ -452,11 +462,6 @@ namespace TUGraz.VectoCore.Utils
 						Val /= factor.Value;
 					}
 				}
-			}
-
-			foreach (var v in numerator.ToArray().Where(v => denominator.Contains(v))) {
-				denominator.Remove(v);
-				numerator.Remove(v);
 			}
 
 			Numerator = denominator.ToArray();
@@ -736,6 +741,7 @@ namespace TUGraz.VectoCore.Utils
 			get { return new SI(this, 60.0, Unit.min, Unit.s); }
 		}
 
+		[DebuggerHidden]
 		public SI Milli
 		{
 			get { return new SI(this, 0.001, Unit.milli); }
@@ -763,6 +769,7 @@ namespace TUGraz.VectoCore.Utils
 
 		#region Operators
 
+		[DebuggerHidden]
 		public static SI operator +(SI si1, SI si2)
 		{
 			Contract.Requires(si1 != null);
@@ -775,6 +782,7 @@ namespace TUGraz.VectoCore.Utils
 			return new SI(si1.Val + si2.Val, si1.Numerator, si1.Denominator);
 		}
 
+		[DebuggerHidden]
 		public static SI operator -(SI si1, SI si2)
 		{
 			Contract.Requires(si1 != null);
@@ -786,13 +794,14 @@ namespace TUGraz.VectoCore.Utils
 			return new SI(si1.Val - si2.Val, si1.Numerator, si1.Denominator);
 		}
 
+		[DebuggerHidden]
 		public static SI operator -(SI si1)
 		{
 			Contract.Requires(si1 != null);
 			return new SI(-si1.Val, si1);
 		}
 
-
+		[DebuggerHidden]
 		public static SI operator *(SI si1, SI si2)
 		{
 			Contract.Requires(si1 != null);
@@ -802,18 +811,21 @@ namespace TUGraz.VectoCore.Utils
 			return new SI(si1.Val * si2.Val, numerator, denominator);
 		}
 
+		[DebuggerHidden]
 		public static SI operator *(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
 			return new SI(si1.Val * d, si1);
 		}
 
+		[DebuggerHidden]
 		public static SI operator *(double d, SI si1)
 		{
 			Contract.Requires(si1 != null);
 			return new SI(d * si1.Val, si1);
 		}
 
+		[DebuggerHidden]
 		public static SI operator /(SI si1, SI si2)
 		{
 			Contract.Requires(si1 != null);
@@ -823,18 +835,21 @@ namespace TUGraz.VectoCore.Utils
 			return new SI(si1.Val / si2.Val, numerator, denominator);
 		}
 
+		[DebuggerHidden]
 		public static SI operator /(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
 			return new SI(si1.Val / d, si1);
 		}
 
+		[DebuggerHidden]
 		public static SI operator /(double d, SI si1)
 		{
 			Contract.Requires(si1 != null);
 			return new SI(d / si1.Val, si1.Denominator, si1.Numerator);
 		}
 
+		[DebuggerHidden]
 		public static bool operator <(SI si1, SI si2)
 		{
 			Contract.Requires(si1 != null);
@@ -846,12 +861,14 @@ namespace TUGraz.VectoCore.Utils
 			return si1.Val < si2.Val;
 		}
 
+		[DebuggerHidden]
 		public static bool operator <(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
 			return si1 != null && si1.Val < d;
 		}
 
+		[DebuggerHidden]
 		public static bool operator >(SI si1, SI si2)
 		{
 			Contract.Requires(si1 != null);
@@ -863,24 +880,28 @@ namespace TUGraz.VectoCore.Utils
 			return si1.Val > si2.Val;
 		}
 
+		[DebuggerHidden]
 		public static bool operator >(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
 			return si1 != null && si1.Val > d;
 		}
 
+		[DebuggerHidden]
 		public static bool operator >(double d, SI si1)
 		{
 			Contract.Requires(si1 != null);
 			return si1 != null && d > si1.Val;
 		}
 
+		[DebuggerHidden]
 		public static bool operator <(double d, SI si1)
 		{
 			Contract.Requires(si1 != null);
 			return si1 != null && d < si1.Val;
 		}
 
+		[DebuggerHidden]
 		public static bool operator <=(SI si1, SI si2)
 		{
 			Contract.Requires(si1 != null);
@@ -892,12 +913,14 @@ namespace TUGraz.VectoCore.Utils
 			return si1.Val <= si2.Val;
 		}
 
+		[DebuggerHidden]
 		public static bool operator <=(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
 			return si1 != null && si1.Val <= d;
 		}
 
+		[DebuggerHidden]
 		public static bool operator >=(SI si1, SI si2)
 		{
 			Contract.Requires(si1 != null);
@@ -909,6 +932,7 @@ namespace TUGraz.VectoCore.Utils
 			return si1.Val >= si2.Val;
 		}
 
+		[DebuggerHidden]
 		public static bool operator >=(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
@@ -1044,7 +1068,7 @@ namespace TUGraz.VectoCore.Utils
 			outputFactor = outputFactor ?? 1.0;
 			showUnit = showUnit ?? false;
 
-			var format = string.Format("{{0:F{0}}}" + (showUnit.Value ? " [{2}]" : ""), decimals);
+			var format = string.Format("{{0:F{0}}}" + (showUnit.Value ? " [{{1}}]" : ""), decimals);
 			return string.Format(CultureInfo.InvariantCulture, format, Val * outputFactor, GetUnitString());
 		}
 	}
