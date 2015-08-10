@@ -22,6 +22,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal IMileageCounter MilageCounter;
 
+		internal IClutchInfo Clutch;
+
 		internal IRoadLookAhead Road;
 
 		internal ISimulationOutPort Cycle;
@@ -131,6 +133,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			if (road != null) {
 				Road = road;
 			}
+
+			var clutch = component as IClutchInfo;
+			if (clutch != null) {
+				Clutch = clutch;
+			}
 		}
 
 
@@ -182,6 +189,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			get { return Breaks.BreakPower; }
 			set { Breaks.BreakPower = value; }
+		}
+
+		public ClutchState ClutchState()
+		{
+			return Clutch.ClutchState();
 		}
 	}
 }

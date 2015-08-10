@@ -162,6 +162,7 @@
     <Compile Include="Models\SimulationComponent\Impl\Breaks.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\Impl\MappingAuxiliaryData.cs" />
+    <Compile Include="Models\Simulation\DataBus\IClutchInfo.cs" />
     <Compile Include="Models\Simulation\Data\AuxiliaryDemandType.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryType.cs" />
     <Compile Include="Models\SimulationComponent\Data\GearFullLoadCurve.cs" />

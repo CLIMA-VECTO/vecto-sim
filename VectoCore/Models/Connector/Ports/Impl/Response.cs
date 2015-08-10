@@ -8,6 +8,18 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public Second SimulationInterval { get; set; }
 
 		public abstract ResponseType ResponseType { get; }
+
+		public Watt EnginePowerRequest { get; set; }
+
+		public Watt ClutchPowerRequest { get; set; }
+
+		public Watt GearboxPowerRequest { get; set; }
+
+		public Watt AxlegearPowerRequest { get; set; }
+
+		public Watt WheelsPowerRequest { get; set; }
+
+		public Watt VehiclePowerRequest { get; set; }
 	}
 
 	/// <summary>
@@ -71,8 +83,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 	internal class ResponseDryRun : AbstractResponse
 	{
-		public Watt DeltaFullLoad { get; set; }
-		public Watt DeltaDragLoad { get; set; }
+		public Watt EngineDeltaFullLoad { get; set; }
+		public Watt EngineDeltaDragLoad { get; set; }
 
 		public override ResponseType ResponseType
 		{

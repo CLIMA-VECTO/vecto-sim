@@ -33,6 +33,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						requestDone = true;
 						break;
 					case ResponseType.DrivingCycleDistanceExceeded:
+						var distanceResponse = response as ResponseDrivingCycleDistanceExceeded;
+						if (distanceResponse != null) {
+							ds = distanceResponse.MaxDistance;
+						}
 						break;
 				}
 			} while (!requestDone);

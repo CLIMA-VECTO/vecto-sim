@@ -135,8 +135,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						nextDrivingAction.Current.Key, nextDrivingAction.Current.Key - currentDistance, currentDistance);
 					return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = nextDrivingAction.Current.Key - currentDistance };
 				}
+			} else {
+				if (targetVelocity > DataBus.VehicleSpeed()) {
+					CurrentState.DrivingAction.Action = DrivingBehavior.Accelerating;
+				}
 			}
-			Log.DebugFormat("DrivingAction: {0}", CurrentState.DrivingAction);
+			Log.DebugFormat("DrivingAction: {0}", CurrentState.DrivingAction.Action);
 			//CurrentState.DrivingAction = nextAction;
 			switch (CurrentState.DrivingAction.Action) {
 				case DrivingBehavior.Accelerating:
@@ -167,9 +171,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new VectoSimulationException("Expected DryRunResponse after Dry-Run Request!");
 			}
 
-			if (dryRun.DeltaDragLoad > 0) {
-				throw new VectoSimulationException("No breaking necessary, still above full drag load!");
-			}
+			//if (dryRun.EngineDeltaDragLoad > 0) {
+			//	throw new VectoSimulationException("No breaking necessary, still above full drag load!");
+			//}
 
 			var newDs = ds;
 			var success = SearchBreakingPower(absTime, ref newDs, gradient, dryRun, true);
@@ -202,14 +206,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private bool SearchBreakingPower(Second absTime, ref Meter ds, Radian gradient, ResponseDryRun response, bool coasting)
 		{
 			var exceeded = new List<Watt>(); // only used while testing
-			var searchInterval = VectoMath.Abs(response.DeltaDragLoad);
-			var breakingPower = VectoMath.Abs(response.DeltaDragLoad);
-
+			var breakingPower = VectoMath.Abs(response.EngineDeltaDragLoad);
+			if (DataBus.ClutchState() != ClutchState.ClutchClosed) {
+				breakingPower = VectoMath.Abs(response.AxlegearPowerRequest);
+			}
+			var searchInterval = breakingPower;
 			var originalDs = ds;
 
 			do {
 				ds = originalDs;
-				var delta = -response.DeltaDragLoad;
+				var delta = DataBus.ClutchState() == ClutchState.ClutchClosed
+					? -response.EngineDeltaDragLoad
+					: -response.AxlegearPowerRequest;
 
 				exceeded.Add(delta);
 				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
@@ -380,7 +388,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						delta = ((ResponseFailOverload)response).Delta;
 						break;
 					case ResponseType.DryRun:
-						delta = coasting ? -((ResponseDryRun)response).DeltaDragLoad : ((ResponseDryRun)response).DeltaFullLoad;
+						delta = coasting
+							? -((ResponseDryRun)response).EngineDeltaDragLoad
+							: ((ResponseDryRun)response).EngineDeltaFullLoad;
 						break;
 					default:
 						throw new VectoSimulationException("Unknown response type");
@@ -533,6 +543,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			CurrentState.RetryCount = 0;
 			CurrentState.Response = null;
+
+			if (CurrentState.DrivingAction.NextTargetSpeed != null && DataBus.VehicleSpeed().IsEqual(CurrentState.DrivingAction.NextTargetSpeed))
+			{
+				Log.DebugFormat("reached target Speed {0} - set Driving action to {1}", CurrentState.DrivingAction.NextTargetSpeed, DrivingBehavior.Drive);
+				CurrentState.DrivingAction.Action = DrivingBehavior.Drive;
+			}
+			if (DataBus.VehicleSpeed().IsEqual(0))
+			{
+				Log.DebugFormat("vehicle stopped {0} - set Driving action to {1}", DataBus.VehicleSpeed(), DrivingBehavior.Stopped);
+				CurrentState.DrivingAction.Action = DrivingBehavior.Stopped;
+			}
 		}
 
 

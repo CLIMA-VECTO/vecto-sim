@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Cache;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -118,6 +119,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private IResponse DriveDistance(Second absTime, Meter ds)
 		{
+			if (!CurrentState.RequestToNextSamplePointDone &&
+				(CycleIntervalIterator.RightSample.Distance - PreviousState.Distance) <
+				Constants.SimulationSettings.DriveOffDistance) {
+				CurrentState.RequestToNextSamplePointDone = true;
+				return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = Constants.SimulationSettings.DriveOffDistance };
+			}
 			CurrentState.Distance = PreviousState.Distance + ds;
 			CurrentState.VehicleTargetSpeed = CycleIntervalIterator.LeftSample.VehicleTargetSpeed;
 			CurrentState.Gradient = ComputeGradient();
@@ -191,7 +198,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
 				CycleIntervalIterator.MoveNext();
 			}
-			if (CurrentState.Distance >= CycleIntervalIterator.RightSample.Distance) {
+
+			// separately test for equality and greater than to have tolerance for equality comparison
+			if (CurrentState.Distance.IsEqual(CycleIntervalIterator.RightSample.Distance) ||
+				CurrentState.Distance > CycleIntervalIterator.RightSample.Distance) {
 				// we have reached the end of the current interval in the cycle, move on...
 				CycleIntervalIterator.MoveNext();
 			}
@@ -316,6 +326,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Radian Gradient;
 
 			public IResponse Response;
+
+			public bool RequestToNextSamplePointDone = false;
 		}
 	}
 }

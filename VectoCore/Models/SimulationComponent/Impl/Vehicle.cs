@@ -74,7 +74,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 											AirDragResistance() +
 											SlopeResistance(gradient);
 
-			return _nextInstance.Request(absTime, dt, vehicleAccelerationForce, _currentState.Velocity, dryRun);
+			var retval = _nextInstance.Request(absTime, dt, vehicleAccelerationForce, _currentState.Velocity, dryRun);
+			//retval.VehiclePowerRequest = 
+			return retval;
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)

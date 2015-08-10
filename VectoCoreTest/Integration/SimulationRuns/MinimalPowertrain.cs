@@ -29,6 +29,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
+		public const string AccelerationFile2 = @"TestData\Components\Truck.vacc";
 
 		public const double Tolerance = 0.001;
 
@@ -42,7 +43,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var axleGearData = CreateAxleGearData();
 
-			var driverData = CreateDriverData();
+			var driverData = CreateDriverData(AccelerationFile);
 
 			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrainOverload.vmod", false); //new TestModalDataWriter();
 			var sumWriter = new TestSumWriter();
@@ -91,7 +92,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 
-			var driverData = CreateDriverData();
+			var driverData = CreateDriverData(AccelerationFile);
 
 			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain.vmod", false); //new TestModalDataWriter();
 			var sumWriter = new TestSumWriter();
@@ -161,7 +162,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
 
-			var driverData = CreateDriverData();
+			var driverData = CreateDriverData(AccelerationFile2);
 
 			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain_Stop.vmod", false); //new TestModalDataWriter();
 			var sumWriter = new TestSumWriter();
@@ -172,6 +173,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			dynamic tmp = AddComponent(cycle, new Driver(vehicleContainer, driverData));
 			tmp = AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = AddComponent(tmp, new Breaks(vehicleContainer));
 			tmp = AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
 			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
 			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
@@ -189,7 +191,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			gbx.CurrentGear = 1;
 			IResponse response;
 			var ds = Constants.SimulationSettings.DriveOffDistance;
-			while (vehicleContainer.Distance().Value() < 20) {
+			while (vehicleContainer.Distance().Value() < 100) {
 				response = cyclePort.Request(absTime, ds);
 
 				switch (response.ResponseType) {
@@ -263,10 +265,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			};
 		}
 
-		private static DriverData CreateDriverData()
+		private static DriverData CreateDriverData(string accelerationFile)
 		{
 			return new DriverData() {
-				AccelerationCurve = AccelerationCurveData.ReadFromFile(AccelerationFile),
+				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
 				LookAheadCoasting = new DriverData.LACData() {
 					Enabled = false,
 				},

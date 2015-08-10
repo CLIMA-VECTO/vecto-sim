@@ -23,5 +23,17 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		Second SimulationInterval { get; set; }
 
 		ResponseType ResponseType { get; }
+
+		Watt EnginePowerRequest { get; set; }
+
+		Watt ClutchPowerRequest { get; set; }
+
+		Watt GearboxPowerRequest { get; set; }
+
+		Watt AxlegearPowerRequest { get; set; }
+
+		Watt WheelsPowerRequest { get; set; }
+
+		Watt VehiclePowerRequest { get; set; }
 	}
 }

@@ -29,7 +29,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
-			BreakTorque = Formulas.PowerToTorque(BreakPower, angularVelocity);
+			
+			if (!BreakPower.IsEqual(0)) {
+				if (angularVelocity.IsEqual(0)) {
+					BreakTorque = -torque;
+				} else {
+					BreakTorque = Formulas.PowerToTorque(BreakPower, angularVelocity);
+				}
+			}
 			return Next.Request(absTime, dt, torque - BreakTorque, angularVelocity, dryRun);
 		}
 
