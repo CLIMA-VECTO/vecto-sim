@@ -14,6 +14,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 	{
 		[JsonProperty] private readonly List<GearLossMapEntry> _entries;
 
+		private readonly double _ratio;
+
 		private readonly DelauneyMap _lossMap; // Input Speed, Output Torque (to Wheels) => Input Torque (Engine)
 		//private readonly DelauneyMap _reverseLossMap; // Input Speed, Input Torque (Engine) => Output Torque (Wheels)
 
@@ -81,11 +83,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		private TransmissionLossMap(List<GearLossMapEntry> entries, double gearRatio)
 		{
+			_ratio = gearRatio;
 			_entries = entries;
 			_lossMap = new DelauneyMap();
 			//_reverseLossMap = new DelauneyMap();
 			foreach (var entry in _entries) {
-				_lossMap.AddPoint(entry.InputSpeed.Value(), (entry.InputTorque.Value() - entry.TorqueLoss.Value()) * gearRatio,
+				_lossMap.AddPoint(entry.InputSpeed.Value(), (entry.InputTorque.Value() - entry.TorqueLoss.Value()) * _ratio,
 					entry.InputTorque.Value());
 				// @@@quam: according to Raphael, not needed for now...
 				//_reverseLossMap.AddPoint(entry.InputSpeed.Double(), entry.InputTorque.Double(),
@@ -108,7 +111,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				LogManager.GetLogger(this.GetType()).DebugFormat("GearboxLoss: {0}", gbxInTorque);
 				// Torque at input of the geabox must be greater than or equal to the torque at the output
 				// (i.e. no 'torque-gain' in the transmission due to interpolation etc.)
-				return VectoMath.Max(gbxInTorque, gbxOutTorque);
+				return VectoMath.Max(gbxInTorque, gbxOutTorque / _ratio);
 			} catch (Exception e) {
 				throw new VectoSimulationException(
 					string.Format("Failed to interpolate in TransmissionLossMap. angularVelocity: {0}, torque: {1}", angularVelocity,
