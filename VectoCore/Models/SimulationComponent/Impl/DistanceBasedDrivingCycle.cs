@@ -91,7 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							CycleIntervalIterator.LeftSample.StoppingTime, CycleIntervalIterator.LeftSample.VehicleTargetSpeed);
 						throw new VectoSimulationException("Stopping Time only allowed when target speed is zero!");
 					}
-					var dt = CycleIntervalIterator.LeftSample.StoppingTime.Value() - PreviousState.WaitTime;
+					var dt = CycleIntervalIterator.LeftSample.StoppingTime - PreviousState.WaitTime;
 					return DriveTimeInterval(absTime, dt);
 				}
 			}

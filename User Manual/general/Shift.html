@@ -5,15 +5,46 @@
 
 
 
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Gear Shift Model</title></head>
-<body>
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Gear Shift Model</title></head><body>
 <big><big><big><span style="font-family: Verdana; font-weight: bold;">Gear Shift Model</span></big></big></big><br>
 <hr style="width: 100%; height: 0px;">
 
 <div style="margin-left: 40px;">The Gear Shift Model is based on shift
 curves that define the engine speed for up- and down- shifting as a
 function of engine torque. As soon as the engine operation point passes
-one of the shift curves a gear change is initiated.<br>The shift polygons are saved in the <a href="../fileformat/VGBS.html">Shift Polygons Input File (.vgbs)</a> and have to be added to the <a href="../GUI/GBX-Editor.html">Gearbox File</a>. In <a href="calc_Declaration.html">Declaration Mode</a> the shift polygons are generated automatically based on the full load curve.<br><br><img style="width: 500px; height: 392px;" alt="" src="pics/Shift.png"><br><span style="font-style: italic;">Example shift polygons</span><br><br>In the Gearbox File two additional parameters are defined:<br><ul><li><span style="font-weight: bold;">Torque Reserve</span> [%] -&nbsp;Required
+one of the shift curves a gear change is initiated.<br>
+<br>
+<img style="width: 500px; height: 392px;" alt="" src="pics/Shift.png"><br>
+<span style="font-style: italic;">Example shift polygons</span><br>
+<br>
+<ul>
+  <li style="font-weight: bold;">Down-shift:</li>
+  <ul>
+    <li>As soon as the current engine speed falls below the down-shift cuve a down-shift is initiated<br>
+    </li>
+  </ul>
+</ul>
+<ul>
+  <li><span style="font-weight: bold;">Up-shift:</span><br>
+  </li>
+  <ul>
+    <li>MT and AMT transmissions: Up-shift is initiated when the <span style="text-decoration: underline;">current engine speed</span> is above the up-shift curve<br>
+    </li>
+  </ul>
+  <ul>
+    <li>AT transmissions: Up-shift is initiated when the <span style="text-decoration: underline;">next-gear engine speed</span> is above the up-shift curve<br>
+    </li>
+  </ul>
+</ul>
+<br>The shift polygons are saved in the <a href="../fileformat/VGBS.html">Shift Polygons Input File (.vgbs)</a> and have to be added to the <a href="../GUI/GBX-Editor.html">Gearbox File</a> when not in <a href="calc_Declaration.html">Declaration Mode</a>.<br>
+<br>
+In <a href="calc_Declaration.html">Declaration Mode</a> the shift
+polygons are generated automatically based on the full load curve of
+each gear. If the engine's full load torque is lower than the gear's,
+then the engine's full load is used to prevent unreasonable shifting
+with small engines.<br><br><br><br>In the Gearbox File two additional parameters are defined:<br><ul><li><span style="font-weight: bold;">Torque Reserve</span> [%] -&nbsp;Required
 for the "<span style="font-weight: bold;">Early Upshift</span>" and "<span style="font-weight: bold;">Skip
 Gears</span>" options, see below.<span style="font-weight: bold;"></span></li><li><span style="font-weight: bold;">Minimum shift time</span> [s] - Limits
 the time between two gear shifts in whole seconds. This rule will be
@@ -22,7 +53,8 @@ cause high rpms during acceleration.<br></li></ul><br>&nbsp;<big><big style="fon
 a gear change is initiated (by crossing the up- or down-shift line)
 VECTO may skip one or several gears as long as the required torque reserve is provided.<br><img style="width: 500px; height: 300px;" alt="" src="../GUI/pics/GBX-Editor-shift3.PNG"><br><br><br><big><big style="font-weight: bold;">Early Upshift</big></big><br><hr style="height: 1px; width: 100%;">Early Upshift can be enabled in the <a href="../GUI/GBX-Editor.html">Gearbox File</a> (Allow shift-up inside polygons).&nbsp;By default it is enabled for  AMT only.<br>If the next higher gear
 provides the required torque reserve
-and it's rpm is still above down-shift-rpm VECTO will shift up.<br><img style="width: 500px; height: 301px;" alt="" src="../GUI/pics/GBX-Editor-shift2.PNG"><br><br><br></div><span style="font-family: Calibri;"></span>
+and it's rpm is still above down-shift-rpm VECTO will shift up.<br><img style="width: 500px; height: 301px;" alt="" src="../GUI/pics/GBX-Editor-shift2.PNG"><br><br><br></div>
+<span style="font-family: Calibri;"></span>
 
 
 

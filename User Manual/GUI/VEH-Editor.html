@@ -6,8 +6,9 @@
 
 
 
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Vehicle Editor - VECTO User Manual</title></head>
-<body>
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Vehicle Editor - VECTO User Manual</title></head><body>
 
 <div style="text-align: left;">
 
@@ -85,9 +86,9 @@ Weight Extra Trailer/Body</span><span style="color: rgb(253, 0, 0);"> and </span
 <br>
 <br><big><big style="font-weight: bold;">Air Resistance</big></big><br>
 
-<hr style="height: 1px; width: 100%;">The product of <span style="font-weight: bold;">Drag Coefficient</span>
-[-], <span style="font-weight: bold;">Cross Sectional Area</span>
-[m<sup>2</sup>] and <span style="font-weight: bold;">Air
+<hr style="height: 1px; width: 100%;">The product of Drag Coefficient
+[-] and Cross Sectional Area
+[m<sup>2</sup>] (<span style="font-weight: bold;">c<sub>d</sub> x A</span>) and <span style="font-weight: bold;">Air
 Density</span> [kg/m<sup>3</sup>]
 (see <a href="settings.html">Settings</a>) together with the vehicle speed defines the Air Resistance. Note that the Drag Coefficient may
 be altered when using <a href="../general/cd.html"><span style="font-weight: bold;">Cross
@@ -98,17 +99,17 @@ Wind Correction</span></a>.<br>
 
 
 <hr style="height: 1px; width: 100%;">For each axle the parameters <span style="font-weight: bold;">Relative axle load</span>, <span style="font-weight: bold;">RRC</span><sub style="font-weight: bold;">ISO</sub> and <span style="font-weight: bold;">F</span><sub style="font-weight: bold;">zISO</sub> have to be defined in order to calculate the total <a href="../general/RRC.html">Rolling Resistance Coefficient</a>.<br>
-Furthermore the <span style="font-weight: bold;">Wheels Inertia [kgm²]</span> has to be set <span style="text-decoration: underline;">per wheel</span> for each axle. In <a href="../general/calc_Declaration.html">Declaration Mode</a> the inertia is defined automatically according to the selected tires.<br>
+Furthermore the <span style="font-weight: bold;">Wheels Inertia [kgm²]</span> has to be set <span style="text-decoration: underline;">per wheel</span> for each axle. In <a href="../general/calc_Declaration.html">Declaration Mode</a> the inertia is defined automatically according to the selected tyres.<br>
 Use the <img style="width: 16px; height: 16px;" alt="add" src="../pics/icons/plus-circle-icon.png"> and <img style="width: 16px; height: 16px;" alt="remove" src="../pics/icons/minus-circle-icon.png"> buttons to add or
 remove axles form the vehicle. Doubleclick entries to edit existing
 axle configurations.<br>
 <br>
-<span style="font-weight: bold;">Dynamic Tire Radius [mm]</span><br>
-<div style="margin-left: 40px;">Effective (dynamic) wheel radius used to calculate engine speed. In <a href="../general/calc_Declaration.html">Declaration Mode</a> the radius calculated automatically using tires/rims of the powered axle.<br>
+<span style="font-weight: bold;">Dynamic Tyre Radius [mm]</span><br>
+<div style="margin-left: 40px;">Effective (dynamic) wheel radius used to calculate engine speed. In <a href="../general/calc_Declaration.html">Declaration Mode</a> the radius calculated automatically using tyres/rims of the powered axle.<br>
 </div>
 <br>
 <span style="font-weight: bold;">Powered axle tyres/rims</span><br>
-<div style="margin-left: 40px;">Needed for <a href="../general/calc_Declaration.html">Declaration Mode</a> to calculate the dynamic tire radius.</div>
+<div style="margin-left: 40px;">Needed for <a href="../general/calc_Declaration.html">Declaration Mode</a> to calculate the dynamic tyre radius.</div>
 <br>
 <br>
 <big><big style="font-weight: bold;">Retarder Losses</big></big><br>
@@ -134,12 +135,15 @@ Both, primary and secondary retarders, require an <a href="../fileformat/VRLM.ht
 <big><big style="font-weight: bold;">Cross Wind Correction</big></big><br>
 
 
-<hr style="height: 1px; width: 100%;">Three different options
+<hr style="height: 1px; width: 100%;">Four different options
 are available:<br>
 
 
 <ul>
-<li>No Correction</li><li>Speed dependent</li><li>Vair &amp; Beta Input</li>
+<li>No Correction</li><li>Speed dependent (User-defined)<br>
+</li>
+  <li>Speed dependent (Declaration Mode) </li>
+<li>Vair &amp; Beta Input</li>
 </ul>
 
 
