@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			var torque = VectoMath.Interpolate(sec.Item1.Key, sec.Item2.Key, sec.Item1.Value.Torque, sec.Item2.Value.Torque, nu);
-			return torque * Math.Pow((angularSpeedIn / referenceSpeed).Scalar(), 2);
+			return torque * Math.Pow((angularSpeedIn / referenceSpeed).Cast<Scalar>(), 2);
 		}
 
 		public double LookupMu(double nu)

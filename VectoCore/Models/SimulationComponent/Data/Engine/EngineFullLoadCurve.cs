@@ -251,7 +251,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		{
 			var maxArea = ComputeArea(EngineData.IdleSpeed, N95hSpeed);
 
-			var area = 0.0;
+			var area = 0.SI();
 			var idx = 0;
 			while (++idx < _fullLoadEntries.Count) {
 				var additionalArea = ComputeArea(_fullLoadEntries[idx - 1].EngineSpeed, _fullLoadEntries[idx].EngineSpeed);
@@ -265,7 +265,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			Log.WarnFormat("Could not compute preferred speed, check FullLoadCurve! N95h: {0}, maxArea: {1}", N95hSpeed, maxArea);
 		}
 
-		private PerSecond ComputeEngineSpeedForSegmentArea(FullLoadCurveEntry p1, FullLoadCurveEntry p2, double area)
+		private PerSecond ComputeEngineSpeedForSegmentArea(FullLoadCurveEntry p1, FullLoadCurveEntry p2, SI area)
 		{
 			var k = (p2.TorqueFullLoad - p1.TorqueFullLoad) / (p2.EngineSpeed - p1.EngineSpeed);
 			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;
@@ -273,7 +273,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (k.IsEqual(0.0)) {
 				// rectangle
 				// area = M * n
-				return (p1.EngineSpeed + (area / d.Value()));
+				return p1.EngineSpeed + (area / d).Cast<PerSecond>();
 			}
 
 			// non-constant torque, M(n) = k * n + d
@@ -340,16 +340,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return retVal;
 		}
 
-		private double ComputeArea(PerSecond lowEngineSpeed, PerSecond highEngineSpeed)
+		private SI ComputeArea(PerSecond lowEngineSpeed, PerSecond highEngineSpeed)
 		{
 			var startSegment = FindIndex(lowEngineSpeed);
 			var endSegment = FindIndex(highEngineSpeed);
 
-			var area = 0.0;
+			var area = 0.SI().Kilo.Gramm.Meter.Per.Second;
 			if (lowEngineSpeed < _fullLoadEntries[startSegment].EngineSpeed) {
 				// add part of the first segment
-				area += ((_fullLoadEntries[startSegment].EngineSpeed - lowEngineSpeed) *
-						(FullLoadStationaryTorque(lowEngineSpeed) + _fullLoadEntries[startSegment].TorqueFullLoad) / 2.0).Value();
+				area += (_fullLoadEntries[startSegment].EngineSpeed - lowEngineSpeed) *
+						(FullLoadStationaryTorque(lowEngineSpeed) + _fullLoadEntries[startSegment].TorqueFullLoad) / 2.0;
 			}
 			for (var i = startSegment + 1; i <= endSegment; i++) {
 				var speedHigh = _fullLoadEntries[i].EngineSpeed;
@@ -359,8 +359,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 					speedHigh = highEngineSpeed;
 					torqueHigh = FullLoadStationaryTorque(highEngineSpeed);
 				}
-				area += ((speedHigh - _fullLoadEntries[i - 1].EngineSpeed) *
-						(torqueHigh + _fullLoadEntries[i - 1].TorqueFullLoad) / 2.0).Value();
+				area += (speedHigh - _fullLoadEntries[i - 1].EngineSpeed) * (torqueHigh + _fullLoadEntries[i - 1].TorqueFullLoad) /
+						2.0;
 			}
 			return area;
 		}
