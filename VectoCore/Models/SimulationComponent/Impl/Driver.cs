@@ -1,5 +1,4 @@
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCore.Configuration;
@@ -8,7 +7,6 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -95,7 +93,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var exceeded = new List<double>();
 			var acceleration = new List<double>();
-			var searchInterval = CurrentState.Acceleration.Value() / 2.0;
+			var searchInterval = CurrentState.Acceleration / 2.0;
 
 			do {
 				var delta = 0.0;
