@@ -273,9 +273,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected List<KeyValuePair<Meter, DrivingBehaviorEntry>> GetNextDrivingActions(Meter minDistance)
 		{
 			var currentSpeed = DataBus.VehicleSpeed();
-			// distance until halt: s = - v * v / (2 * a)
-			var lookaheadDistance =
-				(-currentSpeed * currentSpeed / (2 * DeclarationData.Driver.LookAhead.Deceleration)).Cast<Meter>();
+
+			// distance until halt
+			var lookaheadDistance = Formulas.DecelerationDistance(currentSpeed, 0.SI<MeterPerSecond>(),
+				DeclarationData.Driver.LookAhead.Deceleration);
+
 			var lookaheadData = DataBus.LookAhead(1.2 * lookaheadDistance);
 
 			Log.DebugFormat("Lookahead distance: {0} @ current speed {1}", lookaheadDistance, currentSpeed);
@@ -294,11 +296,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							TriggerDistance = entry.Distance,
 							NextTargetSpeed = entry.VehicleTargetSpeed
 						}));
-					Log.DebugFormat("adding 'Coasting' starting at distance {0}", entry.Distance - lookaheadDistance);
-					nextActions.Add(new KeyValuePair<Meter, DrivingBehaviorEntry>(entry.Distance - lookaheadDistance,
+					var coastingDistance = Formulas.DecelerationDistance(currentSpeed, entry.VehicleTargetSpeed,
+						DeclarationData.Driver.LookAhead.Deceleration);
+					Log.DebugFormat("adding 'Coasting' starting at distance {0}", entry.Distance - coastingDistance);
+					nextActions.Add(new KeyValuePair<Meter, DrivingBehaviorEntry>(entry.Distance - coastingDistance,
 						new DrivingBehaviorEntry() {
 							Action = DrivingBehavior.Coasting,
-							ActionDistance = entry.Distance - lookaheadDistance,
+							ActionDistance = entry.Distance - coastingDistance,
 							TriggerDistance = entry.Distance,
 							NextTargetSpeed = entry.VehicleTargetSpeed
 						}));
@@ -412,7 +416,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.Acceleration += searchInterval;
 				}
 				// check for minimum acceleration, add some safety margin due to search
-				if (Math.Abs(CurrentState.Acceleration.Value()) < Constants.SimulationSettings.MinimumAcceleration.Value() / 5.0 &&
+				if (CurrentState.Acceleration.Abs() < Constants.SimulationSettings.MinimumAcceleration.Value() / 5.0 &&
 					searchInterval.Abs() < Constants.SimulationSettings.MinimumAcceleration / 20.0) {
 					throw new VectoSimulationException("Could not achieve minimum acceleration");
 				}

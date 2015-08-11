@@ -126,7 +126,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			gbx.CurrentGear = 1;
 			var ds = Constants.SimulationSettings.DriveOffDistance;
-			while (vehicleContainer.Distance().Value() < 200) {
+			while (vehicleContainer.Distance().Value() < 17000) {
 				response = cyclePort.Request(absTime, ds);
 
 				switch (response.ResponseType) {

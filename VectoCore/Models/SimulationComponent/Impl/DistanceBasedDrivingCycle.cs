@@ -146,6 +146,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				gradient = VectoMath.InclinationToAngle(((CurrentState.Altitude - PreviousState.Altitude) /
 														(CurrentState.Distance - PreviousState.Distance)).Value());
 			}
+			//return 0.SI<Radian>();
 			return gradient;
 		}
 
