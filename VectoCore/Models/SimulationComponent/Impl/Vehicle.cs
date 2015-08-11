@@ -159,7 +159,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var points = new List<Point> { new Point { X = 0.SI<MeterPerSecond>(), Y = 0 } };
 
-			for (var vVeh = 60; vVeh <= 100; vVeh += 5) {
+			for (var vVeh = 60.KMPHtoMeterPerSecond(); vVeh <= 100; vVeh += 5.SI<MeterPerSecond>()) {
 				var cdASum = 0.0;
 				for (var alpha = 0; alpha <= 180; alpha += 10) {
 					var vWindX = Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
@@ -173,11 +173,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var deltaCdA = VectoMath.Interpolate(sec.Item1.Key, sec.Item2.Key, sec.Item1.Value, sec.Item2.Value, beta);
 					var cdA = cdA0Actual + deltaCdA;
 
-					var degreeShare = ((vVeh != 0 && vVeh != 180) ? 10.0 / 180.0 : 5.0 / 180.0);
+					var degreeShare = ((alpha != 0 && alpha != 180) ? 10.0 / 180.0 : 5.0 / 180.0);
 
-					cdASum += degreeShare * cdA * (vAir * vAir / (vVeh * vVeh)).Scalar();
+					cdASum += degreeShare * cdA * (vAir * vAir / (vVeh * vVeh)).Cast<Scalar>();
 				}
-				points.Add(new Point { X = vVeh.SI<MeterPerSecond>(), Y = cdASum });
+				points.Add(new Point { X = vVeh, Y = cdASum });
 			}
 
 			points[0].Y = points[1].Y;

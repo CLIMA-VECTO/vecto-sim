@@ -172,8 +172,8 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 				var angularSpeed = r.Next(1000).SI<PerSecond>();
 				var torque = tc.LookupTorque(exp.nu, angularSpeed, referenceSpeed);
-				AssertHelper.AreRelativeEqual(exp.torque * Math.Pow(angularSpeed.Value() / referenceSpeed.Value(), 2),
-					torque.Value());
+				AssertHelper.AreRelativeEqual(
+					exp.torque.SI<NewtonMeter>() * Math.Pow((angularSpeed / referenceSpeed).Cast<Scalar>(), 2), torque);
 			}
 		}
 
@@ -412,7 +412,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(longHaulMission.CycleFile).ReadLine()));
 
 			Assert.AreEqual(0.SI<Kilogram>(), longHaulMission.MinLoad);
-			Assert.AreEqual(0.5882 * vehicleData.GrossVehicleMassRating - 2511.8, longHaulMission.RefLoad);
+			Assert.AreEqual(0.5882 * vehicleData.GrossVehicleMassRating - 2511.8.SI<Kilogram>(), longHaulMission.RefLoad);
 			Assert.AreEqual(vehicleData.GrossVehicleMassRating - longHaulMission.MassExtra - vehicleData.CurbWeight,
 				longHaulMission.MaxLoad);
 
@@ -429,7 +429,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(regionalDeliveryMission.CycleFile).ReadLine()));
 
 			Assert.AreEqual(0.SI<Kilogram>(), regionalDeliveryMission.MinLoad);
-			Assert.AreEqual(0.3941 * vehicleData.GrossVehicleMassRating - 1705.9, regionalDeliveryMission.RefLoad);
+			Assert.AreEqual(0.3941 * vehicleData.GrossVehicleMassRating - 1705.9.SI<Kilogram>(), regionalDeliveryMission.RefLoad);
 			Assert.AreEqual(vehicleData.GrossVehicleMassRating - regionalDeliveryMission.MassExtra - vehicleData.CurbWeight,
 				regionalDeliveryMission.MaxLoad);
 
@@ -446,7 +446,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 			Assert.IsTrue(!string.IsNullOrEmpty(new StreamReader(urbanDeliveryMission.CycleFile).ReadLine()));
 
 			Assert.AreEqual(0.SI<Kilogram>(), urbanDeliveryMission.MinLoad);
-			Assert.AreEqual(0.3941 * vehicleData.GrossVehicleMassRating - 1705.9, urbanDeliveryMission.RefLoad);
+			Assert.AreEqual(0.3941 * vehicleData.GrossVehicleMassRating - 1705.9.SI<Kilogram>(), urbanDeliveryMission.RefLoad);
 			Assert.AreEqual(vehicleData.GrossVehicleMassRating - urbanDeliveryMission.MassExtra - vehicleData.CurbWeight,
 				urbanDeliveryMission.MaxLoad);
 		}

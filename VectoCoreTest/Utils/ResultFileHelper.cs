@@ -41,8 +41,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 					var actualRow = actual.Rows[i];
 
 					foreach (var field in testColumns ?? new string[0]) {
-						AssertHelper.AreRelativeEqual(expectedRow.ParseDoubleOrGetDefault(field), actualRow.ParseDoubleOrGetDefault(field),
-							string.Format("t: {0}  field: {1}", i, field));
+						Assert.AreEqual(expectedRow.ParseDoubleOrGetDefault(field), actualRow.ParseDoubleOrGetDefault(field),
+							DoubleExtensionMethods.Tolerance, string.Format("t: {0}  field: {1}", i, field));
 					}
 				}
 			}

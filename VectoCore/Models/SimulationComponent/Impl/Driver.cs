@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var exceeded = new List<double>();
 			var acceleration = new List<double>();
-			var searchInterval = CurrentState.Acceleration.Value() / 2.0;
+			var searchInterval = CurrentState.Acceleration / 2.0;
 
 			do {
 				var delta = 0.0;

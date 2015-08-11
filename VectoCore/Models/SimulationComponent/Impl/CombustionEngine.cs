@@ -285,7 +285,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected bool IsFullLoad(Watt requestedPower, Watt maxPower)
 		{
-			var testValue = requestedPower / maxPower - 1.0;
+			var testValue = (requestedPower / maxPower).Cast<Scalar>() - 1.0;
 			return testValue.Abs() < FullLoadMargin;
 		}
 

@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public override Watt Lookup(MissionType mission, string technology)
 		{
-			if (string.IsNullOrWhiteSpace(technology.Trim())) {
+			if (string.IsNullOrWhiteSpace(technology)) {
 				technology = DefaultTechnology;
 			}
 			return _data[Tuple.Create(mission, technology)];

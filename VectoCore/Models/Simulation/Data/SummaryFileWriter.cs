@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -108,14 +109,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		private void WriteAuxiliaries(IModalDataWriter data, DataRow row)
 		{
-			_auxColumns = _auxColumns.Union(data.Auxiliaries.Select(kv => "Eaux_" + kv.Key + " [kwh]")).ToList();
+			_auxColumns = _auxColumns.Union(data.Auxiliaries.Select(kv => "Eaux_" + kv.Key + " [kWh]")).ToList();
 
 			var sum = 0.SI<Watt>();
 			foreach (var aux in data.Auxiliaries) {
 				var colName = "Eaux_" + aux.Key + " [kWh]";
-				if (!_table.Columns.Contains(colName)) {
+				try {
 					_table.Columns.Add(colName, typeof(SI));
-				}
+				} catch (DuplicateNameException) {}
+
 
 				var currentSum = data.Sum(aux.Value);
 				row[colName] = currentSum;
@@ -180,8 +182,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				row[LOADING] = vehicleLoading;
 			}
 
-			var dtValues = data.GetValues<SI>(ModalResultField.simulationInterval).ToList();
-			var accValues = data.GetValues<SI>(ModalResultField.acc);
+			var dtValues = data.GetValues<SI>(ModalResultField.simulationInterval).Cast<Second>().ToList();
+			var accValues = data.GetValues<SI>(ModalResultField.acc).Cast<MeterPerSquareSecond>();
 			var accelerations = CalculateAverageOverSeconds(dtValues, accValues).ToList();
 			if (accelerations.Any()) {
 				row[A] = accelerations.Average();
@@ -218,8 +220,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		}
 
 
-		private static IEnumerable<SI> CalculateAverageOverSeconds(IEnumerable<SI> dtValues,
-			IEnumerable<SI> accValues)
+		private static IEnumerable<SI> CalculateAverageOverSeconds(IEnumerable<Second> dtValues,
+			IEnumerable<MeterPerSquareSecond> accValues)
 		{
 			var dtSum = 0.SI().Second;
 			var accSum = 0.SI().Meter.Per.Second;
@@ -228,7 +230,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				var currentX = x;
 
 				while (dtSum + currentX.dt >= 1) {
-					var splitX = new { dt = 1 - dtSum, currentX.acc };
+					var splitX = new { dt = 1.SI<Second>() - dtSum, currentX.acc };
 					yield return accSum;
 					dtSum = 0.SI<Second>();
 					accSum = 0.SI<MeterPerSecond>();

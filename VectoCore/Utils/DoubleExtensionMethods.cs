@@ -15,6 +15,12 @@ namespace TUGraz.VectoCore.Utils
 		public const double Tolerance = 0.001;
 
 		/// <summary>
+		/// The tolerancefactor for relative comparisons.
+		/// </summary>
+		public const double ToleranceFactor = 10e-6;
+
+
+		/// <summary>
 		/// Determines whether the specified other is equal within tolerance.
 		/// </summary>
 		/// <param name="self">The self.</param>
@@ -114,22 +120,17 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Creates an SI object for the number (unit-less: [-]).
 		/// </summary>
-		/// <param name="self">The self.</param>
-		/// <returns></returns>
-		public static SI SI(this double self)
+		public static SI SI(this double value)
 		{
-			return (SI)self;
+			return new SI(value);
 		}
 
 		/// <summary>
 		/// Creates an templated SI object for the number.
 		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="self">The self.</param>
-		/// <returns></returns>
-		public static T SI<T>(this double self) where T : SIBase<T>
+		public static T SI<T>(this double value) where T : SIBase<T>
 		{
-			return SIBase<T>.Create(self);
+			return SIBase<T>.Create(value);
 		}
 
 		public static IEnumerable<T> SI<T>(this IEnumerable<double> self) where T : SIBase<T>

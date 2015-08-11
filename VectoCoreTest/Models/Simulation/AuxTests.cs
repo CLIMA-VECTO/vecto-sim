@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCore.Utils;
+﻿using System.Linq;
+using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.FileIO.Reader;
@@ -6,6 +7,7 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.FileIO;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.Tests.Models.Simulation
@@ -16,7 +18,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxWriteModFileSumFile()
 		{
-			var dataWriter = new ModalDataWriter(@"40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod", false);
+			var dataWriter = new ModalDataWriter(@"40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod",
+				SimulatorFactory.FactoryMode.EngineeringMode);
 			dataWriter.AddAuxiliary("FAN");
 			dataWriter.AddAuxiliary("PS");
 			dataWriter.AddAuxiliary("STP");
@@ -266,41 +269,51 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		}
 
 		[TestMethod]
-		public void AuxReadJobFile()
+		public void AuxReadJobFileDeclarationMode()
 		{
-			Assert.Inconclusive();
-		}
+			var sumWriter = new SummaryFileWriter(@"40t_Long_Haul_Truck.vsum");
+			var jobContainer = new JobContainer(sumWriter);
 
+			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode);
+			runsFactory.DataReader.SetJobFile(@"TestData\Jobs\40t_Long_Haul_Truck.vecto");
+
+			jobContainer.AddRuns(runsFactory);
+			jobContainer.Execute();
+
+			ResultFileHelper.TestSumFile(@"TestData\Results\Declaration\40t_Long_Haul_Truck.vsum", @"40t_Long_Haul_Truck.vsum");
+		}
 
 		[TestMethod]
-		public void AuxDeclaration()
+		public void AuxReadJobFileEngineeringMode()
 		{
+			var sumWriter = new SummaryFileWriter(@"24t Coach.vsum");
+			var jobContainer = new JobContainer(sumWriter);
+
+			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode);
+			runsFactory.DataReader.SetJobFile(@"TestData\Jobs\24t Coach.vecto");
+
+			jobContainer.AddRuns(runsFactory);
+			jobContainer.Execute();
+
+			ResultFileHelper.TestSumFile(@"TestData\Results\Engineering\24t Coach.vsum", @"24t Coach.vsum");
+
+			ResultFileHelper.TestModFile(
+				@"TestData\Results\Engineering\24t Coach_Coach_24t_xshort.vmod",
+				@"TestData\Jobs\24t Coach_Coach_24t_xshort.vmod");
 			Assert.Inconclusive();
 		}
-
 
 		[TestMethod]
 		public void AuxDeclarationWrongConfiguration()
 		{
-			Assert.Inconclusive();
-		}
-
-
-		[TestMethod]
-		public void AuxEngineering()
-		{
+			// test what happens if there was a wrong auxiliary configuration in declaration mode
 			Assert.Inconclusive();
 		}
 
 		[TestMethod]
 		public void AuxCycleAdditionalFieldMissing()
 		{
-			Assert.Inconclusive();
-		}
-
-		[TestMethod]
-		public void AuxCycleAdditionalFieldOnly()
-		{
+			// test the case when the Padd field is missing (no direct auxiliary)
 			Assert.Inconclusive();
 		}
 	}

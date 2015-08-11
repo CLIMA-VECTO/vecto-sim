@@ -1,0 +1,20 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
+    "Date": "25.06.2015 09:02:39",
+    "AppVersion": "2.2 beta",
+    "FileVersion": 3
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "ModelName": "Generic 40t Long Haul Truck",
+    "Displacement": 12730.0,
+    "IdlingSpeed": 560.0,
+    "Inertia": 5.1471,
+    "FullLoadCurve": "40t_Long_Haul_Truck.vfld",
+    "FuelMap": "40t_Long_Haul_Truck.vmap",
+    "WHTC-Urban": 0.97,
+    "WHTC-Rural": 0.99,
+    "WHTC-Motorway": 1.02
+  }
+}
