@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+
+
+
+
+
+
+
+
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Rolling Resistance Coefficient</title></head><body>
+<big><big><big><span style="font-family: Verdana; font-weight: bold;">Rolling Resistance Coefficient</span></big></big></big><br>
+<hr style="width: 100%; height: 0px;">
+
+<div style="margin-left: 40px;">The rolling resistance is calculated using a speed-independent rolling resistance coefficient (RRC).<br>
+In order to consider that the RRC is dependent from the vehicle weight
+it is modelled as a function of the total vehicle mass. The total RRC
+is calculated in VECTO using the following formula. The index <span style="font-style: italic;">i</span> refers to each single vehicle axle (truck and trailer).<br>
+<img style="width: 378px; height: 71px;" alt="" src="../GUI/pics/VEH-RRC_formula.png"><br>
+<br>
+<div style="margin-left: 40px;"><table style="text-align: left; height: 195px; width: 1106px;" border="0" cellpadding="2" cellspacing="2"><tbody><tr><td style="width: 76px;">RRC</td><td style="width: 75px;">[-]</td><td style="width: 620px;">...Total rolling resistance coefficient used for calculation</td><td style="width: 299px;">[calculated]</td></tr><tr><td>s<sub>(i)</sub></td><td>[-]</td><td style="width: 620px;">...Relative axle load. Defined in the <a href="../GUI/VEH-Editor.html">Vehicle File</a>.<br>
+</td><td style="width: 299px;">[user input]</td></tr><tr><td style="width: 76px;">RRC<sub>ISO(i)</sub></td><td style="width: 75px;">[-]</td><td style="width: 620px;">...Tyre RRC according to ISO 28580. Defined in the <a href="../GUI/VEH-Editor.html">Vehicle File</a>.</td><td style="width: 299px;">[user input]</td></tr><tr><td style="width: 76px;">m</td><td style="width: 75px;">[kg]</td><td style="width: 620px;">...Vehicle mass plus loading.</td><td style="width: 299px;">[calculated]</td></tr><tr><td>g</td><td>[m/s²]</td><td style="width: 620px;">...Earth gravity acceleration (constant = 9.81)</td><td style="width: 299px;">[constant model parameter]</td></tr><tr><td>w<sub>(i)</sub></td><td>[-]</td><td style="width: 620px;">...Number of tyres (4 if Twin Tyres, else 2). Defined in the <a href="../GUI/VEH-Editor.html">Vehicle File</a>.</td><td style="width: 299px;">[user input]</td></tr><tr><td style="width: 76px;">F<sub>zISO(i)</sub></td><td style="width: 75px;">[N]</td><td style="width: 620px;">...Tyre test load according to ISO 28580 (85% of max. load capacity). Defined in the <a href="../GUI/VEH-Editor.html">Vehicle File</a>.</td><td style="width: 299px;">[user input]</td></tr><tr><td style="width: 76px;"><span style="font-size: 12pt; font-family: &quot;Times New Roman&quot;,&quot;serif&quot;;" lang="DE-AT">&#946;</span></td><td style="width: 75px;">[-]</td><td style="width: 620px;">...Constant parameter = 0.9</td><td style="width: 299px;">[constant model parameter]</td></tr></tbody></table></div>
+<br>
+For each axle the parameters <span style="font-weight: bold;">Relative axle load</span>, <span style="font-weight: bold;">RRC</span><sub style="font-weight: bold;">ISO</sub> and <span style="font-weight: bold;">F</span><sub style="font-weight: bold;">zISO</sub> have to be defined. Axles with twin tyres have to be marked using the respective checkbox in the <a href="../GUI/VEH-Editor.html">Vehicle Editor</a>.<br>
+<br>
+<br></div><span style="font-family: Calibri;"></span>
+
+
+
+
+
+
+
+
+
+
+</body></html>

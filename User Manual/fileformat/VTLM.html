@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+
+
+
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Transmission Loss Map (.vtlm)</title></head>
+<body>
+<big><big><big><span style="font-family: Verdana; font-weight: bold;">Transmission Loss Map (.vtlm)</span></big></big></big><br>
+<hr style="width: 100%; height: 0px;">
+
+<div style="margin-left: 40px;">This file defines losses in gearbox and axle transmission and must be provided for each gear in the <a href="../GUI/GBX-Editor.html">Gearbox File</a>.<br>
+<br>
+<big><big style="font-weight: bold;">File Format</big></big><br>
+<hr style="height: 1px; width: 100%;">The file uses the <a href="index.html">VECTO CSV format</a>.<br>
+<br>
+<span style="font-weight: bold;">Format:</span><br>
+<ul>
+  <li>Three columns</li><li>One header line</li>
+  <li>At least four lines with numeric values (below file header)<br>
+  </li>
+</ul>
+<span style="font-weight: bold;">Columns:</span><br>
+<table style="background-color: white; text-align: left; height: 115px; margin-left: 0px; width: 703px;" border="1" cellpadding="2" cellspacing="1">
+<tbody><tr><th style="text-align: center; width: 221px;"><span style="color: rgb(51, 102, 255);"></span>Input
+Speed [1/min]</th>
+<th style="text-align: center; width: 227px;">Input
+Torque&nbsp;[Nm]</th>
+<th style="text-align: center; width: 233px;">Torque
+Loss</th>
+</tr>
+
+<tr>
+<td style="width: 221px;">...</td>
+<td style="width: 227px;">...</td>
+<td style="width: 233px;">...</td>
+</tr>
+<tr>
+<td style="width: 221px;">...</td>
+<td style="width: 227px;">...</td>
+<td style="width: 233px;">...</td>
+</tr><tr><td style="width: 221px;">...</td><td style="width: 227px;">...</td><td style="width: 233px;">...</td></tr><tr><td style="width: 221px;">...</td><td style="width: 227px;">...</td><td style="width: 233px;">...</td></tr>
+</tbody>
+</table>
+
+<br>
+<span style="font-weight: bold;">Input Speed &amp;
+Torque always
+means <span style="text-decoration: underline;">engine-side</span>.</span><br><br><span style="font-weight: bold;">Sign of torque values:</span><br><ul><li>Input Torque &gt; 0 for normal driving operation</li><li>Input Torque &lt; 0 for motoring operation.&nbsp;<span style="font-weight: bold;"><span style="color: red;">The Torque Loss Map must include negative torque
+values for engine motoring operation!</span></span></li><li>Torque Loss is always positive!</li></ul><span style="font-weight: bold;">Calculation of Output Torque</span>:<br><div style="margin-left: 40px;">VECTO calculates the output torque using this formula, independent from the current operation mode (driving/braking).<br><img style="width: 600px; height: 39px;" alt="" src="../GUI/pics/GBX-Editor_Tout.PNG"></div><br><br></div><span style="font-family: Calibri;"></span>
+
+
+
+
+
+
+
+
+
+
+</body></html>

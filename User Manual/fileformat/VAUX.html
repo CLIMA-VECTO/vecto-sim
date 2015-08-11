@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+
+
+
+
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Auxiliary Input File</title></head>
+<body>
+<big><big><big><span style="font-family: Verdana; font-weight: bold;">Auxiliary Input File (.vaux)</span></big></big></big><br>
+<hr style="width: 100%; height: 0px;">
+
+<div style="margin-left: 40px;">This file is used to configure a single auxiliary. Multiple .vaux files can be defined in the <a href="../GUI/VECTO-Editor.html">Job File</a> via the <a href="../GUI/VECTO-Editor_Aux.html">Auxiliary Dialog</a>.<br>
+<br>
+See <a href="../general/Auxiliaries.html">Auxiliaries</a> for details on how the power demand for each auxiliary is calculated.<br><br>
+<big><big style="font-weight: bold;">File Format</big></big><br>
+<hr style="height: 1px; width: 100%;">The file uses the VECTO CSV format with three additional parameters on top of the efficiency map.<br>
+<br>
+<span style="font-weight: bold;">Format:</span><br>
+<ul>
+  <li>Lines 1,3,5 and 7 are reserved for headers. Theses lines are skipped during file read.</li><li>Line 2: <a href="../general/Auxiliaries.html">TransRatio</a> = Speed ratio between auxiliary and engine. [-]<br>
+</li>
+  <li>Line 4: <a href="../general/Auxiliaries.html">EffToEng</a> = Efficiency of auxiliary (belt/gear) drive [-]</li>
+  <li>Line 6: <a href="../general/Auxiliaries.html">EffToSply</a> = Consumer efficiency [-]<br>
+  </li>
+
+  <li>Line 8 and following (at least four): <a href="../general/Auxiliaries.html">EffMap</a> = Auxiliary efficiency map.<br>
+  </li>
+</ul>
+<span style="font-weight: bold;">Format:</span><br>
+
+
+<table style="text-align: left; height: 247px; margin-left: 0px; width: 670px;" border="1" cellpadding="2" cellspacing="1">
+
+<tbody>
+
+<tr>
+<td style="width: 300px;"><span style="font-weight: bold;">TransRatio</span> [-]<br>
+</td>
+<td style="width: 200px;"><br>
+</td>
+<td style="width: 146px;"><br>
+</td>
+</tr>
+    <tr>
+      <td style="vertical-align: top;">...<br>
+      </td>
+      <td style="vertical-align: top; width: 200px;"><br>
+      </td>
+      <td style="vertical-align: top; width: 146px;"><br>
+      </td>
+    </tr>
+<tr>
+<td style="width: 300px;"><span style="color: rgb(51, 102, 255); font-weight: bold;"></span><span style="font-weight: bold;">EffToEng </span><span style="font-weight: bold;">[-]</span></td>
+<td style="width: 200px;"><br>
+</td>
+<td style="width: 146px;"><br>
+</td>
+</tr>
+
+    <tr>
+      <td style="vertical-align: top;">...<br>
+      </td>
+      <td style="vertical-align: top; width: 200px;"><br>
+      </td>
+      <td style="vertical-align: top; width: 146px;"><br>
+      </td>
+    </tr>
+<tr>
+<td style="width: 300px;"><span style="color: rgb(51, 102, 255); font-weight: bold;"></span><span style="font-weight: bold;">EffToSply [-]</span></td>
+<td style="width: 200px;"><br>
+</td>
+<td style="width: 146px;"><br>
+</td>
+</tr>
+<tr>
+<td style="width: 300px;">...</td>
+<td style="width: 200px;"><br>
+</td>
+<td style="width: 146px;"><br>
+</td>
+</tr>
+<tr>
+<td style="text-align: center; font-weight: bold; width: 300px;">Auxiliary
+speed [1/min]<br>
+</td>
+<td style="text-align: center; font-weight: bold; width: 200px;">Mechanical
+power [kW]<br>
+</td>
+<td style="text-align: center; font-weight: bold; width: 146px;">Supply
+power [kW]<br>
+ </td>
+</tr>
+<tr>
+<td style="width: 300px; text-align: left;">...<br>
+</td>
+<td style="width: 200px; text-align: left;">...<br>
+</td>
+<td style="width: 146px; text-align: left;">...<br>
+</td>
+</tr>
+<tr>
+<td style="width: 300px;">...</td>
+<td style="width: 200px;">...</td>
+<td style="width: 146px;">...</td>
+</tr>
+<tr>
+<td style="width: 300px;">...</td>
+<td style="width: 200px;">...</td>
+<td style="width: 146px;">...</td>
+</tr><tr><td>...</td><td>...</td><td>...</td></tr>
+</tbody>
+</table><br>
+<br></div><span style="font-family: Calibri;"></span>
+
+
+
+
+
+
+
+
+
+
+</body></html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Engine Editor - VECTO User Manual</title></head><body>
+<div style="text-align: left;">
+
+
+<span style="font-family: Verdana;"><big><big><big><span style="font-weight: bold;">Engine Editor</span></big></big></big></span><br>
+<hr style="width: 100%; height: 0px;"><br>
+
+
+
+<div style="text-align: center;"><img src="pics/ENG-Editor.PNg" style="width: 800px; height: 444px;" alt="eng" usemap="#linkmap"><br></div>
+<span style="font-family: Verdana;"><br></span><div style="margin-left: 40px;"><big><big style="font-weight: bold;">Description</big></big><br><hr style="height: 1px; width: 100%;">
+
+The Engine File (.veng) defines all engine-related parameters and input files like Fuel Consumption Map and Full Load Curve.<br><br>
+<br>
+<big><big style="font-weight: bold;">Relatve File Paths</big></big><br>
+
+<hr style="height: 1px; width: 100%;">It is recommended to define
+relative filepaths. This way the Job File and all input files can be
+moved without having to update the paths.<br>
+
+Example: "Demo\FLD1.vfld" points to the "Demo" subdirectory of the Engine File's directoy.<br>
+
+<br>
+VECTO automatically uses relative paths if the input file (e.g. FC Map)
+is in the same directory as the Engine File. (The Engine File must be
+saved before browsing for input files.)<br><br>
+<br><big><big style="font-weight: bold;">Main Engine Parameters</big></big><br><hr style="height: 1px; width: 100%;">
+
+<br><span style="font-weight: bold;">Make
+and Model</span><br>
+<div style="margin-left: 40px;">Free text defining the
+engine model, type, etc.<br>
+</div>
+<span style="font-family: Verdana;"></span><br>
+<span style="font-weight: bold;">Idling
+Engine Speed</span> [rpm]<br><div style="margin-left: 40px;">
+Low idle, applied in
+simulation for vehicle standstill in neutral gear position.<br></div><br>
+<span style="font-weight: bold;">Displacement</span>
+[ccm]<br>
+<div style="margin-left: 40px;"><span style="font-family: Verdana;"></span>Used in <a href="../general/calc_Declaration.html">Declaration Mode</a> to calculate inertia.</div>
+<br>
+<span style="font-family: Verdana;"></span><span style="font-weight: bold;">Inertia
+including Flywheel</span> [kgm<sup>2</sup>]<br>
+<div style="margin-left: 40px;">Inertia for rotating parts
+including engine flywheel<span style="font-family: Verdana;"></span>. In <a href="../general/calc_Declaration.html">Declaration Mode</a> the inertia is calculated automatically.
+</div>
+<br>
+<span style="font-family: Verdana;"></span><br><big><big style="font-weight: bold;">Full Load and Drag Curve</big></big><br><hr style="height: 1px; width: 100%;">The <a href="../fileformat/VFLD.html">Full Load and Drag Curve (.vfld)</a>. Note that gear-specific full load curves can be defined in the <a href="GBX-Editor.html">Gearbox File</a> to limit the maximum gearbox input torque.<br><br>The input file (.vfld) file format is described <a href="../fileformat/VFLD.html">here</a>. <br><br><br><big><big style="font-weight: bold;">Fuel Consumption Map</big></big><br><hr style="height: 1px; width: 100%;">
+
+The <a href="../fileformat/VMAP.html">Fuel Consumption Map</a> is used to calculate the base FC value. See <a href="../general/FC.html">Fuel Consumption Calculation</a> for details.<br><br>The input file (.vmap) file format is described <a href="../fileformat/VMAP.html">here</a>. <br><br><br><big><big style="font-weight: bold;">WHTC Correction Factors</big></big><br><hr style="height: 1px; width: 100%;">The WHTC Correction Factors are required in <a href="../general/calc_Declaration.html">Declaration Mode</a> for the <a href="../general/FC.html">WHTC FC Correction</a>.<br><br><br><big><big style="font-weight: bold;">Chart Area</big></big><br><hr style="height: 1px; width: 100%;">The Chart Area shows the fuel consumption map and the selected full load curve.<br><br><br><big><big style="font-weight: bold;">Controls</big></big><br><hr style="height: 1px; width: 100%;"><img src="../pics/icons/blue-document-icon.png" style="width: 16px; height: 16px;" alt="new"><span style="font-weight: bold;">New
+file</span><br>
+<div style="margin-left: 40px;">Create a new empty .veng
+file<br>
+</div>
+<br>
+<img src="../pics/icons/Open-icon.png" style="width: 16px; height: 16px;" alt="open"><span style="font-weight: bold;">Open
+existing file</span><br>
+<div style="margin-left: 40px;">Open an existing .veng
+file<br>
+</div>
+<span style="font-family: Verdana;"></span><br>
+<span style="font-family: Verdana;"></span><img src="../pics/icons/Actions-document-save-icon.png" style="width: 16px; height: 16px;" alt="save"> <span style="font-weight: bold;">Save
+current file</span><br>
+<span style="font-family: Verdana;"></span><br>
+<span style="font-family: Verdana;"></span><img src="../pics/icons/Actions-document-save-as-icon.png" style="width: 16px; height: 16px;" alt="SaveAs"> <span style="font-weight: bold;">Save
+file as...</span><br>
+<span style="font-family: Verdana;"></span><br>
+<span style="font-family: Verdana;"></span><img src="../pics/icons/export-icon.png" style="width: 16px; height: 16px;" alt="sendto"> <span style="font-weight: bold;">Send
+current file to the <a href="VECTO-Editor.html">VECTO
+Editor</a></span><br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">Note:</span> If the current
+file was opened via the <a href="VECTO-Editor.html">VECTO
+Editor</a> the file will be sent automatically when saved.<br></div><br>
+<img style="width: 28px; height: 21px;" alt="" src="../pics/misc/browse.png"> <span style="font-weight: bold;">Open file browser</span>.<br>
+<br>
+<img style="width: 22px; height: 22px;" alt="" src="../pics/misc/OpenFile.PNG"> <span style="font-weight: bold;">Open file</span> (see <a href="settings.html#opencmd">File
+Open Command)</a>.<br><br><img src="../pics/misc/OK.png" style="width: 75px; height: 23px;" alt="OK"><span style="font-weight: bold;">Save
+and close file</span><br>
+<div style="margin-left: 40px;">If necessary the file path
+in the <a href="VECTO-Editor.html">VECTO Editor</a>
+will be updated.<br>
+</div>
+<br>
+<img src="../pics/misc/Cancel.png" style="width: 75px; height: 23px;" alt="Cancel"><span style="font-weight: bold;">
+Cancel without saving</span><br><br></div><span style="font-family: Verdana;">
+
+</span>
+<br>
+
+<ul style="text-align: left; font-family: Tahoma;">
+</ul>
+</div>
+</body></html>

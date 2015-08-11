@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Cross Wind Correction</title></head><body>
+<big><big><big><span style="font-family: Verdana; font-weight: bold;">Cross Wind Correction</span></big></big></big><br>
+<hr style="width: 100%; height: 0px;">
+
+<div style="margin-left: 40px;">VECTO offers two different modes to consider cross wind influence on the drag coefficient. It is configured in the <a href="../GUI/VEH-Editor.html">Vehicle File</a>.<br>
+<br>
+<br>
+<big><big style="font-weight: bold;">Speed dependent correction (Declaration Mode</big></big>)<br>
+
+<hr style="height: 1px; width: 100%;">This is the default mode which is used in <a href="calc_Declaration.html">Declaration Mode</a>.<br>
+The <span style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; display: inline ! important; float: none;">speed dependent<span class="Apple-converted-space"> c<sub>d</sub> x A curve (see below) is calculated</span></span> based on generic parameters for each vehicle class and the base <span style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; display: inline ! important; float: none;"><span class="Apple-converted-space">c<sub>d</sub> x A value</span></span> form the <a href="../GUI/VEH-Editor.html">Vehicle File</a>.<br>
+<br>
+<br>
+<br>
+<big><big style="font-weight: bold;">Speed dependent correction (User-defined)</big></big><br>
+<hr style="height: 1px; width: 100%;">The base <span style="color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; display: inline ! important; float: none;"><span class="Apple-converted-space">c<sub>d</sub> x A value</span></span> (see <a href="../GUI/VEH-Editor.html">Vehicle File</a>) is corrected with a user-defined speed dependent scaling function. The input file (.vcdv) format is described <a href="../fileformat/VCDV.html">here</a>.<br>
+<br>
+<img style="width: 404px; height: 290px;" alt="" src="pics/VCDV.png"><br>
+<br>
+<br>
+<big><big style="font-weight: bold;">Correction using Vair &amp; Beta Input</big></big><br>
+<hr style="height: 1px; width: 100%;">If available the actual
+(measured) air speed and direction can be used. The input file (.vcdb)
+defines the drag coefficient scaling factor. The input file (.vcdb) format is described <a href="../fileformat/VCDB.html">here</a>.<br>
+The <a href="../fileformat/VDRI.html">driving cycle</a> must include the air speed relative to the vehicle v<sub>air</sub> (&lt;vair_res&gt;) and the wind yaw angle beta (&lt;vair_beta&gt;).<br>
+<br>
+<img style="width: 600px; height: 236px;" alt="" src="pics/VCDB.png"><br>
+<br>
+<br></div><span style="font-family: Calibri;"></span>
+
+
+
+
+
+
+
+
+
+
+</body></html>

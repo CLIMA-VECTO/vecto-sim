@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+
+
+
+
+
+
+
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Auxiliaries</title></head><body>
+<big><big><big><span style="font-family: Verdana; font-weight: bold;">Auxiliaries</span></big></big></big><br>
+<hr style="width: 100%; height: 0px;">
+
+<div style="margin-left: 40px;">In VECTO a generic map-based approach
+was implemented to consider all types of auxiliaries. The supply power
+demand for each single auxiliary is defined in the driving cycle. Hence
+a time/distance-dependent power demand can be defined. Based on the
+supply power and a pre-defined efficiency map the auxiliary input power
+is calculated. A constant efficiency determines the losses between
+auxiliary and engine.<br>
+<br>
+
+For each auxiliary the power demand is calculated using the following steps:<br>
+<br>
+<img style="width: 421px; height: 349px;" alt="" src="pics/AuxModel.png"><br>
+<ol>
+<li>Auxiliary speed: <span style="font-weight: bold;">n</span><sub style="font-weight: bold;">aux</sub> = <span style="font-weight: bold;">n</span><sub style="font-weight: bold;">Eng</sub> * <span style="font-weight: bold;">TransRatio</span></li><li>Auxiliary output power: <span style="font-weight: bold;">P</span><sub style="font-weight: bold;">auxOut</sub> = <span style="font-weight: bold;">P</span><sub style="font-weight: bold;">supply</sub> / <span style="font-weight: bold;">EffToSply</span></li><li>Auxiliary input power: <span style="font-weight: bold;">P</span><sub style="font-weight: bold;">auxIn</sub> = <span style="font-weight: bold;">EffMap(</span>n<sub>Aux</sub>, P<sub>AuxOut</sub><span style="font-weight: bold;">)</span></li><li>Auxiliary power consumption: <span style="font-weight: bold;">P</span><sub style="font-weight: bold;">aux</sub> = <span style="font-weight: bold;">P</span><sub style="font-weight: bold;">auxIn</sub> / <span style="font-weight: bold;">EffToEng</span></li><li><span style="font-weight: bold;">P</span><sub style="font-weight: bold;">aux</sub><span style="font-weight: bold;"> is&nbsp;added to the engine's power demand</span></li>
+</ol>
+
+<div style="margin-left: 40px;">
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top; width: 168px;">n<sub>Eng</sub></td>
+      <td style="vertical-align: top; width: 626px;"> = Calculated engine speed.<br>
+      </td>
+      <td style="vertical-align: top; width: 707px;">[1/min]</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; width: 168px;">TransRatio</td>
+      <td style="vertical-align: top; width: 626px;">= Speed ratio between auxiliary and engine. <a href="../fileformat/VAUX.html">Defined in the Auxiliary File</a>.<br>
+      </td>
+      <td style="vertical-align: top; width: 707px;">[-]<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; width: 168px;">n<sub>aux</sub></td>
+      <td style="vertical-align: top; width: 626px;"> = Auxiliary speed</td>
+      <td style="vertical-align: top; width: 707px;">[1/min]<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">P<sub>supply</sub></td>
+      <td style="vertical-align: top; width: 626px;">=  Effective supply power demand. <a href="../fileformat/VDRI.html">Defined in the driving cycle</a>.<br>
+      </td>
+      <td style="vertical-align: top; width: 707px;">[kW]</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">EffToSply</td>
+      <td style="vertical-align: top; width: 626px;">= Consumer efficiency. <a href="../fileformat/VAUX.html">Defined in the Auxiliary File</a>.</td>
+      <td style="vertical-align: top; width: 707px;">[-]<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; width: 168px;">P<sub>auxOut</sub> </td>
+      <td style="vertical-align: top; width: 626px;">= Auxiliary output power</td>
+      <td style="vertical-align: top; width: 707px;">[kW]</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">EffMap<br>
+      </td>
+      <td style="vertical-align: top; width: 626px;">= Auxiliary efficiency map. <a href="../fileformat/VAUX.html">Defined in the Auxiliary File</a>.</td>
+      <td style="vertical-align: top; width: 707px;">[kW] = f( [1/min], [kW] )<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top; width: 168px;">P<sub>auxIn</sub></td>
+      <td style="vertical-align: top; width: 626px;">= Auxiliary input power<br>
+      </td>
+      <td style="vertical-align: top; width: 707px;">[kW]</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">EffToEng</td>
+      <td style="vertical-align: top; width: 626px;">= Efficiency of auxiliary (belt/gear) drive. <a href="../fileformat/VAUX.html">Defined in the Auxiliary File</a>.</td>
+      <td style="vertical-align: top; width: 707px;">[-]<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">P<sub>aux</sub></td>
+      <td style="vertical-align: top; width: 626px;">= Mechanical auxiliary power demand at the crank shaft<br>
+      </td>
+      <td style="vertical-align: top; width: 707px;">[kW]<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<br>Each auxiliary must be defined in the <a href="../GUI/VECTO-Editor.html">Job File</a> and each <a href="../fileformat/VDRI.html">driving cycle</a> used with this vehicle must include supply power for each auxiliary.<br>
+To link the supply power in the driving cycle to the correct auxiliary
+in the Job File an ID is used. The corresponding supply power is then
+named <span style="font-style: italic;">"&lt;Aux_ID&gt;"</span>.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold; font-style: italic;"><br>
+Example</span><span style="font-style: italic;">: </span><span style="font-style: italic;">The Auxiliary with the ID "ALT" (in the Job File) is linked to
+the supply power in the column "&lt;AUX_ALT&gt;" in the driving cylce.</span><br>
+
+
+</div>
+
+<br>
+<br>
+<br></div><span style="font-family: Calibri;"></span>
+
+
+
+
+
+
+
+
+
+
+</body></html>

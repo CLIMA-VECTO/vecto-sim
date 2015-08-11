@@ -6,7 +6,7 @@ In order to consider that the RRC is dependent from the vehicle weight it is mod
 
 
 
-$RRC = \sum_{i=1}^{n} s_{(i)} \cdot RCC_{ISO(i)} \cdot ( \frac{s_{(i)} \cdot m \cdot g }{w_{(i)} \cdot F_{zISO(i)} } )^{\beta-1}$
+$RRC = \sum_{i=1}^{n} s_{(i)} \cdot RRC_{ISO(i)} \cdot \left( \frac{s_{(i)} \cdot m \cdot g }{w_{(i)} \cdot F_{zISO(i)} } \right)^{\beta-1}$
 
 
 

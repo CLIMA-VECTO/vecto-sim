@@ -7,13 +7,7 @@
   <title></title>
   <style type="text/css">code{white-space: pre;}</style>
   <link rel="stylesheet" href="style.css" type="text/css" />
-  <script src="katex/katex.min.js"></script><link rel="stylesheet" href="katex/katex.min.css" /><script type="text/javascript">window.onload = function(){var mathElements = document.getElementsByClassName("math");
-  for (var i=0; i < mathElements.length; i++)
-  {
-   var texText = mathElements[i].firstChild
-   katex.render(texText.data, mathElements[i])
-  }}
-  </script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 </head>
 <body>
 <div id="TOC">
@@ -1093,7 +1087,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <li>The correction factor CF<sub>WHTC</sub> is calculated using the equation below considering the current mission profile’s weighting factors for each part.</li>
 <li>The factor is multiplied to the FC values for each time step and the total FC result.</li>
 </ol>
-<p><span class="math inline">CF_{WHTC} = \sum_{i=1}^{3} f_i \cdot \frac{FC_{meas_i}}{FC_{calc_i}}[-]</span></p>
+<p><span class="math inline">\(CF_{WHTC} = \sum_{i=1}^{3} f_i \cdot \frac{FC_{meas_i}}{FC_{calc_i}}[-]\)</span></p>
 <p>where:</p>
 <table>
 <tbody>
@@ -1287,7 +1281,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </table>
 <h1 id="rolling-resistance-coefficient">Rolling Resistance Coefficient</h1>
 <p>The rolling resistance is calculated using a speed-independent rolling resistance coefficient (RRC). In order to consider that the RRC is dependent from the vehicle weight it is modelled as a function of the total vehicle mass. The total RRC is calculated in VECTO using the following formula. The index i refers to each single vehicle axle (truck and trailer).</p>
-<p><span class="math inline">RRC = \sum_{i=1}^{n} s_{(i)} \cdot RCC_{ISO(i)} \cdot ( \frac{s_{(i)} \cdot m \cdot g }{w_{(i)} \cdot F_{zISO(i)} } )^{\beta-1}</span></p>
+<p><span class="math inline">\(RRC = \sum_{i=1}^{n} s_{(i)} \cdot RRC_{ISO(i)} \cdot \left( \frac{s_{(i)} \cdot m \cdot g }{w_{(i)} \cdot F_{zISO(i)} } \right)^{\beta-1}\)</span></p>
 <table>
 <tbody>
 <tr class="odd">
@@ -1360,7 +1354,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </div>
 <h1 id="transient-full-load">Transient Full Load</h1>
 <p>VECTO uses a PT1 function to model transient torque build up using this formula:</p>
-<p><span class="math inline">P_{fld\ dyn_{i}} = \frac{1}{T(n_{i})+1} \cdot [P_{fld\ stat}(n_{i})+T(n_{i}) \cdot P_{act_{i-1}}]</span></p>
+<p><span class="math inline">\(P_{fld\ dyn_{i}} = \frac{1}{T(n_{i})+1} \cdot [P_{fld\ stat}(n_{i})+T(n_{i}) \cdot P_{act_{i-1}}]\)</span></p>
 <p>where:</p>
 <table>
 <tbody>
@@ -2049,7 +2043,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <dd>VECTO calculates the output torque using this formula, independent from the current operation mode (driving/braking).
 </dd>
 </dl>
-<p><span class="math inline">Output\ Torque = (Input\ Torque-Torque\ Loss) \times GearRatio</span></p>
+<p><span class="math inline">\(Output\ Torque = (Input\ Torque-Torque\ Loss) \times GearRatio\)</span></p>
 <h1 id="torque-converter-characteristics-.vtcc">Torque Converter Characteristics (.vtcc)</h1>
 <p><strong>!!! The Torque Converter Model is still in development !!!</strong></p>
 <p>This file defines the torque converter characteristics as described in VDI 2153:</p>
@@ -2059,7 +2053,7 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <li><strong>Input Torque</strong> (T<sub>ref(ν)</sub>) is the input torque (over ν) for a specific reference engine speed (see below).</li>
 </ul>
 <p>The Input Torque at  reference engine speed is needed to calculate the actual engine torque using this formula:</p>
-<p><span class="math inline">T_{in} = T_{ref}(v) \cdot ( \frac{n_{in}}{n_{ref}} )^{2}</span></p>
+<p><span class="math inline">\(T_{in} = T_{ref}(v) \cdot ( \frac{n_{in}}{n_{ref}} )^{2}\)</span></p>
 <p>with:</p>
 <ul>
 <li>T<sub>in</sub> = engine torque [Nm]</li>

@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><title>Summary Results - VECTO User Manual</title></head><body>
+
+
+
+<span style="font-family: Verdana;"><big><big><big><span style="font-weight: bold;">Summary Results (.vsum)</span></big></big></big></span><br>
+<hr style="width: 100%; height: 0px;">
+
+<div style="margin-left: 40px;">
+
+<span style="font-family: Times New Roman,Times,serif;">The
+.vsum file includes total / average results for each calculation run in one execution (ie. click of <a href="../GUI/mainform.html">START Button</a>). The file is located in the directory of the fist run
+.vecto file.<br>
+<br>
+</span><span style="font-weight: bold;">Quantities:</span><br>
+<span style="font-family: Verdana;"></span>
+<table style="width: 100%;" border="1" cellpadding="5" cellspacing="0">
+<col style="width: 60pt;" span="2" width="80">
+<tbody>
+<tr>
+<td style="font-weight: bold;">Name</td>
+<td style="font-weight: bold; width: 109px;">Unit</td>
+<td style="font-weight: bold; width: 1342px;">Description</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt; width: 60pt;" height="20" width="80">Job</td>
+<td style="width: 109px;">[-]</td>
+<td style="width: 1342px;">Job number. Format is "x-y" with x = file number and y
+= cycle number</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Input
+File</td>
+<td style="width: 109px;">[-]</td>
+<td style="width: 1342px;">Name of the input file</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Cycle</td>
+<td style="width: 109px;">[-]</td>
+<td style="width: 1342px;">Name of the cycle file</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">time</td>
+<td style="width: 109px;">[s]</td>
+<td style="width: 1342px;">Total simulation&nbsp;time</td>
+</tr>
+
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">distance</td>
+<td style="width: 109px;">[km]</td>
+<td style="width: 1342px;">Total travelled distance</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">speed</td>
+<td style="width: 109px;">[km/h]</td>
+<td style="width: 1342px;">Average vehicle speed</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">&#8710;altitude</td>
+<td style="width: 109px;">[m]</td>
+<td style="width: 1342px;">Altitude difference between start and end of cycle</td>
+</tr>
+
+
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Ppos</td>
+<td style="width: 109px;">[kW]</td>
+<td style="width: 1342px;">Average&nbsp;positive engine power</td>
+</tr>
+    <tr>
+      <td style="vertical-align: top;">PwheelPos<br>
+      </td>
+      <td style="vertical-align: top;">[kW]<br>
+      </td>
+      <td style="vertical-align: top;">Average positive wheel power<br>
+      </td>
+    </tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Pneg</td>
+<td style="width: 109px;">[kW]</td>
+<td style="width: 1342px;">Average&nbsp;negative engine power</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">FC-Final</td>
+<td style="width: 109px;">[g/km] &amp; [l/100km] &amp; [l/100tkm]<br>
+</td>
+<td style="width: 1342px;">Average fuel consumption. Final value after all corrections.<br>
+</td>
+</tr>
+    <tr>
+      <td style="vertical-align: top;">FC-Map<br>
+      </td>
+      <td style="vertical-align: top; width: 109px;">[g/h] &amp; [g/km]<br>
+      </td>
+      <td style="vertical-align: top; width: 1342px;">Fuel consumption interpolated form <a href="../general/FC.html">Fuel Map</a>.<br>
+      </td>
+    </tr>
+<tr><td>FC-AUXc</td><td style="width: 109px;">[g/h] &amp; [g/km]</td><td style="width: 1342px;">Fuel consumption after <a href="../general/FC.html">Auxiliary-Start/Stop Correction</a>. (Based on FC-Map.)</td></tr><tr><td>FC-WHTCc</td><td style="width: 109px;">[g/h] &amp; [g/km]</td><td style="width: 1342px;">Fuel consumption after <a href="../general/FC.html">WHTC Correction</a>. (Based on FC-AUXc.)</td></tr><tr>
+      <td style="vertical-align: top;">CO<sub>2</sub><br>
+      </td>
+      <td style="vertical-align: top;">[g/km] &amp; [g/tkm]<br>
+      </td>
+      <td style="vertical-align: top;">Average CO<sub>2</sub> emissions.<br>
+      </td>
+    </tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Pbrake</td>
+<td style="width: 109px;">[kW]</td>
+<td style="width: 1342px;">Average brake power (not including engine drag)</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">EposICE</td>
+<td style="width: 109px;">[kWh]</td>
+<td style="width: 1342px;">Total positive engine work</td></tr><tr style="height: 15pt;" height="20"><td style="height: 15pt;" height="20">EnegICE</td>
+<td style="width: 109px;">[kWh]</td>
+<td style="width: 1342px;">Total negative engine work (engine brake)</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Eair</td>
+<td style="width: 109px;">[kWh]</td>
+<td style="width: 1342px;">Total work of air resistance</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Eroll</td>
+<td style="width: 109px;">[kWh]</td>
+<td style="width: 1342px;">Total work of rolling resistance</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Egrad</td>
+<td style="width: 109px;">[kWh]</td>
+<td style="width: 1342px;">Total work of gradient resistance</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Eacc</td>
+<td style="width: 109px;">[kWh]</td>
+<td style="width: 1342px;">Total work from accelerations (&lt;0) / decelerations (&gt;0)&nbsp;</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Eaux</td>
+<td style="width: 109px;">[kWh]</td>
+<td style="width: 1342px;">Total energy demand of auxiliaries</td>
+</tr>
+<tr><td>Eaux_xxx</td><td style="width: 109px;">[kWh]</td><td style="width: 1342px;">Energy demand of auxiliary with ID <span style="font-style: italic; font-weight: bold;">xxx</span>. See also <a href="../GUI/VECTO-Editor_Aux.html">Aux Dialog</a> and <a href="VDRI.html">Driving Cycle</a>.</td></tr><tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Ebrake</td>
+<td style="width: 109px;">[kWh]</td>
+<td style="width: 1342px;">Total work dissipated in mechanical braking (sum of service brakes, retader and additional engine exhaust brakes)</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Etransm</td>
+<td style="width: 109px;">[kWh]</td>
+<td style="width: 1342px;">Total transmission losses</td>
+</tr>
+<tr><td>Eretarder</td><td style="width: 109px;">[kWh]</td><td style="width: 1342px;">Total retarder losses</td></tr><tr>
+      <td style="vertical-align: top;">Etorqueconv<br>
+      </td>
+      <td style="vertical-align: top;">[kWh]<br>
+      </td>
+      <td style="vertical-align: top;">Total torque converter losses<br>
+      </td>
+    </tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Mass</td>
+<td style="width: 109px;">[kg]</td>
+<td style="width: 1342px;">Vehicle mass (equals <span style="font-weight: bold;">Curb Weight Vehicle</span>
+plus <span style="font-weight: bold;">Curb Weight Extra
+Trailer/Body</span>, see <a href="../GUI/VEH-Editor.html">Vehicle
+Editor</a>)</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Loading</td>
+<td style="width: 109px;">[kg]</td>
+<td style="width: 1342px;">Vehicle loading (see <a href="../GUI/VEH-Editor.html">Vehicle Editor</a>)</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">a</td>
+<td style="width: 109px;">[m/s<sup>2</sup>]</td>
+<td style="width: 1342px;">Average acceleration</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">a_pos</td>
+<td style="width: 109px;">[m/s<sup>2</sup>]</td>
+<td style="width: 1342px;">Average&nbsp;acceleration in&nbsp;acceleration
+phases*</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">a_neg</td>
+<td style="width: 109px;">[m/s<sup>2</sup>]</td>
+<td style="width: 1342px;">Average deceleration in deceleration phases*</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">Acc.Noise</td>
+<td style="width: 109px;">[m/s<sup>2</sup>]</td>
+<td style="width: 1342px;">Acceleration noise</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">pAcc</td>
+<td style="width: 109px;">[%]</td>
+<td style="width: 1342px;">Time share of acceleration phases*</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">pDec</td>
+<td style="width: 109px;">[%]</td>
+<td style="width: 1342px;">Time share of deceleration phases*</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">pCruise</td>
+<td style="width: 109px;">[%]</td>
+<td style="width: 1342px;">Time share of cruise phases*</td>
+</tr>
+<tr style="height: 15pt;" height="20">
+<td style="height: 15pt;" height="20">pStop</td>
+<td style="width: 109px;">[%]</td>
+<td style="width: 1342px;">Time share of stop phases*</td>
+</tr>
+</tbody>
+</table>
+<br>*Driving conditions:<br>
+<div style="margin-left: 40px;">Acceleration: a<sub>3s</sub> &gt;
+0.125 [m/s<sup>2</sup>]<br>
+Deceleration: a<sub>3s</sub> &lt; -0.125 [m/s<sup>2</sup>]<br>
+Cruise: -0.125 &#8804; a<sub>3s</sub> &#8804; 0.125 [m/s<sup>2</sup>]<br>
+Stop: v &lt; 0.1 [m/s]<br><span style="font-style: italic;"><br>a<sub>3s</sub>&nbsp;= 3 seconds-averaged acceleration&nbsp;</span></div>
+
+<br>
+Definition of work (E...):<br><div style="margin-left: 40px;">sign &gt; 0: positive work applied to the vehicle (e.g. from engine, from kinetic energy)<br>sign &lt; 0: losses<br>The
+sum
+of EposICE, EnegICE, Eair, Eroll, Egrad, Eacc, Eaux, Ebrake, Etransm
+and&nbsp;Eretarder is zero (besides small rounding error for long
+driving cycles)<br></div><br>
+
+</div>
+</body></html>

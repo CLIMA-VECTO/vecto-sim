@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Gearbox Editor - VECTO User Manual</title></head><body>
+
+
+
+<div style="text-align: left;">
+
+<span style="font-family: Verdana;"><big><big><big><span style="font-weight: bold;">Gearbox Editor</span></big></big></big></span><br>
+<hr style="width: 100%; height: 0px;"><br>
+
+
+<div style="text-align: center;"><img src="pics/GBX-Editor.PNG" usemap="#linkmap" alt="gbx" style="width: 750px; height: 550px;"><br></div>
+<span style="font-family: Verdana;"><br>
+</span>
+
+<div style="margin-left: 40px;"><big><big style="font-weight: bold;">Description</big></big><br><hr style="height: 1px; width: 100%;">
+
+The Gearbox File (.vgbx) defines alls gearbox-related input parameters like gear ratios and transmission loss maps.<br>See <a href="../general/Shift.html">Gear Shift Model</a> for details.<br><br><br><big><big style="font-weight: bold;">Relatve File Paths</big></big><br>
+<hr style="height: 1px; width: 100%;">It is recommended to define
+relative filepaths. This way the Job File and all input files can be
+moved without having to update the paths.<br>
+Example: "Gears\Gear1.vtlm" points to the "Gears" subdirectory of the Gearbox File's directoy.<br>
+<br>
+VECTO automatically uses relative paths if the input file (e.g. Shift Polygons
+File) is in the same directory as the&nbsp;Gearbox File. (The&nbsp;Gearbox File must be
+saved before browsing for input files.)<br><br><br><big><big style="font-weight: bold;">Main Gearbox Parameters</big></big><br><hr style="height: 1px; width: 100%;">
+<span style="font-weight: bold;">Make and Model</span><br>
+<div style="margin-left: 40px;">Free text defining the
+gearbox model, type, etc.<br>
+</div>
+<br>
+<span style="font-weight: bold;">Transmission Type</span><br>
+<div style="margin-left: 40px;">Depending on the
+transmission type some options below are not available. The following
+types are available:
+<ul><li><span style="font-weight: bold;">Manual
+Transmission</span> (MT)</li><li><span style="font-weight: bold;">Automated
+Manual Transmission</span> (AMT)</li><li><span style="font-weight: bold;">Automatic
+Transmission</span> (AT)</li><li style="font-weight: bold;">Custom</li></ul>Note: The types AT and Custom are not available in <a href="../general/calc_Declaration.html">Declaration Mode</a>.
+</div><br><span style="font-weight: bold;">Inertia</span> [kgm<sup>2</sup>]
+<div style="margin-left: 40px;">Rotational inertia of the
+gearbox (constant for all gears).<br>
+</div>
+<br><span style="font-weight: bold;">Traction Interruption</span>
+[s]<br><div style="margin-left: 40px;">Interruption&nbsp;during
+gear shift event.<br></div>
+<br><br>
+<big><big style="font-weight: bold;">Gears</big></big><br><hr style="height: 1px; width: 100%;">
+<span style="font-weight: bold;"></span>Use the <img style="width: 16px; height: 16px;" alt="add" src="../pics/icons/plus-circle-icon.png"> and <img style="width: 16px; height: 16px;" alt="remove" src="../pics/icons/minus-circle-icon.png"> buttons to add or
+remove gears form the vehicle. Doubleclick entries to edit existing gears.<br><ul><li>Gear <span style="font-weight: bold;">"A"</span> defines the ratio of the axle transmission /
+differential.</li><li>Column <span style="font-weight: bold;">"TC</span>" (AT only) defines which gears are using the torque converter (lock-up clutch open).</li><li>Column
+    <span style="font-weight: bold;">"Loss Map or Efficiency"</span> allows to define either a constant efficiency
+value or a <a href="../fileformat/VTLM.html">loss map (.vtlm)</a>.</li><li>Column <span style="font-weight: bold;">"Shift polygons"</span> defines the <a href="../fileformat/VGBS.html">Shift Polygons Input File (.vgbs)</a> for each gear. Not required in <a href="../general/calc_Declaration.html">Declaration Mode</a>. See <a href="../general/Shift.html">Gear Shift Model</a> for details.</li>
+  <li>Column <span style="font-weight: bold;">"Full Load Curves"</span> defines the <a href="../fileformat/VFLD.html">Full Load Curve for (.vfld)</a> each gear. It is used for torque limiting and <a href="../general/Shift.html">generic shift polygons</a> in Declaration Mode. If no file is defined the engine full load curve will be used.<br>
+  </li>
+</ul><br><br><big><big style="font-weight: bold;">Gear shift parameters</big></big><br><hr style="height: 1px; width: 100%;">
+<span style="font-weight: bold;"><img alt="" src="../pics/misc/checkbox.png"> Allow shift-up inside
+polygons</span><br><div style="margin-left: 40px;">See <a href="../general/Shift.html">Gear Shift Model</a>.<br></div><br><span style="font-weight: bold;"><img style="width: 15px; height: 15px;" alt="" src="../pics/misc/checkbox.png"> Skip Gears</span><br><div style="margin-left: 40px;">See <a href="../general/Shift.html">Gear Shift Model</a>.<br></div><br><span style="font-weight: bold;">Torque Reserve</span> [%]<br>
+<div style="margin-left: 40px;">This parameter is required
+for the "<span style="font-weight: bold;">Allow shift-up
+inside polygons</span>" and "<span style="font-weight: bold;">Skip
+Gears</span>" options.</div>
+<br>
+<span style="font-weight: bold;">Minimum shift time</span> [s]<br>
+<div style="margin-left: 40px;">Limits
+the time between two gear shifts in whole seconds. This rule will be
+ignored if rpms are too high or too low. Note that high values may
+cause high rpms during acceleration.<br>
+</div>
+<br>
+<span style="font-weight: bold;">Start Gear</span><br>
+<div style="margin-left: 40px;">In order to calculate an
+appropriate
+gear for vehicle start (first gear after vehicle standstill) a
+fictional load case is calculated using a specified&nbsp;<span style="font-weight: bold;">reference vehicle speed</span>
+and <span style="font-weight: bold;">reference
+acceleration</span>
+together with the actual road gradient, transmission losses and
+auxiliary power demand. This way the start gear is independent from the
+target speed. VECTO uses the highest possible gear which provides the
+defined <span style="font-weight: bold;">torque reserve</span>.</div><br><br><big><big style="font-weight: bold;">Chart Area</big></big><br><hr style="height: 1px; width: 100%;">
+
+The Chart Area displays the <a href="../fileformat/VGBS.html">Shift Polygons Input File (.vgbs)</a> for the selected gear.<br><br><br><big><big style="font-weight: bold;">Torque Converter </big></big><br><hr style="height: 1px; width: 100%;">
+
+The <a href="../general/TC.html">Torque Converter Model</a> is still in development.<br><br>
+<span style="font-weight: bold;">Inertia</span> [kgm<sup>2</sup>]<br>
+<div style="margin-left: 40px;">Rotational inertia of the engine-side part of the torque converter. (Gearbox-side inertia is not considered in VECTO.)<br>
+</div>
+<br>
+<br><big><big style="font-weight: bold;">Controls</big></big><br><hr style="height: 1px; width: 100%;"><span style="font-weight: bold;"><img style="width: 16px; height: 16px;" alt="" src="../pics/icons/blue-document-icon.png"> New
+file</span><br>
+
+Create a new empty .vgbx
+file<br><br><img src="../pics/icons/Open-icon.png" style="width: 16px; height: 16px;" alt="open"><span style="font-weight: bold;">
+Open
+existing file</span><br>
+
+
+<div style="margin-left: 40px;">Open an existing .vgbx
+file<br></div><br><img src="../pics/icons/Actions-document-save-icon.png" style="width: 16px; height: 16px;" alt="save"> <span style="font-weight: bold;">Save
+current file</span><br><br><img src="../pics/icons/Actions-document-save-as-icon.png" style="width: 16px; height: 16px;" alt="SaveAs"> <span style="font-weight: bold;">Save
+file as...</span><br><br><img src="../pics/icons/export-icon.png" style="width: 16px; height: 16px;" alt="sendto"> <span style="font-weight: bold;">Send
+current file to the <a href="VECTO-Editor.html">VECTO
+Editor</a></span><br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">Note:</span> If the current
+file was opened via the <a href="VECTO-Editor.html">VECTO
+Editor</a> the file will be sent automatically when saved.<br></div><br><img style="width: 28px; height: 21px;" alt="" src="../pics/misc/browse.png"> <span style="font-weight: bold;">Open file browser</span>.<br>
+<br>
+<img style="width: 22px; height: 22px;" alt="" src="../pics/misc/OpenFile.PNG"> <span style="font-weight: bold;">Open file</span>&nbsp;(see <a href="settings.html#opencmd">File
+Open Command)</a>.<br>
+<br><img style="width: 75px; height: 23px;" alt="OK" src="../pics/misc/OK.png"><span style="font-weight: bold;">Save and close file</span><br><div style="margin-left: 40px;">If necessary the file path
+in the <a href="VECTO-Editor.html">VECTO Editor</a>
+will be updated.<br></div><br><img style="width: 75px; height: 23px;" alt="Cancel" src="../pics/misc/Cancel.png"><span style="font-weight: bold;"> Cancel without saving</span><span style="font-weight: bold;"></span><br></div></div>
+</body></html>
