@@ -28,56 +28,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		internal readonly Dictionary<uint, GearData> _gearData = new Dictionary<uint, GearData>();
 
-		// @@@quam: according to Raphael no longer required
-		//public void CalculateAverageEfficiency(CombustionEngineData engineData)
-		//{
-		//	var angularVelocityStep = (2.0 / 3.0) * (engineData.GetFullLoadCurve(0).RatedSpeed() - engineData.IdleSpeed) / 10.0;
-
-		//	var axleGearEfficiencySum = 0.0;
-		//	var axleGearSumCount = 0;
-
-		//	foreach (var gearEntry in _gearData) {
-		//		var gearEfficiencySum = 0.0;
-		//		var gearSumCount = 0;
-		//		for (var angularVelocity = engineData.IdleSpeed + angularVelocityStep;
-		//			angularVelocity < engineData.GetFullLoadCurve(0).RatedSpeed();
-		//			angularVelocity += angularVelocityStep) {
-		//			var fullLoadStationaryTorque = engineData.GetFullLoadCurve(gearEntry.Key).FullLoadStationaryTorque(angularVelocity);
-		//			var torqueStep = (2.0 / 3.0) * fullLoadStationaryTorque / 10.0;
-		//			for (var engineOutTorque = (1.0 / 3.0) * fullLoadStationaryTorque;
-		//				engineOutTorque < fullLoadStationaryTorque;
-		//				engineOutTorque += torqueStep) {
-		//				var engineOutPower = Formulas.TorqueToPower(engineOutTorque, angularVelocity);
-		//				var gearboxOutPower =
-		//					Formulas.TorqueToPower(
-		//						gearEntry.Value.LossMap.GearboxOutTorque(angularVelocity, engineOutTorque), angularVelocity);
-		//				if (gearboxOutPower > engineOutPower) {
-		//					gearboxOutPower = engineOutPower;
-		//				}
-
-		//				gearEfficiencySum += ((engineOutPower - gearboxOutPower) / engineOutPower).Double();
-		//				gearSumCount += 1;
-
-
-		//				// axle gear
-		//				var angularVelocityAxleGear = angularVelocity / gearEntry.Value.Ratio;
-		//				var axlegearOutPower =
-		//					Formulas.TorqueToPower(
-		//						AxleGearData.LossMap.GearboxOutTorque(angularVelocityAxleGear,
-		//							Formulas.PowerToTorque(engineOutPower, angularVelocityAxleGear)),
-		//						angularVelocityAxleGear);
-		//				if (axlegearOutPower > engineOutPower) {
-		//					axlegearOutPower = engineOutPower;
-		//				}
-		//				axleGearEfficiencySum += (axlegearOutPower / engineOutPower).Double();
-		//				axleGearSumCount += 1;
-		//			}
-		//		}
-		//		gearEntry.Value.AverageEfficiency = gearEfficiencySum / gearSumCount;
-		//	}
-		//	AxleGearData.AverageEfficiency = axleGearEfficiencySum / axleGearSumCount;
-		//}
-
 		public int GearsCount()
 		{
 			return _gearData.Count;

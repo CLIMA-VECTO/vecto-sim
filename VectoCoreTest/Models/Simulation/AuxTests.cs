@@ -18,15 +18,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxWriteModFileSumFile()
 		{
-			var dataWriter = new ModalDataWriter(@"40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod",
-				SimulatorFactory.FactoryMode.EngineeringMode);
+			var dataWriter = new ModalDataWriter(@"40t_Long_Haul_Truck_Long_Haul_Empty Loading AUX.vmod");
 			dataWriter.AddAuxiliary("FAN");
 			dataWriter.AddAuxiliary("PS");
 			dataWriter.AddAuxiliary("STP");
 			dataWriter.AddAuxiliary("ES");
 			dataWriter.AddAuxiliary("AC");
 
-			var sumWriter = new SummaryFileWriter(@"40t_Long_Haul_Truck.vsum");
+			var sumWriter = new SummaryFileWriter(@"40t_Long_Haul_Truck AUX.vsum");
 			var deco = new SumWriterDecoratorFullPowertrain(sumWriter, "", "", "");
 
 			var container = new VehicleContainer(dataWriter, deco);
@@ -67,9 +66,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var testColumns = new[] { "Paux_FAN", "Paux_STP", "Paux_AC", "Paux_ES", "Paux_PS", "Paux" };
 
 			ResultFileHelper.TestModFile(@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod",
-				@"40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod", testColumns);
+				@"40t_Long_Haul_Truck_Long_Haul_Empty Loading AUX.vmod", testColumns);
 			ResultFileHelper.TestSumFile(@"40t_Long_Haul_Truck.vsum",
-				@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck.vsum");
+				@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck AUX.vsum");
 		}
 
 		[TestMethod]

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -11,12 +13,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class Gearbox : VectoSimulationComponent, IGearbox, ITnOutPort, ITnInPort
 	{
 		protected ITnOutPort Next;
+		private uint _gear;
 
 		internal GearboxData Data;
 
 		public Gearbox(IVehicleContainer container, GearboxData gearboxData) : base(container)
 		{
 			Data = gearboxData;
+			_gear = 0;
 		}
 
 		#region ITnInProvider
@@ -41,21 +45,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		uint IGearboxInfo.Gear()
 		{
-			throw new NotImplementedException();
+			return _gear;
 		}
 
 		#endregion
 
 		#region ITnOutPort
 
+		private GearData CurrentGear
+		{
+			get { return Data[_gear]; }
+		}
+
+
 		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
 		{
-			throw new NotImplementedException();
+			// todo check fulloadcurve for overload
+
+
+			// todo check shiftpolygon for shifting
+
+
+			engineSpeed *= CurrentGear.Ratio;
+			torque = CurrentGear.LossMap.GearboxInTorque(engineSpeed, torque);
+
+			return Next.Request(absTime, dt, torque, engineSpeed);
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			// todo: add gearbox losses
+			_gear = 0;
 			return Next.Initialize(torque, engineSpeed);
 		}
 
@@ -74,12 +93,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			throw new NotImplementedException();
+			//todo implement
 		}
 
 		protected override void DoCommitSimulationStep()
 		{
-			throw new NotImplementedException();
+			//todo implement
 		}
 
 		#endregion
