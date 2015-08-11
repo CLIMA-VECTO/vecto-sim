@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 {
@@ -11,25 +12,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		[TestMethod]
 		public void TestParseAuxiliaryType()
 		{
-			var aux1 = AuxiliaryTypeHelper.Parse("Fan");
-			Assert.AreEqual(AuxiliaryType.Fan, aux1);
-
-			var aux2 = AuxiliaryTypeHelper.Parse("Steering pump");
-			Assert.AreEqual(AuxiliaryType.SteeringPump, aux2);
-
-			var aux3 = AuxiliaryTypeHelper.Parse("Electric System");
-			Assert.AreEqual(AuxiliaryType.ElectricSystem, aux3);
-
-			var aux4 = AuxiliaryTypeHelper.Parse("HVAC");
-			Assert.AreEqual(AuxiliaryType.HeatingVentilationAirCondition, aux4);
-
-			var aux5 = AuxiliaryTypeHelper.Parse("Pneumatic System");
-			Assert.AreEqual(AuxiliaryType.PneumaticSystem, aux5);
-
-			try {
-				var aux6 = AuxiliaryTypeHelper.Parse("Foo Bar Blupp");
-				Assert.Fail();
-			} catch (ArgumentOutOfRangeException e) {}
+			Assert.AreEqual(AuxiliaryType.Fan, AuxiliaryTypeHelper.Parse("Fan"));
+			Assert.AreEqual(AuxiliaryType.SteeringPump, AuxiliaryTypeHelper.Parse("Steering pump"));
+			Assert.AreEqual(AuxiliaryType.ElectricSystem, AuxiliaryTypeHelper.Parse("Electric System"));
+			Assert.AreEqual(AuxiliaryType.HeatingVentilationAirCondition, AuxiliaryTypeHelper.Parse("HVAC"));
+			Assert.AreEqual(AuxiliaryType.PneumaticSystem, AuxiliaryTypeHelper.Parse("Pneumatic System"));
+			AssertHelper.Exception<ArgumentOutOfRangeException>(() => { AuxiliaryTypeHelper.Parse("Foo Bar Blupp"); });
 		}
 
 		[TestMethod]

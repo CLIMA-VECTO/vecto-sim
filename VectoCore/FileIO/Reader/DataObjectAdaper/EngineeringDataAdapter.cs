@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				if (i == 0) {
 					retVal.AxleGearData = gear;
 				} else {
-					retVal._gearData.Add(i, gear);
+					retVal.Gears.Add(i, gear);
 				}
 			}
 			return retVal;

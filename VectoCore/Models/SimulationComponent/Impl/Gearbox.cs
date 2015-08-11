@@ -1,6 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using TUGraz.VectoCore.Models.Connector.Ports;
+﻿using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -20,7 +18,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Gearbox(IVehicleContainer container, GearboxData gearboxData) : base(container)
 		{
 			Data = gearboxData;
-			_gear = 0;
+			_gear = 1;
 		}
 
 		#region ITnInProvider
@@ -54,7 +52,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private GearData CurrentGear
 		{
-			get { return Data[_gear]; }
+			get { return Data.Gears[_gear]; }
 		}
 
 
@@ -74,7 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			_gear = 0;
+			_gear = 1;
 			return Next.Initialize(torque, engineSpeed);
 		}
 

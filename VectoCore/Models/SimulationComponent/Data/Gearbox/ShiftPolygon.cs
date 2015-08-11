@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
@@ -12,8 +10,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
 	public class ShiftPolygon : SimulationComponentData
 	{
-		private List<ShiftPolygonEntry> _upshiftPolygon;
-		private List<ShiftPolygonEntry> _downshifPolygon;
+		private readonly List<ShiftPolygonEntry> _upshiftPolygon;
+		private readonly List<ShiftPolygonEntry> _downshifPolygon;
 
 		internal ShiftPolygon(List<ShiftPolygonEntry> downshift, List<ShiftPolygonEntry> upshift)
 		{

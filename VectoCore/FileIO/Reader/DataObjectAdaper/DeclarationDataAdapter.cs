@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 						: null;
 					var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(fullLoad, engine);
 
-					retVal._gearData.Add(i, new GearData() {
+					retVal.Gears.Add(i, new GearData() {
 						LossMap = lossMap,
 						ShiftPolygon = shiftPolygon,
 						Ratio = gearSettings.Ratio,
