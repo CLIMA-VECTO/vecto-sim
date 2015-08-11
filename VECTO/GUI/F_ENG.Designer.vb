@@ -10,28 +10,28 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class F_ENG
-    Inherits System.Windows.Forms.Form
+	Inherits System.Windows.Forms.Form
 
-    'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
-    <System.Diagnostics.DebuggerNonUserCode()> _
-    Protected Overrides Sub Dispose(ByVal disposing As Boolean)
-        Try
-            If disposing AndAlso components IsNot Nothing Then
-                components.Dispose()
-            End If
-        Finally
-            MyBase.Dispose(disposing)
-        End Try
-    End Sub
+	'Das Formular überschreibt den Löschvorgang, um die Komponentenliste zu bereinigen.
+	<System.Diagnostics.DebuggerNonUserCode()> _
+	Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+		Try
+			If disposing AndAlso components IsNot Nothing Then
+				components.Dispose()
+			End If
+		Finally
+			MyBase.Dispose(disposing)
+		End Try
+	End Sub
 
-    'Wird vom Windows Form-Designer benötigt.
-    Private components As System.ComponentModel.IContainer
+	'Wird vom Windows Form-Designer benötigt.
+	Private components As System.ComponentModel.IContainer
 
-    'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
-    'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
-    'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
-    <System.Diagnostics.DebuggerStepThrough()> _
-    Private Sub InitializeComponent()
+	'Hinweis: Die folgende Prozedur ist für den Windows Form-Designer erforderlich.
+	'Das Bearbeiten ist mit dem Windows Form-Designer möglich.  
+	'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
+	<System.Diagnostics.DebuggerStepThrough()> _
+	Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
 		Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(F_ENG))
 		Me.TbNleerl = New System.Windows.Forms.TextBox()
@@ -68,6 +68,7 @@ Partial Class F_ENG
 		Me.BtMAPopen = New System.Windows.Forms.Button()
 		Me.PnInertia = New System.Windows.Forms.Panel()
 		Me.GrWHTC = New System.Windows.Forms.GroupBox()
+		Me.BtWHTCimport = New System.Windows.Forms.Button()
 		Me.Label13 = New System.Windows.Forms.Label()
 		Me.TbWHTCmw = New System.Windows.Forms.TextBox()
 		Me.TbWHTCrural = New System.Windows.Forms.TextBox()
@@ -372,6 +373,7 @@ Partial Class F_ENG
 		'
 		'GrWHTC
 		'
+		Me.GrWHTC.Controls.Add(Me.BtWHTCimport)
 		Me.GrWHTC.Controls.Add(Me.Label13)
 		Me.GrWHTC.Controls.Add(Me.TbWHTCmw)
 		Me.GrWHTC.Controls.Add(Me.TbWHTCrural)
@@ -386,6 +388,15 @@ Partial Class F_ENG
 		Me.GrWHTC.TabIndex = 9
 		Me.GrWHTC.TabStop = False
 		Me.GrWHTC.Text = "WHTC Correction"
+		'
+		'BtWHTCimport
+		'
+		Me.BtWHTCimport.Location = New System.Drawing.Point(305, 19)
+		Me.BtWHTCimport.Name = "BtWHTCimport"
+		Me.BtWHTCimport.Size = New System.Drawing.Size(170, 28)
+		Me.BtWHTCimport.TabIndex = 4
+		Me.BtWHTCimport.Text = "Import from VECTO-Engine"
+		Me.BtWHTCimport.UseVisualStyleBackColor = True
 		'
 		'Label13
 		'
@@ -587,4 +598,5 @@ Partial Class F_ENG
 	Friend WithEvents Label14 As System.Windows.Forms.Label
 	Friend WithEvents BtFLD As System.Windows.Forms.Button
 	Friend WithEvents BtFLDopen As System.Windows.Forms.Button
+	Friend WithEvents BtWHTCimport As System.Windows.Forms.Button
 End Class
