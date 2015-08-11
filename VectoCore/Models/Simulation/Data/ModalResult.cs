@@ -174,7 +174,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [km/h]	Target vehicle speed.
 		/// </summary>
-		[ModalResultField(typeof(SI))] v_targ,
+		[ModalResultField(typeof(SI), outputFactor: 3.6)] v_targ,
 
 		/// <summary>
 		///     [m/s2]	Vehicle acceleration.

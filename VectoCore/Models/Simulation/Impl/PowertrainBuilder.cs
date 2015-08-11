@@ -46,7 +46,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var driver = AddComponent(cycle, new Driver(_container, data.DriverData));
 			var vehicle = AddComponent(driver, new Vehicle(_container, data.VehicleData));
 			var wheels = AddComponent(vehicle, new Wheels(_container, data.VehicleData.DynamicTyreRadius));
-			var tmp = AddComponent(wheels, new AxleGear(_container, data.GearboxData.AxleGearData));
+			var breaks = AddComponent(wheels, new Breaks(_container));
+			var tmp = AddComponent(breaks, new AxleGear(_container, data.GearboxData.AxleGearData));
 
 			switch (data.VehicleData.Retarder.Type) {
 				case RetarderData.RetarderType.Primary:
@@ -152,7 +153,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			directAux.AddDirect(cycle);
 			gearbox.InPort().Connect(directAux.OutPort());
 
-			var engine = new CombustionEngine(_container, data.EngineData);
+			var engine = new EngineOnlyCombustionEngine(_container, data.EngineData);
 			directAux.InPort().Connect(engine.OutPort());
 
 			return _container;

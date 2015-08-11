@@ -34,9 +34,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
-			return _nextComponent.Request(absTime, dt,
+			Log.DebugFormat("request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
+			var retVal = _nextComponent.Request(absTime, dt,
 				_gearData.LossMap.GearboxInTorque(angularVelocity * _gearData.Ratio, torque),
 				angularVelocity * _gearData.Ratio, dryRun);
+			retVal.AxlegearPowerRequest = Formulas.TorqueToPower(torque, angularVelocity);
+			return retVal;
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
