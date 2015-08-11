@@ -1,0 +1,60 @@
+body {
+  padding-left: 21em;
+  font-family: Calibri, sans-serif;
+}
+
+nav, #TOC {
+  position: fixed;
+  width: 20em;
+  top: 0;
+  left: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #eee;
+  overflow: scroll;
+
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+nav ul {
+	line-height: 1.7em;
+}
+
+th {
+  font-weight: bold;
+}
+
+th, td {
+  padding: 6px;
+  border: 1px solid #aaa;
+}
+
+h1 {
+  padding-bottom: 3px;
+  border-bottom: 1px solid #aaa;
+  padding-top: 2em;
+}
+
+body h1 {
+  margin-top: 0px;
+}
+
+h2 {
+  padding-bottom: 3px;
+  border-bottom: 1px solid #aaa;
+}
+
+dt {
+  font-style: italic;
+  font-weight: bold;
+}
+
+.math {
+  font-size: 20px;
+
+}

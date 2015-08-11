@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+  dslVersion="1.0.0.0"
+  Id="e83d43a2-8561-45a6-83ca-4727ad9879ce"
+  name="Impl"
+  visibility="Private" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <referencesInternal>
+    <reference
+      Id="d6717aa7-9094-4d98-b552-1066685f87e8"
+      handle="viewcode://./CodeSchema_Namespace?Namespace%3DTUGraz.VectoCore.FileIO.Reader.Impl"
+      tag="ViewCode" />
+  </referencesInternal>
+  <packagedElements>
+    <packageHasNamedElement>
+      <class
+        Id="fa13beb5-e4de-4479-af47-abc476aea6f7"
+        name="EngineeringModeSimulationDataReader"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="a760f261-bd61-4219-b368-c2413251be8a"
+            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.Impl Type%3DEngineeringModeSimulationDataReader"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="ca91a67a-845e-4b8c-94f9-d65a512347f0"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="49c7ad3b-e3d0-445a-9992-b3dccca030a9">
+                <propertyInstance
+                  Id="70960ef7-a764-4711-8c21-9b7ff91349c6"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="150af285-4856-403b-9723-bfc927b76a7a">
+                <propertyInstance
+                  Id="bc71eaf3-9477-419e-9596-6d24fa639f9f"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="a54620b9-a57c-4d3b-8ae2-abcbdf61f38a">
+                <propertyInstance
+                  Id="6e226fff-8aa8-4101-b7bf-916cb1d33ce0"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="e29ab9dc-48d7-49da-817d-869813f0f2e0">
+                <propertyInstance
+                  Id="f44642ea-43a1-4380-a1e6-00ef46e9f835"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="f8b23b47-91b2-4892-9e9c-ef0ad5bffbed">
+                <propertyInstance
+                  Id="620c3f31-8b0f-46cc-9082-148a8c535802"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+        <generalsInternal>
+          <generalization
+            Id="9b570798-fca4-4e29-9be5-e6f58428ec28"
+            isSubstitutable="false">
+            <classMoniker
+              Id="1b085670-f45d-4c37-a6af-a5e117768c96"
+              LastKnownName="AbstractSimulationDataReader"
+              LastKnownLocation="Package_1827.uml" />
+          </generalization>
+        </generalsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="1b085670-f45d-4c37-a6af-a5e117768c96"
+        name="AbstractSimulationDataReader"
+        isAbstract="true"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="a272e5ad-a2c9-4aa1-8872-44071317f370"
+            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.Impl Type%3DAbstractSimulationDataReader"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="b53ee9c5-6785-490a-bfcb-14425054264c"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="33d426e6-3234-4ade-a101-abb9eeaa162e">
+                <propertyInstance
+                  Id="7c7df5da-4cda-4c6a-9e54-05e46b1d3334"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="b1534cf6-7935-422b-85bf-d1f91a1c9aac">
+                <propertyInstance
+                  Id="9e5a4efd-f549-43fa-a0c6-5de8d8794414"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="4969c9d2-043b-4269-930c-730c055d085d">
+                <propertyInstance
+                  Id="5f034498-f03a-444f-80f4-078837b957bd"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="77edf5fe-e20e-410e-ba55-568cb5da5540">
+                <propertyInstance
+                  Id="a29562ab-e3d9-49b1-891e-a90949574dc7"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="44ad5a7e-b81c-42cd-a27f-f7798d59cf14">
+                <propertyInstance
+                  Id="ddc6a037-5532-4d53-a33b-ea13c1e645f6"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+        <suppliersInternal>
+          <interfaceRealization
+            Id="f86384c8-abde-42f2-a5b7-ba4278a0b0f4">
+            <interfaceMoniker
+              Id="a19b5894-701e-4ea8-b6c2-4ecbf617105b"
+              LastKnownName="ISimulationDataReader"
+              LastKnownLocation="Package2_1426.uml" />
+          </interfaceRealization>
+        </suppliersInternal>
+        <ownedOperationsInternal>
+          <operation
+            Id="8adff4b4-495d-4a3b-a9ee-f194f6115f0b"
+            name="SetJobFile"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="2b036822-28ef-4f2e-b11b-0834ccfea923"
+                  name="fileName"
+                  direction="In">
+                  <type_NamedElement>
+                    <primitiveTypeMoniker
+                      Id="59259974-6d55-42c6-b7bd-763d77ac8ef9"
+                      LastKnownName="String"
+                      LastKnownLocation="VectoArchitecture.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="2483bf49-db26-4887-8cfd-2cbbc7ffe5d5"
+            name="NextRun"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="3728d369-46cc-4114-97d8-78f2c3425d47"
+                  direction="Return">
+                  <type_NamedElement>
+                    <interfaceMoniker
+                      Id="06171118-1679-46ee-88d0-93e8d470b41e"
+                      LastKnownName="IEnumerable&lt;VectoRunData‎&gt;"
+                      LastKnownLocation="Package8_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+        </ownedOperationsInternal>
+      </class>
+    </packageHasNamedElement>
+  </packagedElements>
+</package>
