@@ -9,6 +9,7 @@ using TUGraz.VectoCore.FileIO.EngineeringFile;
 using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 [assembly: InternalsVisibleTo("VectoCoreTest")]
@@ -57,7 +58,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				ID = a.ID,
 				Technology = a.Technology,
 				TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
-				DemandType = AuxiliaryDemandType.Mapping
+				DemandType = AuxiliaryDemandType.Mapping,
+				Data = AuxiliaryData.ReadFromFile(Path.Combine(Job.BasePath, a.Path))
 			});
 
 			// add a direct auxiliary

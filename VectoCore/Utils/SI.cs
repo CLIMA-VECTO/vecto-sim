@@ -29,31 +29,77 @@ namespace TUGraz.VectoCore.Utils
 			return self.Val;
 		}
 
+		/// <summary>
+		/// Implements the operator +.
+		/// </summary>
+		/// <param name="si1">The si1.</param>
+		/// <param name="si2">The si2.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
 		public static Scalar operator +(Scalar si1, Scalar si2)
 		{
 			return new Scalar(si1.Val + si2.Val);
 		}
 
+		[DebuggerHidden]
 		public static Scalar operator +(Scalar si1, double si2)
 		{
 			return new Scalar(si1.Val + si2);
 		}
 
+		/// <summary>
+		/// Implements the operator +.
+		/// </summary>
+		/// <param name="si1">The si1.</param>
+		/// <param name="si2">The si2.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
 		public static Scalar operator +(double si1, Scalar si2)
 		{
 			return new Scalar(si1 + si2.Val);
 		}
 
+		/// <summary>
+		/// Implements the operator -.
+		/// </summary>
+		/// <param name="si1">The si1.</param>
+		/// <param name="si2">The si2.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
 		public static Scalar operator -(Scalar si1, Scalar si2)
 		{
 			return new Scalar(si1.Val - si2.Val);
 		}
 
+		/// <summary>
+		/// Implements the operator -.
+		/// </summary>
+		/// <param name="si1">The si1.</param>
+		/// <param name="si2">The si2.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
 		public static Scalar operator -(Scalar si1, double si2)
 		{
 			return new Scalar(si1.Val - si2);
 		}
 
+		/// <summary>
+		/// Implements the operator -.
+		/// </summary>
+		/// <param name="si1">The si1.</param>
+		/// <param name="si2">The si2.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
 		public static Scalar operator -(double si1, Scalar si2)
 		{
 			return new Scalar(si1 - si2.Val);
@@ -73,6 +119,15 @@ namespace TUGraz.VectoCore.Utils
 		[JsonConstructor]
 		private Newton(double val) : base(new SI(val).Newton) {}
 
+		/// <summary>
+		/// Implements the operator *.
+		/// </summary>
+		/// <param name="newton">The newton.</param>
+		/// <param name="meter">The meter.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
 		public static NewtonMeter operator *(Newton newton, Meter meter)
 		{
 			return ((newton as SI) * meter).Cast<NewtonMeter>();
@@ -230,11 +285,29 @@ namespace TUGraz.VectoCore.Utils
 		[JsonConstructor]
 		private Watt(double val) : base(new SI(val).Watt) {}
 
+		/// <summary>
+		/// Implements the operator /.
+		/// </summary>
+		/// <param name="watt">The watt.</param>
+		/// <param name="newtonMeter">The newton meter.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
 		public static PerSecond operator /(Watt watt, NewtonMeter newtonMeter)
 		{
 			return ((watt as SI) / newtonMeter).Cast<PerSecond>();
 		}
 
+		/// <summary>
+		/// Implements the operator /.
+		/// </summary>
+		/// <param name="watt">The watt.</param>
+		/// <param name="perSecond">The per second.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
 		public static NewtonMeter operator /(Watt watt, PerSecond perSecond)
 		{
 			return ((watt as SI) / perSecond).Cast<NewtonMeter>();
@@ -268,7 +341,15 @@ namespace TUGraz.VectoCore.Utils
 		[JsonConstructor]
 		private MeterPerSecond(double val) : base(new SI(val).Meter.Per.Second) {}
 
-
+		/// <summary>
+		/// Implements the operator /.
+		/// </summary>
+		/// <param name="meterPerSecond">The meter per second.</param>
+		/// <param name="meter">The meter.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
 		public static PerSecond operator /(MeterPerSecond meterPerSecond, Meter meter)
 		{
 			return ((meterPerSecond as SI) / meter).Cast<PerSecond>();
@@ -302,21 +383,25 @@ namespace TUGraz.VectoCore.Utils
 		[JsonConstructor]
 		private NewtonMeter(double val) : base(new SI(val).Newton.Meter) {}
 
+		[DebuggerHidden]
 		public static Watt operator *(NewtonMeter newtonMeter, PerSecond perSecond)
 		{
 			return ((newtonMeter as SI) * perSecond).Cast<Watt>();
 		}
 
+		[DebuggerHidden]
 		public static Watt operator *(PerSecond perSecond, NewtonMeter newtonMeter)
 		{
 			return ((perSecond as SI) * newtonMeter).Cast<Watt>();
 		}
 
+		[DebuggerHidden]
 		public static Second operator /(NewtonMeter newtonMeter, Watt watt)
 		{
 			return ((newtonMeter as SI) / watt).Cast<Second>();
 		}
 
+		[DebuggerHidden]
 		public static Newton operator /(NewtonMeter newtonMeter, Meter meter)
 		{
 			return ((newtonMeter as SI) / meter).Cast<Newton>();

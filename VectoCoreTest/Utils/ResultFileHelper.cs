@@ -36,34 +36,45 @@ namespace TUGraz.VectoCore.Tests.Utils
 					string.Format("Moddata: Columns differ:\nExpected: {0}\nActual: {1}", string.Join(", ", expectedCols),
 						string.Join(", ", actualCols)));
 
-				//todo initial state
 				for (var i = 0; i < expected.Rows.Count; i++) {
 					var expectedRow = expected.Rows[i];
 					var actualRow = actual.Rows[i];
 
 					foreach (var field in testColumns ?? new string[0]) {
-						AssertHelper.AreRelativeEqual(expectedRow.ParseDoubleOrGetDefault(field), actualRow.ParseDoubleOrGetDefault(field),
-							string.Format("t: {0}  field: {1}", i, field));
+						Assert.AreEqual(expectedRow.ParseDoubleOrGetDefault(field), actualRow.ParseDoubleOrGetDefault(field),
+							DoubleExtensionMethods.Tolerance, string.Format("t: {0}  field: {1}", i, field));
 					}
 				}
 			}
 		}
 
-		public static void TestSumFile(string expectedFile, string actualFile)
+		public static void TestSumFile(string expectedFile, string actualFile, string[] testColumns = null)
 		{
 			Assert.IsTrue(File.Exists(actualFile), "SUM File is missing: " + actualFile);
 
-			var expected = File.ReadAllLines(expectedFile);
-			var actual = File.ReadAllLines(actualFile);
+			var expected = VectoCSVFile.Read(expectedFile, fullHeader: true);
+			var actual = VectoCSVFile.Read(actualFile, fullHeader: true);
 
-			Assert.AreEqual(expected.Length, actual.Length,
-				string.Format("SUM File row count differs.\nExpected {0} Rows in {1}\nGot {2} Rows in {3}", expected.Length,
-					expectedFile, actual.Length, actualFile));
+			Assert.AreEqual(expected.Rows.Count, actual.Rows.Count,
+				string.Format("SUM File row count differs.\nExpected {0} Rows in {1}\nGot {2} Rows in {3}", expected.Rows.Count,
+					expectedFile, actual.Rows.Count, actualFile));
 
-			Assert.AreEqual(expected.First(), actual.First(),
-				string.Format("SUM File Header differs:\nExpected: '{0}'\nActual  : '{1}'", expected.First(), actual.First()));
+			var actualCols = actual.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
+			var expectedCols = expected.Columns.Cast<DataColumn>().Select(x => x.ColumnName).OrderBy(x => x).ToList();
 
-			// todo: test contents of sum file
+			Assert.IsTrue(expectedCols.SequenceEqual(actualCols),
+				string.Format("Moddata: Columns differ:\nExpected: {0}\nActual: {1}", string.Join(", ", expectedCols),
+					string.Join(", ", actualCols)));
+
+			for (var i = 0; i < expected.Rows.Count; i++) {
+				var expectedRow = expected.Rows[i];
+				var actualRow = actual.Rows[i];
+
+				foreach (var field in testColumns ?? new string[0]) {
+					AssertHelper.AreRelativeEqual(expectedRow.ParseDoubleOrGetDefault(field), actualRow.ParseDoubleOrGetDefault(field),
+						string.Format("t: {0}  field: {1}", i, field));
+				}
+			}
 		}
 	}
 }

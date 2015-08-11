@@ -17,19 +17,19 @@
       {
         "ID": "ALT1",
         "Type": "Alternator",
-        "Path": "24t_Coach_ALT.vaux",
+        "Path": "../Components/24t_Coach_ALT.vaux",
         "Technology": ""
       },
       {
         "ID": "ALT2",
         "Type": "Alternator",
-        "Path": "24t_Coach_ALT.vaux",
+        "Path": "../Components/24t_Coach_ALT.vaux",
         "Technology": ""
       },
       {
         "ID": "ALT3",
         "Type": "Alternator",
-        "Path": "24t_Coach_ALT.vaux",
+        "Path": "../Components/24t_Coach_ALT.vaux",
         "Technology": ""
       }
     ],

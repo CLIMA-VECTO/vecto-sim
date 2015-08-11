@@ -1,0 +1,118 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
+    "Date": "24.06.2015 09:43:54",
+    "AppVersion": "2.2 beta",
+    "FileVersion": 5
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "ModelName": "Generic 40t Long Haul Truck",
+    "Inertia": 0.0,
+    "TracInt": 1.0,
+    "Gears": [
+      {
+        "Ratio": 2.59,
+        "LossMap": "Axle.vtlm"
+      },
+      {
+        "Ratio": 14.93,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 11.64,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 9.02,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 7.04,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 5.64,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 4.4,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 3.39,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 2.65,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 2.05,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.6,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.28,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.0,
+        "LossMap": "Direct Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "-",
+        "FullLoadCurve": "<NOFILE>"
+      }
+    ],
+    "TqReserve": 20.0,
+    "SkipGears": true,
+    "ShiftTime": 2,
+    "EaryShiftUp": true,
+    "StartTqReserve": 20.0,
+    "StartSpeed": 2.0,
+    "StartAcc": 0.6,
+    "GearboxType": "AMT",
+    "TorqueConverter": {
+      "Enabled": false,
+      "File": "<NOFILE>",
+      "RefRPM": 0.0,
+      "Inertia": 0.0
+    }
+  }
+}

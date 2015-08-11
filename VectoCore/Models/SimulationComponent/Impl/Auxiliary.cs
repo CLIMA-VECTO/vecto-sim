@@ -107,7 +107,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_auxDict[DirectAuxiliaryId] = speed => cycle.CycleData().LeftSample.AdditionalAuxPowerDemand;
 		}
 
-		public void AddMapping(string auxId, IDrivingCycleInfo cycle, MappingAuxiliaryData data)
+		public void AddMapping(string auxId, IDrivingCycleInfo cycle, AuxiliaryData data)
 		{
 			if (!cycle.CycleData().LeftSample.AuxiliarySupplyPower.ContainsKey("Aux_" + auxId)) {
 				var error = string.Format("driving cycle does not contain column for auxiliary: {0}", auxId);

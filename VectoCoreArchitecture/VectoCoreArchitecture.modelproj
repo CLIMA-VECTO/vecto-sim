@@ -22,13 +22,17 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\ArchitectureTools\Microsoft.VisualStudio.TeamArchitect.ModelingProject.targets" Condition="'$(VSToolsPath)' != ''" />
   <ItemGroup>
-    <Content Include="FileInputAndPowertrainCreation.classdiagram">
+<Content Include="FileInputAndPowertrainCreation.classdiagram">
       <SubType>Content</SubType>
     </Content>
     <Content Include="FileInputAndPowertrainCreation.classdiagram.layout">
       <SubType>Content</SubType>
       <DependentUpon>FileInputAndPowertrainCreation.classdiagram</DependentUpon>
     </Content>
+<Content Include="VectoFiles.dgml">
+      <SubType>Content</SubType>
+    </Content>
+
     <Content Include="ModelDefinition\Package10_1344.uml">
       <SubType>Content</SubType>
     </Content>

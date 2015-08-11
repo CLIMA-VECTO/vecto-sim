@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Utils;
 
@@ -10,6 +11,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 		/// <summary>
 		/// Assert an expected Exception.
 		/// </summary>
+		[DebuggerHidden]
 		public static void Exception<T>(Action func, string message = null) where T : Exception
 		{
 			try {
@@ -55,16 +57,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 				return;
 			}
 
-			if (expected.IsEqual(0.0)) {
-				Assert.AreEqual(expected, actual, DoubleExtensionMethods.Tolerance,
-					string.Format("Actual value is different. Expected: {0}, Actual: {1}, Difference: {3}, ToleranceFactor: {2}{4}",
-						expected, actual, toleranceFactor, expected - actual, message));
-				return;
-			}
-
-			Assert.IsTrue(Math.Abs(actual / expected - 1) < toleranceFactor,
-				string.Format("Actual value is different. Expected: {0}, Actual: {1}, Difference: {3}, ToleranceFactor: {2}{4}",
-					expected, actual, toleranceFactor, expected - actual, message));
+			var ratio = expected == 0 ? Math.Abs(actual) : Math.Abs(actual / expected - 1);
+			Assert.IsTrue(ratio < toleranceFactor, string.Format(CultureInfo.InvariantCulture,
+				"Given values are not equal. Expected: {0}, Actual: {1}, Difference: {3} (Tolerance: {2}){4}",
+				expected, actual, toleranceFactor * (expected == 0 ? 1 : expected), expected - actual, message));
 		}
 	}
 }
