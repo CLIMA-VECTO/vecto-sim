@@ -2,8 +2,8 @@ using System;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -33,7 +33,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IGearboxCockpit
 
-		uint IGearboxCockpit.Gear()
+		uint IGearboxInfo.Gear()
 		{
 			return 0;
 		}
@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed)
+		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
 		{
 			if (_outPort == null) {
 				Log.ErrorFormat("{0} cannot handle incoming request - no outport available", absTime);
@@ -59,12 +59,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					string.Format("{0} cannot handle incoming request - no outport available",
 						absTime));
 			}
-			return _outPort.Request(absTime, dt, torque, engineSpeed);
+			return _outPort.Request(absTime, dt, torque, engineSpeed, dryRun);
 		}
 
-		public IResponse Initialize()
+		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			return _outPort.Initialize();
+			return _outPort.Initialize(torque, engineSpeed);
 		}
 
 		#endregion

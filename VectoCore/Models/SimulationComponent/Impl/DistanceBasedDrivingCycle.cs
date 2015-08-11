@@ -8,6 +8,7 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -17,8 +18,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	///     Class representing one Distance Based Driving Cycle
 	/// </summary>
 	public class DistanceBasedDrivingCycle : VectoSimulationComponent, IDrivingCycle,
-		ISimulationOutPort,
-		IDrivingCycleInPort
+		ISimulationOutPort, IDrivingCycleInPort, IRoadLookAhead
 	{
 		protected DrivingCycleData Data;
 
@@ -159,7 +159,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 			CurrentState = PreviousState.Clone();
 			//return new ResponseSuccess();
-			return _outPort.Initialize();
+			return _outPort.Initialize(CycleIntervalIterator.LeftSample.VehicleTargetSpeed,
+				CycleIntervalIterator.LeftSample.RoadGradient);
 		}
 
 		#endregion
@@ -199,19 +200,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		protected void LookupCycle(Meter ds) {}
+		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter distance)
+		{
+			throw new NotImplementedException();
+		}
 
+		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
+		{
+			throw new NotImplementedException();
+		}
 
 		public class DrivingCycleEnumerator : IEnumerator<DrivingCycleData.DrivingCycleEntry>
 		{
 			protected IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSampleIt;
 			protected IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSampleIt;
 
+			//protected uint currentCycleIndex;
+
 			public DrivingCycleEnumerator(DrivingCycleData data)
 			{
 				LeftSampleIt = data.Entries.GetEnumerator();
 				RightSampleIt = data.Entries.GetEnumerator();
 				RightSampleIt.MoveNext();
+				//currentCycleIndex = 0;
 			}
 
 			public DrivingCycleData.DrivingCycleEntry Current

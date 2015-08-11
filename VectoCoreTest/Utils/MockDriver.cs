@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return new ResponseSuccess() { SimulationInterval = dt }; //_next.Request(absTime, dt, acc, gradient);
 		}
 
-		public IResponse Initialize()
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
 			return new ResponseSuccess();
 		}

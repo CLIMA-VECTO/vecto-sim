@@ -28,12 +28,12 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var powerTrain = builder.Build(runData);
 
 			Assert.IsInstanceOfType(powerTrain, typeof(IVehicleContainer));
-			Assert.AreEqual(10, powerTrain._components.Count);
+			Assert.AreEqual(10, powerTrain.Components.Count);
 
-			Assert.IsInstanceOfType(powerTrain._engine, typeof(CombustionEngine));
-			Assert.IsInstanceOfType(powerTrain._gearbox, typeof(Gearbox));
-			Assert.IsInstanceOfType(powerTrain._cycle, typeof(ISimulationOutPort));
-			Assert.IsInstanceOfType(powerTrain._vehicle, typeof(Vehicle));
+			Assert.IsInstanceOfType(powerTrain.Engine, typeof(CombustionEngine));
+			Assert.IsInstanceOfType(powerTrain.Gearbox, typeof(Gearbox));
+			Assert.IsInstanceOfType(powerTrain.Cycle, typeof(ISimulationOutPort));
+			Assert.IsInstanceOfType(powerTrain.Vehicle, typeof(Vehicle));
 		}
 	}
 }

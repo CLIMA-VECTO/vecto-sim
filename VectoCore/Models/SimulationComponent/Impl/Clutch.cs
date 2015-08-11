@@ -58,12 +58,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return this;
 		}
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
-			var torqueIn = torque;
-			var engineSpeedIn = angularVelocity;
+			NewtonMeter torqueIn;
+			PerSecond engineSpeedIn;
+			AddClutchLoss(torque, angularVelocity, out torqueIn, out engineSpeedIn);
 
-			if (Cockpit.Gear() == 0) {
+			return _nextComponent.Request(absTime, dt, torqueIn, engineSpeedIn, dryRun);
+		}
+
+		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+		{
+			NewtonMeter torqueIn;
+			PerSecond engineSpeedIn;
+			AddClutchLoss(torque, angularVelocity, out torqueIn, out engineSpeedIn);
+
+			return _nextComponent.Initialize(torqueIn, engineSpeedIn);
+		}
+
+		public void Connect(ITnOutPort other)
+		{
+			_nextComponent = other;
+		}
+
+		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,
+			out PerSecond engineSpeedIn)
+		{
+			torqueIn = torque;
+			engineSpeedIn = angularVelocity;
+
+			if (DataBus.Gear() == 0) {
 				_clutchState = ClutchState.ClutchOpened;
 				engineSpeedIn = _idleSpeed;
 				torqueIn = 0.SI<NewtonMeter>();
@@ -85,18 +109,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					_clutchState = ClutchState.ClutchClosed;
 				}
 			}
-
-			return _nextComponent.Request(absTime, dt, torqueIn, engineSpeedIn);
-		}
-
-		public IResponse Initialize()
-		{
-			return _nextComponent.Initialize();
-		}
-
-		public void Connect(ITnOutPort other)
-		{
-			_nextComponent = other;
 		}
 	}
 }

@@ -4,37 +4,40 @@ using System.Globalization;
 using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class VehicleContainer : IVehicleContainer
 	{
-		internal readonly IList<VectoSimulationComponent> _components = new List<VectoSimulationComponent>();
-		internal IEngineCockpit _engine;
-		internal IGearboxCockpit _gearbox;
-		internal IVehicleCockpit _vehicle;
+		internal readonly IList<VectoSimulationComponent> Components = new List<VectoSimulationComponent>();
+		internal IEngineInfo Engine;
+		internal IGearboxInfo Gearbox;
+		internal IVehicleInfo Vehicle;
 
-		internal IMileageCounter _milageCounter;
+		internal IMileageCounter MilageCounter;
 
-		internal ISimulationOutPort _cycle;
+		internal IRoadLookAhead Road;
 
-		internal ISummaryDataWriter _sumWriter;
-		internal IModalDataWriter _dataWriter;
+		internal ISimulationOutPort Cycle;
 
-		private ILog _logger;
+		internal ISummaryDataWriter SumWriter;
+		internal IModalDataWriter DataWriter;
+
+		private readonly ILog _logger;
 
 		#region IGearCockpit
 
 		public uint Gear()
 		{
-			if (_gearbox == null) {
+			if (Gearbox == null) {
 				throw new VectoException("no gearbox available!");
 			}
-			return _gearbox.Gear();
+			return Gearbox.Gear();
 		}
 
 		#endregion
@@ -43,10 +46,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public PerSecond EngineSpeed()
 		{
-			if (_engine == null) {
+			if (Engine == null) {
 				throw new VectoException("no engine available!");
 			}
-			return _engine.EngineSpeed();
+			return Engine.EngineSpeed();
 		}
 
 		#endregion
@@ -55,22 +58,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public MeterPerSecond VehicleSpeed()
 		{
-			return _vehicle != null ? _vehicle.VehicleSpeed() : 0.SI<MeterPerSecond>();
+			return Vehicle != null ? Vehicle.VehicleSpeed() : 0.SI<MeterPerSecond>();
 		}
 
 		public Kilogram VehicleMass()
 		{
-			return _vehicle != null ? _vehicle.VehicleMass() : 0.SI<Kilogram>();
+			return Vehicle != null ? Vehicle.VehicleMass() : 0.SI<Kilogram>();
 		}
 
 		public Kilogram VehicleLoading()
 		{
-			return _vehicle != null ? _vehicle.VehicleLoading() : 0.SI<Kilogram>();
+			return Vehicle != null ? Vehicle.VehicleLoading() : 0.SI<Kilogram>();
 		}
 
 		public Kilogram TotalMass()
 		{
-			return _vehicle != null ? _vehicle.TotalMass() : 0.SI<Kilogram>();
+			return Vehicle != null ? Vehicle.TotalMass() : 0.SI<Kilogram>();
 		}
 
 		#endregion
@@ -78,44 +81,49 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public VehicleContainer(IModalDataWriter dataWriter = null, ISummaryDataWriter sumWriter = null)
 		{
 			_logger = LogManager.GetLogger(GetType());
-			_dataWriter = dataWriter;
-			_sumWriter = sumWriter;
+			DataWriter = dataWriter;
+			SumWriter = sumWriter;
 		}
 
 		#region IVehicleContainer
 
 		public ISimulationOutPort GetCycleOutPort()
 		{
-			return _cycle;
+			return Cycle;
 		}
 
 		public virtual void AddComponent(VectoSimulationComponent component)
 		{
-			_components.Add(component);
+			Components.Add(component);
 
-			var engine = component as IEngineCockpit;
+			var engine = component as IEngineInfo;
 			if (engine != null) {
-				_engine = engine;
+				Engine = engine;
 			}
 
-			var gearbox = component as IGearboxCockpit;
+			var gearbox = component as IGearboxInfo;
 			if (gearbox != null) {
-				_gearbox = gearbox;
+				Gearbox = gearbox;
 			}
 
-			var vehicle = component as IVehicleCockpit;
+			var vehicle = component as IVehicleInfo;
 			if (vehicle != null) {
-				_vehicle = vehicle;
+				Vehicle = vehicle;
 			}
 
 			var cycle = component as ISimulationOutPort;
 			if (cycle != null) {
-				_cycle = cycle;
+				Cycle = cycle;
 			}
 
 			var milage = component as IMileageCounter;
 			if (milage != null) {
-				_milageCounter = milage;
+				MilageCounter = milage;
+			}
+
+			var road = component as IRoadLookAhead;
+			if (road != null) {
+				Road = road;
 			}
 		}
 
@@ -123,35 +131,45 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
 			_logger.Info("VehicleContainer committing simulation.");
-			foreach (var component in _components) {
-				component.CommitSimulationStep(_dataWriter);
+			foreach (var component in Components) {
+				component.CommitSimulationStep(DataWriter);
 			}
 
-			if (_dataWriter != null) {
-				_dataWriter[ModalResultField.time] = time + simulationInterval / 2;
-				_dataWriter[ModalResultField.simulationInterval] = simulationInterval;
-				_dataWriter.CommitSimulationStep();
+			if (DataWriter != null) {
+				DataWriter[ModalResultField.time] = time + simulationInterval / 2;
+				DataWriter[ModalResultField.simulationInterval] = simulationInterval;
+				DataWriter.CommitSimulationStep();
 			}
 		}
 
 		public void FinishSimulation()
 		{
 			_logger.Info("VehicleContainer finishing simulation.");
-			_dataWriter.Finish();
+			DataWriter.Finish();
 
-			_sumWriter.Write(_dataWriter, VehicleMass(), VehicleLoading());
+			SumWriter.Write(DataWriter, VehicleMass(), VehicleLoading());
 		}
 
 		#endregion
 
 		public IReadOnlyCollection<VectoSimulationComponent> SimulationComponents()
 		{
-			return new ReadOnlyCollection<VectoSimulationComponent>(_components);
+			return new ReadOnlyCollection<VectoSimulationComponent>(Components);
 		}
 
 		public Meter Distance()
 		{
-			return _milageCounter.Distance();
+			return MilageCounter.Distance();
+		}
+
+		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter distance)
+		{
+			return Road.LookAhead(distance);
+		}
+
+		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
+		{
+			return Road.LookAhead(time);
 		}
 	}
 }

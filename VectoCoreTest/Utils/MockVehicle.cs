@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			NextComponent = other;
 		}
 
-		public IResponse Request(Second absTime, Second dt, MeterPerSquareSecond acceleration, Radian gradient)
+		public IResponse Request(Second absTime, Second dt, MeterPerSquareSecond acceleration, Radian gradient, bool b)
 		{
 			LastRequest = new RequestData() {
 				abstime = absTime,
@@ -66,7 +66,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return new ResponseSuccess();
 		}
 
-		public IResponse Initialize()
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
 			throw new NotImplementedException();
 		}

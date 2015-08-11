@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -60,7 +60,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState = new VehicleState();
 		}
 
-		public IResponse Request(Second absTime, Second dt, MeterPerSquareSecond accelleration, Radian gradient)
+		public IResponse Request(Second absTime, Second dt, MeterPerSquareSecond accelleration, Radian gradient,
+			bool dryRun = false)
 		{
 			_currentState.Velocity = (_previousState.Velocity + (accelleration * dt)).Cast<MeterPerSecond>();
 			_currentState.dt = dt;
@@ -74,11 +75,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return _nextInstance.Request(absTime, dt, vehicleAccelerationForce, _currentState.Velocity);
 		}
 
-		public IResponse Initialize()
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
 			_previousState = new VehicleState() { Distance = 0.SI<Meter>(), Velocity = 0.SI<MeterPerSecond>() };
 			_currentState = new VehicleState() { Distance = 0.SI<Meter>(), Velocity = 0.SI<MeterPerSecond>() };
-			return _nextInstance.Initialize();
+
+			var vehicleAccelerationForce = RollingResistance(roadGradient) + AirDragResistance() + SlopeResistance(roadGradient);
+			return _nextInstance.Initialize(vehicleAccelerationForce, vehicleSpeed);
 		}
 
 		protected Newton RollingResistance(Radian gradient)

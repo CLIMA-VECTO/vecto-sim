@@ -11,6 +11,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		FailOverload,
 		FailTimeInterval,
 		DrivingCycleDistanceExceeded,
+		DryRun,
 	}
 
 

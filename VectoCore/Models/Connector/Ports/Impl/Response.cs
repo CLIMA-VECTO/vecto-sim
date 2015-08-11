@@ -68,4 +68,15 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 			get { return ResponseType.DrivingCycleDistanceExceeded; }
 		}
 	}
+
+	internal class ResponseDryRun : AbstractResponse
+	{
+		public double DeltaFullLoad { get; set; }
+		public double DeltaDragLoad { get; set; }
+
+		public override ResponseType ResponseType
+		{
+			get { return ResponseType.DryRun; }
+		}
+	}
 }
