@@ -17,22 +17,31 @@ namespace TUGraz.VectoCore.Tests.Utils
 				Assert.Fail("Expected Exception {0}, but no exception occured.", typeof(T));
 			} catch (T ex) {
 				if (!string.IsNullOrEmpty(message)) {
-					Assert.AreEqual(message, ex.Message,
-						string.Format("Expected Exception message: {0}, but got message: {1}", message, ex.Message));
+					Assert.AreEqual(message, ex.Message);
 				}
 			}
 		}
 
-		public static void AreRelativeEqual(SI expected, SI actual)
+		[DebuggerHidden]
+		public static void AreRelativeEqual(SI expected, SI actual,
+			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
 		{
 			Assert.IsTrue(actual.HasEqualUnit(expected),
 				string.Format("Wrong SI Units: expected: {0}, actual: {1}", expected.ToBasicUnits(), actual.ToBasicUnits()));
-			AreRelativeEqual(expected.Value(), actual.Value());
+			AreRelativeEqual(expected.Value(), actual.Value(), toleranceFactor: toleranceFactor);
+		}
+
+		[DebuggerHidden]
+		public static void AreRelativeEqual(Scalar expected, Scalar actual,
+			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
+		{
+			Assert.IsTrue(expected.HasEqualUnit(new SI()) && actual.HasEqualUnit(new SI()), "Units of Scalars must be empty.");
+			AreRelativeEqual(expected.Value(), actual.Value(), toleranceFactor: toleranceFactor);
 		}
 
 		[DebuggerHidden]
 		public static void AreRelativeEqual(double expected, double actual, string message = null,
-			double toleranceFactor = DoubleExtensionMethods.Tolerance)
+			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
 		{
 			if (!string.IsNullOrWhiteSpace(message)) {
 				message = "\n" + message;
@@ -48,13 +57,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			if (expected.IsEqual(0.0)) {
 				Assert.AreEqual(expected, actual, DoubleExtensionMethods.Tolerance,
-					string.Format("Actual value is different. Difference: {3} Expected: {0}, Actual: {1}, Tolerance: {2}{4}",
+					string.Format("Actual value is different. Expected: {0}, Actual: {1}, Difference: {3}, ToleranceFactor: {2}{4}",
 						expected, actual, toleranceFactor, expected - actual, message));
 				return;
 			}
 
 			Assert.IsTrue(Math.Abs(actual / expected - 1) < toleranceFactor,
-				string.Format("Actual value is different. Difference: {3} Expected: {0}, Actual: {1}, Tolerance: {2}{4}",
+				string.Format("Actual value is different. Expected: {0}, Actual: {1}, Difference: {3}, ToleranceFactor: {2}{4}",
 					expected, actual, toleranceFactor, expected - actual, message));
 		}
 	}

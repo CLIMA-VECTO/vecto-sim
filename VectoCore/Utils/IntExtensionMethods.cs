@@ -23,11 +23,9 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Gets the SI representation of the number (unit-less).
 		/// </summary>
-		/// <param name="d"></param>
-		/// <returns></returns>
-		public static SI SI(this int d)
+		public static SI SI(this int value)
 		{
-			return (SI)d;
+			return new SI(value);
 		}
 
 		/// <summary>
