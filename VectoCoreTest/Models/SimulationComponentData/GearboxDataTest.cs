@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
