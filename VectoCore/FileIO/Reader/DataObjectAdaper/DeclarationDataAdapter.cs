@@ -165,7 +165,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			}
 
 			if (gearbox.Body.Gears.Count < 2) {
-				throw new VectoSimulationException("At least two gears must be defined: 1 Axle-Gear and 1 Gearbox-Gear!");
+				throw new VectoSimulationException(
+					"At least two Gear-Entries must be defined in Gearbox: 1 Axle-Gear and at least 1 Gearbox-Gear!");
 			}
 
 			retVal.Inertia = DeclarationData.Gearbox.Inertia.SI<KilogramSquareMeter>();
@@ -183,7 +184,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 			var axleGear = gearbox.Body.Gears.First();
 			var lossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, axleGear.LossMap), axleGear.Ratio);
-			retVal.AxleGearData = new GearData { LossMap = lossMap, Ratio = axleGear.Ratio, TorqueConverterActive = false };
+			retVal.AxleGearData = new GearData { LossMap = lossMap, Ratio = axleGear.Ratio };
 
 			retVal.Gears = gearbox.Body.Gears.Skip(1).Select((gear, i) => {
 				lossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, gear.LossMap), gear.Ratio);
@@ -191,18 +192,18 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				if (string.IsNullOrWhiteSpace(gear.FullLoadCurve) || gear.FullLoadCurve == "<NOFILE>") {
 					fullLoadCurve = engine.FullLoadCurve;
 				} else {
-					var gearFullLoad = GearFullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gear.FullLoadCurve));
+					var gearFullLoad = FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gear.FullLoadCurve));
 					fullLoadCurve = IntersectFullLoadCurves(gearFullLoad, engine.FullLoadCurve);
 				}
 
 				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(fullLoadCurve, engine.IdleSpeed);
 				return new KeyValuePair<uint, GearData>((uint)i + 1,
-					new GearData { LossMap = lossMap, ShiftPolygon = shiftPolygon, Ratio = gear.Ratio, TorqueConverterActive = false });
+					new GearData { LossMap = lossMap, ShiftPolygon = shiftPolygon, Ratio = gear.Ratio });
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
 			return retVal;
 		}
 
-		private EngineFullLoadCurve IntersectFullLoadCurves(GearFullLoadCurve fullLoadCurve,
+		private EngineFullLoadCurve IntersectFullLoadCurves(FullLoadCurve fullLoadCurve,
 			EngineFullLoadCurve engineFullLoadCurve)
 		{
 			//create new entries

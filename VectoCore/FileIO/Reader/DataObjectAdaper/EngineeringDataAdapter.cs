@@ -61,7 +61,6 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 		//=================================
 
-
 		internal DriverData CreateDriverData(VectoJobFileV2Engineering job)
 		{
 			var data = job.Body;
@@ -132,8 +131,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		{
 			var retVal = SetCommonCombustionEngineData(engine.Body, engine.BasePath);
 			retVal.Inertia = engine.Body.Inertia.SI<KilogramSquareMeter>();
-			retVal.FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, engine.Body.FullLoadCurve),
-				false);
+			retVal.FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, engine.Body.FullLoadCurve));
 			retVal.FullLoadCurve.EngineData = retVal;
 			return retVal;
 		}
@@ -172,7 +170,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 					? ShiftPolygon.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.ShiftPolygon))
 					: null;
 				var fullLoad = !string.IsNullOrEmpty(gearSettings.FullLoadCurve) && !gearSettings.FullLoadCurve.Equals("<NOFILE>")
-					? GearFullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
+					? FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
 					: null;
 
 				var gear = new GearData() {

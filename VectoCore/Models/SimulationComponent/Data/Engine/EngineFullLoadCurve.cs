@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using Common.Logging;
-using Newtonsoft.Json;
-using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
@@ -15,11 +9,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 	/// <summary>
 	/// Represents the Full load curve.
 	/// </summary>
-	public class EngineFullLoadCurve : SimulationComponentData
+	public class EngineFullLoadCurve : FullLoadCurve
 	{
-		private List<FullLoadCurveEntry> _fullLoadEntries;
-		private LookupData<PerSecond, Second> _pt1Data;
-
 		private Watt _maxPower;
 
 		private PerSecond _ratedSpeed;
@@ -28,120 +19,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		private PerSecond _engineSpeedHi; // 70% of Pmax
 		private PerSecond _n95hSpeed; // 95% of Pmax
 
-		public static EngineFullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
+		public new static EngineFullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
 		{
-			var data = VectoCSVFile.Read(fileName);
-
-			//todo Contract.Requires<VectoException>(data.Columns.Count != 4, "FullLoadCurve Data File must consist of 4 columns.");
-			if (data.Columns.Count < 3) {
-				throw new VectoException("FullLoadCurve Data File must consist of at least 3 columns.");
-			}
-
-			//todo Contract.Requires<VectoException>(data.Rows.Count < 2, "FullLoadCurve must consist of at least two lines with numeric values (below file header)");
-			if (data.Rows.Count < 2) {
-				throw new VectoException(
-					"FullLoadCurve must consist of at least two lines with numeric values (below file header)");
-			}
-
-			List<FullLoadCurveEntry> entriesFld;
-			if (HeaderIsValid(data.Columns)) {
-				entriesFld = CreateFromColumnNames(data);
-			} else {
-				var log = LogManager.GetLogger<EngineFullLoadCurve>();
-				log.WarnFormat(
-					"FullLoadCurve: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index.",
-					Fields.EngineSpeed, Fields.TorqueFullLoad, Fields.TorqueDrag,
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName)));
-
-				entriesFld = CreateFromColumnIndizes(data);
-			}
-
-			LookupData<PerSecond, Second> tmp;
-			if (declarationMode) {
-				tmp = new PT1();
-			} else {
-				tmp = PT1Curve.ReadFromFile(fileName);
-			}
-
-			return new EngineFullLoadCurve { _fullLoadEntries = entriesFld, _pt1Data = tmp };
+			var curve = FullLoadCurve.ReadFromFile(fileName, declarationMode);
+			return new EngineFullLoadCurve { FullLoadEntries = curve.FullLoadEntries, PT1Data = curve.PT1Data };
 		}
 
-		private static bool HeaderIsValid(DataColumnCollection columns)
-		{
-			Contract.Requires(columns != null);
-			return columns.Contains(Fields.EngineSpeed)
-					&& columns.Contains(Fields.TorqueDrag)
-					&& columns.Contains(Fields.TorqueFullLoad);
-			//&& columns.Contains(Fields.PT1);
-		}
-
-		private static List<FullLoadCurveEntry> CreateFromColumnNames(DataTable data)
-		{
-			Contract.Requires(data != null);
-			return (from DataRow row in data.Rows
-				select new FullLoadCurveEntry {
-					EngineSpeed = row.ParseDouble(Fields.EngineSpeed).RPMtoRad(),
-					TorqueFullLoad = row.ParseDouble(Fields.TorqueFullLoad).SI<NewtonMeter>(),
-					TorqueDrag = row.ParseDouble(Fields.TorqueDrag).SI<NewtonMeter>(),
-					//PT1 = row.ParseDouble(Fields.PT1).SI<Second>()
-				}).ToList();
-		}
-
-		private static List<FullLoadCurveEntry> CreateFromColumnIndizes(DataTable data)
-		{
-			Contract.Requires(data != null);
-			return (from DataRow row in data.Rows
-				select new FullLoadCurveEntry {
-					EngineSpeed = row.ParseDouble(0).RPMtoRad(),
-					TorqueFullLoad = row.ParseDouble(1).SI<NewtonMeter>(),
-					TorqueDrag = row.ParseDouble(2).SI<NewtonMeter>(),
-					//PT1 = row.ParseDouble(3).SI<Second>()
-				}).ToList();
-		}
 
 		public CombustionEngineData EngineData { get; internal set; }
 
-		/// <summary>
-		///     [rad/s] => [Nm]
-		/// </summary>
-		/// <param name="angularVelocity">[rad/s]</param>
-		/// <returns>[Nm]</returns>
+
 		public NewtonMeter FullLoadStationaryTorque(PerSecond angularVelocity)
 		{
 			var idx = FindIndex(angularVelocity);
-			return VectoMath.Interpolate(_fullLoadEntries[idx - 1].EngineSpeed, _fullLoadEntries[idx].EngineSpeed,
-				_fullLoadEntries[idx - 1].TorqueFullLoad, _fullLoadEntries[idx].TorqueFullLoad,
+			return VectoMath.Interpolate(FullLoadEntries[idx - 1].EngineSpeed, FullLoadEntries[idx].EngineSpeed,
+				FullLoadEntries[idx - 1].TorqueFullLoad, FullLoadEntries[idx].TorqueFullLoad,
 				angularVelocity);
 		}
 
-		/// <summary>
-		///     [rad/s] => [W]
-		/// </summary>
-		/// <param name="angularVelocity">[rad/s]</param>
-		/// <returns>[W]</returns>
 		public Watt FullLoadStationaryPower(PerSecond angularVelocity)
 		{
 			return Formulas.TorqueToPower(FullLoadStationaryTorque(angularVelocity), angularVelocity);
 		}
 
-		/// <summary>
-		///     [rad/s] => [Nm]
-		/// </summary>
-		/// <param name="angularVelocity">[rad/s]</param>
-		/// <returns>[Nm]</returns>
 		public NewtonMeter DragLoadStationaryTorque(PerSecond angularVelocity)
 		{
 			var idx = FindIndex(angularVelocity);
-			return VectoMath.Interpolate(_fullLoadEntries[idx - 1].EngineSpeed, _fullLoadEntries[idx].EngineSpeed,
-				_fullLoadEntries[idx - 1].TorqueDrag, _fullLoadEntries[idx].TorqueDrag,
+			return VectoMath.Interpolate(FullLoadEntries[idx - 1].EngineSpeed, FullLoadEntries[idx].EngineSpeed,
+				FullLoadEntries[idx - 1].TorqueDrag, FullLoadEntries[idx].TorqueDrag,
 				angularVelocity);
 		}
 
-		/// <summary>
-		///     [rad/s] => [W].
-		/// </summary>
-		/// <param name="angularVelocity">[rad/s]</param>
-		/// <returns>[W]</returns>
 		public Watt DragLoadStationaryPower(PerSecond angularVelocity)
 		{
 			Contract.Requires(angularVelocity.HasEqualUnit(new SI().Radian.Per.Second));
@@ -150,21 +58,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return Formulas.TorqueToPower(DragLoadStationaryTorque(angularVelocity), angularVelocity);
 		}
 
-		/// <summary>
-		///     [rad/s] => [s]
-		/// </summary>
-		/// <param name="angularVelocity">[rad/s]</param>
-		/// <returns>[s]</returns>
 		public Second PT1(PerSecond angularVelocity)
 		{
-			return _pt1Data.Lookup(angularVelocity);
+			return PT1Data.Lookup(angularVelocity);
 		}
 
 
 		/// <summary>
-		///		Get the engine's rated speed from the given full-load curve (i.e. engine speed with max. power)
+		/// Get the engine's rated speed from the given full-load curve (i.e. engine speed with max. power)
 		/// </summary>
-		/// <returns>[1/s]</returns>
 		public PerSecond RatedSpeed
 		{
 			get
@@ -188,7 +90,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		}
 
 		/// <summary>
-		///		Get the engine's preferred speed from the given full-load curve (i.e. Speed at 51% torque/speed-integral between idling and N95h.)
+		///	Get the engine's preferred speed from the given full-load curve (i.e. Speed at 51% torque/speed-integral between idling and N95h.)
 		/// </summary>
 		public PerSecond PreferredSpeed
 		{
@@ -220,23 +122,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		public NewtonMeter MaxLoadTorque
 		{
-			get { return _fullLoadEntries.Max(x => x.TorqueFullLoad); }
+			get { return FullLoadEntries.Max(x => x.TorqueFullLoad); }
 		}
 
 		public NewtonMeter MaxDragTorque
 		{
-			get { return _fullLoadEntries.Min(x => x.TorqueDrag); }
+			get { return FullLoadEntries.Min(x => x.TorqueDrag); }
 		}
 
 		/// <summary>
-		///		Compute the engine's rated speed from the given full-load curve (i.e. engine speed with max. power)
+		///	Compute the engine's rated speed from the given full-load curve (i.e. engine speed with max. power)
 		/// </summary>
-		/// <returns>[1/s]</returns>
 		private void ComputeRatedSpeed()
 		{
 			var max = new Tuple<PerSecond, Watt>(0.SI<PerSecond>(), 0.SI<Watt>());
-			for (var idx = 1; idx < _fullLoadEntries.Count; idx++) {
-				var currentMax = FindMaxPower(_fullLoadEntries[idx - 1], _fullLoadEntries[idx]);
+			for (var idx = 1; idx < FullLoadEntries.Count; idx++) {
+				var currentMax = FindMaxPower(FullLoadEntries[idx - 1], FullLoadEntries[idx]);
 				if (currentMax.Item2 > max.Item2) {
 					max = currentMax;
 				}
@@ -253,11 +154,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 			var area = 0.SI<Watt>();
 			var idx = 0;
-			while (++idx < _fullLoadEntries.Count) {
-				var additionalArea = ComputeArea(_fullLoadEntries[idx - 1].EngineSpeed, _fullLoadEntries[idx].EngineSpeed);
+			while (++idx < FullLoadEntries.Count) {
+				var additionalArea = ComputeArea(FullLoadEntries[idx - 1].EngineSpeed, FullLoadEntries[idx].EngineSpeed);
 				if (area + additionalArea > 0.51 * maxArea) {
 					var deltaArea = 0.51 * maxArea - area;
-					_preferredSpeed = ComputeEngineSpeedForSegmentArea(_fullLoadEntries[idx - 1], _fullLoadEntries[idx], deltaArea);
+					_preferredSpeed = ComputeEngineSpeedForSegmentArea(FullLoadEntries[idx - 1], FullLoadEntries[idx], deltaArea);
 					return;
 				}
 				area += additionalArea;
@@ -294,15 +195,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		protected int FindIndex(PerSecond angularVelocity)
 		{
 			int idx;
-			if (angularVelocity < _fullLoadEntries[0].EngineSpeed) {
+			if (angularVelocity < FullLoadEntries[0].EngineSpeed) {
 				Log.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}",
-					angularVelocity.ConvertTo().Rounds.Per.Minute, _fullLoadEntries[0].EngineSpeed.ConvertTo().Rounds.Per.Minute);
+					angularVelocity.ConvertTo().Rounds.Per.Minute, FullLoadEntries[0].EngineSpeed.ConvertTo().Rounds.Per.Minute);
 				idx = 1;
 			} else {
-				idx = _fullLoadEntries.FindIndex(x => x.EngineSpeed > angularVelocity);
+				idx = FullLoadEntries.FindIndex(x => x.EngineSpeed > angularVelocity);
 			}
 			if (idx <= 0) {
-				idx = angularVelocity > _fullLoadEntries[0].EngineSpeed ? _fullLoadEntries.Count - 1 : 1;
+				idx = angularVelocity > FullLoadEntries[0].EngineSpeed ? FullLoadEntries.Count - 1 : 1;
 			}
 			return idx;
 		}
@@ -310,8 +211,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		private List<PerSecond> FindEngineSpeedForPower(Watt power)
 		{
 			var retVal = new List<PerSecond>();
-			for (var idx = 1; idx < _fullLoadEntries.Count; idx++) {
-				var solutions = FindEngineSpeedForPower(_fullLoadEntries[idx - 1], _fullLoadEntries[idx], power);
+			for (var idx = 1; idx < FullLoadEntries.Count; idx++) {
+				var solutions = FindEngineSpeedForPower(FullLoadEntries[idx - 1], FullLoadEntries[idx], power);
 				retVal.AddRange(solutions);
 			}
 			retVal.Sort();
@@ -340,26 +241,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return retVal;
 		}
 
-		private SI ComputeArea(PerSecond lowEngineSpeed, PerSecond highEngineSpeed)
+		private Watt ComputeArea(PerSecond lowEngineSpeed, PerSecond highEngineSpeed)
 		{
 			var startSegment = FindIndex(lowEngineSpeed);
 			var endSegment = FindIndex(highEngineSpeed);
 
 			var area = 0.SI<Watt>();
-			if (lowEngineSpeed < _fullLoadEntries[startSegment].EngineSpeed) {
+			if (lowEngineSpeed < FullLoadEntries[startSegment].EngineSpeed) {
 				// add part of the first segment
-				area += (_fullLoadEntries[startSegment].EngineSpeed - lowEngineSpeed) *
-						(FullLoadStationaryTorque(lowEngineSpeed) + _fullLoadEntries[startSegment].TorqueFullLoad) / 2.0;
+				area += (FullLoadEntries[startSegment].EngineSpeed - lowEngineSpeed) *
+						(FullLoadStationaryTorque(lowEngineSpeed) + FullLoadEntries[startSegment].TorqueFullLoad) / 2.0;
 			}
 			for (var i = startSegment + 1; i <= endSegment; i++) {
-				var speedHigh = _fullLoadEntries[i].EngineSpeed;
-				var torqueHigh = _fullLoadEntries[i].TorqueFullLoad;
-				if (highEngineSpeed < _fullLoadEntries[i].EngineSpeed) {
+				var speedHigh = FullLoadEntries[i].EngineSpeed;
+				var torqueHigh = FullLoadEntries[i].TorqueFullLoad;
+				if (highEngineSpeed < FullLoadEntries[i].EngineSpeed) {
 					// add part of the last segment
 					speedHigh = highEngineSpeed;
 					torqueHigh = FullLoadStationaryTorque(highEngineSpeed);
 				}
-				area += (speedHigh - _fullLoadEntries[i - 1].EngineSpeed) * (torqueHigh + _fullLoadEntries[i - 1].TorqueFullLoad) /
+				area += (speedHigh - FullLoadEntries[i - 1].EngineSpeed) * (torqueHigh + FullLoadEntries[i - 1].TorqueFullLoad) /
 						2.0;
 			}
 			return area;
@@ -394,86 +295,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				Formulas.TorqueToPower(engineTorqueMaxPower, engineSpeedMaxPower));
 		}
 
-		private static class Fields
-		{
-			/// <summary>
-			///     [rpm] engine speed
-			/// </summary>
-			public const string EngineSpeed = "engine speed";
-
-			/// <summary>
-			///     [Nm] full load torque
-			/// </summary>
-			public const string TorqueFullLoad = "full load torque";
-
-			/// <summary>
-			///     [Nm] motoring torque
-			/// </summary>
-			public const string TorqueDrag = "motoring torque";
-		}
-
-		private class FullLoadCurveEntry
-		{
-			/// <summary>
-			///     [rad/s] engine speed
-			/// </summary>
-			public PerSecond EngineSpeed { get; set; }
-
-			/// <summary>
-			///     [Nm] full load torque
-			/// </summary>
-			public NewtonMeter TorqueFullLoad { get; set; }
-
-			/// <summary>
-			///     [Nm] motoring torque
-			/// </summary>
-			public NewtonMeter TorqueDrag { get; set; }
-
-			///// <summary>
-			/////     [s] PT1 time constant
-			///// </summary>
-			//public Second PT1 { get; set; }
-
-			#region Equality members
-
-			protected bool Equals(FullLoadCurveEntry other)
-			{
-				return Equals(EngineSpeed, other.EngineSpeed) && Equals(TorqueFullLoad, other.TorqueFullLoad) &&
-						Equals(TorqueDrag, other.TorqueDrag);
-			}
-
-			public override bool Equals(object obj)
-			{
-				if (ReferenceEquals(null, obj)) {
-					return false;
-				}
-				if (ReferenceEquals(this, obj)) {
-					return true;
-				}
-				if (obj.GetType() != this.GetType()) {
-					return false;
-				}
-				return Equals((FullLoadCurveEntry)obj);
-			}
-
-			public override int GetHashCode()
-			{
-				unchecked {
-					var hashCode = (EngineSpeed != null ? EngineSpeed.GetHashCode() : 0);
-					hashCode = (hashCode * 397) ^ (TorqueFullLoad != null ? TorqueFullLoad.GetHashCode() : 0);
-					hashCode = (hashCode * 397) ^ (TorqueDrag != null ? TorqueDrag.GetHashCode() : 0);
-					return hashCode;
-				}
-			}
-
-			#endregion
-		}
-
 		#region Equality members
 
 		protected bool Equals(EngineFullLoadCurve other)
 		{
-			return Equals(_fullLoadEntries, other._fullLoadEntries) && Equals(_pt1Data, other._pt1Data);
+			return Equals(FullLoadEntries, other.FullLoadEntries) && Equals(PT1Data, other.PT1Data);
 		}
 
 		public override bool Equals(object obj)
@@ -493,8 +319,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		public override int GetHashCode()
 		{
 			unchecked {
-				return ((_fullLoadEntries != null ? _fullLoadEntries.GetHashCode() : 0) * 397) ^
-						(_pt1Data != null ? _pt1Data.GetHashCode() : 0);
+				return ((FullLoadEntries != null ? FullLoadEntries.GetHashCode() : 0) * 397) ^
+						(PT1Data != null ? PT1Data.GetHashCode() : 0);
 			}
 		}
 

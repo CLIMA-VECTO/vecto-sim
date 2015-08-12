@@ -165,7 +165,7 @@
     <Compile Include="Models\Simulation\DataBus\IClutchInfo.cs" />
     <Compile Include="Models\Simulation\Data\AuxiliaryDemandType.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryType.cs" />
-    <Compile Include="Models\SimulationComponent\Data\GearFullLoadCurve.cs" />
+    <Compile Include="Models\SimulationComponent\Data\FullLoadCurve.cs" />
     <Compile Include="Models\Simulation\DataBus\IMileageCounter.cs" />
     <Compile Include="Models\Simulation\DataBus\IRoadLookAhead.cs" />
     <Compile Include="Models\Simulation\Impl\DistanceRun.cs" />
