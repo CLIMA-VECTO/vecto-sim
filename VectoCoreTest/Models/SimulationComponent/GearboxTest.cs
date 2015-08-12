@@ -4,7 +4,6 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -69,25 +68,21 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
 
-			var ratios = new[] { 0.0, 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
-			// the first element 0.0 is just a placeholder for axlegear, not used in this test
+			var ratio = 6.38;
 
 			//todo: serach for a overload point in gearbox fullloadcurve
 			//todo: serach for a overload point in engine fullloadcurve
 			var expected = new[] {
-				new { gear = 1, t = 2400, n = 1200, loss = 10.108 },
-				new { gear = 1, t = 2400, n = 1200, loss = 10.108 },
+				new { t = 2250, n = 1200, loss = 55.0 }, //todo: calc exact loss
+				new { t = 2129, n = 1600, loss = 55.0 }, //todo: calc exact loss
 			};
 
 			foreach (var exp in expected) {
-				var torque = (exp.t.SI<NewtonMeter>() - exp.loss.SI<NewtonMeter>()) * ratios[exp.gear];
-				var angularVelocity = exp.n.RPMtoRad() / ratios[exp.gear];
+				var torque = (exp.t.SI<NewtonMeter>() - exp.loss.SI<NewtonMeter>()) * ratio;
+				var angularVelocity = exp.n.RPMtoRad() / ratio;
 
-				gearbox.Gear = (uint)exp.gear;
 				var response = gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity);
 				Assert.IsInstanceOfType(response, typeof(ResponseFailOverload));
-
-				//var overload = response as ResponseFailOverload;
 			}
 
 			Assert.Inconclusive("Test if the intersection of two fullloadcurves is correct");

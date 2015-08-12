@@ -137,7 +137,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public static class OverSpeedEcoRoll
 			{
-				public static readonly IList<DriverData.DriverMode> AllowedModes = new List<DriverData.DriverMode>() {
+				public static readonly IList<DriverData.DriverMode> AllowedModes = new List<DriverData.DriverMode> {
 					DriverData.DriverMode.EcoRoll,
 					DriverData.DriverMode.Overspeed
 				};
@@ -187,9 +187,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public const double MinTimeBetweenGearshifts = 2;
 
 
-
-
-
 			internal static ShiftPolygon ComputeShiftPolygon(EngineFullLoadCurve fullLoadCurve, PerSecond engineIdleSpeed)
 			{
 				var maxTorque = fullLoadCurve.MaxLoadTorque;
@@ -197,27 +194,27 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var entriesDown = new List<ShiftPolygon.ShiftPolygonEntry>();
 				var entriesUp = new List<ShiftPolygon.ShiftPolygonEntry>();
 
-				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() {
+				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry {
 					AngularSpeed = engineIdleSpeed,
 					Torque = 0.SI<NewtonMeter>()
 				});
 
 				var tq1 = maxTorque * engineIdleSpeed / (fullLoadCurve.PreferredSpeed + fullLoadCurve.LoSpeed - engineIdleSpeed);
-				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = engineIdleSpeed, Torque = tq1 });
+				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = engineIdleSpeed, Torque = tq1 });
 
 				var speed1 = (fullLoadCurve.PreferredSpeed + fullLoadCurve.LoSpeed) / 2;
-				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = speed1, Torque = maxTorque });
+				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = speed1, Torque = maxTorque });
 
 
-				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() {
+				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry {
 					AngularSpeed = fullLoadCurve.PreferredSpeed,
 					Torque = 0.SI<NewtonMeter>()
 				});
 
 				tq1 = maxTorque * (fullLoadCurve.PreferredSpeed - engineIdleSpeed) / (fullLoadCurve.N95hSpeed - engineIdleSpeed);
-				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = fullLoadCurve.PreferredSpeed, Torque = tq1 });
+				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = fullLoadCurve.PreferredSpeed, Torque = tq1 });
 
-				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = fullLoadCurve.N95hSpeed, Torque = maxTorque });
+				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = fullLoadCurve.N95hSpeed, Torque = maxTorque });
 
 				return new ShiftPolygon(entriesDown, entriesUp);
 			}
