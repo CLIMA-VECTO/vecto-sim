@@ -67,7 +67,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void Gearbox_Request()
 		{
-			
 			var container = new VehicleContainer();
 			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData);
@@ -75,25 +74,64 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
 
+			var ratios = new[] { 0.0, 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
+			// the first element 0.0 is just a placeholder for axlegear, not used in this test
+
 			var absTime = 0.SI<Second>();
-			var dt = 0.5.SI<Second>();
-			var torque = 500.SI<NewtonMeter>();
-			var angularVelocity = 1400.RPMtoRad();
+			var dt = 1.SI<Second>();
 
-			var ratio = 1; // todo: set correct ratio
-			var expectedN = angularVelocity * ratio;
-			var expectedT = 500.SI<NewtonMeter>(); //todo: set correct value
+			var expected = new[] {
+				new { gear = 1, t = 50, n = 800, loss = 10.108 },
+				new { gear = 1, t = 2450, n = 800, loss = 58.11 },
+				new { gear = 1, t = -1000, n = 800, loss = 29.11 },
+				new { gear = 1, t = 850, n = 800, loss = 26.11 },
+				new { gear = 1, t = 850, n = 0, loss = 22.06 },
+				new { gear = 1, t = 850, n = 200, loss = 23.07 },
+				new { gear = 1, t = 850, n = 2000, loss = 32.18 },
+				new { gear = 2, t = 50, n = 800, loss = 10.108 },
+				new { gear = 2, t = 2450, n = 800, loss = 58.11 },
+				new { gear = 2, t = -1000, n = 800, loss = 29.11 },
+				new { gear = 2, t = 850, n = 800, loss = 26.11 },
+				new { gear = 2, t = 850, n = 0, loss = 22.06 },
+				new { gear = 2, t = 850, n = 200, loss = 23.07 },
+				new { gear = 2, t = 850, n = 2000, loss = 32.18 },
+				new { gear = 7, t = -1000, n = 0, loss = 10.06 },
+				new { gear = 7, t = -1000, n = 1200, loss = 16.132 },
+				new { gear = 7, t = -1000, n = 2000, loss = 20.18 },
+				new { gear = 7, t = 850, n = 0, loss = 9.31 },
+				new { gear = 7, t = 850, n = 1200, loss = 15.382 },
+				new { gear = 7, t = 850, n = 2000, loss = 19.43 },
+				new { gear = 7, t = 2450, n = 0, loss = 17.31 },
+				new { gear = 7, t = 2450, n = 1200, loss = 23.382 },
+				new { gear = 7, t = 2450, n = 2000, loss = 27.43 },
+			};
 
-			gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
-			AssertHelper.AreRelativeEqual(absTime, port.AbsTime);
-			AssertHelper.AreRelativeEqual(dt, port.Dt);
-			AssertHelper.AreRelativeEqual(expectedN, port.AngularVelocity);
-			AssertHelper.AreRelativeEqual(expectedT, port.Torque);
+			foreach (var exp in expected) {
+				var expectedT = exp.t.SI<NewtonMeter>();
+				var expectedN = exp.n.RPMtoRad();
+				var expectedLoss = exp.loss.SI<NewtonMeter>();
 
-			// todo check for different ranges and gears
-			// todo set initial gear
+				var torque = (expectedT - expectedLoss) * ratios[exp.gear];
+				var angularVelocity = expectedN / ratios[exp.gear];
 
-			Assert.Inconclusive();
+				gearbox.Gear = (uint)exp.gear;
+				gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
+				AssertHelper.AreRelativeEqual(absTime, port.AbsTime);
+				AssertHelper.AreRelativeEqual(dt, port.Dt);
+				AssertHelper.AreRelativeEqual(expectedN, port.AngularVelocity);
+				AssertHelper.AreRelativeEqual(expectedT, port.Torque);
+			}
+		}
+
+		[TestMethod]
+		public void Gearbox_LossMapInterpolationFail()
+		{
+			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var gearbox = new Gearbox(new VehicleContainer(), gearboxData);
+
+			AssertHelper.Exception<VectoException>(
+				() => gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), 5000.SI<NewtonMeter>(), 10000.SI<PerSecond>()),
+				"Failed to interpolate in TransmissionLossMap. angularVelocity: 63800.0000 [1/s], torque: 5000.0000 [Nm]");
 		}
 
 		[TestMethod]

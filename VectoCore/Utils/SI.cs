@@ -326,6 +326,11 @@ namespace TUGraz.VectoCore.Utils
 
 		[JsonConstructor]
 		private PerSecond(double val) : base(new SI(val).Per.Second) {}
+
+		public SI RoundsPerMinute
+		{
+			get { return ConvertTo().Rounds.Per.Minute; }
+		}
 	}
 
 	/// <summary>
@@ -842,6 +847,10 @@ namespace TUGraz.VectoCore.Utils
 					factor *= 1000;
 					numerator.Add(Unit.k);
 					numerator.Add(Unit.g);
+					break;
+				case Unit.min:
+					factor *= 60;
+					numerator.Add(Unit.s);
 					break;
 				default:
 					numerator.Add(unit);

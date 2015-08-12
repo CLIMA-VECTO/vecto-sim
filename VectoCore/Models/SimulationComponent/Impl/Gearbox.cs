@@ -55,6 +55,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return Data.Gears[_gear]; }
 		}
 
+		internal uint Gear
+		{
+			get { return _gear; }
+			set { _gear = value; }
+		}
+
 
 		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
 		{
@@ -64,10 +70,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// todo check shiftpolygon for shifting
 
 
-			engineSpeed *= CurrentGear.Ratio;
-			torque = CurrentGear.LossMap.GearboxInTorque(engineSpeed, torque);
+			var inEngineSpeed = engineSpeed * CurrentGear.Ratio;
+			var inTorque = CurrentGear.LossMap.GearboxInTorque(inEngineSpeed, torque);
 
-			return Next.Request(absTime, dt, torque, engineSpeed);
+			return Next.Request(absTime, dt, inTorque, inEngineSpeed);
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)

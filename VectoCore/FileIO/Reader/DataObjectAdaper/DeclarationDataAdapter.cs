@@ -186,7 +186,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.AxleGearData = new GearData { LossMap = lossMap, Ratio = axleGear.Ratio, TorqueConverterActive = false };
 
 			retVal.Gears = gearbox.Body.Gears.Skip(1).Select((gear, i) => {
-				lossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, axleGear.LossMap), axleGear.Ratio);
+				lossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, gear.LossMap), gear.Ratio);
 				EngineFullLoadCurve fullLoadCurve;
 				if (string.IsNullOrWhiteSpace(gear.FullLoadCurve) || gear.FullLoadCurve == "<NOFILE>") {
 					fullLoadCurve = engine.FullLoadCurve;
@@ -196,7 +196,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				}
 
 				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(fullLoadCurve, engine.IdleSpeed);
-				return new KeyValuePair<uint, GearData>((uint)i,
+				return new KeyValuePair<uint, GearData>((uint)i + 1,
 					new GearData { LossMap = lossMap, ShiftPolygon = shiftPolygon, Ratio = gear.Ratio, TorqueConverterActive = false });
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
 			return retVal;

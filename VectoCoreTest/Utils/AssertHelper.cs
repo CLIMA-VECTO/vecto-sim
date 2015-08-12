@@ -59,8 +59,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			var ratio = expected == 0 ? Math.Abs(actual) : Math.Abs(actual / expected - 1);
 			Assert.IsTrue(ratio < toleranceFactor, string.Format(CultureInfo.InvariantCulture,
-				"Given values are not equal. Expected: {0}, Actual: {1}, Difference: {3} (Tolerance: {2}){4}",
-				expected, actual, toleranceFactor * (expected == 0 ? 1 : expected), expected - actual, message));
+				"Given values are not equal. Expected: {0}, Actual: {1}, Difference: {3} (Tolerance Factor: {2}){4}",
+				expected, actual, toleranceFactor, expected - actual, message));
 		}
 	}
 }
