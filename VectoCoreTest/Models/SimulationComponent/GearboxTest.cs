@@ -1,7 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -12,6 +14,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	public class GearboxTest
 	{
 		protected string GearboxDataFile = @"TestData\Components\24t Coach.vgbx";
+		protected string EngineDataFile = @"TestData\Components\24t Coach.veng";
 
 		public TestContext TestContext { get; set; }
 
@@ -64,8 +67,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void Gearbox_Request()
 		{
+			
 			var container = new VehicleContainer();
-			var gearboxData = EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile);
+			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData);
 
 			var port = new MockTnOutPort();
@@ -108,6 +112,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_Overload()
 		{
 			Assert.Inconclusive();
+		}
+
+		[TestMethod]
+		public void Gearbox_LessThanTwoGearsException()
+		{
+			var wrongFile = @"TestData\Components\24t Coach LessThanTwoGears.vgbx";
+			AssertHelper.Exception<VectoSimulationException>(
+				() => DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(wrongFile, EngineDataFile));
 		}
 	}
 }

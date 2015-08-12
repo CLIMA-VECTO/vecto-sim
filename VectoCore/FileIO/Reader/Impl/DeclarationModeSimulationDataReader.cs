@@ -169,5 +169,21 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		{
 			get { return false; }
 		}
+
+		/// <summary>
+		/// Create gearboxdata instance directly from a file
+		/// </summary>
+		/// <param name="gearBoxFile"></param>
+		/// <param name="engineFile"></param>
+		/// <returns>GearboxData instance</returns>
+		public static GearboxData CreateGearboxDataFromFile(string gearBoxFile, string engineFile)
+		{
+			var reader = new DeclarationModeSimulationDataReader();
+			reader.ReadEngine(engineFile);
+			reader.ReadGearbox(gearBoxFile);
+			var dao = new DeclarationDataAdapter();
+			var engineData = dao.CreateEngineData(reader.Engine);
+			return dao.CreateGearboxData(reader.Gearbox, engineData);
+		}
 	}
 }
