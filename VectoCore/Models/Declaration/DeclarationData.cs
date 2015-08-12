@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NLog.Targets.Wrappers;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
@@ -224,21 +225,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 				return false;
 			}
 
-			internal static ShiftPolygon ComputeShiftPolygon(GearFullLoadCurve gear, CombustionEngineData engine)
+			internal static ShiftPolygon ComputeShiftPolygon(EngineFullLoadCurve fullLoadCurve, PerSecond engineIdleSpeed)
 			{
 				// TODO: How to compute shift-polygons exactly? (merge with engine full load?)
-				var fullLoadCurve = engine.FullLoadCurve;
-				var idleSpeed = engine.IdleSpeed;
+				//var fullLoadCurve = engine.FullLoadCurve;
+				//var engineIdleSpeed = engine.IdleSpeed;
 
 				var maxTorque = fullLoadCurve.MaxLoadTorque;
 
 				var entriesDown = new List<ShiftPolygon.ShiftPolygonEntry>();
 				var entriesUp = new List<ShiftPolygon.ShiftPolygonEntry>();
 
-				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = idleSpeed, Torque = 0.SI<NewtonMeter>() });
+				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() {
+					AngularSpeed = engineIdleSpeed,
+					Torque = 0.SI<NewtonMeter>()
+				});
 
-				var tq1 = maxTorque * idleSpeed / (fullLoadCurve.PreferredSpeed + fullLoadCurve.LoSpeed - idleSpeed);
-				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = idleSpeed, Torque = tq1 });
+				var tq1 = maxTorque * engineIdleSpeed / (fullLoadCurve.PreferredSpeed + fullLoadCurve.LoSpeed - engineIdleSpeed);
+				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = engineIdleSpeed, Torque = tq1 });
 
 				var speed1 = (fullLoadCurve.PreferredSpeed + fullLoadCurve.LoSpeed) / 2;
 				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = speed1, Torque = maxTorque });
@@ -249,7 +253,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					Torque = 0.SI<NewtonMeter>()
 				});
 
-				tq1 = maxTorque * (fullLoadCurve.PreferredSpeed - idleSpeed) / (fullLoadCurve.N95hSpeed - idleSpeed);
+				tq1 = maxTorque * (fullLoadCurve.PreferredSpeed - engineIdleSpeed) / (fullLoadCurve.N95hSpeed - engineIdleSpeed);
 				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = fullLoadCurve.PreferredSpeed, Torque = tq1 });
 
 				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = fullLoadCurve.N95hSpeed, Torque = maxTorque });

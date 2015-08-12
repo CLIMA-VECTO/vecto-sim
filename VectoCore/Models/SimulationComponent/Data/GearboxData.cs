@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public GearData AxleGearData { get; internal set; }
 
-		public readonly Dictionary<uint, GearData> Gears = new Dictionary<uint, GearData>();
+		public Dictionary<uint, GearData> Gears = new Dictionary<uint, GearData>();
 
 		public GearboxType Type { get; internal set; }
 

@@ -56,6 +56,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[TestMethod]
+		public void Gearbox_IntersectFullLoadCurves()
+		{
+			Assert.Inconclusive("Test if the intersection of two fullloadcurves is correct");
+		}
+
+		[TestMethod]
 		public void Gearbox_Request()
 		{
 			var container = new VehicleContainer();
