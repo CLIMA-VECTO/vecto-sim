@@ -156,23 +156,21 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		internal GearboxData CreateGearboxData(GearboxFileV5Declaration gearbox, CombustionEngineData engine)
 		{
 			var retVal = SetCommonGearboxData(gearbox.Body);
-
-			if (retVal.Type == GearboxData.GearboxType.AT) {
-				throw new VectoSimulationException("Automatic Transmission currently not supported in DeclarationMode!");
+			switch (retVal.Type) {
+				case GearboxType.AT:
+					throw new VectoSimulationException("Automatic Transmission currently not supported in DeclarationMode!");
+				case GearboxType.Custom:
+					throw new VectoSimulationException("Custom Transmission not supported in DeclarationMode!");
 			}
-			if (retVal.Type == GearboxData.GearboxType.Custom) {
-				throw new VectoSimulationException("Custom Transmission not supported in DeclarationMode!");
-			}
-
 			if (gearbox.Body.Gears.Count < 2) {
 				throw new VectoSimulationException(
 					"At least two Gear-Entries must be defined in Gearbox: 1 Axle-Gear and at least 1 Gearbox-Gear!");
 			}
 
 			retVal.Inertia = DeclarationData.Gearbox.Inertia.SI<KilogramSquareMeter>();
-			retVal.TractionInterruption = DeclarationData.Gearbox.TractionInterruption(retVal.Type);
-			retVal.SkipGears = DeclarationData.Gearbox.SkipGears(retVal.Type);
-			retVal.EarlyShiftUp = DeclarationData.Gearbox.EarlyShiftGears((retVal.Type));
+			retVal.TractionInterruption = retVal.Type.TractionInterruption();
+			retVal.SkipGears = retVal.Type.SkipGears();
+			retVal.EarlyShiftUp = retVal.Type.EarlyShiftGears();
 
 			retVal.TorqueReserve = DeclarationData.Gearbox.TorqueReserve;
 			retVal.StartTorqueReserve = DeclarationData.Gearbox.TorqueReserveStart;

@@ -71,7 +71,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			return new GearboxData() {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				ModelName = data.ModelName,
-				Type = data.GearboxType.Parse<GearboxData.GearboxType>()
+				Type = data.GearboxType.Parse<GearboxType>()
 			};
 		}
 

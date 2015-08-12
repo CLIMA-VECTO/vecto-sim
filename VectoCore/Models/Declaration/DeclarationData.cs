@@ -186,51 +186,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public const double MinTimeBetweenGearshifts = 2;
 
-			public static Second TractionInterruption(GearboxData.GearboxType type)
-			{
-				switch (type) {
-					case GearboxData.GearboxType.MT:
-						return 2.SI<Second>();
-					case GearboxData.GearboxType.AMT:
-						return 1.SI<Second>();
-					case GearboxData.GearboxType.AT:
-						return 0.8.SI<Second>();
-				}
-				return 0.SI<Second>();
-			}
 
-			public static bool EarlyShiftGears(GearboxData.GearboxType type)
-			{
-				switch (type) {
-					case GearboxData.GearboxType.MT:
-						return false;
-					case GearboxData.GearboxType.AMT:
-						return true;
-					case GearboxData.GearboxType.AT:
-						return false;
-				}
-				return false;
-			}
 
-			public static bool SkipGears(GearboxData.GearboxType type)
-			{
-				switch (type) {
-					case GearboxData.GearboxType.MT:
-						return true;
-					case GearboxData.GearboxType.AMT:
-						return true;
-					case GearboxData.GearboxType.AT:
-						return false;
-				}
-				return false;
-			}
+
 
 			internal static ShiftPolygon ComputeShiftPolygon(EngineFullLoadCurve fullLoadCurve, PerSecond engineIdleSpeed)
 			{
-				// TODO: How to compute shift-polygons exactly? (merge with engine full load?)
-				//var fullLoadCurve = engine.FullLoadCurve;
-				//var engineIdleSpeed = engine.IdleSpeed;
-
 				var maxTorque = fullLoadCurve.MaxLoadTorque;
 
 				var entriesDown = new List<ShiftPolygon.ShiftPolygonEntry>();

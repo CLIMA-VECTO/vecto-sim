@@ -95,9 +95,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected IGearbox GetGearbox(VehicleContainer container, GearboxData data)
 		{
 			switch (data.Type) {
-				case GearboxData.GearboxType.AT:
+				case GearboxType.AT:
 					throw new VectoSimulationException("Unsupported Geabox type: Automatic Transmission (AT)");
-				case GearboxData.GearboxType.Custom:
+				case GearboxType.Custom:
 					throw new VectoSimulationException("Custom Gearbox not supported");
 				default:
 					return new Gearbox(container, data);

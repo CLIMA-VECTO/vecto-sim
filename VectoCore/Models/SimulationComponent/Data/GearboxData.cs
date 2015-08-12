@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
@@ -13,15 +12,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	[DataContract]
 	public class GearboxData : SimulationComponentData
 	{
-		[SuppressMessage("ReSharper", "InconsistentNaming")]
-		public enum GearboxType
-		{
-			MT, // Manual Transmission
-			AMT, // Automated Manual Transmission
-			AT, // Automatic Transmission
-			Custom
-		}
-
 		public string ModelName { get; internal set; }
 
 		public GearData AxleGearData { get; internal set; }

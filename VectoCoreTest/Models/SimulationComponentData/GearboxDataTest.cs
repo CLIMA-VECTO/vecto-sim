@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var gbxData = EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(GearboxFile);
 
-			Assert.AreEqual(GearboxData.GearboxType.AMT, gbxData.Type);
+			Assert.AreEqual(GearboxType.AMT, gbxData.Type);
 			Assert.AreEqual(1.0, gbxData.TractionInterruption.Value(), 0.0001);
 			Assert.AreEqual(8, gbxData.Gears.Count);
 
