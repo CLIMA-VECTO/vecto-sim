@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var vehicle = new VehicleContainer();
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
-			var gearbox = new DummyGearbox(vehicle);
+			var gearbox = new MockGearbox(vehicle);
 
 			var clutch = new Clutch(vehicle, engineData);
 

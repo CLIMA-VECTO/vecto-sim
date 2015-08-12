@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 			AddComponent(tmp, engine);
 
-			var gbx = new DummyGearbox(vehicleContainer);
+			var gbx = new MockGearbox(vehicleContainer);
 
 			var driverPort = driver.OutPort();
 
@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
 			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
 
-			var gbx = new DummyGearbox(vehicleContainer);
+			var gbx = new MockGearbox(vehicleContainer);
 
 			var cyclePort = cycle.OutPort();
 
@@ -179,7 +179,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
 			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
 
-			var gbx = new DummyGearbox(vehicleContainer);
+			var gbx = new MockGearbox(vehicleContainer);
 
 			var cyclePort = cycle.OutPort();
 

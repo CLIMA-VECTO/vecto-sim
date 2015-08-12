@@ -7,13 +7,13 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class DummyGearbox : VectoSimulationComponent, IGearbox, ITnInPort, ITnOutPort
+	public class MockGearbox : VectoSimulationComponent, IGearbox, ITnInPort, ITnOutPort
 	{
 		private ITnOutPort _outPort;
 		public uint CurrentGear { get; set; }
 
 
-		public DummyGearbox(IVehicleContainer cockpit) : base(cockpit) {}
+		public MockGearbox(IVehicleContainer cockpit) : base(cockpit) {}
 
 		public ITnInPort InPort()
 		{

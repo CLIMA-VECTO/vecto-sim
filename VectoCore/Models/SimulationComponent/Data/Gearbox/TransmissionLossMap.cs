@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using Common.Logging;
 using Newtonsoft.Json;
-using NLog.Fluent;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
@@ -86,16 +85,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_ratio = gearRatio;
 			_entries = entries;
 			_lossMap = new DelauneyMap();
-			//_reverseLossMap = new DelauneyMap();
 			foreach (var entry in _entries) {
-				_lossMap.AddPoint(entry.InputSpeed.Value(), (entry.InputTorque.Value() - entry.TorqueLoss.Value()) * _ratio,
+				_lossMap.AddPoint(entry.InputSpeed.Value(), ((entry.InputTorque - entry.TorqueLoss) * _ratio).Value(),
 					entry.InputTorque.Value());
-				// @@@quam: according to Raphael, not needed for now...
-				//_reverseLossMap.AddPoint(entry.InputSpeed.Double(), entry.InputTorque.Double(),
-				//	entry.InputTorque.Double() - entry.TorqueLoss.Double());
 			}
 			_lossMap.Triangulate();
-			//_reverseLossMap.Triangulate();
 		}
 
 		/// <summary>
@@ -108,9 +102,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		{
 			try {
 				var gbxInTorque = _lossMap.Interpolate(angularVelocity.Value(), gbxOutTorque.Value()).SI<NewtonMeter>();
-				LogManager.GetLogger(this.GetType()).DebugFormat("GearboxLoss: {0}", gbxInTorque);
-				// Torque at input of the geabox must be greater than or equal to the torque at the output
-				// (i.e. no 'torque-gain' in the transmission due to interpolation etc.)
+				LogManager.GetLogger(GetType()).DebugFormat("GearboxLoss: {0}", gbxInTorque);
+				// Torque at input of the gearbox must be greater or equal than the value without any losses (just torque/ratio)
 				return VectoMath.Max(gbxInTorque, gbxOutTorque / _ratio);
 			} catch (Exception e) {
 				throw new VectoSimulationException(
@@ -119,15 +112,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			}
 		}
 
-		/// <summary>
-		///		Compute the available torque at the output of the gear(box) (towards wheels)
-		/// </summary>
-		/// <returns>[Nm] torque provided to the next component (towards the wheels)</returns>
-		//public NewtonMeter GearboxOutTorque(PerSecond angularVelocity, NewtonMeter gbxInTorque)
-		//{
-		//	// TODO extrapolate!
-		//	return _reverseLossMap.Interpolate(angularVelocity.Double(), gbxInTorque.Double()).SI<NewtonMeter>();
-		//}
 		public GearLossMapEntry this[int i]
 		{
 			get { return _entries[i]; }
