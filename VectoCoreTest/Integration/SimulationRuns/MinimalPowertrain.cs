@@ -126,7 +126,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			gbx.CurrentGear = 1;
 			var ds = Constants.SimulationSettings.DriveOffDistance;
-			while (vehicleContainer.Distance().Value() < 17000) {
+			var cnt = 0;
+			var doRun = true;
+			while (doRun && vehicleContainer.Distance().Value() < 17000) {
 				response = cyclePort.Request(absTime, ds);
 
 				switch (response.ResponseType) {
@@ -134,19 +136,27 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 						var rsp = response as ResponseDrivingCycleDistanceExceeded;
 						ds = rsp.MaxDistance;
 						continue;
+					case ResponseType.CycleFinished:
+						doRun = false;
+						break;
 				}
-				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+				if (doRun) {
+					Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
+					vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+					absTime += response.SimulationInterval;
 
-				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
-				absTime += response.SimulationInterval;
+					ds = vehicleContainer.VehicleSpeed().IsEqual(0)
+						? Constants.SimulationSettings.DriveOffDistance
+						: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed()).Cast<Meter>();
 
-				ds = vehicleContainer.VehicleSpeed().IsEqual(0)
-					? Constants.SimulationSettings.DriveOffDistance
-					: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed()).Cast<Meter>();
-
-				modalWriter.Finish();
+					if (cnt++ % 100 == 0) {
+						modalWriter.Finish();
+					}
+				}
 			}
+
+			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 
 			modalWriter.Finish();
 			//var run = new DistanceRun(vehicleContainer);

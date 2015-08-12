@@ -171,10 +171,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				throw new VectoSimulationException("Expected DryRunResponse after Dry-Run Request!");
 			}
 
-			//if (dryRun.EngineDeltaDragLoad > 0) {
-			//	throw new VectoSimulationException("No breaking necessary, still above full drag load!");
-			//}
-
 			var newDs = ds;
 			var success = SearchBreakingPower(absTime, ref newDs, gradient, dryRun, true);
 
@@ -259,9 +255,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						retVal.SimulationInterval = CurrentState.dt;
 						return retVal;
 					case ResponseType.FailOverload:
-						SearchOperatingPoint(absTime, ref ds, gradient, retVal);
-						Log.DebugFormat("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}", CurrentState.dt,
-							CurrentState.Acceleration);
+						var overloadResponse = retVal as ResponseFailOverload;
+						if (overloadResponse != null && overloadResponse.Delta < 0) {
+							// if Delta is negative we are already below the Drag-load curve. activate breaks
+							return DoBreak(absTime, ds, gradient, targetVelocity);
+						}
+						var doAccelerate = (DataBus.VehicleSpeed() - targetVelocity).Abs() > 0.1 * targetVelocity;
+
+						var success = SearchOperatingPoint(absTime, ref ds, gradient, retVal, accelerating: doAccelerate);
+						if (!success) {
+							throw new VectoSimulationException("could not find operating point");
+						}
+						Log.DebugFormat("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}, doAccelerate: {2}",
+							CurrentState.dt,
+							CurrentState.Acceleration, doAccelerate);
 
 						break;
 				}
@@ -339,7 +346,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);
 
 			var newDs = ds;
-			var success = SearchOperatingPoint(absTime, ref newDs, gradient, response, true);
+			var success = SearchOperatingPoint(absTime, ref newDs, gradient, response, coasting: true);
 
 			if (!success) {
 				Log.ErrorFormat("Failed to find operating point for coasting!");
@@ -378,17 +385,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="gradient">gradient from the original request</param>
 		/// <param name="response">response of the former request that resulted in an overload response (or a dry-run response)</param>
 		/// <param name="coasting">if true approach the drag-load curve, otherwise full-load curve</param>
+		/// <param name="accelerating"></param>
 		/// <returns></returns>
 		private bool SearchOperatingPoint(Second absTime, ref Meter ds, Radian gradient,
-			IResponse response, bool coasting = false)
+			IResponse response, bool coasting = false, bool accelerating = true)
 		{
+			var origResponse = response;
 			var exceeded = new List<Watt>(); // only used while testing
 			var acceleration = new List<double>(); // only used while testing
 			var searchInterval = CurrentState.Acceleration / 2.0;
-			Meter originalDs = ds;
+			var originalDs = ds;
+
+			if (coasting) {
+				accelerating = false;
+			}
 
 			do {
-				var delta = 0.0.SI<Watt>();
+				Watt delta;
 				ds = originalDs;
 				switch (response.ResponseType) {
 					case ResponseType.FailOverload:
@@ -416,7 +429,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.Acceleration += searchInterval;
 				}
 				// check for minimum acceleration, add some safety margin due to search
-				if (CurrentState.Acceleration.Abs() < Constants.SimulationSettings.MinimumAcceleration.Value() / 5.0 &&
+				if (!coasting && accelerating &&
+					CurrentState.Acceleration.Abs() < Constants.SimulationSettings.MinimumAcceleration.Value() / 5.0 &&
 					searchInterval.Abs() < Constants.SimulationSettings.MinimumAcceleration / 20.0) {
 					throw new VectoSimulationException("Could not achieve minimum acceleration");
 				}
