@@ -88,6 +88,35 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		}
 
 
+		public NewtonMeter FullLoadStationaryTorque(PerSecond angularVelocity)
+		{
+			var idx = FindIndex(angularVelocity);
+			return VectoMath.Interpolate(FullLoadEntries[idx - 1].EngineSpeed, FullLoadEntries[idx].EngineSpeed,
+				FullLoadEntries[idx - 1].TorqueFullLoad, FullLoadEntries[idx].TorqueFullLoad,
+				angularVelocity);
+		}
+
+		public NewtonMeter DragLoadStationaryTorque(PerSecond angularVelocity)
+		{
+			var idx = FindIndex(angularVelocity);
+			return VectoMath.Interpolate(FullLoadEntries[idx - 1].EngineSpeed, FullLoadEntries[idx].EngineSpeed,
+				FullLoadEntries[idx - 1].TorqueDrag, FullLoadEntries[idx].TorqueDrag,
+				angularVelocity);
+		}
+
+		/// <summary>
+		///     [rad/s] => index. Get item index for angularVelocity.
+		/// </summary>
+		/// <param name="angularVelocity">[rad/s]</param>
+		/// <returns>index</returns>
+		protected int FindIndex(PerSecond angularVelocity)
+		{
+			int index;
+			FullLoadEntries.GetSection(x => x.EngineSpeed < angularVelocity, out index,
+				string.Format("requested rpm outside of FLD curve - extrapolating. rpm: {0}", angularVelocity.RoundsPerMinute));
+			return index + 1;
+		}
+
 		internal class FullLoadCurveEntry
 		{
 			public PerSecond EngineSpeed { get; set; }

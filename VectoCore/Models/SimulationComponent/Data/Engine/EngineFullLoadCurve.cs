@@ -25,29 +25,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			return new EngineFullLoadCurve { FullLoadEntries = curve.FullLoadEntries, PT1Data = curve.PT1Data };
 		}
 
-
-		public CombustionEngineData EngineData { get; internal set; }
-
-
-		public NewtonMeter FullLoadStationaryTorque(PerSecond angularVelocity)
-		{
-			var idx = FindIndex(angularVelocity);
-			return VectoMath.Interpolate(FullLoadEntries[idx - 1].EngineSpeed, FullLoadEntries[idx].EngineSpeed,
-				FullLoadEntries[idx - 1].TorqueFullLoad, FullLoadEntries[idx].TorqueFullLoad,
-				angularVelocity);
-		}
-
 		public Watt FullLoadStationaryPower(PerSecond angularVelocity)
 		{
 			return Formulas.TorqueToPower(FullLoadStationaryTorque(angularVelocity), angularVelocity);
-		}
-
-		public NewtonMeter DragLoadStationaryTorque(PerSecond angularVelocity)
-		{
-			var idx = FindIndex(angularVelocity);
-			return VectoMath.Interpolate(FullLoadEntries[idx - 1].EngineSpeed, FullLoadEntries[idx].EngineSpeed,
-				FullLoadEntries[idx - 1].TorqueDrag, FullLoadEntries[idx].TorqueDrag,
-				angularVelocity);
 		}
 
 		public Watt DragLoadStationaryPower(PerSecond angularVelocity)
@@ -57,6 +37,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 			return Formulas.TorqueToPower(DragLoadStationaryTorque(angularVelocity), angularVelocity);
 		}
+
+
+		public CombustionEngineData EngineData { get; internal set; }
+
 
 		public Second PT1(PerSecond angularVelocity)
 		{
@@ -184,28 +168,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (retVal.Count == 0) {
 				Log.InfoFormat("No real solution found for requested area: P: {0}, p1: {1}, p2: {2}", area, p1, p2);
 			}
-			return retVal.First(x => x >= p1.EngineSpeed.Value() && x <= p2.EngineSpeed.Value()).SI<PerSecond>();
-		}
-
-		/// <summary>
-		///     [rad/s] => index. Get item index for angularVelocity.
-		/// </summary>
-		/// <param name="angularVelocity">[rad/s]</param>
-		/// <returns>index</returns>
-		protected int FindIndex(PerSecond angularVelocity)
-		{
-			int idx;
-			if (angularVelocity < FullLoadEntries[0].EngineSpeed) {
-				Log.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}",
-					angularVelocity.ConvertTo().Rounds.Per.Minute, FullLoadEntries[0].EngineSpeed.ConvertTo().Rounds.Per.Minute);
-				idx = 1;
-			} else {
-				idx = FullLoadEntries.FindIndex(x => x.EngineSpeed > angularVelocity);
-			}
-			if (idx <= 0) {
-				idx = angularVelocity > FullLoadEntries[0].EngineSpeed ? FullLoadEntries.Count - 1 : 1;
-			}
-			return idx;
+			return retVal.First(x => x >= p1.EngineSpeed && x <= p2.EngineSpeed).SI<PerSecond>();
 		}
 
 		private List<PerSecond> FindEngineSpeedForPower(Watt power)

@@ -1404,6 +1404,46 @@ namespace TUGraz.VectoCore.Utils
 			return si1 != null && si1.Val >= d;
 		}
 
+		/// <summary>
+		/// Implements the operator &gt;=.
+		/// </summary>
+		/// <param name="d">The d.</param>
+		/// <param name="si1">The lower.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
+		public static bool operator >=(double d, SI si1)
+		{
+			Contract.Requires(si1 != null);
+			return si1 != null && d >= si1.Val;
+		}
+
+		/// <summary>
+		/// Implements the operator &lt;=.
+		/// </summary>
+		/// <param name="d">The d.</param>
+		/// <param name="si1">The lower.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		public static bool operator <=(double d, SI si1)
+		{
+			Contract.Requires(si1 != null);
+			return si1 != null && d <= si1.Val;
+		}
+
+		/// <summary>
+		/// Determines whether the SI is between lower and uppper bound.
+		/// </summary>
+		/// <param name="lower">The lower bound.</param>
+		/// <param name="upper">The upper bound.</param>
+		/// <returns></returns>
+		public bool IsBetween(SI lower, SI upper)
+		{
+			return lower <= Val && Val <= upper;
+		}
+
 		#endregion
 
 		#region ToString

@@ -201,10 +201,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		///     Validates the requested power demand [W].
 		/// </summary>
 		/// <param name="requestedEnginePower">[W]</param>
-		protected virtual void ValidatePowerDemand(SI requestedEnginePower)
+		protected virtual void ValidatePowerDemand(Watt requestedEnginePower)
 		{
-			Contract.Requires(requestedEnginePower.HasEqualUnit(new SI().Watt));
-
 			if (_currentState.FullDragPower >= 0 && requestedEnginePower < 0) {
 				throw new VectoSimulationException(string.Format("t: {0}  P_engine_drag > 0! n: {1} [1/min] ",
 					_currentState.AbsTime, _currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute));
@@ -216,19 +214,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		/// <summary>
-		///     [W] => [W]
+		/// Limits the engine power to either DynamicFullLoadPower (upper bound) or FullDragPower (lower bound)
 		/// </summary>
-		/// <param name="requestedEnginePower">[W]</param>
-		/// <returns>[W]</returns>
 		protected virtual Watt LimitEnginePower(Watt requestedEnginePower)
 		{
-			if (requestedEnginePower > _currentState.DynamicFullLoadPower) {
-				return _currentState.DynamicFullLoadPower;
-			}
-			if (requestedEnginePower < _currentState.FullDragPower) {
-				return _currentState.FullDragPower;
-			}
-			return requestedEnginePower;
+			return VectoMath.Limit(requestedEnginePower, _currentState.DynamicFullLoadPower, _currentState.FullDragPower);
 		}
 
 		/// <summary>

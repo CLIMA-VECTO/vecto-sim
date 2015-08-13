@@ -201,12 +201,25 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			return retVal;
 		}
 
-		private EngineFullLoadCurve IntersectFullLoadCurves(FullLoadCurve fullLoadCurve,
-			EngineFullLoadCurve engineFullLoadCurve)
+		/// <summary>
+		/// Intersects full load curves.
+		/// </summary>
+		/// <param name="curves">full load curves</param>
+		/// <returns>A combined full load curve with the minimum of all full load torques over all input curves.</returns>
+		private static EngineFullLoadCurve IntersectFullLoadCurves(params FullLoadCurve[] curves)
 		{
-			//create new entries
+			var entries = curves.SelectMany(curve => curve.FullLoadEntries)
+				.Select(entry => entry.EngineSpeed)
+				.OrderBy(x => x)
+				.Distinct()
+				.Select(engineSpeed => new FullLoadCurve.FullLoadCurveEntry {
+					EngineSpeed = engineSpeed,
+					TorqueFullLoad = curves.Select(c => c.FullLoadStationaryTorque(engineSpeed)).Min()
+				});
 
-			throw new NotImplementedException();
+			var flc = new EngineFullLoadCurve();
+			flc.FullLoadEntries.AddRange(entries);
+			return flc;
 		}
 
 		public IEnumerable<VectoRunData.AuxData> CreateAuxiliaryData(IEnumerable<VectoRunData.AuxData> auxList,

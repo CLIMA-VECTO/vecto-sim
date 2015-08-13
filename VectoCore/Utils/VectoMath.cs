@@ -79,6 +79,17 @@ namespace TUGraz.VectoCore.Utils
 			return c1.CompareTo(c2) >= 0 ? c1 : c2;
 		}
 
+		public static T Limit<T>(T value, T upperBound, T lowerBound) where T : SIBase<T>
+		{
+			if (value > upperBound) {
+				return upperBound;
+			}
+			if (value < lowerBound) {
+				return lowerBound;
+			}
+			return value;
+		}
+
 		public static T Sqrt<T>(SI si) where T : SIBase<T>
 		{
 			return si.Sqrt().Cast<T>();

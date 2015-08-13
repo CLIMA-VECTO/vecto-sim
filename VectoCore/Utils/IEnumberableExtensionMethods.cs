@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Common.Logging;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -55,26 +56,36 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		/// <summary>
-		/// Get the two adjacent items where the predicate is true.
+		/// Get the first two adjacent items where the predicate changes from true to false.
 		/// If the predicate never gets true, the last 2 elements are returned.
 		/// </summary>
-		public static Tuple<T, T> GetSamples<T>(this IEnumerable<T> self, Func<T, bool> skip, out int index)
+		public static Tuple<T, T> GetSection<T>(this IEnumerable<T> self, Func<T, bool> skip, out int index,
+			string message = null)
 		{
 			var list = self.ToList();
 			var skipList = list.Select((arg1, i) => new { skip = skip(arg1) && i < list.Count - 1, i, value = arg1 });
 			var p = skipList.SkipWhile(x => x.skip).First();
 			index = Math.Max(p.i - 1, 0);
+
+			if (!string.IsNullOrWhiteSpace(message)) {
+				if (!skip(list[index]) || skip(list[index + 1])) {
+					var logger = LogManager.GetLogger(typeof(T));
+					logger.Error(message);
+				}
+			}
+
 			return Tuple.Create(list[index], list[index + 1]);
 		}
 
 		/// <summary>
-		/// Get the two adjacent items where the predicate is true.
+		/// Get the first two adjacent items where the predicate changes from true to false.
 		/// If the predicate never gets true, the last 2 elements are returned.
 		/// </summary>
-		public static Tuple<T, T> GetSamples<T>(this IEnumerable<T> self, Func<T, bool> predicate)
+		/// <example>GetSection(data => data.X &lt; searchedX); //returns the pair where first &lt; searchedX and second &gt;= searchedX</example>>
+		public static Tuple<T, T> GetSection<T>(this IEnumerable<T> self, Func<T, bool> predicate, string message = null)
 		{
 			int unused;
-			return self.GetSamples(predicate, out unused);
+			return self.GetSection(predicate, out unused, message);
 		}
 	}
 }

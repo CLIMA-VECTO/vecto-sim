@@ -59,6 +59,26 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[TestMethod]
+		public void Gearbox_LessThanTwoGearsException()
+		{
+			var wrongFile = @"TestData\Components\24t Coach LessThanTwoGears.vgbx";
+			AssertHelper.Exception<VectoSimulationException>(
+				() => DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(wrongFile, EngineDataFile),
+				"At least two Gear-Entries must be defined in Gearbox: 1 Axle-Gear and at least 1 Gearbox-Gear!");
+		}
+
+		[TestMethod]
+		public void Gearbox_LossMapInterpolationFail()
+		{
+			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var gearbox = new Gearbox(new VehicleContainer(), gearboxData);
+
+			AssertHelper.Exception<VectoException>(
+				() => gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), 5000.SI<NewtonMeter>(), 10000.SI<PerSecond>()),
+				"Failed to interpolate in TransmissionLossMap. angularVelocity: 63800.0000 [1/s], torque: 5000.0000 [Nm]");
+		}
+
+		[TestMethod]
 		public void Gearbox_IntersectFullLoadCurves()
 		{
 			var container = new VehicleContainer();
@@ -73,8 +93,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//todo: serach for a overload point in gearbox fullloadcurve
 			//todo: serach for a overload point in engine fullloadcurve
 			var expected = new[] {
-				new { t = 2250, n = 1200, loss = 55.0 }, //todo: calc exact loss
 				new { t = 2129, n = 1600, loss = 55.0 }, //todo: calc exact loss
+				new { t = 2250, n = 1200, loss = 55.0 }, //todo: calc exact loss
 			};
 
 			foreach (var exp in expected) {
@@ -144,16 +164,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			}
 		}
 
-		[TestMethod]
-		public void Gearbox_LossMapInterpolationFail()
-		{
-			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
-			var gearbox = new Gearbox(new VehicleContainer(), gearboxData);
-
-			AssertHelper.Exception<VectoException>(
-				() => gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), 5000.SI<NewtonMeter>(), 10000.SI<PerSecond>()),
-				"Failed to interpolate in TransmissionLossMap. angularVelocity: 63800.0000 [1/s], torque: 5000.0000 [Nm]");
-		}
 
 		[TestMethod]
 		public void Gearbox_ShiftUp()
@@ -171,14 +181,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_Overload()
 		{
 			Assert.Inconclusive();
-		}
-
-		[TestMethod]
-		public void Gearbox_LessThanTwoGearsException()
-		{
-			var wrongFile = @"TestData\Components\24t Coach LessThanTwoGears.vgbx";
-			AssertHelper.Exception<VectoSimulationException>(
-				() => DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(wrongFile, EngineDataFile));
 		}
 	}
 }
