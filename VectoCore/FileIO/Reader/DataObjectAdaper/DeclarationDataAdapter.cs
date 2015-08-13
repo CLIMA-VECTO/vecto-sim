@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.Configuration;
@@ -181,22 +180,25 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.HasTorqueConverter = false;
 
 			var axleGear = gearbox.Body.Gears.First();
-			var lossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, axleGear.LossMap), axleGear.Ratio);
-			retVal.AxleGearData = new GearData { LossMap = lossMap, Ratio = axleGear.Ratio };
+			var axleLossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, axleGear.LossMap), axleGear.Ratio);
+			retVal.AxleGearData = new GearData { LossMap = axleLossMap, Ratio = axleGear.Ratio, TorqueConverterActive = false };
 
 			retVal.Gears = gearbox.Body.Gears.Skip(1).Select((gear, i) => {
-				lossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, gear.LossMap), gear.Ratio);
-				EngineFullLoadCurve fullLoadCurve;
-				if (string.IsNullOrWhiteSpace(gear.FullLoadCurve) || gear.FullLoadCurve == "<NOFILE>") {
-					fullLoadCurve = engine.FullLoadCurve;
-				} else {
-					var gearFullLoad = FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gear.FullLoadCurve));
-					fullLoadCurve = IntersectFullLoadCurves(gearFullLoad, engine.FullLoadCurve);
-				}
+				var gearLossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, gear.LossMap), gear.Ratio);
+				var gearFullLoad = (string.IsNullOrWhiteSpace(gear.FullLoadCurve) || gear.FullLoadCurve == "<NOFILE>")
+					? engine.FullLoadCurve
+					: FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gear.FullLoadCurve));
 
+				var fullLoadCurve = IntersectFullLoadCurves(gearFullLoad, engine.FullLoadCurve);
 				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(fullLoadCurve, engine.IdleSpeed);
 				return new KeyValuePair<uint, GearData>((uint)i + 1,
-					new GearData { LossMap = lossMap, ShiftPolygon = shiftPolygon, Ratio = gear.Ratio });
+					new GearData {
+						LossMap = gearLossMap,
+						ShiftPolygon = shiftPolygon,
+						FullLoadCurve = gearFullLoad,
+						Ratio = gear.Ratio,
+						TorqueConverterActive = false
+					});
 			}).ToDictionary(kv => kv.Key, kv => kv.Value);
 			return retVal;
 		}
@@ -205,12 +207,11 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		/// Intersects full load curves.
 		/// </summary>
 		/// <param name="curves">full load curves</param>
-		/// <returns>A combined full load curve with the minimum of all full load torques over all input curves.</returns>
+		/// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
 		private static EngineFullLoadCurve IntersectFullLoadCurves(params FullLoadCurve[] curves)
 		{
-			var entries = curves.SelectMany(curve => curve.FullLoadEntries)
-				.Select(entry => entry.EngineSpeed)
-				.OrderBy(x => x)
+			var entries = curves.SelectMany(curve => curve.FullLoadEntries, (curve, entry) => entry.EngineSpeed)
+				.OrderBy(engineSpeed => engineSpeed)
 				.Distinct()
 				.Select(engineSpeed => new FullLoadCurve.FullLoadCurveEntry {
 					EngineSpeed = engineSpeed,
