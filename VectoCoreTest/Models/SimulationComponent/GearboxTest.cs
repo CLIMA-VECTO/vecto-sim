@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NLog.Targets;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -147,7 +148,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				new { gear = 7, t = 2450, n = 2000, loss = 27.43 },
 			};
 
-			foreach (var exp in expected) {
+			for (var i = 0; i < expected.Length; i++) {
+				var exp = expected[i];
 				var expectedT = exp.t.SI<NewtonMeter>();
 				var expectedN = exp.n.RPMtoRad();
 				var expectedLoss = exp.loss.SI<NewtonMeter>();
@@ -157,10 +159,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 				gearbox.Gear = (uint)exp.gear;
 				gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity);
-				AssertHelper.AreRelativeEqual(0.SI<Second>(), port.AbsTime);
-				AssertHelper.AreRelativeEqual(1.SI<Second>(), port.Dt);
-				AssertHelper.AreRelativeEqual(expectedN, port.AngularVelocity);
-				AssertHelper.AreRelativeEqual(expectedT, port.Torque);
+				AssertHelper.AreRelativeEqual(0.SI<Second>(), port.AbsTime, message: i.ToString());
+				AssertHelper.AreRelativeEqual(1.SI<Second>(), port.Dt, message: i.ToString());
+				AssertHelper.AreRelativeEqual(expectedN, port.AngularVelocity, message: i.ToString());
+				AssertHelper.AreRelativeEqual(expectedT, port.Torque, message: i.ToString());
 			}
 		}
 

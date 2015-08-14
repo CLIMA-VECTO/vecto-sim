@@ -84,9 +84,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// check if GearBox should shift up
 				if (_gear < Data.Gears.Count) {
 					var upSection = CurrentGear.ShiftPolygon.Upshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
-					if (inEngineSpeed > upSection.Item2.AngularSpeed ||
-						(inEngineSpeed > upSection.Item1.AngularSpeed &&
-						(inTorque < upSection.Item1.Torque || inTorque < upSection.Item2.Torque))) {
+					if (IsRight(inEngineSpeed, inTorque, upSection.Item1, upSection.Item2)) {
 						_gear++;
 						gearChanged = true;
 						continue;
@@ -96,9 +94,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// check if GearBox should shift down
 				if (_gear > 1) {
 					var downSection = CurrentGear.ShiftPolygon.Downshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
-					if (inEngineSpeed < downSection.Item1.AngularSpeed ||
-						(inEngineSpeed < downSection.Item2.AngularSpeed &&
-						(inTorque > downSection.Item1.Torque || inTorque > downSection.Item2.Torque))) {
+					if (IsLeft(inEngineSpeed, inTorque, downSection.Item1, downSection.Item2)) {
 						_gear--;
 						gearChanged = true;
 					}
@@ -120,6 +116,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			return Next.Request(absTime, dt, inTorque, inEngineSpeed);
 		}
+
+		/// <summary>
+		/// Determines whether the given point is left or right from the line given by (from, to)
+		/// </summary>
+		/// <remarks>Calculates the 2d cross product (from, to) x (from, [angularSpeed, torque]) and checks if the z-component is positive or negative.</remarks>
+		/// <param name="angularSpeed">The angular speed.</param>
+		/// <param name="torque">The torque.</param>
+		/// <param name="from">From.</param>
+		/// <param name="to">To.</param>
+		/// <returns></returns>
+		private static bool IsLeft(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
+			ShiftPolygon.ShiftPolygonEntry to)
+		{
+			return ((to.AngularSpeed - from.AngularSpeed) * (torque - from.Torque) -
+					(to.Torque - from.Torque) * (angularSpeed - from.AngularSpeed)) >= 0;
+		}
+
+		/// <summary>
+		/// Determines whether the given point is left or right from the line given by (from, to)
+		/// </summary>
+		/// <remarks>Calculates the 2d cross product (from, to) x (from, [angularSpeed, torque]) and checks if the z-component is positive or negative.</remarks>
+		/// <param name="angularSpeed">The angular speed.</param>
+		/// <param name="torque">The torque.</param>
+		/// <param name="from">From.</param>
+		/// <param name="to">To.</param>
+		/// <returns></returns>
+		private static bool IsRight(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
+			ShiftPolygon.ShiftPolygonEntry to)
+		{
+			return ((to.AngularSpeed - from.AngularSpeed) * (torque - from.Torque) -
+					(to.Torque - from.Torque) * (angularSpeed - from.AngularSpeed)) <= 0;
+		}
+
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{

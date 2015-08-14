@@ -189,7 +189,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 					? engine.FullLoadCurve
 					: FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gear.FullLoadCurve));
 
-				var fullLoadCurve = IntersectFullLoadCurves(gearFullLoad, engine.FullLoadCurve);
+				var fullLoadCurve = IntersectFullLoadCurves(engine.FullLoadCurve, gearFullLoad);
 				var shiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(fullLoadCurve, engine.IdleSpeed);
 				return new KeyValuePair<uint, GearData>((uint)i + 1,
 					new GearData {
@@ -208,18 +208,23 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		/// </summary>
 		/// <param name="curves">full load curves</param>
 		/// <returns>A combined EngineFullLoadCurve with the minimum full load torque over all inputs curves.</returns>
-		private static EngineFullLoadCurve IntersectFullLoadCurves(params FullLoadCurve[] curves)
+		private static EngineFullLoadCurve IntersectFullLoadCurves(EngineFullLoadCurve engineCurve, FullLoadCurve gearCurve)
 		{
-			var entries = curves.SelectMany(curve => curve.FullLoadEntries, (curve, entry) => entry.EngineSpeed)
+			var entries = gearCurve.FullLoadEntries.Concat(engineCurve.FullLoadEntries)
+				.Select(entry => entry.EngineSpeed)
 				.OrderBy(engineSpeed => engineSpeed)
 				.Distinct()
 				.Select(engineSpeed => new FullLoadCurve.FullLoadCurveEntry {
 					EngineSpeed = engineSpeed,
-					TorqueFullLoad = curves.Select(c => c.FullLoadStationaryTorque(engineSpeed)).Min()
+					TorqueFullLoad =
+						VectoMath.Min(engineCurve.FullLoadStationaryTorque(engineSpeed), gearCurve.FullLoadStationaryTorque(engineSpeed))
 				});
 
-			var flc = new EngineFullLoadCurve();
-			flc.FullLoadEntries.AddRange(entries);
+			var flc = new EngineFullLoadCurve {
+				FullLoadEntries = entries.ToList(),
+				EngineData = engineCurve.EngineData,
+				PT1Data = engineCurve.PT1Data
+			};
 			return flc;
 		}
 
