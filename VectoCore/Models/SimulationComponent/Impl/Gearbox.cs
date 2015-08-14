@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Gearbox(IVehicleContainer container, GearboxData gearboxData) : base(container)
 		{
 			Data = gearboxData;
-			_gear = 1;
+			_gear = 0;
 		}
 
 		#region ITnInProvider
@@ -43,11 +43,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IGearboxCockpit
 
-		uint IGearboxInfo.Gear()
+		uint IGearboxInfo.Gear
 		{
-			return _gear;
+			get { return _gear; }
+			set { _gear = value; }
 		}
-
 		#endregion
 
 		#region ITnOutPort
@@ -66,6 +66,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
 		{
+			if (Gear == 0) {
+				return Next.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<PerSecond>());
+			}
+
 			bool gearChanged;
 			PerSecond inEngineSpeed;
 			NewtonMeter inTorque;
@@ -152,7 +156,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			_gear = 1;
+			_gear = 0;
 			return Next.Initialize(torque, engineSpeed);
 		}
 

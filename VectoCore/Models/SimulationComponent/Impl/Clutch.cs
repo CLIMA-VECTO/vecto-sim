@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			torqueIn = torque;
 			engineSpeedIn = angularVelocity;
 
-			if (DataBus.Gear() == 0) {
+			if (DataBus.Gear == 0) {
 				_clutchState = SimulationComponent.ClutchState.ClutchOpened;
 				engineSpeedIn = _idleSpeed;
 				torqueIn = 0.SI<NewtonMeter>();

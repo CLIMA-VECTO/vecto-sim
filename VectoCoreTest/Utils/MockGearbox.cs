@@ -25,10 +25,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return this;
 		}
 
-		public uint Gear()
+		public uint Gear
 		{
-			return CurrentGear;
+			get { return CurrentGear; }
+			set { CurrentGear = value; }
 		}
+
 
 		public void Connect(ITnOutPort other)
 		{

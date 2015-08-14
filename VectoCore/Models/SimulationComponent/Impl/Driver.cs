@@ -542,6 +542,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed().IsEqual(0)) {
 				throw new NotImplementedException("TargetVelocity or VehicleVelocity is not zero!");
 			}
+			DataBus.Gear = 0;
+			DataBus.BreakPower = double.PositiveInfinity.SI<Watt>();
 			var retVal = Next.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
 			retVal.SimulationInterval = dt;
 			return retVal;

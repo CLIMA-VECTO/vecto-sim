@@ -35,12 +35,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IGearCockpit
 
-		public uint Gear()
+		public uint Gear
 		{
-			if (Gearbox == null) {
-				throw new VectoException("no gearbox available!");
+			get
+			{
+				if (Gearbox == null) {
+					throw new VectoException("no gearbox available!");
+				}
+				return Gearbox.Gear;
 			}
-			return Gearbox.Gear();
+			set
+			{
+				if (Gearbox == null) {
+					throw new VectoException("no gearbox available!");
+				}
+				Gearbox.Gear = value;
+			}
 		}
 
 		#endregion

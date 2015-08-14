@@ -33,9 +33,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IGearboxCockpit
 
-		uint IGearboxInfo.Gear()
+		uint IGearboxInfo.Gear
 		{
-			return 0;
+			get { return 0; }
+			set { }
 		}
 
 		#endregion
