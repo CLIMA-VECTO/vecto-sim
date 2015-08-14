@@ -78,8 +78,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private IResponse DoHandleRequest(Second absTime, Meter ds)
 		{
-			//var currentCycleEntry = Data.Entries[_previousState.CycleIndex];
-			//var nextCycleEntry = Data.Entries[_previousState.CycleIndex + 1];
+			if (CycleIntervalIterator.LastEntry && PreviousState.Distance.IsEqual(CycleIntervalIterator.RightSample.Distance)) {
+				return new ResponseCycleFinished();
+			}
 
 			if (CycleIntervalIterator.LeftSample.Distance.IsEqual(PreviousState.Distance.Value())) {
 				// exactly on an entry in the cycle...
@@ -146,6 +147,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				gradient = VectoMath.InclinationToAngle(((CurrentState.Altitude - PreviousState.Altitude) /
 														(CurrentState.Distance - PreviousState.Distance)).Value());
 			}
+			//return 0.SI<Radian>();
 			return gradient;
 		}
 
@@ -245,12 +247,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			{
 				CurrentCycleIndex = 0;
 				Data = data;
+				LastEntry = false;
 			}
 
 			public DrivingCycleEnumerator Clone()
 			{
 				return new DrivingCycleEnumerator(Data) {
 					CurrentCycleIndex = CurrentCycleIndex,
+					LastEntry = LastEntry
 				};
 			}
 
@@ -274,6 +278,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				get { return CurrentCycleIndex + 1 >= Data.Entries.Count ? null : Data.Entries[CurrentCycleIndex + 1]; }
 			}
 
+			public bool LastEntry { get; protected set; }
+
 			public void Dispose() {}
 
 			object System.Collections.IEnumerator.Current
@@ -283,10 +289,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public bool MoveNext()
 			{
-				if (CurrentCycleIndex >= Data.Entries.Count - 1) {
+				// cycleIndex has to be max. next to last (so that rightSample is still valid.
+				if (CurrentCycleIndex >= Data.Entries.Count - 2) {
 					return false;
 				}
 				CurrentCycleIndex++;
+				if (CurrentCycleIndex == Data.Entries.Count - 2) {
+					LastEntry = true;
+				}
 				return true;
 			}
 

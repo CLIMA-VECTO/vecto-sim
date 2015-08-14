@@ -76,7 +76,8 @@ namespace TUGraz.VectoCore.FileIO.Reader
 					altitude += (entry.Distance - distance) * entries[i - 1].RoadGradientPercent / 100.0;
 				}
 				entry.Altitude = altitude;
-				if (!CycleEntriesAreEqual(current, entry)) {
+				// if something changes in the cycle, add it to the filtered cycle but always add last entry
+				if (!CycleEntriesAreEqual(current, entry) || i == entries.Count - 1) {
 					entry.Altitude = altitude;
 					filtered.Add(entry);
 					current = entry;

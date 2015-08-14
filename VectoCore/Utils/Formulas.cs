@@ -29,5 +29,18 @@ namespace TUGraz.VectoCore.Utils
 			}
 			return power / angularVelocity;
 		}
+
+		public static Meter DecelerationDistance(MeterPerSecond v1, MeterPerSecond v2,
+			MeterPerSquareSecond deceleration)
+		{
+			if (deceleration >= 0) {
+				throw new VectoException("Deceleration must be negative!");
+			}
+			if (v2 > v1) {
+				throw new VectoException("v2 must not be greater than v1");
+			}
+
+			return ((v2 - v1) * (v1 + v2) / deceleration / 2.0).Cast<Meter>();
+		}
 	}
 }
