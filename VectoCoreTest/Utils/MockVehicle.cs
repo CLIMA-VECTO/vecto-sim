@@ -3,12 +3,13 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockVehicle : VectoSimulationComponent, IVehicle, IFvInPort, IDriverDemandOutPort
+	public class MockVehicle : VectoSimulationComponent, IVehicle, IFvInPort, IDriverDemandOutPort, IMileageCounter
 	{
 		internal MeterPerSecond MyVehicleSpeed;
 		internal IFvOutPort NextComponent;
@@ -77,6 +78,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			public Second dt;
 			public MeterPerSquareSecond acceleration;
 			public Radian gradient;
+		}
+
+		public Meter Distance()
+		{
+			return 0.SI<Meter>();
 		}
 	}
 }
