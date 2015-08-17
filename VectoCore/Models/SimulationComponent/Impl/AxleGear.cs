@@ -1,5 +1,4 @@
-﻿using System;
-using TUGraz.VectoCore.Models.Connector.Ports;
+﻿using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
@@ -32,20 +31,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_nextComponent = other;
 		}
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			bool dryRun = false)
 		{
-			Log.DebugFormat("request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
-			var retVal = _nextComponent.Request(absTime, dt,
-				_gearData.LossMap.GearboxInTorque(angularVelocity * _gearData.Ratio, torque),
-				angularVelocity * _gearData.Ratio, dryRun);
-			retVal.AxlegearPowerRequest = Formulas.TorqueToPower(torque, angularVelocity);
+			Log.DebugFormat("request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
+
+			var inAngularVelocity = outAngularVelocity * _gearData.Ratio;
+			var inTorque = _gearData.LossMap.GearboxInTorque(inAngularVelocity, outTorque);
+
+			var retVal = _nextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
+
+			retVal.AxlegearPowerRequest = outTorque * outAngularVelocity;
 			return retVal;
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
-			return _nextComponent.Initialize(_gearData.LossMap.GearboxInTorque(angularVelocity * _gearData.Ratio, torque),
-				angularVelocity * _gearData.Ratio);
+			var inAngularVelocity = angularVelocity * _gearData.Ratio;
+			var inTorque = _gearData.LossMap.GearboxInTorque(inAngularVelocity, torque);
+
+			return _nextComponent.Initialize(inTorque, inAngularVelocity);
 		}
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)

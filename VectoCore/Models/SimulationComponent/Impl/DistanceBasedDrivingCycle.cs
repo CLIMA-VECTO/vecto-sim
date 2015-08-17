@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Cache;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
