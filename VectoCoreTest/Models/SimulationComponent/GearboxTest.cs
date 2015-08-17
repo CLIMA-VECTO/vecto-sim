@@ -278,16 +278,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.InPort().Connect(port);
 
 			container.Gear = 0;
-			var response = gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), 500.SI<NewtonMeter>(), 1000.SI<PerSecond>());
+			var response = gearbox.OutPort()
+				.Request(0.SI<Second>(), 1.SI<Second>(), 50000000.SI<NewtonMeter>(), 1000000.SI<PerSecond>());
 			Assert.AreEqual(response.ResponseType, ResponseType.Success);
 
 			AssertHelper.AreRelativeEqual(0.SI<Second>(), port.AbsTime);
 			AssertHelper.AreRelativeEqual(1.SI<Second>(), port.Dt);
 			AssertHelper.AreRelativeEqual(0.SI<PerSecond>(), port.AngularVelocity);
 			AssertHelper.AreRelativeEqual(0.SI<NewtonMeter>(), port.Torque);
-
-
-			Assert.Inconclusive();
 		}
 	}
 }
