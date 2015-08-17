@@ -111,10 +111,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			} while (Data.SkipGears && gearChanged);
 
-			if (previousGear != _gear) {
-				return new ResponseGearShift { SimulationInterval = Data.TractionInterruption };
-			}
-
 			// check full load curve for overload/underload (mirrored)
 			var maxTorque = CurrentGear.FullLoadCurve.FullLoadStationaryTorque(inEngineSpeed);
 			if (inTorque.Abs() > maxTorque) {
@@ -122,6 +118,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					GearboxPowerRequest = inTorque * inEngineSpeed,
 					Delta = Math.Sign(inTorque.Value()) * (inTorque.Abs() - maxTorque) * inEngineSpeed
 				};
+			}
+
+			if (previousGear != _gear) {
+				return new ResponseGearShift { SimulationInterval = Data.TractionInterruption };
 			}
 
 			return Next.Request(absTime, dt, inTorque, inEngineSpeed);

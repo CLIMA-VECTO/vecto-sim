@@ -78,9 +78,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			container.Gear = 1;
 
 			var response = gearbox.OutPort()
-				.Request(0.SI<Second>(), 1.SI<Second>(), 5000.SI<NewtonMeter>(), 10000.SI<PerSecond>());
+				.Request(0.SI<Second>(), 1.SI<Second>(), 1500.SI<NewtonMeter>() / 6.38, 700.SI<PerSecond>() * 6.38);
 
-			Assert.AreEqual(response.ResponseType, ResponseType.FailOverload);
+			Assert.AreEqual(ResponseType.FailOverload, response.ResponseType);
 		}
 
 		[TestMethod]
@@ -152,7 +152,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				new { gear = 2, t = -1000, n = 800, loss = 29.11, responseType = ResponseType.Success },
 				new { gear = 2, t = 850, n = 800, loss = 26.11, responseType = ResponseType.Success },
 				new { gear = 2, t = 850, n = 0, loss = 22.06, responseType = ResponseType.Success },
-				new { gear = 2, t = 850, n = 200, loss = 23.07, responseType = ResponseType.GearShift },
+				new { gear = 2, t = 850, n = 400, loss = 11.334, responseType = ResponseType.GearShift },
 				new { gear = 2, t = 850, n = 2000, loss = 32.18, responseType = ResponseType.GearShift },
 				new { gear = 7, t = -1000, n = 0, loss = 10.06, responseType = ResponseType.Success },
 				new { gear = 7, t = -1000, n = 1200, loss = 16.132, responseType = ResponseType.Success },
