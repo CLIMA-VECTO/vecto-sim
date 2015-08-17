@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -79,8 +81,11 @@ namespace TUGraz.VectoCore.Utils
 			return c1.CompareTo(c2) >= 0 ? c1 : c2;
 		}
 
-		public static T Limit<T>(T value, T upperBound, T lowerBound) where T : SIBase<T>
+		public static T Limit<T>(T value, T lowerBound, T upperBound) where T : SIBase<T>
 		{
+			if (lowerBound > upperBound)
+				throw new VectoException("VectoMath.Limit: lowerBound must not be greater than upperBound");
+
 			if (value > upperBound) {
 				return upperBound;
 			}

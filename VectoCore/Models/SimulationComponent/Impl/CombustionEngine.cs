@@ -218,7 +218,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		protected virtual Watt LimitEnginePower(Watt requestedEnginePower)
 		{
-			return VectoMath.Limit(requestedEnginePower, _currentState.DynamicFullLoadPower, _currentState.FullDragPower);
+			return VectoMath.Limit(requestedEnginePower, _currentState.FullDragPower, _currentState.DynamicFullLoadPower);
 		}
 
 		/// <summary>

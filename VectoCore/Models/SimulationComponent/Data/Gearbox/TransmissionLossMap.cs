@@ -16,6 +16,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		private readonly double _ratio;
 
 		private readonly DelauneyMap _lossMap; // Input Speed, Output Torque (to Wheels) => Input Torque (Engine)
+		private NewtonMeter _minTorque = double.PositiveInfinity.SI<NewtonMeter>();
+		private NewtonMeter _maxTorque = double.NegativeInfinity.SI<NewtonMeter>();
+		private PerSecond _maxSpeed = double.NegativeInfinity.SI<PerSecond>();
+		private PerSecond _minSpeed = double.PositiveInfinity.SI<PerSecond>();
 		//private readonly DelauneyMap _reverseLossMap; // Input Speed, Input Torque (Engine) => Output Torque (Wheels)
 
 		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio)
@@ -86,9 +90,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_entries = entries;
 			_lossMap = new DelauneyMap();
 			foreach (var entry in _entries) {
-				_lossMap.AddPoint(entry.InputSpeed.Value(), ((entry.InputTorque - entry.TorqueLoss) * _ratio).Value(),
-					entry.InputTorque.Value());
+				var outTorque = (entry.InputTorque - entry.TorqueLoss) * _ratio;
+				_minTorque = VectoMath.Min(_minTorque, outTorque);
+				_maxTorque = VectoMath.Max(_maxTorque, outTorque);
+
+				_minSpeed = VectoMath.Min(_minSpeed, entry.InputSpeed);
+				_maxSpeed = VectoMath.Max(_maxSpeed, entry.InputSpeed);
+
+				_lossMap.AddPoint(entry.InputSpeed.Value(), outTorque.Value(), entry.InputTorque.Value());
 			}
+
 			_lossMap.Triangulate();
 		}
 
@@ -101,14 +112,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public NewtonMeter GearboxInTorque(PerSecond angularVelocity, NewtonMeter gbxOutTorque)
 		{
 			try {
-				var gbxInTorque = _lossMap.Interpolate(angularVelocity.Value(), gbxOutTorque.Value()).SI<NewtonMeter>();
+				var limitedAngularVelocity = VectoMath.Limit(angularVelocity, _minSpeed, _maxSpeed).Value();
+				var limitedTorque = VectoMath.Limit(gbxOutTorque, _minTorque, _maxTorque).Value();
+				var gbxInTorque = _lossMap.Interpolate(limitedAngularVelocity, limitedTorque).SI<NewtonMeter>();
 				LogManager.GetLogger(GetType()).DebugFormat("GearboxLoss: {0}", gbxInTorque);
 				// Torque at input of the gearbox must be greater or equal than the value without any losses (just torque/ratio)
 				return VectoMath.Max(gbxInTorque, gbxOutTorque / _ratio);
-			} catch (Exception e) {
-				throw new VectoSimulationException(
-					string.Format("Failed to interpolate in TransmissionLossMap. angularVelocity: {0}, torque: {1}", angularVelocity,
-						gbxOutTorque), e);
+			} catch (VectoException) {
+				var log = LogManager.GetLogger(GetType());
+				log.ErrorFormat("Failed to interpolate in TransmissionLossMap. angularVelocity: {0}, torque: {1}", angularVelocity,
+					gbxOutTorque);
+				return gbxOutTorque / _ratio;
 			}
 		}
 

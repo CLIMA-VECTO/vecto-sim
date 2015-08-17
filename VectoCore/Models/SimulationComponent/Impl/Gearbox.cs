@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
@@ -34,6 +36,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutProvider
 
+		[DebuggerHidden]
 		public ITnOutPort OutPort()
 		{
 			return this;
@@ -48,6 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return _gear; }
 			set { _gear = value; }
 		}
+
 		#endregion
 
 		#region ITnOutPort
@@ -64,9 +68,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
+		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed, bool dryRun)
 		{
-			if (Gear == 0) {
+			if (Gear == 0 || outEngineSpeed.IsEqual(0)) {
 				return Next.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<PerSecond>());
 			}
 
@@ -74,11 +78,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond inEngineSpeed;
 			NewtonMeter inTorque;
 
+			var previousGear = _gear;
+
 			do {
 				gearChanged = false;
 				// calculate new inEngineSpeed and Torque for the current gear
-				inEngineSpeed = engineSpeed * CurrentGear.Ratio;
-				inTorque = CurrentGear.LossMap.GearboxInTorque(inEngineSpeed, torque);
+				inEngineSpeed = outEngineSpeed * CurrentGear.Ratio;
+				inTorque = CurrentGear.LossMap.GearboxInTorque(inEngineSpeed, outTorque);
 
 				//todo: 
 				// Data.TorqueReserve ... % TorqueReserver for GearSkipping and EarlyUpshift
@@ -105,7 +111,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			} while (Data.SkipGears && gearChanged);
 
-			if (gearChanged) {
+			if (previousGear != _gear) {
 				return new ResponseGearShift { SimulationInterval = Data.TractionInterruption };
 			}
 
