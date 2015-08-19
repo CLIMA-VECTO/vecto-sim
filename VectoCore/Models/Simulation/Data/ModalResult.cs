@@ -190,7 +190,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		///     [-]	 GearData. "0" = clutch opened / neutral. "0.5" = lock-up clutch is open (AT with torque converter only, see
 		///     Gearbox)
 		/// </summary>
-		[ModalResultField(typeof(SI), caption: "Gear [-]")] Gear,
+		[ModalResultField(typeof(uint), caption: "Gear [-]")] Gear,
 
 		/// <summary>
 		///     [kW]	Gearbox losses.
