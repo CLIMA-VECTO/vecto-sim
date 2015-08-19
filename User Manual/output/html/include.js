@@ -1,15 +1,15 @@
 $(function(){
 	var hash = window.location.hash;
 	if (hash){
-      $(hash).show();
-      $(hash).parents().show();
+      $(hash.replace(".", "\\.")).show();
+      $(hash.replace(".", "\\.")).parents().show();
    	} else
    		$("#user-manual").show();
 
     $('a').click(function(){
     	$("body > div:not(#TOC)").hide();
-    	$($(this).attr("href")).show();
-	    $($(this).attr("href")).parents().show();
+    	$($(this).attr("href").replace(".", "\\.")).show();
+	    $($(this).attr("href").replace(".", "\\.")).parents().show();
     });
 
 	$("#TOC").resizable({
