@@ -67,12 +67,12 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		{
 			var data = job.Body;
 
-			var lookAheadData = new DriverData.LACData() {
+			var lookAheadData = new DriverData.LACData {
 				Enabled = DeclarationData.Driver.LookAhead.Enabled,
 				Deceleration = DeclarationData.Driver.LookAhead.Deceleration,
 				MinSpeed = DeclarationData.Driver.LookAhead.MinimumSpeed
 			};
-			var overspeedData = new DriverData.OverSpeedEcoRollData() {
+			var overspeedData = new DriverData.OverSpeedEcoRollData {
 				Mode = DriverData.ParseDriverMode(data.OverSpeedEcoRoll.Mode),
 				MinSpeed = DeclarationData.Driver.OverSpeedEcoRoll.MinSpeed,
 				OverSpeed = DeclarationData.Driver.OverSpeedEcoRoll.OverSpeed,
@@ -82,13 +82,13 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				throw new VectoSimulationException(
 					string.Format("Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}", overspeedData.Mode));
 			}
-			var startstopData = new VectoRunData.StartStopData() {
+			var startstopData = new VectoRunData.StartStopData {
 				Enabled = data.StartStop.Enabled,
 				Delay = DeclarationData.Driver.StartStop.Delay,
 				MinTime = DeclarationData.Driver.StartStop.MinTime,
 				MaxSpeed = DeclarationData.Driver.StartStop.MaxSpeed,
 			};
-			var retVal = new DriverData() {
+			var retVal = new DriverData {
 				LookAheadCoasting = lookAheadData,
 				OverSpeedEcoRoll = overspeedData,
 				StartStop = startstopData,
@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			}
 
 			foreach (var tmp in mission.TrailerAxleWeightDistribution) {
-				retVal.AxleData.Add(new Axle() {
+				retVal.AxleData.Add(new Axle {
 					AxleWeightShare = tmp,
 					TwinTyres = DeclarationData.Trailer.TwinTyres,
 					RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,

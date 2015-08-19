@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.EnginePower = LimitEnginePower(requestedEnginePower);
 
 			if (dryRun) {
-				return new ResponseDryRun() {
+				return new ResponseDryRun {
 					EngineDeltaFullLoad = (requestedEnginePower - _currentState.DynamicFullLoadPower),
 					EngineDeltaDragLoad = (requestedEnginePower - _currentState.FullDragPower),
 					EnginePowerRequest = requestedEnginePower
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (!_currentState.EnginePower.IsEqual(requestedEnginePower, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
-				return new ResponseFailOverload() {
+				return new ResponseFailOverload {
 					Delta = (requestedEnginePower - _currentState.EnginePower),
 					EnginePowerRequest = requestedEnginePower
 				};
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.EngineTorque = Formulas.PowerToTorque(_currentState.EnginePower,
 				_currentState.EngineSpeed);
 
-			return new ResponseSuccess() { EnginePowerRequest = requestedEnginePower };
+			return new ResponseSuccess { EnginePowerRequest = requestedEnginePower };
 		}
 
 		protected void ComputeRequestedEnginePower(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed,
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			_previousState = new EngineState() {
+			_previousState = new EngineState {
 				EngineSpeed = engineSpeed,
 				dt = 1.SI<Second>(),
 				EnginePowerLoss = 0.SI<Watt>(),

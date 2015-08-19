@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IResponse Request(Second absTime, Second dt, MeterPerSquareSecond acceleration, Radian gradient, bool b)
 		{
-			LastRequest = new RequestData() {
+			LastRequest = new RequestData {
 				abstime = absTime,
 				dt = dt,
 				acceleration = acceleration,

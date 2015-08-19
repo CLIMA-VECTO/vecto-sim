@@ -332,22 +332,22 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		private static VehicleData CreateVehicleData(Kilogram loading)
 		{
-			var axles = new List<Axle>() {
-				new Axle() {
+			var axles = new List<Axle> {
+				new Axle {
 					AxleWeightShare = 0.4375,
 					Inertia = 21.66667.SI<KilogramSquareMeter>(),
 					RollResistanceCoefficient = 0.0055,
 					TwinTyres = false,
 					TyreTestLoad = 62538.75.SI<Newton>()
 				},
-				new Axle() {
+				new Axle {
 					AxleWeightShare = 0.375,
 					Inertia = 10.83333.SI<KilogramSquareMeter>(),
 					RollResistanceCoefficient = 0.0065,
 					TwinTyres = false,
 					TyreTestLoad = 52532.55.SI<Newton>()
 				},
-				new Axle() {
+				new Axle {
 					AxleWeightShare = 0.1875,
 					Inertia = 21.66667.SI<KilogramSquareMeter>(),
 					RollResistanceCoefficient = 0.0055,
@@ -355,7 +355,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					TyreTestLoad = 62538.75.SI<Newton>()
 				}
 			};
-			return new VehicleData() {
+			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
 				CrossSectionArea = 3.2634.SI<SquareMeter>(),
 				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
@@ -364,7 +364,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
-				Retarder = new RetarderData() { Type = RetarderData.RetarderType.None },
+				Retarder = new RetarderData { Type = RetarderData.RetarderType.None },
 				AxleData = axles,
 				SavedInDeclarationMode = false,
 			};
@@ -372,15 +372,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		private static DriverData CreateDriverData()
 		{
-			return new DriverData() {
+			return new DriverData {
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(AccelerationFile),
-				LookAheadCoasting = new DriverData.LACData() {
+				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
 				},
-				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData() {
+				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = VectoCore.Models.SimulationComponent.Data.DriverData.DriverMode.Off
 				},
-				StartStop = new VectoRunData.StartStopData() {
+				StartStop = new VectoRunData.StartStopData {
 					Enabled = false,
 				}
 			};

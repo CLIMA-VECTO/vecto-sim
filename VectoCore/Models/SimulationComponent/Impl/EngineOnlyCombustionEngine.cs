@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.EnginePower = LimitEnginePower(requestedEnginePower);
 
 			if (dryRun) {
-				return new ResponseDryRun() {
+				return new ResponseDryRun {
 					EngineDeltaFullLoad = (requestedEnginePower - _currentState.DynamicFullLoadPower),
 					EngineDeltaDragLoad = (requestedEnginePower - _currentState.FullDragPower)
 				};

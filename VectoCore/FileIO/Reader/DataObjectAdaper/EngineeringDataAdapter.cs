@@ -66,24 +66,24 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			var data = job.Body;
 
 			var accelerationData = AccelerationCurveData.ReadFromFile(Path.Combine(job.BasePath, data.AccelerationCurve));
-			var lookAheadData = new DriverData.LACData() {
+			var lookAheadData = new DriverData.LACData {
 				Enabled = data.LookAheadCoasting.Enabled,
 				Deceleration = data.LookAheadCoasting.Dec.SI<MeterPerSquareSecond>(),
 				MinSpeed = data.LookAheadCoasting.MinSpeed.KMPHtoMeterPerSecond(),
 			};
-			var overspeedData = new DriverData.OverSpeedEcoRollData() {
+			var overspeedData = new DriverData.OverSpeedEcoRollData {
 				Mode = DriverData.ParseDriverMode(data.OverSpeedEcoRoll.Mode),
 				MinSpeed = data.OverSpeedEcoRoll.MinSpeed.KMPHtoMeterPerSecond(),
 				OverSpeed = data.OverSpeedEcoRoll.OverSpeed.KMPHtoMeterPerSecond(),
 				UnderSpeed = data.OverSpeedEcoRoll.UnderSpeed.KMPHtoMeterPerSecond(),
 			};
-			var startstopData = new VectoRunData.StartStopData() {
+			var startstopData = new VectoRunData.StartStopData {
 				Enabled = data.StartStop.Enabled,
 				Delay = data.StartStop.Delay.SI<Second>(),
 				MinTime = data.StartStop.MinTime.SI<Second>(),
 				MaxSpeed = data.StartStop.MaxSpeed.KMPHtoMeterPerSecond(),
 			};
-			var retVal = new DriverData() {
+			var retVal = new DriverData {
 				AccelerationCurve = accelerationData,
 				LookAheadCoasting = lookAheadData,
 				OverSpeedEcoRoll = overspeedData,
@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 					? FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
 					: null;
 
-				var gear = new GearData() {
+				var gear = new GearData {
 					LossMap = lossMap,
 					ShiftPolygon = shiftPolygon,
 					FullLoadCurve = fullLoad,

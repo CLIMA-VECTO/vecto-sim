@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.DebugFormat(
 						"current Distance: {3} -- Simulation Distance {0} exceeds next DrivingAction at {1}, reducing interval to {2}", ds,
 						nextDrivingAction.Current.Key, nextDrivingAction.Current.Key - currentDistance, currentDistance);
-					return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = nextDrivingAction.Current.Key - currentDistance };
+					return new ResponseDrivingCycleDistanceExceeded { MaxDistance = nextDrivingAction.Current.Key - currentDistance };
 				}
 			} else {
 				if (targetVelocity > DataBus.VehicleSpeed()) {
@@ -183,7 +183,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.DebugFormat(
 					"SearchOperatingPoint Breaking reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!", newDs,
 					ds);
-				return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = newDs, SimulationInterval = CurrentState.dt };
+				return new ResponseDrivingCycleDistanceExceeded { MaxDistance = newDs, SimulationInterval = CurrentState.dt };
 			}
 
 			Log.DebugFormat("Found operating point for breaking. dt: {0}, acceleration: {1}", CurrentState.dt,
@@ -274,7 +274,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
 
-			return new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
+			return new ResponseDrivingCycleDistanceExceeded { SimulationInterval = CurrentState.dt };
 		}
 
 		protected List<KeyValuePair<Meter, DrivingBehaviorEntry>> GetNextDrivingActions(Meter minDistance)
@@ -297,7 +297,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						breakingDistance);
 					Log.DebugFormat("adding 'Braking' starting at distance {0}", entry.Distance - breakingDistance);
 					nextActions.Add(new KeyValuePair<Meter, DrivingBehaviorEntry>(entry.Distance - breakingDistance,
-						new DrivingBehaviorEntry() {
+						new DrivingBehaviorEntry {
 							Action = DrivingBehavior.Breaking,
 							ActionDistance = entry.Distance - breakingDistance,
 							TriggerDistance = entry.Distance,
@@ -307,7 +307,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						DeclarationData.Driver.LookAhead.Deceleration);
 					Log.DebugFormat("adding 'Coasting' starting at distance {0}", entry.Distance - coastingDistance);
 					nextActions.Add(new KeyValuePair<Meter, DrivingBehaviorEntry>(entry.Distance - coastingDistance,
-						new DrivingBehaviorEntry() {
+						new DrivingBehaviorEntry {
 							Action = DrivingBehavior.Coasting,
 							ActionDistance = entry.Distance - coastingDistance,
 							TriggerDistance = entry.Distance,
@@ -315,7 +315,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						}));
 				}
 				if (entry.VehicleTargetSpeed > currentSpeed) {
-					nextActions.Add(new KeyValuePair<Meter, DrivingBehaviorEntry>(entry.Distance, new DrivingBehaviorEntry() {
+					nextActions.Add(new KeyValuePair<Meter, DrivingBehaviorEntry>(entry.Distance, new DrivingBehaviorEntry {
 						Action = DrivingBehavior.Accelerating,
 						NextTargetSpeed = entry.VehicleTargetSpeed,
 						TriggerDistance = entry.Distance,
@@ -356,7 +356,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!ds.IsEqual(newDs)) {
 				Log.DebugFormat(
 					"SearchOperatingPoint reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!", newDs, ds);
-				return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = newDs, SimulationInterval = CurrentState.dt };
+				return new ResponseDrivingCycleDistanceExceeded { MaxDistance = newDs, SimulationInterval = CurrentState.dt };
 			}
 
 			Log.DebugFormat("Found operating point for coasting. dt: {0}, acceleration: {1}", CurrentState.dt,

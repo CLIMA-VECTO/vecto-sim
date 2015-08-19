@@ -23,7 +23,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			}
 			var dao = new EngineeringDataAdapter();
 			foreach (var cycle in job.Body.Cycles) {
-				var simulationRunData = new VectoRunData() {
+				var simulationRunData = new VectoRunData {
 					BasePath = job.BasePath,
 					JobFileName = job.JobFile,
 					EngineData = dao.CreateEngineData(Engine),

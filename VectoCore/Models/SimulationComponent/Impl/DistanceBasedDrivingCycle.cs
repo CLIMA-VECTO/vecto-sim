@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (PreviousState.Distance + ds > CycleIntervalIterator.RightSample.Distance) {
 				// only drive until next sample point in cycle
 				// only drive until next sample point in cycle
-				return new ResponseDrivingCycleDistanceExceeded() {
+				return new ResponseDrivingCycleDistanceExceeded {
 					MaxDistance = CycleIntervalIterator.RightSample.Distance - PreviousState.Distance
 				};
 			}
@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				(CycleIntervalIterator.RightSample.Distance - PreviousState.Distance) <
 				Constants.SimulationSettings.DriveOffDistance) {
 				CurrentState.RequestToNextSamplePointDone = true;
-				return new ResponseDrivingCycleDistanceExceeded() { MaxDistance = Constants.SimulationSettings.DriveOffDistance };
+				return new ResponseDrivingCycleDistanceExceeded { MaxDistance = Constants.SimulationSettings.DriveOffDistance };
 			}
 			CurrentState.Distance = PreviousState.Distance + ds;
 			CurrentState.VehicleTargetSpeed = CycleIntervalIterator.LeftSample.VehicleTargetSpeed;
@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		IResponse ISimulationOutPort.Initialize()
 		{
 			var first = Data.Entries.First();
-			PreviousState = new DrivingCycleState() {
+			PreviousState = new DrivingCycleState {
 				AbsTime = 0.SI<Second>(),
 				WaitTime = 0.SI<Second>(),
 				Distance = first.Distance,
@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public DrivingCycleState Clone()
 			{
-				return new DrivingCycleState() {
+				return new DrivingCycleState {
 					AbsTime = AbsTime,
 					Distance = Distance,
 					VehicleTargetSpeed = VehicleTargetSpeed,
