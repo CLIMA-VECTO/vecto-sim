@@ -230,7 +230,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 				container.Gear = (uint)exp.gear;
 				var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
-				Assert.AreEqual(response.ResponseType, exp.responseType, exp.ToString());
+				Assert.AreEqual(exp.responseType, response.ResponseType, exp.ToString());
 				Assert.AreEqual((uint)exp.newGear, container.Gear, exp.ToString());
 				absTime += dt;
 			}

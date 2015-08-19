@@ -15,12 +15,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		private readonly double _ratio;
 
-		private readonly DelauneyMap _lossMap; // Input Speed, Output Torque (to Wheels) => Input Torque (Engine)
-		private NewtonMeter _minTorque = double.PositiveInfinity.SI<NewtonMeter>();
-		private NewtonMeter _maxTorque = double.NegativeInfinity.SI<NewtonMeter>();
-		private PerSecond _maxSpeed = double.NegativeInfinity.SI<PerSecond>();
-		private PerSecond _minSpeed = double.PositiveInfinity.SI<PerSecond>();
-		//private readonly DelauneyMap _reverseLossMap; // Input Speed, Input Torque (Engine) => Output Torque (Wheels)
+		/// <summary>
+		/// [X=Input EngineSpeed, Y=Output Torque] => Z=Input Torque
+		/// </summary>
+		private readonly DelauneyMap _lossMap;
+
+		private readonly NewtonMeter _minTorque = double.PositiveInfinity.SI<NewtonMeter>();
+		private readonly NewtonMeter _maxTorque = double.NegativeInfinity.SI<NewtonMeter>();
+		private readonly PerSecond _maxSpeed = double.NegativeInfinity.SI<PerSecond>();
+		private readonly PerSecond _minSpeed = double.PositiveInfinity.SI<PerSecond>();
 
 		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio)
 		{
@@ -104,25 +107,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		}
 
 		/// <summary>
-		///		Compute the required torque at the input of the gear(box) (from engine)
+		///	Computes the INPUT torque given by the input engineSpeed and the output torque.
 		/// </summary>
-		/// <param name="angularVelocity">[1/s] angular speed of the shaft</param>
-		/// <param name="gbxOutTorque">[Nm] torque requested by the previous componend (towards the wheels)</param>
-		/// <returns>[Nm] torque requested from the next component (towards the engine)</returns>
-		public NewtonMeter GearboxInTorque(PerSecond angularVelocity, NewtonMeter gbxOutTorque)
+		/// <param name="inAngularVelocity">Angular speed at input side.</param>
+		/// <param name="outTorque">Torque at output side (as requested by the previous componend towards the wheels).</param>
+		/// <returns>Torque needed at input side (towards the engine).</returns>
+		public NewtonMeter GearboxInTorque(PerSecond inAngularVelocity, NewtonMeter outTorque)
 		{
 			try {
-				var limitedAngularVelocity = VectoMath.Limit(angularVelocity, _minSpeed, _maxSpeed).Value();
-				var limitedTorque = VectoMath.Limit(gbxOutTorque, _minTorque, _maxTorque).Value();
-				var gbxInTorque = _lossMap.Interpolate(limitedAngularVelocity, limitedTorque).SI<NewtonMeter>();
-				LogManager.GetLogger(GetType()).DebugFormat("GearboxLoss: {0}", gbxInTorque);
-				// Torque at input of the gearbox must be greater or equal than the value without any losses (just torque/ratio)
-				return VectoMath.Max(gbxInTorque, gbxOutTorque / _ratio);
+				var limitedAngularVelocity = VectoMath.Limit(inAngularVelocity, _minSpeed, _maxSpeed).Value();
+				var limitedTorque = VectoMath.Limit(outTorque, _minTorque, _maxTorque).Value();
+
+				var inTorque = _lossMap.Interpolate(limitedAngularVelocity, limitedTorque).SI<NewtonMeter>();
+				LogManager.GetLogger(GetType()).DebugFormat("GearboxLoss: {0}", inTorque - outTorque);
+
+				// Limit input torque to a maximum value without losses (just torque/ratio)
+				return VectoMath.Max(inTorque, outTorque / _ratio);
 			} catch (VectoException) {
-				var log = LogManager.GetLogger(GetType());
-				log.ErrorFormat("Failed to interpolate in TransmissionLossMap. angularVelocity: {0}, torque: {1}", angularVelocity,
-					gbxOutTorque);
-				return gbxOutTorque / _ratio;
+				LogManager.GetLogger(GetType())
+					.ErrorFormat("Failed to interpolate in TransmissionLossMap. angularVelocity: {0}, torque: {1}", inAngularVelocity,
+						outTorque);
+				return outTorque / _ratio;
 			}
 		}
 
@@ -144,24 +149,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		private static class Fields
 		{
-			/// <summary>
-			///		[rpm]
-			/// </summary>
+			/// <summary>[rpm]</summary>
 			public const string InputSpeed = "Input Speed";
 
-			/// <summary>
-			///		[Nm]
-			/// </summary>
+			/// <summary>[Nm]</summary>
 			public const string InputTorque = "Input Torque";
 
-			/// <summary>
-			///		[Nm]
-			/// </summary>
+			/// <summary>[Nm]</summary>
 			public const string TorqeLoss = "Torque Loss";
 
-			/// <summary>
-			///		[-]
-			/// </summary>
+			/// <summary>[-]</summary>
 			public const string Efficiency = "Eff";
 		}
 	}

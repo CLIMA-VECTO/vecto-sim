@@ -14,15 +14,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class Gearbox : VectoSimulationComponent, IGearbox, ITnOutPort, ITnInPort
 	{
 		protected ITnOutPort Next;
-		private uint _gear;
 
 		internal GearboxData Data;
+
+		private uint _gear;
 		private Second _lastShiftTime = double.NegativeInfinity.SI<Second>();
+		private uint _previousGear;
+		private Watt _loss;
 
 		public Gearbox(IVehicleContainer container, GearboxData gearboxData) : base(container)
 		{
 			Data = gearboxData;
-			_gear = 0;
 		}
 
 		private GearData CurrentGear
@@ -34,30 +36,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			get { return _gear; }
 			set { _gear = value; }
-		}
-
-		/// <summary>
-		/// Tests if current power request is left or right of the shiftpolygon segment
-		/// </summary>
-		private static bool IsOnLeftSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
-			ShiftPolygon.ShiftPolygonEntry to)
-		{
-			var p = new Point(angularSpeed.Value(), torque.Value());
-			var edge = new Edge(new Point(from.AngularSpeed.Value(), from.Torque.Value()),
-				new Point(to.AngularSpeed.Value(), to.Torque.Value()));
-			return p.IsLeftOf(edge);
-		}
-
-		/// <summary>
-		/// Tests if current power request is left or right of the shiftpolygon segment
-		/// </summary>
-		private static bool IsOnRightSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
-			ShiftPolygon.ShiftPolygonEntry to)
-		{
-			var p = new Point(angularSpeed.Value(), torque.Value());
-			var edge = new Edge(new Point(from.AngularSpeed.Value(), from.Torque.Value()),
-				new Point(to.AngularSpeed.Value(), to.Torque.Value()));
-			return p.IsRightOf(edge);
 		}
 
 		#region ITnInProvider
@@ -96,7 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// TODO:
 			// * EarlyUpshift (shift before outside of up-shift curve if torque reserve for the next higher gear is fullfilled)
 			// * SkipGears (when already shifting to next gear, check if torque reserve is fullfilled for the overnext gear and eventually shift to it)
-			// * AT, MT, AMT .... different behaviour!
+			// * MT, AMT and AT .... different behaviour!
 
 			if (Gear == 0 || outEngineSpeed.IsEqual(0)) {
 				return Next.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<PerSecond>());
@@ -106,13 +84,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond inEngineSpeed;
 			NewtonMeter inTorque;
 
-			var previousGear = _gear;
+			_previousGear = _gear;
 
 			do {
 				gearChanged = false;
 
 				inEngineSpeed = outEngineSpeed * CurrentGear.Ratio;
 				inTorque = CurrentGear.LossMap.GearboxInTorque(inEngineSpeed, outTorque);
+				_loss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
 
 				if (!ShiftAllowed(absTime)) {
 					continue;
@@ -130,9 +109,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			} while (Data.SkipGears && gearChanged);
 
+			// Overload Response
 			var maxTorque = CurrentGear.FullLoadCurve.FullLoadStationaryTorque(inEngineSpeed);
 			if (inTorque.Abs() > maxTorque) {
-				_gear = previousGear;
+				_gear = _previousGear;
 				return new ResponseFailOverload {
 					GearboxPowerRequest = inTorque * inEngineSpeed,
 					Delta = Math.Sign(inTorque.Value()) * (inTorque.Abs() - maxTorque) * inEngineSpeed
@@ -140,19 +120,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// GearShift Response
-			if (previousGear != _gear) {
+			if (_previousGear != _gear) {
 				_lastShiftTime = absTime;
+				Log.DebugFormat("Gearbox Shift from gear {0} to gear {0}.", _previousGear, _gear);
 				return new ResponseGearShift { SimulationInterval = Data.TractionInterruption };
 			}
 
 			return Next.Request(absTime, dt, inTorque, inEngineSpeed);
 		}
 
+
+		/// <summary>
+		/// Tests if a shift is allowed.
+		/// </summary>
 		private bool ShiftAllowed(Second absTime)
 		{
-			return absTime - _lastShiftTime < Data.ShiftTime;
+			return absTime - _lastShiftTime >= Data.ShiftTime;
 		}
 
+		/// <summary>
+		/// Tests if the gearbox should shift down.
+		/// </summary>
 		private bool ShouldShiftDown(PerSecond inEngineSpeed, NewtonMeter inTorque)
 		{
 			if (_gear <= 1) {
@@ -163,6 +151,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return IsOnLeftSide(inEngineSpeed, inTorque, downSection.Item1, downSection.Item2);
 		}
 
+		/// <summary>
+		/// Tests if the gearbox should shift up.
+		/// </summary>
 		private bool ShouldShiftUp(PerSecond inEngineSpeed, NewtonMeter inTorque)
 		{
 			if (_gear >= Data.Gears.Count) {
@@ -171,6 +162,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var upSection = CurrentGear.ShiftPolygon.Upshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
 			return IsOnRightSide(inEngineSpeed, inTorque, upSection.Item1, upSection.Item2);
+		}
+
+		/// <summary>
+		/// Tests if current power request is left or right of the shiftpolygon segment
+		/// </summary>
+		private static bool IsOnLeftSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
+			ShiftPolygon.ShiftPolygonEntry to)
+		{
+			var p = new Point(angularSpeed.Value(), torque.Value());
+			var edge = new Edge(new Point(from.AngularSpeed.Value(), from.Torque.Value()),
+				new Point(to.AngularSpeed.Value(), to.Torque.Value()));
+			return p.IsLeftOf(edge);
+		}
+
+		/// <summary>
+		/// Tests if current power request is left or right of the shiftpolygon segment
+		/// </summary>
+		private static bool IsOnRightSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
+			ShiftPolygon.ShiftPolygonEntry to)
+		{
+			var p = new Point(angularSpeed.Value(), torque.Value());
+			var edge = new Edge(new Point(from.AngularSpeed.Value(), from.Torque.Value()),
+				new Point(to.AngularSpeed.Value(), to.Torque.Value()));
+			return p.IsRightOf(edge);
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
@@ -194,12 +209,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			//todo implement
+			writer[ModalResultField.Gear] = _gear;
+			writer[ModalResultField.PlossGB] = _loss;
+
+			// todo Gearbox PaGB rotational acceleration power: Gearbox
+			writer[ModalResultField.PaGB] = 0.SI();
 		}
 
 		protected override void DoCommitSimulationStep()
 		{
-			//todo implement
+			_previousGear = _gear;
+			_loss = 0.SI<Watt>();
 		}
 
 		#endregion
