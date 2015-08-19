@@ -163,6 +163,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				new { gear = 7, t = 2450, n = 1200, loss = 23.382, responseType = ResponseType.FailOverload }
 			};
 
+			var absTime = 0.SI<Second>();
+			var dt = 2.SI<Second>();
+
 			foreach (var exp in expected) {
 				var expectedT = exp.t.SI<NewtonMeter>();
 				var expectedN = exp.n.RPMtoRad();
@@ -172,7 +175,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				var angularVelocity = expectedN / ratios[exp.gear];
 
 				container.Gear = (uint)exp.gear;
-				var response = gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity);
+				var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
 				Assert.AreEqual(exp.responseType, response.ResponseType, exp.ToString());
 
 				if (angularVelocity.IsEqual(0)) {
@@ -180,11 +183,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				}
 
 				if (exp.responseType == ResponseType.Success) {
-					AssertHelper.AreRelativeEqual(0.SI<Second>(), port.AbsTime, message: exp.ToString());
-					AssertHelper.AreRelativeEqual(1.SI<Second>(), port.Dt, message: exp.ToString());
+					AssertHelper.AreRelativeEqual(absTime, port.AbsTime, message: exp.ToString());
+					AssertHelper.AreRelativeEqual(dt, port.Dt, message: exp.ToString());
 					AssertHelper.AreRelativeEqual(expectedN, port.AngularVelocity, message: exp.ToString());
 					AssertHelper.AreRelativeEqual(expectedT, port.Torque, message: exp.ToString());
 				}
+				absTime += dt;
 			}
 		}
 
@@ -211,8 +215,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				new { gear = 3, newGear = 2, t = 1500, n = 700, responseType = ResponseType.GearShift },
 				new { gear = 2, newGear = 1, t = 1500, n = 700, responseType = ResponseType.GearShift },
 				new { gear = 1, newGear = 1, t = 1200, n = 700, responseType = ResponseType.Success },
-				new { gear = 8, newGear = 1, t = 10000, n = 120, responseType = ResponseType.GearShift }, // skip gears
+				new { gear = 8, newGear = 1, t = 10000, n = 120, responseType = ResponseType.GearShift }
 			};
+
+			var absTime = 0.SI<Second>();
+			var dt = 2.SI<Second>();
 
 			foreach (var exp in expected) {
 				var expectedT = exp.t.SI<NewtonMeter>();
@@ -222,9 +229,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				var angularVelocity = expectedN / ratios[exp.gear];
 
 				container.Gear = (uint)exp.gear;
-				var response = gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity);
+				var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
 				Assert.AreEqual(response.ResponseType, exp.responseType, exp.ToString());
 				Assert.AreEqual((uint)exp.newGear, container.Gear, exp.ToString());
+				absTime += dt;
 			}
 		}
 
@@ -250,8 +258,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				new { gear = 2, newGear = 3, t = 1000, n = 1400, responseType = ResponseType.GearShift },
 				new { gear = 1, newGear = 2, t = 1000, n = 1400, responseType = ResponseType.GearShift },
 				new { gear = 8, newGear = 8, t = 1000, n = 1400, responseType = ResponseType.Success },
-				new { gear = 1, newGear = 8, t = 200, n = 9000, responseType = ResponseType.GearShift }, // skip gears
+				new { gear = 1, newGear = 8, t = 200, n = 9000, responseType = ResponseType.GearShift }
 			};
+
+			var absTime = 0.SI<Second>();
+			var dt = 2.SI<Second>();
 
 			foreach (var exp in expected) {
 				var expectedT = exp.t.SI<NewtonMeter>();
@@ -261,9 +272,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				var angularVelocity = expectedN / ratios[exp.gear];
 
 				container.Gear = (uint)exp.gear;
-				var response = gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity);
-				Assert.AreEqual(response.ResponseType, exp.responseType, exp.ToString());
+				var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
+				Assert.AreEqual(exp.responseType, response.ResponseType, exp.ToString());
 				Assert.AreEqual((uint)exp.newGear, container.Gear, exp.ToString());
+				absTime += dt;
 			}
 		}
 

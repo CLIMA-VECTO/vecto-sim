@@ -91,4 +91,12 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 			get { return ResponseType.DryRun; }
 		}
 	}
+
+	internal class ResponseGearShift : AbstractResponse
+	{
+		public override ResponseType ResponseType
+		{
+			get { return ResponseType.GearShift; }
+		}
+	}
 }
