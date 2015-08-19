@@ -147,6 +147,9 @@
     <None Include="TestData\Components\12t Delivery Truck.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Components\Gearbox.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Components\24t Coach Engine.vfld">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -202,9 +205,7 @@
     <None Include="TestData\Components\FullLoadCurve insufficient entries.vfld">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Components\Indirect Gear.vtlm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="TestData\Components\Indirect Gear.vtlm" />
     <None Include="TestData\Components\Retarder.vrlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

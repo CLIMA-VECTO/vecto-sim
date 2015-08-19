@@ -1,9 +1,6 @@
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -11,7 +8,6 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -413,7 +409,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							: ((ResponseDryRun)response).EngineDeltaFullLoad;
 						break;
 					default:
-						throw new VectoSimulationException("Unknown response type");
+						throw new VectoSimulationException(string.Format("Unknown response type. {0}", response));
 				}
 
 				exceeded.Add(delta);

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.FileIO.Reader;
@@ -28,6 +30,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
 		public const string AccelerationFile2 = @"TestData\Components\Truck.vacc";
+
+		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
+		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
+
 
 		public const double Tolerance = 0.001;
 
@@ -116,34 +122,19 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 		private static GearboxData CreateGearboxData()
 		{
-			var gear = new GearData {
-				FullLoadCurve = null,
-				LossMap = TransmissionLossMap.ReadFromFile(GbxLossMap, 1),
-				Ratio = 6.38,
-				ShiftPolygon = null
-			};
+			var flc = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile);
+			var lm = TransmissionLossMap.ReadFromFile(GbxLossMap, 1);
+			var sp = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile);
+
+			var ratios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
 
 			return new GearboxData {
 				Gears =
-					new Dictionary<uint, GearData> {
-						{ 1, gear },
-						{ 2, gear },
-						{ 3, gear },
-						{ 4, gear },
-						{ 5, gear },
-						{ 6, gear },
-						{ 7, gear },
-						{ 8, gear }
-					},
+					ratios.Select(
+						(g, i) => Tuple.Create((uint)i, new GearData { FullLoadCurve = flc, LossMap = lm, Ratio = g, ShiftPolygon = sp }))
+						.ToDictionary(k => k.Item1, v => v.Item2),
 				ShiftTime = 2.SI<Second>()
 			};
-
-			//return new GearboxData {
-			//	FullLoadCurve = null,
-			//	LossMap = TransmissionLossMap.ReadFromFile(GbxLossMap, 3.0 * 3.5),
-			//	Ratio = null,
-			//	ShiftPolygon = null
-			//};
 		}
 
 
