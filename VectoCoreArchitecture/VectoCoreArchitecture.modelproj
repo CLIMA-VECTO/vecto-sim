@@ -29,6 +29,13 @@
       <SubType>Content</SubType>
       <DependentUpon>FileInputAndPowertrainCreation.classdiagram</DependentUpon>
     </Content>
+    <Content Include="Components.componentdiagram">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Components.componentdiagram.layout">
+      <SubType>Content</SubType>
+      <DependentUpon>Components.componentdiagram</DependentUpon>
+    </Content>
     <Content Include="VectoFiles.dgml">
       <SubType>Content</SubType>
     </Content>
