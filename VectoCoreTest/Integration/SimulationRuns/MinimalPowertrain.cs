@@ -8,7 +8,6 @@ using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -50,13 +49,13 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 
 			var driver = new Driver(vehicleContainer, driverData);
-			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
-			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
-			tmp = AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
+			dynamic tmp = Port.AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
+			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
 
-			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData));
 			var engine = new CombustionEngine(vehicleContainer, engineData);
-			AddComponent(tmp, engine);
+			Port.AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
 
@@ -100,13 +99,13 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
 
-			dynamic tmp = AddComponent(cycle, new Driver(vehicleContainer, driverData));
-			tmp = AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
-			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
-			tmp = AddComponent(tmp, new Breaks(vehicleContainer));
-			tmp = AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
-			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
-			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
+			dynamic tmp = Port.AddComponent(cycle, new Driver(vehicleContainer, driverData));
+			tmp = Port.AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
+			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = Port.AddComponent(tmp, new Breaks(vehicleContainer));
+			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
+			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			Port.AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
 
 			var gbx = new MockGearbox(vehicleContainer);
 
@@ -181,13 +180,13 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
 
-			dynamic tmp = AddComponent(cycle, new Driver(vehicleContainer, driverData));
-			tmp = AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
-			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
-			tmp = AddComponent(tmp, new Breaks(vehicleContainer));
-			tmp = AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
-			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
-			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
+			dynamic tmp = Port.AddComponent(cycle, new Driver(vehicleContainer, driverData));
+			tmp = Port.AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
+			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = Port.AddComponent(tmp, new Breaks(vehicleContainer));
+			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
+			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			Port.AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
 
 			var gbx = new MockGearbox(vehicleContainer);
 
@@ -290,45 +289,6 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					Enabled = false,
 				}
 			};
-		}
-
-
-		// ========================
-
-		protected virtual IDriver AddComponent(IDrivingCycle prev, IDriver next)
-		{
-			prev.InPort().Connect(next.OutPort());
-			return next;
-		}
-
-		protected virtual IVehicle AddComponent(IDriver prev, IVehicle next)
-		{
-			prev.InPort().Connect(next.OutPort());
-			return next;
-		}
-
-		protected virtual IWheels AddComponent(IFvInProvider prev, IWheels next)
-		{
-			prev.InPort().Connect(next.OutPort());
-			return next;
-		}
-
-
-		protected virtual ITnOutProvider AddComponent(IWheels prev, ITnOutProvider next)
-		{
-			prev.InPort().Connect(next.OutPort());
-			return next;
-		}
-
-		protected virtual IPowerTrainComponent AddComponent(IPowerTrainComponent prev, IPowerTrainComponent next)
-		{
-			prev.InPort().Connect(next.OutPort());
-			return next;
-		}
-
-		protected virtual void AddComponent(IPowerTrainComponent prev, ITnOutProvider next)
-		{
-			prev.InPort().Connect(next.OutPort());
 		}
 	}
 }
