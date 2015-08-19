@@ -452,6 +452,11 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		protected SIBase(SI si) : base(si) {}
 
+		public new T Abs()
+		{
+			return base.Abs().Cast<T>();
+		}
+
 		#region Operators
 
 		/// <summary>
@@ -878,7 +883,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Returns the absolute value.
 		/// </summary>
-		public SI Abs()
+		public virtual SI Abs()
 		{
 			return new SI(Math.Abs(Val), this);
 		}

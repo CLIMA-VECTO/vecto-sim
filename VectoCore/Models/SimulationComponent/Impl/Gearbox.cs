@@ -36,7 +36,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			set { _gear = value; }
 		}
 
-
+		/// <summary>
+		/// Tests if current power request is left or right of the shiftpolygon segment
+		/// </summary>
 		private static bool IsOnLeftSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
 			ShiftPolygon.ShiftPolygonEntry to)
 		{
@@ -46,6 +48,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return p.IsLeftOf(edge);
 		}
 
+		/// <summary>
+		/// Tests if current power request is left or right of the shiftpolygon segment
+		/// </summary>
 		private static bool IsOnRightSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
 			ShiftPolygon.ShiftPolygonEntry to)
 		{
@@ -106,38 +111,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			do {
 				gearChanged = false;
 
-				// calculate new inEngineSpeed and Torque for the current gear
 				inEngineSpeed = outEngineSpeed * CurrentGear.Ratio;
 				inTorque = CurrentGear.LossMap.GearboxInTorque(inEngineSpeed, outTorque);
 
-				// check last shift time if a new shift is allowed
-				if (absTime - _lastShiftTime < Data.ShiftTime) {
+				if (!ShiftAllowed(absTime)) {
 					continue;
 				}
 
-				// check if GearBox should shift up
-				if (_gear < Data.Gears.Count) {
-					var upSection = CurrentGear.ShiftPolygon.Upshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
-					if (IsOnRightSide(inEngineSpeed, inTorque, upSection.Item1, upSection.Item2)) {
-						_gear++;
-						gearChanged = true;
-						continue;
-					}
+				if (ShouldShiftUp(inEngineSpeed, inTorque)) {
+					_gear++;
+					gearChanged = true;
+					continue;
 				}
 
-				// check if GearBox should shift down
-				if (_gear > 1) {
-					var downSection = CurrentGear.ShiftPolygon.Downshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
-					if (IsOnLeftSide(inEngineSpeed, inTorque, downSection.Item1, downSection.Item2)) {
-						_gear--;
-						gearChanged = true;
-					}
+				if (ShouldShiftDown(inEngineSpeed, inTorque)) {
+					_gear--;
+					gearChanged = true;
 				}
 			} while (Data.SkipGears && gearChanged);
 
-			// check full load curve for overload/underload (mirrored with Abs() )
 			var maxTorque = CurrentGear.FullLoadCurve.FullLoadStationaryTorque(inEngineSpeed);
 			if (inTorque.Abs() > maxTorque) {
+				_gear = previousGear;
 				return new ResponseFailOverload {
 					GearboxPowerRequest = inTorque * inEngineSpeed,
 					Delta = Math.Sign(inTorque.Value()) * (inTorque.Abs() - maxTorque) * inEngineSpeed
@@ -151,6 +146,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			return Next.Request(absTime, dt, inTorque, inEngineSpeed);
+		}
+
+		private bool ShiftAllowed(Second absTime)
+		{
+			return absTime - _lastShiftTime < Data.ShiftTime;
+		}
+
+		private bool ShouldShiftDown(PerSecond inEngineSpeed, NewtonMeter inTorque)
+		{
+			if (_gear <= 1) {
+				return false;
+			}
+
+			var downSection = CurrentGear.ShiftPolygon.Downshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
+			return IsOnLeftSide(inEngineSpeed, inTorque, downSection.Item1, downSection.Item2);
+		}
+
+		private bool ShouldShiftUp(PerSecond inEngineSpeed, NewtonMeter inTorque)
+		{
+			if (_gear >= Data.Gears.Count) {
+				return false;
+			}
+
+			var upSection = CurrentGear.ShiftPolygon.Upshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
+			return IsOnRightSide(inEngineSpeed, inTorque, upSection.Item1, upSection.Item2);
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)

@@ -202,9 +202,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private bool SearchBreakingPower(Second absTime, ref Meter ds, Radian gradient, ResponseDryRun response, bool coasting)
 		{
 			var exceeded = new List<Watt>(); // only used while testing
-			var breakingPower = VectoMath.Abs(response.EngineDeltaDragLoad);
+			var breakingPower = response.EngineDeltaDragLoad.Abs();
 			if (DataBus.ClutchState() != ClutchState.ClutchClosed) {
-				breakingPower = VectoMath.Abs(response.AxlegearPowerRequest);
+				breakingPower = response.AxlegearPowerRequest.Abs();
 			}
 			var searchInterval = breakingPower;
 			var originalDs = ds;

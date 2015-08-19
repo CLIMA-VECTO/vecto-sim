@@ -58,14 +58,6 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		/// <summary>
-		/// Returns the absolute value.
-		/// </summary>
-		public static T Abs<T>(T si) where T : SIBase<T>
-		{
-			return si.Abs().Cast<T>();
-		}
-
-		/// <summary>
 		/// Returns the minimum of two values.
 		/// </summary>
 		public static T Min<T>(T c1, T c2) where T : IComparable
