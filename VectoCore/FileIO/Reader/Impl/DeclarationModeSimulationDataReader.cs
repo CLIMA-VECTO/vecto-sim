@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 	{
 		internal DeclarationModeSimulationDataReader() {}
 
-		protected void CheckForDeclarationMode(InputFileReader.VersionInfo info, string msg)
+		protected void CheckForDeclarationMode(VersionInfo info, string msg)
 		{
 			if (!info.SavedInDeclarationMode) {
 				// throw new VectoException("File not saved in Declaration Mode! - " + msg);

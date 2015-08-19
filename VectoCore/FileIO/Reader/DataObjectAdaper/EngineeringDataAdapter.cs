@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 {
 	public class EngineeringDataAdapter : AbstractSimulationDataAdapter
 	{
-		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle, Models.Declaration.Mission segment,
+		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission segment,
 			Kilogram loading)
 		{
 			return CreateVehicleData(vehicle);

@@ -284,7 +284,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					Enabled = false,
 				},
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
-					Mode = VectoCore.Models.SimulationComponent.Data.DriverData.DriverMode.Off
+					Mode = DriverData.DriverMode.Off
 				},
 				StartStop = new VectoRunData.StartStopData {
 					Enabled = false,
