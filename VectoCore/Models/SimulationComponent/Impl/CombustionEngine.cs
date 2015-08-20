@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (!_currentState.EnginePower.IsEqual(requestedEnginePower, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
-				return new ResponseFailOverload {
+				return new ResponseEngineOverload {
 					Delta = (requestedEnginePower - _currentState.EnginePower),
 					EnginePowerRequest = requestedEnginePower
 				};

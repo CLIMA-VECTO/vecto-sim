@@ -1506,6 +1506,7 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="si">The si.</param>
 		/// <returns></returns>
+		[DebuggerHidden]
 		public bool HasEqualUnit(SI si)
 		{
 			Contract.Requires(si != null);

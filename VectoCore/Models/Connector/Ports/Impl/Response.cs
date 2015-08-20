@@ -1,4 +1,3 @@
-using System;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
@@ -6,8 +5,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	public abstract class AbstractResponse : IResponse
 	{
 		public Second SimulationInterval { get; set; }
-
-		public abstract ResponseType ResponseType { get; }
 
 		public Watt EnginePowerRequest { get; set; }
 
@@ -25,38 +22,31 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	/// <summary>
 	/// Response when the Cycle is finished.
 	/// </summary>
-	public class ResponseCycleFinished : AbstractResponse
-	{
-		public override ResponseType ResponseType
-		{
-			get { return ResponseType.CycleFinished; }
-		}
-	}
+	public class ResponseCycleFinished : AbstractResponse {}
 
 	/// <summary>
 	/// Response when a request was successful.
 	/// </summary>
-	public class ResponseSuccess : AbstractResponse
+	public class ResponseSuccess : AbstractResponse {}
+
+	/// <summary>
+	/// Response when the request resulted in an engine overload. 
+	/// </summary>
+	public class ResponseEngineOverload : AbstractResponse
 	{
-		public override ResponseType ResponseType
-		{
-			get { return ResponseType.Success; }
-		}
+		public Watt Delta { get; set; }
+		public double Gradient { get; set; }
 	}
 
 	/// <summary>
 	/// Response when the request resulted in an engine overload. 
 	/// </summary>
-	public class ResponseFailOverload : AbstractResponse
+	public class ResponseGearboxOverload : AbstractResponse
 	{
 		public Watt Delta { get; set; }
 		public double Gradient { get; set; }
-
-		public override ResponseType ResponseType
-		{
-			get { return ResponseType.FailOverload; }
-		}
 	}
+
 
 	/// <summary>
 	/// Response when the request should have another time interval.
@@ -64,39 +54,19 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	public class ResponseFailTimeInterval : AbstractResponse
 	{
 		public Second DeltaT { get; set; }
-
-		public override ResponseType ResponseType
-		{
-			get { return ResponseType.FailTimeInterval; }
-		}
 	}
 
 	public class ResponseDrivingCycleDistanceExceeded : AbstractResponse
 	{
 		public Meter MaxDistance { get; set; }
-
-		public override ResponseType ResponseType
-		{
-			get { return ResponseType.DrivingCycleDistanceExceeded; }
-		}
 	}
 
 	internal class ResponseDryRun : AbstractResponse
 	{
 		public Watt EngineDeltaFullLoad { get; set; }
 		public Watt EngineDeltaDragLoad { get; set; }
-
-		public override ResponseType ResponseType
-		{
-			get { return ResponseType.DryRun; }
-		}
+		public Watt GearboxDeltaFullLoad { get; set; }
 	}
 
-	internal class ResponseGearShift : AbstractResponse
-	{
-		public override ResponseType ResponseType
-		{
-			get { return ResponseType.GearShift; }
-		}
-	}
+	internal class ResponseGearShift : AbstractResponse {}
 }

@@ -67,18 +67,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("==== DRIVER Request ====");
 			Log.DebugFormat(
 				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}", absTime, ds,
-				targetVelocity,
-				gradient, DataBus.Distance(), DataBus.VehicleSpeed());
+				targetVelocity, gradient, DataBus.Distance(), DataBus.VehicleSpeed());
 
 			var retVal = DoHandleRequest(absTime, ds, targetVelocity, gradient);
 
 			CurrentState.Response = retVal;
-
-			switch (retVal.ResponseType) {
-				case ResponseType.FailOverload:
-
-					break;
-			}
 			return retVal;
 		}
 
@@ -86,13 +79,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			Log.Debug("==== DRIVER Request ====");
-			Log.DebugFormat("Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3}", absTime, dt, targetVelocity
-				, gradient);
+			Log.DebugFormat("Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3}", absTime, dt, targetVelocity,
+				gradient);
 			var retVal = DoHandleRequest(absTime, dt, targetVelocity, gradient);
 
 			CurrentState.Response = retVal;
-
-			//switch (retVal.ResponseType) {}
 			return retVal;
 		}
 
@@ -186,12 +177,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.Acceleration);
 			var retVal = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
 			CurrentState.Response = retVal;
-			switch (retVal.ResponseType) {
-				case ResponseType.Success:
-					retVal.SimulationInterval = CurrentState.dt;
-					return retVal;
+			if (retVal is ResponseSuccess) {
+				retVal.SimulationInterval = CurrentState.dt;
+			} else {
+				Log.DebugFormat("unhandled response from powertrain: {0}", retVal);
 			}
-			Log.DebugFormat("unhandled response from powertrain: {0}", retVal);
+
 			return retVal; //new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
 		}
 
@@ -244,29 +235,46 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseFailTimeInterval();
 			}
 
+			IResponse retVal = null;
 			do {
-				var retVal = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
-				switch (retVal.ResponseType) {
-					case ResponseType.Success:
-						retVal.SimulationInterval = CurrentState.dt;
-						return retVal;
-					case ResponseType.FailOverload:
-						var overloadResponse = retVal as ResponseFailOverload;
-						if (overloadResponse != null && overloadResponse.Delta < 0) {
+				var response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
+				response.Switch().
+					Case<ResponseSuccess>(r => {
+						r.SimulationInterval = CurrentState.dt;
+						retVal = r;
+					}).
+					Case<ResponseEngineOverload>(r => {
+						if (r != null && r.Delta < 0) {
 							// if Delta is negative we are already below the Drag-load curve. activate breaks
-							return DoBreak(absTime, ds, gradient, targetVelocity);
-						}
-						var doAccelerate = (DataBus.VehicleSpeed() - targetVelocity).Abs() > 0.1 * targetVelocity;
+							retVal = DoBreak(absTime, ds, gradient, targetVelocity);
+						} else {
+							var doAccelerate = (DataBus.VehicleSpeed() - targetVelocity).Abs() > 0.1 * targetVelocity;
 
-						var success = SearchOperatingPoint(absTime, ref ds, gradient, retVal, accelerating: doAccelerate);
-						if (!success) {
-							throw new VectoSimulationException("could not find operating point");
+							if (!SearchOperatingPoint(absTime, ref ds, gradient, r, accelerating: doAccelerate)) {
+								throw new VectoSimulationException("could not find operating point");
+							}
+							Log.DebugFormat("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}, doAccelerate: {2}",
+								CurrentState.dt, CurrentState.Acceleration, doAccelerate);
 						}
-						Log.DebugFormat("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}, doAccelerate: {2}",
-							CurrentState.dt,
-							CurrentState.Acceleration, doAccelerate);
+					}).
+					Case<ResponseGearShift>(() => { }).
+					Case<ResponseGearboxOverload>(r => {
+						if (r != null && r.Delta < 0) {
+							// if Delta is negative we are below the Drag-load curve: activate breaks
+							retVal = DoBreak(absTime, ds, gradient, targetVelocity);
+						} else {
+							var doAccelerate = (DataBus.VehicleSpeed() - targetVelocity).Abs() > 0.1 * targetVelocity;
 
-						break;
+							if (!SearchOperatingPoint(absTime, ref ds, gradient, r, accelerating: doAccelerate)) {
+								throw new VectoSimulationException("could not find operating point");
+							}
+							Log.DebugFormat("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}, doAccelerate: {2}",
+								CurrentState.dt, CurrentState.Acceleration, doAccelerate);
+						}
+					}).
+					Default(r => { throw new VectoException(string.Format("Unknown Response: {0}", r)); });
+				if (retVal != null) {
+					return retVal;
 				}
 			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
 
@@ -359,12 +367,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.Acceleration);
 			var retVal = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
 			CurrentState.Response = retVal;
-			switch (retVal.ResponseType) {
-				case ResponseType.Success:
-					retVal.SimulationInterval = CurrentState.dt;
-					return retVal;
-			}
-			Log.DebugFormat("unhandled response from powertrain: {0}", retVal);
+
+			retVal.Switch().
+				Case<ResponseSuccess>(r => r.SimulationInterval = CurrentState.dt).
+				Default(() => Log.DebugFormat("unhandled response from powertrain: {0}", retVal));
+
 			return retVal; //new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
 		}
 
@@ -397,20 +404,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			do {
-				Watt delta;
+				var delta = 0.SI<Watt>();
 				ds = originalDs;
-				switch (response.ResponseType) {
-					case ResponseType.FailOverload:
-						delta = ((ResponseFailOverload)response).Delta;
-						break;
-					case ResponseType.DryRun:
-						delta = coasting
-							? -((ResponseDryRun)response).EngineDeltaDragLoad
-							: ((ResponseDryRun)response).EngineDeltaFullLoad;
-						break;
-					default:
-						throw new VectoSimulationException(string.Format("Unknown response type. {0}", response));
-				}
+				response.Switch().
+					Case<ResponseEngineOverload>(r => delta = r.Delta).
+					Case<ResponseDryRun>(r => delta = coasting ? -r.EngineDeltaDragLoad : r.EngineDeltaFullLoad).
+					Default(r => { throw new VectoSimulationException(string.Format("Unknown response type. {0}", r)); });
 
 				exceeded.Add(delta);
 				acceleration.Add(CurrentState.Acceleration.Value());
@@ -558,8 +557,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep()
 		{
-			if (CurrentState.Response.ResponseType != ResponseType.Success) {
-				throw new VectoSimulationException("Previois request did not succeed!");
+			if (!(CurrentState.Response is ResponseSuccess)) {
+				throw new VectoSimulationException("Previous request did not succeed!");
 			}
 			CurrentState.RetryCount = 0;
 			CurrentState.Response = null;

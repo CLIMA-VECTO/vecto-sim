@@ -77,8 +77,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// * SkipGears (when already shifting to next gear, check if torque reserve is fullfilled for the overnext gear and eventually shift to it)
 			// * MT, AMT and AT .... different behaviour!
 
+			//Special Behaviour: When Gear is 0 (no gear set) or the speed is 0 (not rotating) a zero-request is applied.
 			if (Gear == 0 || outEngineSpeed.IsEqual(0)) {
-				return Next.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<PerSecond>());
+				return Next.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<PerSecond>(), dryRun);
 			}
 
 			bool gearChanged;
@@ -114,9 +115,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var maxTorque = CurrentGear.FullLoadCurve.FullLoadStationaryTorque(inEngineSpeed);
 			if (inTorque.Abs() > maxTorque) {
 				_gear = _previousGear;
-				return new ResponseFailOverload {
+				return new ResponseGearboxOverload {
+					Delta = (inTorque.Abs() - maxTorque) * inEngineSpeed,
 					GearboxPowerRequest = inTorque * inEngineSpeed,
-					Delta = Math.Sign(inTorque.Value()) * (inTorque.Abs() - maxTorque) * inEngineSpeed
 				};
 			}
 
@@ -127,7 +128,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseGearShift { SimulationInterval = Data.TractionInterruption };
 			}
 
-			return Next.Request(absTime, dt, inTorque, inEngineSpeed);
+			var response = Next.Request(absTime, dt, inTorque, inEngineSpeed, dryRun);
+			response.GearboxPowerRequest = inTorque * inEngineSpeed;
+
+			response.Switch().
+				Case<ResponseDryRun>(r => r.GearboxDeltaFullLoad = (maxTorque - inTorque) * inEngineSpeed);
+
+			return response;
 		}
 
 
@@ -213,7 +220,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			writer[ModalResultField.Gear] = _gear;
 			writer[ModalResultField.PlossGB] = _loss;
 
-			// todo Gearbox PaGB rotational acceleration power: Gearbox
+			// todo Gearbox PaGB rotational acceleration power in moddata
 			writer[ModalResultField.PaGB] = 0.SI();
 		}
 

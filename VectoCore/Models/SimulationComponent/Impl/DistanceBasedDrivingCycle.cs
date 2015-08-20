@@ -97,7 +97,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (PreviousState.Distance + ds > CycleIntervalIterator.RightSample.Distance) {
 				// only drive until next sample point in cycle
-				// only drive until next sample point in cycle
 				return new ResponseDrivingCycleDistanceExceeded {
 					MaxDistance = CycleIntervalIterator.RightSample.Distance - PreviousState.Distance
 				};
@@ -186,7 +185,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep()
 		{
-			if (CurrentState.Response.ResponseType != ResponseType.Success) {
+			if (!(CurrentState.Response is ResponseSuccess)) {
 				throw new VectoSimulationException("Previous request did not succeed!");
 			}
 

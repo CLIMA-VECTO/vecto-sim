@@ -25,20 +25,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			do {
 				response = CyclePort.Request(AbsTime, ds);
-				switch (response.ResponseType) {
-					case ResponseType.Success:
-						requestDone = true;
-						break;
-					case ResponseType.CycleFinished:
-						requestDone = true;
-						break;
-					case ResponseType.DrivingCycleDistanceExceeded:
-						var distanceResponse = response as ResponseDrivingCycleDistanceExceeded;
-						if (distanceResponse != null) {
-							ds = distanceResponse.MaxDistance;
-						}
-						break;
-				}
+				response.Switch().
+					Case<ResponseSuccess>(_ => requestDone = true).
+					Case<ResponseCycleFinished>(_ => requestDone = true).
+					Case<ResponseDrivingCycleDistanceExceeded>(r => { ds = r.MaxDistance; });
 			} while (!requestDone);
 
 			//while (response is ResponseFailTimeInterval) {

@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -64,51 +63,40 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			cyclePort.Initialize();
 
+			container.Gear = 0;
+
 			var absTime = 0.SI<Second>();
-			var response = cyclePort.Request(absTime, 1.SI<Meter>());
-
+			var ds = Constants.SimulationSettings.DriveOffDistance;
+			var response = cyclePort.Request(absTime, ds);
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
-
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
 			container.Gear = 1;
-			var ds = Constants.SimulationSettings.DriveOffDistance;
 			var cnt = 0;
-			var doRun = true;
-			while (doRun && container.Distance().Value() < 17000) {
+			while (!(response is ResponseCycleFinished) && container.Distance().Value() < 17000) {
 				response = cyclePort.Request(absTime, ds);
+				response.Switch().
+					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
+					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseSuccess>(r => {
+						container.CommitSimulationStep(absTime, r.SimulationInterval);
+						absTime += r.SimulationInterval;
 
-				switch (response.ResponseType) {
-					case ResponseType.DrivingCycleDistanceExceeded:
-						var rsp = response as ResponseDrivingCycleDistanceExceeded;
-						ds = rsp.MaxDistance;
-						continue;
-					case ResponseType.CycleFinished:
-						doRun = false;
-						break;
-				}
-				if (doRun) {
-					Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+						ds = container.VehicleSpeed().IsEqual(0)
+							? Constants.SimulationSettings.DriveOffDistance
+							: (Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed()).Cast<Meter>();
 
-					container.CommitSimulationStep(absTime, response.SimulationInterval);
-					absTime += response.SimulationInterval;
-
-					ds = container.VehicleSpeed().IsEqual(0)
-						? Constants.SimulationSettings.DriveOffDistance
-						: (Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed()).Cast<Meter>();
-
-					if (cnt++ % 100 == 0) {
-						modalWriter.Finish();
-					}
-				}
+						if (cnt++ % 100 == 0) {
+							modalWriter.Finish();
+						}
+					}).
+					Default(r => Assert.Fail("Unexpected Response: {0}", r));
 			}
 
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 
 			modalWriter.Finish();
-			//var run = new DistanceRun(vehicleContainer);
-			//run.Run();
 		}
 
 		private static GearData CreateAxleGearData()

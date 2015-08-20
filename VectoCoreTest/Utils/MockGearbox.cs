@@ -10,8 +10,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 	public class MockGearbox : VectoSimulationComponent, IGearbox, ITnInPort, ITnOutPort
 	{
 		private ITnOutPort _outPort;
-		public uint CurrentGear { get; set; }
-
 
 		public MockGearbox(IVehicleContainer cockpit) : base(cockpit) {}
 
@@ -25,11 +23,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return this;
 		}
 
-		public uint Gear
-		{
-			get { return CurrentGear; }
-			set { CurrentGear = value; }
-		}
+		public uint Gear { get; set; }
 
 
 		public void Connect(ITnOutPort other)

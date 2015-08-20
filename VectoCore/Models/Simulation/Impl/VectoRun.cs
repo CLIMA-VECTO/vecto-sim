@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Initialize();
 			do {
 				response = DoSimulationStep();
-				if (response.ResponseType == ResponseType.Success) {
+				if (response is ResponseSuccess) {
 					Container.CommitSimulationStep(AbsTime, dt);
 				}
 
