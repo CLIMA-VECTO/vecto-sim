@@ -20,28 +20,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				ds = Constants.SimulationSettings.DriveOffDistance;
 			}
 
-			IResponse response;
+			IResponse response = null;
 			var requestDone = false;
-
-			do {
+			while (!requestDone) {
 				response = CyclePort.Request(AbsTime, ds);
+
 				response.Switch().
-					Case<ResponseSuccess>(_ => requestDone = true).
-					Case<ResponseCycleFinished>(_ => requestDone = true).
+					Case<ResponseSuccess>(r => {
+						AbsTime = AbsTime + r.SimulationInterval;
+						dt = r.SimulationInterval;
+						requestDone = true;
+					}).
+					Case<ResponseCycleFinished>(() => requestDone = true).
 					Case<ResponseDrivingCycleDistanceExceeded>(r => { ds = r.MaxDistance; });
-			} while (!requestDone);
+			}
 
 			//while (response is ResponseFailTimeInterval) {
 			//	_dt = (response as ResponseFailTimeInterval).DeltaT;
 			//	response = CyclePort.Request(_absTime, _dt);
 			//}
 
-			if (response is ResponseCycleFinished) {
-				return response;
-			}
-
-			AbsTime = AbsTime + response.SimulationInterval;
-			dt = response.SimulationInterval;
 			return response;
 		}
 

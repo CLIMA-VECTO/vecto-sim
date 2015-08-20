@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.GearboxPowerRequest = inTorque * inEngineSpeed;
 
 			response.Switch().
-				Case<ResponseDryRun>(r => r.GearboxDeltaFullLoad = (maxTorque - inTorque) * inEngineSpeed);
+				Case<ResponseDryRun>(r => r.DeltaFullLoad = (maxTorque - inTorque) * inEngineSpeed);
 
 			return response;
 		}

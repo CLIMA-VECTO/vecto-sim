@@ -63,9 +63,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 	internal class ResponseDryRun : AbstractResponse
 	{
-		public Watt EngineDeltaFullLoad { get; set; }
-		public Watt EngineDeltaDragLoad { get; set; }
-		public Watt GearboxDeltaFullLoad { get; set; }
+		public Watt DeltaFullLoad { get; set; }
+		public Watt DeltaDragLoad { get; set; }
 	}
 
 	internal class ResponseGearShift : AbstractResponse {}

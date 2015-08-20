@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -11,46 +10,46 @@ namespace TUGraz.VectoCore.Utils
 	/// </remarks>
 	public static class SwitchExtension
 	{
-		public static Switcher<T> Switch<T>(this T self)
+		public static Switch<T> Switch<T>(this T self)
 		{
-			return new Switcher<T>(self);
+			return new Switch<T>(self);
+		}
+	}
+
+	public class Switch<T>
+	{
+		private readonly T _value;
+		private bool _handled;
+
+		internal Switch(T value)
+		{
+			_value = value;
+			_handled = false;
 		}
 
-		public class Switcher<T>
+		public Switch<T> Case<TFilter>(Action action) where TFilter : T
 		{
-			private readonly T _value;
-			private bool _handled;
+			return Case<TFilter>(_ => action());
+		}
 
-			internal Switcher(T value)
-			{
-				_value = value;
-				_handled = false;
+		public Switch<T> Case<TFilter>(Action<TFilter> action) where TFilter : T
+		{
+			if (!_handled && _value is TFilter) {
+				action((TFilter)_value);
+				_handled = true;
 			}
+			return this;
+		}
 
-			public Switcher<T> Case<TTarget>(Action action) where TTarget : T
-			{
-				return Case<TTarget>(_ => action());
-			}
+		public void Default(Action action)
+		{
+			Default(_ => action());
+		}
 
-			public Switcher<T> Case<TTarget>(Action<TTarget> action) where TTarget : T
-			{
-				if (!_handled && _value is TTarget) {
-					action((TTarget)_value);
-					_handled = true;
-				}
-				return this;
-			}
-
-			public void Default(Action action)
-			{
-				Default(_ => action());
-			}
-
-			public void Default(Action<T> action)
-			{
-				if (!_handled) {
-					action(_value);
-				}
+		public void Default(Action<T> action)
+		{
+			if (!_handled) {
+				action(_value);
 			}
 		}
 	}

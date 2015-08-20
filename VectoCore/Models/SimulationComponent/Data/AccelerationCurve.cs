@@ -138,8 +138,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			var b = -d / k;
 			var c = 0.SI<Meter>() - m / k;
 			var t = Math.Log(((v2 * k + d) / (v1 * k + d)).Cast<Scalar>()) / k;
-			// TODO @@@quam: remove .SI<> when bug #VECTO-111 is fixed...
-
 			return m / k * Math.Exp((k * t).Value()) + b * t + c;
 		}
 	}

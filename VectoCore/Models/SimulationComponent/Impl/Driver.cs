@@ -177,11 +177,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.Acceleration);
 			var retVal = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
 			CurrentState.Response = retVal;
-			if (retVal is ResponseSuccess) {
-				retVal.SimulationInterval = CurrentState.dt;
-			} else {
-				Log.DebugFormat("unhandled response from powertrain: {0}", retVal);
-			}
+
+			retVal.Switch().
+				Case<ResponseSuccess>(r => r.SimulationInterval = CurrentState.dt).
+				Default(() => Log.DebugFormat("unhandled response from powertrain: {0}", retVal));
 
 			return retVal; //new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
 		}
@@ -189,7 +188,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private bool SearchBreakingPower(Second absTime, ref Meter ds, Radian gradient, ResponseDryRun response, bool coasting)
 		{
 			var exceeded = new List<Watt>(); // only used while testing
-			var breakingPower = response.EngineDeltaDragLoad.Abs();
+			var breakingPower = response.DeltaDragLoad.Abs();
 			if (DataBus.ClutchState() != ClutchState.ClutchClosed) {
 				breakingPower = response.AxlegearPowerRequest.Abs();
 			}
@@ -199,7 +198,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			do {
 				ds = originalDs;
 				var delta = DataBus.ClutchState() == ClutchState.ClutchClosed
-					? -response.EngineDeltaDragLoad
+					? -response.DeltaDragLoad
 					: -response.AxlegearPowerRequest;
 
 				exceeded.Add(delta);
@@ -408,14 +407,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				ds = originalDs;
 				response.Switch().
 					Case<ResponseEngineOverload>(r => delta = r.Delta).
-					Case<ResponseDryRun>(r => delta = coasting ? -r.EngineDeltaDragLoad : r.EngineDeltaFullLoad).
+					Case<ResponseGearboxOverload>(r => delta = r.Delta).
+					Case<ResponseDryRun>(r => delta = coasting ? -r.DeltaDragLoad : r.DeltaFullLoad).
 					Default(r => { throw new VectoSimulationException(string.Format("Unknown response type. {0}", r)); });
 
 				exceeded.Add(delta);
 				acceleration.Add(CurrentState.Acceleration.Value());
 				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
-					Log.DebugFormat("found operating point in {0} iterations. Engine Power req: {2},  delta: {1}", exceeded.Count,
-						delta, response.EnginePowerRequest);
+					Log.DebugFormat(
+						"found operating point in {0} iterations. Engine Power req: {2}, Gearbox Power req: {3} delta: {1}",
+						exceeded.Count, delta, response.EnginePowerRequest, response.GearboxPowerRequest);
 					return true;
 				}
 				if (delta > 0) {

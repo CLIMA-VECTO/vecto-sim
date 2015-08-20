@@ -98,8 +98,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (dryRun) {
 				return new ResponseDryRun {
-					EngineDeltaFullLoad = (requestedEnginePower - _currentState.DynamicFullLoadPower),
-					EngineDeltaDragLoad = (requestedEnginePower - _currentState.FullDragPower),
+					DeltaFullLoad = (requestedEnginePower - _currentState.DynamicFullLoadPower),
+					DeltaDragLoad = (requestedEnginePower - _currentState.FullDragPower),
 					EnginePowerRequest = requestedEnginePower
 				};
 			}
