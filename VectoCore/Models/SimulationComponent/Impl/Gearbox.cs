@@ -124,7 +124,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// GearShift Response
 			if (_previousGear != _gear) {
 				_lastShiftTime = absTime;
-				Log.DebugFormat("Gearbox Shift from gear {0} to gear {0}.", _previousGear, _gear);
+				Log.DebugFormat("Gearbox Shift from gear {0} to gear {1}.", _previousGear, _gear);
 				return new ResponseGearShift { SimulationInterval = Data.TractionInterruption };
 			}
 
@@ -132,7 +132,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			response.GearboxPowerRequest = inTorque * inEngineSpeed;
 
 			response.Switch().
-				Case<ResponseDryRun>(r => r.DeltaFullLoad = (maxTorque - inTorque) * inEngineSpeed);
+				Case<ResponseDryRun>(r => r.DeltaFullLoad = VectoMath.Max(r.DeltaFullLoad, (inTorque - maxTorque) * inEngineSpeed));
 
 			return response;
 		}
