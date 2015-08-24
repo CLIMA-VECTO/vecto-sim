@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// * MT, AMT and AT .... different behaviour!
 
 			//Special Behaviour: When Gear is 0 (no gear set) OR the speed is 0 (not rotating) a zero-request is applied.
-			if (Gear == 0 || outEngineSpeed.IsEqual(0)) {
+			if (Gear == 0) {
 				var resp = Next.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<PerSecond>(), dryRun);
 				resp.GearboxPowerRequest = outTorque * outEngineSpeed;
 				return resp;

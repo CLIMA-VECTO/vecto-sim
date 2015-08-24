@@ -113,7 +113,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			int index;
 			FullLoadEntries.GetSection(x => x.EngineSpeed < angularVelocity, out index,
-				string.Format("requested rpm outside of FLD curve - extrapolating. rpm: {0}", angularVelocity.RoundsPerMinute));
+				string.Format("requested rpm outside of FLD curve - extrapolating. rpm: {0}",
+					angularVelocity.ConvertTo().Rounds.Per.Minute));
 			return index + 1;
 		}
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.FileIO.Reader;
@@ -137,13 +137,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
 					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseGearShift>(r => { Debug.WriteLine("Gearshift"); }).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
 
 						ds = container.VehicleSpeed().IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: (Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed()).Cast<Meter>();
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed();
 
 						if (cnt++ % 100 == 0) {
 							modalWriter.Finish();
@@ -161,7 +162,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		// todo: add realistic FullLoadCurve
 		private static GearboxData CreateGearboxData()
 		{
-			var ratios = new[] { 6.38 }; //new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
+			var ratios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
 
 			return new GearboxData {
 				Gears = ratios.Select((ratio, i) =>

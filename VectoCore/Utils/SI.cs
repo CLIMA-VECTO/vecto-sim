@@ -340,6 +340,7 @@ namespace TUGraz.VectoCore.Utils
 	/// <summary>
 	/// SI Class for one per second [1/s].
 	/// </summary>
+	[DebuggerDisplay("rad/s: {this} | rpm: {ConvertTo().Rounds.Per.Minute}")]
 	public class PerSecond : SIBase<PerSecond>
 	{
 		static PerSecond()
@@ -349,22 +350,12 @@ namespace TUGraz.VectoCore.Utils
 
 		[JsonConstructor]
 		private PerSecond(double val) : base(new SI(val).Per.Second) {}
-
-		/// <summary>
-		/// Gets the rounds per minute.
-		/// </summary>
-		/// <value>
-		/// The rounds per minute.
-		/// </value>
-		public SI RoundsPerMinute
-		{
-			get { return ConvertTo().Rounds.Per.Minute; }
-		}
 	}
 
 	/// <summary>
 	/// SI Class for Meter per second [m/s].
 	/// </summary>
+	[DebuggerDisplay("m/s: {this} | km/h: {ConvertTo().Kilo.Meter.Per.Hour}")]
 	public class MeterPerSecond : SIBase<MeterPerSecond>
 	{
 		static MeterPerSecond()
@@ -416,11 +407,26 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return ((meterPerSecond as SI) * second).Cast<Meter>();
 		}
+
+		/// <summary>
+		/// Implements the operator *.
+		/// </summary>
+		/// <param name="meterPerSecond">The meter per second.</param>
+		/// <param name="second">The second.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
+		public static Meter operator *(Second second, MeterPerSecond meterPerSecond)
+		{
+			return (second * (meterPerSecond as SI)).Cast<Meter>();
+		}
 	}
 
 	/// <summary>
 	/// SI Class for Rounds per minute [rpm] (automatically converts internally to radian per second)
 	/// </summary>
+	[DebuggerDisplay("rad/s: {this} | rpm: {ConvertTo().Rounds.Per.Minute}")]
 	public class RoundsPerMinute : SIBase<RoundsPerMinute>
 	{
 		static RoundsPerMinute()
@@ -866,6 +872,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Converts the derived SI units to the basic units and returns this as a new SI object.
 		/// </summary>
+		[DebuggerHidden]
 		public SI ToBasicUnits()
 		{
 			var numerator = new List<Unit>();
@@ -923,6 +930,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Gets the underlying scalar double value.
 		/// </summary>
+		[DebuggerHidden]
 		public double Value()
 		{
 			return Val;

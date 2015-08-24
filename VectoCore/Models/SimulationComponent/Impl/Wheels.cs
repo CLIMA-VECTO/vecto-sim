@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var torque = force * _dynamicWheelRadius;
 			var angularVelocity = velocity / _dynamicWheelRadius;
 			var retVal = _outPort.Request(absTime, dt, torque, angularVelocity, dryRun);
-			retVal.WheelsPowerRequest = Formulas.TorqueToPower(torque, angularVelocity);
+			retVal.WheelsPowerRequest = torque * angularVelocity;
 			return retVal;
 		}
 

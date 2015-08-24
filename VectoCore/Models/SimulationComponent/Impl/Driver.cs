@@ -99,10 +99,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (nextDrivingActions.Count > 0) {
 				// if we exceeded the previous action (by accident), set the action anyway in case there is no 'next action'...
-				var previousActionss = nextDrivingActions.Where(x => x.Key < currentDistance).ToList();
-				if (previousActionss.Count > 0) {
-					CurrentState.DrivingAction = previousActionss.Last().Value;
-				}
+				CurrentState.DrivingAction = nextDrivingActions.LastOrDefault(x => x.Key < currentDistance).Value ??
+											CurrentState.DrivingAction;
 
 				var nextActions = nextDrivingActions.Where(x => x.Key >= currentDistance).ToList();
 				var nextDrivingAction = nextActions.GetEnumerator();
@@ -115,7 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.DrivingAction = nextDrivingAction.Current.Value;
 					hasNextEntry = nextDrivingAction.MoveNext(); // the current action has already been processed, look at next one...
 				}
-				// check if desired distance exeeds next acttion point
+				// check if desired distance exceeds next action point
 				if (hasNextEntry && nextDrivingAction.Current.Key < currentDistance + ds) {
 					Log.DebugFormat(
 						"current Distance: {3} -- Simulation Distance {0} exceeds next DrivingAction at {1}, reducing interval to {2}", ds,
@@ -269,7 +267,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseDrivingCycleDistanceExceeded { SimulationInterval = CurrentState.dt };
 		}
 
-		protected List<KeyValuePair<Meter, DrivingBehaviorEntry>> GetNextDrivingActions(Meter minDistance)
+		protected SortedList<Meter, DrivingBehaviorEntry> GetNextDrivingActions(Meter minDistance)
 		{
 			var currentSpeed = DataBus.VehicleSpeed();
 
@@ -280,7 +278,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var lookaheadData = DataBus.LookAhead(1.2 * lookaheadDistance);
 
 			Log.DebugFormat("Lookahead distance: {0} @ current speed {1}", lookaheadDistance, currentSpeed);
-			var nextActions = new List<KeyValuePair<Meter, DrivingBehaviorEntry>>();
+			var nextActions = new SortedList<Meter, DrivingBehaviorEntry>();
 			for (var i = 0; i < lookaheadData.Count; i++) {
 				var entry = lookaheadData[i];
 				if (entry.VehicleTargetSpeed < currentSpeed) {
@@ -288,35 +286,33 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.DebugFormat("distance to decelerate from {0} to {1}: {2}", currentSpeed, entry.VehicleTargetSpeed,
 						breakingDistance);
 					Log.DebugFormat("adding 'Braking' starting at distance {0}", entry.Distance - breakingDistance);
-					nextActions.Add(new KeyValuePair<Meter, DrivingBehaviorEntry>(entry.Distance - breakingDistance,
+					nextActions[entry.Distance - breakingDistance] =
 						new DrivingBehaviorEntry {
 							Action = DrivingBehavior.Breaking,
 							ActionDistance = entry.Distance - breakingDistance,
 							TriggerDistance = entry.Distance,
 							NextTargetSpeed = entry.VehicleTargetSpeed
-						}));
+						};
 					var coastingDistance = Formulas.DecelerationDistance(currentSpeed, entry.VehicleTargetSpeed,
 						DeclarationData.Driver.LookAhead.Deceleration);
 					Log.DebugFormat("adding 'Coasting' starting at distance {0}", entry.Distance - coastingDistance);
-					nextActions.Add(new KeyValuePair<Meter, DrivingBehaviorEntry>(entry.Distance - coastingDistance,
+					nextActions[entry.Distance - coastingDistance] =
 						new DrivingBehaviorEntry {
 							Action = DrivingBehavior.Coasting,
 							ActionDistance = entry.Distance - coastingDistance,
 							TriggerDistance = entry.Distance,
 							NextTargetSpeed = entry.VehicleTargetSpeed
-						}));
+						};
 				}
 				if (entry.VehicleTargetSpeed > currentSpeed) {
-					nextActions.Add(new KeyValuePair<Meter, DrivingBehaviorEntry>(entry.Distance, new DrivingBehaviorEntry {
+					nextActions[entry.Distance] = new DrivingBehaviorEntry {
 						Action = DrivingBehavior.Accelerating,
 						NextTargetSpeed = entry.VehicleTargetSpeed,
 						TriggerDistance = entry.Distance,
 						ActionDistance = entry.Distance
-					}));
+					};
 				}
 			}
-
-			nextActions.Sort((x, y) => x.Key.CompareTo(y.Key));
 
 			return nextActions;
 		}
@@ -348,6 +344,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			Log.DebugFormat("Found operating point for coasting. dt: {0}, acceleration: {1}", CurrentState.dt,
 				CurrentState.Acceleration);
+
 			var retVal = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
 			CurrentState.Response = retVal;
 
@@ -378,12 +375,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var exceeded = new List<Watt>(); // only used while testing
 			var acceleration = new List<double>(); // only used while testing
+			var searchInterval = Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating;
 
-			var searchInterval = Constants.SimulationSettings.OperatingPointInitialSearchInterval;
 			var originalDs = ds;
 
 			if (coasting) {
 				accelerating = false;
+				searchInterval = Constants.SimulationSettings.OperatingPointInitialSearchIntervalCoasting;
 			}
 
 			var delta = 0.SI<Watt>();

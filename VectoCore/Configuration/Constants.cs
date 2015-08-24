@@ -69,14 +69,19 @@ namespace TUGraz.VectoCore.Configuration
 			public static Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
 
 			/// <summary>
-			/// The initial search interval for the breaking power search in the driver. (coasting, drag)
+			/// The initial search interval for the breaking power search in the driver.
 			/// </summary>
 			public static Watt BreakingPowerInitialSearchInterval = 100.SI().Kilo.Watt.Cast<Watt>();
 
 			/// <summary>
-			/// The initial search interval for the operating point search in the driver. (acceleration, full load)
+			/// The initial search interval for the operating point search in the driver.
 			/// </summary>
-			public static MeterPerSquareSecond OperatingPointInitialSearchInterval = 5.SI<MeterPerSquareSecond>();
+			public static MeterPerSquareSecond OperatingPointInitialSearchIntervalAccelerating = 5.SI<MeterPerSquareSecond>();
+
+			/// <summary>
+			/// The initial search interval for the operating point search in the driver.
+			/// </summary>
+			public static MeterPerSquareSecond OperatingPointInitialSearchIntervalCoasting = 1.SI<MeterPerSquareSecond>();
 		}
 	}
 }
