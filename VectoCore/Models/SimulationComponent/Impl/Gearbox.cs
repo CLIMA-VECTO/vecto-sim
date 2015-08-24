@@ -122,7 +122,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (CurrentGear.FullLoadCurve != null) {
 				var maxTorque = CurrentGear.FullLoadCurve.FullLoadStationaryTorque(inEngineSpeed);
 
-				if (inTorque.Abs() > maxTorque) {
+				if (inEngineSpeed > 0 && inTorque.Abs() > maxTorque) {
 					_gear = _previousGear;
 					return new ResponseGearboxOverload {
 						Delta = Math.Sign(inTorque.Value()) * (inTorque.Abs() - maxTorque) * inEngineSpeed,

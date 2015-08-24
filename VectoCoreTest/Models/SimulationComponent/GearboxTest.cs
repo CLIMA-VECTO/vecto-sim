@@ -168,15 +168,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				new { gear = 2, t = 2450, n = 800, loss = 58.11, responseType = typeof(ResponseGearShift) },
 				new { gear = 2, t = -1000, n = 800, loss = 29.11, responseType = typeof(ResponseSuccess) },
 				new { gear = 2, t = 850, n = 800, loss = 26.11, responseType = typeof(ResponseSuccess) },
-				new { gear = 2, t = 850, n = 0, loss = 22.06, responseType = typeof(ResponseSuccess) },
+				new { gear = 2, t = 850, n = 0, loss = 22.06, responseType = typeof(ResponseGearShift) },
 				new { gear = 2, t = 850, n = 400, loss = 11.334, responseType = typeof(ResponseGearShift) },
 				new { gear = 2, t = 850, n = 2000, loss = 32.18, responseType = typeof(ResponseGearShift) },
-				new { gear = 7, t = -1000, n = 0, loss = 10.06, responseType = typeof(ResponseSuccess) },
+				new { gear = 7, t = -1000, n = 0, loss = 10.06, responseType = typeof(ResponseGearShift) },
 				new { gear = 7, t = -1000, n = 1200, loss = 16.132, responseType = typeof(ResponseSuccess) },
-				new { gear = 7, t = 850, n = 0, loss = 9.31, responseType = typeof(ResponseSuccess) },
+				new { gear = 7, t = 850, n = 0, loss = 9.31, responseType = typeof(ResponseGearShift) },
 				new { gear = 7, t = 850, n = 1200, loss = 15.382, responseType = typeof(ResponseSuccess) },
 				new { gear = 7, t = 850, n = 2000, loss = 19.43, responseType = typeof(ResponseGearShift) },
-				new { gear = 7, t = 2450, n = 0, loss = 17.31, responseType = typeof(ResponseSuccess) },
+				new { gear = 7, t = 2450, n = 0, loss = 17.31, responseType = typeof(ResponseGearShift) },
 				new { gear = 7, t = 2450, n = 1200, loss = 23.382, responseType = typeof(ResponseGearboxOverload) }
 			};
 
@@ -194,10 +194,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				container.Gear = (uint)exp.gear;
 				var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
 				Assert.IsInstanceOfType(response, exp.responseType, exp.ToString());
-
-				if (angularVelocity.IsEqual(0)) {
-					expectedT = 0.SI<NewtonMeter>();
-				}
 
 				if (exp.responseType == typeof(ResponseSuccess)) {
 					AssertHelper.AreRelativeEqual(absTime, port.AbsTime, message: exp.ToString());
