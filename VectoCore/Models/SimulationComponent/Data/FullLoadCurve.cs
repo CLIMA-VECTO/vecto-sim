@@ -88,7 +88,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		}
 
 
-		public NewtonMeter FullLoadStationaryTorque(PerSecond angularVelocity)
+		public virtual NewtonMeter FullLoadStationaryTorque(PerSecond angularVelocity)
 		{
 			var idx = FindIndex(angularVelocity);
 			return VectoMath.Interpolate(FullLoadEntries[idx - 1].EngineSpeed, FullLoadEntries[idx].EngineSpeed,
@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				angularVelocity);
 		}
 
-		public NewtonMeter DragLoadStationaryTorque(PerSecond angularVelocity)
+		public virtual NewtonMeter DragLoadStationaryTorque(PerSecond angularVelocity)
 		{
 			var idx = FindIndex(angularVelocity);
 			return VectoMath.Interpolate(FullLoadEntries[idx - 1].EngineSpeed, FullLoadEntries[idx].EngineSpeed,

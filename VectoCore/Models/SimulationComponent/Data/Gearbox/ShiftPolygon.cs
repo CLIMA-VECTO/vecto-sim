@@ -10,13 +10,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
 	public class ShiftPolygon : SimulationComponentData
 	{
-		private readonly List<ShiftPolygonEntry> _upshiftPolygon;
-		private readonly List<ShiftPolygonEntry> _downshifPolygon;
+		private readonly List<ShiftPolygonEntry> _upShiftPolygon;
+		private readonly List<ShiftPolygonEntry> _downShiftPolygon;
 
-		internal ShiftPolygon(List<ShiftPolygonEntry> downshift, List<ShiftPolygonEntry> upshift)
+		internal ShiftPolygon(List<ShiftPolygonEntry> downshift, List<ShiftPolygonEntry> upShift)
 		{
-			_upshiftPolygon = upshift;
-			_downshifPolygon = downshift;
+			_upShiftPolygon = upShift;
+			_downShiftPolygon = downshift;
 		}
 
 		public static ShiftPolygon ReadFromFile(string fileName)
@@ -24,11 +24,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			var data = VectoCSVFile.Read(fileName);
 
 			if (data.Columns.Count != 3) {
-				throw new VectoException("ShiftPolygon Data File must contain 3 columns.");
+				throw new VectoException("ShiftPolygon Data File must contain exactly 3 columns.");
 			}
 
 			if (data.Rows.Count < 2) {
-				throw new VectoException("ShiftPolygon must consist of at least tow lines with numeric values (below file header)");
+				throw new VectoException("ShiftPolygon must have at least two entries");
 			}
 
 			List<ShiftPolygonEntry> entriesDown, entriesUp;
@@ -49,12 +49,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 
 		public ReadOnlyCollection<ShiftPolygonEntry> Upshift
 		{
-			get { return _upshiftPolygon.AsReadOnly(); }
+			get { return _upShiftPolygon.AsReadOnly(); }
 		}
 
 		public ReadOnlyCollection<ShiftPolygonEntry> Downshift
 		{
-			get { return _downshifPolygon.AsReadOnly(); }
+			get { return _downShiftPolygon.AsReadOnly(); }
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)

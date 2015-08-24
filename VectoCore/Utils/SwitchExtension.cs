@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -10,6 +11,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </remarks>
 	public static class SwitchExtension
 	{
+		[DebuggerHidden]
 		public static Switch<T> Switch<T>(this T self)
 		{
 			return new Switch<T>(self);
@@ -21,17 +23,20 @@ namespace TUGraz.VectoCore.Utils
 		private readonly T _value;
 		private bool _handled;
 
+		[DebuggerHidden]
 		internal Switch(T value)
 		{
 			_value = value;
 			_handled = false;
 		}
 
+		[DebuggerHidden]
 		public Switch<T> Case<TFilter>(Action action) where TFilter : T
 		{
 			return Case<TFilter>(_ => action());
 		}
 
+		[DebuggerHidden]
 		public Switch<T> Case<TFilter>(Action<TFilter> action) where TFilter : T
 		{
 			if (!_handled && _value is TFilter) {
@@ -41,11 +46,13 @@ namespace TUGraz.VectoCore.Utils
 			return this;
 		}
 
+		[DebuggerHidden]
 		public void Default(Action action)
 		{
 			Default(_ => action());
 		}
 
+		[DebuggerHidden]
 		public void Default(Action<T> action)
 		{
 			if (!_handled) {

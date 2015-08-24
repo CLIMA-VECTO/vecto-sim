@@ -87,5 +87,15 @@ namespace TUGraz.VectoCore.Utils
 			int unused;
 			return self.GetSection(predicate, out unused, message);
 		}
+
+		public static IEnumerable<T> Slice<T>(this IEnumerable<T> numerable, int from = 0, int to = int.MaxValue)
+		{
+			var s = numerable.ToList();
+			from = Math.Min(Math.Max(from, -s.Count), s.Count);
+			from = from < 0 ? from + s.Count : from;
+			to = Math.Min(Math.Max(to, -s.Count), s.Count);
+			to = to < 0 ? to + s.Count : to;
+			return s.Skip(from).Take(Math.Max(to - from, 0));
+		}
 	}
 }

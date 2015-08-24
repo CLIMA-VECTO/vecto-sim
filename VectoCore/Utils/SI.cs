@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -43,6 +44,14 @@ namespace TUGraz.VectoCore.Utils
 			return new Scalar(si1.Val + si2.Val);
 		}
 
+		/// <summary>
+		/// Implements the operator +.
+		/// </summary>
+		/// <param name="si1">The si1.</param>
+		/// <param name="si2">The si2.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
 		[DebuggerHidden]
 		public static Scalar operator +(Scalar si1, double si2)
 		{
@@ -159,6 +168,20 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		protected MeterPerSquareSecond(double val) : base(new SI(val).Meter.Per.Square.Second) {}
+
+		/// <summary>
+		/// Implements the operator /.
+		/// </summary>
+		/// <param name="meterPerSecond">The meter per second.</param>
+		/// <param name="meterPerSquareSecond">The meter per square second.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
+		public static Second operator /(MeterPerSecond meterPerSecond, MeterPerSquareSecond meterPerSquareSecond)
+		{
+			return ((meterPerSecond as SI) / meterPerSquareSecond).Cast<Second>();
+		}
 	}
 
 	/// <summary>
@@ -327,6 +350,12 @@ namespace TUGraz.VectoCore.Utils
 		[JsonConstructor]
 		private PerSecond(double val) : base(new SI(val).Per.Second) {}
 
+		/// <summary>
+		/// Gets the rounds per minute.
+		/// </summary>
+		/// <value>
+		/// The rounds per minute.
+		/// </value>
 		public SI RoundsPerMinute
 		{
 			get { return ConvertTo().Rounds.Per.Minute; }
@@ -358,6 +387,34 @@ namespace TUGraz.VectoCore.Utils
 		public static PerSecond operator /(MeterPerSecond meterPerSecond, Meter meter)
 		{
 			return ((meterPerSecond as SI) / meter).Cast<PerSecond>();
+		}
+
+		/// <summary>
+		/// Implements the operator /.
+		/// </summary>
+		/// <param name="second">The second.</param>
+		/// <param name="meterPerSecond">The meter per second.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
+		public static Second operator /(Meter second, MeterPerSecond meterPerSecond)
+		{
+			return (second / (meterPerSecond as SI)).Cast<Second>();
+		}
+
+		/// <summary>
+		/// Implements the operator *.
+		/// </summary>
+		/// <param name="meterPerSecond">The meter per second.</param>
+		/// <param name="second">The second.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
+		public static Meter operator *(MeterPerSecond meterPerSecond, Second second)
+		{
+			return ((meterPerSecond as SI) * second).Cast<Meter>();
 		}
 	}
 
@@ -886,6 +943,15 @@ namespace TUGraz.VectoCore.Utils
 		public virtual SI Abs()
 		{
 			return new SI(Math.Abs(Val), this);
+		}
+
+		/// <summary>
+		/// Returns the numerical sign of the SI.
+		/// </summary>
+		/// <returns>-1 if si &lt; 0. 0 if si==0, 1 if si &gt; 0.</returns>
+		public int Sign()
+		{
+			return Math.Sign(Val);
 		}
 
 		/// <summary>

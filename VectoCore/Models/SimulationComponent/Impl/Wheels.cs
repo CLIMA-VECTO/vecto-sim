@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IFvOutPort
 
-		IResponse IFvOutPort.Request(Second absTime, Second dt, Newton force, MeterPerSecond velocity, bool dryRun)
+		public IResponse Request(Second absTime, Second dt, Newton force, MeterPerSecond velocity, bool dryRun)
 		{
 			Log.DebugFormat("request: force: {0}, velocity: {1}", force, velocity);
 			var torque = force * _dynamicWheelRadius;

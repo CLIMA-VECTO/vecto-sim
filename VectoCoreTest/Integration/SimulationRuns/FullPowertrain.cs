@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.FileIO.Reader;
@@ -22,19 +23,76 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 	public class FullPowerTrain
 	{
 		public const string CycleFile = @"TestData\Integration\FullPowerTrain\1-Gear-Test-dist.vdri";
-		public const string CycleFileStop = @"TestData\Integration\FullPowerTrain\1-Gear-StopTest-dist.vdri";
-		public const string EngineFile = @"TestData\Integration\FullPowerTrain\24t Coach.veng";
-		public const string GearboxFile = @"TestData\Integration\FullPowerTrain\24t Coach-1Gear.vgbx";
-		public const string GbxLossMap = @"TestData\Integration\FullPowerTrain\NoLossGbxMap.vtlm";
+		public const string EngineFile = @"TestData\Components\24t Coach.veng";
 
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
-		public const string AccelerationFile2 = @"TestData\Components\Truck.vacc";
 
+		public const string GearboxLossMap = @"TestData\Components\Indirect Gear.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
+		[TestMethod]
+		public void Test_FullPowertrain_SimpleGearbox()
+		{
+			var modalWriter = new ModalDataWriter("Coach_FullPowertrain.vmod");
+			var sumWriter = new TestSumWriter();
+			var container = new VehicleContainer(modalWriter, sumWriter);
 
-		public const double Tolerance = 0.001;
+			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CycleFile);
+			var axleGearData = CreateAxleGearData();
+			var gearboxData = CreateSimpleGearboxData();
+			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
+			var driverData = CreateDriverData(AccelerationFile);
+
+			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
+			var cyclePort = cycle.OutPort();
+			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData));
+			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
+			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
+			tmp = Port.AddComponent(tmp, new Breaks(container));
+			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
+			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData));
+			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
+			Port.AddComponent(tmp, new CombustionEngine(container, engineData));
+
+			cyclePort.Initialize();
+
+			container.Gear = 0;
+
+			var absTime = 0.SI<Second>();
+			var ds = Constants.SimulationSettings.DriveOffDistance;
+			var response = cyclePort.Request(absTime, ds);
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			container.CommitSimulationStep(absTime, response.SimulationInterval);
+			absTime += response.SimulationInterval;
+
+			container.Gear = 1;
+			var cnt = 0;
+			while (!(response is ResponseCycleFinished) && container.Distance().Value() < 17000) {
+				response = cyclePort.Request(absTime, ds);
+				response.Switch().
+					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
+					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseSuccess>(r => {
+						container.CommitSimulationStep(absTime, r.SimulationInterval);
+						absTime += r.SimulationInterval;
+
+						ds = container.VehicleSpeed().IsEqual(0)
+							? Constants.SimulationSettings.DriveOffDistance
+							: (Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed()).Cast<Meter>();
+
+						if (cnt++ % 100 == 0) {
+							modalWriter.Finish();
+						}
+					}).
+					Default(r => Assert.Fail("Unexpected Response: {0}", r));
+			}
+
+			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
+
+			modalWriter.Finish();
+		}
 
 		[TestMethod]
 		public void Test_FullPowertrain()
@@ -99,32 +157,53 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			modalWriter.Finish();
 		}
 
-		private static GearData CreateAxleGearData()
-		{
-			//todo change gear ratio!
-			return new GearData {
-				Ratio = 3.0 * 3.5,
-				LossMap = TransmissionLossMap.ReadFromFile(GbxLossMap, 3.0 * 3.5)
-			};
-		}
 
+		// todo: add realistic FullLoadCurve
 		private static GearboxData CreateGearboxData()
 		{
-			var flc = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile);
-			var lm = TransmissionLossMap.ReadFromFile(GbxLossMap, 1);
-			var sp = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile);
-
-			var ratios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
+			var ratios = new[] { 6.38 }; //new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
 
 			return new GearboxData {
-				Gears =
-					ratios.Select(
-						(g, i) => Tuple.Create((uint)i, new GearData { FullLoadCurve = flc, LossMap = lm, Ratio = g, ShiftPolygon = sp }))
-						.ToDictionary(k => k.Item1, v => v.Item2),
+				Gears = ratios.Select((ratio, i) =>
+					Tuple.Create((uint)i,
+						new GearData {
+							FullLoadCurve = null, //FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile);
+							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio),
+							Ratio = ratio,
+							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
+						}))
+					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 2.SI<Second>()
 			};
 		}
 
+
+		private static GearData CreateAxleGearData()
+		{
+			var ratio = 3.240355;
+			return new GearData {
+				Ratio = ratio,
+				LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio)
+			};
+		}
+
+		private static GearboxData CreateSimpleGearboxData()
+		{
+			var ratio = 3.44;
+			return new GearboxData {
+				Gears = new Dictionary<uint, GearData> {
+					{
+						1, new GearData {
+							FullLoadCurve = null,
+							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio),
+							Ratio = ratio,
+							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
+						}
+					}
+				},
+				ShiftTime = 2.SI<Second>()
+			};
+		}
 
 		private static VehicleData CreateVehicleData(Kilogram loading)
 		{

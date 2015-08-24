@@ -64,15 +64,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			bool dryRun = false)
 		{
 			Log.DebugFormat("from Wheels: acceleration: {0}", accelleration);
-			_currentState.Velocity = (_previousState.Velocity + (accelleration * dt)).Cast<MeterPerSecond>();
 			_currentState.dt = dt;
-			_currentState.Distance = _previousState.Distance +
-									((_previousState.Velocity + _currentState.Velocity) / 2 * _currentState.dt).Cast<Meter>();
+			_currentState.Velocity = _previousState.Velocity + accelleration * dt;
+			_currentState.Distance = _previousState.Distance + dt * (_previousState.Velocity + _currentState.Velocity) / 2;
 
 			// DriverAcceleration = vehicleAccelerationForce - RollingResistance - AirDragResistance - SlopeResistance
-			var vehicleAccelerationForce = DriverAcceleration(accelleration) + RollingResistance(gradient) +
-											AirDragResistance() +
-											SlopeResistance(gradient);
+			var vehicleAccelerationForce = DriverAcceleration(accelleration)
+											+ RollingResistance(gradient)
+											+ AirDragResistance()
+											+ SlopeResistance(gradient);
 
 			var retval = _nextInstance.Request(absTime, dt, vehicleAccelerationForce, _currentState.Velocity, dryRun);
 			//retval.VehiclePowerRequest = 

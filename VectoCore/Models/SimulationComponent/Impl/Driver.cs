@@ -159,12 +159,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var newDs = ds;
-			var success = SearchBreakingPower(absTime, ref newDs, gradient, dryRun, true);
-
-			if (!success) {
-				Log.ErrorFormat("Failed to find operating point for breaking!");
-				throw new VectoSimulationException("Failed to find operating point for breaking!");
-			}
+			SearchBreakingPower(absTime, ref newDs, gradient, dryRun, true);
 
 			if (!ds.IsEqual(newDs)) {
 				Log.DebugFormat(
@@ -185,14 +180,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal; //new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
 		}
 
-		private bool SearchBreakingPower(Second absTime, ref Meter ds, Radian gradient, ResponseDryRun response, bool coasting)
+		private void SearchBreakingPower(Second absTime, ref Meter ds, Radian gradient, ResponseDryRun response, bool coasting)
 		{
 			var exceeded = new List<Watt>(); // only used while testing
-			var breakingPower = response.DeltaDragLoad.Abs();
-			if (DataBus.ClutchState() != ClutchState.ClutchClosed) {
-				breakingPower = response.AxlegearPowerRequest.Abs();
-			}
-			var searchInterval = breakingPower;
+			var breakingPower = (DataBus.ClutchState() != ClutchState.ClutchClosed)
+				? response.AxlegearPowerRequest.Abs()
+				: response.DeltaDragLoad.Abs();
+
+			var searchInterval = Constants.SimulationSettings.BreakingPowerInitialSearchInterval;
 			var originalDs = ds;
 
 			do {
@@ -204,16 +199,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				exceeded.Add(delta);
 				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
 					Log.DebugFormat("found operating point in {0} iterations, delta: {1}", exceeded.Count, delta);
-					return true;
-				}
-				if (delta > 0) {
-					breakingPower -= searchInterval;
-				} else {
-					breakingPower += searchInterval;
+					return;
 				}
 
+				breakingPower += searchInterval * (delta > 0 ? -1 : 1);
 				searchInterval /= 2.0;
-				ComputeTimeInterval(CurrentState.Acceleration, ref ds, out CurrentState.dt);
+
+				CurrentState.dt = ComputeTimeInterval(CurrentState.Acceleration, ref ds);
 				DataBus.BreakPower = breakingPower;
 				response = (ResponseDryRun)Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);
 			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
@@ -224,7 +216,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.DebugFormat("exceeded: {0} ... {1}", string.Join(", ", exceeded.Take(5)),
 				string.Join(", ", exceeded.GetRange(exceeded.Count - 6, 5)));
 
-			return false;
+			Log.ErrorFormat("Failed to find operating point for breaking!");
+			throw new VectoSimulationException("Failed to find operating point for breaking!");
 		}
 
 		private IResponse DriveOrAccelerate(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
@@ -249,9 +242,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						} else {
 							var doAccelerate = (DataBus.VehicleSpeed() - targetVelocity).Abs() > 0.1 * targetVelocity;
 
-							if (!SearchOperatingPoint(absTime, ref ds, gradient, r, accelerating: doAccelerate)) {
-								throw new VectoSimulationException("could not find operating point");
-							}
+							SearchOperatingPoint(absTime, ref ds, gradient, r, accelerating: doAccelerate);
 							Log.DebugFormat("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}, doAccelerate: {2}",
 								CurrentState.dt, CurrentState.Acceleration, doAccelerate);
 						}
@@ -264,9 +255,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						} else {
 							var doAccelerate = (DataBus.VehicleSpeed() - targetVelocity).Abs() > 0.1 * targetVelocity;
 
-							if (!SearchOperatingPoint(absTime, ref ds, gradient, r, accelerating: doAccelerate)) {
-								throw new VectoSimulationException("could not find operating point");
-							}
+							SearchOperatingPoint(absTime, ref ds, gradient, r, accelerating: doAccelerate);
 							Log.DebugFormat("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}, doAccelerate: {2}",
 								CurrentState.dt, CurrentState.Acceleration, doAccelerate);
 						}
@@ -346,15 +335,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseFailTimeInterval();
 			}
 
-			var response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);
+			var response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, dryRun: true);
 
 			var newDs = ds;
-			var success = SearchOperatingPoint(absTime, ref newDs, gradient, response, coasting: true);
-
-			if (!success) {
-				Log.ErrorFormat("Failed to find operating point for coasting!");
-				throw new VectoSimulationException("Failed to find operating point for coasting!");
-			}
+			SearchOperatingPoint(absTime, ref newDs, gradient, response, coasting: true);
 
 			if (!ds.IsEqual(newDs)) {
 				Log.DebugFormat(
@@ -389,26 +373,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="coasting">if true approach the drag-load curve, otherwise full-load curve</param>
 		/// <param name="accelerating"></param>
 		/// <returns></returns>
-		private bool SearchOperatingPoint(Second absTime, ref Meter ds, Radian gradient,
+		private void SearchOperatingPoint(Second absTime, ref Meter ds, Radian gradient,
 			IResponse response, bool coasting = false, bool accelerating = true)
 		{
-			var origResponse = response;
 			var exceeded = new List<Watt>(); // only used while testing
 			var acceleration = new List<double>(); // only used while testing
-			var searchInterval = CurrentState.Acceleration / 2.0;
+
+			var searchInterval = Constants.SimulationSettings.OperatingPointInitialSearchInterval;
 			var originalDs = ds;
 
 			if (coasting) {
 				accelerating = false;
 			}
 
+			var delta = 0.SI<Watt>();
+
 			do {
-				var delta = 0.SI<Watt>();
 				ds = originalDs;
 				response.Switch().
 					Case<ResponseEngineOverload>(r => delta = r.Delta).
 					Case<ResponseGearboxOverload>(r => delta = r.Delta).
-					Case<ResponseDryRun>(r => delta = coasting ? -r.DeltaDragLoad : r.DeltaFullLoad).
+					Case<ResponseDryRun>(r => delta = coasting ? r.DeltaDragLoad : r.DeltaFullLoad).
 					Default(r => { throw new VectoSimulationException(string.Format("Unknown response type. {0}", r)); });
 
 				exceeded.Add(delta);
@@ -417,13 +402,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.DebugFormat(
 						"found operating point in {0} iterations. Engine Power req: {2}, Gearbox Power req: {3} delta: {1}",
 						exceeded.Count, delta, response.EnginePowerRequest, response.GearboxPowerRequest);
-					return true;
+					return;
 				}
-				if (delta > 0) {
-					CurrentState.Acceleration -= searchInterval;
-				} else {
-					CurrentState.Acceleration += searchInterval;
-				}
+
+				CurrentState.Acceleration += searchInterval * (delta > 0 ? -1 : 1);
+
 				// check for minimum acceleration, add some safety margin due to search
 				if (!coasting && accelerating &&
 					CurrentState.Acceleration.Abs() < Constants.SimulationSettings.MinimumAcceleration.Value() / 5.0 &&
@@ -431,7 +414,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					throw new VectoSimulationException("Could not achieve minimum acceleration");
 				}
 				searchInterval /= 2.0;
-				ComputeTimeInterval(CurrentState.Acceleration, ref ds, out CurrentState.dt);
+				CurrentState.dt = ComputeTimeInterval(CurrentState.Acceleration, ref ds);
 				response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);
 			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
 
@@ -441,7 +424,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.DebugFormat("exceeded: {0} ... {1}", string.Join(", ", exceeded.Take(5)),
 				string.Join(", ", exceeded.GetRange(exceeded.Count - 6, 5)));
 
-			return false;
+			Log.ErrorFormat("Failed to find operating point! absTime: {0}", absTime);
+			throw new VectoSimulationException(string.Format("Failed to find operating point! absTime: {0}", absTime));
 		}
 
 		/// <summary>
@@ -471,7 +455,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.Acceleration = requiredAcceleration;
 			var tmpDs = ds;
-			ComputeTimeInterval(CurrentState.Acceleration, ref ds, out CurrentState.dt);
+			CurrentState.dt = ComputeTimeInterval(CurrentState.Acceleration, ref ds);
 			if (!ds.IsEqual(tmpDs)) {
 				Log.ErrorFormat(
 					"Unexpected Condition: Distance has been adjusted from {0} to {1}, currentVelocity: {2} acceleration: {3}, targetVelocity: {4}",
@@ -481,14 +465,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		/// <summary>
-		/// compute the time interval for driving the given distance ds with the vehicle's current speed and the given acceleration
-		/// if the given distance ds can not be reached (i.e., the vehicle would halt before ds is reached) then the distance parameter is adjusted
-		/// the computed time interval is returned via the out parameter dt
+		/// Computes the time interval for driving the given distance ds with the vehicle's current speed and the given acceleration.
+		/// If the distance ds can not be reached (i.e., the vehicle would halt before ds is reached) then the distance parameter is adjusted.
+		/// The computed time interval is returned via the out parameter dt
 		/// </summary>
 		/// <param name="acceleration"></param>
 		/// <param name="ds"></param>
-		/// <param name="dt"></param>
-		private void ComputeTimeInterval(MeterPerSquareSecond acceleration, ref Meter ds, out Second dt)
+		private Second ComputeTimeInterval(MeterPerSquareSecond acceleration, ref Meter ds)
 		{
 			if (!(ds > 0)) {
 				throw new VectoSimulationException("distance has to be greater than 0!");
@@ -500,8 +483,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.ErrorFormat("vehicle speed is {0}, acceleration is {1}", currentSpeed, acceleration);
 					throw new VectoSimulationException("vehicle speed has to be > 0 if acceleration = 0");
 				}
-				dt = (ds / currentSpeed).Cast<Second>();
-				return;
+				return ds / currentSpeed;
 			}
 
 			// we need to accelerate / decelerate. solve quadratic equation...
@@ -511,8 +493,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (solutions.Count == 0) {
 				// no real-valued solutions, required distance can not be reached (vehicle stopped), adapt ds...
-				dt = -(currentSpeed / acceleration).Cast<Second>();
-				var stopDistance = (currentSpeed * dt + acceleration / 2 * dt * dt).Cast<Meter>();
+				var dt = -currentSpeed / acceleration;
+				var stopDistance = currentSpeed * dt + acceleration / 2 * dt * dt;
 				if (stopDistance > ds) {
 					Log.WarnFormat(
 						"Could not find solution for computing required time interval to drive distance {0}. currentSpeed: {1}, acceleration: {2}",
@@ -523,13 +505,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					"Adjusted distance when computing time interval: currentSpeed: {0}, acceleration: {1}, distance: {2} -> {3}, timeInterval: {4}",
 					currentSpeed, acceleration, ds, stopDistance, dt);
 				ds = stopDistance;
-				return;
+				return dt;
 			}
 			solutions = solutions.Where(x => x >= 0).ToList();
 			// if there are 2 positive solutions (i.e. when decelerating), take the smaller time interval
 			// (the second solution means that you reach negative speed 
-			solutions.Sort();
-			dt = solutions.First().SI<Second>();
+			return solutions.Min().SI<Second>();
 		}
 
 

@@ -76,11 +76,28 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var gearbox = new Gearbox(container, gearboxData);
 
 			container.Gear = 1;
+			var ratio = 6.38;
 
-			var response = gearbox.OutPort()
-				.Request(0.SI<Second>(), 1.SI<Second>(), 1500.SI<NewtonMeter>() / 6.38, 700.SI<PerSecond>() * 6.38);
+			var port = new MockTnOutPort();
+			gearbox.InPort().Connect(port);
 
+			var absTime = 0.SI<Second>();
+			var dt = 2.SI<Second>();
+			var t = 2600.SI<NewtonMeter>();
+			var n = 1600.RPMtoRad();
+			var response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
 			Assert.IsInstanceOfType(response, typeof(ResponseGearboxOverload));
+
+			absTime += dt;
+			t = -1300.SI<NewtonMeter>();
+			n = 1000.RPMtoRad();
+			response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.AreEqual(absTime, port.AbsTime);
+			Assert.AreEqual(dt, port.Dt);
+			Assert.AreEqual(n, port.AngularVelocity);
+			Assert.AreEqual(t, port.Torque);
 		}
 
 		[TestMethod]

@@ -272,9 +272,6 @@
     <None Include="TestData\EngineFullLoadJumps.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\FullPowerTrain\1-Gear-StopTest-dist.vdri">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="TestData\Integration\FullPowerTrain\1-Gear-Test-dist.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -282,9 +279,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\FullPowerTrain\24t Coach-1Gear.vecto">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TestData\Integration\FullPowerTrain\24t Coach-1Gear.vgbx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\FullPowerTrain\24t Coach-1Gear.vsig">
@@ -302,16 +296,13 @@
     <None Include="TestData\Integration\FullPowerTrain\24t Coach.veng">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\FullPowerTrain\24t Coach.vfld">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="TestData\Integration\FullPowerTrain\24t Coach.vmap">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\FullPowerTrain\24t Coach.vveh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\FullPowerTrain\Coach.vacc">
+    <None Include="TestData\Integration\FullPowerTrain\Axle.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Integration\FullPowerTrain\Coach.vdri">
@@ -320,12 +311,16 @@
     <None Include="TestData\Integration\FullPowerTrain\Coach_24t_xshort.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\FullPowerTrain\NoLossGbxMap.vtlm">
+    <None Include="TestData\Integration\FullPowerTrain\Gearbox.vfld">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Integration\FullPowerTrain\ShiftPolygons.vgbs">
+    <None Include="TestData\Integration\FullPowerTrain\SimpleLoss.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\FullPowerTrain\Indirect Gear.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\FullPowerTrain\NoLossGbxMap.vtlm" />
     <None Include="TestData\Integration\FullPowerTrain\unlimited.vacc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "8/10/2015 4:19:34 PM",
+    "Date": "8/21/2015 10:23:23 AM",
     "AppVersion": "2.2 beta-2",
     "FileVersion": 2
   },
@@ -9,7 +9,7 @@
     "SavedInDeclMode": false,
     "VehicleFile": "24t Coach.vveh",
     "EngineFile": "24t Coach.veng",
-    "GearboxFile": "24t Coach-1Gear.vgbx",
+    "GearboxFile": "24t Coach-8indirectGears.vgbx",
     "Cycles": [
       "Coach_24t_InitTest.vdri",
       "1-Gear-Test-dist.vdri"

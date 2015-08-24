@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
@@ -70,55 +69,66 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed, bool dryRun)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed, bool dryRun)
 		{
 			// TODO:
 			// * EarlyUpshift (shift before outside of up-shift curve if torque reserve for the next higher gear is fullfilled)
 			// * SkipGears (when already shifting to next gear, check if torque reserve is fullfilled for the overnext gear and eventually shift to it)
 			// * MT, AMT and AT .... different behaviour!
 
-			//Special Behaviour: When Gear is 0 (no gear set) or the speed is 0 (not rotating) a zero-request is applied.
+			//Special Behaviour: When Gear is 0 (no gear set) OR the speed is 0 (not rotating) a zero-request is applied.
 			if (Gear == 0 || outEngineSpeed.IsEqual(0)) {
-				return Next.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<PerSecond>(), dryRun);
+				var resp = Next.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<PerSecond>(), dryRun);
+				resp.GearboxPowerRequest = outTorque * outEngineSpeed;
+				return resp;
 			}
-
-			bool gearChanged;
-			PerSecond inEngineSpeed;
-			NewtonMeter inTorque;
 
 			_previousGear = _gear;
 
-			do {
+			var inEngineSpeed = outEngineSpeed * CurrentGear.Ratio;
+			var inTorque = CurrentGear.LossMap.GearboxInTorque(inEngineSpeed, outTorque);
+
+			var gearChanged = true;
+			while (IsShiftAllowed(absTime, dryRun) && gearChanged) {
 				gearChanged = false;
-
-				inEngineSpeed = outEngineSpeed * CurrentGear.Ratio;
-				inTorque = CurrentGear.LossMap.GearboxInTorque(inEngineSpeed, outTorque);
-				_loss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
-
-				if (!ShiftAllowed(absTime)) {
-					continue;
-				}
-
 				if (ShouldShiftUp(inEngineSpeed, inTorque)) {
 					_gear++;
 					gearChanged = true;
-					continue;
-				}
-
-				if (ShouldShiftDown(inEngineSpeed, inTorque)) {
+				} else if (ShouldShiftDown(inEngineSpeed, inTorque)) {
 					_gear--;
 					gearChanged = true;
 				}
-			} while (Data.SkipGears && gearChanged);
+
+				if (gearChanged) {
+					inEngineSpeed = outEngineSpeed * CurrentGear.Ratio;
+					inTorque = CurrentGear.LossMap.GearboxInTorque(inEngineSpeed, outTorque);
+					if (!Data.SkipGears) {
+						break;
+					}
+				}
+			}
+
+			_loss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
+
+			// DryRun Response
+			if (dryRun) {
+				//todo: Gearbox DryRun Request: Add the DeltaFull, DeltaDrag for Gearbox FullLoadCurve
+				var r = Next.Request(absTime, dt, inTorque, inEngineSpeed, true);
+				r.GearboxPowerRequest = outTorque * outEngineSpeed;
+				return r;
+			}
 
 			// Overload Response
-			var maxTorque = CurrentGear.FullLoadCurve.FullLoadStationaryTorque(inEngineSpeed);
-			if (inTorque.Abs() > maxTorque) {
-				_gear = _previousGear;
-				return new ResponseGearboxOverload {
-					Delta = (inTorque.Abs() - maxTorque) * inEngineSpeed,
-					GearboxPowerRequest = inTorque * inEngineSpeed,
-				};
+			if (CurrentGear.FullLoadCurve != null) {
+				var maxTorque = CurrentGear.FullLoadCurve.FullLoadStationaryTorque(inEngineSpeed);
+
+				if (inTorque.Abs() > maxTorque) {
+					_gear = _previousGear;
+					return new ResponseGearboxOverload {
+						Delta = Math.Sign(inTorque.Value()) * (inTorque.Abs() - maxTorque) * inEngineSpeed,
+						GearboxPowerRequest = inTorque * inEngineSpeed,
+					};
+				}
 			}
 
 			// GearShift Response
@@ -128,12 +138,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseGearShift { SimulationInterval = Data.TractionInterruption };
 			}
 
-			var response = Next.Request(absTime, dt, inTorque, inEngineSpeed, dryRun);
-			response.GearboxPowerRequest = inTorque * inEngineSpeed;
-
-			response.Switch().
-				Case<ResponseDryRun>(r => r.DeltaFullLoad = VectoMath.Max(r.DeltaFullLoad, (inTorque - maxTorque) * inEngineSpeed));
-
+			// Normal Response
+			var response = Next.Request(absTime, dt, inTorque, inEngineSpeed);
+			response.GearboxPowerRequest = outTorque * outEngineSpeed;
 			return response;
 		}
 
@@ -141,9 +148,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// Tests if a shift is allowed.
 		/// </summary>
-		private bool ShiftAllowed(Second absTime)
+		private bool IsShiftAllowed(Second absTime, bool dryRun)
 		{
-			return absTime - _lastShiftTime >= Data.ShiftTime;
+			return !dryRun && absTime - _lastShiftTime >= Data.ShiftTime;
 		}
 
 		/// <summary>

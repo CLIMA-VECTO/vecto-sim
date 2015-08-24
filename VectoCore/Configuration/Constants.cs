@@ -62,12 +62,21 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const double EngineFLDPowerTolerance = 0.50; // Watt
 
-
 			public const double CluchNormSpeed = 0.03;
 
 			public static readonly MeterPerSquareSecond MinimumAcceleration = 0.1.SI<MeterPerSquareSecond>();
 
 			public static Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
+
+			/// <summary>
+			/// The initial search interval for the breaking power search in the driver. (coasting, drag)
+			/// </summary>
+			public static Watt BreakingPowerInitialSearchInterval = 100.SI().Kilo.Watt.Cast<Watt>();
+
+			/// <summary>
+			/// The initial search interval for the operating point search in the driver. (acceleration, full load)
+			/// </summary>
+			public static MeterPerSquareSecond OperatingPointInitialSearchInterval = 5.SI<MeterPerSquareSecond>();
 		}
 	}
 }
