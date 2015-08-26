@@ -189,12 +189,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private void SearchBreakingPower(Second absTime, ref Meter ds, Radian gradient, ResponseDryRun response, bool coasting)
 		{
-			var debug = new List<Watt>(); // only used while testing
+			var debug = new List<dynamic>(); // only used while testing
 			var breakingPower = (DataBus.ClutchState() != ClutchState.ClutchClosed)
 				? response.AxlegearPowerRequest.Abs()
 				: response.DeltaDragLoad.Abs();
 
 			var searchInterval = Constants.SimulationSettings.BreakingPowerInitialSearchInterval;
+
 			var originalDs = ds;
 			Watt origDelta = null;
 
@@ -207,6 +208,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					? -response.DeltaDragLoad
 					: -response.AxlegearPowerRequest;
 
+				debug.Add(new { breakingPower, searchInterval, delta });
+
 				if (origDelta == null) {
 					origDelta = delta;
 				} else {
@@ -217,7 +220,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 				}
 
-				debug.Add(delta);
 				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
 					Log.DebugFormat("found operating point in {0} iterations, delta: {1}", debug.Count, delta);
 					return;
@@ -233,7 +235,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
 
 			Log.DebugFormat("Exceeded max iterations when searching for operating point!");
-			Log.DebugFormat("exceeded: {0} ... {1}", ", ".Join(debug.Slice(5)), ", ".Join(debug.Slice(-6)));
+			Log.DebugFormat("exceeded: {0} ... {1}", ", ".Join(debug.Take(5)), ", ".Join(debug.Slice(-6)));
 			Log.ErrorFormat("Failed to find operating point for breaking!");
 			throw new VectoSimulationException("Failed to find operating point for breaking!");
 		}
@@ -459,9 +461,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
 
 			Log.DebugFormat("Exceeded max iterations when searching for operating point!");
-			Log.DebugFormat("acceleration: {0} ... {1}", ", ".Join(debug.Slice(5).Select(x => x.acceleration)),
+			Log.DebugFormat("acceleration: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.acceleration)),
 				", ".Join(debug.Slice(-6).Select(x => x.acceleration)));
-			Log.DebugFormat("exceeded: {0} ... {1}", ", ".Join(debug.Slice(5).Select(x => x.delta)),
+			Log.DebugFormat("exceeded: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.delta)),
 				", ".Join(debug.Slice(-6).Select(x => x.delta)));
 
 			Log.ErrorFormat("Failed to find operating point! absTime: {0}", absTime);

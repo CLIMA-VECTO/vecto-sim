@@ -23,6 +23,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 	public class FullPowerTrain
 	{
 		public const string CycleFile = @"TestData\Integration\FullPowerTrain\1-Gear-Test-dist.vdri";
+		public const string CoachCycleFile = @"TestData\Integration\FullPowerTrain\Coach.vdri";
 		public const string EngineFile = @"TestData\Components\24t Coach.veng";
 
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
@@ -96,6 +97,76 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain()
 		{
 			var modalWriter = new ModalDataWriter("Coach_FullPowertrain.vmod");
+			var sumWriter = new TestSumWriter();
+			var container = new VehicleContainer(modalWriter, sumWriter);
+
+			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CoachCycleFile);
+			var axleGearData = CreateAxleGearData();
+			var gearboxData = CreateGearboxData();
+			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
+			var driverData = CreateDriverData(AccelerationFile);
+
+			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
+			var cyclePort = cycle.OutPort();
+			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData));
+			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
+			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
+			tmp = Port.AddComponent(tmp, new Breaks(container));
+			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
+			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData));
+			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
+			Port.AddComponent(tmp, new CombustionEngine(container, engineData));
+
+			cyclePort.Initialize();
+
+			container.Gear = 0;
+			var Log = LogManager.GetLogger<FullPowerTrain>();
+			var absTime = 0.SI<Second>();
+			var ds = Constants.SimulationSettings.DriveOffDistance;
+			var response = cyclePort.Request(absTime, ds);
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			container.CommitSimulationStep(absTime, response.SimulationInterval);
+			absTime += response.SimulationInterval;
+
+			container.Gear = 1;
+			var cnt = 0;
+			while (!(response is ResponseCycleFinished) && container.Distance().Value() < 17000) {
+				Log.InfoFormat("Test New Request absTime: {0}, ds: {1}", absTime, ds);
+				try {
+					response = cyclePort.Request(absTime, ds);
+				} catch (Exception) {
+					modalWriter.Finish();
+					throw;
+				}
+				Log.InfoFormat("Test Got Response: {0},", response);
+
+				response.Switch().
+					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
+					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
+					Case<ResponseSuccess>(r => {
+						container.CommitSimulationStep(absTime, r.SimulationInterval);
+						absTime += r.SimulationInterval;
+
+						ds = container.VehicleSpeed().IsEqual(0)
+							? Constants.SimulationSettings.DriveOffDistance
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed();
+
+						if (cnt++ % 100 == 0) {
+							modalWriter.Finish();
+						}
+					}).
+					Default(r => Assert.Fail("Unexpected Response: {0}", r));
+			}
+			modalWriter.Finish();
+			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
+		}
+
+		[TestMethod]
+		public void Test_FullPowertrain_LowSpeed()
+		{
+			var modalWriter = new ModalDataWriter("Coach_FullPowertrain_LowSpeed.vmod");
 			var sumWriter = new TestSumWriter();
 			var container = new VehicleContainer(modalWriter, sumWriter);
 
