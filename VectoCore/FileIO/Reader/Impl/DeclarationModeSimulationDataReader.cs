@@ -80,7 +80,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			switch (fileInfo.Version) {
 				case 2:
 					Job = JsonConvert.DeserializeObject<VectoJobFileV2Declaration>(json);
-					Job.BasePath = Path.GetDirectoryName(file) + Path.DirectorySeparatorChar;
+					Job.BasePath = Path.GetDirectoryName(Path.GetFullPath(file)) + Path.DirectorySeparatorChar;
 					Job.JobFile = Path.GetFileName(file);
 					break;
 				default:
