@@ -355,7 +355,7 @@ namespace TUGraz.VectoCore.Utils
 	/// <summary>
 	/// SI Class for Meter per second [m/s].
 	/// </summary>
-	[DebuggerDisplay("m/s: {this} | km/h: {ConvertTo().Kilo.Meter.Per.Hour}")]
+	[DebuggerDisplay("{this} | {ConvertTo().Kilo.Meter.Per.Hour}")]
 	public class MeterPerSecond : SIBase<MeterPerSecond>
 	{
 		static MeterPerSecond()

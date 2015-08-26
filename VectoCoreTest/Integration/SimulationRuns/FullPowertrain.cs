@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Common.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -173,7 +172,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				Gears = ratios.Select((ratio, i) =>
 					Tuple.Create((uint)i,
 						new GearData {
-							FullLoadCurve = null, //FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile);
+							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
 							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
