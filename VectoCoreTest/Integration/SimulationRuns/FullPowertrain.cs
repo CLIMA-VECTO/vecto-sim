@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Common.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.FileIO.Reader;
@@ -34,7 +35,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		[TestMethod]
 		public void Test_FullPowertrain_SimpleGearbox()
 		{
-			var modalWriter = new ModalDataWriter("Coach_FullPowertrain.vmod");
+			var modalWriter = new ModalDataWriter("Coach_FullPowertrain_SimpleGearbox.vmod");
 			var sumWriter = new TestSumWriter();
 			var container = new VehicleContainer(modalWriter, sumWriter);
 
@@ -80,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 						ds = container.VehicleSpeed().IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: (Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed()).Cast<Meter>();
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed();
 
 						if (cnt++ % 100 == 0) {
 							modalWriter.Finish();
@@ -122,7 +123,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			cyclePort.Initialize();
 
 			container.Gear = 0;
-
+			var Log = LogManager.GetLogger<FullPowerTrain>();
 			var absTime = 0.SI<Second>();
 			var ds = Constants.SimulationSettings.DriveOffDistance;
 			var response = cyclePort.Request(absTime, ds);
@@ -133,11 +134,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			container.Gear = 1;
 			var cnt = 0;
 			while (!(response is ResponseCycleFinished) && container.Distance().Value() < 17000) {
+				Log.InfoFormat("Test New Request absTime: {0}, ds: {1}", absTime, ds);
 				response = cyclePort.Request(absTime, ds);
+				Log.InfoFormat("Test Got Response: {0},", response);
+
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
 					Case<ResponseCycleFinished>(r => { }).
-					Case<ResponseGearShift>(r => { Debug.WriteLine("Gearshift"); }).
+					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;

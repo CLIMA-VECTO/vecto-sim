@@ -1,3 +1,4 @@
+using System.Linq;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
@@ -17,6 +18,12 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 		public Watt WheelsPowerRequest { get; set; }
 
 		public Watt VehiclePowerRequest { get; set; }
+
+		public override string ToString()
+		{
+			var t = GetType();
+			return string.Format("{0}{{{1}}}", t.Name, ", ".Join(t.GetProperties().Select(p => string.Format("{0}: {1}", p.Name, p.GetValue(this)))));
+		}
 	}
 
 	/// <summary>

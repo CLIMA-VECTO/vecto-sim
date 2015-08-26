@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected override IResponse DoSimulationStep()
 		{
 			// estimate distance to be traveled within the next TargetTimeInterval
-			var ds = (Container.VehicleSpeed() * Constants.SimulationSettings.TargetTimeInterval).Cast<Meter>();
+			var ds = Container.VehicleSpeed() * Constants.SimulationSettings.TargetTimeInterval;
 
 			if (ds.IsEqual(0)) {
 				// vehicle stands still, drive a certain distance...

@@ -74,6 +74,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
+		/// <summary>
+		/// Does the handle request.
+		/// </summary>
+		/// <param name="absTime">The abs time.</param>
+		/// <param name="ds">The ds.</param>
+		/// <returns></returns>
+		/// <exception cref="VectoSimulationException">Stopping Time only allowed when target speed is zero!</exception>
 		private IResponse DoHandleRequest(Second absTime, Meter ds)
 		{
 			if (CycleIntervalIterator.LastEntry && PreviousState.Distance.IsEqual(CycleIntervalIterator.RightSample.Distance)) {
