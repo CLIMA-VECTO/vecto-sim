@@ -189,7 +189,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private void SearchBreakingPower(Second absTime, ref Meter ds, Radian gradient, ResponseDryRun response, bool coasting)
 		{
-			var exceeded = new List<Watt>(); // only used while testing
+			var debug = new List<Watt>(); // only used while testing
 			var breakingPower = (DataBus.ClutchState() != ClutchState.ClutchClosed)
 				? response.AxlegearPowerRequest.Abs()
 				: response.DeltaDragLoad.Abs();
@@ -198,6 +198,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var originalDs = ds;
 			Watt origDelta = null;
 
+			// double the searchInterval until a good interval was found
 			var intervalFactor = 2.0;
 
 			do {
@@ -209,18 +210,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (origDelta == null) {
 					origDelta = delta;
 				} else {
+					// check if a correct searchInterval was found (when the delta changed signs, we stepped through the 0-point)
+					// from then on the searchInterval can be bisected.
 					if (origDelta.Sign() != delta.Sign()) {
 						intervalFactor = 0.5;
 					}
 				}
 
-				exceeded.Add(delta);
+				debug.Add(delta);
 				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
-					Log.DebugFormat("found operating point in {0} iterations, delta: {1}", exceeded.Count, delta);
+					Log.DebugFormat("found operating point in {0} iterations, delta: {1}", debug.Count, delta);
 					return;
 				}
 
-				breakingPower += searchInterval * (delta > 0 ? -1 : 1);
+
+				breakingPower += searchInterval * -delta.Sign();
 				searchInterval *= intervalFactor;
 
 				CurrentState.dt = ComputeTimeInterval(CurrentState.Acceleration, ref ds);
@@ -229,11 +233,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
 
 			Log.DebugFormat("Exceeded max iterations when searching for operating point!");
-			//Log.DebugFormat("acceleration: {0} ... {1}", string.Join(", ", acceleration.Take(5)),
-			//	string.Join(", ", acceleration.GetRange(acceleration.Count - 6, 5)));
-			Log.DebugFormat("exceeded: {0} ... {1}", string.Join(", ", exceeded.Take(5)),
-				string.Join(", ", exceeded.GetRange(exceeded.Count - 6, 5)));
-
+			Log.DebugFormat("exceeded: {0} ... {1}", ", ".Join(debug.Slice(5)), ", ".Join(debug.Slice(-6)));
 			Log.ErrorFormat("Failed to find operating point for breaking!");
 			throw new VectoSimulationException("Failed to find operating point for breaking!");
 		}
