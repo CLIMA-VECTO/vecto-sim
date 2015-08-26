@@ -96,7 +96,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var currentDistance = DataBus.Distance();
 			var nextDrivingActions = GetNextDrivingActions(currentDistance);
 
-			Log.DebugFormat(", ".Join(nextDrivingActions.Select(x => string.Format("[{0}]: {1}", x.ActionDistance, x.Action))));
+			Log.DebugFormat(", ".Join(nextDrivingActions.Select(x => string.Format("({0}: {1})", x.ActionDistance, x.Action))));
 
 
 			if (CurrentState.DrivingAction.Action == DrivingBehavior.Stopped && targetVelocity >= DataBus.VehicleSpeed()) {
@@ -196,12 +196,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var searchInterval = Constants.SimulationSettings.BreakingPowerInitialSearchInterval;
 			var originalDs = ds;
+			Watt previousDelta = null;
 
 			do {
 				ds = originalDs;
 				var delta = DataBus.ClutchState() == ClutchState.ClutchClosed
 					? -response.DeltaDragLoad
 					: -response.AxlegearPowerRequest;
+
+				if (previousDelta == null) {
+					previousDelta = 2 * delta;
+				}
 
 				exceeded.Add(delta);
 				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
@@ -210,7 +215,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				breakingPower += searchInterval * (delta > 0 ? -1 : 1);
-				searchInterval /= 2.0;
+
+				searchInterval /= VectoMath.Limit((previousDelta / delta).Cast<Scalar>(), 1.1, 2.0);
+				previousDelta = delta;
 
 				CurrentState.dt = ComputeTimeInterval(CurrentState.Acceleration, ref ds);
 				DataBus.BreakPower = breakingPower;
@@ -358,7 +365,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.DebugFormat("Limiting coasting deceleration from {0} to {1}", CurrentState.Acceleration,
 					DeclarationData.Driver.LookAhead.Deceleration);
 				CurrentState.Acceleration = DeclarationData.Driver.LookAhead.Deceleration;
-				CurrentState.dt = ComputeTimeInterval(CurrentState.Acceleration, ref ds);
+				//CurrentState.dt = ComputeTimeInterval(CurrentState.Acceleration, ref ds);
 				Log.DebugFormat("Changed dt due to limited coasting deceleration. dt: {0}", CurrentState.dt);
 			}
 
@@ -430,6 +437,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					throw new VectoSimulationException("Could not achieve minimum acceleration");
 				}
 				searchInterval /= 2.0;
+
 				CurrentState.dt = ComputeTimeInterval(CurrentState.Acceleration, ref ds);
 				response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);
 			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);

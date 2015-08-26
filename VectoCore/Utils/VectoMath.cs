@@ -73,16 +73,16 @@ namespace TUGraz.VectoCore.Utils
 			return c1.CompareTo(c2) >= 0 ? c1 : c2;
 		}
 
-		public static T Limit<T>(T value, T lowerBound, T upperBound) where T : SIBase<T>
+		public static T Limit<T>(T value, T lowerBound, T upperBound) where T : IComparable
 		{
-			if (lowerBound > upperBound) {
+			if (lowerBound.CompareTo(upperBound) > 0) {
 				throw new VectoException("VectoMath.Limit: lowerBound must not be greater than upperBound");
 			}
 
-			if (value > upperBound) {
+			if (value.CompareTo(upperBound) > 0) {
 				return upperBound;
 			}
-			if (value < lowerBound) {
+			if (value.CompareTo(lowerBound) < 0) {
 				return lowerBound;
 			}
 			return value;

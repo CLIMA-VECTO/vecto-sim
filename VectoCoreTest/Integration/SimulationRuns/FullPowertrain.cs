@@ -89,10 +89,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					}).
 					Default(r => Assert.Fail("Unexpected Response: {0}", r));
 			}
-
-			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
-
 			modalWriter.Finish();
+			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 
 		[TestMethod]
@@ -135,7 +133,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var cnt = 0;
 			while (!(response is ResponseCycleFinished) && container.Distance().Value() < 17000) {
 				Log.InfoFormat("Test New Request absTime: {0}, ds: {1}", absTime, ds);
-				response = cyclePort.Request(absTime, ds);
+				try {
+					response = cyclePort.Request(absTime, ds);
+				} catch (Exception) {
+					modalWriter.Finish();
+					throw;
+				}
 				Log.InfoFormat("Test Got Response: {0},", response);
 
 				response.Switch().
@@ -156,10 +159,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					}).
 					Default(r => Assert.Fail("Unexpected Response: {0}", r));
 			}
-
-			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
-
 			modalWriter.Finish();
+			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 
 
