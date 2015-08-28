@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void TestPreferredSpeed()
 		{
 			var fldCurve = EngineFullLoadCurve.ReadFromFile(CoachEngineFLD);
-			fldCurve.EngineData = new CombustionEngineData() { IdleSpeed = 560.RPMtoRad() };
+			fldCurve.EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad() };
 			AssertHelper.AreRelativeEqual(130.691151551712.SI<PerSecond>(), fldCurve.PreferredSpeed);
 			AssertHelper.AreRelativeEqual(194.515816596908.SI<PerSecond>(), fldCurve.N95hSpeed);
 			AssertHelper.AreRelativeEqual(94.2463966015023.SI<PerSecond>(), fldCurve.LoSpeed);

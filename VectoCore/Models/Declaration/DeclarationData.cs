@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
@@ -128,13 +129,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public static class LookAhead
 			{
 				public const bool Enabled = true;
-				public static readonly MeterPerSquareSecond Deceleration = 0.5.SI<MeterPerSquareSecond>();
+				public static readonly MeterPerSquareSecond Deceleration = -0.5.SI<MeterPerSquareSecond>();
 				public static readonly MeterPerSecond MinimumSpeed = 50.KMPHtoMeterPerSecond();
 			}
 
 			public static class OverSpeedEcoRoll
 			{
-				public static readonly IList<DriverData.DriverMode> AllowedModes = new List<DriverData.DriverMode>() {
+				public static readonly IList<DriverData.DriverMode> AllowedModes = new List<DriverData.DriverMode> {
 					DriverData.DriverMode.EcoRoll,
 					DriverData.DriverMode.Overspeed
 				};
@@ -183,74 +184,35 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			public const double MinTimeBetweenGearshifts = 2;
 
-			public static Second TractionInterruption(GearboxData.GearboxType type)
-			{
-				switch (type) {
-					case GearboxData.GearboxType.MT:
-						return 2.SI<Second>();
-					case GearboxData.GearboxType.AMT:
-						return 1.SI<Second>();
-					case GearboxData.GearboxType.AT:
-						return 0.8.SI<Second>();
-				}
-				return 0.SI<Second>();
-			}
 
-			public static bool EarlyShiftGears(GearboxData.GearboxType type)
+			internal static ShiftPolygon ComputeShiftPolygon(EngineFullLoadCurve fullLoadCurve, PerSecond engineIdleSpeed)
 			{
-				switch (type) {
-					case GearboxData.GearboxType.MT:
-						return false;
-					case GearboxData.GearboxType.AMT:
-						return true;
-					case GearboxData.GearboxType.AT:
-						return false;
-				}
-				return false;
-			}
-
-			public static bool SkipGears(GearboxData.GearboxType type)
-			{
-				switch (type) {
-					case GearboxData.GearboxType.MT:
-						return true;
-					case GearboxData.GearboxType.AMT:
-						return true;
-					case GearboxData.GearboxType.AT:
-						return false;
-				}
-				return false;
-			}
-
-			internal static ShiftPolygon ComputeShiftPolygon(GearFullLoadCurve gear, CombustionEngineData engine)
-			{
-				// TODO: How to compute shift-polygons exactly? (merge with engine full load?)
-				var fullLoadCurve = engine.FullLoadCurve;
-				var idleSpeed = engine.IdleSpeed;
-
 				var maxTorque = fullLoadCurve.MaxLoadTorque;
 
 				var entriesDown = new List<ShiftPolygon.ShiftPolygonEntry>();
 				var entriesUp = new List<ShiftPolygon.ShiftPolygonEntry>();
 
-				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = idleSpeed, Torque = 0.SI<NewtonMeter>() });
+				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry {
+					AngularSpeed = engineIdleSpeed,
+					Torque = 0.SI<NewtonMeter>()
+				});
 
-				var tq1 = maxTorque * idleSpeed / (fullLoadCurve.PreferredSpeed + fullLoadCurve.LoSpeed - idleSpeed);
-				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = idleSpeed, Torque = tq1 });
+				var tq1 = maxTorque * engineIdleSpeed / (fullLoadCurve.PreferredSpeed + fullLoadCurve.LoSpeed - engineIdleSpeed);
+				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = engineIdleSpeed, Torque = tq1 });
 
 				var speed1 = (fullLoadCurve.PreferredSpeed + fullLoadCurve.LoSpeed) / 2;
-				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = speed1, Torque = maxTorque });
+				entriesDown.Add(new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = speed1, Torque = maxTorque });
 
 
-				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() {
+				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry {
 					AngularSpeed = fullLoadCurve.PreferredSpeed,
 					Torque = 0.SI<NewtonMeter>()
 				});
 
-				tq1 = maxTorque * (fullLoadCurve.PreferredSpeed - idleSpeed) / (fullLoadCurve.N95hSpeed - idleSpeed);
-				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = fullLoadCurve.PreferredSpeed, Torque = tq1 });
+				tq1 = maxTorque * (fullLoadCurve.PreferredSpeed - engineIdleSpeed) / (fullLoadCurve.N95hSpeed - engineIdleSpeed);
+				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = fullLoadCurve.PreferredSpeed, Torque = tq1 });
 
-				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry() { AngularSpeed = fullLoadCurve.N95hSpeed, Torque = maxTorque });
+				entriesUp.Add(new ShiftPolygon.ShiftPolygonEntry { AngularSpeed = fullLoadCurve.N95hSpeed, Torque = maxTorque });
 
 				return new ShiftPolygon(entriesDown, entriesUp);
 			}

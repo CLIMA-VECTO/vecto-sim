@@ -57,8 +57,8 @@ where:
 
 |                   |                                                    |            |
 | ----------------- | -------------------------------------------------- | ---------- |
-| CF~WHTC~          | WHTC Correction Factor                             | \[-\]      |
-| i                 | index for each part (Urban, Rural, Motorway)       | \[-\]      |
-| f~i~              | Weighting factor per part                          | \[-\]      |
-| FC~meas\_i~       | WHTC measurement result per part (input parameter) | \[g/kWh\]  |
-| FC~calc\_i~       | Calculated FC per part                             | \[g/kWh\]  |
+| $CF_{WHTC}$          | WHTC Correction Factor                             | \[-\]      |
+| $i$                | index for each part (Urban, Rural, Motorway)       | \[-\]      |
+| $f_i$              | Weighting factor per part                          | \[-\]      |
+| $FC_{meas_i}$       | WHTC measurement result per part (input parameter) | \[g/kWh\]  |
+| $FC_{calc_i}$       | Calculated FC per part                             | \[g/kWh\]  |

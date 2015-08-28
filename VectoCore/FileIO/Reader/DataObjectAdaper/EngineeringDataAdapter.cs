@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 {
 	public class EngineeringDataAdapter : AbstractSimulationDataAdapter
 	{
-		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle, Models.Declaration.Mission segment,
+		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission segment,
 			Kilogram loading)
 		{
 			return CreateVehicleData(vehicle);
@@ -61,30 +61,29 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 		//=================================
 
-
 		internal DriverData CreateDriverData(VectoJobFileV2Engineering job)
 		{
 			var data = job.Body;
 
 			var accelerationData = AccelerationCurveData.ReadFromFile(Path.Combine(job.BasePath, data.AccelerationCurve));
-			var lookAheadData = new DriverData.LACData() {
+			var lookAheadData = new DriverData.LACData {
 				Enabled = data.LookAheadCoasting.Enabled,
 				Deceleration = data.LookAheadCoasting.Dec.SI<MeterPerSquareSecond>(),
 				MinSpeed = data.LookAheadCoasting.MinSpeed.KMPHtoMeterPerSecond(),
 			};
-			var overspeedData = new DriverData.OverSpeedEcoRollData() {
+			var overspeedData = new DriverData.OverSpeedEcoRollData {
 				Mode = DriverData.ParseDriverMode(data.OverSpeedEcoRoll.Mode),
 				MinSpeed = data.OverSpeedEcoRoll.MinSpeed.KMPHtoMeterPerSecond(),
 				OverSpeed = data.OverSpeedEcoRoll.OverSpeed.KMPHtoMeterPerSecond(),
 				UnderSpeed = data.OverSpeedEcoRoll.UnderSpeed.KMPHtoMeterPerSecond(),
 			};
-			var startstopData = new VectoRunData.StartStopData() {
+			var startstopData = new VectoRunData.StartStopData {
 				Enabled = data.StartStop.Enabled,
 				Delay = data.StartStop.Delay.SI<Second>(),
 				MinTime = data.StartStop.MinTime.SI<Second>(),
 				MaxSpeed = data.StartStop.MaxSpeed.KMPHtoMeterPerSecond(),
 			};
-			var retVal = new DriverData() {
+			var retVal = new DriverData {
 				AccelerationCurve = accelerationData,
 				LookAheadCoasting = lookAheadData,
 				OverSpeedEcoRoll = overspeedData,
@@ -132,8 +131,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		{
 			var retVal = SetCommonCombustionEngineData(engine.Body, engine.BasePath);
 			retVal.Inertia = engine.Body.Inertia.SI<KilogramSquareMeter>();
-			retVal.FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, engine.Body.FullLoadCurve),
-				false);
+			retVal.FullLoadCurve = EngineFullLoadCurve.ReadFromFile(Path.Combine(engine.BasePath, engine.Body.FullLoadCurve));
 			retVal.FullLoadCurve.EngineData = retVal;
 			return retVal;
 		}
@@ -172,10 +170,10 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 					? ShiftPolygon.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.ShiftPolygon))
 					: null;
 				var fullLoad = !string.IsNullOrEmpty(gearSettings.FullLoadCurve) && !gearSettings.FullLoadCurve.Equals("<NOFILE>")
-					? GearFullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
+					? FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
 					: null;
 
-				var gear = new GearData() {
+				var gear = new GearData {
 					LossMap = lossMap,
 					ShiftPolygon = shiftPolygon,
 					FullLoadCurve = fullLoad,
@@ -185,7 +183,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				if (i == 0) {
 					retVal.AxleGearData = gear;
 				} else {
-					retVal._gearData.Add(i, gear);
+					retVal.Gears.Add(i, gear);
 				}
 			}
 			return retVal;

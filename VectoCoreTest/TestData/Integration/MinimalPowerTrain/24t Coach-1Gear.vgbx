@@ -1,8 +1,8 @@
 ﻿{
   "Header": {
-    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
-    "Date": "27.07.2015 11:20:45",
-    "AppVersion": "2.2",
+    "CreatedBy": " ()",
+    "Date": "7/31/2015 8:06:20 AM",
+    "AppVersion": "2.2 beta-2",
     "FileVersion": 5
   },
   "Body": {
@@ -13,11 +13,11 @@
     "Gears": [
       {
         "Ratio": 3.5,
-        "Efficiency": "0.95"
+        "Efficiency": "1"
       },
       {
         "Ratio": 3.0,
-        "Efficiency": "0.95",
+        "Efficiency": "1",
         "TCactive": false,
         "ShiftPolygon": "ShiftPolygons.vgbs",
         "FullLoadCurve": "<NOFILE>"

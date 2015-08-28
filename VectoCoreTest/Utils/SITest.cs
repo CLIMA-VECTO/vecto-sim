@@ -37,6 +37,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.IsInstanceOfType(force, typeof(Newton));
 			Assert.AreEqual(15, force.Value());
 
+			var test = 2.0.SI<PerSecond>();
+			var reziprok = 1.0 / test;
+			Assert.AreEqual(0.5, reziprok.Value());
+			Assert.IsTrue(1.SI<Second>().HasEqualUnit(reziprok));
 
 			//add
 			var angularVelocity2 = 400.SI<RoundsPerMinute>().Cast<PerSecond>();

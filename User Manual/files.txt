@@ -1,3 +1,4 @@
+main/start.md
 GUI/index.md
 GUI/mainform.md
 GUI/settings.md

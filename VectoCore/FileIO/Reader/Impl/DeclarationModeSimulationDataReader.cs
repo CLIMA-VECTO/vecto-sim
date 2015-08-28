@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				case 5:
 					var vehicle = JsonConvert.DeserializeObject<VehicleFileV5Declaration>(json);
 					vehicle.BasePath = file;
-					return Vehicle;
+					return vehicle;
 				default:
 					throw new UnsupportedFileVersionException("Unsupported Version of vehicle-file. Got version " + fileInfo.Version);
 			}
@@ -176,6 +176,22 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		public override bool IsEngineOnly
 		{
 			get { return false; }
+		}
+
+		/// <summary>
+		/// Create gearboxdata instance directly from a file
+		/// </summary>
+		/// <param name="gearBoxFile"></param>
+		/// <param name="engineFile"></param>
+		/// <returns>GearboxData instance</returns>
+		public static GearboxData CreateGearboxDataFromFile(string gearBoxFile, string engineFile)
+		{
+			var reader = new DeclarationModeSimulationDataReader();
+			var engine = reader.ReadEngine(engineFile);
+			var gearbox = reader.ReadGearbox(gearBoxFile);
+			var dao = new DeclarationDataAdapter();
+			var engineData = dao.CreateEngineData(engine);
+			return dao.CreateGearboxData(gearbox, engineData);
 		}
 	}
 }

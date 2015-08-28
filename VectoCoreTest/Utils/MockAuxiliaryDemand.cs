@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public CycleData CycleData()
 		{
-			return new CycleData() {
+			return new CycleData {
 				AbsTime = 0.SI<Second>(),
 				AbsDistance = 0.SI<Meter>(),
 				LeftSample = _left.Current,

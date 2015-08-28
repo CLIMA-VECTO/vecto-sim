@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -32,6 +34,116 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 
 		[TestMethod]
+		public void DriverCoastingTest()
+		{
+			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+
+			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
+
+			var driverData = CreateDriverData();
+
+			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain_Coasting.vmod");
+			var sumWriter = new TestSumWriter();
+			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
+
+			var driver = new Driver(vehicleContainer, driverData);
+			var engine = new CombustionEngine(vehicleContainer, engineData);
+
+			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
+			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			AddComponent(tmp, engine);
+
+			var gbx = new MockGearbox(vehicleContainer);
+			vehicleContainer.Gear = 1;
+
+			var driverPort = driver.OutPort();
+
+			driverPort.Initialize(5.SI<MeterPerSecond>(), 0.SI<Radian>());
+
+			var absTime = 0.SI<Second>();
+
+			var response = driver.DoCoast(absTime, 1.SI<Meter>(), 0.SI<Radian>());
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+			absTime += response.SimulationInterval;
+
+			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed().Value(), Tolerance);
+			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
+			Assert.AreEqual(engine._previousState.FullDragPower.Value(), engine._previousState.EnginePower.Value(),
+				Constants.SimulationSettings.EngineFLDPowerTolerance);
+
+			while (vehicleContainer.VehicleSpeed() > 1) {
+				response = driver.DoCoast(absTime, 1.SI<Meter>(), 0.SI<Radian>());
+
+				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+				absTime += response.SimulationInterval;
+				modalWriter.Finish();
+			}
+			modalWriter.Finish();
+		}
+
+		[TestMethod]
+		public void DriverCoastingTest2()
+		{
+			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
+
+			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
+
+			var driverData = CreateDriverData();
+
+			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain_Coasting.vmod"); //new TestModalDataWriter();
+			var sumWriter = new TestSumWriter();
+			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
+
+			var driver = new Driver(vehicleContainer, driverData);
+			var engine = new CombustionEngine(vehicleContainer, engineData);
+
+			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
+			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
+			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			AddComponent(tmp, engine);
+
+			var gbx = new MockGearbox(vehicleContainer);
+			vehicleContainer.Gear = 1;
+
+			var driverPort = driver.OutPort();
+
+			var gradient = VectoMath.InclinationToAngle(-0.020237973 / 100.0);
+			driverPort.Initialize(5.SI<MeterPerSecond>(), gradient);
+
+			var absTime = 0.SI<Second>();
+
+			var response = driver.DoCoast(absTime, 1.SI<Meter>(), gradient);
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+			absTime += response.SimulationInterval;
+
+			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed().Value(), Tolerance);
+			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
+			Assert.AreEqual(engine._previousState.FullDragPower.Value(), engine._previousState.EnginePower.Value(),
+				Constants.SimulationSettings.EngineFLDPowerTolerance);
+
+			while (vehicleContainer.VehicleSpeed() > 1) {
+				response = driver.DoCoast(absTime, 1.SI<Meter>(), gradient);
+
+				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+				absTime += response.SimulationInterval;
+				modalWriter.Finish();
+			}
+			modalWriter.Finish();
+		}
+
+
+		[TestMethod]
 		public void DriverOverloadTest()
 		{
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
@@ -51,8 +163,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
 			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
 
-			var gbx = new DummyGearbox(vehicleContainer);
-			gbx.CurrentGear = 1;
+			var gbx = new MockGearbox(vehicleContainer);
+			vehicleContainer.Gear = 1;
 
 			var driverPort = driver.OutPort();
 
@@ -67,7 +179,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.900, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.908, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 
 			response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.SI<Radian>());
 
@@ -76,14 +188,18 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.7990, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.7973, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 
-			/// change vehicle weight
+			// change vehicle weight, cannot reach minimum acceleration...
 			vehicleData.Loading = 70000.SI<Kilogram>();
 
-			response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.05.SI<Radian>());
-
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			try {
+				response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.05.SI<Radian>());
+				Assert.Fail();
+			} catch (VectoSimulationException e) {
+				Assert.AreEqual("Could not achieve minimum acceleration", e.Message);
+			}
+			//Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 		}
 
 		[TestMethod]
@@ -216,22 +332,22 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		private static VehicleData CreateVehicleData(Kilogram loading)
 		{
-			var axles = new List<Axle>() {
-				new Axle() {
+			var axles = new List<Axle> {
+				new Axle {
 					AxleWeightShare = 0.4375,
 					Inertia = 21.66667.SI<KilogramSquareMeter>(),
 					RollResistanceCoefficient = 0.0055,
 					TwinTyres = false,
 					TyreTestLoad = 62538.75.SI<Newton>()
 				},
-				new Axle() {
+				new Axle {
 					AxleWeightShare = 0.375,
 					Inertia = 10.83333.SI<KilogramSquareMeter>(),
 					RollResistanceCoefficient = 0.0065,
 					TwinTyres = false,
 					TyreTestLoad = 52532.55.SI<Newton>()
 				},
-				new Axle() {
+				new Axle {
 					AxleWeightShare = 0.1875,
 					Inertia = 21.66667.SI<KilogramSquareMeter>(),
 					RollResistanceCoefficient = 0.0055,
@@ -239,7 +355,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					TyreTestLoad = 62538.75.SI<Newton>()
 				}
 			};
-			return new VehicleData() {
+			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
 				CrossSectionArea = 3.2634.SI<SquareMeter>(),
 				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
@@ -248,7 +364,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				CurbWeigthExtra = 0.SI<Kilogram>(),
 				Loading = loading,
 				DynamicTyreRadius = 0.52.SI<Meter>(),
-				Retarder = new RetarderData() { Type = RetarderData.RetarderType.None },
+				Retarder = new RetarderData { Type = RetarderData.RetarderType.None },
 				AxleData = axles,
 				SavedInDeclarationMode = false,
 			};
@@ -256,15 +372,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		private static DriverData CreateDriverData()
 		{
-			return new DriverData() {
+			return new DriverData {
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(AccelerationFile),
-				LookAheadCoasting = new DriverData.LACData() {
+				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
 				},
-				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData() {
-					Mode = VectoCore.Models.SimulationComponent.Data.DriverData.DriverMode.Off
+				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
+					Mode = DriverData.DriverMode.Off
 				},
-				StartStop = new VectoRunData.StartStopData() {
+				StartStop = new VectoRunData.StartStopData {
 					Enabled = false,
 				}
 			};

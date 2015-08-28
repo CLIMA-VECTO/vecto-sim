@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -34,7 +35,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			aux.AddDirect(cycle);
 			var gearbox = new EngineOnlyGearbox(vehicle);
 
-			var engine = new CombustionEngine(vehicle, engineData);
+			var engine = new EngineOnlyCombustionEngine(vehicle, engineData);
 
 			aux.InPort().Connect(engine.OutPort());
 			gearbox.InPort().Connect(aux.OutPort());
@@ -47,7 +48,8 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 			var dataWriter = new ModalDataWriter(modFile, SimulatorFactory.FactoryMode.EngineOnlyMode);
 
 			foreach (var cycleEntry in data.Entries) {
-				port.Request(absTime, dt, cycleEntry.EngineTorque, cycleEntry.EngineSpeed);
+				var response = port.Request(absTime, dt, cycleEntry.EngineTorque, cycleEntry.EngineSpeed);
+				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 				foreach (var sc in vehicle.SimulationComponents()) {
 					dataWriter[ModalResultField.time] = absTime + dt / 2;
 					sc.CommitSimulationStep(dataWriter);

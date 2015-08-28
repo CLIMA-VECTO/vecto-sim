@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
@@ -59,24 +58,24 @@ namespace TUGraz.VectoCore.Tests.FileIO
 
 			Assert.AreEqual(3.7890, runData.EngineData.Inertia.Value());
 
-			var downshiftSpeeds = new double[] { 600, 600, 1310.6673 };
-			var downshiftTorque = new double[] { 0, 266.85346, 899 };
+			var downshiftSpeeds = new[] { 600, 600, 1310.6673 };
+			var downshiftTorque = new[] { 0, 266.85346, 899 };
 
-			Assert.AreEqual(downshiftSpeeds.Length, runData.GearboxData[1].ShiftPolygon.Downshift.Count);
+			Assert.AreEqual(downshiftSpeeds.Length, runData.GearboxData.Gears[1].ShiftPolygon.Downshift.Count);
 			for (var i = 0; i < downshiftSpeeds.Length; i++) {
 				Assert.AreEqual(downshiftSpeeds[i].RPMtoRad().Value(),
-					runData.GearboxData[1].ShiftPolygon.Downshift[i].AngularSpeed.Value(), Tolerance);
-				Assert.AreEqual(downshiftTorque[i], runData.GearboxData[1].ShiftPolygon.Downshift[i].Torque.Value(), Tolerance);
+					runData.GearboxData.Gears[1].ShiftPolygon.Downshift[i].AngularSpeed.Value(), Tolerance);
+				Assert.AreEqual(downshiftTorque[i], runData.GearboxData.Gears[1].ShiftPolygon.Downshift[i].Torque.Value(), Tolerance);
 			}
 
-			var upshiftSpeed = new double[] { 1531.230044, 1531.230044, 2420.505793661 };
-			var upshiftTorque = new double[] { 0, 459.8588, 899 };
+			var upshiftSpeed = new[] { 1531.230044, 1531.230044, 2420.505793661 };
+			var upshiftTorque = new[] { 0, 459.8588, 899 };
 
-			Assert.AreEqual(upshiftSpeed.Length, runData.GearboxData[1].ShiftPolygon.Downshift.Count);
+			Assert.AreEqual(upshiftSpeed.Length, runData.GearboxData.Gears[1].ShiftPolygon.Downshift.Count);
 			for (var i = 0; i < downshiftSpeeds.Length; i++) {
 				Assert.AreEqual(upshiftSpeed[i].RPMtoRad().Value(),
-					runData.GearboxData[1].ShiftPolygon.Upshift[i].AngularSpeed.Value(), Tolerance);
-				Assert.AreEqual(upshiftTorque[i], runData.GearboxData[1].ShiftPolygon.Upshift[i].Torque.Value(), Tolerance);
+					runData.GearboxData.Gears[1].ShiftPolygon.Upshift[i].AngularSpeed.Value(), Tolerance);
+				Assert.AreEqual(upshiftTorque[i], runData.GearboxData.Gears[1].ShiftPolygon.Upshift[i].Torque.Value(), Tolerance);
 			}
 			//Assert.AreEqual();
 

@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -33,6 +34,7 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="d"></param>
 		/// <returns></returns>
+		[DebuggerHidden]
 		public static T SI<T>(this int d) where T : SIBase<T>
 		{
 			return SIBase<T>.Create(d);

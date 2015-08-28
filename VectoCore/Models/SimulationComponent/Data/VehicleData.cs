@@ -10,7 +10,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		public string BasePath { get; internal set; }
 
-
 		public VehicleCategory VehicleCategory { get; internal set; }
 
 		public VehicleClass VehicleClass { get; internal set; }

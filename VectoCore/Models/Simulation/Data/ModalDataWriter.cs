@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private string ModFileName { get; set; }
 
 
-		public ModalDataWriter(string modFileName, SimulatorFactory.FactoryMode mode)
+		public ModalDataWriter(string modFileName, SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode)
 		{
 			HasTorqueConverter = false;
 			ModFileName = modFileName;

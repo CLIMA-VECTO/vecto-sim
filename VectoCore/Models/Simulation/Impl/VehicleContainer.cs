@@ -16,8 +16,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal IEngineInfo Engine;
 		internal IGearboxInfo Gearbox;
 		internal IVehicleInfo Vehicle;
+		internal IBreaks Breaks;
 
 		internal IMileageCounter MilageCounter;
+
+		internal IClutchInfo Clutch;
 
 		internal IRoadLookAhead Road;
 
@@ -28,12 +31,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IGearCockpit
 
-		public uint Gear()
+		public uint Gear
 		{
-			if (Gearbox == null) {
-				throw new VectoException("no gearbox available!");
+			get
+			{
+				if (Gearbox == null) {
+					throw new VectoException("no gearbox available!");
+				}
+				return Gearbox.Gear;
 			}
-			return Gearbox.Gear();
+			set
+			{
+				if (Gearbox == null) {
+					throw new VectoException("no gearbox available!");
+				}
+				Gearbox.Gear = value;
+			}
 		}
 
 		#endregion
@@ -116,9 +129,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				MilageCounter = milage;
 			}
 
+			var breaks = component as IBreaks;
+			if (breaks != null) {
+				Breaks = breaks;
+			}
+
 			var road = component as IRoadLookAhead;
 			if (road != null) {
 				Road = road;
+			}
+
+			var clutch = component as IClutchInfo;
+			if (clutch != null) {
+				Clutch = clutch;
 			}
 		}
 
@@ -157,14 +180,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return MilageCounter.Distance();
 		}
 
-		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter distance)
+		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
-			return Road.LookAhead(distance);
+			return Road.LookAhead(lookaheadDistance);
 		}
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
 			return Road.LookAhead(time);
+		}
+
+		public Watt BreakPower
+		{
+			get { return Breaks.BreakPower; }
+			set { Breaks.BreakPower = value; }
+		}
+
+		public ClutchState ClutchState()
+		{
+			return Clutch.ClutchState();
 		}
 	}
 }
