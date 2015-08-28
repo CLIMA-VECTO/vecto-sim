@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					&& CycleIntervalIterator.LeftSample.StoppingTime > PreviousState.WaitTime) {
 					// stop for certain time unless we've already waited long enough...
 					if (!CycleIntervalIterator.LeftSample.VehicleTargetSpeed.IsEqual(0)) {
-						Log.WarnFormat("Stopping Time requested in cycle but target-velocity not zero. distance: {0}, target speed: {1}",
+						Log.Warn("Stopping Time requested in cycle but target-velocity not zero. distance: {0}, target speed: {1}",
 							CycleIntervalIterator.LeftSample.StoppingTime, CycleIntervalIterator.LeftSample.VehicleTargetSpeed);
 						throw new VectoSimulationException("Stopping Time only allowed when target speed is zero!");
 					}

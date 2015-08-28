@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -14,13 +15,14 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 {
 	public class DeclarationModeSimulationDataReader : AbstractSimulationDataReader
 	{
+		
 		internal DeclarationModeSimulationDataReader() {}
 
-		protected void CheckForDeclarationMode(InputFileReader.VersionInfo info, string msg)
+		protected void CheckForDeclarationMode(VersionInfo info, string msg)
 		{
 			if (!info.SavedInDeclarationMode) {
 				// throw new VectoException("File not saved in Declaration Mode! - " + msg);
-				Log.WarnFormat("File not saved in Declaration Mode! - {0}", msg);
+				Log.Warn("File not saved in Declaration Mode! - {0}", msg);
 			}
 		}
 
@@ -56,22 +58,25 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 		protected override void ProcessJob(VectoJobFile vectoJob)
 		{
-			var declaration = vectoJob as VectoJobFileV2Declaration;
-			if (declaration == null) {
-				return;
+			try {
+				var job = vectoJob as VectoJobFileV2Declaration;
+				if (job == null) {
+					throw new VectoException(
+						string.Format("Unhandled Job File Format. Expected: Job File, Version 2, Declaration Mode. Got: {0}",
+							vectoJob.GetType()));
+				}
+				Vehicle = ReadVehicle(Path.Combine(job.BasePath, job.Body.VehicleFile));
+				Engine = ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));
+				Gearbox = ReadGearbox(Path.Combine(job.BasePath, job.Body.GearboxFile));
+				Aux = ReadAuxiliary(job.BasePath, job.Body.Aux);
+			} catch (VectoException e) {
+				var message = string.Format("Exception during processing of job file \"{0}\": {1}", vectoJob.JobFile, e.Message);
+				Log.Error(message);
+				throw new VectoException(message, e);
 			}
-			var job = declaration;
-
-			ReadVehicle(Path.Combine(job.BasePath, job.Body.VehicleFile));
-
-			ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));
-
-			ReadGearbox(Path.Combine(job.BasePath, job.Body.GearboxFile));
-
-			ReadAuxiliary(job.Body.Aux);
 		}
 
-		protected override void ReadJobFile(string file)
+		protected override VectoJobFile ReadJobFile(string file)
 		{
 			var json = File.ReadAllText(file);
 			var fileInfo = GetFileVersion(json);
@@ -79,16 +84,16 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 			switch (fileInfo.Version) {
 				case 2:
-					Job = JsonConvert.DeserializeObject<VectoJobFileV2Declaration>(json);
-					Job.BasePath = Path.GetDirectoryName(Path.GetFullPath(file)) + Path.DirectorySeparatorChar;
-					Job.JobFile = Path.GetFileName(file);
-					break;
+					var job = JsonConvert.DeserializeObject<VectoJobFileV2Declaration>(json);
+					job.BasePath = file;
+					job.JobFile = file;
+					return job;
 				default:
 					throw new UnsupportedFileVersionException("Unsupported version of job-file. Got version " + fileInfo.Version);
 			}
 		}
 
-		protected override void ReadVehicle(string file)
+		protected override VectoVehicleFile ReadVehicle(string file)
 		{
 			var json = File.ReadAllText(file);
 			var fileInfo = GetFileVersion(json);
@@ -96,15 +101,15 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 			switch (fileInfo.Version) {
 				case 5:
-					Vehicle = JsonConvert.DeserializeObject<VehicleFileV5Declaration>(json);
-					Vehicle.BasePath = Path.GetDirectoryName(file);
-					break;
+					var vehicle = JsonConvert.DeserializeObject<VehicleFileV5Declaration>(json);
+					vehicle.BasePath = file;
+					return Vehicle;
 				default:
 					throw new UnsupportedFileVersionException("Unsupported Version of vehicle-file. Got version " + fileInfo.Version);
 			}
 		}
 
-		protected override void ReadEngine(string file)
+		protected override VectoEngineFile ReadEngine(string file)
 		{
 			var json = File.ReadAllText(file);
 			var fileInfo = GetFileVersion(json);
@@ -112,15 +117,15 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 			switch (fileInfo.Version) {
 				case 3:
-					Engine = JsonConvert.DeserializeObject<EngineFileV3Declaration>(json);
-					Engine.BasePath = Path.GetDirectoryName(file);
-					break;
+					var engine = JsonConvert.DeserializeObject<EngineFileV3Declaration>(json);
+					engine.BasePath = file;
+					return engine;
 				default:
 					throw new UnsupportedFileVersionException("Unsupported Version of engine-file. Got version " + fileInfo.Version);
 			}
 		}
 
-		protected override void ReadGearbox(string file)
+		protected override VectoGearboxFile ReadGearbox(string file)
 		{
 			var json = File.ReadAllText(file);
 			var fileInfo = GetFileVersion(json);
@@ -128,31 +133,35 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 			switch (fileInfo.Version) {
 				case 5:
-					Gearbox = JsonConvert.DeserializeObject<GearboxFileV5Declaration>(json);
-					Gearbox.BasePath = Path.GetDirectoryName(file);
-					break;
+					var gearbox = JsonConvert.DeserializeObject<GearboxFileV5Declaration>(json);
+					gearbox.BasePath = file;
+					return gearbox;
 				default:
 					throw new UnsupportedFileVersionException("Unsupported Version of gearbox-file. Got version " + fileInfo.Version);
 			}
 		}
 
-		private void ReadAuxiliary(IEnumerable<VectoJobFileV2Declaration.DataBodyDecl.AuxDataDecl> auxiliaries)
+		protected override IList<VectoRunData.AuxData> ReadAuxiliary(string basePath,
+			IEnumerable<VectoAuxiliaryFile> auxiliaries)
 		{
-			var aux = DeclarationData.AuxiliaryIDs().Select(id => {
-				var a = auxiliaries.First(decl => decl.ID == id);
-				return new VectoRunData.AuxData {
-					ID = a.ID,
-					Type = AuxiliaryTypeHelper.Parse(a.Type),
-					Technology = a.Technology,
-					TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
-					DemandType = AuxiliaryDemandType.Constant
-				};
-			});
-
-			// add a direct auxiliary
-			aux = aux.Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable());
-
-			Aux = aux.ToArray();
+			var inputAuxiliaries = auxiliaries.Cast<VectoJobFileV2Declaration.DataBodyDecl.AuxDataDecl>().ToArray();
+			return DeclarationData.AuxiliaryIDs().Select(id => {
+				try {
+					var a = inputAuxiliaries.First(decl => decl.ID == id);
+					return new VectoRunData.AuxData {
+						ID = a.ID,
+						Type = AuxiliaryTypeHelper.Parse(a.Type),
+						Technology = a.Technology,
+						TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
+						DemandType = AuxiliaryDemandType.Constant
+					};
+				} catch (InvalidOperationException) {
+					var message = string.Format("Auxiliary was not found: Expected: [{0}], Got: [{1}]",
+						string.Join(", ", DeclarationData.AuxiliaryIDs()), string.Join(", ", inputAuxiliaries.Select(a => a.ID)));
+					Log.Error(message);
+					throw new VectoException(message);
+				}
+			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
 		}
 
 		internal Segment GetVehicleClassification(VehicleCategory category, AxleConfiguration axles, Kilogram grossMassRating,

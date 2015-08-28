@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
@@ -38,8 +35,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				entriesDown = CreateFromColumnNames(data, Fields.AngluarSpeedDown);
 				entriesUp = CreateFromColumnNames(data, Fields.AngularSpeedUp);
 			} else {
-				var log = LogManager.GetLogger<ShiftPolygon>();
-				log.WarnFormat(
+				Log.Warn(
 					"ShiftPolygon: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index",
 					Fields.Torque, Fields.AngularSpeedUp, Fields.AngluarSpeedDown,
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));

@@ -1,25 +1,38 @@
-﻿using System.Runtime.Serialization;
+﻿using System.IO;
+using System.Runtime.Serialization;
 
 namespace TUGraz.VectoCore.FileIO
 {
-	public abstract class VectoJobFile
+	public abstract class VectoBaseFile
 	{
-		[DataMember] internal string BasePath;
-		[DataMember] internal string JobFile;
+		protected string basePath;
+
+		[DataMember]
+		internal string BasePath
+		{
+			get { return basePath; }
+			set { basePath = Path.GetDirectoryName(Path.GetFullPath(value)); }
+		}
 	}
 
-	public abstract class VectoVehicleFile
+
+	public abstract class VectoJobFile : VectoBaseFile
 	{
-		[DataMember] internal string BasePath;
+		private string _jobFile;
+
+		[DataMember]
+		internal string JobFile
+		{
+			get { return _jobFile; }
+			set { _jobFile = Path.GetFileName(value); }
+		}
 	}
 
-	public abstract class VectoGearboxFile
-	{
-		[DataMember] internal string BasePath;
-	}
+	public abstract class VectoVehicleFile : VectoBaseFile {}
 
-	public abstract class VectoEngineFile
-	{
-		[DataMember] internal string BasePath;
-	}
+	public abstract class VectoGearboxFile : VectoBaseFile {}
+
+	public abstract class VectoEngineFile : VectoBaseFile {}
+
+	public abstract class VectoAuxiliaryFile : VectoBaseFile {}
 }

@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						.ConvertTo()
 						.Gramm.Per.Hour;
 			} catch (VectoException ex) {
-				Log.WarnFormat("t: {0} - {1} n: {2} Tq: {3}", _currentState.AbsTime, ex.Message,
+				Log.Warn("t: {0} - {1} n: {2} Tq: {3}", _currentState.AbsTime, ex.Message,
 					_currentState.EngineSpeed, _currentState.EngineTorque);
 				writer[ModalResultField.FCMap] = double.NaN.SI();
 			}
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (requestedEnginePower > _currentState.DynamicFullLoadPower) {
 				if (requestedEnginePower / _currentState.DynamicFullLoadPower > MaxPowerExceededThreshold) {
 					_enginePowerCorrections.Add(_currentState.AbsTime);
-					Log.WarnFormat(
+					Log.Warn(
 						"t: {0}  requested power > P_engine_full * 1.05 - corrected. P_request: {1}  P_engine_full: {2}",
 						_currentState.AbsTime, requestedEnginePower, _currentState.DynamicFullLoadPower);
 				}
@@ -213,7 +213,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (requestedEnginePower / _currentState.FullDragPower > MaxPowerExceededThreshold &&
 					requestedEnginePower > -99999) {
 					_enginePowerCorrections.Add(_currentState.AbsTime);
-					Log.WarnFormat(
+					Log.Warn(
 						"t: {0}  requested power < P_engine_drag * 1.05 - corrected. P_request: {1}  P_engine_drag: {2}",
 						_currentState.AbsTime, requestedEnginePower, _currentState.FullDragPower);
 				}

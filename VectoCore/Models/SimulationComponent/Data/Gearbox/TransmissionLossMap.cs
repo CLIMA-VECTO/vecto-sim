@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Common.Logging;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 {
-	public class TransmissionLossMap
+	public class TransmissionLossMap : LoggingObject
 	{
 		[JsonProperty] private readonly List<GearLossMapEntry> _entries;
 
@@ -33,8 +32,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			if (HeaderIsValid(data.Columns)) {
 				entries = CreateFromColumnNames(data);
 			} else {
-				var log = LogManager.GetLogger<TransmissionLossMap>();
-				log.WarnFormat(
+				Log.Warn(
 					"TransmissionLossMap: Header line is not valid. Expected: '{0}, {1}, {2}, <{3}>'. Got: '{4}'. Falling back to column index.",
 					Fields.InputSpeed, Fields.InputTorque, Fields.TorqeLoss, Fields.Efficiency,
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));

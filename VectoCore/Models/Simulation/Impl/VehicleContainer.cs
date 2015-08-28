@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
-using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -12,7 +10,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class VehicleContainer : IVehicleContainer
+	public class VehicleContainer : LoggingObject, IVehicleContainer
 	{
 		internal readonly IList<VectoSimulationComponent> Components = new List<VectoSimulationComponent>();
 		internal IEngineInfo Engine;
@@ -27,8 +25,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		internal ISummaryDataWriter SumWriter;
 		internal IModalDataWriter DataWriter;
-
-		private readonly ILog _logger;
 
 		#region IGearCockpit
 
@@ -80,7 +76,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public VehicleContainer(IModalDataWriter dataWriter = null, ISummaryDataWriter sumWriter = null)
 		{
-			_logger = LogManager.GetLogger(GetType());
 			DataWriter = dataWriter;
 			SumWriter = sumWriter;
 		}
@@ -130,7 +125,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
-			_logger.Info("VehicleContainer committing simulation.");
+			Log.Info("VehicleContainer committing simulation.");
 			foreach (var component in Components) {
 				component.CommitSimulationStep(DataWriter);
 			}
@@ -144,7 +139,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void FinishSimulation()
 		{
-			_logger.Info("VehicleContainer finishing simulation.");
+			Log.Info("VehicleContainer finishing simulation.");
 			DataWriter.Finish();
 
 			SumWriter.Write(DataWriter, VehicleMass(), VehicleLoading());

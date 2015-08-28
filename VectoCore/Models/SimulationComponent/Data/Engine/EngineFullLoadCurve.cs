@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using Common.Logging;
-using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
@@ -47,8 +44,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (HeaderIsValid(data.Columns)) {
 				entriesFld = CreateFromColumnNames(data);
 			} else {
-				var log = LogManager.GetLogger<EngineFullLoadCurve>();
-				log.WarnFormat(
+				Log.Warn(
 					"FullLoadCurve: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index.",
 					Fields.EngineSpeed, Fields.TorqueFullLoad, Fields.TorqueDrag,
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
@@ -262,7 +258,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				}
 				area += additionalArea;
 			}
-			Log.WarnFormat("Could not compute preferred speed, check FullLoadCurve! N95h: {0}, maxArea: {1}", N95hSpeed, maxArea);
+			Log.Warn("Could not compute preferred speed, check FullLoadCurve! N95h: {0}, maxArea: {1}", N95hSpeed, maxArea);
 		}
 
 		private PerSecond ComputeEngineSpeedForSegmentArea(FullLoadCurveEntry p1, FullLoadCurveEntry p2, Watt area)
@@ -281,7 +277,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			var retVal = VectoMath.QuadraticEquationSolver(k.Value() / 2.0, d.Value(),
 				(k * p1.EngineSpeed * p1.EngineSpeed + 2 * p1.EngineSpeed * d).Value());
 			if (retVal.Count == 0) {
-				Log.InfoFormat("No real solution found for requested area: P: {0}, p1: {1}, p2: {2}", area, p1, p2);
+				Log.Info("No real solution found for requested area: P: {0}, p1: {1}, p2: {2}", area, p1, p2);
 			}
 			return retVal.First(x => x >= p1.EngineSpeed.Value() && x <= p2.EngineSpeed.Value()).SI<PerSecond>();
 		}
@@ -295,7 +291,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		{
 			int idx;
 			if (angularVelocity < _fullLoadEntries[0].EngineSpeed) {
-				Log.ErrorFormat("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}",
+				Log.Error("requested rpm below minimum rpm in FLD curve - extrapolating. n: {0}, rpm_min: {1}",
 					angularVelocity.ConvertTo().Rounds.Per.Minute, _fullLoadEntries[0].EngineSpeed.ConvertTo().Rounds.Per.Minute);
 				idx = 1;
 			} else {
@@ -333,7 +329,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				// power = M(n) * n = (k * n + d) * n =  k * n^2 + d * n
 				retVal = VectoMath.QuadraticEquationSolver(k.Value(), d.Value(), -power.Value()).SI<PerSecond>().ToList();
 				if (retVal.Count == 0) {
-					Log.InfoFormat("No real solution found for requested power demand: P: {0}, p1: {1}, p2: {2}", power, p1, p2);
+					Log.Info("No real solution found for requested power demand: P: {0}, p1: {1}, p2: {2}", power, p1, p2);
 				}
 			}
 			retVal = retVal.Where(x => x >= p1.EngineSpeed && x <= p2.EngineSpeed).ToList();

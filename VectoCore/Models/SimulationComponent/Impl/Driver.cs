@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			solutions = solutions.Where(x => x >= 0).ToList();
 
 			if (solutions.Count == 0) {
-				Log.WarnFormat(
+				Log.Warn(
 					"Could not find solution for computing required time interval to drive distance {0}. currentSpeed: {1}, targetSpeed: {2}, acceleration: {3}",
 					ds, currentSpeed, targetVelocity, acceleration);
 				return 0.SI<Second>();

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Common.Logging;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
@@ -14,7 +12,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	/// <summary>
 	/// Container for simulation jobs.
 	/// </summary>
-	public class JobContainer
+	public class JobContainer : LoggingObject
 	{
 		private readonly List<IVectoRun> _runs = new List<IVectoRun>();
 		private readonly SummaryFileWriter _sumWriter;
@@ -54,7 +52,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		/// </summary>
 		public void Execute()
 		{
-			LogManager.GetLogger(GetType()).Info("VectoRun started running. Executing Runs.");
+			Log.Info("VectoRun started running. Executing Runs.");
 
 			Task.WaitAll(_runs.Select(r => Task.Factory.StartNew(r.Run)).ToArray());
 

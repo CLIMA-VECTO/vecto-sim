@@ -1,14 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.EngineeringFile;
 using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
 namespace TUGraz.VectoCore.FileIO.Reader.Impl
 {
@@ -42,7 +37,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			}
 			var job = declaration;
 
-			ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));
+			Engine = ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));
 		}
 
 		public override bool IsEngineOnly

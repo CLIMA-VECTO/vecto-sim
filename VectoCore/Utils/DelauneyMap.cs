@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using Common.Logging;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models;
 
 namespace TUGraz.VectoCore.Utils
 {
 	[JsonObject(MemberSerialization.Fields)]
-	public class DelauneyMap
+	public class DelauneyMap : LoggingObject
 	{
 		private readonly List<Point> _points = new List<Point>();
 		private List<Triangle> _triangles = new List<Triangle>();
@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Utils
 		{
 			var tr = _triangles.Find(triangle => triangle.IsInside(x, y, true));
 			if (tr == null) {
-				LogManager.GetLogger(GetType()).Info("Exact search found no fitting triangle. Approximation will be used.");
+				Log.Info("Exact search found no fitting triangle. Approximation will be used.");
 				tr = _triangles.Find(triangle => triangle.IsInside(x, y, false));
 				if (tr == null) {
 					throw new VectoException(string.Format("Interpolation failed. x: {0}, y: {1}", x, y));

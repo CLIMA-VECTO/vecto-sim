@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
 		{
 			if (_outPort == null) {
-				Log.ErrorFormat("{0} cannot handle incoming request - no outport available", absTime);
+				Log.Error("{0} cannot handle incoming request - no outport available", absTime);
 				throw new VectoSimulationException(
 					string.Format("{0} cannot handle incoming request - no outport available",
 						absTime));

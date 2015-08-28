@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using NLog;
+using NLog.Config;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -19,13 +21,17 @@ namespace VectoConsole
 				}
 
 				if (args.Contains("-v")) {
+					var config = LogManager.Configuration;
+					var target = config.FindTargetByName("ConsoleLogger");
+					config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, target));
+					LogManager.Configuration = config;
 					Trace.Listeners.Add(new ConsoleTraceListener(true));
 				}
 
 				var fileList = args.Where(a => a != "-v").ToList().ToList();
 
-				var sumWriter =
-					new SummaryFileWriter(Path.GetFileNameWithoutExtension(fileList.First()) + Constants.FileExtensions.SumFile);
+				var sumFileName = Path.GetFileNameWithoutExtension(fileList.First()) + Constants.FileExtensions.SumFile;
+				var sumWriter = new SummaryFileWriter(sumFileName);
 				var jobContainer = new JobContainer(sumWriter);
 
 				foreach (var file in fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile)) {

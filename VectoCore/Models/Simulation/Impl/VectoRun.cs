@@ -1,6 +1,4 @@
-﻿using System;
-using Common.Logging;
-using TUGraz.VectoCore.Models.Connector.Ports;
+﻿using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
@@ -10,7 +8,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	/// <summary>
 	/// Simulator for one vecto simulation job.
 	/// </summary>
-	public abstract class VectoRun : IVectoRun
+	public abstract class VectoRun : LoggingObject, IVectoRun
 	{
 		protected Second AbsTime = 0.SI<Second>();
 
@@ -39,7 +37,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void Run()
 		{
-			LogManager.GetLogger(GetType()).Info("VectoJob started running.");
+			Log.Info("VectoJob started running.");
 			IResponse response;
 
 			Initialize();
@@ -55,7 +53,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			Container.FinishSimulation();
 
-			LogManager.GetLogger(GetType()).Info("VectoJob finished.");
+			Log.Info("VectoJob finished.");
 		}
 
 		protected abstract IResponse DoSimulationStep();
