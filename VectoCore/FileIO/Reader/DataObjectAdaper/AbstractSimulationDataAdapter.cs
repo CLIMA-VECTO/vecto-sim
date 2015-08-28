@@ -39,8 +39,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			};
 
 			var retarder = new RetarderData() {
-				Type =
-					(RetarderData.RetarderType)Enum.Parse(typeof(RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
+				Type = data.Retarder.TypeStr.Parse<RetarderData.RetarderType>()
 			};
 			if (retarder.Type != RetarderData.RetarderType.None) {
 				retarder.LossMap = RetarderLossMap.ReadFromFile(Path.Combine(basePath, data.Retarder.File));

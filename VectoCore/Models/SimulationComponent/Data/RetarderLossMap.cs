@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (HeaderIsValid(data.Columns)) {
 				entries = CreateFromColumnNames(data);
 			} else {
-				Log.Warn(
+				Logger<RetarderLossMap>().Warn(
 					"RetarderLossMap: Header Line is not valid. Expected: '{0}, {1}', Got: '{2}'. Falling back to column index.",
 					Fields.RetarderSpeed, Fields.TorqueLoss,
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));

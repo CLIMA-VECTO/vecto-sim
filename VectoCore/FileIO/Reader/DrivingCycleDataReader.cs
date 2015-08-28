@@ -79,7 +79,8 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				}
 				distance = entry.Distance;
 			}
-			Log.Info("Data loaded. Number of Entries: {0}, filtered Entries: {1}", entries.Count, filtered.Count);
+			Logger<DrivingCycleDataReader>()
+				.Info("Data loaded. Number of Entries: {0}, filtered Entries: {1}", entries.Count, filtered.Count);
 			entries = filtered;
 
 			AdjustDistanceAfterStop(entries);
@@ -424,7 +425,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				}
 
 				if (header.Contains(Fields.EngineTorque) && header.Contains(Fields.EnginePower)) {
-					Log.Warn("Found column '{0}' and column '{1}': only column '{0}' will be used.",
+					Logger<DrivingCycleDataReader>().Warn("Found column '{0}' and column '{1}': only column '{0}' will be used.",
 						Fields.EngineTorque, Fields.EnginePower);
 				}
 			}

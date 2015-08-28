@@ -35,7 +35,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				entriesDown = CreateFromColumnNames(data, Fields.AngluarSpeedDown);
 				entriesUp = CreateFromColumnNames(data, Fields.AngularSpeedUp);
 			} else {
-				Log.Warn(
+				Logger<ShiftPolygon>().Warn(
 					"ShiftPolygon: Header Line is not valid. Expected: '{0}, {1}, {2}', Got: '{3}'. Falling back to column index",
 					Fields.Torque, Fields.AngularSpeedUp, Fields.AngluarSpeedDown,
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));

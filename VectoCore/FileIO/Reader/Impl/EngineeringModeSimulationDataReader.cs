@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
+using NLog;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.EngineeringFile;
 using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
@@ -25,7 +26,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		protected static void CheckForEngineeringMode(VersionInfo info, string msg)
 		{
 			if (info.SavedInDeclarationMode) {
-				Log.Warn("File was saved in Declaration Mode but is used for Engineering Mode!");
+				Logger<EngineeringModeSimulationDataReader>()
+					.Warn("File was saved in Declaration Mode but is used for Engineering Mode!");
 			}
 		}
 
@@ -74,7 +76,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			switch (fileInfo.Version) {
 				case 5:
 					var vehicle = JsonConvert.DeserializeObject<VehicleFileV5Engineering>(json);
-					vehicle.BasePath = Path.GetDirectoryName(file);
+					vehicle.BasePath = file;
 					return vehicle;
 				default:
 					throw new UnsupportedFileVersionException("Unsupported Version of .vveh file. Got Version " + fileInfo.Version);

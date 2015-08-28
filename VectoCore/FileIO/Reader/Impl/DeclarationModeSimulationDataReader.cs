@@ -15,7 +15,6 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 {
 	public class DeclarationModeSimulationDataReader : AbstractSimulationDataReader
 	{
-		
 		internal DeclarationModeSimulationDataReader() {}
 
 		protected void CheckForDeclarationMode(VersionInfo info, string msg)

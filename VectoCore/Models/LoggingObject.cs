@@ -1,10 +1,19 @@
-﻿using System;
-using NLog;
+﻿using NLog;
 
 namespace TUGraz.VectoCore.Models
 {
 	public class LoggingObject
 	{
-		[NonSerialized] protected static readonly Logger Log = LogManager.GetCurrentClassLogger();
+		protected Logger Log { get; private set; }
+
+		protected LoggingObject()
+		{
+			Log = LogManager.GetLogger(GetType().FullName);
+		}
+
+		protected static Logger Logger<T>()
+		{
+			return LogManager.GetLogger(typeof(T).ToString());
+		}
 	}
 }
