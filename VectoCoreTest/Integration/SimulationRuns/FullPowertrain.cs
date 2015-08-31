@@ -234,6 +234,22 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 
+		[TestMethod]
+		public void Test_FullPowerTrain_JobFile()
+		{
+			var sumWriter = new SummaryFileWriter(@"job.vsum");
+			var jobContainer = new JobContainer(sumWriter);
+
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode, @"TestData\job.vecto");
+
+			jobContainer.AddRuns(factory);
+			jobContainer.Execute();
+
+			ResultFileHelper.TestSumFile(@"TestData\Results\Integration\job.vsum", @"job.vsum");
+
+			ResultFileHelper.TestModFile(@"TestData\Results\Integration\job.vmod", @"TestData\Jobs\job.vmod");
+		}
+
 
 		// todo: add realistic FullLoadCurve
 		private static GearboxData CreateGearboxData()

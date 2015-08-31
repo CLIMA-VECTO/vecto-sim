@@ -67,8 +67,7 @@ Examples:
 				var jobContainer = new JobContainer(sumWriter);
 
 				foreach (var file in fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile)) {
-					var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode);
-					runsFactory.DataReader.SetJobFile(file);
+					var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode, file);
 					jobContainer.AddRuns(runsFactory);
 				}
 

@@ -273,8 +273,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var sumWriter = new SummaryFileWriter(@"AuxReadJobFileDeclarationMode.vsum");
 			var jobContainer = new JobContainer(sumWriter);
 
-			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode);
-			runsFactory.DataReader.SetJobFile(@"TestData\Jobs\40t_Long_Haul_Truck.vecto");
+			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, @"TestData\Jobs\40t_Long_Haul_Truck.vecto");
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
@@ -289,8 +288,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var sumWriter = new SummaryFileWriter(@"AuxReadJobFileEngineeringMode.vsum");
 			var jobContainer = new JobContainer(sumWriter);
 
-			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode);
-			runsFactory.DataReader.SetJobFile(@"TestData\Jobs\24t Coach.vecto");
+			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode, @"TestData\Jobs\24t Coach.vecto");
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();

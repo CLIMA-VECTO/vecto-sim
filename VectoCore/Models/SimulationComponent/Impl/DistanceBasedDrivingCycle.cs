@@ -312,8 +312,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public class DrivingCycleState
 		{
-			public DrivingCycleState() {}
-
 			public DrivingCycleState Clone()
 			{
 				return new DrivingCycleState {
