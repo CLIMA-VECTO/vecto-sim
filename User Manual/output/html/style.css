@@ -1,19 +1,24 @@
 body {
-  padding-left: 21em;
+  height: 100%;
+  min-height: 100%;
   font-family: Calibri, sans-serif;
 }
 
 nav, #TOC {
   position: fixed;
-  width: 20em;
+  width: 21em;
   top: 0;
-  left: 0;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+  bottom: 0;
   background-color: #eee;
   overflow: scroll;
+  border: 0, 0, 0, 1px solid black;
+}
 
+body > div:not(#TOC) {
+	display: none;
+	padding-left: 21em;
+	padding-top: 1em;
+	margin-left: 1em;
 }
 
 table {
@@ -37,7 +42,6 @@ th, td {
 h1 {
   padding-bottom: 3px;
   border-bottom: 1px solid #aaa;
-  padding-top: 2em;
 }
 
 body h1 {
@@ -54,7 +58,11 @@ dt {
   font-weight: bold;
 }
 
-.math {
-  font-size: 20px;
-
+.ui-resizable-handle {
+	position: absolute;
+	width: 20px;
+	cursor: ew-resize;
+	right: 0px;
+	height: 100%;
+	top: 0px;
 }

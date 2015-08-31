@@ -97,15 +97,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.EnginePower = LimitEnginePower(requestedEnginePower);
 
 			if (dryRun) {
-				return new ResponseDryRun() {
-					EngineDeltaFullLoad = (requestedEnginePower - _currentState.DynamicFullLoadPower),
-					EngineDeltaDragLoad = (requestedEnginePower - _currentState.FullDragPower),
+				return new ResponseDryRun {
+					DeltaFullLoad = (requestedEnginePower - _currentState.DynamicFullLoadPower),
+					DeltaDragLoad = (requestedEnginePower - _currentState.FullDragPower),
 					EnginePowerRequest = requestedEnginePower
 				};
 			}
 
 			if (!_currentState.EnginePower.IsEqual(requestedEnginePower, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
-				return new ResponseFailOverload() {
+				return new ResponseEngineOverload {
 					Delta = (requestedEnginePower - _currentState.EnginePower),
 					EnginePowerRequest = requestedEnginePower
 				};
@@ -117,7 +117,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.EngineTorque = Formulas.PowerToTorque(_currentState.EnginePower,
 				_currentState.EngineSpeed);
 
-			return new ResponseSuccess() { EnginePowerRequest = requestedEnginePower };
+			return new ResponseSuccess { EnginePowerRequest = requestedEnginePower };
 		}
 
 		protected void ComputeRequestedEnginePower(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed,
@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			_previousState = new EngineState() {
+			_previousState = new EngineState {
 				EngineSpeed = engineSpeed,
 				dt = 1.SI<Second>(),
 				EnginePowerLoss = 0.SI<Watt>(),
@@ -183,8 +183,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						.ConvertTo()
 						.Gramm.Per.Hour;
 			} catch (VectoException ex) {
-				Log.WarnFormat("t: {0} - {1} n: {2} Tq: {3}", _currentState.AbsTime, ex.Message,
-					_currentState.EngineSpeed, _currentState.EngineTorque);
+				Log.Warn("t: {0} - {1} n: {2} Tq: {3}", _currentState.AbsTime, ex.Message, _currentState.EngineSpeed,
+					_currentState.EngineTorque);
 				writer[ModalResultField.FCMap] = double.NaN.SI();
 			}
 		}
@@ -201,10 +201,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		///     Validates the requested power demand [W].
 		/// </summary>
 		/// <param name="requestedEnginePower">[W]</param>
-		protected virtual void ValidatePowerDemand(SI requestedEnginePower)
+		protected virtual void ValidatePowerDemand(Watt requestedEnginePower)
 		{
-			Contract.Requires(requestedEnginePower.HasEqualUnit(new SI().Watt));
-
 			if (_currentState.FullDragPower >= 0 && requestedEnginePower < 0) {
 				throw new VectoSimulationException(string.Format("t: {0}  P_engine_drag > 0! n: {1} [1/min] ",
 					_currentState.AbsTime, _currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute));
@@ -216,19 +214,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		/// <summary>
-		///     [W] => [W]
+		/// Limits the engine power to either DynamicFullLoadPower (upper bound) or FullDragPower (lower bound)
 		/// </summary>
-		/// <param name="requestedEnginePower">[W]</param>
-		/// <returns>[W]</returns>
 		protected virtual Watt LimitEnginePower(Watt requestedEnginePower)
 		{
-			if (requestedEnginePower > _currentState.DynamicFullLoadPower) {
-				return _currentState.DynamicFullLoadPower;
-			}
-			if (requestedEnginePower < _currentState.FullDragPower) {
-				return _currentState.FullDragPower;
-			}
-			return requestedEnginePower;
+			return VectoMath.Limit(requestedEnginePower, _currentState.FullDragPower, _currentState.DynamicFullLoadPower);
 		}
 
 		/// <summary>
@@ -258,7 +248,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="dt">[s]</param>
 		protected void ComputeFullLoadPower(PerSecond angularVelocity, Second dt)
 		{
-			if (dt.IsEqual(0)) {
+			if (dt <= 0) {
 				throw new VectoException("ComputeFullLoadPower cannot compute for simulation interval length 0.");
 			}
 
@@ -303,9 +293,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns>[W]</returns>
 		protected Watt InertiaPowerLoss(NewtonMeter torque, PerSecond angularVelocity)
 		{
-			// TODO: consider simulation interval!
 			var deltaEngineSpeed = angularVelocity - _previousState.EngineSpeed;
-			var avgEngineSpeed = (_previousState.EngineSpeed + angularVelocity) / 2;
+			// TODO: consider simulation interval! (not simply divide by 1 Second but the current dt)
+			var avgEngineSpeed = (_previousState.EngineSpeed + angularVelocity) / 2.SI<Second>();
+
 			var result = _data.Inertia * deltaEngineSpeed * avgEngineSpeed;
 			return result.Cast<Watt>();
 		}

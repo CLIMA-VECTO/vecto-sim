@@ -157,7 +157,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			var plossdiff = data.Sum(ModalResultField.PlossDiff);
 			var plossgb = data.Sum(ModalResultField.PlossGB);
 			if ((plossdiff ?? plossgb) != null) {
-				row[ETRANSM] = plossdiff ?? 0.SI() + plossgb ?? 0.SI();
+				row[ETRANSM] = plossdiff ?? 0.SI<Watt>() + plossgb ?? 0.SI<Watt>();
 			}
 			row[ERETARDER] = data.Sum(ModalResultField.PlossRetarder).DefaultIfNull();
 

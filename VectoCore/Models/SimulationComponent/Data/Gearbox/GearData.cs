@@ -6,7 +6,7 @@
 
 		public TransmissionLossMap LossMap { get; internal set; }
 
-		public GearFullLoadCurve FullLoadCurve { get; internal set; }
+		public FullLoadCurve FullLoadCurve { get; internal set; }
 
 		public double Ratio { get; internal set; }
 

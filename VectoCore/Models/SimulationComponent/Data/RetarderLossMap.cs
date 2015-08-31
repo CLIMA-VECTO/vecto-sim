@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
@@ -28,8 +27,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			if (HeaderIsValid(data.Columns)) {
 				entries = CreateFromColumnNames(data);
 			} else {
-				var log = LogManager.GetLogger<RetarderLossMap>();
-				log.WarnFormat(
+				Logger<RetarderLossMap>().Warn(
 					"RetarderLossMap: Header Line is not valid. Expected: '{0}, {1}', Got: '{2}'. Falling back to column index.",
 					Fields.RetarderSpeed, Fields.TorqueLoss,
 					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
@@ -49,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			int idx;
 			if (angularVelocity < _entries[0].RetarderSpeed) {
-				Log.InfoFormat("requested rpm below minimum rpm in retarder loss map - extrapolating. n: {0}, rpm_min: {1}",
+				Log.Info("requested rpm below minimum rpm in retarder loss map - extrapolating. n: {0}, rpm_min: {1}",
 					angularVelocity.ConvertTo().Rounds.Per.Minute, _entries[0].RetarderSpeed.ConvertTo().Rounds.Per.Minute);
 				idx = 1;
 			} else {

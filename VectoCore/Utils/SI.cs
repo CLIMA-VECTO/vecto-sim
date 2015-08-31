@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -43,6 +44,14 @@ namespace TUGraz.VectoCore.Utils
 			return new Scalar(si1.Val + si2.Val);
 		}
 
+		/// <summary>
+		/// Implements the operator +.
+		/// </summary>
+		/// <param name="si1">The si1.</param>
+		/// <param name="si2">The si2.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
 		[DebuggerHidden]
 		public static Scalar operator +(Scalar si1, double si2)
 		{
@@ -159,6 +168,20 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		protected MeterPerSquareSecond(double val) : base(new SI(val).Meter.Per.Square.Second) {}
+
+		/// <summary>
+		/// Implements the operator /.
+		/// </summary>
+		/// <param name="meterPerSecond">The meter per second.</param>
+		/// <param name="meterPerSquareSecond">The meter per square second.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
+		public static Second operator /(MeterPerSecond meterPerSecond, MeterPerSquareSecond meterPerSquareSecond)
+		{
+			return ((meterPerSecond as SI) / meterPerSquareSecond).Cast<Second>();
+		}
 	}
 
 	/// <summary>
@@ -317,6 +340,7 @@ namespace TUGraz.VectoCore.Utils
 	/// <summary>
 	/// SI Class for one per second [1/s].
 	/// </summary>
+	[DebuggerDisplay("rad/s: {this} | rpm: {ConvertTo().Rounds.Per.Minute}")]
 	public class PerSecond : SIBase<PerSecond>
 	{
 		static PerSecond()
@@ -331,6 +355,7 @@ namespace TUGraz.VectoCore.Utils
 	/// <summary>
 	/// SI Class for Meter per second [m/s].
 	/// </summary>
+	[DebuggerDisplay("{this} | {ConvertTo().Kilo.Meter.Per.Hour}")]
 	public class MeterPerSecond : SIBase<MeterPerSecond>
 	{
 		static MeterPerSecond()
@@ -354,11 +379,54 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return ((meterPerSecond as SI) / meter).Cast<PerSecond>();
 		}
+
+		/// <summary>
+		/// Implements the operator /.
+		/// </summary>
+		/// <param name="second">The second.</param>
+		/// <param name="meterPerSecond">The meter per second.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
+		public static Second operator /(Meter second, MeterPerSecond meterPerSecond)
+		{
+			return (second / (meterPerSecond as SI)).Cast<Second>();
+		}
+
+		/// <summary>
+		/// Implements the operator *.
+		/// </summary>
+		/// <param name="meterPerSecond">The meter per second.</param>
+		/// <param name="second">The second.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
+		public static Meter operator *(MeterPerSecond meterPerSecond, Second second)
+		{
+			return ((meterPerSecond as SI) * second).Cast<Meter>();
+		}
+
+		/// <summary>
+		/// Implements the operator *.
+		/// </summary>
+		/// <param name="meterPerSecond">The meter per second.</param>
+		/// <param name="second">The second.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
+		public static Meter operator *(Second second, MeterPerSecond meterPerSecond)
+		{
+			return (second * (meterPerSecond as SI)).Cast<Meter>();
+		}
 	}
 
 	/// <summary>
 	/// SI Class for Rounds per minute [rpm] (automatically converts internally to radian per second)
 	/// </summary>
+	[DebuggerDisplay("rad/s: {this} | rpm: {ConvertTo().Rounds.Per.Minute}")]
 	public class RoundsPerMinute : SIBase<RoundsPerMinute>
 	{
 		static RoundsPerMinute()
@@ -427,6 +495,7 @@ namespace TUGraz.VectoCore.Utils
 		/// Creates the specified special SI object.
 		/// </summary>
 		/// <param name="val">The value of the SI object.</param>
+		[DebuggerHidden]
 		public static T Create(double val)
 		{
 			RuntimeHelpers.RunClassConstructor(typeof(T).TypeHandle);
@@ -446,6 +515,11 @@ namespace TUGraz.VectoCore.Utils
 		/// Initializes a new instance of the <see cref="SIBase{T}"/> class. Is used by specialized sub classes.
 		/// </summary>
 		protected SIBase(SI si) : base(si) {}
+
+		public new T Abs()
+		{
+			return base.Abs().Cast<T>();
+		}
 
 		#region Operators
 
@@ -676,6 +750,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="reciproc">if set to <c>true</c> then the object is in reciproc mode (1/...)</param>
 		/// <param name="reverse">if set to <c>true</c> then the object is in reverse convertion mode (e.g. rpm/min => rad/s).</param>
 		/// <param name="exponent">The exponent for further conversions (e.g. Square.Meter).</param>
+		[DebuggerHidden]
 		protected SI(double val, IEnumerable<Unit> numerator, IEnumerable<Unit> denominator, bool reciproc = false,
 			bool reverse = false, int exponent = 1)
 		{
@@ -799,6 +874,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Converts the derived SI units to the basic units and returns this as a new SI object.
 		/// </summary>
+		[DebuggerHidden]
 		public SI ToBasicUnits()
 		{
 			var numerator = new List<Unit>();
@@ -843,6 +919,10 @@ namespace TUGraz.VectoCore.Utils
 					numerator.Add(Unit.k);
 					numerator.Add(Unit.g);
 					break;
+				case Unit.min:
+					factor *= 60;
+					numerator.Add(Unit.s);
+					break;
 				default:
 					numerator.Add(unit);
 					break;
@@ -852,6 +932,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Gets the underlying scalar double value.
 		/// </summary>
+		[DebuggerHidden]
 		public double Value()
 		{
 			return Val;
@@ -869,9 +950,18 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Returns the absolute value.
 		/// </summary>
-		public SI Abs()
+		public virtual SI Abs()
 		{
 			return new SI(Math.Abs(Val), this);
+		}
+
+		/// <summary>
+		/// Returns the numerical sign of the SI.
+		/// </summary>
+		/// <returns>-1 if si &lt; 0. 0 if si==0, 1 if si &gt; 0.</returns>
+		public int Sign()
+		{
+			return Math.Sign(Val);
 		}
 
 		/// <summary>
@@ -1395,6 +1485,46 @@ namespace TUGraz.VectoCore.Utils
 			return si1 != null && si1.Val >= d;
 		}
 
+		/// <summary>
+		/// Implements the operator &gt;=.
+		/// </summary>
+		/// <param name="d">The d.</param>
+		/// <param name="si1">The lower.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		[DebuggerHidden]
+		public static bool operator >=(double d, SI si1)
+		{
+			Contract.Requires(si1 != null);
+			return si1 != null && d >= si1.Val;
+		}
+
+		/// <summary>
+		/// Implements the operator &lt;=.
+		/// </summary>
+		/// <param name="d">The d.</param>
+		/// <param name="si1">The lower.</param>
+		/// <returns>
+		/// The result of the operator.
+		/// </returns>
+		public static bool operator <=(double d, SI si1)
+		{
+			Contract.Requires(si1 != null);
+			return si1 != null && d <= si1.Val;
+		}
+
+		/// <summary>
+		/// Determines whether the SI is between lower and uppper bound.
+		/// </summary>
+		/// <param name="lower">The lower bound.</param>
+		/// <param name="upper">The upper bound.</param>
+		/// <returns></returns>
+		public bool IsBetween(SI lower, SI upper)
+		{
+			return lower <= Val && Val <= upper;
+		}
+
 		#endregion
 
 		#region ToString
@@ -1452,6 +1582,7 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="si">The si.</param>
 		/// <returns></returns>
+		[DebuggerHidden]
 		public bool HasEqualUnit(SI si)
 		{
 			Contract.Requires(si != null);

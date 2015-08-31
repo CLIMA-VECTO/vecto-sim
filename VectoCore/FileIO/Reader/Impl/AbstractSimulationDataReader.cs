@@ -19,7 +19,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 		public void SetJobFile(string filename)
 		{
-			ReadJobFile(filename);
+			Job = ReadJobFile(filename);
 			ProcessJob(Job);
 		}
 
@@ -34,15 +34,18 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		/// <summary>
 		/// has to read the file string and create file-container
 		/// </summary>
-		protected abstract void ReadJobFile(string file);
+		protected abstract VectoJobFile ReadJobFile(string file);
 
 		/// <summary>
 		/// has to read the file string and create file-container
 		/// </summary>
-		protected abstract void ReadVehicle(string file);
+		protected abstract VectoVehicleFile ReadVehicle(string file);
 
-		protected abstract void ReadEngine(string file);
+		protected abstract VectoEngineFile ReadEngine(string file);
 
-		protected abstract void ReadGearbox(string file);
+		protected abstract VectoGearboxFile ReadGearbox(string file);
+
+		protected abstract IList<VectoRunData.AuxData> ReadAuxiliary(string basePath,
+			IEnumerable<VectoAuxiliaryFile> auxiliaries);
 	}
 }

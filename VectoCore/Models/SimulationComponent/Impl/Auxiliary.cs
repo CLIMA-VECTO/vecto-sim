@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
@@ -54,7 +53,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var powerDemand = ComputePowerDemand(engineSpeed);
 
-			return _outPort.Request(absTime, dt, torque + powerDemand / engineSpeed, engineSpeed);
+			return _outPort.Request(absTime, dt, torque + powerDemand / engineSpeed, engineSpeed, dryRun);
 		}
 
 		private Watt ComputePowerDemand(PerSecond engineSpeed)
@@ -111,7 +110,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			if (!cycle.CycleData().LeftSample.AuxiliarySupplyPower.ContainsKey("Aux_" + auxId)) {
 				var error = string.Format("driving cycle does not contain column for auxiliary: {0}", auxId);
-				LogManager.GetLogger(GetType()).ErrorFormat(error);
+				Log.Error(error);
 				throw new VectoException(error);
 			}
 

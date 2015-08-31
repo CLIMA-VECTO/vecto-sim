@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.FileIO.DeclarationFile
 {
@@ -102,7 +101,7 @@ namespace TUGraz.VectoCore.FileIO.DeclarationFile
 			//[JsonProperty(Required = Required.Always)] public LACData LAC;
 			[JsonProperty(Required = Required.Always)] public OverSpeedEcoRollDataDecl OverSpeedEcoRoll;
 
-			public class AuxDataDecl
+			public class AuxDataDecl : VectoAuxiliaryFile
 			{
 				[JsonProperty(Required = Required.Always)] public string ID;
 				[JsonProperty(Required = Required.Always)] public string Type;

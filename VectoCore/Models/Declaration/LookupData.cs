@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using Common.Logging;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public abstract class LookupData
+	public abstract class LookupData : LoggingObject
 	{
-		protected LookupData()
-		{
-			Log = LogManager.GetLogger(GetType());
-		}
-
-		[NonSerialized] protected ILog Log;
-
 		protected abstract void ParseData(DataTable table);
 
 		protected DataTable ReadCsvResource(string resourceId)

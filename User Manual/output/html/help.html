@@ -6,12 +6,16 @@
   <meta name="generator" content="pandoc" />
   <title></title>
   <style type="text/css">code{white-space: pre;}</style>
-  <link rel="stylesheet" href="style.css" type="text/css" />
   <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="include.js"></script>
 </head>
 <body>
 <div id="TOC">
 <ul>
+<li><a href="#user-manual">User Manual</a></li>
 <li><a href="#user-interface">User Interface</a></li>
 <li><a href="#main-form">Main Form</a><ul>
 <li><a href="#description">Description</a></li>
@@ -249,7 +253,16 @@
 </ul></li>
 </ul>
 </div>
-<h1 id="user-interface">User Interface</h1>
+<div id="user-manual" class="section level1">
+<h1>User Manual</h1>
+<div class="figure">
+<img src="pics/VECTOlarge.png" alt="" />
+
+</div>
+<p><strong>VECTO 2.2</strong></p>
+</div>
+<div id="user-interface" class="section level1">
+<h1>User Interface</h1>
 <p>When VECTO starts the <a href="#main-form">Main Form</a> is loaded. Closing this form will close VECTO even if other dialogs are still open.</p>
 <ul>
 <li><a href="#main-form">Main Form</a>
@@ -265,12 +278,15 @@
 <li><a href="#gearbox-editor">Gearbox Editor</a></li>
 <li><a href="#graph-window">Graph Window</a></li>
 </ul>
-<h1 id="main-form">Main Form</h1>
+</div>
+<div id="main-form" class="section level1">
+<h1>Main Form</h1>
 <div class="figure">
 <img src="pics/mainform.svg" alt="" />
 
 </div>
-<h2 id="description">Description</h2>
+<div id="description" class="section level2">
+<h2>Description</h2>
 <p>The Main Form is loaded when starting VECTO. Closing this form will close VECTO even if other dialogs are still open. In this form all global settings can be controlled and all other application dialogs can be opened.</p>
 <p>In order to start a calculation the <a href="#calculation-modes">Calculation Mode</a> must be set and at least one <a href="#job-editor">Job File (.vecto)</a> must added to the Job List. After clicking START all checked files in the Job List will be calculated.</p>
 <dl>
@@ -282,8 +298,11 @@
 </ul>
 </dd>
 </dl>
-<h2 id="job-files-tab">Job Files Tab</h2>
-<h3 id="job-files-list">Job Files List</h3>
+</div>
+<div id="job-files-tab" class="section level2">
+<h2>Job Files Tab</h2>
+<div id="job-files-list" class="section level3">
+<h3>Job Files List</h3>
 <p>Job files (.vecto) listed here will be used for calculation. Unchecked files will be ignored! Doubleclick entries to edit job files with the <a href="#job-editor">VECTO Editor</a>.</p>
 <dl>
 <dt><img src="pics/checkbox.png" alt="cb" /> All</dt>
@@ -293,7 +312,8 @@
 <p><img src="pics/plus-circle-icon.png" alt="add" /> <strong><em>Add files to Job List</em></strong></p>
 <p><img src="pics/minus-circle-icon.png" alt="remove" /> <strong><em>Remove selected files from List</em></strong></p>
 <p><img src="pics/Actions-arrow-up-icon.png" alt="up" /><img src="pics/Actions-arrow-down-icon.png" alt="down" /> <strong><em>Move selected files up or down in list</em></strong></p>
-<h4 id="list-options">List Options</h4>
+<div id="list-options" class="section level4">
+<h4>List Options</h4>
 <ul>
 <li><strong>Save/Load List</strong>
 <ul>
@@ -312,15 +332,23 @@
 <li>Remove paths, i.e. only file names remain using the Working Directory as source path.</li>
 </ul></li>
 </ul>
-<h3 id="start-start-button"><img src="pics/Play-icon.png" alt="START" /> <strong><em>START Button</em></strong></h3>
+</div>
+</div>
+<div id="start-start-button" class="section level3">
+<h3><img src="pics/Play-icon.png" alt="START" /> <strong><em>START Button</em></strong></h3>
 <p>Start VECTO in the selected mode (see <a href="#options-tab">Options</a>).</p>
-<h2 id="driving-cycles-tab">Driving Cycles Tab</h2>
+</div>
+</div>
+<div id="driving-cycles-tab" class="section level2">
+<h2>Driving Cycles Tab</h2>
 <dl>
 <dt>Driving Cycle List</dt>
 <dd>The Driving Cycles List is only used in <a href="#batch-mode">Batch Mode</a>. The same controls are used as in the Job Files List.
 </dd>
 </dl>
-<h2 id="options-tab">Options Tab</h2>
+</div>
+<div id="options-tab" class="section level2">
+<h2>Options Tab</h2>
 <p>In this tab the global calculation settings can be changed.</p>
 <dl>
 <dt><img src="pics/checkbox.png" alt="" /> Declaration Mode</dt>
@@ -353,7 +381,9 @@
 <dd>If activated a subdirectory for each job file will be created inside <strong>Output Path</strong> for modal output.
 </dd>
 </dl>
-<h2 id="controls">Controls</h2>
+</div>
+<div id="controls" class="section level2">
+<h2>Controls</h2>
 <dl>
 <dt><img src="pics/blue-document-icon.png" alt="new" /> New Job File</dt>
 <dd>Create a new .vecto file using the <a href="#job-editor">VECTO Editor</a>
@@ -413,14 +443,20 @@
 <dd>Displays current status and progress of running calculations. When no calculation is running the current mode is displayed (Standard, Batch or Declaration Mode).
 </dd>
 </dl>
-<h1 id="settings">Settings</h1>
+</div>
+</div>
+<div id="settings" class="section level1">
+<h1>Settings</h1>
 <div class="figure">
 <img src="pics/Settings.svg" alt="" />
 
 </div>
-<h2 id="description-1">Description</h2>
+<div id="description-1" class="section level2">
+<h2>Description</h2>
 <p>In the Settings dialog controls general application settings. The settings are saved in the <a href="#application-files">settings.json</a> file.</p>
-<h2 id="interface-settings">Interface Settings</h2>
+</div>
+<div id="interface-settings" class="section level2">
+<h2>Interface Settings</h2>
 <dl>
 <dt>Logfile Size Limit [MB]</dt>
 <dd>Whenever the <a href="#application-files">Log File</a> reaches this size it will be restarted. One backup is always stored as LOG_backup.txt.
@@ -433,7 +469,9 @@
 <dd><p><strong><em>Example</em></strong> <em>: If the command is</em> <strong><em>excel</em></strong> <em>and the file is</em> <strong><em>C:\VECTO\cycle1.vdri</em></strong> <em>then VECTO will run:</em> <strong><em>excel “C:\VECTO\cycle1.vdri”</em></strong></p>
 </dd>
 </dl>
-<h2 id="calculation-settings">Calculation Settings</h2>
+</div>
+<div id="calculation-settings" class="section level2">
+<h2>Calculation Settings</h2>
 <dl>
 <dt>Air Density [kg/m³]</dt>
 <dd>The Air Density is needed to calculate the air resistance together with the <strong>Drag Coefficient</strong> and the <strong>Cross Sectional Area</strong> (see <a href="#vehicle-editor">Vehicle Editor</a>).
@@ -445,7 +483,9 @@
 <dd>Mass ratio (kg<sub>CO2</sub> / kg<sub>FC</sub>) used to calculate CO<sub>2</sub> emissions.
 </dd>
 </dl>
-<h2 id="controls-1">Controls</h2>
+</div>
+<div id="controls-1" class="section level2">
+<h2>Controls</h2>
 <dl>
 <dt>Reset All Settings</dt>
 <dd>All values in the Settings dialog and Options Tab of the <a href="#main-form">Main Form</a> will be restored to default values.
@@ -453,12 +493,16 @@
 </dl>
 <p><img src="pics/OK.png" alt="" /> <strong><em>Save and close dialog</em></strong></p>
 <p><img src="pics/Cancel.png" alt="" /> <strong><em>Close without saving</em></strong></p>
-<h1 id="job-editor">Job Editor</h1>
+</div>
+</div>
+<div id="job-editor" class="section level1">
+<h1>Job Editor</h1>
 <div class="figure">
 <img src="pics/VECTO-Editor.svg" alt="" />
 
 </div>
-<h2 id="description-2">Description</h2>
+<div id="description-2" class="section level2">
+<h2>Description</h2>
 <p>The job file (.vecto) includes all informations to run a VECTO calculation. It defines the vehicle and the driving cycle(s) to be used for calculation. In summary it defines:</p>
 <ul>
 <li>Filepath to the <a href="#vehicle-editor">Vehicle File (.vveh)</a> which defines the not-engine/gearbox-related vehicle parameters</li>
@@ -468,10 +512,14 @@
 <li>Driver Assist parameters</li>
 <li>Driving Cycles (not used in Batch Mode)</li>
 </ul>
-<h2 id="relative-file-paths">Relative File Paths</h2>
+</div>
+<div id="relative-file-paths" class="section level2">
+<h2>Relative File Paths</h2>
 <p>It is recommended to define relative filepaths. This way the Job File and all input files can be moved without having to update the paths. Example: “Vehicles\Vehicle1.vveh” points to the “Vehicles” subdirectory of the Job File’s directoy.</p>
 <p>VECTO automatically uses relative paths if the input file (e.g. Vehicle File) is in the same directory as the Job File. (The Job File must be saved before browsing for input files.)</p>
-<h2 id="general-settings">General Settings</h2>
+</div>
+<div id="general-settings" class="section level2">
+<h2>General Settings</h2>
 <dl>
 <dt><img src="pics/checkbox.png" alt="" /> Engine Only Mode</dt>
 <dd><p>Enables <a href="#engine-only-mode">Engine Only Mode</a>. Only the following parameters are needed for this mode:</p>
@@ -508,7 +556,9 @@
 <dd><img src="pics/minus-circle-icon.png" alt="remcycle" /> Remove the selected cycle from the list
 </dd>
 </dl>
-<h2 id="driver-assist-tab">Driver Assist Tab</h2>
+</div>
+<div id="driver-assist-tab" class="section level2">
+<h2>Driver Assist Tab</h2>
 <p>In this tab the driver assistance functions are enabled and parameterised.</p>
 <dl>
 <dt>Engine Start/Stop</dt>
@@ -524,9 +574,13 @@
 <dd>See <a href="#acceleration-limiting">Acceleration Limiting</a> for details.
 </dd>
 </dl>
-<h2 id="chart-area">Chart Area</h2>
+</div>
+<div id="chart-area" class="section level2">
+<h2>Chart Area</h2>
 <p>If a valid <a href="#vehicle-editor">Vehicle File</a>, <a href="#engine-editor">Engine File</a> and <a href="#gearbox-editor">Gearbox File</a> is loaded into the Editor the main vehicle parameters like HDV class and axle configuration are shown here. The plot shows the full load curve(s) and shift polygons. In <a href="#declaration-mode">Declaration Mode</a> the <strong>generic</strong> shift polygons are shown, not the ones from the Gearbox File.</p>
-<h2 id="controls-2">Controls</h2>
+</div>
+<div id="controls-2" class="section level2">
+<h2>Controls</h2>
 <dl>
 <dt><img src="pics/blue-document-icon.png" alt="new" /> New Job File</dt>
 <dd>Create a new empty .vecto file
@@ -552,15 +606,21 @@
 </dd>
 </dl>
 <p><img src="pics/Cancel.png" alt="Cancel" /> <strong><em>Cancel without saving</em></strong></p>
-<h1 id="auxiliary-dialog">Auxiliary Dialog</h1>
+</div>
+</div>
+<div id="auxiliary-dialog" class="section level1">
+<h1>Auxiliary Dialog</h1>
 <div class="figure">
 <img src="pics/VECTO-Editor_Aux.png" alt="" />
 
 </div>
-<h2 id="description-3">Description</h2>
+<div id="description-3" class="section level2">
+<h2>Description</h2>
 <p>The Auxiliary Dialog is used to configure auxiliaries. Auxiliary efficieny is defined using an <a href="#auxiliary-input-file-.vaux">Auxiliary Input File (.vaux)</a>. See <a href="#auxiliaries">Auxiliaries</a> for details on how the power demand for each auxiliary is calculated.</p>
 <p>In <a href="#declaration-mode">Declaration Mode</a> only the Technology for each auxiliary has to be selected.</p>
-<h2 id="settings-1">Settings</h2>
+</div>
+<div id="settings-1" class="section level2">
+<h2>Settings</h2>
 <dl>
 <dt>Type</dt>
 <dd>String defining type of auxiliary. Click the arrow to load from a predefined list, however It is not required to use a type from the list.
@@ -572,20 +632,30 @@
 <dd>Path to the <a href="#auxiliary-input-file-.vaux">Auxiliary File (.vaux)</a>.
 </dd>
 </dl>
-<h2 id="controls-3">Controls</h2>
+</div>
+<div id="controls-3" class="section level2">
+<h2>Controls</h2>
 <p><img src="pics/OK.png" alt="ok" /> <strong><em>Save and close</em></strong></p>
 <p><img src="pics/Cancel.png" alt="cancel" /> <strong><em>Close without saving</em></strong></p>
-<h1 id="vehicle-editor">Vehicle Editor</h1>
+</div>
+</div>
+<div id="vehicle-editor" class="section level1">
+<h1>Vehicle Editor</h1>
 <div class="figure">
 <img src="pics/VEH-Editor.png" alt="" />
 
 </div>
-<h2 id="description-4">Description</h2>
+<div id="description-4" class="section level2">
+<h2>Description</h2>
 <p>The Vehicle File (.vveh) defines the main vehicle/chassis parameters like axles including <a href="#rolling-resistance-coefficient">RRC</a>s, air resistance and weight.</p>
-<h2 id="relative-file-paths-1">Relative File Paths</h2>
+</div>
+<div id="relative-file-paths-1" class="section level2">
+<h2>Relative File Paths</h2>
 <p>It is recommended to define relative filepaths. This way the Job File and all input files can be moved without having to update the paths. Example: “Demo1.vrlm” points to the “Demo” subdirectory of the Vehicle File’s directoy.</p>
 <p>VECTO automatically uses relative paths if the input file (e.g. Retarder Losses File) is in the same directory as the Vehicle File. (The Vehicle File must be saved before browsing for input files.)</p>
-<h2 id="general-vehicle-parameters">General vehicle parameters</h2>
+</div>
+<div id="general-vehicle-parameters" class="section level2">
+<h2>General vehicle parameters</h2>
 <dl>
 <dt>Vehicle Category</dt>
 <dd>Needed for <a href="#declaration-mode">Declaration Mode</a> to identify the HDV Class.
@@ -600,12 +670,18 @@
 <dd>Displays the automatically selected HDV Class depending on the settings above.
 </dd>
 </dl>
-<h2 id="weightloading">Weight/Loading</h2>
+</div>
+<div id="weightloading" class="section level2">
+<h2>Weight/Loading</h2>
 <p>These fields define the weight and loading of the vehicle. <strong>Max. Loading</strong> displayes the maximum possible loading for the selected vehicle depending on curb weight and GVW values.</p>
 <p><strong><em>Note:</em></strong> <em>VECTO uses the sum of</em> <strong><em>Curb Weight Vehicle, Curb Weight Extra Trailer/Body</em></strong> <em>and</em> <strong><em>Loading</em></strong> <em>for calculation!</em></p>
-<h2 id="air-resistance">Air Resistance</h2>
+</div>
+<div id="air-resistance" class="section level2">
+<h2>Air Resistance</h2>
 <p>The product of Drag Coefficient [-] and Cross Sectional Area [m²] (<strong>c<sub>d</sub> x A</strong>) and <strong>Air Density</strong> [kg/m³] (see <a href="#settings">Settings</a>) together with the vehicle speed defines the Air Resistance. Note that the Drag Coefficient may be altered when using <a href="#cross-wind-correction"><strong>Cross Wind Correction</strong></a>.</p>
-<h2 id="axleswheels">Axles/Wheels</h2>
+</div>
+<div id="axleswheels" class="section level2">
+<h2>Axles/Wheels</h2>
 <p>For each axle the parameters <strong>Relative axle load, RRC<sub>ISO</sub></strong> and <strong>F<sub>zISO</sub></strong> have to be defined in order to calculate the total <a href="#rolling-resistance-coefficient">Rolling Resistance Coefficient</a>. Furthermore the <strong>Wheels Inertia [kgm²]</strong> has to be set per wheel for each axle. In <a href="#declaration-mode">Declaration Mode</a> the inertia is defined automatically according to the selected tyres. Use the <img src="pics/plus-circle-icon.png" alt="" /> and <img src="pics/minus-circle-icon.png" alt="" /> buttons to add or remove axles form the vehicle. Doubleclick entries to edit existing axle configurations.</p>
 <dl>
 <dt>Dynamic Tyre Radius [mm]</dt>
@@ -615,7 +691,9 @@
 <dd>Needed for <a href="#declaration-mode">Declaration Mode</a> to calculate the dynamic tyre radius.
 </dd>
 </dl>
-<h2 id="retarder-losses">Retarder Losses</h2>
+</div>
+<div id="retarder-losses" class="section level2">
+<h2>Retarder Losses</h2>
 <p>If available a <strong>Retarder Torque Loss Map</strong> can be defined here to consider idling losses caused by the retarder. <strong><em>Note: Do not use this function if the retarder’s losses are already included in the Transmission Loss Maps!</em></strong></p>
 <dl>
 <dt>Three options are available:</dt>
@@ -627,7 +705,9 @@
 </dd>
 </dl>
 <p>Both, primary and secondary retarders, require an <a href="#retarder-loss-torque-input-file-.vrlm">Retarder Loss Torque Input File (.vrlm)</a>.</p>
-<h2 id="cross-wind-correction">Cross Wind Correction</h2>
+</div>
+<div id="cross-wind-correction" class="section level2">
+<h2>Cross Wind Correction</h2>
 <dl>
 <dt>Three different options are available:</dt>
 <dd><ul>
@@ -639,7 +719,9 @@
 </dd>
 </dl>
 <p>Depending on the chosen mode either a <a href="#speed-dependent-cross-wind-correction-input-file-.vcdv">Speed Dependent Cross Wind Correction Input File (.vcdv)</a> or a <a href="#speed-dependent-cross-wind-correction-input-file-.vcdv">Vair &amp; Beta Cross Wind Correction Input File (.vcdb)</a> must be defined. For details see <a href="#cross-wind-correction">Cross Wind Correction</a>.</p>
-<h2 id="controls-4">Controls</h2>
+</div>
+<div id="controls-4" class="section level2">
+<h2>Controls</h2>
 <dl>
 <dt><img src="pics/blue-document-icon.png" alt="" /> New file</dt>
 <dd>Create a new empty .vveh file
@@ -659,18 +741,26 @@
 </dd>
 </dl>
 <p><img src="pics/Cancel.png" alt="" /> <strong><em>Cancel without saving</em></strong></p>
-<h1 id="engine-editor">Engine Editor</h1>
+</div>
+</div>
+<div id="engine-editor" class="section level1">
+<h1>Engine Editor</h1>
 <div class="figure">
 <img src="pics/ENG-Editor.svg" alt="" />
 
 </div>
-<h2 id="description-5">Description</h2>
+<div id="description-5" class="section level2">
+<h2>Description</h2>
 <p>The Engine File (.veng) defines all engine-related parameters and input files like Fuel Consumption Map and Full Load Curves.</p>
-<h2 id="relative-file-paths-2">Relative File Paths</h2>
+</div>
+<div id="relative-file-paths-2" class="section level2">
+<h2>Relative File Paths</h2>
 <p>It is recommended to define relative filepaths. This way the Job File and all input files can be moved without having to update the paths.</p>
 <p>Example: “Demo\FLD1.vfld” points to the “Demo” subdirectory of the Engine File’s directory.</p>
 <p>VECTO automatically uses relative paths if the input file (e.g. FC Map) is in the same directory as the Engine File. The Engine File must be saved before browsing for input files.)</p>
-<h2 id="main-engine-parameters">Main Engine Parameters</h2>
+</div>
+<div id="main-engine-parameters" class="section level2">
+<h2>Main Engine Parameters</h2>
 <dl>
 <dt>Make and Model</dt>
 <dd>Free text defining the engine model, type, etc.
@@ -685,17 +775,27 @@
 <dd>Inertia for rotating parts including engine flywheel. In <a href="#declaration-mode">Declaration Mode</a> the inertia is calculated automatically.
 </dd>
 </dl>
-<h2 id="full-load-and-drag-curves">Full Load and Drag Curves</h2>
+</div>
+<div id="full-load-and-drag-curves" class="section level2">
+<h2>Full Load and Drag Curves</h2>
 <p>The <a href="#full-load-and-drag-curves-.vfld">Full Load and Drag Curves (.vfld)</a> Note that gear-specific full load curves can be defined in the <a href="#gearbox-editor">Gearbox File</a> to limit the maximum gearbox input torque.</p>
 <p>The input file (.vfld) file format is described <a href="#full-load-and-drag-curves-.vfld">here</a>.</p>
-<h2 id="fuel-consumption-map">Fuel Consumption Map</h2>
+</div>
+<div id="fuel-consumption-map" class="section level2">
+<h2>Fuel Consumption Map</h2>
 <p>The <a href="#fuel-consumption-map-.vmap">Fuel Consumption Map</a> is used to calculate the base FC value. See <a href="#fuel-consumption-calculation">Fuel Consumption Calculation</a> for details.</p>
 <p>The input file (.vmap) file format is described <a href="#fuel-consumption-map-.vmap">here</a>.</p>
-<h2 id="whtc-correction-factors">WHTC Correction Factors</h2>
+</div>
+<div id="whtc-correction-factors" class="section level2">
+<h2>WHTC Correction Factors</h2>
 <p>The WHTC Corretion Factors are required in <a href="#declaration-mode">Declaration Mode</a> for the <a href="#fuel-consumption-calculation">WHTC FC Correction</a>.</p>
-<h2 id="chart-area-1">Chart Area</h2>
+</div>
+<div id="chart-area-1" class="section level2">
+<h2>Chart Area</h2>
 <p>The Chart Area shows the fuel consumption map and the selected full load curve.</p>
-<h2 id="controls-5">Controls</h2>
+</div>
+<div id="controls-5" class="section level2">
+<h2>Controls</h2>
 <dl>
 <dt><img src="pics/blue-document-icon.png" alt="new" />New file</dt>
 <dd>Create a new empty .veng file
@@ -720,18 +820,26 @@
 </dd>
 </dl>
 <p><img src="pics/Cancel.png" alt="Cancel" /><strong><em>Cancel without saving</em></strong></p>
-<h1 id="gearbox-editor">Gearbox Editor</h1>
+</div>
+</div>
+<div id="gearbox-editor" class="section level1">
+<h1>Gearbox Editor</h1>
 <div class="figure">
 <img src="pics/GBX-Editor.svg" alt="" />
 
 </div>
-<h2 id="description-6">Description</h2>
+<div id="description-6" class="section level2">
+<h2>Description</h2>
 <p>The Gearbox File (.vgbx) defines alls gearbox-related input parameters like gear ratios and transmission loss maps. See <a href="#gear-shift-model">Gear Shift Model</a> for details.</p>
-<h2 id="relative-file-paths-3">Relative File Paths</h2>
+</div>
+<div id="relative-file-paths-3" class="section level2">
+<h2>Relative File Paths</h2>
 <p>It is recommended to define relative filepaths. This way the Job File and all input files can be moved without having to update the paths.<br />
 Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Gearbox File’s directoy.</p>
 <p>VECTO automatically uses relative paths if the input file (e.g. Shift Polygons File) is in the same directory as the Gearbox File. (The Gearbox File must be saved before browsing for input files.)</p>
-<h2 id="main-gearbox-parameters">Main Gearbox Parameters</h2>
+</div>
+<div id="main-gearbox-parameters" class="section level2">
+<h2>Main Gearbox Parameters</h2>
 <dl>
 <dt>Make and Model</dt>
 <dd>Free text defining the gearbox model, type, etc.
@@ -755,7 +863,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <dd>Interruption during gear shift event.
 </dd>
 </dl>
-<h2 id="gears">Gears</h2>
+</div>
+<div id="gears" class="section level2">
+<h2>Gears</h2>
 <p>Use the <img src="pics/plus-circle-icon.png" alt="add" /> and <img src="pics/minus-circle-icon.png" alt="remove" /> buttons to add or remove gears form the vehicle. Doubleclick entries to edit existing gears.</p>
 <ul>
 <li>Gear <strong>“A”</strong> defines the ratio of the axle transmission / differential.</li>
@@ -764,7 +874,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <li>Column <strong>“Shift polygons”</strong> defines the <a href="#shift-polygons-input-file-.vgbs">Shift Polygons InputFile (.vgbs)</a> for each gear. Not requiredin <a href="#declaration-mode">Declaration Mode</a>. See <a href="#gear-shift-model">GearShift Model</a> for details.</li>
 <li>Column <strong>“Full Load Curves”</strong> defines the <a href="#full-load-and-drag-curves-.vfld">Full Load Curve for (.vfld)</a> each gear. It is used for torque limiting and <a href="#gear-shift-model">generic shift polygons</a> in Declaration Mode. If no file is defined the engine full load curve will be used.</li>
 </ul>
-<h2 id="gear-shift-parameters">Gear shift parameters</h2>
+</div>
+<div id="gear-shift-parameters" class="section level2">
+<h2>Gear shift parameters</h2>
 <dl>
 <dt><img src="pics/checkbox.png" alt="" /> Allow shift-up inside polygons</dt>
 <dd>See <a href="#gear-shift-model">Gear Shift Model</a>.
@@ -782,16 +894,22 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <dd>In order to calculate an appropriate gear for vehicle start (first gear after vehicle standstill) a fictional load case is calculated using a specified <strong>reference vehicle speed</strong> and <strong>reference acceleration</strong> together with the actual road gradient, transmission losses and auxiliary power demand. This way the start gear is independent from the target speed. VECTO uses the highest possible gear which provides the defined <strong>torque reserve</strong>.
 </dd>
 </dl>
-<h2 id="chart-area-2">Chart Area</h2>
+</div>
+<div id="chart-area-2" class="section level2">
+<h2>Chart Area</h2>
 <p>The Chart Area displays the <a href="#shift-polygons-input-file-.vgbs">Shift Polygons Input File(.vgbs)</a> for the selected gear.</p>
-<h2 id="torque-converter">Torque Converter</h2>
+</div>
+<div id="torque-converter" class="section level2">
+<h2>Torque Converter</h2>
 <p>The <a href="#torque-converter-model">Torque Converter Model</a> is still in development.</p>
 <dl>
 <dt>Inertia [kgm²]</dt>
 <dd>Rotational inertia of the engine-side part of the torque converter. (Gearbox-side inertia is not considered in VECTO.)
 </dd>
 </dl>
-<h2 id="controls-6">Controls</h2>
+</div>
+<div id="controls-6" class="section level2">
+<h2>Controls</h2>
 <dl>
 <dt><img src="pics/blue-document-icon.png" alt="" /> New file</dt>
 <dd>Create a new empty .vgbx file
@@ -815,18 +933,26 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </dd>
 </dl>
 <p><img src="pics/Cancel.png" alt="Cancel" /> <strong><em>Cancel without saving</em></strong></p>
-<h1 id="graph-window">Graph Window</h1>
+</div>
+</div>
+<div id="graph-window" class="section level1">
+<h1>Graph Window</h1>
 <div class="figure">
 <img src="pics/Graph.svg" alt="" />
 
 </div>
-<h2 id="description-7">Description</h2>
+<div id="description-7" class="section level2">
+<h2>Description</h2>
 <p>The Graph Window allows to visualise <a href="#modal-results-.vmod">modal results files (.vmod)</a>. Multiple windows can be open at the same time to display different files.</p>
 <p>Note that the graph does <strong>not</strong> update automatically if the results file has changed.</p>
-<h2 id="channels">Channels</h2>
+</div>
+<div id="channels" class="section level2">
+<h2>Channels</h2>
 <p>Use the <img src="pics/plus-circle-icon.png" alt="add" /> and <img src="pics/minus-circle-icon.png" alt="remove" /> buttons to add or remove channels. Doubleclick entries to edit existing channels.</p>
 <p>Each channel can be plotted either on the left or on the right Y Axis. Use the checkbox to disable channels in the graph.</p>
-<h2 id="x-axis-controls">X Axis Controls</h2>
+</div>
+<div id="x-axis-controls" class="section level2">
+<h2>X Axis Controls</h2>
 <p>The X Axis can either show distance or time.</p>
 <dl>
 <dt>Min, Max</dt>
@@ -842,11 +968,16 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <dd>Move the x axis range left/right.
 </dd>
 </dl>
-<h2 id="controls-7">Controls</h2>
+</div>
+<div id="controls-7" class="section level2">
+<h2>Controls</h2>
 <p><img src="pics/Open-icon.png" alt="open" /> <strong><em>Open a .vmod file</em></strong></p>
 <p><img src="pics/application-add-icon.png" alt="" /> <strong><em>Open a new Graph Window</em></strong></p>
 <p><img src="pics/Refresh-icon.png" alt="" /> <strong><em>Reload the currently open file</em></strong></p>
-<h1 id="calculation-modes">Calculation Modes</h1>
+</div>
+</div>
+<div id="calculation-modes" class="section level1">
+<h1>Calculation Modes</h1>
 <p>The Calculation Mode can be changed in the Options Tab of the <a href="#main-form">Main Form</a>. VECTO is running in Standard Mode when Batch Mode and Declaration Mode is disabled.</p>
 <p>Note that <a href="#engine-only-mode">Engine Only Mode</a> is not an actual calculation mode and can be set for each <a href="#job-editor">Job File</a> individually and used in Standard and Batch Mode.</p>
 <ul>
@@ -854,45 +985,65 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <li><a href="#batch-mode">Batch Mode</a></li>
 <li><a href="#declaration-mode">Declaration Mode</a></li>
 </ul>
-<h1 id="standard-mode">Standard Mode</h1>
+</div>
+<div id="standard-mode" class="section level1">
+<h1>Standard Mode</h1>
 <p>This is the default calculation mode in VECTO. It is active when both <a href="#batch-mode">Batch</a> and <a href="#declaration-mode">Declaration</a> Mode are disabled. In this mode a predefined list of job files (.vecto) is run. Each job file defines a vehicle and a list of driving cycles.</p>
-<h2 id="requirements">Requirements</h2>
+<div id="requirements" class="section level2">
+<h2>Requirements</h2>
 <ul>
 <li>One or more checked job files in the Job List</li>
 <li>Each job file must include at least one driving cycle</li>
 </ul>
-<h2 id="results">Results</h2>
+</div>
+<div id="results" class="section level2">
+<h2>Results</h2>
 <ul>
 <li>Modal results (.vmod) for each job file and driving cycle. One file for each cycle.</li>
 <li>Average/sum results (.vsum / .vsum.json). One file in total containing results for each calculation.</li>
 </ul>
-<h1 id="batch-mode">Batch Mode</h1>
+</div>
+</div>
+<div id="batch-mode" class="section level1">
+<h1>Batch Mode</h1>
 <p>In Batch Mode a list of vehicles is run with a list of driving cycles. Each vehicle defined in the Job List is calculated with each driving cycle defined in the Driving Cycle List. Note that the Driving Cycle List is only visible if Batch Mode is enabled in the Main Form / Options Tab.</p>
-<h2 id="requirements-1">Requirements</h2>
+<div id="requirements-1" class="section level2">
+<h2>Requirements</h2>
 <ul>
 <li>One or more checked job files in the Job List. The job files don’t need to include driving cycles. These are ignored in Batch mode.</li>
 <li>One or more checked driving cycles in the Dricing Cycle List</li>
 </ul>
-<h2 id="results-1">Results</h2>
+</div>
+<div id="results-1" class="section level2">
+<h2>Results</h2>
 <ul>
 <li>Modal results (.vmod) for each job file and driving cycle. One file for each vehicle/cycle combination.</li>
 <li>Average/sum results (.vsum / .vsum.json). One file in total containing results for each vehicle/cycle combination.</li>
 </ul>
-<h1 id="declaration-mode">Declaration Mode</h1>
+</div>
+</div>
+<div id="declaration-mode" class="section level1">
+<h1>Declaration Mode</h1>
 <p>In Declaration Mode all input parameters that are not user-defined in official certification are locked in the user interface and automatically defined by VECTO during calculation. Calculations will be performed for each mission profile (of the corresponding HDV class) with three different loadings each: Empty, full and with reference loading. </p>
 <p>Declaration Mode can be activated in the <a href="#main-form">Options Tab</a>.</p>
-<h2 id="requirements-2">Requirements</h2>
+<div id="requirements-2" class="section level2">
+<h2>Requirements</h2>
 <ul>
 <li>One or more checked job files in the Job List</li>
 <li>The job files don’t need to include driving cycles. These are automatically assigned.</li>
 </ul>
-<h2 id="results-2">Results</h2>
+</div>
+<div id="results-2" class="section level2">
+<h2>Results</h2>
 <ul>
 <li>Modal results (.vmod) for each job file and driving cycle. One file for each cycle.</li>
 <li>Average/sum results (.vsum / .vsum.json). One file in total containing results for each calculation.</li>
 <li>Results overview (.pdf). One file for each job file.</li>
 </ul>
-<h1 id="acceleration-limiting">Acceleration Limiting</h1>
+</div>
+</div>
+<div id="acceleration-limiting" class="section level1">
+<h1>Acceleration Limiting</h1>
 <p>VECTO limits the vehicle acceleration and deceleration according to speed-dependent limits. These limits are defined in the <a href="#acceleration-limiting-input-file-.vacc">Acceleration Limiting Input File</a> (.vacc). Note that the full load curve also limits acceleration. If the engine cannot provide the required power the vehicle might accelerate below the defined acceleration limit.</p>
 <p>This function cannot be disabled. If acceleration and/or deceleration should not be limited during calculation the values in the Acceleration Limiting file (.vacc) have to be changed accordingly.</p>
 <dl>
@@ -903,7 +1054,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </dd>
 </dl>
 <p>The input file format is described <a href="#acceleration-limiting-input-file-.vacc">here</a>.</p>
-<h1 id="auxiliaries">Auxiliaries</h1>
+</div>
+<div id="auxiliaries" class="section level1">
+<h1>Auxiliaries</h1>
 <p>In VECTO a generic map-based approach was implemented to consider all types of auxiliaries. The supply power demand for each single auxiliary is defined in the driving cycle. Hence a time/distance-dependent power demand can be defined. Based on the supply power and a pre-defined efficiency map the auxiliary input power is calculated. A constant efficiency determines the losses between auxiliary and engine.</p>
 <p>For each auxiliary the power demand is calculated using the following steps:</p>
 <div class="figure">
@@ -973,25 +1126,36 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </table>
 <p>Each auxiliary must be defined in the <a href="#job-editor">Job File</a> and each <a href="#driving-cycle-.vdri">driving cycle</a> used with this vehicle must include supply power for each auxiliary. To link the supply power in the driving cycle to the correct auxiliary in the Job File an ID is used. The corresponding supply power is then named <em>“&lt;Aux_ID&gt;”</em>.</p>
 <p><strong><em>Example:</em></strong> <em>The Auxiliary with the ID “ALT” (in the Job File) is linked to the supply power in the column “&lt;AUX_ALT&gt;” in the driving cylce.</em></p>
-<h1 id="cross-wind-correction-1">Cross Wind Correction</h1>
+</div>
+<div id="cross-wind-correction-1" class="section level1">
+<h1>Cross Wind Correction</h1>
 <p>VECTO offers two different modes to consider cross wind influence on the drag coefficient. It is configured in the <a href="#vehicle-editor">Vehicle File</a>.</p>
-<h2 id="speed-dependent-correction-declaration-mode">Speed dependent correction (Declaration Mode)</h2>
+<div id="speed-dependent-correction-declaration-mode" class="section level2">
+<h2>Speed dependent correction (Declaration Mode)</h2>
 <p>This is the default mode which is used in <a href="#declaration-mode">Declaration Mode</a>. The speed dependent c<sub>d</sub> x A curve (see below) is calculated based on generic parameters for each vehicle class and the base c<sub>d</sub> x A value form the <a href="#vehicle-editor">Vehicle File</a>.</p>
-<h2 id="speed-dependent-correction-user-defined">Speed dependent correction (User-defined)</h2>
+</div>
+<div id="speed-dependent-correction-user-defined" class="section level2">
+<h2>Speed dependent correction (User-defined)</h2>
 <p>The base c<sub>d</sub> x A value (see <a href="#vehicle-editor">Vehicle File</a>) is corrected with a user-defined speed dependent scaling function. The input file (.vcdv) format is described <a href="#speed-dependent-cross-wind-correction-input-file-.vcdv">here</a>.</p>
 <div class="figure">
 <img src="pics/VCDV.png" alt="" />
 
 </div>
-<h2 id="correction-using-vair-beta-input">Correction using Vair &amp; Beta Input</h2>
+</div>
+<div id="correction-using-vair-beta-input" class="section level2">
+<h2>Correction using Vair &amp; Beta Input</h2>
 <p>If available the actual (measured) air speed and direction can be used. The input file (.vcdb) defines the drag coefficient scaling factor. The input file (.vcdb) format is described <a href="#vair-beta-cross-wind-correction-input-file-.vcdb">here</a>. The <a href="#driving-cycle-.vdri">driving cycle</a> must include the air speed relative to vehicle (&lt;vair_res&gt;) and the wind yaw angle (&lt;vair_beta&gt;).</p>
 <div class="figure">
 <img src="pics/VCDB.png" alt="" />
 
 </div>
-<h1 id="overspeed-eco-roll">Overspeed / Eco-Roll</h1>
+</div>
+</div>
+<div id="overspeed-eco-roll" class="section level1">
+<h1>Overspeed / Eco-Roll</h1>
 <p>Both functions control the vehicle’s behaviour on uneven road sections (slope ≠ 0) and can be configured in the <a href="#job-editor">Job File</a>’s Driver Assist Tab. Overspeed is designed to model an average driver’s behaviour without the aid of driver assistance systems. Eco-Roll  represents an optional driver assistance feature. For this reason vehicles without Eco-Roll should always have the Overspeed function enabled.</p>
-<h2 id="overspeed">Overspeed</h2>
+<div id="overspeed" class="section level2">
+<h2>Overspeed</h2>
 <p>Overspeed activates as soon as the total power demand at the wheels (Pwheel) falls below zero, i.e. the vehicle accelerates on a negative slope. The clutch remains closed, engine in motoring operation, and the vehicle accelerates beyond the cycle’s target speed. When the speed limit (target speed plus <strong>Max. Overspeed</strong>) is reached the mechanical brakes are engaged to prevent further acceleration.</p>
 <div class="figure">
 <img src="pics/Overspeed.svg" alt="" />
@@ -1006,7 +1170,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </ul>
 </dd>
 </dl>
-<h2 id="eco-roll">Eco-Roll</h2>
+</div>
+<div id="eco-roll" class="section level2">
+<h2>Eco-Roll</h2>
 <p>Instead of using the engine brake (with no fuel consumption) Eco-Roll shifts to Neutral, engine idling, to minimize deceleration and maximize the vehicle’s roll out distance. During this phase the engine has to overcome its own idling losses and the power demand from the auxiliaries. The engine is engaged again if the speed exceeds the speed limits defined by Max. Over-/Underspeed.</p>
 <div class="figure">
 <img src="pics/EcoRoll.svg" alt="" />
@@ -1022,7 +1188,10 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </ul>
 </dd>
 </dl>
-<h1 id="engine-only-mode">Engine Only Mode</h1>
+</div>
+</div>
+<div id="engine-only-mode" class="section level1">
+<h1>Engine Only Mode</h1>
 <p>When this mode is enabled in the Job File then VECTO only calculates the fuel consumption based on a load cycle (engine speed and torque). In the <a href="#job-editor">Job File</a> only the following parameters are needed:</p>
 <ul>
 <li>Filepath to the Engine File (.veng)</li>
@@ -1036,7 +1205,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </ul>
 <p><strong>Note that VECTO adds the engine’s inertia to the given power demand!</strong></p>
 <p><strong>Example .vdri cycle:</strong> <img src="pics/VECTO-EngOnlyCycle.svg" alt="" /></p>
-<h1 id="engine-startstop">Engine Start/Stop</h1>
+</div>
+<div id="engine-startstop" class="section level1">
+<h1>Engine Start/Stop</h1>
 <p>If enabled the engine will be turned off after the set <strong>Activation Delay [s] </strong>if the following conditions apply:</p>
 <ul>
 <li>Power demand ≤ 0</li>
@@ -1053,10 +1224,13 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </dd>
 </dl>
 <p>If Start/Stop is enabled the fuel consumption is corrected for not-considered auxiliary energy consumption during engine stop. See <a href="#fuel-consumption-calculation">Start/Stop FC Correction</a>.</p>
-<h1 id="fuel-consumption-calculation">Fuel Consumption Calculation</h1>
+</div>
+<div id="fuel-consumption-calculation" class="section level1">
+<h1>Fuel Consumption Calculation</h1>
 <p>The base FC value is interpolated from the stationary <a href="#fuel-consumption-map-.vmap">FC map</a>. If necessary the base value is corrected to compensate for unconsidered auxiliary energy consumption for vehicles with Start/Stop. In Declaration Mode additionally the WHTC correction is applied, see below.</p>
 <p>The CO<sub>2</sub> result for the actual mission profile is directly derived from the fuel consumption using a gravimetric <a href="#settings">CO<sub>2</sub>/FC factor</a>.</p>
-<h2 id="fuel-map-interpolation">Fuel Map Interpolation</h2>
+<div id="fuel-map-interpolation" class="section level2">
+<h2>Fuel Map Interpolation</h2>
 <p>The interpolation is based on <a href="http://en.wikipedia.org/wiki/Delaunay_triangulation">Delaunay Triangulation <img src="pics/external-icon%2012x12.png" alt="" /></a> and works as follows:</p>
 <ol style="list-style-type: decimal">
 <li>Triangulate the given rpm/torque/fuel points (= x,y,z)  to create a network of triangles with each point of the map being part of at least one triangle.</li>
@@ -1068,7 +1242,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 
 </div>
 <p><em>Delaunay Triangulation Example</em></p>
-<h2 id="auxiliary---startstop-correction">Auxiliary - Start/Stop Correction</h2>
+</div>
+<div id="auxiliary---startstop-correction" class="section level2">
+<h2>Auxiliary - Start/Stop Correction</h2>
 <p>For vehicles with <a href="#engine-start-stop">Start/Stop</a> the fuel consumption needs to be corrected to consider the wrong auxiliary energy balance caused by engine stops because VECTO uses a constant power demand for auxiliaries for the whole mission profile. The correction consists of the following steps:</p>
 <ol style="list-style-type: decimal">
 <li>From all 1Hz data points of the VECTO simulation, a linear regression curve (y=k*x+d) for fuel consumption (unit: grams per hour) over engine power (unit: kilo-watt) is calculated (see figure below).</li>
@@ -1080,7 +1256,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 
 </div>
 <p><em>Example of a linear regression between engine power and fuel consumption</em></p>
-<h2 id="whtc-correction">WHTC Correction</h2>
+</div>
+<div id="whtc-correction" class="section level2">
+<h2>WHTC Correction</h2>
 <p>The WHTC correction aims to counter the disadvantages of using a stationary FC map. The following steps are applied in VECTO for the WHTC correction method:</p>
 <ol style="list-style-type: decimal">
 <li>VECTO interpolates the fuel consumption for the WHTC load cycle from the engine fuel map based on the target speed and target torque as determined based on the engine full-load curve. The results are FC values for the Urban, Rural and Motorway part.</li>
@@ -1092,33 +1270,36 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <table>
 <tbody>
 <tr class="odd">
-<td align="left"> CF<sub>WHTC</sub>   </td>
+<td align="left"> <span class="math inline">\(CF_{WHTC}\)</span>   </td>
 <td align="left">WHTC Correction Factor</td>
 <td align="left">[-]</td>
 </tr>
 <tr class="even">
-<td align="left"> i       </td>
+<td align="left"> <span class="math inline">\(i\)</span>      </td>
 <td align="left">index for each part (Urban, Rural, Motorway)</td>
 <td align="left">[-]</td>
 </tr>
 <tr class="odd">
-<td align="left"> f<sub>i</sub>       </td>
+<td align="left"> <span class="math inline">\(f_i\)</span>       </td>
 <td align="left">Weighting factor per part</td>
 <td align="left">[-]</td>
 </tr>
 <tr class="even">
-<td align="left"> FC<sub>meas_i</sub>   </td>
+<td align="left"> <span class="math inline">\(FC_{meas_i}\)</span>   </td>
 <td align="left">WHTC measurement result per part (input parameter)</td>
 <td align="left">[g/kWh]</td>
 </tr>
 <tr class="odd">
-<td align="left"> FC<sub>calc_i</sub>       </td>
+<td align="left"> <span class="math inline">\(FC_{calc_i}\)</span>       </td>
 <td align="left">Calculated FC per part</td>
 <td align="left">[g/kWh]</td>
 </tr>
 </tbody>
 </table>
-<h1 id="gear-shift-model">Gear Shift Model</h1>
+</div>
+</div>
+<div id="gear-shift-model" class="section level1">
+<h1>Gear Shift Model</h1>
 <p>The Gear Shift Model is based on shift curves that define the engine speed for up- and down- shifting as a function of engine torque. As soon as the engine operation point passes one of the shift curves a gear change is initiated.</p>
 <div class="figure">
 <img src="pics/Shift.svg" alt="" />
@@ -1143,19 +1324,25 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <li><strong>Torque Reserve</strong> [%] - Required for the “<strong>Early Upshift</strong>” and “<strong>Skip Gears</strong>” options, see below.</li>
 <li><strong>Minimum shift time</strong> [s] - Limits the time between two gear shifts in whole seconds. This rule will be ignored if rpms are too high or too low. Note that high values may cause high rpms during acceleration.</li>
 </ul>
-<h2 id="gear-skipping">Gear Skipping</h2>
+<div id="gear-skipping" class="section level2">
+<h2>Gear Skipping</h2>
 <p>Gear Skipping can be enabled in the <a href="#gearbox-editor">Gearbox File</a>. By default it is enabled for AMT and MT. Whenever a gear change is initiated (by crossing the up- or down-shift line) VECTO may skip one or several gears as long as the required torque reserve is provided.</p>
 <div class="figure">
 <img src="pics/GBX-Editor-shift3.svg" alt="" />
 
 </div>
-<h2 id="early-upshift">Early Upshift</h2>
+</div>
+<div id="early-upshift" class="section level2">
+<h2>Early Upshift</h2>
 <p>Early Upshift can be enabled in the <a href="#gearbox-editor">Gearbox File</a> (Allow shift-up inside polygons). By default it is enabled for AMT only. If the next higher gear provides the required torque reserve and it’s rpm is still above down-shift-rpm VECTO will shift up.</p>
 <div class="figure">
 <img src="pics/GBX-Editor-shift2.svg" alt="" />
 
 </div>
-<h1 id="look-ahead-coasting">Look-Ahead Coasting</h1>
+</div>
+</div>
+<div id="look-ahead-coasting" class="section level1">
+<h1>Look-Ahead Coasting</h1>
 <p>Like Overspeed, Look-Ahead Coasting is a function that aims on modelling real-life driver behaviour. It is a forward-looking function that detects forthcoming reductions in target speed in the mission profile (e.g. change of road type / speed limit, etc.) and induces an early deceleration using engine braking before applying mechanical brakes according to the <a href="#acceleration-limiting">deceleration limit</a>.</p>
 <p>The implemented approach uses a predefined target deceleration (a<sub>lookahead</sub>) to calculate the deceleration time for each particular target speed change.</p>
 <div class="figure">
@@ -1171,9 +1358,12 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </ul>
 </dd>
 </dl>
-<h1 id="overspeed-eco-roll-1">Overspeed / Eco-Roll</h1>
+</div>
+<div id="overspeed-eco-roll-1" class="section level1">
+<h1>Overspeed / Eco-Roll</h1>
 <p>Both functions control the vehicle’s behaviour on uneven road sections (slope ≠ 0) and can be configured in the <a href="#job-editor">Job File</a>’s Driver Assist Tab. Overspeed is designed to model an average driver’s behaviour without the aid of driver assistance systems. Eco-Roll  represents an optional driver assistance feature. For this reason vehicles without Eco-Roll should always have the Overspeed function enabled.</p>
-<h2 id="overspeed-1">Overspeed</h2>
+<div id="overspeed-1" class="section level2">
+<h2>Overspeed</h2>
 <p>Overspeed activates as soon as the total power demand at the wheels (Pwheel) falls below zero, i.e. the vehicle accelerates on a negative slope. The clutch remains closed, engine in motoring operation, and the vehicle accelerates beyond the cycle’s target speed. When the speed limit (target speed plus <strong>Max. Overspeed</strong>) is reached the mechanical brakes are engaged to prevent further acceleration.</p>
 <div class="figure">
 <img src="pics/Overspeed.svg" alt="" />
@@ -1188,7 +1378,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </ul>
 </dd>
 </dl>
-<h2 id="eco-roll-1">Eco-Roll</h2>
+</div>
+<div id="eco-roll-1" class="section level2">
+<h2>Eco-Roll</h2>
 <p>Instead of using the engine brake (with no fuel consumption) Eco-Roll shifts to Neutral, engine idling, to minimize deceleration and maximize the vehicle’s roll out distance. During this phase the engine has to overcome its own idling losses and the power demand from the auxiliaries. The engine is engaged again if the speed exceeds the speed limits defined by Max. Over-/Underspeed.</p>
 <div class="figure">
 <img src="pics/EcoRoll.svg" alt="" />
@@ -1204,9 +1396,13 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </ul>
 </dd>
 </dl>
-<h1 id="pwheel-input-sico-mode">P<sub>wheel</sub>-Input (SiCo Mode)</h1>
+</div>
+</div>
+<div id="pwheel-input-sico-mode" class="section level1">
+<h1>P<sub>wheel</sub>-Input (SiCo Mode)</h1>
 <p>For verification tasks it is possible to manually input the power at wheels (Pwheel) which is normally calculated via longitudinal dynamics. In this case VECTO only calculates the losses between wheels and engine and auxiliary power demand. This mode is active as soon as Pwheel, Gear and Engine Speed are defined in the driving cycle.</p>
-<h2 id="requirements-3">Requirements</h2>
+<div id="requirements-3" class="section level2">
+<h2>Requirements</h2>
 <ul>
 <li>Driving Cycle must include Pwheel, Gear and Engine Speed, see <a href="#driving-cycle-.vdri">Driving Cycle (.vdri) format</a>.</li>
 <li>The driving cycle must be time-based.</li>
@@ -1279,7 +1475,10 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h1 id="rolling-resistance-coefficient">Rolling Resistance Coefficient</h1>
+</div>
+</div>
+<div id="rolling-resistance-coefficient" class="section level1">
+<h1>Rolling Resistance Coefficient</h1>
 <p>The rolling resistance is calculated using a speed-independent rolling resistance coefficient (RRC). In order to consider that the RRC is dependent from the vehicle weight it is modelled as a function of the total vehicle mass. The total RRC is calculated in VECTO using the following formula. The index i refers to each single vehicle axle (truck and trailer).</p>
 <p><span class="math inline">\(RRC = \sum_{i=1}^{n} s_{(i)} \cdot RRC_{ISO(i)} \cdot \left( \frac{s_{(i)} \cdot m \cdot g }{w_{(i)} \cdot F_{zISO(i)} } \right)^{\beta-1}\)</span></p>
 <table>
@@ -1327,12 +1526,17 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tbody>
 </table>
 <p>For each axle the parameters <strong>Relative axle load, RRC<sub>ISO</sub></strong> and <strong>F<sub>zISO</sub></strong> have to be defined. Axles with twin tyres have to be marked using the respective checkbox in the <a href="#vehicle-editor">Vehicle-Editor</a>.</p>
-<h1 id="torque-converter-model">Torque Converter Model</h1>
+</div>
+<div id="torque-converter-model" class="section level1">
+<h1>Torque Converter Model</h1>
 <p><strong>!!! The Torque Converter Model is still in development !!!</strong></p>
 <p>The torque converter is defined as (virtual) separate gear. While TC active: Iterative calculation of engine torque and speed based on TC characteristic. Creeping: Engine speed set to idling. Brakes engaged to absorb surplus torque. <img src="pics/GBX-TC.svg" alt="" /></p>
-<h2 id="torque-converter-characteristics-file-.vtcc">Torque converter characteristics file (.vtcc)</h2>
+<div id="torque-converter-characteristics-file-.vtcc" class="section level2">
+<h2>Torque converter characteristics file (.vtcc)</h2>
 <p>The file is described <a href="#torque-converter-characteristics-.vtcc">here</a>.</p>
-<h2 id="setup-for-conventional-at-gearboxes">Setup for Conventional AT gearboxes </h2>
+</div>
+<div id="setup-for-conventional-at-gearboxes" class="section level2">
+<h2>Setup for Conventional AT gearboxes </h2>
 <p>Torque converter file is defined for <strong>torque converter only</strong> <img src="pics/GBX-TC-Setup1-1.svg" alt="" /></p>
 <ul>
 <li>Define TC gear with ratio of first (mechanical) gear</li>
@@ -1342,7 +1546,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <img src="pics/GBX-TC-Setup-1-2.svg" alt="" />
 
 </div>
-<h2 id="setup-for-power-distributed-at-gearboxes">Setup for Power-distributed AT gearboxes</h2>
+</div>
+<div id="setup-for-power-distributed-at-gearboxes" class="section level2">
+<h2>Setup for Power-distributed AT gearboxes</h2>
 <p>Torque converter file is defined for the <strong>whole gearbox</strong> <img src="pics/GBX-TC-Setup-2-1.svg" alt="" /></p>
 <ul>
 <li>Define TC gear with ratio = 1</li>
@@ -1352,7 +1558,10 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <img src="pics/GBX-TC-Setup-2-2.svg" alt="" />
 
 </div>
-<h1 id="transient-full-load">Transient Full Load</h1>
+</div>
+</div>
+<div id="transient-full-load" class="section level1">
+<h1>Transient Full Load</h1>
 <p>VECTO uses a PT1 function to model transient torque build up using this formula:</p>
 <p><span class="math inline">\(P_{fld\ dyn_{i}} = \frac{1}{T(n_{i})+1} \cdot [P_{fld\ stat}(n_{i})+T(n_{i}) \cdot P_{act_{i-1}}]\)</span></p>
 <p>where:</p>
@@ -1376,30 +1585,42 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h1 id="command-line-arguments">Command Line Arguments</h1>
+</div>
+<div id="command-line-arguments" class="section level1">
+<h1>Command Line Arguments</h1>
 <div class="figure">
 <img src="pics/cmd.png" alt="" />
 
 </div>
 <p>It is possible to control basic functions of VECTO via command line arguments (e.g. to automate calculations and results analysis using scripts).</p>
-<h2 id="general-notes">General Notes</h2>
+<div id="general-notes" class="section level2">
+<h2>General Notes</h2>
 <ul>
 <li>The order in which the arguments are provided is free.</li>
 <li>If a file path includes space characters (e.g. “C:\VECTO Test Files\Demo.vecto”) then double quotes have to be used (as in the picture above).</li>
 <li>If not the complete file path is defined (e.g. “file1.vecto” instead of “c:\data\file1.vecto”) then VECTO expects the file in the application directory (where VECTO.exe is located).</li>
 <li>In the instructions below square brackets “[  ]” indicate optional arguments.</li>
 </ul>
-<h2 id="standard-mode-1">Standard Mode</h2>
+</div>
+<div id="standard-mode-1" class="section level2">
+<h2>Standard Mode</h2>
 <pre><code>    VECTO.exe -run \[-close\] \[file1.vecto file2.vecto ... fileN.vecto\]</code></pre>
 <p>Runs calculation(s) either with the provided .vecto file(s) or (if no file names are defined) with the files already loaded on start up*. If -<strong>close</strong> is used then VECTO closes after calculations are done.</p>
-<h2 id="batch-mode-1">Batch Mode</h2>
+</div>
+<div id="batch-mode-1" class="section level2">
+<h2>Batch Mode</h2>
 <pre><code>    VECTO.exe -run -batch \[-close\] \[file1.vecto file2.vecto ... fileN.vecto\] \[cycle1.vdri cycle2.vdri ... cycleN.vdri\]</code></pre>
 <p>Switches to BATCH mode and runs with the provided .vecto and .vdri files. If no files are defined the pre-loaded files* are used. If -<strong>close</strong> is used then VECTO closes after calculations are done.</p>
-<h2 id="opening-files">Opening files</h2>
+</div>
+<div id="opening-files" class="section level2">
+<h2>Opening files</h2>
 <pre><code>    VECTO.exe file1.xxx</code></pre>
 <p>If the file has one of the following extensions it is opened with the associated editor dialog: .vecto, .vgbx, .veng, .vveh. Note: if more than one .vecto file is provided they will be loaded in the file list (replacing the pre-loaded list*) instead.</p>
 <p>*pre-loaded files: When VECTO starts it loads the file lists (.vecto, .vdri) of the last session, see <a href="#application-files">Application Files</a>. These files can be changes manually if VECTO is not running.</p>
-<h1 id="csv-format">CSV Format</h1>
+</div>
+</div>
+<div id="csv-format" class="section level1">
+<h1>CSV Format</h1>
 <p>The following format applies to all CSV (Comma-separated values) Input Files used in VECTO:</p>
 <table>
 <tbody>
@@ -1421,18 +1642,23 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h2 id="exceptions">Exceptions</h2>
+<div id="exceptions" class="section level2">
+<h2>Exceptions</h2>
 <ul>
 <li>The main input files (<a href="#job-editor">Job</a>, <a href="#vehicle-editor">Vehicle</a>, <a href="#engine-editor">Engine</a> and <a href="#gearbox-editor">Gearbox</a>) use the <a href="http://en.wikipedia.org/wiki/JSON">JSON format</a> <img src="../pics/misc/external-icon%2012x12.png" alt="" />.</li>
 <li>The <a href="#auxiliary-input-file-.vaux">Auxiliary Input File (.vaux)</a> uses a modified format.</li>
 <li>The <a href="#driving-cycle-.vdri">Driving Cycle (.vdri)</a> uses keywords to identify columns and therefore the header line must follow certain specifications.</li>
 </ul>
-<h1 id="job-editor-1">Job Editor</h1>
+</div>
+</div>
+<div id="job-editor-1" class="section level1">
+<h1>Job Editor</h1>
 <div class="figure">
 <img src="pics/VECTO-Editor.svg" alt="" />
 
 </div>
-<h2 id="description-8">Description</h2>
+<div id="description-8" class="section level2">
+<h2>Description</h2>
 <p>The job file (.vecto) includes all informations to run a VECTO calculation. It defines the vehicle and the driving cycle(s) to be used for calculation. In summary it defines:</p>
 <ul>
 <li>Filepath to the <a href="#vehicle-editor">Vehicle File (.vveh)</a> which defines the not-engine/gearbox-related vehicle parameters</li>
@@ -1442,10 +1668,14 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <li>Driver Assist parameters</li>
 <li>Driving Cycles (not used in Batch Mode)</li>
 </ul>
-<h2 id="relative-file-paths-4">Relative File Paths</h2>
+</div>
+<div id="relative-file-paths-4" class="section level2">
+<h2>Relative File Paths</h2>
 <p>It is recommended to define relative filepaths. This way the Job File and all input files can be moved without having to update the paths. Example: “Vehicles\Vehicle1.vveh” points to the “Vehicles” subdirectory of the Job File’s directoy.</p>
 <p>VECTO automatically uses relative paths if the input file (e.g. Vehicle File) is in the same directory as the Job File. (The Job File must be saved before browsing for input files.)</p>
-<h2 id="general-settings-1">General Settings</h2>
+</div>
+<div id="general-settings-1" class="section level2">
+<h2>General Settings</h2>
 <dl>
 <dt><img src="pics/checkbox.png" alt="" /> Engine Only Mode</dt>
 <dd><p>Enables <a href="#engine-only-mode">Engine Only Mode</a>. Only the following parameters are needed for this mode:</p>
@@ -1482,7 +1712,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <dd><img src="pics/minus-circle-icon.png" alt="remcycle" /> Remove the selected cycle from the list
 </dd>
 </dl>
-<h2 id="driver-assist-tab-1">Driver Assist Tab</h2>
+</div>
+<div id="driver-assist-tab-1" class="section level2">
+<h2>Driver Assist Tab</h2>
 <p>In this tab the driver assistance functions are enabled and parameterised.</p>
 <dl>
 <dt>Engine Start/Stop</dt>
@@ -1498,9 +1730,13 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <dd>See <a href="#acceleration-limiting">Acceleration Limiting</a> for details.
 </dd>
 </dl>
-<h2 id="chart-area-3">Chart Area</h2>
+</div>
+<div id="chart-area-3" class="section level2">
+<h2>Chart Area</h2>
 <p>If a valid <a href="#vehicle-editor">Vehicle File</a>, <a href="#engine-editor">Engine File</a> and <a href="#gearbox-editor">Gearbox File</a> is loaded into the Editor the main vehicle parameters like HDV class and axle configuration are shown here. The plot shows the full load curve(s) and shift polygons. In <a href="#declaration-mode">Declaration Mode</a> the <strong>generic</strong> shift polygons are shown, not the ones from the Gearbox File.</p>
-<h2 id="controls-8">Controls</h2>
+</div>
+<div id="controls-8" class="section level2">
+<h2>Controls</h2>
 <dl>
 <dt><img src="pics/blue-document-icon.png" alt="new" /> New Job File</dt>
 <dd>Create a new empty .vecto file
@@ -1526,17 +1762,25 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </dd>
 </dl>
 <p><img src="pics/Cancel.png" alt="Cancel" /> <strong><em>Cancel without saving</em></strong></p>
-<h1 id="vehicle-editor-1">Vehicle Editor</h1>
+</div>
+</div>
+<div id="vehicle-editor-1" class="section level1">
+<h1>Vehicle Editor</h1>
 <div class="figure">
 <img src="pics/VEH-Editor.png" alt="" />
 
 </div>
-<h2 id="description-9">Description</h2>
+<div id="description-9" class="section level2">
+<h2>Description</h2>
 <p>The Vehicle File (.vveh) defines the main vehicle/chassis parameters like axles including <a href="#rolling-resistance-coefficient">RRC</a>s, air resistance and weight.</p>
-<h2 id="relative-file-paths-5">Relative File Paths</h2>
+</div>
+<div id="relative-file-paths-5" class="section level2">
+<h2>Relative File Paths</h2>
 <p>It is recommended to define relative filepaths. This way the Job File and all input files can be moved without having to update the paths. Example: “Demo1.vrlm” points to the “Demo” subdirectory of the Vehicle File’s directoy.</p>
 <p>VECTO automatically uses relative paths if the input file (e.g. Retarder Losses File) is in the same directory as the Vehicle File. (The Vehicle File must be saved before browsing for input files.)</p>
-<h2 id="general-vehicle-parameters-1">General vehicle parameters</h2>
+</div>
+<div id="general-vehicle-parameters-1" class="section level2">
+<h2>General vehicle parameters</h2>
 <dl>
 <dt>Vehicle Category</dt>
 <dd>Needed for <a href="#declaration-mode">Declaration Mode</a> to identify the HDV Class.
@@ -1551,12 +1795,18 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <dd>Displays the automatically selected HDV Class depending on the settings above.
 </dd>
 </dl>
-<h2 id="weightloading-1">Weight/Loading</h2>
+</div>
+<div id="weightloading-1" class="section level2">
+<h2>Weight/Loading</h2>
 <p>These fields define the weight and loading of the vehicle. <strong>Max. Loading</strong> displayes the maximum possible loading for the selected vehicle depending on curb weight and GVW values.</p>
 <p><strong><em>Note:</em></strong> <em>VECTO uses the sum of</em> <strong><em>Curb Weight Vehicle, Curb Weight Extra Trailer/Body</em></strong> <em>and</em> <strong><em>Loading</em></strong> <em>for calculation!</em></p>
-<h2 id="air-resistance-1">Air Resistance</h2>
+</div>
+<div id="air-resistance-1" class="section level2">
+<h2>Air Resistance</h2>
 <p>The product of Drag Coefficient [-] and Cross Sectional Area [m²] (<strong>c<sub>d</sub> x A</strong>) and <strong>Air Density</strong> [kg/m³] (see <a href="#settings">Settings</a>) together with the vehicle speed defines the Air Resistance. Note that the Drag Coefficient may be altered when using <a href="#cross-wind-correction"><strong>Cross Wind Correction</strong></a>.</p>
-<h2 id="axleswheels-1">Axles/Wheels</h2>
+</div>
+<div id="axleswheels-1" class="section level2">
+<h2>Axles/Wheels</h2>
 <p>For each axle the parameters <strong>Relative axle load, RRC<sub>ISO</sub></strong> and <strong>F<sub>zISO</sub></strong> have to be defined in order to calculate the total <a href="#rolling-resistance-coefficient">Rolling Resistance Coefficient</a>. Furthermore the <strong>Wheels Inertia [kgm²]</strong> has to be set per wheel for each axle. In <a href="#declaration-mode">Declaration Mode</a> the inertia is defined automatically according to the selected tyres. Use the <img src="pics/plus-circle-icon.png" alt="" /> and <img src="pics/minus-circle-icon.png" alt="" /> buttons to add or remove axles form the vehicle. Doubleclick entries to edit existing axle configurations.</p>
 <dl>
 <dt>Dynamic Tyre Radius [mm]</dt>
@@ -1566,7 +1816,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <dd>Needed for <a href="#declaration-mode">Declaration Mode</a> to calculate the dynamic tyre radius.
 </dd>
 </dl>
-<h2 id="retarder-losses-1">Retarder Losses</h2>
+</div>
+<div id="retarder-losses-1" class="section level2">
+<h2>Retarder Losses</h2>
 <p>If available a <strong>Retarder Torque Loss Map</strong> can be defined here to consider idling losses caused by the retarder. <strong><em>Note: Do not use this function if the retarder’s losses are already included in the Transmission Loss Maps!</em></strong></p>
 <dl>
 <dt>Three options are available:</dt>
@@ -1578,7 +1830,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </dd>
 </dl>
 <p>Both, primary and secondary retarders, require an <a href="#retarder-loss-torque-input-file-.vrlm">Retarder Loss Torque Input File (.vrlm)</a>.</p>
-<h2 id="cross-wind-correction-2">Cross Wind Correction</h2>
+</div>
+<div id="cross-wind-correction-2" class="section level2">
+<h2>Cross Wind Correction</h2>
 <dl>
 <dt>Three different options are available:</dt>
 <dd><ul>
@@ -1590,7 +1844,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </dd>
 </dl>
 <p>Depending on the chosen mode either a <a href="#speed-dependent-cross-wind-correction-input-file-.vcdv">Speed Dependent Cross Wind Correction Input File (.vcdv)</a> or a <a href="#speed-dependent-cross-wind-correction-input-file-.vcdv">Vair &amp; Beta Cross Wind Correction Input File (.vcdb)</a> must be defined. For details see <a href="#cross-wind-correction">Cross Wind Correction</a>.</p>
-<h2 id="controls-9">Controls</h2>
+</div>
+<div id="controls-9" class="section level2">
+<h2>Controls</h2>
 <dl>
 <dt><img src="pics/blue-document-icon.png" alt="" /> New file</dt>
 <dd>Create a new empty .vveh file
@@ -1610,9 +1866,13 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </dd>
 </dl>
 <p><img src="pics/Cancel.png" alt="" /> <strong><em>Cancel without saving</em></strong></p>
-<h1 id="speed-dependent-cross-wind-correction-input-file-.vcdv">Speed Dependent Cross Wind Correction Input File (.vcdv)</h1>
+</div>
+</div>
+<div id="speed-dependent-cross-wind-correction-input-file-.vcdv" class="section level1">
+<h1>Speed Dependent Cross Wind Correction Input File (.vcdv)</h1>
 <p>The file is needed for speed dependent <a href="#cross-wind-correction">Cross Wind Correction</a>.</p>
-<h2 id="file-format">File Format</h2>
+<div id="file-format" class="section level2">
+<h2>File Format</h2>
 <p>The file uses the <a href="#csv-format">VECTO CSV format</a>.</p>
 <dl>
 <dt>Format:</dt>
@@ -1642,9 +1902,13 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h1 id="vair-beta-cross-wind-correction-input-file-.vcdb">Vair &amp; Beta Cross Wind Correction Input File (.vcdb)</h1>
+</div>
+</div>
+<div id="vair-beta-cross-wind-correction-input-file-.vcdb" class="section level1">
+<h1>Vair &amp; Beta Cross Wind Correction Input File (.vcdb)</h1>
 <p>The file is needed for Vair &amp; Beta <a href="#cross-wind-correction">Cross Wind Correction</a>.</p>
-<h2 id="file-format-1">File Format</h2>
+<div id="file-format-1" class="section level2">
+<h2>File Format</h2>
 <p>The file uses the VECTO CSV format <a href="#csv-format">VECTO CSV format</a>.</p>
 <dl>
 <dt>Format:</dt>
@@ -1674,9 +1938,13 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h1 id="retarder-loss-torque-input-file-.vrlm">Retarder Loss Torque Input File (.vrlm)</h1>
+</div>
+</div>
+<div id="retarder-loss-torque-input-file-.vrlm" class="section level1">
+<h1>Retarder Loss Torque Input File (.vrlm)</h1>
 <p>This file is used to define retarder idling losses. It can be used for primary and secondary retarders and must be set in the <a href="#vehicle-editor">Vehicle File</a>.</p>
-<h2 id="file-format-2">File Format</h2>
+<div id="file-format-2" class="section level2">
+<h2>File Format</h2>
 <p>The file uses the <a href="#csv-format">VECTO CSV format</a>.</p>
 <dl>
 <dt>Format:</dt>
@@ -1706,18 +1974,26 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h1 id="engine-editor-1">Engine Editor</h1>
+</div>
+</div>
+<div id="engine-editor-1" class="section level1">
+<h1>Engine Editor</h1>
 <div class="figure">
 <img src="pics/ENG-Editor.svg" alt="" />
 
 </div>
-<h2 id="description-10">Description</h2>
+<div id="description-10" class="section level2">
+<h2>Description</h2>
 <p>The Engine File (.veng) defines all engine-related parameters and input files like Fuel Consumption Map and Full Load Curves.</p>
-<h2 id="relative-file-paths-6">Relative File Paths</h2>
+</div>
+<div id="relative-file-paths-6" class="section level2">
+<h2>Relative File Paths</h2>
 <p>It is recommended to define relative filepaths. This way the Job File and all input files can be moved without having to update the paths.</p>
 <p>Example: “Demo\FLD1.vfld” points to the “Demo” subdirectory of the Engine File’s directory.</p>
 <p>VECTO automatically uses relative paths if the input file (e.g. FC Map) is in the same directory as the Engine File. The Engine File must be saved before browsing for input files.)</p>
-<h2 id="main-engine-parameters-1">Main Engine Parameters</h2>
+</div>
+<div id="main-engine-parameters-1" class="section level2">
+<h2>Main Engine Parameters</h2>
 <dl>
 <dt>Make and Model</dt>
 <dd>Free text defining the engine model, type, etc.
@@ -1732,17 +2008,27 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <dd>Inertia for rotating parts including engine flywheel. In <a href="#declaration-mode">Declaration Mode</a> the inertia is calculated automatically.
 </dd>
 </dl>
-<h2 id="full-load-and-drag-curves-1">Full Load and Drag Curves</h2>
+</div>
+<div id="full-load-and-drag-curves-1" class="section level2">
+<h2>Full Load and Drag Curves</h2>
 <p>The <a href="#full-load-and-drag-curves-.vfld">Full Load and Drag Curves (.vfld)</a> Note that gear-specific full load curves can be defined in the <a href="#gearbox-editor">Gearbox File</a> to limit the maximum gearbox input torque.</p>
 <p>The input file (.vfld) file format is described <a href="#full-load-and-drag-curves-.vfld">here</a>.</p>
-<h2 id="fuel-consumption-map-1">Fuel Consumption Map</h2>
+</div>
+<div id="fuel-consumption-map-1" class="section level2">
+<h2>Fuel Consumption Map</h2>
 <p>The <a href="#fuel-consumption-map-.vmap">Fuel Consumption Map</a> is used to calculate the base FC value. See <a href="#fuel-consumption-calculation">Fuel Consumption Calculation</a> for details.</p>
 <p>The input file (.vmap) file format is described <a href="#fuel-consumption-map-.vmap">here</a>.</p>
-<h2 id="whtc-correction-factors-1">WHTC Correction Factors</h2>
+</div>
+<div id="whtc-correction-factors-1" class="section level2">
+<h2>WHTC Correction Factors</h2>
 <p>The WHTC Corretion Factors are required in <a href="#declaration-mode">Declaration Mode</a> for the <a href="#fuel-consumption-calculation">WHTC FC Correction</a>.</p>
-<h2 id="chart-area-4">Chart Area</h2>
+</div>
+<div id="chart-area-4" class="section level2">
+<h2>Chart Area</h2>
 <p>The Chart Area shows the fuel consumption map and the selected full load curve.</p>
-<h2 id="controls-10">Controls</h2>
+</div>
+<div id="controls-10" class="section level2">
+<h2>Controls</h2>
 <dl>
 <dt><img src="pics/blue-document-icon.png" alt="new" />New file</dt>
 <dd>Create a new empty .veng file
@@ -1767,9 +2053,13 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </dd>
 </dl>
 <p><img src="pics/Cancel.png" alt="Cancel" /><strong><em>Cancel without saving</em></strong></p>
-<h1 id="full-load-and-drag-curves-.vfld">Full Load and Drag Curves (.vfld)</h1>
+</div>
+</div>
+<div id="full-load-and-drag-curves-.vfld" class="section level1">
+<h1>Full Load and Drag Curves (.vfld)</h1>
 <p>This file contains the full load and drag curves and the PT1 values for the <a href="#transient-full-load">transient full load calculation</a>.</p>
-<h2 id="file-format-3">File Format</h2>
+<div id="file-format-3" class="section level2">
+<h2>File Format</h2>
 <p>The file uses the <a href="#csv-format">VECTO CSV format</a>.</p>
 <dl>
 <dt>Format:</dt>
@@ -1805,9 +2095,13 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h1 id="fuel-consumption-map-.vmap">Fuel Consumption Map (.vmap)</h1>
+</div>
+</div>
+<div id="fuel-consumption-map-.vmap" class="section level1">
+<h1>Fuel Consumption Map (.vmap)</h1>
 <p>The FC map is used to interpolate the base fuel consumption before corrections are applied. For details see <a href="#fuel-consumption-calculation">Fuel Consumption Calculation</a>.</p>
-<h2 id="file-format-4">File Format</h2>
+<div id="file-format-4" class="section level2">
+<h2>File Format</h2>
 <p>The file uses the <a href="#csv-format">VECTO CSV format</a>.</p>
 <dl>
 <dt>Format:</dt>
@@ -1851,18 +2145,26 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h1 id="gearbox-editor-1">Gearbox Editor</h1>
+</div>
+</div>
+<div id="gearbox-editor-1" class="section level1">
+<h1>Gearbox Editor</h1>
 <div class="figure">
 <img src="pics/GBX-Editor.svg" alt="" />
 
 </div>
-<h2 id="description-11">Description</h2>
+<div id="description-11" class="section level2">
+<h2>Description</h2>
 <p>The Gearbox File (.vgbx) defines alls gearbox-related input parameters like gear ratios and transmission loss maps. See <a href="#gear-shift-model">Gear Shift Model</a> for details.</p>
-<h2 id="relative-file-paths-7">Relative File Paths</h2>
+</div>
+<div id="relative-file-paths-7" class="section level2">
+<h2>Relative File Paths</h2>
 <p>It is recommended to define relative filepaths. This way the Job File and all input files can be moved without having to update the paths.<br />
 Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Gearbox File’s directoy.</p>
 <p>VECTO automatically uses relative paths if the input file (e.g. Shift Polygons File) is in the same directory as the Gearbox File. (The Gearbox File must be saved before browsing for input files.)</p>
-<h2 id="main-gearbox-parameters-1">Main Gearbox Parameters</h2>
+</div>
+<div id="main-gearbox-parameters-1" class="section level2">
+<h2>Main Gearbox Parameters</h2>
 <dl>
 <dt>Make and Model</dt>
 <dd>Free text defining the gearbox model, type, etc.
@@ -1886,7 +2188,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <dd>Interruption during gear shift event.
 </dd>
 </dl>
-<h2 id="gears-1">Gears</h2>
+</div>
+<div id="gears-1" class="section level2">
+<h2>Gears</h2>
 <p>Use the <img src="pics/plus-circle-icon.png" alt="add" /> and <img src="pics/minus-circle-icon.png" alt="remove" /> buttons to add or remove gears form the vehicle. Doubleclick entries to edit existing gears.</p>
 <ul>
 <li>Gear <strong>“A”</strong> defines the ratio of the axle transmission / differential.</li>
@@ -1895,7 +2199,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <li>Column <strong>“Shift polygons”</strong> defines the <a href="#shift-polygons-input-file-.vgbs">Shift Polygons InputFile (.vgbs)</a> for each gear. Not requiredin <a href="#declaration-mode">Declaration Mode</a>. See <a href="#gear-shift-model">GearShift Model</a> for details.</li>
 <li>Column <strong>“Full Load Curves”</strong> defines the <a href="#full-load-and-drag-curves-.vfld">Full Load Curve for (.vfld)</a> each gear. It is used for torque limiting and <a href="#gear-shift-model">generic shift polygons</a> in Declaration Mode. If no file is defined the engine full load curve will be used.</li>
 </ul>
-<h2 id="gear-shift-parameters-1">Gear shift parameters</h2>
+</div>
+<div id="gear-shift-parameters-1" class="section level2">
+<h2>Gear shift parameters</h2>
 <dl>
 <dt><img src="pics/checkbox.png" alt="" /> Allow shift-up inside polygons</dt>
 <dd>See <a href="#gear-shift-model">Gear Shift Model</a>.
@@ -1913,16 +2219,22 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <dd>In order to calculate an appropriate gear for vehicle start (first gear after vehicle standstill) a fictional load case is calculated using a specified <strong>reference vehicle speed</strong> and <strong>reference acceleration</strong> together with the actual road gradient, transmission losses and auxiliary power demand. This way the start gear is independent from the target speed. VECTO uses the highest possible gear which provides the defined <strong>torque reserve</strong>.
 </dd>
 </dl>
-<h2 id="chart-area-5">Chart Area</h2>
+</div>
+<div id="chart-area-5" class="section level2">
+<h2>Chart Area</h2>
 <p>The Chart Area displays the <a href="#shift-polygons-input-file-.vgbs">Shift Polygons Input File(.vgbs)</a> for the selected gear.</p>
-<h2 id="torque-converter-1">Torque Converter</h2>
+</div>
+<div id="torque-converter-1" class="section level2">
+<h2>Torque Converter</h2>
 <p>The <a href="#torque-converter-model">Torque Converter Model</a> is still in development.</p>
 <dl>
 <dt>Inertia [kgm²]</dt>
 <dd>Rotational inertia of the engine-side part of the torque converter. (Gearbox-side inertia is not considered in VECTO.)
 </dd>
 </dl>
-<h2 id="controls-11">Controls</h2>
+</div>
+<div id="controls-11" class="section level2">
+<h2>Controls</h2>
 <dl>
 <dt><img src="pics/blue-document-icon.png" alt="" /> New file</dt>
 <dd>Create a new empty .vgbx file
@@ -1946,13 +2258,17 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </dd>
 </dl>
 <p><img src="pics/Cancel.png" alt="Cancel" /> <strong><em>Cancel without saving</em></strong></p>
-<h1 id="shift-polygons-input-file-.vgbs">Shift Polygons Input File (.vgbs)</h1>
+</div>
+</div>
+<div id="shift-polygons-input-file-.vgbs" class="section level1">
+<h1>Shift Polygons Input File (.vgbs)</h1>
 <p>Defines up- and down-shift curves. See <a href="#gear-shift-model">Gear Shift Model</a> for details.</p>
 <div class="figure">
 <img src="pics/Shift.svg" alt="" />
 
 </div>
-<h2 id="file-format-5">File Format</h2>
+<div id="file-format-5" class="section level2">
+<h2>File Format</h2>
 <p>The file uses the <a href="#csv-format">VECTO CSV format</a>.</p>
 <dl>
 <dt>Format:</dt>
@@ -1985,9 +2301,13 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h1 id="transmission-loss-map-.vtlm">Transmission Loss Map (.vtlm)</h1>
+</div>
+</div>
+<div id="transmission-loss-map-.vtlm" class="section level1">
+<h1>Transmission Loss Map (.vtlm)</h1>
 <p>This file defines losses in gearbox and axle transmission and must be provided for each gear in the <a href="#gearbox-editor">Gearbox File</a>.</p>
-<h2 id="file-format-6">File Format</h2>
+<div id="file-format-6" class="section level2">
+<h2>File Format</h2>
 <p>The file uses the <a href="#csv-format">VECTO CSV format</a>.</p>
 <dl>
 <dt>Format:</dt>
@@ -2044,7 +2364,10 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </dd>
 </dl>
 <p><span class="math inline">\(Output\ Torque = (Input\ Torque-Torque\ Loss) \times GearRatio\)</span></p>
-<h1 id="torque-converter-characteristics-.vtcc">Torque Converter Characteristics (.vtcc)</h1>
+</div>
+</div>
+<div id="torque-converter-characteristics-.vtcc" class="section level1">
+<h1>Torque Converter Characteristics (.vtcc)</h1>
 <p><strong>!!! The Torque Converter Model is still in development !!!</strong></p>
 <p>This file defines the torque converter characteristics as described in VDI 2153:</p>
 <ul>
@@ -2062,7 +2385,8 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <li>n<sub>ref</sub> = reference rpm [1/min] (see below)</li>
 </ul>
 <p>The torque converter characteristics must also be defined for speed ratios of more than one (ν&gt;1) in order to calculate overrun conditions (torque&lt;0).</p>
-<h2 id="file-format-7">File Format</h2>
+<div id="file-format-7" class="section level2">
+<h2>File Format</h2>
 <p>The file uses the <a href="#csv-format">VECTO CSV format</a>.</p>
 <dl>
 <dt>Format:</dt>
@@ -2106,10 +2430,14 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h1 id="auxiliary-input-file-.vaux">Auxiliary Input File (.vaux)</h1>
+</div>
+</div>
+<div id="auxiliary-input-file-.vaux" class="section level1">
+<h1>Auxiliary Input File (.vaux)</h1>
 <p>This file is used to configure a single auxiliary. Multiple .vaux files can be defined in the <a href="#job-editor">Job File</a> via the <a href="#auxiliary-dialog">Auxiliary Dialog</a>.</p>
 <p>See <a href="#auxiliaries">Auxiliaries</a> for details on how the power demand for each auxiliary is calculated.</p>
-<h2 id="file-format-8">File Format</h2>
+<div id="file-format-8" class="section level2">
+<h2>File Format</h2>
 <p>The file uses the VECTO CSV format with three additional parameters on top of the efficiency map.</p>
 <dl>
 <dt>Format:</dt>
@@ -2172,14 +2500,20 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h1 id="driving-cycle-.vdri">Driving Cycle (.vdri)</h1>
+</div>
+</div>
+<div id="driving-cycle-.vdri" class="section level1">
+<h1>Driving Cycle (.vdri)</h1>
 <p>The Driving Cycle defines vehicle speed, road gradient and other parameters either time- or distance-based. It’s open format requires Idenfiers to define the content of each column.</p>
-<h2 id="important-notes">Important Notes</h2>
+<div id="important-notes" class="section level2">
+<h2>Important Notes</h2>
 <ul>
 <li>For distance-based cycles there is a minimum distance-step of 1[m] required. The calculation will abort if larger steps are used.</li>
 <li>Time-based cycles can be defined in any given time resolution, including variable time steps. If the time identifier “&lt;t&gt;” is not used the data will be interpreted in 1[s] resolution (1Hz).</li>
 </ul>
-<h2 id="supported-identifiers">Supported Identifiers</h2>
+</div>
+<div id="supported-identifiers" class="section level2">
+<h2>Supported Identifiers</h2>
 <table>
 <thead>
 <tr class="header">
@@ -2276,7 +2610,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h2 id="examples">Examples</h2>
+</div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
 <p>The demo data provided with VECTO contains several .vdri files that may be used as template.</p>
 <p><strong>Example 1:</strong> Distance-based cycle with <strong>Road Gradient</strong> and two <strong>Auxiliaries</strong></p>
 <table>
@@ -2602,13 +2938,17 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h1 id="acceleration-limiting-input-file-.vacc">Acceleration Limiting Input File (.vacc)</h1>
+</div>
+</div>
+<div id="acceleration-limiting-input-file-.vacc" class="section level1">
+<h1>Acceleration Limiting Input File (.vacc)</h1>
 <p>The file is used for <a href="#acceleration-limiting">Acceleration Limiting</a>. It defines the acceleration and deceleration limits as function of vehicle speed. The filepath has to be defined in the <a href="#job-editor">Job File</a>.</p>
 <div class="figure">
 <img src="pics/AccLimit.png" alt="" />
 
 </div>
-<h2 id="file-format-9">File Format</h2>
+<div id="file-format-9" class="section level2">
+<h2>File Format</h2>
 <p>The file uses the <a href="#user-interface">VECTO CSV format</a>.</p>
 <dl>
 <dt>Format:</dt>
@@ -2641,7 +2981,10 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h1 id="modal-results-.vmod">Modal Results (.vmod)</h1>
+</div>
+</div>
+<div id="modal-results-.vmod" class="section level1">
+<h1>Modal Results (.vmod)</h1>
 <p>Modal results are only created if enabled in the <a href="#main-form">Options</a> tab. One file is created for each calculation and stored in the same directory as the .vecto file.</p>
 <p><strong><em>Quantities:</em></strong></p>
 <table>
@@ -2835,7 +3178,9 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 </tr>
 </tbody>
 </table>
-<h1 id="summary-results-.vsum">Summary Results (.vsum)</h1>
+</div>
+<div id="summary-results-.vsum" class="section level1">
+<h1>Summary Results (.vsum)</h1>
 <p>The .vsum file includes total / average results for each calculation run in one execution (ie. click of <a href="#main-form">START Button</a>). The file is located in the directory of the fist run .vecto file.</p>
 <p><strong><em>Quantities:</em></strong></p>
 <table>
@@ -3051,16 +3396,25 @@ Example: “Gears\Gear1.vtlm” points to the “Gears” subdirectory of the Ge
 <dd>The sum of EposICE, EnegICE, Eair, Eroll, Egrad, Eacc, Eaux, Ebrake, Etransm and Eretarder is zero (besides small rounding error for long driving cycles)
 </dd>
 </dl>
-<h1 id="application-files">Application Files</h1>
+</div>
+<div id="application-files" class="section level1">
+<h1>Application Files</h1>
 <p>VECTO uses a numbers of files to save GUI settings and file lists. All files are text-based and can be changed outside of VECTO <strong><em>if VECTO is not running</em></strong>.</p>
-<h2 id="settings.json">Settings.json</h2>
+<div id="settings.json" class="section level2">
+<h2>Settings.json</h2>
 <p>This file is located in VECTO’s <strong>config</strong> folder. Here all parameters of the <a href="#settings">Settings Dialog</a> are saved. The file uses the <a href="http://en.wikipedia.org/wiki/JSON">JSON format</a> <img src="pics/external-icon%2012x12.png" alt="" />.</p>
-<h2 id="job-cycle-lists">Job / Cycle lists</h2>
+</div>
+<div id="job-cycle-lists" class="section level2">
+<h2>Job / Cycle lists</h2>
 <p>The job and cycle lists in the <a href="#main-form">Main Form</a> are saved in the <strong>joblist.txt</strong> / <strong>cyclelist.txt</strong> files of the <strong>config</strong> folder.</p>
 <p>Both files save the full file paths separated by line breaks. Additionally it is saved whether each file’s checkbox is checked or not. “?1” after a file path means the file is checked (otherwise “?0”). However, this information can be omitted in which case the file will be loaded in checked state.</p>
-<h2 id="log.txt">LOG.txt</h2>
+</div>
+<div id="log.txt" class="section level2">
+<h2>LOG.txt</h2>
 <p>The tabulator-separated log file saves all messages of the <a href="#main-form">Main Form’s Message List</a> and is located in VECTO’s program directory. The file is restarted whenever the <a href="#settings">Logfile Size Limit</a> is reached.One backup is always stored as LOG_backup.txt.</p>
-<h2 id="license-file">License file</h2>
+</div>
+<div id="license-file" class="section level2">
+<h2>License file</h2>
 <p>The license file license.dat is located in VECTO’s program directory. Without a valid lisence file VECTO won’t run.</p>
 <p>It no valid license file is provided with your VECTO version please contact <script type="text/javascript">
 <!--
@@ -3068,8 +3422,12 @@ h='&#106;&#114;&#x63;&#46;&#x65;&#x63;&#46;&#x65;&#x75;&#114;&#x6f;&#112;&#x61;&
 document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\/'+'a'+'>');
 // -->
 </script><noscript>&#118;&#x65;&#x63;&#116;&#x6f;&#32;&#x61;&#116;&#32;&#106;&#114;&#x63;&#32;&#100;&#x6f;&#116;&#32;&#x65;&#x63;&#32;&#100;&#x6f;&#116;&#32;&#x65;&#x75;&#114;&#x6f;&#112;&#x61;&#32;&#100;&#x6f;&#116;&#32;&#x65;&#x75;</noscript>.</p>
-<h1 id="changelog">Changelog</h1>
-<h2 id="vecto-2.2">VECTO 2.2</h2>
+</div>
+</div>
+<div id="changelog" class="section level1">
+<h1>Changelog</h1>
+<div id="vecto-2.2" class="section level2">
+<h2>VECTO 2.2</h2>
 <ul>
 <li>Bugfix: Error in Declaration Mode Pneumatic System aux power calculation ([kW] were interpreted as [W])</li>
 <li>Bugfix: Error in Declaration Mode Electric System aux power calculation</li>
@@ -3085,7 +3443,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\
 <li>Various small updates in GUI</li>
 <li>Added ‘Create JIRA Issue’ dialog</li>
 </ul>
-<h2 id="vecto-2.1.4">VECTO 2.1.4</h2>
+</div>
+<div id="vecto-2.1.4" class="section level2">
+<h2>VECTO 2.1.4</h2>
 <ul>
 <li>Bugfixes in start gear and (A)MT shift model</li>
 <li>Updated Coach .vcdv file for higher speeds to avoid extrapolation</li>
@@ -3094,24 +3454,32 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\
 <li>Reduced minimum turbine speed for 1C-to-2C AT up-shift condition from 900 to 700rpm.</li>
 <li>Updated cross wind correction parameters to current White Book values</li>
 </ul>
-<h2 id="vecto-2.1.3">VECTO 2.1.3</h2>
+</div>
+<div id="vecto-2.1.3" class="section level2">
+<h2>VECTO 2.1.3</h2>
 <ul>
 <li>PwheelPos output in VSUM file.</li>
 <li>Implemented new Cd*A(v) method</li>
 <li>Bugfix in TC model</li>
 <li>Bugfix: Unit error in Cd(v) methods caused incorrect Delta-Cd value being used</li>
 </ul>
-<h2 id="vecto-2.1.2">VECTO 2.1.2</h2>
+</div>
+<div id="vecto-2.1.2" class="section level2">
+<h2>VECTO 2.1.2</h2>
 <ul>
 <li>Improved TC iteration for higher precision</li>
 <li>Extended possible TC speed ratio</li>
 </ul>
-<h2 id="vecto-2.1.1">VECTO 2.1.1</h2>
+</div>
+<div id="vecto-2.1.1" class="section level2">
+<h2>VECTO 2.1.1</h2>
 <ul>
 <li>Bugfix: Incorrect torque calculation in AT/TC model caused early up-shifts</li>
 <li>Updated C-to-C shift strategy with acc_min rule (see V2.1)</li>
 </ul>
-<h2 id="vecto-2.1">VECTO 2.1</h2>
+</div>
+<div id="vecto-2.1" class="section level2">
+<h2>VECTO 2.1</h2>
 <ul>
 <li>Automatic Transmission / Torque Converter Model
 <ul>
@@ -3125,7 +3493,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\
 <li>GUI: Corrected air density unit in GUI</li>
 <li>Bugfix: Format error in .vmod header</li>
 </ul>
-<h2 id="vecto-2.0.4-beta4_test-test-release">VECTO 2.0.4-beta4_Test (Test Release)</h2>
+</div>
+<div id="vecto-2.0.4-beta4_test-test-release" class="section level2">
+<h2>VECTO 2.0.4-beta4_Test (Test Release)</h2>
 <ul>
 <li>Transmission loss extrapolation Errors are now Warnings in Engineering Mode.</li>
 <li>Bugfix: Error in TC Iteration caused crash</li>
@@ -3133,7 +3503,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\
 <li>Fixed error in cycle conversion</li>
 <li>Errors if full load curve is too “short”</li>
 </ul>
-<h2 id="vecto-2.0.4-beta3">VECTO 2.0.4-beta3</h2>
+</div>
+<div id="vecto-2.0.4-beta3" class="section level2">
+<h2>VECTO 2.0.4-beta3</h2>
 <ul>
 <li>Bugfix: VECTO didn’t check if the full load curve covers the speed range up to nhi. Now it will abort if the full load curve is “too short”</li>
 <li>Update in Torque Convert model: Allowed engine speed range up to n95h (before: Pmax-speed)</li>
@@ -3143,12 +3515,16 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\
 <li>Implemented speed profile cleaning for very small values. (Caused shifting back to first gear when decelerating.)</li>
 <li>DEV Option for advanced CSV format output (units line, additional info)</li>
 </ul>
-<h2 id="vecto-2.0.4-beta2">VECTO 2.0.4-beta2</h2>
+</div>
+<div id="vecto-2.0.4-beta2" class="section level2">
+<h2>VECTO 2.0.4-beta2</h2>
 <ul>
 <li>Bugfix: VECTO freezed if torque converter creeping was not possible due to low full load torque. Now it will abort with error message.</li>
 <li>Bugfix: Small fixes in torque converter model</li>
 </ul>
-<h2 id="vecto-2.0.4-beta1">VECTO 2.0.4-beta1</h2>
+</div>
+<div id="vecto-2.0.4-beta1" class="section level2">
+<h2>VECTO 2.0.4-beta1</h2>
 <ul>
 <li>Updated CSV format of some declaration config files</li>
 <li>Various bugfixes in AT model</li>
@@ -3157,29 +3533,39 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\
 <li>Added ..\Developer Guide\Segment Table Description.xlsx</li>
 <li>Fixed bug that caused engine power &gt; full load</li>
 </ul>
-<h2 id="vecto-2.0.4-beta">VECTO 2.0.4-beta</h2>
+</div>
+<div id="vecto-2.0.4-beta" class="section level2">
+<h2>VECTO 2.0.4-beta</h2>
 <ul>
 <li>AT update for 1C2C gearboxes</li>
 <li>Warning when opening or running files if file was created in different mode (Declaration/Engineering Mode)</li>
 </ul>
-<h2 id="vecto-2.0.3-beta0">VECTO 2.0.3-beta0</h2>
+</div>
+<div id="vecto-2.0.3-beta0" class="section level2">
+<h2>VECTO 2.0.3-beta0</h2>
 <ul>
 <li>Implemented engine-side TC inertia input parameter in GBX file</li>
 <li>Updated User Manual for TC inertia</li>
 <li>Relabeled “OK” buttons to “Save” in input file editors</li>
 </ul>
-<h2 id="vecto-2.0.2-beta2">VECTO 2.0.2-beta2</h2>
+</div>
+<div id="vecto-2.0.2-beta2" class="section level2">
+<h2>VECTO 2.0.2-beta2</h2>
 <ul>
 <li>AT/TC Update</li>
 <li>Various smaller fixes</li>
 </ul>
-<h2 id="vecto-2.0.2-beta1">VECTO 2.0.2-beta1</h2>
+</div>
+<div id="vecto-2.0.2-beta1" class="section level2">
+<h2>VECTO 2.0.2-beta1</h2>
 <ul>
 <li>AT/TC Update</li>
 <li>Engine inertia power demand (PaEng) is now always calculated based on the previous engine speed rather than vehicle acceleration.</li>
 <li>Various smaller fixes</li>
 </ul>
-<h2 id="vecto-2.0.1-beta1-hotfix.vecto-33">VECTO 2.0.1-beta1-hotfix.VECTO-33</h2>
+</div>
+<div id="vecto-2.0.1-beta1-hotfix.vecto-33" class="section level2">
+<h2>VECTO 2.0.1-beta1-hotfix.VECTO-33</h2>
 <ul>
 <li>Fixed VECTO-34</li>
 <li>Updated .vsum(.json)
@@ -3191,18 +3577,24 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\
 </ul></li>
 <li>Updated README.md</li>
 </ul>
-<h2 id="vecto-2.0.1-beta1">VECTO 2.0.1-beta1</h2>
+</div>
+<div id="vecto-2.0.1-beta1" class="section level2">
+<h2>VECTO 2.0.1-beta1</h2>
 <ul>
 <li>Updated Segment Table header</li>
 <li>Fixed Eco Roll (VECTO-30)</li>
 <li>Fixed Cycles in VECTO Editor being overwritten in Engineering Mode (VECTO-31)</li>
 </ul>
-<h2 id="vecto-2.0.1-beta0">VECTO 2.0.1-beta0</h2>
+</div>
+<div id="vecto-2.0.1-beta0" class="section level2">
+<h2>VECTO 2.0.1-beta0</h2>
 <ul>
 <li>Update Notes &gt; Release Notes</li>
 <li>Segment Table header</li>
 </ul>
-<h2 id="vecto-2.0">VECTO 2.0</h2>
+</div>
+<div id="vecto-2.0" class="section level2">
+<h2>VECTO 2.0</h2>
 <ul>
 <li>Updated CSV file format. Now only one header with units included.</li>
 <li>Changed input file comment symbol form “c” to “#”.</li>
@@ -3215,22 +3607,30 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\
 <li>Removed rated power (not used anymore)</li>
 <li>Removed rated engine speed form engine file. Now calculated form vfld file.</li>
 </ul>
-<h2 id="vecto-1.4.rc8">VECTO 1.4.RC8</h2>
+</div>
+<div id="vecto-1.4.rc8" class="section level2">
+<h2>VECTO 1.4.RC8</h2>
 <ul>
 <li>Bugfix: Eco Roll didn’t go into motoring operation when Overspeed-Limit was reached (could cause higher FC than Overspeed Mode)</li>
 <li>Minor update in demo data (12t motoring curve)</li>
 </ul>
-<h2 id="vecto-1.4.rc7">VECTO 1.4.RC7</h2>
+</div>
+<div id="vecto-1.4.rc7" class="section level2">
+<h2>VECTO 1.4.RC7</h2>
 <ul>
 <li>Bugfix: Error in road gradient resulted in altitude error</li>
 <li>Speed reduction in smaller steps to get closer to full load curve (before speed was sometimes reduced too much and caused problem with gear shifting)</li>
 <li>Updates in demo data</li>
 </ul>
-<h2 id="vecto-1.4.rc6">VECTO 1.4.RC6</h2>
+</div>
+<div id="vecto-1.4.rc6" class="section level2">
+<h2>VECTO 1.4.RC6</h2>
 <ul>
 <li>Bugfix in torque converter calculation</li>
 </ul>
-<h2 id="vecto-1.4.rc5">VECTO 1.4.RC5</h2>
+</div>
+<div id="vecto-1.4.rc5" class="section level2">
+<h2>VECTO 1.4.RC5</h2>
 <ul>
 <li>Bugfix: Gears using torque converter and transmission loss maps may cause invalid “out of engine operation range” errors</li>
 <li>Null values for FzISO will abort calculation</li>
@@ -3238,7 +3638,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\
 <li>Torque converter update: rpms over rated speed are not allowed.</li>
 <li>Fixed Wheels inertia in Demo Data</li>
 </ul>
-<h2 id="vecto-1.4.rc4">VECTO 1.4.RC4</h2>
+</div>
+<div id="vecto-1.4.rc4" class="section level2">
+<h2>VECTO 1.4.RC4</h2>
 <ul>
 <li>Bugfix: FC interpolation failed when load points matched map points exactly.</li>
 <li>Bugfix: Invalid “FC= -10000!” errors when outside of FC-Map</li>
@@ -3291,20 +3693,28 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\
 <li>Updated some error messages (units)</li>
 <li>Driving Cycle stop times corrected (No more zero stop times).</li>
 </ul>
-<h2 id="vecto-1.3.1.1">VECTO 1.3.1.1</h2>
+</div>
+<div id="vecto-1.3.1.1" class="section level2">
+<h2>VECTO 1.3.1.1</h2>
 <ul>
 <li>Fixed error in power calculation (rotatory part of acceleration force)</li>
 </ul>
-<h2 id="vecto-1.3.1">VECTO 1.3.1</h2>
+</div>
+<div id="vecto-1.3.1" class="section level2">
+<h2>VECTO 1.3.1</h2>
 <ul>
 <li>Fixed assembly information</li>
 </ul>
-<h2 id="vecto-1.3">VECTO 1.3</h2>
+</div>
+<div id="vecto-1.3" class="section level2">
+<h2>VECTO 1.3</h2>
 <ul>
 <li>Some file-specific error messages link to files</li>
 <li>Eco-Roll, Overspeed, Look Ahead Coasting</li>
 </ul>
-<h2 id="vecto-1.2">VECTO 1.2</h2>
+</div>
+<div id="vecto-1.2" class="section level2">
+<h2>VECTO 1.2</h2>
 <ul>
 <li>Engine Start/Stop implemented</li>
 <li>Bugfix: Fixed error in FC interpolation (invalid extrapolation errors)</li>
@@ -3323,7 +3733,9 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\
 <li>Tranmission Loss Maps are not converted to n,Pe-Maps anymore. Should fix non-linear interpolation effects.</li>
 <li>Engine Only Mode</li>
 </ul>
-<h2 id="vecto-1.1">VECTO 1.1</h2>
+</div>
+<div id="vecto-1.1" class="section level2">
+<h2>VECTO 1.1</h2>
 <ul>
 <li>Speed values below 0.09km/h are set to 0km/h</li>
 <li>New gear shift model
@@ -3347,5 +3759,7 @@ document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'" clas'+'s="em' + 'ail">'+e+'<\
 <li>Demo data updated for new gear shift model</li>
 <li>New independent licensing dll replaces TUG’s version</li>
 </ul>
+</div>
+</div>
 </body>
 </html>

@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var container = job.GetContainer();
 
 			Assert.AreEqual(560.RPMtoRad(), container.EngineSpeed());
-			Assert.AreEqual(0U, container.Gear());
+			Assert.AreEqual(0U, container.Gear);
 		}
 
 		[TestMethod]
@@ -63,9 +63,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var dataWriter = new ModalDataWriter(resultFileName, SimulatorFactory.FactoryMode.EngineOnlyMode);
 			var sumWriter = new SummaryFileWriter(sumFileName);
 
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode) { SumWriter = sumWriter };
-			factory.DataReader.SetJobFile(EngineOnlyJob);
-
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode, EngineOnlyJob) { SumWriter = sumWriter };
+			
 			return factory.SimulationRuns().First();
 		}
 
@@ -75,8 +74,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var sumWriter = new SummaryFileWriter(@"24t Coach.vsum");
 			var jobContainer = new JobContainer(sumWriter);
 
-			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode);
-			runsFactory.DataReader.SetJobFile(@"TestData\Jobs\24t Coach EngineOnly.vecto");
+			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode, @"TestData\Jobs\24t Coach EngineOnly.vecto");
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();

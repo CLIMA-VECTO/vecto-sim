@@ -26,11 +26,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		[DebuggerHidden]
 		public static void AreRelativeEqual(SI expected, SI actual,
-			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor)
+			double toleranceFactor = DoubleExtensionMethods.ToleranceFactor, string message = null)
 		{
 			Assert.IsTrue(actual.HasEqualUnit(expected),
 				string.Format("Wrong SI Units: expected: {0}, actual: {1}", expected.ToBasicUnits(), actual.ToBasicUnits()));
-			AreRelativeEqual(expected.Value(), actual.Value(), toleranceFactor: toleranceFactor);
+			AreRelativeEqual(expected.Value(), actual.Value(), toleranceFactor: toleranceFactor, message: message);
 		}
 
 		[DebuggerHidden]
@@ -59,8 +59,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			var ratio = expected == 0 ? Math.Abs(actual) : Math.Abs(actual / expected - 1);
 			Assert.IsTrue(ratio < toleranceFactor, string.Format(CultureInfo.InvariantCulture,
-				"Given values are not equal. Expected: {0}, Actual: {1}, Difference: {3} (Tolerance: {2}){4}",
-				expected, actual, toleranceFactor * (expected == 0 ? 1 : expected), expected - actual, message));
+				"Given values are not equal. Expected: {0}, Actual: {1}, Difference: {3} (Tolerance Factor: {2}){4}",
+				expected, actual, toleranceFactor, expected - actual, message));
 		}
 	}
 }

@@ -1,22 +1,17 @@
-﻿using Common.Logging;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using TUGraz.VectoCore.Models;
 
 namespace TUGraz.VectoCore.FileIO
 {
-	public class InputFileReader
+	public class InputFileReader : LoggingObject
 	{
-		protected ILog Log;
-
 		protected class VersionInfo
 		{
 			public bool SavedInDeclarationMode;
 			public int Version;
 		}
 
-		protected InputFileReader()
-		{
-			Log = LogManager.GetLogger(GetType());
-		}
+		protected InputFileReader() {}
 
 		protected static VersionInfo GetFileVersion(string jsonStr)
 		{

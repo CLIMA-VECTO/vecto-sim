@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
-using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -12,7 +10,7 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class VehicleContainer : IVehicleContainer
+	public class VehicleContainer : LoggingObject, IVehicleContainer
 	{
 		internal readonly IList<VectoSimulationComponent> Components = new List<VectoSimulationComponent>();
 		internal IEngineInfo Engine;
@@ -31,16 +29,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal ISummaryDataWriter SumWriter;
 		internal IModalDataWriter DataWriter;
 
-		private readonly ILog _logger;
-
 		#region IGearCockpit
 
-		public uint Gear()
+		public uint Gear
 		{
-			if (Gearbox == null) {
-				throw new VectoException("no gearbox available!");
+			get
+			{
+				if (Gearbox == null) {
+					throw new VectoException("no gearbox available!");
+				}
+				return Gearbox.Gear;
 			}
-			return Gearbox.Gear();
+			set
+			{
+				if (Gearbox == null) {
+					throw new VectoException("no gearbox available!");
+				}
+				Gearbox.Gear = value;
+			}
 		}
 
 		#endregion
@@ -83,7 +89,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public VehicleContainer(IModalDataWriter dataWriter = null, ISummaryDataWriter sumWriter = null)
 		{
-			_logger = LogManager.GetLogger(GetType());
 			DataWriter = dataWriter;
 			SumWriter = sumWriter;
 		}
@@ -143,7 +148,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
-			_logger.Info("VehicleContainer committing simulation.");
+			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time, Distance(), VehicleSpeed());
 			foreach (var component in Components) {
 				component.CommitSimulationStep(DataWriter);
 			}
@@ -157,7 +162,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void FinishSimulation()
 		{
-			_logger.Info("VehicleContainer finishing simulation.");
+			Log.Info("VehicleContainer finishing simulation.");
 			DataWriter.Finish();
 
 			SumWriter.Write(DataWriter, VehicleMass(), VehicleLoading());
@@ -172,6 +177,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public Meter Distance()
 		{
+			if (MilageCounter == null) {
+				Log.Warn("No MileageCounter in VehicleContainer. Distance cannot be measured.");
+				return 0.SI<Meter>();
+			}
 			return MilageCounter.Distance();
 		}
 

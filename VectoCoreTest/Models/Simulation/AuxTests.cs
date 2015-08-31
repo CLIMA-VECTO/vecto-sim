@@ -18,15 +18,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxWriteModFileSumFile()
 		{
-			var dataWriter = new ModalDataWriter(@"40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod",
-				SimulatorFactory.FactoryMode.EngineeringMode);
+			var dataWriter = new ModalDataWriter(@"AuxWriteModFileSumFile.vmod");
 			dataWriter.AddAuxiliary("FAN");
 			dataWriter.AddAuxiliary("PS");
 			dataWriter.AddAuxiliary("STP");
 			dataWriter.AddAuxiliary("ES");
 			dataWriter.AddAuxiliary("AC");
 
-			var sumWriter = new SummaryFileWriter(@"40t_Long_Haul_Truck.vsum");
+			var sumWriter = new SummaryFileWriter(@"AuxWriteModFileSumFile.vsum");
 			var deco = new SumWriterDecoratorFullPowertrain(sumWriter, "", "", "");
 
 			var container = new VehicleContainer(dataWriter, deco);
@@ -54,7 +53,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var t = 0.SI<Second>();
 			var dt = 1.SI<Second>();
 
-			for (var i = 0; i < data.Entries.Count; i++) {
+			for (var i = 0; i < 11; i++) {
 				aux.OutPort().Request(t, dt, torque, speed);
 				container.CommitSimulationStep(t, dt);
 				t += dt;
@@ -67,9 +66,9 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var testColumns = new[] { "Paux_FAN", "Paux_STP", "Paux_AC", "Paux_ES", "Paux_PS", "Paux" };
 
 			ResultFileHelper.TestModFile(@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod",
-				@"40t_Long_Haul_Truck_Long_Haul_Empty Loading.vmod", testColumns);
-			ResultFileHelper.TestSumFile(@"40t_Long_Haul_Truck.vsum",
-				@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck.vsum");
+				@"AuxWriteModFileSumFile.vmod", testColumns, testRowCount: false);
+			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\40t_Long_Haul_Truck.vsum",
+				@"AuxWriteModFileSumFile.vsum");
 		}
 
 		[TestMethod]
@@ -271,31 +270,30 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void AuxReadJobFileDeclarationMode()
 		{
-			var sumWriter = new SummaryFileWriter(@"40t_Long_Haul_Truck.vsum");
+			var sumWriter = new SummaryFileWriter(@"AuxReadJobFileDeclarationMode.vsum");
 			var jobContainer = new JobContainer(sumWriter);
 
-			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode);
-			runsFactory.DataReader.SetJobFile(@"TestData\Jobs\40t_Long_Haul_Truck.vecto");
+			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, @"TestData\Jobs\40t_Long_Haul_Truck.vecto");
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
 
-			ResultFileHelper.TestSumFile(@"TestData\Results\Declaration\40t_Long_Haul_Truck.vsum", @"40t_Long_Haul_Truck.vsum");
+			ResultFileHelper.TestSumFile(@"TestData\Results\Declaration\40t_Long_Haul_Truck.vsum",
+				@"AuxReadJobFileDeclarationMode.vsum");
 		}
 
 		[TestMethod]
 		public void AuxReadJobFileEngineeringMode()
 		{
-			var sumWriter = new SummaryFileWriter(@"24t Coach.vsum");
+			var sumWriter = new SummaryFileWriter(@"AuxReadJobFileEngineeringMode.vsum");
 			var jobContainer = new JobContainer(sumWriter);
 
-			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode);
-			runsFactory.DataReader.SetJobFile(@"TestData\Jobs\24t Coach.vecto");
+			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode, @"TestData\Jobs\24t Coach.vecto");
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
 
-			ResultFileHelper.TestSumFile(@"TestData\Results\Engineering\24t Coach.vsum", @"24t Coach.vsum");
+			ResultFileHelper.TestSumFile(@"TestData\Results\Engineering\24t Coach.vsum", @"AuxReadJobFileEngineeringMode.vsum");
 
 			ResultFileHelper.TestModFile(
 				@"TestData\Results\Engineering\24t Coach_Coach_24t_xshort.vmod",

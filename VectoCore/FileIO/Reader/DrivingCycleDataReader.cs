@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using Common.Logging;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.FileIO.Reader
 {
-	public class DrivingCycleDataReader
+	public class DrivingCycleDataReader : LoggingObject
 	{
 		// --- Factory Methods
 		public static DrivingCycleData ReadFromStream(Stream stream, CycleType type)
@@ -62,8 +62,6 @@ namespace TUGraz.VectoCore.FileIO.Reader
 		private static List<DrivingCycleData.DrivingCycleEntry> FilterDrivingCycleEntries(
 			List<DrivingCycleData.DrivingCycleEntry> entries)
 		{
-			var log = LogManager.GetLogger<DrivingCycleData>();
-
 			var filtered = new List<DrivingCycleData.DrivingCycleEntry>();
 			var current = entries.First();
 			current.Altitude = 0.SI<Meter>();
@@ -95,7 +93,8 @@ namespace TUGraz.VectoCore.FileIO.Reader
 
 				distance = entry.Distance;
 			}
-			log.Info(string.Format("Data loaded. Number of Entries: {0}, filtered Entries: {1}", entries.Count, filtered.Count));
+			Logger<DrivingCycleDataReader>()
+				.Info("Data loaded. Number of Entries: {0}, filtered Entries: {1}", entries.Count, filtered.Count);
 			entries = filtered;
 
 			AdjustDistanceAfterStop(entries);
@@ -440,9 +439,8 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				}
 
 				if (header.Contains(Fields.EngineTorque) && header.Contains(Fields.EnginePower)) {
-					LogManager.GetLogger<DrivingCycleData>()
-						.WarnFormat("Found column '{0}' and column '{1}': only column '{0}' will be used.",
-							Fields.EngineTorque, Fields.EnginePower);
+					Logger<DrivingCycleDataReader>().Warn("Found column '{0}' and column '{1}': only column '{0}' will be used.",
+						Fields.EngineTorque, Fields.EnginePower);
 				}
 			}
 		}

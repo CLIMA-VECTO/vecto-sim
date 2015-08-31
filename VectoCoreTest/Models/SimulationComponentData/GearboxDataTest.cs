@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -20,20 +19,20 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		{
 			var gbxData = EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(GearboxFile);
 
-			Assert.AreEqual(GearboxData.GearboxType.AMT, gbxData.Type);
+			Assert.AreEqual(GearboxType.AMT, gbxData.Type);
 			Assert.AreEqual(1.0, gbxData.TractionInterruption.Value(), 0.0001);
-			Assert.AreEqual(8, gbxData.GearsCount());
+			Assert.AreEqual(8, gbxData.Gears.Count);
 
 			Assert.AreEqual(3.240355, gbxData.AxleGearData.Ratio, 0.0001);
-			Assert.AreEqual(1.0, gbxData[7].Ratio, 0.0001);
+			Assert.AreEqual(1.0, gbxData.Gears[7].Ratio, 0.0001);
 
-			Assert.AreEqual(-400, gbxData[1].ShiftPolygon.Downshift[0].Torque.Value(), 0.0001);
-			Assert.AreEqual(560.RPMtoRad().Value(), gbxData[1].ShiftPolygon.Downshift[0].AngularSpeed.Value(), 0.0001);
-			Assert.AreEqual(1289.RPMtoRad().Value(), gbxData[1].ShiftPolygon.Upshift[0].AngularSpeed.Value(), 0.0001);
+			Assert.AreEqual(-400, gbxData.Gears[1].ShiftPolygon.Downshift[0].Torque.Value(), 0.0001);
+			Assert.AreEqual(560.RPMtoRad().Value(), gbxData.Gears[1].ShiftPolygon.Downshift[0].AngularSpeed.Value(), 0.0001);
+			Assert.AreEqual(1289.RPMtoRad().Value(), gbxData.Gears[1].ShiftPolygon.Upshift[0].AngularSpeed.Value(), 0.0001);
 
-			Assert.AreEqual(200.RPMtoRad().Value(), gbxData[1].LossMap[15].InputSpeed.Value(), 0.0001);
-			Assert.AreEqual(-350, gbxData[1].LossMap[15].InputTorque.Value(), 0.0001);
-			Assert.AreEqual(13.072, gbxData[1].LossMap[15].TorqueLoss.Value(), 0.0001);
+			Assert.AreEqual(200.RPMtoRad().Value(), gbxData.Gears[1].LossMap[15].InputSpeed.Value(), 0.0001);
+			Assert.AreEqual(-350, gbxData.Gears[1].LossMap[15].InputTorque.Value(), 0.0001);
+			Assert.AreEqual(13.072, gbxData.Gears[1].LossMap[15].TorqueLoss.Value(), 0.0001);
 		}
 
 		[TestMethod]

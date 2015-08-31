@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public NewtonMeter LookupTorque(double nu, PerSecond angularSpeedIn, PerSecond referenceSpeed)
 		{
-			var sec = Data.GetSamples(kv => kv.Key < nu);
+			var sec = Data.GetSection(kv => kv.Key < nu);
 
 			if (nu < sec.Item1.Key || sec.Item2.Key < nu) {
 				Log.Warn(string.Format("TCextrapol: nu = {0} [n_out/n_in]", nu));
@@ -37,7 +37,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public double LookupMu(double nu)
 		{
-			var sec = Data.GetSamples(kv => kv.Key < nu);
+			var sec = Data.GetSection(kv => kv.Key < nu);
 
 			if (nu < sec.Item1.Key || sec.Item2.Key < nu) {
 				Log.Warn(string.Format("TCextrapol: nu = {0} [n_out/n_in]", nu));
