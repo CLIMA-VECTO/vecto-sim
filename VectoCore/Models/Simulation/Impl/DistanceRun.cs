@@ -1,5 +1,6 @@
 ﻿using System;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Utils;
@@ -20,25 +21,19 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				ds = Constants.SimulationSettings.DriveOffDistance;
 			}
 
-			IResponse response = null;
-			var requestDone = false;
-			while (!requestDone) {
+			IResponse response;
+			do {
 				response = CyclePort.Request(AbsTime, ds);
-
 				response.Switch().
 					Case<ResponseSuccess>(r => {
-						AbsTime = AbsTime + r.SimulationInterval;
-						dt = r.SimulationInterval;
-						requestDone = true;
+						ds = Container.VehicleSpeed().IsEqual(0)
+							? Constants.SimulationSettings.DriveOffDistance
+							: Constants.SimulationSettings.TargetTimeInterval * Container.VehicleSpeed();
 					}).
-					Case<ResponseCycleFinished>(() => requestDone = true).
-					Case<ResponseDrivingCycleDistanceExceeded>(r => { ds = r.MaxDistance; });
-			}
-
-			//while (response is ResponseFailTimeInterval) {
-			//	_dt = (response as ResponseFailTimeInterval).DeltaT;
-			//	response = CyclePort.Request(_absTime, _dt);
-			//}
+					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
+					Case<ResponseCycleFinished>(r => { }).
+					Default(r => { throw new VectoException("DistanceRun got an unexpected response: {0}", r); });
+			} while (!(response is ResponseSuccess || response is ResponseCycleFinished));
 
 			return response;
 		}

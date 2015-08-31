@@ -248,7 +248,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="dt">[s]</param>
 		protected void ComputeFullLoadPower(PerSecond angularVelocity, Second dt)
 		{
-			if (dt.IsEqual(0)) {
+			if (dt <= 0) {
 				throw new VectoException("ComputeFullLoadPower cannot compute for simulation interval length 0.");
 			}
 

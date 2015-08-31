@@ -41,6 +41,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IResponse response;
 
 			Initialize();
+
+			Container.Gear = 1;
 			do {
 				response = DoSimulationStep();
 				if (response is ResponseSuccess) {

@@ -114,11 +114,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var hasNextEntry = true;
 
 				// if the current position matches the next action - set new action.
-				if (nextDrivingAction.Current.ActionDistance.IsEqual(currentDistance,
-					Constants.SimulationSettings.DriverActionDistanceTolerance.Value())) {
+				if (nextDrivingAction.Current.ActionDistance <=
+					currentDistance + Constants.SimulationSettings.DriverActionDistanceTolerance) {
 					CurrentState.DrivingAction = nextDrivingAction.Current;
 					hasNextEntry = nextDrivingAction.MoveNext(); // the current action has already been processed, look at next one...
 				}
+
 				// check if desired distance exceeds next action point
 				if (hasNextEntry && nextDrivingAction.Current.ActionDistance < currentDistance + ds) {
 					Log.Debug(
@@ -154,7 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			ComputeAcceleration(ref ds, nextTargetSpeed);
 
 			// todo: still required?
-			if (CurrentState.dt.IsEqual(0)) {
+			if (CurrentState.dt <= 0) {
 				return new ResponseFailTimeInterval();
 			}
 
@@ -243,7 +244,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IResponse DriveOrAccelerate(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			ComputeAcceleration(ref ds, targetVelocity);
-			if (CurrentState.dt.IsEqual(0)) {
+			if (CurrentState.dt <= 0) {
 				return new ResponseFailTimeInterval();
 			}
 
@@ -348,8 +349,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			ComputeAcceleration(ref ds, 0.SI<MeterPerSecond>());
 
-			// todo: still required?
-			if (CurrentState.dt.IsEqual(0)) {
+			if (CurrentState.dt <= 0) {
 				return new ResponseFailTimeInterval();
 			}
 
@@ -427,6 +427,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Case<ResponseDryRun>(r => delta = coasting ? r.DeltaDragLoad : r.DeltaFullLoad).
 					Default(r => { throw new VectoSimulationException(string.Format("Unknown response type. {0}", r)); });
 
+				debug.Add(new { delta, acceleration = CurrentState.Acceleration, searchInterval, intervalFactor });
+
 				if (origDelta == null) {
 					origDelta = delta;
 				} else {
@@ -453,7 +455,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					searchInterval.Abs() < Constants.SimulationSettings.MinimumAcceleration / 20.0) {
 					throw new VectoSimulationException("Could not achieve minimum acceleration");
 				}
-				debug.Add(new { delta, acceleration = CurrentState.Acceleration, searchInterval, intervalFactor });
+
 
 				CurrentState.dt = ComputeTimeInterval(CurrentState.Acceleration, ref ds);
 
@@ -560,10 +562,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed().IsEqual(0)) {
 				throw new NotImplementedException("TargetVelocity or VehicleVelocity is not zero!");
 			}
+			var oldGear = DataBus.Gear;
 			DataBus.Gear = 0;
 			DataBus.BreakPower = double.PositiveInfinity.SI<Watt>();
 			var retVal = Next.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
 			retVal.SimulationInterval = dt;
+			DataBus.Gear = oldGear;
 			return retVal;
 		}
 
