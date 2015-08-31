@@ -6,19 +6,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class DrivingCycleData : SimulationComponentData
 	{
-		public enum CycleType
-		{
-			EngineOnly,
-			TimeBased,
-			DistanceBased
-		}
-
 		internal DrivingCycleData() {}
 
 		public List<DrivingCycleEntry> Entries { get; internal set; }
 
 		public string Name { get; internal set; }
 
+		public CycleType CycleType { get; internal set; }
 
 		public class DrivingCycleEntry
 		{
@@ -134,5 +128,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		}
 
 		#endregion
+	}
+
+	public enum CycleType
+	{
+		EngineOnly,
+		TimeBased,
+		DistanceBased
 	}
 }

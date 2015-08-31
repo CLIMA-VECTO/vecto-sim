@@ -29,7 +29,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Accelerating,
 			Drive,
 			Coasting,
-			Breaking,
+			Braking,
 			//EcoRoll,
 			//OverSpeed,
 		}
@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return DriveOrAccelerate(absTime, ds, targetVelocity, gradient);
 				case DrivingBehavior.Coasting:
 					return DoCoast(absTime, ds, gradient);
-				case DrivingBehavior.Breaking:
+				case DrivingBehavior.Braking:
 					return DoBreak(absTime, ds, gradient, CurrentState.DrivingAction.NextTargetSpeed);
 			}
 			throw new VectoSimulationException("unhandled driving action " + CurrentState.DrivingAction);
@@ -310,7 +310,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.Debug("adding 'Braking' starting at distance {0}", entry.Distance - breakingDistance);
 					nextActions.Add(
 						new DrivingBehaviorEntry {
-							Action = DrivingBehavior.Breaking,
+							Action = DrivingBehavior.Braking,
 							ActionDistance = entry.Distance - breakingDistance,
 							TriggerDistance = entry.Distance,
 							NextTargetSpeed = entry.VehicleTargetSpeed
@@ -404,7 +404,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private void SearchOperatingPoint(Second absTime, ref Meter ds, Radian gradient,
 			IResponse response, bool coasting = false, bool accelerating = true)
 		{
-			var debug = new List<dynamic>(); // only used while testing
+			var debug = new List<dynamic>();
 			var searchInterval = Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating;
 
 			var originalDs = ds;

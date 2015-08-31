@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class Wheels : VectoSimulationComponent, IWheels, IFvOutPort, ITnInPort
 	{
 		private ITnOutPort _outPort;
-		private Meter _dynamicWheelRadius;
+		private readonly Meter _dynamicWheelRadius;
 
 		public Wheels(IVehicleContainer cockpit, Meter rdyn)
 			: base(cockpit)

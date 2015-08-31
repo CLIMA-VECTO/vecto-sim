@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			var driverdata = dao.CreateDriverData(Job);
 			driverdata.AccelerationCurve = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
 			foreach (var mission in segment.Missions) {
-				var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, DrivingCycleData.CycleType.DistanceBased);
+				var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased);
 				foreach (var loading in mission.Loadings) {
 					var engineData = dao.CreateEngineData(Engine);
 

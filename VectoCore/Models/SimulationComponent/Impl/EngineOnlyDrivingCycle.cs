@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	/// <summary>
 	///     Class representing one EngineOnly Driving Cycle
 	/// </summary>
-	public class EngineOnlySimulation : VectoSimulationComponent, IDrivingCycleInfo, IEngineOnlySimulation, ITnInPort,
+	public class EngineOnlyDrivingCycle : VectoSimulationComponent, IDrivingCycleInfo, IEngineOnlySimulation, ITnInPort,
 		ISimulationOutPort
 	{
 		protected DrivingCycleData Data;
@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
 
 
-		public EngineOnlySimulation(IVehicleContainer container, DrivingCycleData cycle) : base(container)
+		public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
 			Data = cycle;
 			LeftSample = Data.Entries.GetEnumerator();

@@ -161,7 +161,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var driverData = CreateDriverData(AccelerationFile2);
 
-			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain_Stop.vmod"); //new TestModalDataWriter();
+			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrainOverload.vmod", SimulatorFactory.FactoryMode.EngineeringMode);
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 

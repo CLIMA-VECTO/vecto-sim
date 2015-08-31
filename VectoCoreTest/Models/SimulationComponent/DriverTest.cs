@@ -42,7 +42,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var driverData = CreateDriverData();
 
-			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain_Coasting.vmod");
+			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain_Coasting.vmod",
+				SimulatorFactory.FactoryMode.EngineeringMode); //new TestModalDataWriter();
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 
@@ -96,7 +97,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var driverData = CreateDriverData();
 
-			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain_Coasting.vmod"); //new TestModalDataWriter();
+			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain_Coasting.vmod",
+				SimulatorFactory.FactoryMode.EngineeringMode); //new TestModalDataWriter();
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 

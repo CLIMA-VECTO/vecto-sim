@@ -14,43 +14,44 @@ namespace TUGraz.VectoCore.FileIO.Reader
 	public class DrivingCycleDataReader : LoggingObject
 	{
 		// --- Factory Methods
-		public static DrivingCycleData ReadFromStream(Stream stream, DrivingCycleData.CycleType type)
+		public static DrivingCycleData ReadFromStream(Stream stream, CycleType type)
 		{
 			return DoReadCycleData(type, VectoCSVFile.ReadStream(stream));
 		}
 
 		public static DrivingCycleData ReadFromFileEngineOnly(string fileName)
 		{
-			return ReadFromFile(fileName, DrivingCycleData.CycleType.EngineOnly);
+			return ReadFromFile(fileName, CycleType.EngineOnly);
 		}
 
 		public static DrivingCycleData ReadFromFileDistanceBased(string fileName)
 		{
-			return ReadFromFile(fileName, DrivingCycleData.CycleType.DistanceBased);
+			return ReadFromFile(fileName, CycleType.DistanceBased);
 		}
 
 		public static DrivingCycleData ReadFromFileTimeBased(string fileName)
 		{
-			return ReadFromFile(fileName, DrivingCycleData.CycleType.TimeBased);
+			return ReadFromFile(fileName, CycleType.TimeBased);
 		}
 
-		public static DrivingCycleData ReadFromFile(string fileName, DrivingCycleData.CycleType type)
+		public static DrivingCycleData ReadFromFile(string fileName, CycleType type)
 		{
 			var retVal = DoReadCycleData(type, VectoCSVFile.Read(fileName));
 			retVal.Name = Path.GetFileNameWithoutExtension(fileName);
 			return retVal;
 		}
 
-		private static DrivingCycleData DoReadCycleData(DrivingCycleData.CycleType type, DataTable data)
+		private static DrivingCycleData DoReadCycleData(CycleType type, DataTable data)
 		{
 			var parser = CreateDataParser(type);
 			var entries = parser.Parse(data).ToList();
 
-			if (type == DrivingCycleData.CycleType.DistanceBased) {
+			if (type == CycleType.DistanceBased) {
 				entries = FilterDrivingCycleEntries(entries);
 			}
 			var cycle = new DrivingCycleData {
 				Entries = entries,
+				CycleType = type
 			};
 			return cycle;
 		}
@@ -140,14 +141,14 @@ namespace TUGraz.VectoCore.FileIO.Reader
 			return retVal;
 		}
 
-		private static IDataParser CreateDataParser(DrivingCycleData.CycleType type)
+		private static IDataParser CreateDataParser(CycleType type)
 		{
 			switch (type) {
-				case DrivingCycleData.CycleType.EngineOnly:
+				case CycleType.EngineOnly:
 					return new EngineOnlyDataParser();
-				case DrivingCycleData.CycleType.TimeBased:
+				case CycleType.TimeBased:
 					return new TimeBasedDataParser();
-				case DrivingCycleData.CycleType.DistanceBased:
+				case CycleType.DistanceBased:
 					return new DistanceBasedDataParser();
 				default:
 					throw new ArgumentOutOfRangeException("type");
