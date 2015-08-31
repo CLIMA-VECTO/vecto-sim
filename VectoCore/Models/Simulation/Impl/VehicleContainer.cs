@@ -177,6 +177,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public Meter Distance()
 		{
+			if (MilageCounter == null) {
+				Log.Warn("No MileageCounter in VehicleContainer. Distance cannot be measured.");
+				return 0.SI<Meter>();
+			}
 			return MilageCounter.Distance();
 		}
 
