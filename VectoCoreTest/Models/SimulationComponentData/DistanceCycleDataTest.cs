@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			var missionType = "LongHaul";
 			var stream = RessourceHelper.ReadStream(ResourceNamespace + "MissionCycles." + missionType + ".vdri");
 
-			var cycleData = DrivingCycleDataReader.ReadFromStream(stream, DrivingCycleData.CycleType.DistanceBased);
+			var cycleData = DrivingCycleDataReader.ReadFromStream(stream, CycleType.DistanceBased);
 			foreach (var entry in cycleData.Entries) {
 				var tmp = entry.Altitude;
 			}

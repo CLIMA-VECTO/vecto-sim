@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var powerTrain = builder.Build(runData);
 
 			Assert.IsInstanceOfType(powerTrain, typeof(IVehicleContainer));
-			Assert.AreEqual(10, powerTrain.Components.Count);
+			Assert.AreEqual(11, powerTrain.Components.Count);
 
 			Assert.IsInstanceOfType(powerTrain.Engine, typeof(CombustionEngine));
 			Assert.IsInstanceOfType(powerTrain.Gearbox, typeof(Gearbox));

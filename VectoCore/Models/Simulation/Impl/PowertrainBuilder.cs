@@ -1,3 +1,4 @@
+using System.Collections;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -32,21 +33,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private VehicleContainer BuildFullPowertrain(VectoRunData data)
 		{
 			IDrivingCycle cycle;
-			if (_engineOnly) {
-				cycle = new TimeBasedDrivingCycle(_container, data.Cycle);
-			} else {
-				if (data.IsEngineOnly) {
-					cycle = new TimeBasedDrivingCycle(_container, data.Cycle);
-				} else {
-					//todo: make distinction between time based and distance based driving cycle!
+			switch (data.Cycle.CycleType) {
+				case CycleType.EngineOnly:
+					throw new VectoSimulationException("Engine-Only cycle File for full PowerTrain not allowed!");
+				case CycleType.DistanceBased:
 					cycle = new DistanceBasedDrivingCycle(_container, data.Cycle);
-				}
+					break;
+				case CycleType.TimeBased:
+					cycle = new TimeBasedDrivingCycle(_container, data.Cycle);
+					break;
+				default:
+					throw new VectoSimulationException("Unhandled Cycle Type");
 			}
 			// cycle --> driver --> vehicle --> wheels --> axleGear --> retarder --> gearBox
 			var driver = AddComponent(cycle, new Driver(_container, data.DriverData));
 			var vehicle = AddComponent(driver, new Vehicle(_container, data.VehicleData));
 			var wheels = AddComponent(vehicle, new Wheels(_container, data.VehicleData.DynamicTyreRadius));
-			var tmp = AddComponent(wheels, new AxleGear(_container, data.GearboxData.AxleGearData));
+			var breaks = AddComponent(wheels, new Breaks(_container));
+			var tmp = AddComponent(breaks, new AxleGear(_container, data.GearboxData.AxleGearData));
 
 			switch (data.VehicleData.Retarder.Type) {
 				case RetarderData.RetarderType.Primary:
@@ -142,7 +146,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private VehicleContainer BuildEngineOnly(VectoRunData data)
 		{
-			var cycle = new EngineOnlySimulation(_container, data.Cycle);
+			var cycle = new EngineOnlyDrivingCycle(_container, data.Cycle);
 
 			var gearbox = new EngineOnlyGearbox(_container);
 			cycle.InPort().Connect(gearbox.OutPort());
@@ -152,7 +156,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			directAux.AddDirect(cycle);
 			gearbox.InPort().Connect(directAux.OutPort());
 
-			var engine = new CombustionEngine(_container, data.EngineData);
+			var engine = new EngineOnlyCombustionEngine(_container, data.EngineData);
 			directAux.InPort().Connect(engine.OutPort());
 
 			return _container;

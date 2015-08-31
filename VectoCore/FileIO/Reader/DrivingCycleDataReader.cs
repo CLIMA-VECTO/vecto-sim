@@ -14,43 +14,44 @@ namespace TUGraz.VectoCore.FileIO.Reader
 	public class DrivingCycleDataReader
 	{
 		// --- Factory Methods
-		public static DrivingCycleData ReadFromStream(Stream stream, DrivingCycleData.CycleType type)
+		public static DrivingCycleData ReadFromStream(Stream stream, CycleType type)
 		{
 			return DoReadCycleData(type, VectoCSVFile.ReadStream(stream));
 		}
 
 		public static DrivingCycleData ReadFromFileEngineOnly(string fileName)
 		{
-			return ReadFromFile(fileName, DrivingCycleData.CycleType.EngineOnly);
+			return ReadFromFile(fileName, CycleType.EngineOnly);
 		}
 
 		public static DrivingCycleData ReadFromFileDistanceBased(string fileName)
 		{
-			return ReadFromFile(fileName, DrivingCycleData.CycleType.DistanceBased);
+			return ReadFromFile(fileName, CycleType.DistanceBased);
 		}
 
 		public static DrivingCycleData ReadFromFileTimeBased(string fileName)
 		{
-			return ReadFromFile(fileName, DrivingCycleData.CycleType.TimeBased);
+			return ReadFromFile(fileName, CycleType.TimeBased);
 		}
 
-		public static DrivingCycleData ReadFromFile(string fileName, DrivingCycleData.CycleType type)
+		public static DrivingCycleData ReadFromFile(string fileName, CycleType type)
 		{
 			var retVal = DoReadCycleData(type, VectoCSVFile.Read(fileName));
 			retVal.Name = Path.GetFileNameWithoutExtension(fileName);
 			return retVal;
 		}
 
-		private static DrivingCycleData DoReadCycleData(DrivingCycleData.CycleType type, DataTable data)
+		private static DrivingCycleData DoReadCycleData(CycleType type, DataTable data)
 		{
 			var parser = CreateDataParser(type);
 			var entries = parser.Parse(data).ToList();
 
-			if (type == DrivingCycleData.CycleType.DistanceBased) {
+			if (type == CycleType.DistanceBased) {
 				entries = FilterDrivingCycleEntries(entries);
 			}
 			var cycle = new DrivingCycleData {
 				Entries = entries,
+				CycleType = type
 			};
 			return cycle;
 		}
@@ -69,16 +70,29 @@ namespace TUGraz.VectoCore.FileIO.Reader
 			filtered.Add(current);
 			var distance = current.Distance;
 			var altitude = current.Altitude;
-			foreach (var entry in entries) {
+			//foreach (var entry in entries) {
+			for (var i = 0; i < entries.Count; i++) {
+				var entry = entries[i];
+				if (i > 0) {
+					altitude += (entry.Distance - distance) * entries[i - 1].RoadGradientPercent / 100.0;
+				}
 				entry.Altitude = altitude;
-				if (!CycleEntriesAreEqual(current, entry)) {
+				// if something changes in the cycle, add it to the filtered cycle but always add last entry
+				if (!CycleEntriesAreEqual(current, entry) || i == entries.Count - 1) {
 					entry.Altitude = altitude;
 					filtered.Add(entry);
 					current = entry;
 				}
-				if (entry.StoppingTime.IsEqual(0) && !entry.VehicleTargetSpeed.IsEqual(0)) {
-					altitude += (entry.Distance - distance) * entry.RoadGradientPercent / 100.0;
+				if (!entry.StoppingTime.IsEqual(0) && entry.VehicleTargetSpeed.IsEqual(0)) {
+					// vehicle stops. duplicate current distance entry with 0 waiting time
+					var tmp = new DrivingCycleData.DrivingCycleEntry(entry) {
+						StoppingTime = 0.SI<Second>(),
+						VehicleTargetSpeed = i < entries.Count - 1 ? entries[i + 1].VehicleTargetSpeed : 0.SI<MeterPerSecond>()
+					};
+					filtered.Add(tmp);
+					current = tmp;
 				}
+
 				distance = entry.Distance;
 			}
 			log.Info(string.Format("Data loaded. Number of Entries: {0}, filtered Entries: {1}", entries.Count, filtered.Count));
@@ -128,14 +142,14 @@ namespace TUGraz.VectoCore.FileIO.Reader
 			return retVal;
 		}
 
-		private static IDataParser CreateDataParser(DrivingCycleData.CycleType type)
+		private static IDataParser CreateDataParser(CycleType type)
 		{
 			switch (type) {
-				case DrivingCycleData.CycleType.EngineOnly:
+				case CycleType.EngineOnly:
 					return new EngineOnlyDataParser();
-				case DrivingCycleData.CycleType.TimeBased:
+				case CycleType.TimeBased:
 					return new TimeBasedDataParser();
-				case DrivingCycleData.CycleType.DistanceBased:
+				case CycleType.DistanceBased:
 					return new DistanceBasedDataParser();
 				default:
 					throw new ArgumentOutOfRangeException("type");

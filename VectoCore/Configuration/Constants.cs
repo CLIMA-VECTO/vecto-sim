@@ -54,13 +54,20 @@ namespace TUGraz.VectoCore.Configuration
 			/// threshold for changes in the road gradient. changes below this threshold will be considered to be equal for filtering out the driving cycle.
 			/// altitude computation is done before filtering! 
 			/// </summary>
-			public static readonly double DrivingCycleRoadGradientTolerance = 0;
+			public static readonly double DrivingCycleRoadGradientTolerance = 1E-12;
 
 			//VectoMath.InclinationToAngle(0.25 / 100.0).Value();
 
 			public const int DriverSearchLoopThreshold = 100;
 
 			public const double EngineFLDPowerTolerance = 0.50; // Watt
+
+
+			public const double CluchNormSpeed = 0.03;
+
+			public static readonly MeterPerSquareSecond MinimumAcceleration = 0.1.SI<MeterPerSquareSecond>();
+
+			public static Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
 		}
 	}
 }
