@@ -159,9 +159,9 @@
     <Compile Include="Models\SimulationComponent\Data\Engine\PT1Curve.cs" />
     <Compile Include="Models\SimulationComponent\IBreaks.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\AuxiliaryData.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Breaks.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\MappingAuxiliaryData.cs" />
     <Compile Include="Models\Simulation\DataBus\IClutchInfo.cs" />
     <Compile Include="Models\Simulation\Data\AuxiliaryDemandType.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryType.cs" />
@@ -276,6 +276,7 @@
     <EmbeddedResource Include="Resources\Declaration\DefaultTC.vtcc" />
     <EmbeddedResource Include="Resources\Declaration\VCDV\parameters.csv" />
     <EmbeddedResource Include="Resources\Declaration\WHTC-Weighting-Factors.csv" />
+    <EmbeddedResource Include="Resources\Declaration\VAUX\ALT-Tech.csv" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

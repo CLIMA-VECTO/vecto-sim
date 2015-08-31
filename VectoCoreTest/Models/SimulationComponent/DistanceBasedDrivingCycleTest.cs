@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			// Constants.SimulationSettings.DrivingCycleRoadGradientTolerance = 1E-12;
 
-			var cycleData = DrivingCycleDataReader.ReadFromFile(ShortCycle, DrivingCycleData.CycleType.DistanceBased);
+			var cycleData = DrivingCycleDataReader.ReadFromFile(ShortCycle, CycleType.DistanceBased);
 
 			var vehicleContainer = new VehicleContainer();
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);

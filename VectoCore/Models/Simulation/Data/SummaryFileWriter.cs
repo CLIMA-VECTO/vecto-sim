@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -108,14 +109,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		private void WriteAuxiliaries(IModalDataWriter data, DataRow row)
 		{
-			_auxColumns = _auxColumns.Union(data.Auxiliaries.Select(kv => "Eaux_" + kv.Key + " [kwh]")).ToList();
+			_auxColumns = _auxColumns.Union(data.Auxiliaries.Select(kv => "Eaux_" + kv.Key + " [kWh]")).ToList();
 
 			var sum = 0.SI<Watt>();
 			foreach (var aux in data.Auxiliaries) {
 				var colName = "Eaux_" + aux.Key + " [kWh]";
-				if (!_table.Columns.Contains(colName)) {
+				try {
 					_table.Columns.Add(colName, typeof(SI));
-				}
+				} catch (DuplicateNameException) {}
+
 
 				var currentSum = data.Sum(aux.Value);
 				row[colName] = currentSum;

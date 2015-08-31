@@ -212,7 +212,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			foreach (var auxData in auxList) {
 				var aux = new VectoRunData.AuxData { DemandType = AuxiliaryDemandType.Constant };
 
-				switch (aux.Type) {
+				switch (auxData.Type) {
 					case AuxiliaryType.Fan:
 						aux.PowerDemand = DeclarationData.Fan.Lookup(mission, auxData.Technology);
 						aux.ID = Constants.Auxiliaries.IDs.Fan;

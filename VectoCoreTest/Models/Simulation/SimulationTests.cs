@@ -60,7 +60,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		{
 			var sumFileName = resultFileName.Substring(0, resultFileName.Length - 5) + Constants.FileExtensions.SumFile;
 
-			var dataWriter = new ModalDataWriter(resultFileName, engineOnly: true);
+			var dataWriter = new ModalDataWriter(resultFileName, SimulatorFactory.FactoryMode.EngineOnlyMode);
 			var sumWriter = new SummaryFileWriter(sumFileName);
 
 			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode) { SumWriter = sumWriter };

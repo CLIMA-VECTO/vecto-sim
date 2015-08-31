@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			public string[] TechList;
 			public Watt PowerDemand;
 			public AuxiliaryDemandType DemandType;
-			public MappingAuxiliaryData Data;
+			public AuxiliaryData Data;
 		}
 
 		public class StartStopData

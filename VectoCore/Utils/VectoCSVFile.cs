@@ -35,12 +35,13 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="fileName"></param>
 		/// <param name="ignoreEmptyColumns"></param>
+		/// <param name="fullHeader"></param>
 		/// <exception cref="FileIOException"></exception>
 		/// <returns>A DataTable which represents the CSV File.</returns>
-		public static DataTable Read(string fileName, bool ignoreEmptyColumns = false)
+		public static DataTable Read(string fileName, bool ignoreEmptyColumns = false, bool fullHeader = false)
 		{
 			try {
-				return ReadData(File.ReadAllLines(fileName), ignoreEmptyColumns);
+				return ReadData(File.ReadAllLines(fileName), ignoreEmptyColumns, fullHeader);
 			} catch (Exception e) {
 				throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message));
 			}
@@ -68,11 +69,11 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
-		private static DataTable ReadData(string[] data, bool ignoreEmptyColumns = false)
+		private static DataTable ReadData(string[] data, bool ignoreEmptyColumns = false, bool fullHeader = false)
 		{
 			var lines = RemoveComments(data);
 
-			var validColumns = GetValidHeaderColumns(lines.First());
+			var validColumns = GetValidHeaderColumns(lines.First(), fullHeader).ToArray();
 
 			if (validColumns.Length > 0) {
 				// Valid Columns found => header was valid => skip header line
@@ -108,22 +109,24 @@ namespace TUGraz.VectoCore.Utils
 			return table;
 		}
 
-		private static string[] GetValidHeaderColumns(string line)
+		private static IEnumerable<string> GetValidHeaderColumns(string line, bool fullHeader = false)
 		{
 			Contract.Requires(line != null);
 			double test;
-			var validColumns = GetColumns(line).
+			var validColumns = GetColumns(line, fullHeader).
 				Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out test));
 			return validColumns.ToArray();
 		}
 
-		private static IEnumerable<string> GetColumns(string line)
+		private static IEnumerable<string> GetColumns(string line, bool fullHeader = false)
 		{
 			Contract.Requires(line != null);
 
-			line = Regex.Replace(line, @"\[.*?\]", "");
-			line = line.Replace("<", "");
-			line = line.Replace(">", "");
+			if (!fullHeader) {
+				line = Regex.Replace(line, @"\[.*?\]", "");
+				line = line.Replace("<", "");
+				line = line.Replace(">", "");
+			}
 			return line.Split(Delimiter).Select(col => col.Trim());
 		}
 

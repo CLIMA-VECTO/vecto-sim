@@ -21,17 +21,17 @@ namespace TUGraz.VectoCore.FileIO.Reader
 
 		public static DrivingCycleData ReadFromFileEngineOnly(string fileName)
 		{
-			return ReadFromFile(fileName, DrivingCycleData.CycleType.EngineOnly);
+			return ReadFromFile(fileName, CycleType.EngineOnly);
 		}
 
 		public static DrivingCycleData ReadFromFileDistanceBased(string fileName)
 		{
-			return ReadFromFile(fileName, DrivingCycleData.CycleType.DistanceBased);
+			return ReadFromFile(fileName, CycleType.DistanceBased);
 		}
 
 		public static DrivingCycleData ReadFromFileTimeBased(string fileName)
 		{
-			return ReadFromFile(fileName, DrivingCycleData.CycleType.TimeBased);
+			return ReadFromFile(fileName, CycleType.TimeBased);
 		}
 
 		public static DrivingCycleData ReadFromFile(string fileName, CycleType type)
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 			var parser = CreateDataParser(type);
 			var entries = parser.Parse(data).ToList();
 
-			if (type == DrivingCycleData.CycleType.DistanceBased) {
+			if (type == CycleType.DistanceBased) {
 				entries = FilterDrivingCycleEntries(entries);
 			}
 			var cycle = new DrivingCycleData {
@@ -145,11 +145,11 @@ namespace TUGraz.VectoCore.FileIO.Reader
 		private static IDataParser CreateDataParser(CycleType type)
 		{
 			switch (type) {
-				case DrivingCycleData.CycleType.EngineOnly:
+				case CycleType.EngineOnly:
 					return new EngineOnlyDataParser();
-				case DrivingCycleData.CycleType.TimeBased:
+				case CycleType.TimeBased:
 					return new TimeBasedDataParser();
-				case DrivingCycleData.CycleType.DistanceBased:
+				case CycleType.DistanceBased:
 					return new DistanceBasedDataParser();
 				default:
 					throw new ArgumentOutOfRangeException("type");

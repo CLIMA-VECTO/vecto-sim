@@ -42,6 +42,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case CycleType.TimeBased:
 					cycle = new TimeBasedDrivingCycle(_container, data.Cycle);
 					break;
+				default:
+					throw new VectoSimulationException("Unhandled Cycle Type");
 			}
 			// cycle --> driver --> vehicle --> wheels --> axleGear --> retarder --> gearBox
 			var driver = AddComponent(cycle, new Driver(_container, data.DriverData));
