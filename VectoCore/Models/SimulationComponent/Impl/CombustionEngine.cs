@@ -303,8 +303,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns>[W]</returns>
 		protected Watt InertiaPowerLoss(NewtonMeter torque, PerSecond angularVelocity)
 		{
+			// TODO: consider simulation interval!
 			var deltaEngineSpeed = angularVelocity - _previousState.EngineSpeed;
-			var avgEngineSpeed = (_previousState.EngineSpeed + angularVelocity) / 2.SI<Second>();
+			var avgEngineSpeed = (_previousState.EngineSpeed + angularVelocity) / 2;
 			var result = _data.Inertia * deltaEngineSpeed * avgEngineSpeed;
 			return result.Cast<Watt>();
 		}

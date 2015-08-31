@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Accelerating,
 			Drive,
 			Coasting,
-			Breaking,
+			Braking,
 			//EcoRoll,
 			//OverSpeed,
 		}
@@ -112,9 +112,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (nextDrivingActions.Count > 0) {
 				// if we exceeded the previous action (by accident), set the action anyway in case there is no 'next action'...
-				var previousActionss = nextDrivingActions.Where(x => x.Key < currentDistance).ToList();
-				if (previousActionss.Count > 0) {
-					CurrentState.DrivingAction = previousActionss.Last().Value;
+				var previousActions = nextDrivingActions.Where(x => x.Key < currentDistance).ToList();
+				if (previousActions.Count > 0) {
+					CurrentState.DrivingAction = previousActions.Last().Value;
 				}
 
 				var nextActions = nextDrivingActions.Where(x => x.Key >= currentDistance).ToList();
@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					CurrentState.DrivingAction = nextDrivingAction.Current.Value;
 					hasNextEntry = nextDrivingAction.MoveNext(); // the current action has already been processed, look at next one...
 				}
-				// check if desired distance exeeds next acttion point
+				// check if desired distance exeeds next action point
 				if (hasNextEntry && nextDrivingAction.Current.Key < currentDistance + ds) {
 					Log.DebugFormat(
 						"current Distance: {3} -- Simulation Distance {0} exceeds next DrivingAction at {1}, reducing interval to {2}", ds,
@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return DriveOrAccelerate(absTime, ds, targetVelocity, gradient);
 				case DrivingBehavior.Coasting:
 					return DoCoast(absTime, ds, gradient);
-				case DrivingBehavior.Breaking:
+				case DrivingBehavior.Braking:
 					return DoBreak(absTime, ds, gradient, CurrentState.DrivingAction.NextTargetSpeed);
 			}
 			throw new VectoSimulationException("unhandled driving action " + CurrentState.DrivingAction);
@@ -298,7 +298,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Log.DebugFormat("adding 'Braking' starting at distance {0}", entry.Distance - breakingDistance);
 					nextActions.Add(new KeyValuePair<Meter, DrivingBehaviorEntry>(entry.Distance - breakingDistance,
 						new DrivingBehaviorEntry() {
-							Action = DrivingBehavior.Breaking,
+							Action = DrivingBehavior.Braking,
 							ActionDistance = entry.Distance - breakingDistance,
 							TriggerDistance = entry.Distance,
 							NextTargetSpeed = entry.VehicleTargetSpeed

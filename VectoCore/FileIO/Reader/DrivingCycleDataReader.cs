@@ -14,7 +14,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 	public class DrivingCycleDataReader
 	{
 		// --- Factory Methods
-		public static DrivingCycleData ReadFromStream(Stream stream, DrivingCycleData.CycleType type)
+		public static DrivingCycleData ReadFromStream(Stream stream, CycleType type)
 		{
 			return DoReadCycleData(type, VectoCSVFile.ReadStream(stream));
 		}
@@ -34,14 +34,14 @@ namespace TUGraz.VectoCore.FileIO.Reader
 			return ReadFromFile(fileName, DrivingCycleData.CycleType.TimeBased);
 		}
 
-		public static DrivingCycleData ReadFromFile(string fileName, DrivingCycleData.CycleType type)
+		public static DrivingCycleData ReadFromFile(string fileName, CycleType type)
 		{
 			var retVal = DoReadCycleData(type, VectoCSVFile.Read(fileName));
 			retVal.Name = Path.GetFileNameWithoutExtension(fileName);
 			return retVal;
 		}
 
-		private static DrivingCycleData DoReadCycleData(DrivingCycleData.CycleType type, DataTable data)
+		private static DrivingCycleData DoReadCycleData(CycleType type, DataTable data)
 		{
 			var parser = CreateDataParser(type);
 			var entries = parser.Parse(data).ToList();
@@ -51,6 +51,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 			}
 			var cycle = new DrivingCycleData {
 				Entries = entries,
+				CycleType = type
 			};
 			return cycle;
 		}
@@ -141,7 +142,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 			return retVal;
 		}
 
-		private static IDataParser CreateDataParser(DrivingCycleData.CycleType type)
+		private static IDataParser CreateDataParser(CycleType type)
 		{
 			switch (type) {
 				case DrivingCycleData.CycleType.EngineOnly:

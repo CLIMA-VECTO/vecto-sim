@@ -142,7 +142,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				}
 				if (doRun) {
 					Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
-
+	
 					vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 					absTime += response.SimulationInterval;
 
