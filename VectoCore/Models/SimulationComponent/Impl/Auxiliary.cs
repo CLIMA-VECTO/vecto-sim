@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var powerDemand = ComputePowerDemand(engineSpeed);
 
-			return _outPort.Request(absTime, dt, torque + powerDemand / engineSpeed, engineSpeed);
+			return _outPort.Request(absTime, dt, torque + powerDemand / engineSpeed, engineSpeed, dryRun);
 		}
 
 		private Watt ComputePowerDemand(PerSecond engineSpeed)
