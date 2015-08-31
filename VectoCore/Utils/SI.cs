@@ -495,6 +495,7 @@ namespace TUGraz.VectoCore.Utils
 		/// Creates the specified special SI object.
 		/// </summary>
 		/// <param name="val">The value of the SI object.</param>
+		[DebuggerHidden]
 		public static T Create(double val)
 		{
 			RuntimeHelpers.RunClassConstructor(typeof(T).TypeHandle);
@@ -749,6 +750,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="reciproc">if set to <c>true</c> then the object is in reciproc mode (1/...)</param>
 		/// <param name="reverse">if set to <c>true</c> then the object is in reverse convertion mode (e.g. rpm/min => rad/s).</param>
 		/// <param name="exponent">The exponent for further conversions (e.g. Square.Meter).</param>
+		[DebuggerHidden]
 		protected SI(double val, IEnumerable<Unit> numerator, IEnumerable<Unit> denominator, bool reciproc = false,
 			bool reverse = false, int exponent = 1)
 		{

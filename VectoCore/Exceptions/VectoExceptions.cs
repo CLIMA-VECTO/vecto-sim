@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using JetBrains.Annotations;
 
 namespace TUGraz.VectoCore.Exceptions
 {
@@ -7,6 +8,10 @@ namespace TUGraz.VectoCore.Exceptions
 	{
 		public VectoException(string message) : base(message) {}
 		public VectoException(string message, Exception innerException) : base(message, innerException) {}
+
+		[StringFormatMethod("message")]
+		public VectoException(string message, params object[] args)
+			: base(string.Format(message, args)) {}
 	}
 
 	public abstract class FileIOException : VectoException
