@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				Rim = data.RimStr,
 			};
 
-			var retarder = new RetarderData() {
+			var retarder = new RetarderData {
 				Type =
 					(RetarderData.RetarderType)Enum.Parse(typeof(RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
 			};
@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 		internal CombustionEngineData SetCommonCombustionEngineData(EngineFileV3Declaration.DataBodyDecl data, string basePath)
 		{
-			var retVal = new CombustionEngineData() {
+			var retVal = new CombustionEngineData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				ModelName = data.ModelName,
 				Displacement = data.Displacement.SI().Cubic.Centi.Meter.Cast<CubicMeter>(), // convert vom ccm to m^3
@@ -68,10 +68,10 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 		internal GearboxData SetCommonGearboxData(GearboxFileV5Declaration.DataBodyDecl data)
 		{
-			return new GearboxData() {
+			return new GearboxData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
 				ModelName = data.ModelName,
-				Type = (GearboxData.GearboxType)Enum.Parse(typeof(GearboxData.GearboxType), data.GearboxType, true),
+				Type = data.GearboxType.Parse<GearboxType>()
 			};
 		}
 

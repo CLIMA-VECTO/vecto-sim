@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Engine Editor - VECTO User Manual</title></head>
-<body>
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Engine Editor - VECTO User Manual</title></head><body>
 <div style="text-align: left;">
 
 
@@ -14,7 +14,7 @@
 <div style="text-align: center;"><img src="pics/ENG-Editor.PNg" style="width: 800px; height: 444px;" alt="eng" usemap="#linkmap"><br></div>
 <span style="font-family: Verdana;"><br></span><div style="margin-left: 40px;"><big><big style="font-weight: bold;">Description</big></big><br><hr style="height: 1px; width: 100%;">
 
-The Engine File (.veng) defines all engine-related parameters and input files like Fuel Consumption Map and Full Load Curves.<br><br>
+The Engine File (.veng) defines all engine-related parameters and input files like Fuel Consumption Map and Full Load Curve.<br><br>
 <br>
 <big><big style="font-weight: bold;">Relatve File Paths</big></big><br>
 
@@ -50,13 +50,9 @@ including Flywheel</span> [kgm<sup>2</sup>]<br>
 including engine flywheel<span style="font-family: Verdana;"></span>. In <a href="../general/calc_Declaration.html">Declaration Mode</a> the inertia is calculated automatically.
 </div>
 <br>
-<span style="font-family: Verdana;"></span><br><big><big style="font-weight: bold;">Full Load and Drag Curves</big></big><br><hr style="height: 1px; width: 100%;">
+<span style="font-family: Verdana;"></span><br><big><big style="font-weight: bold;">Full Load and Drag Curve</big></big><br><hr style="height: 1px; width: 100%;">The <a href="../fileformat/VFLD.html">Full Load and Drag Curve (.vfld)</a>. Note that gear-specific full load curves can be defined in the <a href="GBX-Editor.html">Gearbox File</a> to limit the maximum gearbox input torque.<br><br>The input file (.vfld) file format is described <a href="../fileformat/VFLD.html">here</a>. <br><br><br><big><big style="font-weight: bold;">Fuel Consumption Map</big></big><br><hr style="height: 1px; width: 100%;">
 
-Multiple <a href="../fileformat/VFLD.html">Full Load and Drag Curves (.vfld)</a> can be defined and assigned
-to different gears. Gear "0" must be assigned for idling and <a href="../general/EngOnlyMode.html">Engine Only Mode</a>.<br>Use the <img style="width: 16px; height: 16px;" alt="add" src="../pics/icons/plus-circle-icon.png"> and <img style="width: 16px; height: 16px;" alt="remove" src="../pics/icons/minus-circle-icon.png"> buttons to add or
-remove&nbsp;.vfld files. Doubleclick entries to edit existing configurations.<br><br>The input file (.vfld) file format is described <a href="../fileformat/VFLD.html">here</a>. <br><br><br><big><big style="font-weight: bold;">Fuel Consumption Map</big></big><br><hr style="height: 1px; width: 100%;">
-
-The <a href="../fileformat/VMAP.html">Fuel Consumption Map</a> is used to calculate the base FC value. See <a href="../general/FC.html">Fuel Consumption Calculation</a> for details.<br><br>The input file (.vmap) file format is described <a href="../fileformat/VMAP.html">here</a>. <br><br><br><big><big style="font-weight: bold;">WHTC Test Results</big></big><br><hr style="height: 1px; width: 100%;">The WHTC test results are required in <a href="../general/calc_Declaration.html">Declaration Mode</a> for the <a href="../general/FC.html">WHTC FC Correction</a>. The fuel consumption must be defined in [g/kWh] for each test part (Urban, Rural, Motorway) separately.<br><br><br><big><big style="font-weight: bold;">Chart Area</big></big><br><hr style="height: 1px; width: 100%;">The Chart Area shows the fuel consumption map and the selected full load curve.<br><br><br><big><big style="font-weight: bold;">Controls</big></big><br><hr style="height: 1px; width: 100%;"><img src="../pics/icons/blue-document-icon.png" style="width: 16px; height: 16px;" alt="new"><span style="font-weight: bold;">New
+The <a href="../fileformat/VMAP.html">Fuel Consumption Map</a> is used to calculate the base FC value. See <a href="../general/FC.html">Fuel Consumption Calculation</a> for details.<br><br>The input file (.vmap) file format is described <a href="../fileformat/VMAP.html">here</a>. <br><br><br><big><big style="font-weight: bold;">WHTC Correction Factors</big></big><br><hr style="height: 1px; width: 100%;">The WHTC Correction Factors are required in <a href="../general/calc_Declaration.html">Declaration Mode</a> for the <a href="../general/FC.html">WHTC FC Correction</a>.<br><br><br><big><big style="font-weight: bold;">Chart Area</big></big><br><hr style="height: 1px; width: 100%;">The Chart Area shows the fuel consumption map and the selected full load curve.<br><br><br><big><big style="font-weight: bold;">Controls</big></big><br><hr style="height: 1px; width: 100%;"><img src="../pics/icons/blue-document-icon.png" style="width: 16px; height: 16px;" alt="new"><span style="font-weight: bold;">New
 file</span><br>
 <div style="margin-left: 40px;">Create a new empty .veng
 file<br>

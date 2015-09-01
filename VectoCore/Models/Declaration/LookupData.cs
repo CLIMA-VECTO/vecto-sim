@@ -1,35 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
-using Common.Logging;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public abstract class LookupData
+	public abstract class LookupData : LoggingObject
 	{
-		protected LookupData()
-		{
-			Log = LogManager.GetLogger(GetType());
-			//var csvFile = ReadCsvResource(ResourceId);
-			//ParseData(csvFile);
-			//ParseData(ReadData());
-		}
-
-		[NonSerialized] protected ILog Log;
-
-		//protected abstract string ResourceId { get; }
-
-		//protected abstract DataTable ReadData();
-
 		protected abstract void ParseData(DataTable table);
 
 		protected DataTable ReadCsvResource(string resourceId)
 		{
-			var myAssembly = Assembly.GetExecutingAssembly();
-			var file = myAssembly.GetManifestResourceStream(resourceId);
-			return VectoCSVFile.ReadStream(file);
+			return VectoCSVFile.ReadStream(RessourceHelper.ReadStream(resourceId));
 		}
 
 		protected DataTable ReadCsvFile(string fileName)

@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static AxleConfiguration Parse(string typeString)
 		{
-			return EnumHelper.Parse<AxleConfiguration>(Prefix + typeString);
+			return (Prefix + typeString).Parse<AxleConfiguration>();
 		}
 	}
 }

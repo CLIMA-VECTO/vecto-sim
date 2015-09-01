@@ -1,4 +1,4 @@
-﻿time [s],n [1/min],Tq_eng [Nm],Tq_clutch [Nm],Tq_full [Nm],Tq_drag [Nm],Pe_eng [kW],Pe_full [kW],Pe_drag [kW],Pe_clutch [kW],Pa [Eng],Paux [kW],FC [g/h],FC-AUXc [g/h],FC-WHTCc [g/h]
+﻿time [s],n [1/min],Tq_eng [Nm],Tq_clutch [Nm],Tq_full [Nm],Tq_drag [Nm],Pe_eng [kW],Pe_full [kW],Pe_drag [kW],Pe_clutch [kW],Pa Eng [kW],Paux [kW],FC-Map [g/h],FC-AUXc [g/h],FC-WHTCc [g/h]
 1,600,0,0,1282,-148,0,80.55044,-9.299114,0,0,0,1459,-,-
 2,600,0,0,801.2501,-148,0,50.34402,-9.299114,0,0,0,1459,-,-
 3,600,0,0,801.2501,-148,0,50.34402,-9.299114,0,0,0,1459,-,-

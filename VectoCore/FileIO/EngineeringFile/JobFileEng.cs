@@ -71,20 +71,18 @@ namespace TUGraz.VectoCore.FileIO.EngineeringFile
 		[JsonProperty(Required = Required.Always)] public new DataBodyEng Body;
 
 
-		public class DataBodyEng : VectoJobFileV2Declaration.DataBodyDecl
+		public class DataBodyEng : DataBodyDecl
 		{
 			[JsonProperty(Required = Required.Always)] public IList<string> Cycles;
 			[JsonProperty] public new IList<AuxDataEng> Aux = new List<AuxDataEng>();
 			[JsonProperty("VACC", Required = Required.Always)] public string AccelerationCurve;
-			//[JsonProperty(Required = Required.Always)] public bool EngineOnlyMode;
+			[JsonProperty] public bool EngineOnlyMode;
 			[JsonProperty(Required = Required.Always)] public new StartStopDataDeclEng StartStop;
 			[JsonProperty("LAC", Required = Required.Always)] public LACDataEng LookAheadCoasting;
 			[JsonProperty(Required = Required.Always)] public new OverSpeedEcoRollDataEng OverSpeedEcoRoll;
 
-			public class AuxDataEng : DataBodyDecl.AuxDataDecl
+			public class AuxDataEng : AuxDataDecl
 			{
-				//[JsonProperty(Required = Required.Always)] public string ID;
-				//[JsonProperty(Required = Required.Always)] public string Type;
 				[JsonProperty(Required = Required.Always)] public string Path;
 			}
 

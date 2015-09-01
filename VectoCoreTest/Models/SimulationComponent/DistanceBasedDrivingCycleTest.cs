@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -22,7 +24,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void TestDistanceRequest()
 		{
-			var cycleData = DrivingCycleData.ReadFromFile(ShortCycle, DrivingCycleData.CycleType.DistanceBased);
+			// Constants.SimulationSettings.DrivingCycleRoadGradientTolerance = 1E-12;
+
+			var cycleData = DrivingCycleDataReader.ReadFromFile(ShortCycle, CycleType.DistanceBased);
 
 			var vehicleContainer = new VehicleContainer();
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
@@ -46,38 +50,38 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			absTime += response.SimulationInterval;
 
 
-			response = cycle.OutPort().Request((Second)absTime, 1.SI<Meter>());
+			response = cycle.OutPort().Request(absTime, 1.SI<Meter>());
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			Assert.AreEqual(5.SI<MeterPerSecond>().Value(), driver.LastRequest.TargetVelocity.Value(), Tolerance);
-			Assert.AreEqual(0.02667562971628240, driver.LastRequest.Gradient.Value(), 1E-12);
+			Assert.AreEqual(0.0284160694958265, driver.LastRequest.Gradient.Value(), 1E-12);
 			Assert.AreEqual(1 + startDistance, cycle.CurrentState.Distance.Value(), Tolerance);
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
 
-			response = cycle.OutPort().Request((Second)absTime, 1.SI<Meter>());
+			response = cycle.OutPort().Request(absTime, 1.SI<Meter>());
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			Assert.AreEqual(5.SI<MeterPerSecond>().Value(), driver.LastRequest.TargetVelocity.Value(), Tolerance);
-			Assert.AreEqual(0.02667562971628240, driver.LastRequest.Gradient.Value(), 1E-12);
+			Assert.AreEqual(0.0284160694958265, driver.LastRequest.Gradient.Value(), 1E-12);
 			Assert.AreEqual(2 + startDistance, cycle.CurrentState.Distance.Value(), Tolerance);
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
 
-			response = cycle.OutPort().Request((Second)absTime, 300.SI<Meter>());
+			response = cycle.OutPort().Request(absTime, 300.SI<Meter>());
 
 			Assert.IsInstanceOfType(response, typeof(ResponseDrivingCycleDistanceExceeded));
 			var tmp = response as ResponseDrivingCycleDistanceExceeded;
-			Assert.AreEqual(36, tmp.MaxDistance.Value(), Tolerance);
+			Assert.AreEqual(16, tmp.MaxDistance.Value(), Tolerance);
 
 			Assert.AreEqual(5.SI<MeterPerSecond>().Value(), driver.LastRequest.TargetVelocity.Value(), Tolerance);
-			Assert.AreEqual(0.02667562971628240, driver.LastRequest.Gradient.Value(), 1E-12);
+			Assert.AreEqual(0.0284160694958265, driver.LastRequest.Gradient.Value(), 1E-12);
 			Assert.AreEqual(2 + startDistance, cycle.CurrentState.Distance.Value(), Tolerance);
 
 			try {
@@ -87,11 +91,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			} catch (VectoSimulationException e) {
 				Assert.AreEqual("Previous request did not succeed!", e.Message);
 			}
-			response = cycle.OutPort().Request((Second)absTime, tmp.MaxDistance);
+			response = cycle.OutPort().Request(absTime, tmp.MaxDistance);
 
 			Assert.AreEqual(5.SI<MeterPerSecond>().Value(), driver.LastRequest.TargetVelocity.Value(), Tolerance);
-			Assert.AreEqual(0.02667562971628240, driver.LastRequest.Gradient.Value(), 1E-12);
-			Assert.AreEqual(38 + startDistance, cycle.CurrentState.Distance.Value(), Tolerance);
+			Assert.AreEqual(0.0284160694958265, driver.LastRequest.Gradient.Value(), 1E-12);
+			Assert.AreEqual(18 + startDistance, cycle.CurrentState.Distance.Value(), Tolerance);
 
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);

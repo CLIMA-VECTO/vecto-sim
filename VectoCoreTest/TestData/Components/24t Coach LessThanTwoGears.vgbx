@@ -1,0 +1,29 @@
+﻿{
+  "Header": {
+    "CreatedBy": "Raphael Luz IVT TU-Graz (14fea510-e457-4bf6-860f-a9514dc327f1)",
+    "Date": "25.06.2015 11:23:31",
+    "AppVersion": "2.2 beta",
+    "FileVersion": 5
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "ModelName": "Generic 24t Coach",
+    "Inertia": 0.0,
+    "TracInt": 1.0,
+    "Gears": [],
+    "TqReserve": 20.0,
+    "SkipGears": true,
+    "ShiftTime": 2,
+    "EaryShiftUp": true,
+    "StartTqReserve": 20.0,
+    "StartSpeed": 2.0,
+    "StartAcc": 0.6,
+    "GearboxType": "AMT",
+    "TorqueConverter": {
+      "Enabled": false,
+      "File": "<NOFILE>",
+      "RefRPM": 0.0,
+      "Inertia": 0.0
+    }
+  }
+}

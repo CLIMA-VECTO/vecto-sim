@@ -40,8 +40,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 						fuelConsumptionMap._entries.Add(entry);
 
 						// Delauney map works only as expected, when the engineSpeed is in rpm.
-						fuelConsumptionMap._fuelMap.AddPoint((double)entry.Torque, row.ParseDouble(Fields.EngineSpeed),
-							(double)entry.FuelConsumption);
+						fuelConsumptionMap._fuelMap.AddPoint(entry.Torque.Value(), row.ParseDouble(Fields.EngineSpeed),
+							entry.FuelConsumption.Value());
 					} catch (Exception e) {
 						throw new VectoException(string.Format("Line {0}: {1}", data.Rows.IndexOf(row), e.Message), e);
 					}

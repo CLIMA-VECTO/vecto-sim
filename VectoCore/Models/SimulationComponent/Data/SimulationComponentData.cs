@@ -1,18 +1,7 @@
-﻿using System;
-using Common.Logging;
-using Newtonsoft.Json;
-
-namespace TUGraz.VectoCore.Models.SimulationComponent.Data
+﻿namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
-	public class SimulationComponentData
+	public class SimulationComponentData : LoggingObject
 	{
-		[NonSerialized] protected ILog Log;
-
-		public SimulationComponentData()
-		{
-			Log = LogManager.GetLogger(GetType());
-		}
-
 		public bool SavedInDeclarationMode { get; internal set; }
 	}
 }

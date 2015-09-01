@@ -1,7 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
+using NLog;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -21,7 +22,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		private FactoryMode _mode;
 
-		public SimulatorFactory(FactoryMode mode)
+		public SimulatorFactory(FactoryMode mode, string jobFile)
 		{
 			JobNumber = 0;
 			_mode = mode;
@@ -35,7 +36,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case FactoryMode.EngineOnlyMode:
 					DataReader = new EngineOnlySimulationDataReader();
 					break;
+				default:
+					throw new VectoException("Unkown factory mode in SimulatorFactory: {0}", mode);
 			}
+			DataReader.SetJobFile(jobFile);
 		}
 
 		///// <summary>
@@ -66,14 +70,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			var i = 0;
 			foreach (var data in DataReader.NextRun()) {
-				IModalDataWriter modWriter = null;
-
-				if (_mode != FactoryMode.DeclarationMode) {
-					var modFileName = Path.Combine(data.BasePath,
-						data.JobFileName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}" +
-						Constants.FileExtensions.ModDataFile);
-					modWriter = new ModalDataWriter(string.Format(modFileName, data.Cycle.Name), DataReader.IsEngineOnly);
-				}
+				var modFileName = Path.Combine(data.BasePath,
+					data.JobFileName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}" +
+					Constants.FileExtensions.ModDataFile);
+				IModalDataWriter modWriter = new ModalDataWriter(string.Format(modFileName, data.Cycle.Name), _mode);
 				var jobName = string.Format("{0}-{1}", JobNumber, i++);
 				var sumWriterDecorator = DecorateSumWriter(data.IsEngineOnly, SumWriter, data.JobFileName, jobName, data.Cycle.Name);
 				var builder = new PowertrainBuilder(modWriter, sumWriterDecorator, DataReader.IsEngineOnly);

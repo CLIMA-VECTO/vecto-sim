@@ -20,7 +20,7 @@ Public Class cENG
     ''' Current format version
     ''' </summary>
     ''' <remarks></remarks>
-    Private Const FormatVersion As Short = 2
+	Private Const FormatVersion As Short = 3
 
     ''' <summary>
     ''' Format version of input file. Defined in ReadFile.
@@ -56,7 +56,8 @@ Public Class cENG
     ''' List of full load/motoring curve files (.vfld)
     ''' </summary>
     ''' <remarks></remarks>
-    Public fFLD As List(Of cSubPath)
+	Public fFLD As cSubPath
+	Public FLD As cFLD
 
     ''' <summary>
     ''' Path to fuel consumption map
@@ -64,16 +65,10 @@ Public Class cENG
     ''' <remarks></remarks>
     Private fMAP As cSubPath
 
-    ''' <summary>
-    ''' List of gear-assignments for the given .vfld files.
-    ''' </summary>
-    ''' <remarks></remarks>
-    Public FLDgears As List(Of String)
-
-    ''' <summary>
-    ''' Directory of engine file. Defined in FilePath property (Set)
-    ''' </summary>
-    ''' <remarks></remarks>
+	''' <summary>
+	''' Directory of engine file. Defined in FilePath property (Set)
+	''' </summary>
+	''' <remarks></remarks>
     Private MyPath As String
 
     ''' <summary>
@@ -127,13 +122,10 @@ Public Class cENG
     ''' <returns>True if successful.</returns>
     ''' <remarks></remarks>
     Public Function CreateFileList() As Boolean
-        Dim sb As cSubPath
 
         MyFileList = New List(Of String)
 
-        For Each sb In Me.fFLD
-            MyFileList.Add(sb.FullPath)
-        Next
+		MyFileList.Add(PathFLD)
 
         MyFileList.Add(PathMAP)
 
@@ -150,7 +142,8 @@ Public Class cENG
     Public Sub New()
         MyPath = ""
         sFilePath = ""
-        fMAP = New cSubPath
+		fMAP = New cSubPath
+		fFLD = New cSubPath
         SetDefault()
     End Sub
 
@@ -166,10 +159,8 @@ Public Class cENG
         Nrated = 0
         Pmax = 0
 
-        fFLD = New List(Of cSubPath)
-        FLDgears = New List(Of String)
-
-        fMAP.Clear()
+		fMAP.Clear()
+		fFLD.Clear()
 
         WHTCurban = 0
         WHTCrural = 0
@@ -185,11 +176,8 @@ Public Class cENG
     ''' <returns>True if successful.</returns>
     ''' <remarks></remarks>
     Public Function SaveFile() As Boolean
-        Dim i As Integer
         Dim JSON As New cJSON
         Dim dic As Dictionary(Of String, Object)
-        Dim dic0 As Dictionary(Of String, Object)
-        Dim ls As List(Of Object)
 
         'Header
         dic = New Dictionary(Of String, Object)
@@ -211,14 +199,7 @@ Public Class cENG
         dic.Add("IdlingSpeed", Nidle)
         dic.Add("Inertia", I_mot)
 
-        ls = New List(Of Object)
-        For i = 0 To fFLD.Count - 1
-            dic0 = New Dictionary(Of String, Object)
-            dic0.Add("Path", fFLD(i).PathOrDummy)
-            dic0.Add("Gears", FLDgears(i))
-            ls.Add(dic0)
-        Next
-        dic.Add("FullLoadCurves", ls)
+		dic.Add("FullLoadCurve", fFLD.PathOrDummy)
 
         dic.Add("FuelMap", fMAP.PathOrDummy)
 
@@ -242,9 +223,7 @@ Public Class cENG
     ''' <remarks></remarks>
     Public Function ReadFile(Optional ByVal ShowMsg As Boolean = True) As Boolean
         Dim MsgSrc As String
-        Dim i As Integer
         Dim JSON As New cJSON
-        Dim dic As Object
 
         MsgSrc = "ENG/ReadFile"
 
@@ -269,21 +248,19 @@ Public Class cENG
             Nidle = JSON.Content("Body")("IdlingSpeed")
             I_mot = JSON.Content("Body")("Inertia")
 
-            i = -1
-            For Each dic In JSON.Content("Body")("FullLoadCurves")
-                i += 1
-                fFLD.Add(New cSubPath)
-                fFLD(i).Init(MyPath, dic("Path"))
-                FLDgears.Add(dic("Gears"))
-            Next
+			If FileVersion < 3 Then
+				fFLD.Init(MyPath, JSON.Content("Body")("FullLoadCurves")(0)("Path"))
+			Else
+				fFLD.Init(MyPath, JSON.Content("Body")("FullLoadCurve"))
+			End If
 
             fMAP.Init(MyPath, JSON.Content("Body")("FuelMap"))
 
-            If Not JSON.Content("Body")("WHTC-Urban") Is Nothing Then
-                WHTCurban = CSng(JSON.Content("Body")("WHTC-Urban"))
-                WHTCrural = CSng(JSON.Content("Body")("WHTC-Rural"))
-                WHTCmw = CSng(JSON.Content("Body")("WHTC-Motorway"))
-            End If
+			If FileVersion > 2 AndAlso Not JSON.Content("Body")("WHTC-Urban") Is Nothing Then
+				WHTCurban = CSng(JSON.Content("Body")("WHTC-Urban"))
+				WHTCrural = CSng(JSON.Content("Body")("WHTC-Rural"))
+				WHTCmw = CSng(JSON.Content("Body")("WHTC-Motorway"))
+			End If
 
         Catch ex As Exception
             If ShowMsg Then WorkerMsg(tMsgID.Err, "Failed to read VECTO file! " & ex.Message, MsgSrc)
@@ -300,85 +277,18 @@ Public Class cENG
     ''' <returns>True if successful.</returns>
     ''' <remarks></remarks>
     Public Function Init() As Boolean
-        Dim fl As cFLD
-        Dim fldgear As Dictionary(Of Integer, String)
-        Dim fldgFromTo As String()
-        Dim str As String
-        Dim i As Integer
-        Dim j As Integer
-        Dim G As Integer
 
         Dim MsgSrc As String
         MsgSrc = "ENG/Init"
 
-        G = Math.Max(GBX.GearCount, 0)
 
-        'Create cFLD instance for each gear (list with gear as index)
-        FLD = New List(Of cFLD)
-
-        If FLDgears.Count = 0 Then
-            WorkerMsg(tMsgID.Err, "No .vfld file defined in Engine file!", MsgSrc, "<GUI>" & sFilePath)
-            Return False
-        End If
-
-        fldgear = New Dictionary(Of Integer, String)
-
-        Try
-            j = -1
-            For Each str In FLDgears
-
-                j += 1
-                If str.Contains("-") Then
-                    fldgFromTo = str.Replace(" ", "").Split("-")
-                Else
-                    fldgFromTo = New String() {str, str}
-                End If
-
-                For i = CInt(fldgFromTo(0)) To CInt(fldgFromTo(1))
-
-                    If i > G Then Exit For
-
-                    If i < 0 Or i > 99 Then
-                        WorkerMsg(tMsgID.Err, "Cannot assign .vfld file to gear " & i & "!", MsgSrc, "<GUI>" & sFilePath)
-                        Return False
-                    End If
-
-                    If fldgear.ContainsKey(i) Then
-                        WorkerMsg(tMsgID.Err, "Multiple .vfld files are assigned to gear " & i & "!", MsgSrc, "<GUI>" & sFilePath)
-                        Return False
-                    End If
-
-                    fldgear.Add(i, PathFLD(j))
-
-                Next
-
-            Next
-        Catch ex As Exception
-            WorkerMsg(tMsgID.Err, "Failed to process engine file '" & sFilePath & "'!", MsgSrc)
-            Return False
-        End Try
-
-        'read .vfld files
-        For i = 0 To G
-
-            If Not fldgear.ContainsKey(i) Then
-                WorkerMsg(tMsgID.Err, "No .vfld file assigned to gear " & i & "!", MsgSrc, "<GUI>" & sFilePath)
-                Return False
-            End If
-
-            FLD.Add(New cFLD)
-            FLD(i).FilePath = fldgear(i)
-
-            Try
-                If Not FLD(i).ReadFile Then Return False 'Error message in ReadFile
-            Catch ex As Exception
-                WorkerMsg(tMsgID.Err, "File read error! (" & fldgear(i) & ")", MsgSrc, fldgear(i))
-                Return False
-            End Try
-
-            If Not FLD(i).Init(Nidle) Then Return False
-
-        Next
+		'read .vfld file
+		FLD = New cFLD
+		FLD.FilePath = PathFLD
+		If Not FLD.ReadFile(False) Then
+			WorkerMsg(tMsgID.Err, "File read error! (" & PathFLD & ")", MsgSrc, PathFLD)
+			Return False
+		End If
 
         'Read FC map
         MAP = New cMAP
@@ -398,12 +308,9 @@ Public Class cENG
         End If
 
 
-        'Special rpms for Shift Model and WHTC de-normalisation
-        fl = FLD(0)
+		Nrated = FLD.fnUrated
 
-        Nrated = fl.fnUrated
-
-        Pmax = fl.Pfull(fl.fnUrated)
+		Pmax = FLD.Pfull(FLD.fnUrated)
 
         Return True
 
@@ -415,13 +322,10 @@ Public Class cENG
     ''' <returns>True if successful.</returns>
     ''' <remarks></remarks>
     Public Function DeclInit() As Boolean
-        Dim f0 As cFLD
 
         I_mot = Declaration.EngInertia(Displ)
 
-        For Each f0 In FLD
-            f0.DeclInit()
-        Next
+		FLD.DeclInit()
 
         Return True
     End Function
@@ -458,26 +362,19 @@ Public Class cENG
         End Set
     End Property
 
-    ''' <summary>
-    ''' Get or set file path (cSubPath) of .vfld file for each gear range.
-    ''' </summary>
-    ''' <param name="x">Index</param>
-    ''' <param name="Original">True= (relative) file path as saved in file; False= full file path</param>
-    ''' <value></value>
-    ''' <returns>Relative or absolute file path for each gear range</returns>
-    ''' <remarks></remarks>
-    Public Property PathFLD(ByVal x As Short, Optional ByVal Original As Boolean = False) As String
-        Get
-            If Original Then
-                Return fFLD(x).OriginalPath
-            Else
-                Return fFLD(x).FullPath
-            End If
-        End Get
-        Set(ByVal value As String)
-            fFLD(x).Init(MyPath, value)
-        End Set
-    End Property
+
+	Public Property PathFLD(Optional ByVal Original As Boolean = False) As String
+		Get
+			If Original Then
+				Return fFLD.OriginalPath
+			Else
+				Return fFLD.FullPath
+			End If
+		End Get
+		Set(ByVal value As String)
+			fFLD.Init(MyPath, value)
+		End Set
+	End Property
 
     ''' <summary>
     ''' Get or set file path (cSubPath) to FC map (.vmap)

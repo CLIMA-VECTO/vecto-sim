@@ -1,3 +1,6 @@
+using System;
+using System.Diagnostics;
+
 namespace TUGraz.VectoCore.Utils
 {
 	public static class IntExtensionMethods
@@ -21,11 +24,9 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Gets the SI representation of the number (unit-less).
 		/// </summary>
-		/// <param name="d"></param>
-		/// <returns></returns>
-		public static SI SI(this int d)
+		public static SI SI(this int value)
 		{
-			return (SI)d;
+			return new SI(value);
 		}
 
 		/// <summary>
@@ -33,9 +34,15 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="d"></param>
 		/// <returns></returns>
+		[DebuggerHidden]
 		public static T SI<T>(this int d) where T : SIBase<T>
 		{
 			return SIBase<T>.Create(d);
+		}
+
+		public static double ToRadian(this int self)
+		{
+			return self * Math.PI / 180.0;
 		}
 
 		/// <summary>

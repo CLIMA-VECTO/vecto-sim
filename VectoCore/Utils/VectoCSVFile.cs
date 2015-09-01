@@ -7,8 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Common.Logging;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models;
 
 namespace TUGraz.VectoCore.Utils
 {
@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Utils
 	///     max: id (name) [unit], id (name) [unit], ...
 	///     min: id,id,...
 	/// </remarks>
-	public static class VectoCSVFile
+	public class VectoCSVFile : LoggingObject
 	{
 		private const char Delimiter = ',';
 		private const char Comment = '#';
@@ -35,12 +35,13 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="fileName"></param>
 		/// <param name="ignoreEmptyColumns"></param>
+		/// <param name="fullHeader"></param>
 		/// <exception cref="FileIOException"></exception>
 		/// <returns>A DataTable which represents the CSV File.</returns>
-		public static DataTable Read(string fileName, bool ignoreEmptyColumns = false)
+		public static DataTable Read(string fileName, bool ignoreEmptyColumns = false, bool fullHeader = false)
 		{
 			try {
-				return ReadData(File.ReadAllLines(fileName), ignoreEmptyColumns);
+				return ReadData(File.ReadAllLines(fileName), ignoreEmptyColumns, fullHeader);
 			} catch (Exception e) {
 				throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message));
 			}
@@ -57,7 +58,7 @@ namespace TUGraz.VectoCore.Utils
 		{
 			try {
 				var lines = new List<string>();
-				using (StreamReader reader = new StreamReader(stream)) {
+				using (var reader = new StreamReader(stream)) {
 					while (!reader.EndOfStream) {
 						lines.Add(reader.ReadLine());
 					}
@@ -68,18 +69,17 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
-		private static DataTable ReadData(string[] data, bool ignoreEmptyColumns = false)
+		private static DataTable ReadData(string[] data, bool ignoreEmptyColumns = false, bool fullHeader = false)
 		{
 			var lines = RemoveComments(data);
 
-			var validColumns = GetValidHeaderColumns(lines.First());
+			var validColumns = GetValidHeaderColumns(lines.First(), fullHeader).ToArray();
 
 			if (validColumns.Length > 0) {
 				// Valid Columns found => header was valid => skip header line
 				lines = lines.Skip(1).ToArray();
 			} else {
-				var log = LogManager.GetLogger(typeof(VectoCSVFile));
-				log.Warn("No valid Data Header found. Interpreting the first line as data line.");
+				Logger<VectoCSVFile>().Warn("No valid Data Header found. Interpreting the first line as data line.");
 				// set the validColumns to: {"0", "1", "2", "3", ...} for all columns in first line.
 				validColumns = GetColumns(lines.First()).Select((_, index) => index.ToString()).ToArray();
 			}
@@ -108,22 +108,24 @@ namespace TUGraz.VectoCore.Utils
 			return table;
 		}
 
-		private static string[] GetValidHeaderColumns(string line)
+		private static IEnumerable<string> GetValidHeaderColumns(string line, bool fullHeader = false)
 		{
 			Contract.Requires(line != null);
 			double test;
-			var validColumns = GetColumns(line).
+			var validColumns = GetColumns(line, fullHeader).
 				Where(col => !double.TryParse(col, NumberStyles.Any, CultureInfo.InvariantCulture, out test));
 			return validColumns.ToArray();
 		}
 
-		private static IEnumerable<string> GetColumns(string line)
+		private static IEnumerable<string> GetColumns(string line, bool fullHeader = false)
 		{
 			Contract.Requires(line != null);
 
-			line = Regex.Replace(line, @"\[.*?\]", "");
-			line = line.Replace("<", "");
-			line = line.Replace(">", "");
+			if (!fullHeader) {
+				line = Regex.Replace(line, @"\[.*?\]", "");
+				line = line.Replace("<", "");
+				line = line.Replace(">", "");
+			}
 			return line.Split(Delimiter).Select(col => col.Trim());
 		}
 
@@ -152,14 +154,18 @@ namespace TUGraz.VectoCore.Utils
 			sb.AppendLine(string.Join(Delimiter.ToString(), header));
 
 			foreach (DataRow row in table.Rows) {
-				var formattedList = new List<string>();
-				foreach (var item in row.ItemArray) {
-					var formattable = item as IFormattable;
-					var formattedValue = formattable != null
-						? formattable.ToString("", CultureInfo.InvariantCulture)
-						: item.ToString();
-					formattedList.Add(formattedValue);
-				}
+				var formattedList = table.Columns.Cast<DataColumn>().Select(col => {
+					var item = row[col];
+					var decimals = (uint?)col.ExtendedProperties["decimals"];
+					var outputFactor = (double?)col.ExtendedProperties["outputFactor"];
+					var showUnit = (bool?)col.ExtendedProperties["showUnit"];
+
+					var si = item as SI;
+					return (si != null
+						? si.ToOutputFormat(decimals, outputFactor, showUnit)
+						: string.Format(CultureInfo.InvariantCulture, "{0}", item));
+				});
+
 				sb.AppendLine(string.Join(Delimiter.ToString(), formattedList));
 			}
 

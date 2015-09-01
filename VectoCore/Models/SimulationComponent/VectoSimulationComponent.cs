@@ -1,29 +1,25 @@
 using System;
-using Common.Logging;
 using TUGraz.VectoCore.Models.Simulation;
-using TUGraz.VectoCore.Models.Simulation.Cockpit;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 	/// <summary>
 	/// Base class for all vecto simulation components.
 	/// </summary>
-	public abstract class VectoSimulationComponent
+	public abstract class VectoSimulationComponent : LoggingObject
 	{
-		[NonSerialized] protected ICockpit Cockpit;
-		[NonSerialized] protected ILog Log;
+		[NonSerialized] protected IDataBus DataBus;
 
 		/// <summary>
 		/// Constructor. Registers the component in the cockpit.
 		/// </summary>
-		/// <param name="cockpit">The vehicle container</param>
-		protected VectoSimulationComponent(IVehicleContainer cockpit)
+		/// <param name="dataBus">The vehicle container</param>
+		protected VectoSimulationComponent(IVehicleContainer dataBus)
 		{
-			Cockpit = cockpit;
-			Log = LogManager.GetLogger(GetType());
-
-			cockpit.AddComponent(this);
+			DataBus = dataBus;
+			dataBus.AddComponent(this);
 		}
 
 		public void CommitSimulationStep(IModalDataWriter writer)

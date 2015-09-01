@@ -2,9 +2,30 @@
 
 namespace TUGraz.VectoCore.Configuration
 {
-	public class Constants
+	public static class Constants
 	{
-		public class FileExtensions
+		public static class Auxiliaries
+		{
+			public static class IDs
+			{
+				public const string Fan = "FAN";
+				public const string SteeringPump = "STP";
+				public const string ElectricSystem = "ES";
+				public const string HeatingVentilationAirCondition = "AC";
+				public const string PneumaticSystem = "PS";
+			}
+
+			public static class Names
+			{
+				public const string Fan = "Fan";
+				public const string SteeringPump = "Steering pump";
+				public const string ElectricSystem = "Electric System";
+				public const string HeatingVentilationAirCondition = "HVAC";
+				public const string PneumaticSystem = "Pneumatic System";
+			}
+		}
+
+		public static class FileExtensions
 		{
 			public const string ModDataFile = ".vmod";
 
@@ -17,7 +38,7 @@ namespace TUGraz.VectoCore.Configuration
 			public const string CycleFile = ".vdri";
 		}
 
-		public class SimulationSettings
+		public static class SimulationSettings
 		{
 			/// <summary>
 			/// base time interval for the simulation. the distance is estimated to reach this time interval as good as possible
@@ -33,7 +54,29 @@ namespace TUGraz.VectoCore.Configuration
 			/// threshold for changes in the road gradient. changes below this threshold will be considered to be equal for filtering out the driving cycle.
 			/// altitude computation is done before filtering! 
 			/// </summary>
-			public static readonly double DrivingCycleRoadGradientTolerance = VectoMath.InclinationToAngle(0.25 / 100.0).Value();
+			public static readonly double DrivingCycleRoadGradientTolerance = 1E-12;
+
+			//VectoMath.InclinationToAngle(0.25 / 100.0).Value();
+
+			public const int DriverSearchLoopThreshold = 100;
+
+			public const double EngineFLDPowerTolerance = 0.50; // Watt
+
+			public const double CluchNormSpeed = 0.03;
+
+			public static readonly MeterPerSquareSecond MinimumAcceleration = 0.1.SI<MeterPerSquareSecond>();
+
+			public static Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
+
+			/// <summary>
+			/// The initial search interval for the breaking power search in the driver.
+			/// </summary>
+			public static Watt BreakingPowerInitialSearchInterval = 100.SI().Kilo.Watt.Cast<Watt>();
+
+			/// <summary>
+			/// The initial search interval for the operating point search in the driver.
+			/// </summary>
+			public static MeterPerSquareSecond OperatingPointInitialSearchIntervalAccelerating = 5.SI<MeterPerSquareSecond>();
 		}
 	}
 }

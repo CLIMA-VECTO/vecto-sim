@@ -1,6 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html><head>
 
+
+
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Gearbox Editor - VECTO User Manual</title></head><body>
 
 
@@ -49,10 +51,13 @@ gear shift event.<br></div>
 <br><br>
 <big><big style="font-weight: bold;">Gears</big></big><br><hr style="height: 1px; width: 100%;">
 <span style="font-weight: bold;"></span>Use the <img style="width: 16px; height: 16px;" alt="add" src="../pics/icons/plus-circle-icon.png"> and <img style="width: 16px; height: 16px;" alt="remove" src="../pics/icons/minus-circle-icon.png"> buttons to add or
-remove gears form the vehicle. Doubleclick entries to edit existing gears.<br><ul><li>Gear "A" defines the ratio of the axle transmission /
-differential.</li><li>Column "TC" (AT only) defines which gears are using the torque converter (lock-up clutch open).</li><li>Column
-"Loss Map or Efficiency" allows to define either a constant efficiency
-value or a <a href="../fileformat/VTLM.html">loss map (.vtlm)</a>.</li><li>Column "Shift polygons" defines the <a href="../fileformat/VGBS.html">Shift Polygons Input File (.vgbs)</a> for each gear. Not required in <a href="../general/calc_Declaration.html">Declaration Mode</a>. See <a href="../general/Shift.html">Gear Shift Model</a> for details.</li></ul><br><br><big><big style="font-weight: bold;">Gear shift parameters</big></big><br><hr style="height: 1px; width: 100%;">
+remove gears form the vehicle. Doubleclick entries to edit existing gears.<br><ul><li>Gear <span style="font-weight: bold;">"A"</span> defines the ratio of the axle transmission /
+differential.</li><li>Column <span style="font-weight: bold;">"TC</span>" (AT only) defines which gears are using the torque converter (lock-up clutch open).</li><li>Column
+    <span style="font-weight: bold;">"Loss Map or Efficiency"</span> allows to define either a constant efficiency
+value or a <a href="../fileformat/VTLM.html">loss map (.vtlm)</a>.</li><li>Column <span style="font-weight: bold;">"Shift polygons"</span> defines the <a href="../fileformat/VGBS.html">Shift Polygons Input File (.vgbs)</a> for each gear. Not required in <a href="../general/calc_Declaration.html">Declaration Mode</a>. See <a href="../general/Shift.html">Gear Shift Model</a> for details.</li>
+  <li>Column <span style="font-weight: bold;">"Full Load Curves"</span> defines the <a href="../fileformat/VFLD.html">Full Load Curve for (.vfld)</a> each gear. It is used for torque limiting and <a href="../general/Shift.html">generic shift polygons</a> in Declaration Mode. If no file is defined the engine full load curve will be used.<br>
+  </li>
+</ul><br><br><big><big style="font-weight: bold;">Gear shift parameters</big></big><br><hr style="height: 1px; width: 100%;">
 <span style="font-weight: bold;"><img alt="" src="../pics/misc/checkbox.png"> Allow shift-up inside
 polygons</span><br><div style="margin-left: 40px;">See <a href="../general/Shift.html">Gear Shift Model</a>.<br></div><br><span style="font-weight: bold;"><img style="width: 15px; height: 15px;" alt="" src="../pics/misc/checkbox.png"> Skip Gears</span><br><div style="margin-left: 40px;">See <a href="../general/Shift.html">Gear Shift Model</a>.<br></div><br><span style="font-weight: bold;">Torque Reserve</span> [%]<br>
 <div style="margin-left: 40px;">This parameter is required

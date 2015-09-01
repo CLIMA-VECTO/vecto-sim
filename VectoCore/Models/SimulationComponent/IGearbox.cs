@@ -1,10 +1,10 @@
 ﻿using TUGraz.VectoCore.Models.Connector.Ports;
-using TUGraz.VectoCore.Models.Simulation.Cockpit;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 	/// <summary>
 	/// Defines interfaces for a gearbox.
 	/// </summary>
-	public interface IGearbox : IPowerTrainComponent, IGearboxCockpit {}
+	public interface IGearbox : IPowerTrainComponent, IGearboxInfo {}
 }

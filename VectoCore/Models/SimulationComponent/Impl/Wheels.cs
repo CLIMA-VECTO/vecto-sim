@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	public class Wheels : VectoSimulationComponent, IWheels, IFvOutPort, ITnInPort
 	{
 		private ITnOutPort _outPort;
-		private Meter _dynamicWheelRadius;
+		private readonly Meter _dynamicWheelRadius;
 
 		public Wheels(IVehicleContainer cockpit, Meter rdyn)
 			: base(cockpit)
@@ -37,11 +37,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IFvOutPort
 
-		IResponse IFvOutPort.Request(Second absTime, Second dt, Newton force, MeterPerSecond velocity)
+		public IResponse Request(Second absTime, Second dt, Newton force, MeterPerSecond velocity, bool dryRun)
+		{
+			Log.Debug("request: force: {0}, velocity: {1}", force, velocity);
+			var torque = force * _dynamicWheelRadius;
+			var angularVelocity = velocity / _dynamicWheelRadius;
+			var retVal = _outPort.Request(absTime, dt, torque, angularVelocity, dryRun);
+			retVal.WheelsPowerRequest = torque * angularVelocity;
+			return retVal;
+		}
+
+		public IResponse Initialize(Newton force, MeterPerSecond velocity)
 		{
 			var torque = force * _dynamicWheelRadius;
 			var angularVelocity = velocity / _dynamicWheelRadius;
-			return _outPort.Request(absTime, dt, torque, angularVelocity);
+
+			return _outPort.Initialize(torque, angularVelocity);
 		}
 
 		#endregion
@@ -59,12 +70,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			throw new NotImplementedException();
+			// noting to write...
 		}
 
 		protected override void DoCommitSimulationStep()
 		{
-			throw new NotImplementedException();
+			// nothing to commit
 		}
 
 		#endregion

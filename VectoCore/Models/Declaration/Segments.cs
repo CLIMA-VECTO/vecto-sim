@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				GrossVehicleWeightMax = row.ParseDouble("gvw_max").SI().Ton.Cast<Kilogram>(),
 				VehicleCategory = vehicleCategory,
 				AxleConfiguration = axleConfiguration,
-				VehicleClass = row.Field<string>("hdvclass"),
+				VehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass")),
 				AccelerationFile = RessourceHelper.ReadStream(ResourceNamespace + "VACC." + row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(grossVehicleMassRating, curbWeight, row).ToArray()
 			};
@@ -100,8 +100,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			const double longHaulFactor = 0.5882;
 			const double otherFactor = 0.3941;
-			const double longHaulWeightDeduction = 2511.8;
-			const double otherWeightDeduction = 1705.9;
+			var longHaulWeightDeduction = 2511.8.SI<Kilogram>();
+			var otherWeightDeduction = 1705.9.SI<Kilogram>();
 
 			Kilogram refLoad;
 			if (refLoadField == "f") {

@@ -89,18 +89,21 @@ Class cVSUM
         If Not VEC.EngOnly Then
 
             'Average-Speed. calculation
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Vh.V(t)
-            Next
-            Vquer = 3.6 * sum / (t1 + 1)
+            If DRI.Vvorg Then
+                sum = 0
+                For t = 0 To t1
+                    sum += MODdata.Vh.V(t)
+                Next
+                Vquer = 3.6 * sum / (t1 + 1)
 
-            VSUMentries("\\S").ValueString = (Vquer * (t1 + 1) / 3600)
-            VSUMentries("\\V").ValueString = Vquer
+                VSUMentries("\\S").ValueString = (Vquer * (t1 + 1) / 3600)
+                VSUMentries("\\V").ValueString = Vquer
 
-            'altitude change
-            VSUMentries("\\G").ValueString = MODdata.Vh.AltIntp(Vquer * (t1 + 1) / 3.6, False) - MODdata.Vh.AltIntp(0, False)
-
+                'altitude change
+                VSUMentries("\\G").ValueString = MODdata.Vh.AltIntp(Vquer * (t1 + 1) / 3.6, False) - MODdata.Vh.AltIntp(0, False)
+            
+            End If
+   
             'Auxiliary energy consumption
             If VEC.AuxDef Then
                 For Each key In VEC.AuxPaths.Keys
@@ -118,33 +121,26 @@ Class cVSUM
         'FC
         If MODdata.FCerror Then
 
-            If VEC.EngOnly Then
-                VSUMentries("FC_h").ValueString = "ERROR"
-            Else
-                VSUMentries("FC_km").ValueString = "ERROR"
-            End If
+            VSUMentries("FC_h").ValueString = "ERROR"
+
+            If Not VEC.EngOnly Then VSUMentries("FC_km").ValueString = "ERROR"
 
             If MODdata.FCAUXcSet Then
-                If VEC.EngOnly Then
-                    VSUMentries("FC-AUXc_h").ValueString = "ERROR"
-                Else
-                    VSUMentries("FC-AUXc_km").ValueString = "ERROR"
-                End If
+                VSUMentries("FC-AUXc_h").ValueString = "ERROR"
+                If Not VEC.EngOnly Then VSUMentries("FC-AUXc_km").ValueString = "ERROR"
             End If
 
             If Cfg.DeclMode Then
-                If VEC.EngOnly Then
-                    VSUMentries("FC-WHTCc_h").ValueString = "ERROR"
-                Else
-                    VSUMentries("FC-WHTCc_km").ValueString = "ERROR"
-                End If
+                VSUMentries("FC-WHTCc_h").ValueString = "ERROR"
+                If Not VEC.EngOnly Then VSUMentries("FC-WHTCc_km").ValueString = "ERROR"
             End If
 
         Else
 
-            If VEC.EngOnly Then
-                VSUMentries("FC_h").ValueString = MODdata.FCavg
-            Else
+            VSUMentries("FC_h").ValueString = MODdata.FCavg
+
+            If Not VEC.EngOnly And DRI.Vvorg Then
+
                 VSUMentries("FC_km").ValueString = (MODdata.FCavg / Vquer)
 
                 VSUMentries("FCl_km").ValueString = (100 * MODdata.FCavgFinal / Vquer) / (Cfg.FuelDens * 1000)  '[l/100km]
@@ -160,25 +156,14 @@ Class cVSUM
             End If
 
             If MODdata.FCAUXcSet Then
-                If VEC.EngOnly Then
-                    VSUMentries("FC-AUXc_h").ValueString = MODdata.FCavgAUXc
-                Else
-                    VSUMentries("FC-AUXc_km").ValueString = (MODdata.FCavgAUXc / Vquer)
-                End If
+                VSUMentries("FC-AUXc_h").ValueString = MODdata.FCavgAUXc
+                If Not VEC.EngOnly Then VSUMentries("FC-AUXc_km").ValueString = (MODdata.FCavgAUXc / Vquer)
             End If
 
             If Cfg.DeclMode Then
-                If VEC.EngOnly Then
-                    VSUMentries("FC-WHTCc_h").ValueString = MODdata.FCavgWHTCc
-                Else
-                    VSUMentries("FC-WHTCc_km").ValueString = (MODdata.FCavgWHTCc / Vquer)
-                End If
+                VSUMentries("FC-WHTCc_h").ValueString = MODdata.FCavgWHTCc
+                If Not VEC.EngOnly Then VSUMentries("FC-WHTCc_km").ValueString = (MODdata.FCavgWHTCc / Vquer)
             End If
-
-
-
-
-
 
         End If
 
@@ -201,104 +186,111 @@ Class cVSUM
 
 
         'Only Entire-vehicle (not EngOnly)
-        If Not VEC.EngOnly Then
+		If Not VEC.EngOnly Then
 
-            'Pbrake-norm
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Pbrake(t)
-            Next
-            VSUMentries("\\Pbrake").ValueString = (sum / (t1 + 1))
+			'PwheelPos
+			sum = 0
+			For t = 0 To t1
+				sum += Math.Max(0, MODdata.Psum(t))
+			Next
+			VSUMentries("\\PwheelPos").ValueString = (sum / (t1 + 1))
 
-            'Eair
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Pair(t)
-            Next
-            VSUMentries("\\Eair").ValueString = (-sum / 3600)
+			'Pbrake-norm
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.Pbrake(t)
+			Next
+			VSUMentries("\\Pbrake").ValueString = (sum / (t1 + 1))
 
-            'Eroll
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Proll(t)
-            Next
-            VSUMentries("\\Eroll").ValueString = (-sum / 3600)
+			'Eair
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.Pair(t)
+			Next
+			VSUMentries("\\Eair").ValueString = (-sum / 3600)
 
-            'Egrad
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Pstg(t)
-            Next
-            VSUMentries("\\Egrad").ValueString = (-sum / 3600)
+			'Eroll
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.Proll(t)
+			Next
+			VSUMentries("\\Eroll").ValueString = (-sum / 3600)
 
-            'Eacc
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Pa(t) + MODdata.PaGB(t) + MODdata.PaEng(t)
-            Next
-            VSUMentries("\\Eacc").ValueString = (-sum / 3600)
+			'Egrad
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.Pstg(t)
+			Next
+			VSUMentries("\\Egrad").ValueString = (-sum / 3600)
 
-            'Eaux
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.PauxSum(t)
-            Next
-            VSUMentries("\\Eaux").ValueString = (-sum / 3600)
+			'Eacc
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.Pa(t) + MODdata.PaGB(t) + MODdata.PaEng(t)
+			Next
+			VSUMentries("\\Eacc").ValueString = (-sum / 3600)
 
-            'Ebrake
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.Pbrake(t)
-            Next
-            VSUMentries("\\Ebrake").ValueString = (sum / 3600)
+			'Eaux
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.PauxSum(t)
+			Next
+			VSUMentries("\\Eaux").ValueString = (-sum / 3600)
 
-            'Etransm
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.PlossDiff(t) + MODdata.PlossGB(t)
-            Next
-            VSUMentries("\\Etransm").ValueString = (-sum / 3600)
+			'Ebrake
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.Pbrake(t)
+			Next
+			VSUMentries("\\Ebrake").ValueString = (sum / 3600)
 
-            'Retarder
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.PlossRt(t)
-            Next
-            VSUMentries("\\Eretarder").ValueString = (-sum / 3600)
+			'Etransm
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.PlossDiff(t) + MODdata.PlossGB(t)
+			Next
+			VSUMentries("\\Etransm").ValueString = (-sum / 3600)
 
-            'TC Losses
-            sum = 0
-            For t = 0 To t1
-                sum += MODdata.PlossTC(t)
-            Next
-            VSUMentries("\\Etorqueconv").ValueString = (-sum / 3600)
+			'Retarder
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.PlossRt(t)
+			Next
+			VSUMentries("\\Eretarder").ValueString = (-sum / 3600)
+
+			'TC Losses
+			sum = 0
+			For t = 0 To t1
+				sum += MODdata.PlossTC(t)
+			Next
+			VSUMentries("\\Etorqueconv").ValueString = (-sum / 3600)
 
 
 
-            'Masse, Loading
-            VSUMentries("\\Mass").ValueString = (VEH.Mass + VEH.MassExtra)
-            VSUMentries("\\Loading").ValueString = VEH.Loading
+			'Masse, Loading
+			VSUMentries("\\Mass").ValueString = (VEH.Mass + VEH.MassExtra)
+			VSUMentries("\\Loading").ValueString = VEH.Loading
 
-            'CylceKin
-            For Each VSUMentry In MODdata.CylceKin.VSUMentries
-                VSUMentries("\\" & VSUMentry.Head).ValueString = MODdata.CylceKin.GetValueString(VSUMentry.Head)
-            Next
+			'CylceKin
+			For Each VSUMentry In MODdata.CylceKin.VSUMentries
+				VSUMentries("\\" & VSUMentry.Head).ValueString = MODdata.CylceKin.GetValueString(VSUMentry.Head)
+			Next
 
-            'EposICE
-            sum = 0
-            For t = 0 To t1
-                sum += Math.Max(0, MODdata.Pe(t))
-            Next
-            VSUMentries("\\EposICE").ValueString = (sum / 3600)
+			'EposICE
+			sum = 0
+			For t = 0 To t1
+				sum += Math.Max(0, MODdata.Pe(t))
+			Next
+			VSUMentries("\\EposICE").ValueString = (sum / 3600)
 
-            'EnegICE
-            sum = 0
-            For t = 0 To t1
-                sum += Math.Min(0, MODdata.Pe(t))
-            Next
-            VSUMentries("\\EnegICE").ValueString = (sum / 3600)
+			'EnegICE
+			sum = 0
+			For t = 0 To t1
+				sum += Math.Min(0, MODdata.Pe(t))
+			Next
+			VSUMentries("\\EnegICE").ValueString = (sum / 3600)
 
-        End If
+		End If
 
         'Create Output-string:
         First = True
@@ -401,18 +393,18 @@ Class cVSUM
 
                 If VSUMentries(key).Multi Then
 
-                    If dic1.ContainsKey(VSUMentries(key).Head) Then
-                        ls0 = dic1(VSUMentries(key).Head)
-                    Else
-                        ls0 = New List(Of Dictionary(Of String, Object))
-                        dic1.Add(VSUMentries(key).Head, ls0)
-                    End If
+					If dic1.ContainsKey(VSUMentries(key).Head) Then
+						ls0 = dic1(VSUMentries(key).Head)
+					Else
+						ls0 = New List(Of Dictionary(Of String, Object))
+						dic1.Add(VSUMentries(key).Head, ls0)
+					End If
 
                     ls0.Add(dic0)
 
                 Else
 
-                    dic1.Add(VSUMentries(key).Head, dic0)
+					dic1.Add(VSUMentries(key).Head, dic0)
 
                 End If
 
@@ -444,19 +436,15 @@ Class cVSUM
 
     End Function
 
-    Private Sub AddToVSUM(ByVal IDstring As String, ByVal Head As String, ByVal Unit As String, Optional Multi As Boolean = False)
-        If Not VSUMentries.ContainsKey(IDstring) Then
-            VSUMentries.Add(IDstring, New cVSUMentry(Head, Unit))
-            VSUMentryList.Add(IDstring)
-            If Multi Then VSUMentries(IDstring).Multi = True
-        End If
-    End Sub
+	Private Sub AddToVSUM(ByVal IDstring As String, ByVal Head As String, ByVal Unit As String, Optional Multi As Boolean = False)
+		If Not VSUMentries.ContainsKey(IDstring) Then
+			VSUMentries.Add(IDstring, New cVSUMentry(Head, Unit))
+			VSUMentryList.Add(IDstring)
+			If Multi Then VSUMentries(IDstring).Multi = True
+		End If
+	End Sub
 
-    ''' <summary>
-    ''' Initializes the specified job file.
-    ''' </summary>
-    ''' <param name="JobFile">The job file.</param>
-    ''' <returns></returns>
+
     Public Function Init(ByVal JobFile As String) As Boolean
         Dim JobFiles As New List(Of String)
         Dim str As String
@@ -640,14 +628,15 @@ Class cVSUM
                 Return False
             End Try
 
-            If VEC0.EngOnly Then
-                AddToVSUM("FC_h", "FC", "[g/h]")
-                AddToVSUM("FC-AUXc_h", "FC-AUXc", "[g/h]")
-                AddToVSUM("FC-WHTCc_h", "FC-WHTCc", "[g/h]")
-            Else
-                AddToVSUM("FC_km", "FC", "[g/km]")
-                AddToVSUM("FC-AUXc_km", "FC-AUXc", "[g/km]")
-                AddToVSUM("FC-WHTCc_km", "FC-WHTCc", "[g/km]")
+			AddToVSUM("FC_h", "FC-Map", "[g/h]", True)
+			AddToVSUM("FC-AUXc_h", "FC-AUXc", "[g/h]", True)
+			AddToVSUM("FC-WHTCc_h", "FC-WHTCc", "[g/h]", True)
+
+            If Not VEC0.EngOnly Then
+
+				AddToVSUM("FC_km", "FC-Map", "[g/km]", True)
+				AddToVSUM("FC-AUXc_km", "FC-AUXc", "[g/km]", True)
+				AddToVSUM("FC-WHTCc_km", "FC-WHTCc", "[g/km]", True)
 
                 AddToVSUM("CO2_km", "CO2", "[g/km]", True)
                 AddToVSUM("CO2_tkm", "CO2", "[g/tkm]", True)
@@ -669,7 +658,8 @@ Class cVSUM
 
         If NonEngOnly Then
 
-            'Vehicle-related fields
+			'Vehicle-related fields
+			AddToVSUM("\\PwheelPos", "PwheelPos", "[kW]")
             AddToVSUM("\\Pbrake", "Pbrake", "[kW]")
             AddToVSUM("\\EposICE", "EposICE", "[kWh]")
             AddToVSUM("\\EnegICE", "EnegICE", "[kWh]")
@@ -688,7 +678,7 @@ Class cVSUM
             'CylceKin
             CylceKin = New cCycleKin
             For Each VSUMentry In CylceKin.VSUMentries
-                AddToVSUM("\\" & VSUMentry.Head, VSUMentry.Head, VSUMentry.Unit)
+				AddToVSUM("\\" & VSUMentry.Head, VSUMentry.Head, VSUMentry.Unit)
             Next
 
         End If
@@ -732,8 +722,8 @@ Class cVSUM
 End Class
 
 Public Class cVSUMentry
-    Public Head As String
-    Public Unit As String
+	Public Head As String
+	Public Unit As String
     Public MyVal As Object
     Public Multi As Boolean
 
@@ -741,8 +731,8 @@ Public Class cVSUMentry
         Head = HeadStr
         Unit = UnitStr
         MyVal = Nothing
-        Multi = False
-    End Sub
+		Multi = False
+	End Sub
 
     Public Property ValueString As Object
         Get

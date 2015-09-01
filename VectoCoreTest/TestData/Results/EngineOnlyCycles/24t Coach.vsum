@@ -1,4 +1,4 @@
-﻿Job [-],Input File [-],Cycle [-],time [s],Ppos [kW],Pneg [kW],FC [g/h],FC-AUXc [g/h],FC-WHTCc [g/h]
+﻿Job [-],Input File [-],Cycle [-],time [s],Ppos [kW],Pneg [kW],FC-Map [g/h],FC-AUXc [g/h],FC-WHTCc [g/h]
 1,24t Coach.vecto,Engine Only1.vdri,3951,29.5999634846317,-1.63579455196953,ERROR,-,-
 1,24t Coach.vecto,Engine Only2.vdri,3951,29.5999634846317,-1.63579455196953,ERROR,-,-
 1,24t Coach.vecto,Engine Only3.vdri,3951,29.5999634846317,-1.63579455196953,ERROR,-,-

@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DirectedGraph DataVirtualized="True" GraphDirection="TopToBottom" Layout="Sugiyama" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+  <Nodes>
+    <Node Id="..." Bounds="-10.9808287557038,299.315443515797,50.7633333333333,41.9200000000001" Label="ALT ...&#xD;&#xA;.vaux" />
+    <Node Id="...1" Bounds="189.019229024244,299.315443515089,100.34,41.9200000000001" Label="Driving Cycle ...&#xD;&#xA;.vdri" />
+    <Node Id="ALT1.vaux" Bounds="-10.9807615153068,227.395343515797,50,41.9200000000001" Label="ALT1&#xD;&#xA;.vaux" />
+    <Node Id="ALT2.vaux" Bounds="69.0192384846932,227.395328257008,50,41.9200000000001" Label="ALT2&#xD;&#xA;.vaux" />
+    <Node Id="AccelerationCurves.vacc" Bounds="467.039198913567,187.39509013804,149.696666666667,25.9600000000001" Label="Acceleration Curves.vacc" />
+    <Node Id="Auxiliaries*" Bounds="-30.9808287557038,187.395228257008,170.000067240397,173.840315258789" Group="Expanded" Label="Auxiliaries (*.vaux)" />
+    <Node Id="Axle" Bounds="14.0258818562753,-128.365400429515,110.09,101.9202" Group="Expanded" Label="Axle" />
+    <Node Id="CrossWindCorrection.vcdv" Bounds="-327.03409291586,227.395328257008,246.053333333333,89.8" Label="Cross Wind Correction Speed Independent&#xD;&#xA;.vcdv&#xD;&#xA;OR&#xD;&#xA;Cross Wind Correction Vair Beta&#xD;&#xA;.vcdb" />
+    <Node Id="DrivingCycle1.vdri" Bounds="189.019235738111,227.395343515798,99.01,41.9200000000001" Label="Driving Cycle 1&#xD;&#xA;.vdri" />
+    <Node Id="DrivingCycle2.vdri" Bounds="318.029260762525,227.3953282563,99.01,41.9200000000001" Label="Driving Cycle 2&#xD;&#xA;.vdri" />
+    <Node Id="DrivingCycles*1" Bounds="169.019213562013,187.395228256299,268.020031738281,173.840315258789" Group="Expanded" Label="Driving Cycles (*.vdri)" />
+    <Node Id="Engine" Bounds="194.115872497551,-208.365281571078,392.753394911025,233.840629643688" Group="Expanded" Label="Engine.veng" />
+    <Node Id="FuelConsumptionMap.vmap" Bounds="423.209267408576,-168.364885753073,143.66,41.92" Label="Fuel Consumption Map&#xD;&#xA;.vmap" />
+    <Node Id="FullLoadCurve" Bounds="234.115877380364,-128.365081571078,54.5466666666666,41.92" Label="Gear 0&#xD;&#xA;.vlfd" />
+    <Node Id="FullLoadCurves*1" Bounds="214.115872497551,-168.365181571078,179.093348185222,173.840429643688" Group="Expanded" Label="Full Load Curves (*.vlfd)" />
+    <Node Id="Gear1.vlfd" Bounds="318.662554016106,-128.365081571078,54.5466666666666,41.92" Label="Gear 1&#xD;&#xA;.vlfd" />
+    <Node Id="Gear11" Bounds="-146.504116923021,-128.365517519359,130.530031738281,173.8403" Group="Expanded" Label="Gear 1" />
+    <Node Id="Gear2-99.vfld" Bounds="234.115872497551,-56.4448519273895,72.2866666666666,41.92" Label="Gear 2-99&#xD;&#xA;.vfld" />
+    <Node Id="Gear21" Bounds="-307.03408518474,-128.365471742992,130.530001220703,173.8403" Group="Expanded" Label="Gear ..." />
+    <Node Id="Gearbox.vgbx1" Bounds="-347.034089253751,-208.365717519359,511.149971110026,365.760845776368" Group="Expanded" Label="Gearbox.vgbx" />
+    <Node Id="Gears*" Bounds="-327.03408518474,-168.365617519359,471.149967041015,233.840545776367" Group="Expanded" Label="Gears (*.vtlm, *.vgbs)" />
+    <Node Id="JobFile" Bounds="-367.034129842122,-248.365817519359,1003.77,677.481418458862" Group="Expanded" Label="Job File.vecto" UseManualLocation="True" />
+    <Node Id="LossMap.vtlm" Bounds="34.0258818562752,-88.3653004295151,70.0900000000001,41.9200000000001" Label="Loss Map&#xD;&#xA;.vtlm" />
+    <Node Id="LossMap.vtlm1" Bounds="-126.504116923021,-88.365417519359,70.0899999999999,41.9200000000001" Label="Loss Map&#xD;&#xA;.vtlm" />
+    <Node Id="LossMap.vtlm2" Bounds="-287.03408518474,-88.3653717429918,70.0900000000001,41.9200000000001" Label="Loss Map&#xD;&#xA;.vtlm" />
+    <Node Id="Retarder.vrlm" Bounds="-327.03411437989,347.195428257008,65.3166666666667,41.9200000000001" Label="Retarder&#xD;&#xA;.vrlm" />
+    <Node Id="ShiftPolygon.vgbs" Bounds="-126.50408518474,-16.4453175193589,90.53,41.9200000000001" Label="Shift Polygon&#xD;&#xA;.vgbs" />
+    <Node Id="ShiftPolygon.vgbs1" Bounds="-287.034083964037,-16.4452717429918,90.53,41.92" Label="Shift Polygon&#xD;&#xA;.vgbs" />
+    <Node Id="TorqueConverter.vtcc" Bounds="-327.034089253751,95.4750282570085,112.873333333333,41.9200000000001" Label="Torque Converter&#xD;&#xA;.vtcc" />
+    <Node Id="Vehicle.vveh1" Bounds="-347.034129842122,187.395228257009,286.053354797363,221.7203" Group="Expanded" Label="Vehicle.vveh" />
+  </Nodes>
+  <Links>
+    <Link Source="Auxiliaries*" Target="..." Category="Contains" />
+    <Link Source="Auxiliaries*" Target="ALT1.vaux" Category="Contains" />
+    <Link Source="Auxiliaries*" Target="ALT2.vaux" Category="Contains" />
+    <Link Source="Axle" Target="LossMap.vtlm" Category="Contains" />
+    <Link Source="DrivingCycles*1" Target="...1" Category="Contains" />
+    <Link Source="DrivingCycles*1" Target="DrivingCycle1.vdri" Category="Contains" />
+    <Link Source="DrivingCycles*1" Target="DrivingCycle2.vdri" Category="Contains" />
+    <Link Source="Engine" Target="FuelConsumptionMap.vmap" Category="Contains" />
+    <Link Source="Engine" Target="FullLoadCurves*1" Category="Contains" />
+    <Link Source="FullLoadCurves*1" Target="FullLoadCurve" Category="Contains" />
+    <Link Source="FullLoadCurves*1" Target="Gear1.vlfd" Category="Contains" />
+    <Link Source="FullLoadCurves*1" Target="Gear2-99.vfld" Category="Contains" />
+    <Link Source="Gear11" Target="LossMap.vtlm1" Category="Contains" />
+    <Link Source="Gear11" Target="ShiftPolygon.vgbs" Category="Contains" />
+    <Link Source="Gear21" Target="LossMap.vtlm2" Category="Contains" />
+    <Link Source="Gear21" Target="ShiftPolygon.vgbs1" Category="Contains" />
+    <Link Source="Gearbox.vgbx1" Target="Gears*" Category="Contains" />
+    <Link Source="Gearbox.vgbx1" Target="TorqueConverter.vtcc" Category="Contains" />
+    <Link Source="Gears*" Target="Axle" Category="Contains" />
+    <Link Source="Gears*" Target="Gear11" Category="Contains" />
+    <Link Source="Gears*" Target="Gear21" Category="Contains" />
+    <Link Source="JobFile" Target="AccelerationCurves.vacc" Category="Contains" />
+    <Link Source="JobFile" Target="Auxiliaries*" Category="Contains" />
+    <Link Source="JobFile" Target="DrivingCycles*1" Category="Contains" />
+    <Link Source="JobFile" Target="Engine" Category="Contains" />
+    <Link Source="JobFile" Target="Gearbox.vgbx1" Category="Contains" />
+    <Link Source="JobFile" Target="Vehicle.vveh1" Category="Contains" />
+    <Link Source="Vehicle.vveh1" Target="CrossWindCorrection.vcdv" Category="Contains" />
+    <Link Source="Vehicle.vveh1" Target="Retarder.vrlm" Category="Contains" />
+  </Links>
+  <Categories>
+    <Category Id="Contains" Label="Contains" Description="Whether the source of the link contains the target object" CanBeDataDriven="False" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="Contained By" IsContainment="True" OutgoingActionLabel="Contains" />
+  </Categories>
+  <Properties>
+    <Property Id="Bounds" DataType="System.Windows.Rect" />
+    <Property Id="CanBeDataDriven" Label="CanBeDataDriven" Description="CanBeDataDriven" DataType="System.Boolean" />
+    <Property Id="CanLinkedNodesBeDataDriven" Label="CanLinkedNodesBeDataDriven" Description="CanLinkedNodesBeDataDriven" DataType="System.Boolean" />
+    <Property Id="DataVirtualized" Label="Data Virtualized" Description="If true, the graph can contain nodes and links that represent data for virtualized nodes/links (i.e. not actually created in the graph)." DataType="System.Boolean" />
+    <Property Id="Expression" DataType="System.String" />
+    <Property Id="GraphDirection" DataType="Microsoft.VisualStudio.Diagrams.Layout.LayoutOrientation" />
+    <Property Id="Group" Label="Group" Description="Display the node as a group" DataType="Microsoft.VisualStudio.GraphModel.GraphGroupStyle" />
+    <Property Id="GroupLabel" DataType="System.String" />
+    <Property Id="IncomingActionLabel" Label="IncomingActionLabel" Description="IncomingActionLabel" DataType="System.String" />
+    <Property Id="IsContainment" DataType="System.Boolean" />
+    <Property Id="IsEnabled" DataType="System.Boolean" />
+    <Property Id="Label" Label="Label" Description="Displayable label of an Annotatable object" DataType="System.String" />
+    <Property Id="Layout" DataType="System.String" />
+    <Property Id="OutgoingActionLabel" Label="OutgoingActionLabel" Description="OutgoingActionLabel" DataType="System.String" />
+    <Property Id="TargetType" DataType="System.Type" />
+    <Property Id="UseManualLocation" DataType="System.Boolean" />
+    <Property Id="Value" DataType="System.String" />
+    <Property Id="ValueLabel" DataType="System.String" />
+    <Property Id="Visibility" Label="Visibility" Description="Defines whether a node in the graph is visible or not" DataType="System.Windows.Visibility" />
+  </Properties>
+  <Styles>
+    <Style TargetType="Node" GroupLabel="Category 2" ValueLabel="Has category">
+      <Condition Expression="HasCategory('Category2')" />
+      <Setter Property="Background" Value="#FF339933" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Category 1" ValueLabel="Has category">
+      <Condition Expression="HasCategory('Category1')" />
+      <Setter Property="Background" Value="#FFE51400" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Results" ValueLabel="True">
+      <Condition Expression="HasCategory('QueryResult')" />
+      <Setter Property="Background" Value="#FFBCFFBE" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Assembly" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Assembly')" />
+      <Setter Property="Background" Value="#FF094167" />
+      <Setter Property="Stroke" Value="#FF094167" />
+      <Setter Property="Icon" Value="CodeSchema_Assembly" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Namespace" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Namespace')" />
+      <Setter Property="Background" Value="#FF0E619A" />
+      <Setter Property="Stroke" Value="#FF0E619A" />
+      <Setter Property="Icon" Value="CodeSchema_Namespace" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Interface" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Interface')" />
+      <Setter Property="Background" Value="#FF1382CE" />
+      <Setter Property="Stroke" Value="#FF1382CE" />
+      <Setter Property="Icon" Value="CodeSchema_Interface" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Struct" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Struct')" />
+      <Setter Property="Background" Value="#FF1382CE" />
+      <Setter Property="Stroke" Value="#FF1382CE" />
+      <Setter Property="Icon" Value="CodeSchema_Struct" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Enumeration" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Enum')" />
+      <Setter Property="Background" Value="#FF1382CE" />
+      <Setter Property="Stroke" Value="#FF1382CE" />
+      <Setter Property="Icon" Value="CodeSchema_Enum" />
+      <Setter Property="LayoutSettings" Value="List" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Delegate" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Delegate')" />
+      <Setter Property="Background" Value="#FF1382CE" />
+      <Setter Property="Stroke" Value="#FF1382CE" />
+      <Setter Property="Icon" Value="CodeSchema_Delegate" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Class" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Type')" />
+      <Setter Property="Background" Value="#FF1382CE" />
+      <Setter Property="Stroke" Value="#FF1382CE" />
+      <Setter Property="Icon" Value="CodeSchema_Class" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Property" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Property')" />
+      <Setter Property="Background" Value="#FFE0E0E0" />
+      <Setter Property="Stroke" Value="#FFE0E0E0" />
+      <Setter Property="Icon" Value="CodeSchema_Property" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Method" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Method') Or HasCategory('CodeSchema_CallStackUnresolvedMethod')" />
+      <Setter Property="Background" Value="#FFE0E0E0" />
+      <Setter Property="Stroke" Value="#FFE0E0E0" />
+      <Setter Property="Icon" Value="CodeSchema_Method" />
+      <Setter Property="LayoutSettings" Value="List" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Event" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Event')" />
+      <Setter Property="Background" Value="#FFE0E0E0" />
+      <Setter Property="Stroke" Value="#FFE0E0E0" />
+      <Setter Property="Icon" Value="CodeSchema_Event" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Field" ValueLabel="Has category">
+      <Condition Expression="HasCategory('CodeSchema_Field')" />
+      <Setter Property="Background" Value="#FFE0E0E0" />
+      <Setter Property="Stroke" Value="#FFE0E0E0" />
+      <Setter Property="Icon" Value="CodeSchema_Field" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Out Parameter" ValueLabel="True">
+      <Condition Expression="CodeSchemaProperty_IsOut = 'True'" />
+      <Setter Property="Icon" Value="CodeSchema_OutParameter" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Parameter" ValueLabel="True">
+      <Condition Expression="HasCategory('CodeSchema_Parameter')" />
+      <Setter Property="Icon" Value="CodeSchema_Parameter" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Local Variable" ValueLabel="True">
+      <Condition Expression="HasCategory('CodeSchema_LocalExpression')" />
+      <Setter Property="Icon" Value="CodeSchema_LocalExpression" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Externals" ValueLabel="Has category">
+      <Condition Expression="HasCategory('Externals')" />
+      <Setter Property="Background" Value="#FF424242" />
+      <Setter Property="Stroke" Value="#FF424242" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Inherits From" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('InheritsFrom') And Target.HasCategory('CodeSchema_Class')" />
+      <Setter Property="TargetDecorator" Value="OpenArrow" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Implements" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('Implements') And Target.HasCategory('CodeSchema_Interface')" />
+      <Setter Property="TargetDecorator" Value="OpenArrow" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Field Read" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="Target.HasCategory('CodeSchema_Field') And HasCategory('CodeSchema_FieldRead')" />
+      <Setter Property="StrokeDashArray" Value="2 2" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Comment Link" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="Source.HasCategory('Comment')" />
+      <Setter Property="Stroke" Value="#FFE5C365" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Cursor Location Changed" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="IsCursorLocation" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Disabled Breakpoint Location Changed" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="DisabledBreakpointCount" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Enabled Breakpoint Location Changed" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="EnabledBreakpointCount" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Instruction Pointer Location Changed" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="IsInstructionPointerLocation" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Current Callstack Changed" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="IsCurrentCallstackFrame" />
+      <Setter Property="IndicatorWest" Value="WestIndicator" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Comment" ValueLabel="Has comment">
+      <Condition Expression="HasCategory('Comment')" />
+      <Setter Property="Background" Value="#FFFFFACD" />
+      <Setter Property="Stroke" Value="#FFE5C365" />
+      <Setter Property="StrokeThickness" Value="1" />
+      <Setter Property="NodeRadius" Value="2" />
+      <Setter Property="MaxWidth" Value="250" />
+    </Style>
+  </Styles>
+  <Paths>
+    <Path Id="1af7ba24-459e-4497-ae71-03acadd08d8c.OutputPath" Value="C:\Users\Michael\Documents\Visual Studio 2013\Projects\FinalProperties\FactoryMethods\bin\Debug\FactoryMethods.exe" />
+    <Path Id="FxReferenceAssemblies" Value="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework" />
+  </Paths>
+</DirectedGraph>

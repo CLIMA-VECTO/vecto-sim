@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Exceptions;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -26,7 +27,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void TestFullLoadEngineSpeedRated()
 		{
 			var fldCurve = EngineFullLoadCurve.ReadFromFile(CoachEngineFLD);
-			Assert.AreEqual(181.8444, (double)fldCurve.RatedSpeed, Tolerance);
+			Assert.AreEqual(181.8444, fldCurve.RatedSpeed.Value(), Tolerance);
 		}
 
 		[TestMethod]
@@ -69,6 +70,19 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 			Assert.AreEqual(0.6, fldCurve.PT1(560.RPMtoRad()).Value(), Tolerance);
 			Assert.AreEqual(0.25, fldCurve.PT1(2000.RPMtoRad()).Value(), Tolerance);
 			Assert.AreEqual(0.37, fldCurve.PT1(1700.RPMtoRad()).Value(), Tolerance);
+		}
+
+		[TestMethod]
+		public void TestPreferredSpeed()
+		{
+			var fldCurve = EngineFullLoadCurve.ReadFromFile(CoachEngineFLD);
+			fldCurve.EngineData = new CombustionEngineData { IdleSpeed = 560.RPMtoRad() };
+			AssertHelper.AreRelativeEqual(130.691151551712.SI<PerSecond>(), fldCurve.PreferredSpeed);
+			AssertHelper.AreRelativeEqual(194.515816596908.SI<PerSecond>(), fldCurve.N95hSpeed);
+			AssertHelper.AreRelativeEqual(94.2463966015023.SI<PerSecond>(), fldCurve.LoSpeed);
+			AssertHelper.AreRelativeEqual(219.084329211505.SI<PerSecond>(), fldCurve.HiSpeed);
+			AssertHelper.AreRelativeEqual(2300.SI<NewtonMeter>(), fldCurve.MaxLoadTorque);
+			AssertHelper.AreRelativeEqual(-320.SI<NewtonMeter>(), fldCurve.MaxDragTorque);
 		}
 
 		/// <summary>

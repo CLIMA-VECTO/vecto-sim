@@ -13,11 +13,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 			ParseData(ReadCsvResource(ResourceId));
 		}
 
+		public override WheelsEntry Lookup(string key)
+		{
+			return base.Lookup(key.Replace(" ", ""));
+		}
+
 		protected override sealed void ParseData(DataTable table)
 		{
 			Data = (from DataRow row in table.Rows
 				select new WheelsEntry {
-					WheelType = row.Field<string>(0),
+					WheelType = row.Field<string>(0).Replace(" ", ""),
 					Inertia = row.ParseDouble(1).SI<KilogramSquareMeter>(),
 					DynamicTyreRadius = row.ParseDouble(2).SI().Milli.Meter.Cast<Meter>(),
 					SizeClass = row.Field<string>(3)

@@ -1,0 +1,2743 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner"
+  dslVersion="1.0.0.0"
+  Id="bfec8f6b-0671-483a-9ef8-92d3fa96e7fa"
+  name="DataObjectAdaper"
+  visibility="Private" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <referencesInternal>
+    <reference
+      Id="f7be1b7e-0712-4cc0-bffc-125e929ae673"
+      handle="viewcode://./CodeSchema_Namespace?Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper"
+      tag="ViewCode" />
+  </referencesInternal>
+  <packagedElements>
+    <packageHasNamedElement>
+      <class
+        Id="b7d2caf6-3db9-445e-9e1f-84d1203939da"
+        name="DeclarationDataAdapter"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="aae732f2-2e8f-4b67-a946-44530e7a8e3a"
+            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="d5e0eb74-13eb-424f-9e71-17119272cc02"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="145db372-d6d0-4cd3-bb4b-8bd0de34f0e3">
+                <propertyInstance
+                  Id="f6869266-d58b-430b-bd25-cf04ebc99136"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="495a1b0a-0204-44d0-8da7-b4a82ec20fae">
+                <propertyInstance
+                  Id="5c371130-4bf5-43b1-9f8f-38e0a25e6017"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="29de4c23-722b-486f-b574-9e204dc1ec2d">
+                <propertyInstance
+                  Id="5161627e-ee70-4325-8b63-2318233b47eb"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="33054259-285a-413c-8a27-18f9c28c48b1">
+                <propertyInstance
+                  Id="18a72b05-5904-4ba3-bc64-2bb603723f43"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="345c5486-125f-42bf-9415-cfd97e6ad8e1">
+                <propertyInstance
+                  Id="67ea70fe-1f2d-4113-8947-9f6a31c92155"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+        <generalsInternal>
+          <generalization
+            Id="d300bb42-8a0d-4eee-a299-8e28286adcdb"
+            isSubstitutable="false">
+            <classMoniker
+              Id="62c86c7f-c2b6-445b-ac83-359f57b3aa10"
+              LastKnownName="AbstractSimulationDataAdapter"
+              LastKnownLocation="Package1_1817.uml" />
+          </generalization>
+        </generalsInternal>
+        <ownedOperationsInternal>
+          <operation
+            Id="014ed5f0-e9eb-407a-a7f3-d8e8285a6bdc"
+            name="CreateVehicleData"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="63437449-4f55-4160-ba69-00e9e8fb2dfe"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="db0bfdc7-89ca-430d-93a2-63fa58d0ed65"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="51ebae77-180d-4d74-b1e3-41f7653207b6">
+                    <propertyInstance
+                      Id="23ab4303-cd9a-434d-8a01-fbfeaea19fd3"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="094a3289-f0b1-403e-85be-34bfd22f704c">
+                    <propertyInstance
+                      Id="23b174ce-8573-43d7-8f5c-8c17e5b8b98c"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="fd31f868-a59b-4159-bde0-7bb31da326a3">
+                    <propertyInstance
+                      Id="8812bca8-5f6b-4b47-810d-46739ec0a85f"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="370f9559-2233-4716-8872-1a510e5ae7e5">
+                    <propertyInstance
+                      Id="83645263-2ced-4481-a741-7bf425410eb2"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="3c91c728-f32b-490f-9f81-4ed73635af8c">
+                    <propertyInstance
+                      Id="324e242b-5e10-4369-9af1-9c72a3896510"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="13bbb547-adb6-4f61-89de-e5b2be6c4f06">
+                    <propertyInstance
+                      Id="25fef92a-268c-4055-bf15-f64538bfbcdf"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="fe7aadc7-25da-4561-85ec-d522f50a75ae"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="40d91768-4cfb-4b95-ade3-243ea20e028f"
+                      LastKnownName="VehicleData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="0871ab8b-5825-4181-bfe8-d3219d74ee53"
+                  name="vehicle"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="59371000-4d34-4462-84b1-8ef0188aee0d"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)]) ParameterIdentifier%3Dvehicle"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="3e3c4660-8912-4413-877a-929ae6b472b6"
+                      LastKnownName="VectoVehicleFile"
+                      LastKnownLocation="Package1_1426.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="8bc51987-4c58-49f0-afd3-470e7bde6df0"
+                  name="segment"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="2678d4ce-4a4d-4d35-ad8b-302fe7b6f5e7"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)]) ParameterIdentifier%3Dsegment"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="87b1d34e-3c18-4a9d-bb4e-cb899f3c0ce0"
+                      LastKnownName="Mission"
+                      LastKnownLocation="Package1_1341.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="fdf178ed-e844-40f4-b399-f960669b1e71"
+                  name="loading"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="4ff33f0c-de96-4049-ae00-9789d2f73327"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)]) ParameterIdentifier%3Dloading"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="9c152a23-9fb3-46e6-b8ba-6d2eec234e92"
+                      LastKnownName="Kilogram"
+                      LastKnownLocation="Package6_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="407d363a-80ba-48fe-ba3b-cb72758ca3c6"
+            name="CreateVehicleData"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="d0981f99-6308-42b6-abc3-42f6b9110eb4"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="ee08a38b-1253-4cdd-8f47-ccee5d3d3b90"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="90883792-80cb-45f7-8f13-8f5aeb0d9335">
+                    <propertyInstance
+                      Id="0ca63a34-02b7-474b-86b9-9f120cbec1fb"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="7bc1f607-1df9-4c37-b167-a1e8d644cf17">
+                    <propertyInstance
+                      Id="9dae591a-779e-47d5-add5-26400bb42eb3"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="669328fb-fa7d-4e18-8a8d-d97c899f9ccc">
+                    <propertyInstance
+                      Id="714c5743-6721-4ea4-bb00-f48e8b56372a"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="2d308abc-81cf-4f31-8b26-2ab15b245b43">
+                    <propertyInstance
+                      Id="2ccf0c63-eb3b-4b11-9e44-a4bd31ae37ae"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="e2af619f-f951-49c7-a622-2f45a152f5a5">
+                    <propertyInstance
+                      Id="5573e94c-10b2-47b3-a4f3-0be1b82dba99"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="eb4296b4-ffda-4d15-9ccf-92a70144a0b9">
+                    <propertyInstance
+                      Id="a42cfc0d-2606-42e4-937a-78b95150e08b"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="71930841-50c5-4370-a2bc-9eeb44670c33"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="40d91768-4cfb-4b95-ade3-243ea20e028f"
+                      LastKnownName="VehicleData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="a7090386-0bd4-4aa7-b21e-fec511f7da09"
+                  name="vehicle"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="daf10a98-dd11-498e-9a12-6141f5f64236"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)]) ParameterIdentifier%3Dvehicle"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="3e3c4660-8912-4413-877a-929ae6b472b6"
+                      LastKnownName="VectoVehicleFile"
+                      LastKnownLocation="Package1_1426.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="a2623add-1849-45f9-afee-9daa32ef97e1"
+            name="CreateEngineData"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="bb4fb777-2b49-490e-871e-38ada8f19148"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateEngineData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoEngineFile)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="bd89d5ba-a641-4baf-9ae8-895a29efbf03"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="5be42550-ddd8-48cd-b437-b2deaccf8c19">
+                    <propertyInstance
+                      Id="470e1b91-1b61-4c56-86a8-0b46f48ab2d9"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="1226f4c4-94d5-493b-a985-ce13c42e3215">
+                    <propertyInstance
+                      Id="ae5015fd-b091-4658-92ea-5c3888213313"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="f3b146bb-0e66-4716-b18e-57a09acc84d0">
+                    <propertyInstance
+                      Id="4ffeac66-9915-426a-b853-0bf7d7ad465b"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="69ee3349-ed6a-4a63-9227-7b54419fc588">
+                    <propertyInstance
+                      Id="147a83a6-2aee-43bd-be8e-4280531fadf1"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="933d4a9e-1b84-4e07-8604-1e97da430a8f">
+                    <propertyInstance
+                      Id="3e08b6dc-abd5-4ea2-a300-8c3d6a7aaff1"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="fb538d29-4606-43bd-b9ac-0dfd6aae7dc0">
+                    <propertyInstance
+                      Id="a0fff969-ffa9-4cec-a0c3-63a9fe11590d"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="7554d60c-cb36-4c15-8238-28c0ab007bd3"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8f1653e1-038a-4c36-bb53-1d50a69749a1"
+                      LastKnownName="CombustionEngineData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="ed4ef601-0b33-4252-8c64-f259a9ef7fba"
+                  name="engine"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="c28047fd-f232-446b-bde7-82e6d5c0acee"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateEngineData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoEngineFile)]) ParameterIdentifier%3Dengine"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="b8f620d6-7c10-440d-8592-f19e7b1f9c7c"
+                      LastKnownName="VectoEngineFile"
+                      LastKnownLocation="Package1_1426.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="225fbdda-6b9a-41d7-8211-d627d140672d"
+            name="CreateGearboxData"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="09dd5cb6-a728-434a-a4f6-e6b60097e67b"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoGearboxFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data Type%3DCombustionEngineData)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="e3d02f8f-4535-4876-8190-7befabb7a6cd"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="e9354182-b07c-4217-ab09-01d3aadf14d1">
+                    <propertyInstance
+                      Id="7517fd7c-9e92-4a86-98d7-a6f3c1a449d8"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="5701e4ad-8cf7-4835-b12b-2554c7d38288">
+                    <propertyInstance
+                      Id="5760d1cf-f3c3-44a2-b694-6f5650423e36"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="718705ba-6d78-421e-9d1d-1565031c7b54">
+                    <propertyInstance
+                      Id="32f1ef64-ab8a-4f33-bf4b-70e5a1fe1fac"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="197d6979-18d4-4d81-985d-bd2e0ccf0a8f">
+                    <propertyInstance
+                      Id="dede14be-f026-4d60-8e27-669fd9591a13"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="efa27e69-63f0-43b3-bf64-c4cb98c4bc2e">
+                    <propertyInstance
+                      Id="a34da805-4a96-4a2b-a0da-0d9be91a1365"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="84fadfb6-fb7e-4b15-aac2-218e96e6c19b">
+                    <propertyInstance
+                      Id="fd2545ac-8054-4725-888c-1e3871a4d718"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="3e9f7304-d6f9-4170-8ff4-d1e9e10fbb33"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8b5ae4e9-713d-4a09-9e2f-40ecdb827a34"
+                      LastKnownName="GearboxData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="69256d0f-9062-4492-b96a-4b9f06a53e6b"
+                  name="gearbox"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="0e1a6945-409d-41ed-b819-83c8e951976a"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoGearboxFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data Type%3DCombustionEngineData)]) ParameterIdentifier%3Dgearbox"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="fdf8ed6c-8831-46ea-9a01-53fcb0ed8b68"
+                      LastKnownName="VectoGearboxFile"
+                      LastKnownLocation="Package1_1426.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="c3cd3911-5c74-4914-93b3-6b7602a799c7"
+                  name="engine"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="34eacbaa-c798-45e5-a14d-dbd6d6f2af9e"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoGearboxFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data Type%3DCombustionEngineData)]) ParameterIdentifier%3Dengine"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8f1653e1-038a-4c36-bb53-1d50a69749a1"
+                      LastKnownName="CombustionEngineData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="80a8ae47-0f7f-4ead-a474-6b57f4b262ed"
+            name="CreateVehicleData"
+            visibility="Package"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="e8c740bf-64c0-4910-88db-1d387ba389b0"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3DVehicleFileV5Declaration)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="62e36c86-ed7e-47dd-9240-401391c1ac93"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="d91f1a65-8cd7-4556-a7b1-baeaf29da770">
+                    <propertyInstance
+                      Id="c686fae8-bf97-43be-86f1-054084fa099d"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="41ff6430-999e-4a36-84da-3391abfa2e96">
+                    <propertyInstance
+                      Id="c687f0ab-5c71-49ec-b2fd-0ad59251ad93"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="24688886-b82f-417f-bddf-b20ab61317b0">
+                    <propertyInstance
+                      Id="b69e3ff3-177a-4fd7-a4f8-e44a6967c324"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="4c58b009-9e08-47e4-9516-70806983f589">
+                    <propertyInstance
+                      Id="f45d4b14-2691-4f97-963f-27f9deab8da3"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="bb7f32c7-0e0b-4661-afc9-20395cb95f7e">
+                    <propertyInstance
+                      Id="c4f3a858-2950-441f-8c4c-3ce08a2d3caa"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="47562818-b975-4513-b600-9be5735c3146">
+                    <propertyInstance
+                      Id="afc6f74d-ef27-42ec-9adf-9cd385b9c48a"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="f832d81b-2fcc-4e5b-8bcd-170b8d334dc3"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="40d91768-4cfb-4b95-ade3-243ea20e028f"
+                      LastKnownName="VehicleData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="15159d4c-9c07-43ed-9b56-b9c15e2c6b41"
+                  name="vehicle"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="98717365-3ee3-4d0c-9f04-e41ea572d989"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3DVehicleFileV5Declaration)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)]) ParameterIdentifier%3Dvehicle"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="1dbbcc95-72dc-4dd4-bf2f-87797c89be2e"
+                      LastKnownName="VehicleFileV5Declaration"
+                      LastKnownLocation="Package_1817.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="00baef38-390d-49a4-a0f1-c5d28be75f4b"
+                  name="mission"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="53d52867-cd9b-4c7c-a2b3-39b29f961401"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3DVehicleFileV5Declaration)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)]) ParameterIdentifier%3Dmission"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="87b1d34e-3c18-4a9d-bb4e-cb899f3c0ce0"
+                      LastKnownName="Mission"
+                      LastKnownLocation="Package1_1341.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="b527747c-8de4-4046-9fe3-375466f3be63"
+                  name="loading"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="d55940d6-a2d2-4b5d-98bf-42e267f43300"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3DVehicleFileV5Declaration)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)]) ParameterIdentifier%3Dloading"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="9c152a23-9fb3-46e6-b8ba-6d2eec234e92"
+                      LastKnownName="Kilogram"
+                      LastKnownLocation="Package6_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="d22f139f-35cf-4598-86a1-e56a1a1d1770"
+            name="CreateEngineData"
+            visibility="Package"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="361ee535-33ea-4854-aa2a-32fe46d4ca62"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateEngineData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3DEngineFileV2Declaration)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="aeabc941-9de1-4036-a423-a0b43427c275"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="19b7800b-98a6-4d95-9a9e-ec6415e35bb9">
+                    <propertyInstance
+                      Id="ffc8e131-6e38-46e2-89af-9eb0c15e2e71"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="26a2f2cf-705a-44ae-9548-6e4ae299f8e2">
+                    <propertyInstance
+                      Id="2e6d9b82-4b25-41de-8423-7b44e090265a"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="af95a1e2-0ab3-42a4-940e-21aca9426e5d">
+                    <propertyInstance
+                      Id="20ef24dd-cb36-412a-826d-0c935379eb81"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="526f3fc3-4d6b-40c2-9824-24cd293e123d">
+                    <propertyInstance
+                      Id="b9f8ea6d-5b91-4c79-8e8c-d9bd21ed982f"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="17f18f9d-8ed4-4551-a354-a3d6ec89c9fa">
+                    <propertyInstance
+                      Id="973a8308-27de-4bee-9935-c3046673db26"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="01fe85c5-6724-4ce7-8492-53420949aaa4">
+                    <propertyInstance
+                      Id="e3bccb26-979e-4f02-ac45-70250e047072"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="01ba1452-a9ed-43ca-a2ae-a6a053acd11a"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8f1653e1-038a-4c36-bb53-1d50a69749a1"
+                      LastKnownName="CombustionEngineData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="96b00c27-0576-43c8-b003-c3e03ea028a8"
+                  name="engine"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="807cc500-8218-46d1-b20f-6b989dc82614"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateEngineData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3DEngineFileV2Declaration)]) ParameterIdentifier%3Dengine"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="a45650b5-245a-40a2-bed6-fc8d3d37574f"
+                      LastKnownName="EngineFileV2Declaration"
+                      LastKnownLocation="Package_1817.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="287e8a6b-2dc8-4f31-b38c-213916355c5f"
+            name="CreateGearboxData"
+            visibility="Package"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="2befd164-55c8-45d9-9931-59d73b6e34b5"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3DGearboxFileV4Declaration)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data Type%3DCombustionEngineData)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="5240e1c6-a96e-4c9e-89c4-965c3a6ad95e"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="8520f283-284b-43c3-b127-89c70b003ecd">
+                    <propertyInstance
+                      Id="f90b79f8-9e87-4d85-896b-d98faf9405cf"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="173cb768-bc2b-4727-99c5-f1628760eb27">
+                    <propertyInstance
+                      Id="962a0236-ecca-4719-8bc8-60e5d8348bd7"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="150f3521-a723-4241-a400-bf3abb9e96e2">
+                    <propertyInstance
+                      Id="6fb36d3e-4713-46f9-aaa5-58d6d0487d52"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="13302cf9-31e9-491a-9940-6497a7990820">
+                    <propertyInstance
+                      Id="11bcdbb3-0915-4dcc-aed8-dace213511ee"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="2f2f87c7-8d21-47b6-b834-14e53cbe2d3c">
+                    <propertyInstance
+                      Id="9d7c207f-aa97-49a1-b2f5-a37f8816a3ff"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="e74f7e6a-f765-4ff2-85e4-91e7a7696813">
+                    <propertyInstance
+                      Id="82788729-e0c8-47db-b1f4-8535c5afcab0"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="a84551c9-6655-47de-aea9-713ce64b753a"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8b5ae4e9-713d-4a09-9e2f-40ecdb827a34"
+                      LastKnownName="GearboxData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="8b4490cc-c1cc-4c9e-951f-99068d244996"
+                  name="gearbox"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="cff4c910-a539-4080-8e35-7bd4ca00acfb"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3DGearboxFileV4Declaration)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data Type%3DCombustionEngineData)]) ParameterIdentifier%3Dgearbox"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="f978613b-8c1a-41d4-af83-7da7cbd430da"
+                      LastKnownName="GearboxFileV4Declaration"
+                      LastKnownLocation="Package_1817.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="84f057ea-3db7-43aa-babd-8ce058c3ffab"
+                  name="engine"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="d99d8ffb-ed20-4d89-9dab-e49236f797f0"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D(Name%3DCreateGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3DGearboxFileV4Declaration)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data Type%3DCombustionEngineData)]) ParameterIdentifier%3Dengine"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8f1653e1-038a-4c36-bb53-1d50a69749a1"
+                      LastKnownName="CombustionEngineData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="6bcd46c5-ed77-4b24-84fc-593b545e5b2b"
+            name="DeclarationDataAdapter"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="d0e63e64-ba25-4c98-8c48-c65b65ed8f7e"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DDeclarationDataAdapter Member%3D.ctor"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="32a13d7e-ced7-4027-995a-9d9215238d63"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="9f1dd391-f576-4e06-80d0-b8792a34c891">
+                    <propertyInstance
+                      Id="29d6333d-7bd0-469f-97e9-224555f6e340"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="7174235c-b16e-4570-a773-44a5779d4cfb">
+                    <propertyInstance
+                      Id="c0d1bb82-11c2-449e-9ac1-1e59afbf2aa9"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="b2626925-68a5-4f1e-90b3-23b66d3ca93f">
+                    <propertyInstance
+                      Id="9db0312a-c025-4f65-8160-0a4be3103d51"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="36e7e0ae-4f8d-4e85-9a88-aa119dd5f82b">
+                    <propertyInstance
+                      Id="89bb3fd2-b94c-42ba-85d6-df1d592f3f15"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="e8a7703c-eb6b-4cec-a35f-c07c748a0464">
+                    <propertyInstance
+                      Id="9da52cc1-c914-40e8-8781-45d662ff750b"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="a5cf0c1c-f178-4b2b-a1e7-70c25e0b5dba">
+                    <propertyInstance
+                      Id="85266da4-558a-4f53-a283-02e561fb13f1"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+          </operation>
+        </ownedOperationsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="62c86c7f-c2b6-445b-ac83-359f57b3aa10"
+        name="AbstractSimulationDataAdapter"
+        isAbstract="true"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="f03c8aff-ca9c-437f-90fa-5d9ccf803f64"
+            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="aa9a2cb1-69ae-427b-b532-2d734c9ed1dd"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="26bb35fa-e50a-43e6-b2d6-a2b96e7f3c5a">
+                <propertyInstance
+                  Id="eba3ad32-abec-4edc-baf3-6da8b35d0a07"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="d7be36e7-f172-4a78-b7ab-b89f40382839">
+                <propertyInstance
+                  Id="77835014-fe36-4b0a-9311-365c0aac9829"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="d7911cf9-b81e-4737-af09-1a350687c217">
+                <propertyInstance
+                  Id="d596140c-5678-4676-9f9b-1f7cadeae020"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="e3950cc3-e0c7-44f1-af58-006208795cbc">
+                <propertyInstance
+                  Id="e2f22644-2607-4ecc-a249-209e9bc69536"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="046474ad-9d2d-4ff8-b2e8-105972f1e3cf">
+                <propertyInstance
+                  Id="982723d7-8b04-41ee-aa46-be8e19b364cb"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+        <ownedOperationsInternal>
+          <operation
+            Id="6e890e46-ab3b-45e8-84d4-7a7866584e58"
+            name="SetCommonVehicleData"
+            visibility="Package"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="dc94aece-a301-4ab9-af07-b705d7f1a95f"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DSetCommonVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3D(Name%3DDataBodyDecl ParentType%3DVehicleFileV5Declaration))%2C(Assembly%3D&quot;file:%2F%2F%2FC:%2FProgram Files (x86)%2FReference Assemblies%2FMicrosoft%2FFramework%2F.NETFramework%2Fv4.5%2Fmscorlib.dll&quot; Namespace%3DSystem Type%3DString)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="b5430b4f-aeea-41fc-9d7f-60a5294ee592"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="49dd9124-efb9-4700-a2c9-231659ddfa4b">
+                    <propertyInstance
+                      Id="d06db835-40a9-4684-baa7-8ed8a00409ae"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="565d5223-93d0-466d-83a9-19e4f471bc24">
+                    <propertyInstance
+                      Id="21013c36-70c2-4b38-8d6b-d5c0bbf11149"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="419bc402-95b8-4bc1-aea5-a3f9cbf85964">
+                    <propertyInstance
+                      Id="972ab68d-c13f-435e-92ee-dcb38369a7a3"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="c5affd2e-dc2a-409f-b2a6-dddeb2847429">
+                    <propertyInstance
+                      Id="4c38a544-2346-46dc-b35a-40a867485119"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="b20e7e1f-c901-4e80-a862-7a00ef80be77">
+                    <propertyInstance
+                      Id="b41bf3ff-3ca7-4dd7-9df4-7806f8102014"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="8bb9defe-9642-4daf-9c33-07e071a63b13">
+                    <propertyInstance
+                      Id="fa7e91af-3907-442a-bab6-2de6de38bfe9"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="734c5786-36eb-484f-8ddc-4eb41822d3eb"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="40d91768-4cfb-4b95-ade3-243ea20e028f"
+                      LastKnownName="VehicleData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="f6409c22-f7d4-46ad-a057-557cbe3dfa8c"
+                  name="data"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="4f1f0731-13c1-4579-bb53-7dd7dfe430d2"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DSetCommonVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3D(Name%3DDataBodyDecl ParentType%3DVehicleFileV5Declaration))%2C(Assembly%3D&quot;file:%2F%2F%2FC:%2FProgram Files (x86)%2FReference Assemblies%2FMicrosoft%2FFramework%2F.NETFramework%2Fv4.5%2Fmscorlib.dll&quot; Namespace%3DSystem Type%3DString)]) ParameterIdentifier%3Ddata"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="4e1f02ff-d9c2-4d61-b885-109fb6aa76d9"
+                      LastKnownName="DataBodyDecl"
+                      LastKnownLocation="Package_1817.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="739c996a-8631-45ab-95f4-395cf8505cec"
+                  name="basePath"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="12806e98-7f5b-4714-9f55-0f88e75c0e7a"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DSetCommonVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3D(Name%3DDataBodyDecl ParentType%3DVehicleFileV5Declaration))%2C(Assembly%3D&quot;file:%2F%2F%2FC:%2FProgram Files (x86)%2FReference Assemblies%2FMicrosoft%2FFramework%2F.NETFramework%2Fv4.5%2Fmscorlib.dll&quot; Namespace%3DSystem Type%3DString)]) ParameterIdentifier%3DbasePath"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <primitiveTypeMoniker
+                      Id="59259974-6d55-42c6-b7bd-763d77ac8ef9"
+                      LastKnownName="String"
+                      LastKnownLocation="VectoArchitecture.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="0277f124-b16c-4331-94ed-d65b8a9bd7d6"
+            name="SetCommonCombustionEngineData"
+            visibility="Package"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="9c174b29-4d29-44a3-b2bc-5060e5201e6f"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DSetCommonCombustionEngineData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3D(Name%3DDataBodyDecl ParentType%3DEngineFileV2Declaration))%2C(Assembly%3D&quot;file:%2F%2F%2FC:%2FProgram Files (x86)%2FReference Assemblies%2FMicrosoft%2FFramework%2F.NETFramework%2Fv4.5%2Fmscorlib.dll&quot; Namespace%3DSystem Type%3DString)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="ea64946e-7ce2-4206-babb-98ab6e80b4cf"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="4e78c716-1701-4813-951b-1614d176fb89">
+                    <propertyInstance
+                      Id="162ddce7-b184-4106-895b-ad07d42278e9"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="51bb49ed-8220-4ff7-b0c6-f1b56ba69abb">
+                    <propertyInstance
+                      Id="9607ef39-944c-43c3-8823-9dc378eec7da"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="3fefb35c-0f49-46d2-9cfa-8fd912bdc1c0">
+                    <propertyInstance
+                      Id="bf20157b-8348-4686-a5d4-5c40e604c9c7"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="00075200-7772-437d-858e-8d66bc0e8fd5">
+                    <propertyInstance
+                      Id="e32ff6f6-71d8-497f-b3c9-cc88e0b05921"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="5cee08f1-6910-43a9-8f2d-51ffbcbfa3ec">
+                    <propertyInstance
+                      Id="dd65ffb6-e88c-45c0-9e06-09ef8e3dd217"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="585cf20f-4008-4d2f-a3a7-2b3f0612b96d">
+                    <propertyInstance
+                      Id="158ce990-3318-4fce-8623-c48def20c683"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="56315057-0eb5-4ba9-9043-46bf48935ddb"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8f1653e1-038a-4c36-bb53-1d50a69749a1"
+                      LastKnownName="CombustionEngineData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="f97da026-a838-4a1a-826f-93acee42e0ed"
+                  name="data"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="a40bcf1d-9b91-4c04-a83c-2632974e8de9"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DSetCommonCombustionEngineData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3D(Name%3DDataBodyDecl ParentType%3DEngineFileV2Declaration))%2C(Assembly%3D&quot;file:%2F%2F%2FC:%2FProgram Files (x86)%2FReference Assemblies%2FMicrosoft%2FFramework%2F.NETFramework%2Fv4.5%2Fmscorlib.dll&quot; Namespace%3DSystem Type%3DString)]) ParameterIdentifier%3Ddata"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="4e1f02ff-d9c2-4d61-b885-109fb6aa76d9"
+                      LastKnownName="DataBodyDecl"
+                      LastKnownLocation="Package_1817.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="87f1377e-05e6-438e-ac5b-27e86343c3c5"
+                  name="basePath"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="e1058883-7d89-4bbc-b087-effc8ee93fc1"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DSetCommonCombustionEngineData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3D(Name%3DDataBodyDecl ParentType%3DEngineFileV2Declaration))%2C(Assembly%3D&quot;file:%2F%2F%2FC:%2FProgram Files (x86)%2FReference Assemblies%2FMicrosoft%2FFramework%2F.NETFramework%2Fv4.5%2Fmscorlib.dll&quot; Namespace%3DSystem Type%3DString)]) ParameterIdentifier%3DbasePath"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <primitiveTypeMoniker
+                      Id="59259974-6d55-42c6-b7bd-763d77ac8ef9"
+                      LastKnownName="String"
+                      LastKnownLocation="VectoArchitecture.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="58d9cb1b-6aaa-4c32-8c80-0806165bbf52"
+            name="SetCommonGearboxData"
+            visibility="Package"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="d177ee79-0a3d-4edc-ac94-0871d7bb622d"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DSetCommonGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3D(Name%3DDataBodyDecl ParentType%3DGearboxFileV4Declaration))])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="05e9e89f-a9c2-4ce7-809f-2d8c7b118dc0"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="b0f724ab-7056-4f70-b798-1192359ece05">
+                    <propertyInstance
+                      Id="c1a76cf1-5ced-4e89-824e-65c9a382a906"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="233538d4-7fef-4557-b0dc-82b575219299">
+                    <propertyInstance
+                      Id="fa0185c4-d151-48e7-b5fc-6e4b50895482"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="661f9c23-c03c-4f6b-8974-686071298301">
+                    <propertyInstance
+                      Id="c259fee3-49c5-4ac5-be0d-539376220f6d"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="b4d0df59-4ed7-486b-972c-2da9ca88466c">
+                    <propertyInstance
+                      Id="d4ddc7dc-e900-419a-ac3a-8f1d237ffa2e"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="132d559a-3593-4baf-a625-9e5fcb6c80ed">
+                    <propertyInstance
+                      Id="14620002-983b-4a32-98f1-6ace214f7c4a"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="c87edab6-0cda-4fa7-b757-34a6f0dae39d">
+                    <propertyInstance
+                      Id="69b8b47d-77e0-4cc4-b1e9-1b5e342e8012"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="641435ec-68de-4278-b02a-59285c3cd608"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8b5ae4e9-713d-4a09-9e2f-40ecdb827a34"
+                      LastKnownName="GearboxData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="72d4e438-8e06-4ec6-9b5e-f19fd26fa6ae"
+                  name="data"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="c05d86ab-cbc2-4276-baa9-e582c4be4793"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DSetCommonGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.DeclarationFile Type%3D(Name%3DDataBodyDecl ParentType%3DGearboxFileV4Declaration))]) ParameterIdentifier%3Ddata"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="4e1f02ff-d9c2-4d61-b885-109fb6aa76d9"
+                      LastKnownName="DataBodyDecl"
+                      LastKnownLocation="Package_1817.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="2d58e6b4-9d20-4788-bbb9-01f635d14d6e"
+            name="CreateVehicleData"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="true"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="e9b8476f-4ebc-4ea5-98d0-1beead2cc989"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="14ea7070-1b31-4497-a44b-d26b5d19be6d"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="de9cda26-f720-4848-8be8-b41290b75f34">
+                    <propertyInstance
+                      Id="30fc2025-b326-439b-93c0-0c0e7fd311ef"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="07a08748-f264-4b4e-a3ba-219c2510143e">
+                    <propertyInstance
+                      Id="8d915efe-134d-41f5-99c3-cc83e0065834"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="94ecfa73-8695-4ba5-8e25-776e64204f34">
+                    <propertyInstance
+                      Id="9e7f91bc-5ae9-4430-ba81-e81bf2e5e1f8"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="f3e7f4bd-c01f-4aea-940e-7a8c874b50b7">
+                    <propertyInstance
+                      Id="70c147ac-3a10-4fc9-b0ab-16b8fa34dc88"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="100e402f-202d-4040-9590-7ec6d980f190">
+                    <propertyInstance
+                      Id="289a177b-8ab9-4c9f-be33-670b3edb986d"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="ea1efa8f-5d22-415d-8479-02bf14d2b69a">
+                    <propertyInstance
+                      Id="02c2ccba-7607-47e5-842b-c0b9c531786f"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="d0eab124-a138-4bd3-a4e0-1d010a129bc6"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="40d91768-4cfb-4b95-ade3-243ea20e028f"
+                      LastKnownName="VehicleData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="a0733ab3-fbf4-4eb8-9862-77663d5bbef7"
+                  name="vehicle"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="d6fd7c10-2b56-49a9-8f4c-1b8cf559e76d"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)]) ParameterIdentifier%3Dvehicle"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="3e3c4660-8912-4413-877a-929ae6b472b6"
+                      LastKnownName="VectoVehicleFile"
+                      LastKnownLocation="Package1_1426.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="526ad210-5178-4883-96b7-f7b181ec7522"
+                  name="segment"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="d71bd664-51e7-4b40-bfbd-15bcbf20e28e"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)]) ParameterIdentifier%3Dsegment"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="87b1d34e-3c18-4a9d-bb4e-cb899f3c0ce0"
+                      LastKnownName="Mission"
+                      LastKnownLocation="Package1_1341.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="25d705b3-6248-4717-8bb8-4d1dff4476bd"
+                  name="loading"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="3099a111-f421-45f4-be14-74785200bf39"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)]) ParameterIdentifier%3Dloading"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="9c152a23-9fb3-46e6-b8ba-6d2eec234e92"
+                      LastKnownName="Kilogram"
+                      LastKnownLocation="Package6_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="c93326ed-2fc5-4bd7-b786-6ee4ae60f4fe"
+            name="CreateVehicleData"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="true"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="359bc293-987f-41fe-a707-9120878cf876"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="4066c725-67cd-42af-a6d7-581829a467b9"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="83ea75e8-bff7-46a9-879b-cdf581ec25da">
+                    <propertyInstance
+                      Id="c1d51ddd-9c30-4a72-a3bd-ae0acb3fcd33"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="9323f6fb-dfdd-4d02-bb8e-e36b9d889c3d">
+                    <propertyInstance
+                      Id="16cbf759-c8f1-48e5-936a-c92842a47f17"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="26cbc252-b08c-4cf7-8a78-60b6e884c2d6">
+                    <propertyInstance
+                      Id="72fc803e-f351-41f3-b58d-6df29c06274e"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="cb834882-7a1e-48c0-a4d6-5f2e45ce9c44">
+                    <propertyInstance
+                      Id="49db5cb9-b37e-4821-a533-8d7b0c080757"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="f04c3e40-2270-4a9e-956b-59a65f78c5b6">
+                    <propertyInstance
+                      Id="e92964f0-2dd9-4b92-b377-3774c6cb1043"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="e123c35a-f5ca-4ae5-92b2-6fca9f825117">
+                    <propertyInstance
+                      Id="cfadf746-b9b2-4f39-aab6-1c1f55c3f552"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="b1ce2f97-949d-45d3-bb65-db1fd1da5f6f"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="40d91768-4cfb-4b95-ade3-243ea20e028f"
+                      LastKnownName="VehicleData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="a0f5a566-f916-4189-9c94-3c37371b9e66"
+                  name="vehicle"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="5a7295eb-3d96-4442-99f7-6a1d5b8ed337"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)]) ParameterIdentifier%3Dvehicle"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="3e3c4660-8912-4413-877a-929ae6b472b6"
+                      LastKnownName="VectoVehicleFile"
+                      LastKnownLocation="Package1_1426.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="8b926db6-6c1b-4269-9ee4-c6198e964cae"
+            name="CreateEngineData"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="true"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="fe6da106-c49f-4126-84f0-7762f5443baa"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DCreateEngineData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoEngineFile)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="d683a31c-bc93-4d16-adf7-d9b7a348664f"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="c2177a6d-a7db-4e96-b467-a0e36a0fc901">
+                    <propertyInstance
+                      Id="4df8e6d6-9108-442d-8a37-ae5ed9c2648f"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="768cd1d2-d7be-4d50-8a4a-48c5e0a79f66">
+                    <propertyInstance
+                      Id="429f8269-60c3-4b47-8b0b-c60509f62755"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="f7751cde-4978-434b-80c9-5fbeb9b0b4e0">
+                    <propertyInstance
+                      Id="0b13f82a-e8e1-40e8-9a5d-bb7bbcf83c79"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="6d09e7ca-ef72-49b7-aa6b-a29ca3730a93">
+                    <propertyInstance
+                      Id="a1d360f9-2a66-4a6f-bd58-c6ed9a64aece"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="54f98a79-d59f-4d45-8774-f4aa0195173b">
+                    <propertyInstance
+                      Id="93aa1cd6-22f4-42a9-8d38-162555b2020e"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="e1af09e4-8030-4700-a585-0374e775417c">
+                    <propertyInstance
+                      Id="15897128-5a54-4029-aa79-34bc2f4de915"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="7242fcfe-d565-469e-919b-ced680bbb5ef"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8f1653e1-038a-4c36-bb53-1d50a69749a1"
+                      LastKnownName="CombustionEngineData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="f004a815-f3db-4aca-918c-c530462dd676"
+                  name="engine"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="9a194119-031d-4c94-b2c4-e65d72e17cce"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DCreateEngineData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoEngineFile)]) ParameterIdentifier%3Dengine"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="b8f620d6-7c10-440d-8592-f19e7b1f9c7c"
+                      LastKnownName="VectoEngineFile"
+                      LastKnownLocation="Package1_1426.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="6c1b2be1-f108-452e-9ca7-4daed0038b11"
+            name="CreateGearboxData"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="true"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="eeec5c30-521d-4a74-bcdc-9933b0c09a0c"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DCreateGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoGearboxFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data Type%3DCombustionEngineData)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="f813f1de-8530-4955-84ca-215ecf2dd804"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="5f965f09-44ee-4e80-b9cf-c74605d7348f">
+                    <propertyInstance
+                      Id="7c90f260-1178-4cd4-93a1-274aaa93fd4c"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="3f265c0e-2901-43cb-88f9-92909aa2797c">
+                    <propertyInstance
+                      Id="357a0af3-7435-4e92-ac69-217bed51bc1f"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="57cbab88-335f-4cf7-ba50-e295c645d08d">
+                    <propertyInstance
+                      Id="a5d97e2f-4bed-4389-851d-8257e312696c"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="695eee89-a147-4852-adcd-0c6af268a6fc">
+                    <propertyInstance
+                      Id="d57cfb91-8ddb-4317-80b8-bbee7c9abb88"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="2ecaadb4-1a20-4755-bb1f-fcc1b42009f0">
+                    <propertyInstance
+                      Id="19c74b58-1c23-4e42-9dbf-d9b912333fc3"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="e5e52f3d-ce8c-4de2-97ed-02d43ff6aba5">
+                    <propertyInstance
+                      Id="7fb45684-8e12-441f-8a7a-3a8696d3edb7"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="60685aca-aac3-4c80-935e-cacc7f9867a5"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8b5ae4e9-713d-4a09-9e2f-40ecdb827a34"
+                      LastKnownName="GearboxData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="7f8cb4e8-69e2-42d8-9b99-4002dd64ff50"
+                  name="gearbox"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="92f6a727-51ec-4435-a36b-2b7cae0678f1"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DCreateGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoGearboxFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data Type%3DCombustionEngineData)]) ParameterIdentifier%3Dgearbox"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="fdf8ed6c-8831-46ea-9a01-53fcb0ed8b68"
+                      LastKnownName="VectoGearboxFile"
+                      LastKnownLocation="Package1_1426.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="bdbf69dd-86c9-488e-be60-4c115fcfe804"
+                  name="engine"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="aff15ed3-0a66-406a-b609-20fb16a398b2"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D(Name%3DCreateGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoGearboxFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data Type%3DCombustionEngineData)]) ParameterIdentifier%3Dengine"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8f1653e1-038a-4c36-bb53-1d50a69749a1"
+                      LastKnownName="CombustionEngineData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="140697e2-cd03-413c-bc8d-11505f9fbf61"
+            name="AbstractSimulationDataAdapter"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="f83ca978-bd5c-44a3-a73d-63dfd56666ee"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DAbstractSimulationDataAdapter Member%3D.ctor"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="d9ebe075-a08a-464b-94a8-2a68c0e8b528"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="a361fc5c-8b55-42fb-9756-52c4f1d67360">
+                    <propertyInstance
+                      Id="b8dd93a3-4651-44f8-a11e-f8bc0ac65e09"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="0b01992c-4ee2-4fa4-bb28-52de7c9bfa6c">
+                    <propertyInstance
+                      Id="cc00edf2-c3ce-4c0b-9fdb-1b173b15175a"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="37194dae-dad1-41b3-bdf3-23ad7b8bf64f">
+                    <propertyInstance
+                      Id="4881da8c-8e9a-4657-8fe8-762c5f2b7a73"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="13af2d65-6cad-4695-82e9-1929556dba46">
+                    <propertyInstance
+                      Id="75241a9f-792d-4e85-a8f6-8c8a3ee17cf3"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="53ff55c4-c81e-4b1c-b2cf-4260dc82c9ef">
+                    <propertyInstance
+                      Id="a912fa17-74cc-4899-b038-c726f2f4e72c"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="5e76eed7-3786-4bc9-aa2d-d63021c19993">
+                    <propertyInstance
+                      Id="28534c6f-3cb6-4f56-abc6-06a648820500"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+          </operation>
+        </ownedOperationsInternal>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="1e7d7bd8-0083-4bb5-bda5-df59184d4a39"
+        name="EngineeringDataAdapter"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <referencesInternal>
+          <reference
+            Id="723a84d2-f019-4a90-a055-8c7e47adfab2"
+            handle="viewcode://./CodeSchema_Class?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter"
+            tag="ViewCode" />
+        </referencesInternal>
+        <appliedStereotypesInternal>
+          <stereotypeInstance
+            Id="837c63aa-69b8-455e-87fc-86c51a8a33ab"
+            name="class"
+            profile="CSharpProfile">
+            <propertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="67dc12e5-bf52-43a9-bd1a-fcd9b4a08d0b">
+                <propertyInstance
+                  Id="70bcf285-b726-459f-bd1f-e194742e6e00"
+                  name="ClrAttributes" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="8ee07a0e-53a2-4694-be8d-bfd6d6448724">
+                <propertyInstance
+                  Id="a05735fe-337c-4522-933c-acbf33d1197c"
+                  name="IsPartial"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="779cfa7e-8a11-44a8-9a2b-88cdf2f94d5e">
+                <propertyInstance
+                  Id="14f6e549-1f67-4b93-87e5-d5c001f53b84"
+                  name="IsStatic"
+                  value="False" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="071f9ee2-520c-4b82-a36b-d1fa43f16075">
+                <propertyInstance
+                  Id="fc400694-b735-4557-ae70-82876597c8c4"
+                  name="IsUnsafe"
+                  value="false" />
+              </stereotypeInstanceHasPropertyInstances>
+              <stereotypeInstanceHasPropertyInstances
+                Id="7d71d0a5-3b5a-4e06-9b52-c2623cbb995c">
+                <propertyInstance
+                  Id="85a50dad-223d-45eb-af68-20c88be610cb"
+                  name="PackageVisibility"
+                  value="internal" />
+              </stereotypeInstanceHasPropertyInstances>
+            </propertyInstances>
+          </stereotypeInstance>
+        </appliedStereotypesInternal>
+        <generalsInternal>
+          <generalization
+            Id="c8306794-3bb1-4c9b-8fa5-b6b93e8cc4dc"
+            isSubstitutable="false">
+            <classMoniker
+              Id="62c86c7f-c2b6-445b-ac83-359f57b3aa10"
+              LastKnownName="AbstractSimulationDataAdapter"
+              LastKnownLocation="Package1_1817.uml" />
+          </generalization>
+        </generalsInternal>
+        <ownedOperationsInternal>
+          <operation
+            Id="6e038c58-d2f1-4d1f-91c1-1b8ef6513215"
+            name="CreateVehicleData"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="d42fd52f-b5cf-4af8-92b2-9a415e1f201e"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="642773c2-85c3-4369-87f6-7399ea0cf72f"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="ca5c058e-59f6-4a61-8db3-1bfa163ed49f">
+                    <propertyInstance
+                      Id="ea778471-8545-499c-8752-d577f46d73a3"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="da13be7b-cf5b-41d1-bc69-54b38aaec61a">
+                    <propertyInstance
+                      Id="cd7de1bb-631f-41c1-afd0-5aecfc2dd2f4"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="bd09ac9b-c6a4-4e92-a50e-1cfa56de17a8">
+                    <propertyInstance
+                      Id="ac6975da-e09f-4a8a-b70b-e1bfe0979733"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="a998529d-2a48-468e-b546-efd2e6ae567f">
+                    <propertyInstance
+                      Id="e441f775-4725-4ac1-82d7-a0bbfb917ac5"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="54120397-8a43-4e29-bb6e-c87fc6483964">
+                    <propertyInstance
+                      Id="2dbdfc95-446c-4542-8889-3b3b2b1a2270"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="6ee587e5-468d-4840-8c79-007ebc29105d">
+                    <propertyInstance
+                      Id="69a23228-e022-44fd-94a9-f7e9edd40fc5"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="2ecd6840-58dd-48fb-86b3-7f175a892d00"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="40d91768-4cfb-4b95-ade3-243ea20e028f"
+                      LastKnownName="VehicleData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="aad4762a-cc27-4cae-94ee-a4feb598b614"
+                  name="vehicle"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="f1c683d5-f7dc-47f4-bf27-c64c91036820"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)]) ParameterIdentifier%3Dvehicle"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="3e3c4660-8912-4413-877a-929ae6b472b6"
+                      LastKnownName="VectoVehicleFile"
+                      LastKnownLocation="Package1_1426.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="3101ffd5-495c-4a90-af80-7ee6453fb4dc"
+                  name="segment"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="fc702a10-9b49-4de8-aa6a-b96b843ab94c"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)]) ParameterIdentifier%3Dsegment"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="87b1d34e-3c18-4a9d-bb4e-cb899f3c0ce0"
+                      LastKnownName="Mission"
+                      LastKnownLocation="Package1_1341.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="3edcc5fe-4adb-402c-bb40-84bf712b2ac5"
+                  name="loading"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="8f5d22f3-1fb5-445d-936d-43e0a1dae87d"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.Declaration Type%3DMission)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Utils Type%3DKilogram)]) ParameterIdentifier%3Dloading"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="9c152a23-9fb3-46e6-b8ba-6d2eec234e92"
+                      LastKnownName="Kilogram"
+                      LastKnownLocation="Package6_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="02726370-c1f7-46b0-aea0-a2f73356532f"
+            name="CreateVehicleData"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="fe235375-6f12-4fc1-b68c-b0530e57fcba"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="4ccc4e1c-5181-493a-94ea-54d4193f2012"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="19eb0a26-56ee-417d-ace8-0c91c59c48d6">
+                    <propertyInstance
+                      Id="6dbca361-bbe3-4773-92db-f49cf68e6f44"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="03bf733c-7d21-4dbd-b3e7-c1ddf9b7771a">
+                    <propertyInstance
+                      Id="4bce20e1-25c5-475d-b3f4-7df11b1f6485"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="c8c54770-f2d0-4e08-939c-12f9d1e60d2c">
+                    <propertyInstance
+                      Id="2f74803c-b3d9-4724-9d42-a676446ed2c7"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="3196003f-9ea6-4a15-bf6b-d2c4c0f5a3ae">
+                    <propertyInstance
+                      Id="efecc32a-51b2-4fb0-9b36-0b7ce56bf4f8"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="4b10945e-f983-4ba0-93bd-ae7724435c1f">
+                    <propertyInstance
+                      Id="b9a41dd7-8c78-4e70-8f9d-1e2df66a7764"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="93a002d9-6967-4999-8982-afe907e5139a">
+                    <propertyInstance
+                      Id="74ea97e7-a64e-4fb6-9db3-e0d3ec6f805b"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="8fa639ba-0a70-4dac-aac5-89c4f2007860"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="40d91768-4cfb-4b95-ade3-243ea20e028f"
+                      LastKnownName="VehicleData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="b79fd183-4fb7-4105-9cc3-01137cd1ef8b"
+                  name="vehicle"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="ada9dd9e-3a10-49d8-8b0b-1a8eb841e1ed"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoVehicleFile)]) ParameterIdentifier%3Dvehicle"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="3e3c4660-8912-4413-877a-929ae6b472b6"
+                      LastKnownName="VectoVehicleFile"
+                      LastKnownLocation="Package1_1426.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="b057cf78-ed1f-451e-afc9-394b5535c13e"
+            name="CreateEngineData"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="d3bfe2f1-feb5-4731-a98a-864b56606ac8"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateEngineData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoEngineFile)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="6e9efdcc-8f7d-4aad-9a28-3984dd4bc067"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="b5bd0eb0-c325-4caa-869c-91ea4a60d604">
+                    <propertyInstance
+                      Id="0734942d-a873-4a5f-ab92-1954f7cae258"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="460be5bb-f84c-42b4-b145-7ca9d2436b38">
+                    <propertyInstance
+                      Id="9df24867-b782-489a-ab8b-eb5d1736eec7"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="af66b360-8634-4d6e-879e-3a55066014ec">
+                    <propertyInstance
+                      Id="0097583b-64f0-4ce4-8bf8-0554b0e33585"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="ddbaa4dd-9283-454a-b4ca-d6c56622df1f">
+                    <propertyInstance
+                      Id="d53fd026-62dd-4191-b9d4-8606e83c6e5b"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="2bb0b9fb-c299-4e07-b713-e9e816e0c627">
+                    <propertyInstance
+                      Id="d07f8f48-08dd-47d6-bfe1-f0ffc61766e8"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="98f96c4a-7f8d-4d79-a488-f35a41f2e64a">
+                    <propertyInstance
+                      Id="38e48a07-19a7-4133-9996-0a5d43014c32"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="b5821e89-28c1-44b7-be43-4b258ad4fa65"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8f1653e1-038a-4c36-bb53-1d50a69749a1"
+                      LastKnownName="CombustionEngineData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="573939aa-ec5b-469d-bae9-3cc64fe58689"
+                  name="engine"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="cdcf0e58-460b-498d-b54f-f7079840c0d3"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateEngineData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoEngineFile)]) ParameterIdentifier%3Dengine"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="b8f620d6-7c10-440d-8592-f19e7b1f9c7c"
+                      LastKnownName="VectoEngineFile"
+                      LastKnownLocation="Package1_1426.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="6b5c179c-eb62-48d4-80e5-f877303b6a17"
+            name="CreateGearboxData"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="0c987450-e38d-4a07-8f3e-da33cf274015"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoGearboxFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data Type%3DCombustionEngineData)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="c4f9e654-635d-4c25-ba4b-e7ad86f7c225"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="79f960f5-3bf2-482b-ab2b-87d1dc795e83">
+                    <propertyInstance
+                      Id="9ff8fc3a-1537-4064-a617-27b9c0d10379"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="6a9f31b8-82ad-4886-bb3d-08cd5f10e381">
+                    <propertyInstance
+                      Id="04031d43-0db0-44f2-a674-2bfb6640a854"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="7de2145e-fa97-4534-87f5-d0b84597b3e3">
+                    <propertyInstance
+                      Id="73ccb12b-686f-4b37-ab43-a259894e899e"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="9a7c1f98-0f5d-4bc2-b4f4-001127609e20">
+                    <propertyInstance
+                      Id="e32f263c-e922-4aa5-a2c1-fe704ede583c"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="643f112d-20cc-4659-af28-ff630ad7c29c">
+                    <propertyInstance
+                      Id="0c513c90-a26b-407a-992f-92b30a67f7ae"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="c34ea30e-347c-44db-abc5-d440d883d16d">
+                    <propertyInstance
+                      Id="8ca1d353-927f-4287-9c4b-19692df5c2e9"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="b460b0fc-c3eb-49f0-8d20-dbb3813a8fa1"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8b5ae4e9-713d-4a09-9e2f-40ecdb827a34"
+                      LastKnownName="GearboxData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="f3183cec-5405-4ff0-bc2e-25ab8e1e1ffa"
+                  name="gearbox"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="bd2b1ca6-da18-4935-a98c-08cb37fc1005"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoGearboxFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data Type%3DCombustionEngineData)]) ParameterIdentifier%3Dgearbox"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="fdf8ed6c-8831-46ea-9a01-53fcb0ed8b68"
+                      LastKnownName="VectoGearboxFile"
+                      LastKnownLocation="Package1_1426.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="c205a07e-bc75-4cfa-b4a4-15f345e5285c"
+                  name="engine"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="eb3e3fe8-ab9e-404a-b395-a6428ddba603"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO Type%3DVectoGearboxFile)%2C(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.Models.SimulationComponent.Data Type%3DCombustionEngineData)]) ParameterIdentifier%3Dengine"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8f1653e1-038a-4c36-bb53-1d50a69749a1"
+                      LastKnownName="CombustionEngineData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="7b69bccd-fc86-44fe-8f88-2f873b558db9"
+            name="CreateVehicleData"
+            visibility="Package"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="9f6343be-cb3f-4cef-bf86-108b6d9abb10"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3DVehicleFileV5Engineering)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="7a3dd107-27f0-40db-9113-4e9771058d4b"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="4e15d299-5577-44a9-8404-bb5c55d93d2b">
+                    <propertyInstance
+                      Id="9b355eaa-8763-4227-bfd5-26356bd8028e"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="28a52760-970c-472c-9531-5692d94fc20c">
+                    <propertyInstance
+                      Id="12509fd4-b50d-44fe-90d8-08279e8ccb3b"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="87103d24-fab8-46e1-a26b-750a0d907965">
+                    <propertyInstance
+                      Id="e896427b-1739-45ea-bc99-d3054628134f"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="96691066-5ff9-435a-a03a-791c2fe27cf0">
+                    <propertyInstance
+                      Id="e20fba15-cb0c-4696-9aee-ca4fd86b4874"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="6df7e5f7-f7cf-43a7-888a-2cf73063ba87">
+                    <propertyInstance
+                      Id="6a2c6a07-e3f9-4bff-b6b7-b48c7e25a82a"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="84e32bea-3ddb-4438-ac3d-f828edcafd22">
+                    <propertyInstance
+                      Id="a3a2b3eb-95c8-4865-9ba6-39886aa201e3"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="53f3fc4c-58de-4567-b85d-701f17887640"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="40d91768-4cfb-4b95-ade3-243ea20e028f"
+                      LastKnownName="VehicleData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="f38b7a4c-84d3-4467-bcf3-2a8b5719c3fe"
+                  name="vehicle"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="5c9557d0-4631-44ea-bda1-60dc5d5e8068"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateVehicleData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3DVehicleFileV5Engineering)]) ParameterIdentifier%3Dvehicle"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="f252c9b2-9446-4d49-9c98-f3ae2cfd23e7"
+                      LastKnownName="VehicleFileV5Engineering"
+                      LastKnownLocation="Package2_1817.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="1516eb1b-7f1d-4f79-8d84-4f6726d67625"
+            name="CreateEngineData"
+            visibility="Package"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="dbc3927e-782e-4037-94ad-fb084949f233"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateEngineData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3DEngineFileV2Engineering)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="6ca91c08-fe51-4544-9496-d40ce339c4fb"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="cb61c66b-8165-437d-a7d1-bb7eb42ce776">
+                    <propertyInstance
+                      Id="efc60a65-adf0-4fe2-99a8-9721c795791b"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="6e1d5474-153b-4936-8458-c3a981dad5f5">
+                    <propertyInstance
+                      Id="6831c901-b76f-4e91-b883-c3c322f0650c"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="f7c8972e-d5dc-4339-add8-297d07bc9b9b">
+                    <propertyInstance
+                      Id="45fe8730-2287-4bb9-92ac-6860af6c35e1"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="daacf24f-8f37-43d2-8ab2-62d0aeadb383">
+                    <propertyInstance
+                      Id="cb78f887-7094-4764-ba83-b469175d2f9d"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="bfba967c-2934-4b0d-aa8f-087f4676a8ac">
+                    <propertyInstance
+                      Id="2361bfb9-3541-461a-81e8-beaeec97ed6c"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="fce3be84-0c4c-42b5-be93-00ae510a630d">
+                    <propertyInstance
+                      Id="ed24e5ad-92a6-4635-80ce-b049113980d4"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="0b73338f-8095-4e86-931b-db2cca621dea"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8f1653e1-038a-4c36-bb53-1d50a69749a1"
+                      LastKnownName="CombustionEngineData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="bf767054-d7ee-40d8-be73-bcfd1a80a5ec"
+                  name="engine"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="9b1bc2e2-0ed8-42c5-a10d-f884cc6edc26"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateEngineData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3DEngineFileV2Engineering)]) ParameterIdentifier%3Dengine"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="17e38cd3-22dd-4480-a07e-2abe9883868b"
+                      LastKnownName="EngineFileV2Engineering"
+                      LastKnownLocation="Package2_1817.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="a6749f10-d7c8-4c93-b398-00f48a1e3a48"
+            name="CreateGearboxData"
+            visibility="Package"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="1efb55ce-2115-465b-b38c-5e041a655e10"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3DGearboxFileV4Engineering)])"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="4074294d-3c40-4672-b552-939980a07726"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="8a2cb8b5-41f0-40ba-9aa6-3782d7f8bbd7">
+                    <propertyInstance
+                      Id="6b26ba48-50b5-4e44-a94a-94928cf8480a"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="622f9c58-5961-4301-8549-14490cd83acf">
+                    <propertyInstance
+                      Id="650e7595-3a35-46f1-9ad2-a1205def19bb"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="f3194ebd-3df2-43fc-853c-b990c14c23d3">
+                    <propertyInstance
+                      Id="98e63183-2442-4191-9acf-a2f3f20ca3c9"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="d427fa43-c318-4159-b1e9-92fa0fb66aa4">
+                    <propertyInstance
+                      Id="31ff279b-4b20-4517-9c61-363074cd2786"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="4d4d1b79-fe26-4d91-86a8-2ebe62453470">
+                    <propertyInstance
+                      Id="b96495a3-95bd-4aff-8b25-75fce309b1eb"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="2d0c39ab-a748-47df-91af-fbae2244f985">
+                    <propertyInstance
+                      Id="3118f9dc-5a5d-4acc-bf16-c013c55dfe11"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+            <ownedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="32af698f-0743-46f7-adb6-1d37674ef0c0"
+                  direction="Return">
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="8b5ae4e9-713d-4a09-9e2f-40ecdb827a34"
+                      LastKnownName="GearboxData"
+                      LastKnownLocation="Package3_1315.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+              <operationHasOwnedParameters>
+                <parameter
+                  Id="7842641a-6083-41f2-bec6-93b223358ab1"
+                  name="gearbox"
+                  direction="In">
+                  <referencesInternal>
+                    <reference
+                      Id="2cd5939b-5208-4383-b100-c7ab58cada68"
+                      handle="viewcode://./CodeSchema_Parameter?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D(Name%3DCreateGearboxData OverloadingParameters%3D[(Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.EngineeringFile Type%3DGearboxFileV4Engineering)]) ParameterIdentifier%3Dgearbox"
+                      tag="ViewCode" />
+                  </referencesInternal>
+                  <type_NamedElement>
+                    <classMoniker
+                      Id="9490aae7-c363-4662-a516-cf438940e86f"
+                      LastKnownName="GearboxFileV4Engineering"
+                      LastKnownLocation="Package2_1817.uml" />
+                  </type_NamedElement>
+                </parameter>
+              </operationHasOwnedParameters>
+            </ownedParameters>
+          </operation>
+          <operation
+            Id="20e0c742-e6ec-4f8a-82fd-1c7d332b9306"
+            name="EngineeringDataAdapter"
+            isLeaf="false"
+            isStatic="false"
+            isAbstract="false"
+            concurrency="Sequential"
+            isQuery="false">
+            <referencesInternal>
+              <reference
+                Id="fff7f749-4aba-498c-abfd-7fd226a1709e"
+                handle="viewcode://./CodeSchema_Method?Assembly%3Dfile:%2F%2F%2FC:%2Fvecto%2FVectoCore%2Fbin%2FDebug%2FVectoCore.dll Namespace%3DTUGraz.VectoCore.FileIO.Reader.DataObjectAdaper Type%3DEngineeringDataAdapter Member%3D.ctor"
+                tag="ViewCode" />
+            </referencesInternal>
+            <appliedStereotypesInternal>
+              <stereotypeInstance
+                Id="cd102bd5-62a4-444b-8161-5bba15f087a3"
+                name="method"
+                profile="CSharpProfile">
+                <propertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="28e0fc59-5b1f-4265-abec-836e232c68c1">
+                    <propertyInstance
+                      Id="2db1b8ff-2e22-4a3e-9f80-56e4e5db5770"
+                      name="ClrAttributes" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="01ab25cc-e906-46ca-b434-e037d3be9e9e">
+                    <propertyInstance
+                      Id="2fc6e982-9ded-4149-b785-a5a31a9b7591"
+                      name="IsPartial"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="c63d9d6c-4c41-40b6-8fc1-fa616fee3210">
+                    <propertyInstance
+                      Id="ed351a05-1612-4417-844a-a49867882414"
+                      name="IsUnsafe"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="edc40606-8ce9-4490-bb56-3223452cc27e">
+                    <propertyInstance
+                      Id="1d173656-ccbc-4cad-b091-991f3d4cf206"
+                      name="Inheritance"
+                      value="none" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="35899568-20a6-4c9b-9e38-498e94f117d2">
+                    <propertyInstance
+                      Id="236f5dce-2273-4d52-8a52-41e0ceb04634"
+                      name="PackageVisibility"
+                      value="internal" />
+                  </stereotypeInstanceHasPropertyInstances>
+                  <stereotypeInstanceHasPropertyInstances
+                    Id="42bf7197-18e5-4442-8728-19bbf7e1fc53">
+                    <propertyInstance
+                      Id="6111cb3f-841b-4466-a626-3a1503bbd17a"
+                      name="params"
+                      value="false" />
+                  </stereotypeInstanceHasPropertyInstances>
+                </propertyInstances>
+              </stereotypeInstance>
+            </appliedStereotypesInternal>
+          </operation>
+        </ownedOperationsInternal>
+      </class>
+    </packageHasNamedElement>
+  </packagedElements>
+</package>
