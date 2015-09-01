@@ -9,7 +9,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			None,
 			Primary,
-			Secondary
+			Secondary,
+			LossesIncludedInTransmission
 		}
 
 		public RetarderLossMap LossMap { get; internal set; }

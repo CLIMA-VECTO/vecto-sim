@@ -64,6 +64,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case RetarderData.RetarderType.None:
 					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
 					break;
+				case RetarderData.RetarderType.LossesIncludedInTransmission:
+					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					break;
 			}
 
 			// gearbox --> clutch
