@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 
-			var driver = new Driver(vehicleContainer, driverData);
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			dynamic tmp = Port.AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
 			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
 
-			dynamic tmp = Port.AddComponent(cycle, new Driver(vehicleContainer, driverData));
+			dynamic tmp = Port.AddComponent(cycle, new Driver(vehicleContainer, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
 			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Breaks(vehicleContainer));
@@ -161,13 +161,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var driverData = CreateDriverData(AccelerationFile2);
 
-			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrainOverload.vmod", SimulatorFactory.FactoryMode.EngineeringMode);
+			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrainOverload.vmod",
+				SimulatorFactory.FactoryMode.EngineeringMode);
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
 
-			dynamic tmp = Port.AddComponent(cycle, new Driver(vehicleContainer, driverData));
+			dynamic tmp = Port.AddComponent(cycle, new Driver(vehicleContainer, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
 			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Breaks(vehicleContainer));

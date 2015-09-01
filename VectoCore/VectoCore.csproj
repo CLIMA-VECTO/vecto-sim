@@ -153,9 +153,12 @@
     <Compile Include="Models\LoggingObject.cs" />
     <Compile Include="Models\SimulationComponent\Data\GearboxType.cs" />
     <Compile Include="Models\SimulationComponent\IBreaks.cs" />
+    <Compile Include="Models\SimulationComponent\IDriverActions.cs" />
+    <Compile Include="Models\SimulationComponent\IDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AuxiliaryData.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Breaks.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\DefaultDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
     <Compile Include="Models\Simulation\DataBus\IClutchInfo.cs" />
     <Compile Include="Models\Simulation\Data\AuxiliaryDemandType.cs" />

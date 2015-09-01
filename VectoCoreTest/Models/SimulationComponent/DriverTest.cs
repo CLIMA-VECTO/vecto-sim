@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -47,7 +45,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 
-			var driver = new Driver(vehicleContainer, driverData);
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
@@ -64,7 +62,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var absTime = 0.SI<Second>();
 
-			var response = driver.DoCoast(absTime, 1.SI<Meter>(), 0.SI<Radian>());
+			var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), 0.SI<Radian>());
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
@@ -77,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Constants.SimulationSettings.EngineFLDPowerTolerance);
 
 			while (vehicleContainer.VehicleSpeed() > 1) {
-				response = driver.DoCoast(absTime, 1.SI<Meter>(), 0.SI<Radian>());
+				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), 0.SI<Radian>());
 
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
@@ -102,7 +100,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 
-			var driver = new Driver(vehicleContainer, driverData);
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
 
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
@@ -120,7 +118,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var absTime = 0.SI<Second>();
 
-			var response = driver.DoCoast(absTime, 1.SI<Meter>(), gradient);
+			var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), gradient);
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
@@ -133,7 +131,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Constants.SimulationSettings.EngineFLDPowerTolerance);
 
 			while (vehicleContainer.VehicleSpeed() > 1) {
-				response = driver.DoCoast(absTime, 1.SI<Meter>(), gradient);
+				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), gradient);
 
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
@@ -158,7 +156,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 
-			var driver = new Driver(vehicleContainer, driverData);
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
@@ -211,7 +209,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new MockVehicle(vehicleContainer);
 
 			var driverData = EngineeringModeSimulationDataReader.CreateDriverDataFromFile(JobFile);
-			var driver = new Driver(vehicleContainer, driverData);
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 
 			driver.Connect(vehicle.OutPort());
 
@@ -277,7 +275,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new MockVehicle(vehicleContainer);
 
 			var driverData = EngineeringModeSimulationDataReader.CreateDriverDataFromFile(JobFile);
-			var driver = new Driver(vehicleContainer, driverData);
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 
 			driver.Connect(vehicle.OutPort());
 
@@ -322,7 +320,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(2.545854078, response.SimulationInterval.Value(), Tolerance);
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
-			absTime += response.SimulationInterval;
+			//absTime += response.SimulationInterval;
 			vehicle.MyVehicleSpeed +=
 				(response.SimulationInterval * vehicle.LastRequest.acceleration).Cast<MeterPerSecond>();
 

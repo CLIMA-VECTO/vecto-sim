@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new VectoSimulationException("Unhandled Cycle Type");
 			}
 			// cycle --> driver --> vehicle --> wheels --> axleGear --> retarder --> gearBox
-			var driver = AddComponent(cycle, new Driver(_container, data.DriverData));
+			var driver = AddComponent(cycle, new Driver(_container, data.DriverData, new DefaultDriverStrategy()));
 			var vehicle = AddComponent(driver, new Vehicle(_container, data.VehicleData));
 			var wheels = AddComponent(vehicle, new Wheels(_container, data.VehicleData.DynamicTyreRadius));
 			var breaks = AddComponent(wheels, new Breaks(_container));
