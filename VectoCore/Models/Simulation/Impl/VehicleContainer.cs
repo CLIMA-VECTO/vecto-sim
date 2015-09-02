@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal IEngineInfo Engine;
 		internal IGearboxInfo Gearbox;
 		internal IVehicleInfo Vehicle;
-		internal IBreaks Breaks;
+		internal IBrakes Brakes;
 
 		internal IMileageCounter MilageCounter;
 
@@ -129,9 +129,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				MilageCounter = milage;
 			}
 
-			var breaks = component as IBreaks;
+			var breaks = component as IBrakes;
 			if (breaks != null) {
-				Breaks = breaks;
+				Brakes = breaks;
 			}
 
 			var road = component as IRoadLookAhead;
@@ -196,8 +196,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public Watt BreakPower
 		{
-			get { return Breaks.BreakPower; }
-			set { Breaks.BreakPower = value; }
+			get { return Brakes.BreakPower; }
+			set { Brakes.BreakPower = value; }
 		}
 
 		public ClutchState ClutchState()

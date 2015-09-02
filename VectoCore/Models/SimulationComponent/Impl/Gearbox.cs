@@ -78,6 +78,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			//Special Behaviour: When Gear is 0 (no gear set) OR the speed is 0 (not rotating) a zero-request is applied.
 			if (Gear == 0) {
+				if (dryRun) {
+					return new ResponseDryRun() { GearboxPowerRequest = outTorque * outEngineSpeed };
+				}
 				var resp = Next.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<PerSecond>(), dryRun);
 				resp.GearboxPowerRequest = outTorque * outEngineSpeed;
 				return resp;
@@ -110,9 +113,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			_loss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
 
-			// DryRun Response
+			// DryRun Response, gear != 0
 			if (dryRun) {
-				//todo: Gearbox DryRun Request: Add the DeltaFull, DeltaDrag for Gearbox FullLoadCurve
 				var r = Next.Request(absTime, dt, inTorque, inEngineSpeed, true);
 				r.GearboxPowerRequest = outTorque * outEngineSpeed;
 				return r;
@@ -141,6 +143,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// Normal Response
 			var response = Next.Request(absTime, dt, inTorque, inEngineSpeed);
 			response.GearboxPowerRequest = outTorque * outEngineSpeed;
+
 			return response;
 		}
 

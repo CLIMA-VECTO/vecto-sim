@@ -32,8 +32,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public DefaultDriverStrategy()
 		{
-			DrivingModes.Add(DrivingMode.DrivingModeDrive, new DriverModeDrive());
-			DrivingModes.Add(DrivingMode.DrivingModeBrake, new DriverModeBrake());
+			DrivingModes.Add(DrivingMode.DrivingModeDrive, new DriverModeDrive() { DriverStrategy = this });
+			DrivingModes.Add(DrivingMode.DrivingModeBrake, new DriverModeBrake() { DriverStrategy = this });
 			CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 		}
 
@@ -106,7 +106,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 	public interface IDriverMode
 	{
-		IDriverActions Driver { get; set; }
+		DefaultDriverStrategy DriverStrategy { get; set; }
 
 		IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient);
 	}
@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 	public class DriverModeDrive : IDriverMode
 	{
-		public IDriverActions Driver { get; set; }
+		public DefaultDriverStrategy DriverStrategy { get; set; }
 
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
@@ -127,7 +127,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 	public class DriverModeBrake : IDriverMode
 	{
-		public IDriverActions Driver { get; set; }
+		public DefaultDriverStrategy DriverStrategy { get; set; }
 
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{

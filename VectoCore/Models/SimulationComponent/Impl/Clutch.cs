@@ -115,7 +115,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public ClutchState ClutchState()
 		{
-			return _clutchState;
+			return DataBus.Gear == 0 ? SimulationComponent.ClutchState.ClutchOpened : _clutchState;
 		}
 	}
 }

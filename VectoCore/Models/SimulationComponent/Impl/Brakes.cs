@@ -1,4 +1,5 @@
 ﻿using System;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -6,13 +7,13 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Breaks : VectoSimulationComponent, IPowerTrainComponent, ITnOutPort, ITnInPort, IBreaks
+	public class Brakes : VectoSimulationComponent, IPowerTrainComponent, ITnOutPort, ITnInPort, IBrakes
 	{
 		protected ITnOutPort Next;
 
 		protected NewtonMeter BreakTorque;
 
-		public Breaks(IVehicleContainer dataBus) : base(dataBus) {}
+		public Brakes(IVehicleContainer dataBus) : base(dataBus) {}
 
 
 		public ITnInPort InPort()
@@ -35,6 +36,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				} else {
 					BreakTorque = Formulas.PowerToTorque(BreakPower, angularVelocity);
 				}
+			}
+			if (!dryRun && BreakPower < 0) {
+				throw new VectoSimulationException("Negative Braking Power is not allowed!");
 			}
 			return Next.Request(absTime, dt, torque - BreakTorque, angularVelocity, dryRun);
 		}
