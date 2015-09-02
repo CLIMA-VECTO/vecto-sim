@@ -13,29 +13,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Gearbox : VectoSimulationComponent, IGearbox, ITnOutPort, ITnInPort
 	{
+		/// <summary>
+		/// The next port.
+		/// </summary>
 		protected ITnOutPort Next;
 
+		/// <summary>
+		/// The data and settings for the gearbox.
+		/// </summary>
 		internal GearboxData Data;
 
-		private uint _gear;
+		/// <summary>
+		/// Time when a gearbox shift is finished. Is set when shifting is needed.
+		/// </summary>
 		private Second _shiftTime = double.NegativeInfinity.SI<Second>();
-		private uint _previousGear;
+
+		/// <summary>
+		/// The power loss for the mod data.
+		/// </summary>
 		private Watt _powerLoss;
 
 		public Gearbox(IVehicleContainer container, GearboxData gearboxData) : base(container)
 		{
 			Data = gearboxData;
-		}
-
-		private GearData CurrentGear
-		{
-			get { return Data.Gears[_gear]; }
-		}
-
-		internal uint Gear
-		{
-			get { return _gear; }
-			set { _gear = value; }
 		}
 
 		#region ITnInProvider
@@ -59,11 +59,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IGearboxCockpit
 
-		uint IGearboxInfo.Gear
-		{
-			get { return _gear; }
-			set { _gear = value; }
-		}
+		/// <summary>
+		/// The current gear.
+		/// </summary>
+		public uint Gear { get; set; }
 
 		#endregion
 
@@ -76,7 +75,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// * SkipGears (when already shifting to next gear, check if torque reserve is fullfilled for the overnext gear and eventually shift to it)
 			// * MT, AMT and AT .... different behaviour!
 
-			if (_gear == 0) {
+			if (Gear == 0) {
 				// if no gear is set and dry run: just set GearBoxPowerRequest
 				if (dryRun) {
 					return new ResponseDryRun { GearboxPowerRequest = outTorque * outEngineSpeed };
@@ -91,12 +90,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				// if shiftTime was reached and gear is not set: set correct gear
 				if (_shiftTime <= absTime) {
-					_gear = FindGear(outTorque, outEngineSpeed);
+					Gear = FindGear(outTorque, outEngineSpeed);
 				}
 			}
 
-			var inEngineSpeed = outEngineSpeed * CurrentGear.Ratio;
-			var inTorque = CurrentGear.LossMap.GearboxInTorque(inEngineSpeed, outTorque);
+			var inEngineSpeed = outEngineSpeed * Data.Gears[Gear].Ratio;
+			var inTorque = Data.Gears[Gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
 
 			// if dryRun and gear is set: apply dryRun request
 			if (dryRun) {
@@ -109,7 +108,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (_shiftTime + Data.ShiftTime < absTime &&
 				(ShouldShiftUp(inEngineSpeed, inTorque) || ShouldShiftDown(inEngineSpeed, inTorque))) {
 				_shiftTime = absTime + Data.TractionInterruption;
-				_gear = 0;
+				Gear = 0;
 
 				Log.Debug("Gearbox is shifting. absTime: {0}, shiftTime: {1}, outTorque:{2}, outEngineSpeed: {3}",
 					absTime, _shiftTime, outTorque, outEngineSpeed);
@@ -156,11 +155,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		private bool ShouldShiftDown(PerSecond inEngineSpeed, NewtonMeter inTorque)
 		{
-			if (_gear <= 1) {
+			if (Gear <= 1) {
 				return false;
 			}
 
-			var downSection = CurrentGear.ShiftPolygon.Downshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
+			var downSection = Data.Gears[Gear].ShiftPolygon.Downshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
 			return IsOnLeftSide(inEngineSpeed, inTorque, downSection.Item1, downSection.Item2);
 		}
 
@@ -169,11 +168,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		private bool ShouldShiftUp(PerSecond inEngineSpeed, NewtonMeter inTorque)
 		{
-			if (_gear >= Data.Gears.Count) {
+			if (Gear >= Data.Gears.Count) {
 				return false;
 			}
 
-			var upSection = CurrentGear.ShiftPolygon.Upshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
+			var upSection = Data.Gears[Gear].ShiftPolygon.Upshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
 			return IsOnRightSide(inEngineSpeed, inTorque, upSection.Item1, upSection.Item2);
 		}
 
@@ -203,7 +202,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			_gear = 0;
+			Gear = 0;
 			return Next.Initialize(torque, engineSpeed);
 		}
 
@@ -222,7 +221,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			writer[ModalResultField.Gear] = _gear;
+			writer[ModalResultField.Gear] = Gear;
 			writer[ModalResultField.PlossGB] = _powerLoss;
 
 			// todo Gearbox PaGB rotational acceleration power in moddata
@@ -231,7 +230,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoCommitSimulationStep()
 		{
-			_previousGear = _gear;
 			_powerLoss = 0.SI<Watt>();
 		}
 
