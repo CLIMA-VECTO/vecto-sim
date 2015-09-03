@@ -167,14 +167,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					r.SimulationInterval = operatingPoint.SimulationInterval;
 					retVal = r; // => return
 				}).
-				Case<ResponseEngineOverload>(r => {
-					if (r.Delta < 0) {
-						// if Delta is negative we are already below the Drag-load curve. activate breaks
-						retVal = r; // => return, strategy should brake
-					}
+				Case<ResponseOverload>(() => {
+					// do nothing, searchOperatingPoint is called later on
 				}).
-				Case<ResponseGearShift>(r => { retVal = r; }).
-				Default(r => { throw new VectoException(string.Format("Unknown Response: {0}", r)); });
+				Case<ResponseUnderload>(r => {
+					// Delta is negative we are already below the Drag-load curve. activate breaks
+					retVal = r; // => return, strategy should brake
+				}).
+				Case<ResponseGearShift>(r => {
+					retVal = r;
+				}).
+				Default(r => {
+					throw new VectoException(string.Format("Unknown Response: {0}", r));
+				});
 
 			if (retVal == null) {
 				// unhandled response (overload, delta > 0) - we need to search for a valid operating point..				
@@ -199,11 +204,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="absTime"></param>
 		/// <param name="ds"></param>
+		/// <param name="maxVelocity"></param>
 		/// <param name="gradient"></param>
 		/// <returns></returns>
-		public IResponse DrivingActionCoast(Second absTime, Meter ds, Radian gradient)
+		public IResponse DrivingActionCoast(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
-			return CoastOrRollAction(absTime, ds, gradient);
+			return CoastOrRollAction(absTime, ds, maxVelocity, gradient);
 		}
 
 
@@ -212,14 +218,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="absTime"></param>
 		/// <param name="ds"></param>
+		/// <param name="maxVelocity"></param>
 		/// <param name="gradient"></param>
 		/// <returns></returns>
-		public IResponse DrivingActionRoll(Second absTime, Meter ds, Radian gradient)
+		public IResponse DrivingActionRoll(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
-			return CoastOrRollAction(absTime, ds, gradient);
+			return CoastOrRollAction(absTime, ds, maxVelocity, gradient);
 		}
 
-		protected IResponse CoastOrRollAction(Second absTime, Meter ds, Radian gradient)
+		protected IResponse CoastOrRollAction(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
 			var operatingPoint = ComputeAcceleration(ds, 0.SI<MeterPerSecond>());
 
@@ -250,6 +257,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			operatingPoint = LimitAccelerationByDriverModel(operatingPoint, true);
 
+			// compute speed at the end of the simulation interval. if it exceeds the limit -> return
+			var v2 = DataBus.VehicleSpeed() + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
+			if (v2 > maxVelocity) {
+				return new ResponseSpeedLimitExceeded();
+			}
+
 			CurrentState.dt = operatingPoint.SimulationInterval;
 			CurrentState.Acceleration = operatingPoint.Acceleration;
 
@@ -258,11 +271,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			retVal.Switch().
 				Case<ResponseSuccess>(r => r.SimulationInterval = CurrentState.dt).
-				Case<ResponseEngineOverload>(() => {
+				Case<ResponseOverload>(() => {
 					/* an overload may occur due to limiting the acceleration. strategy has to handle this */
 				}).
 				Case<ResponseGearShift>(r => retVal = r).
-				Default(() => { throw new VectoSimulationException("unhandled response from powertrain: {0}", retVal); });
+				Default(() => {
+					throw new VectoSimulationException("unhandled response from powertrain: {0}", retVal);
+				});
 
 			return retVal; //new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
 		}
@@ -273,10 +288,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="absTime"></param>
 		/// <param name="ds"></param>
-		/// <param name="gradient"></param>
 		/// <param name="nextTargetSpeed"></param>
+		/// <param name="gradient"></param>
 		/// <returns></returns>
-		public IResponse DrivingActionBrake(Second absTime, Meter ds, Radian gradient, MeterPerSecond nextTargetSpeed)
+		public IResponse DrivingActionBrake(Second absTime, Meter ds, MeterPerSecond nextTargetSpeed, Radian gradient)
 		{
 			var operatingPoint = ComputeAcceleration(ds, nextTargetSpeed);
 
@@ -437,12 +452,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (actionRoll) {
 				initialResponse.Switch().
 					Case<ResponseDryRun>(r => origDelta = r.GearboxPowerRequest).
-					Default(r => { throw new VectoSimulationException("Unknown response type. {0}", r); });
+					Default(r => {
+						throw new VectoSimulationException("Unknown response type. {0}", r);
+					});
 			} else {
 				initialResponse.Switch().
-					Case<ResponseEngineOverload>(r => origDelta = r.Delta). // search operating point in drive action after overload
+					Case<ResponseOverload>(r => origDelta = r.Delta). // search operating point in drive action after overload
 					Case<ResponseDryRun>(r => origDelta = coasting ? r.DeltaDragLoad : r.DeltaFullLoad).
-					Default(r => { throw new VectoSimulationException("Unknown response type. {0}", r); });
+					Default(r => {
+						throw new VectoSimulationException("Unknown response type. {0}", r);
+					});
 			}
 			var delta = origDelta;
 

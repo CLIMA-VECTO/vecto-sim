@@ -24,9 +24,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// </summary>
 		/// <param name="absTime"></param>
 		/// <param name="ds"></param>
+		/// <param name="maxVelocity"></param>
 		/// <param name="gradient"></param>
 		/// <returns></returns>
-		IResponse DrivingActionCoast(Second absTime, Meter ds, Radian gradient);
+		IResponse DrivingActionCoast(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient);
 
 		/// <summary>
 		/// perform a 'brake driving action', i.e. decelerate the vehicle by using the mechanical brakes to the next target speed
@@ -34,10 +35,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// </summary>
 		/// <param name="absTime"></param>
 		/// <param name="ds"></param>
-		/// <param name="gradient"></param>
 		/// <param name="nextTargetSpeed"></param>
+		/// <param name="gradient"></param>
 		/// <returns></returns>
-		IResponse DrivingActionBrake(Second absTime, Meter ds, Radian gradient, MeterPerSecond nextTargetSpeed);
+		IResponse DrivingActionBrake(Second absTime, Meter ds, MeterPerSecond nextTargetSpeed, Radian gradient);
 
 		/// <summary>
 		/// perform a 'roll driving action', i.e., the clutch is open and the vehicle rolls without motoring. adjust the acceleration 
@@ -45,9 +46,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// </summary>
 		/// <param name="absTime"></param>
 		/// <param name="ds"></param>
+		/// <param name="maxVelocity"></param>
 		/// <param name="gradient"></param>
 		/// <returns></returns>
-		IResponse DrivingActionRoll(Second absTime, Meter ds, Radian gradient);
+		IResponse DrivingActionRoll(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient);
 
 
 		/// <summary>

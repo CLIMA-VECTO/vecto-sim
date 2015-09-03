@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var t = 2600.SI<NewtonMeter>();
 			var n = 1600.RPMtoRad();
 			var response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
-			Assert.IsInstanceOfType(response, typeof(ResponseGearboxOverload));
+			Assert.IsInstanceOfType(response, typeof(ResponseOverload));
 
 			absTime += dt;
 			t = -1300.SI<NewtonMeter>();
@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				var angularVelocity = exp.n.RPMtoRad() / ratio;
 
 				var response = gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity);
-				Assert.IsInstanceOfType(response, typeof(ResponseGearboxOverload));
+				Assert.IsInstanceOfType(response, typeof(ResponseOverload));
 			}
 
 			var expectedCorrect = new[] {
@@ -159,11 +159,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var expected = new[] {
 				new { gear = 1, t = 50, n = 800, loss = 10.108, responseType = typeof(ResponseSuccess) },
-				new { gear = 1, t = 2450, n = 800, loss = 58.11, responseType = typeof(ResponseGearboxOverload) },
+				new { gear = 1, t = 2450, n = 800, loss = 58.11, responseType = typeof(ResponseOverload) },
 				new { gear = 1, t = -1000, n = 800, loss = 29.11, responseType = typeof(ResponseSuccess) },
 				new { gear = 1, t = 850, n = 800, loss = 26.11, responseType = typeof(ResponseSuccess) },
 				new { gear = 1, t = 850, n = 0, loss = 22.06, responseType = typeof(ResponseSuccess) },
-				new { gear = 1, t = 850, n = 200, loss = 23.07, responseType = typeof(ResponseGearboxOverload) },
+				new { gear = 1, t = 850, n = 200, loss = 23.07, responseType = typeof(ResponseOverload) },
 				new { gear = 2, t = 50, n = 800, loss = 10.108, responseType = typeof(ResponseSuccess) },
 				new { gear = 2, t = 2450, n = 800, loss = 58.11, responseType = typeof(ResponseGearShift) },
 				new { gear = 2, t = -1000, n = 800, loss = 29.11, responseType = typeof(ResponseSuccess) },
@@ -177,7 +177,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				new { gear = 7, t = 850, n = 1200, loss = 15.382, responseType = typeof(ResponseSuccess) },
 				new { gear = 7, t = 850, n = 2000, loss = 19.43, responseType = typeof(ResponseGearShift) },
 				new { gear = 7, t = 2450, n = 0, loss = 17.31, responseType = typeof(ResponseGearShift) },
-				new { gear = 7, t = 2450, n = 1200, loss = 23.382, responseType = typeof(ResponseGearboxOverload) }
+				new { gear = 7, t = 2450, n = 1200, loss = 23.382, responseType = typeof(ResponseOverload) }
 			};
 
 			var absTime = 0.SI<Second>();

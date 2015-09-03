@@ -58,11 +58,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var driverPort = driver.OutPort();
 
-			driverPort.Initialize(5.SI<MeterPerSecond>(), 0.SI<Radian>());
+			var velocity = 5.SI<MeterPerSecond>();
+			driverPort.Initialize(velocity, 0.SI<Radian>());
 
 			var absTime = 0.SI<Second>();
 
-			var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), 0.SI<Radian>());
+			var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
@@ -75,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Constants.SimulationSettings.EngineFLDPowerTolerance);
 
 			while (vehicleContainer.VehicleSpeed() > 1) {
-				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), 0.SI<Radian>());
+				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
 
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
@@ -114,11 +115,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverPort = driver.OutPort();
 
 			var gradient = VectoMath.InclinationToAngle(-0.020237973 / 100.0);
-			driverPort.Initialize(5.SI<MeterPerSecond>(), gradient);
+			var velocity = 5.SI<MeterPerSecond>();
+			driverPort.Initialize(velocity, gradient);
 
 			var absTime = 0.SI<Second>();
 
-			var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), gradient);
+			var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
@@ -131,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Constants.SimulationSettings.EngineFLDPowerTolerance);
 
 			while (vehicleContainer.VehicleSpeed() > 1) {
-				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), gradient);
+				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
 
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 

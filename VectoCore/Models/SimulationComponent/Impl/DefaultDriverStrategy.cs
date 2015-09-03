@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -39,7 +40,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IDriverActions Driver { get; set; }
 
-		protected Meter BrakeTriggerDistance { get; set; }
+		protected internal DrivingBehaviorEntry BrakeTrigger { get; set; }
 
 
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
@@ -50,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var nextAction = GetNextDrivingAction(currentDistance);
 					if (currentDistance.IsEqual(nextAction.ActionDistance)) {
 						CurrentDrivingMode = DrivingMode.DrivingModeBrake;
-						BrakeTriggerDistance = nextAction.TriggerDistance;
+						BrakeTrigger = nextAction;
 						break;
 					}
 					if (currentDistance + ds > nextAction.ActionDistance) {
@@ -60,7 +61,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 					break;
 				case DrivingMode.DrivingModeBrake:
-					if (Driver.DataBus.Distance() >= BrakeTriggerDistance) {
+					if (Driver.DataBus.Distance() >= BrakeTrigger.TriggerDistance) {
 						CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 					}
 					break;
@@ -151,20 +152,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				response = DriverStrategy.Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 				response.Switch().
 					Case<ResponseGearShift>(() => {
-						response = DriverStrategy.Driver.DrivingActionRoll(absTime, ds, gradient);
+						response = DriverStrategy.Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
 						response.Switch().
-							Case<ResponseOverload>(() => {
+							Case<ResponseUnderload>(() => {
 								// overload may happen if driver limits acceleration when rolling downhill
 								response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient);
 							});
 					}).
-					Case<ResponseOverload>(() => {
+					Case<ResponseUnderload>(() => {
 						response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient);
 					});
 			} else {
-				response = DriverStrategy.Driver.DrivingActionRoll(absTime, ds, gradient);
+				response = DriverStrategy.Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
 				response.Switch().
-					Case<ResponseOverload>(() => {
+					Case<ResponseUnderload>(() => {
 						response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient);
 					});
 			}
@@ -176,11 +177,68 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 	public class DriverModeBrake : IDriverMode
 	{
+		protected enum BrakingPhase
+		{
+			Coast,
+			Brake
+		}
+
 		public DefaultDriverStrategy DriverStrategy { get; set; }
+
+		protected BrakingPhase Phase;
 
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			throw new System.NotImplementedException();
+			IResponse response = null;
+			if (DriverStrategy.Driver.DataBus.VehicleSpeed() <= DriverStrategy.BrakeTrigger.NextTargetSpeed) {
+				response = DriverStrategy.Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+					gradient);
+				response.Switch().
+					Case<ResponseGearShift>(() => {
+						response = DriverStrategy.Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+						response.Switch().
+							Case<ResponseOverload>(() => {
+								// overload may happen if driver limits acceleration when rolling downhill
+								response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+									gradient);
+							});
+					}).
+					Case<ResponseOverload>(() => {
+						response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+							gradient);
+					});
+				return response;
+			}
+			var currentDistance = DriverStrategy.Driver.DataBus.Distance();
+			if (Phase == BrakingPhase.Coast) {
+				var breakingDistance = DriverStrategy.Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed);
+				if (currentDistance + ds > DriverStrategy.BrakeTrigger.TriggerDistance - breakingDistance) {
+					return new ResponseDrivingCycleDistanceExceeded() {
+						MaxDistance = DriverStrategy.BrakeTrigger.TriggerDistance - breakingDistance - currentDistance
+					};
+				}
+				if (DriverStrategy.BrakeTrigger.TriggerDistance - breakingDistance >
+					currentDistance + Constants.SimulationSettings.DriverActionDistanceTolerance) {
+					Phase = BrakingPhase.Brake;
+				}
+			}
+			switch (Phase) {
+				case BrakingPhase.Coast:
+					response = DriverStrategy.Driver.DrivingActionCoast(absTime, ds, targetVelocity, gradient);
+					response.Switch().
+						Case<ResponseOverload>(() => {
+							// coast would decelerate more than driver's max deceleration => issue brakes to decelerate with driver's max deceleration
+							response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+								gradient);
+							Phase = BrakingPhase.Brake;
+						});
+					break;
+				case BrakingPhase.Brake:
+					response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
+						gradient);
+					break;
+			}
+			return response;
 		}
 	}
 
