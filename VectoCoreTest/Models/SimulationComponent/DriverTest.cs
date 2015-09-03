@@ -213,6 +213,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driverData = EngineeringModeSimulationDataReader.CreateDriverDataFromFile(JobFile);
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 
+			var cycle = new MockDrivingCycle(vehicleContainer, null);
+
+
 			driver.Connect(vehicle.OutPort());
 
 			vehicle.MyVehicleSpeed = 0.SI<MeterPerSecond>();

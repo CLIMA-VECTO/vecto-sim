@@ -76,73 +76,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				gradient);
 
 			var retVal = DriverStrategy.Request(absTime, dt, targetVelocity, gradient);
-			//DoHandleRequest(absTime, dt, targetVelocity, gradient);
 
 			CurrentState.Response = retVal;
 			retVal.SimulationInterval = CurrentState.dt;
 
 			return retVal;
 		}
-
-
-		//protected IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
-		//{
-		//	var currentDistance = DataBus.Distance();
-		//	var nextDrivingActions = GetNextDrivingActions(currentDistance);
-
-		//	Log.Debug(", ".Join(nextDrivingActions.Select(x => string.Format("({0}: {1})", x.ActionDistance, x.Action))));
-
-
-		//	if (CurrentState.DrivingAction.Action == DefaultDriverStrategy.DrivingBehavior.Stopped && targetVelocity >= DataBus.VehicleSpeed()) {
-		//		CurrentState.DrivingAction.Action = DefaultDriverStrategy.DrivingBehavior.Drive;
-		//	}
-
-		//	if (nextDrivingActions.Count > 0) {
-		//		// if we exceeded the previous action (by accident), set the action anyway in case there is no 'next action'...
-		//		CurrentState.DrivingAction = nextDrivingActions.LastOrDefault(x => x.ActionDistance < currentDistance) ??
-		//									CurrentState.DrivingAction;
-
-		//		var nextActions = nextDrivingActions.Where(x => x.ActionDistance >= currentDistance).ToList();
-		//		var nextDrivingAction = nextActions.GetEnumerator();
-		//		nextDrivingAction.MoveNext();
-		//		var hasNextEntry = true;
-
-		//		// if the current position matches the next action - set new action.
-		//		if (nextDrivingAction.Current.ActionDistance <=
-		//			currentDistance + Constants.SimulationSettings.DriverActionDistanceTolerance) {
-		//			CurrentState.DrivingAction = nextDrivingAction.Current;
-		//			hasNextEntry = nextDrivingAction.MoveNext(); // the current action has already been processed, look at next one...
-		//		}
-
-		//		// check if desired distance exceeds next action point
-		//		if (hasNextEntry && nextDrivingAction.Current.ActionDistance < currentDistance + ds) {
-		//			Log.Debug(
-		//				"current Distance: {3} -- Simulation Distance {0} exceeds next DrivingAction at {1}, reducing interval to {2}", ds,
-		//				nextDrivingAction.Current.ActionDistance, nextDrivingAction.Current.ActionDistance - currentDistance,
-		//				currentDistance);
-		//			return new ResponseDrivingCycleDistanceExceeded {
-		//				MaxDistance = nextDrivingAction.Current.ActionDistance - currentDistance
-		//			};
-		//		}
-		//	} else {
-		//		if (targetVelocity > DataBus.VehicleSpeed()) {
-		//			CurrentState.DrivingAction.Action = DefaultDriverStrategy.DrivingBehavior.Accelerating;
-		//		}
-		//	}
-		//	Log.Debug("DrivingAction: {0}", CurrentState.DrivingAction.Action);
-		//	//CurrentState.DrivingAction = nextAction;
-		//	switch (CurrentState.DrivingAction.Action) {
-		//		case DefaultDriverStrategy.DrivingBehavior.Accelerating:
-		//			return DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
-		//		case DefaultDriverStrategy.DrivingBehavior.Drive:
-		//			return DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
-		//		case DefaultDriverStrategy.DrivingBehavior.Coasting:
-		//			return DrivingActionCoast(absTime, ds, gradient);
-		//		case DefaultDriverStrategy.DrivingBehavior.Braking:
-		//			return DoBreak(absTime, ds, gradient, CurrentState.DrivingAction.NextTargetSpeed);
-		//	}
-		//	throw new VectoSimulationException("unhandled driving action " + CurrentState.DrivingAction);
-		//}
 
 		IDataBus IDriverActions.DataBus
 		{
@@ -276,6 +215,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var retVal = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
 			CurrentState.Response = retVal;
+			retVal.SimulationInterval = CurrentState.dt;
 
 			retVal.Switch().
 				Case<ResponseSuccess>().
@@ -320,9 +260,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Debug(
 					"SearchOperatingPoint Breaking reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!",
 					operatingPoint.SimulationDistance, ds);
-				return new ResponseDrivingCycleDistanceExceeded {
-					MaxDistance = operatingPoint.SimulationDistance,
-				};
+				return new ResponseDrivingCycleDistanceExceeded { MaxDistance = operatingPoint.SimulationDistance };
 			}
 
 			Log.Debug("Found operating point for breaking. dt: {0}, acceleration: {1}", operatingPoint.SimulationInterval,
@@ -421,9 +359,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					intervalFactor = 0.5;
 				}
 
-				searchInterval *= intervalFactor; 
+				searchInterval *= intervalFactor;
 				breakingPower += searchInterval * -delta.Sign();
-				
 			} while (retryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
 
 			Log.Warn("Exceeded max iterations when searching for operating point!");
@@ -493,8 +430,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				// TODO: move to driving mode
 				// check for minimum acceleration, add some safety margin due to search
-				if (!coasting && retVal.Acceleration.Abs() < Constants.SimulationSettings.MinimumAcceleration.Value() / 5.0 /* &&
-				 searchInterval.Abs() < Constants.SimulationSettings.MinimumAcceleration / 20.0 */) {
+				if (!coasting && retVal.Acceleration.Abs() < Constants.SimulationSettings.MinimumAcceleration.Value() / 5.0
+					&& searchInterval.Abs() < Constants.SimulationSettings.MinimumAcceleration / 20.0) {
 					throw new VectoSimulationException("Could not achieve minimum acceleration");
 				}
 
@@ -668,19 +605,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!(CurrentState.Response is ResponseSuccess)) {
 				throw new VectoSimulationException("Previous request did not succeed!");
 			}
-			//CurrentState.RetryCount = 0;
 			CurrentState.Response = null;
-
-			//if (CurrentState.DrivingAction.NextTargetSpeed != null &&
-			//	DataBus.VehicleSpeed().IsEqual(CurrentState.DrivingAction.NextTargetSpeed)) {
-			//	Log.Debug("reached target Speed {0} - set Driving action to {1}", CurrentState.DrivingAction.NextTargetSpeed,
-			//		DefaultDriverStrategy.DrivingBehavior.Drive);
-			//	CurrentState.DrivingAction.Action = DefaultDriverStrategy.DrivingBehavior.Drive;
-			//}
-			//if (DataBus.VehicleSpeed().IsEqual(0)) {
-			//	Log.Debug("vehicle stopped {0}", DataBus.VehicleSpeed());
-			//	CurrentState.DrivingAction.Action = DefaultDriverStrategy.DrivingBehavior.Stopped;
-			//}
 		}
 
 
@@ -689,7 +614,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Second dt;
 			public MeterPerSquareSecond Acceleration;
 			public IResponse Response;
-			//public int RetryCount;
 		}
 
 		public struct OperatingPoint
