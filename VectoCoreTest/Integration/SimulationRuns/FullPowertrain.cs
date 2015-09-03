@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
-			tmp = Port.AddComponent(tmp, new Breaks(container));
+			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData));
 			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
@@ -114,7 +114,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
-			tmp = Port.AddComponent(tmp, new Breaks(container));
+			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData));
 			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
-			tmp = Port.AddComponent(tmp, new Breaks(container));
+			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData));
 			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
