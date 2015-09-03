@@ -81,6 +81,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return new ResponseDryRun { GearboxPowerRequest = outTorque * outEngineSpeed };
 				}
 
+				if (!outTorque.IsEqual(0)) {
+					// if clutch is open the gearbox can't provide a torque
+					return new ResponseOverload() { Delta = outTorque * outEngineSpeed };
+				}
 				// if shiftTime still not reached (only happens during shifting): apply zero-request
 				if (_shiftTime > absTime) {
 					var duringShiftResponse = Next.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<PerSecond>());

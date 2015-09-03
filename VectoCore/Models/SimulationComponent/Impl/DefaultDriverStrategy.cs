@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Utils;
 
@@ -18,13 +21,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public enum DrivingBehavior
 		{
-			//Stopped,
 			Accelerating,
 			Drive,
 			Coasting,
 			Braking,
-			//EcoRoll,
-			//OverSpeed,
 		}
 
 		protected DrivingMode CurrentDrivingMode;
@@ -39,10 +39,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IDriverActions Driver { get; set; }
 
+		protected Meter BrakeTriggerDistance { get; set; }
+
+
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			throw new NotImplementedException();
+			switch (CurrentDrivingMode) {
+				case DrivingMode.DrivingModeDrive:
+					var currentDistance = Driver.DataBus.Distance();
+					var nextAction = GetNextDrivingAction(currentDistance);
+					if (currentDistance.IsEqual(nextAction.ActionDistance)) {
+						CurrentDrivingMode = DrivingMode.DrivingModeBrake;
+						BrakeTriggerDistance = nextAction.TriggerDistance;
+						break;
+					}
+					if (currentDistance + ds > nextAction.ActionDistance) {
+						return new ResponseDrivingCycleDistanceExceeded() {
+							MaxDistance = nextAction.ActionDistance - currentDistance
+						};
+					}
+					break;
+				case DrivingMode.DrivingModeBrake:
+					if (Driver.DataBus.Distance() >= BrakeTriggerDistance) {
+						CurrentDrivingMode = DrivingMode.DrivingModeDrive;
+					}
+					break;
+			}
+
+			return DrivingModes[CurrentDrivingMode].Request(absTime, ds, targetVelocity, gradient);
 		}
+
 
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
@@ -50,7 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected IList<DrivingBehaviorEntry> GetNextDrivingActions(Meter minDistance)
+		protected DrivingBehaviorEntry GetNextDrivingAction(Meter minDistance)
 		{
 			var currentSpeed = Driver.DataBus.VehicleSpeed();
 
@@ -97,7 +123,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			return nextActions.OrderBy(x => x.ActionDistance).ToList();
+			return nextActions.OrderBy(x => x.ActionDistance).First();
 		}
 	}
 
@@ -119,7 +145,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			throw new System.NotImplementedException();
+			IResponse response = null;
+			if (DriverStrategy.Driver.DataBus.ClutchState() != ClutchState.ClutchOpened) {
+				// drive along
+				response = DriverStrategy.Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+				response.Switch().
+					Case<ResponseGearShift>(() => {
+						response = DriverStrategy.Driver.DrivingActionRoll(absTime, ds, gradient);
+						response.Switch().
+							Case<ResponseOverload>(() => {
+								// overload may happen if driver limits acceleration when rolling downhill
+								response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient);
+							});
+					}).
+					Case<ResponseOverload>(() => {
+						response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient);
+					});
+			} else {
+				response = DriverStrategy.Driver.DrivingActionRoll(absTime, ds, gradient);
+				response.Switch().
+					Case<ResponseOverload>(() => {
+						response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient);
+					});
+			}
+			return response;
 		}
 	}
 
