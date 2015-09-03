@@ -152,12 +152,12 @@
     <Compile Include="Models\SimulationComponent\Data\Engine\PT1Curve.cs" />
     <Compile Include="Models\LoggingObject.cs" />
     <Compile Include="Models\SimulationComponent\Data\GearboxType.cs" />
-    <Compile Include="Models\SimulationComponent\IBreaks.cs" />
+    <Compile Include="Models\SimulationComponent\IBrakes.cs" />
     <Compile Include="Models\SimulationComponent\IDriverActions.cs" />
     <Compile Include="Models\SimulationComponent\IDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
     <Compile Include="Models\SimulationComponent\Impl\AuxiliaryData.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Breaks.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\Brakes.cs" />
     <Compile Include="Models\SimulationComponent\Impl\DefaultDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
     <Compile Include="Models\Simulation\DataBus\IClutchInfo.cs" />
