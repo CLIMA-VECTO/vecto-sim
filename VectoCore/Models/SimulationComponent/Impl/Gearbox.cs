@@ -131,7 +131,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		private uint FindGear(NewtonMeter outTorque, PerSecond outEngineSpeed)
 		{
-			uint gear = 1;
+			var gear = (Gear != 0) ? Gear : 1;
+
 			var inEngineSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
 			var inTorque = Data.Gears[gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
 
@@ -202,7 +203,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			Gear = 0;
+			Gear = FindGear(torque, engineSpeed);
+
 			return Next.Initialize(torque, engineSpeed);
 		}
 
