@@ -22,7 +22,9 @@ Synopsis:
 
 Description:
     FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the extension: .vecto). At least one file must be given. Delimited by whitespace.
-    -v: Activates verbose mode (trace and exceptions will be displayed)
+    -v: Shows verbose information (errors and warnings will be displayed)
+	-vv: Shows more verbose information (infos will be displayed)
+	-vvv: Shows all verbose information (everything, slow!)
     -h: Displays this help.
 
 Examples:
@@ -41,17 +43,31 @@ Examples:
 					Console.Write(HELP);
 					return 0;
 				}
-				args = args.Where(a => a != "-h").ToArray();
 
 				// on -v: activate verbose console logger
+				var logLevel = LogLevel.Fatal;
+
+				// Fatal > Error > Warn > Info > Debug > Trace
+
 				if (args.Contains("-v")) {
-					var config = LogManager.Configuration;
-					var target = config.FindTargetByName("ConsoleLogger");
-					config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, target));
-					LogManager.Configuration = config;
-					Trace.Listeners.Add(new ConsoleTraceListener(true));
+					// display errors, warnings
+					logLevel = LogLevel.Warn;
+				} else if (args.Contains("-vv")) {
+					// also display info and debug
+					logLevel = LogLevel.Debug;
+				} else if (args.Contains("-vvv")) {
+					// display everything!
+					logLevel = LogLevel.Trace;
 				}
-				args = args.Where(a => a != "-v").ToArray();
+
+				var config = LogManager.Configuration;
+				config.LoggingRules.Add(new LoggingRule("*", logLevel, config.FindTargetByName("Console")));
+				config.LoggingRules.Add(new LoggingRule("*", logLevel, config.FindTargetByName("File")));
+				LogManager.Configuration = config;
+				Trace.Listeners.Add(new ConsoleTraceListener(true));
+
+				args = args.Except(new[] { "-v", "-vv", "-vvv" }).ToArray();
+
 
 				// if no other arguments given: display usage and terminate
 				if (!args.Any()) {
@@ -60,7 +76,7 @@ Examples:
 				}
 
 				// process the file list and start simulation
-				var fileList = args.Where(a => a != "-v").ToList().ToList();
+				var fileList = args;
 
 				var sumFileName = Path.GetFileNameWithoutExtension(fileList.First()) + Constants.FileExtensions.SumFile;
 				var sumWriter = new SummaryFileWriter(sumFileName);
