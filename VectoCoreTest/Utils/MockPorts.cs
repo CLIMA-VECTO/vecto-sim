@@ -28,7 +28,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
-			throw new NotImplementedException();
+			return new ResponseSuccess();
 		}
 	}
 

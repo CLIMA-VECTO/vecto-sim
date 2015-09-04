@@ -1,10 +1,8 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
@@ -26,7 +24,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// Time when a gearbox shift is finished. Is set when shifting is needed.
 		/// </summary>
-		private Second _shiftTime = double.PositiveInfinity.SI<Second>();
+		private Second _shiftTime = double.NegativeInfinity.SI<Second>();
 
 		/// <summary>
 		/// The power loss for the mod data.
@@ -68,6 +66,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
+		/// <summary>
+		/// Requests the specified abs time.
+		/// </summary>
+		/// <param name="absTime">The abs time.</param>
+		/// <param name="dt">The dt.</param>
+		/// <param name="outTorque">The out torque.</param>
+		/// <param name="outEngineSpeed">The out engine speed.</param>
+		/// <param name="dryRun">if set to <c>true</c> [dry run].</param>
+		/// <returns>
+		/// Special Cases:
+		/// * ResponseDryRun
+		/// * ResponseOverload
+		/// * ResponseGearshift
+		/// </returns>
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed, bool dryRun)
 		{
 			// TODO:
@@ -78,17 +90,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (Gear == 0) {
 				// if no gear is set and dry run: just set GearBoxPowerRequest
 				if (dryRun) {
-					return new ResponseDryRun { GearboxPowerRequest = outTorque * outEngineSpeed };
+					return new ResponseDryRun { GearboxPowerRequest = outTorque * outEngineSpeed, Source = this };
 				}
 
-				if (!outTorque.IsEqual(0)) {
-					// if clutch is open the gearbox can't provide a torque
-					return new ResponseOverload {
-						Delta = outTorque * outEngineSpeed,
-						Source = this,
-						GearboxPowerRequest = outTorque * outEngineSpeed
-					};
-				}
 				// if shiftTime still not reached (only happens during shifting): apply zero-request
 				if (_shiftTime > absTime) {
 					var duringShiftResponse = Next.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<PerSecond>());
@@ -99,6 +103,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// if shiftTime was reached and gear is not set: set correct gear
 				if (_shiftTime <= absTime) {
 					Gear = FindGear(outTorque, outEngineSpeed);
+				} else {
+					// if clutch is open the gearbox can't provide a torque
+					if (!outTorque.IsEqual(0)) {
+						return new ResponseOverload {
+							Delta = outTorque * outEngineSpeed,
+							Source = this,
+							GearboxPowerRequest = outTorque * outEngineSpeed
+						};
+					}
 				}
 			}
 
@@ -121,7 +134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Debug("Gearbox is shifting. absTime: {0}, shiftTime: {1}, outTorque:{2}, outEngineSpeed: {3}",
 					absTime, _shiftTime, outTorque, outEngineSpeed);
 
-				return new ResponseGearShift { SimulationInterval = Data.TractionInterruption };
+				return new ResponseGearShift { SimulationInterval = Data.TractionInterruption, Source = this };
 			}
 
 			// Normal Response
@@ -141,10 +154,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var gear = (Gear != 0) ? Gear : 1;
 
-			var inEngineSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
-			var inTorque = Data.Gears[gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
-
 			do {
+				var inEngineSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
+				var inTorque = Data.Gears[gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
 				if (ShouldShiftUp(gear, inEngineSpeed, inTorque)) {
 					gear++;
 					continue;
@@ -211,6 +223,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
+			_shiftTime = double.NegativeInfinity.SI<Second>();
 			Gear = FindGear(torque, engineSpeed);
 
 			return Next.Initialize(torque, engineSpeed);

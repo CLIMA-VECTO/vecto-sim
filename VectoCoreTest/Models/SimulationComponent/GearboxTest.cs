@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var t = 2600.SI<NewtonMeter>();
 			var n = 1600.RPMtoRad();
 			var response = gearbox.OutPort().Request(absTime, dt, t * ratio, n / ratio);
-			Assert.IsInstanceOfType(response, typeof(ResponseOverload));
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			absTime += dt;
 			t = -1300.SI<NewtonMeter>();
@@ -125,7 +125,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				var angularVelocity = exp.n.RPMtoRad() / ratio;
 
 				var response = gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity);
-				Assert.IsInstanceOfType(response, typeof(ResponseOverload));
+				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 			}
 
 			var expectedCorrect = new[] {
@@ -159,11 +159,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var expected = new[] {
 				new { gear = 1, t = 50, n = 800, loss = 10.108, responseType = typeof(ResponseSuccess) },
-				new { gear = 1, t = 2450, n = 800, loss = 58.11, responseType = typeof(ResponseOverload) },
+				new { gear = 1, t = 2450, n = 800, loss = 58.11, responseType = typeof(ResponseSuccess) },
 				new { gear = 1, t = -1000, n = 800, loss = 29.11, responseType = typeof(ResponseSuccess) },
 				new { gear = 1, t = 850, n = 800, loss = 26.11, responseType = typeof(ResponseSuccess) },
 				new { gear = 1, t = 850, n = 0, loss = 22.06, responseType = typeof(ResponseSuccess) },
-				new { gear = 1, t = 850, n = 200, loss = 23.07, responseType = typeof(ResponseOverload) },
+				new { gear = 1, t = 850, n = 200, loss = 23.07, responseType = typeof(ResponseSuccess) },
 				new { gear = 2, t = 50, n = 800, loss = 10.108, responseType = typeof(ResponseSuccess) },
 				new { gear = 2, t = 2450, n = 800, loss = 58.11, responseType = typeof(ResponseGearShift) },
 				new { gear = 2, t = -1000, n = 800, loss = 29.11, responseType = typeof(ResponseSuccess) },
@@ -177,13 +177,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				new { gear = 7, t = 850, n = 1200, loss = 15.382, responseType = typeof(ResponseSuccess) },
 				new { gear = 7, t = 850, n = 2000, loss = 19.43, responseType = typeof(ResponseGearShift) },
 				new { gear = 7, t = 2450, n = 0, loss = 17.31, responseType = typeof(ResponseGearShift) },
-				new { gear = 7, t = 2450, n = 1200, loss = 23.382, responseType = typeof(ResponseOverload) }
+				new { gear = 7, t = 2450, n = 1200, loss = 23.382, responseType = typeof(ResponseSuccess) }
 			};
 
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
 
 			foreach (var exp in expected) {
+				gearbox.OutPort().Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>());
+
+
 				var expectedT = exp.t.SI<NewtonMeter>();
 				var expectedN = exp.n.RPMtoRad();
 				var expectedLoss = exp.loss.SI<NewtonMeter>();
@@ -201,7 +204,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					AssertHelper.AreRelativeEqual(expectedN, port.AngularVelocity, message: exp.ToString());
 					AssertHelper.AreRelativeEqual(expectedT, port.Torque, message: exp.ToString());
 				}
-				absTime += dt;
 			}
 		}
 
@@ -220,19 +222,21 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			// the first element 0.0 is just a placeholder for axlegear, not used in this test
 
 			var expected = new[] {
-				new { gear = 8, newGear = 7, t = 1500, n = 700, responseType = typeof(ResponseGearShift) },
-				new { gear = 7, newGear = 6, t = 1500, n = 700, responseType = typeof(ResponseGearShift) },
-				new { gear = 6, newGear = 5, t = 1500, n = 700, responseType = typeof(ResponseGearShift) },
-				new { gear = 5, newGear = 4, t = 1500, n = 700, responseType = typeof(ResponseGearShift) },
-				new { gear = 4, newGear = 3, t = 1500, n = 700, responseType = typeof(ResponseGearShift) },
-				new { gear = 3, newGear = 2, t = 1500, n = 700, responseType = typeof(ResponseGearShift) },
-				new { gear = 2, newGear = 1, t = 1500, n = 700, responseType = typeof(ResponseGearShift) },
+				new { gear = 8, newGear = 7, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
+				new { gear = 7, newGear = 6, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
+				new { gear = 6, newGear = 5, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
+				new { gear = 5, newGear = 4, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
+				new { gear = 4, newGear = 3, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
+				new { gear = 3, newGear = 2, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
+				new { gear = 2, newGear = 1, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
 				new { gear = 1, newGear = 1, t = 1200, n = 700, responseType = typeof(ResponseSuccess) },
 				new { gear = 8, newGear = 1, t = 10000, n = 120, responseType = typeof(ResponseGearShift) }
 			};
 
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
+
+			gearbox.OutPort().Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>());
 
 			foreach (var exp in expected) {
 				var expectedT = exp.t.SI<NewtonMeter>();
@@ -244,6 +248,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				container.Gear = (uint)exp.gear;
 				var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
 				Assert.IsInstanceOfType(response, exp.responseType, exp.ToString());
+
+				absTime += dt;
+				response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
+				Assert.IsInstanceOfType(response, typeof(ResponseSuccess), exp.ToString());
 				Assert.AreEqual((uint)exp.newGear, container.Gear, exp.ToString());
 				absTime += dt;
 			}
@@ -277,6 +285,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
 
+			gearbox.OutPort().Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>());
+
 			foreach (var exp in expected) {
 				var expectedT = exp.t.SI<NewtonMeter>();
 				var expectedN = exp.n.RPMtoRad();
@@ -287,6 +297,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				container.Gear = (uint)exp.gear;
 				var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
 				Assert.IsInstanceOfType(response, exp.responseType, exp.ToString());
+
+				absTime += dt;
+				response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
+				Assert.IsInstanceOfType(response, typeof(ResponseSuccess), exp.ToString());
 				Assert.AreEqual((uint)exp.newGear, container.Gear, exp.ToString());
 				absTime += dt;
 			}
@@ -302,9 +316,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
 
-			container.Gear = 0;
-			var response = gearbox.OutPort()
-				.Request(0.SI<Second>(), 1.SI<Second>(), 50000000.SI<NewtonMeter>(), 1000000.SI<PerSecond>());
+			gearbox.Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>());
+
+			var response = gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), 50.SI<NewtonMeter>(), 10000.SI<PerSecond>());
+			Assert.IsInstanceOfType(response, typeof(ResponseGearShift));
+			Assert.IsNull(port.AbsTime);
+			Assert.IsNull(port.Dt);
+			Assert.IsNull(port.AngularVelocity);
+			Assert.IsNull(port.Torque);
+			
+			response = gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), 500.SI<NewtonMeter>(), 10000.SI<PerSecond>());
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			AssertHelper.AreRelativeEqual(0.SI<Second>(), port.AbsTime);

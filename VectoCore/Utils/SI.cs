@@ -190,6 +190,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class Second : SIBase<Second>
 	{
+		[DebuggerHidden]
 		static Second()
 		{
 			Register(val => new Second(val));
@@ -344,6 +345,7 @@ namespace TUGraz.VectoCore.Utils
 	[DebuggerDisplay("rad/s: {this} | rpm: {ConvertTo().Rounds.Per.Minute}")]
 	public class PerSecond : SIBase<PerSecond>
 	{
+		[DebuggerHidden]
 		static PerSecond()
 		{
 			Register(val => new PerSecond(val));
@@ -444,6 +446,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class NewtonMeter : SIBase<NewtonMeter>
 	{
+		[DebuggerHidden]
 		static NewtonMeter()
 		{
 			Register(val => new NewtonMeter(val));

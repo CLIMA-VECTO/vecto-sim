@@ -152,11 +152,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
 
+
 			var driverData = CreateDriverData();
 
 			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain.vmod", SimulatorFactory.FactoryMode.EngineeringMode);
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
+
+			var cycle = new MockDrivingCycle(vehicleContainer, null);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 

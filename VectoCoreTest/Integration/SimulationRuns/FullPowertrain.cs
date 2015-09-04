@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 
-		[TestMethod]
+		[TestMethod, Ignore]
 		public void Test_FullPowertrain()
 		{
 			var modalWriter = new ModalDataWriter("Coach_FullPowertrain.vmod");
@@ -274,7 +274,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
-				ShiftTime = 2.SI<Second>()
+				ShiftTime = 2.SI<Second>(),
+				TractionInterruption = 1.SI<Second>(),
 			};
 		}
 
