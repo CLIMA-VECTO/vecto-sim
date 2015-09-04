@@ -200,9 +200,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			set { Brakes.BreakPower = value; }
 		}
 
-		public ClutchState ClutchState()
+		public bool ClutchClosed()
 		{
-			return Clutch.ClutchState();
+			return Clutch.ClutchClosed();
 		}
 	}
 }

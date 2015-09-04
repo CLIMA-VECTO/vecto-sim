@@ -5,6 +5,6 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
 	public interface IClutchInfo
 	{
-		ClutchState ClutchState();
+		bool ClutchClosed();
 	}
 }

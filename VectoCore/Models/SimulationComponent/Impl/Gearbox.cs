@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// Time when a gearbox shift is finished. Is set when shifting is needed.
 		/// </summary>
-		private Second _shiftTime = double.NegativeInfinity.SI<Second>();
+		private Second _shiftTime = double.PositiveInfinity.SI<Second>();
 
 		/// <summary>
 		/// The power loss for the mod data.
@@ -83,7 +83,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				if (!outTorque.IsEqual(0)) {
 					// if clutch is open the gearbox can't provide a torque
-					return new ResponseOverload() { Delta = outTorque * outEngineSpeed };
+					return new ResponseOverload {
+						Delta = outTorque * outEngineSpeed,
+						Source = this,
+						GearboxPowerRequest = outTorque * outEngineSpeed
+					};
 				}
 				// if shiftTime still not reached (only happens during shifting): apply zero-request
 				if (_shiftTime > absTime) {
@@ -110,7 +114,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// Check if shift is needed and eventually return ResponseGearShift
 			if (_shiftTime + Data.ShiftTime < absTime &&
-				(ShouldShiftUp(inEngineSpeed, inTorque) || ShouldShiftDown(inEngineSpeed, inTorque))) {
+				(ShouldShiftUp(Gear, inEngineSpeed, inTorque) || ShouldShiftDown(Gear, inEngineSpeed, inTorque))) {
 				_shiftTime = absTime + Data.TractionInterruption;
 				Gear = 0;
 
@@ -140,12 +144,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inTorque = Data.Gears[gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
 
 			do {
-				if (ShouldShiftUp(inEngineSpeed, inTorque)) {
+				if (ShouldShiftUp(gear, inEngineSpeed, inTorque)) {
 					gear++;
 					continue;
 				}
 
-				if (ShouldShiftDown(inEngineSpeed, inTorque)) {
+				if (ShouldShiftDown(gear, inEngineSpeed, inTorque)) {
 					gear--;
 					continue;
 				}
@@ -157,26 +161,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// Tests if the gearbox should shift down.
 		/// </summary>
-		private bool ShouldShiftDown(PerSecond inEngineSpeed, NewtonMeter inTorque)
+		private bool ShouldShiftDown(uint gear, PerSecond inEngineSpeed, NewtonMeter inTorque)
 		{
-			if (Gear <= 1) {
+			if (gear <= 1) {
 				return false;
 			}
 
-			var downSection = Data.Gears[Gear].ShiftPolygon.Downshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
+			var downSection = Data.Gears[gear].ShiftPolygon.Downshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
 			return IsOnLeftSide(inEngineSpeed, inTorque, downSection.Item1, downSection.Item2);
 		}
 
 		/// <summary>
 		/// Tests if the gearbox should shift up.
 		/// </summary>
-		private bool ShouldShiftUp(PerSecond inEngineSpeed, NewtonMeter inTorque)
+		private bool ShouldShiftUp(uint gear, PerSecond inEngineSpeed, NewtonMeter inTorque)
 		{
-			if (Gear >= Data.Gears.Count) {
+			if (gear >= Data.Gears.Count) {
 				return false;
 			}
 
-			var upSection = Data.Gears[Gear].ShiftPolygon.Upshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
+			var upSection = Data.Gears[gear].ShiftPolygon.Upshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
 			return IsOnRightSide(inEngineSpeed, inTorque, upSection.Item1, upSection.Item2);
 		}
 
@@ -206,7 +210,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			Gear = 0;
+			Gear = FindGear(torque, engineSpeed);
 			return Next.Initialize(torque, engineSpeed);
 		}
 

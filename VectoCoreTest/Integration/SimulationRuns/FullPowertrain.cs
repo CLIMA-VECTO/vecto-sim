@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseCycleFinished>(r => {}).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -145,8 +145,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
-					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
+					Case<ResponseCycleFinished>(r => {}).
+					Case<ResponseGearShift>(r => {
+						Log.Debug("Gearshift");
+					}).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -192,7 +194,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			cyclePort.Initialize();
 
-			container.Gear = 0;
+			//container.Gear = 0;
 			var absTime = 0.SI<Second>();
 			var ds = Constants.SimulationSettings.DriveOffDistance;
 			var response = cyclePort.Request(absTime, ds);
@@ -200,7 +202,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			container.Gear = 1;
+			//container.Gear = 1;
 			var cnt = 0;
 			while (!(response is ResponseCycleFinished) && container.Distance().Value() < 17000) {
 				Log.Info("Test New Request absTime: {0}, ds: {1}", absTime, ds);
@@ -214,8 +216,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
-					Case<ResponseGearShift>(r => { Log.Debug("Gearshift"); }).
+					Case<ResponseCycleFinished>(r => {}).
+					Case<ResponseGearShift>(r => {
+						Log.Debug("Gearshift");
+					}).
 					Case<ResponseSuccess>(r => {
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -228,7 +232,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							modalWriter.Finish();
 						}
 					}).
-					Default(r => Assert.Fail("Unexpected Response: {0}", r));
+					Default(r => {
+						modalWriter.Finish();
+						Assert.Fail("Unexpected Response: {0}", r);
+					});
 			}
 			modalWriter.Finish();
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));

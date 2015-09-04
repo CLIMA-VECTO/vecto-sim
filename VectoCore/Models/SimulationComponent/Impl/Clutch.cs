@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private readonly PerSecond _ratedSpeed;
 		private ITnOutPort _nextComponent;
 		private const double ClutchEff = 1;
-		private ClutchState _clutchState = SimulationComponent.ClutchState.ClutchOpened;
+		private ClutchState _clutchState = SimulationComponent.ClutchState.ClutchSlipping;
 
 
 		public Clutch(IVehicleContainer cockpit, CombustionEngineData engineData)
@@ -113,9 +113,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Formulas.TorqueToPower(torqueIn, engineSpeedIn));
 		}
 
-		public ClutchState ClutchState()
+		public bool ClutchClosed()
 		{
-			return DataBus.Gear == 0 ? SimulationComponent.ClutchState.ClutchOpened : _clutchState;
+			return DataBus.Gear != 0;
 		}
 	}
 }

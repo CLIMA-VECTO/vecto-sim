@@ -1,5 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
+using TUGraz.VectoCore.Models.Connector.Ports;
 
 namespace TUGraz.VectoCore.Exceptions
 {
@@ -10,5 +11,15 @@ namespace TUGraz.VectoCore.Exceptions
 
 		[StringFormatMethod("message")]
 		public VectoSimulationException(string message, params object[] args) : base(message, args) {}
+	}
+
+	public class UnexpectedResponseException : VectoSimulationException
+	{
+		public IResponse Response;
+
+		public UnexpectedResponseException(string message, IResponse resp) : base(message + " {0}", resp)
+		{
+			Response = resp;
+		}
 	}
 }

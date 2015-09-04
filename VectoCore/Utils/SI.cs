@@ -162,6 +162,7 @@ namespace TUGraz.VectoCore.Utils
 	/// </summary>
 	public class MeterPerSquareSecond : SIBase<MeterPerSquareSecond>
 	{
+		[DebuggerHidden]
 		static MeterPerSquareSecond()
 		{
 			Register(val => new MeterPerSquareSecond(val));

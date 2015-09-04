@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!dryRun && BreakPower < 0) {
 				throw new VectoSimulationException("Negative Braking Power is not allowed!");
 			}
-			return Next.Request(absTime, dt, torque - BreakTorque, angularVelocity, dryRun);
+			return Next.Request(absTime, dt, torque - torque.Sign() * BreakTorque, angularVelocity, dryRun);
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)

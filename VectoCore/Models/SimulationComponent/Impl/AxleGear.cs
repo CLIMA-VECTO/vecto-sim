@@ -37,7 +37,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
 
 			var inAngularVelocity = outAngularVelocity * _gearData.Ratio;
-			var inTorque = _gearData.LossMap.GearboxInTorque(inAngularVelocity, outTorque);
+			var inTorque = outAngularVelocity.IsEqual(0)
+				? 0.SI<NewtonMeter>()
+				: _gearData.LossMap.GearboxInTorque(inAngularVelocity, outTorque);
 
 			var retVal = _nextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 

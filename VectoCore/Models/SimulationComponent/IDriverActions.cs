@@ -9,14 +9,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <summary>
 		/// perform an 'acceleration driving action', i.e., accelerate the vehicle to the given target velocity but limit the
 		/// acceleration by the driver model (acceleration/deceleration curve). The acceleration is adjusted such that the engine 
-		/// is not overloaded
+		/// is not overloaded. Brakes are not activated.
 		/// </summary>
 		/// <param name="absTime"></param>
 		/// <param name="ds"></param>
 		/// <param name="targetVelocity"></param>
 		/// <param name="gradient"></param>
-		/// <returns></returns>
-		IResponse DrivingActionAccelerate(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient);
+		/// <param name="previousResponse"></param>
+		/// <returns>
+		/// * ResponseSuccess
+		/// * ResponseUnderload: engine's operating point is below drag curve (vehicle accelerates more than driver model allows; engine's drag load is not sufficient for limited acceleration
+		/// * ResponseGearShift: gearbox needs to shift gears, vehicle can not accelerate (traction interruption)
+		/// </returns>
+		IResponse DrivingActionAccelerate(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
+			IResponse previousResponse = null);
 
 		/// <summary>
 		/// perform a 'coasting driving action', i.e., the engine is operating at the full drag load. adjust the acceleration such that
@@ -26,7 +32,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <param name="ds"></param>
 		/// <param name="maxVelocity"></param>
 		/// <param name="gradient"></param>
-		/// <returns></returns>
+		/// <returns>
+		/// * ResponseSuccess
+		/// * ResponseDrivingCycleDistanceExceeded: vehicle is at low speed, coasting would lead to stop before ds is reached.
+		/// * ResponseSpeedLimitExceeded: vehicle accelerates during coasting which would lead to exceeding the given maxVelocity (e.g., driving downhill, engine's drag load is not sufficient)
+		/// * ResponseUnderload: engine's operating point is below drag curve (vehicle accelerates more than driver model allows; engine's drag load is not sufficient for limited acceleration
+		/// * ResponseGearShift: gearbox needs to shift gears, vehicle can not accelerate (traction interruption)
+		/// </returns>
 		IResponse DrivingActionCoast(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient);
 
 		/// <summary>
@@ -37,8 +49,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <param name="ds"></param>
 		/// <param name="nextTargetSpeed"></param>
 		/// <param name="gradient"></param>
-		/// <returns></returns>
-		IResponse DrivingActionBrake(Second absTime, Meter ds, MeterPerSecond nextTargetSpeed, Radian gradient);
+		/// <param name="previousResponse"></param>
+		/// <returns>
+		/// * ResponseSuccess
+		/// * ResponseDrivingCycleDistanceExceeded: vehicle is at low speed, coasting would lead to stop before ds is reached.
+		/// </returns>
+		IResponse DrivingActionBrake(Second absTime, Meter ds, MeterPerSecond nextTargetSpeed, Radian gradient,
+			IResponse previousResponse = null);
 
 		/// <summary>
 		/// perform a 'roll driving action', i.e., the clutch is open and the vehicle rolls without motoring. adjust the acceleration 
