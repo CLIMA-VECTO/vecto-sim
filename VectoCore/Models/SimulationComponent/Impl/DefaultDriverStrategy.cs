@@ -51,6 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var nextAction = GetNextDrivingAction(currentDistance);
 					if (nextAction != null && currentDistance.IsEqual(nextAction.ActionDistance)) {
 						CurrentDrivingMode = DrivingMode.DrivingModeBrake;
+						DrivingModes[CurrentDrivingMode].ResetMode();
 						BrakeTrigger = nextAction;
 						break;
 					}
@@ -63,6 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				case DrivingMode.DrivingModeBrake:
 					if (Driver.DataBus.Distance() >= BrakeTrigger.TriggerDistance) {
 						CurrentDrivingMode = DrivingMode.DrivingModeDrive;
+						DrivingModes[CurrentDrivingMode].ResetMode();
 					}
 					break;
 			}
@@ -83,7 +85,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// distance until halt
 			var lookaheadDistance = Formulas.DecelerationDistance(currentSpeed, 0.SI<MeterPerSecond>(),
-				DeclarationData.Driver.LookAhead.Deceleration);
+				Driver.LookaheadDeceleration);
 
 			var lookaheadData = Driver.DataBus.LookAhead(1.2 * lookaheadDistance);
 
@@ -104,7 +106,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					//		NextTargetSpeed = entry.VehicleTargetSpeed
 					//	});
 					var coastingDistance = Formulas.DecelerationDistance(currentSpeed, entry.VehicleTargetSpeed,
-						DeclarationData.Driver.LookAhead.Deceleration);
+						Driver.LookaheadDeceleration);
 					Log.Debug("adding 'Coasting' starting at distance {0}", entry.Distance - coastingDistance);
 					nextActions.Add(
 						new DrivingBehaviorEntry {
@@ -139,6 +141,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		DefaultDriverStrategy DriverStrategy { get; set; }
 
 		IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient);
+
+		void ResetMode();
 	}
 
 	//=====================================
@@ -174,6 +178,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			return response;
 		}
+
+		public void ResetMode() {}
 	}
 
 	//=====================================
@@ -220,8 +226,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						MaxDistance = DriverStrategy.BrakeTrigger.TriggerDistance - breakingDistance - currentDistance
 					};
 				}
-				if (DriverStrategy.BrakeTrigger.TriggerDistance - breakingDistance >
-					currentDistance + Constants.SimulationSettings.DriverActionDistanceTolerance) {
+				if (currentDistance + Constants.SimulationSettings.DriverActionDistanceTolerance >
+					DriverStrategy.BrakeTrigger.TriggerDistance - breakingDistance) {
 					Phase = BrakingPhase.Brake;
 				}
 			}
@@ -234,6 +240,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 								gradient, r);
 							Phase = BrakingPhase.Brake;
+						}).
+						Case<ResponseGearShift>(r => {
+							response = DriverStrategy.Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
 						});
 					break;
 				case BrakingPhase.Brake:
@@ -241,7 +250,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						gradient);
 					break;
 			}
+			// todo: @@@quam: add resonse.switch to indicate expected responses?
 			return response;
+		}
+
+		public void ResetMode()
+		{
+			Phase = BrakingPhase.Coast;
 		}
 	}
 

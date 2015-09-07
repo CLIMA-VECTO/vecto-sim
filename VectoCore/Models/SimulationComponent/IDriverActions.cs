@@ -91,5 +91,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// access the vehicle's data bus to get information from other components.
 		/// </summary>
 		IDataBus DataBus { get; }
+
+		MeterPerSquareSecond LookaheadDeceleration { get; }
 	}
 }

@@ -27,12 +27,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected IDriverStrategy DriverStrategy;
 
+		public MeterPerSquareSecond LookaheadDeceleration {get; protected set; }
 
 		public Driver(VehicleContainer container, DriverData driverData, IDriverStrategy strategy) : base(container)
 		{
 			DriverData = driverData;
 			DriverStrategy = strategy;
 			strategy.Driver = this;
+
+			LookaheadDeceleration = DeclarationData.Driver.LookAhead.Deceleration;
 		}
 
 		public IDriverDemandInPort InPort()
@@ -48,6 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
+			LookaheadDeceleration = DriverData.AccelerationCurve.MinDeceleration();
 			return Next.Initialize(vehicleSpeed, roadGradient);
 		}
 

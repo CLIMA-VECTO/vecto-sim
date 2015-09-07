@@ -90,7 +90,57 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// * EarlyUpshift (shift before outside of up-shift curve if torque reserve for the next higher gear is fullfilled)
 			// * SkipGears (when already shifting to next gear, check if torque reserve is fullfilled for the overnext gear and eventually shift to it)
 			// * MT, AMT and AT .... different behaviour!
+/*
+			if (dryRun) {
+				var gear = Gear;
+				if (gear == 0 && _shiftTime <= absTime) {
+					gear = FindGear(outTorque, outEngineSpeed, Data.SkipGears);
+				}
+				if (gear == 0) {
+					return new ResponseDryRun() { GearboxPowerRequest = outTorque * outEngineSpeed, Source = this };
+				} else {
+					var inEngineSpeedDry = outEngineSpeed * Data.Gears[gear].Ratio;
+					var inTorqueDry = Data.Gears[gear].LossMap.GearboxInTorque(inEngineSpeedDry, outTorque);
+					var dryRunResponse = Next.Request(absTime, dt, inTorqueDry, inEngineSpeedDry, true);
+					dryRunResponse.GearboxPowerRequest = outTorque * outEngineSpeed;
+					return dryRunResponse;
+				}
+			} else {
+				if (Gear == 0) {
+					if (_shiftTime <= absTime) {
+						Gear = FindGear(outTorque, outEngineSpeed, Data.SkipGears);
+					}
+					if (!outTorque.IsEqual(0))
+					{
+						return new ResponseOverload
+						{
+							Delta = outTorque * outEngineSpeed,
+							Source = this,
+							GearboxPowerRequest = outTorque * outEngineSpeed
+						};
+					}
+				}
+				
+				// Check if shift is needed and eventually return ResponseGearShift
+				if (_shiftTime + Data.ShiftTime < absTime &&
+					(ShouldShiftUp(Gear, inEngineSpeed, inTorque) || ShouldShiftDown(Gear, inEngineSpeed, inTorque)))
+				{
+					_shiftTime = absTime + Data.TractionInterruption;
+					LastGear = Gear;
+					Gear = 0;
 
+					Log.Debug("Gearbox is shifting. absTime: {0}, shiftTime: {1}, outTorque:{2}, outEngineSpeed: {3}",
+						absTime, _shiftTime, outTorque, outEngineSpeed);
+
+					return new ResponseGearShift
+					{
+						SimulationInterval = Data.TractionInterruption,
+						Source = this,
+						GearboxPowerRequest = outTorque * outEngineSpeed
+					};
+				}
+			}
+*/
 			if (Gear == 0) {
 				// if no gear is set and dry run: just set GearBoxPowerRequest
 				if (dryRun) {
@@ -141,7 +191,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Debug("Gearbox is shifting. absTime: {0}, shiftTime: {1}, outTorque:{2}, outEngineSpeed: {3}",
 					absTime, _shiftTime, outTorque, outEngineSpeed);
 
-				return new ResponseGearShift { SimulationInterval = Data.TractionInterruption, Source = this };
+				return new ResponseGearShift {
+					SimulationInterval = Data.TractionInterruption,
+					Source = this,
+					GearboxPowerRequest = outTorque * outEngineSpeed
+				};
 			}
 
 			// Normal Response
