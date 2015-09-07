@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			switch (CurrentDrivingMode) {
 				case DrivingMode.DrivingModeDrive:
-					var currentDistance = Driver.DataBus.Distance();
+					var currentDistance = Driver.DataBus.Distance;
 					var nextAction = GetNextDrivingAction(currentDistance);
 					if (nextAction != null && currentDistance.IsEqual(nextAction.ActionDistance)) {
 						CurrentDrivingMode = DrivingMode.DrivingModeBrake;
@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 					break;
 				case DrivingMode.DrivingModeBrake:
-					if (Driver.DataBus.Distance() >= BrakeTrigger.TriggerDistance) {
+					if (Driver.DataBus.Distance >= BrakeTrigger.TriggerDistance) {
 						CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 						DrivingModes[CurrentDrivingMode].ResetMode();
 					}
@@ -218,7 +218,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					});
 				return response;
 			}
-			var currentDistance = DriverStrategy.Driver.DataBus.Distance();
+			var currentDistance = DriverStrategy.Driver.DataBus.Distance;
 			if (Phase == BrakingPhase.Coast) {
 				var breakingDistance = DriverStrategy.Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed);
 				if (currentDistance + ds > DriverStrategy.BrakeTrigger.TriggerDistance - breakingDistance) {

@@ -80,9 +80,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			public Radian gradient;
 		}
 
-		public Meter Distance()
+		public Meter Distance
 		{
-			return 0.SI<Meter>();
+			get { return 0.SI<Meter>(); }
 		}
 	}
 }

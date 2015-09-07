@@ -32,10 +32,11 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		[TestMethod]
 		public void Accelerate_0_80_level()
 		{
-			var cycle = CreateCycleData(new string[] {
-				"  0, 0,0,2",
-				"  0,80,0,0",
-				"900,80,0,0",
+			var cycle = CreateCycleData(new[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  0,  0,     2",
+				"  0,  80, 0,     0",
+				"900,  80, 0,     0",
 			});
 
 			var run = CreatePowerTrain(cycle, "DriverStrategy_Accelerate_0_80_level.vmod");
@@ -47,12 +48,13 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		[TestMethod]
 		public void Accelerate_80_0_level()
 		{
-			var cycle = CreateCycleData(new string[] {
-				"  0,80,0,0",
-				"2500, 0,0,0",
+			var cycle = CreateCycleData(new[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  80, 0,     0",
+				"900,  0,  0,     0",
 			});
 
-			var run = CreatePowerTrain(cycle, "DriverStrategy_Accelerate_80_0_level.vmod");
+			var run = CreatePowerTrain(cycle, "DriverStrategy_Accelerate_0_80_level.vmod");
 
 			run.Run();
 		}
