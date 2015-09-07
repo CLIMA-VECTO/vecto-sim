@@ -124,11 +124,11 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			vehicleContainer.Gear = 1;
 			var cnt = 0;
-			while (!(response is ResponseCycleFinished) && vehicleContainer.Distance().Value() < 17000) {
+			while (!(response is ResponseCycleFinished) && vehicleContainer.Distance < 17000) {
 				response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseCycleFinished>(r => {}).
 					Case<ResponseSuccess>(r => {
 						vehicleContainer.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
@@ -188,7 +188,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			vehicleContainer.Gear = 1;
 			var ds = Constants.SimulationSettings.DriveOffDistance;
-			while (vehicleContainer.Distance().Value() < 100) {
+			while (vehicleContainer.Distance < 100) {
 				var response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).

@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			container.Gear = 1;
 			var cnt = 0;
-			while (!(response is ResponseCycleFinished) && container.Distance().Value() < 17000) {
+			while (!(response is ResponseCycleFinished) && container.Distance < 17000) {
 				response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
@@ -133,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			container.Gear = 1;
 			var cnt = 0;
-			while (!(response is ResponseCycleFinished) && container.Distance().Value() < 17000) {
+			while (!(response is ResponseCycleFinished) && container.Distance < 17000) {
 				Log.Info("Test New Request absTime: {0}, ds: {1}", absTime, ds);
 				try {
 					response = cyclePort.Request(absTime, ds);
@@ -204,7 +204,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			//container.Gear = 1;
 			var cnt = 0;
-			while (!(response is ResponseCycleFinished) && container.Distance().Value() < 17000) {
+			while (!(response is ResponseCycleFinished) && container.Distance < 17000) {
 				Log.Info("Test New Request absTime: {0}, ds: {1}", absTime, ds);
 				try {
 					response = cyclePort.Request(absTime, ds);

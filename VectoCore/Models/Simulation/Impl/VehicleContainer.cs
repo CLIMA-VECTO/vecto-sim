@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
-			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time, Distance(), VehicleSpeed());
+			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time, Distance, VehicleSpeed());
 			foreach (var component in Components) {
 				component.CommitSimulationStep(DataWriter);
 			}
@@ -175,13 +175,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return new ReadOnlyCollection<VectoSimulationComponent>(Components);
 		}
 
-		public Meter Distance()
+		public Meter Distance
 		{
-			if (MilageCounter == null) {
-				Log.Warn("No MileageCounter in VehicleContainer. Distance cannot be measured.");
-				return 0.SI<Meter>();
+			get
+			{
+				if (MilageCounter == null) {
+					Log.Warn("No MileageCounter in VehicleContainer. Distance cannot be measured.");
+					return 0.SI<Meter>();
+				}
+				return MilageCounter.Distance;
 			}
-			return MilageCounter.Distance();
 		}
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)

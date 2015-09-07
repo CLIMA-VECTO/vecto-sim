@@ -26,13 +26,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				response = CyclePort.Request(AbsTime, ds);
 				response.Switch().
 					Case<ResponseSuccess>(r => {
-						ds = Container.VehicleSpeed().IsEqual(0)
-							? Constants.SimulationSettings.DriveOffDistance
-							: Constants.SimulationSettings.TargetTimeInterval * Container.VehicleSpeed();
+						dt = r.SimulationInterval;
 					}).
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
-					Default(r => { throw new VectoException("DistanceRun got an unexpected response: {0}", r); });
+					Case<ResponseCycleFinished>(r => {}).
+					Default(r => {
+						throw new VectoException("DistanceRun got an unexpected response: {0}", r);
+					});
 			} while (!(response is ResponseSuccess || response is ResponseCycleFinished));
 
 			return response;
