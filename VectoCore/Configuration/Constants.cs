@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Configuration
 			/// <summary>
 			/// The initial search interval for the operating point search in the driver.
 			/// </summary>
-			public static MeterPerSquareSecond OperatingPointInitialSearchIntervalAccelerating = 5.SI<MeterPerSquareSecond>();
+			public static MeterPerSquareSecond OperatingPointInitialSearchIntervalAccelerating = 0.5.SI<MeterPerSquareSecond>();
 		}
 	}
 }

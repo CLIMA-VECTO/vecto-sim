@@ -61,6 +61,7 @@
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="FileIO\JsonTest.cs" />
     <Compile Include="FileIO\SimulationDataReaderTest.cs" />
+    <Compile Include="Integration\DriverStrategy\DriverStrategyTest.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
     <Compile Include="Integration\SimulationRuns\FullPowertrain.cs" />
     <Compile Include="Utils\Port.cs" />

@@ -180,9 +180,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </returns>
 		protected IResponse CoastOrRollAction(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
-			var operatingPoint = ComputeAcceleration(ds, 0.SI<MeterPerSecond>());
+			var operatingPoint = ComputeAcceleration(ds, DataBus.VehicleSpeed());
+			// todo: @@@ use current velocity instead of maxVelocity?
 
-			CurrentState.Acceleration = operatingPoint.Acceleration;
 
 			var response = Next.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient,
 				dryRun: true);
@@ -198,6 +198,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					MaxDistance = operatingPoint.SimulationDistance,
 				};
 			}
+
+			CurrentState.Acceleration = operatingPoint.Acceleration;
+			CurrentState.dt = operatingPoint.SimulationInterval;
 
 			Log.Debug("Found operating point for coasting. dt: {0}, acceleration: {1}", CurrentState.dt,
 				CurrentState.Acceleration);
@@ -325,7 +328,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Watt origDelta = null;
 			initialResponse.Switch().
 				Case<ResponseGearShift>(r => origDelta = r.GearboxPowerRequest).
-				Case<ResponseUnderload>(r => origDelta = DataBus.ClutchClosed()
+				Case<ResponseUnderload>(r => origDelta = DataBus.ClutchClosed(absTime)
 					? r.Delta
 					: r.GearboxPowerRequest);
 			var delta = origDelta;
@@ -344,7 +347,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var response =
 					(ResponseDryRun)
 						Next.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
-				delta = DataBus.ClutchClosed() ? response.DeltaDragLoad : response.GearboxPowerRequest;
+				delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest;
 
 				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
 					Log.Debug("found operating point in {0} iterations, delta: {1}", debug.Count, delta);
@@ -366,7 +369,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Warn("Exceeded max iterations when searching for operating point!");
 			Log.Warn("exceeded: {0} ... {1}", ", ".Join(debug.Take(5)), ", ".Join(debug.Slice(-6)));
 			Log.Error("Failed to find operating point for breaking!");
-			throw new VectoSimulationException("Failed to find operating point for breaking!");
+			throw new VectoSimulationException(
+				"Failed to find operating point for breaking! absTime: {0}, ds: {1}, gradient: {2}", absTime, ds, gradient);
 		}
 
 
@@ -396,7 +400,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var retVal = new OperatingPoint() { Acceleration = acceleration, SimulationDistance = ds };
 
-			var actionRoll = !DataBus.ClutchClosed();
+			var actionRoll = !DataBus.ClutchClosed(absTime);
 
 			Watt origDelta = null;
 			if (actionRoll) {
@@ -405,6 +409,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Default(r => {
 						throw new VectoSimulationException("Unknown response type. {0}", r);
 					});
+				//searchInterval = origDelta;
 			} else {
 				initialResponse.Switch().
 					Case<ResponseOverload>(r => origDelta = r.Delta). // search operating point in drive action after overload
@@ -616,6 +621,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public IResponse Response;
 		}
 
+		[DebuggerDisplay("a: {Acceleration}, dt: {SimulationInterval}, ds: {SimulationDistance}")]
 		public struct OperatingPoint
 		{
 			public MeterPerSquareSecond Acceleration;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
@@ -76,6 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return index;
 		}
 
+		[DebuggerDisplay("Acceleration: {Acceleration}, Deceleration: {Deceleration}")]
 		public class AccelerationEntry
 		{
 			public MeterPerSquareSecond Acceleration { get; set; }

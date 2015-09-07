@@ -3,13 +3,14 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Gearbox : VectoSimulationComponent, IGearbox, ITnOutPort, ITnInPort
+	public class Gearbox : VectoSimulationComponent, IGearbox, ITnOutPort, ITnInPort, IClutchInfo
 	{
 		/// <summary>
 		/// The next port.
@@ -34,6 +35,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public Gearbox(IVehicleContainer container, GearboxData gearboxData) : base(container)
 		{
 			Data = gearboxData;
+			LastGear = 1;
 		}
 
 		#region ITnInProvider
@@ -63,6 +65,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public uint Gear { get; set; }
 
 		#endregion
+
+		protected uint LastGear;
 
 		#region ITnOutPort
 
@@ -95,16 +99,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				// if shiftTime still not reached (only happens during shifting): apply zero-request
 				if (_shiftTime > absTime) {
-					var duringShiftResponse = Next.Request(absTime, dt, 0.SI<NewtonMeter>(), 0.SI<PerSecond>());
+					var duringShiftResponse = Next.Request(absTime, dt, 0.SI<NewtonMeter>(),
+						outEngineSpeed * Data.Gears[LastGear].Ratio);
 					duringShiftResponse.GearboxPowerRequest = outTorque * outEngineSpeed;
 					return duringShiftResponse;
 				}
 
 				// if shiftTime was reached and gear is not set: set correct gear
 				if (_shiftTime <= absTime) {
-					Gear = FindGear(outTorque, outEngineSpeed);
+					Gear = FindGear(outTorque, outEngineSpeed, Data.SkipGears);
 				} else {
 					// if clutch is open the gearbox can't provide a torque
+					// todo: @@@ quam: unreachable code! see if statement above!
 					if (!outTorque.IsEqual(0)) {
 						return new ResponseOverload {
 							Delta = outTorque * outEngineSpeed,
@@ -129,6 +135,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (_shiftTime + Data.ShiftTime < absTime &&
 				(ShouldShiftUp(Gear, inEngineSpeed, inTorque) || ShouldShiftDown(Gear, inEngineSpeed, inTorque))) {
 				_shiftTime = absTime + Data.TractionInterruption;
+				LastGear = Gear;
 				Gear = 0;
 
 				Log.Debug("Gearbox is shifting. absTime: {0}, shiftTime: {1}, outTorque:{2}, outEngineSpeed: {3}",
@@ -149,10 +156,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="outTorque">The out torque.</param>
 		/// <param name="outEngineSpeed">The out engine speed.</param>
+		/// <param name="allowSkipGears"></param>
 		/// <returns></returns>
-		private uint FindGear(NewtonMeter outTorque, PerSecond outEngineSpeed)
+		private uint FindGear(NewtonMeter outTorque, PerSecond outEngineSpeed, bool allowSkipGears)
 		{
-			var gear = (Gear != 0) ? Gear : 1;
+			var gear = (Gear != 0) ? Gear : LastGear;
 
 			do {
 				var inEngineSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
@@ -167,7 +175,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 				break;
-			} while (Data.SkipGears);
+			} while (allowSkipGears);
 			return gear;
 		}
 
@@ -224,7 +232,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
 			_shiftTime = double.NegativeInfinity.SI<Second>();
-			Gear = FindGear(torque, engineSpeed);
+			Gear = FindGear(torque, engineSpeed, true);
 
 			return Next.Initialize(torque, engineSpeed);
 		}
@@ -257,5 +265,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
+
+		public bool ClutchClosed(Second absTime)
+		{
+			return _shiftTime <= absTime; //  && Gear != 0;
+		}
 	}
 }

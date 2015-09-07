@@ -150,7 +150,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			IResponse response = null;
-			if (DriverStrategy.Driver.DataBus.ClutchClosed()) {
+			if (DriverStrategy.Driver.DataBus.ClutchClosed(absTime)) {
 				// drive along
 				response = DriverStrategy.Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 				response.Switch().
