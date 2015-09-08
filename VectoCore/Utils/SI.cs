@@ -1638,6 +1638,26 @@ namespace TUGraz.VectoCore.Utils
 			return Val.IsEqual(val, tolerance);
 		}
 
+		public bool IsSmaller(SI si, double tolerance = DoubleExtensionMethods.Tolerance)
+		{
+			return HasEqualUnit(si) && Val.IsSmaller(si.Val, tolerance);
+		}
+
+		public bool IsSmallerOrEqual(SI si, double tolerance = DoubleExtensionMethods.Tolerance)
+		{
+			return HasEqualUnit(si) && Val.IsSmallerOrEqual(si.Val, tolerance);
+		}
+
+		public bool IsGreater(SI si, double tolerance = DoubleExtensionMethods.Tolerance)
+		{
+			return HasEqualUnit(si) && Val.IsGreater(si.Val, tolerance);
+		}
+
+		public bool IsGreaterOrEqual(SI si, double tolerance = DoubleExtensionMethods.Tolerance)
+		{
+			return HasEqualUnit(si) && Val.IsGreaterOrEqual(si.Val, tolerance);
+		}
+
 		/// <summary>
 		/// Returns a hash code for this instance.
 		/// </summary>

@@ -55,6 +55,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
+			if (angularVelocity == null) {
+				var retval = _nextComponent.Request(absTime, dt, torque, null, dryRun);
+				retval.ClutchPowerRequest = 0.SI<Watt>();
+				return retval;
+			}
 			NewtonMeter torqueIn;
 			PerSecond engineSpeedIn;
 			AddClutchLoss(torque, angularVelocity, out torqueIn, out engineSpeedIn);
@@ -87,6 +92,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			torqueIn = torque;
 			engineSpeedIn = angularVelocity;
 
+
 			// @@@quam
 			//if (DataBus.Gear == 0) {
 			//	_clutchState = SimulationComponent.ClutchState.ClutchOpened;
@@ -113,6 +119,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, engineSpeedIn,
 				Formulas.TorqueToPower(torqueIn, engineSpeedIn));
 		}
-
 	}
 }

@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// The tolerancefactor for relative comparisons.
 		/// </summary>
-		public const double ToleranceFactor = 10e-6;
+		public const double ToleranceFactor = 1e-6;
 
 
 		/// <summary>
@@ -41,7 +41,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public static bool IsSmaller(this double self, double other, double tolerance = Tolerance)
 		{
-			return self - other < tolerance;
+			return self < other - tolerance;
 		}
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public static bool IsSmallerOrEqual(this double self, double other, double tolerance = Tolerance)
 		{
-			return self - other <= tolerance;
+			return self <= other + tolerance;
 		}
 
 		/// <summary>
@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public static bool IsGreater(this double self, double other, double tolerance = Tolerance)
 		{
-			return other.IsSmallerOrEqual(self, tolerance);
+			return self > other + tolerance; //other.IsSmallerOrEqual(self, tolerance);
 		}
 
 		/// <summary>
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public static bool IsGreaterOrEqual(this double self, double other, double tolerance = Tolerance)
 		{
-			return other.IsSmaller(self, tolerance);
+			return self >= other - tolerance; //other.IsSmaller(self, tolerance);
 		}
 
 		/// <summary>

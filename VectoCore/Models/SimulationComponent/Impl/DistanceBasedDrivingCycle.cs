@@ -102,7 +102,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			if (PreviousState.Distance + ds > CycleIntervalIterator.RightSample.Distance) {
+			if ((PreviousState.Distance + ds).IsGreater(CycleIntervalIterator.RightSample.Distance)) {
 				// only drive until next sample point in cycle
 				return new ResponseDrivingCycleDistanceExceeded {
 					MaxDistance = CycleIntervalIterator.RightSample.Distance - PreviousState.Distance

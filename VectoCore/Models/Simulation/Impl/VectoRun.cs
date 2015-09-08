@@ -20,15 +20,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected IModalDataWriter DataWriter { get; set; }
 		protected IVehicleContainer Container { get; set; }
 
-		public IVehicleContainer GetContainer()
-		{
-			return Container;
-		}
-
 		protected VectoRun(IVehicleContainer container)
 		{
 			Container = container;
 			CyclePort = container.GetCycleOutPort();
+		}
+
+		public IVehicleContainer GetContainer()
+		{
+			return Container;
 		}
 
 

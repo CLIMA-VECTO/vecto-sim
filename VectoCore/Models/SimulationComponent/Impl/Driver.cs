@@ -27,12 +27,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected IDriverStrategy DriverStrategy;
 
+		public MeterPerSquareSecond LookaheadDeceleration { get; protected set; }
 
 		public Driver(VehicleContainer container, DriverData driverData, IDriverStrategy strategy) : base(container)
 		{
 			DriverData = driverData;
 			DriverStrategy = strategy;
 			strategy.Driver = this;
+
+			LookaheadDeceleration = DeclarationData.Driver.LookAhead.Deceleration;
 		}
 
 		public IDriverDemandInPort InPort()
@@ -48,6 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
+			LookaheadDeceleration = DriverData.AccelerationCurve.MinDeceleration();
 			return Next.Initialize(vehicleSpeed, roadGradient);
 		}
 
@@ -158,9 +162,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("DrivingAction Roll");
 
 			var retVal = CoastOrRollAction(absTime, ds, maxVelocity, gradient);
-			retVal.Switch().Case<ResponseGearShift>(() => {
-				throw new UnexpectedResponseException("DrivingAction Roll: Gearshift during Roll action", retVal);
-			});
+			retVal.Switch().
+				//Case<ResponseFailTimeInterval>(r => {
+				//	retVal = new ResponseDrivingCycleDistanceExceeded() {
+				//		Source = r.Source,
+				//		MaxDistance = 
+				//	};
+				//}).
+				Case<ResponseGearShift>(() => {
+					throw new UnexpectedResponseException("DrivingAction Roll: Gearshift during Roll action", retVal);
+				});
 			return retVal;
 		}
 
@@ -177,15 +188,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// * ResponseSpeedLimitExceeded: vehicle accelerates during coasting which would lead to exceeding the given maxVelocity (e.g., driving downhill, engine's drag load is not sufficient)
 		/// * ResponseUnderload: engine's operating point is below drag curve (vehicle accelerates more than driver model allows; engine's drag load is not sufficient for limited acceleration
 		/// * ResponseGearShift: gearbox needs to shift gears, vehicle can not accelerate (traction interruption)
+		/// * ResponseFailTimeInterval: 
 		/// </returns>
 		protected IResponse CoastOrRollAction(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
 			var operatingPoint = ComputeAcceleration(ds, DataBus.VehicleSpeed());
-			// todo: @@@ use current velocity instead of maxVelocity?
 
+			var response = Next.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
 
-			var response = Next.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient,
-				dryRun: true);
+			//if (response is ResponseFailTimeInterval) {
+			//	return response;
+			//}
 
 			operatingPoint = SearchOperatingPoint(absTime, operatingPoint.SimulationDistance, gradient,
 				operatingPoint.Acceleration, response, coasting: true);
@@ -224,6 +237,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseSuccess>().
 				Case<ResponseUnderload>(). // driver limits acceleration, operating point may be below engine's drag load
 				Case<ResponseGearShift>().
+				Case<ResponseFailTimeInterval>(r => {
+					retVal = new ResponseDrivingCycleDistanceExceeded() {
+						Source = this,
+						MaxDistance = DataBus.VehicleSpeed() * r.DeltaT + CurrentState.Acceleration / 2 * r.DeltaT * r.DeltaT
+					};
+				}).
 				Default(() => {
 					throw new UnexpectedResponseException("CoastOrRoll Action: unhandled response from powertrain", retVal);
 				});
@@ -407,6 +426,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (actionRoll) {
 				initialResponse.Switch().
 					Case<ResponseDryRun>(r => origDelta = r.GearboxPowerRequest).
+					Case<ResponseFailTimeInterval>(r => origDelta = r.GearboxPowerRequest).
 					Default(r => {
 						throw new VectoSimulationException("Unknown response type. {0}", r);
 					});

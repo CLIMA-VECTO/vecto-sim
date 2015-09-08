@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
@@ -26,6 +29,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// Time when a gearbox shift is finished. Is set when shifting is needed.
 		/// </summary>
 		private Second _shiftTime = double.NegativeInfinity.SI<Second>();
+
+		//private Second _lastShiftTime = double.NegativeInfinity.SI<Second>();
 
 		/// <summary>
 		/// The power loss for the mod data.
@@ -91,62 +96,71 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// * SkipGears (when already shifting to next gear, check if torque reserve is fullfilled for the overnext gear and eventually shift to it)
 			// * MT, AMT and AT .... different behaviour!
 
+			if (!dryRun && !Double.IsInfinity(_shiftTime.Value()) && absTime.IsSmaller(_shiftTime) &&
+				(absTime + dt).IsGreater(_shiftTime)) {
+				return new ResponseFailTimeInterval() {
+					DeltaT = _shiftTime - absTime,
+					GearboxPowerRequest = outTorque * outEngineSpeed,
+					Source = this
+				};
+			}
+			return absTime < _shiftTime
+				? DoHandleRequestNeutralGear(absTime, dt, outTorque, outEngineSpeed, dryRun)
+				: DoHandleRequestGearEngaged(absTime, dt, outTorque, outEngineSpeed, dryRun);
+		}
+
+		private IResponse DoHandleRequestNeutralGear(Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond outEngineSpeed, bool dryRun)
+		{
+			if (dryRun) {
+				return new ResponseDryRun { GearboxPowerRequest = outTorque * outEngineSpeed, Source = this };
+			}
+
+			if (!outTorque.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
+				return new ResponseOverload {
+					Delta = outTorque * outEngineSpeed,
+					Source = this,
+					GearboxPowerRequest = outTorque * outEngineSpeed
+				};
+			}
+
+			var neutralResponse = Next.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
+			neutralResponse.GearboxPowerRequest = outTorque * outEngineSpeed;
+
+			return neutralResponse;
+		}
+
+		private IResponse DoHandleRequestGearEngaged(Second absTime, Second dt, NewtonMeter outTorque,
+			PerSecond outEngineSpeed, bool dryRun)
+		{
 			if (Gear == 0) {
-				// if no gear is set and dry run: just set GearBoxPowerRequest
-				if (dryRun) {
-					return new ResponseDryRun { GearboxPowerRequest = outTorque * outEngineSpeed, Source = this };
-				}
-
-				// if shiftTime still not reached (only happens during shifting): apply zero-request
-				if (_shiftTime > absTime) {
-					var duringShiftResponse = Next.Request(absTime, dt, 0.SI<NewtonMeter>(),
-						outEngineSpeed * Data.Gears[LastGear].Ratio);
-					duringShiftResponse.GearboxPowerRequest = outTorque * outEngineSpeed;
-					return duringShiftResponse;
-				}
-
-				// if shiftTime was reached and gear is not set: set correct gear
-				if (_shiftTime <= absTime) {
-					Gear = FindGear(outTorque, outEngineSpeed, Data.SkipGears);
-				} else {
-					// if clutch is open the gearbox can't provide a torque
-					// todo: @@@ quam: unreachable code! see if statement above!
-					if (!outTorque.IsEqual(0)) {
-						return new ResponseOverload {
-							Delta = outTorque * outEngineSpeed,
-							Source = this,
-							GearboxPowerRequest = outTorque * outEngineSpeed
-						};
-					}
-				}
+				Gear = FindGear(outTorque, outEngineSpeed, Data.SkipGears);
+				//_lastShiftTime = _shiftTime;
+				//_shiftTime = double.NegativeInfinity.SI<Second>();
 			}
 
 			var inEngineSpeed = outEngineSpeed * Data.Gears[Gear].Ratio;
 			var inTorque = Data.Gears[Gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
 
-			// if dryRun and gear is set: apply dryRun request
-			if (dryRun) {
-				var dryRunResponse = Next.Request(absTime, dt, inTorque, inEngineSpeed, true);
-				dryRunResponse.GearboxPowerRequest = outTorque * outEngineSpeed;
-				return dryRunResponse;
-			}
-
 			// Check if shift is needed and eventually return ResponseGearShift
-			if (_shiftTime + Data.ShiftTime < absTime &&
+			if (!dryRun && _shiftTime + Data.ShiftTime < absTime &&
 				(ShouldShiftUp(Gear, inEngineSpeed, inTorque) || ShouldShiftDown(Gear, inEngineSpeed, inTorque))) {
 				_shiftTime = absTime + Data.TractionInterruption;
-				LastGear = Gear;
+				LastGear = FindGear(outTorque, outEngineSpeed, Data.SkipGears);
+				//NextGear = FindGear(outTorque, outEngineSpeed, Data.SkipGears)
 				Gear = 0;
 
 				Log.Debug("Gearbox is shifting. absTime: {0}, shiftTime: {1}, outTorque:{2}, outEngineSpeed: {3}",
 					absTime, _shiftTime, outTorque, outEngineSpeed);
 
-				return new ResponseGearShift { SimulationInterval = Data.TractionInterruption, Source = this };
+				return new ResponseGearShift {
+					SimulationInterval = Data.TractionInterruption,
+					Source = this,
+					GearboxPowerRequest = outTorque * outEngineSpeed
+				};
 			}
-
-			// Normal Response
 			_powerLoss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
-			var response = Next.Request(absTime, dt, inTorque, inEngineSpeed);
+			var response = Next.Request(absTime, dt, inTorque, inEngineSpeed, dryRun);
 			response.GearboxPowerRequest = outTorque * outEngineSpeed;
 			return response;
 		}
@@ -175,7 +189,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 				break;
+				// ReSharper disable once LoopVariableIsNeverChangedInsideLoop
 			} while (allowSkipGears);
+			if (gear == 0) {
+				throw new VectoSimulationException("Could not find gear!");
+			}
 			return gear;
 		}
 

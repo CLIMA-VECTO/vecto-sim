@@ -14,12 +14,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected override IResponse DoSimulationStep()
 		{
 			// estimate distance to be traveled within the next TargetTimeInterval
-			var ds = Container.VehicleSpeed() * Constants.SimulationSettings.TargetTimeInterval;
-
-			if (ds.IsEqual(0)) {
-				// vehicle stands still, drive a certain distance...
-				ds = Constants.SimulationSettings.DriveOffDistance;
-			}
+			var ds = Container.VehicleSpeed().IsEqual(0)
+				? Constants.SimulationSettings.DriveOffDistance
+				: Constants.SimulationSettings.TargetTimeInterval * Container.VehicleSpeed();
 
 			IResponse response;
 			do {
@@ -28,7 +25,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Case<ResponseSuccess>(r => {
 						dt = r.SimulationInterval;
 					}).
-					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
+					Case<ResponseDrivingCycleDistanceExceeded>(r => {
+						if (r.MaxDistance.Value().IsSmallerOrEqual(0)) {
+							throw new VectoSimulationException("DistanceExceeded, MaxDistance is invalid: {0}", r.MaxDistance);
+						}
+						ds = r.MaxDistance;
+					}).
 					Case<ResponseCycleFinished>(r => {}).
 					Default(r => {
 						throw new VectoException("DistanceRun got an unexpected response: {0}", r);
