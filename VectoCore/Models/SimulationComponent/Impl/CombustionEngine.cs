@@ -88,6 +88,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Watt requestedPower;
 			Watt requestedEnginePower;
+
+			if (engineSpeed == null) {
+				// TODO: clarify what to do if engine speed is undefined (clutch open)
+				engineSpeed = _previousState.EngineSpeed;
+			}
 			ComputeRequestedEnginePower(absTime, dt, torque, engineSpeed, out requestedPower, out requestedEnginePower);
 
 			ComputeFullLoadPower(engineSpeed, dt);
