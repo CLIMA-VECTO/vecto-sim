@@ -206,22 +206,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			CurrentState.Acceleration = operatingPoint.Acceleration;
-			CurrentState.dt = operatingPoint.SimulationInterval;
-
-			Log.Debug("Found operating point for coasting. dt: {0}, acceleration: {1}", CurrentState.dt,
-				CurrentState.Acceleration);
+			Log.Debug("Found operating point for coasting. dt: {0}, acceleration: {1}", operatingPoint.SimulationInterval,
+				operatingPoint.Acceleration);
 
 			operatingPoint = LimitAccelerationByDriverModel(operatingPoint, true);
+
+			CurrentState.Acceleration = operatingPoint.Acceleration;
+			CurrentState.dt = operatingPoint.SimulationInterval;
 
 			// compute speed at the end of the simulation interval. if it exceeds the limit -> return
 			var v2 = DataBus.VehicleSpeed() + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
 			if (v2 > maxVelocity) {
 				return new ResponseSpeedLimitExceeded();
 			}
-
-			CurrentState.dt = operatingPoint.SimulationInterval;
-			CurrentState.Acceleration = operatingPoint.Acceleration;
 
 			var retVal = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
 			CurrentState.Response = retVal;
@@ -276,8 +273,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
 				operatingPoint.Acceleration, response);
 
-			if (!ds.IsEqual(operatingPoint.SimulationDistance)) {
-				Log.Debug(
+			if (!ds.IsEqual(operatingPoint.SimulationDistance, 1E-15)) {
+				Log.Info(
 					"SearchOperatingPoint Breaking reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!",
 					operatingPoint.SimulationDistance, ds);
 				return new ResponseDrivingCycleDistanceExceeded { MaxDistance = operatingPoint.SimulationDistance };
@@ -318,7 +315,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					DeclarationData.Driver.LookAhead.Deceleration);
 				operatingPoint.Acceleration = DeclarationData.Driver.LookAhead.Deceleration;
 				operatingPoint.SimulationInterval =
-					ComputeTimeInterval(CurrentState.Acceleration, operatingPoint.SimulationDistance).SimulationInterval;
+					ComputeTimeInterval(operatingPoint.Acceleration, operatingPoint.SimulationDistance).SimulationInterval;
 				Log.Debug("Changed dt due to limited coasting deceleration. dt: {0}", CurrentState.dt);
 			}
 			return operatingPoint;
