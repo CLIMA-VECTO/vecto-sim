@@ -118,12 +118,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (!outTorque.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
 				if (outTorque > 0) {
-				return new ResponseOverload {
-					Delta = outTorque * outEngineSpeed,
-					Source = this,
-					GearboxPowerRequest = outTorque * outEngineSpeed
-				};
-			}
+					return new ResponseOverload {
+						Delta = outTorque * outEngineSpeed,
+						Source = this,
+						GearboxPowerRequest = outTorque * outEngineSpeed
+					};
+				}
 				return new ResponseUnderload {
 					Delta = outTorque * outEngineSpeed,
 					Source = this,

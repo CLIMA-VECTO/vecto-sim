@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
@@ -100,7 +101,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
 			writer[ModalResultField.v_act] = (_previousState.Velocity + _currentState.Velocity) / 2;
-			writer[ModalResultField.dist] = _currentState.Distance;
+
+			// sanity check: is the vehicle in step with the cycle?
+			var distance = (SI)writer[ModalResultField.dist];
+			if (!distance.IsEqual(_currentState.Distance.Value(), 1e-15)) {
+				Log.Warn("distance diverges: {0}, distance: {1}", (distance - _currentState.Distance).Value(), distance);
+			}
+			//writer[ModalResultField.dist] = _currentState.Distance;
 
 			// todo hint: take care to use correct velocity when writing the P... values in moddata
 		}
