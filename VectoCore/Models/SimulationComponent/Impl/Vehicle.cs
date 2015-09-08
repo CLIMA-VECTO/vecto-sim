@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// sanity check: is the vehicle in step with the cycle?
 			var distance = (SI)writer[ModalResultField.dist];
-			if (!distance.IsEqual(_currentState.Distance.Value(), 1e-15)) {
+			if (!distance.IsEqual(_currentState.Distance.Value(), 1e-12)) {
 				Log.Warn("distance diverges: {0}, distance: {1}", (distance - _currentState.Distance).Value(), distance);
 			}
 			//writer[ModalResultField.dist] = _currentState.Distance;

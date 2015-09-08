@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using NLog;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -76,8 +77,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			Log.Debug("==== DRIVER Request ====");
-			Log.Debug("Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3}", absTime, dt, targetVelocity,
-				gradient);
+			Log.Debug("Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}",
+				absTime, dt, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed());
 
 			var retVal = DriverStrategy.Request(absTime, dt, targetVelocity, gradient);
 
@@ -92,6 +93,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return DataBus; }
 		}
 
+		/// <summary>
+		/// see documentation of IDriverActions
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="ds"></param>
+		/// <param name="targetVelocity"></param>
+		/// <param name="gradient"></param>
+		/// <param name="previousResponse"></param>
+		/// <returns></returns>
 		public IResponse DrivingActionAccelerate(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
 			IResponse previousResponse = null)
 		{
@@ -142,7 +152,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		/// <summary>
-		/// 
+		/// see documentation of IDriverActions
 		/// </summary>
 		/// <param name="absTime"></param>
 		/// <param name="ds"></param>
@@ -156,7 +166,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return CoastOrRollAction(absTime, ds, maxVelocity, gradient);
 		}
 
-
+		/// <summary>
+		/// see documentation of IDriverActions
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="ds"></param>
+		/// <param name="maxVelocity"></param>
+		/// <param name="gradient"></param>
+		/// <returns></returns>
 		public IResponse DrivingActionRoll(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
 			Log.Debug("DrivingAction Roll");
@@ -202,6 +219,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Debug("SearchOperatingPoint reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!",
 					operatingPoint.SimulationDistance, ds);
 				return new ResponseDrivingCycleDistanceExceeded {
+					Source = this,
 					MaxDistance = operatingPoint.SimulationDistance,
 				};
 			}
@@ -277,7 +295,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Info(
 					"SearchOperatingPoint Breaking reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!",
 					operatingPoint.SimulationDistance, ds);
-				return new ResponseDrivingCycleDistanceExceeded { MaxDistance = operatingPoint.SimulationDistance };
+				return new ResponseDrivingCycleDistanceExceeded {
+					Source = this,
+					MaxDistance = operatingPoint.SimulationDistance
+				};
 			}
 
 			Log.Debug("Found operating point for breaking. dt: {0}, acceleration: {1}", operatingPoint.SimulationInterval,
@@ -334,6 +355,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private OperatingPoint SearchBrakingPower(Second absTime, Meter ds, Radian gradient,
 			MeterPerSquareSecond acceleration, IResponse initialResponse)
 		{
+			Log.Info("Disabling logging during search iterations");
+			LogManager.DisableLogging();
+
 			var debug = new List<dynamic>(); // only used while testing
 
 			var searchInterval = Constants.SimulationSettings.BreakingPowerInitialSearchInterval;
@@ -364,6 +388,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest;
 
 				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
+					LogManager.EnableLogging();
 					Log.Debug("found operating point in {0} iterations, delta: {1}", debug.Count, delta);
 					return operatingPoint;
 				}
@@ -380,6 +405,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				breakingPower += searchInterval * -delta.Sign();
 			} while (retryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
 
+			LogManager.EnableLogging();
 			Log.Warn("Exceeded max iterations when searching for operating point!");
 			Log.Warn("exceeded: {0} ... {1}", ", ".Join(debug.Take(5)), ", ".Join(debug.Slice(-6)));
 			Log.Error("Failed to find operating point for breaking!");
@@ -406,6 +432,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected OperatingPoint SearchOperatingPoint(Second absTime, Meter ds, Radian gradient,
 			MeterPerSquareSecond acceleration, IResponse initialResponse, bool coasting = false)
 		{
+			Log.Info("Disabling logging during search iterations");
+			LogManager.DisableLogging();
+
 			var debug = new List<dynamic>();
 
 			var retVal = new OperatingPoint { Acceleration = acceleration, SimulationDistance = ds };
@@ -469,6 +498,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				delta = actionRoll ? response.GearboxPowerRequest : (coasting ? response.DeltaDragLoad : response.DeltaFullLoad);
 
 				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
+					LogManager.EnableLogging();
 					Log.Debug(
 						"found operating point in {0} iterations. Engine Power req: {2}, Gearbox Power req: {3} delta: {1}",
 						debug.Count, delta, response.EnginePowerRequest, response.GearboxPowerRequest);
@@ -476,6 +506,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			} while (retryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
 
+			LogManager.EnableLogging();
 			Log.Warn("Exceeded max iterations when searching for operating point!");
 			Log.Warn("acceleration: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.acceleration)),
 				", ".Join(debug.Slice(-6).Select(x => x.acceleration)));

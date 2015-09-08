@@ -50,8 +50,9 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		{
 			var cycle = CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
-				"   0,  80, 0,     0",
-				"500,  0,  0,     0",
+				"  0,  80, 0,     0",
+				"600,  0,  0,     2",
+				"800, 10, 0, 0"
 			});
 
 			var run = CreatePowerTrain(cycle, "DriverStrategy_Accelerate_80_0_level.vmod");

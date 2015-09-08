@@ -52,11 +52,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (nextAction != null && currentDistance.IsEqual(nextAction.ActionDistance)) {
 						CurrentDrivingMode = DrivingMode.DrivingModeBrake;
 						DrivingModes[CurrentDrivingMode].ResetMode();
+						Log.Debug("Switching to DrivingMode BRAKE");
+
 						BrakeTrigger = nextAction;
 						break;
 					}
 					if (nextAction != null && currentDistance + ds > nextAction.ActionDistance) {
 						return new ResponseDrivingCycleDistanceExceeded() {
+							//Source = this,
 							MaxDistance = nextAction.ActionDistance - currentDistance
 						};
 					}
@@ -65,6 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (Driver.DataBus.Distance >= BrakeTrigger.TriggerDistance) {
 						CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 						DrivingModes[CurrentDrivingMode].ResetMode();
+						Log.Debug("Switching to DrivingMode DRIVE");
 					}
 					break;
 			}
@@ -94,17 +98,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			for (var i = 0; i < lookaheadData.Count; i++) {
 				var entry = lookaheadData[i];
 				if (entry.VehicleTargetSpeed < currentSpeed) {
-					//var breakingDistance = Driver.ComputeDecelerationDistance(entry.VehicleTargetSpeed);
-					//Log.Debug("distance to decelerate from {0} to {1}: {2}", currentSpeed, entry.VehicleTargetSpeed,
-					//	breakingDistance);
-					//Log.Debug("adding 'Braking' starting at distance {0}", entry.Distance - breakingDistance);
-					//nextActions.Add(
-					//	new DrivingBehaviorEntry {
-					//		Action = DefaultDriverStrategy.DrivingBehavior.Braking,
-					//		ActionDistance = entry.Distance - breakingDistance,
-					//		TriggerDistance = entry.Distance,
-					//		NextTargetSpeed = entry.VehicleTargetSpeed
-					//	});
 					var coastingDistance = Formulas.DecelerationDistance(currentSpeed, entry.VehicleTargetSpeed,
 						Driver.LookaheadDeceleration);
 					Log.Debug("adding 'Coasting' starting at distance {0}", entry.Distance - coastingDistance);
@@ -220,16 +213,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			var currentDistance = DriverStrategy.Driver.DataBus.Distance;
 			if (Phase == BrakingPhase.Coast) {
-				var breakingDistance = DriverStrategy.Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed);
-				Log.Info("breaking distance: {0}", breakingDistance);
-				if (currentDistance + ds > DriverStrategy.BrakeTrigger.TriggerDistance - breakingDistance) {
+				var brakingDistance = DriverStrategy.Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed);
+				Log.Debug("breaking distance: {0}, start braking @ {1}", brakingDistance,
+					DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance);
+				if (currentDistance + ds > DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance) {
 					return new ResponseDrivingCycleDistanceExceeded() {
-						MaxDistance = DriverStrategy.BrakeTrigger.TriggerDistance - breakingDistance - currentDistance
+						//Source = this,
+						MaxDistance = DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance - currentDistance
 					};
 				}
 				if (currentDistance + Constants.SimulationSettings.DriverActionDistanceTolerance >
-					DriverStrategy.BrakeTrigger.TriggerDistance - breakingDistance) {
+					DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance) {
 					Phase = BrakingPhase.Brake;
+					Log.Debug("Switching to BRAKE Phase. currentDistance: {0}", currentDistance);
 				}
 			}
 			switch (Phase) {
@@ -247,6 +243,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						});
 					break;
 				case BrakingPhase.Brake:
+					var brakingDistance =
+						DriverStrategy.Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed);
+					Log.Debug("Phase: BRAKE. breaking distance: {0} start braking @ {1}", brakingDistance,
+						DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance);
+
 					response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 						gradient);
 					break;
