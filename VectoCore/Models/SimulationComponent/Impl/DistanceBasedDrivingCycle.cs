@@ -206,8 +206,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			// separately test for equality and greater than to have tolerance for equality comparison
-			if (CurrentState.Distance.IsEqual(CycleIntervalIterator.RightSample.Distance) ||
-				CurrentState.Distance > CycleIntervalIterator.RightSample.Distance) {
+			if (CurrentState.Distance.IsGreaterOrEqual(CycleIntervalIterator.RightSample.Distance)) {
 				// we have reached the end of the current interval in the cycle, move on...
 				CycleIntervalIterator.MoveNext();
 			}
@@ -295,6 +294,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			{
 				// cycleIndex has to be max. next to last (so that rightSample is still valid.
 				if (CurrentCycleIndex >= Data.Entries.Count - 2) {
+					LastEntry = true;
 					return false;
 				}
 				CurrentCycleIndex++;

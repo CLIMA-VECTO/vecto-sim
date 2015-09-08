@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 	[TestClass]
 	public class DriverStrategyTest
 	{
-		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
+		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
 
 		public const string EngineFile = @"TestData\Components\24t Coach.veng";
 
@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				"900,  85, 0,     0",
 			});
 
-			var run = CreatePowerTrain(cycle, "DriverStrategy_Accelerate_0_80_level.vmod");
+			var run = CreatePowerTrain(cycle, "DriverStrategy_Accelerate_0_85_level.vmod");
 
 			run.Run();
 		}
@@ -50,11 +50,11 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		{
 			var cycle = CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
-				"  0,  80, 0,     0",
-				"900,  0,  0,     0",
+				"   0,  10, 0,     0",
+				"500,  0,  0,     0",
 			});
 
-			var run = CreatePowerTrain(cycle, "DriverStrategy_Accelerate_0_80_level.vmod");
+			var run = CreatePowerTrain(cycle, "DriverStrategy_Accelerate_80_0_level.vmod");
 
 			run.Run();
 		}

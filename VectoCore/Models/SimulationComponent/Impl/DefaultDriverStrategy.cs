@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 	//=====================================
 
-	public class DriverModeDrive : IDriverMode
+	public class DriverModeDrive : LoggingObject, IDriverMode
 	{
 		public DefaultDriverStrategy DriverStrategy { get; set; }
 
@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 	//=====================================
 
-	public class DriverModeBrake : IDriverMode
+	public class DriverModeBrake : LoggingObject, IDriverMode
 	{
 		protected enum BrakingPhase
 		{
@@ -221,6 +221,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var currentDistance = DriverStrategy.Driver.DataBus.Distance;
 			if (Phase == BrakingPhase.Coast) {
 				var breakingDistance = DriverStrategy.Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed);
+				Log.Info("breaking distance: {0}", breakingDistance);
 				if (currentDistance + ds > DriverStrategy.BrakeTrigger.TriggerDistance - breakingDistance) {
 					return new ResponseDrivingCycleDistanceExceeded() {
 						MaxDistance = DriverStrategy.BrakeTrigger.TriggerDistance - breakingDistance - currentDistance
@@ -250,7 +251,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						gradient);
 					break;
 			}
-			// todo: @@@quam: add resonse.switch to indicate expected responses?
+
 			return response;
 		}
 

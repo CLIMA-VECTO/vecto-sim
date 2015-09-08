@@ -163,12 +163,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var retVal = CoastOrRollAction(absTime, ds, maxVelocity, gradient);
 			retVal.Switch().
-				//Case<ResponseFailTimeInterval>(r => {
-				//	retVal = new ResponseDrivingCycleDistanceExceeded() {
-				//		Source = r.Source,
-				//		MaxDistance = 
-				//	};
-				//}).
 				Case<ResponseGearShift>(() => {
 					throw new UnexpectedResponseException("DrivingAction Roll: Gearshift during Roll action", retVal);
 				});
@@ -267,6 +261,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseOverload>(r => retVal = r).
 				Case<ResponseUnderload>(). // will be handled in SearchBrakingPower
 				Case<ResponseGearShift>(). // will be handled in SearchBrakingPower
+				Case<ResponseFailTimeInterval>(r => retVal = new ResponseDrivingCycleDistanceExceeded() {
+					Source = this,
+					MaxDistance = DataBus.VehicleSpeed() * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
+				}).
 				Default(r => {
 					throw new UnexpectedResponseException("DrivingAction Brake: first request", r);
 				});
@@ -453,8 +451,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				searchInterval *= intervalFactor;
 				retVal.Acceleration += searchInterval * -delta.Sign();
 
-				if (retVal.Acceleration < (curve.Deceleration - Constants.SimulationSettings.MinimumAcceleration)
-					|| retVal.Acceleration > (curve.Acceleration + Constants.SimulationSettings.MinimumAcceleration)) {
+				if (retVal.Acceleration < (DriverData.AccelerationCurve.MaxDeceleration() - searchInterval)
+					|| retVal.Acceleration > (DriverData.AccelerationCurve.MaxAcceleration() + searchInterval)) {
 					throw new VectoSimulationException(
 						"Could not find an operating point: operating point outside of driver acceleration limits.");
 				}
