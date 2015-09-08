@@ -401,7 +401,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var searchInterval = Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating;
 
 			var curve = DriverData.AccelerationCurve.Lookup(DataBus.VehicleSpeed());
-			Func<MeterPerSquareSecond, MeterPerSquareSecond> modifySearchInterval = x => x * 2;
+			var intervalFactor = 1.0;
 
 			Watt origDelta = null;
 			if (actionRoll) {
@@ -427,10 +427,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// check if a correct searchInterval was found (when the delta changed signs, we stepped through the 0-point)
 				// from then on the searchInterval can be bisected.
 				if (origDelta.Sign() != delta.Sign()) {
-					modifySearchInterval = x => x / 2;
+					intervalFactor = 0.5;
 				}
 
-				searchInterval = modifySearchInterval(searchInterval);
+				searchInterval *= intervalFactor;
 				retVal.Acceleration += searchInterval * -delta.Sign();
 
 				if (retVal.Acceleration < (curve.Deceleration - Constants.SimulationSettings.MinimumAcceleration)
