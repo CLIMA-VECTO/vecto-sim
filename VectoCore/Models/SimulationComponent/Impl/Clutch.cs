@@ -101,7 +101,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//} else {
 			var engineSpeedNorm = (angularVelocity - _idleSpeed) /
 								(_ratedSpeed - _idleSpeed);
-			if (DataBus.Gear == 1 && engineSpeedNorm < Constants.SimulationSettings.CluchNormSpeed) {
+			if ( /*DataBus.Gear == 1 && */ engineSpeedNorm < Constants.SimulationSettings.CluchNormSpeed) {
 				_clutchState = SimulationComponent.ClutchState.ClutchSlipping;
 
 				var engineSpeed0 = VectoMath.Max(_idleSpeed, angularVelocity);

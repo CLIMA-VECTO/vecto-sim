@@ -127,11 +127,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			if (!CurrentState.RequestToNextSamplePointDone &&
 				(CycleIntervalIterator.RightSample.Distance - PreviousState.Distance) <
-				Constants.SimulationSettings.DriveOffDistance) {
+				Constants.SimulationSettings.BrakeNextTargetDistance)
+			{
 				CurrentState.RequestToNextSamplePointDone = true;
 				return new ResponseDrivingCycleDistanceExceeded {
 					Source = this,
-					MaxDistance = Constants.SimulationSettings.DriveOffDistance
+					MaxDistance = Constants.SimulationSettings.BrakeNextTargetDistance
 				};
 			}
 			CurrentState.Distance = PreviousState.Distance + ds;

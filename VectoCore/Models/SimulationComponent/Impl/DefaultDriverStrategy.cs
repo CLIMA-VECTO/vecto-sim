@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using NLog.Fluent;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -247,7 +248,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						DriverStrategy.Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed);
 					Log.Debug("Phase: BRAKE. breaking distance: {0} start braking @ {1}", brakingDistance,
 						DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance);
-
+					if (DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance < currentDistance) {
+						Log.Warn("Expected Braking Deceleration could not be reached!");
+					}
 					response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 						gradient);
 					break;

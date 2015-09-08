@@ -104,6 +104,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Source = this
 				};
 			}
+			if (DataBus.VehicleSpeed().IsEqual(0)) {
+				Gear = 1;
+			}
 			return absTime < _shiftTime
 				? DoHandleRequestNeutralGear(absTime, dt, outTorque, outEngineSpeed, dryRun)
 				: DoHandleRequestGearEngaged(absTime, dt, outTorque, outEngineSpeed, dryRun);
@@ -131,6 +134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
+			Log.Debug("Current Gear: Neutral");
 			var neutralResponse = Next.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
 			neutralResponse.GearboxPowerRequest = outTorque * outEngineSpeed;
 
@@ -166,6 +170,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					GearboxPowerRequest = outTorque * outEngineSpeed
 				};
 			}
+			Log.Debug("Current Gear: {0}", Gear);
+
 			_powerLoss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
 			var response = Next.Request(absTime, dt, inTorque, inEngineSpeed, dryRun);
 			response.GearboxPowerRequest = outTorque * outEngineSpeed;
