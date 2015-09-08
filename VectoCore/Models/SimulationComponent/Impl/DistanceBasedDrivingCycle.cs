@@ -98,6 +98,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						throw new VectoSimulationException("Stopping Time only allowed when target speed is zero!");
 					}
 					var dt = CycleIntervalIterator.LeftSample.StoppingTime - PreviousState.WaitTime;
+					if (CycleIntervalIterator.LeftSample.StoppingTime >= 4 * Constants.SimulationSettings.TargetTimeInterval) {
+						// split into 3 parts
+						if (PreviousState.WaitTime.IsEqual(0)) {
+							dt = Constants.SimulationSettings.TargetTimeInterval;
+						} else {
+							if (dt > Constants.SimulationSettings.TargetTimeInterval)
+							{
+								dt -= Constants.SimulationSettings.TargetTimeInterval;
+							}
+						}
+					}
 					return DriveTimeInterval(absTime, dt);
 				}
 			}
@@ -127,8 +138,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			if (!CurrentState.RequestToNextSamplePointDone &&
 				(CycleIntervalIterator.RightSample.Distance - PreviousState.Distance) <
-				Constants.SimulationSettings.BrakeNextTargetDistance)
-			{
+				Constants.SimulationSettings.BrakeNextTargetDistance) {
 				CurrentState.RequestToNextSamplePointDone = true;
 				return new ResponseDrivingCycleDistanceExceeded {
 					Source = this,
@@ -206,13 +216,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState = CurrentState.Clone();
 
 			if (!CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(0) &&
-				CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(CurrentState.WaitTime)) {
+				CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(PreviousState.WaitTime))
+			{
 				// we needed to stop at the current interval in the cycle and have already waited enough time, move on..
 				CycleIntervalIterator.MoveNext();
 			}
 
 			// separately test for equality and greater than to have tolerance for equality comparison
-			if (CurrentState.Distance.IsGreaterOrEqual(CycleIntervalIterator.RightSample.Distance)) {
+			if (CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(0) && 
+				CurrentState.Distance.IsGreaterOrEqual(CycleIntervalIterator.RightSample.Distance)) {
 				// we have reached the end of the current interval in the cycle, move on...
 				CycleIntervalIterator.MoveNext();
 			}
