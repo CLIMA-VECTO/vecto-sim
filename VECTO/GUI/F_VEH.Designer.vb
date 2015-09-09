@@ -70,7 +70,6 @@ Partial Class F_VEH
 		Me.BtRtBrowse = New System.Windows.Forms.Button()
 		Me.TbRtPath = New System.Windows.Forms.TextBox()
 		Me.CbRtType = New System.Windows.Forms.ComboBox()
-		Me.Label12 = New System.Windows.Forms.Label()
 		Me.Label46 = New System.Windows.Forms.Label()
 		Me.Label50 = New System.Windows.Forms.Label()
 		Me.TbMassExtra = New System.Windows.Forms.TextBox()
@@ -395,7 +394,6 @@ Partial Class F_VEH
 		Me.GroupBox7.Controls.Add(Me.BtRtBrowse)
 		Me.GroupBox7.Controls.Add(Me.TbRtPath)
 		Me.GroupBox7.Controls.Add(Me.CbRtType)
-		Me.GroupBox7.Controls.Add(Me.Label12)
 		Me.GroupBox7.Location = New System.Drawing.Point(6, 345)
 		Me.GroupBox7.Name = "GroupBox7"
 		Me.GroupBox7.Size = New System.Drawing.Size(538, 81)
@@ -408,16 +406,16 @@ Partial Class F_VEH
 		Me.PnRt.Controls.Add(Me.Label45)
 		Me.PnRt.Controls.Add(Me.LbRtRatio)
 		Me.PnRt.Controls.Add(Me.TbRtRatio)
-		Me.PnRt.Location = New System.Drawing.Point(162, 12)
+		Me.PnRt.Location = New System.Drawing.Point(272, 12)
 		Me.PnRt.Name = "PnRt"
-		Me.PnRt.Size = New System.Drawing.Size(348, 34)
+		Me.PnRt.Size = New System.Drawing.Size(238, 34)
 		Me.PnRt.TabIndex = 1
 		'
 		'Label45
 		'
 		Me.Label45.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.Label45.AutoSize = True
-		Me.Label45.Location = New System.Drawing.Point(330, 10)
+		Me.Label45.Location = New System.Drawing.Point(220, 10)
 		Me.Label45.Name = "Label45"
 		Me.Label45.Size = New System.Drawing.Size(16, 13)
 		Me.Label45.TabIndex = 10
@@ -425,9 +423,9 @@ Partial Class F_VEH
 		'
 		'LbRtRatio
 		'
-		Me.LbRtRatio.Location = New System.Drawing.Point(16, 10)
+		Me.LbRtRatio.Location = New System.Drawing.Point(13, 10)
 		Me.LbRtRatio.Name = "LbRtRatio"
-		Me.LbRtRatio.Size = New System.Drawing.Size(246, 17)
+		Me.LbRtRatio.Size = New System.Drawing.Size(139, 17)
 		Me.LbRtRatio.TabIndex = 5
 		Me.LbRtRatio.Text = "LbRtRatio"
 		Me.LbRtRatio.TextAlign = System.Drawing.ContentAlignment.TopRight
@@ -435,7 +433,7 @@ Partial Class F_VEH
 		'TbRtRatio
 		'
 		Me.TbRtRatio.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.TbRtRatio.Location = New System.Drawing.Point(268, 7)
+		Me.TbRtRatio.Location = New System.Drawing.Point(158, 7)
 		Me.TbRtRatio.Name = "TbRtRatio"
 		Me.TbRtRatio.Size = New System.Drawing.Size(56, 20)
 		Me.TbRtRatio.TabIndex = 0
@@ -463,20 +461,11 @@ Partial Class F_VEH
 		'
 		Me.CbRtType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
 		Me.CbRtType.FormattingEnabled = True
-		Me.CbRtType.Items.AddRange(New Object() {"None", "Primary", "Secondary"})
-		Me.CbRtType.Location = New System.Drawing.Point(40, 19)
+		Me.CbRtType.Items.AddRange(New Object() {"Included in Transmission Loss Maps", "Primary Retarder", "Secondary Retarder"})
+		Me.CbRtType.Location = New System.Drawing.Point(6, 19)
 		Me.CbRtType.Name = "CbRtType"
-		Me.CbRtType.Size = New System.Drawing.Size(91, 21)
+		Me.CbRtType.Size = New System.Drawing.Size(223, 21)
 		Me.CbRtType.TabIndex = 0
-		'
-		'Label12
-		'
-		Me.Label12.AutoSize = True
-		Me.Label12.Location = New System.Drawing.Point(6, 22)
-		Me.Label12.Name = "Label12"
-		Me.Label12.Size = New System.Drawing.Size(31, 13)
-		Me.Label12.TabIndex = 0
-		Me.Label12.Text = "Type"
 		'
 		'Label46
 		'
@@ -965,7 +954,6 @@ Partial Class F_VEH
 	Friend WithEvents BtRtBrowse As System.Windows.Forms.Button
 	Friend WithEvents TbRtPath As System.Windows.Forms.TextBox
 	Friend WithEvents CbRtType As System.Windows.Forms.ComboBox
-	Friend WithEvents Label12 As System.Windows.Forms.Label
 	Friend WithEvents Label45 As System.Windows.Forms.Label
 	Friend WithEvents PnRt As System.Windows.Forms.Panel
 	Friend WithEvents Label46 As System.Windows.Forms.Label

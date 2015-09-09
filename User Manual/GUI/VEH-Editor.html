@@ -6,8 +6,10 @@
 
 
 
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Vehicle Editor - VECTO User Manual</title></head>
-<body>
+
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Vehicle Editor - VECTO User Manual</title></head><body>
 
 <div style="text-align: left;">
 
@@ -85,9 +87,9 @@ Weight Extra Trailer/Body</span><span style="color: rgb(253, 0, 0);"> and </span
 <br>
 <br><big><big style="font-weight: bold;">Air Resistance</big></big><br>
 
-<hr style="height: 1px; width: 100%;">The product of <span style="font-weight: bold;">Drag Coefficient</span>
-[-], <span style="font-weight: bold;">Cross Sectional Area</span>
-[m<sup>2</sup>] and <span style="font-weight: bold;">Air
+<hr style="height: 1px; width: 100%;">The product of Drag Coefficient
+[-] and Cross Sectional Area
+[m<sup>2</sup>] (<span style="font-weight: bold;">c<sub>d</sub> x A</span>) and <span style="font-weight: bold;">Air
 Density</span> [kg/m<sup>3</sup>]
 (see <a href="settings.html">Settings</a>) together with the vehicle speed defines the Air Resistance. Note that the Drag Coefficient may
 be altered when using <a href="../general/cd.html"><span style="font-weight: bold;">Cross
@@ -122,8 +124,9 @@ axle configurations.<br>
 Three options are available:<br>
 
 <ul>
-<li>None</li><li>Primary (before gearbox): The rpm ratio is relative to the
-engine speed</li><li>Secondary (after gearbox): The rpm ratio is relative to the
+<li>Included in Transmission Loss Maps: Use this if the <a href="../fileformat/VTLM.html">Transmission Loss Maps</a> already include retarder losses.<br>
+</li><li>Primary Retarder (before gearbox): The rpm ratio is relative to the
+engine speed</li><li>Secondary Retarder (after gearbox): The rpm ratio is relative to the
 cardan shaft speed</li>
 </ul>
 
@@ -134,12 +137,15 @@ Both, primary and secondary retarders, require an <a href="../fileformat/VRLM.ht
 <big><big style="font-weight: bold;">Cross Wind Correction</big></big><br>
 
 
-<hr style="height: 1px; width: 100%;">Three different options
+<hr style="height: 1px; width: 100%;">Four different options
 are available:<br>
 
 
 <ul>
-<li>No Correction</li><li>Speed dependent</li><li>Vair &amp; Beta Input</li>
+<li>No Correction</li><li>Speed dependent (User-defined)<br>
+</li>
+  <li>Speed dependent (Declaration Mode) </li>
+<li>Vair &amp; Beta Input</li>
 </ul>
 
 

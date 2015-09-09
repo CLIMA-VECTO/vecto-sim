@@ -17,6 +17,7 @@ TODO
 * Test Options are now only available in Engineering Mode
 * Gearbox Editor now shows generic and user-defined shift polygons (if available)
 * Various small updates in GUI
+* Added 'Create JIRA Issue' dialog
 
 ### VECTO 2.1.4
 * Bugfixes in start gear and (A)MT shift model

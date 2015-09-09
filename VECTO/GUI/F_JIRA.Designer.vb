@@ -46,9 +46,9 @@ Partial Class F_JIRA
 		Me.Label1.AutoSize = True
 		Me.Label1.Location = New System.Drawing.Point(6, 16)
 		Me.Label1.Name = "Label1"
-		Me.Label1.Size = New System.Drawing.Size(272, 13)
+		Me.Label1.Size = New System.Drawing.Size(269, 13)
 		Me.Label1.TabIndex = 1
-		Me.Label1.Text = "You need a user account for CITnet create a new issue."
+		Me.Label1.Text = "You need a CITnet user account to create a new issue."
 		'
 		'LinkLabel1
 		'
@@ -76,7 +76,7 @@ Partial Class F_JIRA
 		'LinkLabel3
 		'
 		Me.LinkLabel3.AutoSize = True
-		Me.LinkLabel3.Location = New System.Drawing.Point(274, 39)
+		Me.LinkLabel3.Location = New System.Drawing.Point(246, 33)
 		Me.LinkLabel3.Name = "LinkLabel3"
 		Me.LinkLabel3.Size = New System.Drawing.Size(122, 13)
 		Me.LinkLabel3.TabIndex = 18
@@ -86,11 +86,11 @@ Partial Class F_JIRA
 		'Label2
 		'
 		Me.Label2.AutoSize = True
-		Me.Label2.Location = New System.Drawing.Point(6, 39)
+		Me.Label2.Location = New System.Drawing.Point(6, 33)
 		Me.Label2.Name = "Label2"
-		Me.Label2.Size = New System.Drawing.Size(275, 13)
+		Me.Label2.Size = New System.Drawing.Size(241, 13)
 		Me.Label2.TabIndex = 3
-		Me.Label2.Text = "If you don't have CITnet access please contact support: "
+		Me.Label2.Text = "If you don't have one yet please contact support: "
 		'
 		'Button1
 		'
