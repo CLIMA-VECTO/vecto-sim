@@ -9,6 +9,6 @@
 		/// Returns the current gear.
 		/// </summary>
 		/// <returns></returns>
-		uint Gear { get; set; }
+		uint Gear { get; }
 	}
 }

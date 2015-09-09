@@ -51,7 +51,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
 		{
-			var currentEngineSpeed = engineSpeed ?? DataBus.EngineSpeed();
+			var currentEngineSpeed = engineSpeed ?? DataBus.EngineSpeed;
 			var powerDemand = ComputePowerDemand(currentEngineSpeed);
 
 			return _outPort.Request(absTime, dt, torque + powerDemand / currentEngineSpeed, engineSpeed, dryRun);

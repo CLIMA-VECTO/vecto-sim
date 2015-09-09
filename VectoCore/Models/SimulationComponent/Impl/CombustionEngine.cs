@@ -60,9 +60,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region IEngineCockpit
 
-		PerSecond IEngineInfo.EngineSpeed()
+		PerSecond IEngineInfo.EngineSpeed
 		{
-			return _previousState.EngineSpeed;
+			get { return _previousState.EngineSpeed; }
 		}
 
 		#endregion

@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		uint IGearboxInfo.Gear
 		{
 			get { return 0; }
-			set { }
+			//set { }
 		}
 
 		#endregion

@@ -14,9 +14,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected override IResponse DoSimulationStep()
 		{
 			// estimate distance to be traveled within the next TargetTimeInterval
-			var ds = Container.VehicleSpeed().IsEqual(0)
+			var ds = Container.VehicleSpeed.IsEqual(0)
 				? Constants.SimulationSettings.DriveOffDistance
-				: Constants.SimulationSettings.TargetTimeInterval * Container.VehicleSpeed();
+				: Constants.SimulationSettings.TargetTimeInterval * Container.VehicleSpeed;
 
 			IResponse response;
 			do {

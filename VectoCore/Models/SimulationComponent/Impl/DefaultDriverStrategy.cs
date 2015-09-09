@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected DrivingBehaviorEntry GetNextDrivingAction(Meter minDistance)
 		{
-			var currentSpeed = Driver.DataBus.VehicleSpeed();
+			var currentSpeed = Driver.DataBus.VehicleSpeed;
 
 			// distance until halt
 			var lookaheadDistance = Formulas.DecelerationDistance(currentSpeed, 0.SI<MeterPerSecond>(),
@@ -193,7 +193,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			IResponse response = null;
-			if (DriverStrategy.Driver.DataBus.VehicleSpeed() <= DriverStrategy.BrakeTrigger.NextTargetSpeed) {
+			if (DriverStrategy.Driver.DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed) {
 				response = DriverStrategy.Driver.DrivingActionAccelerate(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 					gradient);
 				response.Switch().

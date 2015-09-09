@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Source = this
 				};
 			}
-			if (DataBus.VehicleSpeed().IsEqual(0)) {
+			if (DataBus.VehicleSpeed.IsEqual(0)) {
 				Gear = 1;
 			}
 			var retVal = absTime < _shiftTime

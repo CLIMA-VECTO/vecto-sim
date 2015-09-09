@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("==== DRIVER Request ====");
 			Log.Debug(
 				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}", absTime, ds,
-				targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed());
+				targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed);
 
 			var retVal = DriverStrategy.Request(absTime, ds, targetVelocity, gradient);
 			//DoHandleRequest(absTime, ds, targetVelocity, gradient);
@@ -78,7 +78,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Log.Debug("==== DRIVER Request ====");
 			Log.Debug("Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}",
-				absTime, dt, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed());
+				absTime, dt, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed);
 
 			var retVal = DriverStrategy.Request(absTime, dt, targetVelocity, gradient);
 
@@ -203,7 +203,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </returns>
 		protected IResponse CoastOrRollAction(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
 		{
-			var operatingPoint = ComputeAcceleration(ds, DataBus.VehicleSpeed());
+			var operatingPoint = ComputeAcceleration(ds, DataBus.VehicleSpeed);
 
 			var response = Next.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
 
@@ -233,7 +233,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.dt = operatingPoint.SimulationInterval;
 
 			// compute speed at the end of the simulation interval. if it exceeds the limit -> return
-			var v2 = DataBus.VehicleSpeed() + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
+			var v2 = DataBus.VehicleSpeed + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
 			if (v2 > maxVelocity) {
 				return new ResponseSpeedLimitExceeded();
 			}
@@ -249,7 +249,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseFailTimeInterval>(r => {
 					retVal = new ResponseDrivingCycleDistanceExceeded() {
 						Source = this,
-						MaxDistance = DataBus.VehicleSpeed() * r.DeltaT + CurrentState.Acceleration / 2 * r.DeltaT * r.DeltaT
+						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + CurrentState.Acceleration / 2 * r.DeltaT * r.DeltaT
 					};
 				}).
 				Default(() => {
@@ -268,7 +268,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var operatingPoint = ComputeAcceleration(ds, nextTargetSpeed);
 
-			var v2 = DataBus.VehicleSpeed() + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
+			var v2 = DataBus.VehicleSpeed + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
 			var nextAcceleration = DriverData.AccelerationCurve.Lookup(v2).Deceleration;
 			var tmp = ComputeTimeInterval(VectoMath.Min(operatingPoint.Acceleration, nextAcceleration),
 				operatingPoint.SimulationDistance);
@@ -292,7 +292,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseFailTimeInterval>(r =>
 					retVal = new ResponseDrivingCycleDistanceExceeded() {
 						Source = this,
-						MaxDistance = DataBus.VehicleSpeed() * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
+						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
 					}).
 				Default(r => {
 					throw new UnexpectedResponseException("DrivingAction Brake: first request.", r);
@@ -457,7 +457,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var searchInterval = Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating;
 
-			var curve = DriverData.AccelerationCurve.Lookup(DataBus.VehicleSpeed());
+			var curve = DriverData.AccelerationCurve.Lookup(DataBus.VehicleSpeed);
 			var intervalFactor = 1.0;
 
 			Watt origDelta = null;
@@ -543,7 +543,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="targetVelocity"></param>
 		public OperatingPoint ComputeAcceleration(Meter ds, MeterPerSecond targetVelocity)
 		{
-			var currentSpeed = DataBus.VehicleSpeed();
+			var currentSpeed = DataBus.VehicleSpeed;
 			var retVal = new OperatingPoint() { SimulationDistance = ds };
 
 			var requiredAverageSpeed = (targetVelocity + currentSpeed) / 2.0;
@@ -583,7 +583,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public Meter ComputeDecelerationDistance(MeterPerSecond targetSpeed)
 		{
-			return DriverData.AccelerationCurve.ComputeAccelerationDistance(DataBus.VehicleSpeed(), targetSpeed);
+			return DriverData.AccelerationCurve.ComputeAccelerationDistance(DataBus.VehicleSpeed, targetSpeed);
 		}
 
 
@@ -600,7 +600,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!(ds > 0)) {
 				throw new VectoSimulationException("ds has to be greater than 0! ds: {0}", ds);
 			}
-			var currentSpeed = DataBus.VehicleSpeed();
+			var currentSpeed = DataBus.VehicleSpeed;
 			var retVal = new OperatingPoint() { Acceleration = acceleration, SimulationDistance = ds };
 			if (acceleration.IsEqual(0)) {
 				if (currentSpeed > 0) {
@@ -653,15 +653,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionHalt(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed().IsEqual(0)) {
+			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed.IsEqual(0)) {
 				throw new NotImplementedException("TargetVelocity or VehicleVelocity is not zero!");
 			}
 			var oldGear = DataBus.Gear;
-			DataBus.Gear = 0;
+			//DataBus.Gear = 0;
 			DataBus.BreakPower = double.PositiveInfinity.SI<Watt>();
 			var retVal = Next.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
 			CurrentState.dt = dt;
-			DataBus.Gear = oldGear;
+			//DataBus.Gear = oldGear;
 			return retVal;
 		}
 

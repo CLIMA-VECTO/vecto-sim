@@ -40,49 +40,45 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 				return Gearbox.Gear;
 			}
-			set
-			{
-				if (Gearbox == null) {
-					throw new VectoException("no gearbox available!");
-				}
-				Gearbox.Gear = value;
-			}
 		}
 
 		#endregion
 
 		#region IEngineCockpit
 
-		public PerSecond EngineSpeed()
+		public PerSecond EngineSpeed
 		{
-			if (Engine == null) {
-				throw new VectoException("no engine available!");
+			get
+			{
+				if (Engine == null) {
+					throw new VectoException("no engine available!");
+				}
+				return Engine.EngineSpeed;
 			}
-			return Engine.EngineSpeed();
 		}
 
 		#endregion
 
 		#region IVehicleCockpit
 
-		public MeterPerSecond VehicleSpeed()
+		public MeterPerSecond VehicleSpeed
 		{
-			return Vehicle != null ? Vehicle.VehicleSpeed() : 0.SI<MeterPerSecond>();
+			get { return Vehicle != null ? Vehicle.VehicleSpeed : 0.SI<MeterPerSecond>(); }
 		}
 
-		public Kilogram VehicleMass()
+		public Kilogram VehicleMass
 		{
-			return Vehicle != null ? Vehicle.VehicleMass() : 0.SI<Kilogram>();
+			get { return Vehicle != null ? Vehicle.VehicleMass : 0.SI<Kilogram>(); }
 		}
 
-		public Kilogram VehicleLoading()
+		public Kilogram VehicleLoading
 		{
-			return Vehicle != null ? Vehicle.VehicleLoading() : 0.SI<Kilogram>();
+			get { return Vehicle != null ? Vehicle.VehicleLoading : 0.SI<Kilogram>(); }
 		}
 
-		public Kilogram TotalMass()
+		public Kilogram TotalMass
 		{
-			return Vehicle != null ? Vehicle.TotalMass() : 0.SI<Kilogram>();
+			get { return Vehicle != null ? Vehicle.TotalMass : 0.SI<Kilogram>(); }
 		}
 
 		#endregion
@@ -148,7 +144,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
-			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time, Distance, VehicleSpeed());
+			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time, Distance, VehicleSpeed);
 			foreach (var component in Components) {
 				component.CommitSimulationStep(DataWriter);
 			}
@@ -165,7 +161,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VehicleContainer finishing simulation.");
 			DataWriter.Finish();
 
-			SumWriter.Write(DataWriter, VehicleMass(), VehicleLoading());
+			SumWriter.Write(DataWriter, VehicleMass, VehicleLoading);
 		}
 
 		#endregion

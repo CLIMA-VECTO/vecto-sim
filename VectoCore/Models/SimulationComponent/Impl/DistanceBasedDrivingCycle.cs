@@ -244,7 +244,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
-			return LookAhead((LookaheadTimeSafetyMargin * DataBus.VehicleSpeed() * time).Cast<Meter>());
+			return LookAhead((LookaheadTimeSafetyMargin * DataBus.VehicleSpeed * time).Cast<Meter>());
 		}
 
 		public CycleData CycleData()

@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
-			vehicleContainer.Gear = 1;
+			gbx.Gear = 1;
 
 			var driverPort = driver.OutPort();
 
@@ -70,12 +70,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed().Value(), Tolerance);
+			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
 			Assert.AreEqual(engine._previousState.FullDragPower.Value(), engine._previousState.EnginePower.Value(),
 				Constants.SimulationSettings.EngineFLDPowerTolerance);
 
-			while (vehicleContainer.VehicleSpeed() > 1) {
+			while (vehicleContainer.VehicleSpeed > 1) {
 				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
 
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
-			vehicleContainer.Gear = 1;
+			gbx.Gear = 1;
 
 			var driverPort = driver.OutPort();
 
@@ -127,12 +127,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed().Value(), Tolerance);
+			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
 			Assert.AreEqual(engine._previousState.FullDragPower.Value(), engine._previousState.EnginePower.Value(),
 				Constants.SimulationSettings.EngineFLDPowerTolerance);
 
-			while (vehicleContainer.VehicleSpeed() > 1) {
+			while (vehicleContainer.VehicleSpeed > 1) {
 				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
 
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
@@ -169,7 +169,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
 
 			var gbx = new MockGearbox(vehicleContainer);
-			vehicleContainer.Gear = 1;
+			gbx.Gear = 1;
 
 			var driverPort = driver.OutPort();
 

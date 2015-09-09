@@ -18,24 +18,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private VehicleState _currentState;
 		private readonly VehicleData _data;
 
-		public MeterPerSecond VehicleSpeed()
+		public MeterPerSecond VehicleSpeed
 		{
-			return _previousState.Velocity;
+			get { return _previousState.Velocity; }
 		}
 
-		public Kilogram VehicleMass()
+		public Kilogram VehicleMass
 		{
-			return _data.TotalCurbWeight();
+			get { return _data.TotalCurbWeight(); }
 		}
 
-		public Kilogram VehicleLoading()
+		public Kilogram VehicleLoading
 		{
-			return _data.Loading;
+			get { return _data.Loading; }
 		}
 
-		public Kilogram TotalMass()
+		public Kilogram TotalMass
 		{
-			return _data.TotalVehicleWeight();
+			get { return _data.TotalVehicleWeight(); }
 		}
 
 		public Meter Distance
