@@ -37,6 +37,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		private Watt _powerLoss;
 
+		public bool ClutchClosed(Second absTime)
+		{
+			return _shiftTime <= absTime; //  && Gear != 0;
+		}
+
 		public Gearbox(IVehicleContainer container, GearboxData gearboxData) : base(container)
 		{
 			Data = gearboxData;
@@ -75,14 +80,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
+		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
+		{
+			_shiftTime = double.NegativeInfinity.SI<Second>();
+			Gear = FindGear(torque, engineSpeed, true);
+
+			return Next.Initialize(torque, engineSpeed);
+		}
+
 		/// <summary>
-		/// Requests the specified abs time.
+		/// Requests the Gearbox to deliver outTorque and outEngineSpeed
 		/// </summary>
-		/// <param name="absTime">The abs time.</param>
-		/// <param name="dt">The dt.</param>
-		/// <param name="outTorque">The out torque.</param>
-		/// <param name="outEngineSpeed">The out engine speed.</param>
-		/// <param name="dryRun">if set to <c>true</c> [dry run].</param>
 		/// <returns>
 		/// Special Cases:
 		/// * ResponseDryRun
@@ -96,9 +104,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// * SkipGears (when already shifting to next gear, check if torque reserve is fullfilled for the overnext gear and eventually shift to it)
 			// * MT, AMT and AT .... different behaviour!
 
-			if (!dryRun && !Double.IsInfinity(_shiftTime.Value()) && absTime.IsSmaller(_shiftTime) &&
-				(absTime + dt).IsGreater(_shiftTime)) {
-				return new ResponseFailTimeInterval() {
+			var shiftTimeExceeded = absTime.IsSmaller(_shiftTime) && _shiftTime.IsSmaller(absTime + dt);
+			if (!dryRun && shiftTimeExceeded) {
+				return new ResponseFailTimeInterval {
 					DeltaT = _shiftTime - absTime,
 					GearboxPowerRequest = outTorque * outEngineSpeed,
 					Gear = Gear,
@@ -106,9 +114,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 			if (DataBus.VehicleSpeed().IsEqual(0)) {
-				Gear = 1;
+				Gear = FindGear(outTorque, outEngineSpeed, Data.SkipGears);
 			}
-			var retVal = absTime < _shiftTime
+			var retVal = absTime.IsSmaller(_shiftTime)
 				? DoHandleRequestNeutralGear(absTime, dt, outTorque, outEngineSpeed, dryRun)
 				: DoHandleRequestGearEngaged(absTime, dt, outTorque, outEngineSpeed, dryRun);
 			retVal.Gear = Gear;
@@ -245,10 +253,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private static bool IsOnLeftSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
 			ShiftPolygon.ShiftPolygonEntry to)
 		{
-			var p = new Point(angularSpeed.Value(), torque.Value());
-			var edge = new Edge(new Point(from.AngularSpeed.Value(), from.Torque.Value()),
-				new Point(to.AngularSpeed.Value(), to.Torque.Value()));
-			return p.IsLeftOf(edge);
+			var ab = new { X = to.AngularSpeed - from.AngularSpeed, Y = to.Torque - from.Torque };
+			var ac = new { X = angularSpeed - from.AngularSpeed, Y = torque - from.Torque };
+			return (ab.X * ac.Y - ab.Y * ac.X).Value().IsGreater(0);
 		}
 
 		/// <summary>
@@ -257,18 +264,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private static bool IsOnRightSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
 			ShiftPolygon.ShiftPolygonEntry to)
 		{
-			var p = new Point(angularSpeed.Value(), torque.Value());
-			var edge = new Edge(new Point(from.AngularSpeed.Value(), from.Torque.Value()),
-				new Point(to.AngularSpeed.Value(), to.Torque.Value()));
-			return p.IsRightOf(edge);
-		}
-
-		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
-		{
-			_shiftTime = double.NegativeInfinity.SI<Second>();
-			Gear = FindGear(torque, engineSpeed, true);
-
-			return Next.Initialize(torque, engineSpeed);
+			var ab = new { X = to.AngularSpeed - from.AngularSpeed, Y = to.Torque - from.Torque };
+			var ac = new { X = angularSpeed - from.AngularSpeed, Y = torque - from.Torque };
+			return (ab.X * ac.Y - ab.Y * ac.X).Value().IsSmaller(0);
 		}
 
 		#endregion
@@ -299,10 +297,5 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		#endregion
-
-		public bool ClutchClosed(Second absTime)
-		{
-			return _shiftTime <= absTime; //  && Gear != 0;
-		}
 	}
 }
