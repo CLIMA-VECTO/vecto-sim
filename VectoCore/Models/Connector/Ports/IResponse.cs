@@ -10,7 +10,13 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 	/// </summary>
 	public interface IResponse
 	{
+		//Second AbsTime { get; set; }
+
 		Second SimulationInterval { get; set; }
+
+		//Meter Distance { get; set; }
+
+		Meter SimulationDistance { get; set; }
 
 		Watt EnginePowerRequest { get; set; }
 
@@ -23,5 +29,9 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		Watt WheelsPowerRequest { get; set; }
 
 		Watt VehiclePowerRequest { get; set; }
+
+		Watt BrakePower { get; set; }
+
+		uint Gear { get; set; }
 	}
 }

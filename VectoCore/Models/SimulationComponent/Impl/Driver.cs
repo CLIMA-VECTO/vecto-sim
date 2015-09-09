@@ -253,7 +253,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					};
 				}).
 				Default(() => {
-					throw new UnexpectedResponseException("CoastOrRoll Action: unhandled response from powertrain", retVal);
+					throw new UnexpectedResponseException(
+						"CoastOrRoll Action: unhandled response from powertrain. absTime: {0}, distance: {1}, slope: {2}, ds: {3}", retVal,
+						absTime,
+						DataBus.Distance, gradient, ds);
 				});
 			return retVal;
 		}
@@ -276,7 +279,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// only decelerate more of the simulation interval is not modified
 				// i.e., braking to the next sample point
 				Log.Debug("adjusting acceleration from {0} to {1}", operatingPoint.Acceleration, tmp.Acceleration);
-				operatingPoint = tmp; // ComputeTimeInterval((operatingPoint.Acceleration + tmp.Acceleration) / 2, operatingPoint.SimulationDistance);
+				operatingPoint = tmp;
+				// ComputeTimeInterval((operatingPoint.Acceleration + tmp.Acceleration) / 2, operatingPoint.SimulationDistance);
 			}
 
 
@@ -288,11 +292,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseOverload>(r => retVal = r).
 				Case<ResponseUnderload>(). // will be handled in SearchBrakingPower
 				Case<ResponseGearShift>(). // will be handled in SearchBrakingPower
-				Case<ResponseFailTimeInterval>(r => 
+				Case<ResponseFailTimeInterval>(r =>
 					retVal = new ResponseDrivingCycleDistanceExceeded() {
-					Source = this,
-					MaxDistance = DataBus.VehicleSpeed() * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
-				}).
+						Source = this,
+						MaxDistance = DataBus.VehicleSpeed() * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
+					}).
 				Default(r => {
 					throw new UnexpectedResponseException("DrivingAction Brake: first request", r);
 				});

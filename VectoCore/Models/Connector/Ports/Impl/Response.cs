@@ -8,17 +8,23 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	{
 		public Second SimulationInterval { get; set; }
 
+		public Meter SimulationDistance { get; set; }
+
 		public Watt EnginePowerRequest { get; set; }
 
 		public Watt ClutchPowerRequest { get; set; }
 
 		public Watt GearboxPowerRequest { get; set; }
 
+		public uint Gear { get; set; }
+
 		public Watt AxlegearPowerRequest { get; set; }
 
 		public Watt WheelsPowerRequest { get; set; }
 
 		public Watt VehiclePowerRequest { get; set; }
+
+		public Watt BrakePower { get; set; }
 
 		public VectoSimulationComponent Source { get; set; }
 

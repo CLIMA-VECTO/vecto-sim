@@ -101,15 +101,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseFailTimeInterval() {
 					DeltaT = _shiftTime - absTime,
 					GearboxPowerRequest = outTorque * outEngineSpeed,
+					Gear = Gear,
 					Source = this
 				};
 			}
 			if (DataBus.VehicleSpeed().IsEqual(0)) {
 				Gear = 1;
 			}
-			return absTime < _shiftTime
+			var retVal = absTime < _shiftTime
 				? DoHandleRequestNeutralGear(absTime, dt, outTorque, outEngineSpeed, dryRun)
 				: DoHandleRequestGearEngaged(absTime, dt, outTorque, outEngineSpeed, dryRun);
+			retVal.Gear = Gear;
+			return retVal;
 		}
 
 		private IResponse DoHandleRequestNeutralGear(Second absTime, Second dt, NewtonMeter outTorque,

@@ -44,6 +44,70 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			run.Run();
 		}
 
+		[TestMethod]
+		public void Accelerate_0_85_uphill_1()
+		{
+			var cycle = CreateCycleData(new[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  0,  0,     2",
+				"  0,  85, 1,     0",
+				"900,  85, 1,     0",
+			});
+
+			var run = CreatePowerTrain(cycle, "DriverStrategy_Accelerate_0_85_uh_1.vmod");
+
+			run.Run();
+		}
+
+		[TestMethod]
+		public void Accelerate_0_85_uphill_5()
+		{
+			var cycle = CreateCycleData(new[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  0,  0,     2",
+				"  0,  85, 5,     0",
+				"900,  85, 5,     0",
+			});
+
+			var run = CreatePowerTrain(cycle, "DriverStrategy_Accelerate_0_85_uh_5.vmod");
+
+			run.Run();
+		}
+
+		[TestMethod]
+		public void Accelerate_0_85_uphill_15()
+		{
+			var cycle = CreateCycleData(new[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  0,   0,     2",
+				"  0,  85, 15,     0",
+				"900,  85, 15,     0",
+			});
+
+			var run = CreatePowerTrain(cycle, "DriverStrategy_Accelerate_0_85_uh_15.vmod");
+
+			run.Run();
+		}
+
+		[TestMethod]
+		public void Drive_80_uphill_0_15()
+		{
+			var cycle = CreateCycleData(new[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  80,  0,    0",
+				" 50,  80,  1,    0",
+				"100,  80,  2,    0",
+				"150,  80,  3,    0",
+				"200,  80,  4,    0",
+				"250,  80,  5,    0",
+				"300,  80,  0,    0",
+				"350,  80,  0,    0",
+			});
+
+			var run = CreatePowerTrain(cycle, "DriverStrategy_Drive_80_slope_0_15.vmod");
+
+			run.Run();
+		}
 
 		[TestMethod]
 		public void Accelerate_80_0_level()
@@ -56,6 +120,21 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			});
 
 			var run = CreatePowerTrain(cycle, "DriverStrategy_Accelerate_80_0_level.vmod");
+
+			run.Run();
+		}
+
+		[TestMethod]
+		public void Accelerate_80_50_level()
+		{
+			var cycle = CreateCycleData(new[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  80,  0,    0",
+				"500,  50,  0,    0",
+				"600,  50,  0,    0"
+			});
+
+			var run = CreatePowerTrain(cycle, "DriverStrategy_Accelerate_80_50_level.vmod");
 
 			run.Run();
 		}
