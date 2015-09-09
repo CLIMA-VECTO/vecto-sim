@@ -10,7 +10,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class EngineOnlyGearbox : VectoSimulationComponent, IGearbox, ITnInPort, ITnOutPort
 	{
-		private ITnOutPort _outPort;
+		protected ITnOutPort NextComponent;
 		public EngineOnlyGearbox(IVehicleContainer cockpit) : base(cockpit) {}
 
 		#region ITnInProvider
@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		void ITnInPort.Connect(ITnOutPort other)
 		{
-			_outPort = other;
+			NextComponent = other;
 		}
 
 		#endregion
@@ -54,16 +54,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
 		{
-			if (_outPort == null) {
+			if (NextComponent == null) {
 				Log.Error("Ccannot handle incoming request - no outport available. absTime: {0}, dt: {1}", absTime, dt);
 				throw new VectoSimulationException("Cannot handle incoming request - no outport available.");
 			}
-			return _outPort.Request(absTime, dt, torque, engineSpeed, dryRun);
+			return NextComponent.Request(absTime, dt, torque, engineSpeed, dryRun);
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			return _outPort.Initialize(torque, engineSpeed);
+			return NextComponent.Initialize(torque, engineSpeed);
 		}
 
 		#endregion

@@ -74,10 +74,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 //			1.5      , 5        , 18           , 18            , 0          , 2.842372 , 964.1117  , 323.7562    , 323.7562       , 2208.664     , -158.0261    , 32.68693    , 222.9902     , -15.95456    , 32.68693       , 0           , 0         , 1        , 0             , 0               , 0                   , 0          , 0           , 5.965827   , 0.2423075 , 26.47879   , 32.68693    , 0           , 7574.113     , -             , -
 
 			AssertHelper.AreRelativeEqual(964.1117.RPMtoRad().Value(), vehicleContainer.Engine.EngineSpeed.Value());
-			Assert.AreEqual(2208.664, engine._previousState.StationaryFullLoadTorque.Value(), Tolerance);
-			Assert.AreEqual(-158.0261, engine._previousState.FullDragTorque.Value(), Tolerance);
+			Assert.AreEqual(2208.664, engine.PreviousState.StationaryFullLoadTorque.Value(), Tolerance);
+			Assert.AreEqual(-158.0261, engine.PreviousState.FullDragTorque.Value(), Tolerance);
 
-			Assert.AreEqual(323.7562, engine._previousState.EngineTorque.Value(), Tolerance);
+			Assert.AreEqual(323.7562, engine.PreviousState.EngineTorque.Value(), Tolerance);
 		}
 
 

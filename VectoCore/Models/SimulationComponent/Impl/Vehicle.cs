@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Vehicle : VectoSimulationComponent, IVehicle, IMileageCounter, IFvInPort, IDriverDemandOutPort
 	{
-		private IFvOutPort _nextInstance;
+		protected IFvOutPort NextComponent;
 		private VehicleState _previousState;
 		private VehicleState _currentState;
 		private readonly VehicleData _data;
@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void Connect(IFvOutPort other)
 		{
-			_nextInstance = other;
+			NextComponent = other;
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState = new VehicleState { Distance = 0.SI<Meter>(), Velocity = vehicleSpeed };
 
 			var vehicleAccelerationForce = RollingResistance(roadGradient) + AirDragResistance() + SlopeResistance(roadGradient);
-			return _nextInstance.Initialize(vehicleAccelerationForce, vehicleSpeed);
+			return NextComponent.Initialize(vehicleAccelerationForce, vehicleSpeed);
 		}
 
 		public IResponse Request(Second absTime, Second dt, MeterPerSquareSecond accelleration, Radian gradient,
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 											+ AirDragResistance()
 											+ SlopeResistance(gradient);
 
-			var retval = _nextInstance.Request(absTime, dt, vehicleAccelerationForce, _currentState.Velocity, dryRun);
+			var retval = NextComponent.Request(absTime, dt, vehicleAccelerationForce, _currentState.Velocity, dryRun);
 			return retval;
 		}
 

@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		ISimulationOutPort
 	{
 		protected DrivingCycleData Data;
-		private IDrivingCycleOutPort _outPort;
+		protected IDrivingCycleOutPort NextComponent;
 
 		public TimeBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// TODO!!
 			var dx = 0.SI<Meter>();
-			return _outPort.Request(absTime, dt, Data.Entries[index].VehicleTargetSpeed,
+			return NextComponent.Request(absTime, dt, Data.Entries[index].VehicleTargetSpeed,
 				Data.Entries[index].RoadGradient);
 		}
 
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Connect(IDrivingCycleOutPort
 				other)
 		{
-			_outPort = other;
+			NextComponent = other;
 		}
 
 		#endregion

@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// The next port.
 		/// </summary>
-		protected ITnOutPort Next;
+		protected ITnOutPort NextComponent;
 
 		/// <summary>
 		/// The data and settings for the gearbox.
@@ -138,7 +138,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			Log.Debug("Current Gear: Neutral");
-			var neutralResponse = Next.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
+			var neutralResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
 			neutralResponse.GearboxPowerRequest = outTorque * outEngineSpeed;
 
 			return neutralResponse;
@@ -176,7 +176,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("Current Gear: {0}", Gear);
 
 			_powerLoss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
-			var response = Next.Request(absTime, dt, inTorque, inEngineSpeed, dryRun);
+			var response = NextComponent.Request(absTime, dt, inTorque, inEngineSpeed, dryRun);
 			response.GearboxPowerRequest = outTorque * outEngineSpeed;
 			return response;
 		}
@@ -270,7 +270,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_shiftTime = double.NegativeInfinity.SI<Second>();
 			Gear = FindGear(torque, engineSpeed, true);
 
-			return Next.Initialize(torque, engineSpeed);
+			return NextComponent.Initialize(torque, engineSpeed);
 		}
 
 		#endregion
@@ -279,7 +279,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		void ITnInPort.Connect(ITnOutPort other)
 		{
-			Next = other;
+			NextComponent = other;
 		}
 
 		#endregion

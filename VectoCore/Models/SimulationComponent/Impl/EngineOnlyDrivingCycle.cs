@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		ISimulationOutPort
 	{
 		protected DrivingCycleData Data;
-		private ITnOutPort _outPort;
+		protected ITnOutPort NextComponent;
 		private IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
 		private IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
 
@@ -66,13 +66,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseCycleFinished();
 			}
 
-			return _outPort.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
+			return NextComponent.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
 		}
 
 		public IResponse Initialize()
 		{
 			var index = 0;
-			return _outPort.Initialize(Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
+			return NextComponent.Initialize(Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
 		}
 
 		#endregion
@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		void ITnInPort.Connect(ITnOutPort other)
 		{
-			_outPort = other;
+			NextComponent = other;
 		}
 
 		#endregion

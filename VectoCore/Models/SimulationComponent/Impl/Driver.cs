@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		internal DriverState CurrentState = new DriverState();
 
-		protected IDriverDemandOutPort Next;
+		protected IDriverDemandOutPort NextComponent;
 
 		protected DriverData DriverData;
 
@@ -46,14 +46,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void Connect(IDriverDemandOutPort other)
 		{
-			Next = other;
+			NextComponent = other;
 		}
 
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
 			LookaheadDeceleration = DriverData.AccelerationCurve.MinDeceleration();
-			return Next.Initialize(vehicleSpeed, roadGradient);
+			return NextComponent.Initialize(vehicleSpeed, roadGradient);
 		}
 
 
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			IResponse retVal = null;
 			var response = previousResponse ??
-							Next.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
+							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
 
 			response.Switch().
 				Case<ResponseSuccess>(r => {
@@ -136,7 +136,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Debug("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}",
 					CurrentState.dt, CurrentState.Acceleration);
 
-				retVal = Next.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
+				retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
 				retVal.Switch().
 					Case<ResponseUnderload>().
 					Case<ResponseSuccess>().
@@ -205,7 +205,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var operatingPoint = ComputeAcceleration(ds, DataBus.VehicleSpeed);
 
-			var response = Next.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
+			var response = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
+				gradient, true);
 
 			//if (response is ResponseFailTimeInterval) {
 			//	return response;
@@ -238,7 +239,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseSpeedLimitExceeded();
 			}
 
-			var retVal = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
+			var retVal = NextComponent.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
 			CurrentState.Response = retVal;
 			retVal.SimulationInterval = CurrentState.dt;
 
@@ -282,7 +283,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 			var response = previousResponse ??
-							Next.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
+							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
 
 			response.Switch().
 				Case<ResponseSuccess>(r => retVal = r).
@@ -318,7 +319,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("Found operating point for breaking. dt: {0}, acceleration: {1}", operatingPoint.SimulationInterval,
 				operatingPoint.Acceleration);
 
-			retVal = Next.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
+			retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
 
 			retVal.Switch().
 				Case<ResponseSuccess>().
@@ -398,7 +399,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				DataBus.BreakPower = breakingPower;
 				var response =
 					(ResponseDryRun)
-						Next.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
+						NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
 				delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest;
 
 				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
@@ -508,7 +509,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				retVal.SimulationInterval = tmp.SimulationInterval;
 				retVal.SimulationDistance = tmp.SimulationDistance;
 
-				var response = (ResponseDryRun)Next.Request(absTime, retVal.SimulationInterval, retVal.Acceleration, gradient, true);
+				var response =
+					(ResponseDryRun)NextComponent.Request(absTime, retVal.SimulationInterval, retVal.Acceleration, gradient, true);
 				delta = actionRoll ? response.GearboxPowerRequest : (coasting ? response.DeltaDragLoad : response.DeltaFullLoad);
 
 				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
@@ -659,7 +661,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var oldGear = DataBus.Gear;
 			//DataBus.Gear = 0;
 			DataBus.BreakPower = double.PositiveInfinity.SI<Watt>();
-			var retVal = Next.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
+			var retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
 			CurrentState.dt = dt;
 			//DataBus.Gear = oldGear;
 			return retVal;
