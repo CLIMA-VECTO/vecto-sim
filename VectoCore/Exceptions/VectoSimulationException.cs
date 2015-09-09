@@ -17,14 +17,9 @@ namespace TUGraz.VectoCore.Exceptions
 	{
 		public IResponse Response;
 
-		public UnexpectedResponseException(string message, IResponse resp)
-			: base(message + Environment.NewLine + " {0}", resp)
-		{
-			Response = resp;
-		}
-
+		[StringFormatMethod("message")]
 		public UnexpectedResponseException(string message, IResponse resp, params object[] args)
-			: base(message + Environment.NewLine + resp, args)
+			: base(message + Environment.NewLine + resp.ToString().Replace("{", "{{").Replace("}", "}}"), args)
 		{
 			Response = resp;
 		}
