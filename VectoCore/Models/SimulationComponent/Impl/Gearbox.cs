@@ -208,7 +208,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// ReSharper disable once LoopVariableIsNeverChangedInsideLoop
 			} while (allowSkipGears);
 			if (gear == 0) {
-				throw new VectoSimulationException("Could not find gear!");
+				throw new VectoSimulationException(
+					"Could not find gear! Gear: {0}, LastGear: {1}, outTorque: {2}, outEngineSpeed: {3}, skipGears: {4}",
+					Gear, LastGear, outTorque, outEngineSpeed, allowSkipGears);
 			}
 			return gear;
 		}

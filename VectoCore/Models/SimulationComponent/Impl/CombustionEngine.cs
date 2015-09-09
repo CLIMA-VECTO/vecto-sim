@@ -209,12 +209,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected virtual void ValidatePowerDemand(Watt requestedEnginePower)
 		{
 			if (_currentState.FullDragPower >= 0 && requestedEnginePower < 0) {
-				throw new VectoSimulationException(string.Format("t: {0}  P_engine_drag > 0! n: {1} [1/min] ",
-					_currentState.AbsTime, _currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute));
+				throw new VectoSimulationException("P_engine_drag > 0! n: {0} [1/min] ",
+					_currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute);
 			}
 			if (_currentState.DynamicFullLoadPower <= 0 && requestedEnginePower > 0) {
-				throw new VectoSimulationException(string.Format("t: {0}  P_engine_full < 0! n: {1} [1/min] ",
-					_currentState.AbsTime, _currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute));
+				throw new VectoSimulationException("P_engine_full < 0! n: {0} [1/min] ",
+					_currentState.EngineSpeed.ConvertTo().Rounds.Per.Minute);
 			}
 		}
 

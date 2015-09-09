@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(Second absTime, Meter ds)
 		{
-			throw new VectoSimulationException("Engine-Only Simulation can not handle distance request");
+			throw new VectoSimulationException("Engine-Only Simulation can not handle distance request.");
 		}
 
 		IResponse ISimulationOutPort.Request(Second absTime, Second dt)

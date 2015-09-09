@@ -79,8 +79,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				UnderSpeed = DeclarationData.Driver.OverSpeedEcoRoll.UnderSpeed
 			};
 			if (!DeclarationData.Driver.OverSpeedEcoRoll.AllowedModes.Contains(overspeedData.Mode)) {
-				throw new VectoSimulationException(
-					string.Format("Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}", overspeedData.Mode));
+				throw new VectoSimulationException("Specified Overspeed/EcoRoll Mode not allowed in declaration mode! {0}",
+					overspeedData.Mode);
 			}
 			var startstopData = new VectoRunData.StartStopData {
 				Enabled = data.StartStop.Enabled,
