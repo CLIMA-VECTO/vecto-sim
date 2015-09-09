@@ -51,9 +51,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
 		{
-			var powerDemand = ComputePowerDemand(engineSpeed);
+			var currentEngineSpeed = engineSpeed ?? DataBus.EngineSpeed();
+			var powerDemand = ComputePowerDemand(currentEngineSpeed);
 
-			return _outPort.Request(absTime, dt, torque + powerDemand / engineSpeed, engineSpeed, dryRun);
+			return _outPort.Request(absTime, dt, torque + powerDemand / currentEngineSpeed, engineSpeed, dryRun);
 		}
 
 		private Watt ComputePowerDemand(PerSecond engineSpeed)
@@ -116,7 +117,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			_auxDict[auxId] = speed => {
 				var powerSupply = cycle.CycleData().LeftSample.AuxiliarySupplyPower["Aux_" + auxId];
-
 				var nAuxiliary = speed * data.TransitionRatio;
 				var powerAuxOut = powerSupply / data.EfficiencyToSupply;
 				var powerAuxIn = data.GetPowerDemand(nAuxiliary, powerAuxOut);
