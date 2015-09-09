@@ -267,13 +267,14 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				"Auxiliary file not found: NOT_EXISTING_AUX_FILE.vaux");
 		}
 
-		[TestMethod]
+		[TestMethod, Ignore]
 		public void AuxReadJobFileDeclarationMode()
 		{
 			var sumWriter = new SummaryFileWriter(@"AuxReadJobFileDeclarationMode.vsum");
 			var jobContainer = new JobContainer(sumWriter);
 
-			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, @"TestData\Jobs\40t_Long_Haul_Truck.vecto");
+			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
+				@"TestData\Jobs\40t_Long_Haul_Truck.vecto");
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
@@ -282,7 +283,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				@"AuxReadJobFileDeclarationMode.vsum");
 		}
 
-		[TestMethod]
+		[TestMethod, Ignore]
 		public void AuxReadJobFileEngineeringMode()
 		{
 			var sumWriter = new SummaryFileWriter(@"AuxReadJobFileEngineeringMode.vsum");
