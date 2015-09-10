@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			if (!CurrentState.EnginePower.IsEqual(requestedEnginePower, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
+			if (!CurrentState.EnginePower.IsEqual(requestedEnginePower, Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 				var delta = (requestedEnginePower - CurrentState.EnginePower);
 				return delta > 0
 					? new ResponseOverload { Delta = delta, EnginePowerRequest = requestedEnginePower, Source = this }

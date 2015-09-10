@@ -31,7 +31,5 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		Watt VehiclePowerRequest { get; set; }
 
 		Watt BrakePower { get; set; }
-
-		uint Gear { get; set; }
 	}
 }

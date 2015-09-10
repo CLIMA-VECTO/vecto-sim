@@ -26,7 +26,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						dt = r.SimulationInterval;
 					}).
 					Case<ResponseDrivingCycleDistanceExceeded>(r => {
-						if (r.MaxDistance.Value().IsSmallerOrEqual(0)) {
+						if (r.MaxDistance.IsSmallerOrEqual(0)) {
 							throw new VectoSimulationException("DistanceExceeded, MaxDistance is invalid: {0}", r.MaxDistance);
 						}
 						ds = r.MaxDistance;

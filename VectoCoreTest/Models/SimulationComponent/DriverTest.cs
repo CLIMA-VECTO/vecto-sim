@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
 			Assert.AreEqual(engine.PreviousState.FullDragPower.Value(), engine.PreviousState.EnginePower.Value(),
-				Constants.SimulationSettings.EngineFLDPowerTolerance);
+				Constants.SimulationSettings.EnginePowerSearchTolerance);
 
 			while (vehicleContainer.VehicleSpeed > 1) {
 				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
 			Assert.AreEqual(engine.PreviousState.FullDragPower.Value(), engine.PreviousState.EnginePower.Value(),
-				Constants.SimulationSettings.EngineFLDPowerTolerance);
+				Constants.SimulationSettings.EnginePowerSearchTolerance);
 
 			while (vehicleContainer.VehicleSpeed > 1) {
 				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);

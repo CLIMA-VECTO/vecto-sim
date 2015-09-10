@@ -16,8 +16,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public Watt GearboxPowerRequest { get; set; }
 
-		public uint Gear { get; set; }
-
 		public Watt AxlegearPowerRequest { get; set; }
 
 		public Watt WheelsPowerRequest { get; set; }

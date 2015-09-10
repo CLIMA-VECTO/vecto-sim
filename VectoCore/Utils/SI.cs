@@ -1638,24 +1638,92 @@ namespace TUGraz.VectoCore.Utils
 			return Val.IsEqual(val, tolerance);
 		}
 
+		/// <summary>
+		/// Determines whether the specified si is smaller.
+		/// </summary>
+		/// <param name="si">The si.</param>
+		/// <param name="tolerance">The tolerance.</param>
+		/// <returns></returns>
 		public bool IsSmaller(SI si, double tolerance = DoubleExtensionMethods.Tolerance)
 		{
 			return HasEqualUnit(si) && Val.IsSmaller(si.Val, tolerance);
 		}
 
+		/// <summary>
+		/// Determines whether [is smaller or equal] [the specified si].
+		/// </summary>
+		/// <param name="si">The si.</param>
+		/// <param name="tolerance">The tolerance.</param>
+		/// <returns></returns>
 		public bool IsSmallerOrEqual(SI si, double tolerance = DoubleExtensionMethods.Tolerance)
 		{
 			return HasEqualUnit(si) && Val.IsSmallerOrEqual(si.Val, tolerance);
 		}
 
+		/// <summary>
+		/// Determines whether the specified si is greater.
+		/// </summary>
+		/// <param name="si">The si.</param>
+		/// <param name="tolerance">The tolerance.</param>
+		/// <returns></returns>
 		public bool IsGreater(SI si, double tolerance = DoubleExtensionMethods.Tolerance)
 		{
 			return HasEqualUnit(si) && Val.IsGreater(si.Val, tolerance);
 		}
 
+		/// <summary>
+		/// Determines whether [is greater or equal] [the specified si].
+		/// </summary>
+		/// <param name="si">The si.</param>
+		/// <param name="tolerance">The tolerance.</param>
+		/// <returns></returns>
 		public bool IsGreaterOrEqual(SI si, double tolerance = DoubleExtensionMethods.Tolerance)
 		{
 			return HasEqualUnit(si) && Val.IsGreaterOrEqual(si.Val, tolerance);
+		}
+
+		/// <summary>
+		/// Determines whether the specified value is smaller.
+		/// </summary>
+		/// <param name="val">The value.</param>
+		/// <param name="tolerance">The tolerance.</param>
+		/// <returns></returns>
+		public bool IsSmaller(double val, double tolerance = DoubleExtensionMethods.Tolerance)
+		{
+			return Val.IsSmaller(val, tolerance);
+		}
+
+		/// <summary>
+		/// Determines whether [is smaller or equal] [the specified value].
+		/// </summary>
+		/// <param name="val">The value.</param>
+		/// <param name="tolerance">The tolerance.</param>
+		/// <returns></returns>
+		public bool IsSmallerOrEqual(double val, double tolerance = DoubleExtensionMethods.Tolerance)
+		{
+			return Val.IsSmallerOrEqual(val, tolerance);
+		}
+
+		/// <summary>
+		/// Determines whether the specified value is greater.
+		/// </summary>
+		/// <param name="val">The value.</param>
+		/// <param name="tolerance">The tolerance.</param>
+		/// <returns></returns>
+		public bool IsGreater(double val, double tolerance = DoubleExtensionMethods.Tolerance)
+		{
+			return Val.IsGreater(val, tolerance);
+		}
+
+		/// <summary>
+		/// Determines whether [is greater or equal] [the specified value].
+		/// </summary>
+		/// <param name="val">The value.</param>
+		/// <param name="tolerance">The tolerance.</param>
+		/// <returns></returns>
+		public bool IsGreaterOrEqual(double val, double tolerance = DoubleExtensionMethods.Tolerance)
+		{
+			return Val.IsGreaterOrEqual(val, tolerance);
 		}
 
 		/// <summary>
