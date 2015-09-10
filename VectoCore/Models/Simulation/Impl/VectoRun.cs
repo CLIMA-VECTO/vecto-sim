@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected string JobFileName { get; set; }
 		protected string JobName { get; set; }
 		protected ISimulationOutPort CyclePort { get; set; }
-		protected IModalDataWriter DataWriter { get; set; }
+		//protected IModalDataWriter DataWriter { get; set; }
 		protected IVehicleContainer Container { get; set; }
 
 		protected VectoRun(IVehicleContainer container)
@@ -49,13 +49,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					}
 				} while (response is ResponseSuccess);
 			} catch (VectoSimulationException vse) {
-				if (DataWriter != null) {
-					DataWriter.Finish();
-				}
+				Container.FinishSimulation();
 				throw new VectoSimulationException("absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4}", vse, AbsTime,
 					Container.Distance, dt, Container.VehicleSpeed, Container.Gear, vse.Message);
 			} catch (VectoException ve) {
-				DataWriter.Finish();
+				Container.FinishSimulation();
 				throw new VectoSimulationException("absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4}", ve, AbsTime,
 					Container.Distance, dt, Container.VehicleSpeed, Container.Gear, ve.Message);
 			}
