@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -18,7 +17,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// The next port.
 		/// </summary>
-		protected ITnOutPort Next;
+		protected ITnOutPort NextComponent;
 
 		/// <summary>
 		/// The data and settings for the gearbox.
@@ -85,7 +84,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_shiftTime = double.NegativeInfinity.SI<Second>();
 			Gear = FindGear(torque, engineSpeed, true);
 
-			return Next.Initialize(torque, engineSpeed);
+			return NextComponent.Initialize(torque, engineSpeed);
 		}
 
 		/// <summary>
@@ -113,7 +112,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					Source = this
 				};
 			}
-			if (DataBus.VehicleSpeed().IsEqual(0)) {
+			if (DataBus.VehicleSpeed.IsEqual(0)) {
 				Gear = FindGear(outTorque, outEngineSpeed, Data.SkipGears);
 			}
 			var retVal = absTime.IsSmaller(_shiftTime)
@@ -146,7 +145,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			Log.Debug("Current Gear: Neutral");
-			var neutralResponse = Next.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
+			var neutralResponse = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
 			neutralResponse.GearboxPowerRequest = outTorque * outEngineSpeed;
 
 			return neutralResponse;
@@ -184,7 +183,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("Current Gear: {0}", Gear);
 
 			_powerLoss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
-			var response = Next.Request(absTime, dt, inTorque, inEngineSpeed, dryRun);
+			var response = NextComponent.Request(absTime, dt, inTorque, inEngineSpeed, dryRun);
 			response.GearboxPowerRequest = outTorque * outEngineSpeed;
 			return response;
 		}
@@ -216,7 +215,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// ReSharper disable once LoopVariableIsNeverChangedInsideLoop
 			} while (allowSkipGears);
 			if (gear == 0) {
-				throw new VectoSimulationException("Could not find gear!");
+				throw new VectoSimulationException(
+					"Could not find gear! Gear: {0}, LastGear: {1}, outTorque: {2}, outEngineSpeed: {3}, skipGears: {4}",
+					Gear, LastGear, outTorque, outEngineSpeed, allowSkipGears);
 			}
 			return gear;
 		}
@@ -275,7 +276,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		void ITnInPort.Connect(ITnOutPort other)
 		{
-			Next = other;
+			NextComponent = other;
 		}
 
 		#endregion

@@ -31,24 +31,24 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return this;
 		}
 
-		public MeterPerSecond VehicleSpeed()
+		public MeterPerSecond VehicleSpeed
 		{
-			return MyVehicleSpeed;
+			get { return MyVehicleSpeed; }
 		}
 
-		public Kilogram VehicleMass()
+		public Kilogram VehicleMass
 		{
-			return 7500.SI<Kilogram>();
+			get { return 7500.SI<Kilogram>(); }
 		}
 
-		public Kilogram VehicleLoading()
+		public Kilogram VehicleLoading
 		{
-			return 0.SI<Kilogram>();
+			get { return 0.SI<Kilogram>(); }
 		}
 
-		public Kilogram TotalMass()
+		public Kilogram TotalMass
 		{
-			return VehicleMass();
+			get { return VehicleMass; }
 		}
 
 		public void Connect(IFvOutPort other)

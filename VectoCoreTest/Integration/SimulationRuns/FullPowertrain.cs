@@ -55,13 +55,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData));
+			var gbx = new Gearbox(container, gearboxData);
+			tmp = Port.AddComponent(tmp, gbx);
 			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
 			Port.AddComponent(tmp, new CombustionEngine(container, engineData));
 
 			cyclePort.Initialize();
 
-			container.Gear = 0;
+			gbx.Gear = 0;
 
 			var absTime = 0.SI<Second>();
 			var ds = Constants.SimulationSettings.DriveOffDistance;
@@ -70,7 +71,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			container.Gear = 1;
+			gbx.Gear = 1;
 			var cnt = 0;
 			while (!(response is ResponseCycleFinished) && container.Distance < 17000) {
 				response = cyclePort.Request(absTime, ds);
@@ -81,9 +82,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
 
-						ds = container.VehicleSpeed().IsEqual(0)
+						ds = container.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed();
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
 							modalWriter.Finish();
@@ -116,13 +117,14 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData));
+			var gbx = new Gearbox(container, gearboxData);
+			tmp = Port.AddComponent(tmp, gbx);
 			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
 			Port.AddComponent(tmp, new CombustionEngine(container, engineData));
 
 			cyclePort.Initialize();
 
-			container.Gear = 0;
+			gbx.Gear = 0;
 
 			var absTime = 0.SI<Second>();
 			var ds = Constants.SimulationSettings.DriveOffDistance;
@@ -131,7 +133,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			container.Gear = 1;
+			gbx.Gear = 1;
 			var cnt = 0;
 			while (!(response is ResponseCycleFinished) && container.Distance < 17000) {
 				Log.Info("Test New Request absTime: {0}, ds: {1}", absTime, ds);
@@ -153,9 +155,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
 
-						ds = container.VehicleSpeed().IsEqual(0)
+						ds = container.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed();
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
 							modalWriter.Finish();
@@ -224,9 +226,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 						container.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
 
-						ds = container.VehicleSpeed().IsEqual(0)
+						ds = container.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed();
+							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
 							modalWriter.Finish();

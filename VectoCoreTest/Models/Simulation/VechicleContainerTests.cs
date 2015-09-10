@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
 			var engine = new CombustionEngine(vehicle, engineData);
 
-			Assert.IsNotNull(vehicle.EngineSpeed());
+			Assert.IsNotNull(vehicle.EngineSpeed);
 		}
 	}
 }

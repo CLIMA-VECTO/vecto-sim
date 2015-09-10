@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Brakes : VectoSimulationComponent, IPowerTrainComponent, ITnOutPort, ITnInPort, IBrakes
 	{
-		protected ITnOutPort Next;
+		protected ITnOutPort NextComponent;
 
 		protected NewtonMeter BreakTorque;
 
@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!dryRun && BreakPower < 0) {
 				throw new VectoSimulationException("Negative Braking Power is not allowed!");
 			}
-			var retVal = Next.Request(absTime, dt, torque - torque.Sign() * BreakTorque, angularVelocity, dryRun);
+			var retVal = NextComponent.Request(absTime, dt, torque - torque.Sign() * BreakTorque, angularVelocity, dryRun);
 			retVal.BrakePower = BreakPower;
 			return retVal;
 		}
@@ -49,13 +49,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			BreakPower = 0.SI<Watt>();
 			BreakTorque = 0.SI<NewtonMeter>();
-			return Next.Initialize(torque, angularVelocity);
+			return NextComponent.Initialize(torque, angularVelocity);
 		}
 
 
 		public void Connect(ITnOutPort other)
 		{
-			Next = other;
+			NextComponent = other;
 		}
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)

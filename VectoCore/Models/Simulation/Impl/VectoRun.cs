@@ -1,4 +1,5 @@
 ﻿using System;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -38,14 +39,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			IResponse response;
 
 			Initialize();
-			do {
-				response = DoSimulationStep();
-				if (response is ResponseSuccess) {
-					Container.CommitSimulationStep(AbsTime, dt);
+			try {
+				do {
+					response = DoSimulationStep();
+					if (response is ResponseSuccess) {
+						Container.CommitSimulationStep(AbsTime, dt);
 
-					AbsTime += dt;
+						AbsTime += dt;
+					}
+				} while (response is ResponseSuccess);
+			} catch (VectoSimulationException vse) {
+				if (DataWriter != null) {
+					DataWriter.Finish();
 				}
-			} while (response is ResponseSuccess);
+				throw new VectoSimulationException("absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4}", vse, AbsTime,
+					Container.Distance, dt, Container.VehicleSpeed, Container.Gear, vse.Message);
+			} catch (VectoException ve) {
+				DataWriter.Finish();
+				throw new VectoSimulationException("absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4}", ve, AbsTime,
+					Container.Distance, dt, Container.VehicleSpeed, Container.Gear, ve.Message);
+			}
 
 			Container.FinishSimulation();
 

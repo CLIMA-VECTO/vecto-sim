@@ -11,15 +11,17 @@ namespace TUGraz.VectoCore.Exceptions
 
 		[StringFormatMethod("message")]
 		public VectoSimulationException(string message, params object[] args) : base(message, args) {}
+
+		//[StringFormatMethod("message")]
+		public VectoSimulationException(string message, Exception inner, params object[] args) : base(message, inner, args) {}
 	}
 
 	public class UnexpectedResponseException : VectoSimulationException
 	{
 		public IResponse Response;
 
-		[StringFormatMethod("message")]
-		public UnexpectedResponseException(string message, IResponse resp, params object[] args)
-			: base(message + Environment.NewLine + resp.ToString().Replace("{", "{{").Replace("}", "}}"), args)
+		public UnexpectedResponseException(string message, IResponse resp)
+			: base(message + Environment.NewLine + "{0}", resp)
 		{
 			Response = resp;
 		}

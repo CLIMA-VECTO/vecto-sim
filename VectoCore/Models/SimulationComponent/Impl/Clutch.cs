@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		private readonly PerSecond _idleSpeed;
 		private readonly PerSecond _ratedSpeed;
-		private ITnOutPort _nextComponent;
+		protected ITnOutPort NextComponent;
 		private const double ClutchEff = 1;
 		private ClutchState _clutchState = SimulationComponent.ClutchState.ClutchSlipping;
 
@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
 			if (angularVelocity == null) {
-				var retval = _nextComponent.Request(absTime, dt, torque, null, dryRun);
+				var retval = NextComponent.Request(absTime, dt, torque, null, dryRun);
 				retval.ClutchPowerRequest = 0.SI<Watt>();
 				return retval;
 			}
@@ -64,7 +64,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond engineSpeedIn;
 			AddClutchLoss(torque, angularVelocity, out torqueIn, out engineSpeedIn);
 
-			var retVal = _nextComponent.Request(absTime, dt, torqueIn, engineSpeedIn, dryRun);
+			var retVal = NextComponent.Request(absTime, dt, torqueIn, engineSpeedIn, dryRun);
 			retVal.ClutchPowerRequest = Formulas.TorqueToPower(torque, angularVelocity);
 			return retVal;
 		}
@@ -75,13 +75,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PerSecond engineSpeedIn;
 			AddClutchLoss(torque, angularVelocity, out torqueIn, out engineSpeedIn);
 
-			var retVal = _nextComponent.Initialize(torqueIn, engineSpeedIn);
+			var retVal = NextComponent.Initialize(torqueIn, engineSpeedIn);
 			return retVal;
 		}
 
 		public void Connect(ITnOutPort other)
 		{
-			_nextComponent = other;
+			NextComponent = other;
 		}
 
 		private void AddClutchLoss(NewtonMeter torque, PerSecond angularVelocity, out NewtonMeter torqueIn,

@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var clutchOutPort = clutch.OutPort();
 
 			//Test - Clutch slipping
-			vehicle.Gear = 1;
+			gearbox.Gear = 1;
 
 			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 0.SI<PerSecond>());
 
@@ -45,14 +45,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(62.119969, outPort.AngularVelocity.Value(), 0.001);
 
 			//Test - Clutch opened
-			vehicle.Gear = 0;
+			gearbox.Gear = 0;
 			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 30.SI<PerSecond>());
 
 			Assert.AreEqual(0, outPort.Torque.Value(), 0.001);
 			Assert.AreEqual(engineData.IdleSpeed.Value(), outPort.AngularVelocity.Value(), 0.001);
 
 			//Test - Clutch closed
-			vehicle.Gear = 1;
+			gearbox.Gear = 1;
 			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 80.SI<PerSecond>());
 
 			Assert.AreEqual(100.0, outPort.Torque.Value(), 0.001);

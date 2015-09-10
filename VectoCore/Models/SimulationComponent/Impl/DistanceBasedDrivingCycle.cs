@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		internal readonly DrivingCycleEnumerator CycleIntervalIterator;
 
-		private IDrivingCycleOutPort _outPort;
+		protected IDrivingCycleOutPort NextComponent;
 
 		public DistanceBasedDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
 		{
@@ -57,7 +57,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		void IDrivingCycleInPort.Connect(IDrivingCycleOutPort other)
 		{
-			_outPort = other;
+			NextComponent = other;
 		}
 
 		#endregion
@@ -130,7 +130,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.WaitTime = PreviousState.WaitTime + dt;
 			CurrentState.Gradient = ComputeGradient();
 
-			return _outPort.Request(absTime, dt, CycleIntervalIterator.LeftSample.VehicleTargetSpeed, CurrentState.Gradient);
+			return NextComponent.Request(absTime, dt, CycleIntervalIterator.LeftSample.VehicleTargetSpeed, CurrentState.Gradient);
 		}
 
 		private IResponse DriveDistance(Second absTime, Meter ds)
@@ -148,7 +148,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.VehicleTargetSpeed = CycleIntervalIterator.LeftSample.VehicleTargetSpeed;
 			CurrentState.Gradient = ComputeGradient();
 
-			return _outPort.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
+			return NextComponent.Request(absTime, ds, CurrentState.VehicleTargetSpeed, CurrentState.Gradient);
 		}
 
 		private Radian ComputeGradient()
@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			};
 			CurrentState = PreviousState.Clone();
 			//return new ResponseSuccess();
-			return _outPort.Initialize(CycleIntervalIterator.LeftSample.VehicleTargetSpeed,
+			return NextComponent.Initialize(CycleIntervalIterator.LeftSample.VehicleTargetSpeed,
 				CycleIntervalIterator.LeftSample.RoadGradient);
 		}
 
@@ -244,7 +244,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time)
 		{
-			return LookAhead((LookaheadTimeSafetyMargin * DataBus.VehicleSpeed() * time).Cast<Meter>());
+			return LookAhead((LookaheadTimeSafetyMargin * DataBus.VehicleSpeed * time).Cast<Meter>());
 		}
 
 		public CycleData CycleData()

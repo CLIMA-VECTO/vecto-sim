@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -6,7 +5,7 @@ using System.Text;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
 
-namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
+namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 {
 	public class AuxiliaryData
 	{

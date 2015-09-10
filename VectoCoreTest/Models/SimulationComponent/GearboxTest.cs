@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new VehicleContainer();
 			var gearbox = new Gearbox(container, gearboxData);
 
-			container.Gear = 1;
+			gearbox.Gear = 1;
 			var ratio = 6.38;
 
 			var port = new MockTnOutPort();
@@ -110,7 +110,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
 
-			container.Gear = 1;
+			gearbox.Gear = 1;
 
 			var ratio = 6.38;
 
@@ -194,7 +194,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				var torque = (expectedT - expectedLoss) * ratios[exp.gear];
 				var angularVelocity = expectedN / ratios[exp.gear];
 
-				container.Gear = (uint)exp.gear;
+				gearbox.Gear = (uint)exp.gear;
 				var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
 				Assert.IsInstanceOfType(response, exp.responseType, exp.ToString());
 
@@ -245,7 +245,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				var torque = expectedT * ratios[exp.gear];
 				var angularVelocity = expectedN / ratios[exp.gear];
 
-				container.Gear = (uint)exp.gear;
+				gearbox.Gear = (uint)exp.gear;
 				var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
 				Assert.IsInstanceOfType(response, exp.responseType, exp.ToString());
 
@@ -294,7 +294,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				var torque = expectedT * ratios[exp.gear];
 				var angularVelocity = expectedN / ratios[exp.gear];
 
-				container.Gear = (uint)exp.gear;
+				gearbox.Gear = (uint)exp.gear;
 				var response = gearbox.OutPort().Request(absTime, dt, torque, angularVelocity);
 				Assert.IsInstanceOfType(response, exp.responseType, exp.ToString());
 
@@ -324,7 +324,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsNull(port.Dt);
 			Assert.IsNull(port.AngularVelocity);
 			Assert.IsNull(port.Torque);
-			
+
 			response = gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), 500.SI<NewtonMeter>(), 10000.SI<PerSecond>());
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 

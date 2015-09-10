@@ -9,7 +9,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Retarder : VectoSimulationComponent, IPowerTrainComponent, ITnInPort, ITnOutPort
 	{
-		private ITnOutPort _nextComponent;
+		protected ITnOutPort NextComponent;
 
 		private readonly RetarderLossMap _lossMap;
 
@@ -40,7 +40,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void Connect(ITnOutPort other)
 		{
-			_nextComponent = other;
+			NextComponent = other;
 		}
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
@@ -48,13 +48,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity);
 			_retarderLoss = retarderTorqueLoss * angularVelocity;
 
-			return _nextComponent.Request(absTime, dt, torque + retarderTorqueLoss, angularVelocity, dryRun);
+			return NextComponent.Request(absTime, dt, torque + retarderTorqueLoss, angularVelocity, dryRun);
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
 			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity);
-			return _nextComponent.Initialize(torque + retarderTorqueLoss, angularVelocity);
+			return NextComponent.Initialize(torque + retarderTorqueLoss, angularVelocity);
 		}
 	}
 }

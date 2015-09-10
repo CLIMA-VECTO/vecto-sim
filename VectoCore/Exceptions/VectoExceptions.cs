@@ -12,6 +12,10 @@ namespace TUGraz.VectoCore.Exceptions
 		[StringFormatMethod("message")]
 		public VectoException(string message, params object[] args)
 			: base(string.Format(message, args)) {}
+
+		[StringFormatMethod("message")]
+		protected VectoException(string message, Exception inner, params object[] args)
+			: base(string.Format(message, args), inner) {}
 	}
 
 	public abstract class FileIOException : VectoException
