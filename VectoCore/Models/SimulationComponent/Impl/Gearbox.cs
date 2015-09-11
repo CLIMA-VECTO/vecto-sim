@@ -1,13 +1,11 @@
 ﻿using System.Diagnostics;
 using TUGraz.VectoCore.Configuration;
-using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
-using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
 
 // TODO:
@@ -38,12 +36,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		private Second _shiftTime = double.NegativeInfinity.SI<Second>();
 
+
+		/// <summary>
+		/// True if gearbox is disengaged (no gear is set).
+		/// </summary>
+		private bool _disengaged = true;
+
 		/// <summary>
 		/// The power loss for the mod data.
 		/// </summary>
 		private Watt _powerLoss;
 
-		private bool _disengaged = true;
+		/// <summary>
+		/// The inertia power loss for the mod data.
+		/// </summary>
+		private NewtonMeter _powerLossInertia;
+
+		/// <summary>
+		/// The previous enginespeed for inertia calculation
+		/// </summary>
+		private PerSecond _previousInEnginespeed;
 
 
 		public bool ClutchClosed(Second absTime)
@@ -53,7 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public Gearbox(IVehicleContainer container, GearboxData gearboxData, IShiftStrategy strategy = null) : base(container)
 		{
-			// TODO: no default strategy! gearbox has to be called with explicit shift strategy!
+			// TODO: do not set a default strategy! gearbox should be called with explicit shift strategy! this is just for debug
 			if (strategy == null) {
 				strategy = new AMTShiftStrategy(gearboxData);
 			}
@@ -104,10 +116,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// Requests the Gearbox to deliver outTorque and outEngineSpeed
 		/// </summary>
 		/// <returns>
-		/// Special Cases:
-		/// * ResponseDryRun
-		/// * ResponseOverload
-		/// * ResponseGearshift
+		/// <list type="bullet">
+		/// <item><description>ResponseDryRun</description></item>
+		/// <item><description>ResponseOverload</description></item>
+		/// <item><description>ResponseGearshift</description></item>
+		/// </list>
 		/// </returns>
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed, bool dryRun)
 		{
@@ -118,13 +131,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
+		/// <summary>
+		/// Requests the Gearbox in Disengaged mode
+		/// </summary>
+		/// <returns>
+		/// <list type="bullet">
+		/// <item><term>ResponseDryRun</term><description>if dryRun, immediate return!</description></item>
+		/// <item><term>ResponseFailTimeInterval</term><description>if shiftTime would be exceeded by current step</description></item>
+		/// <item><term>ResponseOverload</term><description>if outTorque &gt; 0</description></item>
+		/// <item><term>ResponseUnderload</term><description>if outTorque &lt; 0</description></item>
+		/// <item><term>else</term><description>Response from NextComponent</description></item>
+		/// </list>
+		/// </returns>
 		private IResponse RequestGearDisengaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed,
 			bool dryRun)
 		{
 			Log.Debug("Current Gear: Neutral");
 
 			if (dryRun) {
-				return new ResponseDryRun { GearboxPowerRequest = outTorque * outEngineSpeed, Source = this };
+				return new ResponseDryRun {
+					Source = this,
+					GearboxPowerRequest = outTorque * outEngineSpeed
+				};
 			}
 
 			var shiftTimeExceeded = absTime.IsSmaller(_shiftTime) && _shiftTime.IsSmaller(absTime + dt);
@@ -157,16 +185,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			var response = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
-
 			response.GearboxPowerRequest = outTorque * outEngineSpeed;
 
 			return response;
 		}
 
+		/// <summary>
+		/// Requests the gearbox in engaged mode. Sets the gear if no gear was set previously.
+		/// </summary>
+		/// <returns>
+		/// <list type="bullet">
+		/// <item><term>ResponseGearShift</term><description>if a shift is needed.</description></item>
+		/// <item><term>else</term><description>Response from NextComponent.</description></item>
+		/// </list>
+		/// </returns>
 		private IResponse RequestGearEngaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed,
 			bool dryRun)
 		{
-			// Engage a Gear if no gear set
+			// Set a Gear if no gear was set
 			if (_disengaged) {
 				Gear = _strategy.Engage(outTorque, outEngineSpeed);
 				_disengaged = false;
@@ -176,13 +212,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inEngineSpeed = outEngineSpeed * Data.Gears[Gear].Ratio;
 			var inTorque = Data.Gears[Gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
 
+			_powerLoss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
+			_powerLossInertia = Formulas.InertiaPower(inEngineSpeed, _previousInEnginespeed, Data.Inertia, dt) / inEngineSpeed;
+			_previousInEnginespeed = inEngineSpeed;
+
+			inTorque += _powerLossInertia;
+
 			if (dryRun) {
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inEngineSpeed, true);
 				dryRunResponse.GearboxPowerRequest = outTorque * outEngineSpeed;
 				return dryRunResponse;
 			}
 
-			// Check if shift is needed and eventually return ResponseGearShift
 			var isShiftAllowed = (_shiftTime + Data.ShiftTime).IsSmaller(absTime);
 			if (isShiftAllowed && _strategy.ShiftRequired(Gear, inTorque, inEngineSpeed)) {
 				_shiftTime = absTime + Data.TractionInterruption;
@@ -201,7 +242,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			_powerLoss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
 			var response = NextComponent.Request(absTime, dt, inTorque, inEngineSpeed);
 			response.GearboxPowerRequest = outTorque * outEngineSpeed;
 			return response;
@@ -211,9 +251,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnInPort
 
-		void ITnInPort.
-			Connect(ITnOutPort
-				other)
+		void ITnInPort.Connect(ITnOutPort other)
 		{
 			NextComponent = other;
 		}
@@ -222,208 +260,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region VectoSimulationComponent
 
-		protected override
-			void DoWriteModalResults
-			(IModalDataWriter
-				writer)
+		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
 			writer[ModalResultField.Gear] = Gear;
 			writer[ModalResultField.PlossGB] = _powerLoss;
-
-			// todo Gearbox PaGB rotational acceleration power in moddata
-			writer[ModalResultField.PaGB] = 0.SI();
+			writer[ModalResultField.PaGB] = _powerLossInertia;
 		}
 
-		protected override
-			void DoCommitSimulationStep
-			()
+		protected override void DoCommitSimulationStep()
 		{
-			_powerLoss = 0.SI<Watt>();
+			_powerLoss = null;
+			_powerLossInertia = null;
 		}
 
 		#endregion
-	}
-
-	public interface IShiftStrategy
-	{
-		bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed);
-		uint InitGear(NewtonMeter torque, PerSecond angularSpeed);
-		uint Engage(NewtonMeter outTorque, PerSecond outEngineSpeed);
-		void Disengage(NewtonMeter outTorque, PerSecond outEngineSpeed);
-		Gearbox Gearbox { get; set; }
-	}
-
-
-	public abstract class ShiftStrategy : IShiftStrategy
-	{
-		public abstract uint Engage(NewtonMeter torque, PerSecond angularSpeed);
-		public abstract void Disengage(NewtonMeter outTorque, PerSecond outEngineSpeed);
-		public abstract bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed);
-		public abstract uint InitGear(NewtonMeter torque, PerSecond angularSpeed);
-
-		protected GearboxData Data;
-		public Gearbox Gearbox { get; set; }
-
-
-		protected ShiftStrategy(GearboxData data)
-		{
-			Data = data;
-		}
-
-		/// <summary>
-		/// Tests if the gearbox should shift down.
-		/// </summary>
-		protected bool ShouldShiftDown(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
-		{
-			if (gear <= 1) {
-				return false;
-			}
-
-			var downSection = Data.Gears[gear].ShiftPolygon.Downshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
-			return IsOnLeftSide(inEngineSpeed, inTorque, downSection.Item1, downSection.Item2);
-		}
-
-		/// <summary>
-		/// Tests if the gearbox should shift up.
-		/// </summary>
-		protected bool ShouldShiftUp(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
-		{
-			if (gear >= Data.Gears.Count) {
-				return false;
-			}
-
-			var upSection = Data.Gears[gear].ShiftPolygon.Upshift.GetSection(entry => entry.AngularSpeed < inEngineSpeed);
-			return IsOnRightSide(inEngineSpeed, inTorque, upSection.Item1, upSection.Item2);
-		}
-
-		/// <summary>
-		/// Tests if current power request is left or right of the shiftpolygon segment
-		/// </summary>
-		protected static bool IsOnLeftSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
-			ShiftPolygon.ShiftPolygonEntry to)
-		{
-			var ab = new { X = to.AngularSpeed - from.AngularSpeed, Y = to.Torque - from.Torque };
-			var ac = new { X = angularSpeed - from.AngularSpeed, Y = torque - from.Torque };
-			return (ab.X * ac.Y - ab.Y * ac.X).IsGreater(0);
-		}
-
-		/// <summary>
-		/// Tests if current power request is left or right of the shiftpolygon segment
-		/// </summary>
-		protected static bool IsOnRightSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
-			ShiftPolygon.ShiftPolygonEntry to)
-		{
-			var ab = new { X = to.AngularSpeed - from.AngularSpeed, Y = to.Torque - from.Torque };
-			var ac = new { X = angularSpeed - from.AngularSpeed, Y = torque - from.Torque };
-			return (ab.X * ac.Y - ab.Y * ac.X).IsSmaller(0);
-		}
-	}
-
-
-	public class AMTShiftStrategy : ShiftStrategy
-	{
-		protected uint LastGear;
-
-		public AMTShiftStrategy(GearboxData data) : base(data)
-		{
-			LastGear = 1;
-		}
-
-		public uint GetGear(uint gear, NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			do {
-				var inEngineSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
-				var inTorque = Data.Gears[gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
-				if (ShouldShiftUp(gear, inTorque, inEngineSpeed)) {
-					gear++;
-					continue;
-				}
-
-				if (ShouldShiftDown(gear, inTorque, inEngineSpeed)) {
-					gear--;
-					continue;
-				}
-				break;
-				// ReSharper disable once LoopVariableIsNeverChangedInsideLoop
-			} while (Data.SkipGears);
-
-			if (gear == 0) {
-				throw new VectoSimulationException("Could not find gear! outTorque: {0}, outEngineSpeed: {1}, skipGears: {2}",
-					outTorque, outEngineSpeed, Data.SkipGears);
-			}
-			return gear;
-		}
-
-		public override uint Engage(NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			return GetGear(LastGear, outTorque, outEngineSpeed);
-		}
-
-		public override void Disengage(NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			LastGear = GetGear(Gearbox.Gear, outTorque, outEngineSpeed);
-		}
-
-		public override bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed)
-		{
-			return ShouldShiftDown(gear, torque, angularSpeed) || ShouldShiftUp(gear, torque, angularSpeed);
-		}
-
-		public override uint InitGear(NewtonMeter torque, PerSecond angularSpeed)
-		{
-			return Engage(torque, angularSpeed);
-		}
-	}
-
-	//TODO Implementd MTShiftStrategy
-	public class MTShiftStrategy : ShiftStrategy
-	{
-		public MTShiftStrategy(GearboxData data) : base(data) {}
-
-		public override uint Engage(NewtonMeter torque, PerSecond angularSpeed)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override void Disengage(NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override uint InitGear(NewtonMeter torque, PerSecond angularSpeed)
-		{
-			throw new System.NotImplementedException();
-		}
-	}
-
-	// TODO Implement ATShiftStrategy
-	public class ATShiftStrategy : ShiftStrategy
-	{
-		public ATShiftStrategy(GearboxData data) : base(data) {}
-
-		public override uint Engage(NewtonMeter torque, PerSecond angularSpeed)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override void Disengage(NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed)
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override uint InitGear(NewtonMeter torque, PerSecond angularSpeed)
-		{
-			throw new System.NotImplementedException();
-		}
 	}
 }

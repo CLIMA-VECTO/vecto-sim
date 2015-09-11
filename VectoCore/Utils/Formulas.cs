@@ -6,22 +6,16 @@ namespace TUGraz.VectoCore.Utils
 	public static class Formulas
 	{
 		/// <summary>
-		///     [Nm], [rad/s] => [W]. Calculates the power from torque and angular velocity.
+		/// Calculates the power from torque and angular velocity.
 		/// </summary>
-		/// <param name="torque">[Nm]</param>
-		/// <param name="angularVelocity">[rad/s]</param>
-		/// <returns>power [W]</returns>
 		public static Watt TorqueToPower(NewtonMeter torque, PerSecond angularVelocity)
 		{
 			return torque * angularVelocity;
 		}
 
 		/// <summary>
-		///     [W], [rad/s] => [Nm]. Calculates the torque from power and angular velocity.
+		/// Calculates the torque from power and angular velocity.
 		/// </summary>
-		/// <param name="power">[W]</param>
-		/// <param name="angularVelocity">[rad/s]</param>
-		/// <returns>torque [Nm]</returns>
 		public static NewtonMeter PowerToTorque(Watt power, PerSecond angularVelocity)
 		{
 			if (Math.Abs(angularVelocity.Value()) < 1E-10) {
@@ -41,6 +35,23 @@ namespace TUGraz.VectoCore.Utils
 			}
 
 			return ((v2 - v1) * (v1 + v2) / deceleration / 2.0).Cast<Meter>();
+		}
+
+		/// <summary>
+		/// Calculates power loss caused by inertia.
+		/// https://en.wikipedia.org/wiki/Angular_acceleration
+		/// alpha = delta_omega / dt
+		/// torque = I * alpha
+		/// </summary>
+		public static Watt InertiaPower(PerSecond currentOmega, PerSecond previousOmega, KilogramSquareMeter inertia,
+			Second dt)
+		{
+			var deltaOmega = previousOmega - currentOmega;
+			var avgOmega = (currentOmega + previousOmega) / 2;
+
+			var alpha = deltaOmega / dt;
+			var torque = inertia * alpha;
+			return (torque * avgOmega).Cast<Watt>();
 		}
 	}
 }
