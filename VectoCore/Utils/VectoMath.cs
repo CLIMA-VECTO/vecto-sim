@@ -212,7 +212,7 @@ namespace TUGraz.VectoCore.Utils
 		}
 	}
 
-	[DebuggerDisplay("Triangle({P1}, {P2}, {P3})")]
+	[DebuggerDisplay("Triangle({P1.X, P1.Y, P1.Z}, {P2.X, P2.Y, P2.Z}, {P3.X, P3.Y, P3.Z})")]
 	public class Triangle
 	{
 		public Point P1;
@@ -226,7 +226,7 @@ namespace TUGraz.VectoCore.Utils
 			P3 = p3;
 		}
 
-		public bool IsInside(double x, double y, bool exact = true)
+		public bool IsInside(double x, double y, bool exact)
 		{
 			Contract.Requires(P1 != null);
 			Contract.Requires(P2 != null);
