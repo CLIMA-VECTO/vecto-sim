@@ -30,7 +30,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
 
-		public const string GearboxLossMap = @"TestData\Components\Indirect Gear.vtlm";
+		public const string IndirectLossMap = @"TestData\Components\Indirect Gear.vtlm";
+		public const string DirectLossMap = @"TestData\Components\Direct Gear.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
@@ -47,7 +48,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					Tuple.Create((uint)i,
 						new GearData {
 							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio),
+							LossMap = TransmissionLossMap.ReadFromFile((i != 6) ? IndirectLossMap : DirectLossMap, ratio),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
 						}))
@@ -198,26 +199,26 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			// the first element 0.0 is just a placeholder for axlegear, not used in this test
 
 			var expected = new[] {
+				new { gear = 1, t = -1000, n = 800, loss = 29.108, responseType = typeof(ResponseSuccess) },
+				new { gear = 2, t = -1000, n = 800, loss = 29.108, responseType = typeof(ResponseSuccess) },
+				new { gear = 7, t = -1000, n = 1200, loss = 16.132, responseType = typeof(ResponseSuccess) },
+				new { gear = 7, t = 850, n = 1200, loss = 15.382, responseType = typeof(ResponseSuccess) },
+				new { gear = 7, t = 2450, n = 1200, loss = 23.382, responseType = typeof(ResponseSuccess) },
 				new { gear = 1, t = 50, n = 800, loss = 10.108, responseType = typeof(ResponseSuccess) },
 				new { gear = 1, t = 2450, n = 800, loss = 58.11, responseType = typeof(ResponseSuccess) },
-				new { gear = 1, t = -1000, n = 800, loss = 29.11, responseType = typeof(ResponseSuccess) },
 				new { gear = 1, t = 850, n = 800, loss = 26.11, responseType = typeof(ResponseSuccess) },
 				new { gear = 1, t = 850, n = 0, loss = 22.06, responseType = typeof(ResponseSuccess) },
 				new { gear = 1, t = 850, n = 200, loss = 23.07, responseType = typeof(ResponseSuccess) },
 				new { gear = 2, t = 50, n = 800, loss = 10.108, responseType = typeof(ResponseSuccess) },
 				new { gear = 2, t = 2450, n = 800, loss = 58.11, responseType = typeof(ResponseGearShift) },
-				new { gear = 2, t = -1000, n = 800, loss = 29.11, responseType = typeof(ResponseSuccess) },
 				new { gear = 2, t = 850, n = 800, loss = 26.11, responseType = typeof(ResponseSuccess) },
 				new { gear = 2, t = 850, n = 0, loss = 22.06, responseType = typeof(ResponseGearShift) },
 				new { gear = 2, t = 850, n = 400, loss = 11.334, responseType = typeof(ResponseGearShift) },
 				new { gear = 2, t = 850, n = 2000, loss = 32.18, responseType = typeof(ResponseGearShift) },
 				new { gear = 7, t = -1000, n = 0, loss = 10.06, responseType = typeof(ResponseGearShift) },
-				new { gear = 7, t = -1000, n = 1200, loss = 16.132, responseType = typeof(ResponseSuccess) },
 				new { gear = 7, t = 850, n = 0, loss = 9.31, responseType = typeof(ResponseGearShift) },
-				new { gear = 7, t = 850, n = 1200, loss = 15.382, responseType = typeof(ResponseSuccess) },
 				new { gear = 7, t = 850, n = 2000, loss = 19.43, responseType = typeof(ResponseGearShift) },
 				new { gear = 7, t = 2450, n = 0, loss = 17.31, responseType = typeof(ResponseGearShift) },
-				new { gear = 7, t = 2450, n = 1200, loss = 23.382, responseType = typeof(ResponseSuccess) }
 			};
 
 			var absTime = 0.SI<Second>();
