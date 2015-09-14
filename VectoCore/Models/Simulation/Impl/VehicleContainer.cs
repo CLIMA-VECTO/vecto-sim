@@ -201,6 +201,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public bool ClutchClosed(Second absTime)
 		{
+			if (Clutch == null) {
+				Log.Warn("No Clutch in VehicleContainer. ClutchClosed set to constant true!");
+				return true;
+			}
 			return Clutch.ClutchClosed(absTime);
 		}
 	}

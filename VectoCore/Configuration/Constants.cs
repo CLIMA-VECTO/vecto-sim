@@ -62,7 +62,7 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const int DriverSearchLoopThreshold = 100;
 
-			public const double EngineFLDPowerTolerance = 0.50; // Watt
+			public const double EnginePowerSearchTolerance = 0.50; // Watt
 
 			public const double CluchNormSpeed = 0.03;
 

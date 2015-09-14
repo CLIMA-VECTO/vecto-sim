@@ -422,7 +422,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
 				delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest;
 
-				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
+				if (delta.IsEqual(0, Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 					LogManager.EnableLogging();
 					Log.Debug("found operating point in {0} iterations, delta: {1}", debug.Count, delta);
 					return operatingPoint;
@@ -537,7 +537,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					(ResponseDryRun)NextComponent.Request(absTime, retVal.SimulationInterval, retVal.Acceleration, gradient, true);
 				delta = actionRoll ? response.GearboxPowerRequest : (coasting ? response.DeltaDragLoad : response.DeltaFullLoad);
 
-				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
+				if (delta.IsEqual(0, Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 					LogManager.EnableLogging();
 					Log.Debug("found operating point in {0} iterations. Engine Power req: {2}, Gearbox Power req: {3} delta: {1}",
 						debug.Count, delta, response.EnginePowerRequest, response.GearboxPowerRequest);

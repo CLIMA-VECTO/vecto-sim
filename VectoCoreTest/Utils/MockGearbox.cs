@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			// noting to write
+			// nothing to write
 		}
 
 		protected override void DoCommitSimulationStep() {}
