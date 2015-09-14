@@ -7,7 +7,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public abstract class ShiftStrategy : IShiftStrategy
 	{
-		public abstract uint Engage(NewtonMeter torque, PerSecond angularSpeed);
+		public abstract uint Engage(NewtonMeter torque, PerSecond angularSpeed, bool skipGears);
 		public abstract void Disengage(NewtonMeter outTorque, PerSecond outEngineSpeed);
 		public abstract bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed);
 		public abstract uint InitGear(NewtonMeter torque, PerSecond angularSpeed);
@@ -74,13 +74,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected uint LastGear;
 
-		public AMTShiftStrategy(GearboxData data)
-			: base(data)
+		public AMTShiftStrategy(GearboxData data) : base(data)
 		{
 			LastGear = 1;
 		}
 
-		public uint GetGear(uint gear, NewtonMeter outTorque, PerSecond outEngineSpeed)
+		public uint GetGear(uint gear, NewtonMeter outTorque, PerSecond outEngineSpeed, bool skipGears)
 		{
 			var loopCount = Data.Gears.Count; // protection against infinite loops
 			do {
@@ -96,23 +95,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					continue;
 				}
 				break;
-			} while (Data.SkipGears && loopCount-- > 0);
+			} while (skipGears && loopCount-- > 0);
 
 			if (gear == 0) {
 				throw new VectoSimulationException("Could not find gear! outTorque: {0}, outEngineSpeed: {1}, skipGears: {2}",
-					outTorque, outEngineSpeed, Data.SkipGears);
+					outTorque, outEngineSpeed, skipGears);
 			}
 			return gear;
 		}
 
-		public override uint Engage(NewtonMeter outTorque, PerSecond outEngineSpeed)
+		public override uint Engage(NewtonMeter outTorque, PerSecond outEngineSpeed, bool skipGears)
 		{
-			return GetGear(LastGear, outTorque, outEngineSpeed);
+			return GetGear(LastGear, outTorque, outEngineSpeed, skipGears);
 		}
 
 		public override void Disengage(NewtonMeter outTorque, PerSecond outEngineSpeed)
 		{
-			LastGear = GetGear(Gearbox.Gear, outTorque, outEngineSpeed);
+			LastGear = GetGear(Gearbox.Gear, outTorque, outEngineSpeed, Data.SkipGears);
 		}
 
 		public override bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed)
@@ -122,7 +121,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override uint InitGear(NewtonMeter torque, PerSecond angularSpeed)
 		{
-			return Engage(torque, angularSpeed);
+			return Engage(torque, angularSpeed, true);
 		}
 	}
 
@@ -131,7 +130,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		public MTShiftStrategy(GearboxData data) : base(data) {}
 
-		public override uint Engage(NewtonMeter torque, PerSecond angularSpeed)
+		public override uint Engage(NewtonMeter torque, PerSecond angularSpeed, bool skipGears)
 		{
 			throw new System.NotImplementedException();
 		}
@@ -157,7 +156,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		public ATShiftStrategy(GearboxData data) : base(data) {}
 
-		public override uint Engage(NewtonMeter torque, PerSecond angularSpeed)
+		public override uint Engage(NewtonMeter torque, PerSecond angularSpeed, bool skipGears)
 		{
 			throw new System.NotImplementedException();
 		}

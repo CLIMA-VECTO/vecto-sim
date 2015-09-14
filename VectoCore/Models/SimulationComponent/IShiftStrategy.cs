@@ -7,7 +7,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	{
 		bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed);
 		uint InitGear(NewtonMeter torque, PerSecond angularSpeed);
-		uint Engage(NewtonMeter outTorque, PerSecond outEngineSpeed);
+		uint Engage(NewtonMeter outTorque, PerSecond outEngineSpeed, bool skipGears);
 		void Disengage(NewtonMeter outTorque, PerSecond outEngineSpeed);
 		Gearbox Gearbox { get; set; }
 	}
