@@ -103,7 +103,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			port.Request(absTime, dt, Formulas.PowerToTorque(2329.973.SI<Watt>(), engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
 
-			Assert.AreEqual(1152.40304, ((SI)dataWriter[ModalResultField.PaEng]).Value(), 0.001);
+			AssertHelper.AreRelativeEqual(1152.40304, ((SI)dataWriter[ModalResultField.PaEng]).Value());
 
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
