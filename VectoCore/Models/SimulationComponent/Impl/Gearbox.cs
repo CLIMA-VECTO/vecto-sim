@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (DataBus.VehicleSpeed.IsEqual(0)) {
-				Gear = _strategy.Engage(outTorque, outEngineSpeed);
+				Gear = _strategy.Engage(outTorque, outEngineSpeed, Data.SkipGears);
 			}
 
 			var response = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
@@ -204,7 +204,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			// Set a Gear if no gear was set
 			if (_disengaged) {
-				Gear = _strategy.Engage(outTorque, outEngineSpeed);
+				Gear = _strategy.Engage(outTorque, outEngineSpeed, Data.SkipGears);
 				_disengaged = false;
 				Log.Debug("Gearbox engaged gear {0}", Gear);
 			}
@@ -216,6 +216,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var torqueLossInertia = !inEngineSpeed.IsEqual(0)
 				? Formulas.InertiaPower(inEngineSpeed, _previousInEnginespeed, Data.Inertia, dt) / inEngineSpeed
 				: 0.SI<NewtonMeter>();
+
 			_previousInEnginespeed = inEngineSpeed;
 
 			inTorque += torqueLossInertia;
