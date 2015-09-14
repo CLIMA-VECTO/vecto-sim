@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// compute speed at the end of the simulation interval. if it exceeds the limit -> return
 			var v2 = DataBus.VehicleSpeed + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
 			if (v2 > maxVelocity) {
-				return new ResponseSpeedLimitExceeded();
+				return new ResponseSpeedLimitExceeded() { Source = this };
 			}
 
 			var retVal = NextComponent.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
@@ -275,16 +275,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var operatingPoint = ComputeAcceleration(ds, nextTargetSpeed);
 
-			var v2 = DataBus.VehicleSpeed + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
-			var nextAcceleration = DriverData.AccelerationCurve.Lookup(v2).Deceleration;
-			var tmp = ComputeTimeInterval(VectoMath.Min(operatingPoint.Acceleration, nextAcceleration),
-				operatingPoint.SimulationDistance);
-			if (operatingPoint.SimulationDistance.Equals(tmp.SimulationDistance)) {
-				// only decelerate more of the simulation interval is not modified
-				// i.e., braking to the next sample point
-				Log.Debug("adjusting acceleration from {0} to {1}", operatingPoint.Acceleration, tmp.Acceleration);
-				operatingPoint = tmp;
-				// ComputeTimeInterval((operatingPoint.Acceleration + tmp.Acceleration) / 2, operatingPoint.SimulationDistance);
+			if (operatingPoint.Acceleration < 0) {
+				var v2 = DataBus.VehicleSpeed + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
+				var nextAcceleration = DriverData.AccelerationCurve.Lookup(v2).Deceleration;
+				var tmp = ComputeTimeInterval(VectoMath.Min(operatingPoint.Acceleration, nextAcceleration),
+					operatingPoint.SimulationDistance);
+				if (operatingPoint.SimulationDistance.Equals(tmp.SimulationDistance)) {
+					// only decelerate more of the simulation interval is not modified
+					// i.e., braking to the next sample point
+					Log.Debug("adjusting acceleration from {0} to {1}", operatingPoint.Acceleration, tmp.Acceleration);
+					operatingPoint = tmp;
+					// ComputeTimeInterval((operatingPoint.Acceleration + tmp.Acceleration) / 2, operatingPoint.SimulationDistance);
+				}
 			}
 
 
@@ -403,7 +405,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseGearShift>(r => origDelta = r.GearboxPowerRequest).
 				Case<ResponseUnderload>(r => origDelta = DataBus.ClutchClosed(absTime)
 					? r.Delta
-					: r.GearboxPowerRequest);
+					: r.GearboxPowerRequest).
+				Default(r => {
+					throw new UnexpectedResponseException("cannot use response for searching braking power!", r);
+				});
 			var delta = origDelta;
 
 			debug.Add(new { brakingPower = 0.SI<Watt>(), searchInterval, delta });
@@ -517,9 +522,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					LogManager.EnableLogging();
 					Log.Warn("Operating Point outside driver acceleration limits: a: {0}", retVal.Acceleration);
 					LogManager.DisableLogging();
-					throw new VectoSimulationException(
-						"Could not find an operating point: operating point outside of driver acceleration limits. a: {0}",
-						retVal.Acceleration);
+					//throw new VectoSimulationException(
+					//	"Could not find an operating point: operating point outside of driver acceleration limits. a: {0}",
+					//	retVal.Acceleration);
 				}
 
 				// TODO: move to driving mode

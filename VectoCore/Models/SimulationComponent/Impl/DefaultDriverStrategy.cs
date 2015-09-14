@@ -158,6 +158,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							Case<ResponseUnderload>(() => {
 								// overload may happen if driver limits acceleration when rolling downhill
 								response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient);
+							}).
+							Case<ResponseSpeedLimitExceeded>(() => {
+								response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient);
 							});
 					}).
 					Case<ResponseUnderload>(r => {
@@ -168,6 +171,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				response.Switch().
 					Case<ResponseUnderload>(r => {
 						response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient, r);
+					}).Case<ResponseSpeedLimitExceeded>(() => {
+						response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, targetVelocity, gradient);
 					});
 			}
 			return response;
