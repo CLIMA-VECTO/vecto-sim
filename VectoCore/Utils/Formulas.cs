@@ -1,4 +1,3 @@
-using System;
 using TUGraz.VectoCore.Exceptions;
 
 namespace TUGraz.VectoCore.Utils
@@ -18,9 +17,6 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		public static NewtonMeter PowerToTorque(Watt power, PerSecond angularVelocity)
 		{
-			if (Math.Abs(angularVelocity.Value()) < 1E-10) {
-				throw new VectoException("Can not compute Torque for 0 angular Velocity!");
-			}
 			return power / angularVelocity;
 		}
 
@@ -43,6 +39,11 @@ namespace TUGraz.VectoCore.Utils
 		/// alpha = delta_omega / dt
 		/// torque = I * alpha
 		/// </summary>
+		/// <param name="currentOmega">The current omega (new angularSpeed).</param>
+		/// <param name="previousOmega">The previous omega (old angularSpeed).</param>
+		/// <param name="inertia">The inertia parameter.</param>
+		/// <param name="dt">The dt.</param>
+		/// <returns></returns>
 		public static Watt InertiaPower(PerSecond currentOmega, PerSecond previousOmega, KilogramSquareMeter inertia,
 			Second dt)
 		{
