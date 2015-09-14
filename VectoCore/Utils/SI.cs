@@ -788,6 +788,7 @@ namespace TUGraz.VectoCore.Utils
 		/// ATTENTION: Before returning an SI Unit, ensure to cancel Conversion Mode (with or Cast).
 		/// </summary>
 		/// <returns></returns>
+		[DebuggerHidden]
 		public SI ConvertTo()
 		{
 			return new SI(Linear, reciproc: false, reverse: true);
@@ -797,6 +798,7 @@ namespace TUGraz.VectoCore.Utils
 		/// Casts the SI Unit to the concrete unit type (if the units allow such an cast).
 		/// </summary>
 		/// <typeparam name="T">the specialized SI unit. e.g. Watt, NewtonMeter, Second</typeparam>
+		[DebuggerHidden]
 		public T Cast<T>() where T : SIBase<T>
 		{
 			var t = SIBase<T>.Create(Val);

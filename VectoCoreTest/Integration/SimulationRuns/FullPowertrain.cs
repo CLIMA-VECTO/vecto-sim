@@ -252,7 +252,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			ResultFileHelper.TestSumFile(@"TestData\Results\Integration\job.vsum", @"job.vsum");
 
 			ResultFileHelper.TestModFile(@"TestData\Results\Integration\job_1-Gear-Test-dist.vmod",
-				@"TestData\job_1-Gear-Test-dist.vmod");
+				@"TestData\job_1-Gear-Test-dist.vmod", testRowCount: false);
 		}
 
 

@@ -151,7 +151,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var vehicleData = CreateVehicleData(33000.SI<Kilogram>());
 
-
 			var driverData = CreateDriverData();
 
 			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain.vmod", SimulatorFactory.FactoryMode.EngineeringMode);
@@ -168,7 +167,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
 
 			var gbx = new MockGearbox(vehicleContainer);
-			gbx.Gear = 1;
 
 			var driverPort = driver.OutPort();
 
@@ -183,7 +181,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.908, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.9613, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 
 			response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.SI<Radian>());
 
@@ -192,18 +190,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.7973, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.7904, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 
 			// change vehicle weight, cannot reach minimum acceleration...
 			vehicleData.Loading = 70000.SI<Kilogram>();
 
-			try {
-				response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.05.SI<Radian>());
-				Assert.Fail();
-			} catch (VectoSimulationException e) {
-				Assert.AreEqual("Could not achieve minimum acceleration", e.Message);
-			}
-			//Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			AssertHelper.Exception<VectoSimulationException>(() => {
+				driverPort.Request(absTime, 0.1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.05.SI<Radian>());
+			}, "Could not achieve minimum acceleration");
 		}
 
 		[TestMethod]
