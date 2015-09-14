@@ -18,7 +18,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected string JobFileName { get; set; }
 		protected string JobName { get; set; }
 		protected ISimulationOutPort CyclePort { get; set; }
-		protected IModalDataWriter DataWriter { get; set; }
+		//protected IModalDataWriter DataWriter { get; set; }
 		protected IVehicleContainer Container { get; set; }
 
 		protected VectoRun(IVehicleContainer container)
