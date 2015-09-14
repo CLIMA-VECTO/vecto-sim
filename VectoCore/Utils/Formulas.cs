@@ -47,7 +47,7 @@ namespace TUGraz.VectoCore.Utils
 		public static Watt InertiaPower(PerSecond currentOmega, PerSecond previousOmega, KilogramSquareMeter inertia,
 			Second dt)
 		{
-			var deltaOmega = previousOmega - currentOmega;
+			var deltaOmega = currentOmega - previousOmega;
 			var avgOmega = (currentOmega + previousOmega) / 2;
 
 			var alpha = deltaOmega / dt;
