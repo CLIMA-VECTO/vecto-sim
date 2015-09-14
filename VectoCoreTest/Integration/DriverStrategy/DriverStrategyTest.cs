@@ -120,6 +120,30 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 		[TestMethod]
+		public void Accelerate_0_85_uphill_1()
+		{
+			var cycle = CreateCycleData(new[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  0,  0,     2",
+				"  0,  85, 1,     0",
+				"1000, 85, 1,     0",
+			});
+			CreatePowerTrain(cycle, "DriverStrategy_Accelerate_0_85_uphill_1.vmod").Run();
+		}
+
+		[TestMethod]
+		public void Accelerate_0_85_uphill_2()
+		{
+			var cycle = CreateCycleData(new[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  0,  0,     2",
+				"  0,  85, 2,     0",
+				"1000, 85, 2,     0",
+			});
+			CreatePowerTrain(cycle, "DriverStrategy_Accelerate_0_85_uphill_2.vmod").Run();
+		}
+
+		[TestMethod]
 		public void Accelerate_0_85_uphill_5()
 		{
 			var cycle = CreateCycleData(new[] {
@@ -173,8 +197,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
 				"  0,  0,  0,     2",
-				"  0,  85, 15,    0",
-				"1000, 85, 15,    0",
+				"  0,  85, 10,    0",
+				"1000, 85, 10,    0",
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Accelerate_0_85_uphill_15.vmod").Run();
 		}
@@ -585,7 +609,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
 
 			var aux = new Auxiliary(container);
-			aux.AddConstant("", 500.SI<Watt>());
+			aux.AddConstant("", 0.SI<Watt>());
 
 			tmp = Port.AddComponent(tmp, aux);
 

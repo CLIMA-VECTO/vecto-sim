@@ -53,8 +53,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
 			AddComponent(tmp, engine);
 
-			var gbx = new MockGearbox(vehicleContainer);
-			gbx.Gear = 1;
+			var gbx = new MockGearbox(vehicleContainer) { Gear = 1 };
 
 			var driverPort = driver.OutPort();
 

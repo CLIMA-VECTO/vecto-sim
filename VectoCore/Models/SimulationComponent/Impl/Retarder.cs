@@ -45,6 +45,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
+			if (angularVelocity == null) {
+				return NextComponent.Request(absTime, dt, torque, null, dryRun);
+			}
 			var retarderTorqueLoss = _lossMap.RetarderLoss(angularVelocity);
 			_retarderLoss = retarderTorqueLoss * angularVelocity;
 
