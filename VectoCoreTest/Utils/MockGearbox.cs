@@ -2,12 +2,13 @@
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockGearbox : VectoSimulationComponent, IGearbox, ITnInPort, ITnOutPort
+	public class MockGearbox : VectoSimulationComponent, IGearbox, ITnInPort, ITnOutPort, IClutchInfo
 	{
 		private ITnOutPort _outPort;
 
@@ -44,9 +45,14 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			// noting to write
+			// nothing to write
 		}
 
 		protected override void DoCommitSimulationStep() {}
+
+		public bool ClutchClosed(Second absTime)
+		{
+			return true;
+		}
 	}
 }

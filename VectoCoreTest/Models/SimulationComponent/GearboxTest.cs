@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NLog;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
+using TUGraz.VectoCore.Tests.Integration.SimulationRuns;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
 
@@ -17,7 +22,42 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		protected string GearboxDataFile = @"TestData\Components\24t Coach.vgbx";
 		protected string EngineDataFile = @"TestData\Components\24t Coach.veng";
 
+		private static Logger Log = LogManager.GetLogger(typeof(FullPowerTrain).ToString());
+
+		public const string CycleFile = @"TestData\Integration\FullPowerTrain\1-Gear-Test-dist.vdri";
+		public const string CoachCycleFile = @"TestData\Integration\FullPowerTrain\Coach.vdri";
+		public const string EngineFile = @"TestData\Components\24t Coach.veng";
+
+		public const string AccelerationFile = @"TestData\Components\Coach.vacc";
+
+		public const string GearboxLossMap = @"TestData\Components\Indirect Gear.vtlm";
+		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
+		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
+
+
 		public TestContext TestContext { get; set; }
+
+		// todo: add realistic FullLoadCurve
+		private static GearboxData CreateGearboxData()
+		{
+			var ratios = new[] { 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
+
+			return new GearboxData {
+				Gears = ratios.Select((ratio, i) =>
+					Tuple.Create((uint)i,
+						new GearData {
+							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
+							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio),
+							Ratio = ratio,
+							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
+						}))
+					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
+				ShiftTime = 2.SI<Second>(),
+				Inertia = 0.SI<KilogramSquareMeter>(),
+				TractionInterruption = 1.SI<Second>(),
+			};
+		}
+
 
 		[TestMethod]
 		public void AxleGearTest()
@@ -148,7 +188,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_Request()
 		{
 			var container = new VehicleContainer();
-			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var gearboxData = CreateGearboxData();
 			var gearbox = new Gearbox(container, gearboxData);
 
 			var port = new MockTnOutPort();
@@ -186,7 +226,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			foreach (var exp in expected) {
 				gearbox.OutPort().Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>());
 
-
 				var expectedT = exp.t.SI<NewtonMeter>();
 				var expectedN = exp.n.RPMtoRad();
 				var expectedLoss = exp.loss.SI<NewtonMeter>();
@@ -202,7 +241,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					AssertHelper.AreRelativeEqual(absTime, port.AbsTime, message: exp.ToString());
 					AssertHelper.AreRelativeEqual(dt, port.Dt, message: exp.ToString());
 					AssertHelper.AreRelativeEqual(expectedN, port.AngularVelocity, message: exp.ToString());
-					AssertHelper.AreRelativeEqual(expectedT, port.Torque, message: exp.ToString());
+					AssertHelper.AreRelativeEqual(expectedT, port.Torque, message: exp.ToString(), toleranceFactor: 1e-5);
 				}
 			}
 		}
@@ -310,7 +349,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_NoGear()
 		{
 			var container = new VehicleContainer();
-			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
+			var gearboxData = CreateGearboxData();
 			var gearbox = new Gearbox(container, gearboxData);
 
 			var port = new MockTnOutPort();
@@ -325,13 +364,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.IsNull(port.AngularVelocity);
 			Assert.IsNull(port.Torque);
 
-			response = gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), 500.SI<NewtonMeter>(), 10000.SI<PerSecond>());
+			response = gearbox.OutPort().Request(2.SI<Second>(), 1.SI<Second>(), 500.SI<NewtonMeter>(), 10000.SI<PerSecond>());
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
-			AssertHelper.AreRelativeEqual(0.SI<Second>(), port.AbsTime);
+			AssertHelper.AreRelativeEqual(2.SI<Second>(), port.AbsTime);
 			AssertHelper.AreRelativeEqual(1.SI<Second>(), port.Dt);
-			AssertHelper.AreRelativeEqual(0.SI<PerSecond>(), port.AngularVelocity);
-			AssertHelper.AreRelativeEqual(0.SI<NewtonMeter>(), port.Torque);
+			Assert.IsNotNull(port.AngularVelocity);
+			Assert.IsNotNull(port.Torque);
+
+			Assert.IsTrue(port.AngularVelocity.IsGreater(0));
+			Assert.IsTrue(port.Torque.IsGreater(0));
 		}
 	}
 }

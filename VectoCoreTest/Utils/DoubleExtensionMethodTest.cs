@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Assert.IsTrue(0.0.IsSmaller(1.0));
 			Assert.IsTrue(1.0.IsSmallerOrEqual(1.0));
 
-			const double inTolerance = 0.00099;
+			const double inTolerance = 1e-7;
 			Assert.IsTrue(0.0.IsEqual(inTolerance));
 			Assert.IsTrue(inTolerance.IsEqual(0.0));
 			Assert.IsTrue(0.0.IsEqual(-inTolerance));
@@ -49,7 +49,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			Assert.IsTrue(1.002.IsGreater(1.0));
 			Assert.IsTrue(1.001.IsGreater(1.0));
-			Assert.IsTrue(1.0.IsGreater(1.0));
+			Assert.IsFalse(1.0.IsGreater(1.0));
 			Assert.IsFalse(0.999.IsGreater(1.0));
 
 			Assert.IsTrue(1.001.IsGreaterOrEqual(1.0));
@@ -58,17 +58,17 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			Assert.IsTrue(0.001.IsPositive());
 			Assert.IsTrue(0.0.IsPositive());
-			Assert.IsTrue((-0.0009).IsPositive());
+			Assert.IsTrue((-inTolerance).IsPositive());
 			Assert.IsFalse((-0.001).IsPositive());
 			Assert.IsFalse((-0.002).IsPositive());
 
 			Assert.IsTrue(0.998.IsSmaller(1.0));
 			Assert.IsTrue(0.999.IsSmaller(1.0));
-			Assert.IsTrue(1.0.IsSmaller(1.0));
+			Assert.IsFalse(1.0.IsSmaller(1.0));
 			Assert.IsFalse(1.0011.IsSmaller(1.0));
 
-			Assert.IsTrue(1.001.IsSmallerOrEqual(1.0));
-			Assert.IsFalse(1.002.IsSmallerOrEqual(1.0));
+			Assert.IsTrue((1 + inTolerance).IsSmallerOrEqual(1.0));
+			Assert.IsFalse(1.001.IsSmallerOrEqual(1.0));
 			Assert.IsTrue(0.999.IsSmallerOrEqual(1.0));
 			Assert.IsTrue(0.998.IsSmallerOrEqual(1.0));
 		}

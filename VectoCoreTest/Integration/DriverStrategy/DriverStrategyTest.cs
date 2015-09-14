@@ -612,6 +612,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 2.SI<Second>(),
+				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 1.SI<Second>(),
 			};
 		}

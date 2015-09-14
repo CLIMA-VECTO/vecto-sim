@@ -131,7 +131,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.EngineSpeed = engineSpeed;
 			CurrentState.AbsTime = absTime;
 
-			requestedPower = Formulas.TorqueToPower(torque, engineSpeed);
+			requestedPower = torque * engineSpeed;
 			CurrentState.EnginePowerLoss = Formulas.InertiaPower(engineSpeed, PreviousState.EngineSpeed, _data.Inertia, dt);
 			requestedEnginePower = requestedPower + CurrentState.EnginePowerLoss;
 

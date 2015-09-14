@@ -6,6 +6,7 @@ using NLog;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
+using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -62,18 +63,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			cyclePort.Initialize();
 
-			gbx.Gear = 0;
-
 			var absTime = 0.SI<Second>();
 			var ds = Constants.SimulationSettings.DriveOffDistance;
-			var response = cyclePort.Request(absTime, ds);
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
-			container.CommitSimulationStep(absTime, response.SimulationInterval);
-			absTime += response.SimulationInterval;
+			IResponse response;
 
-			gbx.Gear = 1;
 			var cnt = 0;
-			while (!(response is ResponseCycleFinished) && container.Distance < 17000) {
+			do {
 				response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
@@ -91,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 						}
 					}).
 					Default(r => Assert.Fail("Unexpected Response: {0}", r));
-			}
+			} while (!(response is ResponseCycleFinished));
 			modalWriter.Finish();
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
@@ -305,6 +300,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 						}
 					}
 				},
+				Inertia = 0.SI<KilogramSquareMeter>(),
+				TractionInterruption = 0.SI<Second>(),
 				ShiftTime = 2.SI<Second>()
 			};
 		}

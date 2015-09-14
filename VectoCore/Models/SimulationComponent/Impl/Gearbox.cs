@@ -50,12 +50,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// The inertia power loss for the mod data.
 		/// </summary>
-		private NewtonMeter _powerLossInertia;
+		private Watt _powerLossInertia;
 
 		/// <summary>
 		/// The previous enginespeed for inertia calculation
 		/// </summary>
-		private PerSecond _previousInEnginespeed;
+		private PerSecond _previousInEnginespeed = 0.SI<PerSecond>();
 
 
 		public bool ClutchClosed(Second absTime)
@@ -108,7 +108,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			_shiftTime = double.NegativeInfinity.SI<Second>();
 			Gear = _strategy.InitGear(torque, engineSpeed);
-			_disengaged = true;
+			_disengaged = false;
 			return NextComponent.Initialize(torque, engineSpeed);
 		}
 
@@ -213,10 +213,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inTorque = Data.Gears[Gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
 
 			_powerLoss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
-			_powerLossInertia = Formulas.InertiaPower(inEngineSpeed, _previousInEnginespeed, Data.Inertia, dt) / inEngineSpeed;
+			var torqueLossInertia = !inEngineSpeed.IsEqual(0)
+				? Formulas.InertiaPower(inEngineSpeed, _previousInEnginespeed, Data.Inertia, dt) / inEngineSpeed
+				: 0.SI<NewtonMeter>();
 			_previousInEnginespeed = inEngineSpeed;
 
-			inTorque += _powerLossInertia;
+			inTorque += torqueLossInertia;
+
+			_powerLossInertia = torqueLossInertia * inEngineSpeed;
 
 			if (dryRun) {
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inEngineSpeed, true);

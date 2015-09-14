@@ -155,7 +155,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			var k = (p2.TorqueFullLoad - p1.TorqueFullLoad) / (p2.EngineSpeed - p1.EngineSpeed);
 			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;
 
-			if (k.IsEqual(0.0)) {
+			if (k.IsEqual(0)) {
 				// rectangle
 				// area = M * n
 				return p1.EngineSpeed + area / d;
@@ -191,7 +191,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 			if (k.IsEqual(0, 0.0001)) {
 				// constant torque, solve linear equation
 				// power = M * n
-				retVal.Add((power.Value() / d.Value()).SI<PerSecond>());
+				retVal.Add(power / d);
 			} else {
 				// non-constant torque, solve quadratic equation for engine speed (n)
 				// power = M(n) * n = (k * n + d) * n =  k * n^2 + d * n
@@ -231,31 +231,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 
 		private Tuple<PerSecond, Watt> FindMaxPower(FullLoadCurveEntry p1, FullLoadCurveEntry p2)
 		{
-			if (p1.EngineSpeed == p2.EngineSpeed) {
-				return new Tuple<PerSecond, Watt>(p1.EngineSpeed, Formulas.TorqueToPower(p1.TorqueFullLoad, p1.EngineSpeed));
+			if (p1.EngineSpeed.IsEqual(p2.EngineSpeed)) {
+				return Tuple.Create(p1.EngineSpeed, p1.TorqueFullLoad * p1.EngineSpeed);
 			}
+
 			if (p2.EngineSpeed < p1.EngineSpeed) {
 				var tmp = p1;
 				p1 = p2;
 				p2 = tmp;
 			}
+
 			// y = kx + d
 			var k = (p2.TorqueFullLoad - p1.TorqueFullLoad) / (p2.EngineSpeed - p1.EngineSpeed);
 			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;
-			if (k == 0.SI()) {
-				return new Tuple<PerSecond, Watt>(p2.EngineSpeed, Formulas.TorqueToPower(p2.TorqueFullLoad, p2.EngineSpeed));
+			if (k.IsEqual(0)) {
+				return Tuple.Create(p2.EngineSpeed, p2.TorqueFullLoad * p2.EngineSpeed);
 			}
-			var engineSpeedMaxPower = (-1 * d / (2 * k)).Cast<PerSecond>();
-			if (engineSpeedMaxPower < p1.EngineSpeed || engineSpeedMaxPower > p2.EngineSpeed) {
-				if (k > 0) {
-					return new Tuple<PerSecond, Watt>(p2.EngineSpeed, Formulas.TorqueToPower(p2.TorqueFullLoad, p2.EngineSpeed));
+			var engineSpeedMaxPower = -d / (2 * k);
+			if (engineSpeedMaxPower.IsSmaller(p1.EngineSpeed) || engineSpeedMaxPower.IsGreater(p2.EngineSpeed)) {
+				if (k.IsGreater(0)) {
+					return Tuple.Create(p2.EngineSpeed, p2.TorqueFullLoad * p2.EngineSpeed);
 				}
-				return new Tuple<PerSecond, Watt>(p1.EngineSpeed, Formulas.TorqueToPower(p1.TorqueFullLoad, p1.EngineSpeed));
+				return Tuple.Create(p1.EngineSpeed, p1.TorqueFullLoad * p1.EngineSpeed);
 			}
 			//return null;
 			var engineTorqueMaxPower = FullLoadStationaryTorque(engineSpeedMaxPower);
-			return new Tuple<PerSecond, Watt>(engineSpeedMaxPower,
-				Formulas.TorqueToPower(engineTorqueMaxPower, engineSpeedMaxPower));
+			return Tuple.Create(engineSpeedMaxPower, engineTorqueMaxPower * engineSpeedMaxPower);
 		}
 
 		#region Equality members
