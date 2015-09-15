@@ -8,10 +8,6 @@ using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
-// TODO:
-// * EarlyUpshift (shift before outside of up-shift curve if outTorque reserve for the next higher gear is fullfilled)
-// * SkipGears (when already shifting to next gear, check if outTorque reserve is fullfilled for the overnext gear and eventually shift to it)
-
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Gearbox : VectoSimulationComponent, IGearbox, ITnOutPort, ITnInPort, IClutchInfo
@@ -36,7 +32,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		private Second _shiftTime = double.NegativeInfinity.SI<Second>();
 
-
 		/// <summary>
 		/// True if gearbox is disengaged (no gear is set).
 		/// </summary>
@@ -56,7 +51,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// The previous enginespeed for inertia calculation
 		/// </summary>
 		private PerSecond _previousInEnginespeed = 0.SI<PerSecond>();
-
 
 		public bool ClutchClosed(Second absTime)
 		{
@@ -106,10 +100,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
+			var response = NextComponent.Initialize(torque, engineSpeed);
+
 			_shiftTime = double.NegativeInfinity.SI<Second>();
-			Gear = _strategy.InitGear(torque, engineSpeed);
-			_disengaged = false;
-			return NextComponent.Initialize(torque, engineSpeed);
+			Gear = 0; //_strategy.InitGear(torque, engineSpeed);
+			_disengaged = true;
+
+			return response;
 		}
 
 		/// <summary>
@@ -180,9 +177,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			if (DataBus.VehicleSpeed.IsEqual(0)) {
-				Gear = _strategy.Engage(outTorque, outEngineSpeed, Data.SkipGears);
-			}
+			//if (DataBus.VehicleSpeed.IsEqual(0)) {
+			//	Gear = _strategy.Engage(outTorque, outEngineSpeed, Data.SkipGears);
+			//}
 
 			var response = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
 			response.GearboxPowerRequest = outTorque * outEngineSpeed;
@@ -204,8 +201,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			// Set a Gear if no gear was set
 			if (_disengaged) {
-				Gear = _strategy.Engage(outTorque, outEngineSpeed, Data.SkipGears);
 				_disengaged = false;
+				Gear = DataBus.VehicleSpeed.IsEqual(0)
+					? _strategy.InitGear(absTime, dt, outTorque, outEngineSpeed) // initGear if speed was 0
+					: _strategy.Engage(absTime, dt, outTorque, outEngineSpeed);
+
 				Log.Debug("Gearbox engaged gear {0}", Gear);
 			}
 
@@ -233,13 +233,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (isShiftAllowed && _strategy.ShiftRequired(Gear, inTorque, inEngineSpeed)) {
 				_shiftTime = absTime + Data.TractionInterruption;
 
+				Log.Debug("Gearbox is shifting. absTime: {0}, dt: {1}, shiftTime: {2}, out: ({3}, {4}), in: ({5}, {6})", absTime, dt,
+					_shiftTime, outTorque, outEngineSpeed, inTorque, inEngineSpeed);
+
 				_disengaged = true;
-				_strategy.Disengage(outTorque, outEngineSpeed);
+				_strategy.Disengage(absTime, dt, outTorque, outEngineSpeed);
 				Log.Info("Gearbox disengaged");
-
-				Log.Debug("Gearbox is shifting. absTime: {0}, shiftTime: {1}, outTorque:{2}, outEngineSpeed: {3}",
-					absTime, _shiftTime, outTorque, outEngineSpeed);
-
+				
 				return new ResponseGearShift {
 					Source = this,
 					SimulationInterval = Data.TractionInterruption,
