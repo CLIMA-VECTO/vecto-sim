@@ -24,6 +24,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 		public const string EngineFile = @"TestData\Components\24t Coach.veng";
 
+		public const string AxleGearLossMap = @"TestData\Components\Axle.vtlm";
 		public const string GearboxLossMap = @"TestData\Components\Indirect Gear.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
@@ -262,6 +263,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				// <s>,<v>,<grad>,<stop>
 				"  0,  60, 5,     0",
 				"1000, 20, 5,     0",
+				"1100, 20, 5,     0"
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_60_20_uphill_5.vmod").Run();
 		}
@@ -305,7 +307,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
 				"  0,  60, 15,     0",
-				"1000, 20, 15,     0",
+				"1000,  0, 15,     0",
+				"1100,  0, 0,     0"
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_60_20_uphill_15.vmod").Run();
 		}
@@ -316,6 +319,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
 				"  0,  60, -15,     0",
+				" 800, 20, -15,     0",
 				"1000, 20, -15,     0",
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_60_20_downhill_15.vmod").Run();
@@ -338,7 +342,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
 				"   0,  80, 5,    0",
-				"1000,  0,  5,    0",
+				"1000,  0,  5,    2",
+//				"1000,  0,  5,    2",
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_80_0_uphill_5.vmod").Run();
 		}
@@ -361,6 +366,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				// <s>,<v>,<grad>,<stop>
 				"   0,  80, 25,    0",
 				"1000,  0,  25,    0",
+				"1000,  0,  25,    2",
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_80_0_steep_uphill_25.vmod").Run();
 		}
@@ -670,25 +676,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var ratio = 3.240355;
 			return new GearData {
 				Ratio = ratio,
-				LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio)
-			};
-		}
-
-		private static GearboxData CreateSimpleGearboxData()
-		{
-			var ratio = 3.44;
-			return new GearboxData {
-				Gears = new Dictionary<uint, GearData> {
-					{
-						1, new GearData {
-							FullLoadCurve = null,
-							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio),
-							Ratio = ratio,
-							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
-						}
-					}
-				},
-				ShiftTime = 2.SI<Second>()
+				LossMap = TransmissionLossMap.ReadFromFile(AxleGearLossMap, ratio)
 			};
 		}
 

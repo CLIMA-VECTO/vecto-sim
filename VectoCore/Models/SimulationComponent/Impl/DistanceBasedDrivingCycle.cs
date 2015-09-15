@@ -83,9 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <exception cref="VectoSimulationException">Stopping Time only allowed when target speed is zero!</exception>
 		private IResponse DoHandleRequest(Second absTime, Meter ds)
 		{
-			if (CycleIntervalIterator.LastEntry && PreviousState.Distance.IsEqual(CycleIntervalIterator.RightSample.Distance)) {
-				return new ResponseCycleFinished();
-			}
+
 
 			if (CycleIntervalIterator.LeftSample.Distance.IsEqual(PreviousState.Distance.Value())) {
 				// exactly on an entry in the cycle...
@@ -110,6 +108,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 					return DriveTimeInterval(absTime, dt);
 				}
+			}
+			if (CycleIntervalIterator.LastEntry && PreviousState.Distance.IsEqual(CycleIntervalIterator.RightSample.Distance))
+			{
+				return new ResponseCycleFinished();
 			}
 
 			if ((PreviousState.Distance + ds).IsGreater(CycleIntervalIterator.RightSample.Distance)) {

@@ -61,14 +61,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Log.Debug("==== DRIVER Request ====");
 			Log.Debug(
-				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}", absTime, ds,
-				targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed);
+				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5} gear: {6}",
+				absTime, ds,
+				targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear);
 
 			var retVal = DriverStrategy.Request(absTime, ds, targetVelocity, gradient);
 			//DoHandleRequest(absTime, ds, targetVelocity, gradient);
 
 			CurrentState.Response = retVal;
 			retVal.SimulationInterval = CurrentState.dt;
+			retVal.Acceleration = CurrentState.Acceleration;
 
 			return retVal;
 		}
@@ -77,13 +79,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			Log.Debug("==== DRIVER Request ====");
-			Log.Debug("Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}",
-				absTime, dt, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed);
+			Log.Debug(
+				"Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5} gear: {6}",
+				absTime, dt, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear);
 
 			var retVal = DriverStrategy.Request(absTime, dt, targetVelocity, gradient);
 
 			CurrentState.Response = retVal;
 			retVal.SimulationInterval = CurrentState.dt;
+			retVal.Acceleration = CurrentState.Acceleration;
 
 			return retVal;
 		}
@@ -130,17 +134,35 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (retVal == null) {
 				// unhandled response (overload, delta > 0) - we need to search for a valid operating point..				
-				operatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration, response);
+				var nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration, response);
 
-				operatingPoint = LimitAccelerationByDriverModel(operatingPoint, LimitationMode.LimitDecelerationDriver);
+				var limitedOperatingPoint = LimitAccelerationByDriverModel(nextOperatingPoint,
+					LimitationMode.LimitDecelerationDriver);
 				Log.Debug("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}",
-					CurrentState.dt, CurrentState.Acceleration);
+					limitedOperatingPoint.SimulationInterval, limitedOperatingPoint.Acceleration);
 
-				retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
+				retVal = NextComponent.Request(absTime, limitedOperatingPoint.SimulationInterval, limitedOperatingPoint.Acceleration,
+					gradient);
 				retVal.Switch().
-					Case<ResponseUnderload>().
-					Case<ResponseGearShift>().
-					Case<ResponseSuccess>().
+					Case<ResponseUnderload>(() => operatingPoint = limitedOperatingPoint)
+					. // acceleration is limited by driver model, operating point moves below drag curve
+					Case<ResponseOverload>(() => {
+						// deceleration is liited by driver model, operating point moves above full load (e.g., steep uphill)
+						// the vehicle/driver can't achieve an acceleration higher than deceleration curve, try again with higher deceleration
+						Log.Warn(
+							"Operating point with limited acceleration resulted in an overload! trying again with original acceleration {0}",
+							nextOperatingPoint.Acceleration);
+						retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval, nextOperatingPoint.Acceleration,
+							gradient);
+						retVal.Switch().
+							Case<ResponseSuccess>(() => operatingPoint = nextOperatingPoint).
+							Case<ResponseGearShift>(() => operatingPoint = nextOperatingPoint).
+							Default(r => {
+								throw new UnexpectedResponseException("DrivingAction Accelerate after Overload", r);
+							});
+					}).
+					Case<ResponseGearShift>(() => operatingPoint = limitedOperatingPoint).
+					Case<ResponseSuccess>(() => operatingPoint = limitedOperatingPoint).
 					Default(r => {
 						throw new UnexpectedResponseException("DrivingAction Accelerate after SearchOperatingPoint.", r);
 					});
@@ -148,6 +170,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.Acceleration = operatingPoint.Acceleration;
 			CurrentState.dt = operatingPoint.SimulationInterval;
 			CurrentState.Response = retVal;
+
+			retVal.Acceleration = operatingPoint.Acceleration;
+			retVal.SimulationInterval = operatingPoint.SimulationInterval;
 
 			return retVal;
 		}
@@ -240,12 +265,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// compute speed at the end of the simulation interval. if it exceeds the limit -> return
 			var v2 = DataBus.VehicleSpeed + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
 			if (v2 > maxVelocity) {
+				Log.Debug("vehicle's velocity would exceed given max speed. v2: {0}, max speed: {1}", v2, maxVelocity);
 				return new ResponseSpeedLimitExceeded() { Source = this };
 			}
 
 			var retVal = NextComponent.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
 			CurrentState.Response = retVal;
 			retVal.SimulationInterval = CurrentState.dt;
+			retVal.Acceleration = CurrentState.Acceleration;
 
 			retVal.Switch().
 				Case<ResponseSuccess>().
@@ -331,12 +358,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			retVal.Switch().
 				Case<ResponseSuccess>().
+				Case<ResponseFailTimeInterval>(r =>
+					retVal = new ResponseDrivingCycleDistanceExceeded() {
+						Source = this,
+						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
+					}).
 				Default(r => {
 					throw new UnexpectedResponseException("DrivingAction Brake: request failed after braking power was found.", r);
 				});
 			CurrentState.Acceleration = operatingPoint.Acceleration;
 			CurrentState.dt = operatingPoint.SimulationInterval;
 			CurrentState.Response = retVal;
+			retVal.Acceleration = operatingPoint.Acceleration;
+			retVal.SimulationInterval = operatingPoint.SimulationInterval;
 
 			return retVal;
 		}
@@ -416,7 +450,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var breakingPower = origDelta.Abs();
 
 			// double the searchInterval until a good interval was found
-			var intervalFactor = 2.0;
+			var intervalFactor = 1.0;
 			var retryCount = 0;
 			//ResponseDryRun response;
 			do {

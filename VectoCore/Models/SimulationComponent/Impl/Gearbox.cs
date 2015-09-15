@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			writer[ModalResultField.Gear] = Gear;
+			writer[ModalResultField.Gear] = _disengaged ? 0 : Gear;
 			writer[ModalResultField.PlossGB] = _powerLoss;
 			writer[ModalResultField.PaGB] = _powerLossInertia;
 		}

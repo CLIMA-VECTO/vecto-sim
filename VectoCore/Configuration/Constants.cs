@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Configuration
 			/// </summary>
 			public static readonly Meter DriveOffDistance = 1.SI<Meter>();
 
-			public static readonly Meter BrakeNextTargetDistance = 5.SI<Meter>();
+			public static readonly Meter BrakeNextTargetDistance = 10.SI<Meter>();
 
 			/// <summary>
 			/// threshold for changes in the road gradient. changes below this threshold will be considered to be equal for filtering out the driving cycle.
@@ -73,7 +73,7 @@ namespace TUGraz.VectoCore.Configuration
 			/// <summary>
 			/// The initial search interval for the breaking power search in the driver.
 			/// </summary>
-			public static Watt BreakingPowerInitialSearchInterval = 100.SI().Kilo.Watt.Cast<Watt>();
+			public static Watt BreakingPowerInitialSearchInterval = 10.SI().Kilo.Watt.Cast<Watt>();
 
 			/// <summary>
 			/// The initial search interval for the operating point search in the driver.

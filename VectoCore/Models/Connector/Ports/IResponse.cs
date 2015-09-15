@@ -10,11 +10,9 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 	/// </summary>
 	public interface IResponse
 	{
-		//Second AbsTime { get; set; }
-
 		Second SimulationInterval { get; set; }
 
-		//Meter Distance { get; set; }
+		MeterPerSquareSecond Acceleration { get; set; }
 
 		Meter SimulationDistance { get; set; }
 
