@@ -11,6 +11,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public Meter SimulationDistance { get; set; }
 
+		public MeterPerSquareSecond Acceleration { get; set; }
+
 		public Watt EnginePowerRequest { get; set; }
 
 		public Watt ClutchPowerRequest { get; set; }
@@ -25,7 +27,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public Watt BrakePower { get; set; }
 
-		public object Source { get; set; }
+		public VectoSimulationComponent Source { get; set; }
 
 		public override string ToString()
 		{
@@ -72,6 +74,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 	public class ResponseDrivingCycleDistanceExceeded : AbstractResponse
 	{
+		public ResponseDrivingCycleDistanceExceeded() {}
 		public Meter MaxDistance { get; set; }
 	}
 
