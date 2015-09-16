@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Utils;
@@ -24,7 +25,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public Watt BrakePower { get; set; }
 
-		public VectoSimulationComponent Source { get; set; }
+		public object Source { get; set; }
 
 		public override string ToString()
 		{

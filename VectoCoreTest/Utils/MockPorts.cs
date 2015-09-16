@@ -11,10 +11,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 	{
 		protected static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-		public Second AbsTime { get; set; }
-		public Second Dt { get; set; }
-		public NewtonMeter Torque { get; set; }
-		public PerSecond AngularVelocity { get; set; }
+		public Second AbsTime;
+		public Second Dt;
+		public NewtonMeter Torque;
+		public PerSecond AngularVelocity;
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
@@ -23,23 +23,45 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Torque = torque;
 			AngularVelocity = angularVelocity;
 			Log.Debug("Request: absTime: {0}, dt: {1}, torque: {3}, engineSpeed: {4}", absTime, dt, torque, angularVelocity);
-			return new ResponseSuccess();
+
+			if (dryRun) {
+				return new ResponseDryRun {
+					Source = this,
+					GearboxPowerRequest = torque * angularVelocity,
+					EnginePowerRequest = torque * angularVelocity,
+					DeltaFullLoad = -100000.SI<Watt>(),
+					DeltaDragLoad = -500.SI<Watt>()
+				};
+			}
+
+			return new ResponseSuccess {
+				Source = this,
+				GearboxPowerRequest = torque * angularVelocity,
+				EnginePowerRequest = torque * angularVelocity,
+			};
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
 			return new ResponseSuccess();
 		}
+
+		public void DoCommitSimulationStep()
+		{
+			AbsTime = null;
+			Dt = null;
+			Torque = null;
+			AngularVelocity = null;
+		}
 	}
 
 	public class MockDrivingCycleOutPort : LoggingObject, IDrivingCycleOutPort
 	{
-		public Second AbsTime { get; set; }
-		public Meter Ds { get; set; }
-
-		public Second Dt { get; set; }
-		public MeterPerSecond Velocity { get; set; }
-		public Radian Gradient { get; set; }
+		public Second AbsTime;
+		public Meter Ds;
+		public Second Dt;
+		public MeterPerSecond Velocity;
+		public Radian Gradient;
 
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{

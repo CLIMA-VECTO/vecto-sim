@@ -99,7 +99,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var inAngularSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
 				var inTorque = currentPower / inAngularSpeed;
-				if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && reserve >= torqueReserve) {
+				if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && reserve >= torqueReserve / 100) {
 					return gear;
 				}
 			}
@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
 		{
-			PreviousGear = GetGear(absTime, dt, outTorque, outEngineSpeed, Data.SkipGears, Data.TorqueReserve);
+			PreviousGear = Gearbox.Gear;
 		}
 
 		public override bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed)
