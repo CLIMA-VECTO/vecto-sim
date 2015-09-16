@@ -235,7 +235,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
 				"  0,  85, 0,     0",
-				"1000, 85, 0,     0",
+				//" 999, 85, 0,     0",
 				"1000,  0,  0,     2",
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Accelerate_85_0_level_stop.vmod").Run();

@@ -83,8 +83,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <exception cref="VectoSimulationException">Stopping Time only allowed when target speed is zero!</exception>
 		private IResponse DoHandleRequest(Second absTime, Meter ds)
 		{
-
-
 			if (CycleIntervalIterator.LeftSample.Distance.IsEqual(PreviousState.Distance.Value())) {
 				// exactly on an entry in the cycle...
 				if (!CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(0)
@@ -109,13 +107,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return DriveTimeInterval(absTime, dt);
 				}
 			}
-			if (CycleIntervalIterator.LastEntry && PreviousState.Distance.IsEqual(CycleIntervalIterator.RightSample.Distance))
-			{
+			if (CycleIntervalIterator.LastEntry && PreviousState.Distance.IsEqual(CycleIntervalIterator.RightSample.Distance)) {
 				return new ResponseCycleFinished();
 			}
 
 			if ((PreviousState.Distance + ds).IsGreater(CycleIntervalIterator.RightSample.Distance)) {
 				// only drive until next sample point in cycle
+				Log.Debug("Limiting distance to next sample point {0}",
+					CycleIntervalIterator.RightSample.Distance - PreviousState.Distance);
 				return new ResponseDrivingCycleDistanceExceeded {
 					Source = this,
 					MaxDistance = CycleIntervalIterator.RightSample.Distance - PreviousState.Distance
@@ -141,6 +140,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				(CycleIntervalIterator.RightSample.Distance - PreviousState.Distance) <
 				Constants.SimulationSettings.BrakeNextTargetDistance) {
 				CurrentState.RequestToNextSamplePointDone = true;
+				Log.Debug("current distance is close to the next speed change: {0}",
+					CycleIntervalIterator.RightSample.Distance - PreviousState.Distance);
 				return new ResponseDrivingCycleDistanceExceeded {
 					Source = this,
 					MaxDistance = Constants.SimulationSettings.BrakeNextTargetDistance

@@ -256,6 +256,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return response;
 			}
 			var currentDistance = DriverStrategy.Driver.DataBus.Distance;
+
 			if (Phase == BrakingPhase.Coast) {
 				var brakingDistance = DriverStrategy.Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed);
 				Log.Debug("breaking distance: {0}, start braking @ {1}", brakingDistance,
@@ -272,7 +273,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						};
 					}
 				}
-				if (DriverStrategy.Driver.DataBus.VehicleSpeed < 5.KMPHtoMeterPerSecond()) {
+				if (DriverStrategy.Driver.DataBus.VehicleSpeed < Constants.SimulationSettings.MinVelocityForCoast) {
 					Phase = BrakingPhase.Brake;
 					Log.Debug("Switching to BRAKE Phase. currentDistance: {0}  v: {1}", currentDistance,
 						DriverStrategy.Driver.DataBus.VehicleSpeed);
@@ -306,8 +307,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					if (DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance < currentDistance) {
 						Log.Warn("Expected Braking Deceleration could not be reached!");
 					}
+					var targetDistance = DriverStrategy.Driver.DataBus.VehicleSpeed < Constants.SimulationSettings.MinVelocityForCoast
+						? DriverStrategy.BrakeTrigger.TriggerDistance
+						: null;
 					response = DriverStrategy.Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
-						gradient);
+						gradient, targetDistance: targetDistance);
 					break;
 			}
 

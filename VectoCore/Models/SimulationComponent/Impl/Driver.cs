@@ -294,7 +294,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 		public IResponse DrivingActionBrake(Second absTime, Meter ds, MeterPerSecond nextTargetSpeed, Radian gradient,
-			IResponse previousResponse = null)
+			IResponse previousResponse = null, Meter targetDistance = null)
 		{
 			Log.Debug("DrivingAction Brake");
 
@@ -315,7 +315,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					// ComputeTimeInterval((operatingPoint.Acceleration + tmp.Acceleration) / 2, operatingPoint.SimulationDistance);
 				}
 			}
-
+			if (targetDistance != null && targetDistance > DataBus.Distance) {
+				var tmp = ComputeAcceleration(targetDistance - DataBus.Distance, nextTargetSpeed);
+				operatingPoint = ComputeTimeInterval(tmp.Acceleration, ds);
+				if (!ds.IsEqual(operatingPoint.SimulationDistance)) {
+					Log.Error(
+						"Unexpected Condition: Distance has been adjusted from {0} to {1}, currentVelocity: {2} acceleration: {3}, targetVelocity: {4}",
+						operatingPoint.SimulationDistance, ds, DataBus.VehicleSpeed, operatingPoint.Acceleration, nextTargetSpeed);
+					throw new VectoSimulationException("Simulation distance unexpectedly adjusted! {0} -> {1}", ds,
+						operatingPoint.SimulationDistance);
+				}
+			}
 
 			var response = previousResponse ??
 							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
@@ -443,7 +453,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Default(r => {
 					throw new UnexpectedResponseException("cannot use response for searching braking power!", r);
 				});
-			var delta = origDelta;
+			var delta = searchInterval;
 
 			debug.Add(new { brakingPower = 0.SI<Watt>(), searchInterval, delta });
 
@@ -695,9 +705,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					throw new VectoSimulationException(
 						"Could not find solution for time-interval!  ds: {0}, stopDistance: {1}", ds, stopDistance);
 				}
+				LogManager.EnableLogging();
 				Log.Info(
 					"Adjusted distance when computing time interval: currentSpeed: {0}, acceleration: {1}, distance: {2} -> {3}, timeInterval: {4}",
 					currentSpeed, acceleration, retVal.SimulationDistance, stopDistance, retVal.SimulationInterval);
+				LogManager.DisableLogging();
 				retVal.SimulationDistance = stopDistance;
 				return retVal;
 			}
@@ -723,6 +735,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 			DataBus.BreakPower = double.PositiveInfinity.SI<Watt>();
 			var retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
+			retVal.Switch().
+				Case<ResponseGearShift>(r => {
+					retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
+				});
 			CurrentState.dt = dt;
 			CurrentState.Acceleration = 0.SI<MeterPerSquareSecond>();
 			return retVal;
