@@ -5,10 +5,50 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 {
 	public interface IShiftStrategy
 	{
+		/// <summary>
+		/// Checks if a shift operation is required.
+		/// </summary>
+		/// <param name="gear">The current gear.</param>
+		/// <param name="torque">The torque.</param>
+		/// <param name="angularSpeed">The angular speed.</param>
+		/// <returns></returns>
 		bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed);
-		uint InitGear(NewtonMeter torque, PerSecond angularSpeed);
-		uint Engage(NewtonMeter outTorque, PerSecond outEngineSpeed, bool skipGears);
-		void Disengage(NewtonMeter outTorque, PerSecond outEngineSpeed);
+
+		/// <summary>
+		/// Returns an appropriate starting gear.
+		/// </summary>
+		/// <param name="absTime">The abs time.</param>
+		/// <param name="dt">The dt.</param>
+		/// <param name="torque">The torque.</param>
+		/// <param name="outEngineSpeed">The angular speed.</param>
+		/// <returns></returns>
+		uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outEngineSpeed);
+
+		/// <summary>
+		/// Engages a gear
+		/// </summary>
+		/// <param name="absTime">The abs time.</param>
+		/// <param name="dt">The dt.</param>
+		/// <param name="outTorque">The out torque.</param>
+		/// <param name="outEngineSpeed">The out engine speed.</param>
+		/// <returns></returns>
+		uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
+
+		/// <summary>
+		/// Disengages a gear.
+		/// </summary>
+		/// <param name="absTime">The abs time.</param>
+		/// <param name="dt">The dt.</param>
+		/// <param name="outTorque">The out torque.</param>
+		/// <param name="outEngineSpeed">The out engine speed.</param>
+		void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
+
+		/// <summary>
+		/// Gets or sets the gearbox.
+		/// </summary>
+		/// <value>
+		/// The gearbox.
+		/// </value>
 		Gearbox Gearbox { get; set; }
 	}
 }

@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public Watt BrakePower { get; set; }
 
-		public Object Source { get; set; }
+		public object Source { get; set; }
 
 		public override string ToString()
 		{
