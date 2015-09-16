@@ -229,25 +229,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Debug("Gearbox engaged gear {0}", Gear);
 			}
 
-			PerSecond inEngineSpeed;
+			var inEngineSpeed = outEngineSpeed * Data.Gears[Gear].Ratio;
 			NewtonMeter inTorque;
 
 			if (outEngineSpeed.IsEqual(0)) {
-				inEngineSpeed = outEngineSpeed;
-				inTorque = outTorque;
+				inTorque = outTorque / Data.Gears[Gear].Ratio;
 			} else {
-				inEngineSpeed = outEngineSpeed * Data.Gears[Gear].Ratio;
 				inTorque = Data.Gears[Gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
-
-				_powerLoss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
-				var torqueLossInertia = !inEngineSpeed.IsEqual(0)
-					? Formulas.InertiaPower(inEngineSpeed, _previousInEnginespeed, Data.Inertia, dt) / inEngineSpeed
-					: 0.SI<NewtonMeter>();
-
-				_previousInEnginespeed = inEngineSpeed;
-				inTorque += torqueLossInertia;
-				_powerLossInertia = torqueLossInertia * inEngineSpeed;
 			}
+			_powerLoss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
+			var torqueLossInertia = !inEngineSpeed.IsEqual(0)
+				? Formulas.InertiaPower(inEngineSpeed, _previousInEnginespeed, Data.Inertia, dt) / inEngineSpeed
+				: 0.SI<NewtonMeter>();
+
+			_previousInEnginespeed = inEngineSpeed;
+			inTorque += torqueLossInertia;
+			_powerLossInertia = torqueLossInertia * inEngineSpeed;
 
 			if (dryRun) {
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inEngineSpeed, true);

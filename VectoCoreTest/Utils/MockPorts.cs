@@ -29,8 +29,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 					Source = this,
 					GearboxPowerRequest = torque * angularVelocity,
 					EnginePowerRequest = torque * angularVelocity,
-					DeltaFullLoad = -100000.SI<Watt>(),
-					DeltaDragLoad = -500.SI<Watt>()
+					DeltaFullLoad = (torque - 2300.SI<NewtonMeter>()) * angularVelocity,
+					DeltaDragLoad = (torque - -100.SI<NewtonMeter>()) * angularVelocity
 				};
 			}
 
