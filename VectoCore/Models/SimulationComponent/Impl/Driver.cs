@@ -61,9 +61,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Log.Debug("==== DRIVER Request ====");
 			Log.Debug(
-				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5} gear: {6}",
+				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}",
 				absTime, ds,
-				targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear);
+				targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed);
 
 			var retVal = DriverStrategy.Request(absTime, ds, targetVelocity, gradient);
 			//DoHandleRequest(absTime, ds, targetVelocity, gradient);
@@ -516,8 +516,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var actionRoll = !DataBus.ClutchClosed(absTime);
 
 			var searchInterval = Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating;
-
-			var curve = DriverData.AccelerationCurve.Lookup(DataBus.VehicleSpeed);
 			var intervalFactor = 1.0;
 
 			Watt origDelta = null;

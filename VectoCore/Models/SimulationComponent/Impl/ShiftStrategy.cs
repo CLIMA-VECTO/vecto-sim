@@ -76,6 +76,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 	public class AMTShiftStrategy : ShiftStrategy
 	{
+		/// <summary>
+		/// The previous gear before the disengagement. Used for GetGear() when skipGears is false.
+		/// </summary>
 		protected uint PreviousGear;
 
 		public AMTShiftStrategy(GearboxData data) : base(data)
@@ -88,6 +91,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var maxGear = (uint)(skipGears ? Data.Gears.Count : Math.Min(PreviousGear + 1, Data.Gears.Count));
 			var minGear = skipGears ? 1 : Math.Max(PreviousGear - 1, 1);
+
+			if (outEngineSpeed.IsEqual(0)) {
+				return minGear;
+			}
 
 			for (var gear = maxGear; gear > minGear; gear--) {
 				Gearbox.Gear = gear;
@@ -121,10 +128,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return IsBelowDownShiftCurve(gear, torque, angularSpeed) || IsAboveUpShiftCurve(gear, torque, angularSpeed);
 		}
 
-
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
 		{
-			return GetGear(absTime, dt, outTorque, outEngineSpeed, true, Data.StartTorqueReserve);
+			return GetGear(absTime, dt, outTorque, outEngineSpeed, skipGears: true, torqueReserve: Data.StartTorqueReserve);
 		}
 	}
 
