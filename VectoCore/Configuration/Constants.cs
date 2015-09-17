@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Configuration
 			/// <summary>
 			/// The initial search interval for the breaking power search in the driver.
 			/// </summary>
-			public static Watt BreakingPowerInitialSearchInterval = 10.SI().Kilo.Watt.Cast<Watt>();
+			public static Watt BreakingPowerInitialSearchInterval = 20.SI().Kilo.Watt.Cast<Watt>();
 
 			/// <summary>
 			/// The initial search interval for the operating point search in the driver.
