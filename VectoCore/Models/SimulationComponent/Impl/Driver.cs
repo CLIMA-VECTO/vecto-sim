@@ -483,6 +483,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// from then on the searchInterval can be bisected.
 				if (origDelta.Sign() != delta.Sign()) {
 					intervalFactor = 0.5;
+					retryCount = 0; // again max. 100 iterations for the binary search...
 				}
 
 				searchInterval *= intervalFactor;
