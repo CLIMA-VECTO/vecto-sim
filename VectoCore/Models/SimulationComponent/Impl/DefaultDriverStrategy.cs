@@ -72,7 +72,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					}
 					break;
 				case DrivingMode.DrivingModeBrake:
-					if (Driver.DataBus.Distance >= BrakeTrigger.TriggerDistance) {
+					if (Driver.DataBus.Distance.IsGreaterOrEqual(BrakeTrigger.TriggerDistance)) {
 						CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 						DrivingModes[CurrentDrivingMode].ResetMode();
 						Log.Debug("Switching to DrivingMode DRIVE");
@@ -85,25 +85,56 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (nextAction == null || !(retVal is ResponseSuccess)) {
 				return retVal;
 			}
-			var v2 = Driver.DataBus.VehicleSpeed + retVal.Acceleration * retVal.SimulationInterval;
-			if (v2 <= nextAction.NextTargetSpeed) {
+
+			// if we accelerate in the current simulation interval the ActionDistance of the next action
+			// changes and we might pass the ActionDistance - check again...
+			if (retVal.Acceleration <= 0) {
 				return retVal;
 			}
 
+			var v2 = Driver.DataBus.VehicleSpeed + retVal.Acceleration * retVal.SimulationInterval;
 			var coastingDistance = Formulas.DecelerationDistance(v2, nextAction.NextTargetSpeed,
 				Driver.LookaheadDeceleration);
-			if (Driver.DataBus.Distance.IsEqual(nextAction.TriggerDistance - coastingDistance)) {
+
+			//if (Driver.DataBus.Distance.IsEqual(nextAction.TriggerDistance - coastingDistance,
+			//	Constants.SimulationSettings.DriverActionDistanceTolerance.Value())) {
+			//	return retVal;
+			//}
+
+			// if the distance at the end of the simulation interval is smaller than the new ActionDistance
+			// we are safe - go ahead...
+			if ((Driver.DataBus.Distance + ds).IsSmallerOrEqual(nextAction.TriggerDistance - coastingDistance,
+				Constants.SimulationSettings.DriverActionDistanceTolerance.Value())) {
 				return retVal;
 			}
-			if ((Driver.DataBus.Distance + ds).IsSmallerOrEqual(nextAction.TriggerDistance - coastingDistance)) {
-				return retVal;
-			}
-			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance to {1}", nextAction.ActionDistance,
-				nextAction.TriggerDistance - coastingDistance - Driver.DataBus.Distance);
+
+			var newds = EstimateAccelerationDistanceBeforeBrake(retVal, nextAction);
+			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance to {1}", nextAction.ActionDistance, newds);
 			return new ResponseDrivingCycleDistanceExceeded() {
 				Source = this,
-				MaxDistance = nextAction.TriggerDistance - coastingDistance - Driver.DataBus.Distance,
+				MaxDistance = newds,
 			};
+		}
+
+		private Meter EstimateAccelerationDistanceBeforeBrake(IResponse retVal, DrivingBehaviorEntry nextAction)
+		{
+			// estimate the distance to drive when accelerating with the current acceleration (taken from retVal) and then 
+			// coasting with the dirver's LookaheadDeceleration. 
+			// TriggerDistance - CurrentDistance = s_accelerate + s_lookahead
+			// s_coast(dt) = - (currentSpeed + a * dt)^2 / (2 * a_lookahead
+			// s_acc(dt) = currentSpeed * dt + a / 2 * dt^2
+			// => solve for dt, compute ds = currentSpeed * dt + a / 2 * dt^2
+			var dtList = VectoMath.QuadraticEquationSolver(
+				(retVal.Acceleration / 2 - retVal.Acceleration * retVal.Acceleration / 2 / Driver.LookaheadDeceleration).Value(),
+				(Driver.DataBus.VehicleSpeed - Driver.DataBus.VehicleSpeed * retVal.Acceleration / Driver.LookaheadDeceleration)
+					.Value
+					(),
+				(-Driver.DataBus.VehicleSpeed * Driver.DataBus.VehicleSpeed / 2 / Driver.LookaheadDeceleration -
+				(nextAction.TriggerDistance - Driver.DataBus.Distance)).Value());
+			dtList.Sort();
+			var dt = dtList.First(x => x > 0).SI<Second>();
+			var newds = Driver.DataBus.VehicleSpeed * dt + retVal.Acceleration / 2 * dt * dt;
+			return newds;
 		}
 
 
@@ -149,10 +180,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 
-			if (nextActions.Count == 0) {
-				return null;
-			}
-			return nextActions.OrderBy(x => x.ActionDistance).First();
+			return nextActions.Count == 0 ? null : nextActions.OrderBy(x => x.ActionDistance).First();
 		}
 	}
 
