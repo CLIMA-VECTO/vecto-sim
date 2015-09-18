@@ -276,6 +276,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				// <s>,<v>,<grad>,<stop>
 				"  0,  60, 0,     0",
 				"1000, 20, 0,     0",
+				"1100, 20, 0,     0",
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_60_20_level.vmod").Run();
 		}
@@ -299,6 +300,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				// <s>,<v>,<grad>,<stop>
 				"  0,  60, -5,     0",
 				"1000, 20, -5,     0",
+				"1100, 20, -5,     0",
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_60_20_downhill_5.vmod").Run();
 		}
@@ -321,6 +323,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				// <s>,<v>,<grad>,<stop>
 				"  0,  60, -25,     0",
 				"1000, 20, -25,     0",
+				"1100, 20, -25,     0",
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_60_20_downhill_25.vmod").Run();
 		}
@@ -355,7 +358,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
 				"   0,  80, 0,     0",
-				"1000,  0,  0,     0",
+				"1000,  0,  0,     2",
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_80_0_level.vmod").Run();
 		}
@@ -378,7 +381,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
 				"   0,  80, -5,    0",
-				" 500,  0,  -5,    0",
+				" 500,  0,  -5,    2",
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_80_0_downhill_5.vmod").Run();
 		}
@@ -389,7 +392,6 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
 				"   0,  80, 25,    0",
-				"1000,  0,  25,    0",
 				"1000,  0,  25,    2",
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_80_0_steep_uphill_25.vmod").Run();
@@ -401,7 +403,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
 				"   0,  80, -25,  0",
-				"1000,  0,  -25,  0",
+				"1000,  0,  -25,  2",
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_80_0_downhill_25.vmod").Run();
 		}
@@ -423,7 +425,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
 				"   0,  80, -15,  0",
-				"1000,  0,  -15,  0",
+				"1000,  0,  -15,  2",
 			});
 			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_80_0_downhill_15.vmod").Run();
 		}
