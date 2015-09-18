@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "9/18/2015 10:24:11 AM",
+    "Date": "9/18/2015 12:29:05 PM",
     "AppVersion": "2.2",
     "FileVersion": 2
   },
@@ -11,7 +11,6 @@
     "EngineFile": "24t Coach.veng",
     "GearboxFile": "24t Coach.vgbx",
     "Cycles": [
-      "Cycle_Decelerate_22_20_downhill_5.vdri",
       "Cycle_AccelerateAtBrake_80_0_level.vdri",
       "Cycle_AccelerateBeforeBrake_80_0_level.vdri",
       "Cycle_AccelerateWhileBrake_80_0_level.vdri",
@@ -21,8 +20,6 @@
       "Cycle_Decelerate_60_20_downhill_25.vdri",
       "Cycle_Decelerate_60_20_downhill_5.vdri",
       "Cycle_Decelerate_60_20_level.vdri",
-      "Cycle_Decelerate_60_20_uphill_15.vdri",
-      "Cycle_Decelerate_60_20_uphill_25.vdri",
       "Cycle_Decelerate_60_20_uphill_5.vdri",
       "Cycle_Decelerate_80_0_downhill_15.vdri",
       "Cycle_Decelerate_80_0_downhill_25.vdri",
@@ -53,7 +50,6 @@
       "Cycle_Drive_80_Increasing_Slope.vdri",
       "Cycle_Drive_80_level.vdri",
       "Cycle_Drive_80_uphill_15.vdri",
-      "Cycle_Drive_80_uphill_25.vdri",
       "Cycle_Drive_80_uphill_5.vdri",
       "Cycle_Drive_stop_85_stop_85_level.vdri"
     ],
