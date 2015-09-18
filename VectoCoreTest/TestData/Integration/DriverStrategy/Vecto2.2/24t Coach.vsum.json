@@ -1,7 +1,7 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "9/18/2015 12:30:08 PM",
+    "Date": "9/18/2015 12:39:57 PM",
     "AppVersion": "2.2",
     "FileVersion": 1
   },
@@ -1444,15 +1444,15 @@
         "AbortedByError": false,
         "Results": {
           "time": {
-            "Value": 31,
+            "Value": 82,
             "Unit": "[s]"
           },
           "distance": {
-            "Value": 0.172222227,
+            "Value": 1.09185565,
             "Unit": "[km]"
           },
           "speed": {
-            "Value": 20.0,
+            "Value": 47.9351273,
             "Unit": "[km/h]"
           },
           "∆altitude": {
@@ -1460,20 +1460,20 @@
             "Unit": "[m]"
           },
           "Ppos": {
-            "Value": 9.32075023651123,
+            "Value": 22.642661013254305,
             "Unit": "[kW]"
           },
           "Pneg": {
-            "Value": 0.0,
+            "Value": -1.8215291296563498,
             "Unit": "[kW]"
           },
           "FC-Map": [
             {
-              "Value": 2864.68921,
+              "Value": 4922.27,
               "Unit": "[g/h]"
             },
             {
-              "Value": 143.234467,
+              "Value": 102.686073,
               "Unit": "[g/km]"
             }
           ],
@@ -1499,50 +1499,50 @@
           ],
           "CO2": [
             {
-              "Value": 452.620941,
+              "Value": 324.488,
               "Unit": "[g/km]"
             },
             {
-              "Value": 137.157867,
+              "Value": 98.3297,
               "Unit": "[g/tkm]"
             }
           ],
           "FC-Final": [
             {
-              "Value": 143.234467,
+              "Value": 102.686073,
               "Unit": "[g/km]"
             },
             {
-              "Value": 5.21687269,
+              "Value": 3.74002314,
               "Unit": "[l/100tkm]"
             },
             {
-              "Value": 17.21568,
+              "Value": 12.3420763,
               "Unit": "[l/100km]"
             }
           ],
           "PwheelPos": {
-            "Value": 6.9637565612792969,
+            "Value": 18.426169918804632,
             "Unit": "[kW]"
           },
           "Pbrake": {
-            "Value": 0.0,
+            "Value": -23.181064268437826,
             "Unit": "[kW]"
           },
           "EposICE": {
-            "Value": 0.08026201592551338,
+            "Value": 0.51574950085745919,
             "Unit": "[kWh]"
           },
           "EnegICE": {
-            "Value": 0.0,
+            "Value": -0.0414903857310613,
             "Unit": "[kWh]"
           },
           "Eair": {
-            "Value": -0.0028621895694070391,
+            "Value": -0.14026919834315776,
             "Unit": "[kWh]"
           },
           "Eroll": {
-            "Value": -0.057103493213653565,
+            "Value": -0.3620251621140374,
             "Unit": "[kWh]"
           },
           "Egrad": {
@@ -1550,7 +1550,7 @@
             "Unit": "[kWh]"
           },
           "Eacc": {
-            "Value": 0.0,
+            "Value": 0.66916399556729533,
             "Unit": "[kWh]"
           },
           "Eaux": {
@@ -1558,11 +1558,11 @@
             "Unit": "[kWh]"
           },
           "Ebrake": {
-            "Value": 0.0,
+            "Value": -0.52801313055886168,
             "Unit": "[kWh]"
           },
           "Etransm": {
-            "Value": -0.020296334425608319,
+            "Value": -0.11238460991117689,
             "Unit": "[kWh]"
           },
           "Eretarder": {
@@ -1582,7 +1582,7 @@
             "Unit": "[kg]"
           },
           "a": {
-            "Value": "0",
+            "Value": "-0.1355013",
             "Unit": "[m/s^2]"
           },
           "a_pos": {
@@ -1590,11 +1590,11 @@
             "Unit": "[m/s^2]"
           },
           "a_neg": {
-            "Value": "0",
+            "Value": "-0.6878751",
             "Unit": "[m/s^2]"
           },
           "Acc.Noise": {
-            "Value": "0",
+            "Value": "0.31195",
             "Unit": "[m/s^2]"
           },
           "pAcc": {
@@ -1602,11 +1602,11 @@
             "Unit": "[%]"
           },
           "pDec": {
-            "Value": "0",
+            "Value": "0.1951219",
             "Unit": "[%]"
           },
           "pCruise": {
-            "Value": "1",
+            "Value": "0.8048781",
             "Unit": "[%]"
           },
           "pStop": {
