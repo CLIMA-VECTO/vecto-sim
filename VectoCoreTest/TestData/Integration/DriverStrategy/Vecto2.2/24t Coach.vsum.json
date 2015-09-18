@@ -1,0 +1,196 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "9/18/2015 10:05:23 AM",
+    "AppVersion": "2.2",
+    "FileVersion": 1
+  },
+  "Body": {
+    "Settings": {
+      "Air Density [kg/m3]": 1.188,
+      "CO2/FC [-]": 3.16,
+      "Fuel Density [kg/l]": 0.832,
+      "Distance Correction": true
+    },
+    "Results": [
+      {
+        "Job": "24t Coach.vecto",
+        "Cycle": "Cycle_Decelerate_22_20_downhill_5.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 51,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.291776776,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 20.5960064,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -14.5888386,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -9.825377239900476,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 1.35829134E-06,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 6.594926E-08,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 2.08399669E-07,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 6.315142E-08,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 6.594926E-08,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 2.40199816E-09,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 7.926594E-09,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -35.071534624286727,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.13919284423192343,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.0051721969991922381,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.096623328261905242,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 0.7543946382734511,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.017995986458328034,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -0.49684674051072863,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.034555507037374707,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 15700.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 3300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.01089325",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.1665527",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.05815914",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.05882353",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.9411765",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      }
+    ]
+  }
+}

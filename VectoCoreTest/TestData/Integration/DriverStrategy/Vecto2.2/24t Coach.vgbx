@@ -1,0 +1,90 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "9/18/2015 9:54:31 AM",
+    "AppVersion": "2.2",
+    "FileVersion": 5
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "ModelName": "Generic 24t Coach",
+    "Inertia": 0.0,
+    "TracInt": 1.0,
+    "Gears": [
+      {
+        "Ratio": 3.240355,
+        "LossMap": "Axle.vtlm"
+      },
+      {
+        "Ratio": 6.38,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 4.63,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 3.44,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 2.59,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.86,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.35,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 1.0,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      },
+      {
+        "Ratio": 0.76,
+        "LossMap": "Indirect Gear.vtlm",
+        "TCactive": false,
+        "ShiftPolygon": "ShiftPolygons.vgbs",
+        "FullLoadCurve": "<NOFILE>"
+      }
+    ],
+    "TqReserve": 20.0,
+    "SkipGears": true,
+    "ShiftTime": 2,
+    "EaryShiftUp": true,
+    "StartTqReserve": 20.0,
+    "StartSpeed": 2.0,
+    "StartAcc": 0.6,
+    "GearboxType": "AMT",
+    "TorqueConverter": {
+      "Enabled": false,
+      "File": "<NOFILE>",
+      "RefRPM": 0.0,
+      "Inertia": 0.0
+    }
+  }
+}
