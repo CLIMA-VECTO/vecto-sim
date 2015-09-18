@@ -31,7 +31,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						}
 						ds = r.MaxDistance;
 					}).
-					Case<ResponseCycleFinished>(r => {}).
+					Case<ResponseCycleFinished>(r => {
+						Log.Info("========= Driving Cycle Finished");
+					}).
 					Default(r => {
 						throw new VectoException("DistanceRun got an unexpected response: {0}", r);
 					});
