@@ -55,6 +55,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return new ResponseSuccess();
 		}
 
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, MeterPerSquareSecond startAcceleration, Radian roadGradient)
+		{
+			throw new NotImplementedException();
+		}
+
 		public void Connect(IDriverDemandOutPort other)
 		{
 			_next = other;

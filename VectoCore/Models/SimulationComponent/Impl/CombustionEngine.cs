@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -53,8 +54,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PreviousState.EngineSpeed = _data.IdleSpeed;
 			PreviousState.dt = 1.SI<Second>();
 
-			StationaryIdleFullLoadPower = Formulas.TorqueToPower(_data.FullLoadCurve.FullLoadStationaryTorque(_data.IdleSpeed),
-				_data.IdleSpeed);
+			StationaryIdleFullLoadPower = _data.FullLoadCurve.FullLoadStationaryTorque(_data.IdleSpeed) * _data.IdleSpeed;
 		}
 
 		#region IEngineCockpit
@@ -62,6 +62,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		PerSecond IEngineInfo.EngineSpeed
 		{
 			get { return PreviousState.EngineSpeed; }
+		}
+
+		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
+		{
+			return _data.FullLoadCurve.FullLoadStationaryTorque(angularSpeed) * angularSpeed;
+		}
+
+		public PerSecond EngineIdleSpeed
+		{
+			get { return _data.IdleSpeed; }
 		}
 
 		#endregion
@@ -162,7 +172,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PreviousState.DynamicFullLoadPower = PreviousState.StationaryFullLoadPower;
 			PreviousState.FullDragPower = Formulas.TorqueToPower(PreviousState.FullDragTorque, engineSpeed);
 
-			return new ResponseSuccess();
+			return new ResponseSuccess { Source = this, EnginePowerRequest = PreviousState.EnginePower };
 		}
 
 		#endregion

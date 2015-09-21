@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using TUGraz.VectoCore.Configuration;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
@@ -30,7 +31,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// Time when a gearbox shift engages a new gear (shift is finished). Is set when shifting is needed.
 		/// </summary>
-		private Second _shiftTime = double.NegativeInfinity.SI<Second>();
+		private Second _shiftTime = 0.SI<Second>();
 
 		/// <summary>
 		/// True if gearbox is disengaged (no gear is set).
@@ -61,7 +62,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			// TODO: do not set a default strategy! gearbox should be called with explicit shift strategy! this is just for debug
 			if (strategy == null) {
-				strategy = new AMTShiftStrategy(gearboxData);
+				strategy = new AMTShiftStrategy(gearboxData, container);
 			}
 			Data = gearboxData;
 			_strategy = strategy;
@@ -94,34 +95,88 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		public uint Gear { get; set; }
 
+		[DebuggerHidden]
+		public MeterPerSecond StartSpeed
+		{
+			get { return Data.StartSpeed; }
+		}
+
+		[DebuggerHidden]
+		public MeterPerSquareSecond StartAcceleration
+		{
+			get { return Data.StartAcceleration; }
+		}
+
 		#endregion
 
 		#region ITnOutPort
 
 		public IResponse Initialize(NewtonMeter outTorque, PerSecond outEngineSpeed)
 		{
-			_shiftTime = double.NegativeInfinity.SI<Second>();
-			_disengaged = true;
-
-			// for initializing the engine:			
 			var absTime = 0.SI<Second>();
 			var dt = Constants.SimulationSettings.TargetTimeInterval;
+			_shiftTime = double.NegativeInfinity.SI<Second>();
 
-			Gear = _strategy.InitGear(absTime, dt, outTorque, outEngineSpeed);
+			if (_disengaged) {
+				Gear = _strategy.InitGear(absTime, dt, outTorque, outEngineSpeed);
+			}
 
 			var inEngineSpeed = outEngineSpeed * Data.Gears[Gear].Ratio;
 			var inTorque = Data.Gears[Gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
 
 			_powerLoss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
-			var torqueLossInertia = !inEngineSpeed.IsEqual(0)
-				? Formulas.InertiaPower(inEngineSpeed, _previousInEnginespeed, Data.Inertia, dt) / inEngineSpeed
-				: 0.SI<NewtonMeter>();
+			var torqueLossInertia = inEngineSpeed.IsEqual(0)
+				? 0.SI<NewtonMeter>()
+				: Formulas.InertiaPower(inEngineSpeed, _previousInEnginespeed, Data.Inertia, dt) / inEngineSpeed;
 
-			_previousInEnginespeed = inEngineSpeed;
+			inTorque += torqueLossInertia;
+			var response = NextComponent.Initialize(inTorque, inEngineSpeed);
+			if (response is ResponseSuccess) {
+				_previousInEnginespeed = inEngineSpeed;
+				_disengaged = false;
+			}
+
+			return response;
+		}
+
+
+		internal ResponseDryRun Initialize(uint gear, NewtonMeter outTorque, PerSecond outEngineSpeed)
+		{
+			var inEngineSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
+			var inTorque = Data.Gears[gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
+
+			_powerLoss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
+
+			PerSquareSecond alpha;
+			if (Data.Inertia.IsEqual(0)) {
+				alpha = 0.SI<PerSquareSecond>();
+			} else {
+				alpha = outTorque / Data.Inertia;
+			}
+
+			var torqueLossInertia = inEngineSpeed.IsEqual(0)
+				? 0.SI<NewtonMeter>()
+				: Formulas.InertiaPower(inEngineSpeed, alpha, Data.Inertia, Constants.SimulationSettings.TargetTimeInterval) /
+				inEngineSpeed;
+
 			inTorque += torqueLossInertia;
 			var response = NextComponent.Initialize(inTorque, inEngineSpeed);
 
-			return response;
+			response.Switch().
+				Case<ResponseSuccess>().
+				Case<ResponseOverload>().
+				Case<ResponseUnderload>().
+				Default(r => {
+					throw new UnexpectedResponseException("Gearbox.Initialize", r);
+				});
+
+			var fullLoadGearbox = Data.Gears[gear].FullLoadCurve.FullLoadStationaryTorque(inEngineSpeed) * inEngineSpeed;
+			var fullLoadEngine = DataBus.EngineStationaryFullPower(inEngineSpeed);
+			return new ResponseDryRun {
+				Source = this,
+				EnginePowerRequest = response.EnginePowerRequest,
+				DeltaFullLoad = response.EnginePowerRequest - VectoMath.Min(fullLoadGearbox, fullLoadEngine)
+			};
 		}
 
 		/// <summary>

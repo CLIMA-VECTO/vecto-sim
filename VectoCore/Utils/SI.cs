@@ -144,6 +144,22 @@ namespace TUGraz.VectoCore.Utils
 	}
 
 	/// <summary>
+	/// SI Class for PerSquareSecond [1/s²].
+	/// </summary>
+	public class PerSquareSecond : SIBase<PerSquareSecond>
+	{
+		[JsonConstructor, DebuggerHidden]
+		private PerSquareSecond(double val) : base(new SI(val).Per.Square.Second) {}
+
+		[DebuggerHidden]
+		public static PerSecond operator *(PerSquareSecond perSquareSecond, Second second)
+		{
+			return ((perSquareSecond as SI) * second).Cast<PerSecond>();
+		}
+	}
+
+
+	/// <summary>
 	/// SI Class for Meter per square second [m/s²].
 	/// </summary>
 	public class MeterPerSquareSecond : SIBase<MeterPerSquareSecond>
@@ -227,6 +243,12 @@ namespace TUGraz.VectoCore.Utils
 	{
 		[JsonConstructor, DebuggerHidden]
 		protected KilogramSquareMeter(double val) : base(new SI(val).Kilo.Gramm.Square.Meter) {}
+
+		[DebuggerHidden]
+		public static NewtonMeter operator *(KilogramSquareMeter kilogramSquareMeter, PerSquareSecond perSquareSecond)
+		{
+			return ((kilogramSquareMeter as SI) * perSquareSecond).Cast<NewtonMeter>();
+		}
 	}
 
 	/// <summary>
@@ -386,6 +408,13 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return ((newtonMeter as SI) / watt).Cast<Second>();
 		}
+
+		[DebuggerHidden]
+		public static PerSquareSecond operator /(NewtonMeter newtonMeter, KilogramSquareMeter kgKilogramSquareMeter)
+		{
+			return ((newtonMeter as SI) / kgKilogramSquareMeter).Cast<PerSquareSecond>();
+		}
+
 
 		[DebuggerHidden]
 		public static PerSecond operator /(NewtonMeter newtonMeter, NewtonMeterSecond newtonMeterSecond)

@@ -11,5 +11,9 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		/// [rad/s] The current engine speed.
 		/// </summary>
 		PerSecond EngineSpeed { get; }
+
+		Watt EngineStationaryFullPower(PerSecond angularSpeed);
+
+		PerSecond EngineIdleSpeed { get; }
 	}
 }

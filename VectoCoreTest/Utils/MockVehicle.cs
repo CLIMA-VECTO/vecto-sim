@@ -72,6 +72,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, MeterPerSquareSecond startAcceleration, Radian roadGradient)
+		{
+			throw new NotImplementedException();
+		}
+
 		public class RequestData
 		{
 			public Second abstime;

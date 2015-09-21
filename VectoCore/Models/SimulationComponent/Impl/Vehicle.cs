@@ -80,6 +80,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return NextComponent.Initialize(vehicleAccelerationForce, vehicleSpeed);
 		}
 
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, MeterPerSquareSecond startAcceleration, Radian roadGradient)
+		{
+			var vehicleAccelerationForce = DriverAcceleration(startAcceleration) + RollingResistance(roadGradient) +
+											AirDragResistance() + SlopeResistance(roadGradient);
+			return NextComponent.Initialize(vehicleAccelerationForce, vehicleSpeed);
+		}
+
 		public IResponse Request(Second absTime, Second dt, MeterPerSquareSecond accelleration, Radian gradient,
 			bool dryRun = false)
 		{

@@ -39,6 +39,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//set { }
 		}
 
+		public MeterPerSecond StartSpeed
+		{
+			get { throw new VectoSimulationException("Not Implemented: EngineOnlyGearbox has no StartSpeed value."); }
+		}
+
+		public MeterPerSquareSecond StartAcceleration
+		{
+			get { throw new VectoSimulationException("Not Implemented: EngineOnlyGearbox has no StartAcceleration value."); }
+		}
+
 		#endregion
 
 		#region ITnInPort
