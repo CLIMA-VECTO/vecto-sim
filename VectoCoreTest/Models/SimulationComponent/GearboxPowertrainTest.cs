@@ -52,12 +52,15 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var ds = 1.SI<Meter>();
 
 			retVal = container.Cycle.Request(absTime, ds);
+			container.CommitSimulationStep(absTime, retVal.SimulationInterval);
 			absTime += retVal.SimulationInterval;
 
 			AssertHelper.AreRelativeEqual(560.RPMtoRad(), container.EngineSpeed);
-			container.Cycle.Request(absTime, ds);
 
-			AssertHelper.AreRelativeEqual(593.RPMtoRad(), container.EngineSpeed);
+			container.Cycle.Request(absTime, ds);
+			container.CommitSimulationStep(absTime, retVal.SimulationInterval);
+
+			AssertHelper.AreRelativeEqual(593.202.RPMtoRad(), container.EngineSpeed);
 		}
 
 		[TestMethod]
@@ -65,13 +68,29 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var cycle = CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
-				"  0,   0, 2.95016969027809,     0",
+				"  0,   0, 2.95016969027809,     1",
 				"1000, 60, 2.95016969027809,     0",
 			});
 			var container = CreatePowerTrain(cycle, "Gearbox_Initialize.vmod", 7500.0.SI<Kilogram>(), 19300.SI<Kilogram>());
 			var retVal = container.Cycle.Initialize();
 			Assert.AreEqual(4u, container.Gear);
 			Assert.IsInstanceOfType(retVal, typeof(ResponseSuccess));
+
+			AssertHelper.AreRelativeEqual(560.RPMtoRad(), container.EngineSpeed);
+
+			var absTime = 0.SI<Second>();
+			var ds = 1.SI<Meter>();
+
+			retVal = container.Cycle.Request(absTime, ds);
+			container.CommitSimulationStep(absTime, retVal.SimulationInterval);
+			absTime += retVal.SimulationInterval;
+
+			AssertHelper.AreRelativeEqual(560.RPMtoRad(), container.EngineSpeed);
+
+			container.Cycle.Request(absTime, ds);
+			container.CommitSimulationStep(absTime, retVal.SimulationInterval);
+
+			AssertHelper.AreRelativeEqual(593.202.RPMtoRad(), container.EngineSpeed);
 		}
 
 

@@ -18,7 +18,8 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Driver : VectoSimulationComponent, IDriver, IDrivingCycleOutPort, IDriverDemandInPort, IDriverActions
+	public class Driver : VectoSimulationComponent, IDriver, IDrivingCycleOutPort, IDriverDemandInPort, IDriverActions,
+		IDriverInfo
 	{
 		internal DriverState CurrentState = new DriverState();
 
@@ -57,21 +58,26 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					"LookAhead Coasting Deceleration is lower than Driver's min. Deceleration. Coasting may start too late. Lookahead dec.: {0}, Driver min. deceleration: {1}",
 					DriverData.LookAheadCoasting.Deceleration, DriverData.AccelerationCurve.MinDeceleration());
 			}
+			VehicleStopped = vehicleSpeed.IsEqual(0);
 			return NextComponent.Initialize(vehicleSpeed, roadGradient);
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, MeterPerSquareSecond startAcceleration, Radian roadGradient)
 		{
-			return NextComponent.Initialize(vehicleSpeed, startAcceleration, roadGradient);
+			VehicleStopped = vehicleSpeed.IsEqual(0);
+			var retVal = NextComponent.Initialize(vehicleSpeed, startAcceleration, roadGradient);
+
+			return retVal;
 		}
 
 
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
+			VehicleStopped = false;
 			Log.Debug("==== DRIVER Request ====");
 			Log.Debug(
-				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5} gear: {6}",
-				absTime, ds, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear);
+				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5} gear: {6}, vehicle stopped: {7}",
+				absTime, ds, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear, VehicleStopped);
 
 			var retVal = DriverStrategy.Request(absTime, ds, targetVelocity, gradient);
 			//DoHandleRequest(absTime, ds, targetVelocity, gradient);
@@ -86,10 +92,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
+			VehicleStopped = true;
 			Log.Debug("==== DRIVER Request ====");
 			Log.Debug(
-				"Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5} gear: {6}",
-				absTime, dt, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear);
+				"Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5} gear: {6}: vehicle stopped: {7}",
+				absTime, dt, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear, VehicleStopped);
 
 			var retVal = DriverStrategy.Request(absTime, dt, targetVelocity, gradient);
 
@@ -794,5 +801,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			LimitDecelerationDriver = 0x2,
 			LimitDecelerationLookahead = 0x4
 		}
+
+		public bool VehicleStopped { get; protected set; }
 	}
 }

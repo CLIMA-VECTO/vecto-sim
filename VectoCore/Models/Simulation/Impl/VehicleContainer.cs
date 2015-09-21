@@ -18,6 +18,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal IGearboxInfo Gearbox;
 		internal IVehicleInfo Vehicle;
 		internal IBrakes Brakes;
+		internal IDriverInfo Driver;
 
 		internal IMileageCounter MilageCounter;
 
@@ -128,6 +129,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Engine = engine;
 			}
 
+			var driver = component as IDriverInfo;
+			if (driver != null) {
+				Driver = driver;
+			}
+
 			var gearbox = component as IGearboxInfo;
 			if (gearbox != null) {
 				Gearbox = gearbox;
@@ -229,6 +235,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				return true;
 			}
 			return Clutch.ClutchClosed(absTime);
+		}
+
+		public bool VehicleStopped
+		{
+			get { return Driver.VehicleStopped; }
 		}
 	}
 }

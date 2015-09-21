@@ -191,6 +191,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </returns>
 		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed, bool dryRun)
 		{
+			if (DataBus.VehicleStopped) {
+				_shiftTime = absTime;
+			}
 			IResponse retVal;
 			if (ClutchClosed(absTime)) {
 				retVal = RequestGearEngaged(absTime, dt, outTorque, outEngineSpeed, dryRun);

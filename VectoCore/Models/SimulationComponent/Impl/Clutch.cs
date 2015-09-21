@@ -94,28 +94,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 			// @@@quam
-			//if (DataBus.Gear == 0) {
-			//	_clutchState = SimulationComponent.ClutchState.ClutchOpened;
-			//	engineSpeedIn = _idleSpeed;
-			//	torqueIn = 0.SI<NewtonMeter>();
-			//} else {
-			var engineSpeedNorm = (angularVelocity - _idleSpeed) /
-								(_ratedSpeed - _idleSpeed);
-			if ( /*DataBus.Gear == 1 && */ engineSpeedNorm < Constants.SimulationSettings.CluchNormSpeed) {
-				_clutchState = SimulationComponent.ClutchState.ClutchSlipping;
-
-				var engineSpeed0 = VectoMath.Max(_idleSpeed, angularVelocity);
-				var clutchSpeedNorm = Constants.SimulationSettings.CluchNormSpeed /
-									((_idleSpeed + Constants.SimulationSettings.CluchNormSpeed * (_ratedSpeed - _idleSpeed)) / _ratedSpeed);
-				engineSpeedIn =
-					((clutchSpeedNorm * engineSpeed0 / _ratedSpeed) * (_ratedSpeed - _idleSpeed) + _idleSpeed).Radian
-						.Cast<PerSecond>();
-
-				torqueIn = Formulas.PowerToTorque(Formulas.TorqueToPower(torque, angularVelocity) / ClutchEff, engineSpeedIn);
+			if (DataBus.VehicleStopped) {
+				_clutchState = SimulationComponent.ClutchState.ClutchOpened;
+				engineSpeedIn = _idleSpeed;
+				torqueIn = 0.SI<NewtonMeter>();
 			} else {
-				_clutchState = SimulationComponent.ClutchState.ClutchClosed;
+				var engineSpeedNorm = (angularVelocity - _idleSpeed) /
+									(_ratedSpeed - _idleSpeed);
+				if (engineSpeedNorm < Constants.SimulationSettings.CluchNormSpeed) {
+					_clutchState = SimulationComponent.ClutchState.ClutchSlipping;
+
+					var engineSpeed0 = VectoMath.Max(_idleSpeed, angularVelocity);
+					var clutchSpeedNorm = Constants.SimulationSettings.CluchNormSpeed /
+										((_idleSpeed + Constants.SimulationSettings.CluchNormSpeed * (_ratedSpeed - _idleSpeed)) / _ratedSpeed);
+					engineSpeedIn =
+						((clutchSpeedNorm * engineSpeed0 / _ratedSpeed) * (_ratedSpeed - _idleSpeed) + _idleSpeed).Radian
+							.Cast<PerSecond>();
+
+					torqueIn = Formulas.PowerToTorque(Formulas.TorqueToPower(torque, angularVelocity) / ClutchEff, engineSpeedIn);
+				} else {
+					_clutchState = SimulationComponent.ClutchState.ClutchClosed;
+				}
 			}
-			//}
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, engineSpeedIn,
 				Formulas.TorqueToPower(torqueIn, engineSpeedIn));
 		}

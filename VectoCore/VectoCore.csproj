@@ -164,6 +164,7 @@
     <Compile Include="Models\SimulationComponent\IShiftStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\ShiftStrategy.cs" />
     <Compile Include="Models\Simulation\DataBus\IClutchInfo.cs" />
+    <Compile Include="Models\Simulation\DataBus\IDriverInfo.cs" />
     <Compile Include="Models\Simulation\Data\AuxiliaryDemandType.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryType.cs" />
     <Compile Include="Models\SimulationComponent\Data\FullLoadCurve.cs" />

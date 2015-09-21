@@ -49,7 +49,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			BreakPower = 0.SI<Watt>();
 			BreakTorque = 0.SI<NewtonMeter>();
-			return NextComponent.Initialize(torque, angularVelocity);
+			return DataBus.VehicleStopped
+				? NextComponent.Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>())
+				: NextComponent.Initialize(torque, angularVelocity);
 		}
 
 
