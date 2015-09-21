@@ -1,5 +1,6 @@
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
@@ -93,6 +94,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// </summary>
 		IDataBus DataBus { get; }
 
-		MeterPerSquareSecond LookaheadDeceleration { get; }
+		DriverData DriverData { get; }
 	}
 }

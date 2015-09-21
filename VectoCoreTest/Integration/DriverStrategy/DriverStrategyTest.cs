@@ -282,6 +282,39 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 		[TestMethod]
+		public void Decelerate_45_0_level()
+		{
+			var cycle = CreateCycleData(new[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  45, 0,     0",
+				" 200,  0, 0,     2",
+			});
+			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_45_0_level.vmod").Run();
+		}
+
+		[TestMethod]
+		public void Decelerate_45_0_uphill_5()
+		{
+			var cycle = CreateCycleData(new[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  45, 5,     0",
+				" 200,  0, 5,     2",
+			});
+			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_45_0_uphill_5.vmod").Run();
+		}
+
+		[TestMethod]
+		public void Decelerate_45_0_downhill_5()
+		{
+			var cycle = CreateCycleData(new[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  45, -5,     0",
+				" 200,  0, -5,     2",
+			});
+			CreatePowerTrain(cycle, "DriverStrategy_Decelerate_45_0_downhill_5.vmod").Run();
+		}
+
+		[TestMethod]
 		public void Decelerate_60_20_uphill_5()
 		{
 			var cycle = CreateCycleData(new[] {
@@ -1036,7 +1069,9 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			return new DriverData {
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
-					Enabled = false,
+					Enabled = true,
+					MinSpeed = 50.KMPHtoMeterPerSecond(),
+					Deceleration = -0.5.SI<MeterPerSquareSecond>(),
 				},
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = DriverData.DriverMode.Off

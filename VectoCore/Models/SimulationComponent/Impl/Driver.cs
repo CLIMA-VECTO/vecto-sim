@@ -24,11 +24,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected IDriverDemandOutPort NextComponent;
 
-		protected DriverData DriverData;
+		public DriverData DriverData { get; protected set; }
 
 		protected IDriverStrategy DriverStrategy;
 
-		public MeterPerSquareSecond LookaheadDeceleration { get; protected set; }
+		//public MeterPerSquareSecond LookaheadDeceleration { get; protected set; }
 
 		public Driver(VehicleContainer container, DriverData driverData, IDriverStrategy strategy) : base(container)
 		{
@@ -36,7 +36,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			DriverStrategy = strategy;
 			strategy.Driver = this;
 
-			LookaheadDeceleration = DeclarationData.Driver.LookAhead.Deceleration;
+			//LookaheadDeceleration = DeclarationData.Driver.LookAhead.Deceleration;
 		}
 
 		public IDriverDemandInPort InPort()
@@ -52,7 +52,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
-			LookaheadDeceleration = DriverData.AccelerationCurve.MinDeceleration();
+			//LookaheadDeceleration = DriverData.AccelerationCurve.MinDeceleration();
+			if (DriverData.LookAheadCoasting.Deceleration < DriverData.AccelerationCurve.MinDeceleration()) {
+				Log.Warn(
+					"LookAhead Coasting Deceleration is lower than Driver's min. Deceleration. Coasting may start too late. Lookahead dec.: {0}, Driver min. deceleration: {1}",
+					DriverData.LookAheadCoasting.Deceleration, DriverData.AccelerationCurve.MinDeceleration());
+			}
 			return NextComponent.Initialize(vehicleSpeed, roadGradient);
 		}
 
@@ -61,9 +66,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			Log.Debug("==== DRIVER Request ====");
 			Log.Debug(
-				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}",
-				absTime, ds,
-				targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed);
+				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5} gear: {6}",
+				absTime, ds, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear);
 
 			var retVal = DriverStrategy.Request(absTime, ds, targetVelocity, gradient);
 			//DoHandleRequest(absTime, ds, targetVelocity, gradient);
@@ -400,8 +404,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var limitApplied = false;
 			var originalAcceleration = operatingPoint.Acceleration;
 			if (((limits & LimitationMode.LimitDecelerationLookahead) != 0) &&
-				operatingPoint.Acceleration < LookaheadDeceleration) {
-				operatingPoint.Acceleration = LookaheadDeceleration;
+				operatingPoint.Acceleration < DriverData.LookAheadCoasting.Deceleration) {
+				operatingPoint.Acceleration = DriverData.LookAheadCoasting.Deceleration;
 				limitApplied = true;
 			}
 			var accelerationLimits = DriverData.AccelerationCurve.Lookup(DataBus.VehicleSpeed);
@@ -453,11 +457,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Default(r => {
 					throw new UnexpectedResponseException("cannot use response for searching braking power!", r);
 				});
-			var delta = searchInterval;
+			var delta = 0.SI<Watt>();
 
-			debug.Add(new { brakingPower = 0.SI<Watt>(), searchInterval, delta });
+			debug.Add(new { brakingPower = 0.SI<Watt>(), searchInterval, delta = origDelta, operatingPoint });
 
-			var breakingPower = origDelta.Abs();
+			var breakingPower = searchInterval * -delta.Sign();
 
 			// double the searchInterval until a good interval was found
 			var intervalFactor = 1.0;
@@ -477,7 +481,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return operatingPoint;
 				}
 
-				debug.Add(new { breakingPower, searchInterval, delta });
+				debug.Add(new { breakingPower, searchInterval, delta, operatingPoint });
 
 				// check if a correct searchInterval was found (when the delta changed signs, we stepped through the 0-point)
 				// from then on the searchInterval can be bisected.

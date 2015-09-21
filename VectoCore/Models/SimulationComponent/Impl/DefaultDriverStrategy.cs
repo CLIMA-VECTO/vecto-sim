@@ -9,6 +9,7 @@ using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -92,9 +93,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return retVal;
 			}
 
+			// if the speed at the end of the simulation interval is below the next target speed 
+			// we are fine (no need to brake right now)
 			var v2 = Driver.DataBus.VehicleSpeed + retVal.Acceleration * retVal.SimulationInterval;
+			if (v2 <= nextAction.NextTargetSpeed) {
+				return retVal;
+			}
 			var coastingDistance = Formulas.DecelerationDistance(v2, nextAction.NextTargetSpeed,
-				Driver.LookaheadDeceleration);
+				Driver.DriverData.LookAheadCoasting.Deceleration);
 
 			//if (Driver.DataBus.Distance.IsEqual(nextAction.TriggerDistance - coastingDistance,
 			//	Constants.SimulationSettings.DriverActionDistanceTolerance.Value())) {
@@ -125,11 +131,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// s_acc(dt) = currentSpeed * dt + a / 2 * dt^2
 			// => solve for dt, compute ds = currentSpeed * dt + a / 2 * dt^2
 			var dtList = VectoMath.QuadraticEquationSolver(
-				(retVal.Acceleration / 2 - retVal.Acceleration * retVal.Acceleration / 2 / Driver.LookaheadDeceleration).Value(),
-				(Driver.DataBus.VehicleSpeed - Driver.DataBus.VehicleSpeed * retVal.Acceleration / Driver.LookaheadDeceleration)
+				(retVal.Acceleration / 2 -
+				retVal.Acceleration * retVal.Acceleration / 2 / Driver.DriverData.LookAheadCoasting.Deceleration).Value(),
+				(Driver.DataBus.VehicleSpeed -
+				Driver.DataBus.VehicleSpeed * retVal.Acceleration / Driver.DriverData.LookAheadCoasting.Deceleration)
 					.Value
 					(),
-				(-Driver.DataBus.VehicleSpeed * Driver.DataBus.VehicleSpeed / 2 / Driver.LookaheadDeceleration -
+				(-Driver.DataBus.VehicleSpeed * Driver.DataBus.VehicleSpeed / 2 / Driver.DriverData.LookAheadCoasting.Deceleration -
 				(nextAction.TriggerDistance - Driver.DataBus.Distance)).Value());
 			dtList.Sort();
 			var dt = dtList.First(x => x > 0).SI<Second>();
@@ -150,25 +158,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// distance until halt
 			var lookaheadDistance = Formulas.DecelerationDistance(currentSpeed, 0.SI<MeterPerSecond>(),
-				Driver.LookaheadDeceleration);
+				Driver.DriverData.LookAheadCoasting.Deceleration);
 
 			var lookaheadData = Driver.DataBus.LookAhead(1.2 * lookaheadDistance);
 
 			Log.Debug("Lookahead distance: {0} @ current speed {1}", lookaheadDistance, currentSpeed);
 			var nextActions = new List<DrivingBehaviorEntry>();
-			for (var i = 0; i < lookaheadData.Count; i++) {
-				var entry = lookaheadData[i];
+			foreach (var entry in lookaheadData) {
 				if (entry.VehicleTargetSpeed < currentSpeed) {
-					var coastingDistance = Formulas.DecelerationDistance(currentSpeed, entry.VehicleTargetSpeed,
-						Driver.LookaheadDeceleration);
-					Log.Debug("adding 'Coasting' starting at distance {0}", entry.Distance - coastingDistance);
-					nextActions.Add(
-						new DrivingBehaviorEntry {
-							Action = DefaultDriverStrategy.DrivingBehavior.Coasting,
-							ActionDistance = entry.Distance - coastingDistance,
+					if (!Driver.DriverData.LookAheadCoasting.Enabled ||
+						currentSpeed < Driver.DriverData.LookAheadCoasting.MinSpeed) {
+						var brakingDistance = Driver.ComputeDecelerationDistance(entry.VehicleTargetSpeed);
+						Log.Debug("adding 'Braking' starting at distance {0}", entry.Distance - brakingDistance);
+						nextActions.Add(new DrivingBehaviorEntry {
+							Action = DrivingBehavior.Braking,
+							ActionDistance = entry.Distance - brakingDistance,
 							TriggerDistance = entry.Distance,
 							NextTargetSpeed = entry.VehicleTargetSpeed
 						});
+					} else {
+						var coastingDistance = Formulas.DecelerationDistance(currentSpeed, entry.VehicleTargetSpeed,
+							Driver.DriverData.LookAheadCoasting.Deceleration);
+						Log.Debug("adding 'Coasting' starting at distance {0}", entry.Distance - coastingDistance);
+						nextActions.Add(
+							new DrivingBehaviorEntry {
+								Action = DefaultDriverStrategy.DrivingBehavior.Coasting,
+								ActionDistance = entry.Distance - coastingDistance,
+								TriggerDistance = entry.Distance,
+								NextTargetSpeed = entry.VehicleTargetSpeed
+							});
+					}
 				}
 				if (entry.VehicleTargetSpeed > currentSpeed) {
 					nextActions.Add(new DrivingBehaviorEntry {
