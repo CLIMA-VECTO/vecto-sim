@@ -52,13 +52,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
-			//LookaheadDeceleration = DriverData.AccelerationCurve.MinDeceleration();
 			if (DriverData.LookAheadCoasting.Deceleration < DriverData.AccelerationCurve.MinDeceleration()) {
 				Log.Warn(
 					"LookAhead Coasting Deceleration is lower than Driver's min. Deceleration. Coasting may start too late. Lookahead dec.: {0}, Driver min. deceleration: {1}",
 					DriverData.LookAheadCoasting.Deceleration, DriverData.AccelerationCurve.MinDeceleration());
 			}
 			return NextComponent.Initialize(vehicleSpeed, roadGradient);
+		}
+
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, MeterPerSquareSecond startAcceleration, Radian roadGradient)
+		{
+			return NextComponent.Initialize(vehicleSpeed, startAcceleration, roadGradient);
 		}
 
 

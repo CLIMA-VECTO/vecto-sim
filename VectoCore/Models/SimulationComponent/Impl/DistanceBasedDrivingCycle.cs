@@ -187,7 +187,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Altitude = first.Altitude,
 			};
 			CurrentState = PreviousState.Clone();
-			//return new ResponseSuccess();
+
+			if (CycleIntervalIterator.LeftSample.VehicleTargetSpeed.IsEqual(0)) {
+				var retVal = NextComponent.Initialize(DataBus.StartSpeed, DataBus.StartAcceleration,
+					CycleIntervalIterator.LeftSample.RoadGradient);
+				if (!(retVal is ResponseSuccess)) {
+					throw new UnexpectedResponseException("Couldn't find start gear.", retVal);
+				}
+			}
+
 			return NextComponent.Initialize(CycleIntervalIterator.LeftSample.VehicleTargetSpeed,
 				CycleIntervalIterator.LeftSample.RoadGradient);
 		}

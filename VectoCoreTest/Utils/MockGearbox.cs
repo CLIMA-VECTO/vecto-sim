@@ -25,6 +25,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 		}
 
 		public uint Gear { get; set; }
+		public MeterPerSecond StartSpeed { get; private set; }
+		public MeterPerSquareSecond StartAcceleration { get; private set; }
 
 
 		public void Connect(ITnOutPort other)

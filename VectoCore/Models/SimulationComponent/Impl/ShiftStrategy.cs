@@ -1,5 +1,6 @@
 using System;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Utils;
@@ -11,17 +12,21 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 	public abstract class ShiftStrategy : IShiftStrategy
 	{
+		protected IDataBus DataBus;
+		protected GearboxData Data;
+
 		public abstract uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
 		public abstract void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
 		public abstract bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed);
 		public abstract uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
 
-		protected GearboxData Data;
+
 		public Gearbox Gearbox { get; set; }
 
 
-		protected ShiftStrategy(GearboxData data)
+		protected ShiftStrategy(GearboxData data, IDataBus dataBus)
 		{
+			DataBus = dataBus;
 			Data = data;
 		}
 
@@ -81,7 +86,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		protected uint PreviousGear;
 
-		public AMTShiftStrategy(GearboxData data) : base(data)
+		public AMTShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus)
 		{
 			PreviousGear = 1;
 		}
@@ -130,14 +135,39 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
 		{
-			return GetGear(absTime, dt, outTorque, outEngineSpeed, skipGears: true, torqueReserve: Data.StartTorqueReserve);
+			if (DataBus.VehicleSpeed.IsEqual(0)) {
+				for (var gear = (uint)Data.Gears.Count; gear > 1; gear--) {
+					var inAngularSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
+
+					if (inAngularSpeed > Data.Gears[gear].FullLoadCurve.RatedSpeed) {
+						continue;
+					}
+
+					var response = Gearbox.Initialize(gear, outTorque, outEngineSpeed);
+
+					var currentPower = response.EnginePowerRequest;
+					var inTorque = currentPower / inAngularSpeed;
+
+					var fullLoadPower = currentPower - response.DeltaFullLoad;
+					var reserve = 1 - (currentPower / fullLoadPower).Cast<Scalar>();
+
+					if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && inAngularSpeed > DataBus.EngineIdleSpeed &&
+						reserve >= Data.StartTorqueReserve / 100) {
+						return gear;
+					}
+				}
+				return 1;
+			}
+
+			// todo else
+			return 1;
 		}
 	}
 
 	//TODO Implementd MTShiftStrategy
 	public class MTShiftStrategy : ShiftStrategy
 	{
-		public MTShiftStrategy(GearboxData data) : base(data) {}
+		public MTShiftStrategy(GearboxData data, IDataBus bus) : base(data, bus) {}
 
 		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
 		{
@@ -163,7 +193,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	// TODO Implement ATShiftStrategy
 	public class ATShiftStrategy : ShiftStrategy
 	{
-		public ATShiftStrategy(GearboxData data) : base(data) {}
+		public ATShiftStrategy(GearboxData data, IDataBus bus) : base(data, bus) {}
 
 		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
 		{

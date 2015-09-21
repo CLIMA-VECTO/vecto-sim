@@ -64,6 +64,7 @@
     <Compile Include="Integration\DriverStrategy\DriverStrategyTest.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
     <Compile Include="Integration\SimulationRuns\FullPowertrain.cs" />
+    <Compile Include="Models\SimulationComponent\GearboxPowertrainTest.cs" />
     <Compile Include="Utils\Port.cs" />
     <Compile Include="Models\SimulationComponentData\AuxiliaryTypeHelperTest.cs" />
     <Compile Include="Models\SimulationComponentData\CombustionEngineDataTest.cs" />

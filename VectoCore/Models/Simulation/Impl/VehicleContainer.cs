@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -42,6 +43,18 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
+		[DebuggerHidden]
+		public MeterPerSecond StartSpeed
+		{
+			get { return Gearbox.StartSpeed; }
+		}
+
+		[DebuggerHidden]
+		public MeterPerSquareSecond StartAcceleration
+		{
+			get { return Gearbox.StartAcceleration; }
+		}
+
 		#endregion
 
 		#region IEngineCockpit
@@ -55,6 +68,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 				return Engine.EngineSpeed;
 			}
+		}
+
+		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
+		{
+			return Engine.EngineStationaryFullPower(angularSpeed);
+		}
+
+		public PerSecond EngineIdleSpeed
+		{
+			get { return Engine.EngineIdleSpeed; }
 		}
 
 		#endregion
