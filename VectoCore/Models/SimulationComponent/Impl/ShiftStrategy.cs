@@ -7,9 +7,6 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	// TODO:
-	// * EarlyUpshift (shift before outside of up-shift curve if outTorque reserve for the next higher gear is fullfilled)
-
 	public abstract class ShiftStrategy : IShiftStrategy
 	{
 		protected IDataBus DataBus;
@@ -31,7 +28,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		/// <summary>
-		/// Tests if the gearbox should shift down.
+		/// Tests if the operating point is below the down-shift curve (=outside of shift curve).
 		/// </summary>
 		protected virtual bool IsBelowDownShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
 		{
@@ -44,7 +41,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		/// <summary>
-		/// Tests if the gearbox should shift up.
+		/// Tests if the gearbox is above the up-shift curve (=outside of shift curve).
 		/// </summary>
 		protected virtual bool IsAboveUpShiftCurve(uint gear, NewtonMeter inTorque, PerSecond inEngineSpeed)
 		{
@@ -59,23 +56,33 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		/// Tests if current power request is left or right of the shiftpolygon segment
 		/// </summary>
-		protected static bool IsOnLeftSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
+		/// <remarks>
+		/// Computes a simplified cross product for the vectors: from-->X, from-->to and checks 
+		/// if the z-component is positive (which means that X was on the right side of from-->to).
+		/// </remarks>
+		private static bool IsOnLeftSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
 			ShiftPolygon.ShiftPolygonEntry to)
 		{
 			var ab = new { X = to.AngularSpeed - from.AngularSpeed, Y = to.Torque - from.Torque };
 			var ac = new { X = angularSpeed - from.AngularSpeed, Y = torque - from.Torque };
-			return (ab.X * ac.Y - ab.Y * ac.X).IsGreater(0);
+			var z = ab.X * ac.Y - ab.Y * ac.X;
+			return z.IsGreater(0);
 		}
 
 		/// <summary>
 		/// Tests if current power request is left or right of the shiftpolygon segment
 		/// </summary>
-		protected static bool IsOnRightSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
+		/// <remarks>
+		/// Computes a simplified cross product for the vectors: from-->X, from-->to and checks 
+		/// if the z-component is negative (which means that X was on the left side of from-->to).
+		/// </remarks>
+		private static bool IsOnRightSide(PerSecond angularSpeed, NewtonMeter torque, ShiftPolygon.ShiftPolygonEntry from,
 			ShiftPolygon.ShiftPolygonEntry to)
 		{
 			var ab = new { X = to.AngularSpeed - from.AngularSpeed, Y = to.Torque - from.Torque };
 			var ac = new { X = angularSpeed - from.AngularSpeed, Y = torque - from.Torque };
-			return (ab.X * ac.Y - ab.Y * ac.X).IsSmaller(0);
+			var z = ab.X * ac.Y - ab.Y * ac.X;
+			return z.IsSmaller(0);
 		}
 	}
 
@@ -111,7 +118,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var inAngularSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
 				var inTorque = currentPower / inAngularSpeed;
-				if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && reserve >= torqueReserve / 100) {
+				if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && reserve >= torqueReserve) {
 					return gear;
 				}
 			}
@@ -130,6 +137,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public override bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed)
 		{
+			// todo: early upshift
 			return IsBelowDownShiftCurve(gear, torque, angularSpeed) || IsAboveUpShiftCurve(gear, torque, angularSpeed);
 		}
 
@@ -151,37 +159,43 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var fullLoadPower = currentPower - response.DeltaFullLoad;
 					var reserve = 1 - (currentPower / fullLoadPower).Cast<Scalar>();
 
+					// if in shift curve and above idle speed and torque reserve is provided.
 					if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && inAngularSpeed > DataBus.EngineIdleSpeed &&
-						reserve >= Data.StartTorqueReserve / 100) {
+						reserve >= Data.StartTorqueReserve) {
 						return gear;
 					}
 				}
 				return 1;
-			}
-			for (var gear = (uint)Data.Gears.Count; gear > 1; gear--) {
-				var response = Gearbox.Initialize(gear, outTorque, outEngineSpeed);
+			} else {
+				for (var gear = (uint)Data.Gears.Count; gear > 1; gear--) {
+					var response = Gearbox.Initialize(gear, outTorque, outEngineSpeed);
 
-				var currentPower = response.EnginePowerRequest;
-				var inAngularSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
-				var inTorque = currentPower / inAngularSpeed;
+					var currentPower = response.EnginePowerRequest;
+					var inAngularSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
+					var inTorque = currentPower / inAngularSpeed;
 
-				var fullLoadPower = currentPower - response.DeltaFullLoad;
-				var reserve = 1 - (currentPower / fullLoadPower).Cast<Scalar>();
+					var fullLoadPower = currentPower - response.DeltaFullLoad;
+					var reserve = 1 - (currentPower / fullLoadPower).Cast<Scalar>();
 
-				if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && !IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) &&
-					reserve >= Data.StartTorqueReserve / 100) {
-					return gear;
+					// if in shift curve and torque reserve is provided: return the current gear
+					if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && !IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) &&
+						reserve >= Data.StartTorqueReserve) {
+						return gear;
+					}
+
+					// if over the up shift curve: return the previous gear (even thou it did not provide the required torque reserve)
+					if (IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) && gear < Data.Gears.Count) {
+						return gear + 1;
+					}
 				}
-				if (IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) && gear < Data.Gears.Count) {
-					return gear + 1;
-				}
 			}
 
+			// fallback: return first gear
 			return 1;
 		}
 	}
 
-	//TODO Implementd MTShiftStrategy
+	//TODO Implement MTShiftStrategy
 	public class MTShiftStrategy : ShiftStrategy
 	{
 		public MTShiftStrategy(GearboxData data, IDataBus bus) : base(data, bus) {}
@@ -230,6 +244,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
 		{
 			throw new System.NotImplementedException();
+		}
+	}
+
+	// TODO Implement CustomShiftStrategy
+	public class CustomShiftStrategy : ShiftStrategy
+	{
+		public CustomShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus) {}
+
+		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

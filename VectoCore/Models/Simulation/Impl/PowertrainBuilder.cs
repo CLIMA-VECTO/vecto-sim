@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -100,14 +101,24 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected IGearbox GetGearbox(VehicleContainer container, GearboxData data)
 		{
+			IShiftStrategy strategy;
 			switch (data.Type) {
+				case GearboxType.AMT:
+					strategy = new AMTShiftStrategy(data, container);
+					break;
+				case GearboxType.MT:
+					strategy = new MTShiftStrategy(data, container);
+					break;
 				case GearboxType.AT:
-					throw new VectoSimulationException("Unsupported Geabox type: Automatic Transmission (AT)");
+					strategy = new ATShiftStrategy(data, container);
+					break;
 				case GearboxType.Custom:
-					throw new VectoSimulationException("Custom Gearbox not supported");
+					strategy = new CustomShiftStrategy(data, container);
+					break;
 				default:
-					return new Gearbox(container, data);
+					throw new VectoSimulationException("Unknown Gearbox Type: {0}", data.Type);
 			}
+			return new Gearbox(container, data, strategy);
 		}
 
 		protected virtual IDriver AddComponent(IDrivingCycle prev, IDriver next)

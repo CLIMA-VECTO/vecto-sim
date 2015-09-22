@@ -113,7 +113,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var container = new VehicleContainer();
-			var gearbox = new Gearbox(container, gearboxData);
+			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 
 			gearbox.Gear = 1;
 			var ratio = 6.38;
@@ -145,7 +145,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer();
 			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
-			var gearbox = new Gearbox(container, gearboxData);
+			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
@@ -189,7 +189,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer();
 			var gearboxData = CreateGearboxData();
-			var gearbox = new Gearbox(container, gearboxData);
+			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
@@ -250,7 +250,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer();
 			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
-			var gearbox = new Gearbox(container, gearboxData);
+			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
@@ -303,7 +303,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer();
 			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
-			var gearbox = new Gearbox(container, gearboxData);
+			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
@@ -353,7 +353,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		{
 			var container = new VehicleContainer();
 			var gearboxData = CreateGearboxData();
-			var gearbox = new Gearbox(container, gearboxData);
+			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
