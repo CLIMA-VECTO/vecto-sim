@@ -158,8 +158,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 				return 1;
 			}
+			for (var gear = (uint)Data.Gears.Count; gear > 1; gear--) {
+				var response = Gearbox.Initialize(gear, outTorque, outEngineSpeed);
 
-			// todo else
+				var currentPower = response.EnginePowerRequest;
+				var inAngularSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
+				var inTorque = currentPower / inAngularSpeed;
+
+				var fullLoadPower = currentPower - response.DeltaFullLoad;
+				var reserve = 1 - (currentPower / fullLoadPower).Cast<Scalar>();
+
+				if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && !IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) &&
+					reserve >= Data.StartTorqueReserve / 100) {
+					return gear;
+				}
+				if (IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) && gear < Data.Gears.Count) {
+					return gear + 1;
+				}
+			}
+
 			return 1;
 		}
 	}

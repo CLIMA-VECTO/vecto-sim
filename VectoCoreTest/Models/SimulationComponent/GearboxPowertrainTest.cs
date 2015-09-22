@@ -93,6 +93,29 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			AssertHelper.AreRelativeEqual(593.202.RPMtoRad(), container.EngineSpeed);
 		}
 
+		[TestMethod]
+		public void Gearbox_Initialize_85_RefLoad()
+		{
+			var cycle = CreateCycleData(new[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  85, 2.95016969027809,     0",
+				" 100, 85, 2.95016969027809,     0",
+			});
+			var container = CreatePowerTrain(cycle, "Gearbox_Initialize.vmod", 7500.0.SI<Kilogram>(), 19300.SI<Kilogram>());
+			var retVal = container.Cycle.Initialize();
+			Assert.AreEqual(11u, container.Gear);
+			Assert.IsInstanceOfType(retVal, typeof(ResponseSuccess));
+
+			AssertHelper.AreRelativeEqual(1195.996.RPMtoRad(), container.EngineSpeed);
+
+			var absTime = 0.SI<Second>();
+			var ds = 1.SI<Meter>();
+
+			retVal = container.Cycle.Request(absTime, ds);
+			container.CommitSimulationStep(absTime, retVal.SimulationInterval);
+			absTime += retVal.SimulationInterval;
+		}
+
 
 		// ===============================
 
