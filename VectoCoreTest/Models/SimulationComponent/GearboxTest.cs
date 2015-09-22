@@ -283,9 +283,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			gearbox.OutPort().Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>());
 
-			var first = gearbox.OutPort().Request(absTime, dt, 1000.SI<NewtonMeter>(), 1000.RPMtoRad());
+			// just for test case mock driver
 			driver.VehicleStopped = false;
-			absTime += dt;
 
 			foreach (var exp in expected) {
 				var expectedT = exp.t.SI<NewtonMeter>();

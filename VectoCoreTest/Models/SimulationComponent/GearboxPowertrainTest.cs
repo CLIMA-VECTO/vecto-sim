@@ -24,7 +24,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
 		public const string EngineFile = @"TestData\Components\40t_Long_Haul_Truck.veng";
 		public const string AxleGearLossMap = @"TestData\Components\Axle.vtlm";
-		public const string GearboxLossMap = @"TestData\Components\Indirect Gear.vtlm";
+		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
+		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
@@ -101,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(11u, container.Gear);
 			Assert.IsInstanceOfType(retVal, typeof(ResponseSuccess));
 
-			AssertHelper.AreRelativeEqual(1195.996.RPMtoRad(), container.EngineSpeed);
+			AssertHelper.AreRelativeEqual(1530.263.RPMtoRad(), container.EngineSpeed, 0.001);
 
 			var absTime = 0.SI<Second>();
 			var ds = 1.SI<Meter>();
@@ -172,9 +173,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					Tuple.Create((uint)i,
 						new GearData {
 							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio),
+							LossMap =
+								(i != 11)
+									? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio)
+									: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio),
 							Ratio = ratio,
-							//ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile),
 							ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(engineData.FullLoadCurve, engineData.IdleSpeed)
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),

@@ -41,17 +41,31 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var startDistance = cycleData.Entries.First().Distance.Value();
 			var absTime = 0.SI<Second>();
+
+			// waiting time of 40 seconds is split up to 3 steps: 0.5, 39, 0.5
 			var response = cycle.OutPort().Request(absTime, 1.SI<Meter>());
-
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
-
 			Assert.AreEqual(0, driver.LastRequest.TargetVelocity.Value(), Tolerance);
 			Assert.AreEqual(0.028416069495827, driver.LastRequest.Gradient.Value(), 1E-12);
 			Assert.AreEqual(0.5, driver.LastRequest.dt.Value(), Tolerance);
-
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
-			absTime += 40.SI<Second>();
+			absTime += response.SimulationInterval;
 
+			response = cycle.OutPort().Request(absTime, 1.SI<Meter>());
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.AreEqual(0, driver.LastRequest.TargetVelocity.Value(), Tolerance);
+			Assert.AreEqual(0.028416069495827, driver.LastRequest.Gradient.Value(), 1E-12);
+			Assert.AreEqual(39, driver.LastRequest.dt.Value(), Tolerance);
+			container.CommitSimulationStep(absTime, response.SimulationInterval);
+			absTime += response.SimulationInterval;
+
+			response = cycle.OutPort().Request(absTime, 1.SI<Meter>());
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.AreEqual(0, driver.LastRequest.TargetVelocity.Value(), Tolerance);
+			Assert.AreEqual(0.028416069495827, driver.LastRequest.Gradient.Value(), 1E-12);
+			Assert.AreEqual(0.5, driver.LastRequest.dt.Value(), Tolerance);
+			container.CommitSimulationStep(absTime, response.SimulationInterval);
+			absTime += response.SimulationInterval;
 
 			response = cycle.OutPort().Request(absTime, 1.SI<Meter>());
 
