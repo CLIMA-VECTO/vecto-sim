@@ -36,6 +36,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			cycle.OutPort().Initialize();
 
+			// just in test mock driver
+			driver.VehicleStopped = false;
+
 			var startDistance = cycleData.Entries.First().Distance.Value();
 			var absTime = 0.SI<Second>();
 			var response = cycle.OutPort().Request(absTime, 1.SI<Meter>());
@@ -44,10 +47,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			Assert.AreEqual(0, driver.LastRequest.TargetVelocity.Value(), Tolerance);
 			Assert.AreEqual(0.028416069495827, driver.LastRequest.Gradient.Value(), 1E-12);
-			Assert.AreEqual(40, driver.LastRequest.dt.Value(), Tolerance);
+			Assert.AreEqual(0.5, driver.LastRequest.dt.Value(), Tolerance);
 
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
-			absTime += response.SimulationInterval;
+			absTime += 40.SI<Second>();
 
 
 			response = cycle.OutPort().Request(absTime, 1.SI<Meter>());

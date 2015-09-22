@@ -34,8 +34,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driver = new MockDriver(container);
 
 			//Test - Clutch slipping
-			gearbox.Gear = 1;
-
 			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 0.SI<PerSecond>());
 
 			Assert.AreEqual(0, outPort.Torque.Value(), 0.001);
@@ -47,14 +45,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(62.119969, outPort.AngularVelocity.Value(), 0.001);
 
 			//Test - Clutch opened
-			gearbox.Gear = 0;
+			driver.VehicleStopped = true;
 			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 30.SI<PerSecond>());
 
 			Assert.AreEqual(0, outPort.Torque.Value(), 0.001);
 			Assert.AreEqual(engineData.IdleSpeed.Value(), outPort.AngularVelocity.Value(), 0.001);
 
 			//Test - Clutch closed
-			gearbox.Gear = 1;
+			driver.VehicleStopped = false;
 			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 80.SI<PerSecond>());
 
 			Assert.AreEqual(100.0, outPort.Torque.Value(), 0.001);
