@@ -195,7 +195,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 					new GearData {
 						LossMap = gearLossMap,
 						ShiftPolygon = shiftPolygon,
-						FullLoadCurve = gearFullLoad,
+						FullLoadCurve = gearFullLoad ?? engine.FullLoadCurve,
 						Ratio = gear.Ratio,
 						TorqueConverterActive = false
 					});

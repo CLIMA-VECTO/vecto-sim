@@ -307,7 +307,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (!outEngineSpeed.IsEqual(0)) {
-				var isShiftAllowed = (_shiftTime + Data.ShiftTime).IsSmaller(absTime);
+				var isShiftAllowed = (_shiftTime + Data.ShiftTime).IsSmallerOrEqual(absTime);
 				if (isShiftAllowed && _strategy.ShiftRequired(Gear, inTorque, inEngineSpeed)) {
 					_shiftTime = absTime + Data.TractionInterruption;
 

@@ -121,6 +121,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driver = new MockDriver(container);
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
+			container.Engine = port;
 
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
@@ -282,8 +283,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			gearbox.OutPort().Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>());
 
-			var first = gearbox.OutPort().Request(absTime, dt, 1000.SI<NewtonMeter>(), 100.SI<PerSecond>());
-
+			var first = gearbox.OutPort().Request(absTime, dt, 1000.SI<NewtonMeter>(), 1000.RPMtoRad());
+			driver.VehicleStopped = false;
 			absTime += dt;
 
 			foreach (var exp in expected) {
@@ -372,7 +373,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>());
 
 			var absTime = 0.SI<Second>();
-			var dt = 1.SI<Second>();
+			var dt = 2.SI<Second>();
 
 			driver.VehicleStopped = true;
 
