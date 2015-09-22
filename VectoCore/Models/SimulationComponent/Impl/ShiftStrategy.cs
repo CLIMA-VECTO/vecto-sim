@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				for (var gear = (uint)Data.Gears.Count; gear > 1; gear--) {
 					var inAngularSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
 
-					if (inAngularSpeed > Data.Gears[gear].FullLoadCurve.RatedSpeed) {
+					if (inAngularSpeed > Data.Gears[gear].FullLoadCurve.RatedSpeed || inAngularSpeed.IsEqual(0)) {
 						continue;
 					}
 

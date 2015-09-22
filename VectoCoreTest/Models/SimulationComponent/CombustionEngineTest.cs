@@ -201,14 +201,16 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void EngineIdleJump()
 		{
-			var vehicleContainer = new VehicleContainer();
-			var gearbox = new MockGearbox(vehicleContainer);
+			var container = new VehicleContainer();
+			var gearbox = new MockGearbox(container);
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
-			var engine = new CombustionEngine(vehicleContainer, engineData);
+			var engine = new CombustionEngine(container, engineData);
 
-			var clutch = new Clutch(vehicleContainer, engineData);
+			var clutch = new Clutch(container, engineData);
 
-			var aux = new Auxiliary(vehicleContainer);
+			var driver = new MockDriver(container);
+
+			var aux = new Auxiliary(container);
 			aux.AddConstant("", 5000.SI<Watt>());
 
 			gearbox.Gear = 1;
@@ -224,7 +226,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			//vehicleContainer.DataWriter = new ModalDataWriter("engine_idle_test.csv");
 			var dataWriter = new MockModalDataWriter();
-			vehicleContainer.DataWriter = dataWriter;
+			container.DataWriter = dataWriter;
 
 			var torque = 1200.SI<NewtonMeter>();
 			var angularVelocity = 800.RPMtoRad();
@@ -239,7 +241,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var response = requestPort.Request(absTime, dt, torque, angularVelocity);
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
-			vehicleContainer.CommitSimulationStep(absTime, dt);
+			container.CommitSimulationStep(absTime, dt);
 			var row = dataWriter.Data.Rows.Cast<DataRow>().Last();
 			Assert.AreEqual(105530.96491487339.SI<Watt>(), row[ModalResultField.Pe_eng.GetName()]);
 			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.Paux.GetName()]);
@@ -255,7 +257,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			response = gearbox.Request(absTime, dt, torque, angularVelocity);
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
-			vehicleContainer.CommitSimulationStep(absTime, dt);
+			container.CommitSimulationStep(absTime, dt);
 			row = dataWriter.Data.Rows.Cast<DataRow>().Last();
 
 			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.Pe_eng.GetName()]);

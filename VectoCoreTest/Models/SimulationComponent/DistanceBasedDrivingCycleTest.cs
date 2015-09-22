@@ -24,14 +24,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void TestDistanceRequest()
 		{
-			// Constants.SimulationSettings.DrivingCycleRoadGradientTolerance = 1E-12;
-
 			var cycleData = DrivingCycleDataReader.ReadFromFile(ShortCycle, CycleType.DistanceBased);
 
-			var vehicleContainer = new VehicleContainer();
-			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
+			var container = new VehicleContainer();
+			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 
-			var driver = new MockDriver(vehicleContainer);
+			var gbx = new MockGearbox(container);
+
+			var driver = new MockDriver(container);
 			cycle.InPort().Connect(driver.OutPort());
 
 			cycle.OutPort().Initialize();
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0.028416069495827, driver.LastRequest.Gradient.Value(), 1E-12);
 			Assert.AreEqual(40, driver.LastRequest.dt.Value(), Tolerance);
 
-			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
 
@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0.0284160694958265, driver.LastRequest.Gradient.Value(), 1E-12);
 			Assert.AreEqual(1 + startDistance, cycle.CurrentState.Distance.Value(), Tolerance);
 
-			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
 
@@ -70,7 +70,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(0.0284160694958265, driver.LastRequest.Gradient.Value(), 1E-12);
 			Assert.AreEqual(2 + startDistance, cycle.CurrentState.Distance.Value(), Tolerance);
 
-			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
 
@@ -85,7 +85,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(2 + startDistance, cycle.CurrentState.Distance.Value(), Tolerance);
 
 			try {
-				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+				container.CommitSimulationStep(absTime, response.SimulationInterval);
 				absTime += response.SimulationInterval;
 				Assert.Fail();
 			} catch (VectoSimulationException e) {
@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(18 + startDistance, cycle.CurrentState.Distance.Value(), Tolerance);
 
 
-			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
+			container.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 		}
 	}

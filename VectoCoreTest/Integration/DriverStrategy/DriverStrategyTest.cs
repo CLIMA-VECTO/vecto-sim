@@ -1011,6 +1011,9 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				ShiftTime = 2.SI<Second>(),
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 1.SI<Second>(),
+				StartSpeed = 2.SI<MeterPerSecond>(),
+				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
+				StartTorqueReserve = 0.2
 			};
 		}
 

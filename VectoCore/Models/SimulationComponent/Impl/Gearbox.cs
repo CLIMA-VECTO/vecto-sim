@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public bool ClutchClosed(Second absTime)
 		{
-			return _shiftTime.IsSmaller(absTime);
+			return _shiftTime.IsSmallerOrEqual(absTime);
 		}
 
 		public Gearbox(IVehicleContainer container, GearboxData gearboxData, IShiftStrategy strategy) : base(container)

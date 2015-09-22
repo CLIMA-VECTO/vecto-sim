@@ -380,6 +380,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(AccelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
+					Deceleration = -0.5.SI<MeterPerSquareSecond>()
 				},
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = DriverData.DriverMode.Off

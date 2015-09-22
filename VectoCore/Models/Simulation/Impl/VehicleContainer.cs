@@ -47,13 +47,25 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		[DebuggerHidden]
 		public MeterPerSecond StartSpeed
 		{
-			get { return Gearbox.StartSpeed; }
+			get
+			{
+				if (Gearbox == null) {
+					throw new VectoException("No Gearbox available. StartSpeed unkown");
+				}
+				return Gearbox.StartSpeed;
+			}
 		}
 
 		[DebuggerHidden]
 		public MeterPerSquareSecond StartAcceleration
 		{
-			get { return Gearbox.StartAcceleration; }
+			get
+			{
+				if (Gearbox == null) {
+					throw new VectoException("No Gearbox available. StartAcceleration unknown.");
+				}
+				return Gearbox.StartAcceleration;
+			}
 		}
 
 		#endregion

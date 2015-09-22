@@ -5,13 +5,10 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -25,9 +22,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	public class GearboxPowertrainTest
 	{
 		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
-
 		public const string EngineFile = @"TestData\Components\40t_Long_Haul_Truck.veng";
-
 		public const string AxleGearLossMap = @"TestData\Components\Axle.vtlm";
 		public const string GearboxLossMap = @"TestData\Components\Indirect Gear.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
@@ -37,9 +32,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_Initialize_Empty()
 		{
 			var cycle = CreateCycleData(new[] {
-				// <s>,<v>,<grad>,<stop>
-				"  0,   0, 2.95016969027809,     1",
-				"1000, 60, 2.95016969027809,     0",
+				// <s>, <v>, <grad>,           <stop>
+				"  0,    0,  2.95016969027809, 1",
+				"1000,  60,  2.95016969027809, 0",
 			});
 			var container = CreatePowerTrain(cycle, "Gearbox_Initialize.vmod", 7500.0.SI<Kilogram>(), 0.SI<Kilogram>());
 			var retVal = container.Cycle.Initialize();
@@ -67,9 +62,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_Initialize_RefLoad()
 		{
 			var cycle = CreateCycleData(new[] {
-				// <s>,<v>,<grad>,<stop>
-				"  0,   0, 2.95016969027809,     1",
-				"1000, 60, 2.95016969027809,     0",
+				// <s>, <v>,           <grad>, <stop>
+				"    0,   0, 2.95016969027809,      1",
+				" 1000,  60, 2.95016969027809,      0",
 			});
 			var container = CreatePowerTrain(cycle, "Gearbox_Initialize.vmod", 7500.0.SI<Kilogram>(), 19300.SI<Kilogram>());
 			var retVal = container.Cycle.Initialize();
@@ -141,7 +136,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
-			//var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CoachCycleFile);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData(engineData);
 			var vehicleData = CreateVehicleData(massExtra, loading);

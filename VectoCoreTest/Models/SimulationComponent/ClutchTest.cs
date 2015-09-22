@@ -18,11 +18,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void TestClutch()
 		{
-			var vehicle = new VehicleContainer();
+			var container = new VehicleContainer();
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
-			var gearbox = new MockGearbox(vehicle);
+			var gearbox = new MockGearbox(container);
 
-			var clutch = new Clutch(vehicle, engineData);
+			var clutch = new Clutch(container, engineData);
 
 			var inPort = clutch.InPort();
 			var outPort = new MockTnOutPort();
@@ -30,6 +30,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			inPort.Connect(outPort);
 
 			var clutchOutPort = clutch.OutPort();
+
+			var driver = new MockDriver(container);
 
 			//Test - Clutch slipping
 			gearbox.Gear = 1;
