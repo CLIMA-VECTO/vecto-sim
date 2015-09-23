@@ -15,7 +15,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void Gearbox_Initialize_Empty()
 		{
-			var cycle = CreateCycleData(new[] {
+			var cycle = SimpleDrivingCycles.CreateCycleData(new[] {
 				// <s>, <v>, <grad>,           <stop>
 				"  0,    0,  2.95016969027809, 1",
 				"1000,  60,  2.95016969027809, 0",
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void Gearbox_Initialize_RefLoad()
 		{
-			var cycle = CreateCycleData(new[] {
+			var cycle = SimpleDrivingCycles.CreateCycleData(new[] {
 				// <s>, <v>,           <grad>, <stop>
 				"    0,   0, 2.95016969027809,      1",
 				" 1000,  60, 2.95016969027809,      0",
@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void Gearbox_Initialize_85_RefLoad()
 		{
-			var cycle = CreateCycleData(new[] {
+			var cycle = SimpleDrivingCycles.CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
 				"  0,  85, 2.95016969027809,     0",
 				" 100, 85, 2.95016969027809,     0",
@@ -98,20 +98,5 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			absTime += retVal.SimulationInterval;
 		}
 
-
-		// ===============================
-
-		public static DrivingCycleData CreateCycleData(string[] entries)
-		{
-			var cycleData = new MemoryStream();
-			var writer = new StreamWriter(cycleData);
-			writer.WriteLine("<s>,<v>,<grad>,<stop>");
-			foreach (var entry in entries) {
-				writer.WriteLine(entry);
-			}
-			writer.Flush();
-			cycleData.Seek(0, SeekOrigin.Begin);
-			return DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased);
-		}
 	}
 }

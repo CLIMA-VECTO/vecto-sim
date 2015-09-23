@@ -1,4 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using TUGraz.VectoCore.FileIO.Reader;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
@@ -559,5 +562,18 @@ namespace TUGraz.VectoCore.Tests.Integration
 		};
 
 		#endregion
+
+		public static DrivingCycleData CreateCycleData(string[] entries)
+		{
+			var cycleData = new MemoryStream();
+			var writer = new StreamWriter(cycleData);
+			writer.WriteLine("<s>,<v>,<grad>,<stop>");
+			foreach (var entry in entries) {
+				writer.WriteLine(entry);
+			}
+			writer.Flush();
+			cycleData.Seek(0, SeekOrigin.Begin);
+			return DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased);
+		}
 	}
 }
