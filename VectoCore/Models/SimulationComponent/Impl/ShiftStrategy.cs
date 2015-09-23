@@ -1,4 +1,5 @@
 using System;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -101,14 +102,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private uint GetGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed, bool skipGears,
 			double torqueReserve)
 		{
-			Func<uint, bool> speedTooLow = gear => outEngineSpeed * Data.Gears[gear].Ratio < DataBus.EngineIdleSpeed;
-			Func<uint, bool> speedTooHigh = gear =>
-				(outEngineSpeed * Data.Gears[gear].Ratio - DataBus.EngineIdleSpeed) /
-				(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) >= 1.2;
-
+			// maxGear ratio must not result in a angularSpeed below idle-speed
 			var maxGear = (uint)(skipGears ? Data.Gears.Count : Math.Min(PreviousGear + 1, Data.Gears.Count));
-			var minGear = skipGears ? 1 : Math.Max(PreviousGear - 1, 1);
+			while (outEngineSpeed * Data.Gears[maxGear].Ratio < DataBus.EngineIdleSpeed && maxGear > 1) {
+				maxGear--;
+			}
 
+			// minGear ratio must not result in an angularSpeed above ratedspeed-range * 1.2
+			var minGear = skipGears ? 1 : Math.Max(PreviousGear - 1, 1);
+			while ((outEngineSpeed * Data.Gears[minGear].Ratio - DataBus.EngineIdleSpeed) /
+					(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) >= 1.2 && minGear < Data.Gears.Count) {
+				minGear++;
+			}
+
+			if (maxGear < minGear) {
+				throw new VectoSimulationException("ShiftStrategy couldn't find an appropriate gear.");
+			}
+
+			// loop only runs from maxGear to minGear+1 because minGear is returned afterwards anyway.
 			for (var gear = maxGear; gear > minGear; gear--) {
 				Gearbox.Gear = gear;
 				var response = (ResponseDryRun)Gearbox.Request(absTime, dt, outTorque, outEngineSpeed, true);
@@ -118,9 +129,18 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var reserve = 1 - (currentPower / fullLoadPower).Cast<Scalar>();
 
 				var inAngularSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
-				var inTorque = currentPower / inAngularSpeed;
-				if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && reserve >= torqueReserve) {
+				var inTorque = response.ClutchPowerRequest / inAngularSpeed;
+
+				// if in shift curve and torque reserve is provided: return the current gear
+				if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) &&
+					!IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) &&
+					reserve >= torqueReserve) {
 					return gear;
+				}
+
+				// if over the up shift curve: return the previous gear (although it did not provide the required torque reserve)
+				if (IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) && gear < maxGear) {
+					return gear + 1;
 				}
 			}
 			return minGear;
@@ -161,15 +181,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				if (Data.EarlyShiftUp) {
-					// try if next gear would provide enough torque reserve to shift up
+					// try if next gear would provide enough torque reserve
 					var nextGear = gear + 1;
 
+					//todo: is initialize correct? shouldnt it be a dry run request? but gear has to be set in advance
 					var response = Gearbox.Initialize(nextGear, outTorque, outAngularVelocity);
 
-					if (!IsBelowDownShiftCurve(nextGear, outTorque, inAngularVelocity)) {
-						var currentPower = response.EnginePowerRequest;
-						var fullLoadPower = currentPower - response.DeltaFullLoad;
-						var reserve = 1 - (currentPower / fullLoadPower).Cast<Scalar>();
+					var nextAngularVelocity = Data.Gears[nextGear].Ratio * outAngularVelocity;
+
+					if (!IsBelowDownShiftCurve(nextGear, response.ClutchPowerRequest / nextAngularVelocity, nextAngularVelocity)) {
+						var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
+						var reserve = 1 - (response.EnginePowerRequest / fullLoadPower).Cast<Scalar>();
 
 						if (reserve >= Data.TorqueReserve) {
 							return true;
@@ -193,11 +215,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					var response = Gearbox.Initialize(gear, outTorque, outEngineSpeed);
 
-					var currentPower = response.EnginePowerRequest;
-					var inTorque = currentPower / inAngularSpeed;
-
-					var fullLoadPower = currentPower - response.DeltaFullLoad;
-					var reserve = 1 - (currentPower / fullLoadPower).Cast<Scalar>();
+					var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
+					var reserve = 1 - (response.EnginePowerRequest / fullLoadPower).Cast<Scalar>();
+					var inTorque = response.ClutchPowerRequest / inAngularSpeed;
 
 					// if in shift curve and above idle speed and torque reserve is provided.
 					if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && inAngularSpeed > DataBus.EngineIdleSpeed &&
@@ -210,12 +230,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				for (var gear = (uint)Data.Gears.Count; gear > 1; gear--) {
 					var response = Gearbox.Initialize(gear, outTorque, outEngineSpeed);
 
-					var currentPower = response.EnginePowerRequest;
 					var inAngularSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
-					var inTorque = currentPower / inAngularSpeed;
-
-					var fullLoadPower = currentPower - response.DeltaFullLoad;
-					var reserve = 1 - (currentPower / fullLoadPower).Cast<Scalar>();
+					var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
+					var reserve = 1 - (response.EnginePowerRequest / fullLoadPower).Cast<Scalar>();
+					var inTorque = response.ClutchPowerRequest / inAngularSpeed;
 
 					// if in shift curve and torque reserve is provided: return the current gear
 					if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && !IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) &&
