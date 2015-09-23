@@ -42,11 +42,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			_outPort = other;
 		}
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun = false)
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
 			if (_outPort != null) {
 				if (Gear > 0) {
-					return _outPort.Request(absTime, dt, torque, engineSpeed, dryRun);
+					return _outPort.Request(absTime, dt, torque, angularVelocity, dryRun);
 				}
 				return _outPort.Request(absTime, dt, 0.SI<NewtonMeter>(), null, dryRun);
 			}

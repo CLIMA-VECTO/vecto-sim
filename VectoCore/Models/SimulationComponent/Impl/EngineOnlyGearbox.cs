@@ -62,13 +62,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
+		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
 		{
 			if (NextComponent == null) {
 				Log.Error("Ccannot handle incoming request - no outport available. absTime: {0}, dt: {1}", absTime, dt);
 				throw new VectoSimulationException("Cannot handle incoming request - no outport available.");
 			}
-			return NextComponent.Request(absTime, dt, torque, engineSpeed, dryRun);
+			return NextComponent.Request(absTime, dt, torque, angularVelocity, dryRun);
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)

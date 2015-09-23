@@ -93,6 +93,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return Engine.EngineIdleSpeed; }
 		}
 
+		public PerSecond EngineRatedSpeed
+		{
+			get { return Engine.EngineRatedSpeed; }
+		}
+
 		#endregion
 
 		#region IVehicleCockpit

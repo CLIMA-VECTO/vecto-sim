@@ -74,6 +74,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return _data.IdleSpeed; }
 		}
 
+		public PerSecond EngineRatedSpeed
+		{
+			get { return _data.FullLoadCurve.RatedSpeed; }
+		}
+
 		#endregion
 
 		#region ITnOutProvider
@@ -87,9 +92,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
+		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
 		{
-			return DoHandleRequest(absTime, dt, torque, engineSpeed, dryRun);
+			return DoHandleRequest(absTime, dt, torque, angularVelocity, dryRun);
 		}
 
 		protected virtual IResponse DoHandleRequest(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed,

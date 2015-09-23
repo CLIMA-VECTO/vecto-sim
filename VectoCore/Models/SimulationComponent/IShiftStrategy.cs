@@ -11,11 +11,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <summary>
 		/// Checks if a shift operation is required.
 		/// </summary>
-		/// <param name="gear">The current gear.</param>
-		/// <param name="torque">The torque.</param>
-		/// <param name="angularSpeed">The angular speed.</param>
-		/// <returns></returns>
-		bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed);
+		bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime);
 
 		/// <summary>
 		/// Returns an appropriate starting gear after a vehicle standstill.

@@ -31,19 +31,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			NextComponent = other;
 		}
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
 			bool dryRun = false)
 		{
-			Log.Debug("request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
+			Log.Debug("request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
 
-			var inAngularVelocity = outAngularVelocity * _gearData.Ratio;
-			var inTorque = outAngularVelocity.IsEqual(0)
+			var inAngularVelocity = angularVelocity * _gearData.Ratio;
+			var inTorque = angularVelocity.IsEqual(0)
 				? 0.SI<NewtonMeter>()
-				: _gearData.LossMap.GearboxInTorque(inAngularVelocity, outTorque);
+				: _gearData.LossMap.GearboxInTorque(inAngularVelocity, torque);
 
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 
-			retVal.AxlegearPowerRequest = outTorque * outAngularVelocity;
+			retVal.AxlegearPowerRequest = torque * angularVelocity;
 			return retVal;
 		}
 

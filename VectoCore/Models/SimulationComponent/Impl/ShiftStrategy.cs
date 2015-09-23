@@ -12,20 +12,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected IDataBus DataBus;
 		protected GearboxData Data;
 
-		public abstract uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
-		public abstract void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
-		public abstract bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed);
-		public abstract uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
-
-
-		public Gearbox Gearbox { get; set; }
-
-
 		protected ShiftStrategy(GearboxData data, IDataBus dataBus)
 		{
 			DataBus = dataBus;
 			Data = data;
 		}
+
+		public abstract uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
+		public abstract void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
+
+		public abstract bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			NewtonMeter inTorque, PerSecond inAngularSpeed, uint gear, Second lastShiftTime);
+
+		public abstract uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
+		public Gearbox Gearbox { get; set; }
 
 		/// <summary>
 		/// Tests if the operating point is below the down-shift curve (=outside of shift curve).
@@ -101,12 +101,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private uint GetGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed, bool skipGears,
 			double torqueReserve)
 		{
+			Func<uint, bool> speedTooLow = gear => outEngineSpeed * Data.Gears[gear].Ratio < DataBus.EngineIdleSpeed;
+			Func<uint, bool> speedTooHigh = gear =>
+				(outEngineSpeed * Data.Gears[gear].Ratio - DataBus.EngineIdleSpeed) /
+				(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) >= 1.2;
+
 			var maxGear = (uint)(skipGears ? Data.Gears.Count : Math.Min(PreviousGear + 1, Data.Gears.Count));
 			var minGear = skipGears ? 1 : Math.Max(PreviousGear - 1, 1);
-
-			if (outEngineSpeed.IsEqual(0)) {
-				return minGear;
-			}
 
 			for (var gear = maxGear; gear > minGear; gear--) {
 				Gearbox.Gear = gear;
@@ -135,10 +136,49 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PreviousGear = Gearbox.Gear;
 		}
 
-		public override bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed)
+		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
 		{
-			// todo: early upshift
-			return IsBelowDownShiftCurve(gear, torque, angularSpeed) || IsAboveUpShiftCurve(gear, torque, angularSpeed);
+			// todo: During start (clutch slipping) no gear shift (cPower.vb::2077) still needed?
+
+			var speedTooLowForEngine = inAngularVelocity < DataBus.EngineIdleSpeed;
+			var speedToHighForEngine = (inAngularVelocity * Data.Gears[gear].Ratio - DataBus.EngineIdleSpeed) /
+										(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) >= 1.2;
+
+			// if angularSpeed is too high or too low to operate the engine, a shift is needed, regardless of shiftTime
+			if (gear > 1 && speedTooLowForEngine || gear < Data.Gears.Count && speedToHighForEngine) {
+				return true;
+			}
+
+			var minimumShiftTimePassed = (lastShiftTime + Data.ShiftTime).IsSmallerOrEqual(absTime);
+			if (minimumShiftTimePassed) {
+				// todo: simulate traction interruption power request change after shift 
+				// and only shift if simulated power request still fullfills the shift conditions.
+
+				if (IsBelowDownShiftCurve(gear, inTorque, inAngularVelocity) ||
+					IsAboveUpShiftCurve(gear, inTorque, inAngularVelocity)) {
+					return true;
+				}
+
+				if (Data.EarlyShiftUp) {
+					// try if next gear would provide enough torque reserve to shift up
+					var nextGear = gear + 1;
+
+					var response = Gearbox.Initialize(nextGear, outTorque, outAngularVelocity);
+
+					if (!IsBelowDownShiftCurve(nextGear, outTorque, inAngularVelocity)) {
+						var currentPower = response.EnginePowerRequest;
+						var fullLoadPower = currentPower - response.DeltaFullLoad;
+						var reserve = 1 - (currentPower / fullLoadPower).Cast<Scalar>();
+
+						if (reserve >= Data.TorqueReserve) {
+							return true;
+						}
+					}
+				}
+			}
+
+			return false;
 		}
 
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
@@ -210,10 +250,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new System.NotImplementedException();
 		}
 
-		public override bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed)
+		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			NewtonMeter inTorque,
+			PerSecond inAngularSpeed, uint gear, Second lastShiftTime)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
+
 
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
 		{
@@ -236,10 +279,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new System.NotImplementedException();
 		}
 
-		public override bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed)
+		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			NewtonMeter inTorque,
+			PerSecond inAngularSpeed, uint gear, Second lastShiftTime)
 		{
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
 		}
+
 
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
 		{
@@ -252,6 +298,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		public CustomShiftStrategy(GearboxData data, IDataBus dataBus) : base(data, dataBus) {}
 
+
+		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+			NewtonMeter inTorque,
+			PerSecond inAngularSpeed, uint gear, Second lastShiftTime)
+		{
+			throw new NotImplementedException();
+		}
+
 		public override uint InitGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
 		{
 			throw new NotImplementedException();
@@ -263,11 +317,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
-		{
-			throw new NotImplementedException();
-		}
-
-		public override bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed)
 		{
 			throw new NotImplementedException();
 		}

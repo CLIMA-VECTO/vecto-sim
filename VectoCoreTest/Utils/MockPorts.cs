@@ -24,7 +24,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Dt = dt;
 			Torque = torque;
 			AngularVelocity = angularVelocity;
-			Log.Debug("Request: absTime: {0}, dt: {1}, torque: {3}, engineSpeed: {4}", absTime, dt, torque, angularVelocity);
+			Log.Debug("Request: absTime: {0}, dt: {1}, torque: {3}, angularVelocity: {4}", absTime, dt, torque, angularVelocity);
 
 			if (dryRun) {
 				return new ResponseDryRun {
@@ -69,6 +69,12 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public PerSecond EngineIdleSpeed
 		{
 			get { return 560.RPMtoRad(); }
+		}
+
+		public PerSecond EngineRatedSpeed
+		{
+			// just a test value. not real.
+			get { return 1600.SI<PerSecond>(); }
 		}
 	}
 
