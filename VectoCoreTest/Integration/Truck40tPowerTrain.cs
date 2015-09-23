@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -17,6 +18,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 	// ReSharper disable once InconsistentNaming
 	public class Truck40tPowerTrain
 	{
+		public const string ShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
 		public const string EngineFile = @"TestData\Components\40t_Long_Haul_Truck.veng";
 		public const string AxleGearLossMap = @"TestData\Components\Axle 40t Truck.vtlm";
@@ -86,7 +88,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 									? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio)
 									: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio),
 							Ratio = ratio,
-							ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(engineData.FullLoadCurve, engineData.IdleSpeed)
+							ShiftPolygon = ShiftPolygon.ReadFromFile(ShiftPolygonFile),
+							//ShiftPolygon =    DeclarationData.Gearbox.ComputeShiftPolygon(engineData.FullLoadCurve, engineData.IdleSpeed)
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
 				ShiftTime = 2.SI<Second>(),
@@ -96,6 +99,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 				StartSpeed = 2.SI<MeterPerSecond>(),
 				TorqueReserve = 0.2,
 				StartTorqueReserve = 0.2,
+				SkipGears = true,
+				EarlyShiftUp = false,
 			};
 		}
 
