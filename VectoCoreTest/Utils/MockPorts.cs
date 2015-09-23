@@ -1,13 +1,15 @@
 using System;
+using System.Diagnostics;
 using NLog;
 using TUGraz.VectoCore.Models;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockTnOutPort : ITnOutPort
+	public class MockTnOutPort : ITnOutPort, IEngineInfo
 	{
 		protected static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -43,7 +45,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
-			return new ResponseSuccess();
+			return new ResponseSuccess { Source = this, EnginePowerRequest = torque * angularVelocity, };
 		}
 
 		public void DoCommitSimulationStep()
@@ -52,6 +54,21 @@ namespace TUGraz.VectoCore.Tests.Utils
 			Dt = null;
 			Torque = null;
 			AngularVelocity = null;
+		}
+
+		public PerSecond EngineSpeed
+		{
+			get { return AngularVelocity; }
+		}
+
+		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
+		{
+			return 2300.SI<NewtonMeter>() * angularSpeed;
+		}
+
+		public PerSecond EngineIdleSpeed
+		{
+			get { return 560.RPMtoRad(); }
 		}
 	}
 
@@ -88,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
-		public IResponse Initialize(MeterPerSecond vehicleSpeed, MeterPerSquareSecond startAcceleration, Radian roadGradient)
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)
 		{
 			throw new NotImplementedException();
 		}

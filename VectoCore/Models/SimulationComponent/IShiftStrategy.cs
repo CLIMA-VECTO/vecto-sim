@@ -3,6 +3,9 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent
 {
+	/// <summary>
+	/// Interface for the ShiftStrategy. Decides when to shift and which gear to take.
+	/// </summary>
 	public interface IShiftStrategy
 	{
 		/// <summary>
@@ -15,7 +18,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		bool ShiftRequired(uint gear, NewtonMeter torque, PerSecond angularSpeed);
 
 		/// <summary>
-		/// Returns an appropriate starting gear.
+		/// Returns an appropriate starting gear after a vehicle standstill.
 		/// </summary>
 		/// <param name="absTime">The abs time.</param>
 		/// <param name="dt">The dt.</param>
@@ -25,7 +28,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outEngineSpeed);
 
 		/// <summary>
-		/// Engages a gear
+		/// Engages a gear.
 		/// </summary>
 		/// <param name="absTime">The abs time.</param>
 		/// <param name="dt">The dt.</param>

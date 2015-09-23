@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			var gbx = new Gearbox(container, gearboxData);
+			var gbx = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			tmp = Port.AddComponent(tmp, gbx);
 			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
 			Port.AddComponent(tmp, new CombustionEngine(container, engineData));
@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			var gbx = new Gearbox(container, gearboxData);
+			var gbx = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			tmp = Port.AddComponent(tmp, gbx);
 			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
 			Port.AddComponent(tmp, new CombustionEngine(container, engineData));
@@ -185,7 +185,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData));
+			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
 			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
 			Port.AddComponent(tmp, new CombustionEngine(container, engineData));
 
@@ -274,6 +274,10 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				ShiftTime = 2.SI<Second>(),
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 1.SI<Second>(),
+				StartSpeed = 2.SI<MeterPerSecond>(),
+				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
+				StartTorqueReserve = 0.2,
+				TorqueReserve = 0.2
 			};
 		}
 
@@ -303,7 +307,11 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				},
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 0.SI<Second>(),
-				ShiftTime = 2.SI<Second>()
+				ShiftTime = 2.SI<Second>(),
+				StartSpeed = 2.SI<MeterPerSecond>(),
+				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
+				StartTorqueReserve = 0.2,
+				TorqueReserve = 0.2
 			};
 		}
 
@@ -353,6 +361,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
+					Deceleration = -0.5.SI<MeterPerSquareSecond>()
 				},
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = DriverData.DriverMode.Off

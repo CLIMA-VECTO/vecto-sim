@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.EngineeringFile;
 using TUGraz.VectoCore.Models.Declaration;
@@ -10,7 +7,6 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Engine;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
-using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
@@ -45,7 +41,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		{
 			var fileV5Eng = gearbox as GearboxFileV5Engineering;
 			if (fileV5Eng != null) {
-				return CreateGearboxData(fileV5Eng);
+				return CreateGearboxData(fileV5Eng, engine);
 			}
 			throw new VectoException("Unsupported GearboxData File Instance");
 		}
@@ -142,8 +138,9 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		/// Gearbox, File-format Version 4
 		/// </summary>
 		/// <param name="gearbox"></param>
+		/// <param name="engineData"></param>
 		/// <returns></returns>
-		internal GearboxData CreateGearboxData(GearboxFileV5Engineering gearbox)
+		internal GearboxData CreateGearboxData(GearboxFileV5Engineering gearbox, CombustionEngineData engineData)
 		{
 			var retVal = SetCommonGearboxData(gearbox.Body);
 
@@ -161,22 +158,25 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 			retVal.HasTorqueConverter = data.TorqueConverter.Enabled;
 
+			var engineFullLoadCurve = (engineData != null) ? engineData.FullLoadCurve : null;
+
+
 			for (uint i = 0; i < gearbox.Body.Gears.Count; i++) {
 				var gearSettings = gearbox.Body.Gears[(int)i];
 				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
-				TransmissionLossMap lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
+				var lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
 
-				var shiftPolygon = !string.IsNullOrEmpty(gearSettings.ShiftPolygon)
-					? ShiftPolygon.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.ShiftPolygon))
-					: null;
-				var fullLoad = !string.IsNullOrEmpty(gearSettings.FullLoadCurve) && !gearSettings.FullLoadCurve.Equals("<NOFILE>")
-					? FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
-					: null;
+				var shiftPolygon = string.IsNullOrEmpty(gearSettings.ShiftPolygon)
+					? null
+					: ShiftPolygon.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.ShiftPolygon));
+				var fullLoad = string.IsNullOrEmpty(gearSettings.FullLoadCurve) || gearSettings.FullLoadCurve.Equals("<NOFILE>")
+					? null
+					: FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve));
 
 				var gear = new GearData {
 					LossMap = lossMap,
 					ShiftPolygon = shiftPolygon,
-					FullLoadCurve = fullLoad,
+					FullLoadCurve = fullLoad ?? engineFullLoadCurve,
 					Ratio = gearSettings.Ratio,
 					TorqueConverterActive = gearSettings.TCactive
 				};

@@ -96,12 +96,13 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			}
 			var dao = new EngineeringDataAdapter();
 			var driver = dao.CreateDriverData(job);
+			var engineData = dao.CreateEngineData(Engine);
 			foreach (var cycle in job.Body.Cycles) {
 				var simulationRunData = new VectoRunData {
 					BasePath = job.BasePath,
 					JobFileName = job.JobFile,
-					EngineData = dao.CreateEngineData(Engine),
-					GearboxData = dao.CreateGearboxData(Gearbox, null),
+					EngineData = engineData,
+					GearboxData = dao.CreateGearboxData(Gearbox, engineData),
 					VehicleData = dao.CreateVehicleData(Vehicle),
 					DriverData = driver,
 					Aux = Aux,

@@ -25,12 +25,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public Second TractionInterruption { get; internal set; }
 
 		/// <summary>
-		///		[%] (0-1)
+		///	[%] (0-1) The torque reserve for shift strategy (early upshift, skipgears)
 		/// </summary>
 		public double TorqueReserve { get; internal set; }
 
 		/// <summary>
-		///		used by gear-shift model
+		///	Indicates if gears can be skipped in Gear Shift Strategy.
 		/// </summary>
 		public bool SkipGears { get; internal set; }
 
@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		public bool EarlyShiftUp { get; internal set; }
 
 		/// <summary>
-		/// [%] (0-1)
+		/// [%] (0-1) The starting torque reserve for finding the starting gear after standstill.
 		/// </summary>
 		public double StartTorqueReserve { get; internal set; }
 

@@ -5,13 +5,10 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
-using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
-using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
@@ -25,11 +22,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	public class GearboxPowertrainTest
 	{
 		public const string AccelerationFile = @"TestData\Components\Truck.vacc";
-
 		public const string EngineFile = @"TestData\Components\40t_Long_Haul_Truck.veng";
-
 		public const string AxleGearLossMap = @"TestData\Components\Axle.vtlm";
-		public const string GearboxLossMap = @"TestData\Components\Indirect Gear.vtlm";
+		public const string GearboxIndirectLoss = @"TestData\Components\Indirect Gear.vtlm";
+		public const string GearboxDirectLoss = @"TestData\Components\Direct Gear.vtlm";
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
@@ -37,9 +33,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_Initialize_Empty()
 		{
 			var cycle = CreateCycleData(new[] {
-				// <s>,<v>,<grad>,<stop>
-				"  0,   0, 2.95016969027809,     1",
-				"1000, 60, 2.95016969027809,     0",
+				// <s>, <v>, <grad>,           <stop>
+				"  0,    0,  2.95016969027809, 1",
+				"1000,  60,  2.95016969027809, 0",
 			});
 			var container = CreatePowerTrain(cycle, "Gearbox_Initialize.vmod", 7500.0.SI<Kilogram>(), 0.SI<Kilogram>());
 			var retVal = container.Cycle.Initialize();
@@ -67,9 +63,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		public void Gearbox_Initialize_RefLoad()
 		{
 			var cycle = CreateCycleData(new[] {
-				// <s>,<v>,<grad>,<stop>
-				"  0,   0, 2.95016969027809,     1",
-				"1000, 60, 2.95016969027809,     0",
+				// <s>, <v>,           <grad>, <stop>
+				"    0,   0, 2.95016969027809,      1",
+				" 1000,  60, 2.95016969027809,      0",
 			});
 			var container = CreatePowerTrain(cycle, "Gearbox_Initialize.vmod", 7500.0.SI<Kilogram>(), 19300.SI<Kilogram>());
 			var retVal = container.Cycle.Initialize();
@@ -106,7 +102,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(11u, container.Gear);
 			Assert.IsInstanceOfType(retVal, typeof(ResponseSuccess));
 
-			AssertHelper.AreRelativeEqual(1195.996.RPMtoRad(), container.EngineSpeed);
+			AssertHelper.AreRelativeEqual(1530.263.RPMtoRad(), container.EngineSpeed, 0.001);
 
 			var absTime = 0.SI<Second>();
 			var ds = 1.SI<Meter>();
@@ -141,7 +137,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
-			//var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CoachCycleFile);
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData(engineData);
 			var vehicleData = CreateVehicleData(massExtra, loading);
@@ -153,7 +148,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData));
+			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
 			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
 
 			var aux = new Auxiliary(container);
@@ -178,9 +173,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					Tuple.Create((uint)i,
 						new GearData {
 							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio),
+							LossMap =
+								(i != 11)
+									? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio)
+									: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio),
 							Ratio = ratio,
-							//ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile),
 							ShiftPolygon = DeclarationData.Gearbox.ComputeShiftPolygon(engineData.FullLoadCurve, engineData.IdleSpeed)
 						}))
 					.ToDictionary(k => k.Item1 + 1, v => v.Item2),
@@ -189,6 +186,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				TractionInterruption = 1.SI<Second>(),
 				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
 				StartSpeed = 2.SI<MeterPerSecond>(),
+				TorqueReserve = 0.2,
+				StartTorqueReserve = 0.2,
 			};
 		}
 

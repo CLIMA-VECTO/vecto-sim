@@ -181,7 +181,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.9613, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.955, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 
 			response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.SI<Radian>());
 
@@ -190,14 +190,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.7904, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
-
-			// change vehicle weight, cannot reach minimum acceleration...
-			vehicleData.Loading = 70000.SI<Kilogram>();
-
-			AssertHelper.Exception<VectoSimulationException>(() => {
-				driverPort.Request(absTime, 0.1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.05.SI<Radian>());
-			}, "Could not achieve minimum acceleration");
+			Assert.AreEqual(0.7914, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 		}
 
 		[TestMethod]
@@ -380,6 +373,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(AccelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
+					Deceleration = -0.5.SI<MeterPerSquareSecond>()
 				},
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = DriverData.DriverMode.Off

@@ -178,8 +178,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public static class Gearbox
 		{
-			public const double TorqueReserve = 20;
-			public const double TorqueReserveStart = 20;
+			public const double TorqueReserve = 0.2;
+			public const double TorqueReserveStart = 0.2;
 			public const double StartSpeed = 2;
 			public const double StartAcceleration = 0.6;
 			public const double Inertia = 0;

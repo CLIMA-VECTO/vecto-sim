@@ -978,7 +978,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
-			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData));
+			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
 			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
 
 			var aux = new Auxiliary(container);
@@ -1011,6 +1011,9 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				ShiftTime = 2.SI<Second>(),
 				Inertia = 0.SI<KilogramSquareMeter>(),
 				TractionInterruption = 1.SI<Second>(),
+				StartSpeed = 2.SI<MeterPerSecond>(),
+				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
+				StartTorqueReserve = 0.2
 			};
 		}
 

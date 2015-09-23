@@ -55,15 +55,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public bool ClutchClosed(Second absTime)
 		{
-			return _shiftTime.IsSmaller(absTime);
+			return _shiftTime.IsSmallerOrEqual(absTime);
 		}
 
-		public Gearbox(IVehicleContainer container, GearboxData gearboxData, IShiftStrategy strategy = null) : base(container)
+		public Gearbox(IVehicleContainer container, GearboxData gearboxData, IShiftStrategy strategy) : base(container)
 		{
-			// TODO: do not set a default strategy! gearbox should be called with explicit shift strategy! this is just for debug
-			if (strategy == null) {
-				strategy = new AMTShiftStrategy(gearboxData, container);
-			}
 			Data = gearboxData;
 			_strategy = strategy;
 			_strategy.Gearbox = this;
@@ -311,7 +307,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (!outEngineSpeed.IsEqual(0)) {
-				var isShiftAllowed = (_shiftTime + Data.ShiftTime).IsSmaller(absTime);
+				var isShiftAllowed = (_shiftTime + Data.ShiftTime).IsSmallerOrEqual(absTime);
 				if (isShiftAllowed && _strategy.ShiftRequired(Gear, inTorque, inEngineSpeed)) {
 					_shiftTime = absTime + Data.TractionInterruption;
 

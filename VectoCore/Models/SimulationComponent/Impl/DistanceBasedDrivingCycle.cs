@@ -189,8 +189,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState = PreviousState.Clone();
 
 			if (CycleIntervalIterator.LeftSample.VehicleTargetSpeed.IsEqual(0)) {
-				var retVal = NextComponent.Initialize(DataBus.StartSpeed, DataBus.StartAcceleration,
-					CycleIntervalIterator.LeftSample.RoadGradient);
+				var retVal = NextComponent.Initialize(DataBus.StartSpeed,
+					CycleIntervalIterator.LeftSample.RoadGradient, DataBus.StartAcceleration);
 				if (!(retVal is ResponseSuccess)) {
 					throw new UnexpectedResponseException("Couldn't find start gear.", retVal);
 				}
