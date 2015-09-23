@@ -139,8 +139,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		internal ResponseDryRun Initialize(uint gear, NewtonMeter outTorque, PerSecond outAngularVelocity)
 		{
-			var inAngularVelocity = outAngularVelocity * Data.Gears[Gear].Ratio;
-			var inTorque = Data.Gears[Gear].LossMap.GearboxInTorque(inAngularVelocity, outTorque);
+			var inAngularVelocity = outAngularVelocity * Data.Gears[gear].Ratio;
+			var inTorque = Data.Gears[gear].LossMap.GearboxInTorque(inAngularVelocity, outTorque);
 
 			if (!inAngularVelocity.IsEqual(0)) {
 				var alpha = (Data.Inertia.IsEqual(0))
@@ -169,6 +169,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return new ResponseDryRun {
 				Source = this,
 				EnginePowerRequest = response.EnginePowerRequest,
+				ClutchPowerRequest = response.ClutchPowerRequest,
+				GearboxPowerRequest = outTorque * outAngularVelocity,
 				DeltaFullLoad = response.EnginePowerRequest - fullLoad
 			};
 		}
@@ -289,10 +291,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_powerLoss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
 
 			if (!inEngineSpeed.IsEqual(0)) {
-				var torqueLossInertia = Formulas.InertiaPower(inEngineSpeed, _previousInAngularSpeed, Data.Inertia, dt) /
-										inEngineSpeed;
-				_powerLossInertia = torqueLossInertia * inEngineSpeed;
-				inTorque += torqueLossInertia;
+				_powerLossInertia = Formulas.InertiaPower(inEngineSpeed, _previousInAngularSpeed, Data.Inertia, dt);
+				inTorque += _powerLossInertia / inEngineSpeed;
 			} else {
 				_powerLossInertia = 0.SI<Watt>();
 			}
@@ -304,7 +304,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (!inEngineSpeed.IsEqual(0)) {
-				if (_strategy.ShiftRequired(absTime, dt, outTorque, outEngineSpeed, inTorque, inEngineSpeed, Gear, _shiftTime)) {
+				if (_strategy.ShiftRequired(absTime, dt, outTorque, outEngineSpeed, inTorque, inEngineSpeed, Gear,
+					_shiftTime + Data.TractionInterruption)) {
 					_shiftTime = absTime + Data.TractionInterruption;
 
 					Log.Debug("Gearbox is shifting. absTime: {0}, dt: {1}, shiftTime: {2}, out: ({3}, {4}), in: ({5}, {6})", absTime,

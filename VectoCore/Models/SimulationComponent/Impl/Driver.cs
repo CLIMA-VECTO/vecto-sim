@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			VehicleStopped = false;
 			Log.Debug("==== DRIVER Request ====");
 			Log.Debug(
-				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}, vehicle stopped: {7}",
+				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}, vehicle stopped: {6}",
 				absTime, ds, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, VehicleStopped);
 
 			var retVal = DriverStrategy.Request(absTime, ds, targetVelocity, gradient);

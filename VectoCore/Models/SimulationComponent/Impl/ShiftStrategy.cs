@@ -99,36 +99,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PreviousGear = 1;
 		}
 
-		private uint GetGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed, bool skipGears,
+		private uint GetGear(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularSpeed, bool skipGears,
 			double torqueReserve)
 		{
 			// maxGear ratio must not result in a angularSpeed below idle-speed
 			var maxGear = (uint)(skipGears ? Data.Gears.Count : Math.Min(PreviousGear + 1, Data.Gears.Count));
-			while (outEngineSpeed * Data.Gears[maxGear].Ratio < DataBus.EngineIdleSpeed && maxGear > 1) {
+			var minGear = skipGears ? 1 : Math.Max(PreviousGear - 1, 1);
+
+			while (outAngularSpeed * Data.Gears[maxGear].Ratio < DataBus.EngineIdleSpeed && maxGear > minGear) {
 				maxGear--;
 			}
 
 			// minGear ratio must not result in an angularSpeed above ratedspeed-range * 1.2
-			var minGear = skipGears ? 1 : Math.Max(PreviousGear - 1, 1);
-			while ((outEngineSpeed * Data.Gears[minGear].Ratio - DataBus.EngineIdleSpeed) /
-					(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) >= 1.2 && minGear < Data.Gears.Count) {
-				minGear++;
-			}
 
-			if (maxGear < minGear) {
-				throw new VectoSimulationException("ShiftStrategy couldn't find an appropriate gear.");
+			while ((outAngularSpeed * Data.Gears[minGear].Ratio - DataBus.EngineIdleSpeed) /
+					(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) >= 1.2 && minGear < maxGear) {
+				minGear++;
 			}
 
 			// loop only runs from maxGear to minGear+1 because minGear is returned afterwards anyway.
 			for (var gear = maxGear; gear > minGear; gear--) {
 				Gearbox.Gear = gear;
-				var response = (ResponseDryRun)Gearbox.Request(absTime, dt, outTorque, outEngineSpeed, true);
+				var response = (ResponseDryRun)Gearbox.Request(absTime, dt, outTorque, outAngularSpeed, true);
 				var currentPower = response.EnginePowerRequest;
 
 				var fullLoadPower = currentPower - response.DeltaFullLoad;
 				var reserve = 1 - (currentPower / fullLoadPower).Cast<Scalar>();
 
-				var inAngularSpeed = outEngineSpeed * Data.Gears[gear].Ratio;
+				var inAngularSpeed = outAngularSpeed * Data.Gears[gear].Ratio;
 				var inTorque = response.ClutchPowerRequest / inAngularSpeed;
 
 				// if in shift curve and torque reserve is provided: return the current gear
@@ -159,7 +157,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
 		{
-			// todo: During start (clutch slipping) no gear shift (cPower.vb::2077) still needed?
+			if (DataBus.VehicleStopped) {
+				return false;
+			}
+
+			var minimumShiftTimePassed = (lastShiftTime + Data.ShiftTime).IsSmallerOrEqual(absTime);
+			if (!minimumShiftTimePassed) {
+				return false;
+			}
 
 			var speedTooLowForEngine = inAngularVelocity < DataBus.EngineIdleSpeed;
 			var speedToHighForEngine = (inAngularVelocity * Data.Gears[gear].Ratio - DataBus.EngineIdleSpeed) /
@@ -170,35 +175,33 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return true;
 			}
 
-			var minimumShiftTimePassed = (lastShiftTime + Data.ShiftTime).IsSmallerOrEqual(absTime);
-			if (minimumShiftTimePassed) {
-				// todo: simulate traction interruption power request change after shift 
-				// and only shift if simulated power request still fullfills the shift conditions.
+			// todo: simulate traction interruption power request change after shift 
+			// and only shift if simulated power request still fullfills the shift conditions.
 
-				if (IsBelowDownShiftCurve(gear, inTorque, inAngularVelocity) ||
-					IsAboveUpShiftCurve(gear, inTorque, inAngularVelocity)) {
-					return true;
-				}
+			if (IsBelowDownShiftCurve(gear, inTorque, inAngularVelocity) ||
+				IsAboveUpShiftCurve(gear, inTorque, inAngularVelocity)) {
+				return true;
+			}
 
-				if (Data.EarlyShiftUp) {
-					// try if next gear would provide enough torque reserve
-					var nextGear = gear + 1;
+			if (Data.EarlyShiftUp && gear < Data.Gears.Count) {
+				// try if next gear would provide enough torque reserve
+				var nextGear = gear + 1;
 
-					//todo: is initialize correct? shouldnt it be a dry run request? but gear has to be set in advance
-					var response = Gearbox.Initialize(nextGear, outTorque, outAngularVelocity);
+				//todo: is initialize correct? shouldnt it be a dry run request? but gear has to be set in advance
+				var response = Gearbox.Initialize(nextGear, outTorque, outAngularVelocity);
 
-					var nextAngularVelocity = Data.Gears[nextGear].Ratio * outAngularVelocity;
+				var nextAngularVelocity = Data.Gears[nextGear].Ratio * outAngularVelocity;
 
-					if (!IsBelowDownShiftCurve(nextGear, response.ClutchPowerRequest / nextAngularVelocity, nextAngularVelocity)) {
-						var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
-						var reserve = 1 - (response.EnginePowerRequest / fullLoadPower).Cast<Scalar>();
+				if (!IsBelowDownShiftCurve(nextGear, response.ClutchPowerRequest / nextAngularVelocity, nextAngularVelocity)) {
+					var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
+					var reserve = 1 - (response.EnginePowerRequest / fullLoadPower).Cast<Scalar>();
 
-						if (reserve >= Data.TorqueReserve) {
-							return true;
-						}
+					if (reserve >= Data.TorqueReserve) {
+						return true;
 					}
 				}
 			}
+
 
 			return false;
 		}

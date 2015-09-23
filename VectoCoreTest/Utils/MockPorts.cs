@@ -31,6 +31,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 					Source = this,
 					GearboxPowerRequest = torque * angularVelocity,
 					EnginePowerRequest = torque * angularVelocity,
+					ClutchPowerRequest = torque * angularVelocity,
 					DeltaFullLoad = (torque - 2300.SI<NewtonMeter>()) * angularVelocity,
 					DeltaDragLoad = (torque - -100.SI<NewtonMeter>()) * angularVelocity
 				};
@@ -40,12 +41,17 @@ namespace TUGraz.VectoCore.Tests.Utils
 				Source = this,
 				GearboxPowerRequest = torque * angularVelocity,
 				EnginePowerRequest = torque * angularVelocity,
+				ClutchPowerRequest = torque * angularVelocity,
 			};
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
-			return new ResponseSuccess { Source = this, EnginePowerRequest = torque * angularVelocity, };
+			return new ResponseSuccess {
+				Source = this, 
+				EnginePowerRequest = torque * angularVelocity, 
+				ClutchPowerRequest = torque * angularVelocity, 
+			};
 		}
 
 		public void DoCommitSimulationStep()

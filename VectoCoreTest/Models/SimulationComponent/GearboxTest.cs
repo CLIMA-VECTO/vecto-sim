@@ -199,6 +199,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
+			container.Engine = port;
 
 			var ratios = new[] { 0.0, 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
 			// the first element 0.0 is just a placeholder for axlegear, not used in this test
@@ -374,9 +375,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
 
+			//just for test driver
 			driver.VehicleStopped = true;
 
-			var response = gearbox.OutPort().Request(absTime, dt, 50.SI<NewtonMeter>(), 10000.SI<PerSecond>());
+			var response = gearbox.OutPort().Request(absTime, dt, 50.SI<NewtonMeter>(), 1000000.RPMtoRad());
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 			AssertHelper.AreRelativeEqual(absTime, port.AbsTime);
 			AssertHelper.AreRelativeEqual(dt, port.Dt);

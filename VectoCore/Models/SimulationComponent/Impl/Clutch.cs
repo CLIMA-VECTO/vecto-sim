@@ -65,7 +65,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AddClutchLoss(torque, angularVelocity, out torqueIn, out engineSpeedIn);
 
 			var retVal = NextComponent.Request(absTime, dt, torqueIn, engineSpeedIn, dryRun);
-			retVal.ClutchPowerRequest = Formulas.TorqueToPower(torque, angularVelocity);
+			retVal.ClutchPowerRequest = torque * angularVelocity;
 			return retVal;
 		}
 
@@ -76,6 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			AddClutchLoss(torque, angularVelocity, out torqueIn, out engineSpeedIn);
 
 			var retVal = NextComponent.Initialize(torqueIn, engineSpeedIn);
+			retVal.ClutchPowerRequest = torque * angularVelocity;
 			return retVal;
 		}
 
