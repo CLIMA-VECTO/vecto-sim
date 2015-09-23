@@ -61,9 +61,13 @@
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="FileIO\JsonTest.cs" />
     <Compile Include="FileIO\SimulationDataReaderTest.cs" />
-    <Compile Include="Integration\DriverStrategy\DriverStrategyTest.cs" />
+    <Compile Include="Integration\CoachPowerTrain.cs" />
+    <Compile Include="Integration\DriverStrategy\DriverStrategyTestCoach.cs" />
+    <Compile Include="Integration\DriverStrategy\DriverStrategyTestTruck.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
+    <Compile Include="Integration\SimpleDrivingCycles.cs" />
     <Compile Include="Integration\SimulationRuns\FullPowertrain.cs" />
+    <Compile Include="Integration\Truck40tPowerTrain.cs" />
     <Compile Include="Models\SimulationComponent\GearboxPowertrainTest.cs" />
     <Compile Include="Utils\Port.cs" />
     <Compile Include="Models\SimulationComponentData\AuxiliaryTypeHelperTest.cs" />
@@ -137,6 +141,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\12t Delivery Truck.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Components\Axle 40t Truck.vtlm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Components\Gearbox.vfld">
