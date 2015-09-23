@@ -25,6 +25,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
+		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName)
+		{
+			var container = CreatePowerTrain(cycleData, modFileName, 7500.SI<Kilogram>(), 19300.SI<Kilogram>());
+
+			return new DistanceRun(container);
+		}
+
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, Kilogram massExtra,
 			Kilogram loading)
 		{
