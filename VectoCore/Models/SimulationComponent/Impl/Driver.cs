@@ -472,7 +472,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			debug.Add(new { brakingPower = 0.SI<Watt>(), searchInterval, delta = origDelta, operatingPoint });
 
-			var breakingPower = searchInterval * -delta.Sign();
+			var brakePower = searchInterval * -delta.Sign();
 
 			// double the searchInterval until a good interval was found
 			var intervalFactor = 1.0;
@@ -480,7 +480,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//ResponseDryRun response;
 			do {
 				operatingPoint = ComputeTimeInterval(operatingPoint.Acceleration, ds);
-				DataBus.BreakPower = breakingPower;
+				DataBus.BreakPower = brakePower;
 				var response =
 					(ResponseDryRun)
 						NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
@@ -492,7 +492,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return operatingPoint;
 				}
 
-				debug.Add(new { breakingPower, searchInterval, delta, operatingPoint });
+				debug.Add(new { brakePower, searchInterval, delta, operatingPoint });
 
 				// check if a correct searchInterval was found (when the delta changed signs, we stepped through the 0-point)
 				// from then on the searchInterval can be bisected.
@@ -502,7 +502,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				searchInterval *= intervalFactor;
-				breakingPower += searchInterval * -delta.Sign();
+				brakePower += searchInterval * -delta.Sign();
 			} while (retryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
 
 			LogManager.EnableLogging();
