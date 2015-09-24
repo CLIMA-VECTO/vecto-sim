@@ -133,8 +133,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			UpdateEngineState(CurrentState.EnginePower);
 
 			// = requestedEnginePower; //todo + _currentState.EnginePowerLoss;
-			CurrentState.EngineTorque = Formulas.PowerToTorque(CurrentState.EnginePower,
-				CurrentState.EngineSpeed);
+			CurrentState.EngineTorque = CurrentState.EnginePower / CurrentState.EngineSpeed;
 
 			return new ResponseSuccess { EnginePowerRequest = requestedEnginePower };
 		}
@@ -157,26 +156,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			CurrentState.FullDragTorque = Data.FullLoadCurve.DragLoadStationaryTorque(angularSpeed);
-			CurrentState.FullDragPower = Formulas.TorqueToPower(CurrentState.FullDragTorque, angularSpeed);
+			CurrentState.FullDragPower = CurrentState.FullDragTorque * angularSpeed;
 		}
 
-		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
+		public IResponse Initialize(NewtonMeter torque, PerSecond angularSpeed)
 		{
 			PreviousState = new EngineState {
-				EngineSpeed = engineSpeed,
+				EngineSpeed = angularSpeed,
 				dt = 1.SI<Second>(),
 				EnginePowerLoss = 0.SI<Watt>(),
 				StationaryFullLoadTorque =
-					Data.FullLoadCurve.FullLoadStationaryTorque(engineSpeed),
-				FullDragTorque = Data.FullLoadCurve.DragLoadStationaryTorque(engineSpeed),
+					Data.FullLoadCurve.FullLoadStationaryTorque(angularSpeed),
+				FullDragTorque = Data.FullLoadCurve.DragLoadStationaryTorque(angularSpeed),
 				EngineTorque = torque,
-				EnginePower = Formulas.TorqueToPower(torque, engineSpeed)
+				EnginePower = torque * angularSpeed,
 			};
-			PreviousState.StationaryFullLoadPower = Formulas.TorqueToPower(PreviousState.StationaryFullLoadTorque,
-				engineSpeed);
+			PreviousState.StationaryFullLoadPower = PreviousState.StationaryFullLoadTorque * angularSpeed;
 			PreviousState.DynamicFullLoadTorque = PreviousState.StationaryFullLoadTorque;
 			PreviousState.DynamicFullLoadPower = PreviousState.StationaryFullLoadPower;
-			PreviousState.FullDragPower = Formulas.TorqueToPower(PreviousState.FullDragTorque, engineSpeed);
+			PreviousState.FullDragPower = PreviousState.FullDragTorque * angularSpeed;
 
 			return new ResponseSuccess { Source = this, EnginePowerRequest = PreviousState.EnginePower };
 		}
@@ -275,8 +273,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//_currentState.StationaryFullLoadPower = _data.GetFullLoadCurve(gear).FullLoadStationaryPower(rpm);
 			CurrentState.StationaryFullLoadTorque =
 				Data.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
-			CurrentState.StationaryFullLoadPower = Formulas.TorqueToPower(CurrentState.StationaryFullLoadTorque,
-				angularVelocity);
+			CurrentState.StationaryFullLoadPower = CurrentState.StationaryFullLoadTorque * angularVelocity;
 
 			double pt1 = Data.FullLoadCurve.PT1(angularVelocity).Value();
 
@@ -296,8 +293,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CurrentState.DynamicFullLoadPower = StationaryIdleFullLoadPower;
 			}
 
-			CurrentState.DynamicFullLoadTorque = Formulas.PowerToTorque(CurrentState.DynamicFullLoadPower,
-				angularVelocity);
+			CurrentState.DynamicFullLoadTorque = CurrentState.DynamicFullLoadPower / angularVelocity;
 		}
 
 		protected bool IsFullLoad(Watt requestedPower, Watt maxPower)

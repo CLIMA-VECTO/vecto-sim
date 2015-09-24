@@ -70,10 +70,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return powerDemand;
 		}
 
-		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
+		public IResponse Initialize(NewtonMeter torque, PerSecond angularSpeed)
 		{
-			var powerDemand = ComputePowerDemand(engineSpeed);
-			return NextComponent.Initialize(torque + powerDemand / engineSpeed, engineSpeed);
+			var powerDemand = ComputePowerDemand(angularSpeed);
+			return NextComponent.Initialize(torque + powerDemand / angularSpeed, angularSpeed);
 		}
 
 		#endregion

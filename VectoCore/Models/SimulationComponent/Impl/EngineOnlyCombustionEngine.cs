@@ -39,8 +39,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			UpdateEngineState(CurrentState.EnginePower);
 
 			// = requestedEnginePower; //todo + _currentState.EnginePowerLoss;
-			CurrentState.EngineTorque = Formulas.PowerToTorque(CurrentState.EnginePower,
-				CurrentState.EngineSpeed);
+			CurrentState.EngineTorque = CurrentState.EnginePower / CurrentState.EngineSpeed;
 
 			return new ResponseSuccess();
 		}

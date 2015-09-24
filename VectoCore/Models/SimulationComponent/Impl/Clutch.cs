@@ -112,7 +112,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						((clutchSpeedNorm * engineSpeed0 / _ratedSpeed) * (_ratedSpeed - _idleSpeed) + _idleSpeed).Radian
 							.Cast<PerSecond>();
 
-					torqueIn = Formulas.PowerToTorque(Formulas.TorqueToPower(torque, angularVelocity) / ClutchEff, engineSpeedIn);
+					torqueIn = ((torque * angularVelocity) / ClutchEff / engineSpeedIn);
 				} else {
 					_clutchState = SimulationComponent.ClutchState.ClutchClosed;
 				}
