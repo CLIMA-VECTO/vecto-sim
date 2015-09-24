@@ -79,6 +79,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return Data.FullLoadCurve.RatedSpeed; }
 		}
 
+		public ICombustionEngineIdleController GetIdleController()
+		{
+			return IdleController ?? new CombustionEngineIdleController(this);
+		}
+
+		protected CombustionEngineIdleController IdleController { get; set; }
+
 		#endregion
 
 		#region ITnOutProvider
@@ -450,6 +457,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		public class CombustionEngineIdleController {}
+		protected class CombustionEngineIdleController : ICombustionEngineIdleController
+		{
+			protected CombustionEngine Engine;
+
+			protected ITnOutPort OutPort;
+
+			public CombustionEngineIdleController(CombustionEngine combustionEngine)
+			{
+				Engine = combustionEngine;
+			}
+
+			public void SetRequestPort(ITnOutPort tnOutPort)
+			{
+				OutPort = tnOutPort;
+			}
+
+			public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
+				bool dryRun = false)
+			{
+				throw new NotImplementedException();
+			}
+
+			public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
+			{
+				return new ResponseSuccess() { Source = this };
+			}
+		}
 	}
 }

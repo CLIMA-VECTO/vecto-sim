@@ -50,7 +50,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
-			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData, engine.GetIdleController()));
 			AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer) { Gear = 1 };
@@ -105,7 +105,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
-			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData, engine.GetIdleController()));
 			AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
@@ -163,8 +163,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
-			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
-			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
+			var engine = new CombustionEngine(vehicleContainer, engineData);
+			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData, engine.GetIdleController()));
+			AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
 

@@ -53,8 +53,8 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
 
-			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData));
 			var engine = new CombustionEngine(vehicleContainer, engineData);
+			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData, engine.GetIdleController()));
 			Port.AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
@@ -104,8 +104,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Brakes(vehicleContainer));
 			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
-			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData));
-			Port.AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
+			var engine = new CombustionEngine(vehicleContainer, engineData);
+			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData, engine.GetIdleController()));
+			Port.AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
 
@@ -173,8 +174,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Brakes(vehicleContainer));
 			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
-			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData));
-			Port.AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
+			var engine = new CombustionEngine(vehicleContainer, engineData);
+			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData, engine.GetIdleController()));
+			Port.AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
 

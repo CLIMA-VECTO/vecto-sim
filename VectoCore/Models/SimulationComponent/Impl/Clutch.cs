@@ -17,12 +17,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private const double ClutchEff = 1;
 		private ClutchState _clutchState = SimulationComponent.ClutchState.ClutchSlipping;
 
+		protected ICombustionEngineIdleController IdleController;
 
-		public Clutch(IVehicleContainer cockpit, CombustionEngineData engineData)
+
+		public Clutch(IVehicleContainer cockpit, CombustionEngineData engineData,
+			ICombustionEngineIdleController idleController)
 			: base(cockpit)
 		{
 			_idleSpeed = engineData.IdleSpeed;
 			_ratedSpeed = engineData.FullLoadCurve.RatedSpeed;
+			IdleController = idleController;
 		}
 
 		public ClutchState State()
@@ -56,7 +60,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
 			if (angularVelocity == null) {
-				var retval = NextComponent.Request(absTime, dt, torque, null, dryRun);
+				//var retval = NextComponent.Request(absTime, dt, torque, null, dryRun);
+				var retval = IdleController.Request(absTime, dt, torque, null, dryRun);
 				retval.ClutchPowerRequest = 0.SI<Watt>();
 				return retval;
 			}

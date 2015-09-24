@@ -55,6 +55,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var vehicleData = CreateVehicleData(massExtra, loading);
 			var driverData = CreateDriverData(AccelerationFile);
 
+			var engine = new CombustionEngine(container, engineData);
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
@@ -62,14 +63,16 @@ namespace TUGraz.VectoCore.Tests.Integration
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
-			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
+			var clutch = new Clutch(container, engineData, engine.GetIdleController());
+			engine.GetIdleController().SetRequestPort(clutch);
+			tmp = Port.AddComponent(tmp, clutch);
 
 			var aux = new Auxiliary(container);
 			aux.AddConstant("", 0.SI<Watt>());
 
 			tmp = Port.AddComponent(tmp, aux);
 
-			Port.AddComponent(tmp, new CombustionEngine(container, engineData));
+			Port.AddComponent(tmp, engine);
 
 			return container;
 		}

@@ -206,7 +206,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
 			var engine = new CombustionEngine(container, engineData);
 
-			var clutch = new Clutch(container, engineData);
+			var clutch = new Clutch(container, engineData, engine.GetIdleController());
 
 			var driver = new MockDriver(container);
 
