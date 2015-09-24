@@ -54,7 +54,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
 
 			var engine = new CombustionEngine(vehicleContainer, engineData);
-			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData, engine.GetIdleController()));
+			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			tmp = Port.AddComponent(tmp, clutch);
 			Port.AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
@@ -105,7 +107,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new Brakes(vehicleContainer));
 			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
 			var engine = new CombustionEngine(vehicleContainer, engineData);
-			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData, engine.GetIdleController()));
+			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			tmp = Port.AddComponent(tmp, clutch);
 			Port.AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
@@ -175,7 +179,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new Brakes(vehicleContainer));
 			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
 			var engine = new CombustionEngine(vehicleContainer, engineData);
-			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData, engine.GetIdleController()));
+			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			tmp = Port.AddComponent(tmp, clutch);
 			Port.AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);

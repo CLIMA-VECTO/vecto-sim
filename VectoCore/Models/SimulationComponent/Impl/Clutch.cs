@@ -57,6 +57,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return this;
 		}
 
+		public ITnOutPort IdleControlPort
+		{
+			get { return NextComponent; }
+		}
+
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
 			if (angularVelocity == null) {

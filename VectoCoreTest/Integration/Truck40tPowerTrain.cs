@@ -55,16 +55,17 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var vehicleData = CreateVehicleData(massExtra, loading);
 			var driverData = CreateDriverData(AccelerationFile);
 
-			var engine = new CombustionEngine(container, engineData);
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
+			var engine = new CombustionEngine(container, engineData);
+			var clutch = new Clutch(container, engineData, engine.IdleController);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+
 			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
 			tmp = Port.AddComponent(tmp, new Wheels(container, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
-			var clutch = new Clutch(container, engineData, engine.GetIdleController());
-			engine.GetIdleController().SetRequestPort(clutch);
 			tmp = Port.AddComponent(tmp, clutch);
 
 			var aux = new Auxiliary(container);

@@ -71,8 +71,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 
 			var engine = new CombustionEngine(_container, data.EngineData);
+			var clutch = new Clutch(_container, data.EngineData, engine.IdleController);
+
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+
 			// gearbox --> clutch
-			tmp = AddComponent(tmp, new Clutch(_container, data.EngineData, engine.GetIdleController()));
+			tmp = AddComponent(tmp, clutch);
 
 
 			// clutch --> direct aux --> ... --> aux_XXX --> directAux
