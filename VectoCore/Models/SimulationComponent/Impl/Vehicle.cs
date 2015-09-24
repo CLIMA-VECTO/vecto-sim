@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Declaration;
+using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
-using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -12,21 +13,45 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class Vehicle : VectoSimulationComponent, IVehicle, IMileageCounter, IFvInPort, IDriverDemandOutPort
 	{
-		private IFvOutPort _nextInstance;
-
+		protected IFvOutPort NextComponent;
 		private VehicleState _previousState;
 		private VehicleState _currentState;
-
 		private readonly VehicleData _data;
 
-		public Vehicle(VehicleContainer container, VehicleData data) : base(container)
+		public MeterPerSecond VehicleSpeed
+		{
+			get { return _previousState.Velocity; }
+		}
+
+		public Kilogram VehicleMass
+		{
+			get { return _data.TotalCurbWeight(); }
+		}
+
+		public Kilogram VehicleLoading
+		{
+			get { return _data.Loading; }
+		}
+
+		public Kilogram TotalMass
+		{
+			get { return _data.TotalVehicleWeight(); }
+		}
+
+		public Meter Distance
+		{
+			get { return _previousState.Distance; }
+		}
+
+
+		public Vehicle(IVehicleContainer container, VehicleData data) : base(container)
 		{
 			_data = data;
 			_previousState = new VehicleState { Distance = 0.SI<Meter>(), Velocity = 0.SI<MeterPerSecond>() };
 			_currentState = new VehicleState { Distance = 0.SI<Meter>(), Velocity = 0.SI<MeterPerSecond>() };
 		}
 
-		public Vehicle(VehicleContainer container, VehicleData data, double initialVelocity) : this(container, data)
+		public Vehicle(IVehicleContainer container, VehicleData data, double initialVelocity) : this(container, data)
 		{
 			_previousState.Velocity = initialVelocity.SI<MeterPerSecond>();
 		}
@@ -43,21 +68,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void Connect(IFvOutPort other)
 		{
-			_nextInstance = other;
+			NextComponent = other;
 		}
 
-		protected override void DoWriteModalResults(IModalDataWriter writer)
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
-			writer[ModalResultField.v_act] = (_previousState.Velocity + _currentState.Velocity) / 2;
-			writer[ModalResultField.dist] = _currentState.Distance;
+			_previousState = new VehicleState { Distance = 0.SI<Meter>(), Velocity = vehicleSpeed };
+			_currentState = new VehicleState { Distance = 0.SI<Meter>(), Velocity = vehicleSpeed };
 
-			// hint: take care to use correct velocity when writing the P... values in moddata
+			var vehicleAccelerationForce = RollingResistance(roadGradient) + AirDragResistance() + SlopeResistance(roadGradient);
+			return NextComponent.Initialize(vehicleAccelerationForce, vehicleSpeed);
 		}
 
-		protected override void DoCommitSimulationStep()
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, MeterPerSquareSecond startAcceleration, Radian roadGradient)
 		{
-			_previousState = _currentState;
-			_currentState = new VehicleState();
+			var vehicleAccelerationForce = DriverAcceleration(startAcceleration) + RollingResistance(roadGradient) +
+											AirDragResistance() + SlopeResistance(roadGradient);
+			return NextComponent.Initialize(vehicleAccelerationForce, vehicleSpeed);
 		}
 
 		public IResponse Request(Second absTime, Second dt, MeterPerSquareSecond accelleration, Radian gradient,
@@ -74,18 +101,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 											+ AirDragResistance()
 											+ SlopeResistance(gradient);
 
-			var retval = _nextInstance.Request(absTime, dt, vehicleAccelerationForce, _currentState.Velocity, dryRun);
-			//retval.VehiclePowerRequest = 
+			var retval = NextComponent.Request(absTime, dt, vehicleAccelerationForce, _currentState.Velocity, dryRun);
 			return retval;
 		}
 
-		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
+		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			_previousState = new VehicleState { Distance = 0.SI<Meter>(), Velocity = vehicleSpeed };
-			_currentState = new VehicleState { Distance = 0.SI<Meter>(), Velocity = vehicleSpeed };
+			writer[ModalResultField.v_act] = (_previousState.Velocity + _currentState.Velocity) / 2;
 
-			var vehicleAccelerationForce = RollingResistance(roadGradient) + AirDragResistance() + SlopeResistance(roadGradient);
-			return _nextInstance.Initialize(vehicleAccelerationForce, vehicleSpeed);
+			// sanity check: is the vehicle in step with the cycle?
+			if (writer[ModalResultField.dist] == DBNull.Value) {
+				Log.Warn("distance field is not set!");
+			} else {
+				var distance = (SI)writer[ModalResultField.dist];
+				if (!distance.IsEqual(_currentState.Distance, 1e-12)) {
+					Log.Warn("distance diverges: {0}, distance: {1}", (distance - _currentState.Distance).Value(), distance);
+				}
+			}
+		}
+
+		protected override void DoCommitSimulationStep()
+		{
+			_previousState = _currentState;
+			_currentState = new VehicleState();
 		}
 
 		protected Newton RollingResistance(Radian gradient)
@@ -207,37 +245,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
-		public MeterPerSecond VehicleSpeed()
-		{
-			return _previousState.Velocity;
-		}
-
-		public Kilogram VehicleMass()
-		{
-			return _data.TotalCurbWeight();
-		}
-
-		public Kilogram VehicleLoading()
-		{
-			return _data.Loading;
-		}
-
-		public Kilogram TotalMass()
-		{
-			return _data.TotalVehicleWeight();
-		}
-
 
 		public class VehicleState
 		{
 			public MeterPerSecond Velocity;
 			public Second dt;
 			public Meter Distance;
-		}
-
-		public Meter Distance()
-		{
-			return _previousState.Distance;
 		}
 	}
 }

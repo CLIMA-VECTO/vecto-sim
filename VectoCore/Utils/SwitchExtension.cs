@@ -37,9 +37,16 @@ namespace TUGraz.VectoCore.Utils
 		}
 
 		[DebuggerHidden]
+		public Switch<T> Case<TFilter>() where TFilter : T
+		{
+			return Case<TFilter>(() => {});
+		}
+
+
+		[DebuggerHidden]
 		public Switch<T> Case<TFilter>(Action<TFilter> action) where TFilter : T
 		{
-			if (!_handled && _value is TFilter) {
+			if (!_handled && _value.GetType() == typeof(TFilter)) {
 				action((TFilter)_value);
 				_handled = true;
 			}

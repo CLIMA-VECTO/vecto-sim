@@ -25,7 +25,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var container = job.GetContainer();
 
-			Assert.AreEqual(560.RPMtoRad(), container.EngineSpeed());
+			Assert.AreEqual(560.RPMtoRad(), container.EngineSpeed);
 			Assert.AreEqual(0U, container.Gear);
 		}
 

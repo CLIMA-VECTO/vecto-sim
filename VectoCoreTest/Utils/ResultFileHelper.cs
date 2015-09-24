@@ -39,13 +39,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 					string.Format("Moddata: Columns differ:\nExpected: {0}\nActual: {1}", string.Join(", ", expectedCols),
 						string.Join(", ", actualCols)));
 
-				for (var i = 0; i < expected.Rows.Count; i++) {
+				for (var i = 0; testRowcount && i < expected.Rows.Count; i++) {
 					var expectedRow = expected.Rows[i];
 					var actualRow = actual.Rows[i];
 
 					foreach (var field in testColumns ?? new string[0]) {
-						Assert.AreEqual(expectedRow.ParseDoubleOrGetDefault(field), actualRow.ParseDoubleOrGetDefault(field),
-							DoubleExtensionMethods.Tolerance, string.Format("t: {0}  field: {1}", i, field));
+						Assert.AreEqual(expectedRow.ParseDoubleOrGetDefault(field), actualRow.ParseDoubleOrGetDefault(field), 1e-4,
+							string.Format("t: {0}  field: {1}", i, field));
 					}
 				}
 			}

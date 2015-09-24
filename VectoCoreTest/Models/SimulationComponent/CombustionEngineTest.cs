@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
+using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -103,7 +107,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			port.Request(absTime, dt, Formulas.PowerToTorque(2329.973.SI<Watt>(), engineSpeed), engineSpeed);
 			engine.CommitSimulationStep(dataWriter);
 
-			Assert.AreEqual(1152.40304, ((SI)dataWriter[ModalResultField.PaEng]).Value(), 0.001);
+			AssertHelper.AreRelativeEqual(1152.40304, ((SI)dataWriter[ModalResultField.PaEng]).Value());
 
 			dataWriter.CommitSimulationStep(absTime, dt);
 			absTime += dt;
@@ -192,6 +196,73 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				modalData.CommitSimulationStep();
 			}
 			modalData.Finish();
+		}
+
+		[TestMethod]
+		public void EngineIdleJump()
+		{
+			var container = new VehicleContainer();
+			var gearbox = new MockGearbox(container);
+			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
+			var engine = new CombustionEngine(container, engineData);
+
+			var clutch = new Clutch(container, engineData);
+
+			var driver = new MockDriver(container);
+
+			var aux = new Auxiliary(container);
+			aux.AddConstant("", 5000.SI<Watt>());
+
+			gearbox.Gear = 1;
+
+			//gearbox.InPort().Connect(engine.OutPort());
+			gearbox.InPort().Connect(clutch.OutPort());
+			clutch.InPort().Connect(aux.OutPort());
+			aux.InPort().Connect(engine.OutPort());
+
+//			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
+
+			var requestPort = gearbox.OutPort();
+
+			//vehicleContainer.DataWriter = new ModalDataWriter("engine_idle_test.csv");
+			var dataWriter = new MockModalDataWriter();
+			container.DataWriter = dataWriter;
+
+			var torque = 1200.SI<NewtonMeter>();
+			var angularVelocity = 800.RPMtoRad();
+
+			// initialize engine...
+
+			gearbox.Initialize(torque, angularVelocity);
+
+			var absTime = 0.SI<Second>();
+			var dt = Constants.SimulationSettings.TargetTimeInterval;
+
+			var response = requestPort.Request(absTime, dt, torque, angularVelocity);
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			container.CommitSimulationStep(absTime, dt);
+			var row = dataWriter.Data.Rows.Cast<DataRow>().Last();
+			Assert.AreEqual(105530.96491487339.SI<Watt>(), row[ModalResultField.Pe_eng.GetName()]);
+			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.Paux.GetName()]);
+			Assert.AreEqual(800.RPMtoRad(), row[ModalResultField.n.GetName()]);
+
+			absTime += dt;
+
+			// actual test...
+
+			gearbox.Gear = 0;
+			torque = 0.SI<NewtonMeter>();
+
+			response = gearbox.Request(absTime, dt, torque, angularVelocity);
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			container.CommitSimulationStep(absTime, dt);
+			row = dataWriter.Data.Rows.Cast<DataRow>().Last();
+
+			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.Pe_eng.GetName()]);
+			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.Paux.GetName()]);
+			Assert.AreEqual(800.RPMtoRad(), row[ModalResultField.n.GetName()]);
 		}
 
 

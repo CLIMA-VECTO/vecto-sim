@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
@@ -6,6 +8,10 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	public abstract class AbstractResponse : IResponse
 	{
 		public Second SimulationInterval { get; set; }
+
+		public Meter SimulationDistance { get; set; }
+
+		public MeterPerSquareSecond Acceleration { get; set; }
 
 		public Watt EnginePowerRequest { get; set; }
 
@@ -19,10 +25,15 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 		public Watt VehiclePowerRequest { get; set; }
 
+		public Watt BrakePower { get; set; }
+
+		public object Source { get; set; }
+
 		public override string ToString()
 		{
 			var t = GetType();
-			return string.Format("{0}{{{1}}}", t.Name, ", ".Join(t.GetProperties().Select(p => string.Format("{0}: {1}", p.Name, p.GetValue(this)))));
+			return string.Format("{0}{{{1}}}", t.Name,
+				", ".Join(t.GetProperties().Select(p => string.Format("{0}: {1}", p.Name, p.GetValue(this)))));
 		}
 	}
 
@@ -37,23 +48,21 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	public class ResponseSuccess : AbstractResponse {}
 
 	/// <summary>
-	/// Response when the request resulted in an engine overload. 
+	/// Response when the request resulted in an engine or gearbox overload. 
 	/// </summary>
-	public class ResponseEngineOverload : AbstractResponse
+	public class ResponseOverload : AbstractResponse
 	{
 		public Watt Delta { get; set; }
 		public double Gradient { get; set; }
 	}
 
 	/// <summary>
-	/// Response when the request resulted in an engine overload. 
+	/// Response when the request resulted in an engine under-load. 
 	/// </summary>
-	public class ResponseGearboxOverload : AbstractResponse
-	{
-		public Watt Delta { get; set; }
-		public double Gradient { get; set; }
-	}
+	public class ResponseUnderload : ResponseOverload {}
 
+
+	public class ResponseSpeedLimitExceeded : AbstractResponse {}
 
 	/// <summary>
 	/// Response when the request should have another time interval.
@@ -65,6 +74,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 
 	public class ResponseDrivingCycleDistanceExceeded : AbstractResponse
 	{
+		public ResponseDrivingCycleDistanceExceeded() {}
 		public Meter MaxDistance { get; set; }
 	}
 

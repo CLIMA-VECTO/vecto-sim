@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private readonly Dictionary<string, Func<PerSecond, Watt>> _auxDict = new Dictionary<string, Func<PerSecond, Watt>>();
 		private readonly Dictionary<string, Watt> _powerDemands = new Dictionary<string, Watt>();
 
-		private ITnOutPort _outPort;
+		protected ITnOutPort NextComponent;
 
 		public Auxiliary(IVehicleContainer container) : base(container) {}
 
@@ -42,18 +42,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		void ITnInPort.Connect(ITnOutPort other)
 		{
-			_outPort = other;
+			NextComponent = other;
 		}
 
 		#endregion
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
+		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
 		{
-			var powerDemand = ComputePowerDemand(engineSpeed);
+			var currentAngularVelocity = angularVelocity ?? DataBus.EngineSpeed;
+			var powerDemand = ComputePowerDemand(currentAngularVelocity);
 
-			return _outPort.Request(absTime, dt, torque + powerDemand / engineSpeed, engineSpeed, dryRun);
+			return NextComponent.Request(absTime, dt, torque + powerDemand / currentAngularVelocity, angularVelocity, dryRun);
 		}
 
 		private Watt ComputePowerDemand(PerSecond engineSpeed)
@@ -72,7 +73,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
 			var powerDemand = ComputePowerDemand(engineSpeed);
-			return _outPort.Initialize(torque + powerDemand / engineSpeed, engineSpeed);
+			return NextComponent.Initialize(torque + powerDemand / engineSpeed, engineSpeed);
 		}
 
 		#endregion
@@ -116,7 +117,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			_auxDict[auxId] = speed => {
 				var powerSupply = cycle.CycleData().LeftSample.AuxiliarySupplyPower["Aux_" + auxId];
-
 				var nAuxiliary = speed * data.TransitionRatio;
 				var powerAuxOut = powerSupply / data.EfficiencyToSupply;
 				var powerAuxIn = data.GetPowerDemand(nAuxiliary, powerAuxOut);

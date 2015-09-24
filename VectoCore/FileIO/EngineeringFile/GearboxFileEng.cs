@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.FileIO.DeclarationFile;
-using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.FileIO.EngineeringFile
 {
@@ -57,52 +57,79 @@ namespace TUGraz.VectoCore.FileIO.EngineeringFile
 			[JsonProperty(Required = Required.Always)] public new IList<GearDataEng> Gears;
 
 			/// <summary>
-			///		[kgm^2] Rotation inertia of the gearbox (constant for all gears)
+			///	[kgm^2] Rotation inertia of the gearbox (constant for all gears)
 			/// </summary>
 			[JsonProperty(Required = Required.Always)] public double Inertia;
 
 			/// <summary>
-			///		[s] Interruption during gear shift event
+			///	[s] Interruption time during gear shift event
 			/// </summary>
 			[JsonProperty("TracInt", Required = Required.Always)] public double TractionInterruption;
 
 			/// <summary>
-			///		[%] This parameter is required for the "Allow shift-up inside polygons" and "Skip Gears" option
+			///	[%] (0-1) Defines the torque reserve for EarlyUpShift and SkipGears in the Shifting Strategy.
 			/// </summary>
-			[JsonProperty("TqReserve")] public double TorqueReserve;
+			/// <remarks>Is serialized via the property <see cref="TorqueReserveConverterProperty"/>.</remarks>
+			public double TorqueReserve
+			{
+				get { return _torqueReserve; }
+				set { _torqueReserve = value; }
+			}
+
+			[JsonProperty("TqReserve"), UsedImplicitly]
+			private double TorqueReserveConverterProperty
+			{
+				get { return (int)_torqueReserve * 100; }
+				set { _torqueReserve = value / 100; }
+			}
+
 
 			[JsonProperty] public bool SkipGears;
 
 			/// <summary>
-			///   min. time interval between two gearshifts
+			/// [s] Minimum time interval between two gearshifts
 			/// </summary>
 			[JsonProperty] public double ShiftTime;
 
 			/// <summary>
-			///   ???
+			/// [true/false] true if earlyUpShift in Gearbox is active
 			/// </summary>
 			[JsonProperty] public bool EarlyShiftUp;
 
 			/// <summary>
-			///  ???
+			/// [%] (0-1) The start torque reserve for finding the starting gear.
 			/// </summary>
-			[JsonProperty("StartTqReserve")] public double StartTorqueReserve;
+			/// <remarks>Is serialized via the property <see cref="StartTorqueReserveConverterProperty"/>.</remarks>
+			public double StartTorqueReserve
+			{
+				get { return _startTorqueReserve; }
+				set { _startTorqueReserve = value; }
+			}
+
+			[JsonProperty("StartTqReserve"), UsedImplicitly]
+			private double StartTorqueReserveConverterProperty
+			{
+				get { return (int)_startTorqueReserve * 100; }
+				set { _startTorqueReserve = value / 100; }
+			}
 
 			/// <summary>
-			///		[m/s] vehicle speed at start
+			///	[m/s] vehicle speed at start
 			/// </summary>
 			[JsonProperty] public double StartSpeed;
 
 			/// <summary>
-			///   [m/s^2] accelleration of the vehicle at start
+			/// [m/s^2] accelleration of the vehicle at start
 			/// </summary>
 			[JsonProperty("StartAcc")] public double StartAcceleration;
 
-
 			/// <summary>
-			///		Contains all parameters of the torque converter if used
+			///	Contains all parameters of the torque converter if used
 			/// </summary>
 			[JsonProperty] public TorqueConverterDataEng TorqueConverter;
+
+			private double _startTorqueReserve;
+			private double _torqueReserve;
 		}
 
 		public class GearDataEng : GearDataDecl

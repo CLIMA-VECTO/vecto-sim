@@ -10,7 +10,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class EngineOnlyCombustionEngine : CombustionEngine
 	{
-		protected readonly List<Second> _enginePowerCorrections = new List<Second>();
+		protected readonly List<Second> EnginePowerCorrections = new List<Second>();
 
 		public EngineOnlyCombustionEngine(IVehicleContainer cockpit, CombustionEngineData data) : base(cockpit, data) {}
 
@@ -27,20 +27,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			ValidatePowerDemand(requestedEnginePower);
 
-			_currentState.EnginePower = LimitEnginePower(requestedEnginePower);
+			CurrentState.EnginePower = LimitEnginePower(requestedEnginePower);
 
 			if (dryRun) {
 				return new ResponseDryRun {
-					DeltaFullLoad = (requestedEnginePower - _currentState.DynamicFullLoadPower),
-					DeltaDragLoad = (requestedEnginePower - _currentState.FullDragPower)
+					DeltaFullLoad = (requestedEnginePower - CurrentState.DynamicFullLoadPower),
+					DeltaDragLoad = (requestedEnginePower - CurrentState.FullDragPower)
 				};
 			}
 
-			UpdateEngineState(_currentState.EnginePower);
+			UpdateEngineState(CurrentState.EnginePower);
 
 			// = requestedEnginePower; //todo + _currentState.EnginePowerLoss;
-			_currentState.EngineTorque = Formulas.PowerToTorque(_currentState.EnginePower,
-				_currentState.EngineSpeed);
+			CurrentState.EngineTorque = Formulas.PowerToTorque(CurrentState.EnginePower,
+				CurrentState.EngineSpeed);
 
 			return new ResponseSuccess();
 		}
@@ -52,23 +52,23 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns>[W]</returns>
 		protected override Watt LimitEnginePower(Watt requestedEnginePower)
 		{
-			if (requestedEnginePower > _currentState.DynamicFullLoadPower) {
-				if (requestedEnginePower / _currentState.DynamicFullLoadPower > MaxPowerExceededThreshold) {
-					_enginePowerCorrections.Add(_currentState.AbsTime);
+			if (requestedEnginePower > CurrentState.DynamicFullLoadPower) {
+				if (requestedEnginePower / CurrentState.DynamicFullLoadPower > MaxPowerExceededThreshold) {
+					EnginePowerCorrections.Add(CurrentState.AbsTime);
 					Log.Warn(
 						"t: {0}  requested power > P_engine_full * 1.05 - corrected. P_request: {1}  P_engine_full: {2}",
-						_currentState.AbsTime, requestedEnginePower, _currentState.DynamicFullLoadPower);
+						CurrentState.AbsTime, requestedEnginePower, CurrentState.DynamicFullLoadPower);
 				}
-				return _currentState.DynamicFullLoadPower;
+				return CurrentState.DynamicFullLoadPower;
 			}
-			if (requestedEnginePower < _currentState.FullDragPower) {
-				if (requestedEnginePower / _currentState.FullDragPower > MaxPowerExceededThreshold &&
+			if (requestedEnginePower < CurrentState.FullDragPower) {
+				if (requestedEnginePower / CurrentState.FullDragPower > MaxPowerExceededThreshold &&
 					requestedEnginePower > -99999) {
-					_enginePowerCorrections.Add(_currentState.AbsTime);
+					EnginePowerCorrections.Add(CurrentState.AbsTime);
 					Log.Warn("t: {0}  requested power < P_engine_drag * 1.05 - corrected. P_request: {1}  P_engine_drag: {2}",
-						_currentState.AbsTime, requestedEnginePower, _currentState.FullDragPower);
+						CurrentState.AbsTime, requestedEnginePower, CurrentState.FullDragPower);
 				}
-				return _currentState.FullDragPower;
+				return CurrentState.FullDragPower;
 			}
 			return requestedEnginePower;
 		}
@@ -76,7 +76,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IList<string> Warnings()
 		{
 			IList<string> retVal = new List<string>();
-			retVal.Add(string.Format("Engine power corrected (>5%) in {0} time steps ", _enginePowerCorrections.Count));
+			retVal.Add(string.Format("Engine power corrected (>5%) in {0} time steps ", EnginePowerCorrections.Count));
 			return retVal;
 		}
 	}

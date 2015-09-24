@@ -68,7 +68,7 @@ namespace TUGraz.VectoCore.Utils
 				Log.Info("Exact search found no fitting triangle. Approximation will be used.");
 				tr = _triangles.Find(triangle => triangle.IsInside(x, y, exact: false));
 				if (tr == null) {
-					throw new VectoException(string.Format("Interpolation failed. x: {0}, y: {1}", x, y));
+					throw new VectoException("Interpolation failed. x: {0}, y: {1}", x, y);
 				}
 			}
 

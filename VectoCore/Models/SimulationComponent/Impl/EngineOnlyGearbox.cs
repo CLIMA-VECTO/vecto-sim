@@ -10,7 +10,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class EngineOnlyGearbox : VectoSimulationComponent, IGearbox, ITnInPort, ITnOutPort
 	{
-		private ITnOutPort _outPort;
+		protected ITnOutPort NextComponent;
 		public EngineOnlyGearbox(IVehicleContainer cockpit) : base(cockpit) {}
 
 		#region ITnInProvider
@@ -36,7 +36,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		uint IGearboxInfo.Gear
 		{
 			get { return 0; }
-			set { }
+			//set { }
+		}
+
+		public MeterPerSecond StartSpeed
+		{
+			get { throw new VectoSimulationException("Not Implemented: EngineOnlyGearbox has no StartSpeed value."); }
+		}
+
+		public MeterPerSquareSecond StartAcceleration
+		{
+			get { throw new VectoSimulationException("Not Implemented: EngineOnlyGearbox has no StartAcceleration value."); }
 		}
 
 		#endregion
@@ -45,27 +55,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		void ITnInPort.Connect(ITnOutPort other)
 		{
-			_outPort = other;
+			NextComponent = other;
 		}
 
 		#endregion
 
 		#region ITnOutPort
 
-		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond engineSpeed, bool dryRun)
+		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
 		{
-			if (_outPort == null) {
-				Log.Error("{0} cannot handle incoming request - no outport available", absTime);
-				throw new VectoSimulationException(
-					string.Format("{0} cannot handle incoming request - no outport available",
-						absTime));
+			if (NextComponent == null) {
+				Log.Error("Ccannot handle incoming request - no outport available. absTime: {0}, dt: {1}", absTime, dt);
+				throw new VectoSimulationException("Cannot handle incoming request - no outport available.");
 			}
-			return _outPort.Request(absTime, dt, torque, engineSpeed, dryRun);
+			return NextComponent.Request(absTime, dt, torque, angularVelocity, dryRun);
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
 		{
-			return _outPort.Initialize(torque, engineSpeed);
+			return NextComponent.Initialize(torque, engineSpeed);
 		}
 
 		#endregion
