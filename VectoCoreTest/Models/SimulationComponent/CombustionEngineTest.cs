@@ -21,6 +21,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 	[TestClass]
 	public class CombustionEngineTest
 	{
+		protected double Tolerance = 1E-3;
+
 		private const string CoachEngine = @"TestData\Components\24t Coach.veng";
 		public TestContext TestContext { get; set; }
 
@@ -207,7 +209,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData, engine.IdleController);
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			var driver = new MockDriver(container);
 
@@ -220,6 +221,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			gearbox.InPort().Connect(clutch.OutPort());
 			clutch.InPort().Connect(aux.OutPort());
 			aux.InPort().Connect(engine.OutPort());
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 //			var expectedResults = VectoCSVFile.Read(TestContext.DataRow["ResultFile"].ToString());
 
@@ -264,6 +266,82 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.Pe_eng.GetName()]);
 			Assert.AreEqual(5000.SI<Watt>(), row[ModalResultField.Paux.GetName()]);
 			Assert.AreEqual(800.RPMtoRad(), row[ModalResultField.n.GetName()]);
+		}
+
+		[TestMethod]
+		public void EngineIdleControllerTest()
+		{
+			var container = new VehicleContainer();
+			var gearbox = new MockGearbox(container);
+			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
+
+			var engine = new CombustionEngine(container, engineData);
+			var clutch = new Clutch(container, engineData, engine.IdleController);
+
+			var driver = new MockDriver(container);
+
+			var aux = new Auxiliary(container);
+			aux.AddConstant("", 5000.SI<Watt>());
+
+			gearbox.Gear = 1;
+
+			//gearbox.InPort().Connect(engine.OutPort());
+			gearbox.InPort().Connect(clutch.OutPort());
+			clutch.InPort().Connect(aux.OutPort());
+			aux.InPort().Connect(engine.OutPort());
+
+			// has to be done after connecting components!
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+
+			var requestPort = gearbox.OutPort();
+
+			//vehicleContainer.DataWriter = new ModalDataWriter("engine_idle_test.csv");
+			var dataWriter = new MockModalDataWriter();
+			container.DataWriter = dataWriter;
+
+			var absTime = 0.SI<Second>();
+			var dt = Constants.SimulationSettings.TargetTimeInterval;
+
+			var angularVelocity = 800.RPMtoRad();
+			var torque = 100000.SI<Watt>() / angularVelocity;
+
+			var response = requestPort.Initialize(torque, angularVelocity);
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+			response = requestPort.Request(absTime, dt, torque, angularVelocity);
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.AreEqual(105000, response.EnginePowerRequest.Value(), Tolerance);
+			container.CommitSimulationStep(absTime, dt);
+			absTime += dt;
+
+			// --------- first 'idle request'
+			torque = 0.SI<NewtonMeter>();
+
+			response = requestPort.Request(absTime, dt, torque, null);
+			container.CommitSimulationStep(absTime, dt);
+			absTime += dt;
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.AreEqual(800.RPMtoRad(), engine.PreviousState.EngineSpeed);
+			Assert.AreEqual(5000.SI<Watt>(), engine.PreviousState.EnginePower);
+
+			// --------- second 'idle request'
+			response = requestPort.Request(absTime, dt, torque, null);
+			container.CommitSimulationStep(absTime, dt);
+			absTime += dt;
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.AreEqual(800.RPMtoRad(), engine.PreviousState.EngineSpeed);
+			Assert.AreEqual(5000.SI<Watt>(), engine.PreviousState.EnginePower);
+
+			// --------- third 'idle request'
+			response = requestPort.Request(absTime, dt, torque, null);
+			container.CommitSimulationStep(absTime, dt);
+			absTime += dt;
+
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.AreEqual(560.RPMtoRad(), engine.PreviousState.EngineSpeed);
+			Assert.AreEqual(-8601.6308, engine.PreviousState.EnginePower.Value(), Tolerance);
 		}
 
 

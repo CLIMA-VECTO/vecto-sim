@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Resources;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -81,7 +82,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public ICombustionEngineIdleController IdleController
 		{
-			get { return EngineIdleController ?? new CombustionEngineIdleController(this); }
+			get { return EngineIdleController ?? (EngineIdleController = new CombustionEngineIdleController(this)); }
 		}
 
 		protected CombustionEngineIdleController EngineIdleController { get; set; }
@@ -442,24 +443,67 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected class CombustionEngineIdleController : ICombustionEngineIdleController
 		{
+			protected readonly double PeDropSlope = -0.75;
+			protected readonly double PeDropOffset = 1.0;
+
 			protected CombustionEngine Engine;
 
-			protected ITnOutPort OutPort;
+			protected Second IdleStart = null;
+			protected Watt LastEnginePower = null;
 
 			public CombustionEngineIdleController(CombustionEngine combustionEngine)
 			{
 				Engine = combustionEngine;
 			}
 
-			public ITnOutPort RequestPort
-			{
-				set { OutPort = value; }
-			}
+			public ITnOutPort RequestPort { private get; set; }
 
 			public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
 				bool dryRun = false)
 			{
-				throw new NotImplementedException();
+				if (angularVelocity != null) {
+					throw new VectoException("IdleController can only handle idle requests, i.e. angularVelocity == null!");
+				}
+				if (IdleStart == null) {
+					IdleStart = absTime;
+					LastEnginePower = Engine.PreviousState.EnginePower;
+				}
+				IResponse retVal = null;
+
+				var idleTime = absTime - IdleStart + dt;
+				var prevEngineSpeed = Engine.PreviousState.EngineSpeed;
+				var nextEnginePower = ComputeNextEngineSpeed(idleTime, prevEngineSpeed);
+
+				var auxDemandResponse = RequestPort.Request(absTime, dt, torque, prevEngineSpeed, true);
+
+				var deltaEnginePower = nextEnginePower - auxDemandResponse.AuxiliariesPowerDemand;
+				var deltaTorque = deltaEnginePower / prevEngineSpeed;
+				var deltaAngularSpeed = (deltaTorque / Engine.Data.Inertia * dt).Cast<PerSecond>();
+
+				var nextAngularSpeed = prevEngineSpeed;
+				if (deltaAngularSpeed > 0) {
+					retVal = RequestPort.Request(absTime, dt, torque, nextAngularSpeed);
+					return retVal;
+				}
+
+				nextAngularSpeed = prevEngineSpeed + deltaAngularSpeed;
+				if (nextAngularSpeed < Engine.Data.IdleSpeed) {
+					// search for EnginePower such that nextAngularSpeed == Engine.Data.IdleSpeed
+					var tmp = RequestPort.Request(absTime, dt, torque, Engine.Data.IdleSpeed);
+					return tmp;
+					//throw new NotImplementedException("Search for PE s.t. n2 = n_idle");
+				}
+
+				retVal = RequestPort.Request(absTime, dt, torque, nextAngularSpeed);
+				return retVal;
+			}
+
+			protected Watt ComputeNextEngineSpeed(Second idleTime, PerSecond angularVelocity)
+			{
+				var dragLoad = Engine.Data.FullLoadCurve.DragLoadStationaryPower(angularVelocity);
+				var totalPower = LastEnginePower - dragLoad;
+
+				return totalPower * VectoMath.Max(idleTime.Value() * PeDropSlope + PeDropOffset, 0) + dragLoad;
 			}
 
 			public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)

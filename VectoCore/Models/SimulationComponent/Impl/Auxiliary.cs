@@ -54,7 +54,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var currentAngularVelocity = angularVelocity ?? DataBus.EngineSpeed;
 			var powerDemand = ComputePowerDemand(currentAngularVelocity);
 
-			return NextComponent.Request(absTime, dt, torque + powerDemand / currentAngularVelocity, angularVelocity, dryRun);
+			var retVal = NextComponent.Request(absTime, dt, torque + powerDemand / currentAngularVelocity, angularVelocity,
+				dryRun);
+			retVal.AuxiliariesPowerDemand = powerDemand;
+			return retVal;
 		}
 
 		private Watt ComputePowerDemand(PerSecond engineSpeed)

@@ -18,6 +18,8 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 
 		Watt EnginePowerRequest { get; set; }
 
+		Watt AuxiliariesPowerDemand { get; set; }
+
 		Watt ClutchPowerRequest { get; set; }
 
 		Watt GearboxPowerRequest { get; set; }
