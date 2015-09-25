@@ -153,8 +153,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.AbsTime = absTime;
 
 			requestedPower = torque * angularSpeed;
-			//CurrentState.EnginePowerLoss = Formulas.InertiaPower(engineSpeed, PreviousState.EngineSpeed, Data.Inertia, dt);
-			CurrentState.EnginePowerLoss = InertiaPowerLoss(torque, angularSpeed);
+			CurrentState.EnginePowerLoss = Formulas.InertiaPower(angularSpeed, PreviousState.EngineSpeed, Data.Inertia, dt);
 			requestedEnginePower = requestedPower + CurrentState.EnginePowerLoss;
 
 			if (angularSpeed < Data.IdleSpeed.Value() - EngineIdleSpeedStopThreshold) {
@@ -307,22 +306,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			var testValue = (requestedPower / maxPower).Cast<Scalar>() - 1.0;
 			return testValue.Abs() < FullLoadMargin;
-		}
-
-		/// <summary>
-		/// Calculates power loss. [W]
-		/// </summary>
-		/// <param name="torque">[Nm]</param>
-		/// <param name="angularVelocity">[rad/s]</param>
-		/// <returns>[W]</returns>
-		protected Watt InertiaPowerLoss(NewtonMeter torque, PerSecond angularVelocity)
-		{
-			var deltaEngineSpeed = angularVelocity - PreviousState.EngineSpeed;
-			// TODO: consider simulation interval! (not simply divide by 1 Second but the current dt)
-			var avgEngineSpeed = (PreviousState.EngineSpeed + angularVelocity) / 2.SI<Second>();
-
-			var result = Data.Inertia * deltaEngineSpeed * avgEngineSpeed;
-			return result.Cast<Watt>();
 		}
 
 		public class EngineState
