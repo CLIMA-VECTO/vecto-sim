@@ -1,10 +1,13 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using TUGraz.VectoCore.Models.SimulationComponent;
+﻿using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
+
 	public interface IClutchInfo
 	{
-		ClutchState ClutchState();
+		/// <summary>
+		/// Returns if the clutch is closed in the current interval.
+		/// </summary>
+		bool ClutchClosed(Second absTime);
 	}
 }

@@ -31,24 +31,24 @@ namespace TUGraz.VectoCore.Tests.Utils
 			return this;
 		}
 
-		public MeterPerSecond VehicleSpeed()
+		public MeterPerSecond VehicleSpeed
 		{
-			return MyVehicleSpeed;
+			get { return MyVehicleSpeed; }
 		}
 
-		public Kilogram VehicleMass()
+		public Kilogram VehicleMass
 		{
-			return 7500.SI<Kilogram>();
+			get { return 7500.SI<Kilogram>(); }
 		}
 
-		public Kilogram VehicleLoading()
+		public Kilogram VehicleLoading
 		{
-			return 0.SI<Kilogram>();
+			get { return 0.SI<Kilogram>(); }
 		}
 
-		public Kilogram TotalMass()
+		public Kilogram TotalMass
 		{
-			return VehicleMass();
+			get { return VehicleMass; }
 		}
 
 		public void Connect(IFvOutPort other)
@@ -72,6 +72,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			throw new NotImplementedException();
 		}
 
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, MeterPerSquareSecond startAcceleration, Radian roadGradient)
+		{
+			throw new NotImplementedException();
+		}
+
 		public class RequestData
 		{
 			public Second abstime;
@@ -80,9 +85,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			public Radian gradient;
 		}
 
-		public Meter Distance()
+		public Meter Distance
 		{
-			return 0.SI<Meter>();
+			get { return 0.SI<Meter>(); }
 		}
 	}
 }

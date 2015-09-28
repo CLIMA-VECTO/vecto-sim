@@ -140,6 +140,7 @@
     <Compile Include="Models\Declaration\VehicleClass.cs" />
     <Compile Include="Models\Declaration\Wheels.cs" />
     <Compile Include="Models\Declaration\WHTCCorrection.cs" />
+    <Compile Include="Models\SimulationComponent\Data\AuxiliaryData.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxSupplyPowerReader.cs" />
     <Compile Include="Models\SimulationComponent\Data\CycleData.cs" />
     <Compile Include="Models\SimulationComponent\Data\AccelerationCurve.cs" />
@@ -152,12 +153,18 @@
     <Compile Include="Models\SimulationComponent\Data\Engine\PT1Curve.cs" />
     <Compile Include="Models\LoggingObject.cs" />
     <Compile Include="Models\SimulationComponent\Data\GearboxType.cs" />
-    <Compile Include="Models\SimulationComponent\IBreaks.cs" />
+    <Compile Include="Models\SimulationComponent\IAuxiliary.cs" />
+    <Compile Include="Models\SimulationComponent\IBrakes.cs" />
+    <Compile Include="Models\SimulationComponent\IDriverActions.cs" />
+    <Compile Include="Models\SimulationComponent\IDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\AuxiliaryData.cs" />
-    <Compile Include="Models\SimulationComponent\Impl\Breaks.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\Brakes.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\DefaultDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\Impl\EngineOnlyCombustionEngine.cs" />
+    <Compile Include="Models\SimulationComponent\IShiftStrategy.cs" />
+    <Compile Include="Models\SimulationComponent\Impl\ShiftStrategy.cs" />
     <Compile Include="Models\Simulation\DataBus\IClutchInfo.cs" />
+    <Compile Include="Models\Simulation\DataBus\IDriverInfo.cs" />
     <Compile Include="Models\Simulation\Data\AuxiliaryDemandType.cs" />
     <Compile Include="Models\SimulationComponent\Data\AuxiliaryType.cs" />
     <Compile Include="Models\SimulationComponent\Data\FullLoadCurve.cs" />
@@ -176,7 +183,6 @@
     <Compile Include="Models\SimulationComponent\Data\CrossWindCorrectionMode.cs" />
     <Compile Include="Models\SimulationComponent\Data\DrivingCycleData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\FuelConsumptionMap.cs" />
-    <Compile Include="Models\SimulationComponent\Data\IAuxiliaryDemand.cs" />
     <Compile Include="Models\SimulationComponent\Data\Engine\EngineFullLoadCurve.cs" />
     <Compile Include="Models\SimulationComponent\Data\GearboxData.cs" />
     <Compile Include="Models\SimulationComponent\Data\Gearbox\GearData.cs" />
@@ -208,7 +214,6 @@
     <Compile Include="Utils\Physics.cs" />
     <Compile Include="Utils\SI.cs" />
     <Compile Include="Models\SimulationComponent\Data\SimulationComponentData.cs" />
-    <Compile Include="Models\SimulationComponent\Data\IAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\ICombustionEngine.cs" />
     <Compile Include="Models\SimulationComponent\IGearbox.cs" />
     <Compile Include="Models\Connector\Ports\ISimulationPort.cs" />

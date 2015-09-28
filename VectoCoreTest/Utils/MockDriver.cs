@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Diagnostics;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
 {
-	public class MockDriver : VectoSimulationComponent, IDriver, IDrivingCycleOutPort, IDriverDemandInPort
+	public class MockDriver : VectoSimulationComponent, IDriver, IDrivingCycleOutPort, IDriverDemandInPort, IDriverInfo
 	{
 		private IDriverDemandOutPort _next;
 
@@ -16,10 +18,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public MockDriver(IVehicleContainer container) : base(container) {}
 
-		protected override void DoWriteModalResults(IModalDataWriter writer)
-		{
-			throw new NotImplementedException();
-		}
+		protected override void DoWriteModalResults(IModalDataWriter writer) {}
 
 		protected override void DoCommitSimulationStep() {}
 
@@ -39,20 +38,32 @@ namespace TUGraz.VectoCore.Tests.Utils
 			LastRequest = new RequestData { AbsTime = absTime, ds = ds, Gradient = gradient, TargetVelocity = targetVelocity };
 			var acc = 0.SI<MeterPerSquareSecond>();
 			var dt = 1.SI<Second>();
-			return new ResponseSuccess { SimulationInterval = dt };
-			//_next.Request(absTime, TimeSpan.FromSeconds(0), acc, 0.SI<Radian>());
+			return new ResponseSuccess { SimulationInterval = dt, Source = this };
 		}
 
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			LastRequest = new RequestData { AbsTime = absTime, dt = dt, Gradient = gradient, TargetVelocity = targetVelocity };
 			var acc = 0.SI<MeterPerSquareSecond>();
-			return new ResponseSuccess { SimulationInterval = dt }; //_next.Request(absTime, dt, acc, gradient);
+			return new ResponseSuccess { SimulationInterval = dt, Source = this };
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
-			return new ResponseSuccess();
+			if (_next != null) {
+				return _next.Initialize(vehicleSpeed, roadGradient);
+			}
+
+			return new ResponseSuccess { Source = this };
+		}
+
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)
+		{
+			if (_next != null) {
+				return _next.Initialize(vehicleSpeed, startAcceleration, roadGradient);
+			}
+
+			return new ResponseSuccess { Source = this };
 		}
 
 		public void Connect(IDriverDemandOutPort other)
@@ -68,5 +79,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			public MeterPerSecond TargetVelocity;
 			public Radian Gradient;
 		}
+
+		public bool VehicleStopped { get; set; }
 	}
 }

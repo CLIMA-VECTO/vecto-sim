@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using TUGraz.VectoCore.Exceptions;
 
@@ -122,6 +123,7 @@ namespace TUGraz.VectoCore.Utils
 		}
 	}
 
+	[DebuggerDisplay("(X:{X}, Y:{Y}, Z:{Z})")]
 	public class Point
 	{
 		public double X;
@@ -145,35 +147,6 @@ namespace TUGraz.VectoCore.Utils
 		public Point CrossProduct(Point other)
 		{
 			return new Point(Y * other.Z - Z * other.Y, Z * other.X - X * other.Z, X * other.Y - Y * other.X);
-		}
-
-		/// <summary>
-		/// Determines whether this point is left of the given edge.
-		/// </summary>
-		/// <remarks>Calculates the cross product and checks if the z-component is positive or negative.</remarks>
-		public bool IsLeftOf(Edge e)
-		{
-			var ab = e.P2 - e.P1;
-			var ac = this - e.P1;
-			var cross = ab.CrossProduct(ac);
-			return cross.Z.IsGreater(0);
-		}
-
-		/// <summary>
-		/// Determines whether this point is right of the given edge.
-		/// </summary>
-		/// <remarks>Calculates the cross product and checks if the z-component is positive or negative.</remarks>
-		public bool IsRightOf(Edge e)
-		{
-			var ab = e.P2 - e.P1;
-			var ac = this - e.P1;
-			var cross = ab.CrossProduct(ac);
-			return cross.Z.IsSmaller(0);
-		}
-
-		public override string ToString()
-		{
-			return string.Format("Point({0}, {1}, {2})", X, Y, Z);
 		}
 
 		#region Equality members
@@ -204,6 +177,7 @@ namespace TUGraz.VectoCore.Utils
 		#endregion
 	}
 
+	[DebuggerDisplay("Plane({X}, {Y}, {Z}, {W})")]
 	public class Plane
 	{
 		public double X;
@@ -236,13 +210,9 @@ namespace TUGraz.VectoCore.Utils
 			Z = cross.Z;
 			W = tr.P1.X * cross.X + tr.P1.Y * cross.Y + tr.P1.Z * cross.Z;
 		}
-
-		public override string ToString()
-		{
-			return string.Format("Plane({0}, {1}, {2}, {3})", X, Y, Z, W);
-		}
 	}
 
+	[DebuggerDisplay("Triangle({P1.X, P1.Y, P1.Z}, {P2.X, P2.Y, P2.Z}, {P3.X, P3.Y, P3.Z})")]
 	public class Triangle
 	{
 		public Point P1;
@@ -256,7 +226,7 @@ namespace TUGraz.VectoCore.Utils
 			P3 = p3;
 		}
 
-		public bool IsInside(double x, double y, bool exact = true)
+		public bool IsInside(double x, double y, bool exact)
 		{
 			Contract.Requires(P1 != null);
 			Contract.Requires(P2 != null);
@@ -321,16 +291,9 @@ namespace TUGraz.VectoCore.Utils
 			return Contains(t.P1) || Contains(t.P2) || Contains(t.P3);
 		}
 
-		public IEnumerable<Edge> GetEdges()
+		public Edge[] GetEdges()
 		{
-			yield return new Edge(P1, P2);
-			yield return new Edge(P2, P3);
-			yield return new Edge(P3, P1);
-		}
-
-		public override string ToString()
-		{
-			return string.Format("Triangle({0}, {1}, {2})", P1, P2, P3);
+			return new[] { new Edge(P1, P2), new Edge(P2, P3), new Edge(P3, P1) };
 		}
 
 		#region Equality members
@@ -368,6 +331,7 @@ namespace TUGraz.VectoCore.Utils
 		#endregion
 	}
 
+	[DebuggerDisplay("Edge({P1}, {P2})")]
 	public class Edge
 	{
 		public Point P1;
@@ -377,11 +341,6 @@ namespace TUGraz.VectoCore.Utils
 		{
 			P1 = p1;
 			P2 = p2;
-		}
-
-		public override string ToString()
-		{
-			return string.Format("Edge({0}, {1})", P1, P2);
 		}
 
 		#region Equality members

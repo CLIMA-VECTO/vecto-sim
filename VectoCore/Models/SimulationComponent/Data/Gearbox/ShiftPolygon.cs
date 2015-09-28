@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Utils;
@@ -99,6 +100,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			public const string AngularSpeedDown = "downshift rpm";
 		}
 
+		[DebuggerDisplay("{Torque}, {AngularSpeed}")]
 		public class ShiftPolygonEntry
 		{
 			/// <summary>

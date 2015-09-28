@@ -113,18 +113,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		public NewtonMeter GearboxInTorque(PerSecond inAngularVelocity, NewtonMeter outTorque)
 		{
 			try {
-				var limitedAngularVelocity = VectoMath.Limit(inAngularVelocity, _minSpeed, _maxSpeed).Value();
-				var limitedTorque = VectoMath.Limit(outTorque, _minTorque, _maxTorque).Value();
+				//var limitedAngularVelocity = VectoMath.Limit(inAngularVelocity, _minSpeed, _maxSpeed).Value();
+				//var limitedTorque = VectoMath.Limit(outTorque, _minTorque, _maxTorque).Value();
 
-				var inTorque = _lossMap.Interpolate(limitedAngularVelocity, limitedTorque).SI<NewtonMeter>();
-				Logger<TransmissionLossMap>().Debug("GearboxLoss: {0}", inTorque - outTorque);
+				var inTorque = _lossMap.Interpolate(inAngularVelocity.Value(), outTorque.Value()).SI<NewtonMeter>();
+				Log.Debug("GearboxLoss: {0}", inTorque - outTorque);
 
 				// Limit input torque to a maximum value without losses (just torque/ratio)
 				return VectoMath.Max(inTorque, outTorque / _ratio);
 			} catch (VectoException) {
-				Logger<TransmissionLossMap>()
-					.Error("Failed to interpolate in TransmissionLossMap. angularVelocity: {0}, torque: {1}", inAngularVelocity,
-						outTorque);
+				Log.Error("Failed to interpolate in TransmissionLossMap. angularVelocity: {0}, torque: {1}", inAngularVelocity,
+					outTorque);
 				return outTorque / _ratio;
 			}
 		}
