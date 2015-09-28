@@ -60,9 +60,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, gbx);
 			var engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData, engine.IdleController);
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
 			tmp = Port.AddComponent(tmp, clutch);
 			Port.AddComponent(tmp, engine);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			cyclePort.Initialize();
 
@@ -119,9 +119,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, gbx);
 			var engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData, engine.IdleController);
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
 			tmp = Port.AddComponent(tmp, clutch);
 			Port.AddComponent(tmp, engine);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			cyclePort.Initialize();
 
@@ -194,9 +194,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
 			var engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData, engine.IdleController);
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
 			tmp = Port.AddComponent(tmp, clutch);
 			Port.AddComponent(tmp, engine);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			cyclePort.Initialize();
 

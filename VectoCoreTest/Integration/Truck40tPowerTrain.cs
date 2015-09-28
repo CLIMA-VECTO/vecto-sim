@@ -58,7 +58,6 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
 			var clutch = new Clutch(container, engineData, engine.IdleController);
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			dynamic tmp = Port.AddComponent(cycle, new Driver(container, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(container, vehicleData));
@@ -74,6 +73,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			tmp = Port.AddComponent(tmp, aux);
 
 			Port.AddComponent(tmp, engine);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			return container;
 		}
