@@ -1,8 +1,5 @@
-﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
-using TUGraz.VectoCore.FileIO.Reader;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
@@ -74,6 +71,9 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_level);
 			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_0_85_level.vmod").Run();
+
+			GraphWriter.Write("Truck_DriverStrategy_Accelerate_0_85_level.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Accelerate_0_85_level.vmod");
 		}
 
 		[TestMethod]
