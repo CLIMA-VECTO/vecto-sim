@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Resources;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
@@ -441,7 +443,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		#endregion
 
-		protected class CombustionEngineIdleController : ICombustionEngineIdleController
+		protected class CombustionEngineIdleController : LoggingObject, ICombustionEngineIdleController
 		{
 			protected readonly double PeDropSlope = -0.75;
 			protected readonly double PeDropOffset = 1.0;
@@ -458,11 +460,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			public ITnOutPort RequestPort { private get; set; }
 
+			public void Reset()
+			{
+				IdleStart = null;
+			}
+
 			public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
 				bool dryRun = false)
 			{
 				if (angularVelocity != null) {
 					throw new VectoException("IdleController can only handle idle requests, i.e. angularVelocity == null!");
+				}
+				if (!torque.IsEqual(0)) {
+					throw new VectoException("Torque has to be 0 for idle requests!");
 				}
 				if (IdleStart == null) {
 					IdleStart = absTime;
@@ -472,7 +482,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var idleTime = absTime - IdleStart + dt;
 				var prevEngineSpeed = Engine.PreviousState.EngineSpeed;
-				var nextEnginePower = ComputeNextEngineSpeed(idleTime, prevEngineSpeed);
+				var dragLoad = Engine.Data.FullLoadCurve.DragLoadStationaryPower(prevEngineSpeed);
+
+				var nextEnginePower = (LastEnginePower - dragLoad) * VectoMath.Max(idleTime.Value() * PeDropSlope + PeDropOffset, 0) +
+									dragLoad;
 
 				var auxDemandResponse = RequestPort.Request(absTime, dt, torque, prevEngineSpeed, true);
 
@@ -486,6 +499,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return retVal;
 				}
 
+
 				nextAngularSpeed = prevEngineSpeed + deltaAngularSpeed;
 				if (nextAngularSpeed < Engine.Data.IdleSpeed) {
 					// search for EnginePower such that nextAngularSpeed == Engine.Data.IdleSpeed
@@ -495,15 +509,63 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 
 				retVal = RequestPort.Request(absTime, dt, torque, nextAngularSpeed);
+				retVal.Switch().
+					Case<ResponseSuccess>().
+					Case<ResponseUnderload>(r => {
+						retVal = RequestPort.Request(absTime, dt, torque, nextAngularSpeed);
+						retVal = SearchIdlingSpeed(absTime, dt, torque, nextAngularSpeed, r);
+					}).
+					Default(r => {
+						throw new UnexpectedResponseException("searching Idling point", r);
+					});
+
 				return retVal;
 			}
 
-			protected Watt ComputeNextEngineSpeed(Second idleTime, PerSecond angularVelocity)
+			private IResponse SearchIdlingSpeed(Second absTime, Second dt, NewtonMeter torque, PerSecond angularSpeed,
+				ResponseUnderload responseUnderload)
 			{
-				var dragLoad = Engine.Data.FullLoadCurve.DragLoadStationaryPower(angularVelocity);
-				var totalPower = LastEnginePower - dragLoad;
+				var prevEngineSpeed = Engine.PreviousState.EngineSpeed;
 
-				return totalPower * VectoMath.Max(idleTime.Value() * PeDropSlope + PeDropOffset, 0) + dragLoad;
+				var searchInterval = Constants.SimulationSettings.EngineIdlingSearchInterval;
+				var intervalFactor = 1.0;
+
+				var debug = new List<dynamic>();
+
+				var origDelta = responseUnderload.Delta;
+				var delta = origDelta;
+				var nextAngularSpeed = angularSpeed;
+
+				debug.Add(new { engineSpeed = angularSpeed, searchInterval, delta });
+				var retryCount = 0;
+				do {
+					nextAngularSpeed -= searchInterval * delta.Sign();
+
+
+					var response = (ResponseDryRun)RequestPort.Request(absTime, dt, torque, nextAngularSpeed, true);
+					delta = response.DeltaDragLoad;
+					debug.Add(new { engineSpeed = nextAngularSpeed, searchInterval, delta });
+					if (delta.IsEqual(0, Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+						Log.Debug("found operating point in {0} iterations. engine speed: {1}, delta: {2}", retryCount, nextAngularSpeed,
+							delta);
+						return RequestPort.Request(absTime, dt, torque, nextAngularSpeed);
+					}
+
+					if (origDelta.Sign() != delta.Sign()) {
+						intervalFactor = 0.5;
+					}
+					searchInterval *= intervalFactor;
+				} while (retryCount++ < Constants.SimulationSettings.EngineSearchLoopThreshold);
+
+				Log.Warn("Exceeded max iterations when searching for idling point!");
+				Log.Warn("acceleration: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.acceleration)),
+					", ".Join(debug.Slice(-6).Select(x => x.acceleration)));
+				Log.Warn("exceeded: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.delta)),
+					", ".Join(debug.Slice(-6).Select(x => x.delta)));
+				Log.Error("Failed to find operating point! absTime: {0}", absTime);
+				throw new VectoSimulationException("Failed to find operating point!  exceeded: {0} ... {1}",
+					", ".Join(debug.Take(5).Select(x => x.delta)),
+					", ".Join(debug.Slice(-6).Select(x => x.delta)));
 			}
 
 			public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)

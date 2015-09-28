@@ -70,6 +70,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				retval.ClutchPowerRequest = 0.SI<Watt>();
 				return retval;
 			}
+			if (IdleController != null) {
+				IdleController.Reset();
+			}
 			NewtonMeter torqueIn;
 			PerSecond engineSpeedIn;
 			AddClutchLoss(torque, angularVelocity, out torqueIn, out engineSpeedIn);

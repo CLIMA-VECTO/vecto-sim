@@ -6,5 +6,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 	public interface ICombustionEngineIdleController : ITnOutPort
 	{
 		ITnOutPort RequestPort { set; }
+
+		void Reset();
 	}
 }
