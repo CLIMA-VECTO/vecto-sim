@@ -510,5 +510,17 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 		#endregion
+
+		#region AccelerateOverspeed
+
+		[TestMethod]
+		public void Accelerate_0_85_downhill_5_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_5);
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_0_85_downhill_5-overspeed.vmod", true)
+				.Run();
+		}
+
+		#endregion
 	}
 }
