@@ -71,9 +71,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return NextComponent.Request(absTime, dt, torque, angularVelocity, dryRun);
 		}
 
-		public IResponse Initialize(NewtonMeter torque, PerSecond engineSpeed)
+		public IResponse Initialize(NewtonMeter torque, PerSecond angularSpeed)
 		{
-			return NextComponent.Initialize(torque, engineSpeed);
+			return NextComponent.Initialize(torque, angularSpeed);
 		}
 
 		#endregion

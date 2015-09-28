@@ -1,0 +1,36 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "9/28/2015 8:54:35 AM",
+    "AppVersion": "2.2",
+    "FileVersion": 2
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehicleFile": "40t_Long_Haul_Truck.vveh",
+    "EngineFile": "40t_Long_Haul_Truck.veng",
+    "GearboxFile": "40t_Long_Haul_Truck_EngineIdle.vgbx",
+    "Cycles": [
+      "C:\\Workspaces\\VisualStudio\\VECTO_quam\\VectoCoreTest\\TestData\\Integration\\DriverStrategy\\Cycles\\Cycle_Accelerate_0_85_level_5kWAux.vdri"
+    ],
+    "VACC": "Truck.vacc",
+    "EngineOnlyMode": false,
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 5.0,
+      "Delay": 5
+    },
+    "LAC": {
+      "Enabled": true,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "Off",
+      "MinSpeed": 50.0,
+      "OverSpeed": 5.0,
+      "UnderSpeed": 5.0
+    }
+  }
+}

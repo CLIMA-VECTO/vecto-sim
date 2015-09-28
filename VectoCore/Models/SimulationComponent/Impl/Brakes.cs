@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (angularVelocity.IsEqual(0)) {
 					BreakTorque = torque;
 				} else {
-					BreakTorque = Formulas.PowerToTorque(BreakPower, angularVelocity);
+					BreakTorque = BreakPower / angularVelocity;
 				}
 			}
 			if (!dryRun && BreakPower < 0) {

@@ -22,7 +22,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
 			var gearbox = new MockGearbox(container);
 
-			var clutch = new Clutch(container, engineData);
+			var clutch = new Clutch(container, engineData, null);
 
 			var inPort = clutch.InPort();
 			var outPort = new MockTnOutPort();

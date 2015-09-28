@@ -399,12 +399,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 						if (row.Field<string>(Fields.EnginePower).Equals("<DRAG>")) {
 							entry.Drag = true;
 						} else {
-							entry.EngineTorque =
-								Formulas.PowerToTorque(
-									row.ParseDouble(Fields.EnginePower)
-										.SI()
-										.Kilo.Watt.Cast<Watt>(),
-									entry.EngineSpeed);
+							entry.EngineTorque = row.ParseDouble(Fields.EnginePower).SI().Kilo.Watt.Cast<Watt>() / entry.EngineSpeed;
 						}
 					}
 					entry.Time = absTime;

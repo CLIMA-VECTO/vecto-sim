@@ -58,8 +58,11 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			var gbx = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			tmp = Port.AddComponent(tmp, gbx);
-			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
-			Port.AddComponent(tmp, new CombustionEngine(container, engineData));
+			var engine = new CombustionEngine(container, engineData);
+			var clutch = new Clutch(container, engineData, engine.IdleController);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			tmp = Port.AddComponent(tmp, clutch);
+			Port.AddComponent(tmp, engine);
 
 			cyclePort.Initialize();
 
@@ -114,8 +117,11 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			var gbx = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			tmp = Port.AddComponent(tmp, gbx);
-			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
-			Port.AddComponent(tmp, new CombustionEngine(container, engineData));
+			var engine = new CombustionEngine(container, engineData);
+			var clutch = new Clutch(container, engineData, engine.IdleController);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			tmp = Port.AddComponent(tmp, clutch);
+			Port.AddComponent(tmp, engine);
 
 			cyclePort.Initialize();
 
@@ -186,8 +192,11 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			tmp = Port.AddComponent(tmp, new Brakes(container));
 			tmp = Port.AddComponent(tmp, new AxleGear(container, axleGearData));
 			tmp = Port.AddComponent(tmp, new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container)));
-			tmp = Port.AddComponent(tmp, new Clutch(container, engineData));
-			Port.AddComponent(tmp, new CombustionEngine(container, engineData));
+			var engine = new CombustionEngine(container, engineData);
+			var clutch = new Clutch(container, engineData, engine.IdleController);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			tmp = Port.AddComponent(tmp, clutch);
+			Port.AddComponent(tmp, engine);
 
 			cyclePort.Initialize();
 
