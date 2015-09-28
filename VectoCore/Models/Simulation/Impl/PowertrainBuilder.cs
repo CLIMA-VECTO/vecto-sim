@@ -73,8 +73,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var engine = new CombustionEngine(_container, data.EngineData);
 			var clutch = new Clutch(_container, data.EngineData, engine.IdleController);
 
-			engine.IdleController.RequestPort = clutch.IdleControlPort;
-
 			// gearbox --> clutch
 			tmp = AddComponent(tmp, clutch);
 
@@ -100,6 +98,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			// connect aux --> engine
 			AddComponent(tmp, engine);
+
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			return _container;
 		}

@@ -206,9 +206,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			try {
 				writer[ModalResultField.FCMap] =
-					Data.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, CurrentState.EngineSpeed)
-						.ConvertTo()
-						.Gramm.Per.Hour;
+					Data.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, CurrentState.EngineSpeed);
 			} catch (VectoException ex) {
 				Log.Warn("t: {0} - {1} n: {2} Tq: {3}", CurrentState.AbsTime, ex.Message, CurrentState.EngineSpeed,
 					CurrentState.EngineTorque);
