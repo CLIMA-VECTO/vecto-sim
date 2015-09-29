@@ -13,6 +13,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		public void DisableLogging()
 		{
 			LogManager.DisableLogging();
+			GraphWriter.Disable();
 		}
 
 		[TestMethod]

@@ -16,8 +16,25 @@ namespace TUGraz.VectoCore.Tests.Utils
 {
 	public static class GraphWriter
 	{
+		private static bool _enabled = true;
+
+		public static void Enabled()
+		{
+			_enabled = true;
+		}
+
+		public static void Disable()
+		{
+			_enabled = false;
+		}
+
+
 		public static void Write(string fileName)
 		{
+			if (!_enabled) {
+				return;
+			}
+
 			var modDataV3 = VectoCSVFile.Read(fileName);
 
 			var xfields = new[] { ModalResultField.time, ModalResultField.dist };
@@ -64,6 +81,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public static void Write(string fileNameV3, string fileNameV22)
 		{
+			if (_enabled) {
+				return;
+			}
+
 			var modDataV3 = VectoCSVFile.Read(fileNameV3);
 			if (!File.Exists(fileNameV22)) {
 				LogManager.GetCurrentClassLogger().Error("Modfile V2.2 not found: " + fileNameV22);
