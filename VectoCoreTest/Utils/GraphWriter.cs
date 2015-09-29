@@ -39,8 +39,17 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 						var values = string.Format("{0}|{1}|{2}|{3}", string.Join(",", x), string.Join(",", y), string.Join(",", x2),
 							string.Join(",", y2));
-						values = values.Replace("NaN", "0");
 
+						if (yfield == ModalResultField.v_act) {
+							var y3 =
+								modDataV3.Rows.Cast<DataRow>()
+									.Select(v => v.Field<string>(ModalResultField.v_targ.GetName()))
+									.Select(v => string.IsNullOrWhiteSpace(v) ? "0" : v);
+
+							values += string.Format("|{0}|{1}", string.Join(",", x), string.Join(",", y3));
+						}
+
+						values = values.Replace("NaN", "0");
 						var maxX = (int)Math.Ceiling(Math.Max(x.ToDouble().Max(), x2.ToDouble().Max()));
 						images.Add(CreateGraphStream(xfield.GetCaption(), yfield.GetCaption(), maxX, values));
 					}
@@ -63,7 +72,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 					{ "chxt", "x,x,y,y" },
 					{ "chds", "a" },
 					{ "chxr", string.Format("0,0,{0},{1}", xAxisRange, xAxisRange / 10) },
-					{ "chco", "0000FF,FF0000" },
+					{ "chco", "0000FF,FF0000,00FF00" },
 					{ "chg", "5,10" },
 					{ "chxl", string.Format("1:|{0}|3:|{1}", xLabel, yLabel) },
 					{ "chxp", "1,0|3,0" },
