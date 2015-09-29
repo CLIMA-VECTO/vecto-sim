@@ -175,7 +175,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							Action = DrivingBehavior.Braking,
 							ActionDistance = entry.Distance - brakingDistance,
 							TriggerDistance = entry.Distance,
-							NextTargetSpeed = entry.VehicleTargetSpeed
+							NextTargetSpeed =
+								OverspeedAllowed(entry.RoadGradient)
+									? entry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
+									: entry.VehicleTargetSpeed
 						});
 					} else {
 						var coastingDistance = Formulas.DecelerationDistance(currentSpeed, entry.VehicleTargetSpeed,
@@ -186,7 +189,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 								Action = DefaultDriverStrategy.DrivingBehavior.Coasting,
 								ActionDistance = entry.Distance - coastingDistance,
 								TriggerDistance = entry.Distance,
-								NextTargetSpeed = entry.VehicleTargetSpeed
+								NextTargetSpeed = OverspeedAllowed(entry.RoadGradient)
+									? entry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
+									: entry.VehicleTargetSpeed
 							});
 					}
 				}
@@ -201,6 +206,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			return nextActions.Count == 0 ? null : nextActions.OrderBy(x => x.ActionDistance).First();
+		}
+
+		public bool OverspeedAllowed(Radian gradient)
+		{
+			return Driver.DriverData.OverSpeedEcoRoll.Mode == DriverData.DriverMode.Overspeed &&
+					gradient < 0 && Driver.DataBus.VehicleSpeed > Driver.DriverData.OverSpeedEcoRoll.MinSpeed;
 		}
 	}
 
@@ -257,14 +268,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			IResponse response = null;
 
 			var velocity = targetVelocity;
-			if (DriverData.OverSpeedEcoRoll.Mode == DriverData.DriverMode.Overspeed) {
-				if (gradient < 0 && DataBus.VehicleSpeed > DriverData.OverSpeedEcoRoll.MinSpeed) {
-					velocity += DriverData.OverSpeedEcoRoll.OverSpeed;
-				}
+			if (DriverStrategy.OverspeedAllowed(gradient)) {
+				velocity += DriverData.OverSpeedEcoRoll.OverSpeed;
 			}
 			if (DataBus.ClutchClosed(absTime)) {
 				// drive along
-				response = Driver.DrivingActionAccelerate(absTime, ds, velocity, gradient);
+				if (DriverStrategy.OverspeedAllowed(gradient) && DataBus.VehicleSpeed.IsEqual(targetVelocity)) {
+					response = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
+					if (response is ResponseSuccess && response.Acceleration < 0) {
+						response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+					}
+				} else {
+					response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
+				}
 				response.Switch().
 					Case<ResponseGearShift>(() => {
 						response = Driver.DrivingActionRoll(absTime, ds, velocity, gradient);
@@ -278,7 +294,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							});
 					}).
 					Case<ResponseUnderload>(r => {
-						response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient, r);
+						if (DriverStrategy.OverspeedAllowed(gradient)) {
+							response = Driver.DrivingActionCoast(absTime, ds, velocity, gradient);
+							if (response is ResponseUnderload || response is ResponseSpeedLimitExceeded) {
+								response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
+							}
+						} else {
+							response = Driver.DrivingActionBrake(absTime, ds, velocity, gradient);
+						}
 					});
 			} else {
 				response = Driver.DrivingActionRoll(absTime, ds, velocity, gradient);
