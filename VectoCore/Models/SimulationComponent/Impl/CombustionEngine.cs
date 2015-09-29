@@ -104,6 +104,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
 		{
+			Log.Debug("Engine Power Request: torque: {0}, angularVelocity: {1}, power: {2}", torque, angularVelocity, torque * angularVelocity);
 			return DoHandleRequest(absTime, dt, torque, angularVelocity, dryRun);
 		}
 
@@ -135,6 +136,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (!CurrentState.EnginePower.IsEqual(requestedEnginePower, Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 				var delta = (requestedEnginePower - CurrentState.EnginePower);
+				Log.Debug("requested engine power exceeds FLD: delta: {0}", delta);
 				return delta > 0
 					? new ResponseOverload { Delta = delta, EnginePowerRequest = requestedEnginePower, Source = this }
 					: new ResponseUnderload { Delta = delta, EnginePowerRequest = requestedEnginePower, Source = this };
@@ -166,6 +168,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			CurrentState.FullDragTorque = Data.FullLoadCurve.DragLoadStationaryTorque(angularSpeed);
 			CurrentState.FullDragPower = CurrentState.FullDragTorque * angularSpeed;
+
+			Log.Debug("EnginePowerLoss: {0}", CurrentState.EnginePowerLoss);
+			Log.Debug("Drag Curve: torque: {0}, power: {1}", CurrentState.FullDragTorque, CurrentState.FullDragPower);
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularSpeed)
@@ -301,6 +306,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			CurrentState.DynamicFullLoadTorque = CurrentState.DynamicFullLoadPower / angularVelocity;
+
+			Log.Debug("FullLoad: torque: {0}, power: {1}", CurrentState.DynamicFullLoadTorque, CurrentState.DynamicFullLoadPower);
 		}
 
 		protected bool IsFullLoad(Watt requestedPower, Watt maxPower)
