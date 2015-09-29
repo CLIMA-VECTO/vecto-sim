@@ -360,6 +360,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				});
 
 			if (retVal != null) {
+				retVal.Acceleration = operatingPoint.Acceleration;
+				retVal.SimulationInterval = operatingPoint.SimulationInterval;
 				return retVal;
 			}
 
@@ -472,7 +474,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			debug.Add(new { brakingPower = 0.SI<Watt>(), searchInterval, delta = origDelta, operatingPoint });
 
-			var breakingPower = searchInterval * -delta.Sign();
+			var breakingPower = searchInterval * -origDelta.Sign();
 
 			// double the searchInterval until a good interval was found
 			var intervalFactor = 1.0;
@@ -498,7 +500,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// from then on the searchInterval can be bisected.
 				if (origDelta.Sign() != delta.Sign()) {
 					intervalFactor = 0.5;
-					retryCount = 0; // again max. 100 iterations for the binary search...
+					//retryCount = 0; // again max. 100 iterations for the binary search...
 				}
 
 				searchInterval *= intervalFactor;
