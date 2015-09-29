@@ -130,67 +130,32 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			PreviousGear = 1;
 		}
 
-		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularSpeed)
+
+		private bool SpeedTooLowForEngine(uint gear, PerSecond outAngularSpeed)
 		{
-			//TODO Find gear with current outTorque and angularSpeed, but not during dry run
+			return (outAngularSpeed * Data.Gears[NextGear].Ratio).IsSmaller(DataBus.EngineIdleSpeed);
+		}
+
+		// original vecto2.2: (inAngularSpeed - IdleSpeed) / (RatedSpeed - IdleSpeed) >= 1.2
+		//                  =  inAngularSpeed - IdleSpeed >= 1.2*(RatedSpeed - IdleSpeed)
+		//                  =  inAngularSpeed >= 1.2*RatedSpeed - 0.2*IdleSpeed
+		private bool SpeedTooHighForEngine(uint gear, PerSecond outAngularSpeed)
+		{
+			return (outAngularSpeed * Data.Gears[NextGear].Ratio).IsGreaterOrEqual(1.2 * DataBus.EngineRatedSpeed -
+																					0.2 * DataBus.EngineIdleSpeed);
+		}
+
+
+		public override uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity)
+		{
+			while (NextGear > 1 && SpeedTooLowForEngine(NextGear, outAngularVelocity)) {
+				NextGear--;
+			}
+			while (NextGear < Data.Gears.Count && SpeedTooHighForEngine(NextGear, outAngularVelocity)) {
+				NextGear++;
+			}
+
 			return NextGear;
-
-			//var skipGears = Data.SkipGears;
-			//var requiredTorqueReserve = Data.TorqueReserve;
-			//var maxGear = (uint)(skipGears ? Data.Gears.Count : Math.Min(PreviousGear + 1, Data.Gears.Count));
-			//var minGear = skipGears ? 1 : Math.Max(PreviousGear - 1, 1);
-
-			//Func<uint, bool> speedTooLowForEngine =
-			//	gear => (outAngularSpeed * Data.Gears[gear].Ratio).IsSmaller(DataBus.EngineIdleSpeed);
-
-			//// original vecto2.2: (inAngularSpeed - IdleSpeed) / (RatedSpeed - IdleSpeed) >= 1.2
-			////                  =  inAngularSpeed - IdleSpeed >= 1.2*(RatedSpeed - IdleSpeed)
-			////                  =  inAngularSpeed >= 1.2*RatedSpeed - 0.2*IdleSpeed
-			//Func<uint, bool> speedToHighForEngine = gear =>
-			//	(outAngularSpeed * Data.Gears[gear].Ratio).IsGreaterOrEqual(1.2 * DataBus.EngineRatedSpeed -
-			//																0.2 * DataBus.EngineIdleSpeed);
-
-			//while (speedTooLowForEngine(maxGear) && maxGear > minGear) {
-			//	maxGear--;
-			//}
-
-			//while (speedToHighForEngine(minGear) && minGear < maxGear) {
-			//	minGear++;
-			//}
-
-			//var tmpGear = Gearbox.Gear;
-			//// loop only runs from maxGear to minGear+1 because minGear is returned afterwards anyway.
-			//for (var gear = maxGear; gear >= minGear; gear--) {
-			//	Gearbox.Gear = gear;
-			//	var response = (ResponseDryRun)Gearbox.Request(absTime, dt, outTorque, outAngularSpeed, true);
-			//	Gearbox.Gear = tmpGear;
-
-			//	var currentPower = response.EnginePowerRequest;
-
-			//	var fullLoadPower = currentPower - response.DeltaFullLoad;
-			//	var torqueReserve = 1 - (currentPower / fullLoadPower).Cast<Scalar>();
-
-			//	var inAngularSpeed = outAngularSpeed * Data.Gears[gear].Ratio;
-			//	var inTorque = response.ClutchPowerRequest / inAngularSpeed;
-
-			//	var isBelowShiftCurve = IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed);
-			//	var isAboveShiftCurve = IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed);
-
-			//	// if gear is the gear which was found at ShiftRequired --> take it!
-			//	if (gear == NextGear && torqueReserve.IsGreaterOrEqual(0)) {
-			//		return gear;
-			//	}
-
-			//	if (torqueReserve.IsGreaterOrEqual(requiredTorqueReserve) && !isBelowShiftCurve && !isAboveShiftCurve) {
-			//		return gear;
-			//	}
-
-			//	// if already over the up shift curve: return the previous gear (although it did not provide the required torque reserve)
-			//	if (isAboveShiftCurve && gear < maxGear) {
-			//		return gear + 1;
-			//	}
-			//}
-			//return minGear;
 		}
 
 		public override void Disengage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed)
@@ -250,62 +215,91 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public override bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime)
 		{
+			// no shift when vehicle stands
 			if (DataBus.VehicleStopped) {
 				return false;
 			}
 
-			var speedTooLowForEngine = inAngularVelocity.IsSmaller(DataBus.EngineIdleSpeed);
-			var speedToHighForEngine =
-				inAngularVelocity.IsGreaterOrEqual(1.2 * DataBus.EngineRatedSpeed - 0.2 * DataBus.EngineIdleSpeed);
-
-			if (gear > 1 && speedTooLowForEngine) {
-				NextGear = gear - 1;
+			// emergency shift to not stall the engine ------------------------
+			NextGear = gear;
+			while (NextGear > 1 && SpeedTooLowForEngine(NextGear, outAngularVelocity)) {
+				NextGear--;
+			}
+			while (NextGear < Data.Gears.Count && SpeedTooHighForEngine(NextGear, outAngularVelocity)) {
+				NextGear++;
+			}
+			if (NextGear != gear) {
 				return true;
 			}
 
-			if (gear < Data.Gears.Count && speedToHighForEngine) {
-				NextGear = gear + 1;
-				return true;
-			}
 
+			// normal shift when all requirements are fullfilled ------------------
 			var minimumShiftTimePassed = (lastShiftTime + Data.ShiftTime).IsSmaller(absTime);
 			if (!minimumShiftTimePassed) {
 				return false;
 			}
 
-			var shiftDown = IsBelowDownShiftCurve(gear, inTorque, inAngularVelocity);
-			var shiftUp = IsAboveUpShiftCurve(gear, inTorque, inAngularVelocity);
+			// down shift
+			while (IsBelowDownShiftCurve(NextGear, inTorque, inAngularVelocity)) {
+				NextGear--;
+				if (!Data.SkipGears) {
+					break;
+				}
 
-			if (shiftDown) {
-				NextGear = gear - 1;
-				return true;
-			}
-			if (shiftUp) {
-				NextGear = gear + 1;
-				return true;
-			}
-
-			if (Data.EarlyShiftUp && gear < Data.Gears.Count) {
-				// try if next gear would provide enough torque reserve
-				var nextGear = gear + 1;
-
-				Gearbox.Gear = nextGear;
+				var tmpGear = Gearbox.Gear;
+				Gearbox.Gear = NextGear;
 				var response = (ResponseDryRun)Gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
+				Gearbox.Gear = tmpGear;
 
-				var nextAngularVelocity = Data.Gears[nextGear].Ratio * outAngularVelocity;
+				inAngularVelocity = Data.Gears[NextGear].Ratio * outAngularVelocity;
+				inTorque = response.ClutchPowerRequest / inAngularVelocity;
+			}
 
-				if (!IsBelowDownShiftCurve(nextGear, response.ClutchPowerRequest / nextAngularVelocity, nextAngularVelocity)) {
+			if (NextGear != gear) {
+				return true;
+			}
+
+			// upshift
+			while (IsAboveUpShiftCurve(NextGear, inTorque, inAngularVelocity)) {
+				NextGear++;
+				if (!Data.SkipGears) {
+					break;
+				}
+
+				var tmpGear = Gearbox.Gear;
+				Gearbox.Gear = NextGear;
+				var response = (ResponseDryRun)Gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
+				Gearbox.Gear = tmpGear;
+
+				inAngularVelocity = Data.Gears[NextGear].Ratio * outAngularVelocity;
+				inTorque = response.ClutchPowerRequest / inAngularVelocity;
+			}
+
+			// early up shift to higher gear ---------------------------------------
+			if (Data.EarlyShiftUp && NextGear < Data.Gears.Count) {
+				// try if next gear would provide enough torque reserve
+				var tryNextGear = NextGear + 1;
+				var tmpGear = Gearbox.Gear;
+				Gearbox.Gear = tryNextGear;
+				var response = (ResponseDryRun)Gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
+				Gearbox.Gear = tmpGear;
+
+				inAngularVelocity = Data.Gears[tryNextGear].Ratio * outAngularVelocity;
+				inTorque = response.ClutchPowerRequest / inAngularVelocity;
+
+				// if next gear supplied enough power reserve: take it
+				// otherwise take
+				if (!IsBelowDownShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
 					var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
 					var reserve = 1 - (response.EnginePowerRequest / fullLoadPower).Cast<Scalar>();
 
 					if (reserve >= Data.TorqueReserve) {
-						NextGear = nextGear;
-						return true;
+						NextGear = tryNextGear;
 					}
 				}
 			}
 
-			return false;
+			return (NextGear != gear);
 		}
 
 		public uint NextGear { get; set; }
