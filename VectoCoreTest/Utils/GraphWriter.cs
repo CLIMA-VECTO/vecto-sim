@@ -81,7 +81,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public static void Write(string fileNameV3, string fileNameV22)
 		{
-			if (_enabled) {
+			if (!_enabled) {
 				return;
 			}
 
