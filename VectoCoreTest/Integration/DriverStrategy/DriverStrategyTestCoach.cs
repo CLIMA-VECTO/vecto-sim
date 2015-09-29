@@ -228,8 +228,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_45_0_level);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Decelerate_45_0_level.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Decelerate_45_0_level.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_45_0_level.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Decelerate_45_0_level.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_45_0_level.vmod");
 		}
 
 		[TestMethod]
@@ -238,8 +238,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_45_0_uphill_5);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Decelerate_45_0_uphill_5.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Decelerate_45_0_uphill_5.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_45_0_uphill_5.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Decelerate_45_0_uphill_5.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_45_0_uphill_5.vmod");
 		}
 
 		[TestMethod]
@@ -248,8 +248,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_45_0_downhill_5);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Decelerate_45_0_downhill_5.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Decelerate_45_0_downhill_5.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_45_0_downhill_5.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Decelerate_45_0_downhill_5.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Decelerate_45_0_downhill_5.vmod");
 		}
 
 		[TestMethod]
@@ -487,8 +487,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_10_level);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Drive_10_level.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Drive_10_level.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_10_level.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Drive_10_level.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_10_level.vmod");
 		}
 
 		[TestMethod]
@@ -497,12 +497,12 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(new[] {
 				// <s>,<v>,<grad>,<stop>
 				"   0,  10, 5,    0",
-				"1000,  10, 5,    0",
+				"800,  10, 5,    0",
 			});
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Drive_10_uphill_5.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Drive_10_uphill_5.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_10_uphill_5.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Drive_10_uphill_5.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_10_uphill_5.vmod");
 		}
 
 		[TestMethod]
@@ -511,8 +511,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_10_uphill_5);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Drive_10_downhill_5.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Drive_10_downhill_5.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_10_downhill_5.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Drive_10_downhill_5.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_10_downhill_5.vmod");
 		}
 
 		[TestMethod]
@@ -565,8 +565,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_80_Increasing_Slope);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Drive_80_slope_inc.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Drive_80_slope_inc.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_80_slope_inc.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Drive_80_slope_inc.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_80_slope_inc.vmod");
 		}
 
 		[TestMethod]
@@ -575,8 +575,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_50_Increasing_Slope);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Drive_50_slope_inc.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Drive_50_slope_inc.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_50_slope_inc.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Drive_50_slope_inc.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_50_slope_inc.vmod");
 		}
 
 		[TestMethod]
@@ -585,8 +585,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_30_Increasing_Slope);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Drive_30_slope_inc.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Drive_30_slope_inc.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_30_slope_inc.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Drive_30_slope_inc.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_30_slope_inc.vmod");
 		}
 
 		[TestMethod]
@@ -595,8 +595,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_80_Decreasing_Slope);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Drive_80_slope_dec.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Drive_80_slope_dec.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_80_slope_dec.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Drive_80_slope_dec.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_80_slope_dec.vmod");
 		}
 
 		[TestMethod]
@@ -605,8 +605,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_50_Decreasing_Slope);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Drive_50_slope_dec.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Drive_50_slope_dec.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_50_slope_dec.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Drive_50_slope_dec.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_50_slope_dec.vmod");
 		}
 
 		[TestMethod]
@@ -615,8 +615,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_30_Decreasing_Slope);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Drive_30_slope_dec.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Drive_30_slope_dec.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_30_slope_dec.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Drive_30_slope_dec.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_30_slope_dec.vmod");
 		}
 
 		[TestMethod]
@@ -625,8 +625,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_80_Dec_Increasing_Slope);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Drive_80_slope_dec-inc.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Drive_80_slope_dec-inc.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_80_slope_dec-inc.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Drive_80_slope_dec-inc.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_80_slope_dec-inc.vmod");
 		}
 
 		[TestMethod]
@@ -635,8 +635,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_50_Dec_Increasing_Slope);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Drive_50_slope_dec-inc.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Drive_50_slope_dec-inc.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_50_slope_dec-inc.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Drive_50_slope_dec-inc.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_50_slope_dec-inc.vmod");
 		}
 
 
@@ -646,8 +646,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_30_Dec_Increasing_Slope);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Drive_30_slope_dec-inc.vmod").Run();
 
-			//GraphWriter.Write("Coach_DriverStrategy_Drive_30_slope_dec-inc.vmod",
-			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_30_slope_dec-inc.vmod");
+			GraphWriter.Write("Coach_DriverStrategy_Drive_30_slope_dec-inc.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_30_slope_dec-inc.vmod");
 		}
 
 		#endregion
