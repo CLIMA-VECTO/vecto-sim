@@ -184,7 +184,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [%]	    Road gradient.
 		/// </summary>
-		[ModalResultField(typeof(double), caption: "grad [%]")] grad,
+		[ModalResultField(typeof(SI), caption: "grad [%]")] grad,
 
 		/// <summary>
 		///     [-]	 GearData. "0" = clutch opened / neutral. "0.5" = lock-up clutch is open (AT with torque converter only, see
