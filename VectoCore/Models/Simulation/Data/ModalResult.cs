@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// <summary>
 		///     [g/h]	Fuel consumption from FC map..
 		/// </summary>
-		[ModalResultField(typeof(SI), name: "FC-Map", caption: "FC-Map [g/h]", outputFactor: 3600)] FCMap,
+		[ModalResultField(typeof(SI), name: "FC-Map", caption: "FC-Map [g/h]", outputFactor: 3600 * 1000)] FCMap,
 
 		/// <summary>
 		///     [g/h]	Fuel consumption after Auxiliary-Start/Stop Correction. (Based on FC.)

@@ -155,6 +155,7 @@
     <Compile Include="Models\SimulationComponent\Data\GearboxType.cs" />
     <Compile Include="Models\SimulationComponent\IAuxiliary.cs" />
     <Compile Include="Models\SimulationComponent\IBrakes.cs" />
+    <Compile Include="Models\SimulationComponent\ICombustionEngineIdleController.cs" />
     <Compile Include="Models\SimulationComponent\IDriverActions.cs" />
     <Compile Include="Models\SimulationComponent\IDriverStrategy.cs" />
     <Compile Include="Models\SimulationComponent\IDrivingCycleInfo.cs" />

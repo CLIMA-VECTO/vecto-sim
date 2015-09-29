@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			Assert.AreEqual(absTime, outPort.AbsTime);
 			Assert.AreEqual(dt, outPort.Dt);
 			Assert.AreEqual(743.2361.RPMtoRad(), outPort.AngularVelocity);
-			Assert.AreEqual(Formulas.PowerToTorque(2779.576.SI<Watt>(), 743.2361.RPMtoRad()), outPort.Torque);
+			Assert.AreEqual(2779.576.SI<Watt>() / 743.2361.RPMtoRad(), outPort.Torque);
 
 			// ========================
 
@@ -95,7 +95,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 				Assert.AreEqual(absTime, outPort.AbsTime);
 				Assert.AreEqual(dt, outPort.Dt);
 				Assert.AreEqual(1584.731.RPMtoRad(), outPort.AngularVelocity);
-				Assert.AreEqual(Formulas.PowerToTorque(3380.548.SI<Watt>(), 1584.731.RPMtoRad()), outPort.Torque);
+				Assert.AreEqual(3380.548.SI<Watt>() / 1584.731.RPMtoRad(), outPort.Torque);
 
 				absTime += dt;
 			}

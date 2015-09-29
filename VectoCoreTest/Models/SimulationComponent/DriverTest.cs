@@ -47,11 +47,12 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
-
+			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
-			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			tmp = AddComponent(tmp, clutch);
 			AddComponent(tmp, engine);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			var gbx = new MockGearbox(vehicleContainer) { Gear = 1 };
 
@@ -102,11 +103,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
+			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
 
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
-			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			tmp = AddComponent(tmp, clutch);
 			AddComponent(tmp, engine);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			var gbx = new MockGearbox(vehicleContainer);
 			gbx.Gear = 1;
@@ -163,8 +166,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
-			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
-			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
+			var engine = new CombustionEngine(vehicleContainer, engineData);
+			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			tmp = AddComponent(tmp, clutch);
+			AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
 
