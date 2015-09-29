@@ -65,7 +65,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 						}
 
 						values = values.Replace("NaN", "0");
-						values = Regex.Replace(values, @"\..*?,", ","); // remove all decimal places to reduce request size
+						if (values.Length > 14000) {
+							// remove all decimal places to reduce request size
+							values = Regex.Replace(values, @"\..*?,", ",");
+						}
 						var maxX = (int)Math.Ceiling(x.ToDouble().Max());
 						images.Add(CreateGraphStream(xfield.GetCaption(), yfield.GetCaption(), maxX, values));
 					}
@@ -124,7 +127,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 						}
 
 						values = values.Replace("NaN", "0");
-						values = Regex.Replace(values, @"\..*?,", ","); // remove all decimal places to reduce request size
+						if (values.Length > 14000) {
+							// remove all decimal places to reduce request size
+							values = Regex.Replace(values, @"\..*?,", ",");
+						}
 						var maxX = (int)Math.Ceiling(Math.Max(x.ToDouble().Max(), x2.ToDouble().Max()));
 						images.Add(CreateGraphStream(xfield.GetCaption(), yfield.GetCaption(), maxX, values));
 					}
