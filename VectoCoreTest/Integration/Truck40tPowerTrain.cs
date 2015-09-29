@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 					TyreTestLoad = 31300.SI<Newton>()
 				},
 				new Axle {
-					AxleWeightShare = 0.2,
+					AxleWeightShare = 0.25,
 					Inertia = 14.9.SI<KilogramSquareMeter>(),
 					RollResistanceCoefficient = 0.0065,
 					TwinTyres = true,
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				CrossSectionArea = 9.5.SI<SquareMeter>(),
+				CrossSectionArea = 6.2985.SI<SquareMeter>(),
 				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
 				DragCoefficient = 1,
 				CurbWeight = 7100.SI<Kilogram>(),
