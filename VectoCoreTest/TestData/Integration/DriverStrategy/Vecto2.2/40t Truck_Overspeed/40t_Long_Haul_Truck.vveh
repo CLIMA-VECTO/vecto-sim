@@ -1,0 +1,71 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "9/23/2015 8:28:58 AM",
+    "AppVersion": "2.2",
+    "FileVersion": 7
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehCat": "Tractor",
+    "CurbWeight": 7100.0,
+    "CurbWeightExtra": 7500.0,
+    "Loading": 19300.0,
+    "MassMax": 40.0,
+    "CdA": 6.2985,
+    "rdyn": 488.2675,
+    "Rim": "5° DC Rims",
+    "CdCorrMode": "Off",
+    "CdCorrFile": "<NOFILE>",
+    "Retarder": {
+      "Type": "None",
+      "Ratio": 1.0,
+      "File": "Retarder.vrlm"
+    },
+    "AxleConfig": {
+      "Type": "4x2",
+      "Axles": [
+        {
+          "Inertia": 14.9,
+          "Wheels": "315/70 R22.5",
+          "AxleWeightShare": 0.2,
+          "TwinTyres": false,
+          "RRCISO": 0.0055,
+          "FzISO": 31300.0
+        },
+        {
+          "Inertia": 14.9,
+          "Wheels": "315/70 R22.5",
+          "AxleWeightShare": 0.25,
+          "TwinTyres": true,
+          "RRCISO": 0.0065,
+          "FzISO": 31300.0
+        },
+        {
+          "Inertia": 19.2,
+          "Wheels": "385/65 R22.5",
+          "AxleWeightShare": 0.183333337,
+          "TwinTyres": false,
+          "RRCISO": 0.00555,
+          "FzISO": 37500.0
+        },
+        {
+          "Inertia": 19.2,
+          "Wheels": "385/65 R22.5",
+          "AxleWeightShare": 0.1833333,
+          "TwinTyres": false,
+          "RRCISO": 0.00555,
+          "FzISO": 37500.0
+        },
+        {
+          "Inertia": 19.2,
+          "Wheels": "385/65 R22.5",
+          "AxleWeightShare": 0.1833333,
+          "TwinTyres": false,
+          "RRCISO": 0.005555,
+          "FzISO": 37500.0
+        }
+      ]
+    }
+  }
+}

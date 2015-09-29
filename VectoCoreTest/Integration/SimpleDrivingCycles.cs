@@ -91,6 +91,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 			"1000, 85, -5,    0",
 		};
 
+		public static readonly string[] CycleAccelerate_0_85_downhill_1 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  85, -1,    0",
+			"1000, 85, -1,    0",
+		};
+
 		public static readonly string[] CycleAccelerate_0_85_uphill_25 = {
 			// <s>,<v>,<grad>,<stop>
 			"  0,  0,  0,     2",

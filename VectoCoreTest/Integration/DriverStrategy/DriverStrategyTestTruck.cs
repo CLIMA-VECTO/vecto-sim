@@ -12,7 +12,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		[TestInitialize]
 		public void DisableLogging()
 		{
-			LogManager.DisableLogging();
+			//LogManager.DisableLogging();
 		}
 
 		[TestMethod]
@@ -518,6 +518,14 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_5);
 			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_0_85_downhill_5-overspeed.vmod", true)
+				.Run();
+		}
+
+		[TestMethod]
+		public void Accelerate_0_85_downhill_1_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_1);
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_0_85_downhill_1-overspeed.vmod", true)
 				.Run();
 		}
 
