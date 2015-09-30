@@ -317,7 +317,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var operatingPoint = ComputeAcceleration(ds, nextTargetSpeed);
 
-			if (operatingPoint.Acceleration < 0) {
+			//if (operatingPoint.Acceleration.IsSmaller(0)) {
+			// if we should brake with the max. deceleration and the deceleration changes within the current interval, take the larger deceleration...
+			if (operatingPoint.Acceleration.IsEqual(DriverData.AccelerationCurve.Lookup(DataBus.VehicleSpeed).Deceleration)) {
 				var v2 = DataBus.VehicleSpeed + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
 				var nextAcceleration = DriverData.AccelerationCurve.Lookup(v2).Deceleration;
 				var tmp = ComputeTimeInterval(VectoMath.Min(operatingPoint.Acceleration, nextAcceleration),
