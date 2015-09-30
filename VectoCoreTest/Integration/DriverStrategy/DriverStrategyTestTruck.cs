@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NLog;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
@@ -9,7 +10,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		[TestInitialize]
 		public void DisableLogging()
 		{
-			//LogManager.DisableLogging();
+			LogManager.DisableLogging();
 			GraphWriter.Disable();
 		}
 
@@ -328,6 +329,16 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 		[TestMethod]
+		public void Truck_Decelerate_80_0_uphill_3()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_uphill_3);
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Decelerate_80_0_uphill_3.vmod").Run();
+
+			GraphWriter.Write("Truck_DriverStrategy_Decelerate_80_0_uphill_3.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_80_0_uphill_3.vmod");
+		}
+
+		[TestMethod, Ignore]
 		public void Truck_Decelerate_80_0_uphill_5()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDecelerate_80_0_uphill_5);
@@ -494,11 +505,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		[TestMethod]
 		public void Truck_Drive_10_uphill_5()
 		{
-			var cycle = SimpleDrivingCycles.CreateCycleData(new[] {
-				// <s>,<v>,<grad>,<stop>
-				"   0,  10, 5,    0",
-				"500,  10, 5,    0",
-			});
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_10_uphill_5);
 			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Drive_10_uphill_5.vmod").Run();
 
 			GraphWriter.Write("Truck_DriverStrategy_Drive_10_uphill_5.vmod",
@@ -508,7 +515,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		[TestMethod]
 		public void Truck_Drive_10_downhill_5()
 		{
-			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_10_uphill_5);
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_10_downhill_5);
 			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Drive_10_downhill_5.vmod").Run();
 
 			GraphWriter.Write("Truck_DriverStrategy_Drive_10_downhill_5.vmod",
