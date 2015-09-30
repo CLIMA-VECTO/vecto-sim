@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				TorqueReserve = 0.2,
 				StartTorqueReserve = 0.2,
 				SkipGears = true,
-				EarlyShiftUp = false,
+				EarlyShiftUp = true,
 			};
 		}
 

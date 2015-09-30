@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Dynamic;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -249,10 +248,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			//if (DataBus.VehicleSpeed.IsEqual(0)) {
-			//	Gear = _strategy.Engage(torque, angularVelocity, Data.SkipGears);
-			//}
-
 			var response = NextComponent.Request(absTime, dt, 0.SI<NewtonMeter>(), null);
 			response.GearboxPowerRequest = outTorque * outAngularVelocity;
 
@@ -268,27 +263,27 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <item><term>else</term><description>Response from NextComponent.</description></item>
 		/// </list>
 		/// </returns>
-		private IResponse RequestGearEngaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed,
+		private IResponse RequestGearEngaged(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			bool dryRun)
 		{
 			// Set a Gear if no gear was set and engineSpeed is not zero
-			if (_disengaged && !outEngineSpeed.IsEqual(0)) {
+			if (_disengaged && !outAngularVelocity.IsEqual(0)) {
 				_disengaged = false;
 				if (DataBus.VehicleStopped) {
-					Gear = _strategy.InitGear(absTime, dt, outTorque, outEngineSpeed);
+					Gear = _strategy.InitGear(absTime, dt, outTorque, outAngularVelocity);
 				} else {
-					Gear = _strategy.Engage(absTime, dt, outTorque, outEngineSpeed);
+					Gear = _strategy.Engage(absTime, dt, outTorque, outAngularVelocity);
 				}
 
 				Log.Debug("Gearbox engaged gear {0}", Gear);
 			}
 
-			var inEngineSpeed = outEngineSpeed * Data.Gears[Gear].Ratio;
-			var inTorque = (outEngineSpeed.IsEqual(0))
+			var inEngineSpeed = outAngularVelocity * Data.Gears[Gear].Ratio;
+			var inTorque = (outAngularVelocity.IsEqual(0))
 				? outTorque / Data.Gears[Gear].Ratio
 				: Data.Gears[Gear].LossMap.GearboxInTorque(inEngineSpeed, outTorque);
 
-			_powerLoss = inTorque * inEngineSpeed - outTorque * outEngineSpeed;
+			_powerLoss = inTorque * inEngineSpeed - outTorque * outAngularVelocity;
 
 			if (!inEngineSpeed.IsEqual(0)) {
 				_powerLossInertia = Formulas.InertiaPower(inEngineSpeed, _previousInAngularSpeed, Data.Inertia, dt);
@@ -299,32 +294,36 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (dryRun) {
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inEngineSpeed, true);
-				dryRunResponse.GearboxPowerRequest = outTorque * outEngineSpeed;
+				dryRunResponse.GearboxPowerRequest = outTorque * outAngularVelocity;
 				return dryRunResponse;
 			}
 
-			if (!inEngineSpeed.IsEqual(0)) {
-				if (_strategy.ShiftRequired(absTime, dt, outTorque, outEngineSpeed, inTorque, inEngineSpeed, Gear,
-					_shiftTime + Data.TractionInterruption)) {
+			var shiftAllowed = !inEngineSpeed.IsEqual(0) && !DataBus.VehicleSpeed.IsEqual(0);
+
+			if (shiftAllowed) {
+				var shiftRequired = _strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inEngineSpeed,
+					Gear, _shiftTime + Data.TractionInterruption);
+
+				if (shiftRequired) {
 					_shiftTime = absTime + Data.TractionInterruption;
 
 					Log.Debug("Gearbox is shifting. absTime: {0}, dt: {1}, shiftTime: {2}, out: ({3}, {4}), in: ({5}, {6})", absTime,
-						dt, _shiftTime, outTorque, outEngineSpeed, inTorque, inEngineSpeed);
+						dt, _shiftTime, outTorque, outAngularVelocity, inTorque, inEngineSpeed);
 
 					_disengaged = true;
-					_strategy.Disengage(absTime, dt, outTorque, outEngineSpeed);
+					_strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
 					Log.Info("Gearbox disengaged");
 
 					return new ResponseGearShift {
 						Source = this,
 						SimulationInterval = Data.TractionInterruption,
-						GearboxPowerRequest = outTorque * outEngineSpeed
+						GearboxPowerRequest = outTorque * outAngularVelocity
 					};
 				}
 			}
 
 			var response = NextComponent.Request(absTime, dt, inTorque, inEngineSpeed);
-			response.GearboxPowerRequest = outTorque * outEngineSpeed;
+			response.GearboxPowerRequest = outTorque * outAngularVelocity;
 
 			_previousInAngularSpeed = inEngineSpeed;
 			return response;
@@ -345,7 +344,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			writer[ModalResultField.Gear] = _disengaged ? 0 : Gear;
+			writer[ModalResultField.Gear] = _disengaged || DataBus.VehicleStopped ? 0 : Gear;
 			writer[ModalResultField.PlossGB] = _powerLoss;
 			writer[ModalResultField.PaGB] = _powerLossInertia;
 		}

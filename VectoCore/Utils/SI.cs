@@ -925,6 +925,7 @@ namespace TUGraz.VectoCore.Utils
 		/// Returns the numerical sign of the SI.
 		/// </summary>
 		/// <returns>-1 if si &lt; 0. 0 if si==0, 1 if si &gt; 0.</returns>
+		[DebuggerHidden]
 		public int Sign()
 		{
 			return Math.Sign(Val);

@@ -61,7 +61,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 									.Select(v => v.Field<string>(ModalResultField.v_targ.GetName()))
 									.Select(v => string.IsNullOrWhiteSpace(v) ? "0" : v);
 
-							values += string.Format("|{0}|{1}", string.Join(",", x), string.Join(",", y3));
+							values += string.Format("|{0}|{1}|0|0", string.Join(",", x), string.Join(",", y3));
 						}
 
 						values = values.Replace("NaN", "0");
