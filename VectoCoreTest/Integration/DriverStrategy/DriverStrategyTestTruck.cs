@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NLog;
 using TUGraz.VectoCore.Tests.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
@@ -7,14 +6,14 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 	[TestClass]
 	public class DriverStrategyTestTruck
 	{
-		#region Accelerate
-
 		[TestInitialize]
 		public void DisableLogging()
 		{
 			//LogManager.DisableLogging();
 			GraphWriter.Disable();
 		}
+
+		#region Accelerate
 
 		[TestMethod]
 		public void Truck_Accelerate_20_60_level()
@@ -710,7 +709,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		#region AccelerateOverspeed
 
 		[TestMethod]
-		public void Accelerate_0_85_downhill_5_overspeed()
+		public void Truck_Accelerate_0_85_downhill_5_overspeed()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_5);
 			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_0_85_downhill_5-overspeed.vmod", true)
@@ -721,7 +720,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 		[TestMethod]
-		public void Accelerate_0_85_downhill_1_overspeed()
+		public void Truck_Accelerate_0_85_downhill_1_overspeed()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_1);
 			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_0_85_downhill_1-overspeed.vmod", true)
