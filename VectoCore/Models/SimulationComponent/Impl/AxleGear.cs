@@ -11,6 +11,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected ITnOutPort NextComponent;
 		private readonly GearData _gearData;
 
+		protected Watt Loss;
+
 		public AxleGear(VehicleContainer container, GearData gearData) : base(container)
 		{
 			_gearData = gearData;
@@ -41,6 +43,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				? 0.SI<NewtonMeter>()
 				: _gearData.LossMap.GearboxInTorque(inAngularVelocity, torque);
 
+			Loss = inTorque * inAngularVelocity - torque * angularVelocity;
+
 			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
 
 			retVal.AxlegearPowerRequest = torque * angularVelocity;
@@ -57,11 +61,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			// nothing to write
+			writer[ModalResultField.PlossDiff] = Loss;
 		}
 
 		protected override void DoCommitSimulationStep()
 		{
+			Loss = null;
 			// nothing to commit
 		}
 	}

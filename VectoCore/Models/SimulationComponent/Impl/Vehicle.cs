@@ -73,11 +73,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
-			_previousState = new VehicleState { Distance = 0.SI<Meter>(), Velocity = vehicleSpeed };
-			_currentState = new VehicleState { Distance = 0.SI<Meter>(), Velocity = vehicleSpeed };
+			_previousState = new VehicleState {
+				Distance = 0.SI<Meter>(),
+				Velocity = vehicleSpeed,
+				AirDragResistance = AirDragResistance(),
+				RollingResistance = RollingResistance(roadGradient),
+				SlopeResistance = SlopeResistance(roadGradient)
+			};
+			_previousState.VehicleAccelerationForce = _previousState.RollingResistance
+													+ _previousState.AirDragResistance
+													+ _previousState.SlopeResistance;
 
-			var vehicleAccelerationForce = RollingResistance(roadGradient) + AirDragResistance() + SlopeResistance(roadGradient);
-			return NextComponent.Initialize(vehicleAccelerationForce, vehicleSpeed);
+			_currentState = new VehicleState {
+				Distance = 0.SI<Meter>(),
+				Velocity = vehicleSpeed,
+				AirDragResistance = _previousState.AirDragResistance,
+				RollingResistance = _previousState.RollingResistance,
+				SlopeResistance = _previousState.SlopeResistance,
+				VehicleAccelerationForce = _previousState.VehicleAccelerationForce,
+			};
+
+
+			return NextComponent.Initialize(_currentState.VehicleAccelerationForce, vehicleSpeed);
 		}
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, MeterPerSquareSecond startAcceleration, Radian roadGradient)
@@ -95,19 +112,37 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.Velocity = _previousState.Velocity + accelleration * dt;
 			_currentState.Distance = _previousState.Distance + dt * (_previousState.Velocity + _currentState.Velocity) / 2;
 
-			// DriverAcceleration = vehicleAccelerationForce - RollingResistance - AirDragResistance - SlopeResistance
-			var vehicleAccelerationForce = DriverAcceleration(accelleration)
-											+ RollingResistance(gradient)
-											+ AirDragResistance()
-											+ SlopeResistance(gradient);
+			_currentState.DriverAcceleration = DriverAcceleration(accelleration);
+			_currentState.RollingResistance = RollingResistance(gradient);
+			_currentState.AirDragResistance = AirDragResistance();
+			_currentState.SlopeResistance = SlopeResistance(gradient);
 
-			var retval = NextComponent.Request(absTime, dt, vehicleAccelerationForce, _currentState.Velocity, dryRun);
+			// DriverAcceleration = vehicleAccelerationForce - RollingResistance - AirDragResistance - SlopeResistance
+			_currentState.VehicleAccelerationForce = _currentState.DriverAcceleration
+													+ _currentState.RollingResistance
+													+ _currentState.AirDragResistance
+													+ _currentState.SlopeResistance;
+
+			var retval = NextComponent.Request(absTime, dt, _currentState.VehicleAccelerationForce, _currentState.Velocity,
+				dryRun);
 			return retval;
 		}
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			writer[ModalResultField.v_act] = (_previousState.Velocity + _currentState.Velocity) / 2;
+			var averageVelocity = (_previousState.Velocity + _currentState.Velocity) / 2;
+
+			writer[ModalResultField.v_act] = averageVelocity;
+			writer[ModalResultField.PaVeh] = (_previousState.VehicleAccelerationForce * _previousState.Velocity +
+											_currentState.VehicleAccelerationForce * _currentState.Velocity) / 2;
+			writer[ModalResultField.Pgrad] = (_previousState.SlopeResistance * _previousState.Velocity +
+											_currentState.SlopeResistance * _currentState.Velocity) / 2;
+			writer[ModalResultField.Proll] = (_previousState.RollingResistance * _previousState.Velocity +
+											_currentState.RollingResistance * _currentState.Velocity) / 2;
+			// TODO: comptuation of AirResistancePower is wrong!
+			writer[ModalResultField.Pair] = (_previousState.AirDragResistance * _previousState.Velocity +
+											_currentState.AirDragResistance * _currentState.Velocity) / 2;
+
 
 			// sanity check: is the vehicle in step with the cycle?
 			if (writer[ModalResultField.dist] == DBNull.Value) {
@@ -251,6 +286,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public MeterPerSecond Velocity;
 			public Second dt;
 			public Meter Distance;
+
+			public Newton VehicleAccelerationForce;
+			public Newton DriverAcceleration;
+			public Newton SlopeResistance;
+			public Newton AirDragResistance;
+			public Newton RollingResistance;
 		}
 	}
 }

@@ -11,6 +11,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected ITnOutPort NextComponent;
 		private readonly Meter _dynamicWheelRadius;
 
+		protected Watt WheelsPowerRequest { get; set; }
+
 		public Wheels(IVehicleContainer cockpit, Meter rdyn)
 			: base(cockpit)
 		{
@@ -42,10 +44,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Debug("request: force: {0}, velocity: {1}", force, velocity);
 			var torque = force * _dynamicWheelRadius;
 			var angularVelocity = velocity / _dynamicWheelRadius;
+			WheelsPowerRequest = torque * angularVelocity;
 			var retVal = NextComponent.Request(absTime, dt, torque, angularVelocity, dryRun);
-			retVal.WheelsPowerRequest = torque * angularVelocity;
+			retVal.WheelsPowerRequest = WheelsPowerRequest;
 			return retVal;
 		}
+
 
 		public IResponse Initialize(Newton force, MeterPerSecond velocity)
 		{
@@ -70,7 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			// noting to write...
+			writer[ModalResultField.Pwheel] = WheelsPowerRequest;
 		}
 
 		protected override void DoCommitSimulationStep()
