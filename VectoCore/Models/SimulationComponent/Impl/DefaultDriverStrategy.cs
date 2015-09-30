@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					nextAction = GetNextDrivingAction(currentDistance);
 					if (nextAction != null) {
 						if (currentDistance.IsEqual(nextAction.ActionDistance,
-							Constants.SimulationSettings.DriverActionDistanceTolerance.Value())) {
+							Constants.SimulationSettings.DriverActionDistanceTolerance)) {
 							CurrentDrivingMode = DrivingMode.DrivingModeBrake;
 							DrivingModes[CurrentDrivingMode].ResetMode();
 							Log.Debug("Switching to DrivingMode BRAKE");
@@ -111,7 +111,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// if the distance at the end of the simulation interval is smaller than the new ActionDistance
 			// we are safe - go ahead...
 			if ((Driver.DataBus.Distance + ds).IsSmallerOrEqual(nextAction.TriggerDistance - coastingDistance,
-				Constants.SimulationSettings.DriverActionDistanceTolerance.Value())) {
+				Constants.SimulationSettings.DriverActionDistanceTolerance)) {
 				return retVal;
 			}
 

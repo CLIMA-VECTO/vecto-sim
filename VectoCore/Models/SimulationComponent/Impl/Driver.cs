@@ -368,7 +368,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
 				operatingPoint.Acceleration, response);
 
-			if (!ds.IsEqual(operatingPoint.SimulationDistance, 1E-15)) {
+			if (!ds.IsEqual(operatingPoint.SimulationDistance, 1E-15.SI<Meter>())) {
 				Log.Info(
 					"SearchOperatingPoint Breaking reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!",
 					operatingPoint.SimulationDistance, ds);
@@ -488,7 +488,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
 				delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest;
 
-				if (delta.IsEqual(0, Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+				if (delta.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 					LogManager.EnableLogging();
 					Log.Debug("found operating point in {0} iterations, delta: {1}", debug.Count, delta);
 					return operatingPoint;
@@ -602,7 +602,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					(ResponseDryRun)NextComponent.Request(absTime, retVal.SimulationInterval, retVal.Acceleration, gradient, true);
 				delta = actionRoll ? response.GearboxPowerRequest : (coasting ? response.DeltaDragLoad : response.DeltaFullLoad);
 
-				if (delta.IsEqual(0, Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+				if (delta.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 					LogManager.EnableLogging();
 					Log.Debug("found operating point in {0} iterations. Engine Power req: {2}, Gearbox Power req: {3} delta: {1}",
 						debug.Count, delta, response.EnginePowerRequest, response.GearboxPowerRequest);

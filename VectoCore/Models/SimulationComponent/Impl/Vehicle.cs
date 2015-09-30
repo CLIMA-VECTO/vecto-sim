@@ -149,7 +149,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Warn("distance field is not set!");
 			} else {
 				var distance = (SI)writer[ModalResultField.dist];
-				if (!distance.IsEqual(_currentState.Distance, 1e-12)) {
+				if (!distance.IsEqual(_currentState.Distance, 1e-12.SI<Meter>())) {
 					Log.Warn("distance diverges: {0}, distance: {1}", (distance - _currentState.Distance).Value(), distance);
 				}
 			}

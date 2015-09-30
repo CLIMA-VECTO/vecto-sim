@@ -232,7 +232,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			if (outTorque.IsGreater(0, Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+			if ((outTorque * outAngularVelocity).IsGreater(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 				return new ResponseOverload {
 					Source = this,
 					Delta = outTorque * outAngularVelocity,
@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			if (outTorque.IsSmaller(0, Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+			if ((outTorque * outAngularVelocity).IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 				return new ResponseUnderload {
 					Source = this,
 					Delta = outTorque * outAngularVelocity,

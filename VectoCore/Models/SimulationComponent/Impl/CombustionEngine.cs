@@ -104,7 +104,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		IResponse ITnOutPort.Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
 		{
-			Log.Debug("Engine Power Request: torque: {0}, angularVelocity: {1}, power: {2}", torque, angularVelocity, torque * angularVelocity);
+			Log.Debug("Engine Power Request: torque: {0}, angularVelocity: {1}, power: {2}", torque, angularVelocity,
+				torque * angularVelocity);
 			return DoHandleRequest(absTime, dt, torque, angularVelocity, dryRun);
 		}
 
@@ -550,7 +551,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					var response = (ResponseDryRun)RequestPort.Request(absTime, dt, torque, nextAngularSpeed, true);
 					delta = response.DeltaDragLoad;
 					debug.Add(new { engineSpeed = nextAngularSpeed, searchInterval, delta });
-					if (delta.IsEqual(0, Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+					if (delta.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 						Log.Debug("found operating point in {0} iterations. engine speed: {1}, delta: {2}", retryCount, nextAngularSpeed,
 							delta);
 						return RequestPort.Request(absTime, dt, torque, nextAngularSpeed);
