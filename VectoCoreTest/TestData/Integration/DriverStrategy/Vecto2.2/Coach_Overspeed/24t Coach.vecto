@@ -1,17 +1,17 @@
 ﻿{
   "Header": {
     "CreatedBy": " ()",
-    "Date": "9/29/2015 1:16:40 PM",
+    "Date": "9/23/2015 11:32:33 AM",
     "AppVersion": "2.2",
     "FileVersion": 2
   },
   "Body": {
     "SavedInDeclMode": false,
-    "VehicleFile": "40t_Long_Haul_Truck.vveh",
-    "EngineFile": "40t_Long_Haul_Truck.veng",
-    "GearboxFile": "40t_Long_Haul_Truck.vgbx",
+    "VehicleFile": "24t Coach.vveh",
+    "EngineFile": "24t Coach.veng",
+    "GearboxFile": "24t Coach.vgbx",
     "Cycles": [
-      "..\\..\\Cycles\\Cycle_Accelerate_0_85_downhill_1.vdri",
+       "..\\..\\Cycles\\Cycle_Accelerate_0_85_downhill_1.vdri",
       "..\\..\\Cycles\\Cycle_Accelerate_0_85_downhill_3.vdri",
       "..\\..\\Cycles\\Cycle_Accelerate_0_85_downhill_5.vdri",
       "..\\..\\Cycles\\Cycle_Accelerate_0_60_downhill_1.vdri",
@@ -26,8 +26,8 @@
     "StartStop": {
       "Enabled": false,
       "MaxSpeed": 5.0,
-      "MinTime": 5.0,
-      "Delay": 5
+      "MinTime": 0.0,
+      "Delay": 0
     },
     "LAC": {
       "Enabled": true,

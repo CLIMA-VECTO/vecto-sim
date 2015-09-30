@@ -91,11 +91,60 @@ namespace TUGraz.VectoCore.Tests.Integration
 			"1000, 85, -5,    0",
 		};
 
+		public static readonly string[] CycleAccelerate_0_85_downhill_3 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  85, -3,    0",
+			"1000, 85, -3,    0",
+		};
+
 		public static readonly string[] CycleAccelerate_0_85_downhill_1 = {
 			// <s>,<v>,<grad>,<stop>
 			"  0,  0,  0,     2",
 			"  0,  85, -1,    0",
 			"1000, 85, -1,    0",
+		};
+
+		public static readonly string[] CycleAccelerate_0_60_downhill_5 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  60, -5,    0",
+			"1000, 60, -5,    0",
+		};
+
+		public static readonly string[] CycleAccelerate_0_60_downhill_3 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  60, -3,    0",
+			"1000, 60, -3,    0",
+		};
+
+		public static readonly string[] CycleAccelerate_0_60_downhill_1 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  60, -1,    0",
+			"1000, 60, -1,    0",
+		};
+
+		public static readonly string[] CycleAccelerate_0_40_downhill_5 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  40, -5,    0",
+			"1000, 40, -5,    0",
+		};
+
+		public static readonly string[] CycleAccelerate_0_40_downhill_3 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  40, -3,    0",
+			"1000, 40, -3,    0",
+		};
+
+		public static readonly string[] CycleAccelerate_0_40_downhill_1 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  40, -1,    0",
+			"1000, 40, -1,    0",
 		};
 
 		public static readonly string[] CycleAccelerate_0_85_uphill_25 = {

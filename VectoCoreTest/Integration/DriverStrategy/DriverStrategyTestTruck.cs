@@ -11,7 +11,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		public void DisableLogging()
 		{
 			LogManager.DisableLogging();
-			GraphWriter.Disable();
+			//GraphWriter.Disable();
 		}
 
 		#region Accelerate
@@ -727,6 +727,18 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		}
 
 		[TestMethod]
+		public void Truck_Accelerate_0_85_downhill_3_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_3);
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_0_85_downhill_3-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Truck_DriverStrategy_Accelerate_0_85_downhill_3-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\40t_Long_Haul_Truck_Cycle_Accelerate_0_85_downhill_3.vmod");
+		}
+
+
+		[TestMethod]
 		public void Truck_Accelerate_0_85_downhill_1_overspeed()
 		{
 			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_1);
@@ -735,6 +747,76 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 			GraphWriter.Write("Truck_DriverStrategy_Accelerate_0_85_downhill_1-overspeed.vmod",
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\40t_Long_Haul_Truck_Cycle_Accelerate_0_85_downhill_1.vmod");
+		}
+
+
+		[TestMethod]
+		public void Truck_Accelerate_0_60_downhill_5_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_60_downhill_5);
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_0_60_downhill_5-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Truck_DriverStrategy_Accelerate_0_60_downhill_5-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\40t_Long_Haul_Truck_Cycle_Accelerate_0_60_downhill_5.vmod");
+		}
+
+		[TestMethod]
+		public void Truck_Accelerate_0_60_downhill_3_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_60_downhill_3);
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_0_60_downhill_3-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Truck_DriverStrategy_Accelerate_0_60_downhill_3-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\40t_Long_Haul_Truck_Cycle_Accelerate_0_60_downhill_3.vmod");
+		}
+
+
+		[TestMethod]
+		public void Truck_Accelerate_0_60_downhill_1_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_60_downhill_1);
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_0_60_downhill_1-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Truck_DriverStrategy_Accelerate_0_60_downhill_1-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\40t_Long_Haul_Truck_Cycle_Accelerate_0_60_downhill_1.vmod");
+		}
+
+
+		[TestMethod]
+		public void Truck_Accelerate_0_40_downhill_5_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_40_downhill_5);
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_0_40_downhill_5-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Truck_DriverStrategy_Accelerate_0_40_downhill_5-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\40t_Long_Haul_Truck_Cycle_Accelerate_0_40_downhill_5.vmod");
+		}
+
+		[TestMethod]
+		public void Truck_Accelerate_0_40_downhill_3_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_40_downhill_3);
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_0_40_downhill_3-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Truck_DriverStrategy_Accelerate_0_40_downhill_3-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\40t_Long_Haul_Truck_Cycle_Accelerate_0_40_downhill_3.vmod");
+		}
+
+
+		[TestMethod]
+		public void Truck_Accelerate_0_40_downhill_1_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_40_downhill_1);
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_0_40_downhill_1-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Truck_DriverStrategy_Accelerate_0_40_downhill_1-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\40t_Long_Haul_Truck_Cycle_Accelerate_0_40_downhill_1.vmod");
 		}
 
 		#endregion

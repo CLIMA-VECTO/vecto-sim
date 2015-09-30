@@ -7,14 +7,14 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 	[TestClass]
 	public class DriverStrategyTestCoach
 	{
-		#region Accelerate
-
 		[TestInitialize]
 		public void DisableLogging()
 		{
 			LogManager.DisableLogging();
-			GraphWriter.Disable();
+			//GraphWriter.Disable();
 		}
+
+		#region Accelerate
 
 		[TestMethod]
 		public void Coach_Accelerate_20_60_level()
@@ -703,6 +703,114 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 			GraphWriter.Write("Coach_DriverStrategy_Drive_stop_85_stop_85_level.vmod",
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_stop_85_stop_85_level.vmod");
+		}
+
+		#endregion
+
+		#region AccelerateOverspeed
+
+		[TestMethod]
+		public void Coach_Accelerate_0_85_downhill_5_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_5);
+			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Accelerate_0_85_downhill_5-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Coach_DriverStrategy_Accelerate_0_85_downhill_5-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach_Overspeed\24t Coach_Cycle_Accelerate_0_85_downhill_5.vmod");
+		}
+
+		[TestMethod]
+		public void Coach_Accelerate_0_85_downhill_3_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_3);
+			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Accelerate_0_85_downhill_3-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Coach_DriverStrategy_Accelerate_0_85_downhill_3-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach_Overspeed\24t Coach_Cycle_Accelerate_0_85_downhill_3.vmod");
+		}
+
+
+		[TestMethod]
+		public void Coach_Accelerate_0_85_downhill_1_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_85_downhill_1);
+			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Accelerate_0_85_downhill_1-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Coach_DriverStrategy_Accelerate_0_85_downhill_1-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach_Overspeed\24t Coach_Cycle_Accelerate_0_85_downhill_1.vmod");
+		}
+
+
+		[TestMethod]
+		public void Coach_Accelerate_0_60_downhill_5_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_60_downhill_5);
+			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Accelerate_0_60_downhill_5-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Coach_DriverStrategy_Accelerate_0_60_downhill_5-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach_Overspeed\24t Coach_Cycle_Accelerate_0_60_downhill_5.vmod");
+		}
+
+		[TestMethod]
+		public void Coach_Accelerate_0_60_downhill_3_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_60_downhill_3);
+			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Accelerate_0_60_downhill_3-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Coach_DriverStrategy_Accelerate_0_60_downhill_3-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach_Overspeed\24t Coach_Cycle_Accelerate_0_60_downhill_3.vmod");
+		}
+
+
+		[TestMethod]
+		public void Coach_Accelerate_0_60_downhill_1_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_60_downhill_1);
+			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Accelerate_0_60_downhill_1-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Coach_DriverStrategy_Accelerate_0_60_downhill_1-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach_Overspeed\24t Coach_Cycle_Accelerate_0_60_downhill_1.vmod");
+		}
+
+
+		[TestMethod]
+		public void Coach_Accelerate_0_40_downhill_5_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_40_downhill_5);
+			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Accelerate_0_40_downhill_5-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Coach_DriverStrategy_Accelerate_0_40_downhill_5-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach_Overspeed\24t Coach_Cycle_Accelerate_0_40_downhill_5.vmod");
+		}
+
+		[TestMethod]
+		public void Coach_Accelerate_0_40_downhill_3_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_40_downhill_3);
+			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Accelerate_0_40_downhill_3-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Coach_DriverStrategy_Accelerate_0_40_downhill_3-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach_Overspeed\24t Coach_Cycle_Accelerate_0_40_downhill_3.vmod");
+		}
+
+
+		[TestMethod]
+		public void Coach_Accelerate_0_40_downhill_1_overspeed()
+		{
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleAccelerate_0_40_downhill_1);
+			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Accelerate_0_40_downhill_1-overspeed.vmod", true)
+				.Run();
+
+			GraphWriter.Write("Coach_DriverStrategy_Accelerate_0_40_downhill_1-overspeed.vmod",
+				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\Coach_Overspeed\24t Coach_Cycle_Accelerate_0_40_downhill_1.vmod");
 		}
 
 		#endregion
