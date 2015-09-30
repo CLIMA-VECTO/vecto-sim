@@ -40,8 +40,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var xfields = new[] { ModalResultField.time, ModalResultField.dist };
 
 			var yfields = new[] {
-				ModalResultField.v_act, ModalResultField.n, ModalResultField.Gear, ModalResultField.Pe_eng, ModalResultField.Tq_eng,
-				ModalResultField.FCMap
+				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n, ModalResultField.Gear, ModalResultField.Pe_eng,
+				ModalResultField.Tq_eng, ModalResultField.FCMap
 			};
 
 			var images = new List<Stream>();
@@ -99,7 +99,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var xfields = new[] { ModalResultField.time, ModalResultField.dist };
 
 			var yfields = new[] {
-				ModalResultField.v_act, ModalResultField.n, ModalResultField.Gear, ModalResultField.Pe_eng, ModalResultField.Tq_eng,
+				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n, ModalResultField.Gear, ModalResultField.Pe_eng,
+				ModalResultField.Tq_eng,
 				ModalResultField.FCMap
 			};
 
@@ -129,7 +130,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 						values = values.Replace("NaN", "0");
 						if (values.Length > 14000) {
 							// remove all decimal places to reduce request size
-							values = Regex.Replace(values, @"\..*?,", ",");
+							values = Regex.Replace(values, @"(\.[0-9]).*?,", "$1,");
 						}
 						var maxX = (int)Math.Ceiling(Math.Max(x.ToDouble().Max(), x2.ToDouble().Max()));
 						images.Add(CreateGraphStream(xfield.GetCaption(), yfield.GetCaption(), maxX, values));
