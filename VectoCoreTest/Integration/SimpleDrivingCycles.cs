@@ -310,13 +310,13 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static readonly string[] CycleDrive_10_level = {
 			// <s>,<v>,<grad>,<stop>
 			"   0,  10, 0,    0",
-			"1000,  10, 0,    0",
+			"500,  10, 0,    0",
 		};
 
 		public static readonly string[] CycleDrive_10_uphill_5 = {
 			// <s>,<v>,<grad>,<stop>
 			"   0,  10, -5,    0",
-			" 1000, 10,  -5,   0",
+			" 800, 10,  -5,   0",
 		};
 
 		public static readonly string[] CycleDrive_10_downhill_25 = {
@@ -328,7 +328,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static readonly string[] CycleDrive_10_uphill_25 = {
 			// <s>,<v>,<grad>,<stop>
 			"   0, 10, 25,    0",
-			" 500, 10, 25,    0",
+			" 800, 10, 25,    0",
 		};
 
 		public static readonly string[] CycleDrive_10_downhill_15 = {
