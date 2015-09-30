@@ -417,6 +417,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						: null;
 					response = Driver.DrivingActionBrake(absTime, ds, DriverStrategy.BrakeTrigger.NextTargetSpeed,
 						gradient, targetDistance: targetDistance);
+					response.Switch().
+						Case<ResponseOverload>(r => {
+							Log.Warn("Got OverloadResponse during brake action - desired deceleration could not be reached! response: {0}", r);
+							if (!DataBus.ClutchClosed(absTime)) {
+								Log.Warn("Clutch is open - trying RollAction");
+								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+							}
+						});
 					break;
 			}
 

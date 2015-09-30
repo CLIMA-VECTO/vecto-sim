@@ -268,8 +268,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			Log.Debug("Found operating point for coasting. dt: {0}, acceleration: {1}", operatingPoint.SimulationInterval,
-				operatingPoint.Acceleration);
+			Log.Debug("Found operating point for {2}. dt: {0}, acceleration: {1}", operatingPoint.SimulationInterval,
+				operatingPoint.Acceleration, rollAction ? "ROL" : "COAST");
 
 			operatingPoint = LimitAccelerationByDriverModel(operatingPoint,
 				rollAction ? LimitationMode.NoLimitation : LimitationMode.LimitDecelerationLookahead);
@@ -349,7 +349,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			response.Switch().
 				Case<ResponseSuccess>(r => retVal = r).
-				Case<ResponseOverload>(r => retVal = r).
+				Case<ResponseOverload>(r => retVal = r)
+				. // i.e., driving uphill, clutch open, deceleration higher than desired deceleration
 				Case<ResponseUnderload>(). // will be handled in SearchBrakingPower
 				Case<ResponseGearShift>(). // will be handled in SearchBrakingPower
 				Case<ResponseFailTimeInterval>(r =>
@@ -472,9 +473,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Default(r => {
 					throw new UnexpectedResponseException("cannot use response for searching braking power!", r);
 				});
-			var delta = 0.SI<Watt>();
+			Watt delta;
 
-			debug.Add(new { brakingPower = 0.SI<Watt>(), searchInterval, delta = origDelta, operatingPoint });
+			debug.Add(new { brakePower = 0.SI<Watt>(), searchInterval, delta = origDelta, operatingPoint });
 
 			var brakePower = searchInterval * -origDelta.Sign();
 
