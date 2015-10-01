@@ -28,15 +28,15 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
-		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName)
+		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, bool overspeed = false)
 		{
-			var container = CreatePowerTrain(cycleData, modFileName);
+			var container = CreatePowerTrain(cycleData, modFileName, overspeed);
 
 			return new DistanceRun(container);
 		}
 
 
-		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName)
+		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName, bool overspeed = false)
 		{
 			var modalWriter = new ModalDataWriter(modFileName);
 			var sumWriter = new TestSumWriter();
@@ -46,7 +46,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData();
 			var vehicleData = CreateVehicleData(3300.SI<Kilogram>());
-			var driverData = CreateDriverData(AccelerationFile);
+			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
@@ -147,7 +147,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			};
 		}
 
-		private static DriverData CreateDriverData(string accelerationFile)
+		private static DriverData CreateDriverData(string accelerationFile, bool overspeed = false)
 		{
 			return new DriverData {
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
@@ -156,9 +156,15 @@ namespace TUGraz.VectoCore.Tests.Integration
 					MinSpeed = 50.KMPHtoMeterPerSecond(),
 					Deceleration = -0.5.SI<MeterPerSquareSecond>(),
 				},
-				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
-					Mode = DriverData.DriverMode.Off
-				},
+				OverSpeedEcoRoll = overspeed
+					? new DriverData.OverSpeedEcoRollData() {
+						Mode = DriverData.DriverMode.Overspeed,
+						MinSpeed = 50.KMPHtoMeterPerSecond(),
+						OverSpeed = 5.KMPHtoMeterPerSecond(),
+					}
+					: new DriverData.OverSpeedEcoRollData {
+						Mode = DriverData.DriverMode.Off
+					},
 				StartStop = new VectoRunData.StartStopData {
 					Enabled = false,
 				}

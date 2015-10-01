@@ -27,9 +27,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public const string GearboxShiftPolygonFile = @"TestData\Components\ShiftPolygons.vgbs";
 		public const string GearboxFullLoadCurveFile = @"TestData\Components\Gearbox.vfld";
 
-		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName)
+		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, bool overspeed = false)
 		{
-			var container = CreatePowerTrain(cycleData, modFileName, 7500.SI<Kilogram>(), 19300.SI<Kilogram>());
+			var container = CreatePowerTrain(cycleData, modFileName, 7500.SI<Kilogram>(), 19300.SI<Kilogram>(), overspeed);
 
 			return new DistanceRun(container);
 		}
@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName, Kilogram massExtra,
-			Kilogram loading)
+			Kilogram loading, bool overspeed = false)
 		{
 			var modalWriter = new ModalDataWriter(modFileName);
 			var sumWriter = new TestSumWriter();
@@ -53,7 +53,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var axleGearData = CreateAxleGearData();
 			var gearboxData = CreateGearboxData(engineData);
 			var vehicleData = CreateVehicleData(massExtra, loading);
-			var driverData = CreateDriverData(AccelerationFile);
+			var driverData = CreateDriverData(AccelerationFile, overspeed);
 
 			var cycle = new DistanceBasedDrivingCycle(container, cycleData);
 			var engine = new CombustionEngine(container, engineData);
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 				TorqueReserve = 0.2,
 				StartTorqueReserve = 0.2,
 				SkipGears = true,
-				EarlyShiftUp = false,
+				EarlyShiftUp = true,
 			};
 		}
 
@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 					TyreTestLoad = 31300.SI<Newton>()
 				},
 				new Axle {
-					AxleWeightShare = 0.2,
+					AxleWeightShare = 0.25,
 					Inertia = 14.9.SI<KilogramSquareMeter>(),
 					RollResistanceCoefficient = 0.0065,
 					TwinTyres = true,
@@ -160,7 +160,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			};
 			return new VehicleData {
 				AxleConfiguration = AxleConfiguration.AxleConfig_4x2,
-				CrossSectionArea = 9.5.SI<SquareMeter>(),
+				CrossSectionArea = 6.2985.SI<SquareMeter>(),
 				CrossWindCorrectionMode = CrossWindCorrectionMode.NoCorrection,
 				DragCoefficient = 1,
 				CurbWeight = 7100.SI<Kilogram>(),
@@ -173,7 +173,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			};
 		}
 
-		private static DriverData CreateDriverData(string accelerationFile)
+		private static DriverData CreateDriverData(string accelerationFile, bool overspeed = false)
 		{
 			return new DriverData {
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
@@ -182,9 +182,15 @@ namespace TUGraz.VectoCore.Tests.Integration
 					MinSpeed = 50.KMPHtoMeterPerSecond(),
 					Deceleration = -0.5.SI<MeterPerSquareSecond>(),
 				},
-				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
-					Mode = DriverData.DriverMode.Off
-				},
+				OverSpeedEcoRoll = overspeed
+					? new DriverData.OverSpeedEcoRollData() {
+						Mode = DriverData.DriverMode.Overspeed,
+						MinSpeed = 50.KMPHtoMeterPerSecond(),
+						OverSpeed = 5.KMPHtoMeterPerSecond(),
+					}
+					: new DriverData.OverSpeedEcoRollData {
+						Mode = DriverData.DriverMode.Off
+					},
 				StartStop = new VectoRunData.StartStopData {
 					Enabled = false,
 				}

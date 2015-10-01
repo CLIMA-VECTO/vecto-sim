@@ -268,8 +268,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			Log.Debug("Found operating point for coasting. dt: {0}, acceleration: {1}", operatingPoint.SimulationInterval,
-				operatingPoint.Acceleration);
+			Log.Debug("Found operating point for {2}. dt: {0}, acceleration: {1}", operatingPoint.SimulationInterval,
+				operatingPoint.Acceleration, rollAction ? "ROL" : "COAST");
 
 			operatingPoint = LimitAccelerationByDriverModel(operatingPoint,
 				rollAction ? LimitationMode.NoLimitation : LimitationMode.LimitDecelerationLookahead);
@@ -317,7 +317,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var operatingPoint = ComputeAcceleration(ds, nextTargetSpeed);
 
-			if (operatingPoint.Acceleration < 0) {
+			//if (operatingPoint.Acceleration.IsSmaller(0)) {
+			// if we should brake with the max. deceleration and the deceleration changes within the current interval, take the larger deceleration...
+			if (operatingPoint.Acceleration.IsEqual(DriverData.AccelerationCurve.Lookup(DataBus.VehicleSpeed).Deceleration)) {
 				var v2 = DataBus.VehicleSpeed + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
 				var nextAcceleration = DriverData.AccelerationCurve.Lookup(v2).Deceleration;
 				var tmp = ComputeTimeInterval(VectoMath.Min(operatingPoint.Acceleration, nextAcceleration),
@@ -347,7 +349,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			response.Switch().
 				Case<ResponseSuccess>(r => retVal = r).
-				Case<ResponseOverload>(r => retVal = r).
+				Case<ResponseOverload>(r => retVal = r)
+				. // i.e., driving uphill, clutch open, deceleration higher than desired deceleration
 				Case<ResponseUnderload>(). // will be handled in SearchBrakingPower
 				Case<ResponseGearShift>(). // will be handled in SearchBrakingPower
 				Case<ResponseFailTimeInterval>(r =>
@@ -360,13 +363,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				});
 
 			if (retVal != null) {
+				retVal.Acceleration = operatingPoint.Acceleration;
+				retVal.SimulationInterval = operatingPoint.SimulationInterval;
 				return retVal;
 			}
 
 			operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
 				operatingPoint.Acceleration, response);
 
-			if (!ds.IsEqual(operatingPoint.SimulationDistance, 1E-15)) {
+			if (!ds.IsEqual(operatingPoint.SimulationDistance, 1E-15.SI<Meter>())) {
 				Log.Info(
 					"SearchOperatingPoint Breaking reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!",
 					operatingPoint.SimulationDistance, ds);
@@ -468,11 +473,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Default(r => {
 					throw new UnexpectedResponseException("cannot use response for searching braking power!", r);
 				});
-			var delta = 0.SI<Watt>();
+			Watt delta;
 
-			debug.Add(new { brakingPower = 0.SI<Watt>(), searchInterval, delta = origDelta, operatingPoint });
+			debug.Add(new { brakePower = 0.SI<Watt>(), searchInterval, delta = origDelta, operatingPoint });
 
-			var breakingPower = searchInterval * -delta.Sign();
+			var brakePower = searchInterval * -origDelta.Sign();
 
 			// double the searchInterval until a good interval was found
 			var intervalFactor = 1.0;
@@ -480,29 +485,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//ResponseDryRun response;
 			do {
 				operatingPoint = ComputeTimeInterval(operatingPoint.Acceleration, ds);
-				DataBus.BreakPower = breakingPower;
+				DataBus.BreakPower = brakePower;
 				var response =
 					(ResponseDryRun)
 						NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
 				delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest;
 
-				if (delta.IsEqual(0, Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+				if (delta.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 					LogManager.EnableLogging();
 					Log.Debug("found operating point in {0} iterations, delta: {1}", debug.Count, delta);
 					return operatingPoint;
 				}
 
-				debug.Add(new { breakingPower, searchInterval, delta, operatingPoint });
+				debug.Add(new { brakePower, searchInterval, delta, operatingPoint });
 
 				// check if a correct searchInterval was found (when the delta changed signs, we stepped through the 0-point)
 				// from then on the searchInterval can be bisected.
 				if (origDelta.Sign() != delta.Sign()) {
 					intervalFactor = 0.5;
-					retryCount = 0; // again max. 100 iterations for the binary search...
+					//retryCount = 0; // again max. 100 iterations for the binary search...
 				}
 
 				searchInterval *= intervalFactor;
-				breakingPower += searchInterval * -delta.Sign();
+				brakePower += searchInterval * -delta.Sign();
 			} while (retryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
 
 			LogManager.EnableLogging();
@@ -600,7 +605,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					(ResponseDryRun)NextComponent.Request(absTime, retVal.SimulationInterval, retVal.Acceleration, gradient, true);
 				delta = actionRoll ? response.GearboxPowerRequest : (coasting ? response.DeltaDragLoad : response.DeltaFullLoad);
 
-				if (delta.IsEqual(0, Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+				if (delta.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 					LogManager.EnableLogging();
 					Log.Debug("found operating point in {0} iterations. Engine Power req: {2}, Gearbox Power req: {3} delta: {1}",
 						debug.Count, delta, response.EnginePowerRequest, response.GearboxPowerRequest);

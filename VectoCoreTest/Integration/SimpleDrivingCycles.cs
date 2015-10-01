@@ -91,6 +91,62 @@ namespace TUGraz.VectoCore.Tests.Integration
 			"1000, 85, -5,    0",
 		};
 
+		public static readonly string[] CycleAccelerate_0_85_downhill_3 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  85, -3,    0",
+			"1000, 85, -3,    0",
+		};
+
+		public static readonly string[] CycleAccelerate_0_85_downhill_1 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  85, -1,    0",
+			"1000, 85, -1,    0",
+		};
+
+		public static readonly string[] CycleAccelerate_0_60_downhill_5 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  60, -5,    0",
+			"1000, 60, -5,    0",
+		};
+
+		public static readonly string[] CycleAccelerate_0_60_downhill_3 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  60, -3,    0",
+			"1000, 60, -3,    0",
+		};
+
+		public static readonly string[] CycleAccelerate_0_60_downhill_1 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  60, -1,    0",
+			"1000, 60, -1,    0",
+		};
+
+		public static readonly string[] CycleAccelerate_0_40_downhill_5 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  40, -5,    0",
+			"1000, 40, -5,    0",
+		};
+
+		public static readonly string[] CycleAccelerate_0_40_downhill_3 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  40, -3,    0",
+			"1000, 40, -3,    0",
+		};
+
+		public static readonly string[] CycleAccelerate_0_40_downhill_1 = {
+			// <s>,<v>,<grad>,<stop>
+			"  0,  0,  0,     2",
+			"  0,  40, -1,    0",
+			"1000, 40, -1,    0",
+		};
+
 		public static readonly string[] CycleAccelerate_0_85_uphill_25 = {
 			// <s>,<v>,<grad>,<stop>
 			"  0,  0,  0,     2",
@@ -201,8 +257,23 @@ namespace TUGraz.VectoCore.Tests.Integration
 
 		public static readonly string[] CycleDecelerate_60_20_downhill_15 = {
 			// <s>,<v>,<grad>,<stop>
-			"   0,  80, 0,     0",
-			"1000,  0,  0,     2",
+			"  0,  60, -15,     0",
+			" 800, 20, -15,     0",
+			"1000, 20, -15,     0",
+		};
+
+		public static readonly string[] CycleDecelerate_80_0_level = {
+			// <s>,<v>,<grad>,<stop>
+			"   0,  80, 0,    0",
+			"1000,  0,  0,    2",
+//				"1000,  0,  5,    2",
+		};
+
+		public static readonly string[] CycleDecelerate_80_0_uphill_3 = {
+			// <s>,<v>,<grad>,<stop>
+			"   0,  80, 3,    0",
+			"1000,  0,  3,    2",
+//				"1000,  0,  5,    2",
 		};
 
 		public static readonly string[] CycleDecelerate_80_0_uphill_5 = {
@@ -303,38 +374,44 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static readonly string[] CycleDrive_10_level = {
 			// <s>,<v>,<grad>,<stop>
 			"   0,  10, 0,    0",
-			"500,  10, 0,    0",
+			"200,  10, 0,    0",
 		};
 
 		public static readonly string[] CycleDrive_10_uphill_5 = {
 			// <s>,<v>,<grad>,<stop>
+			"   0,  10, 5,    0",
+			"200,  10, 5,    0",
+		};
+
+		public static readonly string[] CycleDrive_10_downhill_5 = {
+			// <s>,<v>,<grad>,<stop>
 			"   0,  10, -5,    0",
-			" 800, 10,  -5,   0",
+			" 200, 10,  -5,   0",
 		};
 
 		public static readonly string[] CycleDrive_10_downhill_25 = {
 			// <s>, <v>, <grad>, <stop>
 			"   0,  10,  -25,    0",
-			" 500,  10,  -25,    0",
+			" 200,  10,  -25,    0",
 		};
 
 		public static readonly string[] CycleDrive_10_uphill_25 = {
 			// <s>,<v>,<grad>,<stop>
 			"   0, 10, 25,    0",
-			" 800, 10, 25,    0",
+			" 200, 10, 25,    0",
 		};
 
 		public static readonly string[] CycleDrive_10_downhill_15 = {
 			// <s>, <v>, <grad>, <stop>
 			"   0,  10,  -15,    0",
-			" 500,  10,  -15,    0",
+			" 200,  10,  -15,    0",
 		};
 
 
 		public static readonly string[] CycleDrive_10_uphill_15 = {
 			// <s>,<v>,<grad>,<stop>
 			"   0, 10, 15,    0",
-			" 500, 10, 15,    0",
+			" 200, 10, 15,    0",
 		};
 
 		#endregion
@@ -468,58 +545,58 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static readonly string[] CycleDrive_50_Dec_Increasing_Slope = {
 			// <s>,<v>,<grad>,<stop>
 			"   0,  50,  0,    0",
-			" 100,  50, -0.25, 0",
-			" 200,  50, -0.5,  0",
-			" 300,  50, -0.75, 0",
-			" 400,  50, -1,    0",
-			" 500,  50, -1.25, 0",
-			" 600,  50, -1.5,  0",
-			" 700,  50, -1.75, 0",
-			" 800,  50, -2,    0",
-			" 900,  50, -2.25, 0",
-			"1000,  50, -2.5,  0",
-			"1100,  50,  0,    0",
+			"  50,  50, -0.25, 0",
+			" 100,  50, -0.5,  0",
+			" 150,  50, -0.75, 0",
+			" 200,  50, -1,    0",
+			" 250,  50, -1.25, 0",
+			" 300,  50, -1.5,  0",
+			" 350,  50, -1.75, 0",
+			" 400,  50, -2,    0",
+			" 450,  50, -2.25, 0",
+			" 500,  50, -2.5,  0",
+			" 550,  50,  0,    0",
+			" 600,  50, 0,    0",
+			" 650,  50, 0.25, 0",
+			" 700,  50, 0.5,  0",
+			" 750,  50, 0.75, 0",
+			" 800,  50, 1,    0",
+			" 850,  50, 1.25, 0",
+			" 900,  50, 1.5,  0",
+			" 950,  50, 1.75, 0",
+			"1000,  50, 2,    0",
+			"1050,  50, 2.25, 0",
+			"1100,  50, 2.5,  0",
+			"1150,  50, 5,    0",
 			"1200,  50, 0,    0",
-			"1300,  50, 0.25, 0",
-			"1400,  50, 0.5,  0",
-			"1500,  50, 0.75, 0",
-			"1600,  50, 1,    0",
-			"1700,  50, 1.25, 0",
-			"1800,  50, 1.5,  0",
-			"1900,  50, 1.75, 0",
-			"2000,  50, 2,    0",
-			"2100,  50, 2.25, 0",
-			"2200,  50, 2.5,  0",
-			"2300,  50, 5,    0",
-			"2500,  50, 0,    0",
 		};
 
 		public static readonly string[] CycleDrive_30_Dec_Increasing_Slope = {
 			// <s>,<v>,<grad>,<stop>
 			"   0,  30,  0,    0",
-			" 100,  30, -0.25, 0",
-			" 200,  30, -0.5,  0",
-			" 300,  30, -0.75, 0",
-			" 400,  30, -1,    0",
-			" 500,  30, -1.25, 0",
-			" 600,  30, -1.5,  0",
-			" 700,  30, -1.75, 0",
-			" 800,  30, -2,    0",
-			" 900,  30, -2.25, 0",
-			"1000,  30, -2.5,  0",
-			"1100,  30,  0,    0",
-			"1200,  30, 0,    0",
-			"1300,  30, 0.25, 0",
-			"1400,  30, 0.5,  0",
-			"1500,  30, 0.75, 0",
-			"1600,  30, 1,    0",
-			"1700,  30, 1.25, 0",
-			"1800,  30, 1.5,  0",
-			"1900,  30, 1.75, 0",
-			"2000,  30, 2,    0",
-			"2100,  30, 2.25, 0",
-			"2200,  30, 2.5,  0",
-			"2300,  30, 0,    0",
+			"  50,  30, -0.25, 0",
+			" 100,  30, -0.5,  0",
+			" 150,  30, -0.75, 0",
+			" 200,  30, -1,    0",
+			" 250,  30, -1.25, 0",
+			" 300,  30, -1.5,  0",
+			" 350,  30, -1.75, 0",
+			" 400,  30, -2,    0",
+			" 450,  30, -2.25, 0",
+			" 500,  30, -2.5,  0",
+			" 550,  30,  0,    0",
+			" 600,  30, 0,    0",
+			" 650,  30, 0.25, 0",
+			" 700,  30, 0.5,  0",
+			" 750,  30, 0.75, 0",
+			" 800,  30, 1,    0",
+			" 850,  30, 1.25, 0",
+			" 900,  30, 1.5,  0",
+			" 950,  30, 1.75, 0",
+			"1000,  30, 2,    0",
+			"1050,  30, 2.25, 0",
+			"1100,  30, 2.5,  0",
+			"1150,  30, 0,    0",
 		};
 
 		public static readonly string[] CycleDecelerateWhileBrake_80_0_level = {

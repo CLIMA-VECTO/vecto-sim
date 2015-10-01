@@ -11,6 +11,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <summary>
 		/// Checks if a shift operation is required.
 		/// </summary>
+		/// <param name="absTime">The abs time.</param>
+		/// <param name="dt">The dt.</param>
+		/// <param name="outTorque">The out torque.</param>
+		/// <param name="outAngularVelocity">The out angular velocity.</param>
+		/// <param name="inTorque">The in torque.</param>
+		/// <param name="inAngularVelocity">The in angular velocity.</param>
+		/// <param name="gear">The current gear.</param>
+		/// <param name="lastShiftTime">The last shift time.</param>
+		/// <returns><c>true</c> if a shift is required, <c>false</c> otherwise.</returns>
 		bool ShiftRequired(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
 			NewtonMeter inTorque, PerSecond inAngularVelocity, uint gear, Second lastShiftTime);
 
@@ -20,9 +29,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <param name="absTime">The abs time.</param>
 		/// <param name="dt">The dt.</param>
 		/// <param name="torque">The torque.</param>
-		/// <param name="outEngineSpeed">The angular speed.</param>
-		/// <returns></returns>
-		uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outEngineSpeed);
+		/// <param name="outAngularVelocity">The angular speed.</param>
+		/// <returns>The initial gear.</returns>
+		uint InitGear(Second absTime, Second dt, NewtonMeter torque, PerSecond outAngularVelocity);
 
 		/// <summary>
 		/// Engages a gear.
@@ -31,7 +40,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent
 		/// <param name="dt">The dt.</param>
 		/// <param name="outTorque">The out torque.</param>
 		/// <param name="outEngineSpeed">The out engine speed.</param>
-		/// <returns></returns>
+		/// <returns>The gear to take.</returns>
 		uint Engage(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outEngineSpeed);
 
 		/// <summary>

@@ -925,6 +925,7 @@ namespace TUGraz.VectoCore.Utils
 		/// Returns the numerical sign of the SI.
 		/// </summary>
 		/// <returns>-1 if si &lt; 0. 0 if si==0, 1 if si &gt; 0.</returns>
+		[DebuggerHidden]
 		public int Sign()
 		{
 			return Math.Sign(Val);
@@ -1598,9 +1599,10 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="si">The si.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
-		public bool IsEqual(SI si, double tolerance = DoubleExtensionMethods.Tolerance)
+		public bool IsEqual(SI si, SI tolerance = null)
 		{
-			return HasEqualUnit(si) && Val.IsEqual(si.Val, tolerance);
+			return (tolerance == null || HasEqualUnit(tolerance)) && HasEqualUnit(si) &&
+					Val.IsEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
 		}
 
 		/// <summary>
@@ -1620,9 +1622,10 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="si">The si.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
-		public bool IsSmaller(SI si, double tolerance = DoubleExtensionMethods.Tolerance)
+		public bool IsSmaller(SI si, SI tolerance = null)
 		{
-			return HasEqualUnit(si) && Val.IsSmaller(si.Val, tolerance);
+			return (tolerance == null || HasEqualUnit(tolerance)) && HasEqualUnit(si) &&
+					Val.IsSmaller(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
 		}
 
 		/// <summary>
@@ -1631,9 +1634,10 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="si">The si.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
-		public bool IsSmallerOrEqual(SI si, double tolerance = DoubleExtensionMethods.Tolerance)
+		public bool IsSmallerOrEqual(SI si, SI tolerance = null)
 		{
-			return HasEqualUnit(si) && Val.IsSmallerOrEqual(si.Val, tolerance);
+			return (tolerance == null || HasEqualUnit(tolerance)) && HasEqualUnit(si) &&
+					Val.IsSmallerOrEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
 		}
 
 		/// <summary>
@@ -1642,9 +1646,10 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="si">The si.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
-		public bool IsGreater(SI si, double tolerance = DoubleExtensionMethods.Tolerance)
+		public bool IsGreater(SI si, SI tolerance = null)
 		{
-			return HasEqualUnit(si) && Val.IsGreater(si.Val, tolerance);
+			return (tolerance == null || HasEqualUnit(tolerance)) && HasEqualUnit(si) &&
+					Val.IsGreater(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
 		}
 
 		/// <summary>
@@ -1653,9 +1658,10 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="si">The si.</param>
 		/// <param name="tolerance">The tolerance.</param>
 		/// <returns></returns>
-		public bool IsGreaterOrEqual(SI si, double tolerance = DoubleExtensionMethods.Tolerance)
+		public bool IsGreaterOrEqual(SI si, SI tolerance = null)
 		{
-			return HasEqualUnit(si) && Val.IsGreaterOrEqual(si.Val, tolerance);
+			return (tolerance == null || HasEqualUnit(tolerance)) && HasEqualUnit(si) &&
+					Val.IsGreaterOrEqual(si.Val, tolerance == null ? DoubleExtensionMethods.Tolerance : tolerance.Value());
 		}
 
 		/// <summary>

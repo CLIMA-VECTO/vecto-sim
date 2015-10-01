@@ -62,6 +62,7 @@
     <Compile Include="Exceptions\ExceptionTests.cs" />
     <Compile Include="FileIO\JsonTest.cs" />
     <Compile Include="FileIO\SimulationDataReaderTest.cs" />
+    <Compile Include="GraphProgram.cs" />
     <Compile Include="Integration\CoachPowerTrain.cs" />
     <Compile Include="Integration\DriverStrategy\DriverStrategyTestCoach.cs" />
     <Compile Include="Integration\DriverStrategy\DriverStrategyTestTruck.cs" />
