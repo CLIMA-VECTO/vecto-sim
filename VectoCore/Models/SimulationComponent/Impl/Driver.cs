@@ -473,23 +473,22 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Default(r => {
 					throw new UnexpectedResponseException("cannot use response for searching braking power!", r);
 				});
-			Watt delta;
 
 			debug.Add(new { brakePower = 0.SI<Watt>(), searchInterval, delta = origDelta, operatingPoint });
 
 			var brakePower = searchInterval * -origDelta.Sign();
 
-			// double the searchInterval until a good interval was found
+			var modeBinarySearch = false;
 			var intervalFactor = 1.0;
 			var retryCount = 0;
-			//ResponseDryRun response;
+
 			do {
 				operatingPoint = ComputeTimeInterval(operatingPoint.Acceleration, ds);
 				DataBus.BreakPower = brakePower;
 				var response =
 					(ResponseDryRun)
 						NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
-				delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest;
+				var delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest;	
 
 				if (delta.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 					LogManager.EnableLogging();
@@ -503,7 +502,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				// from then on the searchInterval can be bisected.
 				if (origDelta.Sign() != delta.Sign()) {
 					intervalFactor = 0.5;
-					//retryCount = 0; // again max. 100 iterations for the binary search...
+					if (!modeBinarySearch) {
+						modeBinarySearch = true;
+						retryCount = 0; // again max. 100 iterations for the binary search...
+					}
 				}
 
 				searchInterval *= intervalFactor;
