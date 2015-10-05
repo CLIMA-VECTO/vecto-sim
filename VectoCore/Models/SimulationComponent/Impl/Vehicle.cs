@@ -53,15 +53,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_data = data;
 			_previousState = new VehicleState { Distance = 0.SI<Meter>(), Velocity = 0.SI<MeterPerSecond>() };
 			_currentState = new VehicleState { Distance = 0.SI<Meter>(), Velocity = 0.SI<MeterPerSecond>() };
-		}
 
-		public Vehicle(IVehicleContainer container, VehicleData data, double initialVelocity) : this(container, data)
-		{
 			var values = DeclarationData.AirDrag.Lookup(_data.VehicleCategory);
 			_airResistanceCurve = CalculateAirResistanceCurve(values);
-
-			_previousState.Velocity = initialVelocity.SI<MeterPerSecond>();
 		}
+
 
 		public IFvInPort InPort()
 		{
@@ -203,7 +199,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected Newton AirDragResistance(MeterPerSquareSecond acceleration, Second dt)
+		protected internal Newton AirDragResistance(MeterPerSquareSecond acceleration, Second dt)
 		{
 			if (acceleration.IsEqual(0)) {
 				var vAverage = (_previousState.Velocity + _currentState.Velocity) / 2;
@@ -225,13 +221,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return result;
 		}
 
-		protected Newton ComputeAirDragForce(MeterPerSecond velocity)
+		protected internal Newton ComputeAirDragForce(MeterPerSecond velocity)
 		{
 			var CdA = ComputeEffectiveAirDragArea(velocity);
 			return (Physics.AirDensity / 2.0 * CdA * velocity * velocity).Cast<Newton>();
 		}
 
-		private SquareMeter ComputeEffectiveAirDragArea(MeterPerSecond velocity)
+		protected internal SquareMeter ComputeEffectiveAirDragArea(MeterPerSecond velocity)
 		{
 			var CdA = _data.AerodynamicDragAera;
 			switch (_data.CrossWindCorrectionMode) {
@@ -259,11 +255,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return VectoMath.Interpolate(p.Item1.X, p.Item2.X, p.Item1.Y, p.Item2.Y, x);
 		}
 
-		public class Point
-		{
-			public MeterPerSecond X;
-			public SquareMeter Y;
-		}
 
 		protected Point[] CalculateAirResistanceCurve(AirDrag.AirDragEntry values)
 		{
@@ -311,7 +302,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		protected Newton SlopeResistance(Radian gradient)
+		protected internal Newton SlopeResistance(Radian gradient)
 		{
 			var retVal = (_data.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value())).Cast<Newton>();
 			Log.Debug("SlopeResistance: {0}", retVal);
@@ -331,6 +322,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public Newton AirDragResistance;
 			public Newton RollingResistance;
 			public MeterPerSquareSecond Acceleration { get; set; }
+		}
+
+		public class Point
+		{
+			public MeterPerSecond X;
+			public SquareMeter Y;
 		}
 	}
 }
