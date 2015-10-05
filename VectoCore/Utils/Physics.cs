@@ -8,6 +8,6 @@
 
 		public static readonly double RollResistanceExponent = 0.9;
 
-		public static readonly MeterPerSecond BaseWindSpeed = 3.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>();
+		public static readonly MeterPerSecond BaseWindSpeed = 3.KMPHtoMeterPerSecond();
 	}
 }
