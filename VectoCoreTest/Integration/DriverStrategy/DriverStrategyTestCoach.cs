@@ -14,6 +14,16 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			//GraphWriter.Disable();
 		}
 
+		[TestMethod]
+		public void TestGraph()
+		{
+			var imgV3 = @"..\..\..\VectoCoreTest\bin\Debug\Coach_DriverStrategy_Drive_50_slope_dec-inc.vmod";
+			var imgv22 =
+				@"..\..\..\VectoCoreTest\TestData\Integration\DriverStrategy\Vecto2.2\Coach\24t Coach_Cycle_Drive_50_Dec_Increasing_Slope.vmod";
+
+			GraphWriter.Write(imgV3, imgv22);
+		}
+
 		#region Accelerate
 
 		[TestMethod]
@@ -514,7 +524,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		[TestMethod]
 		public void Coach_Drive_10_downhill_5()
 		{
-			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_10_uphill_5);
+			var cycle = SimpleDrivingCycles.CreateCycleData(SimpleDrivingCycles.CycleDrive_10_downhill_5);
 			CoachPowerTrain.CreateEngineeringRun(cycle, "Coach_DriverStrategy_Drive_10_downhill_5.vmod").Run();
 
 			GraphWriter.Write("Coach_DriverStrategy_Drive_10_downhill_5.vmod",
