@@ -21,9 +21,9 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle)
 		{
-			var fileV5Eng = vehicle as VehicleFileV7Engineering;
-			if (fileV5Eng != null) {
-				return CreateVehicleData(fileV5Eng);
+			var fileV7Eng = vehicle as VehicleFileV7Engineering;
+			if (fileV7Eng != null) {
+				return CreateVehicleData(fileV7Eng);
 			}
 			throw new VectoException("Unsupported EngineData File Instance");
 		}
