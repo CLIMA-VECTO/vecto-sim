@@ -15,20 +15,20 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 {
 	public class DeclarationDataAdapter : AbstractSimulationDataAdapter
 	{
-		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission segment, Kilogram loading)
+		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission mission, Kilogram loading)
 		{
-			var fileV5Decl = vehicle as VehicleFileV5Declaration;
+			var fileV5Decl = vehicle as VehicleFileV7Declaration;
 			if (fileV5Decl != null) {
-				return CreateVehicleData(fileV5Decl, segment, loading);
+				return CreateVehicleData(fileV5Decl, mission, loading);
 			}
 			throw new VectoException("Unsupported VehicleData File Instance");
 		}
 
 		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle)
 		{
-			var fileV5Decl = vehicle as VehicleFileV5Declaration;
-			if (fileV5Decl != null) {
-				return SetCommonVehicleData(fileV5Decl.Body, fileV5Decl.BasePath);
+			var fileV7Decl = vehicle as VehicleFileV7Declaration;
+			if (fileV7Decl != null) {
+				return SetCommonVehicleData(fileV7Decl.Body, fileV7Decl.BasePath);
 			}
 			throw new VectoException("Mission Data and loading required in DeclarationMode");
 		}
@@ -97,7 +97,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		}
 
 
-		internal VehicleData CreateVehicleData(VehicleFileV5Declaration vehicle, Mission mission, Kilogram loading)
+		internal VehicleData CreateVehicleData(VehicleFileV7Declaration vehicle, Mission mission, Kilogram loading)
 		{
 			var data = vehicle.Body;
 			var retVal = SetCommonVehicleData(data, vehicle.BasePath);
@@ -110,6 +110,11 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.Loading = loading;
 			retVal.DynamicTyreRadius =
 				DeclarationData.DynamicTyreRadius(data.AxleConfig.Axles[DeclarationData.PoweredAxle()].WheelsStr, data.RimStr);
+
+			retVal.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
+			retVal.AerodynamicDragAera = mission.UseCdA2
+				? data.DragCoefficientRigidTruck.SI<SquareMeter>()
+				: data.DragCoefficient.SI<SquareMeter>();
 
 			if (data.AxleConfig.Axles.Count < mission.AxleWeightDistribution.Length) {
 				throw new VectoException(

@@ -13,7 +13,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 {
 	public class EngineeringDataAdapter : AbstractSimulationDataAdapter
 	{
-		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission segment,
+		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission mission,
 			Kilogram loading)
 		{
 			return CreateVehicleData(vehicle);
@@ -21,7 +21,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 		public override VehicleData CreateVehicleData(VectoVehicleFile vehicle)
 		{
-			var fileV5Eng = vehicle as VehicleFileV5Engineering;
+			var fileV5Eng = vehicle as VehicleFileV7Engineering;
 			if (fileV5Eng != null) {
 				return CreateVehicleData(fileV5Eng);
 			}
@@ -94,7 +94,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		/// </summary>
 		/// <param name="vehicle">VehicleFileV5 container</param>
 		/// <returns>VehicleData instance</returns>
-		internal VehicleData CreateVehicleData(VehicleFileV5Engineering vehicle)
+		internal VehicleData CreateVehicleData(VehicleFileV7Engineering vehicle)
 		{
 			var data = vehicle.Body;
 
@@ -104,6 +104,9 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>();
 			retVal.Loading = data.Loading.SI<Kilogram>();
 			retVal.DynamicTyreRadius = data.DynamicTyreRadius.SI().Milli.Meter.Cast<Meter>();
+
+			retVal.CrossWindCorrectionMode = CrossWindCorrectionModeHelper.Parse(data.CrossWindCorrectionModeStr);
+			retVal.AerodynamicDragAera = data.DragCoefficient.SI<SquareMeter>();
 
 			retVal.AxleData = data.AxleConfig.Axles.Select(axle => new Axle {
 				Inertia = axle.Inertia.SI<KilogramSquareMeter>(),

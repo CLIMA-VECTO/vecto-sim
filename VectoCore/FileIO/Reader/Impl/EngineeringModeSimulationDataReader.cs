@@ -74,8 +74,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			CheckForEngineeringMode(fileInfo, "Vehicle");
 
 			switch (fileInfo.Version) {
-				case 5:
-					var vehicle = JsonConvert.DeserializeObject<VehicleFileV5Engineering>(json);
+				case 7:
+					var vehicle = JsonConvert.DeserializeObject<VehicleFileV7Engineering>(json);
 					vehicle.BasePath = file;
 					return vehicle;
 				default:
@@ -260,7 +260,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 
 			switch (fileInfo.Version) {
 				case 5:
-					var tmp = JsonConvert.DeserializeObject<VehicleFileV5Engineering>(json);
+					var tmp = JsonConvert.DeserializeObject<VehicleFileV7Engineering>(json);
 					tmp.BasePath = file;
 					return tmp;
 				default:

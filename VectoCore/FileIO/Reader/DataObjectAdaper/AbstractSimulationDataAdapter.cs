@@ -10,7 +10,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 {
 	public abstract class AbstractSimulationDataAdapter
 	{
-		public abstract VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission segment, Kilogram loading);
+		public abstract VehicleData CreateVehicleData(VectoVehicleFile vehicle, Mission mission, Kilogram loading);
 
 		public abstract VehicleData CreateVehicleData(VectoVehicleFile vehicle);
 
@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 
 		// =========================
 
-		internal VehicleData SetCommonVehicleData(VehicleFileV5Declaration.DataBodyDecl data, string basePath)
+		internal VehicleData SetCommonVehicleData(VehicleFileV7Declaration.DataBodyDecl data, string basePath)
 		{
 			var retVal = new VehicleData {
 				SavedInDeclarationMode = data.SavedInDeclarationMode,
@@ -30,10 +30,10 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				//CurbWeigthExtra = data.CurbWeightExtra.SI<Kilogram>(),
 				//Loading = data.Loading.SI<Kilogram>(),
 				GrossVehicleMassRating = data.GrossVehicleMassRating.SI<Ton>().Cast<Kilogram>(),
-				DragCoefficient = data.DragCoefficient,
-				CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>(),
-				DragCoefficientRigidTruck = data.DragCoefficientRigidTruck,
-				CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>(),
+				//DragCoefficient = data.DragCoefficient,
+				//CrossSectionArea = data.CrossSectionArea.SI<SquareMeter>(),
+				//DragCoefficientRigidTruck = data.DragCoefficientRigidTruck,
+				//CrossSectionAreaRigidTruck = data.CrossSectionAreaRigidTruck.SI<SquareMeter>(),
 				//TyreRadius = data.TyreRadius.SI().Milli.Meter.Cast<Meter>(),
 				Rim = data.RimStr,
 			};
