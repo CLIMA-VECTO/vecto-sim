@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics.Contracts;
@@ -13,6 +14,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 	{
 		internal List<FullLoadCurveEntry> FullLoadEntries;
 		internal LookupData<PerSecond, Second> PT1Data;
+
+		protected PerSecond _ratedSpeed;
+		protected Watt _maxPower;
 
 		public static FullLoadCurve ReadFromFile(string fileName, bool declarationMode = false)
 		{
@@ -85,6 +89,67 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				}).ToList();
 		}
 
+		/// <summary>
+		/// Get the rated speed from the given full-load curve (i.e. speed with max. power)
+		/// </summary>
+		public PerSecond RatedSpeed
+		{
+			get { return (_ratedSpeed ?? ComputeRatedSpeed().Item1); }
+		}
+
+		public Watt MaxPower
+		{
+			get { return (_maxPower ?? ComputeRatedSpeed().Item2); }
+		}
+
+
+		/// <summary>
+		///	Compute the engine's rated speed from the given full-load curve (i.e. engine speed with max. power)
+		/// </summary>
+		protected Tuple<PerSecond, Watt> ComputeRatedSpeed()
+		{
+			var max = new Tuple<PerSecond, Watt>(0.SI<PerSecond>(), 0.SI<Watt>());
+			for (var idx = 1; idx < FullLoadEntries.Count; idx++) {
+				var currentMax = FindMaxPower(FullLoadEntries[idx - 1], FullLoadEntries[idx]);
+				if (currentMax.Item2 > max.Item2) {
+					max = currentMax;
+				}
+			}
+
+			_ratedSpeed = max.Item1;
+			_maxPower = max.Item2;
+
+			return max;
+		}
+
+		private Tuple<PerSecond, Watt> FindMaxPower(FullLoadCurveEntry p1, FullLoadCurveEntry p2)
+		{
+			if (p1.EngineSpeed.IsEqual(p2.EngineSpeed)) {
+				return Tuple.Create(p1.EngineSpeed, p1.TorqueFullLoad * p1.EngineSpeed);
+			}
+
+			if (p2.EngineSpeed < p1.EngineSpeed) {
+				var tmp = p1;
+				p1 = p2;
+				p2 = tmp;
+			}
+
+			// y = kx + d
+			var k = (p2.TorqueFullLoad - p1.TorqueFullLoad) / (p2.EngineSpeed - p1.EngineSpeed);
+			var d = p2.TorqueFullLoad - k * p2.EngineSpeed;
+			if (k.IsEqual(0)) {
+				return Tuple.Create(p2.EngineSpeed, p2.TorqueFullLoad * p2.EngineSpeed);
+			}
+			var engineSpeedMaxPower = -d / (2 * k);
+			if (engineSpeedMaxPower.IsSmaller(p1.EngineSpeed) || engineSpeedMaxPower.IsGreater(p2.EngineSpeed)) {
+				if (k.IsGreater(0)) {
+					return Tuple.Create(p2.EngineSpeed, p2.TorqueFullLoad * p2.EngineSpeed);
+				}
+				return Tuple.Create(p1.EngineSpeed, p1.TorqueFullLoad * p1.EngineSpeed);
+			}
+			var engineTorqueMaxPower = FullLoadStationaryTorque(engineSpeedMaxPower);
+			return Tuple.Create(engineSpeedMaxPower, engineTorqueMaxPower * engineSpeedMaxPower);
+		}
 
 		public virtual NewtonMeter FullLoadStationaryTorque(PerSecond angularVelocity)
 		{

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -16,7 +17,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		internal IEngineInfo Engine;
 		internal IGearboxInfo Gearbox;
 		internal IVehicleInfo Vehicle;
-		internal IBreaks Breaks;
+		internal IBrakes Brakes;
+		internal IDriverInfo Driver;
 
 		internal IMileageCounter MilageCounter;
 
@@ -40,12 +42,29 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				}
 				return Gearbox.Gear;
 			}
-			set
+		}
+
+		[DebuggerHidden]
+		public MeterPerSecond StartSpeed
+		{
+			get
 			{
 				if (Gearbox == null) {
-					throw new VectoException("no gearbox available!");
+					throw new VectoException("No Gearbox available. StartSpeed unkown");
 				}
-				Gearbox.Gear = value;
+				return Gearbox.StartSpeed;
+			}
+		}
+
+		[DebuggerHidden]
+		public MeterPerSquareSecond StartAcceleration
+		{
+			get
+			{
+				if (Gearbox == null) {
+					throw new VectoException("No Gearbox available. StartAcceleration unknown.");
+				}
+				return Gearbox.StartAcceleration;
 			}
 		}
 
@@ -53,36 +72,54 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		#region IEngineCockpit
 
-		public PerSecond EngineSpeed()
+		public PerSecond EngineSpeed
 		{
-			if (Engine == null) {
-				throw new VectoException("no engine available!");
+			get
+			{
+				if (Engine == null) {
+					throw new VectoException("no engine available!");
+				}
+				return Engine.EngineSpeed;
 			}
-			return Engine.EngineSpeed();
+		}
+
+		public Watt EngineStationaryFullPower(PerSecond angularSpeed)
+		{
+			return Engine.EngineStationaryFullPower(angularSpeed);
+		}
+
+		public PerSecond EngineIdleSpeed
+		{
+			get { return Engine.EngineIdleSpeed; }
+		}
+
+		public PerSecond EngineRatedSpeed
+		{
+			get { return Engine.EngineRatedSpeed; }
 		}
 
 		#endregion
 
 		#region IVehicleCockpit
 
-		public MeterPerSecond VehicleSpeed()
+		public MeterPerSecond VehicleSpeed
 		{
-			return Vehicle != null ? Vehicle.VehicleSpeed() : 0.SI<MeterPerSecond>();
+			get { return Vehicle != null ? Vehicle.VehicleSpeed : 0.SI<MeterPerSecond>(); }
 		}
 
-		public Kilogram VehicleMass()
+		public Kilogram VehicleMass
 		{
-			return Vehicle != null ? Vehicle.VehicleMass() : 0.SI<Kilogram>();
+			get { return Vehicle != null ? Vehicle.VehicleMass : 0.SI<Kilogram>(); }
 		}
 
-		public Kilogram VehicleLoading()
+		public Kilogram VehicleLoading
 		{
-			return Vehicle != null ? Vehicle.VehicleLoading() : 0.SI<Kilogram>();
+			get { return Vehicle != null ? Vehicle.VehicleLoading : 0.SI<Kilogram>(); }
 		}
 
-		public Kilogram TotalMass()
+		public Kilogram TotalMass
 		{
-			return Vehicle != null ? Vehicle.TotalMass() : 0.SI<Kilogram>();
+			get { return Vehicle != null ? Vehicle.TotalMass : 0.SI<Kilogram>(); }
 		}
 
 		#endregion
@@ -109,6 +146,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Engine = engine;
 			}
 
+			var driver = component as IDriverInfo;
+			if (driver != null) {
+				Driver = driver;
+			}
+
 			var gearbox = component as IGearboxInfo;
 			if (gearbox != null) {
 				Gearbox = gearbox;
@@ -129,9 +171,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				MilageCounter = milage;
 			}
 
-			var breaks = component as IBreaks;
+			var breaks = component as IBrakes;
 			if (breaks != null) {
-				Breaks = breaks;
+				Brakes = breaks;
 			}
 
 			var road = component as IRoadLookAhead;
@@ -148,7 +190,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public void CommitSimulationStep(Second time, Second simulationInterval)
 		{
-			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time, Distance(), VehicleSpeed());
+			Log.Info("VehicleContainer committing simulation. time: {0}, dist: {1}, speed: {2}", time, Distance, VehicleSpeed);
 			foreach (var component in Components) {
 				component.CommitSimulationStep(DataWriter);
 			}
@@ -165,7 +207,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			Log.Info("VehicleContainer finishing simulation.");
 			DataWriter.Finish();
 
-			SumWriter.Write(DataWriter, VehicleMass(), VehicleLoading());
+			SumWriter.Write(DataWriter, VehicleMass, VehicleLoading);
 		}
 
 		#endregion
@@ -175,13 +217,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			return new ReadOnlyCollection<VectoSimulationComponent>(Components);
 		}
 
-		public Meter Distance()
+		public Meter Distance
 		{
-			if (MilageCounter == null) {
-				Log.Warn("No MileageCounter in VehicleContainer. Distance cannot be measured.");
-				return 0.SI<Meter>();
+			get
+			{
+				if (MilageCounter == null) {
+					Log.Warn("No MileageCounter in VehicleContainer. Distance cannot be measured.");
+					return 0.SI<Meter>();
+				}
+				return MilageCounter.Distance;
 			}
-			return MilageCounter.Distance();
 		}
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
@@ -196,13 +241,22 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public Watt BreakPower
 		{
-			get { return Breaks.BreakPower; }
-			set { Breaks.BreakPower = value; }
+			get { return Brakes.BreakPower; }
+			set { Brakes.BreakPower = value; }
 		}
 
-		public ClutchState ClutchState()
+		public bool ClutchClosed(Second absTime)
 		{
-			return Clutch.ClutchState();
+			if (Clutch == null) {
+				Log.Warn("No Clutch in VehicleContainer. ClutchClosed set to constant true!");
+				return true;
+			}
+			return Clutch.ClutchClosed(absTime);
+		}
+
+		public bool VehicleStopped
+		{
+			get { return Driver.VehicleStopped; }
 		}
 	}
 }

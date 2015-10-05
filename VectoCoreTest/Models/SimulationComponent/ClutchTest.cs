@@ -18,11 +18,11 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		[TestMethod]
 		public void TestClutch()
 		{
-			var vehicle = new VehicleContainer();
+			var container = new VehicleContainer();
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(CoachEngine);
-			var gearbox = new MockGearbox(vehicle);
+			var gearbox = new MockGearbox(container);
 
-			var clutch = new Clutch(vehicle, engineData);
+			var clutch = new Clutch(container, engineData, null);
 
 			var inPort = clutch.InPort();
 			var outPort = new MockTnOutPort();
@@ -31,9 +31,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var clutchOutPort = clutch.OutPort();
 
-			//Test - Clutch slipping
-			vehicle.Gear = 1;
+			var driver = new MockDriver(container);
 
+			//Test - Clutch slipping
 			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 0.SI<PerSecond>());
 
 			Assert.AreEqual(0, outPort.Torque.Value(), 0.001);
@@ -45,14 +45,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(62.119969, outPort.AngularVelocity.Value(), 0.001);
 
 			//Test - Clutch opened
-			vehicle.Gear = 0;
+			driver.VehicleStopped = true;
 			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 30.SI<PerSecond>());
 
 			Assert.AreEqual(0, outPort.Torque.Value(), 0.001);
 			Assert.AreEqual(engineData.IdleSpeed.Value(), outPort.AngularVelocity.Value(), 0.001);
 
 			//Test - Clutch closed
-			vehicle.Gear = 1;
+			driver.VehicleStopped = false;
 			clutchOutPort.Request(0.SI<Second>(), 0.SI<Second>(), 100.SI<NewtonMeter>(), 80.SI<PerSecond>());
 
 			Assert.AreEqual(100.0, outPort.Torque.Value(), 0.001);

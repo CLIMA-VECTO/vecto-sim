@@ -1,5 +1,4 @@
-﻿using System;
-using TUGraz.VectoCore.Utils;
+﻿using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Connector.Ports
 {
@@ -50,11 +49,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		/// <summary>
 		/// Requests the Outport with the given torque [Nm] and angularVelocity [rad/s].
 		/// </summary>
-		/// <param name="absTime">[s]</param>
-		/// <param name="dt">[s]</param>
-		/// <param name="torque">[Nm]</param>
-		/// <param name="angularVelocity">[rad/s]</param>
-		/// <param name="dryRun"></param>
 		IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false);
 
 		IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity);

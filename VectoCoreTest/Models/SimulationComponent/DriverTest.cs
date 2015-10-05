@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
-using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -47,37 +45,38 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 
-			var driver = new Driver(vehicleContainer, driverData);
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
-
+			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
-			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			tmp = AddComponent(tmp, clutch);
 			AddComponent(tmp, engine);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
-			var gbx = new MockGearbox(vehicleContainer);
-			vehicleContainer.Gear = 1;
+			var gbx = new MockGearbox(vehicleContainer) { Gear = 1 };
 
 			var driverPort = driver.OutPort();
 
-			driverPort.Initialize(5.SI<MeterPerSecond>(), 0.SI<Radian>());
+			var velocity = 5.SI<MeterPerSecond>();
+			driverPort.Initialize(velocity, 0.SI<Radian>());
 
 			var absTime = 0.SI<Second>();
 
-			var response = driver.DoCoast(absTime, 1.SI<Meter>(), 0.SI<Radian>());
+			var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed().Value(), Tolerance);
+			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
-			Assert.AreEqual(engine._previousState.FullDragPower.Value(), engine._previousState.EnginePower.Value(),
-				Constants.SimulationSettings.EngineFLDPowerTolerance);
+			Assert.AreEqual(engine.PreviousState.FullDragPower.Value(), engine.PreviousState.EnginePower.Value(),
+				Constants.SimulationSettings.EnginePowerSearchTolerance.Value());
 
-			while (vehicleContainer.VehicleSpeed() > 1) {
-				response = driver.DoCoast(absTime, 1.SI<Meter>(), 0.SI<Radian>());
+			while (vehicleContainer.VehicleSpeed > 1) {
+				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, 0.SI<Radian>());
 
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
@@ -102,38 +101,41 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 
-			var driver = new Driver(vehicleContainer, driverData);
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			var engine = new CombustionEngine(vehicleContainer, engineData);
+			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
 
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
-			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
+			tmp = AddComponent(tmp, clutch);
 			AddComponent(tmp, engine);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			var gbx = new MockGearbox(vehicleContainer);
-			vehicleContainer.Gear = 1;
+			gbx.Gear = 1;
 
 			var driverPort = driver.OutPort();
 
 			var gradient = VectoMath.InclinationToAngle(-0.020237973 / 100.0);
-			driverPort.Initialize(5.SI<MeterPerSecond>(), gradient);
+			var velocity = 5.SI<MeterPerSecond>();
+			driverPort.Initialize(velocity, gradient);
 
 			var absTime = 0.SI<Second>();
 
-			var response = driver.DoCoast(absTime, 1.SI<Meter>(), gradient);
+			var response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
 
 			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed().Value(), Tolerance);
+			Assert.AreEqual(4.9812, vehicleContainer.VehicleSpeed.Value(), Tolerance);
 			Assert.AreEqual(0.2004, response.SimulationInterval.Value(), Tolerance);
-			Assert.AreEqual(engine._previousState.FullDragPower.Value(), engine._previousState.EnginePower.Value(),
-				Constants.SimulationSettings.EngineFLDPowerTolerance);
+			Assert.AreEqual(engine.PreviousState.FullDragPower.Value(), engine.PreviousState.EnginePower.Value(),
+				Constants.SimulationSettings.EnginePowerSearchTolerance.Value());
 
-			while (vehicleContainer.VehicleSpeed() > 1) {
-				response = driver.DoCoast(absTime, 1.SI<Meter>(), gradient);
+			while (vehicleContainer.VehicleSpeed > 1) {
+				response = driver.DrivingActionCoast(absTime, 1.SI<Meter>(), velocity, gradient);
 
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 
@@ -158,15 +160,19 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 
-			var driver = new Driver(vehicleContainer, driverData);
+			var cycle = new MockDrivingCycle(vehicleContainer, null);
+
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 
 			dynamic tmp = AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
 			tmp = AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
-			tmp = AddComponent(tmp, new Clutch(vehicleContainer, engineData));
-			AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
+			var engine = new CombustionEngine(vehicleContainer, engineData);
+			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
+			tmp = AddComponent(tmp, clutch);
+			AddComponent(tmp, engine);
 
 			var gbx = new MockGearbox(vehicleContainer);
-			vehicleContainer.Gear = 1;
 
 			var driverPort = driver.OutPort();
 
@@ -181,7 +187,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.908, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
+			Assert.AreEqual(0.955, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 
 			response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.SI<Radian>());
 
@@ -190,18 +196,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			Assert.AreEqual(0.7973, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
-
-			// change vehicle weight, cannot reach minimum acceleration...
-			vehicleData.Loading = 70000.SI<Kilogram>();
-
-			try {
-				response = driverPort.Request(absTime, 1.SI<Meter>(), 10.SI<MeterPerSecond>(), 0.05.SI<Radian>());
-				Assert.Fail();
-			} catch (VectoSimulationException e) {
-				Assert.AreEqual("Could not achieve minimum acceleration", e.Message);
-			}
-			//Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.AreEqual(0.7914, modalWriter.GetValues<SI>(ModalResultField.acc).Last().Value(), Tolerance);
 		}
 
 		[TestMethod]
@@ -211,7 +206,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new MockVehicle(vehicleContainer);
 
 			var driverData = EngineeringModeSimulationDataReader.CreateDriverDataFromFile(JobFile);
-			var driver = new Driver(vehicleContainer, driverData);
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
+
+			var cycle = new MockDrivingCycle(vehicleContainer, null);
+
 
 			driver.Connect(vehicle.OutPort());
 
@@ -277,7 +275,10 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var vehicle = new MockVehicle(vehicleContainer);
 
 			var driverData = EngineeringModeSimulationDataReader.CreateDriverDataFromFile(JobFile);
-			var driver = new Driver(vehicleContainer, driverData);
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
+
+			var cycle = new MockDrivingCycle(vehicleContainer, null);
+
 
 			driver.Connect(vehicle.OutPort());
 
@@ -322,7 +323,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			Assert.AreEqual(2.545854078, response.SimulationInterval.Value(), Tolerance);
 
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
-			absTime += response.SimulationInterval;
+			//absTime += response.SimulationInterval;
 			vehicle.MyVehicleSpeed +=
 				(response.SimulationInterval * vehicle.LastRequest.acceleration).Cast<MeterPerSecond>();
 
@@ -378,6 +379,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(AccelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
+					Deceleration = -0.5.SI<MeterPerSquareSecond>()
 				},
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = DriverData.DriverMode.Off

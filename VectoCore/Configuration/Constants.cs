@@ -50,17 +50,21 @@ namespace TUGraz.VectoCore.Configuration
 			/// </summary>
 			public static readonly Meter DriveOffDistance = 1.SI<Meter>();
 
+			public static readonly Meter BrakeNextTargetDistance = 5.SI<Meter>();
+
+			public static readonly MeterPerSecond MinVelocityForCoast = 5.KMPHtoMeterPerSecond();
+
 			/// <summary>
 			/// threshold for changes in the road gradient. changes below this threshold will be considered to be equal for filtering out the driving cycle.
 			/// altitude computation is done before filtering! 
 			/// </summary>
-			public static readonly double DrivingCycleRoadGradientTolerance = 1E-12;
+			public static readonly Radian DrivingCycleRoadGradientTolerance = 1E-12.SI<Radian>();
 
 			//VectoMath.InclinationToAngle(0.25 / 100.0).Value();
 
 			public const int DriverSearchLoopThreshold = 100;
 
-			public const double EngineFLDPowerTolerance = 0.50; // Watt
+			public static readonly Watt EnginePowerSearchTolerance = 0.50.SI<Watt>(); // Watt
 
 			public const double CluchNormSpeed = 0.03;
 
@@ -71,12 +75,17 @@ namespace TUGraz.VectoCore.Configuration
 			/// <summary>
 			/// The initial search interval for the breaking power search in the driver.
 			/// </summary>
-			public static Watt BreakingPowerInitialSearchInterval = 100.SI().Kilo.Watt.Cast<Watt>();
+			public static readonly Watt BreakingPowerInitialSearchInterval = 20.SI().Kilo.Watt.Cast<Watt>();
 
 			/// <summary>
 			/// The initial search interval for the operating point search in the driver.
 			/// </summary>
-			public static MeterPerSquareSecond OperatingPointInitialSearchIntervalAccelerating = 5.SI<MeterPerSquareSecond>();
+			public static readonly MeterPerSquareSecond OperatingPointInitialSearchIntervalAccelerating =
+				0.1.SI<MeterPerSquareSecond>();
+
+			public static readonly PerSecond EngineIdlingSearchInterval = 10.SI<PerSecond>();
+
+			public const int EngineSearchLoopThreshold = 100;
 		}
 	}
 }

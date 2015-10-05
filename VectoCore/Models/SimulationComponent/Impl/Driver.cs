@@ -1,51 +1,43 @@
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using NLog;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
-	public class Driver : VectoSimulationComponent, IDriver, IDrivingCycleOutPort, IDriverDemandInPort
+	public class Driver : VectoSimulationComponent, IDriver, IDrivingCycleOutPort, IDriverDemandInPort, IDriverActions,
+		IDriverInfo
 	{
 		internal DriverState CurrentState = new DriverState();
 
-		protected IDriverDemandOutPort Next;
+		protected IDriverDemandOutPort NextComponent;
 
-		protected DriverData DriverData;
+		public DriverData DriverData { get; protected set; }
 
-		public enum DrivingBehavior
-		{
-			Stopped,
-			Accelerating,
-			Drive,
-			Coasting,
-			Braking,
-			//EcoRoll,
-			//OverSpeed,
-		}
+		protected IDriverStrategy DriverStrategy;
 
-		[DebuggerDisplay("ActionDistance: {ActionDistance}, TriggerDistance: {TriggerDistance}, Action: {Action}")]
-		public class DrivingBehaviorEntry
-		{
-			public DrivingBehavior Action;
-			public MeterPerSecond NextTargetSpeed;
-			public Meter TriggerDistance;
-			public Meter ActionDistance;
-		}
+		//public MeterPerSquareSecond LookaheadDeceleration { get; protected set; }
 
-		public Driver(VehicleContainer container, DriverData driverData) : base(container)
+		public Driver(VehicleContainer container, DriverData driverData, IDriverStrategy strategy) : base(container)
 		{
 			DriverData = driverData;
+			DriverStrategy = strategy;
+			strategy.Driver = this;
+
+			//LookaheadDeceleration = DeclarationData.Driver.LookAhead.Deceleration;
 		}
 
 		public IDriverDemandInPort InPort()
@@ -55,336 +47,479 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void Connect(IDriverDemandOutPort other)
 		{
-			Next = other;
+			NextComponent = other;
 		}
 
 
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
-			return Next.Initialize(vehicleSpeed, roadGradient);
+			if (DriverData.LookAheadCoasting.Deceleration < DriverData.AccelerationCurve.MinDeceleration()) {
+				Log.Warn(
+					"LookAhead Coasting Deceleration is lower than Driver's min. Deceleration. Coasting may start too late. Lookahead dec.: {0}, Driver min. deceleration: {1}",
+					DriverData.LookAheadCoasting.Deceleration, DriverData.AccelerationCurve.MinDeceleration());
+			}
+			VehicleStopped = vehicleSpeed.IsEqual(0);
+			return NextComponent.Initialize(vehicleSpeed, roadGradient);
+		}
+
+		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient, MeterPerSquareSecond startAcceleration)
+		{
+			VehicleStopped = vehicleSpeed.IsEqual(0);
+			var retVal = NextComponent.Initialize(vehicleSpeed, startAcceleration, roadGradient);
+
+			return retVal;
 		}
 
 
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
+			VehicleStopped = false;
 			Log.Debug("==== DRIVER Request ====");
 			Log.Debug(
-				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}", absTime, ds,
-				targetVelocity, gradient, DataBus.Distance(), DataBus.VehicleSpeed());
+				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}, vehicle stopped: {6}",
+				absTime, ds, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, VehicleStopped);
 
-			var retVal = DoHandleRequest(absTime, ds, targetVelocity, gradient);
+			var retVal = DriverStrategy.Request(absTime, ds, targetVelocity, gradient);
+			//DoHandleRequest(absTime, ds, targetVelocity, gradient);
 
 			CurrentState.Response = retVal;
+			retVal.SimulationInterval = CurrentState.dt;
+			retVal.Acceleration = CurrentState.Acceleration;
+
 			return retVal;
 		}
 
 
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
+			VehicleStopped = true;
 			Log.Debug("==== DRIVER Request ====");
-			Log.Debug("Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3}", absTime, dt, targetVelocity,
-				gradient);
-			var retVal = DoHandleRequest(absTime, dt, targetVelocity, gradient);
+			Log.Debug(
+				"Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5} gear: {6}: vehicle stopped: {7}",
+				absTime, dt, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear, VehicleStopped);
+
+			var retVal = DriverStrategy.Request(absTime, dt, targetVelocity, gradient);
 
 			CurrentState.Response = retVal;
+			retVal.SimulationInterval = CurrentState.dt;
+			retVal.Acceleration = CurrentState.Acceleration;
+
+			return retVal;
+		}
+
+		IDataBus IDriverActions.DataBus
+		{
+			get { return DataBus; }
+		}
+
+		/// <summary>
+		/// see documentation of IDriverActions
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="ds"></param>
+		/// <param name="targetVelocity"></param>
+		/// <param name="gradient"></param>
+		/// <param name="previousResponse"></param>
+		/// <returns></returns>
+		public IResponse DrivingActionAccelerate(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient,
+			IResponse previousResponse = null)
+		{
+			Log.Debug("DrivingAction Accelerate");
+			var operatingPoint = ComputeAcceleration(ds, targetVelocity);
+
+			IResponse retVal = null;
+			var response = previousResponse ??
+							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
+
+			response.Switch().
+				Case<ResponseSuccess>(r => {
+					retVal = r; // => return
+				}).
+				Case<ResponseOverload>(). // do nothing, searchOperatingPoint is called later on
+				Case<ResponseUnderload>(r => {
+					// Delta is negative we are already below the Drag-load curve. activate breaks
+					retVal = r; // => return, strategy should brake
+				}).
+				Case<ResponseGearShift>(r => {
+					retVal = r;
+				}).
+				Default(r => {
+					throw new UnexpectedResponseException("DrivingAction Accelerate.", r);
+				});
+
+			if (retVal == null) {
+				// unhandled response (overload, delta > 0) - we need to search for a valid operating point..				
+				var nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration, response);
+
+				var limitedOperatingPoint = LimitAccelerationByDriverModel(nextOperatingPoint,
+					LimitationMode.LimitDecelerationDriver);
+				Log.Debug("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}",
+					limitedOperatingPoint.SimulationInterval, limitedOperatingPoint.Acceleration);
+
+				retVal = NextComponent.Request(absTime, limitedOperatingPoint.SimulationInterval, limitedOperatingPoint.Acceleration,
+					gradient);
+				retVal.Switch().
+					Case<ResponseUnderload>(() => operatingPoint = limitedOperatingPoint)
+					. // acceleration is limited by driver model, operating point moves below drag curve
+					Case<ResponseOverload>(() => {
+						// deceleration is liited by driver model, operating point moves above full load (e.g., steep uphill)
+						// the vehicle/driver can't achieve an acceleration higher than deceleration curve, try again with higher deceleration
+						Log.Warn(
+							"Operating point with limited acceleration resulted in an overload! trying again with original acceleration {0}",
+							nextOperatingPoint.Acceleration);
+						retVal = NextComponent.Request(absTime, nextOperatingPoint.SimulationInterval, nextOperatingPoint.Acceleration,
+							gradient);
+						retVal.Switch().
+							Case<ResponseSuccess>(() => operatingPoint = nextOperatingPoint).
+							Case<ResponseGearShift>(() => operatingPoint = nextOperatingPoint).
+							Default(r => {
+								throw new UnexpectedResponseException("DrivingAction Accelerate after Overload", r);
+							});
+					}).
+					Case<ResponseGearShift>(() => operatingPoint = limitedOperatingPoint).
+					Case<ResponseSuccess>(() => operatingPoint = limitedOperatingPoint).
+					Default(r => {
+						throw new UnexpectedResponseException("DrivingAction Accelerate after SearchOperatingPoint.", r);
+					});
+			}
+			CurrentState.Acceleration = operatingPoint.Acceleration;
+			CurrentState.dt = operatingPoint.SimulationInterval;
+			CurrentState.Response = retVal;
+
+			retVal.Acceleration = operatingPoint.Acceleration;
+			retVal.SimulationInterval = operatingPoint.SimulationInterval;
+
+			return retVal;
+		}
+
+		/// <summary>
+		/// see documentation of IDriverActions
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="ds"></param>
+		/// <param name="maxVelocity"></param>
+		/// <param name="gradient"></param>
+		/// <returns></returns>
+		public IResponse DrivingActionCoast(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
+		{
+			Log.Debug("DrivingAction Coast");
+
+			return CoastOrRollAction(absTime, ds, maxVelocity, gradient, false);
+		}
+
+		/// <summary>
+		/// see documentation of IDriverActions
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="ds"></param>
+		/// <param name="maxVelocity"></param>
+		/// <param name="gradient"></param>
+		/// <returns></returns>
+		public IResponse DrivingActionRoll(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient)
+		{
+			Log.Debug("DrivingAction Roll");
+
+			var retVal = CoastOrRollAction(absTime, ds, maxVelocity, gradient, true);
+			retVal.Switch().
+				Case<ResponseGearShift>(() => {
+					throw new UnexpectedResponseException("DrivingAction Roll: Gearshift during Roll action.", retVal);
+				});
+			return retVal;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="ds"></param>
+		/// <param name="maxVelocity"></param>
+		/// <param name="gradient"></param>
+		/// <param name="rollAction"></param>
+		/// <returns>
+		/// * ResponseSuccess
+		/// * ResponseDrivingCycleDistanceExceeded: vehicle is at low speed, coasting would lead to stop before ds is reached.
+		/// * ResponseSpeedLimitExceeded: vehicle accelerates during coasting which would lead to exceeding the given maxVelocity (e.g., driving downhill, engine's drag load is not sufficient)
+		/// * ResponseUnderload: engine's operating point is below drag curve (vehicle accelerates more than driver model allows; engine's drag load is not sufficient for limited acceleration
+		/// * ResponseGearShift: gearbox needs to shift gears, vehicle can not accelerate (traction interruption)
+		/// * ResponseFailTimeInterval: 
+		/// </returns>
+		protected IResponse CoastOrRollAction(Second absTime, Meter ds, MeterPerSecond maxVelocity, Radian gradient,
+			bool rollAction)
+		{
+			var operatingPoint = ComputeAcceleration(ds, DataBus.VehicleSpeed);
+
+			var response = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration,
+				gradient, true);
+
+			//if (response is ResponseFailTimeInterval) {
+			//	return response;
+			//}
+
+			operatingPoint = SearchOperatingPoint(absTime, operatingPoint.SimulationDistance, gradient,
+				operatingPoint.Acceleration, response, coasting: true);
+
+			if (!ds.IsEqual(operatingPoint.SimulationDistance)) {
+				// vehicle is at low speed, coasting would lead to stop before ds is reached.
+				Log.Debug("SearchOperatingPoint reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!",
+					operatingPoint.SimulationDistance, ds);
+				return new ResponseDrivingCycleDistanceExceeded {
+					Source = this,
+					MaxDistance = operatingPoint.SimulationDistance,
+				};
+			}
+
+			Log.Debug("Found operating point for {2}. dt: {0}, acceleration: {1}", operatingPoint.SimulationInterval,
+				operatingPoint.Acceleration, rollAction ? "ROL" : "COAST");
+
+			operatingPoint = LimitAccelerationByDriverModel(operatingPoint,
+				rollAction ? LimitationMode.NoLimitation : LimitationMode.LimitDecelerationLookahead);
+
+			CurrentState.Acceleration = operatingPoint.Acceleration;
+			CurrentState.dt = operatingPoint.SimulationInterval;
+
+			// compute speed at the end of the simulation interval. if it exceeds the limit -> return
+			var v2 = DataBus.VehicleSpeed + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
+			if (v2 > maxVelocity) {
+				Log.Debug("vehicle's velocity would exceed given max speed. v2: {0}, max speed: {1}", v2, maxVelocity);
+				return new ResponseSpeedLimitExceeded() { Source = this };
+			}
+
+			var retVal = NextComponent.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
+			CurrentState.Response = retVal;
+			retVal.SimulationInterval = CurrentState.dt;
+			retVal.Acceleration = CurrentState.Acceleration;
+
+			retVal.Switch().
+				Case<ResponseSuccess>().
+				Case<ResponseUnderload>(). // driver limits acceleration, operating point may be below engine's 
+				//drag load resp. below 0
+				//Case<ResponseOverload>(). // driver limits acceleration, operating point may be above 0 (GBX), use brakes
+				Case<ResponseGearShift>().
+				Case<ResponseFailTimeInterval>(r => {
+					retVal = new ResponseDrivingCycleDistanceExceeded() {
+						Source = this,
+						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + CurrentState.Acceleration / 2 * r.DeltaT * r.DeltaT
+					};
+				}).
+				Default(() => {
+					throw new UnexpectedResponseException("CoastOrRoll Action: unhandled response from powertrain.", retVal);
+				});
 			return retVal;
 		}
 
 
-		protected IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		public IResponse DrivingActionBrake(Second absTime, Meter ds, MeterPerSecond nextTargetSpeed, Radian gradient,
+			IResponse previousResponse = null, Meter targetDistance = null)
 		{
-			var currentDistance = DataBus.Distance();
-			var nextDrivingActions = GetNextDrivingActions(currentDistance);
+			Log.Debug("DrivingAction Brake");
 
-			Log.Debug(", ".Join(nextDrivingActions.Select(x => string.Format("({0}: {1})", x.ActionDistance, x.Action))));
+			IResponse retVal = null;
 
+			var operatingPoint = ComputeAcceleration(ds, nextTargetSpeed);
 
-			if (CurrentState.DrivingAction.Action == DrivingBehavior.Stopped && targetVelocity >= DataBus.VehicleSpeed()) {
-				CurrentState.DrivingAction.Action = DrivingBehavior.Drive;
-			}
-
-			if (nextDrivingActions.Count > 0) {
-				// if we exceeded the previous action (by accident), set the action anyway in case there is no 'next action'...
-				CurrentState.DrivingAction = nextDrivingActions.LastOrDefault(x => x.ActionDistance < currentDistance) ??
-											CurrentState.DrivingAction;
-
-				var nextActions = nextDrivingActions.Where(x => x.ActionDistance >= currentDistance).ToList();
-				var nextDrivingAction = nextActions.GetEnumerator();
-				nextDrivingAction.MoveNext();
-				var hasNextEntry = true;
-
-				// if the current position matches the next action - set new action.
-				if (nextDrivingAction.Current.ActionDistance <=
-					currentDistance + Constants.SimulationSettings.DriverActionDistanceTolerance) {
-					CurrentState.DrivingAction = nextDrivingAction.Current;
-					hasNextEntry = nextDrivingAction.MoveNext(); // the current action has already been processed, look at next one...
-				}
-
-				// check if desired distance exceeds next action point
-				if (hasNextEntry && nextDrivingAction.Current.ActionDistance < currentDistance + ds) {
-					Log.Debug(
-						"current Distance: {3} -- Simulation Distance {0} exceeds next DrivingAction at {1}, reducing interval to {2}", ds,
-						nextDrivingAction.Current.ActionDistance, nextDrivingAction.Current.ActionDistance - currentDistance,
-						currentDistance);
-					return new ResponseDrivingCycleDistanceExceeded {
-						MaxDistance = nextDrivingAction.Current.ActionDistance - currentDistance
-					};
-				}
-			} else {
-				if (targetVelocity > DataBus.VehicleSpeed()) {
-					CurrentState.DrivingAction.Action = DrivingBehavior.Accelerating;
+			//if (operatingPoint.Acceleration.IsSmaller(0)) {
+			// if we should brake with the max. deceleration and the deceleration changes within the current interval, take the larger deceleration...
+			if (operatingPoint.Acceleration.IsEqual(DriverData.AccelerationCurve.Lookup(DataBus.VehicleSpeed).Deceleration)) {
+				var v2 = DataBus.VehicleSpeed + operatingPoint.Acceleration * operatingPoint.SimulationInterval;
+				var nextAcceleration = DriverData.AccelerationCurve.Lookup(v2).Deceleration;
+				var tmp = ComputeTimeInterval(VectoMath.Min(operatingPoint.Acceleration, nextAcceleration),
+					operatingPoint.SimulationDistance);
+				if (operatingPoint.SimulationDistance.Equals(tmp.SimulationDistance)) {
+					// only decelerate more of the simulation interval is not modified
+					// i.e., braking to the next sample point
+					Log.Debug("adjusting acceleration from {0} to {1}", operatingPoint.Acceleration, tmp.Acceleration);
+					operatingPoint = tmp;
+					// ComputeTimeInterval((operatingPoint.Acceleration + tmp.Acceleration) / 2, operatingPoint.SimulationDistance);
 				}
 			}
-			Log.Debug("DrivingAction: {0}", CurrentState.DrivingAction.Action);
-			//CurrentState.DrivingAction = nextAction;
-			switch (CurrentState.DrivingAction.Action) {
-				case DrivingBehavior.Accelerating:
-					return DriveOrAccelerate(absTime, ds, targetVelocity, gradient);
-				case DrivingBehavior.Drive:
-					return DriveOrAccelerate(absTime, ds, targetVelocity, gradient);
-				case DrivingBehavior.Coasting:
-					return DoCoast(absTime, ds, gradient);
-				case DrivingBehavior.Braking:
-					return DoBreak(absTime, ds, gradient, CurrentState.DrivingAction.NextTargetSpeed);
-			}
-			throw new VectoSimulationException("unhandled driving action " + CurrentState.DrivingAction);
-		}
-
-		private IResponse DoBreak(Second absTime, Meter ds, Radian gradient, MeterPerSecond nextTargetSpeed)
-		{
-			ComputeAcceleration(ref ds, nextTargetSpeed);
-
-			// todo: still required?
-			if (CurrentState.dt <= 0) {
-				return new ResponseFailTimeInterval();
+			if (targetDistance != null && targetDistance > DataBus.Distance) {
+				var tmp = ComputeAcceleration(targetDistance - DataBus.Distance, nextTargetSpeed);
+				operatingPoint = ComputeTimeInterval(tmp.Acceleration, ds);
+				if (!ds.IsEqual(operatingPoint.SimulationDistance)) {
+					Log.Error(
+						"Unexpected Condition: Distance has been adjusted from {0} to {1}, currentVelocity: {2} acceleration: {3}, targetVelocity: {4}",
+						operatingPoint.SimulationDistance, ds, DataBus.VehicleSpeed, operatingPoint.Acceleration, nextTargetSpeed);
+					throw new VectoSimulationException("Simulation distance unexpectedly adjusted! {0} -> {1}", ds,
+						operatingPoint.SimulationDistance);
+				}
 			}
 
-			var response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);
+			var response = previousResponse ??
+							NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
 
-			var dryRun = response as ResponseDryRun;
-			if (dryRun == null) {
-				throw new VectoSimulationException("Expected DryRunResponse after Dry-Run Request!");
+			response.Switch().
+				Case<ResponseSuccess>(r => retVal = r).
+				Case<ResponseOverload>(r => retVal = r)
+				. // i.e., driving uphill, clutch open, deceleration higher than desired deceleration
+				Case<ResponseUnderload>(). // will be handled in SearchBrakingPower
+				Case<ResponseGearShift>(). // will be handled in SearchBrakingPower
+				Case<ResponseFailTimeInterval>(r =>
+					retVal = new ResponseDrivingCycleDistanceExceeded() {
+						Source = this,
+						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
+					}).
+				Default(r => {
+					throw new UnexpectedResponseException("DrivingAction Brake: first request.", r);
+				});
+
+			if (retVal != null) {
+				retVal.Acceleration = operatingPoint.Acceleration;
+				retVal.SimulationInterval = operatingPoint.SimulationInterval;
+				return retVal;
 			}
 
-			var newDs = ds;
-			SearchBreakingPower(absTime, ref newDs, gradient, dryRun, true);
+			operatingPoint = SearchBrakingPower(absTime, operatingPoint.SimulationDistance, gradient,
+				operatingPoint.Acceleration, response);
 
-			if (!ds.IsEqual(newDs)) {
-				Log.Debug(
-					"SearchOperatingPoint Breaking reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!", newDs,
-					ds);
-				return new ResponseDrivingCycleDistanceExceeded { MaxDistance = newDs, SimulationInterval = CurrentState.dt };
+			if (!ds.IsEqual(operatingPoint.SimulationDistance, 1E-15.SI<Meter>())) {
+				Log.Info(
+					"SearchOperatingPoint Breaking reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!",
+					operatingPoint.SimulationDistance, ds);
+				return new ResponseDrivingCycleDistanceExceeded {
+					Source = this,
+					MaxDistance = operatingPoint.SimulationDistance
+				};
 			}
 
-			Log.Debug("Found operating point for breaking. dt: {0}, acceleration: {1}", CurrentState.dt,
-				CurrentState.Acceleration);
-			var retVal = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
-			CurrentState.Response = retVal;
+			Log.Debug("Found operating point for breaking. dt: {0}, acceleration: {1}", operatingPoint.SimulationInterval,
+				operatingPoint.Acceleration);
+
+			retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
 
 			retVal.Switch().
-				Case<ResponseSuccess>(r => r.SimulationInterval = CurrentState.dt).
-				Default(() => Log.Debug("unhandled response from powertrain: {0}", retVal));
+				Case<ResponseSuccess>().
+				Case<ResponseFailTimeInterval>(r =>
+					retVal = new ResponseDrivingCycleDistanceExceeded() {
+						Source = this,
+						MaxDistance = DataBus.VehicleSpeed * r.DeltaT + operatingPoint.Acceleration / 2 * r.DeltaT * r.DeltaT
+					}).
+				Default(r => {
+					throw new UnexpectedResponseException("DrivingAction Brake: request failed after braking power was found.", r);
+				});
+			CurrentState.Acceleration = operatingPoint.Acceleration;
+			CurrentState.dt = operatingPoint.SimulationInterval;
+			CurrentState.Response = retVal;
+			retVal.Acceleration = operatingPoint.Acceleration;
+			retVal.SimulationInterval = operatingPoint.SimulationInterval;
 
-			return retVal; //new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
+			return retVal;
 		}
 
-		private void SearchBreakingPower(Second absTime, ref Meter ds, Radian gradient, ResponseDryRun response, bool coasting)
+
+		// ================================================
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="operatingPoint"></param>
+		/// <param name="limits"></param>
+		/// <returns></returns>
+		private OperatingPoint LimitAccelerationByDriverModel(OperatingPoint operatingPoint,
+			LimitationMode limits)
 		{
+			var limitApplied = false;
+			var originalAcceleration = operatingPoint.Acceleration;
+			if (((limits & LimitationMode.LimitDecelerationLookahead) != 0) &&
+				operatingPoint.Acceleration < DriverData.LookAheadCoasting.Deceleration) {
+				operatingPoint.Acceleration = DriverData.LookAheadCoasting.Deceleration;
+				limitApplied = true;
+			}
+			var accelerationLimits = DriverData.AccelerationCurve.Lookup(DataBus.VehicleSpeed);
+			if (operatingPoint.Acceleration > accelerationLimits.Acceleration) {
+				operatingPoint.Acceleration = accelerationLimits.Acceleration;
+				limitApplied = true;
+			}
+			if (((limits & LimitationMode.LimitDecelerationDriver) != 0) &&
+				operatingPoint.Acceleration < accelerationLimits.Deceleration) {
+				operatingPoint.Acceleration = accelerationLimits.Deceleration;
+				limitApplied = true;
+			}
+			if (limitApplied) {
+				operatingPoint.SimulationInterval =
+					ComputeTimeInterval(operatingPoint.Acceleration, operatingPoint.SimulationDistance).SimulationInterval;
+				Log.Debug("Limiting acceleration from {0} to {1}, dt: {2}", originalAcceleration,
+					operatingPoint.Acceleration, operatingPoint.SimulationInterval);
+			}
+			return operatingPoint;
+		}
+
+		/// <summary>
+		/// Performs a search for the required braking power such that the vehicle accelerates with the given acceleration.
+		/// Returns a new operating point (a, ds, dt) where ds may be shorter due to vehicle stopping
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="ds"></param>
+		/// <param name="gradient"></param>
+		/// <param name="acceleration"></param>
+		/// <param name="initialResponse"></param>
+		/// <returns>operating point (a, ds, dt) such that the vehicle accelerates with the given acceleration.</returns>
+		private OperatingPoint SearchBrakingPower(Second absTime, Meter ds, Radian gradient,
+			MeterPerSquareSecond acceleration, IResponse initialResponse)
+		{
+			Log.Info("Disabling logging during search iterations");
+			LogManager.DisableLogging();
+
 			var debug = new List<dynamic>(); // only used while testing
-			var breakingPower = (DataBus.ClutchState() != ClutchState.ClutchClosed)
-				? response.AxlegearPowerRequest.Abs()
-				: response.DeltaDragLoad.Abs();
 
 			var searchInterval = Constants.SimulationSettings.BreakingPowerInitialSearchInterval;
 
-			var originalDs = ds;
+			var operatingPoint = new OperatingPoint() { SimulationDistance = ds, Acceleration = acceleration };
 			Watt origDelta = null;
+			initialResponse.Switch().
+				Case<ResponseGearShift>(r => origDelta = r.GearboxPowerRequest).
+				Case<ResponseUnderload>(r => origDelta = DataBus.ClutchClosed(absTime)
+					? r.Delta
+					: r.GearboxPowerRequest).
+				Default(r => {
+					throw new UnexpectedResponseException("cannot use response for searching braking power!", r);
+				});
 
-			// double the searchInterval until a good interval was found
-			var intervalFactor = 2.0;
+			debug.Add(new { brakePower = 0.SI<Watt>(), searchInterval, delta = origDelta, operatingPoint });
+
+			var brakePower = searchInterval * -origDelta.Sign();
+
+			var modeBinarySearch = false;
+			var intervalFactor = 1.0;
+			var retryCount = 0;
 
 			do {
-				ds = originalDs;
-				var delta = DataBus.ClutchState() == ClutchState.ClutchClosed
-					? -response.DeltaDragLoad
-					: -response.AxlegearPowerRequest;
+				operatingPoint = ComputeTimeInterval(operatingPoint.Acceleration, ds);
+				DataBus.BreakPower = brakePower;
+				var response =
+					(ResponseDryRun)
+						NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
+				var delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest;	
 
-				debug.Add(new { breakingPower, searchInterval, delta });
+				if (delta.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+					LogManager.EnableLogging();
+					Log.Debug("found operating point in {0} iterations, delta: {1}", debug.Count, delta);
+					return operatingPoint;
+				}
 
-				if (origDelta == null) {
-					origDelta = delta;
-				} else {
-					// check if a correct searchInterval was found (when the delta changed signs, we stepped through the 0-point)
-					// from then on the searchInterval can be bisected.
-					if (origDelta.Sign() != delta.Sign()) {
-						intervalFactor = 0.5;
+				debug.Add(new { brakePower, searchInterval, delta, operatingPoint });
+
+				// check if a correct searchInterval was found (when the delta changed signs, we stepped through the 0-point)
+				// from then on the searchInterval can be bisected.
+				if (origDelta.Sign() != delta.Sign()) {
+					intervalFactor = 0.5;
+					if (!modeBinarySearch) {
+						modeBinarySearch = true;
+						retryCount = 0; // again max. 100 iterations for the binary search...
 					}
 				}
 
-				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
-					Log.Debug("found operating point in {0} iterations, delta: {1}", debug.Count, delta);
-					return;
-				}
-
-
-				breakingPower += searchInterval * -delta.Sign();
 				searchInterval *= intervalFactor;
+				brakePower += searchInterval * -delta.Sign();
+			} while (retryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
 
-				CurrentState.dt = ComputeTimeInterval(CurrentState.Acceleration, ref ds);
-				DataBus.BreakPower = breakingPower;
-				response = (ResponseDryRun)Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);
-			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
-
-			Log.Debug("Exceeded max iterations when searching for operating point!");
-			Log.Debug("exceeded: {0} ... {1}", ", ".Join(debug.Take(5)), ", ".Join(debug.Slice(-6)));
+			LogManager.EnableLogging();
+			Log.Warn("Exceeded max iterations when searching for operating point!");
+			Log.Warn("exceeded: {0} ... {1}", ", ".Join(debug.Take(5)), ", ".Join(debug.Slice(-6)));
 			Log.Error("Failed to find operating point for breaking!");
-			throw new VectoSimulationException("Failed to find operating point for breaking!");
+			throw new VectoSimulationException("Failed to find operating point for breaking!exceeded: {0} ... {1}",
+				", ".Join(debug.Take(5)), ", ".Join(debug.Slice(-6)));
 		}
 
-		private IResponse DriveOrAccelerate(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
-		{
-			ComputeAcceleration(ref ds, targetVelocity);
-			if (CurrentState.dt <= 0) {
-				return new ResponseFailTimeInterval();
-			}
-
-			IResponse retVal = null;
-			do {
-				var response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
-				response.Switch().
-					Case<ResponseSuccess>(r => {
-						r.SimulationInterval = CurrentState.dt;
-						retVal = r;
-					}).
-					Case<ResponseEngineOverload>(r => {
-						if (r != null && r.Delta < 0) {
-							// if Delta is negative we are already below the Drag-load curve. activate breaks
-							retVal = DoBreak(absTime, ds, gradient, targetVelocity);
-						} else {
-							var doAccelerate = (DataBus.VehicleSpeed() - targetVelocity).Abs() > 0.1 * targetVelocity;
-
-							SearchOperatingPoint(absTime, ref ds, gradient, r, accelerating: doAccelerate);
-							Log.Debug("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}, doAccelerate: {2}",
-								CurrentState.dt, CurrentState.Acceleration, doAccelerate);
-						}
-					}).
-					Case<ResponseGearShift>(() => { }).
-					Case<ResponseGearboxOverload>(r => {
-						if (r != null && r.Delta < 0) {
-							// if Delta is negative we are below the Drag-load curve: activate breaks
-							retVal = DoBreak(absTime, ds, gradient, targetVelocity);
-						} else {
-							var doAccelerate = (DataBus.VehicleSpeed() - targetVelocity).Abs() > 0.1 * targetVelocity;
-
-							SearchOperatingPoint(absTime, ref ds, gradient, r, accelerating: doAccelerate);
-							Log.Debug("Found operating point for Drive/Accelerate. dt: {0}, acceleration: {1}, doAccelerate: {2}",
-								CurrentState.dt, CurrentState.Acceleration, doAccelerate);
-						}
-					}).
-					Default(r => { throw new VectoException(string.Format("Unknown Response: {0}", r)); });
-				if (retVal != null) {
-					return retVal;
-				}
-			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
-
-			return new ResponseDrivingCycleDistanceExceeded { SimulationInterval = CurrentState.dt };
-		}
-
-		protected IList<DrivingBehaviorEntry> GetNextDrivingActions(Meter minDistance)
-		{
-			var currentSpeed = DataBus.VehicleSpeed();
-
-			// distance until halt
-			var lookaheadDistance = Formulas.DecelerationDistance(currentSpeed, 0.SI<MeterPerSecond>(),
-				DeclarationData.Driver.LookAhead.Deceleration);
-
-			var lookaheadData = DataBus.LookAhead(1.2 * lookaheadDistance);
-
-			Log.Debug("Lookahead distance: {0} @ current speed {1}", lookaheadDistance, currentSpeed);
-			var nextActions = new List<DrivingBehaviorEntry>();
-			for (var i = 0; i < lookaheadData.Count; i++) {
-				var entry = lookaheadData[i];
-				if (entry.VehicleTargetSpeed < currentSpeed) {
-					var breakingDistance = ComputeDecelerationDistance(entry.VehicleTargetSpeed);
-					Log.Debug("distance to decelerate from {0} to {1}: {2}", currentSpeed, entry.VehicleTargetSpeed,
-						breakingDistance);
-					Log.Debug("adding 'Braking' starting at distance {0}", entry.Distance - breakingDistance);
-					nextActions.Add(
-						new DrivingBehaviorEntry {
-							Action = DrivingBehavior.Braking,
-							ActionDistance = entry.Distance - breakingDistance,
-							TriggerDistance = entry.Distance,
-							NextTargetSpeed = entry.VehicleTargetSpeed
-						});
-					var coastingDistance = Formulas.DecelerationDistance(currentSpeed, entry.VehicleTargetSpeed,
-						DeclarationData.Driver.LookAhead.Deceleration);
-					Log.Debug("adding 'Coasting' starting at distance {0}", entry.Distance - coastingDistance);
-					nextActions.Add(
-						new DrivingBehaviorEntry {
-							Action = DrivingBehavior.Coasting,
-							ActionDistance = entry.Distance - coastingDistance,
-							TriggerDistance = entry.Distance,
-							NextTargetSpeed = entry.VehicleTargetSpeed
-						});
-				}
-				if (entry.VehicleTargetSpeed > currentSpeed) {
-					nextActions.Add(new DrivingBehaviorEntry {
-						Action = DrivingBehavior.Accelerating,
-						NextTargetSpeed = entry.VehicleTargetSpeed,
-						TriggerDistance = entry.Distance,
-						ActionDistance = entry.Distance
-					});
-				}
-			}
-
-			return nextActions.OrderBy(x => x.ActionDistance).ToList();
-		}
-
-		protected internal Meter ComputeDecelerationDistance(MeterPerSecond targetSpeed)
-		{
-			return DriverData.AccelerationCurve.ComputeAccelerationDistance(DataBus.VehicleSpeed(), targetSpeed);
-		}
-
-		protected internal IResponse DoCoast(Second absTime, Meter ds, Radian gradient)
-		{
-			ComputeAcceleration(ref ds, 0.SI<MeterPerSecond>());
-
-			if (CurrentState.dt <= 0) {
-				return new ResponseFailTimeInterval();
-			}
-
-			var response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, dryRun: true);
-
-			var newDs = ds;
-			SearchOperatingPoint(absTime, ref newDs, gradient, response, coasting: true);
-
-			if (!ds.IsEqual(newDs)) {
-				Log.Debug(
-					"SearchOperatingPoint reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!", newDs, ds);
-				return new ResponseDrivingCycleDistanceExceeded { MaxDistance = newDs, SimulationInterval = CurrentState.dt };
-			}
-
-			Log.Debug("Found operating point for coasting. dt: {0}, acceleration: {1}", CurrentState.dt,
-				CurrentState.Acceleration);
-
-			if (CurrentState.Acceleration < DeclarationData.Driver.LookAhead.Deceleration) {
-				Log.Debug("Limiting coasting deceleration from {0} to {1}", CurrentState.Acceleration,
-					DeclarationData.Driver.LookAhead.Deceleration);
-				CurrentState.Acceleration = DeclarationData.Driver.LookAhead.Deceleration;
-				//CurrentState.dt = ComputeTimeInterval(CurrentState.Acceleration, ref ds);
-				Log.Debug("Changed dt due to limited coasting deceleration. dt: {0}", CurrentState.dt);
-			}
-
-
-			var retVal = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient);
-			CurrentState.Response = retVal;
-
-			retVal.Switch().
-				Case<ResponseSuccess>(r => r.SimulationInterval = CurrentState.dt).
-				Default(() => Log.Debug("unhandled response from powertrain: {0}", retVal));
-
-			return retVal; //new ResponseDrivingCycleDistanceExceeded() { SimulationInterval = CurrentState.dt };
-		}
 
 		/// <summary>
 		/// search for the operating point where the engine's requested power is either on the full-load curve or  on the drag curve (parameter 'coasting').
@@ -397,79 +532,101 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <param name="absTime">absTime from the original request</param>
 		/// <param name="ds">ds from the original request</param>
 		/// <param name="gradient">gradient from the original request</param>
-		/// <param name="response">response of the former request that resulted in an overload response (or a dry-run response)</param>
+		/// <param name="acceleration"></param>
+		/// <param name="initialResponse"></param>
 		/// <param name="coasting">if true approach the drag-load curve, otherwise full-load curve</param>
-		/// <param name="accelerating"></param>
 		/// <returns></returns>
-		private void SearchOperatingPoint(Second absTime, ref Meter ds, Radian gradient,
-			IResponse response, bool coasting = false, bool accelerating = true)
+		protected OperatingPoint SearchOperatingPoint(Second absTime, Meter ds, Radian gradient,
+			MeterPerSquareSecond acceleration, IResponse initialResponse, bool coasting = false)
 		{
+			Log.Info("Disabling logging during search iterations");
+			LogManager.DisableLogging();
+
 			var debug = new List<dynamic>();
+
+			var retVal = new OperatingPoint { Acceleration = acceleration, SimulationDistance = ds };
+
+			var actionRoll = !DataBus.ClutchClosed(absTime);
+
 			var searchInterval = Constants.SimulationSettings.OperatingPointInitialSearchIntervalAccelerating;
+			var intervalFactor = 1.0;
 
-			var originalDs = ds;
-
-			if (coasting) {
-				accelerating = false;
-			}
-
-			// double the searchInterval until a good interval was found
-			var intervalFactor = 2.0;
-
-			var delta = 0.SI<Watt>();
 			Watt origDelta = null;
+			if (actionRoll) {
+				initialResponse.Switch().
+					Case<ResponseDryRun>(r => origDelta = r.GearboxPowerRequest).
+					Case<ResponseFailTimeInterval>(r => origDelta = r.GearboxPowerRequest).
+					Default(r => {
+						throw new UnexpectedResponseException("Unknown response type.", r);
+					});
+			} else {
+				initialResponse.Switch().
+					Case<ResponseOverload>(r => origDelta = r.Delta). // search operating point in drive action after overload
+					Case<ResponseDryRun>(r => origDelta = coasting ? r.DeltaDragLoad : r.DeltaFullLoad).
+					Default(r => {
+						throw new UnexpectedResponseException("Unknown response type.", r);
+					});
+			}
+			var delta = origDelta;
 
+			var retryCount = 0;
 			do {
-				ds = originalDs;
-				response.Switch().
-					Case<ResponseEngineOverload>(r => delta = r.Delta).
-					Case<ResponseGearboxOverload>(r => delta = r.Delta).
-					Case<ResponseDryRun>(r => delta = coasting ? r.DeltaDragLoad : r.DeltaFullLoad).
-					Default(r => { throw new VectoSimulationException(string.Format("Unknown response type. {0}", r)); });
+				debug.Add(new { delta, acceleration = retVal.Acceleration, searchInterval });
 
-				debug.Add(new { delta, acceleration = CurrentState.Acceleration, searchInterval, intervalFactor });
-
-				if (origDelta == null) {
-					origDelta = delta;
-				} else {
-					// check if a correct searchInterval was found (when the delta changed signs, we stepped through the 0-point)
-					// from then on the searchInterval can be bisected.
-					if (origDelta.Sign() != delta.Sign()) {
-						intervalFactor = 0.5;
-					}
-				}
-
-				if (delta.IsEqual(0, Constants.SimulationSettings.EngineFLDPowerTolerance)) {
-					Log.Debug(
-						"found operating point in {0} iterations. Engine Power req: {2}, Gearbox Power req: {3} delta: {1}",
-						debug.Count, delta, response.EnginePowerRequest, response.GearboxPowerRequest);
-					return;
+				// check if a correct searchInterval was found (when the delta changed signs, we stepped through the 0-point)
+				// from then on the searchInterval can be bisected.
+				if (origDelta.Sign() != delta.Sign()) {
+					intervalFactor = 0.5;
 				}
 
 				searchInterval *= intervalFactor;
-				CurrentState.Acceleration += searchInterval * -delta.Sign();
+				retVal.Acceleration += searchInterval * -delta.Sign();
 
-				// check for minimum acceleration, add some safety margin due to search
-				if (!coasting && accelerating &&
-					CurrentState.Acceleration.Abs() < Constants.SimulationSettings.MinimumAcceleration.Value() / 5.0 &&
-					searchInterval.Abs() < Constants.SimulationSettings.MinimumAcceleration / 20.0) {
-					throw new VectoSimulationException("Could not achieve minimum acceleration");
+				if (retVal.Acceleration < (10 * DriverData.AccelerationCurve.MaxDeceleration() - searchInterval)
+					|| retVal.Acceleration > (DriverData.AccelerationCurve.MaxAcceleration() + searchInterval)) {
+					LogManager.EnableLogging();
+					Log.Warn("Operating Point outside driver acceleration limits: a: {0}", retVal.Acceleration);
+					LogManager.DisableLogging();
+					//throw new VectoSimulationException(
+					//	"Could not find an operating point: operating point outside of driver acceleration limits. a: {0}",
+					//	retVal.Acceleration);
 				}
 
+				// TODO: move to driving mode
+				// check for minimum acceleration, add some safety margin due to search
+				//if (!coasting && retVal.Acceleration.Abs() < Constants.SimulationSettings.MinimumAcceleration / 5.0
+				//	&& searchInterval.Abs() < Constants.SimulationSettings.MinimumAcceleration / 20.0) {
+				//	throw new VectoSimulationException("Could not achieve minimum acceleration");
+				//}
 
-				CurrentState.dt = ComputeTimeInterval(CurrentState.Acceleration, ref ds);
+				var tmp = ComputeTimeInterval(retVal.Acceleration, ds);
+				retVal.SimulationInterval = tmp.SimulationInterval;
+				retVal.SimulationDistance = tmp.SimulationDistance;
 
-				response = Next.Request(absTime, CurrentState.dt, CurrentState.Acceleration, gradient, true);
-			} while (CurrentState.RetryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
+				var response =
+					(ResponseDryRun)NextComponent.Request(absTime, retVal.SimulationInterval, retVal.Acceleration, gradient, true);
+				delta = actionRoll ? response.GearboxPowerRequest : (coasting ? response.DeltaDragLoad : response.DeltaFullLoad);
 
-			Log.Debug("Exceeded max iterations when searching for operating point!");
-			Log.Debug("acceleration: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.acceleration)),
+				if (delta.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+					LogManager.EnableLogging();
+					Log.Debug("found operating point in {0} iterations. Engine Power req: {2}, Gearbox Power req: {3} delta: {1}",
+						debug.Count, delta, response.EnginePowerRequest, response.GearboxPowerRequest);
+					return retVal;
+				}
+			} while (retryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
+
+			LogManager.EnableLogging();
+			Log.Warn("Exceeded max iterations when searching for operating point!");
+			Log.Warn("acceleration: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.acceleration)),
 				", ".Join(debug.Slice(-6).Select(x => x.acceleration)));
-			Log.Debug("exceeded: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.delta)),
+			Log.Warn("exceeded: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.delta)),
 				", ".Join(debug.Slice(-6).Select(x => x.delta)));
 			Log.Error("Failed to find operating point! absTime: {0}", absTime);
-			throw new VectoSimulationException(string.Format("Failed to find operating point! absTime: {0}", absTime));
+			throw new VectoSimulationException("Failed to find operating point!  exceeded: {0} ... {1}",
+				", ".Join(debug.Take(5).Select(x => x.delta)),
+				", ".Join(debug.Slice(-6).Select(x => x.delta)));
 		}
+
 
 		/// <summary>
 		/// compute the acceleration and time-interval such that the vehicle's velocity approaches the given target velocity
@@ -480,9 +637,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		/// <param name="ds"></param>
 		/// <param name="targetVelocity"></param>
-		private void ComputeAcceleration(ref Meter ds, MeterPerSecond targetVelocity)
+		public OperatingPoint ComputeAcceleration(Meter ds, MeterPerSecond targetVelocity)
 		{
-			var currentSpeed = DataBus.VehicleSpeed();
+			var currentSpeed = DataBus.VehicleSpeed;
+			var retVal = new OperatingPoint() { SimulationDistance = ds };
 
 			var requiredAverageSpeed = (targetVelocity + currentSpeed) / 2.0;
 			var requiredAcceleration =
@@ -496,37 +654,58 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				requiredAcceleration = maxAcceleration.Deceleration;
 			}
 
-			CurrentState.Acceleration = requiredAcceleration;
-			var tmpDs = ds;
-			CurrentState.dt = ComputeTimeInterval(CurrentState.Acceleration, ref ds);
-			if (!ds.IsEqual(tmpDs)) {
-				Log.Error(
-					"Unexpected Condition: Distance has been adjusted from {0} to {1}, currentVelocity: {2} acceleration: {3}, targetVelocity: {4}",
-					tmpDs, ds, currentSpeed, CurrentState.Acceleration, targetVelocity);
-				throw new VectoSimulationException("Simulation distance unexpectedly adjusted!");
+			retVal.Acceleration = requiredAcceleration;
+			retVal = ComputeTimeInterval(retVal.Acceleration, ds);
+
+			if (ds.IsEqual(retVal.SimulationDistance)) {
+				return retVal;
 			}
+
+			// this case should not happen, acceleration has been computed such that the target speed
+			// can be reached within ds.
+			Log.Error(
+				"Unexpected Condition: Distance has been adjusted from {0} to {1}, currentVelocity: {2} acceleration: {3}, targetVelocity: {4}",
+				retVal.SimulationDistance, ds, currentSpeed, CurrentState.Acceleration, targetVelocity);
+			throw new VectoSimulationException("Simulation distance unexpectedly adjusted! {0} -> {1}", ds,
+				retVal.SimulationDistance);
 		}
+
+
+		/// <summary>
+		/// computes the distance required to decelerate from the current velocity to the given target velocity considering
+		/// the drivers acceleration/deceleration curve.
+		/// </summary>
+		/// <param name="targetSpeed"></param>
+		/// <returns></returns>
+		public Meter ComputeDecelerationDistance(MeterPerSecond targetSpeed)
+		{
+			return DriverData.AccelerationCurve.ComputeAccelerationDistance(DataBus.VehicleSpeed, targetSpeed);
+		}
+
 
 		/// <summary>
 		/// Computes the time interval for driving the given distance ds with the vehicle's current speed and the given acceleration.
 		/// If the distance ds can not be reached (i.e., the vehicle would halt before ds is reached) then the distance parameter is adjusted.
-		/// The computed time interval is returned via the out parameter dt
+		/// Returns a new operating point (a, ds, dt)
 		/// </summary>
 		/// <param name="acceleration"></param>
 		/// <param name="ds"></param>
-		private Second ComputeTimeInterval(MeterPerSquareSecond acceleration, ref Meter ds)
+		/// <returns>Operating point (a, ds, dt)</returns>
+		private OperatingPoint ComputeTimeInterval(MeterPerSquareSecond acceleration, Meter ds)
 		{
 			if (!(ds > 0)) {
-				throw new VectoSimulationException("distance has to be greater than 0!");
+				throw new VectoSimulationException("ds has to be greater than 0! ds: {0}", ds);
 			}
-			var currentSpeed = DataBus.VehicleSpeed();
-
+			var currentSpeed = DataBus.VehicleSpeed;
+			var retVal = new OperatingPoint() { Acceleration = acceleration, SimulationDistance = ds };
 			if (acceleration.IsEqual(0)) {
-				if (!(currentSpeed > 0)) {
-					Log.Error("vehicle speed is {0}, acceleration is {1}", currentSpeed, acceleration);
-					throw new VectoSimulationException("vehicle speed has to be > 0 if acceleration = 0");
+				if (currentSpeed > 0) {
+					retVal.SimulationInterval = ds / currentSpeed;
+					return retVal;
 				}
-				return ds / currentSpeed;
+				Log.Error("vehicle speed is {0}, acceleration is {1}", currentSpeed, acceleration);
+				throw new VectoSimulationException(
+					"vehicle speed has to be > 0 if acceleration = 0!  v: {0}", currentSpeed);
 			}
 
 			// we need to accelerate / decelerate. solve quadratic equation...
@@ -536,38 +715,53 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			if (solutions.Count == 0) {
 				// no real-valued solutions, required distance can not be reached (vehicle stopped), adapt ds...
-				var dt = -currentSpeed / acceleration;
-				var stopDistance = currentSpeed * dt + acceleration / 2 * dt * dt;
+				retVal.SimulationInterval = -currentSpeed / acceleration;
+				var stopDistance = currentSpeed * retVal.SimulationInterval +
+									acceleration / 2 * retVal.SimulationInterval * retVal.SimulationInterval;
 				if (stopDistance > ds) {
-					Log.Warn(
-						"Could not find solution for computing required time interval to drive distance {0}. currentSpeed: {1}, acceleration: {2}",
-						ds, currentSpeed, acceleration);
-					throw new VectoSimulationException("Could not find solution");
+					// just to cover everything - does not happen...
+					Log.Error(
+						"Could not find solution for computing required time interval to drive distance ds: {0}. currentSpeed: {1}, acceleration: {2}, stopDistance: {3}, distance: {4}",
+						ds, currentSpeed, acceleration, stopDistance, DataBus.Distance);
+					throw new VectoSimulationException(
+						"Could not find solution for time-interval!  ds: {0}, stopDistance: {1}", ds, stopDistance);
 				}
+				LogManager.EnableLogging();
 				Log.Info(
 					"Adjusted distance when computing time interval: currentSpeed: {0}, acceleration: {1}, distance: {2} -> {3}, timeInterval: {4}",
-					currentSpeed, acceleration, ds, stopDistance, dt);
-				ds = stopDistance;
-				return dt;
+					currentSpeed, acceleration, retVal.SimulationDistance, stopDistance, retVal.SimulationInterval);
+				LogManager.DisableLogging();
+				retVal.SimulationDistance = stopDistance;
+				return retVal;
 			}
 			solutions = solutions.Where(x => x >= 0).ToList();
 			// if there are 2 positive solutions (i.e. when decelerating), take the smaller time interval
 			// (the second solution means that you reach negative speed 
-			return solutions.Min().SI<Second>();
+			retVal.SimulationInterval = solutions.Min().SI<Second>();
+			return retVal;
 		}
 
-
-		protected IResponse DoHandleRequest(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
+		/// <summary>
+		/// simulate a certain time interval where the vehicle is stopped.
+		/// </summary>
+		/// <param name="absTime"></param>
+		/// <param name="dt"></param>
+		/// <param name="targetVelocity"></param>
+		/// <param name="gradient"></param>
+		/// <returns></returns>
+		public IResponse DrivingActionHalt(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed().IsEqual(0)) {
+			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed.IsEqual(0)) {
 				throw new NotImplementedException("TargetVelocity or VehicleVelocity is not zero!");
 			}
-			var oldGear = DataBus.Gear;
-			DataBus.Gear = 0;
 			DataBus.BreakPower = double.PositiveInfinity.SI<Watt>();
-			var retVal = Next.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
-			retVal.SimulationInterval = dt;
-			DataBus.Gear = oldGear;
+			var retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
+			retVal.Switch().
+				Case<ResponseGearShift>(r => {
+					retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
+				});
+			CurrentState.dt = dt;
+			CurrentState.Acceleration = 0.SI<MeterPerSquareSecond>();
 			return retVal;
 		}
 
@@ -587,34 +781,34 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (!(CurrentState.Response is ResponseSuccess)) {
 				throw new VectoSimulationException("Previous request did not succeed!");
 			}
-			CurrentState.RetryCount = 0;
 			CurrentState.Response = null;
-
-			if (CurrentState.DrivingAction.NextTargetSpeed != null &&
-				DataBus.VehicleSpeed().IsEqual(CurrentState.DrivingAction.NextTargetSpeed)) {
-				Log.Debug("reached target Speed {0} - set Driving action to {1}", CurrentState.DrivingAction.NextTargetSpeed,
-					DrivingBehavior.Drive);
-				CurrentState.DrivingAction.Action = DrivingBehavior.Drive;
-			}
-			if (DataBus.VehicleSpeed().IsEqual(0)) {
-				Log.Debug("vehicle stopped {0} - set Driving action to {1}", DataBus.VehicleSpeed(), DrivingBehavior.Stopped);
-				CurrentState.DrivingAction.Action = DrivingBehavior.Stopped;
-			}
 		}
 
 
 		public class DriverState
 		{
-			public DriverState()
-			{
-				DrivingAction = new DrivingBehaviorEntry();
-			}
-
 			public Second dt;
 			public MeterPerSquareSecond Acceleration;
 			public IResponse Response;
-			public int RetryCount;
-			public DrivingBehaviorEntry DrivingAction;
 		}
+
+		[DebuggerDisplay("a: {Acceleration}, dt: {SimulationInterval}, ds: {SimulationDistance}")]
+		public struct OperatingPoint
+		{
+			public MeterPerSquareSecond Acceleration;
+			public Meter SimulationDistance;
+			public Second SimulationInterval;
+		}
+
+		[Flags]
+		protected enum LimitationMode
+		{
+			NoLimitation = 0x0,
+			//LimitAccelerationDriver = 0x1,
+			LimitDecelerationDriver = 0x2,
+			LimitDecelerationLookahead = 0x4
+		}
+
+		public bool VehicleStopped { get; protected set; }
 	}
 }

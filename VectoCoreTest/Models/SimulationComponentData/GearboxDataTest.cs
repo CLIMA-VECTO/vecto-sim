@@ -70,6 +70,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponentData
 		public void TestInputOutOfRange()
 		{
 			var gbxData = EngineeringModeSimulationDataReader.CreateGearboxDataFromFile(GearboxFile);
+
+			Assert.Inconclusive("test another file which is not correct");
 		}
 
 		protected PerSecond SpeedToAngularSpeed(double v, double r)

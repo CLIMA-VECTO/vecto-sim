@@ -48,20 +48,22 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 
-			var driver = new Driver(vehicleContainer, driverData);
+			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			dynamic tmp = Port.AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
 			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
 			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
 
-			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData));
 			var engine = new CombustionEngine(vehicleContainer, engineData);
+			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
+			tmp = Port.AddComponent(tmp, clutch);
 			Port.AddComponent(tmp, engine);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			var gbx = new MockGearbox(vehicleContainer);
 
 			var driverPort = driver.OutPort();
 
-			vehicleContainer.Gear = 1;
+			gbx.Gear = 1;
 
 			var response = driverPort.Initialize(18.KMPHtoMeterPerSecond(), VectoMath.InclinationToAngle(2.842372037 / 100));
 
@@ -73,11 +75,11 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 //			time [s] , dist [m] , v_act [km/h] , v_targ [km/h] , acc [m/s²] , grad [%] , n [1/min] , Tq_eng [Nm] , Tq_clutch [Nm] , Tq_full [Nm] , Tq_drag [Nm] , Pe_eng [kW] , Pe_full [kW] , Pe_drag [kW] , Pe_clutch [kW] , Pa Eng [kW] , Paux [kW] , Gear [-] , Ploss GB [kW] , Ploss Diff [kW] , Ploss Retarder [kW] , Pa GB [kW] , Pa Veh [kW] , Proll [kW] , Pair [kW] , Pgrad [kW] , Pwheel [kW] , Pbrake [kW] , FC-Map [g/h] , FC-AUXc [g/h] , FC-WHTCc [g/h]
 //			1.5      , 5        , 18           , 18            , 0          , 2.842372 , 964.1117  , 323.7562    , 323.7562       , 2208.664     , -158.0261    , 32.68693    , 222.9902     , -15.95456    , 32.68693       , 0           , 0         , 1        , 0             , 0               , 0                   , 0          , 0           , 5.965827   , 0.2423075 , 26.47879   , 32.68693    , 0           , 7574.113     , -             , -
 
-			AssertHelper.AreRelativeEqual(964.1117.RPMtoRad().Value(), vehicleContainer.Engine.EngineSpeed().Value());
-			Assert.AreEqual(2208.664, engine._previousState.StationaryFullLoadTorque.Value(), Tolerance);
-			Assert.AreEqual(-158.0261, engine._previousState.FullDragTorque.Value(), Tolerance);
+			AssertHelper.AreRelativeEqual(964.1117.RPMtoRad().Value(), vehicleContainer.Engine.EngineSpeed.Value());
+			Assert.AreEqual(2208.664, engine.PreviousState.StationaryFullLoadTorque.Value(), Tolerance);
+			Assert.AreEqual(-158.0261, engine.PreviousState.FullDragTorque.Value(), Tolerance);
 
-			Assert.AreEqual(323.7562, engine._previousState.EngineTorque.Value(), Tolerance);
+			Assert.AreEqual(323.7562, engine.PreviousState.EngineTorque.Value(), Tolerance);
 		}
 
 
@@ -99,13 +101,16 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
 
-			dynamic tmp = Port.AddComponent(cycle, new Driver(vehicleContainer, driverData));
+			dynamic tmp = Port.AddComponent(cycle, new Driver(vehicleContainer, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
 			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
-			tmp = Port.AddComponent(tmp, new Breaks(vehicleContainer));
+			tmp = Port.AddComponent(tmp, new Brakes(vehicleContainer));
 			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
-			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData));
-			Port.AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
+			var engine = new CombustionEngine(vehicleContainer, engineData);
+			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
+			tmp = Port.AddComponent(tmp, clutch);
+			Port.AddComponent(tmp, engine);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			var gbx = new MockGearbox(vehicleContainer);
 
@@ -113,7 +118,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			cyclePort.Initialize();
 
-			vehicleContainer.Gear = 0;
+			gbx.Gear = 0;
 
 			var absTime = 0.SI<Second>();
 			var ds = Constants.SimulationSettings.DriveOffDistance;
@@ -122,20 +127,20 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 			absTime += response.SimulationInterval;
 
-			vehicleContainer.Gear = 1;
+			gbx.Gear = 1;
 			var cnt = 0;
-			while (!(response is ResponseCycleFinished) && vehicleContainer.Distance().Value() < 17000) {
+			while (!(response is ResponseCycleFinished) && vehicleContainer.Distance < 17000) {
 				response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
-					Case<ResponseCycleFinished>(r => { }).
+					Case<ResponseCycleFinished>(r => {}).
 					Case<ResponseSuccess>(r => {
 						vehicleContainer.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
 
-						ds = vehicleContainer.VehicleSpeed().IsEqual(0)
+						ds = vehicleContainer.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed()).Cast<Meter>();
+							: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed).Cast<Meter>();
 
 						if (cnt++ % 100 == 0) {
 							modalWriter.Finish();
@@ -161,19 +166,23 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var driverData = CreateDriverData(AccelerationFile2);
 
-			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrainOverload.vmod", SimulatorFactory.FactoryMode.EngineeringMode);
+			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrainOverload.vmod",
+				SimulatorFactory.FactoryMode.EngineeringMode);
 			var sumWriter = new TestSumWriter();
 			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
 
-			dynamic tmp = Port.AddComponent(cycle, new Driver(vehicleContainer, driverData));
+			dynamic tmp = Port.AddComponent(cycle, new Driver(vehicleContainer, driverData, new DefaultDriverStrategy()));
 			tmp = Port.AddComponent(tmp, new Vehicle(vehicleContainer, vehicleData));
 			tmp = Port.AddComponent(tmp, new Wheels(vehicleContainer, vehicleData.DynamicTyreRadius));
-			tmp = Port.AddComponent(tmp, new Breaks(vehicleContainer));
+			tmp = Port.AddComponent(tmp, new Brakes(vehicleContainer));
 			tmp = Port.AddComponent(tmp, new AxleGear(vehicleContainer, axleGearData));
-			tmp = Port.AddComponent(tmp, new Clutch(vehicleContainer, engineData));
-			Port.AddComponent(tmp, new CombustionEngine(vehicleContainer, engineData));
+			var engine = new CombustionEngine(vehicleContainer, engineData);
+			var clutch = new Clutch(vehicleContainer, engineData, engine.IdleController);
+			tmp = Port.AddComponent(tmp, clutch);
+			Port.AddComponent(tmp, engine);
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			var gbx = new MockGearbox(vehicleContainer);
 
@@ -181,13 +190,13 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			cyclePort.Initialize();
 
-			vehicleContainer.Gear = 0;
+			gbx.Gear = 0;
 
 			var absTime = 0.SI<Second>();
 
-			vehicleContainer.Gear = 1;
+			gbx.Gear = 1;
 			var ds = Constants.SimulationSettings.DriveOffDistance;
-			while (vehicleContainer.Distance().Value() < 100) {
+			while (vehicleContainer.Distance < 100) {
 				var response = cyclePort.Request(absTime, ds);
 				response.Switch().
 					Case<ResponseDrivingCycleDistanceExceeded>(r => ds = r.MaxDistance).
@@ -195,9 +204,9 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 						vehicleContainer.CommitSimulationStep(absTime, r.SimulationInterval);
 						absTime += r.SimulationInterval;
 
-						ds = vehicleContainer.VehicleSpeed().IsEqual(0)
+						ds = vehicleContainer.VehicleSpeed.IsEqual(0)
 							? Constants.SimulationSettings.DriveOffDistance
-							: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed()).Cast<Meter>();
+							: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed).Cast<Meter>();
 
 						modalWriter.Finish();
 					});
@@ -261,6 +270,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				AccelerationCurve = AccelerationCurveData.ReadFromFile(accelerationFile),
 				LookAheadCoasting = new DriverData.LACData {
 					Enabled = false,
+					Deceleration = -0.5.SI<MeterPerSquareSecond>()
 				},
 				OverSpeedEcoRoll = new DriverData.OverSpeedEcoRollData {
 					Mode = DriverData.DriverMode.Off

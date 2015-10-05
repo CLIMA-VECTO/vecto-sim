@@ -10,13 +10,13 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		/// <summary>
 		/// Returns the current vehicle speed.
 		/// </summary>
-		/// <returns></returns>
-		MeterPerSecond VehicleSpeed();
+		/// <value></value>
+		MeterPerSecond VehicleSpeed { get; }
 
-		Kilogram VehicleMass();
+		Kilogram VehicleMass { get; }
 
-		Kilogram VehicleLoading();
+		Kilogram VehicleLoading { get; }
 
-		Kilogram TotalMass();
+		Kilogram TotalMass { get; }
 	}
 }

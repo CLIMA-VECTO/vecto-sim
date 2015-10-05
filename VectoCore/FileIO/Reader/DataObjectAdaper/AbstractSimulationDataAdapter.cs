@@ -42,7 +42,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				Type =
 					(RetarderData.RetarderType)Enum.Parse(typeof(RetarderData.RetarderType), data.Retarder.TypeStr.ToString(), true),
 			};
-			if (retarder.Type != RetarderData.RetarderType.None) {
+			if (retarder.Type == RetarderData.RetarderType.Primary || retarder.Type == RetarderData.RetarderType.Secondary) {
 				retarder.LossMap = RetarderLossMap.ReadFromFile(Path.Combine(basePath, data.Retarder.File));
 				retarder.Ratio = data.Retarder.Ratio;
 			}

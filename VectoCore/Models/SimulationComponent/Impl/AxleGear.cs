@@ -8,8 +8,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class AxleGear : VectoSimulationComponent, IPowerTrainComponent, ITnInPort, ITnOutPort
 	{
-		private ITnOutPort _nextComponent;
+		protected ITnOutPort NextComponent;
 		private readonly GearData _gearData;
+
+		protected Watt Loss;
 
 		public AxleGear(VehicleContainer container, GearData gearData) : base(container)
 		{
@@ -28,20 +30,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public void Connect(ITnOutPort other)
 		{
-			_nextComponent = other;
+			NextComponent = other;
 		}
 
-		public IResponse Request(Second absTime, Second dt, NewtonMeter outTorque, PerSecond outAngularVelocity,
+		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity,
 			bool dryRun = false)
 		{
-			Log.Debug("request: torque: {0}, angularVelocity: {1}", outTorque, outAngularVelocity);
+			Log.Debug("request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
 
-			var inAngularVelocity = outAngularVelocity * _gearData.Ratio;
-			var inTorque = _gearData.LossMap.GearboxInTorque(inAngularVelocity, outTorque);
+			var inAngularVelocity = angularVelocity * _gearData.Ratio;
+			var inTorque = angularVelocity.IsEqual(0)
+				? 0.SI<NewtonMeter>()
+				: _gearData.LossMap.GearboxInTorque(inAngularVelocity, torque);
 
-			var retVal = _nextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
+			Loss = inTorque * inAngularVelocity - torque * angularVelocity;
 
-			retVal.AxlegearPowerRequest = outTorque * outAngularVelocity;
+			var retVal = NextComponent.Request(absTime, dt, inTorque, inAngularVelocity, dryRun);
+
+			retVal.AxlegearPowerRequest = torque * angularVelocity;
 			return retVal;
 		}
 
@@ -50,16 +56,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var inAngularVelocity = angularVelocity * _gearData.Ratio;
 			var inTorque = _gearData.LossMap.GearboxInTorque(inAngularVelocity, torque);
 
-			return _nextComponent.Initialize(inTorque, inAngularVelocity);
+			return NextComponent.Initialize(inTorque, inAngularVelocity);
 		}
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			// nothing to write
+			writer[ModalResultField.PlossDiff] = Loss;
 		}
 
 		protected override void DoCommitSimulationStep()
 		{
+			Loss = null;
 			// nothing to commit
 		}
 	}

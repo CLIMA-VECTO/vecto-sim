@@ -1,0 +1,7672 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "9/23/2015 9:19:56 AM",
+    "AppVersion": "2.2",
+    "FileVersion": 1
+  },
+  "Body": {
+    "Settings": {
+      "Air Density [kg/m3]": 1.188,
+      "CO2/FC [-]": 3.16,
+      "Fuel Density [kg/l]": 0.832,
+      "Distance Correction": true
+    },
+    "Results": [
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_AccelerateAtBrake_80_0_level.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 58,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.9874753,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 61.29157,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 0.0,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 52.686865707923623,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -6.837278435970175,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 10118.0049,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 165.07988,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 521.6524,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 27.0286236,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 165.07988,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 1.02804828,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 19.8413315,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 48.23815523344895,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -127.87670260462268,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.84884394751654735,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.11015615257951948,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.42442306373197225,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.5385272224247456,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 2.3914348793029787,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -2.0602357641855877,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.104575687845548,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.3831418",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0.1910066",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.7044746",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.4179549",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0.05172414",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.5517241",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.3793103",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0.01724138",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_AccelerateBeforeBrake_80_0_level.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 58,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.988161743,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 61.33418,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 0.0,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 54.631382120066675,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -7.2314032627076941,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 10502.9375,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 171.24118,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 541.122131,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 28.0374165,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 171.24118,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 1.06641841,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 20.5818748,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 50.200314488904226,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -129.15733738603262,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.88017226748996313,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.11650594145473507,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.42792573485809449,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.53890160818894706,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 2.3914348085721335,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -2.080868213441637,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.10622692899571524,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.3831418",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0.1990935",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.6940194",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.425371",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0.06896552",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.5689655",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.3448276",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0.01724138",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_AccelerateWhileBrake_80_0_level.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 61,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.9874105,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 58.273407,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 0.0,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 40.026375692398823,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -6.379615691841626,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 7774.099,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 133.407318,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 421.567139,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 21.8428574,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 133.407318,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.830804944,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 16.0345345,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 36.095459484663166,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -112.1656855676995,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.67822469923231332,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.10809904366731643,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.42113095950516255,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.53849191939665209,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 2.3914347089661492,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -1.900585227674908,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.098964072300328151,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.3642987",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.6669721",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.3846135",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.5409836",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.4262295",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0.03278688",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Accelerate_0_20_downhill_5.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 58,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.294097662,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 18.2543373,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -14.7048826,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 4.3268826583336137,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -9.6199374198913574,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 1018.97363,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 55.8209038,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 176.394058,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 9.139589,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 55.8209038,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.3476292,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 6.7092433,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 3.8522866018887223,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -56.9065512295427,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.069710887273152666,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.1549878806538052,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.0091393665172492741,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.16018831825918622,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 1.3567055140601265,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": -0.15089796745114856,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -0.916827769809299,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.034375131560696492,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0.09578544",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0.6701862",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.1392673",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.2841256",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0.137931",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.01724138",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.8103448",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0.03448276",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Accelerate_0_20_level.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 59,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.295864046,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 18.0527229,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 0.0,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 21.713940410290736,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 5083.367,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 281.5845,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 889.807068,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 46.1039963,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 281.5845,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 1.75359035,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 33.84429,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 19.488873740374032,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.35586735672420927,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.00905146582361744,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.16135174478093783,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": -0.14930695991872603,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.036157214012410906,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0.09416196",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0.5202299",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.2919045",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0.1694915",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.7966102",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0.03389831",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_DecelerateWhileBrake_80_0_level.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 62,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.988534,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 57.39875,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 0.0,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 19.248081268802768,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -8.6301227658987045,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 4097.946,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 71.39434,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 225.606125,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 11.6894369,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 71.39434,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.444614053,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 8.581051,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 17.257830773630449,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -89.548487763251032,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.33149473296271431,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.14862989207936658,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.40123801532382458,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.53910463620391158,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 2.3914350652694703,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -1.5422239559226565,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.088176582985454138,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.3584229",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.5192389",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.3648162",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.6612903",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.3064516",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0.03225806",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Decelerate_22_20_downhill_5.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 51,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.292194545,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 20.6254978,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -14.6097279,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -10.850520706644245,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 21.2213268,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 1.028888,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 3.251286,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.168460429,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 1.028888,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.006407483,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 0.123664416,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -72.2585184433881,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.15371571001079348,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.010024293247196409,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.15915172815322876,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 1.3479262161254884,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.030087385806772445,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -1.0236623446146647,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.031459538539250695,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.01089325",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.1512468",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.1011332",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.05882353",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.9411765",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Decelerate_60_20_downhill_15.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 82,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 1.09245074,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 47.96125,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -163.8676,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -12.500103581605888,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 27.71097,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 0.5777783,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 1.82577944,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.09459998,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 0.5777783,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.003598161,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 0.06944451,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -655.292909203506,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.284724581581023,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.27111511708961594,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.58918492449654469,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 14.970203009711371,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 1.1932091008954577,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -14.926116265190972,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.089837673438919921,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.1355013",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.729587",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.3514989",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.1829268",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.8170732",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Decelerate_60_20_downhill_25.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 82,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 1.09245074,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 47.96125,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -273.112671,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -12.500103581605888,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 27.71097,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 0.5777783,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 1.82577944,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.09459998,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 0.5777783,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.003598161,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 0.06944451,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -1073.1200025604992,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.284724581581023,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.27111511708961594,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.57798799938625756,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 24.476178393893772,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 1.1932091008954577,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -24.443288947211371,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.089837673438919921,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.1355013",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.729587",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.3514989",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.1829268",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.8170732",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Decelerate_60_20_downhill_5.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 82,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 1.09186852,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 47.93569,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -54.5934258,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -12.491804730964869,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 27.710968,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 0.5780863,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 1.82675278,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.09465041,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 0.5780863,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.00360007933,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 0.06948153,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -218.96737605769459,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.2845355522053109,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.27105170430408582,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.59471595499250629,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 5.0369119644165039,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 1.1932090998689333,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -4.9875902324252657,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.089793813493516714,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.1355013",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.6896226",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.3215879",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.1951219",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.8048781",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Decelerate_60_20_level.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 82,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 1.09096348,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 47.8959579,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 0.0,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 35.913299432614956,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -2.0904003966872287,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 7321.0835,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 152.8539,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 483.018341,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 25.0268574,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 152.8539,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.95191,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 18.3718624,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 31.826463257394185,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -43.40896736703268,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.81802515374289619,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.047614675702320204,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.27064152169558736,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.59496528016196359,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 1.1948002315114719,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -0.98875981224907772,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.10841039227114783,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.1355014",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.7274253",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.3126254",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.1829268",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.8170732",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Decelerate_60_20_uphill_5.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 85,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 1.09239626,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 46.2661972,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 54.61982,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 227.22401455149932,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -1.1793082265292898,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 43362.9922,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 937.25,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 2961.71,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 153.456482,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 937.25,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 5.83679962,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 112.65023,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 215.69197935216567,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -15.793631116081686,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 5.3650114546881777,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.02784477757083045,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.24893719699647693,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.595003444618649,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": -5.0393468899197051,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 1.1991202543841468,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -0.3729051791297065,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.2776605208714803,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.1307189",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0.2567733",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.7869603",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.3355308",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0.02352941",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.1529412",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.8235294",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Decelerate_80_0_downhill_15.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 61,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.9875448,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 58.28133,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -148.131714,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -15.079430720845206,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 134.706131,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 2.31130838,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 7.303735,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.378431857,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 2.31130838,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.01439386,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 0.277801484,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -863.4793978831807,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.25551257610321043,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.42163404006885991,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.53260660225318535,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 13.532642511791654,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 2.3914351020587814,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -14.631178686353895,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.080707081523206492,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.3642987",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.6683277",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.3865429",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.5409836",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.4262295",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0.03278688",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Decelerate_80_0_downhill_25.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 61,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.9875448,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 58.28133,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -246.886185,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -15.079430720845206,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 134.706131,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 2.31130838,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 7.303735,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.378431857,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 2.31130838,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.01439386,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 0.277801484,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -1371.212550210171,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.25551257610321043,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.42163404006885991,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.52248488585154218,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 22.125776668654549,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 2.3914351020587814,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -23.234434878561231,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.080707081523206492,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.3642987",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.6683277",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.3865429",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.5409836",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.4262295",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0.03278688",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Decelerate_80_0_downhill_5.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 36,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.487020463,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 48.7020454,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -24.3510246,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -12.786738173829185,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 130.810257,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 2.68592954,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 8.487537,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.4397688,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 2.68592954,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.0167268422,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 0.322828025,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -403.86381970511542,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.12786738173829185,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.16533338501137121,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.26526897773146629,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 2.2466800639364455,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 2.3914350557327269,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -4.0386381970511547,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.038649039732085333,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.6172839",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.7069911",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.339553",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.8611111",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.1111111",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0.02777778",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Decelerate_80_0_level.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 62,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.9875845,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 57.3436165,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 0.0,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 19.248081268802768,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -8.5994735071736,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 4101.571,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 71.5262,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 226.0228,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 11.7110262,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 71.5262,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.4454352,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 8.596899,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 17.257830773630449,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -89.6475609271757,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.33149473296271431,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.14810204373465644,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.40156480543276507,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.53858681211041082,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 2.3914349895053442,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -1.5439302159680262,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.0883073295156161,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.3584229",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.5192387",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.3649616",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.6612903",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.3064516",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0.03225806",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Decelerate_80_0_uphill_15.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 107,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.6516512,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 21.9247131,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 97.74768,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 244.81552049155547,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -0.01008916458236837,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 46912.36,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 2139.70239,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 6761.46,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 350.334717,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 2139.70239,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 13.3251686,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 257.175751,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 234.36807611055463,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -2.167603679906542E-05,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 7.27646130349901,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.00029987239175372654,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.0686672460402921,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.35145114611420364,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": -8.92978532049391,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 2.396975257676095,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -6.4425998263888891E-07,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.3232327080104086,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.2076844",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.8134995",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.421518",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.2523364",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.728972",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0.01869159",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Decelerate_80_0_uphill_5.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 66,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.9872035,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 53.8474655,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 49.3601761,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 202.44468966758612,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -1.807200054327647,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 38851.668,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 721.5134,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 2279.98242,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 118.133812,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 721.5134,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 4.493283,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 86.72035,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 191.37870437087435,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -23.9599377747738,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 3.7114859772390791,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.033132000996006862,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.33901491433005,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.53770730670127609,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": -4.5540805696778826,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 2.3976480948593881,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -0.439265525870853,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.20475588056776259,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.3367003",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.3949744",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.3458336",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.8333333",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.1363636",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0.03030303",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_10_downhill_15.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 179,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.497222215,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 10.0,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -74.5833359,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -9.6013879776000977,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -120.48969268798828,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.47740234666400483,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.0039871866173214381,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.26816387653350832,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 6.8135953776041669,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -5.991015275319417,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.07302630126476288,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_10_downhill_25.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 179,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.497222215,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 10.0,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -124.305557,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -9.6013879776000977,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -207.60733032226562,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.47740234666400483,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.0039871866173214381,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.26306765887472366,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 11.140181342230903,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -10.322697813245986,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.07302630126476288,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_10_downhill_5.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 359,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.997222245,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 10.0,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -49.86111,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -9.6013879776000977,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -29.534084320068359,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.95747174554400971,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.007996648020214504,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.54316426515579219,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 4.600297677781847,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -2.945204519695706,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.14646057069301605,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_10_level.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 358,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.99444443,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 10.0,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 0.0,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 6.8852519989013672,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 2507.49463,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 250.749466,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 792.368347,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 41.0553551,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 250.749466,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 1.56156254,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 30.1381569,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 5.53376579284668,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.68470005989074711,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.0079743732346428762,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.54232789172066587,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.13439781864484152,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_10_uphill_15.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 179,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.497222215,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 10.0,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 74.5833359,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 149.30609130859375,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 27713.64,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 2771.364,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 8757.511,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 453.75705,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 2771.364,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 17.258894,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 333.096649,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 142.50663757324219,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 7.4238306511773,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.0039871866173214381,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.26816387653350832,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": -6.8135953776041669,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.33808390220006307,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_10_uphill_25.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 179,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.497222215,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 10.0,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 124.305557,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 239.83404541015625,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 44493.6172,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 4449.362,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 14059.9834,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 728.4966,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 4449.362,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 27.7087612,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 534.779053,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 229.41928100585937,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 11.925081702338325,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.0039871866173214381,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.26306765887472366,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": -11.140181342230903,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.51784532494015167,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_10_uphill_5.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 359,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.997222245,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 10.0,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 49.86111,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 54.6676139831543,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 10751.8945,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 1075.18945,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 3397.59888,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 176.0414,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 1075.18945,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 6.69583,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 129.2295,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 51.6580810546875,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 5.4515759499867755,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.007996648020214504,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.54316426515579219,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": -4.600297677781847,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.30011731147766113,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_20_downhill_15.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 89,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.49444443,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 20.0,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -74.16667,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -11.614755630493164,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -248.73370361328125,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.28714256975385877,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.015859647326999241,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.2666657543182373,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 6.7755305989583334,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -6.1492498948838978,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.056612944867875839,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_30_Decreasing_Slope.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 131,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 1.09166658,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 29.9999981,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -13.5566654,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 3.9094560392030324,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -6.3364746406788131,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 1219.95557,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 40.6651878,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 128.502,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 6.658135,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 40.6651878,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.253245741,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 4.887643,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 3.1077696021276577,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -10.967222024466246,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.14226076142655478,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.23057727164692349,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.07878591656684876,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.59528382725185813,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 1.2613147574663162,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -0.39908502366807724,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.099843452705277336,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_30_Dec_Increasing_Slope.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 276,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 2.29247618,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 29.9018631,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -0.175598145,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 29.761342195928961,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -3.0455518926399341,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 6223.737,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 208.138763,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 657.7185,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 34.0786819,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 208.138763,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 1.29620111,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 25.01668,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 27.322488090266351,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -5.2158635802890947,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 2.2817029016878871,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.23349231176906163,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.16440688878297804,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -1.2500891057650247,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 0.00816412713792589,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.016632568571302627,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -0.39988287448883059,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.25863047507074144,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.0007485825",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.1518024",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.1064273",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.02173913",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.9782609",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_30_downhill_15.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 58,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.4833333,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 29.9999981,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -72.5,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -10.494144439697266,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 9.236381E-05,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 3.07879372E-06,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 9.72898852E-06,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 5.04092668E-07,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 3.07879372E-06,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 1.91734379E-08,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 3.70047331E-07,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -379.51229858398437,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.16907232708401151,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.034882314205169677,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.2606732654571533,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 6.623271484375,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -6.1143648105197483,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.044278755585352582,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_30_Increasing_Slope.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 132,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 1.09247613,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 29.7948036,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 13.5769014,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 56.381574153900146,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 11362.4688,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 381.3574,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 1205.08936,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 62.4398651,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 381.3574,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 2.374934,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 45.8362236,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 52.360445672815494,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -3.4101081616950757E-06,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 2.0673243856430052,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.077802522480487829,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.59572522242863968,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": -1.2627725344896317,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.016632568571302627,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -1.2503729926215279E-07,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.14765864186816746,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.001565218",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.1518024",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.1538895",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.04545455",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.9545454",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_50_Decreasing_Slope.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 78,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 1.08333337,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 50.0,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -13.3483343,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 8.7552246925158386,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -6.4865696980403023,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 2068.78076,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 41.3756142,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 130.746948,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 6.77445364,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 41.3756142,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.25767,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 4.97303057,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 7.1689994518573465,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -18.582664196307842,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.18969653500450981,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.14054234345753988,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.21717919031778971,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.59073980490366618,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 1.2507319312625462,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -0.40262439092000324,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.089342751105626422,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_50_Dec_Increasing_Slope.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 164,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 2.27500939,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 49.93923,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -0.612261951,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 52.279947269253611,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -3.1517939276811555,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 10286.6357,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 205.983063,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 650.9065,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 33.7257271,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 205.983063,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 1.28277612,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 24.7575779,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 48.082954360217585,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -9.2236583988841,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 2.3816420422659981,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.14358172337214151,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.4549913223584493,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -1.240564652548896,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 0.052574412027994795,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.070160267569331664,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -0.42018888261583115,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.24505246102809905,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.003358044",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.2493812",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.06924811",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.01219512",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.9878049",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_50_downhill_15.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 34,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.4722222,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 50.0,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -70.8333359,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -10.941767692565918,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 0.0,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 0.0,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -633.25555419921875,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.10333891709645589,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.094667852189805779,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.25468079460991755,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 6.4710129462348087,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -5.9807469007703995,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.037578105529149371,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_50_Increasing_Slope.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 78,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 1.07984018,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 49.83878,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 13.2610054,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 97.724582721025513,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 18920.7188,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 379.6385,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 1199.65771,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 62.158432,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 379.6385,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 2.3642292,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 45.6296234,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 91.02188457586827,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 2.1173659589555527,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.21510693046781751,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.58883565160963269,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": -1.2405844730801052,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.070160264205187561,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.14300196356243558,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.007060503",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.2493812",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.1102031",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.02564103",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.974359",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_80_Decreasing_Slope.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 48,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 1.06666672,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 80.0,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -12.9316654,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 25.097923477490742,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -9.1413693030675258,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 5494.71045,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 68.68388,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 217.041077,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 11.2456522,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 68.68388,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 0.4277344,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 8.255274,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 21.493561188379925,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -15.482429703076681,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.33463897969987655,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.12188492404090033,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.54742513020833339,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.58165307256910537,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 1.2186678748660618,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -0.2064323960410224,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.09591132044792175,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_80_Dec_Increasing_Slope.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 102,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 2.26574826,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 79.96758,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -0.8437988,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 104.0240805569817,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -4.5005201451918655,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 19873.957,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 248.525162,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 785.339539,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 40.69117,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 248.525162,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 1.54771066,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 29.8708153,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 95.866143806307917,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -8.001975657893162,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 2.9473489491144815,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.12751473744710287,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -1.1618798128763834,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -1.2355159865485297,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 0.053405838012695314,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.025669103198581272,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -0.22672264364030625,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.274790661599901,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.001455139",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.0349764",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_80_downhill_15.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 21,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.466666669,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 80.0,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -70.0,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -20.2673282623291,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 5.63808E-05,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 7.0476E-07,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 2.2270417E-06,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 1.15390769E-07,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 7.0476E-07,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 4.38894965E-09,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 8.470673E-08,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -985.07806396484375,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.11822608153025309,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.23949849446614582,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.25168453216552733,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 6.3948828125,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -5.7462887064615886,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.039184805949529014,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_80_downhill_5.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 44,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.9777778,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 80.0,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": -48.88889,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -20.2673282623291,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 5.63808E-05,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 7.0476E-07,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 2.2270417E-06,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 1.15390769E-07,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 7.0476E-07,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 4.38894965E-09,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 8.470673E-08,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -257.43316650390625,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.24771178987291123,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.50180636935763889,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.53257331848144529,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 4.51059828016493,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -3.1464053683810764,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.082101498179965551,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_80_Increasing_Slope.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 48,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 1.06574821,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 79.9311142,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 12.9087038,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 186.171160697937,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 34876.07,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 436.3266,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 1378.79211,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 71.44001,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 436.3266,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 2.71725917,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 52.4431,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 173.4005880355835,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -8.7738037109375E-05,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 2.48228214263916,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.54602654139200846,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.58115234480963818,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": -1.2165668370988634,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.025669103198581272,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -1.1698404947916666E-06,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.16420432806015015,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.00309217",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.05093675",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_80_level.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 44,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.9777778,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 80.0,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 0.0,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 93.908035278320312,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 17869.2461,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 223.36557,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 705.8352,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 36.5717735,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 223.36557,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 1.39102721,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 26.8468246,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 84.685501098632813,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 1.1477648756239149,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.50180636935763889,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.53323859744601776,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.11271981557210287,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "1",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_80_uphill_15.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 34,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.308613777,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 32.676754,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 46.29207,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 243.66986263499541,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 46949.8828,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 1436.79761,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 4540.281,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 235.247711,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 1436.79761,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 8.947774,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 172.692032,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 232.98283655503218,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -6.821576286764706E-05,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 2.3013264804416234,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.059537576056189007,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.16644284142388238,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": -4.2290339660644527,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 2.2596604897826911,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -6.4425998263888891E-07,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.10597235414716932,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.5013545",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-1.002381",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.5831483",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.5",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.5",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_80_uphill_5.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 52,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 0.9616838,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 66.57811,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 48.08419,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 306.26445652888373,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": 0.0,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 58408.93,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 877.2993,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 2772.26587,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 143.640732,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 877.2993,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 5.46345234,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 105.444626,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 290.42354818490833,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -6.2208909254807688E-05,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 4.423819927639431,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -0.35296090232001409,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -0.52380730099148221,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": -4.4363552941216362,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": 1.1207383304172092,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -8.9857313368055552E-07,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.23143384456634522,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "-0.115946",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.1607749",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.08528713",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.6538461",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.3461539",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0",
+            "Unit": "[%]"
+          }
+        }
+      },
+      {
+        "Job": "40t_Long_Haul_Truck.vecto",
+        "Cycle": "Cycle_Drive_stop_85_stop_85_level.vdri",
+        "Loading": "User-defined Loading",
+        "AbortedByError": false,
+        "Results": {
+          "time": {
+            "Value": 219,
+            "Unit": "[s]"
+          },
+          "distance": {
+            "Value": 2.96740055,
+            "Unit": "[km]"
+          },
+          "speed": {
+            "Value": 48.7791862,
+            "Unit": "[km/h]"
+          },
+          "∆altitude": {
+            "Value": 0.0,
+            "Unit": "[m]"
+          },
+          "Ppos": {
+            "Value": 160.40226864923625,
+            "Unit": "[kW]"
+          },
+          "Pneg": {
+            "Value": -3.4184774983010882,
+            "Unit": "[kW]"
+          },
+          "FC-Map": [
+            {
+              "Value": 31101.44,
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": 637.5965,
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-AUXc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "FC-WHTCc": [
+            {
+              "Value": "-",
+              "Unit": "[g/h]"
+            },
+            {
+              "Value": "-",
+              "Unit": "[g/km]"
+            }
+          ],
+          "CO2": [
+            {
+              "Value": 2014.80493,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 104.394043,
+              "Unit": "[g/tkm]"
+            }
+          ],
+          "FC-Final": [
+            {
+              "Value": 637.5965,
+              "Unit": "[g/km]"
+            },
+            {
+              "Value": 3.970684,
+              "Unit": "[l/100tkm]"
+            },
+            {
+              "Value": 76.6342,
+              "Unit": "[l/100km]"
+            }
+          ],
+          "PwheelPos": {
+            "Value": 151.58289264435092,
+            "Unit": "[kW]"
+          },
+          "Pbrake": {
+            "Value": -59.965077531936508,
+            "Unit": "[kW]"
+          },
+          "EposICE": {
+            "Value": 9.7578046761618715,
+            "Unit": "[kWh]"
+          },
+          "EnegICE": {
+            "Value": -0.20795738114664952,
+            "Unit": "[kWh]"
+          },
+          "Eair": {
+            "Value": -1.0067577262123688,
+            "Unit": "[kWh]"
+          },
+          "Eroll": {
+            "Value": -1.6182947089274724,
+            "Unit": "[kWh]"
+          },
+          "Egrad": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Eacc": {
+            "Value": -2.700022404210435,
+            "Unit": "[kWh]"
+          },
+          "Eaux": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Ebrake": {
+            "Value": -3.6478755498594708,
+            "Unit": "[kWh]"
+          },
+          "Etransm": {
+            "Value": -0.57100832760334019,
+            "Unit": "[kWh]"
+          },
+          "Eretarder": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Etorqueconv": {
+            "Value": 0.0,
+            "Unit": "[kWh]"
+          },
+          "Mass": {
+            "Value": 14600.0,
+            "Unit": "[kg]"
+          },
+          "Loading": {
+            "Value": 19300.0,
+            "Unit": "[kg]"
+          },
+          "a": {
+            "Value": "0.1078133",
+            "Unit": "[m/s^2]"
+          },
+          "a_pos": {
+            "Value": "0.5013386",
+            "Unit": "[m/s^2]"
+          },
+          "a_neg": {
+            "Value": "-0.6633881",
+            "Unit": "[m/s^2]"
+          },
+          "Acc.Noise": {
+            "Value": "0.6129725",
+            "Unit": "[m/s^2]"
+          },
+          "pAcc": {
+            "Value": "0.5981735",
+            "Unit": "[%]"
+          },
+          "pDec": {
+            "Value": "0.2968037",
+            "Unit": "[%]"
+          },
+          "pCruise": {
+            "Value": "0.08219178",
+            "Unit": "[%]"
+          },
+          "pStop": {
+            "Value": "0.02283105",
+            "Unit": "[%]"
+          }
+        }
+      }
+    ]
+  }
+}

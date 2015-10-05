@@ -1,4 +1,6 @@
-﻿namespace TUGraz.VectoCore.Models.Simulation.DataBus
+﻿using TUGraz.VectoCore.Utils;
+
+namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
 	/// <summary>
 	/// Defines a method to access shared data of the gearbox.
@@ -9,6 +11,11 @@
 		/// Returns the current gear.
 		/// </summary>
 		/// <returns></returns>
-		uint Gear { get; set; }
+		uint Gear { get; }
+
+
+		MeterPerSecond StartSpeed { get; }
+
+		MeterPerSquareSecond StartAcceleration { get; }
 	}
 }

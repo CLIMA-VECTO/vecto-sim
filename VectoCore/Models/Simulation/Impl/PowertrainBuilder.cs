@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -46,11 +47,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					throw new VectoSimulationException("Unhandled Cycle Type");
 			}
 			// cycle --> driver --> vehicle --> wheels --> axleGear --> retarder --> gearBox
-			var driver = AddComponent(cycle, new Driver(_container, data.DriverData));
+			var driver = AddComponent(cycle, new Driver(_container, data.DriverData, new DefaultDriverStrategy()));
 			var vehicle = AddComponent(driver, new Vehicle(_container, data.VehicleData));
 			var wheels = AddComponent(vehicle, new Wheels(_container, data.VehicleData.DynamicTyreRadius));
-			var breaks = AddComponent(wheels, new Breaks(_container));
-			var tmp = AddComponent(breaks, new AxleGear(_container, data.GearboxData.AxleGearData));
+			var brakes = AddComponent(wheels, new Brakes(_container));
+			var tmp = AddComponent(brakes, new AxleGear(_container, data.GearboxData.AxleGearData));
 
 			switch (data.VehicleData.Retarder.Type) {
 				case RetarderData.RetarderType.Primary:
@@ -64,10 +65,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				case RetarderData.RetarderType.None:
 					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
 					break;
+				case RetarderData.RetarderType.LossesIncludedInTransmission:
+					tmp = AddComponent(tmp, GetGearbox(_container, data.GearboxData));
+					break;
 			}
 
+			var engine = new CombustionEngine(_container, data.EngineData);
+			var clutch = new Clutch(_container, data.EngineData, engine.IdleController);
+
 			// gearbox --> clutch
-			tmp = AddComponent(tmp, new Clutch(_container, data.EngineData));
+			tmp = AddComponent(tmp, clutch);
 
 
 			// clutch --> direct aux --> ... --> aux_XXX --> directAux
@@ -90,21 +97,33 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				tmp = AddComponent(tmp, aux);
 			}
 			// connect aux --> engine
-			AddComponent(tmp, new CombustionEngine(_container, data.EngineData));
+			AddComponent(tmp, engine);
+
+			engine.IdleController.RequestPort = clutch.IdleControlPort;
 
 			return _container;
 		}
 
 		protected IGearbox GetGearbox(VehicleContainer container, GearboxData data)
 		{
+			IShiftStrategy strategy;
 			switch (data.Type) {
+				case GearboxType.AMT:
+					strategy = new AMTShiftStrategy(data, container);
+					break;
+				case GearboxType.MT:
+					strategy = new MTShiftStrategy(data, container);
+					break;
 				case GearboxType.AT:
-					throw new VectoSimulationException("Unsupported Geabox type: Automatic Transmission (AT)");
+					strategy = new ATShiftStrategy(data, container);
+					break;
 				case GearboxType.Custom:
-					throw new VectoSimulationException("Custom Gearbox not supported");
+					strategy = new CustomShiftStrategy(data, container);
+					break;
 				default:
-					return new Gearbox(container, data);
+					throw new VectoSimulationException("Unknown Gearbox Type: {0}", data.Type);
 			}
+			return new Gearbox(container, data, strategy);
 		}
 
 		protected virtual IDriver AddComponent(IDrivingCycle prev, IDriver next)

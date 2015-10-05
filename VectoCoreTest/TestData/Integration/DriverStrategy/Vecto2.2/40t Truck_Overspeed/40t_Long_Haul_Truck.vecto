@@ -1,0 +1,44 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "9/29/2015 1:16:40 PM",
+    "AppVersion": "2.2",
+    "FileVersion": 2
+  },
+  "Body": {
+    "SavedInDeclMode": false,
+    "VehicleFile": "40t_Long_Haul_Truck.vveh",
+    "EngineFile": "40t_Long_Haul_Truck.veng",
+    "GearboxFile": "40t_Long_Haul_Truck.vgbx",
+    "Cycles": [
+      "..\\..\\Cycles\\Cycle_Accelerate_0_85_downhill_1.vdri",
+      "..\\..\\Cycles\\Cycle_Accelerate_0_85_downhill_3.vdri",
+      "..\\..\\Cycles\\Cycle_Accelerate_0_85_downhill_5.vdri",
+      "..\\..\\Cycles\\Cycle_Accelerate_0_60_downhill_1.vdri",
+      "..\\..\\Cycles\\Cycle_Accelerate_0_60_downhill_3.vdri",
+      "..\\..\\Cycles\\Cycle_Accelerate_0_60_downhill_5.vdri",
+      "..\\..\\Cycles\\Cycle_Accelerate_0_40_downhill_1.vdri",
+      "..\\..\\Cycles\\Cycle_Accelerate_0_40_downhill_3.vdri",
+      "..\\..\\Cycles\\Cycle_Accelerate_0_40_downhill_5.vdri"
+    ],
+    "VACC": "Truck.vacc",
+    "EngineOnlyMode": false,
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 5.0,
+      "Delay": 5
+    },
+    "LAC": {
+      "Enabled": true,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "OverSpeed",
+      "MinSpeed": 50.0,
+      "OverSpeed": 5.0,
+      "UnderSpeed": 5.0
+    }
+  }
+}

@@ -12,7 +12,13 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 	{
 		Second SimulationInterval { get; set; }
 
+		MeterPerSquareSecond Acceleration { get; set; }
+
+		Meter SimulationDistance { get; set; }
+
 		Watt EnginePowerRequest { get; set; }
+
+		Watt AuxiliariesPowerDemand { get; set; }
 
 		Watt ClutchPowerRequest { get; set; }
 
@@ -23,5 +29,7 @@ namespace TUGraz.VectoCore.Models.Connector.Ports
 		Watt WheelsPowerRequest { get; set; }
 
 		Watt VehiclePowerRequest { get; set; }
+
+		Watt BrakePower { get; set; }
 	}
 }
