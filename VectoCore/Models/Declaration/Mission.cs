@@ -23,5 +23,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 		public Stream CycleFile { get; set; }
+
+		public bool UseCdA2 { get; set; }
 	}
 }
