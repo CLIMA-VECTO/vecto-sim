@@ -55,7 +55,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				ModalResultField.Tq_eng, ModalResultField.FCMap
 			};
 
-			var titleHeight = (36 * 100.0f) / (diagramSize.Height * yfields.Count());
+			var titleHeight = (50 * 100.0f) / (diagramSize.Height * yfields.Count());
 
 			foreach (var xfield in xfields) {
 				var fileName = string.Format("{0}_{1}.png", Path.GetFileNameWithoutExtension(fileNameV3), xfield.GetName());
@@ -64,9 +64,10 @@ namespace TUGraz.VectoCore.Tests.Utils
 				var x2 = modDataV22.Rows.Cast<DataRow>().Select(v => v.Field<string>(xfield.GetName()).ToDouble()).ToArray();
 
 				var plotSize = new Size(diagramSize.Width, diagramSize.Height * yfields.Count());
-				var maxX = (int)(Math.Ceiling(Math.Max(x.Max(), x2.Max()) / 10.0) * 10.0);
+				var maxX = (int)(Math.Ceiling(Math.Max(x.Max(), x2.Max()) * 1.01 / 10.0) * 10.0);
 				var minX = (int)(Math.Floor(Math.Max(x.Min(), x2.Min()) / 10.0) * 10.0);
 				var chart = new Chart { Size = plotSize };
+
 
 				for (var i = 0; i < yfields.Length; i++) {
 					var yfield = yfields[i];
@@ -114,6 +115,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 					chart.ChartAreas.Add(chartArea);
 
+					var legend = new Legend(yfield.ToString()) {
+						Docking = Docking.Right,
+						IsDockedInsideChartArea = false,
+						DockedToChartArea = yfield.ToString(),
+						Font = new Font("Verdana", 14),
+						
+					};
+					chart.Legends.Add(legend);
+
 					if (yfield == ModalResultField.v_act) {
 						var y3 = modDataV3.Rows.Cast<DataRow>()
 							.Select(
@@ -127,7 +137,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 							Name = "v_target",
 							ChartType = SeriesChartType.FastLine,
 							Color = Color.Green,
-							BorderWidth = 3
+							BorderWidth = 3,
+							Legend = legend.Name,
+							IsVisibleInLegend = true
 						};
 						chart.Series.Add(series3);
 						chart.Series[series3.Name].Points.DataBindXY(x, y3);
@@ -136,9 +148,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 					var series1 = new Series {
 						Name = String.Format("Vecto 3 - {0}", yfield),
-						ChartType = SeriesChartType.FastLine,
+						ChartType = SeriesChartType.Line,
 						Color = Color.Blue,
-						BorderWidth = 2
+						BorderWidth = 2,
+						Legend = legend.Name,
+						IsVisibleInLegend = true,
+						//MarkerColor = Color.Blue,
+						//MarkerSize = 4,
+						//MarkerStyle = MarkerStyle.Circle,
+						//MarkerBorderColor = Color.White,
+						//MarkerBorderWidth = 1,
 					};
 					series1.ChartArea = chartArea.Name;
 
@@ -147,9 +166,16 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 					var series2 = new Series {
 						Name = String.Format("Vecto 2.2 - {0}", yfield),
-						ChartType = SeriesChartType.FastLine,
+						ChartType = SeriesChartType.Line,
 						Color = Color.Red,
-						BorderWidth = 2
+						BorderWidth = 2,
+						Legend = legend.Name,
+						IsVisibleInLegend = true,
+						//MarkerColor = Color.Red,
+						//MarkerSize = 4,
+						//MarkerStyle = MarkerStyle.Circle,
+						//MarkerBorderColor = Color.White,
+						//MarkerBorderWidth = 1,
 					};
 					series2.ChartArea = chartArea.Name;
 
@@ -158,7 +184,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 
 					chartArea.Position.Auto = false;
-					chartArea.Position.Width = 97;
+					chartArea.Position.Width = 85;
 					chartArea.Position.Height = (100.0f - titleHeight) / yfields.Count();
 					chartArea.Position.X = 0;
 					chartArea.Position.Y = (i * (100.0f - titleHeight)) / yfields.Count() + titleHeight;
@@ -174,7 +200,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 				title.Text = Path.GetFileNameWithoutExtension(fileName);
 				title.DockedToChartArea = yfields[0].ToString();
 				title.IsDockedInsideChartArea = false;
-				title.Font = new Font("Verdana", 14, FontStyle.Bold);
+				title.Font = new Font("Verdana", 18, FontStyle.Bold);
 				chart.Titles.Add(title);
 
 				chart.Invalidate();
