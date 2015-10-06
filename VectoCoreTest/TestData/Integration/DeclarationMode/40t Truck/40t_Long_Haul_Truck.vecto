@@ -1,0 +1,70 @@
+﻿{
+  "Header": {
+    "CreatedBy": " ()",
+    "Date": "10/6/2015 3:19:54 PM",
+    "AppVersion": "2.2",
+    "FileVersion": 2
+  },
+  "Body": {
+    "SavedInDeclMode": true,
+    "VehicleFile": "40t_Long_Haul_Truck.vveh",
+    "EngineFile": "40t_Long_Haul_Truck.veng",
+    "GearboxFile": "40t_Long_Haul_Truck.vgbx",
+    "Cycles": [
+      "Long Haul",
+      "Regional Delivery"
+    ],
+    "Aux": [
+      {
+        "ID": "FAN",
+        "Type": "Fan",
+        "Path": "<NOFILE>",
+        "Technology": "Hydraulic driven - Constant displacement pump"
+      },
+      {
+        "ID": "STP",
+        "Type": "Steering pump",
+        "Path": "<NOFILE>",
+        "Technology": "Variable displacement"
+      },
+      {
+        "ID": "AC",
+        "Type": "HVAC",
+        "Path": "<NOFILE>",
+        "Technology": "Default"
+      },
+      {
+        "ID": "ES",
+        "Type": "Electric System",
+        "Path": "<NOFILE>",
+        "Technology": "Custom Technology List",
+        "TechList": []
+      },
+      {
+        "ID": "PS",
+        "Type": "Pneumatic System",
+        "Path": "<NOFILE>",
+        "Technology": "Default"
+      }
+    ],
+    "VACC": "<NOFILE>",
+    "EngineOnlyMode": false,
+    "StartStop": {
+      "Enabled": false,
+      "MaxSpeed": 5.0,
+      "MinTime": 5.0,
+      "Delay": 5
+    },
+    "LAC": {
+      "Enabled": true,
+      "Dec": -0.5,
+      "MinSpeed": 50.0
+    },
+    "OverSpeedEcoRoll": {
+      "Mode": "OverSpeed",
+      "MinSpeed": 50.0,
+      "OverSpeed": 5.0,
+      "UnderSpeed": 5.0
+    }
+  }
+}
