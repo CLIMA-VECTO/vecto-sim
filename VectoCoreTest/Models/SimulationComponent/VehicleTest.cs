@@ -1,7 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.FileIO.Reader.Impl;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -43,7 +45,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			var retVal = requestPort.Request(absTime, dt, accell, gradient);
 
-			Assert.AreEqual(-2549.06772173622, mockPort.Force.Value(), 0.0001);
+			Assert.AreEqual(-2428.0412094587, mockPort.Force.Value(), 0.0001);
 			Assert.AreEqual(16.954303841, mockPort.Velocity.Value(), 0.0001);
 		}
 
@@ -106,6 +108,36 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			avgForce = vehicle.AirDragResistance(1.SI<MeterPerSquareSecond>(), dt);
 			Assert.AreEqual(2102.13153, avgForce.Value(), Tolerance);
+		}
+
+		[TestMethod]
+		public void VehicleAirDragPowerLossDeclarationTest()
+		{
+			var container = new VehicleContainer();
+
+			var vehicleData = EngineeringModeSimulationDataReader.CreateVehicleDataFromFile(VehicleDataFileTruck);
+			vehicleData.AerodynamicDragAera = 6.2985.SI<SquareMeter>();
+			vehicleData.CrossWindCorrectionMode = CrossWindCorrectionMode.DeclarationModeCorrection;
+
+			var vehicle = new Vehicle(container, vehicleData);
+
+			var mockPort = new MockFvOutPort();
+			vehicle.InPort().Connect(mockPort);
+
+			var writer = new MockModalDataWriter();
+			vehicle.Initialize(80.KMPHtoMeterPerSecond(), 0.SI<Radian>());
+
+			var absTime = 0.SI<Second>();
+			var dt = 0.5.SI<Second>();
+
+			var retVal = vehicle.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
+			vehicle.CommitSimulationStep(writer);
+
+			Assert.AreEqual(48213.70, ((SI)writer[ModalResultField.Pair]).Value(), 0.1);
+
+			retVal = vehicle.Request(absTime, dt, 1.SI<MeterPerSquareSecond>(), 0.SI<Radian>());
+			vehicle.CommitSimulationStep(writer);
+			Assert.AreEqual(49747.8535, ((SI)writer[ModalResultField.Pair]).Value(), 0.1);
 		}
 	}
 }
