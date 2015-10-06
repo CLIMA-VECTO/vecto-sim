@@ -265,36 +265,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected Point[] CalculateAirResistanceCurve(AirDrag.AirDragEntry values)
 		{
-			// todo: get from vehicle or move whole procedure to vehicle
-			var cdA0Actual = _data.AerodynamicDragAera;
-
-			var betaValues = new Dictionary<int, SquareMeter>();
-			for (var beta = 0; beta <= 12; beta++) {
-				var deltaCdA = values.A1 * beta + values.A2 * beta * beta + values.A3 * beta * beta * beta;
-				betaValues[beta] = deltaCdA.SI<SquareMeter>();
-			}
-
 			var points = new List<Point> { new Point { X = 0.SI<MeterPerSecond>(), Y = 0.SI<SquareMeter>() } };
 
-			for (var vVeh = 60.KMPHtoMeterPerSecond();
-				vVeh.IsSmallerOrEqual(100.KMPHtoMeterPerSecond());
-				vVeh += 5.KMPHtoMeterPerSecond()) {
+			for (var speed = 60; speed <= 100; speed += 5) {
+				var vVeh = speed.KMPHtoMeterPerSecond();
 				var cdASum = 0.0.SI<SquareMeter>();
 				for (var alpha = 0; alpha <= 180; alpha += 10) {
 					var vWindX = Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());
 					var vWindY = Physics.BaseWindSpeed * Math.Sin(alpha.ToRadian());
 					var vAirX = vVeh + vWindX;
 					var vAirY = vWindY;
-					var vAir = VectoMath.Sqrt<MeterPerSecond>(vAirX * vAirX + vAirY * vAirY);
+//					var vAir = VectoMath.Sqrt<MeterPerSecond>(vAirX * vAirX + vAirY * vAirY);
 					var beta = Math.Atan((vAirY / vAirX).Value()).ToDegree();
-
-					var sec = betaValues.GetSection(b => b.Key < beta);
-					var deltaCdA = VectoMath.Interpolate(sec.Item1.Key, sec.Item2.Key, sec.Item1.Value, sec.Item2.Value, beta);
-					var cdA = cdA0Actual + deltaCdA;
+					var deltaCdA = ComputeDeltaCd(beta, values);
+					var cdA = _data.AerodynamicDragAera + deltaCdA;
 
 					var degreeShare = ((alpha != 0 && alpha != 180) ? 10.0 / 180.0 : 5.0 / 180.0);
 
-					cdASum += degreeShare * cdA * (vAir * vAir / (vVeh * vVeh)).Cast<Scalar>();
+//					cdASum += degreeShare * cdA * (vAir * vAir / (vVeh * vVeh)).Cast<Scalar>();
+					cdASum += degreeShare * cdA * ((vAirX * vAirX + vAirY * vAirY) / (vVeh * vVeh)).Cast<Scalar>();
 				}
 				points.Add(new Point { X = vVeh, Y = cdASum });
 			}
@@ -303,6 +292,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return points.ToArray();
 		}
 
+		protected SquareMeter ComputeDeltaCd(double beta, AirDrag.AirDragEntry values)
+		{
+			return (values.A1 * beta + values.A2 * beta * beta + values.A3 * beta * beta * beta).SI<SquareMeter>();
+		}
 
 		public class VehicleState
 		{
