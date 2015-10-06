@@ -79,10 +79,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_previousState = new VehicleState {
 				Distance = 0.SI<Meter>(),
 				Velocity = vehicleSpeed,
-				AirDragResistance = AirDragResistance(0.SI<MeterPerSquareSecond>(), Constants.SimulationSettings.TargetTimeInterval),
 				RollingResistance = RollingResistance(roadGradient),
 				SlopeResistance = SlopeResistance(roadGradient)
 			};
+			_previousState.AirDragResistance = AirDragResistance(0.SI<MeterPerSquareSecond>(),
+				Constants.SimulationSettings.TargetTimeInterval);
 			_previousState.VehicleAccelerationForce = _previousState.RollingResistance
 													+ _previousState.AirDragResistance
 													+ _previousState.SlopeResistance;
@@ -155,21 +156,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 											_currentState.RollingResistance * _currentState.Velocity) / 2;
 			// TODO: comptuation of AirResistancePower is wrong!
 
-			Watt averageAirDragPower;
-			if (_currentState.Acceleration.IsEqual(0)) {
-				var vAverage = (_previousState.Velocity + _currentState.Velocity) / 2;
-				averageAirDragPower = (ComputeAirDragForce(vAverage) * vAverage).Cast<Watt>();
-			} else {
-				// compute the average force within the current simulation interval
-				// P(t) = k * v(t)^3  , v(t) = v0 + a * t  // a != 0
-				// => P_avg = 1/T * k/(4*a) * (v1^4 - v0^4) = 1/(4*a*T)(F1*v1^2 - F0*v0^2)
-				var force0 = ComputeAirDragForce(_previousState.Velocity);
-				var force1 = ComputeAirDragForce(_currentState.Velocity);
-				averageAirDragPower = ((force1 * _currentState.Velocity * _currentState.Velocity -
-										force0 * _previousState.Velocity * _previousState.Velocity) /
-										(4 * _currentState.Acceleration * _currentState.dt)).Cast<Watt>();
-			}
-			writer[ModalResultField.Pair] = averageAirDragPower;
+			writer[ModalResultField.Pair] = ComputeAirDragPowerLoss(_previousState.Velocity, _currentState.Velocity,
+				_currentState.dt);
 
 
 			// sanity check: is the vehicle in step with the cycle?
@@ -182,6 +170,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				}
 			}
 		}
+
 
 		protected override void DoCommitSimulationStep()
 		{
@@ -201,30 +190,30 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected internal Newton AirDragResistance(MeterPerSquareSecond acceleration, Second dt)
 		{
-			if (acceleration.IsEqual(0)) {
-				var vAverage = (_previousState.Velocity + _currentState.Velocity) / 2;
-				var retVal = ComputeAirDragForce(vAverage);
-				Log.Debug("AirDragResistance: {0}", retVal);
-				return retVal;
-			}
-
-			// compute the average force within the current simulation interval
-			// F(t) = k * v(t)^2  , v(t) = v0 + a * t  // a != 0
-			// => F_avg = 1/T * k/(3*a) * (v1^3 - v0^3) = 1/(3*a*T)(F1*v1 - F0*v0)
-			var force0 = ComputeAirDragForce(_previousState.Velocity);
-			var force1 = ComputeAirDragForce(_currentState.Velocity);
-
-			var result =
-				((force1 * _currentState.Velocity - force0 * _previousState.Velocity) / (3.0 * acceleration * dt)).Cast<Newton>();
+			var vAverage = _previousState.Velocity + acceleration * dt / 2;
+			var result = (ComputeAirDragPowerLoss(_previousState.Velocity, _previousState.Velocity + acceleration * dt, dt) /
+						vAverage).Cast<Newton>();
 
 			Log.Debug("AirDragResistance: {0}", result);
 			return result;
 		}
 
-		protected internal Newton ComputeAirDragForce(MeterPerSecond velocity)
+		private Watt ComputeAirDragPowerLoss(MeterPerSecond v1, MeterPerSecond v2, Second dt)
 		{
-			var CdA = ComputeEffectiveAirDragArea(velocity);
-			return (Physics.AirDensity / 2.0 * CdA * velocity * velocity).Cast<Newton>();
+			var vAverage = (v1 + v2) / 2;
+			var CdA = ComputeEffectiveAirDragArea(vAverage);
+			Watt averageAirDragPower;
+			if (v1.IsEqual(v2)) {
+				averageAirDragPower = (Physics.AirDensity / 2.0 * CdA * vAverage * vAverage * vAverage).Cast<Watt>();
+			} else {
+				// compute the average force within the current simulation interval
+				// P(t) = k * v(t)^3  , v(t) = v0 + a * t  // a != 0
+				// => P_avg = (CdA * rho/2)/(4*a * dt) * (v2^4 - v1^4)
+				var acceleration = (v2 - v1) / dt;
+				averageAirDragPower =
+					(Physics.AirDensity / 2.0 * CdA * (v2 * v2 * v2 * v2 - v1 * v1 * v1 * v1) / (4 * acceleration * dt)).Cast<Watt>();
+			}
+			return averageAirDragPower;
 		}
 
 		protected internal SquareMeter ComputeEffectiveAirDragArea(MeterPerSecond velocity)
@@ -269,7 +258,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var points = new List<Point> { new Point { X = 0.SI<MeterPerSecond>(), Y = 0.SI<SquareMeter>() } };
 
-			for (var vVeh = 60.KMPHtoMeterPerSecond(); vVeh <= 100.KMPHtoMeterPerSecond(); vVeh += 5.KMPHtoMeterPerSecond()) {
+			for (var vVeh = 60.KMPHtoMeterPerSecond();
+				vVeh.IsSmallerOrEqual(100.KMPHtoMeterPerSecond());
+				vVeh += 5.KMPHtoMeterPerSecond()) {
 				var cdASum = 0.0.SI<SquareMeter>();
 				for (var alpha = 0; alpha <= 180; alpha += 10) {
 					var vWindX = Physics.BaseWindSpeed * Math.Cos(alpha.ToRadian());

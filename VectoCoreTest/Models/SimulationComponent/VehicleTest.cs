@@ -81,6 +81,31 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 			tmp = vehicle.ComputeEffectiveAirDragArea(92.8765.KMPHtoMeterPerSecond());
 			Assert.AreEqual(7.33617, tmp.Value(), Tolerance);
+
+			// ====================
+
+			var dt = 0.5.SI<Second>();
+			vehicle.Initialize(60.KMPHtoMeterPerSecond(), 0.SI<Radian>());
+
+			var avgForce = vehicle.AirDragResistance(0.SI<MeterPerSquareSecond>(), dt);
+			Assert.AreEqual(1340.13618774784, avgForce.Value(), Tolerance);
+
+			avgForce = vehicle.AirDragResistance(1.SI<MeterPerSquareSecond>(), dt);
+			Assert.AreEqual(1375.658146, avgForce.Value(), Tolerance);
+
+			avgForce = vehicle.AirDragResistance(0.5.SI<MeterPerSquareSecond>(), dt);
+			Assert.AreEqual(1357.785735, avgForce.Value(), Tolerance);
+
+			// - - - - - - 
+			vehicle.Initialize(72.KMPHtoMeterPerSecond(), 0.SI<Radian>());
+
+			avgForce = vehicle.AirDragResistance(0.5.SI<MeterPerSquareSecond>(), dt);
+			Assert.AreEqual(1861.603488, avgForce.Value(), Tolerance);
+
+			dt = 3.SI<Second>();
+
+			avgForce = vehicle.AirDragResistance(1.SI<MeterPerSquareSecond>(), dt);
+			Assert.AreEqual(2102.13153, avgForce.Value(), Tolerance);
 		}
 	}
 }
