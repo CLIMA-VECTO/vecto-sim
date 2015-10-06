@@ -3,7 +3,7 @@
     "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
     "Date": "29.07.2014 16:59:13",
     "AppVersion": "2.0.4-beta",
-    "FileVersion": 5
+    "FileVersion": 7
   },
   "Body": {
     "SavedInDeclMode": false,
@@ -12,11 +12,10 @@
     "CurbWeightExtra": 0.0,
     "Loading": 3300.0,
     "MassMax": 24.0,
-    "Cd": 0.441,
-    "CrossSecArea": 7.4,
+    "CdA": 3.2634,
     "rdyn": 520.0,
     "Rim": "-",
-    "CdCorrMode": "CdOfV",
+    "CdCorrMode": "CdofVdecl",
     "CdCorrFile": "24t Coach.vcdv",
     "Retarder": {
       "Type": "Secondary",

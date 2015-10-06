@@ -46,11 +46,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 				AccelerationFile = RessourceHelper.ReadStream(ResourceNamespace + "VACC." + row.Field<string>(".vaccfile")),
 				Missions = CreateMissions(grossVehicleMassRating, curbWeight, row).ToArray()
 			};
+
 			return segment;
 		}
 
 		private static IEnumerable<Mission> CreateMissions(Kilogram grossVehicleMassRating, Kilogram curbWeight, DataRow row)
 		{
+			var trailerOnlyInLongHaul = row.Field<string>("vehiclecategory") == VehicleCategory.RigidTruck.ToString() &&
+										row.Field<string>("traileraxles-longhaul") != "-" &&
+										row.Field<string>("traileraxles-other") == "-";
+
 			var missionTypes = Enum.GetValues(typeof(MissionType)).Cast<MissionType>();
 			foreach (var missionType in missionTypes.Where(m => row.Field<string>(m.ToString()) == "1")) {
 				string vcdvField;
@@ -72,7 +77,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					CrossWindCorrection = row.Field<string>(vcdvField),
 					MassExtra = row.ParseDouble("massextra-" + missionType.ToString().ToLower()).SI<Kilogram>(),
 					CycleFile = RessourceHelper.ReadStream(ResourceNamespace + "MissionCycles." + missionType + ".vdri"),
-					AxleWeightDistribution = row.Field<string>(axleField).Split('/').ToDouble().Select(x => x / 100.0).ToArray()
+					AxleWeightDistribution = row.Field<string>(axleField).Split('/').ToDouble().Select(x => x / 100.0).ToArray(),
+					UseCdA2 = trailerOnlyInLongHaul && missionType != MissionType.LongHaul,
 				};
 
 				var trailerAxles = row.Field<string>(trailerField).Split('/');

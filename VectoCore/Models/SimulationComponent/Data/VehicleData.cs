@@ -60,13 +60,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public Kilogram GrossVehicleMassRating { get; internal set; }
 
-		public double DragCoefficient { get; internal set; }
-
-		public SquareMeter CrossSectionArea { get; internal set; }
-
-		public double DragCoefficientRigidTruck { get; internal set; }
-
-		public SquareMeter CrossSectionAreaRigidTruck { get; internal set; }
+		public SquareMeter AerodynamicDragAera { get; internal set; }
 
 		public Meter DynamicTyreRadius { get; internal set; }
 

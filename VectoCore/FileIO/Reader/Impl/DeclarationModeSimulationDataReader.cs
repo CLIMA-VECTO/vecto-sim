@@ -99,8 +99,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			CheckForDeclarationMode(fileInfo, "Vehicle");
 
 			switch (fileInfo.Version) {
-				case 5:
-					var vehicle = JsonConvert.DeserializeObject<VehicleFileV5Declaration>(json);
+				case 7:
+					var vehicle = JsonConvert.DeserializeObject<VehicleFileV7Declaration>(json);
 					vehicle.BasePath = file;
 					return vehicle;
 				default:

@@ -4,7 +4,7 @@ using TUGraz.VectoCore.FileIO.DeclarationFile;
 
 namespace TUGraz.VectoCore.FileIO.EngineeringFile
 {
-	internal class VehicleFileV5Engineering : VehicleFileV5Declaration
+	internal class VehicleFileV7Engineering : VehicleFileV7Declaration
 	{
 		[JsonProperty(Required = Required.Always)] public new DataBodyEng Body;
 

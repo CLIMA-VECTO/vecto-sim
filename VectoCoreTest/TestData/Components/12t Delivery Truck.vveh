@@ -3,7 +3,7 @@
     "CreatedBy": "Raphael Luz IVT TU-Graz (85407225-fc3f-48a8-acda-c84a05df6837)",
     "Date": "29.07.2014 16:58:52",
     "AppVersion": "2.0.4-beta",
-    "FileVersion": 5
+    "FileVersion": 7
   },
   "Body": {
     "SavedInDeclMode": true,
@@ -12,8 +12,7 @@
     "CurbWeightExtra": 0.0,
     "Loading": 0.0,
     "MassMax": 11.9,
-    "Cd": 0.6,
-    "CrossSecArea": 8.8,
+    "CdA": 5.28,
     "rdyn": 406.9297,
     "Rim": "15° DC Rims",
     "CdCorrMode": "CdOfV",
