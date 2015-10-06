@@ -48,7 +48,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 		}
 
 		[TestMethod]
-		public void VehicleSlopeResistanceTest()
+		public void VehicleAirResistanceTest()
 		{
 			var container = new VehicleContainer();
 
@@ -62,13 +62,25 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 
 			var tmp = vehicle.ComputeEffectiveAirDragArea(0.KMPHtoMeterPerSecond());
-			Assert.AreEqual(8.06, tmp.Value(), Tolerance);
+			Assert.AreEqual(8.12204, tmp.Value(), Tolerance);
 
 			tmp = vehicle.ComputeEffectiveAirDragArea(60.KMPHtoMeterPerSecond());
-			Assert.AreEqual(8.06, tmp.Value(), Tolerance);
+			Assert.AreEqual(8.12204, tmp.Value(), Tolerance);
 
 			tmp = vehicle.ComputeEffectiveAirDragArea(75.KMPHtoMeterPerSecond());
-			Assert.AreEqual(7.64, tmp.Value(), Tolerance);
+			Assert.AreEqual(7.67232, tmp.Value(), Tolerance);
+
+			tmp = vehicle.ComputeEffectiveAirDragArea(100.KMPHtoMeterPerSecond());
+			Assert.AreEqual(7.23949, tmp.Value(), Tolerance);
+
+			tmp = vehicle.ComputeEffectiveAirDragArea(52.1234.KMPHtoMeterPerSecond());
+			Assert.AreEqual(8.12204, tmp.Value(), Tolerance);
+
+			tmp = vehicle.ComputeEffectiveAirDragArea(73.5432.KMPHtoMeterPerSecond());
+			Assert.AreEqual(7.70967, tmp.Value(), Tolerance);
+
+			tmp = vehicle.ComputeEffectiveAirDragArea(92.8765.KMPHtoMeterPerSecond());
+			Assert.AreEqual(7.33617, tmp.Value(), Tolerance);
 		}
 	}
 }
