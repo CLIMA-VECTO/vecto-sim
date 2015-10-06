@@ -1,12 +1,16 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms.DataVisualization.Charting;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Utils;
+using Font = System.Drawing.Font;
 using Image = iTextSharp.text.Image;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
@@ -16,7 +20,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public System.Drawing.Image ChartCO2speed;
 		public System.Drawing.Image ChartCO2tkm;
 		public string Creator = "";
-		public cMissionResults CurrentMR;
+		public MissionResults CurrentMR;
 		public string DateStr = "";
 		public string EngModelStr = "";
 		public string EngStr = "";
@@ -26,82 +30,86 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public string HDVclassStr = "";
 		public string JobFile = "";
 		public string MassMaxStr = "";
-		public List<cMissionResults> MissionResults = new List<cMissionResults>();
+		public List<MissionResults> missionResults = new List<MissionResults>();
 		public VehicleCategory VehCat;
 
 		public void CreateCharts()
 		{
-			ChartArea area;
-			Chart chart;
-			Series series;
-			System.Drawing.Rectangle rectangle;
+			foreach (var results in missionResults) {
+				var missionResultChart = new Chart { Width = 1000, Height = 427 };
 
-			foreach (var results in MissionResults) {
-				chart = new Chart { Width = 0x3e8, Height = 0x1ab };
-				area = new ChartArea();
+				var missionResultArea = new ChartArea {
+					Name = "main",
+					BorderDashStyle = ChartDashStyle.Solid,
+					BorderWidth = 3,
+					AxisX = {
+						Title = "engine speed [1/min]",
+						TitleFont = new Font("Helvetica", 20),
+						LabelStyle = { Font = new Font("Helvetica", 20) },
+						LabelAutoFitStyle = LabelAutoFitStyles.None,
+						Minimum = 300.0
+					},
+					AxisY = {
+						Title = "engine torque [Nm]",
+						TitleFont = new Font("Helvetica", 20),
+						LabelStyle = { Font = new Font("Helvetica", 20) },
+						LabelAutoFitStyle = LabelAutoFitStyles.None
+					}
+				};
+				missionResultChart.ChartAreas.Add(missionResultArea);
 
-				series = new Series();
-				series.Points.DataBindXY(VECTO_Global.ENG.FLD.LnU, new IEnumerable[] { VECTO_Global.ENG.FLD.LTq });
-				series.ChartType = SeriesChartType.FastLine;
-				series.BorderWidth = 3;
-				series.Color = Color.DarkBlue;
-				series.Name = "Full load curve";
-				chart.Series.Add(series);
+				//todo: what is this?
+				var area2 = missionResultChart.ChartAreas[0];
+				area2.Position.X = 0;
+				area2.Position.Y = 0;
+				area2.Position.Width = 70;
+				area2.Position.Height = 100;
 
-				series = new Series();
-				series.Points.DataBindXY(VECTO_Global.ENG.FLD.LnU, new IEnumerable[] { VECTO_Global.ENG.FLD.LTqDrag });
-				series.ChartType = SeriesChartType.FastLine;
-				series.BorderWidth = 3;
-				series.Color = Color.Blue;
-				series.Name = "Drag curve";
-				chart.Series.Add(series);
+				var legend = new Legend("main") {
+					Font = new Font("Helvetica", 14),
+					BorderColor = Color.Black,
+					BorderWidth = 3,
+				};
+				missionResultChart.Legends.Add(legend);
 
-				series = new Series();
-				series.Points.DataBindXY(results.Results[tLoading.RefLoaded].nU,
-					new IEnumerable[] { results.Results[tLoading.RefLoaded].Tq });
-				series.ChartType = SeriesChartType.Point;
-				series.Color = Color.Red;
-				series.Name = "load points (Ref. load.)";
-				chart.Series.Add(series);
+				// todo: get full load curve from engine
+				var flc = new FullLoadCurve();
+				var n = flc.FullLoadEntries.Select(x => x.EngineSpeed).ToDouble().ToList();
 
-				area.Name = "main";
-				area.AxisX.Title = "engine speed [1/min]";
-				area.AxisX.TitleFont = new System.Drawing.Font("Helvetica", 20f);
-				area.AxisX.LabelStyle.Font = new System.Drawing.Font("Helvetica", 20f);
-				area.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None;
-				area.AxisY.Title = "engine torque [Nm]";
-				area.AxisY.TitleFont = new System.Drawing.Font("Helvetica", 20f);
-				area.AxisY.LabelStyle.Font = new System.Drawing.Font("Helvetica", 20f);
-				area.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None;
-				area.AxisX.Minimum = 300.0;
-				area.BorderDashStyle = ChartDashStyle.Solid;
-				area.BorderWidth = 3;
-				chart.ChartAreas.Add(area);
+				var fullLoadCurve = new Series("Full load curve") {
+					ChartType = SeriesChartType.FastLine,
+					BorderWidth = 3,
+					Color = Color.DarkBlue
+				};
+				fullLoadCurve.Points.DataBindXY(n, flc.FullLoadEntries.Select(x => x.TorqueFullLoad).ToDouble());
+				missionResultChart.Series.Add(fullLoadCurve);
 
-				var area2 = chart.ChartAreas[0];
-				area2.Position.X = 0f;
-				area2.Position.Y = 0f;
-				area2.Position.Width = 70f;
-				area2.Position.Height = 100f;
+				var dragLoadCurve = new Series("Drag curve") {
+					ChartType = SeriesChartType.FastLine,
+					BorderWidth = 3,
+					Color = Color.Blue
+				};
+				dragLoadCurve.Points.DataBindXY(n, flc.FullLoadEntries.Select(x => x.TorqueDrag).ToDouble());
+				missionResultChart.Series.Add(dragLoadCurve);
 
-				chart.Legends.Add("main");
-				chart.Legends[0].Font = new System.Drawing.Font("Helvetica", 14f);
-				chart.Legends[0].BorderColor = Color.Black;
-				chart.Legends[0].BorderWidth = 3;
-				chart.Update();
+				var dataPoints = new Series("load points (Ref. load.)") { ChartType = SeriesChartType.Point, Color = Color.Red };
+				dataPoints.Points.DataBindXY(results.Results[LoadingType.Reference].nU, results.Results[LoadingType.Reference].Tq);
+				missionResultChart.Series.Add(dataPoints);
 
-				results.ChartTqN = new Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb);
-				rectangle = new System.Drawing.Rectangle(0, 0, results.ChartTqN.Size.Width, results.ChartTqN.Size.Height);
-				chart.DrawToBitmap((Bitmap)results.ChartTqN, rectangle);
+
+				missionResultChart.Update();
+
+				results.ChartTqN = new Bitmap(missionResultChart.Width, missionResultChart.Height, PixelFormat.Format32bppArgb);
+				var rectangle = new Rectangle(0, 0, results.ChartTqN.Size.Width, results.ChartTqN.Size.Height);
+				missionResultChart.DrawToBitmap((Bitmap)results.ChartTqN, rectangle);
 			}
-			foreach (var results in MissionResults) {
-				chart = new Chart { Width = 0x7d0, Height = 400 };
+			foreach (var results in missionResults) {
+				var chart = new Chart { Width = 2000, Height = 400 };
 
-				area = new ChartArea();
+				var area = new ChartArea();
 
-				series = new Series();
-				series.Points.DataBindXY(results.Results[tLoading.RefLoaded].Distance,
-					new IEnumerable[] { results.Results[tLoading.RefLoaded].Alt });
+				var series = new Series();
+				series.Points.DataBindXY(results.Results[LoadingType.Reference].Distance, results.Results[LoadingType.Reference].Alt);
 				series.ChartType = SeriesChartType.Area;
 				series.Color = Color.Lavender;
 				series.Name = "Altitude";
@@ -109,34 +117,34 @@ namespace TUGraz.VectoCore.Models.Declaration
 				chart.Series.Add(series);
 
 				series = new Series();
-				series.Points.DataBindXY(results.Results[tLoading.RefLoaded].Distance,
-					new IEnumerable[] { results.Results[tLoading.RefLoaded].TargetSpeed });
+				series.Points.DataBindXY(results.Results[LoadingType.Reference].Distance,
+					results.Results[LoadingType.Reference].TargetSpeed);
 				series.ChartType = SeriesChartType.FastLine;
 				series.BorderWidth = 3;
 				series.Name = "Target speed";
 				chart.Series.Add(series);
 
-				foreach (KeyValuePair<tLoading, cLoadingResults> pair in results.Results) {
+				foreach (var pair in results.Results) {
 					series = new Series();
-					series.Points.DataBindXY(pair.Value.Distance, new IEnumerable[] { pair.Value.ActualSpeed });
+					series.Points.DataBindXY(pair.Value.Distance, pair.Value.ActualSpeed);
 					series.ChartType = SeriesChartType.FastLine;
-					series.Name = VECTO_Global.ConvLoading(pair.Key);
+					series.Name = pair.Key.GetName();
 					chart.Series.Add(series);
 				}
 
 				area.Name = "main";
 				area.AxisX.Title = "distance [km]";
-				area.AxisX.TitleFont = new System.Drawing.Font("Helvetica", 16f);
-				area.AxisX.LabelStyle.Font = new System.Drawing.Font("Helvetica", 16f);
+				area.AxisX.TitleFont = new Font("Helvetica", 16f);
+				area.AxisX.LabelStyle.Font = new Font("Helvetica", 16f);
 				area.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None;
 				area.AxisX.LabelStyle.Format = "0.0";
 				area.AxisY.Title = "vehicle speed [km/h]";
-				area.AxisY.TitleFont = new System.Drawing.Font("Helvetica", 16f);
-				area.AxisY.LabelStyle.Font = new System.Drawing.Font("Helvetica", 16f);
+				area.AxisY.TitleFont = new Font("Helvetica", 16f);
+				area.AxisY.LabelStyle.Font = new Font("Helvetica", 16f);
 				area.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None;
 				area.AxisY2.Title = "altitude [m]";
-				area.AxisY2.TitleFont = new System.Drawing.Font("Helvetica", 16f);
-				area.AxisY2.LabelStyle.Font = new System.Drawing.Font("Helvetica", 16f);
+				area.AxisY2.TitleFont = new Font("Helvetica", 16f);
+				area.AxisY2.LabelStyle.Font = new Font("Helvetica", 16f);
 				area.AxisY2.LabelAutoFitStyle = LabelAutoFitStyles.None;
 				area.AxisY2.MinorGrid.Enabled = false;
 				area.AxisY2.MajorGrid.Enabled = false;
@@ -151,7 +159,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				area3.Position.Width = 90f;
 				area3.Position.Height = 100f;
 				chart.Legends.Add("main");
-				chart.Legends[0].Font = new System.Drawing.Font("Helvetica", 14f);
+				chart.Legends[0].Font = new Font("Helvetica", 14f);
 				chart.Legends[0].BorderColor = Color.Black;
 				chart.Legends[0].BorderWidth = 3;
 				chart.Legends[0].Position.X = 97f;
@@ -161,38 +169,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 				chart.Update();
 
 				results.ChartSpeed = new Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb);
-				rectangle = new System.Drawing.Rectangle(0, 0, results.ChartSpeed.Size.Width, results.ChartSpeed.Size.Height);
-				chart.DrawToBitmap((Bitmap)results.ChartSpeed, rectangle);
+				chart.DrawToBitmap((Bitmap)results.ChartSpeed,
+					new Rectangle(0, 0, results.ChartSpeed.Size.Width, results.ChartSpeed.Size.Height));
 			}
 
-			chart = new Chart();
+			var chart = new Chart();
 
-			area = new ChartArea();
+			var area = new ChartArea();
 
-			foreach (var results in MissionResults) {
-				series = new Series();
-				series.Points.AddXY(results.MissionRef.NameStr, new object[] { results.Results[tLoading.RefLoaded].CO2tkm });
+			foreach (var results in missionResults) {
+				var series = new Series();
+				series.Points.AddXY(results.Mission.ToString(), results.Results[LoadingType.Reference].CO2tkm);
 				series.Points[0].Label = series.Points[0].YValues[0].ToString("0.0") + " [g/tkm]";
-				series.Points[0].Font = new System.Drawing.Font("Helvetica", 20f);
+				series.Points[0].Font = new Font("Helvetica", 20f);
 				series.Points[0].LabelBackColor = Color.White;
-				series.Name = results.MissionRef.NameStr + " (Ref. load.)";
+				series.Name = results.Mission + " (Ref. load.)";
 				chart.Series.Add(series);
 			}
 
 			area.Name = "main";
 			area.AxisX.Title = "Missions";
-			area.AxisX.TitleFont = new System.Drawing.Font("Helvetica", 20f);
+			area.AxisX.TitleFont = new Font("Helvetica", 20f);
 			area.AxisX.LabelStyle.Enabled = false;
 			area.AxisY.Title = "CO2 [g/tkm]";
-			area.AxisY.TitleFont = new System.Drawing.Font("Helvetica", 20f);
-			area.AxisY.LabelStyle.Font = new System.Drawing.Font("Helvetica", 20f);
+			area.AxisY.TitleFont = new Font("Helvetica", 20f);
+			area.AxisY.LabelStyle.Font = new Font("Helvetica", 20f);
 			area.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None;
 			area.BorderDashStyle = ChartDashStyle.Solid;
 			area.BorderWidth = 3;
 			chart.ChartAreas.Add(area);
 
 			chart.Legends.Add("main");
-			chart.Legends[0].Font = new System.Drawing.Font("Helvetica", 20f);
+			chart.Legends[0].Font = new Font("Helvetica", 20f);
 			chart.Legends[0].BorderColor = Color.Black;
 			chart.Legends[0].BorderWidth = 3;
 			chart.Width = 0x5dc;
@@ -200,44 +208,43 @@ namespace TUGraz.VectoCore.Models.Declaration
 			chart.Update();
 
 			ChartCO2tkm = new Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb);
-			rectangle = new System.Drawing.Rectangle(0, 0, ChartCO2tkm.Size.Width, ChartCO2tkm.Size.Height);
-			chart.DrawToBitmap((Bitmap)ChartCO2tkm, rectangle);
+			chart.DrawToBitmap((Bitmap)ChartCO2tkm, new Rectangle(0, 0, ChartCO2tkm.Size.Width, ChartCO2tkm.Size.Height));
 
 			chart = new Chart();
 
 			area = new ChartArea();
 
-			foreach (var results in MissionResults) {
+			foreach (var results in missionResults) {
 				series = new Series {
 					MarkerSize = 15,
 					MarkerStyle = MarkerStyle.Circle,
 					ChartType = SeriesChartType.Point
 				};
 				short num = -1;
-				foreach (KeyValuePair<tLoading, cLoadingResults> pair in results.Results) {
+				foreach (KeyValuePair<LoadingType, LoadingResults> pair in results.Results) {
 					num = (short)(num + 1);
 					series.Points.AddXY((double)pair.Value.Speed, (double)pair.Value.CO2km);
 					series.Points[num].Label = pair.Value.Loading.ToString("0.0") + " t";
-					if (((tLoading)pair.Key) == tLoading.RefLoaded) {
-						series.Points[num].Font = new System.Drawing.Font("Helvetica", 16f);
+					if (pair.Key == LoadingType.Reference) {
+						series.Points[num].Font = new Font("Helvetica", 16f);
 					} else {
 						series.Points[num].MarkerSize = 10;
-						series.Points[num].Font = new System.Drawing.Font("Helvetica", 14f);
+						series.Points[num].Font = new Font("Helvetica", 14f);
 					}
 					series.Points[num].LabelBackColor = Color.White;
 				}
-				series.Name = results.MissionRef.NameStr;
+				series.Name = results.Mission.ToString();
 				chart.Series.Add(series);
 			}
 
 			area.Name = "main";
 			area.AxisX.Title = "vehicle speed [km/h]";
-			area.AxisX.TitleFont = new System.Drawing.Font("Helvetica", 20f);
-			area.AxisX.LabelStyle.Font = new System.Drawing.Font("Helvetica", 20f);
+			area.AxisX.TitleFont = new Font("Helvetica", 20f);
+			area.AxisX.LabelStyle.Font = new Font("Helvetica", 20f);
 			area.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None;
 			area.AxisY.Title = "CO2 [g/km]";
-			area.AxisY.TitleFont = new System.Drawing.Font("Helvetica", 20f);
-			area.AxisY.LabelStyle.Font = new System.Drawing.Font("Helvetica", 20f);
+			area.AxisY.TitleFont = new Font("Helvetica", 20f);
+			area.AxisY.LabelStyle.Font = new Font("Helvetica", 20f);
 			area.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None;
 			area.AxisX.Minimum = 20.0;
 			area.BorderDashStyle = ChartDashStyle.Solid;
@@ -245,7 +252,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			chart.ChartAreas.Add(area);
 
 			chart.Legends.Add("main");
-			chart.Legends[0].Font = new System.Drawing.Font("Helvetica", 20f);
+			chart.Legends[0].Font = new Font("Helvetica", 20f);
 			chart.Legends[0].BorderColor = Color.Black;
 			chart.Legends[0].BorderWidth = 3;
 			chart.Width = 0x5dc;
@@ -260,7 +267,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public void WritePdfs()
 		{
-			var pgMax = MissionResults.Count;
+			var pgMax = missionResults.Count;
 			var filename = string.Format("Reports\rep{0}C.pdf", pgMax);
 			var temppdfs = new List<string>();
 
@@ -287,10 +294,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			pdfFields.SetField("GbxM", GbxModelStr);
 			pdfFields.SetField("PageNr", "Page 1 of " + pgMax);
 
-			for (var i = 1; i <= MissionResults.Count; i++) {
-				var results = MissionResults[i];
-				pdfFields.SetField("Mission" + i, results.MissionRef.NameStr);
-				cLoadingResults results2 = results.Results[tLoading.RefLoaded];
+			for (var i = 1; i <= missionResults.Count; i++) {
+				var results = missionResults[i];
+				pdfFields.SetField("Mission" + i, results.Mission.MissionType.ToString());
+				LoadingResults results2 = results.Results[LoadingType.Reference];
 				pdfFields.SetField("Loading" + i, results2.Loading.ToString("0.0") + " t");
 				pdfFields.SetField("Speed" + i, results2.Speed.ToString("0.0") + " km/h");
 				pdfFields.SetField("FC" + i, results2.FCkm.ToString("0.0"));
@@ -324,8 +331,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			// close the pdf
 			stamper.Close();
 
-			for (var i = 1; i <= MissionResults.Count; i++) {
-				var results = MissionResults[i];
+			for (var i = 1; i <= missionResults.Count; i++) {
+				var results = missionResults[i];
 
 				temppath = reportOutputPath + @"Reports\temp" + i + ".pdf";
 				temppdfs.Add(temppath);
@@ -341,38 +348,28 @@ namespace TUGraz.VectoCore.Models.Declaration
 				pdfFields.SetField("Config", MassMaxStr + " " + AxleConf + " " + VehCat);
 				pdfFields.SetField("HDVclass", "HDV Class " + HDVclassStr);
 				pdfFields.SetField("PageNr", "Page " + (i + 1) + " of " + pgMax);
-				pdfFields.SetField("Mission", results.MissionRef.NameStr);
+				pdfFields.SetField("Mission", results.Mission.MissionType.ToString());
 
-				foreach (KeyValuePair<tLoading, cLoadingResults> pair in results.Results) {
-					var str = "";
-					switch (pair.Key) {
-						case tLoading.FullLoaded:
-							str = "F";
-							break;
 
-						case tLoading.EmptyLoaded:
-							str = "E";
-							break;
+				foreach (var pair in results.Results) {
+					var loadingType = pair.Key;
+					var loadingResult = pair.Value;
 
-						case tLoading.RefLoaded:
-							str = "R";
-							break;
-					}
+					var loadString = loadingType.GetName();
 
-					var loading = pair.Value;
-					pdfFields.SetField("Load" + str, loading.Loading.ToString("0.0") + " t");
-					pdfFields.SetField("Speed" + str, loading.Speed.ToString("0.0"));
-					pdfFields.SetField("FCkm" + str, loading.FCkm.ToString("0.0"));
+					pdfFields.SetField("Load" + loadString, loadingResult.Loading.ToString("0.0") + " t");
+					pdfFields.SetField("Speed" + loadString, loadingResult.Speed.ToString("0.0"));
+					pdfFields.SetField("FCkm" + loadString, loadingResult.FCkm.ToString("0.0"));
 
-					if (loading.Loading == 0) {
-						pdfFields.SetField("FCtkm" + str, "-");
-						pdfFields.SetField("CO2tkm" + str, "-");
+					if (loadingResult.Loading == 0) {
+						pdfFields.SetField("FCtkm" + loadString, "-");
+						pdfFields.SetField("CO2tkm" + loadString, "-");
 					} else {
-						pdfFields.SetField("FCtkm" + str, loading.FCtkm.ToString("0.0"));
-						pdfFields.SetField("CO2tkm" + str, loading.CO2tkm.ToString("0.0"));
+						pdfFields.SetField("FCtkm" + loadString, loadingResult.FCtkm.ToString("0.0"));
+						pdfFields.SetField("CO2tkm" + loadString, loadingResult.CO2tkm.ToString("0.0"));
 					}
 
-					pdfFields.SetField("CO2km" + str, loading.CO2km.ToString("0.0"));
+					pdfFields.SetField("CO2km" + loadString, loadingResult.CO2km.ToString("0.0"));
 				}
 
 
@@ -416,7 +413,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			document.Close();
 		}
 
-		public class cLoadingResults
+		public class LoadingResults
 		{
 			public List<float> ActualSpeed = new List<float>();
 			public List<float> Alt = new List<float>();
@@ -433,12 +430,36 @@ namespace TUGraz.VectoCore.Models.Declaration
 			public List<float> Tq = new List<float>();
 		}
 
-		public class cMissionResults
+		public class MissionResults
 		{
 			public System.Drawing.Image ChartSpeed;
 			public System.Drawing.Image ChartTqN;
-			public cMission MissionRef;
-			public Dictionary<tLoading, cReport.cLoadingResults> Results = new Dictionary<tLoading, cReport.cLoadingResults>();
+
+			public Mission Mission;
+			public Dictionary<LoadingType, LoadingResults> Results = new Dictionary<LoadingType, LoadingResults>();
+		}
+	}
+
+	public enum LoadingType
+	{
+		Full,
+		Reference,
+		Empty,
+		UserDefined
+	}
+
+	public static class LoadingTypeHelper
+	{
+		private static readonly Dictionary<LoadingType, string> LoadingTypeToString = new Dictionary<LoadingType, string> {
+			{ LoadingType.Empty, "E" },
+			{ LoadingType.Full, "F" },
+			{ LoadingType.Reference, "R" }
+		};
+
+
+		public static string GetName(this LoadingType loadingType)
+		{
+			return LoadingTypeToString[loadingType];
 		}
 	}
 }
