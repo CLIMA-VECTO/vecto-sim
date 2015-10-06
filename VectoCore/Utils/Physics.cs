@@ -8,6 +8,6 @@
 
 		public static readonly double RollResistanceExponent = 0.9;
 
-		public static readonly MeterPerSecond BaseWindSpeed = 3.KMPHtoMeterPerSecond();
+		public static readonly MeterPerSecond BaseWindSpeed = 3.SI<MeterPerSecond>();
 	}
 }
