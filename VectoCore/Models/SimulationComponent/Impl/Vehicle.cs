@@ -188,9 +188,28 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
+		protected Newton DriverAcceleration(MeterPerSquareSecond accelleration)
+		{
+			var retVal = ((_data.TotalVehicleWeight() + _data.ReducedMassWheels) * accelleration).Cast<Newton>();
+			Log.Debug("DriverAcceleration: {0}", retVal);
+			return retVal;
+		}
+
+
+		protected internal Newton SlopeResistance(Radian gradient)
+		{
+			var retVal = (_data.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value())).Cast<Newton>();
+			Log.Debug("SlopeResistance: {0}", retVal);
+			return retVal;
+		}
+
+
 		protected internal Newton AirDragResistance(MeterPerSquareSecond acceleration, Second dt)
 		{
 			var vAverage = _previousState.Velocity + acceleration * dt / 2;
+			if (vAverage.IsEqual(0)) {
+				return 0.SI<Newton>();
+			}
 			var result = (ComputeAirDragPowerLoss(_previousState.Velocity, _previousState.Velocity + acceleration * dt, dt) /
 						vAverage).Cast<Newton>();
 
@@ -244,7 +263,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return VectoMath.Interpolate(p.Item1.X, p.Item2.X, p.Item1.Y, p.Item2.Y, x);
 		}
 
-
 		protected Point[] CalculateAirResistanceCurve(AirDrag.AirDragEntry values)
 		{
 			// todo: get from vehicle or move whole procedure to vehicle
@@ -283,21 +301,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			points[0].Y = points[1].Y;
 			return points.ToArray();
-		}
-
-		protected Newton DriverAcceleration(MeterPerSquareSecond accelleration)
-		{
-			var retVal = ((_data.TotalVehicleWeight() + _data.ReducedMassWheels) * accelleration).Cast<Newton>();
-			Log.Debug("DriverAcceleration: {0}", retVal);
-			return retVal;
-		}
-
-
-		protected internal Newton SlopeResistance(Radian gradient)
-		{
-			var retVal = (_data.TotalVehicleWeight() * Physics.GravityAccelleration * Math.Sin(gradient.Value())).Cast<Newton>();
-			Log.Debug("SlopeResistance: {0}", retVal);
-			return retVal;
 		}
 
 
