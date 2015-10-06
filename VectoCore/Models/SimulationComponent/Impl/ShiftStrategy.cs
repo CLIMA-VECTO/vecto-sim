@@ -1,4 +1,5 @@
 using System;
+using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -133,7 +134,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private bool SpeedTooLowForEngine(uint gear, PerSecond outAngularSpeed)
 		{
-			return (outAngularSpeed * Data.Gears[NextGear].Ratio).IsSmaller(DataBus.EngineIdleSpeed);
+			return (outAngularSpeed * Data.Gears[gear].Ratio).IsSmaller(DataBus.EngineIdleSpeed);
 		}
 
 		// original vecto2.2: (inAngularSpeed - IdleSpeed) / (RatedSpeed - IdleSpeed) >= 1.2
@@ -141,8 +142,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		//                  =  inAngularSpeed >= 1.2*RatedSpeed - 0.2*IdleSpeed
 		private bool SpeedTooHighForEngine(uint gear, PerSecond outAngularSpeed)
 		{
-			return (outAngularSpeed * Data.Gears[NextGear].Ratio).IsGreaterOrEqual(1.2 * DataBus.EngineRatedSpeed -
-																					0.2 * DataBus.EngineIdleSpeed);
+			return (outAngularSpeed * Data.Gears[gear].Ratio).IsGreaterOrEqual(1.2 * DataBus.EngineRatedSpeed -
+																				0.2 * DataBus.EngineIdleSpeed);
 		}
 
 
@@ -198,6 +199,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					// if in shift curve and torque reserve is provided: return the current gear
 					if (!IsBelowDownShiftCurve(gear, inTorque, inAngularSpeed) && !IsAboveUpShiftCurve(gear, inTorque, inAngularSpeed) &&
 						reserve >= Data.StartTorqueReserve) {
+						if ((inAngularSpeed - DataBus.EngineIdleSpeed) / (DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) <
+							Constants.SimulationSettings.CluchNormSpeed && gear > 1) {
+							gear--;
+						}
+
 						return gear;
 					}
 
@@ -297,6 +303,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						NextGear = tryNextGear;
 					}
 				}
+			}
+
+			if ((Data.Gears[NextGear].Ratio * outAngularVelocity - DataBus.EngineIdleSpeed) /
+				(DataBus.EngineRatedSpeed - DataBus.EngineIdleSpeed) <
+				Constants.SimulationSettings.CluchNormSpeed && NextGear > 1) {
+				NextGear--;
 			}
 
 			return (NextGear != gear);

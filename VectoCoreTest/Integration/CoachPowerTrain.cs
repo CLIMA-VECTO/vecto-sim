@@ -94,7 +94,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 				TractionInterruption = 1.SI<Second>(),
 				StartSpeed = 2.SI<MeterPerSecond>(),
 				StartAcceleration = 0.6.SI<MeterPerSquareSecond>(),
-				StartTorqueReserve = 0.2
+				StartTorqueReserve = 0.2,
+				SkipGears = true,
+				TorqueReserve = 0.2,
 			};
 		}
 
