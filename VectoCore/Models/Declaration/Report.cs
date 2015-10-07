@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms.DataVisualization.Charting;
+using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 using Font = System.Drawing.Font;
@@ -33,13 +34,26 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public List<MissionResults> missionResults = new List<MissionResults>();
 		public VehicleCategory VehCat;
 
+
+		private IModalDataWriter _modalData;
+
+		public Report(IModalDataWriter modalData)
+		{
+			_modalData = modalData;
+		}
+
+
 		public void CreateCharts()
 		{
 			foreach (var results in missionResults) {
 				var missionResultChart = new Chart { Width = 1000, Height = 427 };
+				missionResultChart.Legends.Add(new Legend("main") {
+					Font = new Font("Helvetica", 14),
+					BorderColor = Color.Black,
+					BorderWidth = 3,
+				});
 
-				var missionResultArea = new ChartArea {
-					Name = "main",
+				missionResultChart.ChartAreas.Add(new ChartArea("main") {
 					BorderDashStyle = ChartDashStyle.Solid,
 					BorderWidth = 3,
 					AxisX = {
@@ -54,23 +68,14 @@ namespace TUGraz.VectoCore.Models.Declaration
 						TitleFont = new Font("Helvetica", 20),
 						LabelStyle = { Font = new Font("Helvetica", 20) },
 						LabelAutoFitStyle = LabelAutoFitStyles.None
-					}
-				};
-				missionResultChart.ChartAreas.Add(missionResultArea);
-
-				//todo: what is this?
-				var area2 = missionResultChart.ChartAreas[0];
-				area2.Position.X = 0;
-				area2.Position.Y = 0;
-				area2.Position.Width = 70;
-				area2.Position.Height = 100;
-
-				var legend = new Legend("main") {
-					Font = new Font("Helvetica", 14),
-					BorderColor = Color.Black,
-					BorderWidth = 3,
-				};
-				missionResultChart.Legends.Add(legend);
+					},
+					Position = {
+						X = 0,
+						Y = 0,
+						Width = 70,
+						Height = 100
+					},
+				});
 
 				// todo: get full load curve from engine
 				var flc = new FullLoadCurve();
@@ -96,134 +101,168 @@ namespace TUGraz.VectoCore.Models.Declaration
 				dataPoints.Points.DataBindXY(results.Results[LoadingType.Reference].nU, results.Results[LoadingType.Reference].Tq);
 				missionResultChart.Series.Add(dataPoints);
 
-
 				missionResultChart.Update();
 
 				results.ChartTqN = new Bitmap(missionResultChart.Width, missionResultChart.Height, PixelFormat.Format32bppArgb);
-				var rectangle = new Rectangle(0, 0, results.ChartTqN.Size.Width, results.ChartTqN.Size.Height);
-				missionResultChart.DrawToBitmap((Bitmap)results.ChartTqN, rectangle);
+				missionResultChart.DrawToBitmap((Bitmap)results.ChartTqN,
+					new Rectangle(0, 0, results.ChartTqN.Size.Width, results.ChartTqN.Size.Height));
 			}
+
+
 			foreach (var results in missionResults) {
-				var chart = new Chart { Width = 2000, Height = 400 };
+				var missionResultChart = new Chart { Width = 2000, Height = 400 };
+				missionResultChart.Legends.Add(new Legend("main") {
+					Font = new Font("Helvetica", 14),
+					BorderColor = Color.Black,
+					BorderWidth = 3,
+					Position = {
+						X = 97f,
+						Y = 3f,
+						Width = 10f,
+						Height = 40f
+					}
+				});
+				missionResultChart.ChartAreas.Add(new ChartArea {
+					Name = "main",
+					BorderDashStyle = ChartDashStyle.Solid,
+					BorderWidth = 3,
+					AxisX = {
+						Title = "distance [km]",
+						TitleFont = new Font("Helvetica", 16),
+						LabelStyle = { Font = new Font("Helvetica", 16), Format = "0.0" },
+						LabelAutoFitStyle = LabelAutoFitStyles.None,
+						Minimum = 0
+					},
+					AxisY = {
+						Title = "vehicle speed [km/h]",
+						TitleFont = new Font("Helvetica", 16),
+						LabelStyle = { Font = new Font("Helvetica", 16) },
+						LabelAutoFitStyle = LabelAutoFitStyles.None
+					},
+					AxisY2 = {
+						Title = "altitude [m]",
+						TitleFont = new Font("Helvetica", 16),
+						LabelStyle = { Font = new Font("Helvetica", 16) },
+						LabelAutoFitStyle = LabelAutoFitStyles.None,
+						MinorGrid = { Enabled = false },
+						MajorGrid = { Enabled = false }
+					},
+					Position = { X = 0f, Y = 0f, Width = 90f, Height = 100f },
+				});
 
-				var area = new ChartArea();
+				var altitude = new Series {
+					ChartType = SeriesChartType.Area,
+					Color = Color.Lavender,
+					Name = "Altitude",
+					YAxisType = AxisType.Secondary
+				};
+				altitude.Points.DataBindXY(results.Results[LoadingType.Reference].Distance,
+					results.Results[LoadingType.Reference].Alt);
+				missionResultChart.Series.Add(altitude);
 
-				var series = new Series();
-				series.Points.DataBindXY(results.Results[LoadingType.Reference].Distance, results.Results[LoadingType.Reference].Alt);
-				series.ChartType = SeriesChartType.Area;
-				series.Color = Color.Lavender;
-				series.Name = "Altitude";
-				series.YAxisType = AxisType.Secondary;
-				chart.Series.Add(series);
-
-				series = new Series();
-				series.Points.DataBindXY(results.Results[LoadingType.Reference].Distance,
+				var targetSpeed = new Series {
+					ChartType = SeriesChartType.FastLine,
+					BorderWidth = 3,
+					Name = "Target speed"
+				};
+				targetSpeed.Points.DataBindXY(results.Results[LoadingType.Reference].Distance,
 					results.Results[LoadingType.Reference].TargetSpeed);
-				series.ChartType = SeriesChartType.FastLine;
-				series.BorderWidth = 3;
-				series.Name = "Target speed";
-				chart.Series.Add(series);
+				missionResultChart.Series.Add(targetSpeed);
 
 				foreach (var pair in results.Results) {
-					series = new Series();
+					var series = new Series {
+						ChartType = SeriesChartType.FastLine,
+						Name = pair.Key.GetName(),
+					};
 					series.Points.DataBindXY(pair.Value.Distance, pair.Value.ActualSpeed);
-					series.ChartType = SeriesChartType.FastLine;
-					series.Name = pair.Key.GetName();
-					chart.Series.Add(series);
+					missionResultChart.Series.Add(series);
 				}
 
-				area.Name = "main";
-				area.AxisX.Title = "distance [km]";
-				area.AxisX.TitleFont = new Font("Helvetica", 16f);
-				area.AxisX.LabelStyle.Font = new Font("Helvetica", 16f);
-				area.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None;
-				area.AxisX.LabelStyle.Format = "0.0";
-				area.AxisY.Title = "vehicle speed [km/h]";
-				area.AxisY.TitleFont = new Font("Helvetica", 16f);
-				area.AxisY.LabelStyle.Font = new Font("Helvetica", 16f);
-				area.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None;
-				area.AxisY2.Title = "altitude [m]";
-				area.AxisY2.TitleFont = new Font("Helvetica", 16f);
-				area.AxisY2.LabelStyle.Font = new Font("Helvetica", 16f);
-				area.AxisY2.LabelAutoFitStyle = LabelAutoFitStyles.None;
-				area.AxisY2.MinorGrid.Enabled = false;
-				area.AxisY2.MajorGrid.Enabled = false;
-				area.AxisX.Minimum = 0.0;
-				area.BorderDashStyle = ChartDashStyle.Solid;
-				area.BorderWidth = 3;
-				chart.ChartAreas.Add(area);
+				missionResultChart.Update();
 
-				var area3 = chart.ChartAreas[0];
-				area3.Position.X = 0f;
-				area3.Position.Y = 0f;
-				area3.Position.Width = 90f;
-				area3.Position.Height = 100f;
-				chart.Legends.Add("main");
-				chart.Legends[0].Font = new Font("Helvetica", 14f);
-				chart.Legends[0].BorderColor = Color.Black;
-				chart.Legends[0].BorderWidth = 3;
-				chart.Legends[0].Position.X = 97f;
-				chart.Legends[0].Position.Y = 3f;
-				chart.Legends[0].Position.Width = 10f;
-				chart.Legends[0].Position.Height = 40f;
-				chart.Update();
-
-				results.ChartSpeed = new Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb);
-				chart.DrawToBitmap((Bitmap)results.ChartSpeed,
+				results.ChartSpeed = new Bitmap(missionResultChart.Width, missionResultChart.Height, PixelFormat.Format32bppArgb);
+				missionResultChart.DrawToBitmap((Bitmap)results.ChartSpeed,
 					new Rectangle(0, 0, results.ChartSpeed.Size.Width, results.ChartSpeed.Size.Height));
 			}
 
-			var chart = new Chart();
 
-			var area = new ChartArea();
+			var co2Chart = new Chart { Width = 1500, Height = 700 };
+			co2Chart.Legends.Add(new Legend("main") {
+				Font = new Font("Helvetica", 20),
+				BorderColor = Color.Black,
+				BorderWidth = 3,
+			});
+			co2Chart.ChartAreas.Add(new ChartArea {
+				Name = "main",
+				AxisX = {
+					Title = "Missions",
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Enabled = false }
+				},
+				AxisY = {
+					Title = "CO2 [g/tkm]",
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Font = new Font("Helvetica", 20) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None
+				},
+				BorderDashStyle = ChartDashStyle.Solid,
+				BorderWidth = 3
+			});
 
 			foreach (var results in missionResults) {
-				var series = new Series();
-				series.Points.AddXY(results.Mission.ToString(), results.Results[LoadingType.Reference].CO2tkm);
+				var series = new Series(results.Mission + " (Ref. load.)");
 				series.Points[0].Label = series.Points[0].YValues[0].ToString("0.0") + " [g/tkm]";
 				series.Points[0].Font = new Font("Helvetica", 20f);
 				series.Points[0].LabelBackColor = Color.White;
-				series.Name = results.Mission + " (Ref. load.)";
-				chart.Series.Add(series);
+
+				series.Points.AddXY(results.Mission.ToString(), results.Results[LoadingType.Reference].CO2tkm);
+				co2Chart.Series.Add(series);
 			}
 
-			area.Name = "main";
-			area.AxisX.Title = "Missions";
-			area.AxisX.TitleFont = new Font("Helvetica", 20f);
-			area.AxisX.LabelStyle.Enabled = false;
-			area.AxisY.Title = "CO2 [g/tkm]";
-			area.AxisY.TitleFont = new Font("Helvetica", 20f);
-			area.AxisY.LabelStyle.Font = new Font("Helvetica", 20f);
-			area.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None;
-			area.BorderDashStyle = ChartDashStyle.Solid;
-			area.BorderWidth = 3;
-			chart.ChartAreas.Add(area);
+			co2Chart.Update();
+			ChartCO2tkm = new Bitmap(co2Chart.Width, co2Chart.Height, PixelFormat.Format32bppArgb);
+			co2Chart.DrawToBitmap((Bitmap)ChartCO2tkm, new Rectangle(0, 0, ChartCO2tkm.Size.Width, ChartCO2tkm.Size.Height));
 
-			chart.Legends.Add("main");
-			chart.Legends[0].Font = new Font("Helvetica", 20f);
-			chart.Legends[0].BorderColor = Color.Black;
-			chart.Legends[0].BorderWidth = 3;
-			chart.Width = 0x5dc;
-			chart.Height = 700;
-			chart.Update();
 
-			ChartCO2tkm = new Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb);
-			chart.DrawToBitmap((Bitmap)ChartCO2tkm, new Rectangle(0, 0, ChartCO2tkm.Size.Width, ChartCO2tkm.Size.Height));
 
-			chart = new Chart();
+			var chart = new Chart { Width = 1500, Height = 700 };
+			chart.Legends.Add(new Legend("main") {
+				Font = new Font("Helvetica", 20f),
+				BorderColor = Color.Black,
+				BorderWidth = 3,
+			});
+			chart.ChartAreas.Add(new ChartArea("main")
+			{
+				BorderDashStyle = ChartDashStyle.Solid,
+				BorderWidth = 3,
+				AxisX =
+				{
+					Title = "vehicle speed [km/h]",
+					TitleFont = new Font("Helvetica", 20f),
+					LabelStyle = { Font = new Font("Helvetica", 20f) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None,
+					Minimum = 20.0,
+				},
+				AxisY =
+				{
+					Title = "CO2 [g/km]",
+					TitleFont = new Font("Helvetica", 20f),
+					LabelStyle = { Font = new Font("Helvetica", 20f) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None
+				}
+			});
 
-			area = new ChartArea();
 
 			foreach (var results in missionResults) {
-				series = new Series {
+				var series = new Series {
 					MarkerSize = 15,
 					MarkerStyle = MarkerStyle.Circle,
 					ChartType = SeriesChartType.Point
 				};
 				short num = -1;
-				foreach (KeyValuePair<LoadingType, LoadingResults> pair in results.Results) {
+				foreach (var pair in results.Results) {
 					num = (short)(num + 1);
-					series.Points.AddXY((double)pair.Value.Speed, (double)pair.Value.CO2km);
+					series.Points.AddXY(pair.Value.Speed, pair.Value.CO2km);
 					series.Points[num].Label = pair.Value.Loading.ToString("0.0") + " t";
 					if (pair.Key == LoadingType.Reference) {
 						series.Points[num].Font = new Font("Helvetica", 16f);
@@ -237,32 +276,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				chart.Series.Add(series);
 			}
 
-			area.Name = "main";
-			area.AxisX.Title = "vehicle speed [km/h]";
-			area.AxisX.TitleFont = new Font("Helvetica", 20f);
-			area.AxisX.LabelStyle.Font = new Font("Helvetica", 20f);
-			area.AxisX.LabelAutoFitStyle = LabelAutoFitStyles.None;
-			area.AxisY.Title = "CO2 [g/km]";
-			area.AxisY.TitleFont = new Font("Helvetica", 20f);
-			area.AxisY.LabelStyle.Font = new Font("Helvetica", 20f);
-			area.AxisY.LabelAutoFitStyle = LabelAutoFitStyles.None;
-			area.AxisX.Minimum = 20.0;
-			area.BorderDashStyle = ChartDashStyle.Solid;
-			area.BorderWidth = 3;
-			chart.ChartAreas.Add(area);
-
-			chart.Legends.Add("main");
-			chart.Legends[0].Font = new Font("Helvetica", 20f);
-			chart.Legends[0].BorderColor = Color.Black;
-			chart.Legends[0].BorderWidth = 3;
-			chart.Width = 0x5dc;
-			chart.Height = 700;
 			chart.Update();
-
 			ChartCO2speed = new Bitmap(chart.Width, chart.Height, PixelFormat.Format32bppArgb);
-			rectangle = new System.Drawing.Rectangle(0, 0, ChartCO2speed.Size.Width, ChartCO2speed.Size.Height);
-
-			chart.DrawToBitmap((Bitmap)ChartCO2speed, rectangle);
+			chart.DrawToBitmap((Bitmap)ChartCO2speed, new Rectangle(0, 0, ChartCO2speed.Size.Width, ChartCO2speed.Size.Height));
 		}
 
 		public void WritePdfs()
