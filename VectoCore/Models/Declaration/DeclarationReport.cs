@@ -17,31 +17,7 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
-	public enum LoadingType
-	{
-		Full,
-		Reference,
-		Empty,
-		UserDefined
-	}
-
-
-	public static class LoadingTypeHelper
-	{
-		private static readonly Dictionary<LoadingType, string> LoadingTypeToString = new Dictionary<LoadingType, string> {
-			{ LoadingType.Empty, "E" },
-			{ LoadingType.Full, "F" },
-			{ LoadingType.Reference, "R" }
-		};
-
-
-		public static string GetName(this LoadingType loadingType)
-		{
-			return LoadingTypeToString[loadingType];
-		}
-	}
-
-	public class Report
+	public class DeclarationReport
 	{
 		public class ResultContainer
 		{
@@ -65,9 +41,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private readonly string _gearboxModel;
 		private readonly string _gearboxStr;
 		private readonly string _jobFile;
+		private readonly int _resultCount;
 
-		public Report(FullLoadCurve flc, Segment segment, string creator, string engineModel, string engineStr,
-			string outputFilePath, string gearboxModel, string gearboxStr, string jobFile)
+		public DeclarationReport(FullLoadCurve flc, Segment segment, string creator, string engineModel, string engineStr,
+			string outputFilePath, string gearboxModel, string gearboxStr, string jobFile, int resultCount)
 		{
 			_flc = flc;
 			_segment = segment;
@@ -78,6 +55,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			_gearboxModel = gearboxModel;
 			_gearboxStr = gearboxStr;
 			_jobFile = jobFile;
+			_resultCount = resultCount;
 		}
 
 		public void AddResult(LoadingType loadingType, Mission mission, IModalDataWriter modData)
@@ -91,10 +69,135 @@ namespace TUGraz.VectoCore.Models.Declaration
 			_missions[mission.MissionType].ModData[loadingType] = modData;
 
 
-			//ChartTqN = DrawOperatingPointsChart(modData, _flc),
-			//ChartCycle = DrawCycleChart(modData)
+			if (_resultCount == _missions.Sum(v => v.Value.ModData.Count)) {
+				WriteReport();
+			}
 		}
 
+		private void WriteReport()
+		{
+			_chartCO2Missions = DrawCO2MissionsChart(_missions);
+			_chartCO2speed = DrawCO2SpeedChart(_missions);
+
+			foreach (var mission in _missions.Values) {
+				mission.ChartCycle = DrawCycleChart(mission);
+				mission.ChartTqN = DrawOperatingPointsChart(mission.ModData[LoadingType.ReferenceLoad], _flc);
+			}
+
+			WritePdfs(_missions);
+		}
+
+		private static Bitmap DrawCO2MissionsChart(Dictionary<MissionType, ResultContainer> missions)
+		{
+			var co2Chart = new Chart { Width = 1500, Height = 700 };
+			co2Chart.Legends.Add(new Legend("main") {
+				Font = new Font("Helvetica", 20),
+				BorderColor = Color.Black,
+				BorderWidth = 3,
+			});
+			co2Chart.ChartAreas.Add(new ChartArea {
+				Name = "main",
+				AxisX = {
+					Title = "Missions",
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Enabled = false }
+				},
+				AxisY = {
+					Title = "CO2 [g/tkm]",
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Font = new Font("Helvetica", 20) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None
+				},
+				BorderDashStyle = ChartDashStyle.Solid,
+				BorderWidth = 3
+			});
+
+
+			foreach (var missionResult in missions) {
+				var series = new Series(missionResult.Key + " (Ref. load.)");
+				series.Points[0].Label = series.Points[0].YValues[0].ToString("0.0") + " [g/tkm]";
+				series.Points[0].Font = new Font("Helvetica", 20);
+				series.Points[0].LabelBackColor = Color.White;
+
+				var co2sum = missionResult.Value.ModData[LoadingType.ReferenceLoad].GetValues<SI>(ModalResultField.FCMap).Sum();
+
+				var maxDistance = missionResult.Value.ModData[LoadingType.ReferenceLoad].GetValues<SI>(ModalResultField.dist).Max();
+				var loading = missionResult.Value.Mission.Loadings[LoadingType.ReferenceLoad];
+				var co2pertkm = co2sum / maxDistance / loading * 1000;
+
+				series.Points.AddXY(missionResult.Key, co2pertkm.Value());
+				co2Chart.Series.Add(series);
+			}
+
+			co2Chart.Update();
+
+			var chartCO2tkm = new Bitmap(co2Chart.Width, co2Chart.Height, PixelFormat.Format32bppArgb);
+			co2Chart.DrawToBitmap(chartCO2tkm, new Rectangle(0, 0, chartCO2tkm.Width, chartCO2tkm.Height));
+			return chartCO2tkm;
+		}
+
+		private static Bitmap DrawCO2SpeedChart(Dictionary<MissionType, ResultContainer> missions)
+		{
+			var co2speedChart = new Chart { Width = 1500, Height = 700 };
+			co2speedChart.Legends.Add(new Legend("main") {
+				Font = new Font("Helvetica", 20),
+				BorderColor = Color.Black,
+				BorderWidth = 3,
+			});
+			co2speedChart.ChartAreas.Add(new ChartArea("main") {
+				BorderDashStyle = ChartDashStyle.Solid,
+				BorderWidth = 3,
+				AxisX = {
+					Title = "vehicle speed [km/h]",
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Font = new Font("Helvetica", 20) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None,
+					Minimum = 20.0,
+				},
+				AxisY = {
+					Title = "CO2 [g/km]",
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Font = new Font("Helvetica", 20) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None
+				}
+			});
+
+			foreach (var missionResult in missions) {
+				var series = new Series { MarkerSize = 15, MarkerStyle = MarkerStyle.Circle, ChartType = SeriesChartType.Point };
+				foreach (var pair in missionResult.Value.ModData) {
+					var dt = pair.Value.GetValues<SI>(ModalResultField.simulationInterval).ToDouble();
+					var speed = pair.Value.GetValues<SI>(ModalResultField.v_act).ToDouble();
+					var distance = pair.Value.GetValues<SI>(ModalResultField.dist).Max().Value();
+
+					//todo get co2 value
+					var co2 = pair.Value.GetValues<SI>(ModalResultField.FCMap).ToDouble();
+
+					var avgSpeed = speed.Zip(dt, (v, t) => v / t).Average();
+					var avgCO2km = co2.Zip(dt, (co, t) => co / t).Average() / distance * 1000;
+
+					var loading = missionResult.Value.Mission.Loadings[pair.Key];
+
+					var point = new DataPoint(avgSpeed, avgCO2km) {
+						Label = loading.Value().ToString("0.0") + " t",
+						Font = new Font("Helvetica", 16),
+						LabelBackColor = Color.White
+					};
+
+					if (pair.Key != LoadingType.ReferenceLoad) {
+						point.MarkerSize = 10;
+						point.Font = new Font("Helvetica", 14);
+					}
+					series.Points.Add(point);
+				}
+				series.Name = missionResult.Key.ToString();
+				co2speedChart.Series.Add(series);
+			}
+
+			co2speedChart.Update();
+			var chartCO2speed = new Bitmap(co2speedChart.Width, co2speedChart.Height, PixelFormat.Format32bppArgb);
+			co2speedChart.DrawToBitmap(chartCO2speed, new Rectangle(0, 0, co2speedChart.Width, co2speedChart.Height));
+			return chartCO2speed;
+		}
 
 		private static Bitmap DrawCycleChart(ResultContainer results)
 		{
@@ -167,7 +270,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return cycleChart;
 		}
 
-
 		private static Bitmap DrawOperatingPointsChart(IModalDataWriter modData, FullLoadCurve flc)
 		{
 			var operatingPointsChart = new Chart { Width = 1000, Height = 427 };
@@ -228,126 +330,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return tqnBitmap;
 		}
 
-
-		public void CreateCharts()
-		{
-			_chartCO2Missions = DrawCO2MissionsChart(_missions);
-			_chartCO2speed = DrawCO2SpeedChart(_missions);
-		}
-
-		private static Bitmap DrawCO2MissionsChart(Dictionary<MissionType, ResultContainer> missions)
-		{
-			var co2Chart = new Chart { Width = 1500, Height = 700 };
-			co2Chart.Legends.Add(new Legend("main") {
-				Font = new Font("Helvetica", 20),
-				BorderColor = Color.Black,
-				BorderWidth = 3,
-			});
-			co2Chart.ChartAreas.Add(new ChartArea {
-				Name = "main",
-				AxisX = {
-					Title = "Missions",
-					TitleFont = new Font("Helvetica", 20),
-					LabelStyle = { Enabled = false }
-				},
-				AxisY = {
-					Title = "CO2 [g/tkm]",
-					TitleFont = new Font("Helvetica", 20),
-					LabelStyle = { Font = new Font("Helvetica", 20) },
-					LabelAutoFitStyle = LabelAutoFitStyles.None
-				},
-				BorderDashStyle = ChartDashStyle.Solid,
-				BorderWidth = 3
-			});
-
-
-			foreach (var missionResult in missions) {
-				var series = new Series(missionResult.Key + " (Ref. load.)");
-				series.Points[0].Label = series.Points[0].YValues[0].ToString("0.0") + " [g/tkm]";
-				series.Points[0].Font = new Font("Helvetica", 20);
-				series.Points[0].LabelBackColor = Color.White;
-
-				var co2sum = missionResult.Value.ModData[LoadingType.Reference].GetValues<SI>(ModalResultField.FCMap).Sum();
-
-				var maxDistance = missionResult.Value.ModData[LoadingType.Reference].GetValues<SI>(ModalResultField.dist).Max();
-				var loading = GetLoading(LoadingType.Reference, missionResult.Value.Mission);
-				var co2pertkm = co2sum / maxDistance / loading * 1000;
-
-				series.Points.AddXY(missionResult.Key, co2pertkm.Value());
-				co2Chart.Series.Add(series);
-			}
-
-			co2Chart.Update();
-
-			var chartCO2tkm = new Bitmap(co2Chart.Width, co2Chart.Height, PixelFormat.Format32bppArgb);
-			co2Chart.DrawToBitmap(chartCO2tkm, new Rectangle(0, 0, chartCO2tkm.Width, chartCO2tkm.Height));
-			return chartCO2tkm;
-		}
-
-		private static Bitmap DrawCO2SpeedChart(Dictionary<MissionType, ResultContainer> missions)
-		{
-			var co2speedChart = new Chart { Width = 1500, Height = 700 };
-			co2speedChart.Legends.Add(new Legend("main") {
-				Font = new Font("Helvetica", 20),
-				BorderColor = Color.Black,
-				BorderWidth = 3,
-			});
-			co2speedChart.ChartAreas.Add(new ChartArea("main") {
-				BorderDashStyle = ChartDashStyle.Solid,
-				BorderWidth = 3,
-				AxisX = {
-					Title = "vehicle speed [km/h]",
-					TitleFont = new Font("Helvetica", 20),
-					LabelStyle = { Font = new Font("Helvetica", 20) },
-					LabelAutoFitStyle = LabelAutoFitStyles.None,
-					Minimum = 20.0,
-				},
-				AxisY = {
-					Title = "CO2 [g/km]",
-					TitleFont = new Font("Helvetica", 20),
-					LabelStyle = { Font = new Font("Helvetica", 20) },
-					LabelAutoFitStyle = LabelAutoFitStyles.None
-				}
-			});
-
-			foreach (var missionResult in missions) {
-				var series = new Series { MarkerSize = 15, MarkerStyle = MarkerStyle.Circle, ChartType = SeriesChartType.Point };
-				foreach (var pair in missionResult.Value.ModData) {
-					var dt = pair.Value.GetValues<SI>(ModalResultField.simulationInterval).ToDouble();
-					var speed = pair.Value.GetValues<SI>(ModalResultField.v_act).ToDouble();
-					var distance = pair.Value.GetValues<SI>(ModalResultField.dist).Max().Value();
-
-					//todo get co2 value
-					var co2 = pair.Value.GetValues<SI>(ModalResultField.FCMap).ToDouble();
-
-					var avgSpeed = speed.Zip(dt, (v, t) => v / t).Average();
-					var avgCO2km = co2.Zip(dt, (co, t) => co / t).Average() / distance * 1000;
-
-					var loading = GetLoading(pair.Key, missionResult.Value.Mission);
-
-					var point = new DataPoint(avgSpeed, avgCO2km) {
-						Label = loading.Value().ToString("0.0") + " t",
-						Font = new Font("Helvetica", 16),
-						LabelBackColor = Color.White
-					};
-
-					if (pair.Key != LoadingType.Reference) {
-						point.MarkerSize = 10;
-						point.Font = new Font("Helvetica", 14);
-					}
-					series.Points.Add(point);
-				}
-				series.Name = missionResult.Key.ToString();
-				co2speedChart.Series.Add(series);
-			}
-
-			co2speedChart.Update();
-			var chartCO2speed = new Bitmap(co2speedChart.Width, co2speedChart.Height, PixelFormat.Format32bppArgb);
-			co2speedChart.DrawToBitmap(chartCO2speed, new Rectangle(0, 0, co2speedChart.Width, co2speedChart.Height));
-			return chartCO2speed;
-		}
-
-
 		public void WritePdfs(Dictionary<MissionType, ResultContainer> missions)
 		{
 			var assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
@@ -401,7 +383,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			foreach (var results in missions.Values) {
 				pdfFields.SetField("Mission" + i, results.Mission.MissionType.ToString());
 
-				var m = results.ModData[LoadingType.Reference];
+				var m = results.ModData[LoadingType.ReferenceLoad];
 				var dt = m.GetValues<SI>(ModalResultField.simulationInterval);
 				var distance = m.GetValues<SI>(ModalResultField.dist).Max().Value();
 
@@ -468,8 +450,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var loadingType = pair.Key;
 				var m = pair.Value;
 
-				var loadString = loadingType.GetName();
-				pdfFields.SetField("Load" + loadString, GetLoading(loadingType, results.Mission).ToString("0.0") + " t");
+				var loadString = loadingType.GetShortName();
+				pdfFields.SetField("Load" + loadString, results.Mission.Loadings[loadingType].ToString("0.0") + " t");
 
 				var dt = m.GetValues<SI>(ModalResultField.simulationInterval);
 				var distance = m.GetValues<SI>(ModalResultField.dist).Max().Value();
@@ -482,7 +464,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var fc = avgWeighted(ModalResultField.FCMap) / distance * 1000;
 				var co2 = fc;
 
-				var loading = GetLoading(loadingType, results.Mission);
+				var loading = results.Mission.Loadings[loadingType];
 
 				pdfFields.SetField("FCkm" + loadString, fc.ToString("0.0"));
 				pdfFields.SetField("CO2km" + loadString, co2.ToString("0.0"));
@@ -538,16 +520,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			document.Close();
-		}
-
-
-		private static Kilogram GetLoading(LoadingType loadingType, Mission mission)
-		{
-			return loadingType == LoadingType.Full
-				? mission.MaxLoad
-				: loadingType == LoadingType.Reference
-					? mission.RefLoad
-					: mission.MinLoad;
 		}
 	}
 }

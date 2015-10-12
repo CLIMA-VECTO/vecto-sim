@@ -139,7 +139,7 @@
     <Compile Include="Models\Declaration\HVAC.cs" />
     <Compile Include="Models\Declaration\PneumaticSystem.cs" />
     <Compile Include="Models\Declaration\PT1.cs" />
-    <Compile Include="Models\Declaration\Report.cs" />
+    <Compile Include="Models\Declaration\DeclarationReport.cs" />
     <Compile Include="Models\Declaration\Rims.cs" />
     <Compile Include="Models\Declaration\Segments.cs" />
     <Compile Include="Models\Declaration\SteeringPump.cs" />
