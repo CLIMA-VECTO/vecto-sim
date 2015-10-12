@@ -128,17 +128,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// estimate the distance to drive when accelerating with the current acceleration (taken from retVal) and then 
 			// coasting with the dirver's LookaheadDeceleration. 
 			// TriggerDistance - CurrentDistance = s_accelerate + s_lookahead
-			// s_coast(dt) = - (currentSpeed + a * dt)^2 / (2 * a_lookahead
+			// s_coast(dt) = - (currentSpeed + a * dt + nextTargetSpeed) * (nextTargetSpeed - (currentSpeed + a * dt))  / (2 * a_lookahead)
 			// s_acc(dt) = currentSpeed * dt + a / 2 * dt^2
 			// => solve for dt, compute ds = currentSpeed * dt + a / 2 * dt^2
 			var dtList = VectoMath.QuadraticEquationSolver(
 				(retVal.Acceleration / 2 -
 				retVal.Acceleration * retVal.Acceleration / 2 / Driver.DriverData.LookAheadCoasting.Deceleration).Value(),
 				(Driver.DataBus.VehicleSpeed -
-				Driver.DataBus.VehicleSpeed * retVal.Acceleration / Driver.DriverData.LookAheadCoasting.Deceleration)
-					.Value
-					(),
-				(-Driver.DataBus.VehicleSpeed * Driver.DataBus.VehicleSpeed / 2 / Driver.DriverData.LookAheadCoasting.Deceleration -
+				Driver.DataBus.VehicleSpeed * retVal.Acceleration / Driver.DriverData.LookAheadCoasting.Deceleration).Value(),
+				(nextAction.NextTargetSpeed * nextAction.NextTargetSpeed / 2 / Driver.DriverData.LookAheadCoasting.Deceleration -
+				Driver.DataBus.VehicleSpeed * Driver.DataBus.VehicleSpeed / 2 / Driver.DriverData.LookAheadCoasting.Deceleration -
 				(nextAction.TriggerDistance - Driver.DataBus.Distance)).Value());
 			dtList.Sort();
 			var dt = dtList.First(x => x > 0).SI<Second>();
