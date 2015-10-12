@@ -15,13 +15,45 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
+	public enum LoadingType
+	{
+		Full,
+		Reference,
+		Empty,
+		UserDefined
+	}
+
+	public static class LoadingTypeHelper
+	{
+		private static readonly Dictionary<LoadingType, string> LoadingTypeToString = new Dictionary<LoadingType, string> {
+			{ LoadingType.Empty, "E" },
+			{ LoadingType.Full, "F" },
+			{ LoadingType.Reference, "R" }
+		};
+
+
+		public static string GetName(this LoadingType loadingType)
+		{
+			return LoadingTypeToString[loadingType];
+		}
+	}
+
+
 	public class Report
 	{
-		public AxleConfiguration AxleConf;
+		public Mission Mission;
+		public Dictionary<LoadingType, IModalDataWriter> modData = new Dictionary<LoadingType, IModalDataWriter>();
+
+		public System.Drawing.Image ChartSpeed;
+		public System.Drawing.Image ChartTqN;
 		public System.Drawing.Image ChartCO2speed;
 		public System.Drawing.Image ChartCO2tkm;
+
+		public AxleConfiguration AxleConf;
+		public VehicleCategory VehCat;
+		private readonly FullLoadCurve _flc;
+
 		public string Creator = "";
-		public MissionResults CurrentMR;
 		public string DateStr = "";
 		public string EngModelStr = "";
 		public string EngStr = "";
@@ -31,159 +63,148 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public string HDVclassStr = "";
 		public string JobFile = "";
 		public string MassMaxStr = "";
-		public List<MissionResults> missionResults = new List<MissionResults>();
-		public VehicleCategory VehCat;
 
-
-		private IModalDataWriter _modalData;
-
-		public Report(IModalDataWriter modalData)
+		public Report(IModalDataWriter fullLoad, IModalDataWriter referenceLoad, IModalDataWriter emptyLoad, FullLoadCurve flc)
 		{
-			_modalData = modalData;
+			modData[LoadingType.Full] = fullLoad;
+			modData[LoadingType.Empty] = emptyLoad;
+			modData[LoadingType.Reference] = referenceLoad;
+			_flc = flc;
 		}
 
 
 		public void CreateCharts()
 		{
-			foreach (var results in missionResults) {
-				var missionResultChart = new Chart { Width = 1000, Height = 427 };
-				missionResultChart.Legends.Add(new Legend("main") {
-					Font = new Font("Helvetica", 14),
-					BorderColor = Color.Black,
-					BorderWidth = 3,
-				});
+			var missionOperatingPointsChart = new Chart { Width = 1000, Height = 427 };
+			missionOperatingPointsChart.Legends.Add(new Legend("main") {
+				Font = new Font("Helvetica", 14),
+				BorderColor = Color.Black,
+				BorderWidth = 3
+			});
 
-				missionResultChart.ChartAreas.Add(new ChartArea("main") {
-					BorderDashStyle = ChartDashStyle.Solid,
-					BorderWidth = 3,
-					AxisX = {
-						Title = "engine speed [1/min]",
-						TitleFont = new Font("Helvetica", 20),
-						LabelStyle = { Font = new Font("Helvetica", 20) },
-						LabelAutoFitStyle = LabelAutoFitStyles.None,
-						Minimum = 300.0
-					},
-					AxisY = {
-						Title = "engine torque [Nm]",
-						TitleFont = new Font("Helvetica", 20),
-						LabelStyle = { Font = new Font("Helvetica", 20) },
-						LabelAutoFitStyle = LabelAutoFitStyles.None
-					},
-					Position = {
-						X = 0,
-						Y = 0,
-						Width = 70,
-						Height = 100
-					},
-				});
+			missionOperatingPointsChart.ChartAreas.Add(new ChartArea("main") {
+				BorderDashStyle = ChartDashStyle.Solid,
+				BorderWidth = 3,
+				AxisX = {
+					Title = "engine speed [1/min]",
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Font = new Font("Helvetica", 20) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None,
+					Minimum = 300.0
+				},
+				AxisY = {
+					Title = "engine torque [Nm]",
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Font = new Font("Helvetica", 20) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None
+				},
+				Position = { X = 0, Y = 0, Width = 70, Height = 100 }
+			});
 
-				// todo: get full load curve from engine
-				var flc = new FullLoadCurve();
-				var n = flc.FullLoadEntries.Select(x => x.EngineSpeed).ToDouble().ToList();
+			var n = _flc.FullLoadEntries.Select(x => x.EngineSpeed).ToDouble().ToList();
+			var torqueFull = _flc.FullLoadEntries.Select(x => x.TorqueFullLoad).ToDouble();
+			var torqueDrag = _flc.FullLoadEntries.Select(x => x.TorqueDrag).ToDouble();
 
-				var fullLoadCurve = new Series("Full load curve") {
-					ChartType = SeriesChartType.FastLine,
-					BorderWidth = 3,
-					Color = Color.DarkBlue
-				};
-				fullLoadCurve.Points.DataBindXY(n, flc.FullLoadEntries.Select(x => x.TorqueFullLoad).ToDouble());
-				missionResultChart.Series.Add(fullLoadCurve);
+			var fullLoadCurve = new Series("Full load curve") {
+				ChartType = SeriesChartType.FastLine,
+				BorderWidth = 3,
+				Color = Color.DarkBlue
+			};
+			fullLoadCurve.Points.DataBindXY(n, torqueFull);
+			missionOperatingPointsChart.Series.Add(fullLoadCurve);
 
-				var dragLoadCurve = new Series("Drag curve") {
-					ChartType = SeriesChartType.FastLine,
-					BorderWidth = 3,
-					Color = Color.Blue
-				};
-				dragLoadCurve.Points.DataBindXY(n, flc.FullLoadEntries.Select(x => x.TorqueDrag).ToDouble());
-				missionResultChart.Series.Add(dragLoadCurve);
+			var dragLoadCurve = new Series("Drag curve") {
+				ChartType = SeriesChartType.FastLine,
+				BorderWidth = 3,
+				Color = Color.Blue
+			};
+			dragLoadCurve.Points.DataBindXY(n, torqueDrag);
+			missionOperatingPointsChart.Series.Add(dragLoadCurve);
 
-				var dataPoints = new Series("load points (Ref. load.)") { ChartType = SeriesChartType.Point, Color = Color.Red };
-				dataPoints.Points.DataBindXY(results.Results[LoadingType.Reference].nU, results.Results[LoadingType.Reference].Tq);
-				missionResultChart.Series.Add(dataPoints);
+			var dataPoints = new Series("load points (Ref. load.)") { ChartType = SeriesChartType.Point, Color = Color.Red };
+			dataPoints.Points.DataBindXY(modData[LoadingType.Reference].GetValues<SI>(ModalResultField.n).ToDouble(),
+				modData[LoadingType.Reference].GetValues<SI>(ModalResultField.Tq_eng).ToDouble());
+			missionOperatingPointsChart.Series.Add(dataPoints);
 
-				missionResultChart.Update();
+			missionOperatingPointsChart.Update();
 
-				results.ChartTqN = new Bitmap(missionResultChart.Width, missionResultChart.Height, PixelFormat.Format32bppArgb);
-				missionResultChart.DrawToBitmap((Bitmap)results.ChartTqN,
-					new Rectangle(0, 0, results.ChartTqN.Size.Width, results.ChartTqN.Size.Height));
+			ChartTqN = new Bitmap(missionOperatingPointsChart.Width, missionOperatingPointsChart.Height,
+				PixelFormat.Format32bppArgb);
+			missionOperatingPointsChart.DrawToBitmap((Bitmap)ChartTqN,
+				new Rectangle(0, 0, ChartTqN.Size.Width, ChartTqN.Size.Height));
+			//----------------------------------------------------------------------------------------------------
+
+			var missionCycleChart = new Chart { Width = 2000, Height = 400 };
+			missionCycleChart.Legends.Add(new Legend("main") {
+				Font = new Font("Helvetica", 14),
+				BorderColor = Color.Black,
+				BorderWidth = 3,
+				Position = { X = 97, Y = 3, Width = 10, Height = 40 }
+			});
+
+			missionCycleChart.ChartAreas.Add(new ChartArea {
+				Name = "main",
+				BorderDashStyle = ChartDashStyle.Solid,
+				BorderWidth = 3,
+				AxisX = {
+					Title = "distance [km]",
+					TitleFont = new Font("Helvetica", 16),
+					LabelStyle = { Font = new Font("Helvetica", 16), Format = "0.0" },
+					LabelAutoFitStyle = LabelAutoFitStyles.None,
+					Minimum = 0
+				},
+				AxisY = {
+					Title = "vehicle speed [km/h]",
+					TitleFont = new Font("Helvetica", 16),
+					LabelStyle = { Font = new Font("Helvetica", 16) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None
+				},
+				AxisY2 = {
+					Title = "altitude [m]",
+					TitleFont = new Font("Helvetica", 16),
+					LabelStyle = { Font = new Font("Helvetica", 16) },
+					LabelAutoFitStyle = LabelAutoFitStyles.None,
+					MinorGrid = { Enabled = false },
+					MajorGrid = { Enabled = false }
+				},
+				Position = { X = 0f, Y = 0f, Width = 90f, Height = 100f },
+			});
+
+			var altitude = new Series {
+				ChartType = SeriesChartType.Area,
+				Color = Color.Lavender,
+				Name = "Altitude",
+				YAxisType = AxisType.Secondary
+			};
+
+			var distance = modData[LoadingType.Reference].GetValues<SI>(ModalResultField.dist).ToDouble().ToList();
+
+
+			// todo: altitude in moddata
+			altitude.Points.DataBindXY(distance,
+				modData[LoadingType.Reference].GetValues<SI>(ModalResultField.altitude).ToDouble());
+			missionCycleChart.Series.Add(altitude);
+
+			var targetSpeed = new Series { ChartType = SeriesChartType.FastLine, BorderWidth = 3, Name = "Target speed" };
+			targetSpeed.Points.DataBindXY(distance,
+				modData[LoadingType.Reference].GetValues<SI>(ModalResultField.v_targ).ToDouble());
+			missionCycleChart.Series.Add(targetSpeed);
+
+			foreach (var result in modData) {
+				var name = result.Key.GetName();
+				var values = result.Value;
+
+				var series = new Series { ChartType = SeriesChartType.FastLine, Name = name };
+				series.Points.DataBindXY(values.GetValues<SI>(ModalResultField.dist), values.GetValues<SI>(ModalResultField.v_act));
+				missionCycleChart.Series.Add(series);
 			}
+			missionCycleChart.Update();
 
+			ChartSpeed = new Bitmap(missionCycleChart.Width, missionCycleChart.Height, PixelFormat.Format32bppArgb);
+			missionCycleChart.DrawToBitmap((Bitmap)ChartSpeed,
+				new Rectangle(0, 0, ChartSpeed.Size.Width, ChartSpeed.Size.Height));
 
-			foreach (var results in missionResults) {
-				var missionResultChart = new Chart { Width = 2000, Height = 400 };
-				missionResultChart.Legends.Add(new Legend("main") {
-					Font = new Font("Helvetica", 14),
-					BorderColor = Color.Black,
-					BorderWidth = 3,
-					Position = {
-						X = 97f,
-						Y = 3f,
-						Width = 10f,
-						Height = 40f
-					}
-				});
-				missionResultChart.ChartAreas.Add(new ChartArea {
-					Name = "main",
-					BorderDashStyle = ChartDashStyle.Solid,
-					BorderWidth = 3,
-					AxisX = {
-						Title = "distance [km]",
-						TitleFont = new Font("Helvetica", 16),
-						LabelStyle = { Font = new Font("Helvetica", 16), Format = "0.0" },
-						LabelAutoFitStyle = LabelAutoFitStyles.None,
-						Minimum = 0
-					},
-					AxisY = {
-						Title = "vehicle speed [km/h]",
-						TitleFont = new Font("Helvetica", 16),
-						LabelStyle = { Font = new Font("Helvetica", 16) },
-						LabelAutoFitStyle = LabelAutoFitStyles.None
-					},
-					AxisY2 = {
-						Title = "altitude [m]",
-						TitleFont = new Font("Helvetica", 16),
-						LabelStyle = { Font = new Font("Helvetica", 16) },
-						LabelAutoFitStyle = LabelAutoFitStyles.None,
-						MinorGrid = { Enabled = false },
-						MajorGrid = { Enabled = false }
-					},
-					Position = { X = 0f, Y = 0f, Width = 90f, Height = 100f },
-				});
-
-				var altitude = new Series {
-					ChartType = SeriesChartType.Area,
-					Color = Color.Lavender,
-					Name = "Altitude",
-					YAxisType = AxisType.Secondary
-				};
-				altitude.Points.DataBindXY(results.Results[LoadingType.Reference].Distance,
-					results.Results[LoadingType.Reference].Alt);
-				missionResultChart.Series.Add(altitude);
-
-				var targetSpeed = new Series {
-					ChartType = SeriesChartType.FastLine,
-					BorderWidth = 3,
-					Name = "Target speed"
-				};
-				targetSpeed.Points.DataBindXY(results.Results[LoadingType.Reference].Distance,
-					results.Results[LoadingType.Reference].TargetSpeed);
-				missionResultChart.Series.Add(targetSpeed);
-
-				foreach (var pair in results.Results) {
-					var series = new Series {
-						ChartType = SeriesChartType.FastLine,
-						Name = pair.Key.GetName(),
-					};
-					series.Points.DataBindXY(pair.Value.Distance, pair.Value.ActualSpeed);
-					missionResultChart.Series.Add(series);
-				}
-
-				missionResultChart.Update();
-
-				results.ChartSpeed = new Bitmap(missionResultChart.Width, missionResultChart.Height, PixelFormat.Format32bppArgb);
-				missionResultChart.DrawToBitmap((Bitmap)results.ChartSpeed,
-					new Rectangle(0, 0, results.ChartSpeed.Size.Width, results.ChartSpeed.Size.Height));
-			}
+			//----------------------------------------------------------------------------------------------------
 
 
 			var co2Chart = new Chart { Width = 1500, Height = 700 };
@@ -212,7 +233,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			foreach (var results in missionResults) {
 				var series = new Series(results.Mission + " (Ref. load.)");
 				series.Points[0].Label = series.Points[0].YValues[0].ToString("0.0") + " [g/tkm]";
-				series.Points[0].Font = new Font("Helvetica", 20f);
+				series.Points[0].Font = new Font("Helvetica", 20);
 				series.Points[0].LabelBackColor = Color.White;
 
 				series.Points.AddXY(results.Mission.ToString(), results.Results[LoadingType.Reference].CO2tkm);
@@ -224,30 +245,26 @@ namespace TUGraz.VectoCore.Models.Declaration
 			co2Chart.DrawToBitmap((Bitmap)ChartCO2tkm, new Rectangle(0, 0, ChartCO2tkm.Size.Width, ChartCO2tkm.Size.Height));
 
 
-
 			var chart = new Chart { Width = 1500, Height = 700 };
 			chart.Legends.Add(new Legend("main") {
-				Font = new Font("Helvetica", 20f),
+				Font = new Font("Helvetica", 20),
 				BorderColor = Color.Black,
 				BorderWidth = 3,
 			});
-			chart.ChartAreas.Add(new ChartArea("main")
-			{
+			chart.ChartAreas.Add(new ChartArea("main") {
 				BorderDashStyle = ChartDashStyle.Solid,
 				BorderWidth = 3,
-				AxisX =
-				{
+				AxisX = {
 					Title = "vehicle speed [km/h]",
-					TitleFont = new Font("Helvetica", 20f),
-					LabelStyle = { Font = new Font("Helvetica", 20f) },
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Font = new Font("Helvetica", 20) },
 					LabelAutoFitStyle = LabelAutoFitStyles.None,
 					Minimum = 20.0,
 				},
-				AxisY =
-				{
+				AxisY = {
 					Title = "CO2 [g/km]",
-					TitleFont = new Font("Helvetica", 20f),
-					LabelStyle = { Font = new Font("Helvetica", 20f) },
+					TitleFont = new Font("Helvetica", 20),
+					LabelStyle = { Font = new Font("Helvetica", 20) },
 					LabelAutoFitStyle = LabelAutoFitStyles.None
 				}
 			});
@@ -265,10 +282,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 					series.Points.AddXY(pair.Value.Speed, pair.Value.CO2km);
 					series.Points[num].Label = pair.Value.Loading.ToString("0.0") + " t";
 					if (pair.Key == LoadingType.Reference) {
-						series.Points[num].Font = new Font("Helvetica", 16f);
+						series.Points[num].Font = new Font("Helvetica", 16);
 					} else {
 						series.Points[num].MarkerSize = 10;
-						series.Points[num].Font = new Font("Helvetica", 14f);
+						series.Points[num].Font = new Font("Helvetica", 14);
 					}
 					series.Points[num].LabelBackColor = Color.White;
 				}
@@ -325,20 +342,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 			// Add Images
 			var content = stamper.GetOverContent(1);
 			var img = Image.GetInstance(ChartCO2tkm, BaseColor.WHITE);
-			img.ScaleAbsolute(440f, 195f);
-			img.SetAbsolutePosition(360f, 270f);
+			img.ScaleAbsolute(440, 195);
+			img.SetAbsolutePosition(360, 270);
 			content.AddImage(img);
 
 			img = Image.GetInstance(ChartCO2speed, BaseColor.WHITE);
-			img.ScaleAbsolute(440f, 195f);
-			img.SetAbsolutePosition(360f, 75f);
+			img.ScaleAbsolute(440, 195);
+			img.SetAbsolutePosition(360, 75);
 			content.AddImage(img);
 
 			//todo get image for hdv class
 			var hdvClassImagePath = "";
 			img = Image.GetInstance(hdvClassImagePath);
-			img.ScaleAbsolute(180f, 50f);
-			img.SetAbsolutePosition(30f, 475f);
+			img.ScaleAbsolute(180, 50);
+			img.SetAbsolutePosition(30, 475);
 			content.AddImage(img);
 
 			// flatten the form to remove editting options, set it to false  to leave the form open to subsequent manual edits
@@ -392,18 +409,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 				content = stamper.GetOverContent(1);
 
 				img = Image.GetInstance(hdvClassImagePath);
-				img.ScaleAbsolute(180f, 50f);
-				img.SetAbsolutePosition(600f, 475f);
+				img.ScaleAbsolute(180, 50);
+				img.SetAbsolutePosition(600, 475);
 				content.AddImage(img);
 
 				img = Image.GetInstance(results.ChartSpeed, BaseColor.WHITE);
-				img.ScaleAbsolute(780f, 156f);
-				img.SetAbsolutePosition(17f, 270f);
+				img.ScaleAbsolute(780, 156);
+				img.SetAbsolutePosition(17, 270);
 				content.AddImage(img);
 
 				img = Image.GetInstance(results.ChartTqN, BaseColor.WHITE);
-				img.ScaleAbsolute(420f, 178f);
-				img.SetAbsolutePosition(375f, 75f);
+				img.ScaleAbsolute(420, 178);
+				img.SetAbsolutePosition(375, 75);
 				content.AddImage(img);
 
 				// flatten the form to remove editting options, set it to false  to leave the form open to subsequent manual edits
@@ -414,7 +431,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			// Merge files
-			var document = new Document(PageSize.A4.Rotate(), 12f, 12f, 12f, 12f);
+			var document = new Document(PageSize.A4.Rotate(), 12, 12, 12, 12);
 			var writer = PdfWriter.GetInstance(document, new FileStream(Filepath, FileMode.Create));
 
 			document.Open();
@@ -427,55 +444,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 
 			document.Close();
-		}
-
-		public class LoadingResults
-		{
-			public List<float> ActualSpeed = new List<float>();
-			public List<float> Alt = new List<float>();
-			public float CO2km = 0f;
-			public float CO2tkm = 0f;
-			public List<float> Distance = new List<float>();
-			public bool FCerror = false;
-			public float FCkm = 0f;
-			public float FCtkm = 0f;
-			public float Loading = 0f;
-			public List<float> nU = new List<float>();
-			public float Speed = 0f;
-			public List<float> TargetSpeed = new List<float>();
-			public List<float> Tq = new List<float>();
-		}
-
-		public class MissionResults
-		{
-			public System.Drawing.Image ChartSpeed;
-			public System.Drawing.Image ChartTqN;
-
-			public Mission Mission;
-			public Dictionary<LoadingType, LoadingResults> Results = new Dictionary<LoadingType, LoadingResults>();
-		}
-	}
-
-	public enum LoadingType
-	{
-		Full,
-		Reference,
-		Empty,
-		UserDefined
-	}
-
-	public static class LoadingTypeHelper
-	{
-		private static readonly Dictionary<LoadingType, string> LoadingTypeToString = new Dictionary<LoadingType, string> {
-			{ LoadingType.Empty, "E" },
-			{ LoadingType.Full, "F" },
-			{ LoadingType.Reference, "R" }
-		};
-
-
-		public static string GetName(this LoadingType loadingType)
-		{
-			return LoadingTypeToString[loadingType];
 		}
 	}
 }

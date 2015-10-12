@@ -42,20 +42,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			DataReader.SetJobFile(jobFile);
 		}
 
-		///// <summary>
-		///// Creates a simulation run for time based engine only powertrain.
-		///// </summary>
-		//public static IVectoRun CreateTimeBasedEngineOnlyRun(string engineFile, string cycleName, string jobFileName,
-		//	string jobName, IModalDataWriter dataWriter, SummaryFileWriter sumWriter)
-		//{
-		//	var sumWriterDecorator = new SumWriterDecoratorEngineOnly(sumWriter, jobFileName, jobName, cycleName);
-		//	var builder = new PowertrainBuilder(dataWriter, sumWriterDecorator, engineOnly: true);
-
-		//	// @@@ TODO: builder.AddEngine(engineFile);
-
-		//	return builder.Build(cycleName);
-		//}
-
 		public ISimulationDataReader DataReader { get; private set; }
 
 		public SummaryFileWriter SumWriter { get; set; }

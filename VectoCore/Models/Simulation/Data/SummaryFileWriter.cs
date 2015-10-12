@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -294,6 +295,11 @@ public class SumWriterDecoratorFullPowertrain : SummaryFileWriter, ISummaryDataW
 	public void Write(IModalDataWriter data, Kilogram vehicleMass = null, Kilogram vehicleLoading = null)
 	{
 		_writer.WriteFullPowertrain(data, _jobFileName, _jobName, _cycleFileName, vehicleMass, vehicleLoading);
+
+		//todo: write report only in declaration mode!
+		var report = new Report(data);
+		report.CreateCharts();
+		report.WritePdfs();
 	}
 }
 
