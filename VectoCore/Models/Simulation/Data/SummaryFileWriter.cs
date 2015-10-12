@@ -168,9 +168,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				row[EACC] = paeng ?? 0.SI() + pagb ?? 0.SI();
 			}
 
-			//todo altitude - calculate when reading the cycle file, add column for altitude
-			//row["∆altitude [m]"] = Data.Rows[Data.Rows.Count - 1].Field<double>("altitude") -
-			//						Data.Rows[0].Field<double>("altitude");
+			row[ALTITUDE] = data.GetValues<SI>(ModalResultField.altitude).Last() -
+							data.GetValues<SI>(ModalResultField.altitude).First();
 
 			WriteAuxiliaries(data, row);
 
@@ -295,11 +294,6 @@ public class SumWriterDecoratorFullPowertrain : SummaryFileWriter, ISummaryDataW
 	public void Write(IModalDataWriter data, Kilogram vehicleMass = null, Kilogram vehicleLoading = null)
 	{
 		_writer.WriteFullPowertrain(data, _jobFileName, _jobName, _cycleFileName, vehicleMass, vehicleLoading);
-
-		//todo: write report only in declaration mode!
-		var report = new Report(data);
-		report.CreateCharts();
-		report.WritePdfs();
 	}
 }
 

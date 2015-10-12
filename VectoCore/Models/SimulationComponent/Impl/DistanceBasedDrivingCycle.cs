@@ -214,6 +214,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			writer[ModalResultField.dist] = CurrentState.Distance;
 			writer[ModalResultField.v_targ] = CurrentState.VehicleTargetSpeed;
 			writer[ModalResultField.grad] = (Math.Tan(CurrentState.Gradient.Value()) * 100).SI<Scalar>();
+			writer[ModalResultField.altitude] = CurrentState.Altitude;
 		}
 
 		protected override void DoCommitSimulationStep()

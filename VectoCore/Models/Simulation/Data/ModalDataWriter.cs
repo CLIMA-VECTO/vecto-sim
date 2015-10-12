@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
 
@@ -12,9 +13,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private ModalResults Data { get; set; }
 		private DataRow CurrentRow { get; set; }
 		private string ModFileName { get; set; }
+		private Report _report { get; set; }
 
 
-		public ModalDataWriter(string modFileName, SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode)
+		public ModalDataWriter(string modFileName, Report report,
+			SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode)
 		{
 			HasTorqueConverter = false;
 			ModFileName = modFileName;
@@ -22,6 +25,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			Auxiliaries = new Dictionary<string, DataColumn>();
 			CurrentRow = Data.NewRow();
 			_mode = mode;
+			_report = report;
 		}
 
 		public bool HasTorqueConverter { get; set; }

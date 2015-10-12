@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 using TUGraz.VectoCore.Utils;
@@ -35,6 +36,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public string BasePath { get; set; }
 		public string ModFileSuffix { get; set; }
+		public Report Report { get; set; }
 
 
 		public class AuxData

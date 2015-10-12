@@ -33,11 +33,15 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				tmpVehicle.GrossVehicleMassRating, tmpVehicle.CurbWeight);
 			var driverdata = dao.CreateDriverData(Job);
 			driverdata.AccelerationCurve = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
+
+			var engineData = dao.CreateEngineData(Engine);
+			var gearboxData = dao.CreateGearboxData(Gearbox, engineData);
+			var report = new Report(engineData.FullLoadCurve, segment, "CREATOR", engineData.ModelName, "engineStr",
+				"outputfilepath", gearboxData.ModelName, "gearboxStr", Job.JobFile);
+
 			foreach (var mission in segment.Missions) {
 				var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased);
 				foreach (var loading in mission.Loadings) {
-					var engineData = dao.CreateEngineData(Engine);
-
 					var simulationRunData = new VectoRunData {
 						VehicleData = dao.CreateVehicleData(Vehicle, mission, loading.LoadingWeight),
 						EngineData = engineData,
@@ -48,7 +52,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 						IsEngineOnly = IsEngineOnly,
 						JobFileName = Job.JobFile,
 						BasePath = "",
-						ModFileSuffix = loading.Name
+						ModFileSuffix = loading.Name,
+						Report = report,
 					};
 					simulationRunData.Cycle.Name = mission.MissionType.ToString();
 					simulationRunData.VehicleData.VehicleClass = segment.VehicleClass;
