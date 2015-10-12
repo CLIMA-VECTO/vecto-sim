@@ -68,6 +68,9 @@
     <Compile Include="Integration\CoachPowerTrain.cs" />
     <Compile Include="Integration\DriverStrategy\DriverStrategyTestCoach.cs" />
     <Compile Include="Integration\DriverStrategy\DriverStrategyTestTruck.cs" />
+    <Compile Include="Integration\FullCycleDeclarationTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Utils\GraphWriter.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
     <Compile Include="Integration\SimpleDrivingCycles.cs" />

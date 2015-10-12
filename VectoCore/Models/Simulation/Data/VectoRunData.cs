@@ -34,6 +34,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		public string JobFileName { get; set; }
 
 		public string BasePath { get; set; }
+		public string ModFileSuffix { get; set; }
 
 
 		public class AuxData

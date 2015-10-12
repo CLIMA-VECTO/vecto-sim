@@ -17,13 +17,26 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public Kilogram RefLoad { get; set; }
 		public Kilogram MaxLoad { get; set; }
 
-		public IEnumerable<Kilogram> Loadings
+		public IEnumerable<LoadingEntry> Loadings
 		{
-			get { return new[] { MinLoad, RefLoad, MaxLoad }; }
+			get
+			{
+				return new[] {
+					new LoadingEntry() { LoadingWeight = MinLoad, Name = "EmptyLoading" },
+					new LoadingEntry() { LoadingWeight = RefLoad, Name = "ReferenceLoad" },
+					new LoadingEntry() { LoadingWeight = MaxLoad, Name = "FullLoading" }
+				};
+			}
 		}
 
 		public Stream CycleFile { get; set; }
 
 		public bool UseCdA2 { get; set; }
+
+		public class LoadingEntry
+		{
+			public Kilogram LoadingWeight;
+			public string Name;
+		}
 	}
 }
