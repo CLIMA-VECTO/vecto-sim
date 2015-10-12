@@ -495,7 +495,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var auxDemandResponse = RequestPort.Request(absTime, dt, torque, prevEngineSpeed, true);
 
-				var deltaEnginePower = nextEnginePower - auxDemandResponse.AuxiliariesPowerDemand;
+				var deltaEnginePower = nextEnginePower - (auxDemandResponse.AuxiliariesPowerDemand ?? 0.SI<Watt>());
 				var deltaTorque = deltaEnginePower / prevEngineSpeed;
 				var deltaAngularSpeed = (deltaTorque / Engine.Data.Inertia * dt).Cast<PerSecond>();
 
