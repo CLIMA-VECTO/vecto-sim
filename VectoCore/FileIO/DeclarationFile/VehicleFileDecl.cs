@@ -6,7 +6,7 @@ using TUGraz.VectoCore.Models.SimulationComponent.Data;
 
 namespace TUGraz.VectoCore.FileIO.DeclarationFile
 {
-	internal class VehicleFileV5Declaration : VectoVehicleFile
+	internal class VehicleFileV7Declaration : VectoVehicleFile
 	{
 		[JsonProperty(Required = Required.Always)] public JsonDataHeader Header;
 		[JsonProperty(Required = Required.Always)] public DataBodyDecl Body;
@@ -19,20 +19,16 @@ namespace TUGraz.VectoCore.FileIO.DeclarationFile
 
 			public VehicleCategory VehicleCategory()
 			{
-				return (VehicleCategory) Enum.Parse(typeof (VehicleCategory), VehicleCategoryStr, true);
+				return (VehicleCategory)Enum.Parse(typeof(VehicleCategory), VehicleCategoryStr, true);
 			}
 
 			[JsonProperty(Required = Required.Always)] public double CurbWeight;
 
 			[JsonProperty("MassMax", Required = Required.Always)] public double GrossVehicleMassRating;
 
-			[JsonProperty("Cd", Required = Required.Always)] public double DragCoefficient;
+			[JsonProperty("CdA", Required = Required.Always)] public double DragCoefficient;
 
-			[JsonProperty("CrossSecArea", Required = Required.Always)] public double CrossSectionArea;
-
-			[JsonProperty("Cd2")] public double DragCoefficientRigidTruck; // without trailer
-
-			[JsonProperty("CrossSecArea2")] public double CrossSectionAreaRigidTruck;
+			[JsonProperty("CdA2")] public double DragCoefficientRigidTruck; // without trailer
 
 			[JsonProperty("Rim", Required = Required.Always)] public string RimStr;
 
