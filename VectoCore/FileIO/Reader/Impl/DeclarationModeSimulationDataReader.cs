@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					var engineData = dao.CreateEngineData(Engine);
 
 					var simulationRunData = new VectoRunData {
-						VehicleData = dao.CreateVehicleData(Vehicle, mission, loading),
+						VehicleData = dao.CreateVehicleData(Vehicle, mission, loading.LoadingWeight),
 						EngineData = engineData,
 						GearboxData = dao.CreateGearboxData(Gearbox, engineData),
 						Aux = dao.CreateAuxiliaryData(Aux, mission.MissionType, segment.VehicleClass),
@@ -47,8 +47,10 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 						DriverData = driverdata,
 						IsEngineOnly = IsEngineOnly,
 						JobFileName = Job.JobFile,
-						BasePath = ""
+						BasePath = "",
+						ModFileSuffix = loading.Name
 					};
+					simulationRunData.Cycle.Name = mission.MissionType.ToString();
 					simulationRunData.VehicleData.VehicleClass = segment.VehicleClass;
 					yield return simulationRunData;
 				}

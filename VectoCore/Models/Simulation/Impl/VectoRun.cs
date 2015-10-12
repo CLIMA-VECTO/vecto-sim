@@ -56,10 +56,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				Container.FinishSimulation();
 				throw new VectoSimulationException("absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4}", ve, AbsTime,
 					Container.Distance, dt, Container.VehicleSpeed, Container.Gear, ve.Message);
+			} catch (Exception e) {
+				Container.FinishSimulation();
+				throw new VectoSimulationException("absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4}", e, AbsTime,
+					Container.Distance, dt, Container.VehicleSpeed, Container.Gear, e.Message);
 			}
-
 			Container.FinishSimulation();
-
 			Log.Info("VectoJob finished.");
 		}
 
