@@ -166,31 +166,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var nextActions = new List<DrivingBehaviorEntry>();
 			foreach (var entry in lookaheadData) {
 				if (entry.VehicleTargetSpeed < currentSpeed) {
+					var nextTargetSpeed = OverspeedAllowed(entry.RoadGradient, entry.VehicleTargetSpeed)
+						? entry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
+						: entry.VehicleTargetSpeed;
 					if (!Driver.DriverData.LookAheadCoasting.Enabled ||
 						currentSpeed < Driver.DriverData.LookAheadCoasting.MinSpeed) {
-						var brakingDistance = Driver.ComputeDecelerationDistance(entry.VehicleTargetSpeed);
-						Log.Debug("adding 'Braking' starting at distance {0}", entry.Distance - brakingDistance);
+						var brakingDistance = Driver.ComputeDecelerationDistance(nextTargetSpeed);
+						Log.Debug("adding 'Braking' starting at distance {0}. brakingDistance: {1}, triggerDistance: {2}",
+							entry.Distance - brakingDistance, brakingDistance, entry.Distance);
 						nextActions.Add(new DrivingBehaviorEntry {
 							Action = DrivingBehavior.Braking,
 							ActionDistance = entry.Distance - brakingDistance,
 							TriggerDistance = entry.Distance,
-							NextTargetSpeed =
-								OverspeedAllowed(entry.RoadGradient, entry.VehicleTargetSpeed)
-									? entry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
-									: entry.VehicleTargetSpeed
+							NextTargetSpeed = nextTargetSpeed
 						});
 					} else {
-						var coastingDistance = Formulas.DecelerationDistance(currentSpeed, entry.VehicleTargetSpeed,
+						var coastingDistance = Formulas.DecelerationDistance(currentSpeed, nextTargetSpeed,
 							Driver.DriverData.LookAheadCoasting.Deceleration);
-						Log.Debug("adding 'Coasting' starting at distance {0}", entry.Distance - coastingDistance);
+						Log.Debug("adding 'Coasting' starting at distance {0}. coastingDistance: {1}, triggerDistance: {2}",
+							entry.Distance - coastingDistance, coastingDistance, entry.Distance);
 						nextActions.Add(
 							new DrivingBehaviorEntry {
 								Action = DefaultDriverStrategy.DrivingBehavior.Coasting,
 								ActionDistance = entry.Distance - coastingDistance,
 								TriggerDistance = entry.Distance,
-								NextTargetSpeed = OverspeedAllowed(entry.RoadGradient, entry.VehicleTargetSpeed)
-									? entry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
-									: entry.VehicleTargetSpeed
+								NextTargetSpeed = nextTargetSpeed
 							});
 					}
 				}
