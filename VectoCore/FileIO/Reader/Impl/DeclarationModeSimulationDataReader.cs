@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			var engineData = dao.CreateEngineData(Engine);
 			var gearboxData = dao.CreateGearboxData(Gearbox, engineData);
 			var report = new DeclarationReport(engineData.FullLoadCurve, segment, "CREATOR", engineData.ModelName, "engineStr",
-				"outputfilepath", gearboxData.ModelName, "gearboxStr", Job.JobFile, resultCount);
+				gearboxData.ModelName, "gearboxStr", Job.BasePath, Job.JobFile, resultCount);
 
 			foreach (var mission in segment.Missions) {
 				var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased);

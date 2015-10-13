@@ -59,9 +59,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				var modFileName = Path.Combine(data.BasePath,
 					data.JobFileName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}{1}" +
 					Constants.FileExtensions.ModDataFile);
+				var d = data;
 				IModalDataWriter modWriter =
 					new ModalDataWriter(string.Format(modFileName, data.Cycle.Name, data.ModFileSuffix ?? ""),
-						writer => data.Report.AddResult(data.Loading, data.Mission, writer), _mode);
+						writer => d.Report.AddResult(d.Loading, d.Mission, writer), _mode);
 				var jobName = string.Format("{0}-{1}", JobNumber, i++);
 				var sumWriterDecorator = DecorateSumWriter(data.IsEngineOnly, SumWriter, data.JobFileName, jobName, data.Cycle.Name);
 				var builder = new PowertrainBuilder(modWriter, sumWriterDecorator, DataReader.IsEngineOnly);

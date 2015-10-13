@@ -6,6 +6,8 @@ namespace TUGraz.VectoCore.Utils
 {
 	public static class RessourceHelper
 	{
+		public const string Namespace = "TUGraz.VectoCore.Resources.Declaration.";
+
 		public static Stream ReadStream(string resourceName)
 		{
 			var assembly = Assembly.GetExecutingAssembly();

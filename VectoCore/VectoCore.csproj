@@ -286,6 +286,18 @@
     <EmbeddedResource Include="Resources\Declaration\VCDV\parameters.csv" />
     <EmbeddedResource Include="Resources\Declaration\WHTC-Weighting-Factors.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\ALT-Tech.csv" />
+    <EmbeddedResource Include="Resources\Declaration\Report\report2CyclesTemplate.pdf" />
+    <EmbeddedResource Include="Resources\Declaration\Report\report3CyclesTemplate.pdf" />
+    <EmbeddedResource Include="Resources\Declaration\Report\titlePageTemplate.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />
+    <EmbeddedResource Include="Resources\Declaration\Report\4x2rt.png" />
+    <EmbeddedResource Include="Resources\Declaration\Report\4x2tt.png" />
+    <EmbeddedResource Include="Resources\Declaration\Report\6x2r.png" />
+    <EmbeddedResource Include="Resources\Declaration\Report\6x2rt.png" />
+    <EmbeddedResource Include="Resources\Declaration\Report\6x2tt.png" />
+    <EmbeddedResource Include="Resources\Declaration\Report\Undef.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

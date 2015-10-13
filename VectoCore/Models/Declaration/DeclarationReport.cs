@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms.DataVisualization.Charting;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
@@ -19,17 +20,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class DeclarationReport
 	{
-		public class ResultContainer
+		private class ResultContainer
 		{
 			public Mission Mission;
-			public Bitmap ChartTqN;
-			public Bitmap ChartCycle;
-			public Dictionary<LoadingType, IModalDataWriter> ModData = new Dictionary<LoadingType, IModalDataWriter>();
+			public Dictionary<LoadingType, IModalDataWriter> ModData;
 		}
 
 		private readonly Dictionary<MissionType, ResultContainer> _missions = new Dictionary<MissionType, ResultContainer>();
-		private Bitmap _chartCO2speed;
-		private Bitmap _chartCO2Missions;
 
 		private readonly FullLoadCurve _flc;
 		private readonly Segment _segment;
@@ -37,37 +34,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private readonly string _creator;
 		private readonly string _engineModel;
 		private readonly string _engineStr;
-		private readonly string _outputFilePath;
 		private readonly string _gearboxModel;
 		private readonly string _gearboxStr;
 		private readonly string _jobFile;
 		private readonly int _resultCount;
+		private readonly string _basePath;
 
 		public DeclarationReport(FullLoadCurve flc, Segment segment, string creator, string engineModel, string engineStr,
-			string outputFilePath, string gearboxModel, string gearboxStr, string jobFile, int resultCount)
+			string gearboxModel, string gearboxStr, string basePath, string jobFile, int resultCount)
 		{
 			_flc = flc;
 			_segment = segment;
 			_creator = creator;
 			_engineModel = engineModel;
 			_engineStr = engineStr;
-			_outputFilePath = outputFilePath;
 			_gearboxModel = gearboxModel;
 			_gearboxStr = gearboxStr;
 			_jobFile = jobFile;
 			_resultCount = resultCount;
+			_basePath = basePath;
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void AddResult(LoadingType loadingType, Mission mission, IModalDataWriter modData)
 		{
 			if (!_missions.ContainsKey(mission.MissionType)) {
 				_missions[mission.MissionType] = new ResultContainer {
 					Mission = mission,
+					ModData = new Dictionary<LoadingType, IModalDataWriter> { { loadingType, modData } }
 				};
+			} else {
+				_missions[mission.MissionType].ModData[loadingType] = modData;
 			}
-
-			_missions[mission.MissionType].ModData[loadingType] = modData;
-
 
 			if (_resultCount == _missions.Sum(v => v.Value.ModData.Count)) {
 				WriteReport();
@@ -76,15 +74,200 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		private void WriteReport()
 		{
-			_chartCO2Missions = DrawCO2MissionsChart(_missions);
-			_chartCO2speed = DrawCO2SpeedChart(_missions);
+			var titlePage = CreateTitlePage(_missions);
+			var cyclePages = _missions.Select((m, i) => CreateCyclePage(m.Value, i, _missions.Count));
 
-			foreach (var mission in _missions.Values) {
-				mission.ChartCycle = DrawCycleChart(mission);
-				mission.ChartTqN = DrawOperatingPointsChart(mission.ModData[LoadingType.ReferenceLoad], _flc);
+			MergeDocuments(titlePage, cyclePages, Path.Combine(_basePath, _jobFile + ".pdf"));
+		}
+
+		private Stream CreateTitlePage(Dictionary<MissionType, ResultContainer> missions)
+		{
+			var stream = new MemoryStream();
+
+			var reader = new PdfReader(RessourceHelper.ReadStream(RessourceHelper.Namespace + "Report.titlePageTemplate.pdf"));
+			var stamper = new PdfStamper(reader, stream);
+
+			var pdfFields = stamper.AcroFields;
+			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+			pdfFields.SetField("Job", _jobFile);
+			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
+			pdfFields.SetField("Created", _creator);
+			pdfFields.SetField("Config",
+				string.Format("{0:0.0}t {1} {2}", _segment.GrossVehicleWeightMax / 1000, _segment.AxleConfiguration.GetName(),
+					_segment.VehicleCategory));
+			pdfFields.SetField("HDVclass", "HDV Class " + _segment.VehicleClass);
+			pdfFields.SetField("Engine", _engineStr);
+			pdfFields.SetField("EngM", _engineModel);
+			pdfFields.SetField("Gearbox", _gearboxStr);
+			pdfFields.SetField("GbxM", _gearboxModel);
+			pdfFields.SetField("PageNr", "Page 1 of " + missions.Count);
+
+			var i = 1;
+			foreach (var results in missions.Values) {
+				pdfFields.SetField("Mission" + i, results.Mission.MissionType.ToString());
+
+				var m = results.ModData[LoadingType.ReferenceLoad];
+				var dt = m.GetValues<SI>(ModalResultField.simulationInterval);
+				var distance = m.GetValues<SI>(ModalResultField.dist).Max().Value();
+
+				Func<ModalResultField, double> avgWeighted =
+					field => m.GetValues<SI>(field).Zip(dt, (v, t) => v / t).Average().Value();
+
+				pdfFields.SetField("Loading" + i, results.Mission.RefLoad.Value().ToString("0.0") + " t");
+				pdfFields.SetField("Speed" + i, avgWeighted(ModalResultField.v_act).ToString("0.0") + " km/h");
+
+				var fc = avgWeighted(ModalResultField.FCMap) / distance * 1000;
+				// todo: calc FCt, co2, co2t
+				pdfFields.SetField("FC" + i, fc.ToString("0.0"));
+				pdfFields.SetField("FCt" + i, (fc * 1000).ToString("0.0"));
+				pdfFields.SetField("CO2" + i, fc.ToString("0.0"));
+				pdfFields.SetField("CO2t" + i, fc.ToString("0.0"));
+				i++;
 			}
 
-			WritePdfs(_missions);
+			// Add Images
+			var content = stamper.GetOverContent(1);
+			var img = Image.GetInstance(DrawCO2MissionsChart(missions), BaseColor.WHITE);
+			img.ScaleAbsolute(440, 195);
+			img.SetAbsolutePosition(360, 270);
+			content.AddImage(img);
+
+			img = Image.GetInstance(DrawCO2SpeedChart(missions), BaseColor.WHITE);
+			img.ScaleAbsolute(440, 195);
+			img.SetAbsolutePosition(360, 75);
+			content.AddImage(img);
+
+			img =
+				Image.GetInstance(
+					RessourceHelper.ReadStream(RessourceHelper.Namespace + "Report." +
+												GetHDVClassImageName(_segment, MissionType.LongHaul)));
+			img.ScaleAbsolute(180, 50);
+			img.SetAbsolutePosition(30, 475);
+			content.AddImage(img);
+
+			// flatten the form to remove editting options, set it to false  to leave the form open to subsequent manual edits
+			stamper.FormFlattening = true;
+			stamper.Writer.CloseStream = false;
+			stamper.Close();
+
+			return stream;
+		}
+
+		private static string GetHDVClassImageName(Segment segment, MissionType missionType)
+		{
+			switch (segment.VehicleClass) {
+				case VehicleClass.Class1:
+				case VehicleClass.Class2:
+				case VehicleClass.Class3:
+					return "4x2r.png";
+				case VehicleClass.Class4:
+					return missionType == MissionType.LongHaul ? "4x2rt.png" : "4x2r.png";
+				case VehicleClass.Class5:
+					return "4x2tt.png";
+				case VehicleClass.Class9:
+					return missionType == MissionType.LongHaul ? "6x2rt.png" : "6x2r.png";
+				case VehicleClass.Class10:
+					return "6x2tt.png";
+			}
+			return "Undef.png";
+		}
+
+		private Stream CreateCyclePage(ResultContainer results, int i, int pgMax)
+		{
+			var stream = new MemoryStream();
+			var cyclePages = RessourceHelper.Namespace + string.Format("Report.report{0}CyclesTemplate.pdf", pgMax);
+			var reader = new PdfReader(RessourceHelper.ReadStream(cyclePages));
+			var stamper = new PdfStamper(reader, stream);
+
+			var pdfFields = stamper.AcroFields;
+			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
+			pdfFields.SetField("Job", _jobFile);
+			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
+			pdfFields.SetField("Created", _creator);
+			pdfFields.SetField("Config",
+				string.Format("{0:0.0}t {1} {2}", _segment.GrossVehicleWeightMax / 1000, _segment.AxleConfiguration.GetName(),
+					_segment.VehicleCategory));
+			pdfFields.SetField("HDVclass", "HDV Class " + _segment.VehicleClass);
+			pdfFields.SetField("PageNr", "Page " + (i + 1) + " of " + pgMax);
+			pdfFields.SetField("Mission", results.Mission.MissionType.ToString());
+
+
+			foreach (var pair in results.ModData) {
+				var loadingType = pair.Key;
+				var m = pair.Value;
+
+				var loadString = loadingType.GetShortName();
+				pdfFields.SetField("Load" + loadString, results.Mission.Loadings[loadingType].ToString("0.0") + " t");
+
+				var dt = m.GetValues<SI>(ModalResultField.simulationInterval);
+				var distance = m.GetValues<SI>(ModalResultField.dist).Max().Value();
+
+				Func<ModalResultField, double> avgWeighted =
+					field => m.GetValues<SI>(field).Zip(dt, (v, t) => v / t).Average().Value();
+
+				pdfFields.SetField("Speed" + loadString, avgWeighted(ModalResultField.v_act).ToString("0.0"));
+
+				var fc = avgWeighted(ModalResultField.FCMap) / distance * 1000;
+				var co2 = fc;
+
+				var loading = results.Mission.Loadings[loadingType];
+
+				pdfFields.SetField("FCkm" + loadString, fc.ToString("0.0"));
+				pdfFields.SetField("CO2km" + loadString, co2.ToString("0.0"));
+
+				if (loading.IsEqual(0)) {
+					pdfFields.SetField("FCtkm" + loadString, "-");
+					pdfFields.SetField("CO2tkm" + loadString, "-");
+				} else {
+					pdfFields.SetField("FCtkm" + loadString, (fc / loading).Value().ToString("0.0"));
+					pdfFields.SetField("CO2tkm" + loadString, (fc / loading).ToString("0.0"));
+				}
+			}
+
+			var content = stamper.GetOverContent(1);
+
+			var img =
+				Image.GetInstance(
+					RessourceHelper.ReadStream(RessourceHelper.Namespace + "Report." +
+												GetHDVClassImageName(_segment, results.Mission.MissionType)));
+			img.ScaleAbsolute(180, 50);
+			img.SetAbsolutePosition(600, 475);
+			content.AddImage(img);
+
+			img = Image.GetInstance(DrawCycleChart(results), BaseColor.WHITE);
+			img.ScaleAbsolute(780, 156);
+			img.SetAbsolutePosition(17, 270);
+			content.AddImage(img);
+
+			img = Image.GetInstance(DrawOperatingPointsChart(results.ModData[LoadingType.ReferenceLoad], _flc), BaseColor.WHITE);
+			img.ScaleAbsolute(420, 178);
+			img.SetAbsolutePosition(375, 75);
+			content.AddImage(img);
+
+			// flatten the form to remove editting options, set it to false  to leave the form open to subsequent manual edits
+			stamper.FormFlattening = true;
+
+			stamper.Writer.CloseStream = false;
+			stamper.Close();
+			return stream;
+		}
+
+		private static void MergeDocuments(Stream titlePage, IEnumerable<Stream> cyclePages, string outputFileName)
+		{
+			var document = new Document(PageSize.A4.Rotate(), 12, 12, 12, 12);
+			var writer = PdfWriter.GetInstance(document, new FileStream(outputFileName, FileMode.Create));
+
+			document.Open();
+
+			titlePage.Position = 0;
+			document.Add(Image.GetInstance(writer.GetImportedPage(new PdfReader(titlePage), 1)));
+
+			foreach (var cyclePage in cyclePages) {
+				cyclePage.Position = 0;
+				document.Add(Image.GetInstance(writer.GetImportedPage(new PdfReader(cyclePage), 1)));
+			}
+
+			document.Close();
 		}
 
 		private static Bitmap DrawCO2MissionsChart(Dictionary<MissionType, ResultContainer> missions)
@@ -115,17 +298,18 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			foreach (var missionResult in missions) {
 				var series = new Series(missionResult.Key + " (Ref. load.)");
-				series.Points[0].Label = series.Points[0].YValues[0].ToString("0.0") + " [g/tkm]";
-				series.Points[0].Font = new Font("Helvetica", 20);
-				series.Points[0].LabelBackColor = Color.White;
-
 				var co2sum = missionResult.Value.ModData[LoadingType.ReferenceLoad].GetValues<SI>(ModalResultField.FCMap).Sum();
 
 				var maxDistance = missionResult.Value.ModData[LoadingType.ReferenceLoad].GetValues<SI>(ModalResultField.dist).Max();
 				var loading = missionResult.Value.Mission.Loadings[LoadingType.ReferenceLoad];
 				var co2pertkm = co2sum / maxDistance / loading * 1000;
 
-				series.Points.AddXY(missionResult.Key, co2pertkm.Value());
+				series.Points.AddXY(missionResult.Key.ToString(), co2pertkm.Value());
+
+				series.Points[0].Label = series.Points[0].YValues[0].ToString("0.0") + " [g/tkm]";
+				series.Points[0].Font = new Font("Helvetica", 20);
+				series.Points[0].LabelBackColor = Color.White;
+
 				co2Chart.Series.Add(series);
 			}
 
@@ -244,8 +428,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				YAxisType = AxisType.Secondary
 			};
 
-			var distance = results.ModData.First().Value.GetValues<SI>(ModalResultField.dist).ToDouble().ToList();
-			var altitudeValues = results.ModData.First().Value.GetValues<SI>(ModalResultField.altitude).ToDouble().ToList();
+			var distance = results.ModData.First().Value.GetValues<SI>(ModalResultField.dist).ToDouble();
+			var altitudeValues = results.ModData.First().Value.GetValues<SI>(ModalResultField.altitude).ToDouble();
 
 			altitude.Points.DataBindXY(distance, altitudeValues);
 			missionCycleChart.Series.Add(altitude);
@@ -260,7 +444,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var values = result.Value;
 
 				var series = new Series { ChartType = SeriesChartType.FastLine, Name = name };
-				series.Points.DataBindXY(values.GetValues<SI>(ModalResultField.dist), values.GetValues<SI>(ModalResultField.v_act));
+				series.Points.DataBindXY(values.GetValues<SI>(ModalResultField.dist).ToDouble(),
+					values.GetValues<SI>(ModalResultField.v_act).ToDouble());
 				missionCycleChart.Series.Add(series);
 			}
 			missionCycleChart.Update();
@@ -298,7 +483,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				Position = { X = 0, Y = 0, Width = 70, Height = 100 }
 			});
 
-			var n = flc.FullLoadEntries.Select(x => x.EngineSpeed).ToDouble().ToList();
+			var n = flc.FullLoadEntries.Select(x => x.EngineSpeed).ToDouble();
 			var torqueFull = flc.FullLoadEntries.Select(x => x.TorqueFullLoad).ToDouble();
 			var torqueDrag = flc.FullLoadEntries.Select(x => x.TorqueDrag).ToDouble();
 
@@ -328,198 +513,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var tqnBitmap = new Bitmap(operatingPointsChart.Width, operatingPointsChart.Height, PixelFormat.Format32bppArgb);
 			operatingPointsChart.DrawToBitmap(tqnBitmap, new Rectangle(0, 0, tqnBitmap.Width, tqnBitmap.Height));
 			return tqnBitmap;
-		}
-
-		public void WritePdfs(Dictionary<MissionType, ResultContainer> missions)
-		{
-			var assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
-
-			var pgMax = missions.Count;
-			var filename = string.Format("Reports\rep{0}C.pdf", pgMax);
-			var temppdfs = new List<string>();
-
-			var reportOutputPath = Path.Combine(assemblyPath, "Declaration");
-
-			var pdfTempMR = reportOutputPath + @"Reports\repMR.pdf";
-			var temppath = reportOutputPath + @"Reports\temp0.pdf";
-			temppdfs.Add(temppath);
-
-			WriteOverviewPDF(missions, filename, temppath);
-
-			var i = 1;
-			foreach (var results in missions.Values) {
-				temppath = reportOutputPath + @"Reports\temp" + i + ".pdf";
-				temppdfs.Add(temppath);
-
-				WriteMissionPDF(pdfTempMR, temppath, i, pgMax, results);
-				i++;
-			}
-
-			MergeDocuments(temppdfs, temppath);
-		}
-
-		private void WriteOverviewPDF(Dictionary<MissionType, ResultContainer> missions, string filename,
-			string temppath)
-		{
-			var reader = new PdfReader(filename);
-			var stamper = new PdfStamper(reader, new FileStream(temppath, FileMode.Create));
-
-			var pdfFields = stamper.AcroFields;
-			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
-			pdfFields.SetField("Job", _jobFile);
-			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
-			pdfFields.SetField("Created", _creator);
-			pdfFields.SetField("Config",
-				string.Format("{0:0.0}t {1} {2}", _segment.GrossVehicleWeightMax / 1000, _segment.AxleConfiguration.GetName(),
-					_segment.VehicleCategory));
-			pdfFields.SetField("HDVclass", "HDV Class " + _segment.VehicleClass);
-			pdfFields.SetField("Engine", _engineStr);
-			pdfFields.SetField("EngM", _engineModel);
-			pdfFields.SetField("Gearbox", _gearboxStr);
-			pdfFields.SetField("GbxM", _gearboxModel);
-			pdfFields.SetField("PageNr", "Page 1 of " + missions.Count);
-
-			var i = 1;
-			foreach (var results in missions.Values) {
-				pdfFields.SetField("Mission" + i, results.Mission.MissionType.ToString());
-
-				var m = results.ModData[LoadingType.ReferenceLoad];
-				var dt = m.GetValues<SI>(ModalResultField.simulationInterval);
-				var distance = m.GetValues<SI>(ModalResultField.dist).Max().Value();
-
-				Func<ModalResultField, double> avgWeighted =
-					field => m.GetValues<SI>(field).Zip(dt, (v, t) => v / t).Average().Value();
-
-				pdfFields.SetField("Loading" + i, results.Mission.RefLoad.Value().ToString("0.0") + " t");
-				pdfFields.SetField("Speed" + i, avgWeighted(ModalResultField.v_act).ToString("0.0") + " km/h");
-
-				var fc = avgWeighted(ModalResultField.FCMap) / distance * 1000;
-				// todo: calc FCt, co2, co2t
-				pdfFields.SetField("FC" + i, fc.ToString("0.0"));
-				pdfFields.SetField("FCt" + i, (fc * 1000).ToString("0.0"));
-				pdfFields.SetField("CO2" + i, fc.ToString("0.0"));
-				pdfFields.SetField("CO2t" + i, fc.ToString("0.0"));
-				i++;
-			}
-
-			// Add Images
-			var content = stamper.GetOverContent(1);
-			var img = Image.GetInstance(_chartCO2Missions, BaseColor.WHITE);
-			img.ScaleAbsolute(440, 195);
-			img.SetAbsolutePosition(360, 270);
-			content.AddImage(img);
-
-			img = Image.GetInstance(_chartCO2speed, BaseColor.WHITE);
-			img.ScaleAbsolute(440, 195);
-			img.SetAbsolutePosition(360, 75);
-			content.AddImage(img);
-
-			//todo get image for hdv class
-			var hdvClassImagePath = "";
-			img = Image.GetInstance(hdvClassImagePath);
-			img.ScaleAbsolute(180, 50);
-			img.SetAbsolutePosition(30, 475);
-			content.AddImage(img);
-
-			// flatten the form to remove editting options, set it to false  to leave the form open to subsequent manual edits
-			stamper.FormFlattening = true;
-
-			// close the pdf
-			stamper.Close();
-		}
-
-		private void WriteMissionPDF(string pdfTempMR, string temppath, int i, int pgMax, ResultContainer results)
-		{
-			var reader = new PdfReader(pdfTempMR);
-			var stamper = new PdfStamper(reader, new FileStream(temppath, FileMode.Create));
-
-			var pdfFields = stamper.AcroFields;
-			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
-			pdfFields.SetField("Job", _jobFile);
-			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
-			pdfFields.SetField("Created", _creator);
-			pdfFields.SetField("Config",
-				string.Format("{0:0.0}t {1} {2}", _segment.GrossVehicleWeightMax / 1000, _segment.AxleConfiguration.GetName(),
-					_segment.VehicleCategory));
-			pdfFields.SetField("HDVclass", "HDV Class " + _segment.VehicleClass);
-			pdfFields.SetField("PageNr", "Page " + (i + 1) + " of " + pgMax);
-			pdfFields.SetField("Mission", results.Mission.MissionType.ToString());
-
-
-			foreach (var pair in results.ModData) {
-				var loadingType = pair.Key;
-				var m = pair.Value;
-
-				var loadString = loadingType.GetShortName();
-				pdfFields.SetField("Load" + loadString, results.Mission.Loadings[loadingType].ToString("0.0") + " t");
-
-				var dt = m.GetValues<SI>(ModalResultField.simulationInterval);
-				var distance = m.GetValues<SI>(ModalResultField.dist).Max().Value();
-
-				Func<ModalResultField, double> avgWeighted =
-					field => m.GetValues<SI>(field).Zip(dt, (v, t) => v / t).Average().Value();
-
-				pdfFields.SetField("Speed" + loadString, avgWeighted(ModalResultField.v_act).ToString("0.0"));
-
-				var fc = avgWeighted(ModalResultField.FCMap) / distance * 1000;
-				var co2 = fc;
-
-				var loading = results.Mission.Loadings[loadingType];
-
-				pdfFields.SetField("FCkm" + loadString, fc.ToString("0.0"));
-				pdfFields.SetField("CO2km" + loadString, co2.ToString("0.0"));
-
-				if (loading.IsEqual(0)) {
-					pdfFields.SetField("FCtkm" + loadString, "-");
-					pdfFields.SetField("CO2tkm" + loadString, "-");
-				} else {
-					pdfFields.SetField("FCtkm" + loadString, (fc / loading).Value().ToString("0.0"));
-					pdfFields.SetField("CO2tkm" + loadString, (fc / loading).ToString("0.0"));
-				}
-			}
-
-			var content = stamper.GetOverContent(1);
-
-			//todo hdvClass Image Path
-			var hdvClassImagePath = "";
-
-			var img = Image.GetInstance(hdvClassImagePath);
-			img.ScaleAbsolute(180, 50);
-			img.SetAbsolutePosition(600, 475);
-			content.AddImage(img);
-
-			img = Image.GetInstance(results.ChartCycle, BaseColor.WHITE);
-			img.ScaleAbsolute(780, 156);
-			img.SetAbsolutePosition(17, 270);
-			content.AddImage(img);
-
-			img = Image.GetInstance(results.ChartTqN, BaseColor.WHITE);
-			img.ScaleAbsolute(420, 178);
-			img.SetAbsolutePosition(375, 75);
-			content.AddImage(img);
-
-			// flatten the form to remove editting options, set it to false  to leave the form open to subsequent manual edits
-			stamper.FormFlattening = true;
-
-			// close the pdf
-			stamper.Close();
-		}
-
-
-		private void MergeDocuments(IEnumerable<string> temppdfs, string temppath)
-		{
-			var document = new Document(PageSize.A4.Rotate(), 12, 12, 12, 12);
-			var writer = PdfWriter.GetInstance(document, new FileStream(_outputFilePath, FileMode.Create));
-
-			document.Open();
-
-			foreach (var path in temppdfs) {
-				var importedPage = writer.GetImportedPage(new PdfReader(temppath), 1);
-				document.Add(Image.GetInstance(importedPage));
-				File.Delete(path);
-			}
-
-			document.Close();
 		}
 	}
 }
