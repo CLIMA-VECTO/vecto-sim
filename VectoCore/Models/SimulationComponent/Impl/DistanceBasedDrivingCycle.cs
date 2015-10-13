@@ -246,9 +246,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var retVal = new List<DrivingCycleData.DrivingCycleEntry>();
 
 			var cycleIterator = CycleIntervalIterator.Clone();
+			var velocity = cycleIterator.LeftSample.VehicleTargetSpeed;
 
 			do {
+				if (cycleIterator.RightSample.VehicleTargetSpeed.IsEqual(velocity)) {
+					continue;
+				}
 				retVal.Add(cycleIterator.RightSample);
+				velocity = cycleIterator.RightSample.VehicleTargetSpeed;
 			} while (cycleIterator.MoveNext() && cycleIterator.RightSample.Distance < PreviousState.Distance + lookaheadDistance);
 			return retVal;
 		}
