@@ -84,7 +84,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			var stream = new MemoryStream();
 
-			var reader = new PdfReader(RessourceHelper.ReadStream(RessourceHelper.Namespace + "Report.titlePageTemplate.pdf"));
+			var reader =
+				new PdfReader(
+					RessourceHelper.ReadStream(RessourceHelper.Namespace +
+												string.Format("Report.title{0}CyclesTemplate.pdf", missions.Count)));
 			var stamper = new PdfStamper(reader, stream);
 
 			var pdfFields = stamper.AcroFields;
@@ -93,7 +96,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
 			pdfFields.SetField("Created", _creator);
 			pdfFields.SetField("Config",
-				string.Format("{0:0.0}t {1} {2}", _segment.GrossVehicleWeightMax / 1000, _segment.AxleConfiguration.GetName(),
+				string.Format("{0:0.0}t {1} {2}", _segment.GrossVehicleMassRating / 1000, _segment.AxleConfiguration.GetName(),
 					_segment.VehicleCategory));
 			pdfFields.SetField("HDVclass", "HDV Class " + _segment.VehicleClass);
 			pdfFields.SetField("Engine", _engineStr);
@@ -116,12 +119,17 @@ namespace TUGraz.VectoCore.Models.Declaration
 				pdfFields.SetField("Loading" + i, results.Mission.RefLoad.Value().ToString("0.0") + " t");
 				pdfFields.SetField("Speed" + i, avgWeighted(ModalResultField.v_act).ToString("0.0") + " km/h");
 
-				var fc = avgWeighted(ModalResultField.FCMap) / distance * 1000;
-				// todo: calc FCt, co2, co2t
+				var loading = results.Mission.RefLoad.Value();
+
+				var fc = avgWeighted(ModalResultField.FCMap) / distance * 1000 * 100;
+
+				// todo: calc co2
+				var co2 = fc;
+
 				pdfFields.SetField("FC" + i, fc.ToString("0.0"));
-				pdfFields.SetField("FCt" + i, (fc * 1000).ToString("0.0"));
-				pdfFields.SetField("CO2" + i, fc.ToString("0.0"));
-				pdfFields.SetField("CO2t" + i, fc.ToString("0.0"));
+				pdfFields.SetField("FCt" + i, (fc / loading).ToString("0.0"));
+				pdfFields.SetField("CO2" + i, co2.ToString("0.0"));
+				pdfFields.SetField("CO2t" + i, (co2 / loading).ToString("0.0"));
 				i++;
 			}
 
@@ -145,7 +153,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			img.SetAbsolutePosition(30, 475);
 			content.AddImage(img);
 
-			// flatten the form to remove editting options, set it to false  to leave the form open to subsequent manual edits
 			stamper.FormFlattening = true;
 			stamper.Writer.CloseStream = false;
 			stamper.Close();
@@ -175,8 +182,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private Stream CreateCyclePage(ResultContainer results, int i, int pgMax)
 		{
 			var stream = new MemoryStream();
-			var cyclePages = RessourceHelper.Namespace + string.Format("Report.report{0}CyclesTemplate.pdf", pgMax);
-			var reader = new PdfReader(RessourceHelper.ReadStream(cyclePages));
+
+			var reader = new PdfReader(RessourceHelper.ReadStream(RessourceHelper.Namespace + "Report.cyclePageTemplate.pdf"));
 			var stamper = new PdfStamper(reader, stream);
 
 			var pdfFields = stamper.AcroFields;
@@ -185,7 +192,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
 			pdfFields.SetField("Created", _creator);
 			pdfFields.SetField("Config",
-				string.Format("{0:0.0}t {1} {2}", _segment.GrossVehicleWeightMax / 1000, _segment.AxleConfiguration.GetName(),
+				string.Format("{0:0.0}t {1} {2}", _segment.GrossVehicleMassRating / 1000, _segment.AxleConfiguration.GetName(),
 					_segment.VehicleCategory));
 			pdfFields.SetField("HDVclass", "HDV Class " + _segment.VehicleClass);
 			pdfFields.SetField("PageNr", "Page " + (i + 1) + " of " + pgMax);
@@ -197,7 +204,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var m = pair.Value;
 
 				var loadString = loadingType.GetShortName();
-				pdfFields.SetField("Load" + loadString, results.Mission.Loadings[loadingType].ToString("0.0") + " t");
+				pdfFields.SetField("Load" + loadString, results.Mission.Loadings[loadingType].Value().ToString("0.0") + " t");
 
 				var dt = m.GetValues<SI>(ModalResultField.simulationInterval);
 				var distance = m.GetValues<SI>(ModalResultField.dist).Max().Value();
@@ -207,10 +214,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				pdfFields.SetField("Speed" + loadString, avgWeighted(ModalResultField.v_act).ToString("0.0"));
 
-				var fc = avgWeighted(ModalResultField.FCMap) / distance * 1000;
+				var fc = avgWeighted(ModalResultField.FCMap) / distance * 1000 * 100;
+
+				// todo: calculate co2!!
 				var co2 = fc;
 
-				var loading = results.Mission.Loadings[loadingType];
+				var loading = results.Mission.Loadings[loadingType].Value();
 
 				pdfFields.SetField("FCkm" + loadString, fc.ToString("0.0"));
 				pdfFields.SetField("CO2km" + loadString, co2.ToString("0.0"));
@@ -219,7 +228,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					pdfFields.SetField("FCtkm" + loadString, "-");
 					pdfFields.SetField("CO2tkm" + loadString, "-");
 				} else {
-					pdfFields.SetField("FCtkm" + loadString, (fc / loading).Value().ToString("0.0"));
+					pdfFields.SetField("FCtkm" + loadString, (fc / loading).ToString("0.0"));
 					pdfFields.SetField("CO2tkm" + loadString, (fc / loading).ToString("0.0"));
 				}
 			}
@@ -244,7 +253,6 @@ namespace TUGraz.VectoCore.Models.Declaration
 			img.SetAbsolutePosition(375, 75);
 			content.AddImage(img);
 
-			// flatten the form to remove editting options, set it to false  to leave the form open to subsequent manual edits
 			stamper.FormFlattening = true;
 
 			stamper.Writer.CloseStream = false;
@@ -483,7 +491,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				Position = { X = 0, Y = 0, Width = 70, Height = 100 }
 			});
 
-			var n = flc.FullLoadEntries.Select(x => x.EngineSpeed).ToDouble();
+			var n = flc.FullLoadEntries.Select(x => x.EngineSpeed.ConvertTo().Rounds.Per.Minute).ToDouble();
 			var torqueFull = flc.FullLoadEntries.Select(x => x.TorqueFullLoad).ToDouble();
 			var torqueDrag = flc.FullLoadEntries.Select(x => x.TorqueDrag).ToDouble();
 
@@ -504,7 +512,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			operatingPointsChart.Series.Add(dragLoadCurve);
 
 			var dataPoints = new Series("load points (Ref. load.)") { ChartType = SeriesChartType.Point, Color = Color.Red };
-			dataPoints.Points.DataBindXY(modData.GetValues<SI>(ModalResultField.n).ToDouble(),
+			dataPoints.Points.DataBindXY(
+				modData.GetValues<SI>(ModalResultField.n).Select(x => x.ConvertTo().Rounds.Per.Minute).ToDouble(),
 				modData.GetValues<SI>(ModalResultField.Tq_eng).ToDouble());
 			operatingPointsChart.Series.Add(dataPoints);
 

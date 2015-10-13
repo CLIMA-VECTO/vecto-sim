@@ -41,7 +41,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 				AxleConfiguration = axleConfiguration,
 				VehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass")),
 				AccelerationFile = RessourceHelper.ReadStream(RessourceHelper.Namespace + "VACC." + row.Field<string>(".vaccfile")),
-				Missions = CreateMissions(grossVehicleMassRating, curbWeight, row).ToArray()
+				Missions = CreateMissions(grossVehicleMassRating, curbWeight, row).ToArray(),
+				GrossVehicleMassRating = grossVehicleMassRating
 			};
 
 			return segment;

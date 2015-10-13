@@ -7,10 +7,10 @@
   },
   "Body": {
     "SavedInDeclMode": true,
-    "VehicleFile": "../Components/40t_Long_Haul_Truck.vveh",
-    "EngineFile": "../Components/40t_Long_Haul_Truck.veng",
-    "GearboxFile": "../Components/40t_Long_Haul_Truck.vgbx",
-    "Cycles": [
+    "VehicleFile": "../Components/12t Delivery Truck.vveh",
+    "EngineFile": "../Components/12t Delivery Truck.veng",
+	"GearboxFile": "../Components/12t Delivery Truck.vgbx",  
+	"Cycles": [
       "Long Haul",
       "Regional Delivery"
     ],

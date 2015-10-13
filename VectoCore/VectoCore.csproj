@@ -286,9 +286,9 @@
     <EmbeddedResource Include="Resources\Declaration\VCDV\parameters.csv" />
     <EmbeddedResource Include="Resources\Declaration\WHTC-Weighting-Factors.csv" />
     <EmbeddedResource Include="Resources\Declaration\VAUX\ALT-Tech.csv" />
-    <EmbeddedResource Include="Resources\Declaration\Report\report2CyclesTemplate.pdf" />
-    <EmbeddedResource Include="Resources\Declaration\Report\report3CyclesTemplate.pdf" />
-    <EmbeddedResource Include="Resources\Declaration\Report\titlePageTemplate.pdf" />
+    <EmbeddedResource Include="Resources\Declaration\Report\cyclePageTemplate.pdf" />
+    <EmbeddedResource Include="Resources\Declaration\Report\title2CyclesTemplate.pdf" />
+    <EmbeddedResource Include="Resources\Declaration\Report\title3CyclesTemplate.pdf" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />
