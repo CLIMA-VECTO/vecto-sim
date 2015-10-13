@@ -814,6 +814,22 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\40t_Long_Haul_Truck_Cycle_Accelerate_0_40_downhill_1.vmod");
 		}
 
+		[TestMethod]
+		public void Truck_Accelerate_Decelerate_Downhill_overspeed()
+		{
+			var cycleData = new string[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  60,  0,     0",
+				" 10,  60, -6,     0",
+				"100,  55, -6,     0",
+				"300,  55, -6,     0"
+			};
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_Decelerate-overspeed.vmod", true)
+				.Run();
+		}
+
 		#endregion
 	}
 }
