@@ -87,4 +87,6 @@ namespace TUGraz.VectoCore.Models.Connector.Ports.Impl
 	}
 
 	internal class ResponseGearShift : AbstractResponse {}
+
+	internal class ResponseEngineSpeedTooLow : ResponseDryRun {}
 }

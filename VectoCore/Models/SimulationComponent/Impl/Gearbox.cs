@@ -293,6 +293,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (dryRun) {
+				if (inEngineSpeed < DataBus.EngineIdleSpeed && DataBus.VehicleSpeed < Constants.SimulationSettings.VehicleStopClutchDisengageSpeed) {
+					_disengaged = true;
+					_shiftTime = absTime + dt;
+					_strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
+					Log.Debug("EngineSpeed is below IdleSpeed, Gearbox disengage!");
+					return new ResponseEngineSpeedTooLow() { Source = this, GearboxPowerRequest = outTorque * outAngularVelocity };
+				}
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inEngineSpeed, true);
 				dryRunResponse.GearboxPowerRequest = outTorque * outAngularVelocity;
 				return dryRunResponse;

@@ -148,8 +148,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				});
 
 			if (retVal == null) {
-				// unhandled response (overload, delta > 0) - we need to search for a valid operating point..				
-				var nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration, response);
+				// unhandled response (overload, delta > 0) - we need to search for a valid operating point..	
+
+				OperatingPoint nextOperatingPoint;
+				try {
+					nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration, response);
+				} catch (VectoSimulationException) {
+					// in case of an exception during search the engine-speed got too low - gear disengaged, try roll action.
+					nextOperatingPoint = SearchOperatingPoint(absTime, ds, gradient, operatingPoint.Acceleration, response);
+				}
 
 				var limitedOperatingPoint = LimitAccelerationByDriverModel(nextOperatingPoint,
 					LimitationMode.LimitDecelerationDriver);
@@ -255,9 +262,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			//	return response;
 			//}
 
-			operatingPoint = SearchOperatingPoint(absTime, operatingPoint.SimulationDistance, gradient,
-				operatingPoint.Acceleration, response, coasting: true);
-
+			try {
+				operatingPoint = SearchOperatingPoint(absTime, operatingPoint.SimulationDistance, gradient,
+					operatingPoint.Acceleration, response, coasting: true);
+			} catch (VectoSimulationException) {
+				// in case of an exception during search the engine-speed got too low - gear disengaged, try roll action.
+				operatingPoint = SearchOperatingPoint(absTime, operatingPoint.SimulationDistance, gradient,
+					operatingPoint.Acceleration, response, coasting: true);
+			}
 			if (!ds.IsEqual(operatingPoint.SimulationDistance)) {
 				// vehicle is at low speed, coasting would lead to stop before ds is reached.
 				Log.Debug("SearchOperatingPoint reduced the max. distance: {0} -> {1}. Issue new request from driving cycle!",
@@ -488,7 +500,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				var response =
 					(ResponseDryRun)
 						NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
-				var delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest;	
+				var delta = DataBus.ClutchClosed(absTime) ? response.DeltaDragLoad : response.GearboxPowerRequest;
 
 				if (delta.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 					LogManager.EnableLogging();
@@ -516,7 +528,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Warn("Exceeded max iterations when searching for operating point!");
 			Log.Warn("exceeded: {0} ... {1}", ", ".Join(debug.Take(5)), ", ".Join(debug.Slice(-6)));
 			Log.Error("Failed to find operating point for breaking!");
-			throw new VectoSimulationException("Failed to find operating point for breaking!exceeded: {0} ... {1}",
+			throw new VectoSearchFailedException("Failed to find operating point for breaking!exceeded: {0} ... {1}",
 				", ".Join(debug.Take(5)), ", ".Join(debug.Slice(-6)));
 		}
 
@@ -607,6 +619,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					(ResponseDryRun)NextComponent.Request(absTime, retVal.SimulationInterval, retVal.Acceleration, gradient, true);
 				delta = actionRoll ? response.GearboxPowerRequest : (coasting ? response.DeltaDragLoad : response.DeltaFullLoad);
 
+				if (response is ResponseEngineSpeedTooLow) {
+					LogManager.EnableLogging();
+					Log.Debug("Got EngineSpeedTooLow during SearchOperatingPoint. Aborting!");
+					throw new VectoSimulationException("EngineSpeed too low during search.");
+				}
+
 				if (delta.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
 					LogManager.EnableLogging();
 					Log.Debug("found operating point in {0} iterations. Engine Power req: {2}, Gearbox Power req: {3} delta: {1}",
@@ -622,7 +640,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			Log.Warn("exceeded: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.delta)),
 				", ".Join(debug.Slice(-6).Select(x => x.delta)));
 			Log.Error("Failed to find operating point! absTime: {0}", absTime);
-			throw new VectoSimulationException("Failed to find operating point!  exceeded: {0} ... {1}",
+			throw new VectoSearchFailedException("Failed to find operating point!  exceeded: {0} ... {1}",
 				", ".Join(debug.Take(5).Select(x => x.delta)),
 				", ".Join(debug.Slice(-6).Select(x => x.delta)));
 		}
