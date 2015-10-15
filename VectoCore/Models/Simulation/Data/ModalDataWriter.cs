@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -9,12 +10,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	public class ModalDataWriter : IModalDataWriter
 	{
 		private readonly SimulatorFactory.FactoryMode _mode;
+		private readonly Action<ModalDataWriter> _addReportResult;
 		private ModalResults Data { get; set; }
 		private DataRow CurrentRow { get; set; }
 		private string ModFileName { get; set; }
 
+		public ModalDataWriter(string modFileName,
+			SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode) : this(modFileName, _ => {}, mode) {}
 
-		public ModalDataWriter(string modFileName, SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode)
+		public ModalDataWriter(string modFileName, Action<ModalDataWriter> addReportResult,
+			SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode)
 		{
 			HasTorqueConverter = false;
 			ModFileName = modFileName;
@@ -22,6 +27,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			Auxiliaries = new Dictionary<string, DataColumn>();
 			CurrentRow = Data.NewRow();
 			_mode = mode;
+			_addReportResult = addReportResult;
 		}
 
 		public bool HasTorqueConverter { get; set; }
@@ -92,6 +98,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			if (_mode != SimulatorFactory.FactoryMode.DeclarationMode) {
 				VectoCSVFile.Write(ModFileName, new DataView(Data).ToTable(false, strCols.ToArray()));
+			}
+
+			if (_mode == SimulatorFactory.FactoryMode.DeclarationMode) {
+				_addReportResult(this);
 			}
 		}
 

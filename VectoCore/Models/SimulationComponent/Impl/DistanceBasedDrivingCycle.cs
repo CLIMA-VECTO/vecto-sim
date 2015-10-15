@@ -130,6 +130,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			CurrentState.AbsTime = PreviousState.AbsTime + dt;
 			CurrentState.WaitTime = PreviousState.WaitTime + dt;
 			CurrentState.Gradient = ComputeGradient();
+			CurrentState.VehicleTargetSpeed = CycleIntervalIterator.LeftSample.VehicleTargetSpeed;
 
 			return NextComponent.Request(absTime, dt, CycleIntervalIterator.LeftSample.VehicleTargetSpeed, CurrentState.Gradient);
 		}
@@ -219,6 +220,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			writer[ModalResultField.dist] = CurrentState.Distance;
 			writer[ModalResultField.v_targ] = CurrentState.VehicleTargetSpeed;
 			writer[ModalResultField.grad] = (Math.Tan(CurrentState.Gradient.Value()) * 100).SI<Scalar>();
+			writer[ModalResultField.altitude] = CurrentState.Altitude;
 		}
 
 		protected override void DoCommitSimulationStep()

@@ -71,6 +71,7 @@
     <Compile Include="Integration\FullCycleDeclarationTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Integration\DeclarationReportTest.cs" />
     <Compile Include="Utils\GraphWriter.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
     <Compile Include="Integration\SimpleDrivingCycles.cs" />
@@ -378,6 +379,9 @@
     <None Include="TestData\Integration\FullPowerTrain\unlimited.vacc">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Jobs\job-report.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\job.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -538,6 +542,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Dummy\" />
+    <Folder Include="Integration\FullPowertrain\" />
     <Folder Include="Models\DeclarationData\" />
   </ItemGroup>
   <Choose>

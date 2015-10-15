@@ -4,6 +4,8 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -107,6 +109,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			_table.Rows.Add(row);
 		}
 
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		private void WriteAuxiliaries(IModalDataWriter data, DataRow row)
 		{
 			_auxColumns = _auxColumns.Union(data.Auxiliaries.Select(kv => "Eaux_" + kv.Key + " [kWh]")).ToList();
@@ -114,10 +117,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			var sum = 0.SI<Watt>();
 			foreach (var aux in data.Auxiliaries) {
 				var colName = "Eaux_" + aux.Key + " [kWh]";
-				try {
+				if (!_table.Columns.Contains(colName)) {
 					_table.Columns.Add(colName, typeof(SI));
-				} catch (DuplicateNameException) {}
-
+				}
 
 				var currentSum = data.Sum(aux.Value);
 				row[colName] = currentSum;
@@ -167,9 +169,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				row[EACC] = paeng ?? 0.SI() + pagb ?? 0.SI();
 			}
 
-			//todo altitude - calculate when reading the cycle file, add column for altitude
-			//row["∆altitude [m]"] = Data.Rows[Data.Rows.Count - 1].Field<double>("altitude") -
-			//						Data.Rows[0].Field<double>("altitude");
+			row[ALTITUDE] = data.GetValues<SI>(ModalResultField.altitude).Last() -
+							data.GetValues<SI>(ModalResultField.altitude).First();
 
 			WriteAuxiliaries(data, row);
 

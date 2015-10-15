@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
@@ -458,6 +459,7 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="val">The value of the SI object.</param>
 		[DebuggerHidden]
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public static T Create(double val)
 		{
 			if (!Constructors.ContainsKey(typeof(T))) {

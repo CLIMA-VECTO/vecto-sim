@@ -8,13 +8,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class Segments : LookupData<VehicleCategory, AxleConfiguration, Kilogram, Kilogram, Segment>
 	{
-		private const string ResourceNamespace = "TUGraz.VectoCore.Resources.Declaration.";
-
 		public Segments()
 		{
-			ParseData(ReadCsvResource(ResourceNamespace + "SegmentTable.csv"));
+			ParseData(ReadCsvResource(RessourceHelper.Namespace + "SegmentTable.csv"));
 		}
-
 
 		protected override void ParseData(DataTable table)
 		{
@@ -43,8 +40,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 				VehicleCategory = vehicleCategory,
 				AxleConfiguration = axleConfiguration,
 				VehicleClass = VehicleClassHelper.Parse(row.Field<string>("hdvclass")),
-				AccelerationFile = RessourceHelper.ReadStream(ResourceNamespace + "VACC." + row.Field<string>(".vaccfile")),
-				Missions = CreateMissions(grossVehicleMassRating, curbWeight, row).ToArray()
+				AccelerationFile = RessourceHelper.ReadStream(RessourceHelper.Namespace + "VACC." + row.Field<string>(".vaccfile")),
+				Missions = CreateMissions(grossVehicleMassRating, curbWeight, row).ToArray(),
+				GrossVehicleMassRating = grossVehicleMassRating
 			};
 
 			return segment;
@@ -76,7 +74,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					MissionType = missionType,
 					CrossWindCorrection = row.Field<string>(vcdvField),
 					MassExtra = row.ParseDouble("massextra-" + missionType.ToString().ToLower()).SI<Kilogram>(),
-					CycleFile = RessourceHelper.ReadStream(ResourceNamespace + "MissionCycles." + missionType + ".vdri"),
+					CycleFile = RessourceHelper.ReadStream(RessourceHelper.Namespace + "MissionCycles." + missionType + ".vdri"),
 					AxleWeightDistribution = row.Field<string>(axleField).Split('/').ToDouble().Select(x => x / 100.0).ToArray(),
 					UseCdA2 = trailerOnlyInLongHaul && missionType != MissionType.LongHaul,
 				};

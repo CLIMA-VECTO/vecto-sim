@@ -480,7 +480,7 @@ Public Class F_MAINForm
 		ModeUpdate()
 
 		'License check
-		If Not Lic.LICcheck() Then
+		If False And Not Lic.LICcheck() Then
 			MsgBox("License File invalid!" & vbCrLf & vbCrLf & Lic.FailMsg)
 			If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
 				MsgBox("Activation File created.")
