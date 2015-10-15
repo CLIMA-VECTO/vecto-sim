@@ -305,7 +305,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Case<ResponseSuccess>().
 				Case<ResponseUnderload>(). // driver limits acceleration, operating point may be below engine's 
 				//drag load resp. below 0
-				//Case<ResponseOverload>(). // driver limits acceleration, operating point may be above 0 (GBX), use brakes
+				Case<ResponseOverload>(). // driver limits acceleration, operating point may be above 0 (GBX), use brakes
 				Case<ResponseGearShift>().
 				Case<ResponseFailTimeInterval>(r => {
 					retVal = new ResponseDrivingCycleDistanceExceeded() {
@@ -769,10 +769,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionHalt(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed.IsEqual(0)) {
+			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed.IsEqual(0, 1e-3)) {
 				throw new NotImplementedException("TargetVelocity or VehicleVelocity is not zero!");
 			}
-			DataBus.BreakPower = double.PositiveInfinity.SI<Watt>();
+			DataBus.BreakPower = Double.PositiveInfinity.SI<Watt>();
 			var retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
 			retVal.Switch().
 				Case<ResponseGearShift>(r => {
