@@ -36,15 +36,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void Run()
 		{
 			Log.Info("VectoJob started running.");
-			IResponse response;
 
 			Initialize();
 			try {
+				IResponse response;
 				do {
 					response = DoSimulationStep();
 					if (response is ResponseSuccess) {
 						Container.CommitSimulationStep(AbsTime, dt);
-
 						AbsTime += dt;
 					}
 				} while (response is ResponseSuccess);
