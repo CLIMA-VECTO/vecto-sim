@@ -200,6 +200,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				CycleIntervalIterator.LeftSample.RoadGradient);
 		}
 
+		public Meter CycleStartDistance
+		{
+			get { return Data.Entries.Count > 0 ? Data.Entries.First().Distance : 0.SI<Meter>(); }
+		}
+
 		#endregion
 
 		protected IResponse ProcessResponse(IResponse response)

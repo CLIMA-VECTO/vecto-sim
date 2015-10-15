@@ -6,6 +6,8 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
 	public interface IRoadLookAhead
 	{
+		Meter CycleStartDistance { get; }
+
 		IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance);
 
 		IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Second time);

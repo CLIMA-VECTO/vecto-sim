@@ -47,6 +47,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 			_right.MoveNext();
 		}
 
+		public Meter CycleStartDistance
+		{
+			get { return _left.Current.Distance; }
+		}
+
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)
 		{
 			return new List<DrivingCycleData.DrivingCycleEntry>();

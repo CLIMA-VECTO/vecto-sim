@@ -827,6 +827,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			LimitDecelerationLookahead = 0x4
 		}
 
+		public DrivingBehavior DriverBehavior
+		{
+			get { return DriverStrategy.DriverBehavior; }
+		}
+
 		public bool VehicleStopped { get; protected set; }
+
+		public DrivingBehavior DrivingBehavior
+		{
+			get { return DriverStrategy.DriverBehavior; }
+		}
 	}
 }
