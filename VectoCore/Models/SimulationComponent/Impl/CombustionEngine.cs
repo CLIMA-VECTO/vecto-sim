@@ -45,7 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		internal EngineState PreviousState = new EngineState();
 
-		protected readonly CombustionEngineData Data;
+		protected internal readonly CombustionEngineData Data;
 
 		public CombustionEngine(IVehicleContainer cockpit, CombustionEngineData data)
 			: base(cockpit)
@@ -508,10 +508,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				nextAngularSpeed = prevEngineSpeed + deltaAngularSpeed;
 				if (nextAngularSpeed < Engine.Data.IdleSpeed) {
-					// search for EnginePower such that nextAngularSpeed == Engine.Data.IdleSpeed
-					var tmp = RequestPort.Request(absTime, dt, torque, Engine.Data.IdleSpeed);
-					return tmp;
-					//throw new NotImplementedException("Search for PE s.t. n2 = n_idle");
+					nextAngularSpeed = Engine.Data.IdleSpeed;
 				}
 
 				retVal = RequestPort.Request(absTime, dt, torque, nextAngularSpeed);
