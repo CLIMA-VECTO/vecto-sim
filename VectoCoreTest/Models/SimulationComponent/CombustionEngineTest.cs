@@ -391,6 +391,66 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			//dataWriter.Finish();
 		}
 
+		[TestMethod]
+		public void EngineIdleControllerTest2Truck()
+		{
+			VehicleContainer container;
+			CombustionEngine engine;
+			ITnOutPort requestPort;
+			VehicleContainer(TruckEngine, out container, out engine, out requestPort);
+
+			//var dataWriter = new ModalDataWriter("EngienIdle.vmod");
+			//container.DataWriter = dataWriter;
+
+			var absTime = 0.SI<Second>();
+			var dt = Constants.SimulationSettings.TargetTimeInterval;
+
+			var angularVelocity = 95.5596.SI<PerSecond>();
+			var torque = (engine.Data.FullLoadCurve.DragLoadStationaryPower(angularVelocity) - 5000.SI<Watt>()) / angularVelocity;
+
+			var response = requestPort.Initialize(torque, angularVelocity);
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+			response = requestPort.Request(absTime, dt, torque, angularVelocity);
+			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+			Assert.AreEqual(-14829.79713, response.EnginePowerRequest.Value(), Tolerance);
+			container.CommitSimulationStep(absTime, dt);
+			absTime += dt;
+
+			var engineSpeed = new PerSecond[] {
+				1680.RPMtoRad(), 1680.RPMtoRad(), 1467.014.RPMtoRad(), 1272.8658.RPMtoRad(), 1090.989.RPMtoRad(),
+				915.3533.RPMtoRad(), 738.599.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(),
+				560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(), 560.RPMtoRad(),
+				560.RPMtoRad()
+			};
+			var enginePower = new Watt[] {
+				5000.SI<Watt>(), 5000.SI<Watt>(), -32832.8834.SI<Watt>(), -25025.1308.SI<Watt>(), -19267.0360.SI<Watt>(),
+				-14890.1962.SI<Watt>(), -11500.7991.SI<Watt>(), -8091.0577.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(),
+				5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(),
+				5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>(), 5000.SI<Watt>()
+			};
+
+			var engSpeedResults = new List<dynamic>();
+			torque = 0.SI<NewtonMeter>();
+			for (var i = 0; i < engineSpeed.Count(); i++) {
+				response = requestPort.Request(absTime, dt, torque, null);
+				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
+
+				container.CommitSimulationStep(absTime, dt);
+
+				engSpeedResults.Add(new {
+					absTime,
+					engine.PreviousState.EngineSpeed,
+					engine.PreviousState.EnginePower
+				});
+				//Assert.AreEqual(engineSpeed[i].Value(), engine.PreviousState.EngineSpeed.Value(), Tolerance);
+				//Assert.AreEqual(enginePower[i].Value(), engine.PreviousState.EnginePower.Value(), Tolerance);
+
+				absTime += dt;
+			}
+			//dataWriter.Finish();
+		}
+
 		[TestMethod, Ignore]
 		public void TestWriteToFile()
 		{
