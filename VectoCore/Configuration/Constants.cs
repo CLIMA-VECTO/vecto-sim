@@ -87,6 +87,8 @@ namespace TUGraz.VectoCore.Configuration
 
 			public const int EngineSearchLoopThreshold = 100;
 
+			public const int MaximumIterationCountForSimulationStep = 30;
+
 			public static readonly MeterPerSecond VehicleStopClutchDisengageSpeed = 10.KMPHtoMeterPerSecond();
 		}
 	}
