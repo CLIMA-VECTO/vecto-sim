@@ -66,6 +66,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			if (angularVelocity == null) {
 				//var retval = NextComponent.Request(absTime, dt, torque, null, dryRun);
+				Log.Debug("Invoking IdleController...");
 				var retval = IdleController.Request(absTime, dt, torque, null, dryRun);
 				retval.ClutchPowerRequest = 0.SI<Watt>();
 				return retval;
