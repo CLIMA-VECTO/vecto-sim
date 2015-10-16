@@ -211,6 +211,22 @@ namespace TUGraz.VectoCore.Utils
 	}
 
 	/// <summary>
+	/// SI Class for Kilogram per Second [kg].
+	/// </summary>
+	public class KilogramPerSecond : SIBase<KilogramPerSecond>
+	{
+		[JsonConstructor, DebuggerHidden]
+		protected KilogramPerSecond(double val) : base(new SI(val).Kilo.Gramm.Per.Second) {}
+
+		[DebuggerHidden]
+		public static Kilogram operator *(KilogramPerSecond kilogramPerSecond, Second Second)
+		{
+			return ((kilogramPerSecond as SI) * Second).Cast<Kilogram>();
+		}
+	}
+
+
+	/// <summary>
 	/// SI Class for Ton [t] (automatically converts to [kg])
 	/// </summary>
 	public class Ton : SIBase<Ton>

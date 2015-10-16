@@ -39,9 +39,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return text.Replace(Prefix, "").Parse<VehicleClass>();
 		}
 
-		public static string ToString(VehicleClass hdvClass)
+		public static string GetClassNumber(this VehicleClass hdvClass)
 		{
-			return Prefix + hdvClass;
+			return hdvClass.ToString().Substring(Prefix.Length);
 		}
 	}
 }

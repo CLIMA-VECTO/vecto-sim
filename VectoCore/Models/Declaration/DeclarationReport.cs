@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private void WriteReport()
 		{
 			var titlePage = CreateTitlePage(_missions);
-			var cyclePages = _missions.Select((m, i) => CreateCyclePage(m.Value, i, _missions.Count));
+			var cyclePages = _missions.Select((m, i) => CreateCyclePage(m.Value, i + 2, _missions.Count + 1));
 
 			MergeDocuments(titlePage, cyclePages, Path.Combine(_basePath, _jobFile + ".pdf"));
 		}
@@ -84,10 +84,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		{
 			var stream = new MemoryStream();
 
-			var reader =
-				new PdfReader(
-					RessourceHelper.ReadStream(RessourceHelper.Namespace +
-												string.Format("Report.title{0}CyclesTemplate.pdf", missions.Count)));
+			var resourceName = string.Format("{0}Report.title{1}CyclesTemplate.pdf", RessourceHelper.Namespace, missions.Count);
+			var inputStream = RessourceHelper.ReadStream(resourceName);
+
+			var reader = new PdfReader(inputStream);
+
 			var stamper = new PdfStamper(reader, stream);
 
 			var pdfFields = stamper.AcroFields;
@@ -96,32 +97,42 @@ namespace TUGraz.VectoCore.Models.Declaration
 			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
 			pdfFields.SetField("Created", _creator);
 			pdfFields.SetField("Config",
-				string.Format("{0:0.0}t {1} {2}", _segment.GrossVehicleMassRating / 1000, _segment.AxleConfiguration.GetName(),
+				string.Format(CultureInfo.InvariantCulture, "{0:0.0}t {1} {2}",
+					_segment.GrossVehicleMassRating.ConvertTo().Ton.Value(),
+					_segment.AxleConfiguration.GetName(),
 					_segment.VehicleCategory));
-			pdfFields.SetField("HDVclass", "HDV Class " + _segment.VehicleClass);
+			pdfFields.SetField("HDVclass", "HDV Class " + _segment.VehicleClass.GetClassNumber());
 			pdfFields.SetField("Engine", _engineStr);
 			pdfFields.SetField("EngM", _engineModel);
 			pdfFields.SetField("Gearbox", _gearboxStr);
 			pdfFields.SetField("GbxM", _gearboxModel);
-			pdfFields.SetField("PageNr", "Page 1 of " + missions.Count);
+			pdfFields.SetField("PageNr", string.Format("Page {0} of {1}", 1, missions.Count + 1));
 
 			var i = 1;
-			foreach (var results in missions.Values) {
+			foreach (var results in missions.Values.OrderBy(m => m.Mission.MissionType)) {
 				pdfFields.SetField("Mission" + i, results.Mission.MissionType.ToString());
 
 				var m = results.ModData[LoadingType.ReferenceLoad];
-				var dt = m.GetValues<SI>(ModalResultField.simulationInterval);
-				var distance = m.GetValues<SI>(ModalResultField.dist).Max().Value();
+				var dt = m.GetValues<Second>(ModalResultField.simulationInterval);
+				var maxDistance = m.GetValues<Meter>(ModalResultField.dist).Max();
+				var maxTime = m.GetValues<Second>(ModalResultField.time).Max();
 
-				Func<ModalResultField, double> avgWeighted =
-					field => m.GetValues<SI>(field).Zip(dt, (v, t) => v / t).Average().Value();
+				var avgSpeed = maxDistance / maxTime;
 
 				pdfFields.SetField("Loading" + i, results.Mission.RefLoad.Value().ToString("0.0") + " t");
-				pdfFields.SetField("Speed" + i, avgWeighted(ModalResultField.v_act).ToString("0.0") + " km/h");
+				pdfFields.SetField("Speed" + i,
+					string.Format(CultureInfo.InvariantCulture, "{0:0.0} km/h", avgSpeed.ConvertTo().Kilo.Meter.Per.Hour));
 
 				var loading = results.Mission.RefLoad.Value();
 
-				var fc = avgWeighted(ModalResultField.FCMap) / distance * 1000 * 100;
+				var fc = m.GetValues<KilogramPerSecond>(ModalResultField.FCMap);
+				var fcSum = fc.Zip(dt, (fcVal, dtVal) => fcVal * dtVal).Sum();
+
+				var fcPerM = fcSum / maxDistance;
+
+
+				//var co2 = fcPerM.ConvertTo().Gramm * Physics.CO2PerFuelGram;
+
 
 				// todo: calc co2
 				var co2 = fc;
@@ -160,26 +171,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return stream;
 		}
 
-		private static string GetHDVClassImageName(Segment segment, MissionType missionType)
-		{
-			switch (segment.VehicleClass) {
-				case VehicleClass.Class1:
-				case VehicleClass.Class2:
-				case VehicleClass.Class3:
-					return "4x2r.png";
-				case VehicleClass.Class4:
-					return missionType == MissionType.LongHaul ? "4x2rt.png" : "4x2r.png";
-				case VehicleClass.Class5:
-					return "4x2tt.png";
-				case VehicleClass.Class9:
-					return missionType == MissionType.LongHaul ? "6x2rt.png" : "6x2r.png";
-				case VehicleClass.Class10:
-					return "6x2tt.png";
-			}
-			return "Undef.png";
-		}
 
-		private Stream CreateCyclePage(ResultContainer results, int i, int pgMax)
+		private Stream CreateCyclePage(ResultContainer results, int currentPageNr, int pageCount)
 		{
 			var stream = new MemoryStream();
 
@@ -195,7 +188,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				string.Format("{0:0.0}t {1} {2}", _segment.GrossVehicleMassRating / 1000, _segment.AxleConfiguration.GetName(),
 					_segment.VehicleCategory));
 			pdfFields.SetField("HDVclass", "HDV Class " + _segment.VehicleClass);
-			pdfFields.SetField("PageNr", "Page " + (i + 1) + " of " + pgMax);
+			pdfFields.SetField("PageNr", string.Format("Page {0} of {1}", currentPageNr, pageCount));
 			pdfFields.SetField("Mission", results.Mission.MissionType.ToString());
 
 
@@ -303,21 +296,28 @@ namespace TUGraz.VectoCore.Models.Declaration
 				BorderWidth = 3
 			});
 
+			foreach (var missionResult in missions.OrderBy(m => m.Key)) {
+				var modData = missionResult.Value.ModData[LoadingType.ReferenceLoad];
+				var fc = modData.GetValues<KilogramPerSecond>(ModalResultField.FCMap);
+				var dt = modData.GetValues<Second>(ModalResultField.simulationInterval);
 
-			foreach (var missionResult in missions) {
-				var series = new Series(missionResult.Key + " (Ref. load.)");
-				var co2sum = missionResult.Value.ModData[LoadingType.ReferenceLoad].GetValues<SI>(ModalResultField.FCMap).Sum();
+				var fcSum = fc.Zip(dt, (fcValue, dtValue) => fcValue * dtValue).Sum();
 
-				var maxDistance = missionResult.Value.ModData[LoadingType.ReferenceLoad].GetValues<SI>(ModalResultField.dist).Max();
+				var maxDistance = modData.GetValues<Meter>(ModalResultField.dist).Max();
 				var loading = missionResult.Value.Mission.Loadings[LoadingType.ReferenceLoad];
-				var co2pertkm = co2sum / maxDistance / loading * 1000;
 
-				series.Points.AddXY(missionResult.Key.ToString(), co2pertkm.Value());
+				var co2gPerTKM = fcSum.ConvertTo().Gramm * Physics.CO2PerFuelGram /
+								(loading.ConvertTo().Ton * maxDistance.ConvertTo().Kilo.Meter);
 
-				series.Points[0].Label = series.Points[0].YValues[0].ToString("0.0") + " [g/tkm]";
-				series.Points[0].Font = new Font("Helvetica", 20);
-				series.Points[0].LabelBackColor = Color.White;
-
+				var series = new Series(missionResult.Key + " (Ref. load.)");
+				var dataPoint = new DataPoint {
+					Name = missionResult.Key.ToString(),
+					YValues = new[] { co2gPerTKM.Value() },
+					Label = string.Format(co2gPerTKM.ToOutputFormat(1, showUnit: true)),
+					Font = new Font("Helvetica", 20),
+					LabelBackColor = Color.White
+				};
+				series.Points.Add(dataPoint);
 				co2Chart.Series.Add(series);
 			}
 
@@ -344,7 +344,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 					TitleFont = new Font("Helvetica", 20),
 					LabelStyle = { Font = new Font("Helvetica", 20) },
 					LabelAutoFitStyle = LabelAutoFitStyles.None,
-					Minimum = 20.0,
+					Minimum = 0,
+					Maximum = 80
 				},
 				AxisY = {
 					Title = "CO2 [g/km]",
@@ -355,22 +356,29 @@ namespace TUGraz.VectoCore.Models.Declaration
 			});
 
 			foreach (var missionResult in missions) {
-				var series = new Series { MarkerSize = 15, MarkerStyle = MarkerStyle.Circle, ChartType = SeriesChartType.Point };
+				var series = new Series {
+					MarkerSize = 15,
+					MarkerStyle = MarkerStyle.Circle,
+					ChartType = SeriesChartType.Point
+				};
 				foreach (var pair in missionResult.Value.ModData) {
-					var dt = pair.Value.GetValues<SI>(ModalResultField.simulationInterval).ToDouble();
-					var speed = pair.Value.GetValues<SI>(ModalResultField.v_act).ToDouble();
-					var distance = pair.Value.GetValues<SI>(ModalResultField.dist).Max().Value();
+					var modData = missionResult.Value.ModData[pair.Key];
+					var fc = modData.GetValues<KilogramPerSecond>(ModalResultField.FCMap);
+					var dt = modData.GetValues<Second>(ModalResultField.simulationInterval).ToList();
 
-					//todo get co2 value
-					var co2 = pair.Value.GetValues<SI>(ModalResultField.FCMap).ToDouble();
+					var fcSum = fc.Zip(dt, (fcValue, dtValue) => fcValue * dtValue).Sum();
 
-					var avgSpeed = speed.Zip(dt, (v, t) => v / t).Average();
-					var avgCO2km = co2.Zip(dt, (co, t) => co / t).Average() / distance * 1000;
 
-					var loading = missionResult.Value.Mission.Loadings[pair.Key];
+					var maxDistance = modData.GetValues<Meter>(ModalResultField.dist).Max();
+					var maxTime = modData.GetValues<Second>(ModalResultField.time).Max();
 
-					var point = new DataPoint(avgSpeed, avgCO2km) {
-						Label = loading.Value().ToString("0.0") + " t",
+					var avgKMH = maxDistance.ConvertTo().Kilo.Meter / maxTime.ConvertTo().Hour;
+					var co2gPerKM = fcSum.ConvertTo().Gramm * Physics.CO2PerFuelGram / maxDistance.ConvertTo().Kilo.Meter;
+
+					var loading = missionResult.Value.Mission.Loadings[pair.Key].ConvertTo().Ton;
+
+					var point = new DataPoint(avgKMH.Value(), co2gPerKM.Value()) {
+						Label = string.Format(CultureInfo.InvariantCulture, "{0:0.0} t", loading.Value()),
 						Font = new Font("Helvetica", 16),
 						LabelBackColor = Color.White
 					};
@@ -522,6 +530,25 @@ namespace TUGraz.VectoCore.Models.Declaration
 			var tqnBitmap = new Bitmap(operatingPointsChart.Width, operatingPointsChart.Height, PixelFormat.Format32bppArgb);
 			operatingPointsChart.DrawToBitmap(tqnBitmap, new Rectangle(0, 0, tqnBitmap.Width, tqnBitmap.Height));
 			return tqnBitmap;
+		}
+
+		private static string GetHDVClassImageName(Segment segment, MissionType missionType)
+		{
+			switch (segment.VehicleClass) {
+				case VehicleClass.Class1:
+				case VehicleClass.Class2:
+				case VehicleClass.Class3:
+					return "4x2r.png";
+				case VehicleClass.Class4:
+					return missionType == MissionType.LongHaul ? "4x2rt.png" : "4x2r.png";
+				case VehicleClass.Class5:
+					return "4x2tt.png";
+				case VehicleClass.Class9:
+					return missionType == MissionType.LongHaul ? "6x2rt.png" : "6x2r.png";
+				case VehicleClass.Class10:
+					return "6x2tt.png";
+			}
+			return "Undef.png";
 		}
 	}
 }

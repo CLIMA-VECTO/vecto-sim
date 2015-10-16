@@ -9,5 +9,6 @@
 		public static readonly double RollResistanceExponent = 0.9;
 
 		public static readonly MeterPerSecond BaseWindSpeed = 3.SI<MeterPerSecond>();
+		public static readonly double CO2PerFuelGram = 3.16;
 	}
 }

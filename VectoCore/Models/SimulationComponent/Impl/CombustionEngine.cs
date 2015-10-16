@@ -216,7 +216,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} catch (VectoException ex) {
 				Log.Warn("t: {0} - {1} n: {2} Tq: {3}", CurrentState.AbsTime, ex.Message, CurrentState.EngineSpeed,
 					CurrentState.EngineTorque);
-				writer[ModalResultField.FCMap] = double.NaN.SI();
+				writer[ModalResultField.FCMap] = double.NaN.SI<KilogramPerSecond>();
 			}
 		}
 

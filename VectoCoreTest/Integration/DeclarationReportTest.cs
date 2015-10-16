@@ -8,7 +8,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 	public class DeclarationReportTest
 	{
 		[TestMethod]
-		public void RunDeclarationMode()
+		public void DeclarationReport_Test()
 		{
 			var sumWriter = new SummaryFileWriter(@"job-report.vsum");
 			var jobContainer = new JobContainer(sumWriter);
