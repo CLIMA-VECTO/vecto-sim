@@ -393,8 +393,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			Log.Debug("Found operating point for breaking. dt: {0}, acceleration: {1}", operatingPoint.SimulationInterval,
-				operatingPoint.Acceleration);
+			Log.Debug("Found operating point for breaking. dt: {0}, acceleration: {1} brakingPower: {2}",
+				operatingPoint.SimulationInterval,
+				operatingPoint.Acceleration, DataBus.BreakPower);
+			if (DataBus.BreakPower < 0) {
+				DataBus.BreakPower = 0.SI<Watt>();
+				return new ResponseOverload { Source = this };
+			}
 
 			retVal = NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient);
 
