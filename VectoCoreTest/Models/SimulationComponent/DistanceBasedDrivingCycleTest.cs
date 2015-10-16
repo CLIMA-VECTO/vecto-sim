@@ -29,6 +29,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				"  1,  20, -0.1,   0",
 				"  2,  20, -0.3,   0",
 				" 10,  40, -0.3,   0",
+				" 19,  40, -0.2,   0",
 				" 20,  30, -0.1,   0"
 			};
 			var cycleData = SimpleDrivingCycles.CreateCycleData(data);
