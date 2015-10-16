@@ -9,7 +9,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class DistanceRun : VectoRun
 	{
-		public DistanceRun(IVehicleContainer container) : base(container) {}
+		public string Name { get; protected set; }
+
+		public DistanceRun(string name, IVehicleContainer container) : base(container)
+		{
+			Name = name;
+		}
 
 		protected override IResponse DoSimulationStep()
 		{
@@ -48,6 +53,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected override IResponse Initialize()
 		{
+			Log.Info("Starting {0}", Name);
 			return CyclePort.Initialize();
 		}
 	}
