@@ -119,7 +119,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				default:
 					return retVal;
 			}
-			if (ds.IsEqual(newds, 1e-3.SI<Meter>())) {
+			if (newds.IsEqual(0, 1e-3) || ds.IsEqual(newds, 1e-3.SI<Meter>())) {
 				return retVal;
 			}
 			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance to {1}", nextAction.ActionDistance, newds);
