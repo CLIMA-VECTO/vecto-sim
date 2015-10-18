@@ -713,8 +713,8 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			var data = new string[] {
 				// <s>,<v>,<grad>,<stop>
 				"  0,  49.9, -5,     0",
-				"100,  52, -5,     0",
-				"200,   0, -5,     2",
+				"200,  52, -5,     0",
+				"300,   0, -5,     2",
 			};
 
 			var cycle = SimpleDrivingCycles.CreateCycleData(data);
