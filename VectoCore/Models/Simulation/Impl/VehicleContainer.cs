@@ -267,7 +267,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public Meter CycleStartDistance
 		{
-			get { return Road.CycleStartDistance; }
+			get { return Road == null ? 0.SI<Meter>() : Road.CycleStartDistance; }
 		}
 	}
 }
