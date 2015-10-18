@@ -179,11 +179,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			absTime += response.SimulationInterval;
 
 
-			var exceeded = (ResponseDrivingCycleDistanceExceeded)cycle.OutPort().Request(absTime, 300.SI<Meter>());
-			Assert.AreEqual(16, exceeded.MaxDistance.Value(), Tolerance);
-			Assert.AreEqual(5.SI<MeterPerSecond>().Value(), driver.LastRequest.TargetVelocity.Value(), Tolerance);
-			Assert.AreEqual(0.0284160694958265, driver.LastRequest.Gradient.Value(), 1E-12);
-			Assert.AreEqual(2 + startDistance, cycle.CurrentState.Distance.Value(), Tolerance);
+			var exceeded = (ResponseDrivingCycleDistanceExceeded)cycle.OutPort().Request(absTime, 1000.SI<Meter>());
+			Assert.AreEqual(811, exceeded.MaxDistance.Value(), Tolerance);
 
 			AssertHelper.Exception<VectoSimulationException>(() => {
 				container.CommitSimulationStep(absTime, exceeded.SimulationInterval);
@@ -193,8 +190,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			response = cycle.OutPort().Request(absTime, exceeded.MaxDistance);
 
 			Assert.AreEqual(5.SI<MeterPerSecond>().Value(), driver.LastRequest.TargetVelocity.Value(), Tolerance);
-			Assert.AreEqual(0.0284160694958265, driver.LastRequest.Gradient.Value(), 1E-12);
-			Assert.AreEqual(18 + startDistance, cycle.CurrentState.Distance.Value(), Tolerance);
+			Assert.AreEqual(0.020140043264606885, driver.LastRequest.Gradient.Value(), 1E-12);
+			Assert.AreEqual(813 + startDistance, cycle.CurrentState.Distance.Value(), Tolerance);
 
 
 			container.CommitSimulationStep(absTime, response.SimulationInterval);
