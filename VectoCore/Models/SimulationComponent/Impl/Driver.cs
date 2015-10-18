@@ -478,8 +478,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var debug = new List<dynamic>(); // only used while testing
 
-			var searchInterval = Constants.SimulationSettings.BreakingPowerInitialSearchInterval;
-
 			var operatingPoint = new OperatingPoint() { SimulationDistance = ds, Acceleration = acceleration };
 			Watt origDelta = null;
 			initialResponse.Switch().
@@ -491,6 +489,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					throw new UnexpectedResponseException("cannot use response for searching braking power!", r);
 				});
 
+			// braking power is in the range of the exceeding delta. set searching range to 2/3 so that 
+			// the target point is approximately in the center of the second interval
+			var searchInterval = origDelta.Abs() * 2 / 3;
+			
 			debug.Add(new { brakePower = 0.SI<Watt>(), searchInterval, delta = origDelta, operatingPoint });
 
 			var brakePower = searchInterval * -origDelta.Sign();
