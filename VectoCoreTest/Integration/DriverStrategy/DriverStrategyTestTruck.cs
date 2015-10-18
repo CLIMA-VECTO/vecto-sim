@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 {
@@ -704,6 +705,23 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 			GraphWriter.Write("Truck_DriverStrategy_Drive_stop_85_stop_85_level.vmod",
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_stop_85_stop_85_level.vmod");
+		}
+
+		[TestMethod]
+		public void Truck_Accelerate_48_52_beforeStop_lefel()
+		{
+			var data = new string[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  49.9, -5,     0",
+				"100,  52, -5,     0",
+				"200,   0, -5,     2",
+			};
+
+			var cycle = SimpleDrivingCycles.CreateCycleData(data);
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_48_52_beforeStop_level.vmod",
+				7500.SI<Kilogram>(), 19000.SI<Kilogram>()).Run();
+
+			//GraphWriter.Write("Truck_DriverStrategy_Accelerate_48_52_beforeStop_level.vmod");
 		}
 
 		#endregion
