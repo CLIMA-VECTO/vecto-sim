@@ -189,6 +189,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					return cycleIterator.RightSample.Distance;
 				}
 			} while (cycleIterator.RightSample.Distance < PreviousState.Distance + ds && cycleIterator.MoveNext());
+			if (cycleIterator.LastEntry) {
+				return cycleIterator.RightSample.Distance;
+			}
 			return null;
 		}
 

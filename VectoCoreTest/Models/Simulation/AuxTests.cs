@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var container = new VehicleContainer(dataWriter, deco);
 			var data = DrivingCycleDataReader.ReadFromFileDistanceBased(@"TestData\Cycles\LongHaul_short.vdri");
-
+			var mockcycle = new MockDrivingCycle(container, data);
 			var port = new MockTnOutPort();
 
 			var aux = new Auxiliary(container);
