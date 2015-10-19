@@ -186,6 +186,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </returns>
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun)
 		{
+			Log.Debug("Gearbox Power Request: torque: {0}, angularVelocity: {1}", torque, angularVelocity);
 			if (DataBus.VehicleStopped) {
 				_shiftTime = absTime;
 			}
@@ -293,6 +294,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			if (dryRun) {
+				if ((DataBus.DrivingBehavior == DrivingBehavior.Braking || DataBus.DrivingBehavior == DrivingBehavior.Coasting) &&
+					inEngineSpeed < DataBus.EngineIdleSpeed &&
+					DataBus.VehicleSpeed < Constants.SimulationSettings.VehicleStopClutchDisengageSpeed) {
+					_disengaged = true;
+					_shiftTime = absTime + dt;
+					_strategy.Disengage(absTime, dt, outTorque, outAngularVelocity);
+					Log.Debug("EngineSpeed is below IdleSpeed, Gearbox disengage!");
+					return new ResponseEngineSpeedTooLow() { Source = this, GearboxPowerRequest = outTorque * outAngularVelocity };
+				}
 				var dryRunResponse = NextComponent.Request(absTime, dt, inTorque, inEngineSpeed, true);
 				dryRunResponse.GearboxPowerRequest = outTorque * outAngularVelocity;
 				return dryRunResponse;

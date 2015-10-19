@@ -32,7 +32,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var container = CreatePowerTrain(cycleData, modFileName, overspeed);
 
-			return new DistanceRun(container);
+			return new DistanceRun("", container);
 		}
 
 

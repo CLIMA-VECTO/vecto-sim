@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Initialize(MeterPerSecond vehicleSpeed, Radian roadGradient)
 		{
 			_previousState = new VehicleState {
-				Distance = 0.SI<Meter>(),
+				Distance = DataBus.CycleStartDistance,
 				Velocity = vehicleSpeed,
 				RollingResistance = RollingResistance(roadGradient),
 				SlopeResistance = SlopeResistance(roadGradient)
@@ -89,7 +89,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 													+ _previousState.SlopeResistance;
 
 			_currentState = new VehicleState {
-				Distance = 0.SI<Meter>(),
+				Distance = DataBus.CycleStartDistance,
 				Velocity = vehicleSpeed,
 				AirDragResistance = _previousState.AirDragResistance,
 				RollingResistance = _previousState.RollingResistance,

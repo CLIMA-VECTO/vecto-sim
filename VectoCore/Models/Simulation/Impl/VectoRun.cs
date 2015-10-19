@@ -44,7 +44,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					response = DoSimulationStep();
 					if (response is ResponseSuccess) {
 						Container.CommitSimulationStep(AbsTime, dt);
-
 						AbsTime += dt;
 					}
 				} while (response is ResponseSuccess);

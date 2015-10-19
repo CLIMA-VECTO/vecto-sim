@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Resources;
+using NLog;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
@@ -45,7 +46,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		internal EngineState PreviousState = new EngineState();
 
-		protected readonly CombustionEngineData Data;
+		protected internal readonly CombustionEngineData Data;
 
 		public CombustionEngine(IVehicleContainer cockpit, CombustionEngineData data)
 			: base(cockpit)
@@ -495,7 +496,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				var auxDemandResponse = RequestPort.Request(absTime, dt, torque, prevEngineSpeed, true);
 
-				var deltaEnginePower = nextEnginePower - auxDemandResponse.AuxiliariesPowerDemand;
+				var deltaEnginePower = nextEnginePower - (auxDemandResponse.AuxiliariesPowerDemand ?? 0.SI<Watt>());
 				var deltaTorque = deltaEnginePower / prevEngineSpeed;
 				var deltaAngularSpeed = (deltaTorque / Engine.Data.Inertia * dt).Cast<PerSecond>();
 
@@ -508,10 +509,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 				nextAngularSpeed = prevEngineSpeed + deltaAngularSpeed;
 				if (nextAngularSpeed < Engine.Data.IdleSpeed) {
-					// search for EnginePower such that nextAngularSpeed == Engine.Data.IdleSpeed
-					var tmp = RequestPort.Request(absTime, dt, torque, Engine.Data.IdleSpeed);
-					return tmp;
-					//throw new NotImplementedException("Search for PE s.t. n2 = n_idle");
+					nextAngularSpeed = Engine.Data.IdleSpeed;
 				}
 
 				retVal = RequestPort.Request(absTime, dt, torque, nextAngularSpeed);
@@ -531,6 +529,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			private IResponse SearchIdlingSpeed(Second absTime, Second dt, NewtonMeter torque, PerSecond angularSpeed,
 				ResponseUnderload responseUnderload)
 			{
+				Log.Info("Disabling logging during search idling speed");
+				LogManager.DisableLogging();
+
 				var prevEngineSpeed = Engine.PreviousState.EngineSpeed;
 
 				var searchInterval = Constants.SimulationSettings.EngineIdlingSearchInterval;
@@ -552,6 +553,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					delta = response.DeltaDragLoad;
 					debug.Add(new { engineSpeed = nextAngularSpeed, searchInterval, delta });
 					if (delta.IsEqual(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+						LogManager.EnableLogging();
 						Log.Debug("found operating point in {0} iterations. engine speed: {1}, delta: {2}", retryCount, nextAngularSpeed,
 							delta);
 						return RequestPort.Request(absTime, dt, torque, nextAngularSpeed);
@@ -563,6 +565,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					searchInterval *= intervalFactor;
 				} while (retryCount++ < Constants.SimulationSettings.EngineSearchLoopThreshold);
 
+				LogManager.EnableLogging();
 				Log.Warn("Exceeded max iterations when searching for idling point!");
 				Log.Warn("acceleration: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.acceleration)),
 					", ".Join(debug.Slice(-6).Select(x => x.acceleration)));

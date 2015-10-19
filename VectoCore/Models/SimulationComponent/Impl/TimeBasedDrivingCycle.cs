@@ -69,6 +69,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			throw new NotImplementedException();
 		}
 
+		public Meter StartDistance
+		{
+			get { return 0.SI<Meter>(); }
+		}
+
 		#endregion
 
 		#region IDrivingCycleInPort

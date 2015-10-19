@@ -71,7 +71,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				if (data.IsEngineOnly) {
 					run = new TimeRun(builder.Build(data));
 				} else {
-					run = new DistanceRun(builder.Build(data));
+					var runCaption = string.Format("Cycle: {0} Loading: {1}", data.Cycle.Name, data.ModFileSuffix);
+					run = new DistanceRun(runCaption, builder.Build(data));
 				}
 
 				yield return run;

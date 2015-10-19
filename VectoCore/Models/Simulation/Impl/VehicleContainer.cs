@@ -259,5 +259,15 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		{
 			get { return Driver.VehicleStopped; }
 		}
+
+		public DrivingBehavior DrivingBehavior
+		{
+			get { return Driver.DrivingBehavior; }
+		}
+
+		public Meter CycleStartDistance
+		{
+			get { return Road.CycleStartDistance; }
+		}
 	}
 }
