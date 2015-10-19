@@ -219,9 +219,9 @@ namespace TUGraz.VectoCore.Utils
 		protected KilogramPerSecond(double val) : base(new SI(val).Kilo.Gramm.Per.Second) {}
 
 		[DebuggerHidden]
-		public static Kilogram operator *(KilogramPerSecond kilogramPerSecond, Second Second)
+		public static Kilogram operator *(KilogramPerSecond kilogramPerSecond, Second second)
 		{
-			return ((kilogramPerSecond as SI) * Second).Cast<Kilogram>();
+			return ((kilogramPerSecond as SI) * second).Cast<Kilogram>();
 		}
 	}
 
@@ -700,6 +700,7 @@ namespace TUGraz.VectoCore.Utils
 			Percent,
 			min,
 			c,
+			d,
 			h,
 			milli,
 			t
@@ -1037,7 +1038,6 @@ namespace TUGraz.VectoCore.Utils
 			[DebuggerHidden] get { return new SI(new SI(this, toUnit: Unit.k), 1000, Unit.t, Unit.g); }
 		}
 
-
 		/// <summary>
 		/// [N]
 		/// </summary>
@@ -1127,6 +1127,15 @@ namespace TUGraz.VectoCore.Utils
 		public SI Kilo
 		{
 			[DebuggerHidden] get { return new SI(this, 1000.0, Unit.k); }
+		}
+
+		/// <summary>
+		/// Quantifier for Dezi (1/10)
+		/// </summary>
+		[DebuggerHidden]
+		public SI Dezi
+		{
+			[DebuggerHidden] get { return new SI(this, 0.1, Unit.d); }
 		}
 
 		/// <summary>

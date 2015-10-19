@@ -75,7 +75,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private void WriteReport()
 		{
 			var titlePage = CreateTitlePage(_missions);
-			var cyclePages = _missions.Select((m, i) => CreateCyclePage(m.Value, i + 2, _missions.Count + 1));
+			var cyclePages = _missions.OrderBy(m => m.Key).Select((m, i) => CreateCyclePage(m.Value, i + 2, _missions.Count + 1));
 
 			MergeDocuments(titlePage, cyclePages, Path.Combine(_basePath, _jobFile + ".pdf"));
 		}
@@ -97,16 +97,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
 			pdfFields.SetField("Created", _creator);
 			pdfFields.SetField("Config",
-				string.Format(CultureInfo.InvariantCulture, "{0:0.0}t {1} {2}",
-					_segment.GrossVehicleMassRating.ConvertTo().Ton.Value(),
-					_segment.AxleConfiguration.GetName(),
-					_segment.VehicleCategory));
+				string.Format(CultureInfo.InvariantCulture, "{0}t {1} {2}",
+					_segment.GrossVehicleMassRating.ConvertTo().Ton.ToOutputFormat(1),
+					_segment.AxleConfiguration.GetName(), _segment.VehicleCategory));
 			pdfFields.SetField("HDVclass", "HDV Class " + _segment.VehicleClass.GetClassNumber());
 			pdfFields.SetField("Engine", _engineStr);
 			pdfFields.SetField("EngM", _engineModel);
 			pdfFields.SetField("Gearbox", _gearboxStr);
 			pdfFields.SetField("GbxM", _gearboxModel);
 			pdfFields.SetField("PageNr", string.Format("Page {0} of {1}", 1, missions.Count + 1));
+
 
 			var i = 1;
 			foreach (var results in missions.Values.OrderBy(m => m.Mission.MissionType)) {
@@ -119,28 +119,28 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				var avgSpeed = maxDistance / maxTime;
 
-				pdfFields.SetField("Loading" + i, results.Mission.RefLoad.Value().ToString("0.0") + " t");
-				pdfFields.SetField("Speed" + i,
-					string.Format(CultureInfo.InvariantCulture, "{0:0.0} km/h", avgSpeed.ConvertTo().Kilo.Meter.Per.Hour));
-
-				var loading = results.Mission.RefLoad.Value();
+				pdfFields.SetField("Loading" + i, results.Mission.RefLoad.ConvertTo().Ton.ToOutputFormat(1) + " t");
+				pdfFields.SetField("Speed" + i, avgSpeed.ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1) + " km/h");
 
 				var fc = m.GetValues<KilogramPerSecond>(ModalResultField.FCMap);
-				var fcSum = fc.Zip(dt, (fcVal, dtVal) => fcVal * dtVal).Sum();
+				var fcWeight = fc.Zip(dt, (fcVal, dtVal) => fcVal * dtVal).Sum();
+				var fcVolume = (fcWeight / Physics.FuelDensity).Cast<CubicMeter>();
+				var co2Weight = fcWeight * Physics.CO2PerFuelWeight;
 
-				var fcPerM = fcSum / maxDistance;
+				var fcAvgVolume = fcVolume / maxDistance;
+				var co2AvgWeight = co2Weight / maxDistance;
 
+				var loadingTon = results.Mission.RefLoad.ConvertTo().Ton;
 
-				//var co2 = fcPerM.ConvertTo().Gramm * Physics.CO2PerFuelGram;
+				var fc_LiterPer100km = fcAvgVolume.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
+				var fc_LiterPer100Tonkm = fc_LiterPer100km / loadingTon;
+				var co2_GrammPerKm = co2AvgWeight.ConvertTo().Gramm.Per.Kilo.Meter;
+				var co2_GrammPerTonKm = co2_GrammPerKm / loadingTon;
 
-
-				// todo: calc co2
-				var co2 = fc;
-
-				pdfFields.SetField("FC" + i, fc.ToString("0.0"));
-				pdfFields.SetField("FCt" + i, (fc / loading).ToString("0.0"));
-				pdfFields.SetField("CO2" + i, co2.ToString("0.0"));
-				pdfFields.SetField("CO2t" + i, (co2 / loading).ToString("0.0"));
+				pdfFields.SetField("FC" + i, fc_LiterPer100km.ToOutputFormat(1));
+				pdfFields.SetField("FCt" + i, fc_LiterPer100Tonkm.ToOutputFormat(1));
+				pdfFields.SetField("CO2" + i, co2_GrammPerKm.ToOutputFormat(1));
+				pdfFields.SetField("CO2t" + i, co2_GrammPerTonKm.ToOutputFormat(1));
 				i++;
 			}
 
@@ -156,10 +156,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 			img.SetAbsolutePosition(360, 75);
 			content.AddImage(img);
 
-			img =
-				Image.GetInstance(
-					RessourceHelper.ReadStream(RessourceHelper.Namespace + "Report." +
-												GetHDVClassImageName(_segment, MissionType.LongHaul)));
+			img = GetHDVClassImage(_segment, MissionType.LongHaul);
 			img.ScaleAbsolute(180, 50);
 			img.SetAbsolutePosition(30, 475);
 			content.AddImage(img);
@@ -185,9 +182,9 @@ namespace TUGraz.VectoCore.Models.Declaration
 			pdfFields.SetField("Date", DateTime.Now.ToString(CultureInfo.InvariantCulture));
 			pdfFields.SetField("Created", _creator);
 			pdfFields.SetField("Config",
-				string.Format("{0:0.0}t {1} {2}", _segment.GrossVehicleMassRating / 1000, _segment.AxleConfiguration.GetName(),
-					_segment.VehicleCategory));
-			pdfFields.SetField("HDVclass", "HDV Class " + _segment.VehicleClass);
+				string.Format("{0}t {1} {2}", _segment.GrossVehicleMassRating.ConvertTo().Ton.ToOutputFormat(1),
+					_segment.AxleConfiguration.GetName(), _segment.VehicleCategory));
+			pdfFields.SetField("HDVclass", "HDV Class " + _segment.VehicleClass.GetClassNumber());
 			pdfFields.SetField("PageNr", string.Format("Page {0} of {1}", currentPageNr, pageCount));
 			pdfFields.SetField("Mission", results.Mission.MissionType.ToString());
 
@@ -196,42 +193,38 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var loadingType = pair.Key;
 				var m = pair.Value;
 
+				var dt = m.GetValues<Second>(ModalResultField.simulationInterval);
+				var maxDistance = m.GetValues<Meter>(ModalResultField.dist).Max();
+				var maxTime = m.GetValues<Second>(ModalResultField.time).Max();
+				var avgSpeed = maxDistance / maxTime;
+
+				var fc = m.GetValues<KilogramPerSecond>(ModalResultField.FCMap);
+				var fcWeight = fc.Zip(dt, (fcVal, dtVal) => fcVal * dtVal).Sum();
+				var fcVolume = (fcWeight / Physics.FuelDensity).Cast<CubicMeter>();
+				var co2Weight = fcWeight * Physics.CO2PerFuelWeight;
+				var fcAvgVolume = fcVolume / maxDistance;
+				var co2AvgWeight = co2Weight / maxDistance;
+				var loadingTon = results.Mission.Loadings[loadingType].ConvertTo().Ton;
+
+				var fc_LiterPer100km = fcAvgVolume.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
+				var co2_GrammPerKm = co2AvgWeight.ConvertTo().Gramm.Per.Kilo.Meter;
+
 				var loadString = loadingType.GetShortName();
-				pdfFields.SetField("Load" + loadString, results.Mission.Loadings[loadingType].Value().ToString("0.0") + " t");
 
-				var dt = m.GetValues<SI>(ModalResultField.simulationInterval);
-				var distance = m.GetValues<SI>(ModalResultField.dist).Max().Value();
-
-				Func<ModalResultField, double> avgWeighted =
-					field => m.GetValues<SI>(field).Zip(dt, (v, t) => v / t).Average().Value();
-
-				pdfFields.SetField("Speed" + loadString, avgWeighted(ModalResultField.v_act).ToString("0.0"));
-
-				var fc = avgWeighted(ModalResultField.FCMap) / distance * 1000 * 100;
-
-				// todo: calculate co2!!
-				var co2 = fc;
-
-				var loading = results.Mission.Loadings[loadingType].Value();
-
-				pdfFields.SetField("FCkm" + loadString, fc.ToString("0.0"));
-				pdfFields.SetField("CO2km" + loadString, co2.ToString("0.0"));
-
-				if (loading.IsEqual(0)) {
-					pdfFields.SetField("FCtkm" + loadString, "-");
-					pdfFields.SetField("CO2tkm" + loadString, "-");
-				} else {
-					pdfFields.SetField("FCtkm" + loadString, (fc / loading).ToString("0.0"));
-					pdfFields.SetField("CO2tkm" + loadString, (fc / loading).ToString("0.0"));
-				}
+				pdfFields.SetField("Load" + loadString,
+					results.Mission.Loadings[loadingType].ConvertTo().Ton.ToOutputFormat(1) + " t");
+				pdfFields.SetField("Speed" + loadString, avgSpeed.ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1));
+				pdfFields.SetField("FCkm" + loadString, fc_LiterPer100km.ToOutputFormat(1));
+				pdfFields.SetField("FCtkm" + loadString,
+					loadingTon.IsEqual(0) ? "-" : (fc_LiterPer100km / loadingTon).ToOutputFormat(1));
+				pdfFields.SetField("CO2km" + loadString, co2_GrammPerKm.ToOutputFormat(1));
+				pdfFields.SetField("CO2tkm" + loadString,
+					loadingTon.IsEqual(0) ? "-" : (co2_GrammPerKm / loadingTon).ToOutputFormat(1));
 			}
 
 			var content = stamper.GetOverContent(1);
 
-			var img =
-				Image.GetInstance(
-					RessourceHelper.ReadStream(RessourceHelper.Namespace + "Report." +
-												GetHDVClassImageName(_segment, results.Mission.MissionType)));
+			var img = GetHDVClassImage(_segment, results.Mission.MissionType);
 			img.ScaleAbsolute(180, 50);
 			img.SetAbsolutePosition(600, 475);
 			content.AddImage(img);
@@ -306,7 +299,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var maxDistance = modData.GetValues<Meter>(ModalResultField.dist).Max();
 				var loading = missionResult.Value.Mission.Loadings[LoadingType.ReferenceLoad];
 
-				var co2gPerTKM = fcSum.ConvertTo().Gramm * Physics.CO2PerFuelGram /
+				var co2gPerTKM = fcSum.ConvertTo().Gramm * Physics.CO2PerFuelWeight /
 								(loading.ConvertTo().Ton * maxDistance.ConvertTo().Kilo.Meter);
 
 				var series = new Series(missionResult.Key + " (Ref. load.)");
@@ -373,7 +366,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var maxTime = modData.GetValues<Second>(ModalResultField.time).Max();
 
 					var avgKMH = maxDistance.ConvertTo().Kilo.Meter / maxTime.ConvertTo().Hour;
-					var co2gPerKM = fcSum.ConvertTo().Gramm * Physics.CO2PerFuelGram / maxDistance.ConvertTo().Kilo.Meter;
+					var co2gPerKM = fcSum.ConvertTo().Gramm * Physics.CO2PerFuelWeight / maxDistance.ConvertTo().Kilo.Meter;
 
 					var loading = missionResult.Value.Mission.Loadings[pair.Key].ConvertTo().Ton;
 
@@ -434,7 +427,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					MinorGrid = { Enabled = false },
 					MajorGrid = { Enabled = false }
 				},
-				Position = { X = 0f, Y = 0f, Width = 90f, Height = 100f },
+				Position = { X = 0f, Y = 0f, Width = 90, Height = 100 },
 			});
 
 			var altitude = new Series {
@@ -495,8 +488,7 @@ namespace TUGraz.VectoCore.Models.Declaration
 					TitleFont = new Font("Helvetica", 20),
 					LabelStyle = { Font = new Font("Helvetica", 20) },
 					LabelAutoFitStyle = LabelAutoFitStyles.None
-				},
-				Position = { X = 0, Y = 0, Width = 70, Height = 100 }
+				}
 			});
 
 			var n = flc.FullLoadEntries.Select(x => x.EngineSpeed.ConvertTo().Rounds.Per.Minute).ToDouble();
@@ -532,23 +524,32 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return tqnBitmap;
 		}
 
-		private static string GetHDVClassImageName(Segment segment, MissionType missionType)
+		private static Image GetHDVClassImage(Segment segment, MissionType missionType)
 		{
+			var name = "Undef.png";
 			switch (segment.VehicleClass) {
 				case VehicleClass.Class1:
 				case VehicleClass.Class2:
 				case VehicleClass.Class3:
-					return "4x2r.png";
+					name = "4x2r.png";
+					break;
 				case VehicleClass.Class4:
-					return missionType == MissionType.LongHaul ? "4x2rt.png" : "4x2r.png";
+					name = missionType == MissionType.LongHaul ? "4x2rt.png" : "4x2r.png";
+					break;
 				case VehicleClass.Class5:
-					return "4x2tt.png";
+					name = "4x2tt.png";
+					break;
 				case VehicleClass.Class9:
-					return missionType == MissionType.LongHaul ? "6x2rt.png" : "6x2r.png";
+					name = missionType == MissionType.LongHaul ? "6x2rt.png" : "6x2r.png";
+					break;
 				case VehicleClass.Class10:
-					return "6x2tt.png";
+					name = "6x2tt.png";
+					break;
 			}
-			return "Undef.png";
+
+			var hdvClassImagePath = RessourceHelper.Namespace + "Report." + name;
+			var hdvClassImage = RessourceHelper.ReadStream(hdvClassImagePath);
+			return Image.GetInstance(hdvClassImage);
 		}
 	}
 }
