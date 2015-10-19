@@ -262,7 +262,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// separately test for equality and greater than to have tolerance for equality comparison
 			if (CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(0)) {
-				while (CurrentState.Distance.IsGreaterOrEqual(CycleIntervalIterator.RightSample.Distance) &&
+				while (CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(0) &&
+						CurrentState.Distance.IsGreaterOrEqual(CycleIntervalIterator.RightSample.Distance) &&
 						!CycleIntervalIterator.LastEntry) {
 					// we have reached the end of the current interval in the cycle, move on...
 					CycleIntervalIterator.MoveNext();
