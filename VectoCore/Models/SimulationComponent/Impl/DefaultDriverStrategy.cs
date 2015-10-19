@@ -93,30 +93,46 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 
-			Meter newds;
-			switch (NextDrivingAction.Action) {
-				case DrivingBehavior.Coasting:
-					var coastingDistance = Formulas.DecelerationDistance(v2, NextDrivingAction.NextTargetSpeed,
-						Driver.DriverData.LookAheadCoasting.Deceleration);
+			Meter newds = 0.SI<Meter>();
+			if (CurrentDrivingMode == DrivingMode.DrivingModeDrive) {
+				switch (NextDrivingAction.Action) {
+					case DrivingBehavior.Coasting:
+						var coastingDistance = Formulas.DecelerationDistance(v2, NextDrivingAction.NextTargetSpeed,
+							Driver.DriverData.LookAheadCoasting.Deceleration);
 
-					// if the distance at the end of the simulation interval is smaller than the new ActionDistance
-					// we are safe - go ahead...
-					if ((Driver.DataBus.Distance + ds).IsSmallerOrEqual(NextDrivingAction.TriggerDistance - coastingDistance,
-						Constants.SimulationSettings.DriverActionDistanceTolerance)) {
+						// if the distance at the end of the simulation interval is smaller than the new ActionDistance
+						// we are safe - go ahead...
+						if ((Driver.DataBus.Distance + ds).IsSmallerOrEqual(NextDrivingAction.TriggerDistance - coastingDistance,
+							Constants.SimulationSettings.DriverActionDistanceTolerance)) {
+							return retVal;
+						}
+						newds = EstimateAccelerationDistanceBeforeBrake(retVal, NextDrivingAction);
+						break;
+					case DrivingBehavior.Braking:
+						var brakingDistance = Driver.DriverData.AccelerationCurve.ComputeAccelerationDistance(v2,
+							NextDrivingAction.NextTargetSpeed);
+						if ((Driver.DataBus.Distance + ds).IsSmaller(NextDrivingAction.TriggerDistance - brakingDistance)) {
+							return retVal;
+						}
+						newds = (NextDrivingAction.TriggerDistance - brakingDistance) - Driver.DataBus.Distance;
+						break;
+					default:
 						return retVal;
-					}
-					newds = EstimateAccelerationDistanceBeforeBrake(retVal, NextDrivingAction);
-					break;
-				case DrivingBehavior.Braking:
-					var brakingDistance = Driver.DriverData.AccelerationCurve.ComputeAccelerationDistance(v2,
-						NextDrivingAction.NextTargetSpeed);
-					if ((Driver.DataBus.Distance + ds).IsSmaller(NextDrivingAction.TriggerDistance - brakingDistance)) {
+				}
+			}
+			if (CurrentDrivingMode == DrivingMode.DrivingModeBrake) {
+				switch (NextDrivingAction.Action) {
+					case DrivingBehavior.Coasting:
+						var brakingDistance = Driver.DriverData.AccelerationCurve.ComputeAccelerationDistance(v2,
+							NextDrivingAction.NextTargetSpeed);
+						if ((Driver.DataBus.Distance + ds).IsSmaller(NextDrivingAction.TriggerDistance - brakingDistance)) {
+							return retVal;
+						}
+						newds = (NextDrivingAction.TriggerDistance - brakingDistance) - Driver.DataBus.Distance;
+						break;
+					default:
 						return retVal;
-					}
-					newds = (NextDrivingAction.TriggerDistance - brakingDistance) - Driver.DataBus.Distance;
-					break;
-				default:
-					return retVal;
+				}
 			}
 			if (newds.IsEqual(0, 1e-3) || ds.IsEqual(newds, 1e-3.SI<Meter>())) {
 				return retVal;
