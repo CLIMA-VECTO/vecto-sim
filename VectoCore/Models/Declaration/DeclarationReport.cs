@@ -18,28 +18,90 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
+	/// <summary>
+	/// Class for creating a declaration report.
+	/// </summary>
 	public class DeclarationReport
 	{
+		/// <summary>
+		/// Container class for one mission and the modData for the different loadings.
+		/// </summary>
 		private class ResultContainer
 		{
 			public Mission Mission;
 			public Dictionary<LoadingType, IModalDataWriter> ModData;
 		}
 
+		/// <summary>
+		/// Data Dictionary for all missions.
+		/// </summary>
 		private readonly Dictionary<MissionType, ResultContainer> _missions = new Dictionary<MissionType, ResultContainer>();
 
+		/// <summary>
+		/// The full load curve.
+		/// </summary>
 		private readonly FullLoadCurve _flc;
+
+		/// <summary>
+		/// The declaration segment from the segment table
+		/// </summary>
 		private readonly Segment _segment;
 
+
+		/// <summary>
+		/// The creator name for the report.
+		/// </summary>
 		private readonly string _creator;
+
+
+		/// <summary>
+		/// The engine model string from engine file.
+		/// </summary>
 		private readonly string _engineModel;
+
+		/// <summary>
+		/// The engine description (displacement and max power)
+		/// </summary>
 		private readonly string _engineStr;
+
+		/// <summary>
+		/// The gearbox model string from gearbox file.
+		/// </summary>
 		private readonly string _gearboxModel;
+
+		/// <summary>
+		/// The gearbox description (gear-count and gear type)
+		/// </summary>
 		private readonly string _gearboxStr;
+
+		/// <summary>
+		/// The name of the job file (report name will be the same)
+		/// </summary>
 		private readonly string _jobFile;
+
+		/// <summary>
+		/// The result count determines how many results must be given before the report gets written.
+		/// </summary>
 		private readonly int _resultCount;
+
+		/// <summary>
+		/// The base path of the application
+		/// </summary>
 		private readonly string _basePath;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DeclarationReport"/> class.
+		/// </summary>
+		/// <param name="flc">The full load curve.</param>
+		/// <param name="segment">The segment of the current vehicle from the segment table.</param>
+		/// <param name="creator">The creator name.</param>
+		/// <param name="engineModel">The engine model.</param>
+		/// <param name="engineStr">The engine description string.</param>
+		/// <param name="gearboxModel">The gearbox model.</param>
+		/// <param name="gearboxStr">The gearbox description string.</param>
+		/// <param name="basePath">The base path.</param>
+		/// <param name="jobFile">The name of the job file.</param>
+		/// <param name="resultCount">The result count which defines after how many finished results the report gets written.</param>
 		public DeclarationReport(FullLoadCurve flc, Segment segment, string creator, string engineModel, string engineStr,
 			string gearboxModel, string gearboxStr, string basePath, string jobFile, int resultCount)
 		{
@@ -55,6 +117,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			_basePath = basePath;
 		}
 
+
+		/// <summary>
+		/// Adds the result of one run for the specific mission and loading. If all runs finished (given by the resultCount) the report will be written.
+		/// </summary>
+		/// <param name="loadingType">Type of the loading.</param>
+		/// <param name="mission">The mission.</param>
+		/// <param name="modData">The mod data.</param>
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		public void AddResult(LoadingType loadingType, Mission mission, IModalDataWriter modData)
 		{
@@ -72,6 +141,10 @@ namespace TUGraz.VectoCore.Models.Declaration
 			}
 		}
 
+
+		/// <summary>
+		/// Creates the report and writes it to a pdf file.
+		/// </summary>
 		private void WriteReport()
 		{
 			var titlePage = CreateTitlePage(_missions);
@@ -80,6 +153,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			MergeDocuments(titlePage, cyclePages, Path.Combine(_basePath, _jobFile + ".pdf"));
 		}
 
+
+		/// <summary>
+		/// Creates the title page.
+		/// </summary>
+		/// <param name="missions">The missions.</param>
+		/// <returns>the out stream of the pdf stamper with the title page.</returns>
 		private Stream CreateTitlePage(Dictionary<MissionType, ResultContainer> missions)
 		{
 			var stream = new MemoryStream();
@@ -132,31 +211,31 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 				var loadingTon = results.Mission.RefLoad.ConvertTo().Ton;
 
-				var fc_LiterPer100km = fcAvgVolume.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
-				var fc_LiterPer100Tonkm = fc_LiterPer100km / loadingTon;
-				var co2_GrammPerKm = co2AvgWeight.ConvertTo().Gramm.Per.Kilo.Meter;
-				var co2_GrammPerTonKm = co2_GrammPerKm / loadingTon;
+				var fcLiterPer100Km = fcAvgVolume.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
+				var fcLiterPer100Tonkm = fcLiterPer100Km / loadingTon;
+				var co2GrammPerKm = co2AvgWeight.ConvertTo().Gramm.Per.Kilo.Meter;
+				var co2GrammPerTonKm = co2GrammPerKm / loadingTon;
 
-				pdfFields.SetField("FC" + i, fc_LiterPer100km.ToOutputFormat(1));
-				pdfFields.SetField("FCt" + i, fc_LiterPer100Tonkm.ToOutputFormat(1));
-				pdfFields.SetField("CO2" + i, co2_GrammPerKm.ToOutputFormat(1));
-				pdfFields.SetField("CO2t" + i, co2_GrammPerTonKm.ToOutputFormat(1));
+				pdfFields.SetField("FC" + i, fcLiterPer100Km.ToOutputFormat(1));
+				pdfFields.SetField("FCt" + i, fcLiterPer100Tonkm.ToOutputFormat(1));
+				pdfFields.SetField("CO2" + i, co2GrammPerKm.ToOutputFormat(1));
+				pdfFields.SetField("CO2t" + i, co2GrammPerTonKm.ToOutputFormat(1));
 				i++;
 			}
 
 			// Add Images
 			var content = stamper.GetOverContent(1);
-			var img = Image.GetInstance(DrawCO2MissionsChart(missions), BaseColor.WHITE);
+			var img = Image.GetInstance(DrawCo2MissionsChart(missions), BaseColor.WHITE);
 			img.ScaleAbsolute(440, 195);
 			img.SetAbsolutePosition(360, 270);
 			content.AddImage(img);
 
-			img = Image.GetInstance(DrawCO2SpeedChart(missions), BaseColor.WHITE);
+			img = Image.GetInstance(DrawCo2SpeedChart(missions), BaseColor.WHITE);
 			img.ScaleAbsolute(440, 195);
 			img.SetAbsolutePosition(360, 75);
 			content.AddImage(img);
 
-			img = GetHDVClassImage(_segment, MissionType.LongHaul);
+			img = GetVehicleImage(_segment, MissionType.LongHaul);
 			img.ScaleAbsolute(180, 50);
 			img.SetAbsolutePosition(30, 475);
 			content.AddImage(img);
@@ -169,6 +248,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 		}
 
 
+		/// <summary>
+		/// Creates the cycle page.
+		/// </summary>
+		/// <param name="results">The results.</param>
+		/// <param name="currentPageNr">The current page nr.</param>
+		/// <param name="pageCount">The page count.</param>
+		/// <returns>the out stream of the pdfstamper for a single cycle page</returns>
 		private Stream CreateCyclePage(ResultContainer results, int currentPageNr, int pageCount)
 		{
 			var stream = new MemoryStream();
@@ -206,25 +292,25 @@ namespace TUGraz.VectoCore.Models.Declaration
 				var co2AvgWeight = co2Weight / maxDistance;
 				var loadingTon = results.Mission.Loadings[loadingType].ConvertTo().Ton;
 
-				var fc_LiterPer100km = fcAvgVolume.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
-				var co2_GrammPerKm = co2AvgWeight.ConvertTo().Gramm.Per.Kilo.Meter;
+				var fcLiterPer100Km = fcAvgVolume.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
+				var co2GrammPerKm = co2AvgWeight.ConvertTo().Gramm.Per.Kilo.Meter;
 
 				var loadString = loadingType.GetShortName();
 
 				pdfFields.SetField("Load" + loadString,
 					results.Mission.Loadings[loadingType].ConvertTo().Ton.ToOutputFormat(1) + " t");
 				pdfFields.SetField("Speed" + loadString, avgSpeed.ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1));
-				pdfFields.SetField("FCkm" + loadString, fc_LiterPer100km.ToOutputFormat(1));
+				pdfFields.SetField("FCkm" + loadString, fcLiterPer100Km.ToOutputFormat(1));
 				pdfFields.SetField("FCtkm" + loadString,
-					loadingTon.IsEqual(0) ? "-" : (fc_LiterPer100km / loadingTon).ToOutputFormat(1));
-				pdfFields.SetField("CO2km" + loadString, co2_GrammPerKm.ToOutputFormat(1));
+					loadingTon.IsEqual(0) ? "-" : (fcLiterPer100Km / loadingTon).ToOutputFormat(1));
+				pdfFields.SetField("CO2km" + loadString, co2GrammPerKm.ToOutputFormat(1));
 				pdfFields.SetField("CO2tkm" + loadString,
-					loadingTon.IsEqual(0) ? "-" : (co2_GrammPerKm / loadingTon).ToOutputFormat(1));
+					loadingTon.IsEqual(0) ? "-" : (co2GrammPerKm / loadingTon).ToOutputFormat(1));
 			}
 
 			var content = stamper.GetOverContent(1);
 
-			var img = GetHDVClassImage(_segment, results.Mission.MissionType);
+			var img = GetVehicleImage(_segment, results.Mission.MissionType);
 			img.ScaleAbsolute(180, 50);
 			img.SetAbsolutePosition(600, 475);
 			content.AddImage(img);
@@ -246,6 +332,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return stream;
 		}
 
+		/// <summary>
+		/// Merges the given stream to one document and writes it to a file on disk.
+		/// </summary>
+		/// <param name="titlePage">The title page.</param>
+		/// <param name="cyclePages">The cycle pages.</param>
+		/// <param name="outputFileName">Name of the output file.</param>
 		private static void MergeDocuments(Stream titlePage, IEnumerable<Stream> cyclePages, string outputFileName)
 		{
 			var document = new Document(PageSize.A4.Rotate(), 12, 12, 12, 12);
@@ -264,7 +356,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			document.Close();
 		}
 
-		private static Bitmap DrawCO2MissionsChart(Dictionary<MissionType, ResultContainer> missions)
+		/// <summary>
+		/// Draws the co2 missions chart for the title page.
+		/// </summary>
+		/// <param name="missions">The missions.</param>
+		/// <returns></returns>
+		private static Bitmap DrawCo2MissionsChart(Dictionary<MissionType, ResultContainer> missions)
 		{
 			var co2Chart = new Chart { Width = 1500, Height = 700 };
 			co2Chart.Legends.Add(new Legend("main") {
@@ -290,23 +387,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 			});
 
 			foreach (var missionResult in missions.OrderBy(m => m.Key)) {
-				var modData = missionResult.Value.ModData[LoadingType.ReferenceLoad];
-				var fc = modData.GetValues<KilogramPerSecond>(ModalResultField.FCMap);
-				var dt = modData.GetValues<Second>(ModalResultField.simulationInterval);
+				var m = missionResult.Value.ModData[LoadingType.ReferenceLoad];
+				var fc = m.GetValues<KilogramPerSecond>(ModalResultField.FCMap);
+				var dt = m.GetValues<Second>(ModalResultField.simulationInterval);
 
-				var fcSum = fc.Zip(dt, (fcValue, dtValue) => fcValue * dtValue).Sum();
+				var fcWeight = fc.Zip(dt, (fcValue, dtValue) => fcValue * dtValue).Sum();
 
-				var maxDistance = modData.GetValues<Meter>(ModalResultField.dist).Max();
+				var maxDistance = m.GetValues<Meter>(ModalResultField.dist).Max();
 				var loading = missionResult.Value.Mission.Loadings[LoadingType.ReferenceLoad];
 
-				var co2gPerTKM = fcSum.ConvertTo().Gramm * Physics.CO2PerFuelWeight /
-								(loading.ConvertTo().Ton * maxDistance.ConvertTo().Kilo.Meter);
+				var co2Weight = fcWeight * Physics.CO2PerFuelWeight;
+
+				var co2GPerTonKm = co2Weight.ConvertTo().Gramm / (maxDistance.ConvertTo().Kilo.Meter * loading.ConvertTo().Ton);
 
 				var series = new Series(missionResult.Key + " (Ref. load.)");
 				var dataPoint = new DataPoint {
 					Name = missionResult.Key.ToString(),
-					YValues = new[] { co2gPerTKM.Value() },
-					Label = string.Format(co2gPerTKM.ToOutputFormat(1, showUnit: true)),
+					YValues = new[] { co2GPerTonKm.Value() },
+					Label = co2GPerTonKm.ToOutputFormat(1, showUnit: true),
 					Font = new Font("Helvetica", 20),
 					LabelBackColor = Color.White
 				};
@@ -316,20 +414,25 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			co2Chart.Update();
 
-			var chartCO2tkm = new Bitmap(co2Chart.Width, co2Chart.Height, PixelFormat.Format32bppArgb);
-			co2Chart.DrawToBitmap(chartCO2tkm, new Rectangle(0, 0, chartCO2tkm.Width, chartCO2tkm.Height));
-			return chartCO2tkm;
+			var chartCo2Tkm = new Bitmap(co2Chart.Width, co2Chart.Height, PixelFormat.Format32bppArgb);
+			co2Chart.DrawToBitmap(chartCo2Tkm, new Rectangle(0, 0, chartCo2Tkm.Width, chartCo2Tkm.Height));
+			return chartCo2Tkm;
 		}
 
-		private static Bitmap DrawCO2SpeedChart(Dictionary<MissionType, ResultContainer> missions)
+		/// <summary>
+		/// Draws the co2 speed chart for the title page.
+		/// </summary>
+		/// <param name="missions">The missions.</param>
+		/// <returns></returns>
+		private static Bitmap DrawCo2SpeedChart(Dictionary<MissionType, ResultContainer> missions)
 		{
-			var co2speedChart = new Chart { Width = 1500, Height = 700 };
-			co2speedChart.Legends.Add(new Legend("main") {
+			var co2SpeedChart = new Chart { Width = 1500, Height = 700 };
+			co2SpeedChart.Legends.Add(new Legend("main") {
 				Font = new Font("Helvetica", 20),
 				BorderColor = Color.Black,
 				BorderWidth = 3,
 			});
-			co2speedChart.ChartAreas.Add(new ChartArea("main") {
+			co2SpeedChart.ChartAreas.Add(new ChartArea("main") {
 				BorderDashStyle = ChartDashStyle.Solid,
 				BorderWidth = 3,
 				AxisX = {
@@ -365,12 +468,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 					var maxDistance = modData.GetValues<Meter>(ModalResultField.dist).Max();
 					var maxTime = modData.GetValues<Second>(ModalResultField.time).Max();
 
-					var avgKMH = maxDistance.ConvertTo().Kilo.Meter / maxTime.ConvertTo().Hour;
-					var co2gPerKM = fcSum.ConvertTo().Gramm * Physics.CO2PerFuelWeight / maxDistance.ConvertTo().Kilo.Meter;
+					var avgKmh = maxDistance.ConvertTo().Kilo.Meter / maxTime.ConvertTo().Hour;
+					var co2GPerKm = fcSum.ConvertTo().Gramm * Physics.CO2PerFuelWeight / maxDistance.ConvertTo().Kilo.Meter;
 
 					var loading = missionResult.Value.Mission.Loadings[pair.Key].ConvertTo().Ton;
 
-					var point = new DataPoint(avgKMH.Value(), co2gPerKM.Value()) {
+					var point = new DataPoint(avgKmh.Value(), co2GPerKm.Value()) {
 						Label = string.Format(CultureInfo.InvariantCulture, "{0:0.0} t", loading.Value()),
 						Font = new Font("Helvetica", 16),
 						LabelBackColor = Color.White
@@ -383,15 +486,20 @@ namespace TUGraz.VectoCore.Models.Declaration
 					series.Points.Add(point);
 				}
 				series.Name = missionResult.Key.ToString();
-				co2speedChart.Series.Add(series);
+				co2SpeedChart.Series.Add(series);
 			}
 
-			co2speedChart.Update();
-			var chartCO2speed = new Bitmap(co2speedChart.Width, co2speedChart.Height, PixelFormat.Format32bppArgb);
-			co2speedChart.DrawToBitmap(chartCO2speed, new Rectangle(0, 0, co2speedChart.Width, co2speedChart.Height));
-			return chartCO2speed;
+			co2SpeedChart.Update();
+			var chartCo2Speed = new Bitmap(co2SpeedChart.Width, co2SpeedChart.Height, PixelFormat.Format32bppArgb);
+			co2SpeedChart.DrawToBitmap(chartCo2Speed, new Rectangle(0, 0, co2SpeedChart.Width, co2SpeedChart.Height));
+			return chartCo2Speed;
 		}
 
+		/// <summary>
+		/// Draws the cycle chart for a cycle page.
+		/// </summary>
+		/// <param name="results">The results.</param>
+		/// <returns></returns>
 		private static Bitmap DrawCycleChart(ResultContainer results)
 		{
 			var missionCycleChart = new Chart { Width = 2000, Height = 400 };
@@ -437,24 +545,24 @@ namespace TUGraz.VectoCore.Models.Declaration
 				YAxisType = AxisType.Secondary
 			};
 
-			var distance = results.ModData.First().Value.GetValues<SI>(ModalResultField.dist).ToDouble();
-			var altitudeValues = results.ModData.First().Value.GetValues<SI>(ModalResultField.altitude).ToDouble();
+			var m = results.ModData.First().Value;
+			var distanceKm = m.GetValues<Meter>(ModalResultField.dist).Select(v => v.ConvertTo().Kilo.Meter).ToDouble();
 
-			altitude.Points.DataBindXY(distance, altitudeValues);
+			altitude.Points.DataBindXY(distanceKm, m.GetValues<Meter>(ModalResultField.altitude).ToDouble());
 			missionCycleChart.Series.Add(altitude);
 
 			var targetSpeed = new Series { ChartType = SeriesChartType.FastLine, BorderWidth = 3, Name = "Target speed" };
-			targetSpeed.Points.DataBindXY(distance,
-				results.ModData.First().Value.GetValues<SI>(ModalResultField.v_targ).ToDouble());
+			targetSpeed.Points.DataBindXY(distanceKm,
+				m.GetValues<MeterPerSecond>(ModalResultField.v_targ).Select(v => v.ConvertTo().Kilo.Meter.Per.Hour).ToDouble());
 			missionCycleChart.Series.Add(targetSpeed);
 
 			foreach (var result in results.ModData) {
 				var name = result.Key.ToString();
 				var values = result.Value;
-
 				var series = new Series { ChartType = SeriesChartType.FastLine, Name = name };
-				series.Points.DataBindXY(values.GetValues<SI>(ModalResultField.dist).ToDouble(),
-					values.GetValues<SI>(ModalResultField.v_act).ToDouble());
+				series.Points.DataBindXY(
+					values.GetValues<Meter>(ModalResultField.dist).Select(v => v.ConvertTo().Kilo.Meter).ToDouble(),
+					values.GetValues<MeterPerSecond>(ModalResultField.v_act).Select(v => v.ConvertTo().Kilo.Meter.Per.Hour).ToDouble());
 				missionCycleChart.Series.Add(series);
 			}
 			missionCycleChart.Update();
@@ -464,6 +572,12 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return cycleChart;
 		}
 
+		/// <summary>
+		/// Draws the operating points chart for a cycle page.
+		/// </summary>
+		/// <param name="modData">The mod data.</param>
+		/// <param name="flc">The FLC.</param>
+		/// <returns></returns>
 		private static Bitmap DrawOperatingPointsChart(IModalDataWriter modData, FullLoadCurve flc)
 		{
 			var operatingPointsChart = new Chart { Width = 1000, Height = 427 };
@@ -524,7 +638,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 			return tqnBitmap;
 		}
 
-		private static Image GetHDVClassImage(Segment segment, MissionType missionType)
+		/// <summary>
+		/// Gets the appropriate vehicle image.
+		/// </summary>
+		/// <param name="segment">The segment.</param>
+		/// <param name="missionType">Type of the mission.</param>
+		/// <returns></returns>
+		private static Image GetVehicleImage(Segment segment, MissionType missionType)
 		{
 			var name = "Undef.png";
 			switch (segment.VehicleClass) {
