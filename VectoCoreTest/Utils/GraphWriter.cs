@@ -120,7 +120,6 @@ namespace TUGraz.VectoCore.Tests.Utils
 						IsDockedInsideChartArea = false,
 						DockedToChartArea = yfield.ToString(),
 						Font = new Font("Verdana", 14),
-						
 					};
 					chart.Legends.Add(legend);
 

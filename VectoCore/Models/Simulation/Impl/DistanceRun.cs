@@ -9,8 +9,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class DistanceRun : VectoRun
 	{
-		public string Name { get; protected set; }
-
 		public DistanceRun(string name, IVehicleContainer container) : base(container)
 		{
 			Name = name;
