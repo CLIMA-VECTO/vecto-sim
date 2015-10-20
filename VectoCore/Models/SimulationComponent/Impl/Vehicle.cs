@@ -125,6 +125,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			_currentState.dt = dt;
 			_currentState.Acceleration = acceleration;
 			_currentState.Velocity = _previousState.Velocity + acceleration * dt;
+			if (_currentState.Velocity.IsEqual(0, 1e-4)) {
+				_currentState.Velocity = 0.SI<MeterPerSecond>();
+			}
 			_currentState.Distance = _previousState.Distance + dt * (_previousState.Velocity + _currentState.Velocity) / 2;
 
 			_currentState.DriverAcceleration = DriverAcceleration(acceleration);
