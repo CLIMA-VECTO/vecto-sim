@@ -78,6 +78,16 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return retVal;
 		}
 
+		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
+		{
+			DriverBehavior = DrivingBehavior.Halted;
+			return Driver.DrivingActionHalt(absTime, dt, targetVelocity, gradient);
+		}
+
+
+		public DrivingBehavior DriverBehavior { get; internal set; }
+
+
 		private void UpdateDrivingAction(Meter currentDistance)
 		{
 			var nextAction = GetNextDrivingAction(currentDistance);
@@ -126,15 +136,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 
-		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
-		{
-			DriverBehavior = DrivingBehavior.Halted;
-			return Driver.DrivingActionHalt(absTime, dt, targetVelocity, gradient);
-		}
-
-
-		public DrivingBehavior DriverBehavior { get; internal set; }
-
 		protected DrivingBehaviorEntry GetNextDrivingAction(Meter minDistance)
 		{
 			var currentSpeed = Driver.DataBus.VehicleSpeed;
@@ -152,7 +153,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					? entry.VehicleTargetSpeed + Driver.DriverData.OverSpeedEcoRoll.OverSpeed
 					: entry.VehicleTargetSpeed;
 				if (nextTargetSpeed < currentSpeed) {
-					// TODO @@@quam  currentSpeed ? targetSpeed? nextTargetSpeed?
 					if (!Driver.DriverData.LookAheadCoasting.Enabled ||
 						currentSpeed < Driver.DriverData.LookAheadCoasting.MinSpeed) {
 						var brakingDistance = Driver.ComputeDecelerationDistance(nextTargetSpeed);
@@ -178,14 +178,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							});
 					}
 				}
-				//if (nextTargetSpeed > currentSpeed) {
-				//	nextActions.Add(new DrivingBehaviorEntry {
-				//		Action = DefaultDriverStrategy.DrivingBehavior.Accelerating,
-				//		NextTargetSpeed = entry.VehicleTargetSpeed,
-				//		TriggerDistance = entry.Distance,
-				//		ActionDistance = entry.Distance
-				//	});
-				//}
 			}
 
 			return nextActions.Count == 0 ? null : nextActions.OrderBy(x => x.ActionDistance).First();
