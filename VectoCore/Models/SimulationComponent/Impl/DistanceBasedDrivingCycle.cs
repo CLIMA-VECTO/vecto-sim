@@ -156,25 +156,25 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		private Radian ComputeGradient(Meter ds)
 		{
-			var leftSamplePoint = CycleIntervalIterator.LeftSample;
+			//var leftSamplePoint = CycleIntervalIterator.LeftSample;
 
 			var cycleIterator = CycleIntervalIterator.Clone();
 			while (cycleIterator.RightSample.Distance < PreviousState.Distance + ds && !cycleIterator.LastEntry) {
 				cycleIterator.MoveNext();
 			}
+			var leftSamplePoint = cycleIterator.LeftSample;
 			var rightSamplePoint = cycleIterator.RightSample;
 
-			var gradient = leftSamplePoint.RoadGradient;
 
 			if (leftSamplePoint.Distance.IsEqual(rightSamplePoint.Distance)) {
-				return gradient;
+				return leftSamplePoint.RoadGradient;
 			}
 
 			CurrentState.Altitude = VectoMath.Interpolate(leftSamplePoint.Distance, rightSamplePoint.Distance,
 				leftSamplePoint.Altitude, rightSamplePoint.Altitude, PreviousState.Distance + ds);
 
-			gradient = VectoMath.InclinationToAngle(((CurrentState.Altitude - PreviousState.Altitude) /
-													(ds)).Value());
+			var gradient = VectoMath.InclinationToAngle(((CurrentState.Altitude - PreviousState.Altitude) /
+														(ds)).Value());
 			//return 0.SI<Radian>();
 			return gradient;
 		}
@@ -262,7 +262,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			// separately test for equality and greater than to have tolerance for equality comparison
 			if (CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(0)) {
-				while (CurrentState.Distance.IsGreaterOrEqual(CycleIntervalIterator.RightSample.Distance) &&
+				while (CycleIntervalIterator.LeftSample.StoppingTime.IsEqual(0) &&
+						CurrentState.Distance.IsGreaterOrEqual(CycleIntervalIterator.RightSample.Distance) &&
 						!CycleIntervalIterator.LastEntry) {
 					// we have reached the end of the current interval in the cycle, move on...
 					CycleIntervalIterator.MoveNext();
