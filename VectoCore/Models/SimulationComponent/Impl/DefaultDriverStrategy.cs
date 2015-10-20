@@ -43,7 +43,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			if (CurrentDrivingMode == DrivingMode.DrivingModeBrake) {
-				if (Driver.DataBus.Distance.IsGreaterOrEqual(BrakeTrigger.TriggerDistance)) {
+				if (Driver.DataBus.Distance.IsGreaterOrEqual(BrakeTrigger.TriggerDistance, 1e-3.SI<Meter>())) {
 					CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 					NextDrivingAction = null;
 					DrivingModes[CurrentDrivingMode].ResetMode();
