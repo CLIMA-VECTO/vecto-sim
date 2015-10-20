@@ -266,6 +266,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		///     [1/min]	Torque converter output speed
 		/// </summary>
 		[ModalResultField(typeof(SI))] TC_n_Out,
+
+		/// <summary>
+		///     [m]	Altitude
+		/// </summary>
+		[ModalResultField(typeof(SI))] altitude,
 	}
 
 

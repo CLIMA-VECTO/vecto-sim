@@ -289,18 +289,19 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Gearbox.Gear = tryNextGear;
 				var response = (ResponseDryRun)Gearbox.Request(absTime, dt, outTorque, outAngularVelocity, true);
 				Gearbox.Gear = tmpGear;
+				if (!(response is ResponseEngineSpeedTooLow)) {
+					inAngularVelocity = Data.Gears[tryNextGear].Ratio * outAngularVelocity;
+					inTorque = response.ClutchPowerRequest / inAngularVelocity;
 
-				inAngularVelocity = Data.Gears[tryNextGear].Ratio * outAngularVelocity;
-				inTorque = response.ClutchPowerRequest / inAngularVelocity;
+					// if next gear supplied enough power reserve: take it
+					// otherwise take
+					if (!IsBelowDownShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
+						var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
+						var reserve = 1 - (response.EnginePowerRequest / fullLoadPower).Cast<Scalar>();
 
-				// if next gear supplied enough power reserve: take it
-				// otherwise take
-				if (!IsBelowDownShiftCurve(tryNextGear, inTorque, inAngularVelocity)) {
-					var fullLoadPower = response.EnginePowerRequest - response.DeltaFullLoad;
-					var reserve = 1 - (response.EnginePowerRequest / fullLoadPower).Cast<Scalar>();
-
-					if (reserve >= Data.TorqueReserve) {
-						NextGear = tryNextGear;
+						if (reserve >= Data.TorqueReserve) {
+							NextGear = tryNextGear;
+						}
 					}
 				}
 			}

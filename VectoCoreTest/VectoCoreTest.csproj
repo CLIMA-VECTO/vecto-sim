@@ -68,6 +68,10 @@
     <Compile Include="Integration\CoachPowerTrain.cs" />
     <Compile Include="Integration\DriverStrategy\DriverStrategyTestCoach.cs" />
     <Compile Include="Integration\DriverStrategy\DriverStrategyTestTruck.cs" />
+    <Compile Include="Integration\FullCycleDeclarationTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Integration\DeclarationReportTest.cs" />
     <Compile Include="Utils\GraphWriter.cs" />
     <Compile Include="Integration\EngineOnlyCycle\EngineOnlyCycleTest.cs" />
     <Compile Include="Integration\SimpleDrivingCycles.cs" />
@@ -279,6 +283,40 @@
     <None Include="TestData\EngineFullLoadJumps.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.pdf" />
+    <None Include="TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.vecto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.veng">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.vfld">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.vgbx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.vmap">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\40t Truck\40t_Long_Haul_Truck.vveh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\40t Truck\Axle 40t Truck.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\40t Truck\Axle.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\40t Truck\Direct Gear.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\40t Truck\Indirect Gear.vtlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Integration\DeclarationMode\40t Truck\Retarder.vrlm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Integration\FullPowerTrain\1-Gear-StopTest-dist.vdri" />
     <None Include="TestData\Integration\FullPowerTrain\1-Gear-Test-dist.vdri">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -339,6 +377,9 @@
     </None>
     <None Include="TestData\Integration\FullPowerTrain\NoLossGbxMap.vtlm" />
     <None Include="TestData\Integration\FullPowerTrain\unlimited.vacc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Jobs\job-report.vecto">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="TestData\job.vecto">
@@ -501,6 +542,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Dummy\" />
+    <Folder Include="Integration\FullPowertrain\" />
     <Folder Include="Models\DeclarationData\" />
   </ItemGroup>
   <Choose>

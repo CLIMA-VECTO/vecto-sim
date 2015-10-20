@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
@@ -257,6 +258,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public bool VehicleStopped
 		{
 			get { return Driver.VehicleStopped; }
+		}
+
+		public DrivingBehavior DrivingBehavior
+		{
+			get { return Driver.DrivingBehavior; }
+		}
+
+		public Meter CycleStartDistance
+		{
+			get { return Road == null ? 0.SI<Meter>() : Road.CycleStartDistance; }
 		}
 	}
 }

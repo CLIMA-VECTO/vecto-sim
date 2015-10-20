@@ -61,11 +61,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 		/// <param name="engineSpeed">[rad/sec]</param>
 		/// <param name="torque">[Nm]</param>
 		/// <returns>[kg/s]</returns>
-		public SI GetFuelConsumption(NewtonMeter torque, PerSecond engineSpeed)
+		public KilogramPerSecond GetFuelConsumption(NewtonMeter torque, PerSecond engineSpeed)
 		{
 			// delauney map needs is initialised with rpm, therefore the engineSpeed has to be converted.
 			return
-				_fuelMap.Interpolate(torque.Value(), engineSpeed.ConvertTo().Rounds.Per.Minute.Value()).SI().Kilo.Gramm.Per.Second;
+				_fuelMap.Interpolate(torque.Value(), engineSpeed.ConvertTo().Rounds.Per.Minute.Value())
+					.SI()
+					.Kilo.Gramm.Per.Second.Cast<KilogramPerSecond>();
 		}
 
 		private static class Fields

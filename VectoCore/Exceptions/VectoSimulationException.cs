@@ -26,4 +26,9 @@ namespace TUGraz.VectoCore.Exceptions
 			Response = resp;
 		}
 	}
+
+	public class VectoSearchFailedException : VectoException
+	{
+		public VectoSearchFailedException(string message, params object[] args) : base(message, args) {}
+	}
 }

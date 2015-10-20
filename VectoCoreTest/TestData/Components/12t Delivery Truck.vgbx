@@ -65,7 +65,7 @@
     "StartTqReserve": 20.0,
     "StartSpeed": 2.0,
     "StartAcc": 0.6,
-    "GearboxType": "MT",
+    "GearboxType": "AMT",
     "TorqueConverter": {
       "Enabled": false,
       "File": "<NOFILE>",

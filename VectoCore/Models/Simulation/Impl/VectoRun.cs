@@ -12,6 +12,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 	/// </summary>
 	public abstract class VectoRun : LoggingObject, IVectoRun
 	{
+		public string Name { get; protected set; }
+
 		protected Second AbsTime = 0.SI<Second>();
 		protected Second dt = 1.SI<Second>();
 		protected SummaryFileWriter SumWriter { get; set; }
@@ -36,30 +38,31 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void Run()
 		{
 			Log.Info("VectoJob started running.");
-			IResponse response;
 
 			Initialize();
 			try {
+				IResponse response;
 				do {
 					response = DoSimulationStep();
 					if (response is ResponseSuccess) {
 						Container.CommitSimulationStep(AbsTime, dt);
-
 						AbsTime += dt;
 					}
 				} while (response is ResponseSuccess);
 			} catch (VectoSimulationException vse) {
 				Container.FinishSimulation();
-				throw new VectoSimulationException("absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4}", vse, AbsTime,
-					Container.Distance, dt, Container.VehicleSpeed, Container.Gear, vse.Message);
+				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", vse,
+					AbsTime, Container.Distance, dt, Container.VehicleSpeed, Container.Gear, vse.Message, Name);
 			} catch (VectoException ve) {
 				Container.FinishSimulation();
-				throw new VectoSimulationException("absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4}", ve, AbsTime,
-					Container.Distance, dt, Container.VehicleSpeed, Container.Gear, ve.Message);
+				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", ve,
+					AbsTime, Container.Distance, dt, Container.VehicleSpeed, Container.Gear, ve.Message, Name);
+			} catch (Exception e) {
+				Container.FinishSimulation();
+				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", e, AbsTime,
+					Container.Distance, dt, Container.VehicleSpeed, Container.Gear, e.Message, Name);
 			}
-
 			Container.FinishSimulation();
-
 			Log.Info("VectoJob finished.");
 		}
 

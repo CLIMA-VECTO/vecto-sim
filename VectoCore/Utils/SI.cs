@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
@@ -208,6 +209,22 @@ namespace TUGraz.VectoCore.Utils
 		[JsonConstructor, DebuggerHidden]
 		protected Kilogram(double val) : base(new SI(val).Kilo.Gramm) {}
 	}
+
+	/// <summary>
+	/// SI Class for Kilogram per Second [kg].
+	/// </summary>
+	public class KilogramPerSecond : SIBase<KilogramPerSecond>
+	{
+		[JsonConstructor, DebuggerHidden]
+		protected KilogramPerSecond(double val) : base(new SI(val).Kilo.Gramm.Per.Second) {}
+
+		[DebuggerHidden]
+		public static Kilogram operator *(KilogramPerSecond kilogramPerSecond, Second second)
+		{
+			return ((kilogramPerSecond as SI) * second).Cast<Kilogram>();
+		}
+	}
+
 
 	/// <summary>
 	/// SI Class for Ton [t] (automatically converts to [kg])
@@ -458,6 +475,7 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="val">The value of the SI object.</param>
 		[DebuggerHidden]
+		[MethodImpl(MethodImplOptions.Synchronized)]
 		public static T Create(double val)
 		{
 			if (!Constructors.ContainsKey(typeof(T))) {
@@ -682,6 +700,7 @@ namespace TUGraz.VectoCore.Utils
 			Percent,
 			min,
 			c,
+			d,
 			h,
 			milli,
 			t
@@ -1019,7 +1038,6 @@ namespace TUGraz.VectoCore.Utils
 			[DebuggerHidden] get { return new SI(new SI(this, toUnit: Unit.k), 1000, Unit.t, Unit.g); }
 		}
 
-
 		/// <summary>
 		/// [N]
 		/// </summary>
@@ -1109,6 +1127,15 @@ namespace TUGraz.VectoCore.Utils
 		public SI Kilo
 		{
 			[DebuggerHidden] get { return new SI(this, 1000.0, Unit.k); }
+		}
+
+		/// <summary>
+		/// Quantifier for Dezi (1/10)
+		/// </summary>
+		[DebuggerHidden]
+		public SI Dezi
+		{
+			[DebuggerHidden] get { return new SI(this, 0.1, Unit.d); }
 		}
 
 		/// <summary>

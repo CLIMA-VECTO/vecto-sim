@@ -9,7 +9,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class DistanceRun : VectoRun
 	{
-		public DistanceRun(IVehicleContainer container) : base(container) {}
+		public DistanceRun(string name, IVehicleContainer container) : base(container)
+		{
+			Name = name;
+		}
 
 		protected override IResponse DoSimulationStep()
 		{
@@ -18,6 +21,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				? Constants.SimulationSettings.DriveOffDistance
 				: Constants.SimulationSettings.TargetTimeInterval * Container.VehicleSpeed;
 
+			var loopCount = 0;
 			IResponse response;
 			do {
 				response = CyclePort.Request(AbsTime, ds);
@@ -37,6 +41,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					Default(r => {
 						throw new VectoException("DistanceRun got an unexpected response: {0}", r);
 					});
+				if (loopCount++ > Constants.SimulationSettings.MaximumIterationCountForSimulationStep) {
+					throw new VectoSimulationException("Maximum iteration count for a single simulation interval reached! Aborting!");
+				}
 			} while (!(response is ResponseSuccess || response is ResponseCycleFinished));
 
 			return response;
@@ -44,6 +51,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		protected override IResponse Initialize()
 		{
+			Log.Info("Starting {0}", Name);
 			return CyclePort.Initialize();
 		}
 	}

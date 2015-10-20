@@ -42,20 +42,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			DataReader.SetJobFile(jobFile);
 		}
 
-		///// <summary>
-		///// Creates a simulation run for time based engine only powertrain.
-		///// </summary>
-		//public static IVectoRun CreateTimeBasedEngineOnlyRun(string engineFile, string cycleName, string jobFileName,
-		//	string jobName, IModalDataWriter dataWriter, SummaryFileWriter sumWriter)
-		//{
-		//	var sumWriterDecorator = new SumWriterDecoratorEngineOnly(sumWriter, jobFileName, jobName, cycleName);
-		//	var builder = new PowertrainBuilder(dataWriter, sumWriterDecorator, engineOnly: true);
-
-		//	// @@@ TODO: builder.AddEngine(engineFile);
-
-		//	return builder.Build(cycleName);
-		//}
-
 		public ISimulationDataReader DataReader { get; private set; }
 
 		public SummaryFileWriter SumWriter { get; set; }
@@ -71,9 +57,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			var i = 0;
 			foreach (var data in DataReader.NextRun()) {
 				var modFileName = Path.Combine(data.BasePath,
-					data.JobFileName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}" +
+					data.JobFileName.Replace(Constants.FileExtensions.VectoJobFile, "") + "_{0}{1}" +
 					Constants.FileExtensions.ModDataFile);
-				IModalDataWriter modWriter = new ModalDataWriter(string.Format(modFileName, data.Cycle.Name), _mode);
+				var d = data;
+				IModalDataWriter modWriter =
+					new ModalDataWriter(string.Format(modFileName, data.Cycle.Name, data.ModFileSuffix ?? ""),
+						writer => d.Report.AddResult(d.Loading, d.Mission, writer), _mode);
 				var jobName = string.Format("{0}-{1}", JobNumber, i++);
 				var sumWriterDecorator = DecorateSumWriter(data.IsEngineOnly, SumWriter, data.JobFileName, jobName, data.Cycle.Name);
 				var builder = new PowertrainBuilder(modWriter, sumWriterDecorator, DataReader.IsEngineOnly);
@@ -82,7 +71,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				if (data.IsEngineOnly) {
 					run = new TimeRun(builder.Build(data));
 				} else {
-					run = new DistanceRun(builder.Build(data));
+					var runCaption = string.Format("Cycle: {0} Loading: {1}", data.Cycle.Name, data.ModFileSuffix);
+					run = new DistanceRun(runCaption, builder.Build(data));
 				}
 
 				yield return run;

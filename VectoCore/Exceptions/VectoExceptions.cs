@@ -1,21 +1,35 @@
 ﻿using System;
 using System.IO;
 using JetBrains.Annotations;
+using NLog;
 
 namespace TUGraz.VectoCore.Exceptions
 {
 	public class VectoException : Exception
 	{
-		public VectoException(string message) : base(message) {}
-		public VectoException(string message, Exception innerException) : base(message, innerException) {}
+		public VectoException(string message) : base(message)
+		{
+			LogManager.Flush();
+		}
+
+		public VectoException(string message, Exception innerException) : base(message, innerException)
+		{
+			LogManager.Flush();
+		}
 
 		[StringFormatMethod("message")]
 		public VectoException(string message, params object[] args)
-			: base(string.Format(message, args)) {}
+			: base(string.Format(message, args))
+		{
+			LogManager.Flush();
+		}
 
 		[StringFormatMethod("message")]
 		protected VectoException(string message, Exception inner, params object[] args)
-			: base(string.Format(message, args), inner) {}
+			: base(string.Format(message, args), inner)
+		{
+			LogManager.Flush();
+		}
 	}
 
 	public abstract class FileIOException : VectoException

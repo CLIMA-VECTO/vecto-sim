@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
 using TUGraz.VectoCore.Tests.Utils;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 {
@@ -10,7 +11,7 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 		[TestInitialize]
 		public void DisableLogging()
 		{
-			LogManager.DisableLogging();
+			//LogManager.DisableLogging();
 			//GraphWriter.Disable();
 		}
 
@@ -331,6 +332,21 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 			GraphWriter.Write("Truck_DriverStrategy_Decelerate_80_0_uphill_3.vmod",
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_80_0_uphill_3.vmod");
+		}
+
+		[TestMethod]
+		public void Truck_Decelerate_80_0_SlopeChangeDuringCoast()
+		{
+			var data = new string[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  60, -1.15,     0",
+				" 70,  60, -1.85,     0",
+				"300,   0, -1.85,     2",
+			};
+
+			var cycle = SimpleDrivingCycles.CreateCycleData(data);
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Decelerate_80_0_SlopeChangeDuringCoast.vmod")
+				.Run();
 		}
 
 		[TestMethod, Ignore]
@@ -706,6 +722,23 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Drive_stop_85_stop_85_level.vmod");
 		}
 
+		[TestMethod]
+		public void Truck_Accelerate_48_52_beforeStop_lefel()
+		{
+			var data = new string[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  49.9, -5,     0",
+				"200,  52, -5,     0",
+				"300,   0, -5,     2",
+			};
+
+			var cycle = SimpleDrivingCycles.CreateCycleData(data);
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_48_52_beforeStop_level.vmod",
+				7500.SI<Kilogram>(), 19000.SI<Kilogram>()).Run();
+
+			//GraphWriter.Write("Truck_DriverStrategy_Accelerate_48_52_beforeStop_level.vmod");
+		}
+
 		#endregion
 
 		#region AccelerateOverspeed
@@ -812,6 +845,49 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 
 			GraphWriter.Write("Truck_DriverStrategy_Accelerate_0_40_downhill_1-overspeed.vmod",
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck_Overspeed\40t_Long_Haul_Truck_Cycle_Accelerate_0_40_downhill_1.vmod");
+		}
+
+		[TestMethod]
+		public void Truck_Accelerate_Decelerate_Downhill_overspeed()
+		{
+			var cycleData = new string[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  60,  0,     0",
+				" 10,  60, -6,     0",
+				"100,  55, -6,     0",
+				"300,  55, -6,     0"
+			};
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Accelerate_Decelerate-overspeed.vmod", true)
+				.Run();
+		}
+
+		[TestMethod]
+		public void Truck_SlopeChangeBeforeStop()
+		{
+			var cycleData = new string[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  60, -1.4,     0",
+				"298,  60, -1.7,     0",
+				"300,   0, -1.7,     4",
+			};
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_SlopeChangeBeforeStop.vmod")
+				.Run();
+		}
+
+		[TestMethod]
+		public void Truck_FrequentSlopeChanges()
+		{
+			var cycleData = new string[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  60,  0,     0",
+				" 10,  60, -6,     0",
+				"100,  55, -6,     0",
+				"300,  55, -6,     0"
+			};
 		}
 
 		#endregion

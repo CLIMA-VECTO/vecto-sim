@@ -4,6 +4,22 @@ using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Declaration
 {
+	public enum LoadingType
+	{
+		FullLoading,
+		ReferenceLoad,
+		EmptyLoading,
+	}
+
+	public static class LoadingTypeHelper
+	{
+		public static string GetShortName(this LoadingType loadingType)
+		{
+			return loadingType.ToString().Substring(0, 1);
+		}
+	}
+
+
 	public class Mission
 	{
 		public MissionType MissionType { get; set; }
@@ -17,13 +33,26 @@ namespace TUGraz.VectoCore.Models.Declaration
 		public Kilogram RefLoad { get; set; }
 		public Kilogram MaxLoad { get; set; }
 
-		public IEnumerable<Kilogram> Loadings
+		public Dictionary<LoadingType, Kilogram> Loadings
 		{
-			get { return new[] { MinLoad, RefLoad, MaxLoad }; }
+			get
+			{
+				return new Dictionary<LoadingType, Kilogram> {
+					{ LoadingType.EmptyLoading, MinLoad },
+					{ LoadingType.ReferenceLoad, RefLoad },
+					{ LoadingType.FullLoading, MaxLoad }
+				};
+			}
 		}
 
 		public Stream CycleFile { get; set; }
 
 		public bool UseCdA2 { get; set; }
+
+		public class LoadingEntry
+		{
+			public Kilogram LoadingWeight;
+			public string Name;
+		}
 	}
 }

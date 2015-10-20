@@ -12,9 +12,9 @@ namespace TUGraz.VectoCore.Utils
 			return self.Select(StringExtensionMethods.ToDouble);
 		}
 
-		public static IEnumerable<double> ToDouble(this IEnumerable<SI> self)
+		public static IList<double> ToDouble(this IEnumerable<SI> self)
 		{
-			return self.Select(x => x.Value());
+			return self.Select(x => x.Value()).ToList();
 		}
 
 		/// <summary>
@@ -41,6 +41,12 @@ namespace TUGraz.VectoCore.Utils
 					yield break;
 				}
 			}
+		}
+
+		public static T Sum<T>(this IEnumerable<T> values) where T : SIBase<T>
+		{
+			var valueList = values.ToList();
+			return valueList.Any() ? valueList.Aggregate((sum, current) => sum + current) : null;
 		}
 
 		public static SI Sum(this IEnumerable<SI> values)

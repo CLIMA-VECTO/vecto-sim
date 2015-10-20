@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TUGraz.VectoCore.Models.Simulation;
@@ -19,13 +20,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 			if (data != null) {
 				_left = data.Entries.GetEnumerator();
 				_right = data.Entries.GetEnumerator();
-				_left.MoveNext();
-				_right.MoveNext();
-				_right.MoveNext();
 			} else {
 				_left = Enumerable.Empty<DrivingCycleData.DrivingCycleEntry>().GetEnumerator();
 				_right = Enumerable.Empty<DrivingCycleData.DrivingCycleEntry>().GetEnumerator();
 			}
+			_left.MoveNext();
+			_right.MoveNext();
+			_right.MoveNext();
 		}
 
 
@@ -39,12 +40,23 @@ namespace TUGraz.VectoCore.Tests.Utils
 			};
 		}
 
-		protected override void DoWriteModalResults(IModalDataWriter writer) {}
+		protected override void DoWriteModalResults(IModalDataWriter writer)
+		{
+			writer[ModalResultField.dist] = 0.SI<Meter>();
+			writer[ModalResultField.v_targ] = 0.KMPHtoMeterPerSecond();
+			writer[ModalResultField.grad] = 0.SI<Scalar>();
+			writer[ModalResultField.altitude] = 0.SI<Meter>();
+		}
 
 		protected override void DoCommitSimulationStep()
 		{
 			_left.MoveNext();
 			_right.MoveNext();
+		}
+
+		public Meter CycleStartDistance
+		{
+			get { return 0.SI<Meter>(); }
 		}
 
 		public IReadOnlyList<DrivingCycleData.DrivingCycleEntry> LookAhead(Meter lookaheadDistance)

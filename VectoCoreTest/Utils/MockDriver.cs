@@ -80,6 +80,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 			public Radian Gradient;
 		}
 
+		//public MeterPerSquareSecond DriverAcceleration { get; set; }
+
 		public bool VehicleStopped { get; set; }
+
+		public DrivingBehavior DrivingBehavior
+		{
+			get { throw new NotImplementedException(); }
+		}
 	}
 }

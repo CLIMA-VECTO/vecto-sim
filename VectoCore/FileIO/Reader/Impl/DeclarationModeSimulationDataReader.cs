@@ -33,13 +33,27 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				tmpVehicle.GrossVehicleMassRating, tmpVehicle.CurbWeight);
 			var driverdata = dao.CreateDriverData(Job);
 			driverdata.AccelerationCurve = AccelerationCurveData.ReadFromStream(segment.AccelerationFile);
+
+			var resultCount = segment.Missions.Sum(m => m.Loadings.Count);
+
+			var engineData = dao.CreateEngineData(Engine);
+			var engineTypeString = string.Format("{0} l, {1} kW",
+				engineData.Displacement.ConvertTo().Cubic.Dezi.Meter.ToOutputFormat(1),
+				engineData.FullLoadCurve.MaxPower.ConvertTo().Kilo.Watt.ToOutputFormat(0));
+
+			var gearboxData = dao.CreateGearboxData(Gearbox, engineData);
+			var gearboxTypeString = string.Format("{0}-Speed {1}", gearboxData.Gears.Count, gearboxData.Type);
+
+			// todo: set correct <USERNAME> in Report
+			var report = new DeclarationReport(engineData.FullLoadCurve, segment, "<USERNAME>", engineData.ModelName,
+				engineTypeString, gearboxData.ModelName, gearboxTypeString, Job.BasePath, Job.JobFile, resultCount);
+
 			foreach (var mission in segment.Missions) {
 				var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased);
 				foreach (var loading in mission.Loadings) {
-					var engineData = dao.CreateEngineData(Engine);
-
 					var simulationRunData = new VectoRunData {
-						VehicleData = dao.CreateVehicleData(Vehicle, mission, loading),
+						Loading = loading.Key,
+						VehicleData = dao.CreateVehicleData(Vehicle, mission, loading.Value),
 						EngineData = engineData,
 						GearboxData = dao.CreateGearboxData(Gearbox, engineData),
 						Aux = dao.CreateAuxiliaryData(Aux, mission.MissionType, segment.VehicleClass),
@@ -47,8 +61,12 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 						DriverData = driverdata,
 						IsEngineOnly = IsEngineOnly,
 						JobFileName = Job.JobFile,
-						BasePath = ""
+						BasePath = "",
+						ModFileSuffix = loading.Key.ToString(),
+						Report = report,
+						Mission = mission,
 					};
+					simulationRunData.Cycle.Name = mission.MissionType.ToString();
 					simulationRunData.VehicleData.VehicleClass = segment.VehicleClass;
 					yield return simulationRunData;
 				}
@@ -60,9 +78,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			try {
 				var job = vectoJob as VectoJobFileV2Declaration;
 				if (job == null) {
-					throw new VectoException(
-						string.Format("Unhandled Job File Format. Expected: Job File, Version 2, Declaration Mode. Got: {0}",
-							vectoJob.GetType()));
+					throw new VectoException("Unhandled Job File Format. Expected: Job File, Version 2, Declaration Mode. Got: {0}",
+						vectoJob.GetType());
 				}
 				Vehicle = ReadVehicle(Path.Combine(job.BasePath, job.Body.VehicleFile));
 				Engine = ReadEngine(Path.Combine(job.BasePath, job.Body.EngineFile));

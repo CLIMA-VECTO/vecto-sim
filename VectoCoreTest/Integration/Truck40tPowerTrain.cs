@@ -31,7 +31,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var container = CreatePowerTrain(cycleData, modFileName, 7500.SI<Kilogram>(), 19300.SI<Kilogram>(), overspeed);
 
-			return new DistanceRun(container);
+			return new DistanceRun("", container);
 		}
 
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, Kilogram massExtra,
@@ -39,7 +39,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var container = CreatePowerTrain(cycleData, modFileName, massExtra, loading);
 
-			return new DistanceRun(container);
+			return new DistanceRun("", container);
 		}
 
 		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName, Kilogram massExtra,

@@ -14,6 +14,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 		public Kilogram GrossVehicleWeightMax { get; set; }
 
+		public Kilogram GrossVehicleMassRating { get; set; }
+
 		public VehicleClass VehicleClass { get; internal set; }
 
 		public Stream AccelerationFile { get; internal set; }

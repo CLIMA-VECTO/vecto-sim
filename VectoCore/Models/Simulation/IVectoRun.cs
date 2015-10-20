@@ -10,6 +10,8 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// </summary>
 		void Run();
 
+		string Name { get; }
+
 		/// <summary>
 		/// Return the vehicle container.
 		/// </summary>

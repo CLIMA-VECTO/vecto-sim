@@ -72,10 +72,7 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
 
-			/// <summary>
-			/// The initial search interval for the breaking power search in the driver.
-			/// </summary>
-			public static readonly Watt BreakingPowerInitialSearchInterval = 20.SI().Kilo.Watt.Cast<Watt>();
+			public static MeterPerSecond VehicleSpeedHaltTolerance = 1e-3.SI<MeterPerSecond>();
 
 			/// <summary>
 			/// The initial search interval for the operating point search in the driver.
@@ -86,6 +83,10 @@ namespace TUGraz.VectoCore.Configuration
 			public static readonly PerSecond EngineIdlingSearchInterval = 10.SI<PerSecond>();
 
 			public const int EngineSearchLoopThreshold = 100;
+
+			public const int MaximumIterationCountForSimulationStep = 30;
+
+			public static readonly MeterPerSecond VehicleStopClutchDisengageSpeed = 10.KMPHtoMeterPerSecond();
 		}
 	}
 }
