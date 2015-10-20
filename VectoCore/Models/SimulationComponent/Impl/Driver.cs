@@ -492,7 +492,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			// braking power is in the range of the exceeding delta. set searching range to 2/3 so that 
 			// the target point is approximately in the center of the second interval
 			var searchInterval = origDelta.Abs() * 2 / 3;
-			
+
 			debug.Add(new { brakePower = 0.SI<Watt>(), searchInterval, delta = origDelta, operatingPoint });
 
 			var brakePower = searchInterval * -origDelta.Sign();
@@ -776,10 +776,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionHalt(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed.IsEqual(0, 1e-3)) {
+			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed.IsEqual(0)) {
 				throw new NotImplementedException("TargetVelocity or VehicleVelocity is not zero!");
 			}
-			DataBus.BreakPower = Double.PositiveInfinity.SI<Watt>();
+			DataBus.BreakPower = double.PositiveInfinity.SI<Watt>();
 			var retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
 			retVal.Switch().
 				Case<ResponseGearShift>(r => {
