@@ -334,6 +334,21 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 				@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_80_0_uphill_3.vmod");
 		}
 
+		[TestMethod]
+		public void Truck_Decelerate_80_0_SlopeChangeDuringCoast()
+		{
+			var data = new string[] {
+				// <s>,<v>,<grad>,<stop>
+				"  0,  60, -1.15,     0",
+				" 70,  60, -1.85,     0",
+				"300,   0, -1.85,     2",
+			};
+
+			var cycle = SimpleDrivingCycles.CreateCycleData(data);
+			Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck_DriverStrategy_Decelerate_80_0_SlopeChangeDuringCoast.vmod")
+				.Run();
+		}
+
 		[TestMethod, Ignore]
 		public void Truck_Decelerate_80_0_uphill_5()
 		{

@@ -17,7 +17,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class DefaultDriverStrategy : LoggingObject, IDriverStrategy
 	{
-		protected DrivingBehaviorEntry NextDrivingAction;
+		protected internal DrivingBehaviorEntry NextDrivingAction;
 
 		public enum DrivingMode
 		{
@@ -75,58 +75,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			var retVal = DrivingModes[CurrentDrivingMode].Request(absTime, ds, targetVelocity, gradient);
 
-			if (NextDrivingAction == null || !(retVal is ResponseSuccess)) {
-				return retVal;
-			}
-
-			// if we accelerate in the current simulation interval the ActionDistance of the next action
-			// changes and we might pass the ActionDistance - check again...
-			if (retVal.Acceleration <= 0) {
-				return retVal;
-			}
-
-			// if the speed at the end of the simulation interval is below the next target speed 
-			// we are fine (no need to brake right now)
-			var v2 = Driver.DataBus.VehicleSpeed + retVal.Acceleration * retVal.SimulationInterval;
-			if (v2 <= NextDrivingAction.NextTargetSpeed) {
-				return retVal;
-			}
-
-
-			Meter newds;
-			switch (NextDrivingAction.Action) {
-				case DrivingBehavior.Coasting:
-					var coastingDistance = Formulas.DecelerationDistance(v2, NextDrivingAction.NextTargetSpeed,
-						Driver.DriverData.LookAheadCoasting.Deceleration);
-
-					// if the distance at the end of the simulation interval is smaller than the new ActionDistance
-					// we are safe - go ahead...
-					if ((Driver.DataBus.Distance + ds).IsSmallerOrEqual(NextDrivingAction.TriggerDistance - coastingDistance,
-						Constants.SimulationSettings.DriverActionDistanceTolerance)) {
-						return retVal;
-					}
-					newds = EstimateAccelerationDistanceBeforeBrake(retVal, NextDrivingAction);
-					break;
-				case DrivingBehavior.Braking:
-					var brakingDistance = Driver.DriverData.AccelerationCurve.ComputeAccelerationDistance(v2,
-						NextDrivingAction.NextTargetSpeed);
-					if ((Driver.DataBus.Distance + ds).IsSmaller(NextDrivingAction.TriggerDistance - brakingDistance)) {
-						return retVal;
-					}
-					newds = (NextDrivingAction.TriggerDistance - brakingDistance) - Driver.DataBus.Distance;
-					break;
-				default:
-					return retVal;
-			}
-			if (newds.IsEqual(0, 1e-3) || ds.IsEqual(newds, 1e-3.SI<Meter>())) {
-				return retVal;
-			}
-			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance to {1}", NextDrivingAction.ActionDistance,
-				newds);
-			return new ResponseDrivingCycleDistanceExceeded() {
-				Source = this,
-				MaxDistance = newds,
-			};
+			return retVal;
 		}
 
 		private void UpdateDrivingAction(Meter currentDistance)
@@ -185,28 +134,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 		public DrivingBehavior DriverBehavior { get; internal set; }
-
-		private Meter EstimateAccelerationDistanceBeforeBrake(IResponse retVal, DrivingBehaviorEntry nextAction)
-		{
-			// estimate the distance to drive when accelerating with the current acceleration (taken from retVal) and then 
-			// coasting with the dirver's LookaheadDeceleration. 
-			// TriggerDistance - CurrentDistance = s_accelerate + s_lookahead
-			// s_coast(dt) = - (currentSpeed + a * dt + nextTargetSpeed) * (nextTargetSpeed - (currentSpeed + a * dt))  / (2 * a_lookahead)
-			// s_acc(dt) = currentSpeed * dt + a / 2 * dt^2
-			// => solve for dt, compute ds = currentSpeed * dt + a / 2 * dt^2
-			var dtList = VectoMath.QuadraticEquationSolver(
-				(retVal.Acceleration / 2 -
-				retVal.Acceleration * retVal.Acceleration / 2 / Driver.DriverData.LookAheadCoasting.Deceleration).Value(),
-				(Driver.DataBus.VehicleSpeed -
-				Driver.DataBus.VehicleSpeed * retVal.Acceleration / Driver.DriverData.LookAheadCoasting.Deceleration).Value(),
-				(nextAction.NextTargetSpeed * nextAction.NextTargetSpeed / 2 / Driver.DriverData.LookAheadCoasting.Deceleration -
-				Driver.DataBus.VehicleSpeed * Driver.DataBus.VehicleSpeed / 2 / Driver.DriverData.LookAheadCoasting.Deceleration -
-				(nextAction.TriggerDistance - Driver.DataBus.Distance)).Value());
-			dtList.Sort();
-			var dt = dtList.First(x => x > 0).SI<Second>();
-			var newds = Driver.DataBus.VehicleSpeed * dt + retVal.Acceleration / 2 * dt * dt;
-			return newds;
-		}
 
 		protected DrivingBehaviorEntry GetNextDrivingAction(Meter minDistance)
 		{
@@ -285,20 +212,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 	public abstract class AbstractDriverMode : LoggingObject, IDriverMode
 	{
-		private DefaultDriverStrategy _driverStrategy;
 		private IDriverActions _driver;
 		private DriverData _driverData;
 		private IDataBus _dataBus;
 
-		public DefaultDriverStrategy DriverStrategy
-		{
-			get { return _driverStrategy; }
-			set { _driverStrategy = value; }
-		}
+		public DefaultDriverStrategy DriverStrategy { get; set; }
 
 		protected IDriverActions Driver
 		{
-			get { return _driver ?? (_driver = _driverStrategy.Driver); }
+			get { return _driver ?? (_driver = DriverStrategy.Driver); }
 		}
 
 		protected DriverData DriverData
@@ -311,15 +233,78 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return _dataBus ?? (_dataBus = Driver.DataBus); }
 		}
 
-		public abstract IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient);
+		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		{
+			var response = DoHandleRequest(absTime, ds, targetVelocity, gradient);
+
+			if (DriverStrategy.NextDrivingAction == null || !(response is ResponseSuccess)) {
+				return response;
+			}
+
+
+			// if we accelerate in the current simulation interval the ActionDistance of the next action
+			// changes and we might pass the ActionDistance - check again...
+			if (response.Acceleration <= 0) {
+				return response;
+			}
+
+			// if the speed at the end of the simulation interval is below the next target speed 
+			// we are fine (no need to brake right now)
+			var v2 = Driver.DataBus.VehicleSpeed + response.Acceleration * response.SimulationInterval;
+			if (v2 <= DriverStrategy.NextDrivingAction.NextTargetSpeed) {
+				return response;
+			}
+
+			Meter newds;
+			response = CheckRequestDoesNotExceedNextAction(absTime, ds, targetVelocity, gradient, response, out newds);
+
+			if (newds.IsEqual(0, 1e-3) || ds.IsEqual(newds, 1e-3.SI<Meter>())) {
+				return response;
+			}
+			Log.Debug("Exceeding next ActionDistance at {0}. Reducing max Distance to {1}",
+				DriverStrategy.NextDrivingAction.ActionDistance,
+				newds);
+			return new ResponseDrivingCycleDistanceExceeded() {
+				Source = this,
+				MaxDistance = newds,
+			};
+		}
+
+		protected abstract IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient);
+
+		protected abstract IResponse CheckRequestDoesNotExceedNextAction(Second absTime, Meter ds,
+			MeterPerSecond targetVelocity, Radian gradient, IResponse response, out Meter newSimulationDistance);
+
 		public abstract void ResetMode();
+
+		protected Meter EstimateAccelerationDistanceBeforeBrake(IResponse retVal, DrivingBehaviorEntry nextAction)
+		{
+			// estimate the distance to drive when accelerating with the current acceleration (taken from retVal) and then 
+			// coasting with the dirver's LookaheadDeceleration. 
+			// TriggerDistance - CurrentDistance = s_accelerate + s_lookahead
+			// s_coast(dt) = - (currentSpeed + a * dt + nextTargetSpeed) * (nextTargetSpeed - (currentSpeed + a * dt))  / (2 * a_lookahead)
+			// s_acc(dt) = currentSpeed * dt + a / 2 * dt^2
+			// => solve for dt, compute ds = currentSpeed * dt + a / 2 * dt^2
+			var dtList = VectoMath.QuadraticEquationSolver(
+				(retVal.Acceleration / 2 -
+				retVal.Acceleration * retVal.Acceleration / 2 / Driver.DriverData.LookAheadCoasting.Deceleration).Value(),
+				(Driver.DataBus.VehicleSpeed -
+				Driver.DataBus.VehicleSpeed * retVal.Acceleration / Driver.DriverData.LookAheadCoasting.Deceleration).Value(),
+				(nextAction.NextTargetSpeed * nextAction.NextTargetSpeed / 2 / Driver.DriverData.LookAheadCoasting.Deceleration -
+				Driver.DataBus.VehicleSpeed * Driver.DataBus.VehicleSpeed / 2 / Driver.DriverData.LookAheadCoasting.Deceleration -
+				(nextAction.TriggerDistance - Driver.DataBus.Distance)).Value());
+			dtList.Sort();
+			var dt = dtList.First(x => x > 0).SI<Second>();
+			var newds = Driver.DataBus.VehicleSpeed * dt + retVal.Acceleration / 2 * dt * dt;
+			return newds;
+		}
 	}
 
 	//=====================================
 
 	public class DriverModeDrive : AbstractDriverMode
 	{
-		public override IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		protected override IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			IResponse response = null;
 
@@ -371,6 +356,42 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return response;
 		}
 
+		protected override IResponse CheckRequestDoesNotExceedNextAction(Second absTime, Meter ds,
+			MeterPerSecond targetVelocity, Radian gradient, IResponse response, out Meter newds)
+		{
+			var nextAction = DriverStrategy.NextDrivingAction;
+			newds = ds;
+			if (nextAction == null) {
+				return response;
+			}
+			var v2 = Driver.DataBus.VehicleSpeed + response.Acceleration * response.SimulationInterval;
+			switch (DriverStrategy.NextDrivingAction.Action) {
+				case DrivingBehavior.Coasting:
+					var coastingDistance = Formulas.DecelerationDistance(v2, nextAction.NextTargetSpeed,
+						Driver.DriverData.LookAheadCoasting.Deceleration);
+
+					// if the distance at the end of the simulation interval is smaller than the new ActionDistance
+					// we are safe - go ahead...
+					if ((Driver.DataBus.Distance + ds).IsSmallerOrEqual(nextAction.TriggerDistance - coastingDistance,
+						Constants.SimulationSettings.DriverActionDistanceTolerance)) {
+						return response;
+					}
+					newds = EstimateAccelerationDistanceBeforeBrake(response, nextAction);
+					break;
+				case DrivingBehavior.Braking:
+					var brakingDistance = Driver.DriverData.AccelerationCurve.ComputeAccelerationDistance(v2,
+						nextAction.NextTargetSpeed);
+					if ((Driver.DataBus.Distance + ds).IsSmaller(nextAction.TriggerDistance - brakingDistance)) {
+						return response;
+					}
+					newds = (nextAction.TriggerDistance - brakingDistance) - Driver.DataBus.Distance;
+					break;
+				default:
+					return response;
+			}
+			return null;
+		}
+
 		public override void ResetMode() {}
 	}
 
@@ -386,7 +407,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected BrakingPhase Phase;
 
-		public override IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
+		protected override IResponse DoHandleRequest(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			IResponse response = null;
 			if (DataBus.VehicleSpeed <= DriverStrategy.BrakeTrigger.NextTargetSpeed) {
@@ -496,6 +517,31 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			return response;
+		}
+
+		protected override IResponse CheckRequestDoesNotExceedNextAction(Second absTime, Meter ds,
+			MeterPerSecond targetVelocity, Radian gradient, IResponse response, out Meter newds)
+		{
+			var nextAction = DriverStrategy.NextDrivingAction;
+			newds = ds;
+			if (nextAction == null) {
+				return response;
+			}
+
+			switch (nextAction.Action) {
+				case DrivingBehavior.Coasting:
+					var v2 = Driver.DataBus.VehicleSpeed + response.Acceleration * response.SimulationInterval;
+					var brakingDistance = Driver.DriverData.AccelerationCurve.ComputeAccelerationDistance(v2,
+						nextAction.NextTargetSpeed);
+					if ((Driver.DataBus.Distance + ds).IsSmaller(nextAction.TriggerDistance - brakingDistance)) {
+						return response;
+					}
+					newds = (nextAction.TriggerDistance - brakingDistance) - Driver.DataBus.Distance;
+					break;
+				default:
+					return response;
+			}
+			return null;
 		}
 
 		public override void ResetMode()
