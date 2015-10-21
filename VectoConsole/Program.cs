@@ -61,8 +61,8 @@ Examples:
 				}
 
 				var config = LogManager.Configuration;
-				config.LoggingRules.Add(new LoggingRule("*", logLevel, config.FindTargetByName("Console")));
-				config.LoggingRules.Add(new LoggingRule("*", logLevel, config.FindTargetByName("File")));
+				config.LoggingRules.Add(new LoggingRule("*", logLevel, config.FindTargetByName("ConsoleLogger")));
+				config.LoggingRules.Add(new LoggingRule("*", logLevel, config.FindTargetByName("LogFile")));
 				LogManager.Configuration = config;
 				Trace.Listeners.Add(new ConsoleTraceListener(true));
 
