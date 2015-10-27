@@ -240,7 +240,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 
 			// normal shift when all requirements are fullfilled ------------------
-			var minimumShiftTimePassed = (lastShiftTime + Data.ShiftTime).IsSmaller(absTime);
+			var minimumShiftTimePassed = (lastShiftTime + Data.ShiftTime).IsSmallerOrEqual(absTime);
 			if (!minimumShiftTimePassed) {
 				return false;
 			}

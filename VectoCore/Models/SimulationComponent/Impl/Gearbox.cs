@@ -103,6 +103,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return Data.StartAcceleration; }
 		}
 
+		public FullLoadCurve GearFullLoadCurve
+		{
+			get { return Gear == 0 ? null : Data.Gears[Gear].FullLoadCurve; }
+		}
+
 		#endregion
 
 		#region ITnOutPort
@@ -308,7 +313,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return dryRunResponse;
 			}
 
-			var shiftAllowed = !inEngineSpeed.IsEqual(0) && !DataBus.VehicleSpeed.IsEqual(0) && absTime.IsGreater(0);
+			var shiftAllowed = !inEngineSpeed.IsEqual(0) && !DataBus.VehicleSpeed.IsEqual(0);
 
 			if (shiftAllowed) {
 				var shiftRequired = _strategy.ShiftRequired(absTime, dt, outTorque, outAngularVelocity, inTorque, inEngineSpeed,

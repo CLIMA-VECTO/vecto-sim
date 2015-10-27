@@ -10,11 +10,13 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		/// <param name="d"></param>
 		/// <returns></returns>
+		[DebuggerHidden]
 		public static PerSecond RPMtoRad(this int d)
 		{
 			return d.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
 		}
 
+		[DebuggerHidden]
 		public static MeterPerSecond KMPHtoMeterPerSecond(this int d)
 		{
 			return d.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>();
@@ -22,8 +24,9 @@ namespace TUGraz.VectoCore.Utils
 
 
 		/// <summary>
-		/// Gets the SI representation of the number (unit-less).
+		/// Gets the unit-less SI representation of the number.
 		/// </summary>
+		[DebuggerHidden]
 		public static SI SI(this int value)
 		{
 			return new SI(value);
