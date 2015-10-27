@@ -4,6 +4,7 @@ using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
@@ -36,7 +37,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		uint IGearboxInfo.Gear
 		{
 			get { return 0; }
-			//set { }
 		}
 
 		public MeterPerSecond StartSpeed
@@ -47,6 +47,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public MeterPerSquareSecond StartAcceleration
 		{
 			get { throw new VectoSimulationException("Not Implemented: EngineOnlyGearbox has no StartAcceleration value."); }
+		}
+
+		public FullLoadCurve GearFullLoadCurve
+		{
+			get { return null; }
 		}
 
 		#endregion

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Resources;
 using NLog;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
@@ -126,7 +124,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			ValidatePowerDemand(requestedEnginePower);
 
-			CurrentState.EnginePower = LimitEnginePower(requestedEnginePower);
 
 			if (dryRun) {
 				return new ResponseDryRun {
@@ -136,12 +133,17 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			if (!CurrentState.EnginePower.IsEqual(requestedEnginePower, Constants.SimulationSettings.EnginePowerSearchTolerance)) {
-				var delta = (requestedEnginePower - CurrentState.EnginePower);
-				Log.Debug("requested engine power exceeds FLD: delta: {0}", delta);
-				return delta > 0
-					? new ResponseOverload { Delta = delta, EnginePowerRequest = requestedEnginePower, Source = this }
-					: new ResponseUnderload { Delta = delta, EnginePowerRequest = requestedEnginePower, Source = this };
+			CurrentState.EnginePower = LimitEnginePower(requestedEnginePower);
+			var delta = requestedEnginePower - CurrentState.EnginePower;
+
+			if (delta.IsGreater(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+				Log.Debug("requested engine power exceeds fullload power: delta: {0}", delta);
+				return new ResponseOverload { Delta = delta, EnginePowerRequest = requestedEnginePower, Source = this };
+			}
+
+			if (delta.IsSmaller(0.SI<Watt>(), Constants.SimulationSettings.EnginePowerSearchTolerance)) {
+				Log.Debug("requested engine power is below drag power: delta: {0}", delta);
+				return new ResponseUnderload { Delta = delta, EnginePowerRequest = requestedEnginePower, Source = this };
 			}
 
 			UpdateEngineState(CurrentState.EnginePower);
@@ -250,7 +252,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// </summary>
 		protected virtual Watt LimitEnginePower(Watt requestedEnginePower)
 		{
-			return VectoMath.Limit(requestedEnginePower, CurrentState.FullDragPower, CurrentState.DynamicFullLoadPower);
+			var curve = DataBus.GearFullLoadCurve;
+			if (curve != null) {
+				var gearboxFullLoad = curve.FullLoadStationaryTorque(CurrentState.EngineSpeed) * CurrentState.EngineSpeed;
+				var gearboxDragLoad = curve.DragLoadStationaryTorque(CurrentState.EngineSpeed) * CurrentState.EngineSpeed;
+				requestedEnginePower = VectoMath.Limit(requestedEnginePower, gearboxFullLoad, gearboxDragLoad);
+			}
+
+			return VectoMath.Limit(requestedEnginePower, CurrentState.DynamicFullLoadPower, CurrentState.FullDragPower);
 		}
 
 		/// <summary>
@@ -289,7 +298,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Data.FullLoadCurve.FullLoadStationaryTorque(angularVelocity);
 			CurrentState.StationaryFullLoadPower = CurrentState.StationaryFullLoadTorque * angularVelocity;
 
-			double pt1 = Data.FullLoadCurve.PT1(angularVelocity).Value();
+			var pt1 = Data.FullLoadCurve.PT1(angularVelocity).Value();
 
 //			var dynFullPowerCalculated = (1 / (pt1 + 1)) *
 //										(_currentState.StationaryFullLoadPower + pt1 * _previousState.EnginePower);
@@ -377,6 +386,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			/// </summary>
 			public NewtonMeter EngineTorque { get; set; }
 
+			// ReSharper disable once InconsistentNaming
 			public Second dt { get; set; }
 
 			#region Equality members
@@ -457,8 +467,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			protected CombustionEngine Engine;
 
-			protected Second IdleStart = null;
-			protected Watt LastEnginePower = null;
+			protected Second IdleStart;
+			protected Watt LastEnginePower;
 
 			public CombustionEngineIdleController(CombustionEngine combustionEngine)
 			{
@@ -485,7 +495,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					IdleStart = absTime;
 					LastEnginePower = Engine.PreviousState.EnginePower;
 				}
-				IResponse retVal = null;
+				IResponse retVal;
 
 				var idleTime = absTime - IdleStart + dt;
 				var prevEngineSpeed = Engine.PreviousState.EngineSpeed;
@@ -531,8 +541,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			{
 				Log.Info("Disabling logging during search idling speed");
 				LogManager.DisableLogging();
-
-				var prevEngineSpeed = Engine.PreviousState.EngineSpeed;
 
 				var searchInterval = Constants.SimulationSettings.EngineIdlingSearchInterval;
 				var intervalFactor = 1.0;

@@ -1,4 +1,5 @@
-﻿using TUGraz.VectoCore.Utils;
+﻿using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.DataBus
 {
@@ -17,5 +18,7 @@ namespace TUGraz.VectoCore.Models.Simulation.DataBus
 		MeterPerSecond StartSpeed { get; }
 
 		MeterPerSquareSecond StartAcceleration { get; }
+
+		FullLoadCurve GearFullLoadCurve { get; }
 	}
 }

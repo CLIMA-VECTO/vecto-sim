@@ -103,6 +103,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			get { return Data.StartAcceleration; }
 		}
 
+		public FullLoadCurve GearFullLoadCurve
+		{
+			get { return Gear == 0 ? null : Data.Gears[Gear].FullLoadCurve; }
+		}
+
 		#endregion
 
 		#region ITnOutPort
