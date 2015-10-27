@@ -271,6 +271,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		///     [m]	Altitude
 		/// </summary>
 		[ModalResultField(typeof(SI))] altitude,
+
+		[ModalResultField(typeof(SI), name: "ds [m]")] simulationDistance
 	}
 
 

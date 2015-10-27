@@ -148,6 +148,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			}
 
 			CurrentState.Distance = PreviousState.Distance + ds;
+			CurrentState.SimulationDistance = ds;
 			CurrentState.VehicleTargetSpeed = CycleIntervalIterator.LeftSample.VehicleTargetSpeed;
 			CurrentState.Gradient = ComputeGradient(ds);
 
@@ -240,6 +241,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
 			writer[ModalResultField.dist] = CurrentState.Distance;
+			writer[ModalResultField.simulationDistance] = CurrentState.SimulationDistance;
 			writer[ModalResultField.v_targ] = CurrentState.VehicleTargetSpeed;
 			writer[ModalResultField.grad] = (Math.Tan(CurrentState.Gradient.Value()) * 100).SI<Scalar>();
 			writer[ModalResultField.altitude] = CurrentState.Altitude;
@@ -413,6 +415,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			public IResponse Response;
 
 			public bool RequestToNextSamplePointDone = false;
+
+			public Meter SimulationDistance;
 		}
 	}
 }
