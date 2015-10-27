@@ -86,7 +86,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public DrivingBehavior DrivingBehavior
 		{
-			get { throw new NotImplementedException(); }
+			get { return DrivingBehavior.Accelerating; }
 		}
 	}
 }
