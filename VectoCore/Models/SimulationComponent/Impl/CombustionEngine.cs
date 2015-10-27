@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected readonly Watt StationaryIdleFullLoadPower;
 
 		/// <summary>
-		///     Current state is computed in request method
+		/// Current state is computed in request method
 		/// </summary>
 		internal EngineState CurrentState = new EngineState();
 
@@ -232,9 +232,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		#endregion
 
 		/// <summary>
-		///     Validates the requested power demand [W].
+		/// Validates the requested power demand [W].
 		/// </summary>
-		/// <param name="requestedEnginePower">[W]</param>
 		protected virtual void ValidatePowerDemand(Watt requestedEnginePower)
 		{
 			if (CurrentState.FullDragPower >= 0 && requestedEnginePower < 0) {
@@ -248,7 +247,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		}
 
 		/// <summary>
-		/// Limits the engine power to either DynamicFullLoadPower (upper bound) or FullDragPower (lower bound)
+		/// Limits the engine power to: FullDragPower &lt;= requestedEnginePower %lt;= DynamicFullLoadPower
 		/// </summary>
 		protected virtual Watt LimitEnginePower(Watt requestedEnginePower)
 		{
@@ -256,16 +255,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (curve != null) {
 				var gearboxFullLoad = curve.FullLoadStationaryTorque(CurrentState.EngineSpeed) * CurrentState.EngineSpeed;
 				var gearboxDragLoad = curve.DragLoadStationaryTorque(CurrentState.EngineSpeed) * CurrentState.EngineSpeed;
-				requestedEnginePower = VectoMath.Limit(requestedEnginePower, gearboxFullLoad, gearboxDragLoad);
+				requestedEnginePower = VectoMath.Limit(requestedEnginePower, gearboxDragLoad, gearboxFullLoad);
 			}
 
-			return VectoMath.Limit(requestedEnginePower, CurrentState.DynamicFullLoadPower, CurrentState.FullDragPower);
+			return VectoMath.Limit(requestedEnginePower, CurrentState.FullDragPower, CurrentState.DynamicFullLoadPower);
 		}
 
 		/// <summary>
-		///     Updates the engine state dependend on the requested power [W].
+		/// Updates the engine state dependend on the requested power [W].
 		/// </summary>
-		/// <param name="requestedEnginePower">[W]</param>
 		protected virtual void UpdateEngineState(Watt requestedEnginePower)
 		{
 			if (requestedEnginePower < -ZeroThreshold) {
@@ -285,8 +283,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <summary>
 		///     computes full load power from gear [-], angularVelocity [rad/s] and dt [s].
 		/// </summary>
-		/// <param name="angularVelocity">[rad/s]</param>
-		/// <param name="dt">[s]</param>
 		protected void ComputeFullLoadPower(PerSecond angularVelocity, Second dt)
 		{
 			if (dt <= 0) {
@@ -331,59 +327,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		{
 			public EngineOperationMode OperationMode { get; set; }
 
-			/// <summary>
-			///     [s]
-			/// </summary>
 			public Second AbsTime { get; set; }
 
-			/// <summary>
-			///     [W]
-			/// </summary>
 			public Watt EnginePower { get; set; }
 
 			/// <summary>
-			///     [rad/s]
+			/// [rad/s]
 			/// </summary>
 			public PerSecond EngineSpeed { get; set; }
 
-			/// <summary>
-			///     [W]
-			/// </summary>
 			public Watt EnginePowerLoss { get; set; }
 
-			/// <summary>
-			///     [W]
-			/// </summary>
 			public Watt StationaryFullLoadPower { get; set; }
 
-			/// <summary>
-			///     [W]
-			/// </summary>
 			public Watt DynamicFullLoadPower { get; set; }
 
-			/// <summary>
-			///     [Nm]
-			/// </summary>
 			public NewtonMeter StationaryFullLoadTorque { get; set; }
 
-			/// <summary>
-			///     [Nm]
-			/// </summary>
 			public NewtonMeter DynamicFullLoadTorque { get; set; }
 
-			/// <summary>
-			///     [W]
-			/// </summary>
 			public Watt FullDragPower { get; set; }
 
-			/// <summary>
-			///     [Nm]
-			/// </summary>
 			public NewtonMeter FullDragTorque { get; set; }
 
-			/// <summary>
-			///     [Nm]
-			/// </summary>
 			public NewtonMeter EngineTorque { get; set; }
 
 			// ReSharper disable once InconsistentNaming
