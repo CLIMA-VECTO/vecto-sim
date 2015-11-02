@@ -245,9 +245,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				return table.Rows.Cast<DataRow>().Select(row => new DrivingCycleData.DrivingCycleEntry {
 					Distance = row.ParseDouble(Fields.Distance).SI<Meter>(),
 					VehicleTargetSpeed =
-						row.ParseDouble(Fields.VehicleSpeed)
-							.SI()
-							.Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
+						row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
 					RoadGradientPercent = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
 					RoadGradient =
 						VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
@@ -259,9 +257,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 						row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<PerSecond>(),
 					Gear = row.ParseDoubleOrGetDefault(Fields.Gear),
 					AirSpeedRelativeToVehicle =
-						row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle)
-							.SI()
-							.Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
+						row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond(),
 					WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
 					AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
 				});
@@ -316,9 +312,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 				var entries = table.Rows.Cast<DataRow>().Select((row, index) => new DrivingCycleData.DrivingCycleEntry {
 					Time = row.ParseDoubleOrGetDefault(Fields.Time, index).SI<Second>(),
 					VehicleTargetSpeed =
-						row.ParseDouble(Fields.VehicleSpeed)
-							.SI()
-							.Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
+						row.ParseDouble(Fields.VehicleSpeed).KMPHtoMeterPerSecond(),
 					RoadGradientPercent = row.ParseDoubleOrGetDefault(Fields.RoadGradient),
 					RoadGradient =
 						VectoMath.InclinationToAngle(row.ParseDoubleOrGetDefault(Fields.RoadGradient) / 100.0),
@@ -328,9 +322,7 @@ namespace TUGraz.VectoCore.FileIO.Reader
 					EngineSpeed =
 						row.ParseDoubleOrGetDefault(Fields.EngineSpeed).SI().Rounds.Per.Minute.Cast<PerSecond>(),
 					AirSpeedRelativeToVehicle =
-						row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle)
-							.SI()
-							.Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
+						row.ParseDoubleOrGetDefault(Fields.AirSpeedRelativeToVehicle).KMPHtoMeterPerSecond(),
 					WindYawAngle = row.ParseDoubleOrGetDefault(Fields.WindYawAngle),
 					AuxiliarySupplyPower = AuxSupplyPowerReader.Read(row)
 				}).ToArray();
