@@ -485,6 +485,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Case<ResponseSpeedLimitExceeded>(() => {
 							response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
 								gradient);
+							if (response is ResponseOverload && !DataBus.ClutchClosed(absTime)) {
+								response = Driver.DrivingActionRoll(absTime, ds, DataBus.VehicleSpeed, gradient);
+							}
 						});
 					break;
 				case BrakingPhase.Brake:
