@@ -103,7 +103,8 @@ namespace TUGraz.VectoCore.Utils
 
 		public static MeterPerSecond KMPHtoMeterPerSecond(this double self)
 		{
-			return self.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>();
+			return SI<MeterPerSecond>(self / 3.6);
+			//return self.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>();
 		}
 
 		public static double ToRadian(this double self)
