@@ -87,7 +87,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestMethod]
 		public void Truck40t_SubUrbanCycle_RefLoad()
 		{
-			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("SubUrban");
+			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Suburban");
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck40t_SubUrbanCycle_RefLoad.vmod",
 				7500.SI<Kilogram>(), 12900.SI<Kilogram>());
 
@@ -98,7 +98,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestMethod]
 		public void Truck40t_InterUrbanCycle_RefLoad()
 		{
-			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("InterUrban");
+			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("Interurban");
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck40t_InterUrbanCycle_RefLoad.vmod",
 				7500.SI<Kilogram>(), 12900.SI<Kilogram>());
 
