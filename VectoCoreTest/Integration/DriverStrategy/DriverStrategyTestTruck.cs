@@ -540,6 +540,25 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			//	@"..\..\TestData\Integration\DriverStrategy\Vecto2.2\40t Truck\40t_Long_Haul_Truck_Cycle_Decelerate_20_0_downhill_2_RefLoad.vmod");
 		}
 
+		[TestMethod]
+		public void Truck_Decelerate_55_43_0_downhill_RefLoad()
+		{
+			var cycleData = new string[] {
+				// <s>,<v>,<grad>,<stop>
+				"   0,  55.2, -0.6,  0",
+				" 500,  43.6, -0.6,  0",
+				" 510,  43.6, -0.3,  0",
+				" 623,   0, -0.2,  4"
+			};
+			var cycle = SimpleDrivingCycles.CreateCycleData(cycleData);
+			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle,
+				"Truck_Decelerate_55_43_0_downhill_RefLoad.vmod",
+				7500.SI<Kilogram>(), 12900.SI<Kilogram>());
+
+			run.Run();
+			Assert.IsTrue(run.FinishedWithoutErrors);
+		}
+
 		#endregion
 
 		#region Drive
