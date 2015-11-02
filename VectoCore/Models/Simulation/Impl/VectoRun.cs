@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -37,7 +38,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		}
 
 
-		public void Run()
+		public void Run(BackgroundWorker worker = null)
 		{
 			Log.Info("VectoJob started running.");
 
@@ -49,6 +50,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					if (response is ResponseSuccess) {
 						Container.CommitSimulationStep(AbsTime, dt);
 						AbsTime += dt;
+					}
+					if (worker != null) {
+						worker.ReportProgress((int)(CyclePort.Progress * 1000));
+						if (worker.CancellationPending) {
+							Log.Info("Background Task canceled!");
+							Container.FinishSimulation();
+							return;
+						}
 					}
 				} while (response is ResponseSuccess);
 			} catch (VectoSimulationException vse) {
