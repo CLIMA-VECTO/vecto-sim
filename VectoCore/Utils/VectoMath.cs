@@ -124,11 +124,11 @@ namespace TUGraz.VectoCore.Utils
 	}
 
 	[DebuggerDisplay("(X:{X}, Y:{Y}, Z:{Z})")]
-	public class Point
+	public struct Point
 	{
-		public double X;
-		public double Y;
-		public double Z;
+		public readonly double X;
+		public readonly double Y;
+		public readonly double Z;
 
 		public Point(double x, double y, double z = 0)
 		{
@@ -139,8 +139,8 @@ namespace TUGraz.VectoCore.Utils
 
 		public static Point operator -(Point p1, Point p2)
 		{
-			Contract.Requires(p1 != null);
-			Contract.Requires(p2 != null);
+			//Contract.Requires(p1 != null);
+			//Contract.Requires(p2 != null);
 			return new Point(p1.X - p2.X, p1.Y - p2.Y, p1.Z - p2.Z);
 		}
 
@@ -151,9 +151,9 @@ namespace TUGraz.VectoCore.Utils
 
 		#region Equality members
 
-		protected bool Equals(Point other)
+		private bool Equals(Point other)
 		{
-			Contract.Requires(other != null);
+			//Contract.Requires(other != null);
 
 			return X.Equals(other.X) && Y.Equals(other.Y) && Z.Equals(other.Z);
 		}
@@ -162,9 +162,6 @@ namespace TUGraz.VectoCore.Utils
 		{
 			if (ReferenceEquals(null, obj)) {
 				return false;
-			}
-			if (ReferenceEquals(this, obj)) {
-				return true;
 			}
 			return obj.GetType() == GetType() && Equals((Point)obj);
 		}
@@ -196,9 +193,9 @@ namespace TUGraz.VectoCore.Utils
 		public Plane(Triangle tr)
 		{
 			Contract.Requires(tr != null);
-			Contract.Requires(tr.P1 != null);
-			Contract.Requires(tr.P2 != null);
-			Contract.Requires(tr.P3 != null);
+			//Contract.Requires(tr.P1 != null);
+			//Contract.Requires(tr.P2 != null);
+			//Contract.Requires(tr.P3 != null);
 
 			var ab = tr.P2 - tr.P1;
 			var ac = tr.P3 - tr.P1;
@@ -228,9 +225,9 @@ namespace TUGraz.VectoCore.Utils
 
 		public bool IsInside(double x, double y, bool exact)
 		{
-			Contract.Requires(P1 != null);
-			Contract.Requires(P2 != null);
-			Contract.Requires(P3 != null);
+			//Contract.Requires(P1 != null);
+			//Contract.Requires(P2 != null);
+			//Contract.Requires(P3 != null);
 
 			//Barycentric Technique: http://www.blackpawn.com/texts/pointinpoly/default.html
 			var p = new Point(x, y, 0);
@@ -258,10 +255,10 @@ namespace TUGraz.VectoCore.Utils
 
 		public bool ContainsInCircumcircle(Point p)
 		{
-			Contract.Requires(p != null);
-			Contract.Requires(P1 != null);
-			Contract.Requires(P2 != null);
-			Contract.Requires(P3 != null);
+			//Contract.Requires(p != null);
+			//Contract.Requires(P1 != null);
+			//Contract.Requires(P2 != null);
+			//Contract.Requires(P3 != null);
 
 			var p0 = P1 - p;
 			var p1 = P2 - p;
@@ -321,9 +318,9 @@ namespace TUGraz.VectoCore.Utils
 		public override int GetHashCode()
 		{
 			unchecked {
-				var hashCode = (P1 != null ? P1.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (P2 != null ? P2.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (P3 != null ? P3.GetHashCode() : 0);
+				var hashCode = P1.GetHashCode();
+				hashCode = (hashCode * 397) ^ P2.GetHashCode();
+				hashCode = (hashCode * 397) ^ P3.GetHashCode();
 				return hashCode;
 			}
 		}
@@ -365,7 +362,7 @@ namespace TUGraz.VectoCore.Utils
 
 		public override int GetHashCode()
 		{
-			return ((P1 != null ? P1.GetHashCode() : 0)) ^ (P2 != null ? P2.GetHashCode() : 0);
+			return (P1.GetHashCode()) ^ (P2.GetHashCode());
 		}
 
 		#endregion
