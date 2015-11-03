@@ -1,3 +1,4 @@
+Imports System.Xml.Linq
 ' Copyright 2014 European Union.
 ' Licensed under the EUPL (the 'Licence');
 '
@@ -505,6 +506,27 @@ Public Class F_ENG
 		If fldfile <> sKey.NoFile AndAlso IO.File.Exists(fldfile) Then
 			OpenFiles(fldfile)
 		End If
+
+	End Sub
+
+	Private Sub BtWHTCimport_Click(sender As Object, e As EventArgs) Handles BtWHTCimport.Click
+		Dim xml As XDocument
+
+		Dim dlog As New cFileBrowser("XML", False, True)
+		dlog.Extensions = New String() {"xml"}
+
+		If Not dlog.OpenDialog("") Then Exit Sub
+
+		Try
+			xml = XDocument.Load(dlog.Files(0))
+
+			Me.TbWHTCurban.Text = xml.<VECTO-Engine-TransferFile>.<WHTCCorrectionFactors>.<Urban>.Value
+			Me.TbWHTCrural.Text = xml.<VECTO-Engine-TransferFile>.<WHTCCorrectionFactors>.<Rural>.Value
+			Me.TbWHTCmw.Text = xml.<VECTO-Engine-TransferFile>.<WHTCCorrectionFactors>.<Motorway>.Value
+
+		Catch ex As Exception
+			MsgBox("Failed to load file! " & ex.Message, MsgBoxStyle.Critical)
+		End Try
 
 	End Sub
 End Class
