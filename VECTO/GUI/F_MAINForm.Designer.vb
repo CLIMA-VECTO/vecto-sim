@@ -40,6 +40,7 @@ Partial Class F_MAINForm
 		Me.ToolStripProgBarOverall = New System.Windows.Forms.ToolStripProgressBar()
 		Me.TabControl1 = New System.Windows.Forms.TabControl()
 		Me.TabPageGEN = New System.Windows.Forms.TabPage()
+		Me.Button2 = New System.Windows.Forms.Button()
 		Me.LbDecl = New System.Windows.Forms.Label()
 		Me.PictureBox1 = New System.Windows.Forms.PictureBox()
 		Me.BtGENdown = New System.Windows.Forms.Button()
@@ -47,8 +48,8 @@ Partial Class F_MAINForm
 		Me.LbAutoShDown = New System.Windows.Forms.Label()
 		Me.ChBoxAllGEN = New System.Windows.Forms.CheckBox()
 		Me.LvGEN = New System.Windows.Forms.ListView()
-		Me.ColGENpath = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-		Me.ColGENstatus = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+		Me.ColGENpath = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.ColGENstatus = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ButtonGENopt = New System.Windows.Forms.Button()
 		Me.ButtonGENremove = New System.Windows.Forms.Button()
 		Me.Button1 = New System.Windows.Forms.Button()
@@ -129,7 +130,6 @@ Partial Class F_MAINForm
 		Me.OpenWithToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.OpenInGraphWindowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ShowInFolderToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-		Me.Button2 = New System.Windows.Forms.Button()
 		Me.StatusBAR.SuspendLayout()
 		Me.TabControl1.SuspendLayout()
 		Me.TabPageGEN.SuspendLayout()
@@ -223,6 +223,18 @@ Partial Class F_MAINForm
 		Me.TabPageGEN.TabIndex = 0
 		Me.TabPageGEN.Text = "Job Files"
 		Me.TabPageGEN.UseVisualStyleBackColor = True
+		'
+		'Button2
+		'
+		Me.Button2.Image = Global.VECTO.My.Resources.Resources.Play_icon
+		Me.Button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+		Me.Button2.Location = New System.Drawing.Point(6, 100)
+		Me.Button2.Name = "Button2"
+		Me.Button2.Size = New System.Drawing.Size(105, 41)
+		Me.Button2.TabIndex = 20
+		Me.Button2.Text = "START V3"
+		Me.Button2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+		Me.Button2.UseVisualStyleBackColor = True
 		'
 		'LbDecl
 		'
@@ -1011,18 +1023,6 @@ Partial Class F_MAINForm
 		Me.ShowInFolderToolStripMenuItem.Name = "ShowInFolderToolStripMenuItem"
 		Me.ShowInFolderToolStripMenuItem.Size = New System.Drawing.Size(198, 22)
 		Me.ShowInFolderToolStripMenuItem.Text = "Show in Folder"
-		'
-		'Button2
-		'
-		Me.Button2.Image = Global.VECTO.My.Resources.Resources.Play_icon
-		Me.Button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-		Me.Button2.Location = New System.Drawing.Point(6, 100)
-		Me.Button2.Name = "Button2"
-		Me.Button2.Size = New System.Drawing.Size(105, 41)
-		Me.Button2.TabIndex = 20
-		Me.Button2.Text = "START V3"
-		Me.Button2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-		Me.Button2.UseVisualStyleBackColor = True
 		'
 		'F_MAINForm
 		'

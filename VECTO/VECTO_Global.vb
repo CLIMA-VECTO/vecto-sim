@@ -22,6 +22,7 @@ Module VECTO_Global
 
 	'BackgroundWorker
 	Public VECTOworker As System.ComponentModel.BackgroundWorker
+	Public VECTOworkerV3 As System.ComponentModel.BackgroundWorker
 
 	'Log/Msg
 	Public MSGerror As Integer
