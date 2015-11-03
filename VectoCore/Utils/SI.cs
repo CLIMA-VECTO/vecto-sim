@@ -118,7 +118,10 @@ namespace TUGraz.VectoCore.Utils
 	public class Newton : SIBase<Newton>
 	{
 		[JsonConstructor, DebuggerHidden]
-		private Newton(double val) : base(new SI(val).Newton) {}
+		private Newton(double val) : base(val)
+		{
+			Numerator = new[] { Unit.N };
+		}
 
 		/// <summary>
 		/// Implements the operator *.
@@ -131,7 +134,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static NewtonMeter operator *(Newton newton, Meter meter)
 		{
-			return ((newton as SI) * meter).Cast<NewtonMeter>();
+			return SIBase<NewtonMeter>.Create(newton.Val * meter.Value());
 		}
 	}
 
@@ -141,7 +144,7 @@ namespace TUGraz.VectoCore.Utils
 	public class Radian : SIBase<Radian>
 	{
 		[JsonConstructor, DebuggerHidden]
-		private Radian(double val) : base(new SI(val).Radian) {}
+		private Radian(double val) : base(val) {}
 	}
 
 	/// <summary>
@@ -150,12 +153,15 @@ namespace TUGraz.VectoCore.Utils
 	public class PerSquareSecond : SIBase<PerSquareSecond>
 	{
 		[JsonConstructor, DebuggerHidden]
-		private PerSquareSecond(double val) : base(new SI(val).Per.Square.Second) {}
+		private PerSquareSecond(double val) : base(val)
+		{
+			Denominator = new[] { Unit.s, Unit.s };
+		}
 
 		[DebuggerHidden]
 		public static PerSecond operator *(PerSquareSecond perSquareSecond, Second second)
 		{
-			return ((perSquareSecond as SI) * second).Cast<PerSecond>();
+			return SIBase<PerSecond>.Create(perSquareSecond.Val * second.Value());
 		}
 	}
 
@@ -166,7 +172,11 @@ namespace TUGraz.VectoCore.Utils
 	public class MeterPerSquareSecond : SIBase<MeterPerSquareSecond>
 	{
 		[JsonConstructor, DebuggerHidden]
-		protected MeterPerSquareSecond(double val) : base(new SI(val).Meter.Per.Square.Second) {}
+		protected MeterPerSquareSecond(double val) : base(val)
+		{
+			Numerator = new[] { Unit.m };
+			Denominator = new[] { Unit.s, Unit.s };
+		}
 
 		/// <summary>
 		/// Implements the operator /.
@@ -179,7 +189,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static Second operator /(MeterPerSecond meterPerSecond, MeterPerSquareSecond meterPerSquareSecond)
 		{
-			return ((meterPerSecond as SI) / meterPerSquareSecond).Cast<Second>();
+			return SIBase<Second>.Create(meterPerSecond.Value() / meterPerSquareSecond.Val);
 		}
 	}
 
@@ -189,7 +199,10 @@ namespace TUGraz.VectoCore.Utils
 	public class Second : SIBase<Second>
 	{
 		[JsonConstructor, DebuggerHidden]
-		private Second(double val) : base(new SI(val).Second) {}
+		private Second(double val) : base(val)
+		{
+			Numerator = new[] { Unit.s };
+		}
 	}
 
 	/// <summary>
@@ -198,7 +211,10 @@ namespace TUGraz.VectoCore.Utils
 	public class Meter : SIBase<Meter>
 	{
 		[JsonConstructor, DebuggerHidden]
-		protected Meter(double val) : base(new SI(val).Meter) {}
+		protected Meter(double val) : base(val)
+		{
+			Numerator = new[] { Unit.m };
+		}
 	}
 
 	/// <summary>
@@ -207,7 +223,10 @@ namespace TUGraz.VectoCore.Utils
 	public class Kilogram : SIBase<Kilogram>
 	{
 		[JsonConstructor, DebuggerHidden]
-		protected Kilogram(double val) : base(new SI(val).Kilo.Gramm) {}
+		protected Kilogram(double val) : base(val)
+		{
+			Numerator = new[] { Unit.k, Unit.g };
+		}
 	}
 
 	/// <summary>
@@ -216,7 +235,10 @@ namespace TUGraz.VectoCore.Utils
 	public class Ton : SIBase<Ton>
 	{
 		[JsonConstructor, DebuggerHidden]
-		protected Ton(double val) : base(new SI(val).Ton) {}
+		protected Ton(double val) : base(val * 1000.0)
+		{
+			Numerator = new[] { Unit.k, Unit.g };
+		}
 	}
 
 	/// <summary>
@@ -225,7 +247,10 @@ namespace TUGraz.VectoCore.Utils
 	public class SquareMeter : SIBase<SquareMeter>
 	{
 		[JsonConstructor, DebuggerHidden]
-		private SquareMeter(double val) : base(new SI(val).Square.Meter) {}
+		private SquareMeter(double val) : base(val)
+		{
+			Numerator = new[] { Unit.m, Unit.m };
+		}
 	}
 
 	/// <summary>
@@ -234,7 +259,10 @@ namespace TUGraz.VectoCore.Utils
 	public class CubicMeter : SIBase<CubicMeter>
 	{
 		[JsonConstructor, DebuggerHidden]
-		private CubicMeter(double val) : base(new SI(val).Cubic.Meter) {}
+		private CubicMeter(double val) : base(val)
+		{
+			Numerator = new[] { Unit.m, Unit.m, Unit.m };
+		}
 	}
 
 	/// <summary>
@@ -243,12 +271,15 @@ namespace TUGraz.VectoCore.Utils
 	public class KilogramSquareMeter : SIBase<KilogramSquareMeter>
 	{
 		[JsonConstructor, DebuggerHidden]
-		protected KilogramSquareMeter(double val) : base(new SI(val).Kilo.Gramm.Square.Meter) {}
+		protected KilogramSquareMeter(double val) : base(val)
+		{
+			Numerator = new[] { Unit.k, Unit.g, Unit.m, Unit.m };
+		}
 
 		[DebuggerHidden]
 		public static NewtonMeter operator *(KilogramSquareMeter kilogramSquareMeter, PerSquareSecond perSquareSecond)
 		{
-			return ((kilogramSquareMeter as SI) * perSquareSecond).Cast<NewtonMeter>();
+			return SIBase<NewtonMeter>.Create(kilogramSquareMeter.Val * perSquareSecond.Value());
 		}
 	}
 
@@ -258,7 +289,11 @@ namespace TUGraz.VectoCore.Utils
 	public class KilogramPerWattSecond : SIBase<KilogramPerWattSecond>
 	{
 		[JsonConstructor, DebuggerHidden]
-		protected KilogramPerWattSecond(double val) : base(new SI(val).Kilo.Gramm.Per.Watt.Second) {}
+		protected KilogramPerWattSecond(double val) : base(val)
+		{
+			Numerator = new[] { Unit.k, Unit.g };
+			Denominator = new[] { Unit.W, Unit.s };
+		}
 	}
 
 	/// <summary>
@@ -267,7 +302,10 @@ namespace TUGraz.VectoCore.Utils
 	public class Watt : SIBase<Watt>
 	{
 		[JsonConstructor, DebuggerHidden]
-		private Watt(double val) : base(new SI(val).Watt) {}
+		private Watt(double val) : base(val)
+		{
+			Numerator = new[] { Unit.W };
+		}
 
 		/// <summary>
 		/// Implements the operator /.
@@ -280,7 +318,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static PerSecond operator /(Watt watt, NewtonMeter newtonMeter)
 		{
-			return ((watt as SI) / newtonMeter).Cast<PerSecond>();
+			return SIBase<PerSecond>.Create(watt.Val / newtonMeter.Value());
 		}
 
 		/// <summary>
@@ -294,7 +332,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static NewtonMeter operator /(Watt watt, PerSecond perSecond)
 		{
-			return ((watt as SI) / perSecond).Cast<NewtonMeter>();
+			return SIBase<NewtonMeter>.Create(watt.Val / perSecond.Value());
 		}
 	}
 
@@ -305,7 +343,10 @@ namespace TUGraz.VectoCore.Utils
 	public class PerSecond : SIBase<PerSecond>
 	{
 		[JsonConstructor, DebuggerHidden]
-		private PerSecond(double val) : base(new SI(val).Per.Second) {}
+		private PerSecond(double val) : base(val)
+		{
+			Denominator = new[] { Unit.s };
+		}
 	}
 
 	/// <summary>
@@ -315,7 +356,11 @@ namespace TUGraz.VectoCore.Utils
 	public class MeterPerSecond : SIBase<MeterPerSecond>
 	{
 		[JsonConstructor, DebuggerHidden]
-		private MeterPerSecond(double val) : base(new SI(val).Meter.Per.Second) {}
+		private MeterPerSecond(double val) : base(val)
+		{
+			Numerator = new[] { Unit.m };
+			Denominator = new[] { Unit.s };
+		}
 
 		/// <summary>
 		/// Implements the operator /.
@@ -328,7 +373,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static PerSecond operator /(MeterPerSecond meterPerSecond, Meter meter)
 		{
-			return ((meterPerSecond as SI) / meter).Cast<PerSecond>();
+			return SIBase<PerSecond>.Create(meterPerSecond.Val / meter.Value());
 		}
 
 		/// <summary>
@@ -342,7 +387,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static Second operator /(Meter second, MeterPerSecond meterPerSecond)
 		{
-			return (second / (meterPerSecond as SI)).Cast<Second>();
+			return SIBase<Second>.Create(second.Value() / meterPerSecond.Val);
 		}
 
 		/// <summary>
@@ -356,7 +401,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static Meter operator *(MeterPerSecond meterPerSecond, Second second)
 		{
-			return ((meterPerSecond as SI) * second).Cast<Meter>();
+			return SIBase<Meter>.Create(meterPerSecond.Val * second.Value());
 		}
 
 		/// <summary>
@@ -370,7 +415,7 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public static Meter operator *(Second second, MeterPerSecond meterPerSecond)
 		{
-			return (second * (meterPerSecond as SI)).Cast<Meter>();
+			return SIBase<Meter>.Create(second.Value() * meterPerSecond.Val);
 		}
 	}
 
@@ -390,55 +435,61 @@ namespace TUGraz.VectoCore.Utils
 	public class NewtonMeter : SIBase<NewtonMeter>
 	{
 		[JsonConstructor, DebuggerHidden]
-		private NewtonMeter(double val) : base(new SI(val).Newton.Meter) {}
+		private NewtonMeter(double val) : base(val)
+		{
+			Numerator = new[] { Unit.N, Unit.m };
+		}
 
 		[DebuggerHidden]
 		public static Watt operator *(NewtonMeter newtonMeter, PerSecond perSecond)
 		{
-			return ((newtonMeter as SI) * perSecond).Cast<Watt>();
+			return SIBase<Watt>.Create(newtonMeter.Val * perSecond.Value());
 		}
 
 		[DebuggerHidden]
 		public static Watt operator *(PerSecond perSecond, NewtonMeter newtonMeter)
 		{
-			return ((perSecond as SI) * newtonMeter).Cast<Watt>();
+			return SIBase<Watt>.Create(perSecond.Value() * newtonMeter.Value());
 		}
 
 		[DebuggerHidden]
 		public static Second operator /(NewtonMeter newtonMeter, Watt watt)
 		{
-			return ((newtonMeter as SI) / watt).Cast<Second>();
+			return SIBase<Second>.Create(newtonMeter.Val / watt.Value());
 		}
 
 		[DebuggerHidden]
 		public static PerSquareSecond operator /(NewtonMeter newtonMeter, KilogramSquareMeter kgKilogramSquareMeter)
 		{
-			return ((newtonMeter as SI) / kgKilogramSquareMeter).Cast<PerSquareSecond>();
+			return SIBase<PerSquareSecond>.Create(newtonMeter.Val / kgKilogramSquareMeter.Value());
 		}
 
 
 		[DebuggerHidden]
 		public static PerSecond operator /(NewtonMeter newtonMeter, NewtonMeterSecond newtonMeterSecond)
 		{
-			return ((newtonMeter as SI) / newtonMeterSecond).Cast<PerSecond>();
+			return SIBase<PerSecond>.Create(newtonMeter.Val / newtonMeterSecond.Value());
 		}
 
 		[DebuggerHidden]
 		public static Newton operator /(NewtonMeter newtonMeter, Meter meter)
 		{
-			return ((newtonMeter as SI) / meter).Cast<Newton>();
+			return SIBase<Newton>.Create(newtonMeter.Val / meter.Value());
 		}
 
 		[DebuggerHidden]
 		public static NewtonMeterSecond operator /(NewtonMeter newtonMeter, PerSecond perSecond)
 		{
-			return ((newtonMeter as SI) / perSecond).Cast<NewtonMeterSecond>();
+			return SIBase<NewtonMeterSecond>.Create(newtonMeter.Val / perSecond.Value());
 		}
 	}
 
 	public class NewtonMeterSecond : SIBase<NewtonMeterSecond>
 	{
-		private NewtonMeterSecond(double val) : base(new SI(val).Newton.Meter.Second) {}
+		private NewtonMeterSecond(double val) : base(new SI(val).Newton.Meter.Second)
+		{
+			Numerator = new[] { Unit.N, Unit.m, Unit.s };
+		}
 	}
 
 
@@ -477,6 +528,8 @@ namespace TUGraz.VectoCore.Utils
 		/// </summary>
 		[DebuggerHidden]
 		protected SIBase(SI si) : base(si) {}
+
+		protected SIBase(double value) : base(value) {}
 
 		public new T Abs()
 		{
@@ -644,12 +697,12 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// The denominator of the SI.
 		/// </summary>
-		[DataMember] protected readonly Unit[] Denominator;
+		[DataMember] protected Unit[] Denominator;
 
 		/// <summary>
 		/// The numerator of the SI.
 		/// </summary>
-		[DataMember] protected readonly Unit[] Numerator;
+		[DataMember] protected Unit[] Numerator;
 
 		/// <summary>
 		/// The current exponent for conversion operations (Square, Cubic, Linear, e.g. new SI(3).Square.Meter).
@@ -1144,7 +1197,10 @@ namespace TUGraz.VectoCore.Utils
 				throw new VectoException("Operator '+' can only operate on SI Objects with the same unit. Got: {0} + {1}", si1, si2);
 			}
 
-			return new SI(si1.Val + si2.Val, si1.Numerator, si1.Denominator);
+			return new SI(si1.Val + si2.Val) {
+				Numerator = si1.Numerator,
+				Denominator = si1.Denominator
+			};
 		}
 
 		/// <summary>
@@ -1164,7 +1220,10 @@ namespace TUGraz.VectoCore.Utils
 			if (!si1.HasEqualUnit(si2)) {
 				throw new VectoException("Operator '-' can only operate on SI Objects with the same unit. Got: {0} - {1}", si1, si2);
 			}
-			return new SI(si1.Val - si2.Val, si1.Numerator, si1.Denominator);
+			return new SI(si1.Val - si2.Val) {
+				Numerator = si1.Numerator,
+				Denominator = si1.Denominator
+			};
 		}
 
 		/// <summary>
@@ -1178,7 +1237,7 @@ namespace TUGraz.VectoCore.Utils
 		public static SI operator -(SI si1)
 		{
 			Contract.Requires(si1 != null);
-			return new SI(-si1.Val, si1);
+			return new SI(-si1.Val) { Numerator = si1.Numerator, Denominator = si1.Denominator };
 		}
 
 		/// <summary>
@@ -1211,7 +1270,7 @@ namespace TUGraz.VectoCore.Utils
 		public static SI operator *(SI si1, double d)
 		{
 			Contract.Requires(si1 != null);
-			return new SI(si1.Val * d, si1);
+			return new SI(si1.Val * d) { Numerator = si1.Numerator, Denominator = si1.Denominator };
 		}
 
 		/// <summary>
@@ -1226,7 +1285,7 @@ namespace TUGraz.VectoCore.Utils
 		public static SI operator *(double d, SI si1)
 		{
 			Contract.Requires(si1 != null);
-			return new SI(d * si1.Val, si1);
+			return new SI(d * si1.Val) { Numerator = si1.Numerator, Denominator = si1.Denominator };
 		}
 
 		/// <summary>
@@ -1272,7 +1331,7 @@ namespace TUGraz.VectoCore.Utils
 					new DivideByZeroException());
 			}
 
-			return new SI(si1.Val / d, si1);
+			return new SI(si1.Val / d) { Numerator = si1.Numerator, Denominator = si1.Denominator };
 		}
 
 		/// <summary>
@@ -1293,7 +1352,7 @@ namespace TUGraz.VectoCore.Utils
 					new DivideByZeroException());
 			}
 
-			return new SI(d / si1.Val, si1.Denominator, si1.Numerator);
+			return new SI(d / si1.Val) { Numerator = si1.Denominator, Denominator = si1.Numerator };
 		}
 
 		/// <summary>
