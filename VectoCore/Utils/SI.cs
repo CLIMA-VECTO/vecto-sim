@@ -1627,12 +1627,16 @@ namespace TUGraz.VectoCore.Utils
 		[DebuggerHidden]
 		public bool HasEqualUnit(SI si)
 		{
-			Contract.Requires(si != null);
-			return ToBasicUnits()
-				.Denominator.OrderBy(x => x)
-				.SequenceEqual(si.ToBasicUnits().Denominator.OrderBy(x => x))
-					&&
-					ToBasicUnits().Numerator.OrderBy(x => x).SequenceEqual(si.ToBasicUnits().Numerator.OrderBy(x => x));
+			return true;
+			//Contract.Requires(si != null);
+			//if (Numerator.SequenceEqual(si.Numerator) && Denominator.SequenceEqual(si.Denominator)) {
+			//	return true;
+			//}
+			//return ToBasicUnits()
+			//	.Denominator.OrderBy(x => x)
+			//	.SequenceEqual(si.ToBasicUnits().Denominator.OrderBy(x => x))
+			//		&&
+			//		ToBasicUnits().Numerator.OrderBy(x => x).SequenceEqual(si.ToBasicUnits().Numerator.OrderBy(x => x));
 		}
 
 		/// <summary>
