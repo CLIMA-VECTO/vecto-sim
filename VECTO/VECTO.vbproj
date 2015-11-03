@@ -89,8 +89,9 @@
     <Reference Include="itextsharp">
       <HintPath>..\Third Party Libraries\itextsharp\itextsharp.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Third Party Libraries\JSON.Net\Bin\Net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -363,6 +364,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\TUG-About.png" />
     <None Include="Resources\VECTO-About.png" />
     <None Include="Resources\VECTO-VEH.png" />
@@ -439,6 +441,12 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VectoCore\VectoCore.csproj">
+      <Project>{CD36938A-ADD9-4C65-96DA-B397CDEEA90A}</Project>
+      <Name>VectoCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

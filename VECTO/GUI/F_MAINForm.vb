@@ -11,8 +11,14 @@
 
 Imports System.Collections.Generic
 Imports System.ComponentModel
+Imports System.IO
 Imports System.Linq
 Imports System.Threading
+Imports TUGraz.VectoCore.Models.Simulation.Data
+Imports TUGraz.VectoCore.Models.Simulation.Impl
+Imports TUGraz.VectoCore
+Imports TUGraz.VectoCore.Configuration
+Imports TUGraz.VectoCore.Models.Simulation
 
 ''' <summary>
 ''' Main application form. Loads at application start. Closing form ends application.
@@ -517,86 +523,6 @@ Imports System.Threading
 		End If
 
 		DeclOnOff()
-	End Sub
-
-	Private Sub VectoWorkerV3_OnRunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs)
-		Dim Result As tCalcResult
-
-		'Progbar reset
-		ToolStripProgBarOverall.Visible = False
-		ToolStripProgBarOverall.Style = ProgressBarStyle.Continuous
-		ToolStripProgBarOverall.Value = 0
-		ProgSecStop()
-
-		LvGEN.SelectedIndices.Clear()
-
-		Result = e.Result
-
-		'ShutDown when Unexpected Error
-		If e.Error IsNot Nothing Then
-			MsgBox("An Unexpected Error occurred!" & ChrW(10) & ChrW(10) &
-					e.Error.Message.ToString, MsgBoxStyle.Critical, "Unexpected Error")
-			LogFile.WriteToLog(tMsgID.Err, ">>>Unexpected Error:" & e.Error.ToString())
-		End If
-
-		'Options enable / GUI reset
-		LockGUI(False)
-		Button2.Text = "START V3"
-		Button2.Image = My.Resources.Play_icon
-		Status(LastModeName & " Mode")
-
-		'SLEEP reactivate
-		AllowSleepON()
-	End Sub
-
-	Private Sub VectoWorkerV3_OnProgressChanged(sender As Object, e As ProgressChangedEventArgs)
-		Dim progress As cWorkProg
-		progress = e.UserState
-
-		Select Case progress.Target
-			Case tWorkMsgType.StatusListBox
-				MSGtoForm(e.UserState.ID, e.UserState.Msg, progress.Source, progress.Link)
-
-			Case tWorkMsgType.ProgBars
-				ToolStripProgBarOverall.Value = e.ProgressPercentage
-				ProgSecStart()
-
-			Case tWorkMsgType.InitProgBar
-				ToolStripProgBarOverall.Style = ProgressBarStyle.Continuous
-
-			Case Else ' tWorkMsgType.Abort
-				Button2.Enabled = False
-				Button2.Text = "Aborting..."
-				Button2.Image = My.Resources.Play_icon_gray
-				VECTOworkerV3.CancelAsync()
-		End Select
-	End Sub
-
-	Private Sub VectoWorkerV3_OnDoWork(sender As Object, e As DoWorkEventArgs)
-		AllowSleepOFF()
-		Dim WorkProg As New cWorkProg(tWorkMsgType.StatusListBox)
-		WorkProg.ID = tMsgID.Normal
-		WorkProg.Msg = "Test 0%"
-		WorkProg.Source = "VectoWorkerV3_OnDoWork"
-		WorkProg.Link = ""
-		VECTOworkerV3.ReportProgress(0, WorkProg)
-		Thread.Sleep(1000)
-
-		WorkProg.ID = tMsgID.Normal
-		WorkProg.Msg = "Test 50%"
-		WorkProg.Source = "VectoWorkerV3_OnDoWork"
-		WorkProg.Link = ""
-		VECTOworkerV3.ReportProgress(50, WorkProg)
-		Thread.Sleep(1000)
-
-		WorkProg.ID = tMsgID.Normal
-		WorkProg.Msg = "Test 100%"
-		WorkProg.Source = "VectoWorkerV3_OnDoWork"
-		WorkProg.Link = ""
-		VECTOworkerV3.ReportProgress(100, WorkProg)
-		Thread.Sleep(1000)
-
-		e.Result = True
 	End Sub
 
 	'Declaration mode GUI settings
@@ -1584,15 +1510,14 @@ Imports System.Threading
 
 			LvGEN.SelectedItems.Clear()
 
-			Status("Launching VECTO V3...")
-
-			JobFileList.Clear()
-			JobFileList.AddRange(From listViewItem In LvGEN.CheckedItems Select fFileRepl(listViewItem.SubItems(0).Text))
-
-			If JobFileList.Count = 0 Then
+			If LvGEN.CheckedItems.Count = 0 Then
 				GUImsg(tMsgID.Err, "No job file selected!")
 				Exit Sub
 			End If
+
+			Status("Launching VECTO V3...")
+			JobFileList.Clear()
+			JobFileList.AddRange(From listViewItem In LvGEN.CheckedItems Select fFileRepl(listViewItem.SubItems(0).Text))
 
 			SetOptions()
 			Cfg.ConfigSAVE()
@@ -1604,11 +1529,8 @@ Imports System.Threading
 			Button2.Image = My.Resources.Stop_icon
 
 			ToolStripProgBarOverall.Value = 0
-			ToolStripProgBarOverall.Style = ProgressBarStyle.Marquee
+			ToolStripProgBarOverall.Style = ProgressBarStyle.Continuous
 			ToolStripProgBarOverall.Visible = True
-
-			ProgBarCtrl.ProgJobInt = 0
-			ProgSecStart()
 
 			VECTOworkerV3.RunWorkerAsync()
 		Else
@@ -1617,6 +1539,65 @@ Imports System.Threading
 			Button2.Image = My.Resources.Play_icon_gray
 			VECTOworkerV3.CancelAsync()
 		End If
+	End Sub
+
+	Private Sub VectoWorkerV3_OnDoWork(sender As BackgroundWorker, e As DoWorkEventArgs)
+		AllowSleepOFF()
+		Dim prog As New cWorkProg(tWorkMsgType.StatusListBox)
+
+		Dim sumFileName As String = Path.GetFileNameWithoutExtension(JobFileList(0) + Constants.FileExtensions.SumFile)
+		Dim sumWriter As SummaryFileWriter = New SummaryFileWriter(sumFileName)
+		Dim jobContainer As JobContainer = New JobContainer(sumWriter)
+
+		For Each jobFile As String In JobFileList
+			Dim runsFactory As SimulatorFactory = New SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, jobFile)
+			jobContainer.AddRuns(runsFactory)
+		Next
+
+		jobContainer.Execute()
+
+		While Not jobContainer.AllCompleted
+			Dim progress As Dictionary(Of String, Double) = jobContainer.GetProgress()
+
+			Dim NumLines As Integer = progress.Count
+			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value)
+
+			ToolStripProgBarOverall.Value = Int(sumProgress/NumLines)*100
+			Thread.Sleep(250)
+		End While
+	End Sub
+
+	Private Sub VectoWorkerV3_OnProgressChanged(sender As Object, e As ProgressChangedEventArgs)
+	End Sub
+
+	Private Sub VectoWorkerV3_OnRunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs)
+		Dim Result As tCalcResult
+
+		'Progbar reset
+		ToolStripProgBarOverall.Visible = False
+		ToolStripProgBarOverall.Style = ProgressBarStyle.Continuous
+		ToolStripProgBarOverall.Value = 0
+		ProgSecStop()
+
+		LvGEN.SelectedIndices.Clear()
+
+		Result = e.Result
+
+		'ShutDown when Unexpected Error
+		If e.Error IsNot Nothing Then
+			MsgBox("An Unexpected Error occurred!" & ChrW(10) & ChrW(10) &
+					e.Error.Message.ToString, MsgBoxStyle.Critical, "Unexpected Error")
+			LogFile.WriteToLog(tMsgID.Err, ">>>Unexpected Error:" & e.Error.ToString())
+		End If
+
+		'Options enable / GUI reset
+		LockGUI(False)
+		Button2.Text = "START V3"
+		Button2.Image = My.Resources.Play_icon
+		Status(LastModeName & " Mode")
+
+		'SLEEP reactivate
+		AllowSleepON()
 	End Sub
 
 	'Mode Change (STANDARD/BATCH)
