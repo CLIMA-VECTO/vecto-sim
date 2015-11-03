@@ -16,7 +16,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestMethod]
 		public void Truck40tDeclarationTest()
 		{
-			//LogManager.DisableLogging();
+			LogManager.DisableLogging();
 
 			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, TruckDeclarationJob);
 			var sumFileName = Path.GetFileNameWithoutExtension(TruckDeclarationJob) + Constants.FileExtensions.SumFile;
@@ -26,6 +26,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.AddRuns(factory);
 
 			jobContainer.Execute();
+
+			foreach (var run in jobContainer._runs) {
+				Assert.IsTrue(run.FinishedWithoutErrors);
+			}
 		}
 	}
 }

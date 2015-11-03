@@ -17,5 +17,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// </summary>
 		/// <returns></returns>
 		IVehicleContainer GetContainer();
+
+		bool FinishedWithoutErrors { get; }
 	}
 }

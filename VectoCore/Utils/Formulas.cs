@@ -24,10 +24,10 @@ namespace TUGraz.VectoCore.Utils
 			MeterPerSquareSecond deceleration)
 		{
 			if (deceleration >= 0) {
-				throw new VectoException("Deceleration must be negative!");
+				throw new VectoException("Deceleration must be negative! a: {0}", deceleration);
 			}
 			if (v2 > v1) {
-				throw new VectoException("v2 must not be greater than v1");
+				throw new VectoException("v2 must not be greater than v1 v1: {0} v2: {1}", v1.Value(), v2.Value());
 			}
 
 			return ((v2 - v1) * (v1 + v2) / deceleration / 2.0).Cast<Meter>();
