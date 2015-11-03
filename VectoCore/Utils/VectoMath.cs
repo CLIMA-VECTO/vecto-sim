@@ -230,14 +230,14 @@ namespace TUGraz.VectoCore.Utils
 			//Contract.Requires(P3 != null);
 
 			//Barycentric Technique: http://www.blackpawn.com/texts/pointinpoly/default.html
-			var p = new Point(x, y, 0);
+			//var p = new Point(x, y, 0);
 
 			var v0X = P3.X - P1.X;
 			var v0Y = P3.Y - P1.Y;
 			var v1X = P2.X - P1.X;
 			var v1Y = P2.Y - P1.Y;
-			var v2X = p.X - P1.X;
-			var v2Y = p.Y - P1.Y;
+			var v2X = x - P1.X;
+			var v2Y = y - P1.Y;
 
 			var dot00 = v0X * v0X + v0Y * v0Y;
 			var dot01 = v0X * v1X + v0Y * v1Y;
