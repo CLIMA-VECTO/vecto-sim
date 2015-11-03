@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace TUGraz.VectoCore.Models.Simulation
 {
 	/// <summary>
@@ -8,7 +10,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// <summary>
 		/// Run the simulation.
 		/// </summary>
-		void Run();
+		void Run(BackgroundWorker worker = null);
 
 		string Name { get; }
 
@@ -17,5 +19,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// </summary>
 		/// <returns></returns>
 		IVehicleContainer GetContainer();
+
+		bool FinishedWithoutErrors { get; }
 	}
 }

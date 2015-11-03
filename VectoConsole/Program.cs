@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
+using System.Threading;
 using NLog;
 using NLog.Config;
 using TUGraz.VectoCore.Configuration;
@@ -12,6 +15,9 @@ namespace VectoConsole
 {
 	internal static class Program
 	{
+		private static int NumLines;
+		private static int ProgessCounter { get; set; }
+
 		private const string USAGE = @"Usage: vecto.exe [-h] [-v] FILE1.vecto [FILE2.vecto ...]";
 
 		private const string HELP = @"
@@ -82,18 +88,52 @@ Examples:
 				var sumWriter = new SummaryFileWriter(sumFileName);
 				var jobContainer = new JobContainer(sumWriter);
 
+				Console.WriteLine("Reading Job Files");
 				foreach (var file in fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile)) {
-					var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineeringMode, file);
+					var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, file);
 					jobContainer.AddRuns(runsFactory);
 				}
 
+				Console.WriteLine("Starting simulation runs");
 				jobContainer.Execute();
+
+				Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs e) => {
+					var isCtrlC = e.SpecialKey == ConsoleSpecialKey.ControlC;
+					var isCtrlBreak = e.SpecialKey == ConsoleSpecialKey.ControlBreak;
+
+					if (isCtrlC) {
+						Console.WriteLine("Canceling simulation!");
+					}
+				};
+
+				//var x = Console.CursorLeft;
+				while (!jobContainer.AllCompleted) {
+					PrintProgress(jobContainer.GetProgress());
+					Thread.Sleep(250);
+				}
 			} catch (Exception e) {
 				Console.Error.WriteLine(e.Message);
 				Trace.TraceError(e.ToString());
 				Environment.ExitCode = Environment.ExitCode != 0 ? Environment.ExitCode : 1;
 			}
 			return Environment.ExitCode;
+		}
+
+		private static void PrintProgress(Dictionary<string, double> progessData)
+		{
+			Console.SetCursorPosition(0, Console.CursorTop - NumLines);
+			NumLines = 0;
+			var sumProgress = 0.0;
+			foreach (var progress in progessData) {
+				Console.WriteLine(string.Format("{0,-60}  {1,8:P}", progress.Key, progress.Value));
+				sumProgress += progress.Value;
+				NumLines++;
+			}
+			sumProgress /= NumLines;
+			var spinner = "/-\\|"[ProgessCounter++ % 4];
+			var bar = new string('#', (int)(sumProgress * 100.0 / 2));
+			Console.WriteLine(string.Format("   {2}   [{1,-50}]    [{0,6:P}]", sumProgress, bar, spinner));
+			NumLines++;
 		}
 	}
 }

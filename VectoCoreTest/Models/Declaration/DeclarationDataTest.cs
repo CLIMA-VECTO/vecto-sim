@@ -453,7 +453,7 @@ namespace TUGraz.VectoCore.Tests.Models.Declaration
 
 		public void EqualAcceleration(AccelerationCurveData data, double velocity, double acceleration, double deceleration)
 		{
-			var entry = data.Lookup(velocity.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>());
+			var entry = data.Lookup(velocity.KMPHtoMeterPerSecond());
 			Assert.AreEqual(entry.Acceleration.Value(), acceleration, Tolerance);
 			Assert.AreEqual(entry.Deceleration.Value(), deceleration, Tolerance);
 		}

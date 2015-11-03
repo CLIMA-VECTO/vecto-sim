@@ -229,7 +229,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				};
 			}
 
-			var shiftTimeExceeded = absTime.IsSmaller(_shiftTime) && _shiftTime.IsSmaller(absTime + dt);
+			var shiftTimeExceeded = absTime.IsSmaller(_shiftTime) &&
+									_shiftTime.IsSmaller(absTime + dt, Data.TractionInterruption / 20.0);
 			if (shiftTimeExceeded) {
 				return new ResponseFailTimeInterval {
 					Source = this,

@@ -2,6 +2,7 @@
 using System.IO;
 using TUGraz.VectoCore.FileIO.Reader;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
+using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Integration
 {
@@ -653,5 +654,12 @@ namespace TUGraz.VectoCore.Tests.Integration
 		};
 
 		#endregion
+
+		public static DrivingCycleData ReadDeclarationCycle(string missionType)
+		{
+			var cycleData = RessourceHelper.ReadStream(RessourceHelper.Namespace + "MissionCycles." + missionType + ".vdri");
+			var cycle = DrivingCycleDataReader.ReadFromStream(cycleData, CycleType.DistanceBased);
+			return cycle;
+		}
 	}
 }

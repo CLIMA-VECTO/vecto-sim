@@ -17,6 +17,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 {
 	public class DefaultDriverStrategy : LoggingObject, IDriverStrategy
 	{
+		public static readonly SIBase<Meter> BrakingSafetyMargin = 0.1.SI<Meter>();
+
 		protected internal DrivingBehaviorEntry NextDrivingAction;
 
 		public enum DrivingMode
@@ -43,7 +45,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			if (CurrentDrivingMode == DrivingMode.DrivingModeBrake) {
-				if (Driver.DataBus.Distance.IsGreaterOrEqual(BrakeTrigger.TriggerDistance)) {
+				if (Driver.DataBus.Distance.IsGreaterOrEqual(BrakeTrigger.TriggerDistance, 1e-3.SI<Meter>())) {
 					CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 					NextDrivingAction = null;
 					DrivingModes[CurrentDrivingMode].ResetMode();
@@ -107,7 +109,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							NextDrivingAction.ActionDistance = NextDrivingAction.TriggerDistance - coastingDistance;
 							break;
 						case DrivingBehavior.Braking:
-							var brakingDistance = Driver.ComputeDecelerationDistance(NextDrivingAction.NextTargetSpeed);
+							var brakingDistance = Driver.ComputeDecelerationDistance(NextDrivingAction.NextTargetSpeed) + BrakingSafetyMargin;
 							NextDrivingAction.ActionDistance = NextDrivingAction.TriggerDistance - brakingDistance;
 							break;
 						default:
@@ -155,7 +157,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				if (nextTargetSpeed < currentSpeed) {
 					if (!Driver.DriverData.LookAheadCoasting.Enabled ||
 						currentSpeed < Driver.DriverData.LookAheadCoasting.MinSpeed) {
-						var brakingDistance = Driver.ComputeDecelerationDistance(nextTargetSpeed);
+						var brakingDistance = Driver.ComputeDecelerationDistance(nextTargetSpeed) + BrakingSafetyMargin;
 						Log.Debug("adding 'Braking' starting at distance {0}. brakingDistance: {1}, triggerDistance: {2}",
 							entry.Distance - brakingDistance, brakingDistance, entry.Distance);
 						nextActions.Add(new DrivingBehaviorEntry {
@@ -381,7 +383,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				default:
 					return response;
 			}
-			return null;
+			return response;
 		}
 
 		public override void ResetMode() {}
@@ -433,7 +435,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			var currentDistance = DataBus.Distance;
 
 			if (Phase == BrakingPhase.Coast) {
-				var brakingDistance = Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed);
+				var brakingDistance = Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed) +
+									DefaultDriverStrategy.BrakingSafetyMargin;
 				Log.Debug("breaking distance: {0}, start braking @ {1}", brakingDistance,
 					DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance);
 				if (currentDistance + Constants.SimulationSettings.DriverActionDistanceTolerance >
@@ -482,10 +485,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 						Case<ResponseSpeedLimitExceeded>(() => {
 							response = Driver.DrivingActionBrake(absTime, ds, DataBus.VehicleSpeed,
 								gradient);
+							if (response is ResponseOverload && !DataBus.ClutchClosed(absTime)) {
+								response = Driver.DrivingActionRoll(absTime, ds, DataBus.VehicleSpeed, gradient);
+							}
 						});
 					break;
 				case BrakingPhase.Brake:
-					var brakingDistance = Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed);
+					var brakingDistance = Driver.ComputeDecelerationDistance(DriverStrategy.BrakeTrigger.NextTargetSpeed) +
+										DefaultDriverStrategy.BrakingSafetyMargin;
 					Log.Debug("Phase: BRAKE. breaking distance: {0} start braking @ {1}", brakingDistance,
 						DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance);
 					if (DriverStrategy.BrakeTrigger.TriggerDistance - brakingDistance < currentDistance) {
@@ -533,7 +540,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				default:
 					return response;
 			}
-			return null;
+			return response;
 		}
 
 		public override void ResetMode()

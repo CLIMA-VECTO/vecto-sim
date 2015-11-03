@@ -98,12 +98,14 @@ namespace TUGraz.VectoCore.Utils
 		/// <returns></returns>
 		public static PerSecond RPMtoRad(this double self)
 		{
-			return self.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
+			return SI<PerSecond>(self * 2 * Math.PI / 60.0);
+			//self.SI().Rounds.Per.Minute.ConvertTo().Radian.Per.Second.Cast<PerSecond>();
 		}
 
 		public static MeterPerSecond KMPHtoMeterPerSecond(this double self)
 		{
-			return self.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>();
+			return SI<MeterPerSecond>(self / 3.6);
+			//return self.SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>();
 		}
 
 		public static double ToRadian(this double self)

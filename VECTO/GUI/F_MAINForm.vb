@@ -495,6 +495,7 @@ Imports System.Threading
 		ModeUpdate()
 
 		'License check
+		'TODO uncomment license check
 		If False And Not Lic.LICcheck() Then
 			MsgBox("License File invalid!" & vbCrLf & vbCrLf & Lic.FailMsg)
 			If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
@@ -549,36 +550,25 @@ Imports System.Threading
 	End Sub
 
 	Private Sub VectoWorkerV3_OnProgressChanged(sender As Object, e As ProgressChangedEventArgs)
-		Dim x As cWorkProg
-		x = e.UserState
+		Dim progress As cWorkProg
+		progress = e.UserState
 
-		Select Case x.Target
+		Select Case progress.Target
 			Case tWorkMsgType.StatusListBox
-				MSGtoForm(e.UserState.ID, e.UserState.Msg, x.Source, x.Link)
-
-			Case tWorkMsgType.StatusBar
-				Status(e.UserState.Msg)
+				MSGtoForm(e.UserState.ID, e.UserState.Msg, progress.Source, progress.Link)
 
 			Case tWorkMsgType.ProgBars
-				Me.ToolStripProgBarOverall.Value = e.ProgressPercentage
+				ToolStripProgBarOverall.Value = e.ProgressPercentage
 				ProgSecStart()
 
-			Case tWorkMsgType.JobStatus
-				CheckedItems(x.FileIndex).SubItems(1).Text = x.Msg
-				SetCheckedItemColor(x.FileIndex, x.Status)
-
-			Case tWorkMsgType.CycleStatus
-				Try
-					Me.LvDRI.CheckedItems(x.FileIndex).SubItems(1).Text = x.Msg
-				Catch ex As Exception
-				End Try
-
 			Case tWorkMsgType.InitProgBar
-				Me.ToolStripProgBarOverall.Style = ProgressBarStyle.Continuous
+				ToolStripProgBarOverall.Style = ProgressBarStyle.Continuous
 
 			Case Else ' tWorkMsgType.Abort
-				JobAbort()
-
+				Button2.Enabled = False
+				Button2.Text = "Aborting..."
+				Button2.Image = My.Resources.Play_icon_gray
+				VECTOworkerV3.CancelAsync()
 		End Select
 	End Sub
 
