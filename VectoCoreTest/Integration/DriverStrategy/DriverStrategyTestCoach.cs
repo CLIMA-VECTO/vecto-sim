@@ -24,6 +24,17 @@ namespace TUGraz.VectoCore.Tests.Integration.DriverStrategy
 			GraphWriter.Write(imgV3, imgv22);
 		}
 
+
+         [TestMethod]
+	    public void TestSingleGraph()
+	    {
+	        var imgV3 = @"..\..\..\VectoCoreTest\bin\Debug\Coach_DriverStrategy_Drive_50_slope_dec-inc.vmod";
+			
+			GraphWriter.Write(imgV3);
+	    }
+
+
+
 		#region Accelerate
 
 		[TestMethod]
