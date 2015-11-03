@@ -13,6 +13,7 @@ Imports System.Collections.Generic
 Imports iTextSharp.text.pdf
 Imports System.IO
 Imports System.Linq
+Imports iTextSharp.text
 
 Public Class cDeclaration
 	Public CurrentMission As cMission
@@ -24,7 +25,7 @@ Public Class cDeclaration
 	Public Const SSspeed As Single = 5
 	Public Const SStime As Single = 5
 	Public Const SSdelay As Single = 5
-	Public Const LACa As Single = -0.5
+	Public Const LACa As Single = - 0.5
 	Public Const LACvmin As Single = 50
 	Public Const Overspeed As Single = 5
 	Public Const Underspeed As Single = 5
@@ -120,7 +121,7 @@ Public Class cDeclaration
 		Missions = New Dictionary(Of tMission, cMission)
 		SegmentTable = New cSegmentTable
 
-		If Not IO.Directory.Exists(MyDeclPath) Then
+		If Not Directory.Exists(MyDeclPath) Then
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config!")
 			Return False
 		End If
@@ -249,11 +250,11 @@ Public Class cDeclaration
 					Select Case i
 						Case 0
 							mc0.WHTCWF = New Dictionary(Of tWHTCpart, Single)
-							mc0.WHTCWF.Add(tWHTCpart.Urban, line(a) / 100)
+							mc0.WHTCWF.Add(tWHTCpart.Urban, line(a)/100)
 						Case 1
-							mc0.WHTCWF.Add(tWHTCpart.Rural, line(a) / 100)
+							mc0.WHTCWF.Add(tWHTCpart.Rural, line(a)/100)
 						Case Else '2
-							mc0.WHTCWF.Add(tWHTCpart.Motorway, line(a) / 100)
+							mc0.WHTCWF.Add(tWHTCpart.Motorway, line(a)/100)
 					End Select
 				Next
 			Next
@@ -292,7 +293,8 @@ Public Class cDeclaration
 
 					If ste0.VehCat = tVehCat.Undef Then
 						file.Close()
-						GUImsg(tMsgID.Err, "Failed to load Declaration Config (Segment Table)! " & line(1) & " is no valid Vehicle Configuration.")
+						GUImsg(tMsgID.Err,
+								"Failed to load Declaration Config (Segment Table)! " & line(1) & " is no valid Vehicle Configuration.")
 						Return False
 					End If
 
@@ -300,7 +302,8 @@ Public Class cDeclaration
 
 					If ste0.AxleConf = tAxleConf.Undef Then
 						file.Close()
-						GUImsg(tMsgID.Err, "Failed to load Declaration Config (Segment Table)! " & line(2) & " is no valid Axle Configuration.")
+						GUImsg(tMsgID.Err,
+								"Failed to load Declaration Config (Segment Table)! " & line(2) & " is no valid Axle Configuration.")
 						Return False
 					End If
 
@@ -319,12 +322,12 @@ Public Class cDeclaration
 					Next
 
 					AxleShares.Add(line(9))	   'Long Haul
-					For Each mt0 In SegmentTable.MissionList  'Other cycles
+					For Each mt0 In SegmentTable.MissionList 'Other cycles
 						If mt0 <> tMission.LongHaul Then AxleShares.Add(line(10))
 					Next
 
 					AxleSharesTr.Add(line(11))	 'Long Haul
-					For Each mt0 In SegmentTable.MissionList  'Other cycles
+					For Each mt0 In SegmentTable.MissionList 'Other cycles
 						If mt0 <> tMission.LongHaul Then AxleSharesTr.Add(line(12))
 					Next
 
@@ -368,7 +371,7 @@ Public Class cDeclaration
 
 
 							For a = 1 To TrA
-								l0.Add(TrS / TrA)
+								l0.Add(TrS/TrA)
 							Next
 
 							ste0.AxleSharesTr.Add(SegmentTable.MissionList(i), l0)
@@ -393,7 +396,6 @@ Public Class cDeclaration
 
 		'Aux
 		AuxTechs = New Dictionary(Of tAux, List(Of String))
-
 
 
 		'Aux - Fan
@@ -437,7 +439,6 @@ Public Class cDeclaration
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config (Fan aux config)!" & ex.Message)
 			Return False
 		End Try
-
 
 
 		'Aux - Steering Pump
@@ -599,9 +600,6 @@ Public Class cDeclaration
 		AuxTechs.Add(tAux.ElectricSys, at0)
 
 
-
-
-
 		'Aux - Pneumatic System
 		AuxPSpower = New Dictionary(Of String, Dictionary(Of tMission, Single))
 
@@ -642,13 +640,10 @@ Public Class cDeclaration
 		AuxTechs.Add(tAux.PneumSys, at0)
 
 
-
-
-
 		'Default PT1 values
 		lPT1nU = New List(Of Single)
 		lPT1 = New List(Of Single)
-		PT1dim = -1
+		PT1dim = - 1
 
 		If Not file.OpenRead(MyDeclPath & "PT1.csv") Then
 			GUImsg(tMsgID.Err, "Failed to load Declaration Config (PT1 table)!")
@@ -710,7 +705,6 @@ Public Class cDeclaration
 		file.Close()
 
 
-
 		'Rims
 		Rims = New Dictionary(Of String, cRim)
 
@@ -744,15 +738,13 @@ Public Class cDeclaration
 		file.Close()
 
 
-
 		GUImsg(tMsgID.Normal, "Declaration Config loaded.")
 
 		Return True
-
 	End Function
 
 	Public Function EngInertia(ByVal Displ As Single) As Single
-		Return 1.3 + 0.41 + 0.27 * (Displ / 1000)
+		Return 1.3 + 0.41 + 0.27*(Displ/1000)
 	End Function
 
 	Public Function TracInt(ByVal Gearbox As tGearbox) As Single
@@ -804,9 +796,8 @@ Public Class cDeclaration
 		If Wheels.ContainsKey(Wheel) Then
 			Return Wheels(Wheel).Inertia
 		Else
-			Return -1
+			Return - 1
 		End If
-
 	End Function
 
 	Public Function rdyn(ByVal Wheel As String, ByVal Rim As String) As Single
@@ -814,12 +805,12 @@ Public Class cDeclaration
 		Dim w As cWheel
 
 		If Not Wheels.ContainsKey(Wheel) Then
-			Return -1
+			Return - 1
 		End If
 
 
 		If Not Rims.ContainsKey(Rim) Then
-			Return -1
+			Return - 1
 		End If
 
 		w = Wheels(Wheel)
@@ -830,8 +821,7 @@ Public Class cDeclaration
 			F = Rims(Rim).Fb
 		End If
 
-		Return (F * w.Diam) / (2 * Math.PI)
-
+		Return (F*w.Diam)/(2*Math.PI)
 	End Function
 
 	Public ReadOnly Property WheelsList As Dictionary(Of String, cWheel).KeyCollection
@@ -877,7 +867,6 @@ Public Class cDeclaration
 				Return MyDeclPath & "Reports\Undef.png"
 
 		End Select
-
 	End Function
 
 
@@ -896,15 +885,14 @@ Public Class cDeclaration
 
 		CurrentMission = Missions(SegRef.Missions(CycleIndex))
 
-		WHTCcorrFactor = CurrentMission.WHTCWF(tWHTCpart.Urban) * ENG.WHTCurban _
-			+ CurrentMission.WHTCWF(tWHTCpart.Rural) * ENG.WHTCrural _
-			+ CurrentMission.WHTCWF(tWHTCpart.Motorway) * ENG.WHTCmw
+		WHTCcorrFactor = CurrentMission.WHTCWF(tWHTCpart.Urban)*ENG.WHTCurban _
+						+ CurrentMission.WHTCWF(tWHTCpart.Rural)*ENG.WHTCrural _
+						+ CurrentMission.WHTCWF(tWHTCpart.Motorway)*ENG.WHTCmw
 
 
 		If Not VEH.DeclInitCycle Then Return False
 
 		Return True
-
 	End Function
 
 	''' <summary>
@@ -941,7 +929,7 @@ Public Class cDeclaration
 
 		'Fan
 		Try
-			AuxPower.Add(sKey.AUX.Fan, AuxFanPower(VEC.AuxPaths(sKey.AUX.Fan).TechStr)(CurrentMission.MissionID) / 1000)
+			AuxPower.Add(sKey.AUX.Fan, AuxFanPower(VEC.AuxPaths(sKey.AUX.Fan).TechStr)(CurrentMission.MissionID)/1000)
 		Catch ex As Exception
 			WorkerMsg(tMsgID.Err, "Failed to initialise fan! " & ex.Message, MsgSrc)
 			Result = False
@@ -959,7 +947,7 @@ Public Class cDeclaration
 			fF = sl(1)
 			fB = sl(2)
 			fS = sl(3)
-			AuxPower.Add(sKey.AUX.SteerPump, (U * fU + F * fF + B * fB + S * fS) / 1000)
+			AuxPower.Add(sKey.AUX.SteerPump, (U*fU + F*fF + B*fB + S*fS)/1000)
 		Catch ex As Exception
 			WorkerMsg(tMsgID.Err, "Failed to initialise steering pump! " & ex.Message, MsgSrc)
 			Result = False
@@ -967,7 +955,7 @@ Public Class cDeclaration
 
 		'HVAC
 		Try
-			AuxPower.Add(sKey.AUX.HVAC, AuxHVACPower(SegRef.HDVclass)(CurrentMission.MissionID) / 1000)
+			AuxPower.Add(sKey.AUX.HVAC, AuxHVACPower(SegRef.HDVclass)(CurrentMission.MissionID)/1000)
 		Catch ex As Exception
 			WorkerMsg(tMsgID.Err, "Failed to initialise HVAC! " & ex.Message, MsgSrc)
 			Result = False
@@ -989,7 +977,7 @@ Public Class cDeclaration
 
 			Next
 
-			AuxPower.Add(sKey.AUX.ElecSys, ESsum / (1000 * AuxESeff))
+			AuxPower.Add(sKey.AUX.ElecSys, ESsum/(1000*AuxESeff))
 
 		Catch ex As Exception
 			WorkerMsg(tMsgID.Err, "Failed to initialise electric system! " & ex.Message, MsgSrc)
@@ -1007,7 +995,6 @@ Public Class cDeclaration
 
 
 		Return Result
-
 	End Function
 
 	Public Function PT1(ByVal nU As Single) As Single
@@ -1024,10 +1011,9 @@ Public Class cDeclaration
 			i += 1
 		Loop
 
-lbInt:
+		lbInt:
 		'Interpolation
-		Return (nU - lPT1nU(i - 1)) * (lPT1(i) - lPT1(i - 1)) / (lPT1nU(i) - lPT1nU(i - 1)) + lPT1(i - 1)
-
+		Return (nU - lPT1nU(i - 1))*(lPT1(i) - lPT1(i - 1))/(lPT1nU(i) - lPT1nU(i - 1)) + lPT1(i - 1)
 	End Function
 
 	Public Sub ReportInit()
@@ -1043,12 +1029,11 @@ lbInt:
 			.JobFile = fFILE(JobFile, True)
 			.DateStr = Now.ToString
 			.Creator = Lic.LicString
-			.EngStr = (ENG.Displ / 1000).ToString("0.0") & " l  " & Math.Round(ENG.Pmax, 0).ToString("#") & " kW"
+			.EngStr = (ENG.Displ/1000).ToString("0.0") & " l  " & Math.Round(ENG.Pmax, 0).ToString("#") & " kW"
 			.EngModelStr = ENG.ModelName
 			.GbxStr = GBX.GearCount & "-Speed " & GearboxConv(GBX.gs_Type)
 			.GbxModelStr = GBX.ModelName
 		End With
-
 	End Sub
 
 	Public Sub ReportAddCycle()
@@ -1058,7 +1043,6 @@ lbInt:
 
 		Report.CurrentMR = mr
 		Report.MissionResults.Add(mr)
-
 	End Sub
 
 	Public Sub ReportAddResults()
@@ -1076,27 +1060,27 @@ lbInt:
 		For t = 0 To t1
 			sum += MODdata.Vh.V(t)
 		Next
-		Vquer = 3.6 * sum / (t1 + 1)
+		Vquer = 3.6*sum/(t1 + 1)
 
 		With lr
 
-			.Loading = VEH.Loading / 1000
+			.Loading = VEH.Loading/1000
 			.Speed = Vquer
-			.FCkm = (100 * MODdata.FCavgFinal / Vquer) / (Cfg.FuelDens * 1000)
-			.CO2km = Cfg.CO2perFC * (MODdata.FCavgFinal / Vquer)
+			.FCkm = (100*MODdata.FCavgFinal/Vquer)/(Cfg.FuelDens*1000)
+			.CO2km = Cfg.CO2perFC*(MODdata.FCavgFinal/Vquer)
 			If VEH.Loading > 0 Then
-				.FCtkm = .FCkm / .Loading
-				.CO2tkm = .CO2km / .Loading
+				.FCtkm = .FCkm/.Loading
+				.CO2tkm = .CO2km/.Loading
 			End If
 			.FCerror = MODdata.FCerror
 
 			d = 0
 			MODdata.Vh.AltIntp(d, True)
 			For t = 0 To t1
-				.ActualSpeed.Add(MODdata.Vh.V(t) * 3.6)
-				.TargetSpeed.Add(MODdata.Vh.Vsoll(t) * 3.6)
+				.ActualSpeed.Add(MODdata.Vh.V(t)*3.6)
+				.TargetSpeed.Add(MODdata.Vh.Vsoll(t)*3.6)
 				d += MODdata.Vh.V(t)
-				.Distance.Add(CSng(d / 1000))
+				.Distance.Add(CSng(d/1000))
 				.Alt.Add(MODdata.Vh.AltIntp(d, False))
 				.nU.Add(MODdata.nU(t))
 				.Tq.Add(nPeToM(MODdata.nU(t), MODdata.Pe(t)))
@@ -1105,7 +1089,6 @@ lbInt:
 		End With
 
 		Report.CurrentMR.Results.Add(CurrentLoading, lr)
-
 	End Sub
 
 	Public Function WriteReport() As Boolean
@@ -1113,11 +1096,7 @@ lbInt:
 		Report.CreateCharts()
 
 		Return Report.WritePdfs
-
-
 	End Function
-
-
 End Class
 
 Public Class cWheel
@@ -1142,7 +1121,8 @@ Public Class cSegmentTable
 	Public SegTableEntries As New List(Of cSegmentTableEntry)
 	Public MissionList As New List(Of tMission)
 
-	Public Function SetRef(ByRef SegTableEntryRef As cSegmentTableEntry, ByVal VehCat As tVehCat, ByVal AxleConf As tAxleConf, ByVal MaxMass As Single) As Boolean
+	Public Function SetRef(ByRef SegTableEntryRef As cSegmentTableEntry, ByVal VehCat As tVehCat,
+							ByVal AxleConf As tAxleConf, ByVal MaxMass As Single) As Boolean
 		Dim s0 As cSegmentTableEntry
 
 		For Each s0 In SegTableEntries
@@ -1154,9 +1134,7 @@ Public Class cSegmentTable
 
 		SegTableEntryRef = Nothing
 		Return False
-
 	End Function
-
 End Class
 
 Public Class cSegmentTableEntry
@@ -1184,7 +1162,6 @@ Public Class cSegmentTableEntry
 		Next
 
 		Return l
-
 	End Function
 
 	Public Function GetBodyTrWeight(ByVal Mission As tMission) As Single
@@ -1193,9 +1170,8 @@ Public Class cSegmentTableEntry
 		If BodyTrWeight.ContainsKey(Mission) AndAlso IsNumeric(BodyTrWeight(Mission)) Then
 			Return CSng(BodyTrWeight(Mission))
 		Else
-			Return -1
+			Return - 1
 		End If
-
 	End Function
 
 	Public Function GetLoading(ByVal Mission As tMission, ByVal MassMax As Single) As Single
@@ -1203,31 +1179,26 @@ Public Class cSegmentTableEntry
 		'Check if Config is valid
 		If Loading.ContainsKey(Mission) Then
 			If Not (Loading(Mission) = "f" OrElse IsNumeric(Loading(Mission))) Then
-				Return -1
+				Return - 1
 			End If
 		Else
-			Return -1
+			Return - 1
 		End If
 
 		'Return Loading
 		If HDVclass < 4 Then
 			If Mission = tMission.LongHaul Then
-				Return 588.2 * MassMax - 2511.8
+				Return 588.2*MassMax - 2511.8
 			Else
-				Return 394.1 * MassMax - 1705.9
+				Return 394.1*MassMax - 1705.9
 			End If
 		Else
 			Return CSng(Loading(Mission))
 		End If
-
 	End Function
-
-
-
 End Class
 
 Public Class cReport
-
 	Public Filepath As String = ""
 	Public CurrentMR As cMissionResults
 	Public MissionResults As List(Of cMissionResults)
@@ -1243,8 +1214,8 @@ Public Class cReport
 	Public GbxStr As String = ""
 	Public GbxModelStr As String = ""
 
-	Public ChartCO2tkm As Image
-	Public ChartCO2speed As Image
+	Public ChartCO2tkm As Drawing.Image
+	Public ChartCO2speed As Drawing.Image
 
 
 	Public Sub New()
@@ -1311,13 +1282,13 @@ Public Class cReport
 			a.Name = "main"
 
 			a.AxisX.Title = "engine speed [1/min]"
-			a.AxisX.TitleFont = New Font("Helvetica", 20)
-			a.AxisX.LabelStyle.Font = New Font("Helvetica", 20)
+			a.AxisX.TitleFont = New Drawing.Font("Helvetica", 20)
+			a.AxisX.LabelStyle.Font = New Drawing.Font("Helvetica", 20)
 			a.AxisX.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
 
 			a.AxisY.Title = "engine torque [Nm]"
-			a.AxisY.TitleFont = New Font("Helvetica", 20)
-			a.AxisY.LabelStyle.Font = New Font("Helvetica", 20)
+			a.AxisY.TitleFont = New Drawing.Font("Helvetica", 20)
+			a.AxisY.LabelStyle.Font = New Drawing.Font("Helvetica", 20)
 			a.AxisY.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
 
 			a.AxisX.Minimum = 300
@@ -1335,7 +1306,7 @@ Public Class cReport
 			End With
 
 			MyChart.Legends.Add("main")
-			MyChart.Legends(0).Font = New Font("Helvetica", 14)
+			MyChart.Legends(0).Font = New Drawing.Font("Helvetica", 14)
 			MyChart.Legends(0).BorderColor = Color.Black
 			MyChart.Legends(0).BorderWidth = 3
 
@@ -1344,12 +1315,10 @@ Public Class cReport
 			'MyChart.Titles(0).Font = New Font("Helvetica", 30, FontStyle.Bold)
 
 
-
-
 			MyChart.Update()
 
 			mr.ChartTqN = New Bitmap(MyChart.Width, MyChart.Height, Imaging.PixelFormat.Format32bppArgb)
-			MyChart.DrawToBitmap(mr.ChartTqN, New Rectangle(0, 0, mr.ChartTqN.Size.Width, mr.ChartTqN.Size.Height))
+			MyChart.DrawToBitmap(mr.ChartTqN, New Drawing.Rectangle(0, 0, mr.ChartTqN.Size.Width, mr.ChartTqN.Size.Height))
 
 		Next
 
@@ -1392,19 +1361,19 @@ Public Class cReport
 			a.Name = "main"
 
 			a.AxisX.Title = "distance [km]"
-			a.AxisX.TitleFont = New Font("Helvetica", 16)
-			a.AxisX.LabelStyle.Font = New Font("Helvetica", 16)
+			a.AxisX.TitleFont = New Drawing.Font("Helvetica", 16)
+			a.AxisX.LabelStyle.Font = New Drawing.Font("Helvetica", 16)
 			a.AxisX.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
 			a.AxisX.LabelStyle.Format = "0.0"
 
 			a.AxisY.Title = "vehicle speed [km/h]"
-			a.AxisY.TitleFont = New Font("Helvetica", 16)
-			a.AxisY.LabelStyle.Font = New Font("Helvetica", 16)
+			a.AxisY.TitleFont = New Drawing.Font("Helvetica", 16)
+			a.AxisY.LabelStyle.Font = New Drawing.Font("Helvetica", 16)
 			a.AxisY.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
 
 			a.AxisY2.Title = "altitude [m]"
-			a.AxisY2.TitleFont = New Font("Helvetica", 16)
-			a.AxisY2.LabelStyle.Font = New Font("Helvetica", 16)
+			a.AxisY2.TitleFont = New Drawing.Font("Helvetica", 16)
+			a.AxisY2.LabelStyle.Font = New Drawing.Font("Helvetica", 16)
 			a.AxisY2.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
 			a.AxisY2.MinorGrid.Enabled = False
 			a.AxisY2.MajorGrid.Enabled = False
@@ -1424,7 +1393,7 @@ Public Class cReport
 
 
 			MyChart.Legends.Add("main")
-			MyChart.Legends(0).Font = New Font("Helvetica", 14)
+			MyChart.Legends(0).Font = New Drawing.Font("Helvetica", 14)
 			MyChart.Legends(0).BorderColor = Color.Black
 			MyChart.Legends(0).BorderWidth = 3
 			'MyChart.Legends(0).Position.Auto = False
@@ -1438,11 +1407,10 @@ Public Class cReport
 			'MyChart.Titles(0).Font = New Font("Helvetica", 30, FontStyle.Bold)
 
 
-
 			MyChart.Update()
 
 			mr.ChartSpeed = New Bitmap(MyChart.Width, MyChart.Height, Imaging.PixelFormat.Format32bppArgb)
-			MyChart.DrawToBitmap(mr.ChartSpeed, New Rectangle(0, 0, mr.ChartSpeed.Size.Width, mr.ChartSpeed.Size.Height))
+			MyChart.DrawToBitmap(mr.ChartSpeed, New Drawing.Rectangle(0, 0, mr.ChartSpeed.Size.Width, mr.ChartSpeed.Size.Height))
 
 		Next
 
@@ -1455,7 +1423,7 @@ Public Class cReport
 			s.Points.AddXY(mr.MissionRef.NameStr, mr.Results(tLoading.RefLoaded).CO2tkm)
 			's.IsValueShownAsLabel = True
 			s.Points(0).Label = s.Points(0).YValues(0).ToString("0.0") & " [g/tkm]"
-			s.Points(0).Font = New Font("Helvetica", 20)
+			s.Points(0).Font = New Drawing.Font("Helvetica", 20)
 			s.Points(0).LabelBackColor = Color.White
 			s.Name = mr.MissionRef.NameStr & " (Ref. load.)"
 			MyChart.Series.Add(s)
@@ -1464,12 +1432,12 @@ Public Class cReport
 		a.Name = "main"
 
 		a.AxisX.Title = "Missions"
-		a.AxisX.TitleFont = New Font("Helvetica", 20)
+		a.AxisX.TitleFont = New Drawing.Font("Helvetica", 20)
 		a.AxisX.LabelStyle.Enabled = False
 
 		a.AxisY.Title = "CO2 [g/tkm]"
-		a.AxisY.TitleFont = New Font("Helvetica", 20)
-		a.AxisY.LabelStyle.Font = New Font("Helvetica", 20)
+		a.AxisY.TitleFont = New Drawing.Font("Helvetica", 20)
+		a.AxisY.LabelStyle.Font = New Drawing.Font("Helvetica", 20)
 		a.AxisY.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
 
 		a.BorderDashStyle = DataVisualization.Charting.ChartDashStyle.Solid
@@ -1478,7 +1446,7 @@ Public Class cReport
 		MyChart.ChartAreas.Add(a)
 
 		MyChart.Legends.Add("main")
-		MyChart.Legends(0).Font = New Font("Helvetica", 20)
+		MyChart.Legends(0).Font = New Drawing.Font("Helvetica", 20)
 		MyChart.Legends(0).BorderColor = Color.Black
 		MyChart.Legends(0).BorderWidth = 3
 
@@ -1488,7 +1456,7 @@ Public Class cReport
 		MyChart.Update()
 
 		ChartCO2tkm = New Bitmap(MyChart.Width, MyChart.Height, Imaging.PixelFormat.Format32bppArgb)
-		MyChart.DrawToBitmap(ChartCO2tkm, New Rectangle(0, 0, ChartCO2tkm.Size.Width, ChartCO2tkm.Size.Height))
+		MyChart.DrawToBitmap(ChartCO2tkm, New Drawing.Rectangle(0, 0, ChartCO2tkm.Size.Width, ChartCO2tkm.Size.Height))
 
 
 		'CO2 & Speed
@@ -1500,16 +1468,16 @@ Public Class cReport
 			s.MarkerSize = 15
 			s.MarkerStyle = DataVisualization.Charting.MarkerStyle.Circle
 			s.ChartType = DataVisualization.Charting.SeriesChartType.Point
-			i = -1
+			i = - 1
 			For Each lr In mr.Results
 				i += 1
 				s.Points.AddXY(lr.Value.Speed, lr.Value.CO2km)
 				s.Points(i).Label = lr.Value.Loading.ToString("0.0") & " t"
 				If lr.Key = tLoading.RefLoaded Then
-					s.Points(i).Font = New Font("Helvetica", 16)
+					s.Points(i).Font = New Drawing.Font("Helvetica", 16)
 				Else
 					s.Points(i).MarkerSize = 10
-					s.Points(i).Font = New Font("Helvetica", 14)
+					s.Points(i).Font = New Drawing.Font("Helvetica", 14)
 				End If
 				s.Points(i).LabelBackColor = Color.White
 			Next
@@ -1520,13 +1488,13 @@ Public Class cReport
 		a.Name = "main"
 
 		a.AxisX.Title = "vehicle speed [km/h]"
-		a.AxisX.TitleFont = New Font("Helvetica", 20)
-		a.AxisX.LabelStyle.Font = New Font("Helvetica", 20)
+		a.AxisX.TitleFont = New Drawing.Font("Helvetica", 20)
+		a.AxisX.LabelStyle.Font = New Drawing.Font("Helvetica", 20)
 		a.AxisX.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
 
 		a.AxisY.Title = "CO2 [g/km]"
-		a.AxisY.TitleFont = New Font("Helvetica", 20)
-		a.AxisY.LabelStyle.Font = New Font("Helvetica", 20)
+		a.AxisY.TitleFont = New Drawing.Font("Helvetica", 20)
+		a.AxisY.LabelStyle.Font = New Drawing.Font("Helvetica", 20)
 		a.AxisY.LabelAutoFitStyle = DataVisualization.Charting.LabelAutoFitStyles.None
 
 		a.AxisX.Minimum = 20
@@ -1536,7 +1504,7 @@ Public Class cReport
 		MyChart.ChartAreas.Add(a)
 
 		MyChart.Legends.Add("main")
-		MyChart.Legends(0).Font = New Font("Helvetica", 20)
+		MyChart.Legends(0).Font = New Drawing.Font("Helvetica", 20)
 		MyChart.Legends(0).BorderColor = Color.Black
 		MyChart.Legends(0).BorderWidth = 3
 
@@ -1549,9 +1517,7 @@ Public Class cReport
 		MyChart.Update()
 
 		ChartCO2speed = New Bitmap(MyChart.Width, MyChart.Height, Imaging.PixelFormat.Format32bppArgb)
-		MyChart.DrawToBitmap(ChartCO2speed, New Rectangle(0, 0, ChartCO2speed.Size.Width, ChartCO2speed.Size.Height))
-
-
+		MyChart.DrawToBitmap(ChartCO2speed, New Drawing.Rectangle(0, 0, ChartCO2speed.Size.Width, ChartCO2speed.Size.Height))
 	End Sub
 
 	Public Function WritePdfs() As Boolean
@@ -1624,12 +1590,12 @@ Public Class cReport
 			'Add Images
 			pdfContentByte = pdfStamper.GetOverContent(1)
 
-			imgp = iTextSharp.text.Image.GetInstance(ChartCO2tkm, iTextSharp.text.Color.WHITE)
+			imgp = iTextSharp.text.Image.GetInstance(ChartCO2tkm, BaseColor.WHITE)
 			imgp.ScaleAbsolute(440, 195)
 			imgp.SetAbsolutePosition(360, 270)
 			pdfContentByte.AddImage(imgp)
 
-			imgp = iTextSharp.text.Image.GetInstance(ChartCO2speed, iTextSharp.text.Color.WHITE)
+			imgp = iTextSharp.text.Image.GetInstance(ChartCO2speed, BaseColor.WHITE)
 			imgp.ScaleAbsolute(440, 195)
 			imgp.SetAbsolutePosition(360, 75)
 			pdfContentByte.AddImage(imgp)
@@ -1700,17 +1666,18 @@ Public Class cReport
 				'Add Images
 				pdfContentByte = pdfStamper.GetOverContent(1)
 
-				imgp = iTextSharp.text.Image.GetInstance(Declaration.ConvPicPath(HDVclassStr, (mr.MissionRef.MissionID = tMission.LongHaul)))
+				imgp = iTextSharp.text.Image.GetInstance(Declaration.ConvPicPath(HDVclassStr,
+																				(mr.MissionRef.MissionID = tMission.LongHaul)))
 				imgp.ScaleAbsolute(180, 50)
 				imgp.SetAbsolutePosition(600, 475)
 				pdfContentByte.AddImage(imgp)
 
-				imgp = iTextSharp.text.Image.GetInstance(mr.ChartSpeed, iTextSharp.text.Color.WHITE)
+				imgp = iTextSharp.text.Image.GetInstance(mr.ChartSpeed, BaseColor.WHITE)
 				imgp.ScaleAbsolute(780, 156)
 				imgp.SetAbsolutePosition(17, 270)
 				pdfContentByte.AddImage(imgp)
 
-				imgp = iTextSharp.text.Image.GetInstance(mr.ChartTqN, iTextSharp.text.Color.WHITE)
+				imgp = iTextSharp.text.Image.GetInstance(mr.ChartTqN, BaseColor.WHITE)
 				imgp.ScaleAbsolute(420, 178)
 				imgp.SetAbsolutePosition(375, 75)
 				pdfContentByte.AddImage(imgp)
@@ -1740,7 +1707,7 @@ Public Class cReport
 
 			'Delete temp files
 			For Each temppath In temppdfs
-				IO.File.Delete(temppath)
+				File.Delete(temppath)
 			Next
 
 		Catch ex As Exception
@@ -1750,29 +1717,22 @@ Public Class cReport
 		End Try
 
 
-
 		Return True
-
-
 	End Function
 
 
 	Public Class cMissionResults
-
 		Public Results As Dictionary(Of tLoading, cLoadingResults)
 
 		Public MissionRef As cMission
 
-		Public ChartSpeed As Image
-		Public ChartTqN As Image
+		Public ChartSpeed As Drawing.Image
+		Public ChartTqN As Drawing.Image
 
 
 		Public Sub New()
 			Results = New Dictionary(Of tLoading, cLoadingResults)
 		End Sub
-
-
-
 	End Class
 
 	Public Class cLoadingResults
@@ -1800,12 +1760,6 @@ Public Class cReport
 			Tq = New List(Of Single)
 			nU = New List(Of Single)
 		End Sub
-
-
-
-
 	End Class
-
-
 End Class
 

@@ -1543,31 +1543,72 @@ Imports TUGraz.VectoCore.Models.Simulation
 
 	Private Sub VectoWorkerV3_OnDoWork(sender As BackgroundWorker, e As DoWorkEventArgs)
 		AllowSleepOFF()
-		Dim prog As New cWorkProg(tWorkMsgType.StatusListBox)
 
 		Dim sumFileName As String = Path.GetFileNameWithoutExtension(JobFileList(0) + Constants.FileExtensions.SumFile)
 		Dim sumWriter As SummaryFileWriter = New SummaryFileWriter(sumFileName)
 		Dim jobContainer As JobContainer = New JobContainer(sumWriter)
 
 		For Each jobFile As String In JobFileList
+			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile})
 			Dim runsFactory As SimulatorFactory = New SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, jobFile)
 			jobContainer.AddRuns(runsFactory)
+			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading File " + jobFile})
 		Next
 
-		jobContainer.Execute()
 
+		sender.ReportProgress(0,
+							New _
+								With {.Target = "ListBox",
+								.Message = _
+								String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count, jobContainer.GetProgress().Count)})
+
+		jobContainer.Execute(True)
+		Dim start As DateTime
 		While Not jobContainer.AllCompleted
+			If sender.CancellationPending Then
+				jobContainer.Cancel()
+				Return
+			End If
+
 			Dim progress As Dictionary(Of String, Double) = jobContainer.GetProgress()
 
-			Dim NumLines As Integer = progress.Count
+			Dim NumLines As Double = progress.Count
 			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value)
 
-			ToolStripProgBarOverall.Value = Int(sumProgress/NumLines)*100
-			Thread.Sleep(250)
+
+			If sumProgress > 0 And start = DateTime.MinValue Then
+				start = DateTime.Now()
+			End If
+
+			Dim sumPercent As Integer = Int(sumProgress/NumLines*100)
+
+			Dim progString As String = String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value)))
+
+			Dim duration As Double = 0.0
+			Dim remainingDuration As Double = 0
+			If start > DateTime.MinValue Then
+				duration = (DateTime.Now() - start).TotalSeconds
+				remainingDuration = duration/(sumProgress/NumLines) - duration
+			End If
+
+
+			sender.ReportProgress(sumPercent,
+								New _
+									With {.Target = "Status",
+									.Message = String.Format("Time: {0:0}s, Remaining: {1:0}s, Current Progress: {2:P} ({3})",
+															duration, remainingDuration, sumPercent/100, progString)
+									})
+			Thread.Sleep(1000)
 		End While
 	End Sub
 
 	Private Sub VectoWorkerV3_OnProgressChanged(sender As Object, e As ProgressChangedEventArgs)
+		ToolStripProgBarOverall.Value = e.ProgressPercentage
+		If e.UserState.Target = "ListBox" Then
+			MSGtoForm(tMsgID.Normal, e.UserState.Message, "", "")
+		ElseIf e.UserState.Target = "Status" Then
+			Status(e.UserState.Message)
+		End If
 	End Sub
 
 	Private Sub VectoWorkerV3_OnRunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs)
