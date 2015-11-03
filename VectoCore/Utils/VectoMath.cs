@@ -232,15 +232,18 @@ namespace TUGraz.VectoCore.Utils
 			//Barycentric Technique: http://www.blackpawn.com/texts/pointinpoly/default.html
 			var p = new Point(x, y, 0);
 
-			var v0 = P3 - P1;
-			var v1 = P2 - P1;
-			var v2 = p - P1;
+			var v0X = P3.X - P1.X;
+			var v0Y = P3.Y - P1.Y;
+			var v1X = P2.X - P1.X;
+			var v1Y = P2.Y - P1.Y;
+			var v2X = p.X - P1.X;
+			var v2Y = p.Y - P1.Y;
 
-			var dot00 = v0.X * v0.X + v0.Y * v0.Y;
-			var dot01 = v0.X * v1.X + v0.Y * v1.Y;
-			var dot02 = v0.X * v2.X + v0.Y * v2.Y;
-			var dot11 = v1.X * v1.X + v1.Y * v1.Y;
-			var dot12 = v1.X * v2.X + v1.Y * v2.Y;
+			var dot00 = v0X * v0X + v0Y * v0Y;
+			var dot01 = v0X * v1X + v0Y * v1Y;
+			var dot02 = v0X * v2X + v0Y * v2Y;
+			var dot11 = v1X * v1X + v1Y * v1Y;
+			var dot12 = v1X * v2X + v1Y * v2Y;
 
 			var invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01);
 			var u = (dot11 * dot02 - dot01 * dot12) * invDenom;
@@ -260,17 +263,20 @@ namespace TUGraz.VectoCore.Utils
 			//Contract.Requires(P2 != null);
 			//Contract.Requires(P3 != null);
 
-			var p0 = P1 - p;
-			var p1 = P2 - p;
-			var p2 = P3 - p;
+			var p0X = P1.X - p.X;
+			var p0Y = P1.Y - p.Y;
+			var p1X = P2.X - p.X;
+			var p1Y = P2.Y - p.Y;
+			var p2X = P3.X - p.X;
+			var p2Y = P3.Y - p.Y;
 
-			var p0square = p0.X * p0.X + p0.Y * p0.Y;
-			var p1square = p1.X * p1.X + p1.Y * p1.Y;
-			var p2square = p2.X * p2.X + p2.Y * p2.Y;
+			var p0square = p0X * p0X + p0Y * p0Y;
+			var p1square = p1X * p1X + p1Y * p1Y;
+			var p2square = p2X * p2X + p2Y * p2Y;
 
-			var det01 = p0.X * p1.Y - p1.X * p0.Y;
-			var det12 = p1.X * p2.Y - p2.X * p1.Y;
-			var det20 = p2.X * p0.Y - p0.X * p2.Y;
+			var det01 = p0X * p1Y - p1X * p0Y;
+			var det12 = p1X * p2Y - p2X * p1Y;
+			var det20 = p2X * p0Y - p0X * p2Y;
 
 			var result = p0square * det12 + p1square * det20 + p2square * det01;
 
