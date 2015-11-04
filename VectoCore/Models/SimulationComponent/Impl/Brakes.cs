@@ -11,8 +11,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 	{
 		protected ITnOutPort NextComponent;
 
-		protected NewtonMeter BreakTorque;
-
 		public Brakes(IVehicleContainer dataBus) : base(dataBus) {}
 
 
@@ -26,30 +24,29 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return this;
 		}
 
-		public Watt BreakPower { get; set; }
+		public Watt BrakePower { get; set; }
 
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
-			if (!BreakPower.IsEqual(0)) {
+			var brakeTorque = 0.SI<NewtonMeter>();
+			if (!BrakePower.IsEqual(0)) {
 				if (angularVelocity.IsEqual(0)) {
-					BreakTorque = torque;
+					brakeTorque = torque;
 				} else {
-					BreakTorque = BreakPower / angularVelocity;
+					brakeTorque = BrakePower / angularVelocity;
 				}
 			}
-			if (!dryRun && BreakPower < 0) {
+			if (!dryRun && BrakePower < 0) {
 				throw new VectoSimulationException("Negative Braking Power is not allowed!");
 			}
-//			var retVal = NextComponent.Request(absTime, dt, torque - torque.Sign() *  BreakTorque, angularVelocity, dryRun);
-			var retVal = NextComponent.Request(absTime, dt, torque + BreakTorque, angularVelocity, dryRun);
-			retVal.BrakePower = BreakPower;
+			var retVal = NextComponent.Request(absTime, dt, torque + brakeTorque, angularVelocity, dryRun);
+			retVal.BrakePower = brakeTorque * angularVelocity;
 			return retVal;
 		}
 
 		public IResponse Initialize(NewtonMeter torque, PerSecond angularVelocity)
 		{
-			BreakPower = 0.SI<Watt>();
-			BreakTorque = 0.SI<NewtonMeter>();
+			BrakePower = 0.SI<Watt>();
 			return DataBus.VehicleStopped
 				? NextComponent.Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>())
 				: NextComponent.Initialize(torque, angularVelocity);
@@ -63,13 +60,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			writer[ModalResultField.Pbrake] = BreakPower;
+			writer[ModalResultField.Pbrake] = BrakePower;
 		}
 
 		protected override void DoCommitSimulationStep()
 		{
-			BreakPower = 0.SI<Watt>();
-			BreakTorque = 0.SI<NewtonMeter>();
+			BrakePower = 0.SI<Watt>();
 		}
 	}
 }
