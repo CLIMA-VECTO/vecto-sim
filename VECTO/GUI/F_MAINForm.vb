@@ -1548,9 +1548,17 @@ Imports TUGraz.VectoCore.Models.Simulation
 		Dim sumWriter As SummaryFileWriter = New SummaryFileWriter(sumFileName)
 		Dim jobContainer As JobContainer = New JobContainer(sumWriter)
 
+		Dim mode As SimulatorFactory.FactoryMode
+
+		If Cfg.DeclMode Then
+			mode = SimulatorFactory.FactoryMode.DeclarationMode
+		Else
+			mode = SimulatorFactory.FactoryMode.EngineeringMode
+		End If
+
 		For Each jobFile As String In JobFileList
 			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile})
-			Dim runsFactory As SimulatorFactory = New SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, jobFile)
+			Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, jobFile)
 			jobContainer.AddRuns(runsFactory)
 			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading File " + jobFile})
 		Next
@@ -1580,7 +1588,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 				start = DateTime.Now()
 			End If
 
-			Dim sumPercent As Integer = Int(sumProgress/NumLines*100)
+			Dim sumPercent As Integer = Int(sumProgress / NumLines * 100)
 
 			Dim progString As String = String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value)))
 
@@ -1588,7 +1596,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 			Dim remainingDuration As Double = 0
 			If start > DateTime.MinValue Then
 				duration = (DateTime.Now() - start).TotalSeconds
-				remainingDuration = duration/(sumProgress/NumLines) - duration
+				remainingDuration = duration / (sumProgress / NumLines) - duration
 			End If
 
 
@@ -1596,7 +1604,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 								New _
 									With {.Target = "Status",
 									.Message = String.Format("Time: {0:0}s, Remaining: {1:0}s, Current Progress: {2:P} ({3})",
-															duration, remainingDuration, sumPercent/100, progString)
+															duration, remainingDuration, sumPercent / 100, progString)
 									})
 			Thread.Sleep(1000)
 		End While
