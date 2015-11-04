@@ -27,7 +27,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 		{
 			if (info.SavedInDeclarationMode) {
 				Logger<EngineeringModeSimulationDataReader>()
-					.Warn("File was saved in Declaration Mode but is used for Engineering Mode!");
+					.Warn("{0} File was saved in Declaration Mode but is used for Engineering Mode!", msg);
 			}
 		}
 
