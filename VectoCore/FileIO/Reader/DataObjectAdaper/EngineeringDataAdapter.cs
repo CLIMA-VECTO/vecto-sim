@@ -60,8 +60,11 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 		internal DriverData CreateDriverData(VectoJobFileV2Engineering job)
 		{
 			var data = job.Body;
+			AccelerationCurveData accelerationData = null;
+			if (!string.IsNullOrWhiteSpace(data.AccelerationCurve) && data.AccelerationCurve != "<NOFILE>") {
+				accelerationData = AccelerationCurveData.ReadFromFile(Path.Combine(job.BasePath, data.AccelerationCurve));
+			}
 
-			var accelerationData = AccelerationCurveData.ReadFromFile(Path.Combine(job.BasePath, data.AccelerationCurve));
 			var lookAheadData = new DriverData.LACData {
 				Enabled = data.LookAheadCoasting.Enabled,
 				Deceleration = data.LookAheadCoasting.Dec.SI<MeterPerSquareSecond>(),
@@ -169,12 +172,14 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
 				var lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
 
-				var shiftPolygon = string.IsNullOrEmpty(gearSettings.ShiftPolygon)
-					? null
-					: ShiftPolygon.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.ShiftPolygon));
-				var fullLoad = string.IsNullOrEmpty(gearSettings.FullLoadCurve) || gearSettings.FullLoadCurve.Equals("<NOFILE>")
-					? null
-					: FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve));
+				var shiftPolygon = !string.IsNullOrEmpty(gearSettings.ShiftPolygon) && gearSettings.ShiftPolygon != "-" &&
+									gearSettings.ShiftPolygon != "<NOFILE>"
+					? ShiftPolygon.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.ShiftPolygon))
+					: null;
+				var fullLoad = !string.IsNullOrEmpty(gearSettings.FullLoadCurve) && gearSettings.FullLoadCurve != "<NOFILE>" &&
+								gearSettings.FullLoadCurve != "-"
+					? FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gearSettings.FullLoadCurve))
+					: null;
 
 				var gear = new GearData {
 					LossMap = lossMap,

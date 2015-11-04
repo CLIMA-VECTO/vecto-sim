@@ -10,13 +10,22 @@
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 
 Imports System.Collections.Generic
+Imports System.ComponentModel
+Imports System.IO
+Imports System.Linq
+Imports System.Threading
+Imports TUGraz.VectoCore.Models.Simulation.Data
+Imports TUGraz.VectoCore.Models.Simulation.Impl
+Imports TUGraz.VectoCore
+Imports TUGraz.VectoCore.Configuration
+Imports TUGraz.VectoCore.Models.Simulation
 
 ''' <summary>
 ''' Main application form. Loads at application start. Closing form ends application.
 ''' </summary>
 ''' <remarks></remarks>
 
-Public Class F_MAINForm
+	Public Class F_MAINForm
 	Private JobListView As cFileListView
 	Private CycleListView As cFileListView
 
@@ -50,7 +59,7 @@ Public Class F_MAINForm
 
 #Region "SLEEP Control - Prevent sleep while VECTO is running"
 
-	Private Declare Function SetThreadExecutionState Lib "kernel32" (ByVal esFlags As Long) As Long
+	Private Declare Function SetThreadExecutionState Lib "kernel32"(ByVal esFlags As Long) As Long
 
 	Private Sub AllowSleepOFF()
 #If Not PLATFORM = "x86" Then
@@ -158,11 +167,11 @@ Public Class F_MAINForm
 		Me.LvGEN.SelectedItems.Clear()
 
 		'If more than 100 calculations, ask whether to write by-second results
-		If Cfg.BatchMode And ((Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) > 100) And Me.ChBoxModOut.Checked _
+		If Cfg.BatchMode And ((Me.LvGEN.CheckedItems.Count)*(Me.LvDRI.CheckedItems.Count) > 100) And Me.ChBoxModOut.Checked _
 			Then
 			Select Case _
 				MsgBox(
-					"You are about to run Batch Mode with " & (Me.LvGEN.CheckedItems.Count) * (Me.LvDRI.CheckedItems.Count) &
+					"You are about to run Batch Mode with " & (Me.LvGEN.CheckedItems.Count)*(Me.LvDRI.CheckedItems.Count) &
 					" calculations!" & ChrW(10) & "Do you still want to write modal results?", MsgBoxStyle.YesNoCancel)
 				Case MsgBoxResult.No
 					Me.ChBoxModOut.Checked = False
@@ -228,6 +237,9 @@ Public Class F_MAINForm
 		Me.LvDRI.LabelEdit = Not Lock
 		Me.ChBoxAllDRI.Enabled = Not Lock
 
+		Button1.Enabled = Not Lock
+		Button2.Enabled = Not Lock
+
 		If DEV.Enabled Then
 			Me.LvDEVoptions.Enabled = Not Lock
 		End If
@@ -241,7 +253,7 @@ Public Class F_MAINForm
 		JobFileList.Clear()
 		CheckedItems.Clear()
 
-		x = -1
+		x = - 1
 		For Each LV0 In Me.LvGEN.CheckedItems
 			x += 1
 			LV0.SubItems(1).Text = ""
@@ -280,12 +292,13 @@ Public Class F_MAINForm
 		'Reset Msg-output
 		ClearMSG()
 
-		'Button switch
-		Me.Button1.Text = "STOP"
-		Me.Button1.Image = My.Resources.Stop_icon
-
 		'Disable Options
 		LockGUI(True)
+
+		'Button switch
+		Button1.Enabled = True
+		Me.Button1.Text = "STOP"
+		Me.Button1.Image = My.Resources.Stop_icon
 
 		'ProgBars start
 		If ProgOverallEnabled Then
@@ -393,8 +406,7 @@ Public Class F_MAINForm
 
 		'Options enable / GUI reset
 		LockGUI(False)
-		Me.Button1.Enabled = True
-		Me.Button1.Text = "START"
+		Me.Button1.Text = "START V2.2"
 		Me.Button1.Image = My.Resources.Play_icon
 		Status(LastModeName & " Mode")
 
@@ -467,19 +479,29 @@ Public Class F_MAINForm
 		LoadOptions()
 
 		'Resize columns ... after Loading the @file-lists
-		Me.LvGEN.Columns(1).Width = -2
-		Me.LvDRI.Columns(1).Width = -2
-		Me.LvMsg.Columns(2).Width = -2
+		Me.LvGEN.Columns(1).Width = - 2
+		Me.LvDRI.Columns(1).Width = - 2
+		Me.LvMsg.Columns(2).Width = - 2
 
 		'Initialize BackgroundWorker
 		VECTOworker = Me.BackgroundWorker1
 		VECTOworker.WorkerReportsProgress = True
 		VECTOworker.WorkerSupportsCancellation = True
 
+		VECTOworkerV3 = New BackgroundWorker()
+		AddHandler VECTOworkerV3.DoWork, AddressOf VectoWorkerV3_OnDoWork
+		AddHandler VECTOworkerV3.ProgressChanged, AddressOf VectoWorkerV3_OnProgressChanged
+		AddHandler VECTOworkerV3.RunWorkerCompleted, AddressOf VectoWorkerV3_OnRunWorkerCompleted
+
+		VECTOworkerV3.WorkerReportsProgress = True
+		VECTOworkerV3.WorkerSupportsCancellation = True
+
+
 		'Set mode (Batch/Standard)
 		ModeUpdate()
 
 		'License check
+		'TODO uncomment license check
 		If False And Not Lic.LICcheck() Then
 			MsgBox("License File invalid!" & vbCrLf & vbCrLf & Lic.FailMsg)
 			If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
@@ -526,7 +548,8 @@ Public Class F_MAINForm
 
 		If DEV.Enabled Then
 			If Not Cfg.DeclMode Then
-				If Not Me.TabControl1.TabPages.Contains(DEVpage) Then Me.TabControl1.TabPages.Insert(Me.TabControl1.TabPages.Count, DEVpage)
+				If Not Me.TabControl1.TabPages.Contains(DEVpage) Then _
+					Me.TabControl1.TabPages.Insert(Me.TabControl1.TabPages.Count, DEVpage)
 				LoadDEVconfigs()
 			Else
 				If Me.TabControl1.TabPages.Contains(DEVpage) Then Me.TabControl1.Controls.Remove(DEVpage)
@@ -831,7 +854,7 @@ Public Class F_MAINForm
 
 		lastindx = LvGEN.SelectedIndices(LvGEN.SelectedItems.Count - 1)
 
-		For i = UBound(SelIx) To 0 Step -1
+		For i = UBound(SelIx) To 0 Step - 1
 			LvGEN.Items.RemoveAt(SelIx(i))
 		Next
 
@@ -891,7 +914,7 @@ Public Class F_MAINForm
 		Dim p As Int16
 		Dim f As Int16
 		Dim fList As String()
-		Dim fListDim As Int16 = -1
+		Dim fListDim As Int16 = - 1
 		Dim ListViewItem0 As ListViewItem
 
 		'If VECTO runs: Cancel operation (because Mode-change during calculation is not very clever)
@@ -946,7 +969,7 @@ Public Class F_MAINForm
 			ListViewItem0.Selected = True
 			Me.LvGEN.Items.Add(ListViewItem0)
 			ListViewItem0.EnsureVisible()
-lbFound:
+			lbFound:
 		Next
 
 		Me.LvGEN.EndUpdate()
@@ -1110,7 +1133,7 @@ lbFound:
 
 		lastindx = LvDRI.SelectedIndices(LvDRI.SelectedItems.Count - 1)
 
-		For i = UBound(SelIx) To 0 Step -1
+		For i = UBound(SelIx) To 0 Step - 1
 			LvDRI.Items.RemoveAt(SelIx(i))
 		Next
 
@@ -1168,7 +1191,7 @@ lbFound:
 			ListViewItem0.SubItems.Add(" ")
 			ListViewItem0.Checked = True
 			Me.LvDRI.Items.Add(ListViewItem0)
-lbFound:
+			lbFound:
 		Next
 
 		Me.LvDRI.EndUpdate()
@@ -1303,7 +1326,8 @@ lbFound:
 		End If
 	End Sub
 
-	Private Sub ReportBugViaCITnetToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReportBugViaCITnetToolStripMenuItem.Click
+	Private Sub ReportBugViaCITnetToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+		Handles ReportBugViaCITnetToolStripMenuItem.Click
 		F_JIRA.ShowDialog()
 	End Sub
 
@@ -1477,6 +1501,144 @@ lbFound:
 			VECTO_Launcher()
 
 		End If
+	End Sub
+
+	Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+		If Not VECTOworkerV3.IsBusy Then
+			'Save Lists for Crash
+			SaveFileLists()
+
+			LvGEN.SelectedItems.Clear()
+
+			If LvGEN.CheckedItems.Count = 0 Then
+				GUImsg(tMsgID.Err, "No job file selected!")
+				Exit Sub
+			End If
+
+			Status("Launching VECTO V3...")
+			JobFileList.Clear()
+			JobFileList.AddRange(From listViewItem In LvGEN.CheckedItems Select fFileRepl(listViewItem.SubItems(0).Text))
+
+			SetOptions()
+			Cfg.ConfigSAVE()
+			ClearMSG()
+
+			LockGUI(True)
+			Button2.Enabled = True
+			Button2.Text = "STOP"
+			Button2.Image = My.Resources.Stop_icon
+
+			ToolStripProgBarOverall.Value = 0
+			ToolStripProgBarOverall.Style = ProgressBarStyle.Continuous
+			ToolStripProgBarOverall.Visible = True
+
+			VECTOworkerV3.RunWorkerAsync()
+		Else
+			Button2.Enabled = False
+			Button2.Text = "Aborting..."
+			Button2.Image = My.Resources.Play_icon_gray
+			VECTOworkerV3.CancelAsync()
+		End If
+	End Sub
+
+	Private Sub VectoWorkerV3_OnDoWork(sender As BackgroundWorker, e As DoWorkEventArgs)
+		AllowSleepOFF()
+
+		Dim sumFileName As String = Path.GetFileNameWithoutExtension(JobFileList(0) + Constants.FileExtensions.SumFile)
+		Dim sumWriter As SummaryFileWriter = New SummaryFileWriter(sumFileName)
+		Dim jobContainer As JobContainer = New JobContainer(sumWriter)
+
+		For Each jobFile As String In JobFileList
+			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile})
+			Dim runsFactory As SimulatorFactory = New SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, jobFile)
+			jobContainer.AddRuns(runsFactory)
+			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading File " + jobFile})
+		Next
+
+
+		sender.ReportProgress(0,
+							New _
+								With {.Target = "ListBox",
+								.Message = _
+								String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count, jobContainer.GetProgress().Count)})
+
+		jobContainer.Execute(True)
+		Dim start As DateTime
+		While Not jobContainer.AllCompleted
+			If sender.CancellationPending Then
+				jobContainer.Cancel()
+				Return
+			End If
+
+			Dim progress As Dictionary(Of String, Double) = jobContainer.GetProgress()
+
+			Dim NumLines As Double = progress.Count
+			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value)
+
+
+			If sumProgress > 0 And start = DateTime.MinValue Then
+				start = DateTime.Now()
+			End If
+
+			Dim sumPercent As Integer = Int(sumProgress/NumLines*100)
+
+			Dim progString As String = String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value)))
+
+			Dim duration As Double = 0.0
+			Dim remainingDuration As Double = 0
+			If start > DateTime.MinValue Then
+				duration = (DateTime.Now() - start).TotalSeconds
+				remainingDuration = duration/(sumProgress/NumLines) - duration
+			End If
+
+
+			sender.ReportProgress(sumPercent,
+								New _
+									With {.Target = "Status",
+									.Message = String.Format("Time: {0:0}s, Remaining: {1:0}s, Current Progress: {2:P} ({3})",
+															duration, remainingDuration, sumPercent/100, progString)
+									})
+			Thread.Sleep(1000)
+		End While
+	End Sub
+
+	Private Sub VectoWorkerV3_OnProgressChanged(sender As Object, e As ProgressChangedEventArgs)
+		ToolStripProgBarOverall.Value = e.ProgressPercentage
+		If e.UserState.Target = "ListBox" Then
+			MSGtoForm(tMsgID.Normal, e.UserState.Message, "", "")
+		ElseIf e.UserState.Target = "Status" Then
+			Status(e.UserState.Message)
+		End If
+	End Sub
+
+	Private Sub VectoWorkerV3_OnRunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs)
+		Dim Result As tCalcResult
+
+		'Progbar reset
+		ToolStripProgBarOverall.Visible = False
+		ToolStripProgBarOverall.Style = ProgressBarStyle.Continuous
+		ToolStripProgBarOverall.Value = 0
+		ProgSecStop()
+
+		LvGEN.SelectedIndices.Clear()
+
+		Result = e.Result
+
+		'ShutDown when Unexpected Error
+		If e.Error IsNot Nothing Then
+			MsgBox("An Unexpected Error occurred!" & ChrW(10) & ChrW(10) &
+					e.Error.Message.ToString, MsgBoxStyle.Critical, "Unexpected Error")
+			LogFile.WriteToLog(tMsgID.Err, ">>>Unexpected Error:" & e.Error.ToString())
+		End If
+
+		'Options enable / GUI reset
+		LockGUI(False)
+		Button2.Text = "START V3"
+		Button2.Image = My.Resources.Play_icon
+		Status(LastModeName & " Mode")
+
+		'SLEEP reactivate
+		AllowSleepON()
 	End Sub
 
 	'Mode Change (STANDARD/BATCH)
@@ -1738,9 +1900,9 @@ lbFound:
 
 			Me.ToolStripProgBarJob.Value = .ProgJobInt
 
-			If .ProgOverallStartInt > -1 Then
+			If .ProgOverallStartInt > - 1 Then
 				Me.ToolStripProgBarOverall.Value =
-					CInt(.ProgOverallStartInt + (.PgroOverallEndInt - .ProgOverallStartInt) * .ProgJobInt / 100)
+					CInt(.ProgOverallStartInt + (.PgroOverallEndInt - .ProgOverallStartInt)*.ProgJobInt/100)
 			End If
 
 		End With
@@ -1756,7 +1918,7 @@ lbFound:
 		Me.ChBoxCyclDistCor.Checked = Cfg.DistCorr
 		Me.ChBoxUseGears.Checked = Cfg.GnUfromCycle
 		Me.ChBoxModOut.Checked = Cfg.ModOut
-		CbBOmode.SelectedIndex = -1
+		CbBOmode.SelectedIndex = - 1
 		Select Case UCase(Cfg.BATCHoutpath)
 			Case sKey.JobPath
 				CbBOmode.SelectedIndex = 0
@@ -1832,7 +1994,7 @@ lbFound:
 
 		Me.LvDEVoptions.Items.Clear()
 
-		i = -1
+		i = - 1
 		For Each Config0 In DEV.Options
 			i += 1
 
@@ -1895,7 +2057,7 @@ lbFound:
 
 				CmDEV.Items.Clear()
 
-				i = -1
+				i = - 1
 				For Each str In Config0.Modes
 					i += 1
 					CmDEV.Items.Add("(" & i & ") " & str)
@@ -2217,7 +2379,7 @@ lbFound:
 					MyForm.LvMsg.Items.Insert(RowLim - 4, Space(ColLim - 30) & "         " & Space(10) & "*|       |*")
 			End Select
 			Exit Sub
-LbRace:
+			LbRace:
 
 			PRbAlt = Not PRbAlt
 
@@ -2245,17 +2407,17 @@ LbRace:
 					sAbort()
 					Exit Sub
 				End If
-				Scr += 5 * DiffLvl
+				Scr += 5*DiffLvl
 			End If
 
 			Scr += DiffLvl
 			DiffC += 1
 
 			'Erhöhe Schwierigkeitsgrad
-			If DiffC = (DiffLvl + 3) * 4 Then
+			If DiffC = (DiffLvl + 3)*4 Then
 				DiffC = 0
 				DiffLvl += 1
-				If DiffLvl > 2 And DiffLvl < 7 Then MyForm.TmProgSec.Interval = 300 - (DiffLvl) * 30
+				If DiffLvl > 2 And DiffLvl < 7 Then MyForm.TmProgSec.Interval = 300 - (DiffLvl)*30
 				Scr += 100
 				Select Case DiffLvl
 					Case 3
@@ -2339,10 +2501,10 @@ LbRace:
 			Ctrls(RowLim + 1) = 0
 			CtrlC += 1
 			If CtrlC < CtrlCL Then Exit Sub
-			Select Case CInt(Int((CtrlRnd * Rnd()) + 1))
+			Select Case CInt(Int((CtrlRnd*Rnd()) + 1))
 				Case 1, 2
 					CtrlC = 0
-					x = CInt(Int((7 * Rnd()) + 1))
+					x = CInt(Int((7*Rnd()) + 1))
 					Ctrls(RowLim + 1) = x
 				Case Else
 			End Select
@@ -2386,7 +2548,7 @@ LbRace:
 				s = s.Insert(Ctrls(RowLim + 1) + 1, "X")
 			End If
 			Select Case xPanel - Pnls(RowLim)
-				Case -1
+				Case - 1
 					s = Replace(s, "|", "\")
 				Case 1
 					s = Replace(s, "|", "/")
@@ -2398,15 +2560,15 @@ LbRace:
 			PnDirC += 1
 			If PnDirC < PnDirCL Then GoTo Lb1
 			PnDirC = 0
-			Select Case CInt(Int((PnDirRnd * Rnd()) + 1))
+			Select Case CInt(Int((PnDirRnd*Rnd()) + 1))
 				Case 1
 					PnDir = 1
 				Case 2
-					PnDir = -1
+					PnDir = - 1
 				Case Else
 					PnDir = 0
 			End Select
-Lb1:
+			Lb1:
 			xPanel += PnDir
 			If xPanel > ColLim Then
 				xPanel = ColLim
@@ -2451,5 +2613,4 @@ Lb1:
 	End Sub
 
 #End Region
-
 End Class

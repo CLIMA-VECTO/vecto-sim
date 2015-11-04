@@ -11,7 +11,7 @@
 Imports System.Collections.Generic
 
 Module VECTO_Global
-	Public Const VECTOvers As String = "2.2 beta-2"
+	Public Const VECTOvers As String = "2.2"
 	Public Const LicSigAppCode As String = "VECTO-Release-0093C61E0A2E4BFA9A7ED7E729C56AE4"
 	Public MyAppPath As String
 	Public MyConfPath As String
@@ -22,6 +22,7 @@ Module VECTO_Global
 
 	'BackgroundWorker
 	Public VECTOworker As System.ComponentModel.BackgroundWorker
+	Public VECTOworkerV3 As System.ComponentModel.BackgroundWorker
 
 	'Log/Msg
 	Public MSGerror As Integer
