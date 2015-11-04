@@ -30,7 +30,8 @@ Description:
     FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the extension: .vecto). At least one file must be given. Delimited by whitespace.
     -v: Shows verbose information (errors and warnings will be displayed)
 	-vv: Shows more verbose information (infos will be displayed)
-	-vvv: Shows all verbose information (everything, slow!)
+	-vvv: Shows debug messages (slow!)
+	-vvvv: Shows all verbose information (everything, slow!)
     -h: Displays this help.
 
 Examples:
@@ -54,25 +55,33 @@ Examples:
 				var logLevel = LogLevel.Fatal;
 
 				// Fatal > Error > Warn > Info > Debug > Trace
+				bool debugEnabled = false;
 
 				if (args.Contains("-v")) {
 					// display errors, warnings
 					logLevel = LogLevel.Warn;
+					debugEnabled = true;
 				} else if (args.Contains("-vv")) {
-					// also display info and debug
-					logLevel = LogLevel.Debug;
+					// also display info
+					logLevel = LogLevel.Info;
+					debugEnabled = true;
 				} else if (args.Contains("-vvv")) {
+					// display debug messages
+					logLevel = LogLevel.Debug;
+					debugEnabled = true;
+				} else if (args.Contains("-vvvv")) {
 					// display everything!
 					logLevel = LogLevel.Trace;
+					debugEnabled = true;
 				}
 
 				var config = LogManager.Configuration;
-				config.LoggingRules.Add(new LoggingRule("*", logLevel, config.FindTargetByName("ConsoleLogger")));
+				//config.LoggingRules.Add(new LoggingRule("*", logLevel, config.FindTargetByName("ConsoleLogger")));
 				config.LoggingRules.Add(new LoggingRule("*", logLevel, config.FindTargetByName("LogFile")));
 				LogManager.Configuration = config;
 				Trace.Listeners.Add(new ConsoleTraceListener(true));
 
-				args = args.Except(new[] { "-v", "-vv", "-vvv" }).ToArray();
+				args = args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv" }).ToArray();
 
 
 				// if no other arguments given: display usage and terminate
@@ -95,7 +104,7 @@ Examples:
 				}
 
 				Console.WriteLine("Starting simulation runs");
-				jobContainer.Execute();
+				jobContainer.Execute(!debugEnabled);
 
 				Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs e) => {
 					var isCtrlC = e.SpecialKey == ConsoleSpecialKey.ControlC;
