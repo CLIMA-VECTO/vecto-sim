@@ -48,6 +48,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public int JobNumber { get; set; }
 
+		public bool WriteModalResults { get; set; }
+
 		/// <summary>
 		/// Creates powertrain and initializes it with the component's data.
 		/// </summary>
@@ -63,6 +65,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				IModalDataWriter modWriter =
 					new ModalDataWriter(string.Format(modFileName, data.Cycle.Name, data.ModFileSuffix ?? ""),
 						writer => d.Report.AddResult(d.Loading, d.Mission, writer), _mode);
+				modWriter.WriteModalResults = WriteModalResults;
 				var jobName = string.Format("{0}-{1}", JobNumber, i++);
 				var sumWriterDecorator = DecorateSumWriter(data.IsEngineOnly, SumWriter, data.JobFileName, jobName, data.Cycle.Name);
 				var builder = new PowertrainBuilder(modWriter, sumWriterDecorator, DataReader.IsEngineOnly);

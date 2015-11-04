@@ -105,6 +105,9 @@ Examples:
 				stopWatch.Start();
 				foreach (var file in fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile)) {
 					var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, file);
+					if (args.Contains("-mod")) {
+						runsFactory.WriteModalResults = true;
+					}
 					jobContainer.AddRuns(runsFactory);
 				}
 				stopWatch.Stop();
@@ -112,7 +115,12 @@ Examples:
 				stopWatch.Reset();
 
 				Console.WriteLine("Starting simulation runs");
-
+				if (debugEnabled) {
+					Console.ForegroundColor = ConsoleColor.White;
+					Console.WriteLine("Debug-Output is enabled, executing simulation runs sequentially");
+					Console.ResetColor();
+				}
+				Console.WriteLine();
 				stopWatch.Start();
 				jobContainer.Execute(!debugEnabled);
 
@@ -177,7 +185,7 @@ Examples:
 			Console.WriteLine();
 			Console.WriteLine("---- timing information ----");
 			foreach (var timing in timings) {
-				Console.Write("{0,-20}: {1:F2}s", timing.Key, timing.Value / 1000);
+				Console.WriteLine("{0,-20}: {1:F2}s", timing.Key, timing.Value / 1000);
 			}
 		}
 	}

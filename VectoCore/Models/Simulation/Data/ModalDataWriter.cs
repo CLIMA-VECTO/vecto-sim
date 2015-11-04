@@ -15,6 +15,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private DataRow CurrentRow { get; set; }
 		private string ModFileName { get; set; }
 
+		public bool WriteModalResults { get; set; }
+
+
 		public ModalDataWriter(string modFileName,
 			SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode) : this(modFileName, _ => {}, mode) {}
 
@@ -96,7 +99,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				.Concat((Auxiliaries.Values.Select(c => c.ColumnName)))
 				.Concat(new[] { ModalResultField.FCMap, ModalResultField.FCAUXc, ModalResultField.FCWHTCc }.Select(x => x.GetName()));
 
-			if (_mode != SimulatorFactory.FactoryMode.DeclarationMode) {
+			if (_mode != SimulatorFactory.FactoryMode.DeclarationMode || WriteModalResults) {
 				VectoCSVFile.Write(ModFileName, new DataView(Data).ToTable(false, strCols.ToArray()));
 			}
 
@@ -104,7 +107,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				_addReportResult(this);
 			}
 		}
-
 
 		public IEnumerable<T> GetValues<T>(DataColumn col)
 		{

@@ -34,6 +34,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		void Finish();
 
+		bool WriteModalResults { get; set; }
+
 		IEnumerable<T> GetValues<T>(ModalResultField key);
 
 		IEnumerable<T> GetValues<T>(DataColumn col);

@@ -1570,10 +1570,10 @@ Imports TUGraz.VectoCore.Models.Simulation
 				Return
 			End If
 
-			Dim progress As Dictionary(Of String, Double) = jobContainer.GetProgress()
+			Dim progress As Dictionary(Of String, JobContainer.ProgressEntry) = jobContainer.GetProgress()
 
 			Dim NumLines As Double = progress.Count
-			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value)
+			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
 
 
 			If sumProgress > 0 And start = DateTime.MinValue Then

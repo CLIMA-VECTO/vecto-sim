@@ -37,6 +37,8 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 		public void Finish() {}
 
+		public bool WriteModalResults { get; set; }
+
 		public IEnumerable<T> GetValues<T>(ModalResultField key)
 		{
 			return Data.Rows.Cast<DataRow>().Select(x => x.Field<T>((int)key));

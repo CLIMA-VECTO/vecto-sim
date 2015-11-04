@@ -123,10 +123,10 @@ namespace TUGraz.VectoCore.Tests.Integration
 			LogManager.DisableLogging();
 
 			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, TruckDeclarationJob);
+			factory.WriteModalResults = true;
 			var sumFileName = Path.GetFileNameWithoutExtension(TruckDeclarationJob) + Constants.FileExtensions.SumFile;
 			var sumWriter = new SummaryFileWriter(sumFileName);
 			var jobContainer = new JobContainer(sumWriter);
-
 			jobContainer.AddRuns(factory);
 
 			jobContainer.Execute();
