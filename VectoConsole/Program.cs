@@ -30,6 +30,7 @@ Description:
     FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the extension: .vecto). At least one file must be given. Delimited by whitespace.
     -t: output information about execution times
     -mod: write mod-data in addition to sum-data
+    -eng: switch to engineering mode (implies -mod)
     -v: Shows verbose information (errors and warnings will be displayed)
 	-vv: Shows more verbose information (infos will be displayed)
 	-vvv: Shows debug messages (slow!)
@@ -101,10 +102,18 @@ Examples:
 				var sumWriter = new SummaryFileWriter(sumFileName);
 				var jobContainer = new JobContainer(sumWriter);
 
+				var mode = SimulatorFactory.FactoryMode.DeclarationMode;
+				if (args.Contains("-eng")) {
+					mode = SimulatorFactory.FactoryMode.EngineeringMode;
+					Console.ForegroundColor = ConsoleColor.White;
+					Console.WriteLine("Switching to Engineering Mode. Make sure the job-file is saved in engineering mode!");
+					Console.ResetColor();
+				}
+
 				Console.WriteLine("Reading Job Files");
 				stopWatch.Start();
 				foreach (var file in fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile)) {
-					var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, file);
+					var runsFactory = new SimulatorFactory(mode, file);
 					if (args.Contains("-mod")) {
 						runsFactory.WriteModalResults = true;
 					}
@@ -147,7 +156,10 @@ Examples:
 				}
 			} catch (Exception e) {
 				Console.Error.WriteLine(e.Message);
-				Trace.TraceError(e.ToString());
+				//Trace.TraceError(e.ToString());
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.Error.WriteLine("Please see log-file for further details (logs/log.txt)");
+				Console.ResetColor();
 				Environment.ExitCode = Environment.ExitCode != 0 ? Environment.ExitCode : 1;
 			}
 			return Environment.ExitCode;
