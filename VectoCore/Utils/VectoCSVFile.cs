@@ -43,6 +43,7 @@ namespace TUGraz.VectoCore.Utils
 			try {
 				return ReadData(File.ReadAllLines(fileName), ignoreEmptyColumns, fullHeader);
 			} catch (Exception e) {
+				Logger<VectoCSVFile>().Error(e);
 				throw new VectoException(string.Format("File {0}: {1}", fileName, e.Message));
 			}
 		}
@@ -65,6 +66,7 @@ namespace TUGraz.VectoCore.Utils
 				}
 				return ReadData(lines.ToArray(), ignoreEmptyColumns);
 			} catch (Exception e) {
+				Logger<VectoCSVFile>().Error(e);
 				throw new VectoException("failed to read stream", e);
 			}
 		}
