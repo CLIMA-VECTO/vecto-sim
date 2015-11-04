@@ -4,6 +4,7 @@ using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent;
+using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -34,6 +35,11 @@ namespace TUGraz.VectoCore.Tests.Utils
 		public MeterPerSquareSecond StartAcceleration
 		{
 			get { return 0.6.SI<MeterPerSquareSecond>(); }
+		}
+
+		public FullLoadCurve GearFullLoadCurve
+		{
+			get { return null; }
 		}
 
 

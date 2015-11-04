@@ -37,9 +37,16 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			var resultCount = segment.Missions.Sum(m => m.Loadings.Count);
 
 			var engineData = dao.CreateEngineData(Engine);
+			var engineTypeString = string.Format("{0} l, {1} kW",
+				engineData.Displacement.ConvertTo().Cubic.Dezi.Meter.ToOutputFormat(1),
+				engineData.FullLoadCurve.MaxPower.ConvertTo().Kilo.Watt.ToOutputFormat(0));
+
 			var gearboxData = dao.CreateGearboxData(Gearbox, engineData);
-			var report = new DeclarationReport(engineData.FullLoadCurve, segment, "CREATOR", engineData.ModelName, "engineStr",
-				gearboxData.ModelName, "gearboxStr", Job.BasePath, Job.JobFile, resultCount);
+			var gearboxTypeString = string.Format("{0}-Speed {1}", gearboxData.Gears.Count, gearboxData.Type);
+
+			// todo: set correct <USERNAME> in Report
+			var report = new DeclarationReport(engineData.FullLoadCurve, segment, "<USERNAME>", engineData.ModelName,
+				engineTypeString, gearboxData.ModelName, gearboxTypeString, Job.BasePath, Job.JobFile, resultCount);
 
 			foreach (var mission in segment.Missions) {
 				var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased);

@@ -72,6 +72,8 @@ namespace TUGraz.VectoCore.Configuration
 
 			public static Meter DriverActionDistanceTolerance = 0.25.SI<Meter>();
 
+			public static MeterPerSecond VehicleSpeedHaltTolerance = 1e-3.SI<MeterPerSecond>();
+
 			/// <summary>
 			/// The initial search interval for the operating point search in the driver.
 			/// </summary>

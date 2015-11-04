@@ -69,6 +69,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
+		public FullLoadCurve GearFullLoadCurve
+		{
+			get { return Gearbox != null ? Gearbox.GearFullLoadCurve : null; }
+		}
+
 		#endregion
 
 		#region IEngineCockpit

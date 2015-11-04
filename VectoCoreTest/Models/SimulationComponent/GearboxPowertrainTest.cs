@@ -1,8 +1,5 @@
-﻿using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.FileIO.Reader;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Tests.Integration;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.Utils;
@@ -23,7 +20,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = Truck40tPowerTrain.CreatePowerTrain(cycle, "Gearbox_Initialize.vmod", 7500.0.SI<Kilogram>(),
 				0.SI<Kilogram>());
 			var retVal = container.Cycle.Initialize();
-			Assert.AreEqual(5u, container.Gear);
+			Assert.AreEqual(4u, container.Gear);
 			Assert.IsInstanceOfType(retVal, typeof(ResponseSuccess));
 
 			AssertHelper.AreRelativeEqual(560.RPMtoRad(), container.EngineSpeed);
@@ -97,6 +94,5 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			container.CommitSimulationStep(absTime, retVal.SimulationInterval);
 			absTime += retVal.SimulationInterval;
 		}
-
 	}
 }

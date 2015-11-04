@@ -43,6 +43,12 @@ namespace TUGraz.VectoCore.Utils
 			}
 		}
 
+		public static T Sum<T>(this IEnumerable<T> values) where T : SIBase<T>
+		{
+			var valueList = values.ToList();
+			return valueList.Any() ? valueList.Aggregate((sum, current) => sum + current) : null;
+		}
+
 		public static SI Sum(this IEnumerable<SI> values)
 		{
 			var valueList = values.ToList();

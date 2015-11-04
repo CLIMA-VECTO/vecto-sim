@@ -115,14 +115,14 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var container = new VehicleContainer();
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
-			gearbox.Gear = 1;
-			var ratio = 6.38;
-
 			var driver = new MockDriver(container);
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
 			container.Engine = port;
 
+			gearbox.Initialize(0.SI<NewtonMeter>(), 0.RPMtoRad());
+
+			var ratio = 6.38;
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
 			var t = 2600.SI<NewtonMeter>();
@@ -148,13 +148,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var container = new VehicleContainer();
 			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
-
 			var driver = new MockDriver(container);
 
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
 			container.Engine = port;
-			gearbox.Gear = 1;
+
+			gearbox.Initialize(0.SI<NewtonMeter>(), 0.RPMtoRad());
 
 			var ratio = 6.38;
 
@@ -167,8 +167,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			foreach (var exp in expected) {
 				var torque = exp.t.SI<NewtonMeter>() * ratio;
 				var angularVelocity = exp.n.RPMtoRad() / ratio;
-
 				var response = gearbox.OutPort().Request(0.SI<Second>(), 1.SI<Second>(), torque, angularVelocity);
+
 				Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
 			}
 
@@ -262,6 +262,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var driver = new MockDriver(container);
 			var port = new MockTnOutPort();
 			gearbox.InPort().Connect(port);
+			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 10.SI<MeterPerSecond>() };
 			container.Engine = port;
 
 			var ratios = new[] { 0.0, 6.38, 4.63, 3.44, 2.59, 1.86, 1.35, 1, 0.76 };
@@ -276,16 +277,13 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				new { gear = 3, newGear = 2, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
 				new { gear = 2, newGear = 1, t = 1500, n = 750, responseType = typeof(ResponseGearShift) },
 				new { gear = 1, newGear = 1, t = 1200, n = 700, responseType = typeof(ResponseSuccess) },
-				new { gear = 8, newGear = 1, t = 10000, n = 120, responseType = typeof(ResponseGearShift) }
+				new { gear = 8, newGear = 1, t = 15000, n = 50, responseType = typeof(ResponseGearShift) }
 			};
 
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
 
-			gearbox.OutPort().Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>());
-
-			// just for test case mock driver
-			driver.VehicleStopped = false;
+			gearbox.OutPort().Initialize(1.SI<NewtonMeter>(), 1.SI<PerSecond>());
 
 			foreach (var exp in expected) {
 				var expectedT = exp.t.SI<NewtonMeter>();
@@ -313,6 +311,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var gearboxData = DeclarationModeSimulationDataReader.CreateGearboxDataFromFile(GearboxDataFile, EngineDataFile);
 			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
 			var driver = new MockDriver(container);
+			var vehicle = new MockVehicle(container) { MyVehicleSpeed = 10.SI<MeterPerSecond>() };
 			var port = new MockTnOutPort();
 			container.Engine = port;
 			gearbox.InPort().Connect(port);
@@ -335,8 +334,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 			var absTime = 0.SI<Second>();
 			var dt = 2.SI<Second>();
 
-			gearbox.OutPort().Initialize(1000.SI<NewtonMeter>(), 100.SI<PerSecond>());
-			var first = gearbox.OutPort().Request(absTime, dt, 1000.SI<NewtonMeter>(), 100.SI<PerSecond>());
+			gearbox.OutPort().Initialize(1.SI<NewtonMeter>(), 1.SI<PerSecond>());
+
 			absTime += dt;
 			foreach (var exp in expected) {
 				var expectedT = exp.t.SI<NewtonMeter>();
@@ -355,50 +354,6 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 				Assert.AreEqual((uint)exp.newGear, container.Gear, exp.ToString());
 				absTime += dt;
 			}
-		}
-
-		[TestMethod]
-		public void Gearbox_NoGear()
-		{
-			var container = new VehicleContainer();
-			var gearboxData = CreateGearboxData();
-			var gearbox = new Gearbox(container, gearboxData, new AMTShiftStrategy(gearboxData, container));
-
-			var driver = new MockDriver(container);
-
-			var port = new MockTnOutPort();
-			container.Engine = (IEngineInfo)port;
-			gearbox.InPort().Connect(port);
-
-			gearbox.Initialize(0.SI<NewtonMeter>(), 0.SI<PerSecond>());
-
-			var absTime = 0.SI<Second>();
-			var dt = 2.SI<Second>();
-
-			//just for test driver
-			driver.VehicleStopped = true;
-
-			var response = gearbox.OutPort().Request(absTime, dt, 50.SI<NewtonMeter>(), 1000000.RPMtoRad());
-			Assert.IsInstanceOfType(response, typeof(ResponseSuccess));
-			AssertHelper.AreRelativeEqual(absTime, port.AbsTime);
-			AssertHelper.AreRelativeEqual(dt, port.Dt);
-			Assert.IsNotNull(port.AngularVelocity);
-			Assert.IsNotNull(port.Torque);
-			Assert.IsTrue(port.AngularVelocity.IsGreater(0));
-			Assert.IsTrue(port.Torque.IsGreater(0));
-
-			port.DoCommitSimulationStep();
-
-			driver.VehicleStopped = false;
-
-			absTime += dt;
-
-			response = gearbox.OutPort().Request(absTime, dt, 5000.SI<NewtonMeter>(), 100.SI<PerSecond>());
-			Assert.IsInstanceOfType(response, typeof(ResponseGearShift));
-			Assert.IsNull(port.AbsTime);
-			Assert.IsNull(port.Dt);
-			Assert.IsNull(port.AngularVelocity);
-			Assert.IsNull(port.Torque);
 		}
 	}
 }
