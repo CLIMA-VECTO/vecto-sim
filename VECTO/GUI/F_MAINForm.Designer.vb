@@ -40,6 +40,7 @@ Partial Class F_MAINForm
 		Me.ToolStripProgBarOverall = New System.Windows.Forms.ToolStripProgressBar()
 		Me.TabControl1 = New System.Windows.Forms.TabControl()
 		Me.TabPageGEN = New System.Windows.Forms.TabPage()
+		Me.Button2 = New System.Windows.Forms.Button()
 		Me.LbDecl = New System.Windows.Forms.Label()
 		Me.PictureBox1 = New System.Windows.Forms.PictureBox()
 		Me.BtGENdown = New System.Windows.Forms.Button()
@@ -47,8 +48,8 @@ Partial Class F_MAINForm
 		Me.LbAutoShDown = New System.Windows.Forms.Label()
 		Me.ChBoxAllGEN = New System.Windows.Forms.CheckBox()
 		Me.LvGEN = New System.Windows.Forms.ListView()
-		Me.ColGENpath = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-		Me.ColGENstatus = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+		Me.ColGENpath = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.ColGENstatus = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ButtonGENopt = New System.Windows.Forms.Button()
 		Me.ButtonGENremove = New System.Windows.Forms.Button()
 		Me.Button1 = New System.Windows.Forms.Button()
@@ -58,8 +59,8 @@ Partial Class F_MAINForm
 		Me.BtDRIup = New System.Windows.Forms.Button()
 		Me.ChBoxAllDRI = New System.Windows.Forms.CheckBox()
 		Me.LvDRI = New System.Windows.Forms.ListView()
-		Me.ColDRIpath = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
-		Me.ColDRIstatus = CType(New System.Windows.Forms.ColumnHeader(),System.Windows.Forms.ColumnHeader)
+		Me.ColDRIpath = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+		Me.ColDRIstatus = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
 		Me.ButtonDRIedit = New System.Windows.Forms.Button()
 		Me.ButtonDRIremove = New System.Windows.Forms.Button()
 		Me.ButtonDRIadd = New System.Windows.Forms.Button()
@@ -203,6 +204,7 @@ Partial Class F_MAINForm
 		'
 		'TabPageGEN
 		'
+		Me.TabPageGEN.Controls.Add(Me.Button2)
 		Me.TabPageGEN.Controls.Add(Me.LbDecl)
 		Me.TabPageGEN.Controls.Add(Me.PictureBox1)
 		Me.TabPageGEN.Controls.Add(Me.BtGENdown)
@@ -222,11 +224,23 @@ Partial Class F_MAINForm
 		Me.TabPageGEN.Text = "Job Files"
 		Me.TabPageGEN.UseVisualStyleBackColor = True
 		'
+		'Button2
+		'
+		Me.Button2.Image = Global.VECTO.My.Resources.Resources.Play_icon
+		Me.Button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+		Me.Button2.Location = New System.Drawing.Point(6, 100)
+		Me.Button2.Name = "Button2"
+		Me.Button2.Size = New System.Drawing.Size(105, 41)
+		Me.Button2.TabIndex = 20
+		Me.Button2.Text = "START V3"
+		Me.Button2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+		Me.Button2.UseVisualStyleBackColor = True
+		'
 		'LbDecl
 		'
 		Me.LbDecl.AutoSize = True
 		Me.LbDecl.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.LbDecl.Location = New System.Drawing.Point(6, 97)
+		Me.LbDecl.Location = New System.Drawing.Point(6, 144)
 		Me.LbDecl.Name = "LbDecl"
 		Me.LbDecl.Size = New System.Drawing.Size(107, 13)
 		Me.LbDecl.TabIndex = 19
@@ -345,7 +359,8 @@ Partial Class F_MAINForm
 		Me.Button1.Name = "Button1"
 		Me.Button1.Size = New System.Drawing.Size(105, 41)
 		Me.Button1.TabIndex = 12
-		Me.Button1.Text = "START"
+		Me.Button1.Text = "START V2.2"
+		Me.Button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
 		Me.Button1.UseVisualStyleBackColor = True
 		'
 		'ButtonGENadd
@@ -1011,142 +1026,143 @@ Partial Class F_MAINForm
 		'
 		'F_MAINForm
 		'
-		Me.AutoScaleDimensions = New System.Drawing.SizeF(6!, 13!)
+		Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.ClientSize = New System.Drawing.Size(1136, 638)
 		Me.Controls.Add(Me.ToolStrip1)
 		Me.Controls.Add(Me.SplitContainer1)
 		Me.Controls.Add(Me.StatusBAR)
-		Me.Icon = CType(resources.GetObject("$this.Icon"),System.Drawing.Icon)
+		Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
 		Me.MinimumSize = New System.Drawing.Size(785, 485)
 		Me.Name = "F_MAINForm"
 		Me.Text = "VECTO"
-		Me.StatusBAR.ResumeLayout(false)
-		Me.StatusBAR.PerformLayout
-		Me.TabControl1.ResumeLayout(false)
-		Me.TabPageGEN.ResumeLayout(false)
-		Me.TabPageGEN.PerformLayout
-		CType(Me.PictureBox1,System.ComponentModel.ISupportInitialize).EndInit
-		Me.TabPageDRI.ResumeLayout(false)
-		Me.TabPageDRI.PerformLayout
-		Me.TabPgOptions.ResumeLayout(false)
-		Me.TabPgOptions.PerformLayout
-		Me.GrBoxBATCH.ResumeLayout(false)
-		Me.GrBoxBATCH.PerformLayout
-		Me.PanelOptAllg.ResumeLayout(false)
-		Me.PanelOptAllg.PerformLayout
-		Me.GroupBox1.ResumeLayout(false)
-		Me.GroupBox1.PerformLayout
-		Me.PnDeclOpt.ResumeLayout(false)
-		Me.PnDeclOpt.PerformLayout
-		Me.TabPageDEV.ResumeLayout(false)
-		Me.TabPageDEV.PerformLayout
-		Me.ConMenFilelist.ResumeLayout(false)
-		Me.SplitContainer1.Panel1.ResumeLayout(false)
-		Me.SplitContainer1.Panel2.ResumeLayout(false)
-		CType(Me.SplitContainer1,System.ComponentModel.ISupportInitialize).EndInit
-		Me.SplitContainer1.ResumeLayout(false)
-		Me.ToolStrip1.ResumeLayout(false)
-		Me.ToolStrip1.PerformLayout
-		Me.CmOpenFile.ResumeLayout(false)
-		Me.ResumeLayout(false)
-		Me.PerformLayout
+		Me.StatusBAR.ResumeLayout(False)
+		Me.StatusBAR.PerformLayout()
+		Me.TabControl1.ResumeLayout(False)
+		Me.TabPageGEN.ResumeLayout(False)
+		Me.TabPageGEN.PerformLayout()
+		CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.TabPageDRI.ResumeLayout(False)
+		Me.TabPageDRI.PerformLayout()
+		Me.TabPgOptions.ResumeLayout(False)
+		Me.TabPgOptions.PerformLayout()
+		Me.GrBoxBATCH.ResumeLayout(False)
+		Me.GrBoxBATCH.PerformLayout()
+		Me.PanelOptAllg.ResumeLayout(False)
+		Me.PanelOptAllg.PerformLayout()
+		Me.GroupBox1.ResumeLayout(False)
+		Me.GroupBox1.PerformLayout()
+		Me.PnDeclOpt.ResumeLayout(False)
+		Me.PnDeclOpt.PerformLayout()
+		Me.TabPageDEV.ResumeLayout(False)
+		Me.TabPageDEV.PerformLayout()
+		Me.ConMenFilelist.ResumeLayout(False)
+		Me.SplitContainer1.Panel1.ResumeLayout(False)
+		Me.SplitContainer1.Panel2.ResumeLayout(False)
+		CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.SplitContainer1.ResumeLayout(False)
+		Me.ToolStrip1.ResumeLayout(False)
+		Me.ToolStrip1.PerformLayout()
+		Me.CmOpenFile.ResumeLayout(False)
+		Me.ResumeLayout(False)
+		Me.PerformLayout()
 
-End Sub
-    Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents StatusBAR As System.Windows.Forms.StatusStrip
-    Friend WithEvents ToolStripLbStatus As System.Windows.Forms.ToolStripStatusLabel
-    Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
-    Friend WithEvents TabPageGEN As System.Windows.Forms.TabPage
-    Friend WithEvents TabPageDRI As System.Windows.Forms.TabPage
-    Friend WithEvents ButtonGENadd As System.Windows.Forms.Button
-    Friend WithEvents ButtonGENremove As System.Windows.Forms.Button
-    Friend WithEvents ButtonDRIremove As System.Windows.Forms.Button
-    Friend WithEvents ButtonDRIadd As System.Windows.Forms.Button
-    Friend WithEvents ButtonGENopt As System.Windows.Forms.Button
-    Friend WithEvents ButtonDRIedit As System.Windows.Forms.Button
-    Friend WithEvents ConMenFilelist As System.Windows.Forms.ContextMenuStrip
-    Friend WithEvents SaveListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents LoadListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents LoadDefaultListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ClearListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
-    Friend WithEvents ToolStripProgBarOverall As System.Windows.Forms.ToolStripProgressBar
-    Friend WithEvents LvGEN As System.Windows.Forms.ListView
-    Friend WithEvents ColGENpath As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColGENstatus As System.Windows.Forms.ColumnHeader
-    Friend WithEvents LvDRI As System.Windows.Forms.ListView
-    Friend WithEvents ColDRIpath As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColDRIstatus As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ChBoxAllGEN As System.Windows.Forms.CheckBox
-    Friend WithEvents ChBoxAllDRI As System.Windows.Forms.CheckBox
-    Friend WithEvents TabPgOptions As System.Windows.Forms.TabPage
-    Friend WithEvents ChBoxModOut As System.Windows.Forms.CheckBox
-    Friend WithEvents ChBoxUseGears As System.Windows.Forms.CheckBox
-    Friend WithEvents ChBoxCyclDistCor As System.Windows.Forms.CheckBox
-    Friend WithEvents PanelOptAllg As System.Windows.Forms.Panel
-    Friend WithEvents LbAutoShDown As System.Windows.Forms.Label
-    Friend WithEvents ChBoxAutoSD As System.Windows.Forms.CheckBox
-    Friend WithEvents TbBOpath As System.Windows.Forms.TextBox
-    Friend WithEvents CbBOmode As System.Windows.Forms.ComboBox
-    Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents ButBObrowse As System.Windows.Forms.Button
-    Friend WithEvents ChBoxBatchSubD As System.Windows.Forms.CheckBox
-    Friend WithEvents LvMsg As System.Windows.Forms.ListView
-    Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
-    Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents GrBoxBATCH As System.Windows.Forms.GroupBox
-    Friend WithEvents TabPageDEV As System.Windows.Forms.TabPage
-    Friend WithEvents LvDEVoptions As System.Windows.Forms.ListView
-    Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader6 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents CmDEV As System.Windows.Forms.ContextMenuStrip
-    Friend WithEvents ColumnHeader7 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents BtGENup As System.Windows.Forms.Button
-    Friend WithEvents BtGENdown As System.Windows.Forms.Button
-    Friend WithEvents BtDRIdown As System.Windows.Forms.Button
-    Friend WithEvents BtDRIup As System.Windows.Forms.Button
-    Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
-    Friend WithEvents ToolStripBtNew As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripBtOpen As System.Windows.Forms.ToolStripButton
-    Friend WithEvents ToolStripDrDnBtTools As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents GENEditorToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents VEHEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator4 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents OpenLogToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents SettingsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripDrDnBtInfo As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents CreateActivationFileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents AboutVECTOToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents ToolStripProgBarJob As System.Windows.Forms.ToolStripProgressBar
-    Friend WithEvents TmProgSec As System.Windows.Forms.Timer
-    Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
-    Friend WithEvents EngineEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents GearboxEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents UserManualToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
-    Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ColumnHeader8 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader9 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents UpdateNotesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents SignOrVerifyFilesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator6 As System.Windows.Forms.ToolStripSeparator
-    Friend WithEvents GrBoxSTD As System.Windows.Forms.GroupBox
-    Friend WithEvents PnDeclOpt As System.Windows.Forms.Panel
-    Friend WithEvents LbDecl As System.Windows.Forms.Label
-    Friend WithEvents GraphToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents OpenInGraphWindowToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents CbBatch As System.Windows.Forms.CheckBox
-    Friend WithEvents RbDev As System.Windows.Forms.RadioButton
-    Friend WithEvents RbDecl As System.Windows.Forms.RadioButton
-    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
+	End Sub
+	Friend WithEvents Button1 As System.Windows.Forms.Button
+	Friend WithEvents StatusBAR As System.Windows.Forms.StatusStrip
+	Friend WithEvents ToolStripLbStatus As System.Windows.Forms.ToolStripStatusLabel
+	Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
+	Friend WithEvents TabPageGEN As System.Windows.Forms.TabPage
+	Friend WithEvents TabPageDRI As System.Windows.Forms.TabPage
+	Friend WithEvents ButtonGENadd As System.Windows.Forms.Button
+	Friend WithEvents ButtonGENremove As System.Windows.Forms.Button
+	Friend WithEvents ButtonDRIremove As System.Windows.Forms.Button
+	Friend WithEvents ButtonDRIadd As System.Windows.Forms.Button
+	Friend WithEvents ButtonGENopt As System.Windows.Forms.Button
+	Friend WithEvents ButtonDRIedit As System.Windows.Forms.Button
+	Friend WithEvents ConMenFilelist As System.Windows.Forms.ContextMenuStrip
+	Friend WithEvents SaveListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents LoadListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents LoadDefaultListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents ClearListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
+	Friend WithEvents ToolStripProgBarOverall As System.Windows.Forms.ToolStripProgressBar
+	Friend WithEvents LvGEN As System.Windows.Forms.ListView
+	Friend WithEvents ColGENpath As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColGENstatus As System.Windows.Forms.ColumnHeader
+	Friend WithEvents LvDRI As System.Windows.Forms.ListView
+	Friend WithEvents ColDRIpath As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColDRIstatus As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ChBoxAllGEN As System.Windows.Forms.CheckBox
+	Friend WithEvents ChBoxAllDRI As System.Windows.Forms.CheckBox
+	Friend WithEvents TabPgOptions As System.Windows.Forms.TabPage
+	Friend WithEvents ChBoxModOut As System.Windows.Forms.CheckBox
+	Friend WithEvents ChBoxUseGears As System.Windows.Forms.CheckBox
+	Friend WithEvents ChBoxCyclDistCor As System.Windows.Forms.CheckBox
+	Friend WithEvents PanelOptAllg As System.Windows.Forms.Panel
+	Friend WithEvents LbAutoShDown As System.Windows.Forms.Label
+	Friend WithEvents ChBoxAutoSD As System.Windows.Forms.CheckBox
+	Friend WithEvents TbBOpath As System.Windows.Forms.TextBox
+	Friend WithEvents CbBOmode As System.Windows.Forms.ComboBox
+	Friend WithEvents Label2 As System.Windows.Forms.Label
+	Friend WithEvents ButBObrowse As System.Windows.Forms.Button
+	Friend WithEvents ChBoxBatchSubD As System.Windows.Forms.CheckBox
+	Friend WithEvents LvMsg As System.Windows.Forms.ListView
+	Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
+	Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents GrBoxBATCH As System.Windows.Forms.GroupBox
+	Friend WithEvents TabPageDEV As System.Windows.Forms.TabPage
+	Friend WithEvents LvDEVoptions As System.Windows.Forms.ListView
+	Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColumnHeader6 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents CmDEV As System.Windows.Forms.ContextMenuStrip
+	Friend WithEvents ColumnHeader7 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents BtGENup As System.Windows.Forms.Button
+	Friend WithEvents BtGENdown As System.Windows.Forms.Button
+	Friend WithEvents BtDRIdown As System.Windows.Forms.Button
+	Friend WithEvents BtDRIup As System.Windows.Forms.Button
+	Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
+	Friend WithEvents ToolStripBtNew As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripBtOpen As System.Windows.Forms.ToolStripButton
+	Friend WithEvents ToolStripDrDnBtTools As System.Windows.Forms.ToolStripDropDownButton
+	Friend WithEvents GENEditorToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents VEHEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator4 As System.Windows.Forms.ToolStripSeparator
+	Friend WithEvents OpenLogToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents SettingsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents ToolStripDrDnBtInfo As System.Windows.Forms.ToolStripDropDownButton
+	Friend WithEvents CreateActivationFileToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents AboutVECTOToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
+	Friend WithEvents ToolStripProgBarJob As System.Windows.Forms.ToolStripProgressBar
+	Friend WithEvents TmProgSec As System.Windows.Forms.Timer
+	Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
+	Friend WithEvents EngineEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents GearboxEditorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents UserManualToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator3 As System.Windows.Forms.ToolStripSeparator
+	Friend WithEvents CmOpenFile As System.Windows.Forms.ContextMenuStrip
+	Friend WithEvents OpenWithToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents ShowInFolderToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents ColumnHeader8 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents ColumnHeader9 As System.Windows.Forms.ColumnHeader
+	Friend WithEvents UpdateNotesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents SignOrVerifyFilesToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator6 As System.Windows.Forms.ToolStripSeparator
+	Friend WithEvents GrBoxSTD As System.Windows.Forms.GroupBox
+	Friend WithEvents PnDeclOpt As System.Windows.Forms.Panel
+	Friend WithEvents LbDecl As System.Windows.Forms.Label
+	Friend WithEvents GraphToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents OpenInGraphWindowToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents CbBatch As System.Windows.Forms.CheckBox
+	Friend WithEvents RbDev As System.Windows.Forms.RadioButton
+	Friend WithEvents RbDecl As System.Windows.Forms.RadioButton
+	Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
 	Friend WithEvents Label1 As System.Windows.Forms.Label
 	Friend WithEvents ReportBugViaCITnetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+	Friend WithEvents Button2 As System.Windows.Forms.Button
 
 End Class

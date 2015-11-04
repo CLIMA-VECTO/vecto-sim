@@ -62,7 +62,10 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				Technology = a.Technology,
 				TechList = a.TechList.DefaultIfNull(Enumerable.Empty<string>()).ToArray(),
 				DemandType = AuxiliaryDemandType.Mapping,
-				Data = AuxiliaryData.ReadFromFile(Path.Combine(basePath, a.Path))
+				Data =
+					(!string.IsNullOrWhiteSpace(a.Path) && a.Path != "<NOFILE>")
+						? AuxiliaryData.ReadFromFile(Path.Combine(basePath, a.Path))
+						: null
 			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
 		}
 
