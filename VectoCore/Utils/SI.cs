@@ -1656,11 +1656,8 @@ namespace TUGraz.VectoCore.Utils
 			if (Numerator.SequenceEqual(si.Numerator) && Denominator.SequenceEqual(si.Denominator)) {
 				return true;
 			}
-			return ToBasicUnits()
-				.Denominator.OrderBy(x => x)
-				.SequenceEqual(si.ToBasicUnits().Denominator.OrderBy(x => x))
-					&&
-					ToBasicUnits().Numerator.OrderBy(x => x).SequenceEqual(si.ToBasicUnits().Numerator.OrderBy(x => x));
+			return ToBasicUnits().Denominator.OrderBy(x => x).SequenceEqual(si.ToBasicUnits().Denominator.OrderBy(x => x))
+					&& ToBasicUnits().Numerator.OrderBy(x => x).SequenceEqual(si.ToBasicUnits().Numerator.OrderBy(x => x));
 		}
 
 		/// <summary>

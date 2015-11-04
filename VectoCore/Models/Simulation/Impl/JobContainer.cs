@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -119,9 +120,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 		}
 
-		public Dictionary<string, double> GetProgress()
+		public Dictionary<string, ProgressEntry> GetProgress()
 		{
-			return Runs.ToDictionary(jobEntry => jobEntry.Run.Name, jobEntry => jobEntry.Progress);
+			return Runs.ToDictionary(jobEntry => jobEntry.Run.Name, entry => new ProgressEntry() {
+				Progress = entry.Progress,
+				Done = entry.Done,
+				ExecTime = entry.ExecTime,
+				Success = entry.Success,
+				Canceled = entry.Canceled,
+				Error = entry.ExecException
+			});
 		}
 
 		public bool AllCompleted
@@ -129,7 +137,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			get { return (Runs.Count(x => x.Done == true) == Runs.Count()); }
 		}
 
-		internal class JobEntry
+		public class ProgressEntry
+		{
+			public double Progress;
+			public double ExecTime;
+			public Exception Error;
+			public bool Canceled;
+			public bool Success;
+			public bool Done;
+		}
+
+		internal class JobEntry : LoggingObject
 		{
 			public IVectoRun Run;
 			public JobContainer Container;
@@ -138,19 +156,30 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			public bool Started;
 			public bool Success;
 			public bool Canceled;
+			public double ExecTime;
+			public Exception ExecException;
 
 			public BackgroundWorker Worker;
 
 			public void DoWork(object sender, DoWorkEventArgs e)
 			{
+				var stopWatch = new Stopwatch();
+				stopWatch.Start();
 				var worker = sender as BackgroundWorker;
-				Run.Run(worker);
+				try {
+					Run.Run(worker);
+				} catch (Exception ex) {
+					Log.Error(ex, "Error during simulation run!");
+					ExecException = ex;
+				}
 				if (worker != null && worker.CancellationPending) {
 					e.Cancel = true;
 					Canceled = true;
 				}
+				stopWatch.Stop();
 				Success = Run.FinishedWithoutErrors;
 				Done = true;
+				ExecTime = stopWatch.Elapsed.TotalMilliseconds;
 				Container.JobCompleted(this);
 			}
 

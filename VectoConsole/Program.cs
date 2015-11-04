@@ -28,6 +28,8 @@ Synopsis:
 
 Description:
     FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the extension: .vecto). At least one file must be given. Delimited by whitespace.
+    -t: output information about execution times
+    -mod: write mod-data in addition to sum-data
     -v: Shows verbose information (errors and warnings will be displayed)
 	-vv: Shows more verbose information (infos will be displayed)
 	-vvv: Shows debug messages (slow!)
@@ -89,6 +91,8 @@ Examples:
 					Console.Write(USAGE);
 					return 1;
 				}
+				var stopWatch = new Stopwatch();
+				var timings = new Dictionary<string, double>();
 
 				// process the file list and start simulation
 				var fileList = args;
@@ -98,12 +102,18 @@ Examples:
 				var jobContainer = new JobContainer(sumWriter);
 
 				Console.WriteLine("Reading Job Files");
+				stopWatch.Start();
 				foreach (var file in fileList.Where(f => Path.GetExtension(f) == Constants.FileExtensions.VectoJobFile)) {
 					var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, file);
 					jobContainer.AddRuns(runsFactory);
 				}
+				stopWatch.Stop();
+				timings.Add("Reading input files", stopWatch.Elapsed.TotalMilliseconds);
+				stopWatch.Reset();
 
 				Console.WriteLine("Starting simulation runs");
+
+				stopWatch.Start();
 				jobContainer.Execute(!debugEnabled);
 
 				Console.CancelKeyPress += (object sender, ConsoleCancelEventArgs e) => {
@@ -120,6 +130,13 @@ Examples:
 					PrintProgress(jobContainer.GetProgress());
 					Thread.Sleep(250);
 				}
+				stopWatch.Stop();
+				timings.Add("Simulation runs", stopWatch.Elapsed.TotalMilliseconds);
+
+				PrintProgress(jobContainer.GetProgress(), args.Contains("-t"));
+				if (args.Contains("-t")) {
+					PrintTimings(timings);
+				}
 			} catch (Exception e) {
 				Console.Error.WriteLine(e.Message);
 				Trace.TraceError(e.ToString());
@@ -128,21 +145,40 @@ Examples:
 			return Environment.ExitCode;
 		}
 
-		private static void PrintProgress(Dictionary<string, double> progessData)
+		private static void PrintProgress(Dictionary<string, JobContainer.ProgressEntry> progessData, bool showTiming = true)
 		{
 			Console.SetCursorPosition(0, Console.CursorTop - NumLines);
 			NumLines = 0;
 			var sumProgress = 0.0;
-			foreach (var progress in progessData) {
-				Console.WriteLine(string.Format("{0,-60}  {1,8:P}", progress.Key, progress.Value));
-				sumProgress += progress.Value;
+			foreach (var progressEntry in progessData) {
+				if (progressEntry.Value.Success) {
+					Console.ForegroundColor = ConsoleColor.Green;
+				} else if (progressEntry.Value.Error != null) {
+					Console.ForegroundColor = ConsoleColor.Red;
+				}
+				var timingString = "";
+				if (showTiming && progressEntry.Value.ExecTime > 0) {
+					timingString = string.Format("{0,9:F2}s", progressEntry.Value.ExecTime / 1000.0);
+				}
+				Console.WriteLine("{0,-60}  {1,8:P}{2}", progressEntry.Key, progressEntry.Value.Progress, timingString);
+				Console.ResetColor();
+				sumProgress += progressEntry.Value.Progress;
 				NumLines++;
 			}
 			sumProgress /= NumLines;
 			var spinner = "/-\\|"[ProgessCounter++ % 4];
 			var bar = new string('#', (int)(sumProgress * 100.0 / 2));
-			Console.WriteLine(string.Format("   {2}   [{1,-50}]    [{0,6:P}]", sumProgress, bar, spinner));
+			Console.WriteLine(string.Format("   {2}   [{1,-50}]   [{0,7:P}]", sumProgress, bar, spinner));
 			NumLines++;
+		}
+
+		private static void PrintTimings(Dictionary<string, double> timings)
+		{
+			Console.WriteLine();
+			Console.WriteLine("---- timing information ----");
+			foreach (var timing in timings) {
+				Console.Write("{0,-20}: {1:F2}s", timing.Key, timing.Value / 1000);
+			}
 		}
 	}
 }
