@@ -75,6 +75,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			return NextComponent.Initialize(Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
 		}
 
+		public double Progress
+		{
+			get { throw new NotImplementedException(); }
+		}
+
 		public Meter StartDistance
 		{
 			get { throw new NotImplementedException(); }

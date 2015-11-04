@@ -38,7 +38,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 			return new AccelerationCurveData {
 				_entries = data.Rows.Cast<DataRow>()
 					.Select(r => new KeyValuePair<MeterPerSecond, AccelerationEntry>(
-						r.ParseDouble("v").SI().Kilo.Meter.Per.Hour.Cast<MeterPerSecond>(),
+						r.ParseDouble("v").KMPHtoMeterPerSecond(),
 						new AccelerationEntry {
 							Acceleration = r.ParseDouble("acc").SI<MeterPerSquareSecond>(),
 							Deceleration = r.ParseDouble("dec").SI<MeterPerSquareSecond>()

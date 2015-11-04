@@ -728,9 +728,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					retVal.SimulationInterval = ds / currentSpeed;
 					return retVal;
 				}
-				Log.Error("vehicle speed is {0}, acceleration is {1}", currentSpeed, acceleration);
+				Log.Error("vehicle speed is {0}, acceleration is {1}", currentSpeed.Value(), acceleration.Value());
 				throw new VectoSimulationException(
-					"vehicle speed has to be > 0 if acceleration = 0!  v: {0}", currentSpeed);
+					"vehicle speed has to be > 0 if acceleration = 0!  v: {0}, a: {1}", currentSpeed.Value(), acceleration.Value());
 			}
 
 			// we need to accelerate / decelerate. solve quadratic equation...
@@ -776,10 +776,12 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		/// <returns></returns>
 		public IResponse DrivingActionHalt(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
-			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed.IsEqual(0)) {
-				throw new NotImplementedException("TargetVelocity or VehicleVelocity is not zero!");
+			if (!targetVelocity.IsEqual(0) || !DataBus.VehicleSpeed.IsEqual(0, 1e-3)) {
+				throw new NotImplementedException(string.Format(
+					"TargetVelocity or VehicleVelocity is not zero! v: {0} target: {1}", DataBus.VehicleSpeed.Value(),
+					targetVelocity.Value()));
 			}
-			DataBus.BreakPower = double.PositiveInfinity.SI<Watt>();
+			DataBus.BreakPower = Double.PositiveInfinity.SI<Watt>();
 			var retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
 			retVal.Switch().
 				Case<ResponseGearShift>(r => {

@@ -36,6 +36,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						ds = r.MaxDistance;
 					}).
 					Case<ResponseCycleFinished>(r => {
+						FinishedWithoutErrors = true;
 						Log.Info("========= Driving Cycle Finished");
 					}).
 					Default(r => {

@@ -47,7 +47,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			var angVeloSum = angularVelocity + angularVelocity2;
 			Assert.IsInstanceOfType(angVeloSum, typeof(PerSecond));
 			Assert.AreEqual((400.0 + 600) / 60 * 2 * Math.PI, angVeloSum.Value(), 0.0000001);
-			AssertHelper.Exception<VectoException>(() => { var x = 500.SI().Watt + 300.SI().Newton; });
+			AssertHelper.Exception<VectoException>(() => {
+				var x = 500.SI().Watt + 300.SI().Newton;
+			});
 
 			//subtract
 			var angVeloDiff = angularVelocity - angularVelocity2;
@@ -77,11 +79,15 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 
 			// ConvertTo only allows conversion if the units are correct.
-			AssertHelper.Exception<VectoException>(() => { var x = 40.SI<Newton>().ConvertTo().Watt; });
+			AssertHelper.Exception<VectoException>(() => {
+				var x = 40.SI<Newton>().ConvertTo().Watt;
+			});
 			var res1 = 40.SI<Newton>().ConvertTo().Newton;
 
 			// Cast only allows the cast if the units are correct.
-			AssertHelper.Exception<VectoException>(() => { var x = 40.SI().Newton.Cast<Watt>(); });
+			AssertHelper.Exception<VectoException>(() => {
+				var x = 40.SI().Newton.Cast<Watt>();
+			});
 			var res2 = 40.SI().Newton.Cast<Newton>();
 		}
 
@@ -151,13 +157,21 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 			Assert.IsTrue(v1 > v2);
 			Assert.IsFalse(v1 < v2);
-			AssertHelper.Exception<VectoException>(() => { var x = v1 < v4; },
+			AssertHelper.Exception<VectoException>(() => {
+				var x = v1 < v4;
+			},
 				"Operator '<' can only operate on SI Objects with the same unit. Got: 600.0000 [Nm] < 100.0000 [W]");
-			AssertHelper.Exception<VectoException>(() => { var x = v1 > v4; },
+			AssertHelper.Exception<VectoException>(() => {
+				var x = v1 > v4;
+			},
 				"Operator '>' can only operate on SI Objects with the same unit. Got: 600.0000 [Nm] > 100.0000 [W]");
-			AssertHelper.Exception<VectoException>(() => { var x = v1 <= v4; },
+			AssertHelper.Exception<VectoException>(() => {
+				var x = v1 <= v4;
+			},
 				"Operator '<=' can only operate on SI Objects with the same unit. Got: 600.0000 [Nm] <= 100.0000 [W]");
-			AssertHelper.Exception<VectoException>(() => { var x = v1 >= v4; },
+			AssertHelper.Exception<VectoException>(() => {
+				var x = v1 >= v4;
+			},
 				"Operator '>=' can only operate on SI Objects with the same unit. Got: 600.0000 [Nm] >= 100.0000 [W]");
 
 			SI si = null;
@@ -223,7 +237,9 @@ namespace TUGraz.VectoCore.Tests.Utils
 			AssertHelper.AreRelativeEqual(3.SI<NewtonMeter>(), 1.SI<NewtonMeter>() + 2.SI().Newton.Meter);
 			AssertHelper.AreRelativeEqual(-1.SI<NewtonMeter>(), 1.SI<NewtonMeter>() - 2.SI().Newton.Meter);
 
-			AssertHelper.Exception<VectoException>(() => { var x = 1.SI().Second - 1.SI<Meter>(); },
+			AssertHelper.Exception<VectoException>(() => {
+				var x = 1.SI().Second - 1.SI<Meter>();
+			},
 				"Operator '-' can only operate on SI Objects with the same unit. Got: 1.0000 [s] - 1.0000 [m]");
 		}
 

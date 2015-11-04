@@ -22,9 +22,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 	{
 		private static bool _enabled = true;
 
-		private static Size diagramSize = new Size(2000, 440);
+		private static Size _diagramSize = new Size(2000, 440);
 
-		public static void Enabled()
+        private static readonly Font AxisLabelFont = new Font("Consolas", 10);
+	    private static readonly Font AxisTitleFont = new Font("Verdana", 12);
+        private static readonly Font LegendFont = new Font("Verdana", 14);
+
+	    public static void Enabled()
 		{
 			_enabled = true;
 		}
@@ -34,7 +38,7 @@ namespace TUGraz.VectoCore.Tests.Utils
 			_enabled = false;
 		}
 
-		public static void Write(string fileNameV3, string fileNameV22)
+		public static void Write(string fileNameV3, string fileNameV22 = null)
 		{
 			if (!_enabled) {
 				return;
@@ -44,26 +48,27 @@ namespace TUGraz.VectoCore.Tests.Utils
 			if (!File.Exists(fileNameV22)) {
 				LogManager.GetCurrentClassLogger().Error("Modfile V2.2 not found: " + fileNameV22);
 				//Write(fileNameV3);
-				return;
+				//return;
 			}
-			var modDataV22 = VectoCSVFile.Read(fileNameV22);
+		    DataTable modDataV22 = null;
+		    if (fileNameV22 != null) {
+		        modDataV22 = VectoCSVFile.Read(fileNameV22);
+		    }
+		    var xfields = new[] { ModalResultField.time, ModalResultField.dist };
 
-			var xfields = new[] { ModalResultField.time, ModalResultField.dist };
+			var yfields = new[] { ModalResultField.v_act, ModalResultField.acc, ModalResultField.n, ModalResultField.Gear, ModalResultField.Pe_eng, ModalResultField.Tq_eng, ModalResultField.FCMap };
 
-			var yfields = new[] {
-				ModalResultField.v_act, ModalResultField.acc, ModalResultField.n, ModalResultField.Gear, ModalResultField.Pe_eng,
-				ModalResultField.Tq_eng, ModalResultField.FCMap
-			};
-
-			var titleHeight = (50 * 100.0f) / (diagramSize.Height * yfields.Count());
+			var titleHeight = (50 * 100.0f) / (_diagramSize.Height * yfields.Count());
 
 			foreach (var xfield in xfields) {
 				var fileName = string.Format("{0}_{1}.png", Path.GetFileNameWithoutExtension(fileNameV3), xfield.GetName());
 
-				var x = modDataV3.Rows.Cast<DataRow>().Select(v => v.Field<string>(xfield.GetName()).ToDouble()).ToArray();
-				var x2 = modDataV22.Rows.Cast<DataRow>().Select(v => v.Field<string>(xfield.GetName()).ToDouble()).ToArray();
-
-				var plotSize = new Size(diagramSize.Width, diagramSize.Height * yfields.Count());
+			    var x = LoadData(modDataV3, xfield.GetName());
+			    var x2 = new double[]{ double.NegativeInfinity};
+			    if (fileNameV22 != null && modDataV22 != null) {
+			             x2 = LoadData(modDataV22, xfield.GetName());
+			    }
+			    var plotSize = new Size(_diagramSize.Width, _diagramSize.Height * yfields.Count());
 				var maxX = (int)(Math.Ceiling(Math.Max(x.Max(), x2.Max()) * 1.01 / 10.0) * 10.0);
 				var minX = (int)(Math.Floor(Math.Max(x.Min(), x2.Min()) / 10.0) * 10.0);
 				var chart = new Chart { Size = plotSize };
@@ -71,143 +76,141 @@ namespace TUGraz.VectoCore.Tests.Utils
 
 				for (var i = 0; i < yfields.Length; i++) {
 					var yfield = yfields[i];
-					var y =
-						modDataV3.Rows.Cast<DataRow>()
-							.Select(
-								v => v.Field<string>(yfield.GetName()).Length == 0 ? Double.NaN : v.Field<string>(yfield.GetName()).ToDouble())
-							.ToArray();
-					var y2 =
-						modDataV22.Rows.Cast<DataRow>()
-							.Select(
-								v =>
-									v.Field<string>(yfield.GetName()).Length == 0 ? Double.NaN : v.Field<string>(yfield.GetName()).ToDouble())
-							.ToArray();
+                    var y = LoadData(modDataV3, yfield.GetName());
 
 
-					var chartArea = new ChartArea { Name = yfield.ToString() };
-					chartArea.AxisX.MajorGrid.LineColor = Color.DarkGray;
-					chartArea.AxisY.MajorGrid.LineColor = Color.DarkGray;
-					chartArea.AxisX.LabelStyle.Font = new Font("Consolas", 10);
-					chartArea.AxisY.LabelStyle.Font = new Font("Consolas", 10);
+                    var chartArea = AddChartArea(chart, yfield.ToString(), xfield.GetCaption(), maxX, minX, yfield.GetCaption(), yfield == ModalResultField.Gear);
 
-					chartArea.AxisX.Interval = maxX / 20.0;
-					chartArea.AxisX.Maximum = maxX;
-					chartArea.AxisX.Minimum = minX;
-					chartArea.AxisX.MinorGrid.Enabled = true;
-					chartArea.AxisX.MinorGrid.Interval = maxX / 100.0;
-					chartArea.AxisX.MinorGrid.LineColor = Color.LightGray;
-					chartArea.AxisX.Title = xfield.GetCaption();
-					chartArea.AxisX.TitleFont = new Font("Verdana", 12);
-					chartArea.AxisX.RoundAxisValues();
-					chartArea.AxisX.MajorTickMark.Size = 2 * 100.0f / diagramSize.Height;
+				    var legend = CreateLegend(chart, yfield.ToString());
 
-					chartArea.AxisY.Title = yfield.GetCaption();
-					chartArea.AxisY.TitleFont = new Font("Verdana", 12);
-					chartArea.AxisY.RoundAxisValues();
-					if (yfield == ModalResultField.Gear) {
-						chartArea.AxisY.MajorGrid.Interval = 1;
-						chartArea.AxisY.MinorGrid.Enabled = false;
-					} else {
-						chartArea.AxisY.MinorGrid.Enabled = true;
-					}
-					chartArea.AxisY.MinorGrid.LineColor = Color.LightGray;
-					chartArea.AxisY.MajorTickMark.Size = 5 * 100.0f / diagramSize.Width;
-
-					chart.ChartAreas.Add(chartArea);
-
-					var legend = new Legend(yfield.ToString()) {
-						Docking = Docking.Right,
-						IsDockedInsideChartArea = false,
-						DockedToChartArea = yfield.ToString(),
-						Font = new Font("Verdana", 14),
-					};
-					chart.Legends.Add(legend);
-
-					if (yfield == ModalResultField.v_act) {
-						var y3 = modDataV3.Rows.Cast<DataRow>()
-							.Select(
-								v =>
-									v.Field<string>(ModalResultField.v_targ.GetName()).Length == 0
-										? Double.NaN
-										: v.Field<string>(ModalResultField.v_targ.GetName()).ToDouble())
-							.ToArray();
-
-						var series3 = new Series {
-							Name = "v_target",
-							ChartType = SeriesChartType.FastLine,
-							Color = Color.Green,
-							BorderWidth = 3,
-							Legend = legend.Name,
-							IsVisibleInLegend = true
-						};
-						chart.Series.Add(series3);
-						chart.Series[series3.Name].Points.DataBindXY(x, y3);
-						series3.ChartArea = chartArea.Name;
+				    if (yfield == ModalResultField.v_act) {
+				        var y3 = LoadData(modDataV3, ModalResultField.v_targ.GetName());
+                        var series3 = CreateSeries("v_target", legend, chartArea, chart, Color.Green, x, y3);
 					}
 
-					var series1 = new Series {
-						Name = String.Format("Vecto 3 - {0}", yfield),
-						ChartType = SeriesChartType.Line,
-						Color = Color.Blue,
-						BorderWidth = 2,
-						Legend = legend.Name,
-						IsVisibleInLegend = true,
-						//MarkerColor = Color.Blue,
-						//MarkerSize = 4,
-						//MarkerStyle = MarkerStyle.Circle,
-						//MarkerBorderColor = Color.White,
-						//MarkerBorderWidth = 1,
-					};
-					series1.ChartArea = chartArea.Name;
+				    var series1 = CreateSeries( string.Format("Vecto 3 - {0}", yfield), legend, chartArea, chart,Color.Blue, x, y);
 
-					chart.Series.Add(series1);
-					chart.Series[series1.Name].Points.DataBindXY(x, y);
+				    if (fileNameV22 != null) {
+				        var y2 = LoadData(modDataV22, yfield.GetName());
+				        var series2 = CreateSeries(string.Format("Vecto 2.2 - {0}", yfield), legend, chartArea, chart, Color.Red, x2,
+				            y2);
+				    }
 
-					var series2 = new Series {
-						Name = String.Format("Vecto 2.2 - {0}", yfield),
-						ChartType = SeriesChartType.Line,
-						Color = Color.Red,
-						BorderWidth = 2,
-						Legend = legend.Name,
-						IsVisibleInLegend = true,
-						//MarkerColor = Color.Red,
-						//MarkerSize = 4,
-						//MarkerStyle = MarkerStyle.Circle,
-						//MarkerBorderColor = Color.White,
-						//MarkerBorderWidth = 1,
-					};
-					series2.ChartArea = chartArea.Name;
+				    PositionChartArea(chartArea, titleHeight, i, yfields.Count());
 
-					chart.Series.Add(series2);
-					chart.Series[series2.Name].Points.DataBindXY(x2, y2);
-
-
-					chartArea.Position.Auto = false;
-					chartArea.Position.Width = 85;
-					chartArea.Position.Height = (100.0f - titleHeight) / yfields.Count();
-					chartArea.Position.X = 0;
-					chartArea.Position.Y = (i * (100.0f - titleHeight)) / yfields.Count() + titleHeight;
-
-					if (i > 0) {
-						chart.ChartAreas[yfield.ToString()].AlignWithChartArea = yfields[0].ToString();
-						chart.ChartAreas[yfield.ToString()].AlignmentOrientation = AreaAlignmentOrientations.Vertical;
-						chart.ChartAreas[yfield.ToString()].AlignmentStyle = AreaAlignmentStyles.All;
-					}
+				    if (i > 0) {
+                        AlignChart(chart, yfield.ToString(), yfields[0].ToString());
+				    }
 				}
 
-				var title = new Title();
-				title.Text = Path.GetFileNameWithoutExtension(fileName);
-				title.DockedToChartArea = yfields[0].ToString();
-				title.IsDockedInsideChartArea = false;
-				title.Font = new Font("Verdana", 18, FontStyle.Bold);
-				chart.Titles.Add(title);
+                AddTitle(chart, Path.GetFileNameWithoutExtension(fileName), yfields[0].ToString());
 
-				chart.Invalidate();
+			    chart.Invalidate();
 				chart.SaveImage(fileName, ChartImageFormat.Png);
 			}
 		}
 
-		//public static void Write(string fileName)
+	    private static void AddTitle(Chart chart, string titleText, string dockToChartArea)
+	    {
+	        var title = new Title();
+	        title.Text = titleText;
+	        title.DockedToChartArea = dockToChartArea;
+	        title.IsDockedInsideChartArea = false;
+	        title.Font = new Font("Verdana", 18, FontStyle.Bold);
+	        chart.Titles.Add(title);
+	    }
+
+	    private static double[] LoadData(DataTable modDataV3, string field)
+	    {
+	        return modDataV3.Rows.Cast<DataRow>()
+	            .Select(v => v.Field<string>(field).Length == 0 
+	                ? Double.NaN 
+	                : v.Field<string>(field).ToDouble())
+	            .ToArray();
+	    }
+
+	    private static void AlignChart(Chart chart, string chartToAlign, string chartToAlignWith)
+	    {
+	        chart.ChartAreas[chartToAlign].AlignWithChartArea = chartToAlignWith;
+	        chart.ChartAreas[chartToAlign].AlignmentOrientation = AreaAlignmentOrientations.Vertical;
+	        chart.ChartAreas[chartToAlign].AlignmentStyle = AreaAlignmentStyles.All;
+	    }
+
+	    private static void PositionChartArea(ChartArea chartArea, float titleHeight, int i, int numCharts)
+	    {
+	        chartArea.Position.Auto = false;
+	        chartArea.Position.Width = 85;
+	        chartArea.Position.Height = (100.0f - titleHeight) / numCharts;
+	        chartArea.Position.X = 0;
+	        chartArea.Position.Y = (i * (100.0f - titleHeight)) / numCharts + titleHeight;
+	    }
+
+	    private static ChartArea AddChartArea(Chart chart, string name, string axisXTitle, int xMax, int xMin, string axisYTitle, bool discreteValues)
+	    {
+	        var chartArea = new ChartArea { Name = name };
+	        chartArea.AxisX.MajorGrid.LineColor = Color.DarkGray;
+	        chartArea.AxisY.MajorGrid.LineColor = Color.DarkGray;
+	        chartArea.AxisX.LabelStyle.Font = AxisLabelFont;
+	        chartArea.AxisY.LabelStyle.Font = AxisLabelFont;
+
+	        chartArea.AxisX.Interval = xMax / 20.0;
+	        chartArea.AxisX.Maximum = xMax;
+	        chartArea.AxisX.Minimum = xMin;
+	        chartArea.AxisX.MinorGrid.Enabled = true;
+	        chartArea.AxisX.MinorGrid.Interval = xMax / 100.0;
+	        chartArea.AxisX.MinorGrid.LineColor = Color.LightGray;
+	        chartArea.AxisX.Title = axisXTitle;
+	        chartArea.AxisX.TitleFont = AxisTitleFont;
+	        chartArea.AxisX.RoundAxisValues();
+	        chartArea.AxisX.MajorTickMark.Size = 2 * 100.0f / _diagramSize.Height;
+
+	        chartArea.AxisY.Title = axisYTitle;
+	        chartArea.AxisY.TitleFont = AxisTitleFont;
+	        chartArea.AxisY.RoundAxisValues();
+	        if (discreteValues) {
+	            chartArea.AxisY.MajorGrid.Interval = 1;
+	            chartArea.AxisY.MinorGrid.Enabled = false;
+	        } else {
+	            chartArea.AxisY.MinorGrid.Enabled = true;
+	        }
+	        chartArea.AxisY.MinorGrid.LineColor = Color.LightGray;
+	        chartArea.AxisY.MajorTickMark.Size = 5 * 100.0f / _diagramSize.Width;
+
+	        chart.ChartAreas.Add(chartArea);
+	        return chartArea;
+	    }
+
+	    private static Legend CreateLegend(Chart chart, string dockToChartArea)
+	    {
+	        var legend = new Legend(dockToChartArea.ToString()) {
+	            Docking = Docking.Right,
+	            IsDockedInsideChartArea = false,
+	            DockedToChartArea = dockToChartArea,
+	            Font = LegendFont,
+	        };
+	        chart.Legends.Add(legend);
+	        return legend;
+	    }
+
+	    private static Series CreateSeries(String name, Legend legend, ChartArea chartArea, Chart chart, Color color, double[] x, double[] y)
+	    {
+	        ModalResultField yfield;
+	        var series1 = new Series {
+	            Name = name,
+	            ChartType = SeriesChartType.Line,
+	            Color = color,
+	            BorderWidth = 2,
+	            Legend = legend.Name,
+	            IsVisibleInLegend = true,
+	            ChartArea = chartArea.Name,
+	        };
+
+	        chart.Series.Add(series1);
+	        chart.Series[series1.Name].Points.DataBindXY(x, y);
+	        return series1;
+	    }
+
+	    //public static void Write(string fileName)
 		//{
 		//	if (!_enabled) {
 		//		return;
