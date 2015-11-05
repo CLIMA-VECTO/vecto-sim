@@ -1,0 +1,11 @@
+﻿<#@ template language="C#" #>
+<#@ output extension=".cs"#>
+using System.Reflection;
+
+// generated on <#= DateTime.UtcNow.ToString() #>
+[assembly: AssemblyVersion("3.0.1.<#= this.RevisionNumber #>")]
+[assembly: AssemblyFileVersion("3.0.1.<#= this.RevisionNumber #>")]
+
+<#+
+    int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(2015, 1, 1)).TotalDays;
+#>

@@ -22,12 +22,10 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 		{
 			var data = VectoCSVFile.Read(fileName);
 
-			//todo Contract.Requires<VectoException>(data.Columns.Count != 4, "FullLoadCurve Data File must consist of 4 columns.");
 			if (data.Columns.Count < 3) {
 				throw new VectoException("FullLoadCurve Data File must consist of at least 3 columns.");
 			}
 
-			//todo Contract.Requires<VectoException>(data.Rows.Count < 2, "FullLoadCurve must consist of at least two lines with numeric values (below file header)");
 			if (data.Rows.Count < 2) {
 				throw new VectoException(
 					"FullLoadCurve must consist of at least two lines with numeric values (below file header)");

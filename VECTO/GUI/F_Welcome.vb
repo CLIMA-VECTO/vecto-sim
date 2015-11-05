@@ -24,7 +24,7 @@ Public Class F_Welcome
 
     'Init
     Private Sub F_Welcome_Load(sender As Object, e As System.EventArgs) Handles Me.Load
-        Me.Text = "VECTO " & VECTOvers
+		Me.Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
     End Sub
 
     'Open Release Notes

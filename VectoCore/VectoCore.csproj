@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <CodeContractsAssemblyMode>1</CodeContractsAssemblyMode>
+    <NuGetPackageImportStamp>5f3566e7</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -181,6 +182,11 @@
     <Compile Include="Models\Simulation\Impl\DistanceRun.cs" />
     <Compile Include="Models\Simulation\Impl\PowertrainBuilder.cs" />
     <Compile Include="Models\Simulation\Impl\TimeRun.cs" />
+    <Compile Include="Properties\Version.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Version.tt</DependentUpon>
+    </Compile>
     <Compile Include="Utils\DataTableExtensionMethods.cs" />
     <Compile Include="Utils\EnumHelper.cs" />
     <Compile Include="Utils\RessourceHelper.cs" />
@@ -289,6 +295,10 @@
     <EmbeddedResource Include="Resources\Declaration\Report\cyclePageTemplate.pdf" />
     <EmbeddedResource Include="Resources\Declaration\Report\title2CyclesTemplate.pdf" />
     <EmbeddedResource Include="Resources\Declaration\Report\title3CyclesTemplate.pdf" />
+    <None Include="Properties\Version.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Version.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Declaration\Report\4x2r.png" />
@@ -299,7 +309,13 @@
     <EmbeddedResource Include="Resources\Declaration\Report\6x2tt.png" />
     <EmbeddedResource Include="Resources\Declaration\Report\Undef.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>forfiles /p "$(ProjectDir)." /m "*.tt" /s /c "cmd /c echo Transforming @path &amp;&amp; \"%25CommonProgramFiles(x86)%25\Microsoft Shared\TextTemplating\12.0\TextTransform.exe\" @file"</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -187,7 +187,6 @@ namespace TUGraz.VectoCore.FileIO.Reader
 			///     [kW]	"Aux_xxx" Supply Power input for each auxiliary defined in the .vecto file , where xxx matches the ID of the
 			///     corresponding Auxiliary. ID's are not case sensitive and must not contain space or special characters.
 			/// </summary>
-			// todo: implement additional aux as dictionary!
 			public const string AuxiliarySupplyPower = "Aux_";
 
 			/// <summary>

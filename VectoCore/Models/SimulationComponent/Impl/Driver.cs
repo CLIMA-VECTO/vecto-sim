@@ -395,9 +395,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			Log.Debug("Found operating point for breaking. dt: {0}, acceleration: {1} brakingPower: {2}",
 				operatingPoint.SimulationInterval,
-				operatingPoint.Acceleration, DataBus.BreakPower);
-			if (DataBus.BreakPower < 0) {
-				DataBus.BreakPower = 0.SI<Watt>();
+				operatingPoint.Acceleration, DataBus.BrakePower);
+			if (DataBus.BrakePower < 0) {
+				DataBus.BrakePower = 0.SI<Watt>();
 				return new ResponseOverload { Source = this };
 			}
 
@@ -503,7 +503,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 			do {
 				operatingPoint = ComputeTimeInterval(operatingPoint.Acceleration, ds);
-				DataBus.BreakPower = brakePower;
+				DataBus.BrakePower = brakePower;
 				var response =
 					(ResponseDryRun)
 						NextComponent.Request(absTime, operatingPoint.SimulationInterval, operatingPoint.Acceleration, gradient, true);
@@ -606,17 +606,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					LogManager.EnableLogging();
 					Log.Warn("Operating Point outside driver acceleration limits: a: {0}", retVal.Acceleration);
 					LogManager.DisableLogging();
-					//throw new VectoSimulationException(
-					//	"Could not find an operating point: operating point outside of driver acceleration limits. a: {0}",
-					//	retVal.Acceleration);
 				}
-
-				// TODO: move to driving mode
-				// check for minimum acceleration, add some safety margin due to search
-				//if (!coasting && retVal.Acceleration.Abs() < Constants.SimulationSettings.MinimumAcceleration / 5.0
-				//	&& searchInterval.Abs() < Constants.SimulationSettings.MinimumAcceleration / 20.0) {
-				//	throw new VectoSimulationException("Could not achieve minimum acceleration");
-				//}
 
 				var tmp = ComputeTimeInterval(retVal.Acceleration, ds);
 				retVal.SimulationInterval = tmp.SimulationInterval;
@@ -781,7 +771,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					"TargetVelocity or VehicleVelocity is not zero! v: {0} target: {1}", DataBus.VehicleSpeed.Value(),
 					targetVelocity.Value()));
 			}
-			DataBus.BreakPower = Double.PositiveInfinity.SI<Watt>();
 			var retVal = NextComponent.Request(absTime, dt, 0.SI<MeterPerSquareSecond>(), gradient);
 			retVal.Switch().
 				Case<ResponseGearShift>(r => {

@@ -174,7 +174,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			WriteAuxiliaries(data, row);
 
-			//todo get data from vehicle file
 			if (vehicleMass != null) {
 				row[MASS] = vehicleMass;
 			}

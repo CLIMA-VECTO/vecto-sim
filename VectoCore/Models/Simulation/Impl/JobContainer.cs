@@ -4,15 +4,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	//todo: add job tracking (state of jobs, ...)
-	//todo: add job control (pause, stop)
-
-
 	/// <summary>
 	/// Container for simulation jobs.
 	/// </summary>
