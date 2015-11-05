@@ -58,7 +58,7 @@ Examples:
 				var logLevel = LogLevel.Fatal;
 
 				// Fatal > Error > Warn > Info > Debug > Trace
-				bool debugEnabled = false;
+				var debugEnabled = false;
 
 				if (args.Contains("-v")) {
 					// display errors, warnings
