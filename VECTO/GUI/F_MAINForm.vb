@@ -464,7 +464,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 
 		FB_Initialize()
 
-		Me.Text = "VECTO " & VECTOvers
+		Me.Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
 
 
 		'FileLists
@@ -529,11 +529,11 @@ Imports TUGraz.VectoCore.Models.Simulation
 	Private Sub DeclOnOff()
 
 		If Cfg.DeclMode Then
-			Me.Text = "VECTO " & VECTOvers & " - Declaration Mode"
+			Me.Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers & " - Declaration Mode"
 			Me.CbBatch.Checked = False
 			Cfg.DeclInit()
 		Else
-			Me.Text = "VECTO " & VECTOvers
+			Me.Text = "VECTO " & VECTOvers & " / VectoCore " & COREvers
 		End If
 
 		If Cfg.DeclMode Then

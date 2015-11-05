@@ -9,9 +9,15 @@
 '
 ' See the LICENSE.txt for the specific language governing permissions and limitations.
 Imports System.Collections.Generic
+Imports System.Linq
+Imports System.Reflection
+Imports Microsoft.VisualBasic.ApplicationServices
+Imports TUGraz.VectoCore.Models.Simulation.Impl
 
 Module VECTO_Global
 	Public Const VECTOvers As String = "2.2"
+	Public COREvers As String = Assembly.LoadFrom("VectoCore.dll").GetName().Version.ToString()
+
 	Public Const LicSigAppCode As String = "VECTO-Release-0093C61E0A2E4BFA9A7ED7E729C56AE4"
 	Public MyAppPath As String
 	Public MyConfPath As String
@@ -51,7 +57,7 @@ Module VECTO_Global
 
 	Public ProgBarCtrl As cProgBarCtrl
 
-	Public SetCulture As Boolean       'Damit der Backgroundworker das richtige Format verwendet
+	Public SetCulture As Boolean	   'Damit der Backgroundworker das richtige Format verwendet
 
 	Public Function nMtoPe(ByVal nU As Double, ByVal M As Double) As Double
 		Return ((nU*2*Math.PI/60)*M/1000)
