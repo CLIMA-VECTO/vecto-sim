@@ -606,17 +606,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					LogManager.EnableLogging();
 					Log.Warn("Operating Point outside driver acceleration limits: a: {0}", retVal.Acceleration);
 					LogManager.DisableLogging();
-					//throw new VectoSimulationException(
-					//	"Could not find an operating point: operating point outside of driver acceleration limits. a: {0}",
-					//	retVal.Acceleration);
 				}
-
-				// TODO: move to driving mode
-				// check for minimum acceleration, add some safety margin due to search
-				//if (!coasting && retVal.Acceleration.Abs() < Constants.SimulationSettings.MinimumAcceleration / 5.0
-				//	&& searchInterval.Abs() < Constants.SimulationSettings.MinimumAcceleration / 20.0) {
-				//	throw new VectoSimulationException("Could not achieve minimum acceleration");
-				//}
 
 				var tmp = ComputeTimeInterval(retVal.Acceleration, ds);
 				retVal.SimulationInterval = tmp.SimulationInterval;

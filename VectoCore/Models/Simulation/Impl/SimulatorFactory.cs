@@ -11,8 +11,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class SimulatorFactory
 	{
-		//private IModalDataWriter _dataWriter;
-
 		public enum FactoryMode
 		{
 			EngineeringMode,

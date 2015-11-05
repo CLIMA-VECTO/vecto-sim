@@ -501,8 +501,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 		ModeUpdate()
 
 		'License check
-		'TODO uncomment license check
-		If False And Not Lic.LICcheck() Then
+		If Not Lic.LICcheck() Then
 			MsgBox("License File invalid!" & vbCrLf & vbCrLf & Lic.FailMsg)
 			If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
 				MsgBox("Activation File created.")
@@ -1588,7 +1587,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 				start = DateTime.Now()
 			End If
 
-			Dim sumPercent As Integer = Int(sumProgress / NumLines * 100)
+			Dim sumPercent As Integer = Int(sumProgress/NumLines*100)
 
 			Dim progString As String = String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value)))
 
@@ -1596,7 +1595,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 			Dim remainingDuration As Double = 0
 			If start > DateTime.MinValue Then
 				duration = (DateTime.Now() - start).TotalSeconds
-				remainingDuration = duration / (sumProgress / NumLines) - duration
+				remainingDuration = duration/(sumProgress/NumLines) - duration
 			End If
 
 
@@ -1604,7 +1603,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 								New _
 									With {.Target = "Status",
 									.Message = String.Format("Time: {0:0}s, Remaining: {1:0}s, Current Progress: {2:P} ({3})",
-															duration, remainingDuration, sumPercent / 100, progString)
+															duration, remainingDuration, sumPercent/100, progString)
 									})
 			Thread.Sleep(1000)
 		End While
