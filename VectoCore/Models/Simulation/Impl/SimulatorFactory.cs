@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using NLog;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
@@ -9,7 +10,7 @@ using TUGraz.VectoCore.Models.Simulation.Data;
 
 namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
-	public class SimulatorFactory
+	public class SimulatorFactory : LoggingObject
 	{
 		public enum FactoryMode
 		{
@@ -22,6 +23,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 		public SimulatorFactory(FactoryMode mode, string jobFile)
 		{
+			Log.Fatal("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
 			JobNumber = 0;
 			_mode = mode;
 			switch (mode) {

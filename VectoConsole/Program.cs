@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Remoting.Channels;
 using System.Threading;
 using NLog;
@@ -27,7 +28,10 @@ Synopsis:
     vecto.exe [-h] [-v] FILE1.vecto [FILE2.vecto ...]
 
 Description:
-    FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the extension: .vecto). At least one file must be given. Delimited by whitespace.
+    FILE1.vecto [FILE2.vecto ...]: A list of vecto-job files (with the 
+       extension: .vecto). At least one file must be given. Delimited by 
+       whitespace.
+
     -t: output information about execution times
     -mod: write mod-data in addition to sum-data
     -eng: switch to engineering mode (implies -mod)
@@ -35,10 +39,11 @@ Description:
 	-vv: Shows more verbose information (infos will be displayed)
 	-vvv: Shows debug messages (slow!)
 	-vvvv: Shows all verbose information (everything, slow!)
+    -V: show version information
     -h: Displays this help.
 
 Examples:
-    vecto.exe ""12t Delivery Truck.vecto"" 24tCoach.vecto 40t_Long_Haul_Truck.vecto
+    vecto.exe ""12t Delivery Truck.vecto"" 40t_Long_Haul_Truck.vecto
     vecto.exe 24tCoach.vecto 40t_Long_Haul_Truck.vecto
     vecto.exe -v 24tCoach.vecto
     vecto.exe -v jobs\40t_Long_Haul_Truck.vecto
@@ -50,6 +55,7 @@ Examples:
 			try {
 				// on -h display help and terminate.
 				if (args.Contains("-h")) {
+					ShowVersionInformation();
 					Console.Write(HELP);
 					return 0;
 				}
@@ -84,14 +90,18 @@ Examples:
 				LogManager.Configuration = config;
 				Trace.Listeners.Add(new ConsoleTraceListener(true));
 
-				args = args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv" }).ToArray();
+				if (args.Contains("-V") || debugEnabled) {
+					ShowVersionInformation();
+				}
 
+				args = args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv", "-V" }).ToArray();
 
 				// if no other arguments given: display usage and terminate
 				if (!args.Any()) {
 					Console.Write(USAGE);
 					return 1;
 				}
+
 				var stopWatch = new Stopwatch();
 				var timings = new Dictionary<string, double>();
 
@@ -163,6 +173,13 @@ Examples:
 				Environment.ExitCode = Environment.ExitCode != 0 ? Environment.ExitCode : 1;
 			}
 			return Environment.ExitCode;
+		}
+
+		private static void ShowVersionInformation()
+		{
+			var vectodll = AssemblyName.GetAssemblyName("VectoCore.dll");
+			Console.WriteLine("VectoConsole: {0}", Assembly.GetExecutingAssembly().GetName().Version);
+			Console.WriteLine("VectoCore: {0}", vectodll.Version);
 		}
 
 		private static void PrintProgress(Dictionary<string, JobContainer.ProgressEntry> progessData, bool showTiming = true)

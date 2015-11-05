@@ -54,7 +54,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					if (worker != null) {
 						worker.ReportProgress((int)(CyclePort.Progress * 1000));
 						if (worker.CancellationPending) {
-							Log.Info("Background Task canceled!");
+							Log.Error("Background Task canceled!");
 							Container.FinishSimulation();
 							return;
 						}

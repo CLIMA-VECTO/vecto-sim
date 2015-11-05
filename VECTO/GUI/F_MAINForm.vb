@@ -479,9 +479,9 @@ Imports TUGraz.VectoCore.Models.Simulation
 		LoadOptions()
 
 		'Resize columns ... after Loading the @file-lists
-		Me.LvGEN.Columns(1).Width = - 2
-		Me.LvDRI.Columns(1).Width = - 2
-		Me.LvMsg.Columns(2).Width = - 2
+		Me.LvGEN.Columns(1).Width = -2
+		Me.LvDRI.Columns(1).Width = -2
+		Me.LvMsg.Columns(2).Width = -2
 
 		'Initialize BackgroundWorker
 		VECTOworker = Me.BackgroundWorker1
@@ -853,7 +853,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 
 		lastindx = LvGEN.SelectedIndices(LvGEN.SelectedItems.Count - 1)
 
-		For i = UBound(SelIx) To 0 Step - 1
+		For i = UBound(SelIx) To 0 Step -1
 			LvGEN.Items.RemoveAt(SelIx(i))
 		Next
 
@@ -913,7 +913,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 		Dim p As Int16
 		Dim f As Int16
 		Dim fList As String()
-		Dim fListDim As Int16 = - 1
+		Dim fListDim As Int16 = -1
 		Dim ListViewItem0 As ListViewItem
 
 		'If VECTO runs: Cancel operation (because Mode-change during calculation is not very clever)
@@ -968,7 +968,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 			ListViewItem0.Selected = True
 			Me.LvGEN.Items.Add(ListViewItem0)
 			ListViewItem0.EnsureVisible()
-			lbFound:
+lbFound:
 		Next
 
 		Me.LvGEN.EndUpdate()
@@ -1132,7 +1132,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 
 		lastindx = LvDRI.SelectedIndices(LvDRI.SelectedItems.Count - 1)
 
-		For i = UBound(SelIx) To 0 Step - 1
+		For i = UBound(SelIx) To 0 Step -1
 			LvDRI.Items.RemoveAt(SelIx(i))
 		Next
 
@@ -1190,7 +1190,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 			ListViewItem0.SubItems.Add(" ")
 			ListViewItem0.Checked = True
 			Me.LvDRI.Items.Add(ListViewItem0)
-			lbFound:
+lbFound:
 		Next
 
 		Me.LvDRI.EndUpdate()
@@ -1581,9 +1581,9 @@ Imports TUGraz.VectoCore.Models.Simulation
 			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
 			Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
-			sender.ReportProgress(Int(sumProgress/progress.Count*100),
+			sender.ReportProgress(Int(sumProgress / progress.Count * 100),
 								New With {.Target = "Status", .Message = _
-									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress/progress.Count,
+									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count,
 												String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
 			Thread.Sleep(1000)
 		End While
