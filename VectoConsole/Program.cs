@@ -180,7 +180,7 @@ Examples:
 				if (showTiming && progressEntry.Value.ExecTime > 0) {
 					timingString = string.Format("{0,9:F2}s", progressEntry.Value.ExecTime / 1000.0);
 				}
-				Console.WriteLine("{0,-60}  {1,8:P}{2}", progressEntry.Key, progressEntry.Value.Progress, timingString);
+				Console.WriteLine("{0,-60} {1,8:P}{2}", progressEntry.Key, progressEntry.Value.Progress, timingString);
 				Console.ResetColor();
 				sumProgress += progressEntry.Value.Progress;
 				NumLines++;
@@ -188,7 +188,7 @@ Examples:
 			sumProgress /= NumLines;
 			var spinner = "/-\\|"[ProgessCounter++ % 4];
 			var bar = new string('#', (int)(sumProgress * 100.0 / 2));
-			Console.WriteLine(string.Format("   {2}   [{1,-50}]   [{0,7:P}]", sumProgress, bar, spinner));
+			Console.WriteLine(string.Format("   {2}   [{1,-50}]  [{0,7:P}]", sumProgress, bar, spinner));
 			NumLines++;
 		}
 
