@@ -32,7 +32,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 								row.ParseDouble(Fields.FuelConsumption).SI().Gramm.Per.Hour.ConvertTo().Kilo.Gramm.Per.Second
 						};
 
-						// todo Contract.Assert
 						if (entry.FuelConsumption < 0) {
 							throw new ArgumentOutOfRangeException("FuelConsumption", "FuelConsumption < 0 not allowed.");
 						}

@@ -56,7 +56,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				return new ResponseCycleFinished();
 			}
 
-			// TODO!!
+			// TODO: implement request and response handling!!
 			var dx = 0.SI<Meter>();
 			return NextComponent.Request(absTime, dt, Data.Entries[index].VehicleTargetSpeed,
 				Data.Entries[index].RoadGradient);

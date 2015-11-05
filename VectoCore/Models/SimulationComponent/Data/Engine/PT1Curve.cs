@@ -28,7 +28,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Engine
 				throw new VectoException("FullLoadCurve/PT1 Data File must consist of at least 4 columns.");
 			}
 
-			//todo Contract.Requires<VectoException>(data.Rows.Count < 2, "FullLoadCurve must consist of at least two lines with numeric values (below file header)");
 			if (data.Rows.Count < 2) {
 				throw new VectoException(
 					"FullLoadCurve/PT1 must consist of at least two lines with numeric values (below file header)");

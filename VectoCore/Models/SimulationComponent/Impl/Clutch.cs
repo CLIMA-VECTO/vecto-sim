@@ -1,9 +1,7 @@
-﻿using System;
-using TUGraz.VectoCore.Configuration;
+﻿using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
-using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -15,9 +13,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		private readonly PerSecond _ratedSpeed;
 		protected ITnOutPort NextComponent;
 		private const double ClutchEff = 1;
-		private ClutchState _clutchState = SimulationComponent.ClutchState.ClutchSlipping;
+		private ClutchState _clutchState = ClutchState.ClutchSlipping;
 
 		protected ICombustionEngineIdleController IdleController;
+		private Watt _RequiredPower;
+		private NewtonMeter _RequiredTorque;
 
 
 		public Clutch(IVehicleContainer cockpit, CombustionEngineData engineData,
@@ -36,14 +36,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		protected override void DoWriteModalResults(IModalDataWriter writer)
 		{
-			// TODO: @@@
-			writer[ModalResultField.Pe_clutch] = 0.SI<Watt>();
+			writer[ModalResultField.Pe_clutch] = _RequiredPower;
+			writer[ModalResultField.Tq_clutch] = _RequiredTorque;
 		}
 
 		protected override void DoCommitSimulationStep()
 		{
-			//todo: implement!
-			//throw new NotImplementedException();
+			_RequiredPower = 0.SI<Watt>();
+			_RequiredTorque = 0.SI<NewtonMeter>();
 		}
 
 		public ITnInPort InPort()
@@ -65,20 +65,24 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, NewtonMeter torque, PerSecond angularVelocity, bool dryRun = false)
 		{
 			if (angularVelocity == null) {
-				//var retval = NextComponent.Request(absTime, dt, torque, null, dryRun);
 				Log.Debug("Invoking IdleController...");
+
+				_RequiredPower = 0.SI<Watt>();
+				_RequiredTorque = 0.SI<NewtonMeter>();
 				var retval = IdleController.Request(absTime, dt, torque, null, dryRun);
-				retval.ClutchPowerRequest = 0.SI<Watt>();
+				retval.ClutchPowerRequest = _RequiredPower;
 				return retval;
 			}
 			if (IdleController != null) {
 				IdleController.Reset();
 			}
 			NewtonMeter torqueIn;
-			PerSecond engineSpeedIn;
-			AddClutchLoss(torque, angularVelocity, out torqueIn, out engineSpeedIn);
+			PerSecond angularVelocityIn;
+			AddClutchLoss(torque, angularVelocity, out torqueIn, out angularVelocityIn);
+			_RequiredPower = torqueIn * angularVelocityIn;
+			_RequiredTorque = torqueIn;
 
-			var retVal = NextComponent.Request(absTime, dt, torqueIn, engineSpeedIn, dryRun);
+			var retVal = NextComponent.Request(absTime, dt, torqueIn, angularVelocityIn, dryRun);
 			retVal.ClutchPowerRequest = torque * angularVelocity;
 			return retVal;
 		}
@@ -107,17 +111,15 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			torqueIn = torque;
 			engineSpeedIn = angularVelocity;
 
-
-			// @@@quam
 			if (DataBus.VehicleStopped) {
-				_clutchState = SimulationComponent.ClutchState.ClutchOpened;
+				_clutchState = ClutchState.ClutchOpened;
 				engineSpeedIn = _idleSpeed;
 				torqueIn = 0.SI<NewtonMeter>();
 			} else {
 				var engineSpeedNorm = (angularVelocity - _idleSpeed) /
 									(_ratedSpeed - _idleSpeed);
 				if (engineSpeedNorm < Constants.SimulationSettings.CluchNormSpeed) {
-					_clutchState = SimulationComponent.ClutchState.ClutchSlipping;
+					_clutchState = ClutchState.ClutchSlipping;
 
 					var engineSpeed0 = VectoMath.Max(_idleSpeed, angularVelocity);
 					var clutchSpeedNorm = Constants.SimulationSettings.CluchNormSpeed /
@@ -128,7 +130,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 					torqueIn = ((torque * angularVelocity) / ClutchEff / engineSpeedIn);
 				} else {
-					_clutchState = SimulationComponent.ClutchState.ClutchClosed;
+					_clutchState = ClutchState.ClutchClosed;
 				}
 			}
 			Log.Debug("to Engine:   torque: {0}, angularVelocity: {1}, power {2}", torqueIn, engineSpeedIn,

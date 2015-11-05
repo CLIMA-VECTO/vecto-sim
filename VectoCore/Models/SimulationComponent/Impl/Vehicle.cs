@@ -157,7 +157,6 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 											_currentState.SlopeResistance * _currentState.Velocity) / 2;
 			writer[ModalResultField.Proll] = (_previousState.RollingResistance * _previousState.Velocity +
 											_currentState.RollingResistance * _currentState.Velocity) / 2;
-			// TODO: comptuation of AirResistancePower is wrong!
 
 			writer[ModalResultField.Pair] = ComputeAirDragPowerLoss(_previousState.Velocity, _currentState.Velocity,
 				_currentState.dt);

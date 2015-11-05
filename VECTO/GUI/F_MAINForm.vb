@@ -501,8 +501,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 		ModeUpdate()
 
 		'License check
-		'TODO uncomment license check
-		If False And Not Lic.LICcheck() Then
+		If Not Lic.LICcheck() Then
 			MsgBox("License File invalid!" & vbCrLf & vbCrLf & Lic.FailMsg)
 			If Lic.CreateActFile(MyAppPath & "ActivationCode.dat") Then
 				MsgBox("Activation File created.")
@@ -1571,7 +1570,7 @@ Imports TUGraz.VectoCore.Models.Simulation
 								String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count, jobContainer.GetProgress().Count)})
 
 		jobContainer.Execute(True)
-		Dim start As DateTime
+		Dim start As DateTime = DateTime.Now()
 		While Not jobContainer.AllCompleted
 			If sender.CancellationPending Then
 				jobContainer.Cancel()
@@ -1579,33 +1578,13 @@ Imports TUGraz.VectoCore.Models.Simulation
 			End If
 
 			Dim progress As Dictionary(Of String, JobContainer.ProgressEntry) = jobContainer.GetProgress()
-
-			Dim NumLines As Double = progress.Count
 			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
+			Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
-
-			If sumProgress > 0 And start = DateTime.MinValue Then
-				start = DateTime.Now()
-			End If
-
-			Dim sumPercent As Integer = Int(sumProgress / NumLines * 100)
-
-			Dim progString As String = String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value)))
-
-			Dim duration As Double = 0.0
-			Dim remainingDuration As Double = 0
-			If start > DateTime.MinValue Then
-				duration = (DateTime.Now() - start).TotalSeconds
-				remainingDuration = duration / (sumProgress / NumLines) - duration
-			End If
-
-
-			sender.ReportProgress(sumPercent,
-								New _
-									With {.Target = "Status",
-									.Message = String.Format("Time: {0:0}s, Remaining: {1:0}s, Current Progress: {2:P} ({3})",
-															duration, remainingDuration, sumPercent / 100, progString)
-									})
+			sender.ReportProgress(Int(sumProgress/progress.Count*100),
+								New With {.Target = "Status", .Message = _
+									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress/progress.Count,
+												String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
 			Thread.Sleep(1000)
 		End While
 	End Sub
