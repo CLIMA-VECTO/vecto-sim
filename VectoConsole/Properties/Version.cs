@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-// generated on 05.11.2015 15:12:30
-[assembly: AssemblyVersion("3.0.1.308")]
-[assembly: AssemblyFileVersion("3.0.1.308")]
+// generated on 06.11.2015 21:07:51
+[assembly: AssemblyVersion("3.0.1.309")]
+[assembly: AssemblyFileVersion("3.0.1.309")]
 

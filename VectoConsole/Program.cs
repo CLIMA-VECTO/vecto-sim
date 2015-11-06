@@ -94,7 +94,7 @@ Examples:
 					ShowVersionInformation();
 				}
 
-				args = args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv", "-V" }).ToArray();
+				args = args.Except(new[] { "-v", "-vv", "-vvv", "-vvvv", "-V", "-mod", "-eng", "-t" }).ToArray();
 
 				// if no other arguments given: display usage and terminate
 				if (!args.Any()) {
@@ -108,7 +108,9 @@ Examples:
 				// process the file list and start simulation
 				var fileList = args;
 
-				var sumFileName = Path.GetFileNameWithoutExtension(fileList.First()) + Constants.FileExtensions.SumFile;
+				var sumFileName = Path.Combine(Path.GetDirectoryName(fileList.First()) ?? "",
+					Path.GetFileNameWithoutExtension(fileList.First()) + Constants.FileExtensions.SumFile);
+				Console.WriteLine(sumFileName);
 				var sumWriter = new SummaryFileWriter(sumFileName);
 				var jobContainer = new JobContainer(sumWriter);
 
