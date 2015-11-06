@@ -52,7 +52,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						AbsTime += dt;
 					}
 					if (worker != null) {
-						worker.ReportProgress((int)(CyclePort.Progress * 1000));
+						worker.ReportProgress((int)(CyclePort.Progress * 10000));
 						if (worker.CancellationPending) {
 							Log.Error("Background Task canceled!");
 							Container.FinishSimulation();

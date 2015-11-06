@@ -182,7 +182,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 			public void ProgressChanged(object sender, ProgressChangedEventArgs e)
 			{
-				Progress = e.ProgressPercentage / 1000.0;
+				Progress = e.ProgressPercentage / 10000.0;
 			}
 		}
 	}
