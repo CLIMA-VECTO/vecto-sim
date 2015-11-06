@@ -15,6 +15,9 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 {
 	public class DeclarationModeSimulationDataReader : AbstractSimulationDataReader
 	{
+		protected static Dictionary<MissionType, DrivingCycleData> CyclesCache =
+			new Dictionary<MissionType, DrivingCycleData>();
+
 		internal DeclarationModeSimulationDataReader() {}
 
 		protected void CheckForDeclarationMode(VersionInfo info, string msg)
@@ -49,7 +52,13 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 				engineTypeString, gearboxData.ModelName, gearboxTypeString, Job.BasePath, Job.JobFile, resultCount);
 
 			foreach (var mission in segment.Missions) {
-				var cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased);
+				DrivingCycleData cycle;
+				if (CyclesCache.ContainsKey(mission.MissionType)) {
+					cycle = CyclesCache[mission.MissionType];
+				} else {
+					cycle = DrivingCycleDataReader.ReadFromStream(mission.CycleFile, CycleType.DistanceBased);
+					CyclesCache.Add(mission.MissionType, cycle);
+				}
 				foreach (var loading in mission.Loadings) {
 					var simulationRunData = new VectoRunData {
 						Loading = loading.Key,
@@ -61,7 +70,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 						DriverData = driverdata,
 						IsEngineOnly = IsEngineOnly,
 						JobFileName = Job.JobFile,
-						BasePath = "",
+						BasePath = Job.BasePath,
 						ModFileSuffix = loading.Key.ToString(),
 						Report = report,
 						Mission = mission,

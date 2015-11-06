@@ -20,7 +20,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		ISimulationOutPort, IDrivingCycleInPort, IRoadLookAhead
 	{
 		protected const double LookaheadTimeSafetyMargin = 1.5;
-		protected DrivingCycleData Data;
+		protected readonly DrivingCycleData Data;
 
 		internal DrivingCycleState PreviousState = null;
 		internal DrivingCycleState CurrentState = new DrivingCycleState();
