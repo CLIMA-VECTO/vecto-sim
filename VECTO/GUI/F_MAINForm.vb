@@ -1543,7 +1543,7 @@ lbFound:
 	Private Sub VectoWorkerV3_OnDoWork(sender As BackgroundWorker, e As DoWorkEventArgs)
 		AllowSleepOFF()
 
-		Dim sumFileName As String = Path.GetFileNameWithoutExtension(JobFileList(0) + Constants.FileExtensions.SumFile)
+		Dim sumFileName As String = Path.Combine(Path.GetDirectoryName(JobFileList(0)), Path.GetFileNameWithoutExtension(JobFileList(0)) + Constants.FileExtensions.SumFile)
 		Dim sumWriter As SummaryFileWriter = New SummaryFileWriter(sumFileName)
 		Dim jobContainer As JobContainer = New JobContainer(sumWriter)
 
@@ -1558,13 +1558,13 @@ lbFound:
 		For Each jobFile As String In JobFileList
 			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Reading File " + jobFile})
 			Dim runsFactory As SimulatorFactory = New SimulatorFactory(mode, jobFile)
+			runsFactory.WriteModalResults = Cfg.ModOut
 			jobContainer.AddRuns(runsFactory)
 			sender.ReportProgress(0, New With {.Target = "ListBox", .Message = "Finished Reading File " + jobFile})
 		Next
 
 
-		sender.ReportProgress(0,
-							New _
+		sender.ReportProgress(0, New _
 								With {.Target = "ListBox",
 								.Message = _
 								String.Format("Starting Simulation ({0} Jobs, {1} Runs)", JobFileList.Count, jobContainer.GetProgress().Count)})
@@ -1581,12 +1581,23 @@ lbFound:
 			Dim sumProgress As Double = progress.Sum(Function(pair) pair.Value.Progress)
 			Dim duration As Double = (DateTime.Now() - start).TotalSeconds
 
-			sender.ReportProgress(Int(sumProgress / progress.Count * 100),
+			sender.ReportProgress(Int((sumProgress * 100.0) / progress.Count),
 								New With {.Target = "Status", .Message = _
 									String.Format("Duration: {0:0}s, Current Progress: {1:P} ({2})", duration, sumProgress / progress.Count,
 												String.Join(", ", progress.Select(Function(pair) String.Format("{0,4:P}", pair.Value.Progress))))})
 			Thread.Sleep(1000)
 		End While
+
+		For Each progressEntry As KeyValuePair(Of String, JobContainer.ProgressEntry) In jobContainer.GetProgress()
+			sender.ReportProgress(100, New With {.Target = "ListBox", .Message = String.Format("{0,-60} {1,8:P} {2,10:F2}s - {3}", _
+				progressEntry.Key, progressEntry.Value.Progress, progressEntry.Value.ExecTime / 1000.0, IIf(progressEntry.Value.Success, "Success", "Aborted"))})
+			If (Not progressEntry.Value.Success) Then
+				sender.ReportProgress(100, New With {.Target = "ListBox", .Message = progressEntry.Value.Error.Message})
+			End If
+
+		Next
+
+		sender.ReportProgress(100, New With {.Target = "ListBox", .Message = "Simulation Finished"})
 	End Sub
 
 	Private Sub VectoWorkerV3_OnProgressChanged(sender As Object, e As ProgressChangedEventArgs)
