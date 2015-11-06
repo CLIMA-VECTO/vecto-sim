@@ -53,6 +53,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			return data.GetValues<SI>(field).Max();
 		}
 
+		public static SI Min(this IModalDataWriter data, ModalResultField field)
+		{
+			return data.GetValues<SI>(field).Min();
+		}
+
 		public static SI Average(this IModalDataWriter data, ModalResultField field, Func<SI, bool> filter = null)
 		{
 			return data.GetValues<SI>(field).Average(filter);
