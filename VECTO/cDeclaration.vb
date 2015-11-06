@@ -1687,7 +1687,7 @@ Public Class cReport
 
 				' close the pdf
 				pdfStamper.Close()
-
+				pdfReader.Close()
 			Next
 
 			'Merge files
@@ -1703,12 +1703,14 @@ Public Class cReport
 				doc.Add(iTextSharp.text.Image.GetInstance(pdfpage))
 			Next
 
-			doc.Close()
+			If (doc.IsOpen()) Then
+				doc.Close()
+			End If
 
 			'Delete temp files
-			For Each temppath In temppdfs
-				File.Delete(temppath)
-			Next
+			'For Each temppath In temppdfs
+			'	File.Delete(temppath)
+			'Next
 
 		Catch ex As Exception
 
