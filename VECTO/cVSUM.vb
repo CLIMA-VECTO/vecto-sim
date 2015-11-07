@@ -484,7 +484,7 @@ Class cVSUM
                     VSUMpath = Cfg.BATCHoutpath & fFILE(JobFile, False) & "_BATCH.vsum"
             End Select
         Else
-            VSUMpath = fFileWoExt(JobFile) & ".vsum"
+			VSUMpath = fFileWoExt(JobFile) & ".v2.vsum"
         End If
 
         'Open file

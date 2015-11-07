@@ -186,7 +186,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 					Log.Error(message);
 					throw new VectoException(message);
 				}
-			}).Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct }.ToEnumerable()).ToList();
+			}).ToList();
+			//.Concat(new VectoRunData.AuxData { ID = "", DemandType = AuxiliaryDemandType.Direct}.ToEnumerable()).ToList();
 		}
 
 		internal Segment GetVehicleClassification(VehicleCategory category, AxleConfiguration axles, Kilogram grossMassRating,

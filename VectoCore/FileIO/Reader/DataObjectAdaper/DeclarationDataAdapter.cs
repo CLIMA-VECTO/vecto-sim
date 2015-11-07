@@ -121,7 +121,7 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 					string.Format("Vehicle does not contain sufficient axles. {0} axles defined, {1} axles required",
 						data.AxleConfig.Axles.Count, mission.AxleWeightDistribution.Count()));
 			}
-			retVal.AxleData = new List<Axle>();
+			var axleData = new List<Axle>();
 			for (var i = 0; i < mission.AxleWeightDistribution.Length; i++) {
 				var axleInput = data.AxleConfig.Axles[i];
 				var axle = new Axle {
@@ -131,19 +131,17 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 					TyreTestLoad = axleInput.TyreTestLoad.SI<Newton>(),
 					Inertia = DeclarationData.Wheels.Lookup(axleInput.WheelsStr.Replace(" ", "")).Inertia,
 				};
-				retVal.AxleData.Add(axle);
+				axleData.Add(axle);
 			}
 
-			foreach (var tmp in mission.TrailerAxleWeightDistribution) {
-				retVal.AxleData.Add(new Axle {
-					AxleWeightShare = tmp,
-					TwinTyres = DeclarationData.Trailer.TwinTyres,
-					RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
-					TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
-					Inertia = DeclarationData.Wheels.Lookup(DeclarationData.Trailer.WheelsType).Inertia
-				});
-			}
-
+			axleData.AddRange(mission.TrailerAxleWeightDistribution.Select(tmp => new Axle {
+				AxleWeightShare = tmp,
+				TwinTyres = DeclarationData.Trailer.TwinTyres,
+				RollResistanceCoefficient = DeclarationData.Trailer.RollResistanceCoefficient,
+				TyreTestLoad = DeclarationData.Trailer.TyreTestLoad.SI<Newton>(),
+				Inertia = DeclarationData.Wheels.Lookup(DeclarationData.Trailer.WheelsType).Inertia
+			}));
+			retVal.AxleData = axleData;
 			return retVal;
 		}
 
