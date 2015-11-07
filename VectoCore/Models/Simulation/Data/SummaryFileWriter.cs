@@ -143,36 +143,38 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			var time = data.Max(ModalResultField.time) - data.Min(ModalResultField.time);
 			var distance = data.Max(ModalResultField.dist) - data.Min(ModalResultField.dist);
 
+			var totalFuelConsumption = TimeIntegralFuelConsumption(ModalResultField.FCMap, data, simulationIntervals);
+
 			var row = _table.NewRow();
 			row[JOB] = jobName;
 			row[INPUTFILE] = jobFileName;
 			row[CYCLE] = cycleFileName;
 			row[TIME] = time; //data.Max(ModalResultField.time).DefaultIfNull();
-			row[DISTANCE] = distance; //data.Max(ModalResultField.dist).DefaultIfNull();
+			row[DISTANCE] = distance.ConvertTo().Kilo.Meter; //data.Max(ModalResultField.dist).DefaultIfNull();
 			row[SPEED] = (distance / time).ConvertTo().Kilo.Meter.Per.Hour;
-			//TimeIntegral(ModalResultField.v_act, data, simulationIntervals);
-			//data.GetValues<MeterPerSecond>(ModalResultField.v_act).Zip(sim) //data.Average(ModalResultField.v_act).DefaultIfNull();
 			row[PPOS] = data.Average(ModalResultField.Pe_eng, x => x > 0).DefaultIfNull();
 			row[PNEG] = data.Average(ModalResultField.Pe_eng, x => x < 0).DefaultIfNull();
-			row[FCMAP] = data.Average(ModalResultField.FCMap).DefaultIfNull();
+			row[FCMAP] = (totalFuelConsumption / time).ConvertTo().Gramm.Per.Hour;
+			row[FCMAPKM] = (totalFuelConsumption / distance).ConvertTo().Gramm.Per.Kilo.Meter;
+			// data.Average(ModalResultField.FCMap).DefaultIfNull();
 			row[FCAUXC] = data.Average(ModalResultField.FCAUXc).DefaultIfNull();
 			row[FCWHTCC] = data.Average(ModalResultField.FCWHTCc).DefaultIfNull();
 			row[PBRAKE] = data.Average(ModalResultField.Pbrake).DefaultIfNull();
 			row[EPOSICE] = data.Average(ModalResultField.Pe_eng, x => x > 0).DefaultIfNull();
 			row[ENEGICE] = data.Average(ModalResultField.Pe_eng, x => x < 0).DefaultIfNull();
-			row[EAIR] = TimeIntegral(ModalResultField.Pair, data, simulationIntervals).DefaultIfNull();
-			row[EROLL] = TimeIntegral(ModalResultField.Proll, data, simulationIntervals).DefaultIfNull();
-			row[EGRAD] = TimeIntegral(ModalResultField.Pgrad, data, simulationIntervals).DefaultIfNull();
-			row[EAUX] = TimeIntegral(ModalResultField.Paux, data, simulationIntervals).DefaultIfNull();
-			row[EBRAKE] = TimeIntegral(ModalResultField.Pbrake, data, simulationIntervals).DefaultIfNull();
+			row[EAIR] = TimeIntegralPower(ModalResultField.Pair, data, simulationIntervals).DefaultIfNull();
+			row[EROLL] = TimeIntegralPower(ModalResultField.Proll, data, simulationIntervals).DefaultIfNull();
+			row[EGRAD] = TimeIntegralPower(ModalResultField.Pgrad, data, simulationIntervals).DefaultIfNull();
+			row[EAUX] = TimeIntegralPower(ModalResultField.Paux, data, simulationIntervals).DefaultIfNull();
+			row[EBRAKE] = TimeIntegralPower(ModalResultField.Pbrake, data, simulationIntervals).DefaultIfNull();
 
-			var plossdiff = TimeIntegral(ModalResultField.PlossDiff, data, simulationIntervals).DefaultIfNull();
-			var plossgb = TimeIntegral(ModalResultField.PlossGB, data, simulationIntervals).DefaultIfNull();
+			var plossdiff = TimeIntegralPower(ModalResultField.PlossDiff, data, simulationIntervals).DefaultIfNull();
+			var plossgb = TimeIntegralPower(ModalResultField.PlossGB, data, simulationIntervals).DefaultIfNull();
 			if ((plossdiff ?? plossgb) != null) {
 //				row[ETRANSM] = (plossdiff ?? 0.SI().Watt.Second.ConvertTo().Watt.Hour) +
 //								(plossgb ?? 0.SI().Watt.Second.ConvertTo().Watt.Hour);
 			}
-			row[ERETARDER] = TimeIntegral(ModalResultField.PlossRetarder, data, simulationIntervals).DefaultIfNull();
+			row[ERETARDER] = TimeIntegralPower(ModalResultField.PlossRetarder, data, simulationIntervals).DefaultIfNull();
 
 			var paeng = data.Sum(ModalResultField.PaEng);
 			var pagb = data.Sum(ModalResultField.PaGB);
@@ -218,12 +220,20 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			_table.Rows.Add(row);
 		}
 
-		protected static SI TimeIntegral(ModalResultField field, IModalDataWriter data,
+		protected static SI TimeIntegralPower(ModalResultField field, IModalDataWriter data,
 			IEnumerable<Second> simulationIntervals)
 		{
 			return data.GetValues<Watt>(field)
 				.Zip(simulationIntervals, (P, dt) => dt.ConvertTo().Hour * (P ?? 0.SI<Watt>()).ConvertTo().Kilo.Watt)
 				.Sum();
+		}
+
+		protected static Kilogram TimeIntegralFuelConsumption(ModalResultField field, IModalDataWriter data,
+			IEnumerable<Second> simulationIntervals)
+		{
+			return data.GetValues<KilogramPerSecond>(field)
+				.Zip(simulationIntervals, (FC, dt) => dt * (FC ?? 0.SI<KilogramPerSecond>()))
+				.Sum().Cast<Kilogram>();
 		}
 
 		private static IEnumerable<SI> Calculate3SecondAverage(IReadOnlyList<SI> accelerations)

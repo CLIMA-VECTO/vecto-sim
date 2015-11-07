@@ -27,6 +27,8 @@ namespace TUGraz.VectoCore.Tests.Reports
 				modData[ModalResultField.Paux] = 3000.SI<Watt>();
 				modData[ModalResultField.Pbrake] = 3000.SI<Watt>();
 
+				modData[ModalResultField.FCMap] = 1e-4.SI<KilogramPerSecond>();
+
 				modData[ModalResultField.altitude] = 0.SI<Meter>();
 				modData.CommitSimulationStep();
 			}
@@ -45,6 +47,11 @@ namespace TUGraz.VectoCore.Tests.Reports
 			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("Egrad [kWh]"), 1e-3);
 			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("Eaux [kWh]"), 1e-3);
 			Assert.AreEqual(500.0 * 3000.0 / 1000 / 3600, sumData.Rows[0].ParseDouble("Ebrake [kWh]"), 1e-3);
+
+			// 500s * 1e-4 kg/s = 0.05kg  => 0.05kg / 499s => to g/h
+			Assert.AreEqual((500.0 * 1e-4) * 1000 * 3600 / 499.0, sumData.Rows[0].ParseDouble("FC-Map [g/h]"), 1e-3);
+			// 500s * 1e-4 kg/s = 0.05kg => 0.05kg / 499m => to g/km
+			Assert.AreEqual((500.0 * 1e-4) * 1000 * 1000 / 499.0, sumData.Rows[0].ParseDouble("FC-Map [g/km]"), 1e-3);
 		}
 
 		[TestMethod]

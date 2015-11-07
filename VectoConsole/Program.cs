@@ -110,7 +110,6 @@ Examples:
 
 				var sumFileName = Path.Combine(Path.GetDirectoryName(fileList.First()) ?? "",
 					Path.GetFileNameWithoutExtension(fileList.First()) + Constants.FileExtensions.SumFile);
-				Console.WriteLine(sumFileName);
 				var sumWriter = new SummaryFileWriter(sumFileName);
 				var jobContainer = new JobContainer(sumWriter);
 
