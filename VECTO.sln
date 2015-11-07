@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectoConsole", "VectoConsol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphDrawer", "GraphDrawer\GraphDrawer.csproj", "{6589CAEC-ECC9-4BCC-9699-DE3F22BBCBD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeclarationCycleZip", "DeclarationCycleZip\DeclarationCycleZip.csproj", "{2320CD6F-FE7B-4341-A9BB-3ABCA7EF18F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,14 @@ Global
 		{6589CAEC-ECC9-4BCC-9699-DE3F22BBCBD4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6589CAEC-ECC9-4BCC-9699-DE3F22BBCBD4}.Release|x64.ActiveCfg = Release|Any CPU
 		{6589CAEC-ECC9-4BCC-9699-DE3F22BBCBD4}.Release|x86.ActiveCfg = Release|Any CPU
+		{2320CD6F-FE7B-4341-A9BB-3ABCA7EF18F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2320CD6F-FE7B-4341-A9BB-3ABCA7EF18F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2320CD6F-FE7B-4341-A9BB-3ABCA7EF18F6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2320CD6F-FE7B-4341-A9BB-3ABCA7EF18F6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2320CD6F-FE7B-4341-A9BB-3ABCA7EF18F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2320CD6F-FE7B-4341-A9BB-3ABCA7EF18F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2320CD6F-FE7B-4341-A9BB-3ABCA7EF18F6}.Release|x64.ActiveCfg = Release|Any CPU
+		{2320CD6F-FE7B-4341-A9BB-3ABCA7EF18F6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
