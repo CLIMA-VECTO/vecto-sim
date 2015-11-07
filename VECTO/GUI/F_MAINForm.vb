@@ -1543,7 +1543,7 @@ lbFound:
 	Private Sub VectoWorkerV3_OnDoWork(sender As BackgroundWorker, e As DoWorkEventArgs)
 		AllowSleepOFF()
 
-		Dim sumFileName As String = Path.Combine(Path.GetDirectoryName(JobFileList(0)), Path.GetFileNameWithoutExtension(JobFileList(0)) + Constants.FileExtensions.SumFile)
+		Dim sumFileName As String = Path.Combine(Path.GetDirectoryName(JobFileList(0)), Path.GetFileNameWithoutExtension(JobFileList(0)) + ".v3" + Constants.FileExtensions.SumFile)
 		Dim sumWriter As SummaryFileWriter = New SummaryFileWriter(sumFileName)
 		Dim jobContainer As JobContainer = New JobContainer(sumWriter)
 
