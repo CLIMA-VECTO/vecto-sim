@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,10 +29,10 @@ namespace DeclarationCycleZip
 					continue;
 				}
 				var row = table.NewRow();
-				row["<s>"] = x.Distance.Value();
-				row["<v>"] = x.VehicleTargetSpeed.ConvertTo().Kilo.Meter.Per.Hour.Value();
-				row["<grad>"] = x.RoadGradientPercent;
-				row["<stop>"] = x.StoppingTime.Value();
+				row["<s>"] = x.Distance.Value().ToString(CultureInfo.InvariantCulture);
+				row["<v>"] = x.VehicleTargetSpeed.ConvertTo().Kilo.Meter.Per.Hour.Value().ToString(CultureInfo.InvariantCulture);
+				row["<grad>"] = x.RoadGradientPercent.ToString(CultureInfo.InvariantCulture);
+				row["<stop>"] = x.StoppingTime.Value().ToString(CultureInfo.InvariantCulture);
 				table.Rows.Add(row);
 				lastDistance = x.Distance;
 			}
