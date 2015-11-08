@@ -34,7 +34,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		{
 			var cycle = SimpleDrivingCycles.ReadDeclarationCycle("RegionalDelivery");
 			var run = Truck40tPowerTrain.CreateEngineeringRun(cycle, "Truck40t_RegionalDeliveryCycle_RefLoad.vmod",
-				7500.SI<Kilogram>(), 12900.SI<Kilogram>());
+				7500.SI<Kilogram>(), 12900.SI<Kilogram>(), true);
 
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);

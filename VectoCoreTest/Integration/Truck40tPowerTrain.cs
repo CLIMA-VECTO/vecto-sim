@@ -35,9 +35,9 @@ namespace TUGraz.VectoCore.Tests.Integration
 		}
 
 		public static VectoRun CreateEngineeringRun(DrivingCycleData cycleData, string modFileName, Kilogram massExtra,
-			Kilogram loading)
+			Kilogram loading, bool overspeed = false)
 		{
-			var container = CreatePowerTrain(cycleData, modFileName, massExtra, loading);
+			var container = CreatePowerTrain(cycleData, modFileName, massExtra, loading, overspeed);
 
 			return new DistanceRun("", container);
 		}
