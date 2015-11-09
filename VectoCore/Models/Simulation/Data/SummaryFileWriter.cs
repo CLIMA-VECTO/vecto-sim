@@ -2,11 +2,13 @@
 using System.Data;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
 {
+	public delegate void WriteSumData(IModalDataWriter data, Kilogram vehicleMass, Kilogram loading);
+
+
 	/// <summary>
 	/// Class for the sum file in vecto.
 	/// </summary>
@@ -87,6 +89,17 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				ANEG, PACC, PDEC, PCRUISE, PSTOP, ETORQUECONV, CO2, CO2T, FCFINAL, FCFINAL_LITER, FCFINAL_LITERPER100TKM, ACCNOISE
 			}.Select(x => new DataColumn(x, typeof(SI))).ToArray());
 		}
+
+		public virtual void Write(bool isEngineOnly, IModalDataWriter data, string jobFileName, string jobName, string cycleFileName,
+			Kilogram vehicleMass, Kilogram vehicleLoading)
+		{
+			if (isEngineOnly) {
+				WriteEngineOnly(data, jobFileName, jobName, cycleFileName);
+			} else {
+				WriteFullPowertrain(data, jobFileName, jobName, cycleFileName, vehicleMass, vehicleLoading);
+			}
+		}
+
 
 		protected internal void WriteEngineOnly(IModalDataWriter data, string jobFileName, string jobName,
 			string cycleFileName)
@@ -205,56 +218,5 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			VectoCSVFile.Write(_sumFileName, new DataView(_table).ToTable(false, dataColumns.ToArray()));
 		}
-	}
-}
-
-/// <summary>
-/// Decorator for FullPowertrain which adds some data for later use in the SummaryFileWriter.
-/// </summary>
-public class SumWriterDecoratorFullPowertrain : SummaryFileWriter, ISummaryDataWriter
-{
-	private readonly SummaryFileWriter _writer;
-	private readonly string _jobFileName;
-	private readonly string _jobName;
-	private readonly string _cycleFileName;
-
-	public SumWriterDecoratorFullPowertrain(SummaryFileWriter writer, string jobFileName, string jobName,
-		string cycleFileName)
-	{
-		_writer = writer;
-		_jobFileName = jobFileName;
-		_jobName = jobName;
-		_cycleFileName = cycleFileName;
-	}
-
-	public void Write(IModalDataWriter data, Kilogram vehicleMass = null, Kilogram vehicleLoading = null)
-	{
-		Log.Info("Writing Summary File");
-		_writer.WriteFullPowertrain(data, _jobFileName, _jobName, _cycleFileName, vehicleMass, vehicleLoading);
-	}
-}
-
-
-/// <summary>
-/// Decorator for EngineOnly Mode which adds some data for later use in the SummaryFileWriter.
-/// </summary>
-public class SumWriterDecoratorEngineOnly : SummaryFileWriter, ISummaryDataWriter
-{
-	private readonly SummaryFileWriter _writer;
-	private readonly string _jobFileName;
-	private readonly string _jobName;
-	private readonly string _cycleFileName;
-
-	public SumWriterDecoratorEngineOnly(SummaryFileWriter writer, string jobFileName, string jobName, string cycleFileName)
-	{
-		_writer = writer;
-		_jobFileName = jobFileName;
-		_jobName = jobName;
-		_cycleFileName = cycleFileName;
-	}
-
-	public void Write(IModalDataWriter data, Kilogram vehicleMass = null, Kilogram vehicleLoading = null)
-	{
-		_writer.WriteEngineOnly(data, _jobFileName, _jobName, _cycleFileName);
 	}
 }

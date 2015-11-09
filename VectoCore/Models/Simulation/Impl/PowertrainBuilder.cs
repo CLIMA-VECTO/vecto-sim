@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.Data;
@@ -19,7 +17,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		private readonly IModalDataWriter _dataWriter;
 
 
-		public PowertrainBuilder(IModalDataWriter dataWriter, ISummaryDataWriter sumWriter, bool engineOnly)
+		public PowertrainBuilder(IModalDataWriter dataWriter, bool engineOnly, WriteSumData sumWriter = null)
 		{
 			_engineOnly = engineOnly;
 			_dataWriter = dataWriter;

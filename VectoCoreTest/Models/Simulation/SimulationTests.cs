@@ -41,6 +41,16 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			ResultFileHelper.TestModFile(expected, actual);
 		}
 
+		private class MockSumWriter : SummaryFileWriter
+		{
+			public override void Write(bool isEngineOnly, IModalDataWriter data, string jobFileName, string jobName,
+				string cycleFileName,
+				Kilogram vehicleMass, Kilogram vehicleLoading) {}
+
+			public override void Finish() {}
+		}
+
+
 		[TestMethod]
 		public void TestEngineOnly_SimulatorRun()
 		{
@@ -49,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var run = CreateRun(actual);
 
-			var sim = new JobContainer(new TestSumWriter());
+			var sim = new JobContainer(new MockSumWriter());
 			sim.AddRun(run);
 			sim.Execute();
 
@@ -63,8 +73,10 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var dataWriter = new ModalDataWriter(resultFileName, SimulatorFactory.FactoryMode.EngineOnlyMode);
 			var sumWriter = new SummaryFileWriter(sumFileName);
 
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode, EngineOnlyJob) { SumWriter = sumWriter };
-			
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode, EngineOnlyJob) {
+				SumWriter = sumWriter
+			};
+
 			return factory.SimulationRuns().First();
 		}
 
@@ -74,7 +86,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var sumWriter = new SummaryFileWriter(@"24t Coach.vsum");
 			var jobContainer = new JobContainer(sumWriter);
 
-			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode, @"TestData\Jobs\24t Coach EngineOnly.vecto");
+			var runsFactory = new SimulatorFactory(SimulatorFactory.FactoryMode.EngineOnlyMode,
+				@"TestData\Jobs\24t Coach EngineOnly.vecto");
 
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();

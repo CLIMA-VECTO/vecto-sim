@@ -46,8 +46,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Kilogram loading, bool overspeed = false)
 		{
 			var modalWriter = new ModalDataWriter(modFileName);
-			var sumWriter = new TestSumWriter();
-			var container = new VehicleContainer(modalWriter, sumWriter);
+			var container = new VehicleContainer(modalWriter);
 
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using NLog;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader;
@@ -66,9 +65,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 					new ModalDataWriter(string.Format(modFileName, data.Cycle.Name, data.ModFileSuffix ?? ""),
 						writer => d.Report.AddResult(d.Loading, d.Mission, writer), _mode);
 				modWriter.WriteModalResults = WriteModalResults;
-				var jobName = string.Format("{0}-{1}", JobNumber, i++);
-				var sumWriterDecorator = DecorateSumWriter(data.IsEngineOnly, SumWriter, data.JobFileName, jobName, data.Cycle.Name);
-				var builder = new PowertrainBuilder(modWriter, sumWriterDecorator, DataReader.IsEngineOnly);
+				var builder = new PowertrainBuilder(modWriter,
+					DataReader.IsEngineOnly, (writer, mass, loading) =>
+						SumWriter.Write(d.IsEngineOnly, modWriter, d.JobFileName, string.Format("{0}-{1}", JobNumber, i++), d.Cycle.Name,
+							mass, loading));
 
 				VectoRun run;
 				if (data.IsEngineOnly) {
@@ -81,25 +81,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 
 				yield return run;
 			}
-		}
-
-		/// <summary>
-		/// Decorates the sum writer with a correct decorator (either EngineOnly or FullPowertrain).
-		/// </summary>
-		/// <param name="engineOnly">if set to <c>true</c> [engine only].</param>
-		/// <param name="sumWriter">The sum writer.</param>
-		/// <param name="jobFileName">Name of the job file.</param>
-		/// <param name="jobName">Name of the job.</param>
-		/// <param name="cycleName">The cycle file.</param>
-		/// <returns></returns>
-		private static ISummaryDataWriter DecorateSumWriter(bool engineOnly, SummaryFileWriter sumWriter,
-			string jobFileName, string jobName, string cycleName)
-		{
-			if (engineOnly) {
-				return new SumWriterDecoratorEngineOnly(sumWriter, jobFileName, jobName, cycleName);
-			}
-
-			return new SumWriterDecoratorFullPowertrain(sumWriter, jobFileName, jobName, cycleName);
 		}
 	}
 }
