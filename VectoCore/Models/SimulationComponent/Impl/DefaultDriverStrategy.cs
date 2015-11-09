@@ -510,6 +510,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							if (!DataBus.ClutchClosed(absTime)) {
 								Log.Warn("Clutch is open - trying RollAction");
 								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+							} else {
+								Log.Warn("Clutch is open - trying AccelerateAction");
+								response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 							}
 						});
 					break;
