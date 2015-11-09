@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Utils;
 
@@ -47,7 +43,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private const string ERETARDER = "Eretarder [kWh]";
 		private const string MASS = "Mass [kg]";
 		private const string LOADING = "Loading [kg]";
-		private const string A = "a [m/s^2]";
+		private const string ACCELERATIONS = "a [m/s^2]";
 		private const string APOS = "a_pos [m/s^2]";
 		private const string ANEG = "a_neg [m/s^2]";
 		private const string PACC = "pAcc [%]";
@@ -87,7 +83,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 			_table.Columns.AddRange(new[] {
 				TIME, DISTANCE, SPEED, ALTITUDE, PPOS, PNEG, FCMAP, FCMAPKM, FCAUXC, FCAUXCKM, FCWHTCC, FCWHTCCKM, PWHEELPOS, PBRAKE,
-				EPOSICE, ENEGICE, EAIR, EROLL, EGRAD, EACC, EAUX, EBRAKE, ETRANSM, ERETARDER, MASS, LOADING, A, APOS, ANEG, PACC,
+				EPOSICE, ENEGICE, EAIR, EROLL, EGRAD, EACC, EAUX, EBRAKE, ETRANSM, ERETARDER, MASS, LOADING, ACCELERATIONS, APOS,
+				ANEG, PACC,
 				PDEC, PCRUISE, PSTOP, ETORQUECONV, CO2, CO2T, FCFINAL, FCFINAL_LITER, FCFINAL_LITERPER100TKM, ACCNOISE
 			}.Select(x => new DataColumn(x, typeof(SI))).ToArray());
 		}
@@ -100,16 +97,256 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			row[INPUTFILE] = jobFileName;
 			row[CYCLE] = cycleFileName;
 			row[STATUS] = data.RunStatus;
-			row[TIME] = data.GetValues<SI>(ModalResultField.time).Max();
-			row[PPOS] = data.GetValues<SI>(ModalResultField.Pe_eng).Where(x => x > 0).Average();
-			row[PNEG] = data.GetValues<SI>(ModalResultField.Pe_eng).Where(x => x < 0).Average();
-			row[FCMAP] = data.GetValues<SI>(ModalResultField.FCMap).Average();
-			row[FCAUXC] = data.GetValues<SI>(ModalResultField.FCAUXc).Average();
-			row[FCWHTCC] = data.GetValues<SI>(ModalResultField.FCWHTCc).Average();
+			row[TIME] = Duration(data);
+			row[PPOS] = Ppos(data);
+			row[PNEG] = Pneg(data);
+			row[FCMAP] = FuelConsumption(data);
+			row[FCAUXC] = FuelConsumptionAuxStartStopCorrected(data);
+			row[FCWHTCC] = FuelConsumptionWHTCCorrected(data);
 
 			WriteAuxiliaries(data, row);
 
 			_table.Rows.Add(row);
+		}
+
+
+		protected internal void WriteFullPowertrain(IModalDataWriter data, string jobFileName, string jobName,
+			string cycleFileName, Kilogram vehicleMass, Kilogram vehicleLoading)
+		{
+			_engineOnly = false;
+
+			var row = _table.NewRow();
+			row[JOB] = jobName;
+			row[INPUTFILE] = jobFileName;
+			row[CYCLE] = cycleFileName;
+			row[STATUS] = data.RunStatus;
+			row[TIME] = Duration(data);
+			row[DISTANCE] = Distance(data);
+			row[SPEED] = Speed(data);
+			row[PPOS] = Ppos(data);
+			row[PNEG] = Pneg(data);
+			row[FCMAP] = FuelConsumption(data);
+			row[FCMAPKM] = FuelConsumptionPerKilometer(data);
+			row[FCAUXC] = FuelConsumptionAuxStartStopCorrected(data);
+			row[FCWHTCC] = FuelConsumptionWHTCCorrected(data);
+			row[PBRAKE] = PowerBrake(data);
+			row[EPOSICE] = WorkEnginePositive(data);
+			row[ENEGICE] = WorkEngineNegative(data);
+			row[EAIR] = WorkAirResistance(data);
+			row[EROLL] = WorkRollingResistance(data);
+			row[EGRAD] = WorkRoadGradientResistance(data);
+			row[EAUX] = WorkAuxiliaries(data);
+			row[EBRAKE] = WorkTotalMechanicalBrake(data);
+			row[ETRANSM] = WorkTransmission(data);
+			row[ERETARDER] = PowerLossRetarder(data);
+			row[EACC] = PowerAccelerations(data);
+			row[ALTITUDE] = AltitudeDelta(data);
+
+			WriteAuxiliaries(data, row);
+
+			if (vehicleMass != null) {
+				row[MASS] = vehicleMass;
+			}
+
+			if (vehicleLoading != null) {
+				row[LOADING] = vehicleLoading;
+			}
+
+			row[ACCELERATIONS] = AverageAccelerations(data);
+			row[APOS] = AverageAccelerationsPositive(data);
+			row[ANEG] = AverageAccelerationsNegative(data);
+			row[PACC] = PercentAccelerationTime(data);
+			row[PDEC] = PercentDecelerationTime(data);
+			row[PCRUISE] = PercentCruiseTime(data);
+			row[PSTOP] = PercentStopTime(data);
+
+			_table.Rows.Add(row);
+		}
+
+		private static object AverageAccelerationsPositive(IModalDataWriter data)
+		{
+			var acceleration3SecondAverage = Calculate3SecondAverage(Accelerations(data));
+			return acceleration3SecondAverage.Average(x => x > 0.125).DefaultIfNull();
+		}
+
+		private static object AverageAccelerationsNegative(IModalDataWriter data)
+		{
+			var acceleration3SecondAverage = Calculate3SecondAverage(Accelerations(data));
+			return acceleration3SecondAverage.Average(x => x < -0.125).DefaultIfNull();
+		}
+
+		private static object PercentAccelerationTime(IModalDataWriter data)
+		{
+			var acceleration3SecondAverage = Calculate3SecondAverage(Accelerations(data)).ToList();
+			return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x > 0.125) / acceleration3SecondAverage.Count;
+		}
+
+		private static object PercentDecelerationTime(IModalDataWriter data)
+		{
+			var acceleration3SecondAverage = Calculate3SecondAverage(Accelerations(data)).ToList();
+			return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x < -0.125) / acceleration3SecondAverage.Count;
+		}
+
+		private static object PercentCruiseTime(IModalDataWriter data)
+		{
+			var acceleration3SecondAverage = Calculate3SecondAverage(Accelerations(data)).ToList();
+			return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x < 0.125 && x > -0.125) /
+					acceleration3SecondAverage.Count;
+		}
+
+		private static SI PercentStopTime(IModalDataWriter data)
+		{
+			var acceleration3SecondAverage = Calculate3SecondAverage(Accelerations(data));
+			if (acceleration3SecondAverage.Any()) {}
+			var pStopTime = data.GetValues<SI>(ModalResultField.v_act)
+				.Zip(SimulationIntervals(data), (velocity, dt) => new { velocity, dt })
+				.Where(x => x.velocity < 0.1)
+				.Sum(x => x.dt.Value());
+			return 100 * pStopTime / SimulationIntervals(data).Sum();
+		}
+
+		private static SI AverageAccelerations(IModalDataWriter data)
+		{
+			return Accelerations(data).Average();
+		}
+
+		private static List<SI> Accelerations(IModalDataWriter data)
+		{
+			var accValues = data.GetValues<SI>(ModalResultField.acc).Cast<MeterPerSquareSecond>();
+			var accelerations = CalculateAverageOverSeconds(SimulationIntervals(data), accValues).ToList();
+			return accelerations;
+		}
+
+		private static Second[] SimulationIntervals(IModalDataWriter data)
+		{
+			return data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
+		}
+
+		private static SI AltitudeDelta(IModalDataWriter data)
+		{
+			return data.GetValues<SI>(ModalResultField.altitude).Last() -
+					data.GetValues<SI>(ModalResultField.altitude).First();
+		}
+
+		private static SI PowerAccelerations(IModalDataWriter data)
+		{
+			var zero = 0.SI<Watt>();
+
+			var paeng = data.Sum(ModalResultField.PaEng) ?? zero;
+			var pagb = data.Sum(ModalResultField.PaGB) ?? zero;
+
+			return paeng + pagb;
+		}
+
+		private static SI WorkTransmission(IModalDataWriter data)
+		{
+			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
+			var plossdiff = TimeIntegralPower(ModalResultField.PlossGB, data, simulationIntervals);
+			var plossgb = TimeIntegralPower(ModalResultField.PlossDiff, data, simulationIntervals);
+			return plossdiff + plossgb;
+		}
+
+		private static object PowerLossRetarder(IModalDataWriter data)
+		{
+			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
+			return TimeIntegralPower(ModalResultField.PlossRetarder, data, simulationIntervals).DefaultIfNull();
+		}
+
+		private static SI Duration(IModalDataWriter data)
+		{
+			return data.Max(ModalResultField.time) - data.Min(ModalResultField.time);
+		}
+
+		private static SI Distance(IModalDataWriter data)
+		{
+			return data.Max(ModalResultField.dist) - data.Min(ModalResultField.dist);
+		}
+
+
+		private static object WorkTotalMechanicalBrake(IModalDataWriter data)
+		{
+			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
+			return TimeIntegralPower(ModalResultField.Pbrake, data, simulationIntervals).DefaultIfNull();
+		}
+
+		private static object WorkAuxiliaries(IModalDataWriter data)
+		{
+			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
+			return TimeIntegralPower(ModalResultField.Paux, data, simulationIntervals).DefaultIfNull();
+		}
+
+		private static object WorkRoadGradientResistance(IModalDataWriter data)
+		{
+			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
+			return TimeIntegralPower(ModalResultField.Pgrad, data, simulationIntervals).DefaultIfNull();
+		}
+
+		private static object WorkRollingResistance(IModalDataWriter data)
+		{
+			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
+			return TimeIntegralPower(ModalResultField.Proll, data, simulationIntervals).DefaultIfNull();
+		}
+
+		private static object WorkAirResistance(IModalDataWriter data)
+		{
+			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
+			return TimeIntegralPower(ModalResultField.Pair, data, simulationIntervals).DefaultIfNull();
+		}
+
+		private static object WorkEngineNegative(IModalDataWriter data)
+		{
+			return data.Average(ModalResultField.Pe_eng, x => x < 0).DefaultIfNull();
+		}
+
+		private static object WorkEnginePositive(IModalDataWriter data)
+		{
+			return data.Average(ModalResultField.Pe_eng, x => x > 0).DefaultIfNull();
+		}
+
+		private static object PowerBrake(IModalDataWriter data)
+		{
+			return data.Average(ModalResultField.Pbrake).DefaultIfNull();
+		}
+
+		private static object FuelConsumptionWHTCCorrected(IModalDataWriter data)
+		{
+			return data.Average(ModalResultField.FCWHTCc).DefaultIfNull();
+		}
+
+		private static object FuelConsumptionAuxStartStopCorrected(IModalDataWriter data)
+		{
+			return data.Average(ModalResultField.FCAUXc).DefaultIfNull();
+		}
+
+		private static SI FuelConsumption(IModalDataWriter data)
+		{
+			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
+			return
+				(TimeIntegralFuelConsumption(ModalResultField.FCMap, data, simulationIntervals) / Duration(data)).ConvertTo()
+					.Gramm.Per.Hour;
+		}
+
+		private static SI FuelConsumptionPerKilometer(IModalDataWriter data)
+		{
+			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
+			return
+				(TimeIntegralFuelConsumption(ModalResultField.FCMap, data, simulationIntervals) / Distance(data)).ConvertTo()
+					.Gramm.Per.Kilo.Meter;
+		}
+
+		private static object Pneg(IModalDataWriter data)
+		{
+			return data.Average(ModalResultField.Pe_eng, x => x < 0).DefaultIfNull();
+		}
+
+		private static object Ppos(IModalDataWriter data)
+		{
+			return data.Average(ModalResultField.Pe_eng, x => x > 0).DefaultIfNull();
+		}
+
+		private static SI Speed(IModalDataWriter data)
+		{
+			return (Distance(data) / Duration(data)).ConvertTo().Kilo.Meter.Per.Hour;
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
@@ -133,95 +370,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				sum += currentSum;
 			}
 			row[EAUX] = sum;
-		}
-
-
-		protected internal void WriteFullPowertrain(IModalDataWriter data, string jobFileName, string jobName,
-			string cycleFileName, Kilogram vehicleMass, Kilogram vehicleLoading)
-		{
-			_engineOnly = false;
-
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
-
-			var time = data.Max(ModalResultField.time) - data.Min(ModalResultField.time);
-			var distance = data.Max(ModalResultField.dist) - data.Min(ModalResultField.dist);
-
-			var totalFuelConsumption = TimeIntegralFuelConsumption(ModalResultField.FCMap, data, simulationIntervals);
-
-			var row = _table.NewRow();
-			row[JOB] = jobName;
-			row[INPUTFILE] = jobFileName;
-			row[CYCLE] = cycleFileName;
-			row[STATUS] = data.RunStatus;
-			row[TIME] = time; //data.Max(ModalResultField.time).DefaultIfNull();
-			row[DISTANCE] = distance.ConvertTo().Kilo.Meter; //data.Max(ModalResultField.dist).DefaultIfNull();
-			row[SPEED] = (distance / time).ConvertTo().Kilo.Meter.Per.Hour;
-			row[PPOS] = data.Average(ModalResultField.Pe_eng, x => x > 0).DefaultIfNull();
-			row[PNEG] = data.Average(ModalResultField.Pe_eng, x => x < 0).DefaultIfNull();
-			row[FCMAP] = (totalFuelConsumption / time).ConvertTo().Gramm.Per.Hour;
-			row[FCMAPKM] = (totalFuelConsumption / distance).ConvertTo().Gramm.Per.Kilo.Meter;
-			// data.Average(ModalResultField.FCMap).DefaultIfNull();
-			row[FCAUXC] = data.Average(ModalResultField.FCAUXc).DefaultIfNull();
-			row[FCWHTCC] = data.Average(ModalResultField.FCWHTCc).DefaultIfNull();
-			row[PBRAKE] = data.Average(ModalResultField.Pbrake).DefaultIfNull();
-			row[EPOSICE] = data.Average(ModalResultField.Pe_eng, x => x > 0).DefaultIfNull();
-			row[ENEGICE] = data.Average(ModalResultField.Pe_eng, x => x < 0).DefaultIfNull();
-			row[EAIR] = TimeIntegralPower(ModalResultField.Pair, data, simulationIntervals).DefaultIfNull();
-			row[EROLL] = TimeIntegralPower(ModalResultField.Proll, data, simulationIntervals).DefaultIfNull();
-			row[EGRAD] = TimeIntegralPower(ModalResultField.Pgrad, data, simulationIntervals).DefaultIfNull();
-			row[EAUX] = TimeIntegralPower(ModalResultField.Paux, data, simulationIntervals).DefaultIfNull();
-			row[EBRAKE] = TimeIntegralPower(ModalResultField.Pbrake, data, simulationIntervals).DefaultIfNull();
-
-			var plossdiff = TimeIntegralPower(ModalResultField.PlossDiff, data, simulationIntervals).DefaultIfNull();
-			var plossgb = TimeIntegralPower(ModalResultField.PlossGB, data, simulationIntervals).DefaultIfNull();
-			if ((plossdiff ?? plossgb) != null) {
-//				row[ETRANSM] = (plossdiff ?? 0.SI().Watt.Second.ConvertTo().Watt.Hour) +
-//								(plossgb ?? 0.SI().Watt.Second.ConvertTo().Watt.Hour);
-			}
-			row[ERETARDER] = TimeIntegralPower(ModalResultField.PlossRetarder, data, simulationIntervals).DefaultIfNull();
-
-			var paeng = data.Sum(ModalResultField.PaEng);
-			var pagb = data.Sum(ModalResultField.PaGB);
-			if ((paeng ?? pagb) != null) {
-				row[EACC] = paeng ?? 0.SI() + pagb ?? 0.SI();
-			}
-
-			row[ALTITUDE] = data.GetValues<SI>(ModalResultField.altitude).Last() -
-							data.GetValues<SI>(ModalResultField.altitude).First();
-
-			WriteAuxiliaries(data, row);
-
-			if (vehicleMass != null) {
-				row[MASS] = vehicleMass;
-			}
-
-			if (vehicleLoading != null) {
-				row[LOADING] = vehicleLoading;
-			}
-
-			var dtValues = data.GetValues<SI>(ModalResultField.simulationInterval).Cast<Second>().ToList();
-			var accValues = data.GetValues<SI>(ModalResultField.acc).Cast<MeterPerSquareSecond>();
-			var accelerations = CalculateAverageOverSeconds(dtValues, accValues).ToList();
-			if (accelerations.Any()) {
-				row[A] = accelerations.Average();
-			}
-
-			var acceleration3SecondAverage = Calculate3SecondAverage(accelerations).ToList();
-			if (acceleration3SecondAverage.Any()) {
-				row[APOS] = acceleration3SecondAverage.Average(x => x > 0.125).DefaultIfNull();
-				row[ANEG] = acceleration3SecondAverage.Average(x => x < -0.125).DefaultIfNull();
-				row[PACC] = 100.SI() * acceleration3SecondAverage.Count(x => x > 0.125) / acceleration3SecondAverage.Count;
-				row[PDEC] = 100.SI() * acceleration3SecondAverage.Count(x => x < -0.125) / acceleration3SecondAverage.Count;
-				row[PCRUISE] = 100.SI() * acceleration3SecondAverage.Count(x => x < 0.125 && x > -0.125) /
-								acceleration3SecondAverage.Count;
-			}
-			var pStopTime = data.GetValues<SI>(ModalResultField.v_act)
-				.Zip(dtValues, (velocity, dt) => new { velocity, dt })
-				.Where(x => x.velocity < 0.1)
-				.Sum(x => x.dt.Value());
-			row[PSTOP] = 100 * pStopTime / dtValues.Sum();
-
-			_table.Rows.Add(row);
 		}
 
 		protected static SI TimeIntegralPower(ModalResultField field, IModalDataWriter data,
@@ -296,7 +444,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				dataColumns.AddRange(new[] {
 					PPOS, PNEG, FCMAP, FCMAPKM, FCAUXC, FCAUXCKM, FCWHTCC, FCWHTCCKM, CO2, CO2T, FCFINAL, FCFINAL_LITERPER100TKM,
 					FCFINAL_LITER, PWHEELPOS, PBRAKE, EPOSICE, ENEGICE, EAIR, EROLL, EGRAD, EACC, EAUX, EBRAKE, ETRANSM,
-					ERETARDER, ETORQUECONV, MASS, LOADING, A, APOS, ANEG, ACCNOISE, PACC, PDEC, PCRUISE, PSTOP
+					ERETARDER, ETORQUECONV, MASS, LOADING, ACCELERATIONS, APOS, ANEG, ACCNOISE, PACC, PDEC, PCRUISE, PSTOP
 				});
 			}
 
