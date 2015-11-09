@@ -85,12 +85,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
-							modalWriter.Finish();
+							modalWriter.Finish(VectoRun.Status.Success);
 						}
 					}).
 					Default(r => Assert.Fail("Unexpected Response: {0}", r));
 			} while (!(response is ResponseCycleFinished));
-			modalWriter.Finish();
+			modalWriter.Finish(VectoRun.Status.Success);
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 
@@ -141,7 +141,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				try {
 					response = cyclePort.Request(absTime, ds);
 				} catch (Exception) {
-					modalWriter.Finish();
+					modalWriter.Finish(VectoRun.Status.Success);
 					throw;
 				}
 				Log.Info("Test Got Response: {0},", response);
@@ -161,12 +161,12 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
-							modalWriter.Finish();
+							modalWriter.Finish(VectoRun.Status.Success);
 						}
 					}).
 					Default(r => Assert.Fail("Unexpected Response: {0}", r));
 			}
-			modalWriter.Finish();
+			modalWriter.Finish(VectoRun.Status.Success);
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 
@@ -215,7 +215,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 				try {
 					response = cyclePort.Request(absTime, ds);
 				} catch (Exception) {
-					modalWriter.Finish();
+					modalWriter.Finish(VectoRun.Status.Success);
 					throw;
 				}
 				Log.Info("Test Got Response: {0},", response);
@@ -235,15 +235,15 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							: Constants.SimulationSettings.TargetTimeInterval * container.VehicleSpeed;
 
 						if (cnt++ % 100 == 0) {
-							modalWriter.Finish();
+							modalWriter.Finish(VectoRun.Status.Success);
 						}
 					}).
 					Default(r => {
-						modalWriter.Finish();
+						modalWriter.Finish(VectoRun.Status.Success);
 						Assert.Fail("Unexpected Response: {0}", r);
 					});
 			}
-			modalWriter.Finish();
+			modalWriter.Finish(VectoRun.Status.Success);
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 		}
 

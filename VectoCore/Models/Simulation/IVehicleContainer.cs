@@ -1,5 +1,6 @@
 ﻿using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Models.SimulationComponent;
 using TUGraz.VectoCore.Utils;
 
@@ -28,5 +29,7 @@ namespace TUGraz.VectoCore.Models.Simulation
 		/// Finishes the simulation.
 		/// </summary>
 		void FinishSimulation();
+
+		VectoRun.Status RunStatus { get; set; }
 	}
 }

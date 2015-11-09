@@ -82,9 +82,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 				absTime += response.SimulationInterval;
-				modalWriter.Finish();
+				modalWriter.Finish(VectoRun.Status.Success);
 			}
-			modalWriter.Finish();
+			modalWriter.Finish(VectoRun.Status.Success);
 		}
 
 		[TestMethod]
@@ -141,9 +141,9 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 
 				vehicleContainer.CommitSimulationStep(absTime, response.SimulationInterval);
 				absTime += response.SimulationInterval;
-				modalWriter.Finish();
+				modalWriter.Finish(VectoRun.Status.Success);
 			}
-			modalWriter.Finish();
+			modalWriter.Finish(VectoRun.Status.Success);
 		}
 
 

@@ -29,6 +29,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected VectoRun(IVehicleContainer container)
 		{
 			Container = container;
+			Container.RunStatus = Status.Pending;
 			CyclePort = container.GetCycleOutPort();
 		}
 
@@ -55,6 +56,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 						worker.ReportProgress((int)(CyclePort.Progress * 10000));
 						if (worker.CancellationPending) {
 							Log.Error("Background Task canceled!");
+							Container.RunStatus = Status.Canceled;
 							Container.FinishSimulation();
 							return;
 						}
@@ -63,22 +65,26 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			} catch (VectoSimulationException vse) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(vse);
+				Container.RunStatus = Status.Aborted;
 				Container.FinishSimulation();
 				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", vse,
 					AbsTime, Container.Distance, dt, Container.VehicleSpeed, Container.Gear, vse.Message, Name);
 			} catch (VectoException ve) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(ve);
+				Container.RunStatus = Status.Aborted;
 				Container.FinishSimulation();
 				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", ve,
 					AbsTime, Container.Distance, dt, Container.VehicleSpeed, Container.Gear, ve.Message, Name);
 			} catch (Exception e) {
 				Log.Error("SIMULATION RUN ABORTED! ========================");
 				Log.Error(e);
+				Container.RunStatus = Status.Aborted;
 				Container.FinishSimulation();
 				throw new VectoSimulationException("{6} - absTime: {0}, distance: {1}, dt: {2}, v: {3}, Gear: {4} | {5}", e, AbsTime,
 					Container.Distance, dt, Container.VehicleSpeed, Container.Gear, e.Message, Name);
 			}
+			Container.RunStatus = Status.Success;
 			Container.FinishSimulation();
 			Log.Info("VectoJob finished.");
 		}
@@ -86,5 +92,14 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		protected abstract IResponse DoSimulationStep();
 
 		protected abstract IResponse Initialize();
+
+		public enum Status
+		{
+			Pending,
+			Running,
+			Success,
+			Canceled,
+			Aborted,
+		}
 	}
 }

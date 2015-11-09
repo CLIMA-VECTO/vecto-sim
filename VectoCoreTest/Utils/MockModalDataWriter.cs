@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Utils
@@ -35,7 +36,13 @@ namespace TUGraz.VectoCore.Tests.Utils
 			CurrentRow = Data.NewRow();
 		}
 
-		public void Finish() {}
+		public VectoRun.Status RunStatus
+		{
+			get { return VectoRun.Status.Success; }
+		}
+
+
+		public void Finish(VectoRun.Status runStatus) {}
 
 		public bool WriteModalResults { get; set; }
 

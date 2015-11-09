@@ -58,7 +58,7 @@ namespace TUGraz.VectoCore.Tests.Integration.EngineOnlyCycle
 				dataWriter.CommitSimulationStep();
 				absTime += dt;
 			}
-			dataWriter.Finish();
+			dataWriter.Finish(VectoRun.Status.Success);
 
 			ResultFileHelper.TestModFile(TestContext.DataRow["ModalResultFile"].ToString(), modFile);
 		}

@@ -14,12 +14,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 	/// <summary>
 	/// Class for the sum file in vecto.
 	/// </summary>
-	public class SummaryFileWriter
+	public class SummaryFileWriter : LoggingObject
 	{
 		// ReSharper disable InconsistentNaming
 		private const string JOB = "Job [-]";
 		private const string INPUTFILE = "Input File [-]";
 		private const string CYCLE = "Cycle [-]";
+		private const string STATUS = "Status";
 		private const string TIME = "time [s]";
 		private const string DISTANCE = "distance [km]";
 		private const string SPEED = "speed [km/h]";
@@ -82,6 +83,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			_table.Columns.Add(JOB, typeof(string));
 			_table.Columns.Add(INPUTFILE, typeof(string));
 			_table.Columns.Add(CYCLE, typeof(string));
+			_table.Columns.Add(STATUS, typeof(string));
 
 			_table.Columns.AddRange(new[] {
 				TIME, DISTANCE, SPEED, ALTITUDE, PPOS, PNEG, FCMAP, FCMAPKM, FCAUXC, FCAUXCKM, FCWHTCC, FCWHTCCKM, PWHEELPOS, PBRAKE,
@@ -97,6 +99,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			row[JOB] = jobName;
 			row[INPUTFILE] = jobFileName;
 			row[CYCLE] = cycleFileName;
+			row[STATUS] = data.RunStatus;
 			row[TIME] = data.GetValues<SI>(ModalResultField.time).Max();
 			row[PPOS] = data.GetValues<SI>(ModalResultField.Pe_eng).Where(x => x > 0).Average();
 			row[PNEG] = data.GetValues<SI>(ModalResultField.Pe_eng).Where(x => x < 0).Average();
@@ -149,6 +152,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			row[JOB] = jobName;
 			row[INPUTFILE] = jobFileName;
 			row[CYCLE] = cycleFileName;
+			row[STATUS] = data.RunStatus;
 			row[TIME] = time; //data.Max(ModalResultField.time).DefaultIfNull();
 			row[DISTANCE] = distance.ConvertTo().Kilo.Meter; //data.Max(ModalResultField.dist).DefaultIfNull();
 			row[SPEED] = (distance / time).ConvertTo().Kilo.Meter.Per.Hour;
@@ -283,9 +287,9 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			var dataColumns = new List<string>();
 
 			if (_engineOnly) {
-				dataColumns.AddRange(new[] { JOB, INPUTFILE, CYCLE, TIME, PPOS, PNEG, FCMAP, FCAUXC, FCWHTCC });
+				dataColumns.AddRange(new[] { JOB, INPUTFILE, CYCLE, STATUS, TIME, PPOS, PNEG, FCMAP, FCAUXC, FCWHTCC });
 			} else {
-				dataColumns.AddRange(new[] { JOB, INPUTFILE, CYCLE, TIME, DISTANCE, SPEED, ALTITUDE });
+				dataColumns.AddRange(new[] { JOB, INPUTFILE, CYCLE, STATUS, TIME, DISTANCE, SPEED, ALTITUDE });
 
 				dataColumns.AddRange(_auxColumns);
 
@@ -322,6 +326,7 @@ public class SumWriterDecoratorFullPowertrain : SummaryFileWriter, ISummaryDataW
 
 	public void Write(IModalDataWriter data, Kilogram vehicleMass = null, Kilogram vehicleLoading = null)
 	{
+		Log.Info("Writing Summary File");
 		_writer.WriteFullPowertrain(data, _jobFileName, _jobName, _cycleFileName, vehicleMass, vehicleLoading);
 	}
 }

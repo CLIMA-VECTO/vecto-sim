@@ -17,6 +17,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		public bool WriteModalResults { get; set; }
 
+		public VectoRun.Status RunStatus { get; protected set; }
 
 		public ModalDataWriter(string modFileName,
 			SimulatorFactory.FactoryMode mode = SimulatorFactory.FactoryMode.EngineeringMode) : this(modFileName, _ => {}, mode) {}
@@ -41,9 +42,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			CurrentRow = Data.NewRow();
 		}
 
-		public void Finish()
+		public void Finish(VectoRun.Status runStatus)
 		{
 			var dataColumns = new List<ModalResultField> { ModalResultField.time };
+
+			RunStatus = runStatus;
 
 			if (_mode != SimulatorFactory.FactoryMode.EngineOnlyMode) {
 				dataColumns.AddRange(new[] {

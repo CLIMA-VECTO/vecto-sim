@@ -82,7 +82,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 			}
 			//Task.WaitAll(_runs.Select(r => Task.Factory.StartNew(r.Run)).ToArray());
 
-			_sumWriter.Finish();
+			//_sumWriter.Finish();
 		}
 
 		public void Cancel()

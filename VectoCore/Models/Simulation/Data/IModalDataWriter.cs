@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Models.Simulation.Data
@@ -29,10 +30,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		/// </summary>
 		void CommitSimulationStep();
 
+		VectoRun.Status RunStatus { get; }
+
+
 		/// <summary>
 		/// Finishes the writing of the DataWriter.
 		/// </summary>
-		void Finish();
+		void Finish(VectoRun.Status runStatus);
 
 		bool WriteModalResults { get; set; }
 

@@ -201,7 +201,7 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					string.Format("Load in timestep {0}", t));
 				modalData.CommitSimulationStep();
 			}
-			modalData.Finish();
+			modalData.Finish(VectoRun.Status.Success);
 		}
 
 		[TestMethod]

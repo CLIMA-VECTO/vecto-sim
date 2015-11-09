@@ -211,10 +211,12 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public void FinishSimulation()
 		{
 			Log.Info("VehicleContainer finishing simulation.");
-			DataWriter.Finish();
+			DataWriter.Finish(RunStatus);
 
 			SumWriter.Write(DataWriter, VehicleMass, VehicleLoading);
 		}
+
+		public VectoRun.Status RunStatus { get; set; }
 
 		#endregion
 

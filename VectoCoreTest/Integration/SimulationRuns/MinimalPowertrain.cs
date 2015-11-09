@@ -143,7 +143,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed).Cast<Meter>();
 
 						if (cnt++ % 100 == 0) {
-							modalWriter.Finish();
+							modalWriter.Finish(VectoRun.Status.Success);
 						}
 					}).
 					Default(r => Assert.Fail("Unexpected Response: {0}", r));
@@ -151,7 +151,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			Assert.IsInstanceOfType(response, typeof(ResponseCycleFinished));
 
-			modalWriter.Finish();
+			modalWriter.Finish(VectoRun.Status.Success);
 		}
 
 		[TestMethod]
@@ -208,11 +208,11 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 							? Constants.SimulationSettings.DriveOffDistance
 							: (Constants.SimulationSettings.TargetTimeInterval * vehicleContainer.VehicleSpeed).Cast<Meter>();
 
-						modalWriter.Finish();
+						modalWriter.Finish(VectoRun.Status.Success);
 					});
 			}
 
-			modalWriter.Finish();
+			modalWriter.Finish(VectoRun.Status.Success);
 		}
 
 		private static GearData CreateAxleGearData()
