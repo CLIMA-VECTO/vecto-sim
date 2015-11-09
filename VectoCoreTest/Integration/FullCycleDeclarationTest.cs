@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
 using TUGraz.VectoCore.Configuration;
@@ -39,6 +40,22 @@ namespace TUGraz.VectoCore.Tests.Integration
 			run.Run();
 			Assert.IsTrue(run.FinishedWithoutErrors);
 		}
+
+		[TestMethod]
+		public void Truck40t_RegionalDeliveryCycle_RefLoad_Declaration()
+		{
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
+				@"c:\Users\Technik\Downloads\40t Long Haul Truck\40t_Long_Haul_Truck.vecto");
+			factory.WriteModalResults = true;
+			factory.SumWriter = new SummaryFileWriter("Test.vsum");
+			var runs = factory.SimulationRuns().ToArray();
+
+			var run = runs[4];
+			run.Run();
+
+			Assert.IsTrue(run.FinishedWithoutErrors);
+		}
+
 
 		[TestMethod]
 		public void Truck40t_UrbanDeliveryCycle_RefLoad()

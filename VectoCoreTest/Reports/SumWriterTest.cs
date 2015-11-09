@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TUGraz.VectoCore.Models.Simulation.Data;
+using TUGraz.VectoCore.Models.Simulation.Impl;
 using TUGraz.VectoCore.Utils;
 
 namespace TUGraz.VectoCore.Tests.Reports
@@ -35,7 +36,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			sumWriter.WriteFullPowertrain(modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>());
 
-			modData.Finish();
+			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();
 
 			var sumData = VectoCSVFile.Read("testsumcalc_fixed.vsum", false, true);
@@ -83,7 +84,7 @@ namespace TUGraz.VectoCore.Tests.Reports
 
 			sumWriter.WriteFullPowertrain(modData, "testSumCalc", "--", "--", 0.SI<Kilogram>(), 0.SI<Kilogram>());
 
-			modData.Finish();
+			modData.Finish(VectoRun.Status.Success);
 			sumWriter.Finish();
 
 			var sumData = VectoCSVFile.Read("testsumcalc_var.vsum", false, true);
