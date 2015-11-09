@@ -1,0 +1,45 @@
+%!TEX root = main.tex
+
+% \begin{verbatim}
+
+Driver actions:
+
+- \action{Roll}: traction interruption, driver searches acceleration such that torque at gearbox == 0.
+   if acceleration > 0 and vehicle's speed (driving downhill) > target speed (+ overspeed) => driver strategy has to activate brakes (search braking power to achieve acceleration == 0, torque at gearbox == 0)
+   handle gearbox traction interruption time response: compute distance based on remaining time (gearbox) and rolling acceleration.
+
+- \action{Drive}: driver searches acceleration to reach target velocity. Handles engine overload by reducing acceleration (accceleration may become < 0 - e.g., if driving uphill; vehicle can't reach target speed).
+  engine under-load => return \cmp{OverloadResponse} (driving strategy should apply brakes).
+  engine over-load (engine already at max power, acceleration < braking deceleration - e.g. steep uphill) => return \cmp{OverloadResponse} (driving strategy decides whether to continue (at most until velocity = 0) or abort)
+
+- \action{Coast}: driver searches acceleration to reach engine's full-drag power; engine power < 0.
+
+- \action{Brake}: driver searches for braking power to reach desired acceleration, engine is at full drag load.
+    if clutch is open the brakes have to apply more power to compensate loss of engine's drag load (instantaneous); braking power such that torque at gearbox == 0.
+
+Two different Driver Modes:
+
+- \action{DriveMode}: accelerate or keep target speed
+	look-ahead, compute action distances (coasting, braking) for upcoming speed reductions. drive at most up to nearest action distance. switch to brake mode if action distance is reached.
+
+	if clutch is open: \action{Roll} (traction interruption)
+	else: \action{Drive} -> \action{Brake} (if engine under-load)
+
+- \action{BrakeMode}: decelerate to next target speed.
+    start \action{Coasting} at coasting-action distance until braking distance. 
+    if coasting deceleration is greater than `look-ahead deceleration' write a WARNING
+    re-compute braking-distance for current trigger (distance, next target velocity)
+    if braking distance is reached: start \action{Braking} until triggr distance is reached or target velocity is reached.
+    if target velocity is reached \action{Drive} until trigger distance.
+    if trigger distance is reached switch to \action{DriveMode}
+
+    if clutch is open \action{Coasting} is replaced by \action{Roll}
+
+
+Gear shift behavior
+
+- gearbox needs to change gears => gear-shift response, required traction interruption time
+-> driver processes gear-shift response: switches to \action{Roll} action
+
+
+% \end{verbatim}
