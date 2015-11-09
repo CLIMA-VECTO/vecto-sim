@@ -1,0 +1,21 @@
+% \pdfminorversion=5
+% \pdfminorversion=4
+\pdfobjcompresslevel=1
+\documentclass[14pt,handout]{beamer}
+% \documentclass[14pt,aspectratio=169]{beamer} 
+
+\usepackage{../beamer_theme/pgfmorepages}
+% \usetheme[notes]{tugraz2013}
+\usepackage[institute]{../beamer_theme/beamerthemetugraz2013}
+
+\usepackage{bookmark}
+\makeatletter
+\apptocmd{\beamer@@frametitle}{\only<1>{\bookmark[page=\the\c@page,level=5]{#1}}}%
+{\message{** patching of \string\beamer@@frametitle succeeded **}}%
+{\message{** patching of \string\beamer@@frametitle failed **}}%
+\makeatother
+
+
+% \input{lecture_builder.tex}
+
+\input{header.tex}

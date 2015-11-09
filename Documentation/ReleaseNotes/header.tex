@@ -1,0 +1,231 @@
+%!TEX root = lecture.presentation.tex
+
+%%%
+%%%  Common Settings
+%%%
+\institute{Institute for Technical Informatics, TU Graz}
+\title{ICT Computer Architectures}	% Kurztitel in []
+\author{DI Dr. Markus Quaritsch}
+\date{WS 2015/16}		% \today für heutiges Datum verwenden
+
+\setcounter{tocdepth}{4}
+\usepackage{listings}
+
+\usepackage{multicol}
+
+
+
+% \usepackage[pdftex,
+%        colorlinks=true,
+%        urlcolor=red,
+%        anchorcolor=black,
+%        filecolor=black,
+%        linkcolor=black,
+%        menucolor=black,
+%        citecolor=black,
+%        pdftitle={Signal Processors},
+%        pdfauthor={Dipl.-Ing. Dr. Markus Quaritsch},
+%        pdfsubject={Signal Processors},
+%        pagebackref,
+%        pdfpagemode=None,
+%        bookmarksopen=true]{hyperref}
+
+%%
+%% emphasize text in red
+%%
+\renewcommand<>{\emph}[1]{{\only#2{\color{red}}\textit{#1}}}
+
+%%
+%% helper commands to put contents and notes on [subsub|sub]section slides
+%%
+\newcommand{\sectionslidecontent}[1]{\def\insertsectionslidecontent{#1}}
+\sectionslidecontent{}
+\newcommand{\sectionslidenote}[1]{\def\insertsectionslidenote{#1}}
+\sectionslidenote{}
+
+
+\newcommand{\tskipl}{\vskip-2em}
+\newcommand{\tskipcl}{\vskip-3em}
+\newcommand{\tskip}{\vskip-1.5em}
+\newcommand{\tskips}{\vskip-1em}
+
+\newcommand{\enablenotes}{
+	\setupnotespage
+	\setbeameroption{show notes}
+	\setbeamertemplate{note page}[lookahead]
+	\pgfpagesuselayout{notes page with look ahead}
+}
+
+%%
+%%  helpercommand to switch mode for every lecture, speeds up compilation process
+%%
+
+\makeatletter
+ \newcommand{\lecturemode}{%
+    \ifbeamer@inlecture
+    \else
+      \expandafter\mode\expandafter<\expandafter n\expandafter o\expandafter n\expandafter e\expandafter >\fi
+}
+\makeatother
+
+
+\newlength\contentheight
+\setlength{\contentheight}{\textheight}
+\addtolength{\contentheight}{-4em}
+\newlength\ch
+\setlength{\ch}{\contentheight}
+
+\newcommand{\todo}[1]{%
+	\note{{\color{red}\large\textbf{TODO: #1}}}
+}
+%%
+%% define separating frames for every part
+%%   title of the lecture, author, date, and part, use same background as in titleframe
+%%   reset section count for every part
+%%
+\makeatletter
+\AtBeginPart{%
+
+  \beamer@tocsectionnumber=0\relax
+  \setcounter{section}{0}
+  \setcounter{framenumber}{0}
+  	{
+		\usebackgroundtemplate{
+			\begin{tikzpicture}
+				\fill[white] (0,0) rectangle (\paperwidth,\paperheight);
+				\shade[shading=axis,bottom color=black!35,top color=white] 
+				  (0,0) rectangle (\paperwidth,0.92\paperheight);
+			\end{tikzpicture}
+			\inserttitlepageheader
+		}
+
+		\begin{frame}[plain]
+			\begin{tikzpicture}[remember picture,overlay]
+			    \node at (-1,0.25){% cannot position this using "current page" due to problems with pgfpages in "notes" mode
+				\begin{tikzpicture}[remember picture, overlay]
+					\node[anchor=south west,inner sep=0pt] at (1,-5.07) {
+						\begin{minipage}{11.5cm}
+							\usebeamercolor[fg]{title}\usebeamerfont{title}\inserttitle
+							{\Large\ifx\insertpart\empty\else\par\insertpart\fi}
+						\end{minipage}
+					};
+					\node[anchor=south west, inner sep=0pt] at (1,-6.2) {
+						\begin{minipage}{11.5cm}
+							\usebeamercolor[fg]{author}\usebeamerfont{author}\usebeamercolor[fg]{author}
+							\insertauthor\ifx\insertinstitute\empty\else, \insertinstitute\fi\par
+						\end{minipage}
+					};
+					\node[anchor=north west, inner sep=0pt] at (1,-6.45) {
+						\begin{minipage}{11.5cm}
+							\usebeamercolor[fg]{author}\usebeamercolor[fg]{author}\fontsize{10}{10}\selectfont\insertdate
+						\end{minipage}
+					};			
+				\end{tikzpicture}};
+			\end{tikzpicture}
+		    \insertsectionslidecontent
+
+	    	\sectionslidecontent{}
+			\note{Part: \insertpart \\
+
+				\insertsectionslidenote
+				\sectionslidenote{}
+			}
+		\end{frame}	
+	}
+	\sectionslidecontent{}
+	\sectionslidenote{}
+}
+\makeatother
+
+
+%%
+%%  switch mode for every new lecture
+%%     speeds up compilation process (see below)
+%%
+\AtBeginLecture
+{
+	\lecturemode
+}
+
+%%
+%%  define separating frame for new section
+%%
+\AtBeginSection[] % Do nothing for \section*
+{
+	\begin{frame}[c]
+		\begin{centering}
+			\usebeamercolor[fg]{title}
+			\ifx\insertsectionslidecontent\empty \vskip1em\par\fi
+			\usebeamerfont{subsection title}\insertsection\par
+			\insertsectionslidecontent
+		\end{centering}		
+		\note{Subsection: \insertsection \\
+
+		\insertsectionslidenote
+		}
+	\end{frame}
+
+	\sectionslidecontent{}
+	\sectionslidenote{}
+}
+
+%%
+%%  define separating frame for new subsection
+%%
+\AtBeginSubsection[] % Do nothing for \subsection*
+{
+	\begin{frame}[c]
+		\begin{centering}
+			\usebeamercolor[fg]{title}
+			\ifx\insertsectionslidecontent\empty \vskip1em\par\fi
+			\usebeamerfont{subsection title}\insertsubsection\par
+			\insertsectionslidecontent
+		\end{centering}
+
+		\note{Subsection: \insertsubsection \\
+
+			\insertsectionslidenote
+		}
+	\end{frame}
+
+	\sectionslidecontent{}
+	\sectionslidenote{}
+}
+
+%%
+%%  define separating frame for new subsubsection
+%%
+
+\AtBeginSubsubsection[]
+{
+	\begin{frame}[c]
+		\begin{centering}
+			\ifx\insertsectionslidecontent\empty \vskip1em\par\fi
+			\usebeamerfont{subsection title}\insertsubsubsection\par
+		\end{centering}
+
+		\usebeamerfont{normal text}
+		\usebeamercolor[fg]{normal text}
+		\insertsectionslidecontent
+		\note{Sub-sub-section: \insertsubsubsection \\
+
+		\insertsectionslidenote
+		}
+	\end{frame}
+
+	\sectionslidecontent{}
+	\sectionslidenote{}
+}
+
+
+\renewcommand{\arraystretch}{1.17}
+
+\graphicspath{ %
+	{../beamer_theme/} %
+	 {../Everything/img/} %
+	 {../0_Preparatory/img/} %
+	 {../1_Microprocessor_Fundamentals/img/} %
+	 {../2_Processor_Examples/img/} %
+	 {../3_System_Peripheral_Connect/img/} %
+	 {../4_Networking/img/} %
+}
