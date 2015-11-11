@@ -41,6 +41,16 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			ResultFileHelper.TestModFile(expected, actual);
 		}
 
+		private class MockSumWriter : SummaryFileWriter
+		{
+			public override void Write(bool isEngineOnly, IModalDataWriter data, string jobFileName, string jobName,
+				string cycleFileName,
+				Kilogram vehicleMass, Kilogram vehicleLoading) {}
+
+			public override void Finish() {}
+		}
+
+
 		[TestMethod]
 		public void TestEngineOnly_SimulatorRun()
 		{
@@ -49,7 +59,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			var run = CreateRun(actual);
 
-			var sim = new JobContainer(new TestSumWriter());
+			var sim = new JobContainer(new MockSumWriter());
 			sim.AddRun(run);
 			sim.Execute();
 

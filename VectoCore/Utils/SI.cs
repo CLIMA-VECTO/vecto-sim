@@ -30,11 +30,6 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Implements the operator +.
 		/// </summary>
-		/// <param name="si1">The si1.</param>
-		/// <param name="si2">The si2.</param>
-		/// <returns>
-		/// The result of the operator.
-		/// </returns>
 		[DebuggerHidden]
 		public static Scalar operator +(Scalar si1, Scalar si2)
 		{
@@ -44,11 +39,6 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Implements the operator +.
 		/// </summary>
-		/// <param name="si1">The si1.</param>
-		/// <param name="si2">The si2.</param>
-		/// <returns>
-		/// The result of the operator.
-		/// </returns>
 		[DebuggerHidden]
 		public static Scalar operator +(Scalar si1, double si2)
 		{
@@ -58,11 +48,6 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Implements the operator +.
 		/// </summary>
-		/// <param name="si1">The si1.</param>
-		/// <param name="si2">The si2.</param>
-		/// <returns>
-		/// The result of the operator.
-		/// </returns>
 		[DebuggerHidden]
 		public static Scalar operator +(double si1, Scalar si2)
 		{
@@ -72,11 +57,6 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Implements the operator -.
 		/// </summary>
-		/// <param name="si1">The si1.</param>
-		/// <param name="si2">The si2.</param>
-		/// <returns>
-		/// The result of the operator.
-		/// </returns>
 		[DebuggerHidden]
 		public static Scalar operator -(Scalar si1, Scalar si2)
 		{
@@ -86,11 +66,6 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Implements the operator -.
 		/// </summary>
-		/// <param name="si1">The si1.</param>
-		/// <param name="si2">The si2.</param>
-		/// <returns>
-		/// The result of the operator.
-		/// </returns>
 		[DebuggerHidden]
 		public static Scalar operator -(Scalar si1, double si2)
 		{
@@ -100,11 +75,6 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Implements the operator -.
 		/// </summary>
-		/// <param name="si1">The si1.</param>
-		/// <param name="si2">The si2.</param>
-		/// <returns>
-		/// The result of the operator.
-		/// </returns>
 		[DebuggerHidden]
 		public static Scalar operator -(double si1, Scalar si2)
 		{
@@ -178,18 +148,14 @@ namespace TUGraz.VectoCore.Utils
 			Denominator = new[] { Unit.s, Unit.s };
 		}
 
+
 		/// <summary>
-		/// Implements the operator /.
+		/// Implements the operator *.
 		/// </summary>
-		/// <param name="meterPerSecond">The meter per second.</param>
-		/// <param name="meterPerSquareSecond">The meter per square second.</param>
-		/// <returns>
-		/// The result of the operator.
-		/// </returns>
 		[DebuggerHidden]
-		public static Second operator /(MeterPerSecond meterPerSecond, MeterPerSquareSecond meterPerSquareSecond)
+		public static MeterPerSecond operator *(MeterPerSquareSecond meterPerSecond, Second second)
 		{
-			return SIBase<Second>.Create(meterPerSecond.Value() / meterPerSquareSecond.Val);
+			return SIBase<MeterPerSecond>.Create(meterPerSecond.Val * second.Value());
 		}
 	}
 
@@ -215,6 +181,32 @@ namespace TUGraz.VectoCore.Utils
 		{
 			Numerator = new[] { Unit.m };
 		}
+
+		[DebuggerHidden]
+		public static MeterPerSecond operator /(Meter meter, Second second)
+		{
+			return ((meter as SI) / second).Cast<MeterPerSecond>();
+		}
+
+		/// <summary>
+		/// Implements the operator /.
+		/// </summary>
+		[DebuggerHidden]
+		public static Second operator /(Meter second, MeterPerSecond meterPerSecond)
+		{
+			return SIBase<Second>.Create(second.Val / meterPerSecond.Value());
+		}
+	}
+
+	public class KilogramPerMeter : SIBase<KilogramPerMeter>
+	{
+		[JsonConstructor, DebuggerHidden]
+		protected KilogramPerMeter(double val)
+			: base(val)
+		{
+			Numerator = new[] { Unit.k, Unit.g };
+			Denominator = new[] { Unit.m };
+		}
 	}
 
 	/// <summary>
@@ -226,6 +218,18 @@ namespace TUGraz.VectoCore.Utils
 		protected Kilogram(double val) : base(val)
 		{
 			Numerator = new[] { Unit.k, Unit.g };
+		}
+
+		[DebuggerHidden]
+		public static KilogramPerSecond operator /(Kilogram kg, Second second)
+		{
+			return SIBase<KilogramPerSecond>.Create(kg.Val / second.Value());
+		}
+
+		[DebuggerHidden]
+		public static KilogramPerMeter operator /(Kilogram kg, Meter m)
+		{
+			return SIBase<KilogramPerMeter>.Create(kg.Val / m.Value());
 		}
 	}
 
@@ -312,6 +316,22 @@ namespace TUGraz.VectoCore.Utils
 		}
 	}
 
+	public class WattSecond : SIBase<WattSecond>
+	{
+		[JsonConstructor, DebuggerHidden]
+		protected WattSecond(double val) : base(val)
+		{
+			Numerator = new[] { Unit.W, Unit.s };
+		}
+
+		[DebuggerHidden]
+		public static Watt operator /(WattSecond wattSecond, Second second)
+		{
+			return SIBase<Watt>.Create(wattSecond.Val / second.Value());
+		}
+	}
+
+
 	/// <summary>
 	/// SI Class for Watt [W].
 	/// </summary>
@@ -350,6 +370,12 @@ namespace TUGraz.VectoCore.Utils
 		{
 			return SIBase<NewtonMeter>.Create(watt.Val / perSecond.Value());
 		}
+
+		[DebuggerHidden]
+		public static WattSecond operator *(Watt watt, Second second)
+		{
+			return SIBase<WattSecond>.Create(watt.Val * second.Value());
+		}
 	}
 
 	/// <summary>
@@ -381,11 +407,6 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Implements the operator /.
 		/// </summary>
-		/// <param name="meterPerSecond">The meter per second.</param>
-		/// <param name="meter">The meter.</param>
-		/// <returns>
-		/// The result of the operator.
-		/// </returns>
 		[DebuggerHidden]
 		public static PerSecond operator /(MeterPerSecond meterPerSecond, Meter meter)
 		{
@@ -395,25 +416,24 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Implements the operator /.
 		/// </summary>
-		/// <param name="second">The second.</param>
-		/// <param name="meterPerSecond">The meter per second.</param>
-		/// <returns>
-		/// The result of the operator.
-		/// </returns>
 		[DebuggerHidden]
-		public static Second operator /(Meter second, MeterPerSecond meterPerSecond)
+		public static Second operator /(MeterPerSecond meterPerSecond, MeterPerSquareSecond meterPerSquareSecond)
 		{
-			return SIBase<Second>.Create(second.Value() / meterPerSecond.Val);
+			return SIBase<Second>.Create(meterPerSecond.Val / meterPerSquareSecond.Value());
+		}
+
+		/// <summary>
+		/// Implements the operator /.
+		/// </summary>
+		[DebuggerHidden]
+		public static MeterPerSquareSecond operator /(MeterPerSecond meterPerSecond, Second second)
+		{
+			return SIBase<MeterPerSquareSecond>.Create(meterPerSecond.Val / second.Value());
 		}
 
 		/// <summary>
 		/// Implements the operator *.
 		/// </summary>
-		/// <param name="meterPerSecond">The meter per second.</param>
-		/// <param name="second">The second.</param>
-		/// <returns>
-		/// The result of the operator.
-		/// </returns>
 		[DebuggerHidden]
 		public static Meter operator *(MeterPerSecond meterPerSecond, Second second)
 		{
@@ -423,11 +443,6 @@ namespace TUGraz.VectoCore.Utils
 		/// <summary>
 		/// Implements the operator *.
 		/// </summary>
-		/// <param name="meterPerSecond">The meter per second.</param>
-		/// <param name="second">The second.</param>
-		/// <returns>
-		/// The result of the operator.
-		/// </returns>
 		[DebuggerHidden]
 		public static Meter operator *(Second second, MeterPerSecond meterPerSecond)
 		{
@@ -1588,6 +1603,17 @@ namespace TUGraz.VectoCore.Utils
 		/// <param name="upper">The upper bound.</param>
 		/// <returns></returns>
 		public bool IsBetween(SI lower, SI upper)
+		{
+			return lower <= Val && Val <= upper;
+		}
+
+		/// <summary>
+		/// Determines whether the SI is between lower and uppper bound.
+		/// </summary>
+		/// <param name="lower">The lower bound.</param>
+		/// <param name="upper">The upper bound.</param>
+		/// <returns></returns>
+		public bool IsBetween(double lower, double upper)
 		{
 			return lower <= Val && Val <= upper;
 		}

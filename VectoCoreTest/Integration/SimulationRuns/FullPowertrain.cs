@@ -39,8 +39,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain_SimpleGearbox()
 		{
 			var modalWriter = new ModalDataWriter("Coach_FullPowertrain_SimpleGearbox.vmod");
-			var sumWriter = new TestSumWriter();
-			var container = new VehicleContainer(modalWriter, sumWriter);
+			var container = new VehicleContainer(modalWriter);
 
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
 			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CycleFile);
@@ -98,8 +97,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain()
 		{
 			var modalWriter = new ModalDataWriter("Coach_FullPowertrain.vmod");
-			var sumWriter = new TestSumWriter();
-			var container = new VehicleContainer(modalWriter, sumWriter);
+			var container = new VehicleContainer(modalWriter);
 
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
 			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CoachCycleFile);
@@ -174,8 +172,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		public void Test_FullPowertrain_LowSpeed()
 		{
 			var modalWriter = new ModalDataWriter("Coach_FullPowertrain_LowSpeed.vmod");
-			var sumWriter = new TestSumWriter();
-			var container = new VehicleContainer(modalWriter, sumWriter);
+			var container = new VehicleContainer(modalWriter);
 
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
 			var cycleData = DrivingCycleDataReader.ReadFromFileDistanceBased(CycleFile);

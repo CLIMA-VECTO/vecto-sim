@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using Newtonsoft.Json;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.DeclarationFile;
@@ -47,9 +48,10 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 			var gearboxData = dao.CreateGearboxData(Gearbox, engineData);
 			var gearboxTypeString = string.Format("{0}-Speed {1}", gearboxData.Gears.Count, gearboxData.Type);
 
-			// todo: set correct <USERNAME> in Report
-			var report = new DeclarationReport(engineData.FullLoadCurve, segment, "<USERNAME>", engineData.ModelName,
-				engineTypeString, gearboxData.ModelName, gearboxTypeString, Job.BasePath, Job.JobFile, resultCount);
+			var report = new DeclarationReport(engineData.FullLoadCurve, segment, WindowsIdentity.GetCurrent().Name,
+				engineData.ModelName,
+				engineTypeString, gearboxData.ModelName, gearboxTypeString, Job.BasePath,
+				Path.GetFileNameWithoutExtension(Job.JobFile), resultCount);
 
 			foreach (var mission in segment.Missions) {
 				DrivingCycleData cycle;
@@ -75,6 +77,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.Impl
 						Report = report,
 						Mission = mission,
 					};
+					simulationRunData.EngineData.WHTCCorrectionFactor = DeclarationData.WHTCCorrection.Lookup(mission.MissionType,
+						engineData.WHTCRural.Value(), engineData.WHTCUrban.Value(), engineData.WHTCMotorway.Value());
 					simulationRunData.Cycle.Name = mission.MissionType.ToString();
 					simulationRunData.VehicleData.VehicleClass = segment.VehicleClass;
 					yield return simulationRunData;

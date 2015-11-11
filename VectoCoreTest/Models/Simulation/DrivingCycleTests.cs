@@ -17,8 +17,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void TestEngineOnly()
 		{
 			var dataWriter = new MockModalDataWriter();
-			var sumWriter = new TestSumWriter();
-			var container = new VehicleContainer(dataWriter, sumWriter);
+			var container = new VehicleContainer(dataWriter);
 
 			var cycleData = DrivingCycleDataReader.ReadFromFileEngineOnly(@"TestData\Cycles\Coach Engine Only.vdri");
 			var cycle = new EngineOnlyDrivingCycle(container, cycleData);
@@ -133,7 +132,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		[TestMethod]
 		public void Test_TimeBased_TimeFieldMissing()
 		{
-			var container = new VehicleContainer(new MockModalDataWriter(), new TestSumWriter());
+			var container = new VehicleContainer(new MockModalDataWriter());
 
 			var cycleData = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Cycle time field missing.vdri");
 			var cycle = new TimeBasedDrivingCycle(container, cycleData);

@@ -179,6 +179,7 @@
     <Compile Include="Models\SimulationComponent\Data\FullLoadCurve.cs" />
     <Compile Include="Models\Simulation\DataBus\IMileageCounter.cs" />
     <Compile Include="Models\Simulation\DataBus\IRoadLookAhead.cs" />
+    <Compile Include="Models\Simulation\Data\VectoJobData.cs" />
     <Compile Include="Models\Simulation\Impl\DistanceRun.cs" />
     <Compile Include="Models\Simulation\Impl\PowertrainBuilder.cs" />
     <Compile Include="Models\Simulation\Impl\TimeRun.cs" />
@@ -217,7 +218,6 @@
     <Compile Include="Models\SimulationComponent\Impl\AxleGear.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Retarder.cs" />
     <Compile Include="Models\SimulationComponent\IPowerTrainComponent.cs" />
-    <Compile Include="Models\Simulation\Data\ISummaryDataWriter.cs" />
     <Compile Include="Models\Simulation\Data\SummaryFileWriter.cs" />
     <Compile Include="Models\Simulation\Data\VectoRunData.cs" />
     <Compile Include="Models\SimulationComponent\Impl\Driver.cs" />

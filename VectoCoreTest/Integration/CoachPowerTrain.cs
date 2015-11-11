@@ -39,8 +39,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		public static VehicleContainer CreatePowerTrain(DrivingCycleData cycleData, string modFileName, bool overspeed = false)
 		{
 			var modalWriter = new ModalDataWriter(modFileName);
-			var sumWriter = new TestSumWriter();
-			var container = new VehicleContainer(modalWriter, sumWriter);
+			var container = new VehicleContainer(modalWriter);
 
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();
