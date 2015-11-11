@@ -91,6 +91,25 @@ namespace TUGraz.VectoCore.Tests.Utils
                     if (yfield == ModalResultField.v_act) {
                         var y3 = LoadData(modDataV3, ModalResultField.v_targ.GetName());
                         var series3 = CreateSeries("v_target", legend, chartArea, chart, Color.Green, x, y3);
+
+                        var grad = LoadData(modDataV3, ModalResultField.grad.GetName());
+
+                        chartArea.AxisY2.Enabled = AxisEnabled.True;
+                        chartArea.AxisY2.Title = "gradient [%]";
+                        chartArea.AxisY2.TitleFont = AxisTitleFont;
+                        chartArea.AxisY2.LabelStyle.Font = AxisLabelFont;
+                        chartArea.AxisY2.LabelAutoFitStyle = LabelAutoFitStyles.None;
+                        chartArea.AxisY2.MinorGrid.Enabled = false;
+                        chartArea.AxisY2.MajorGrid.Enabled = false;
+                        var max = Math.Max(-Math.Round(grad.Min() * 2), Math.Round(grad.Max() * 2));
+                        //chartArea.AxisY2.si
+                        //chartArea.AxisY2.Minimum = -max;
+                        //chartArea.AxisY2.Maximum = max;
+                        chartArea.AxisY2.RoundAxisValues();
+                        chartArea.AxisY2.Interval = Math.Round(max / 5);
+
+                        var seriesGrad = CreateSeries("Gradient", legend, chartArea, chart, Color.Coral, x, grad);
+                        seriesGrad.YAxisType = AxisType.Secondary;
                     }
 
                     var series1 = CreateSeries(string.Format("Vecto 3 - {0}", yfield), legend, chartArea, chart,
@@ -197,7 +216,26 @@ namespace TUGraz.VectoCore.Tests.Utils
                 if (yfield == ModalResultField.v_act) {
                     var y3 = LoadData(modDataV3, ModalResultField.v_targ.GetName());
                     var series3 = CreateSeries("v_target", legend, chartArea, chart, Color.Green, x, y3);
+
+                    var grad = LoadData(modDataV3, ModalResultField.grad.GetName());
+
+                    chartArea.AxisY2.Enabled = AxisEnabled.True;
+                    chartArea.AxisY2.Title = "gradient [%]";
+                    chartArea.AxisY2.TitleFont = AxisTitleFont;
+                    chartArea.AxisY2.LabelStyle.Font = AxisLabelFont;
+                    chartArea.AxisY2.LabelAutoFitStyle = LabelAutoFitStyles.None;
+                    chartArea.AxisY2.MinorGrid.Enabled = false;
+                    chartArea.AxisY2.MajorGrid.Enabled = false;
+                    var max = Math.Max(-Math.Round(grad.Min() * 2), Math.Round(grad.Max() * 2));
+                    //chartArea.AxisY2.si
+                    chartArea.AxisY2.Minimum = -max;
+                    chartArea.AxisY2.Maximum = max;
+                    chartArea.AxisY2.RoundAxisValues();
+
+                    var seriesGrad = CreateSeries("Gradient", legend, chartArea, chart, Color.Coral, x, grad);
+                    seriesGrad.YAxisType = AxisType.Secondary;
                 }
+
 
                 var series1 = CreateSeries(string.Format("Vecto 3 - {0}", yfield), legend, chartArea, chart,
                     Color.Blue, x, y);
@@ -205,8 +243,7 @@ namespace TUGraz.VectoCore.Tests.Utils
                 if (fileNameV22 != null) {
                     var y2 = LoadData(modDataV22, yfield.GetName());
                     var series2 = CreateSeries(string.Format("Vecto 2.2 - {0}", yfield), legend, chartArea, chart,
-                        Color.Red, x2,
-                        y2);
+                        Color.Red, x2, y2);
                 }
 
                 PositionChartArea(chartArea, titleHeight, i, yfields.Count());
@@ -244,14 +281,6 @@ namespace TUGraz.VectoCore.Tests.Utils
                 .ToArray();
         }
 
-        //private static double[] LoadData(DataView modDataV3, string field)
-        //{
-        //    return modDataV3.Rows.Cast<DataRow>()
-        //        .Select(v => v.Field<string>(field).Length == 0
-        //            ? Double.NaN
-        //            : v.Field<string>(field).ToDouble())
-        //        .ToArray();
-        //}
 
         private static void AlignChart(Chart chart, string chartToAlign, string chartToAlignWith)
         {
