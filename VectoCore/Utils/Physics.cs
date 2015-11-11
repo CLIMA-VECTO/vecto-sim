@@ -20,7 +20,7 @@
 
 
 		/// <summary>
-		/// Factor to convert from fuel weight to co2 weight.
+		/// fuel[kg] => co2[kg]. Factor to convert from fuel weight to co2 weight.
 		/// </summary>
 		public static readonly double CO2PerFuelWeight = 3.16;
 	}

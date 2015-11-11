@@ -8,7 +8,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 {
 	public delegate void WriteSumData(IModalDataWriter data, Kilogram vehicleMass, Kilogram loading);
 
-
 	/// <summary>
 	/// Class for the sum file in vecto.
 	/// </summary>
@@ -53,10 +52,10 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 		private const string PCRUISE = "pCruise [%]";
 		private const string PSTOP = "pStop [%]";
 		private const string ETORQUECONV = "Etorqueconv [kWh]";
-		private const string CO2 = "CO2 [g/km]";
-		private const string CO2T = "CO2 [g/tkm]";
+		private const string CO2KM = "CO2 [g/km]";
+		private const string CO2TKM = "CO2 [g/tkm]";
 		private const string FCFINAL = "FC-Final [g/km]";
-		private const string FCFINAL_LITER = "FC-Final [l/100km]";
+		private const string FCFINAL_LITERPER100KM = "FC-Final [l/100km]";
 		private const string FCFINAL_LITERPER100TKM = "FC-Final [l/100tkm]";
 		private const string ACCNOISE = "Acc.Noise [m/s^2]";
 		// ReSharper restore InconsistentNaming
@@ -67,7 +66,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 
 		protected SummaryFileWriter() {}
 
-		private IList<string> _auxColumns = new List<string>();
+		private readonly IList<string> _auxColumns = new List<string>();
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SummaryFileWriter"/> class.
@@ -86,11 +85,13 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			_table.Columns.AddRange(new[] {
 				TIME, DISTANCE, SPEED, ALTITUDE, PPOS, PNEG, FCMAP, FCMAPKM, FCAUXC, FCAUXCKM, FCWHTCC, FCWHTCCKM, PWHEELPOS, PBRAKE,
 				EPOSICE, ENEGICE, EAIR, EROLL, EGRAD, EACC, EAUX, EBRAKE, ETRANSM, ERETARDER, MASS, LOADING, ACCELERATIONS, APOS,
-				ANEG, PACC, PDEC, PCRUISE, PSTOP, ETORQUECONV, CO2, CO2T, FCFINAL, FCFINAL_LITER, FCFINAL_LITERPER100TKM, ACCNOISE
+				ANEG, PACC, PDEC, PCRUISE, PSTOP, ETORQUECONV, CO2KM, CO2TKM, FCFINAL, FCFINAL_LITERPER100KM, FCFINAL_LITERPER100TKM,
+				ACCNOISE
 			}.Select(x => new DataColumn(x, typeof(SI))).ToArray());
 		}
 
-		public virtual void Write(bool isEngineOnly, IModalDataWriter data, string jobFileName, string jobName, string cycleFileName,
+		public virtual void Write(bool isEngineOnly, IModalDataWriter data, string jobFileName, string jobName,
+			string cycleFileName,
 			Kilogram vehicleMass, Kilogram vehicleLoading)
 		{
 			if (isEngineOnly) {
@@ -110,12 +111,11 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			row[CYCLE] = cycleFileName;
 			row[STATUS] = data.RunStatus;
 			row[TIME] = data.Duration();
-			row[PPOS] = data.Ppos();
-			row[PNEG] = data.Pneg();
-			row[FCMAP] = data.FuelConsumption();
-			row[FCAUXC] = data.FuelConsumptionAuxStartStopCorrected();
-			row[FCWHTCC] = data.FuelConsumptionWHTCCorrected();
-
+			row[PPOS] = data.EnginePowerPositiveAverage().ConvertTo().Kilo.Watt;
+			row[PNEG] = data.EnginePowerNegativeAverage().ConvertTo().Kilo.Watt;
+			row[FCMAP] = data.FuelConsumptionPerSecond().ConvertTo().Gramm.Per.Hour;
+			row[FCAUXC] = data.FuelConsumptionAuxStartStopCorrectedPerSecond().ConvertTo().Gramm.Per.Hour;
+			row[FCWHTCC] = data.FuelConsumptionWHTCCorrectedPerSecond().ConvertTo().Gramm.Per.Hour;
 			WriteAuxiliaries(data, row);
 
 			_table.Rows.Add(row);
@@ -128,74 +128,70 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			_engineOnly = false;
 
 			var row = _table.NewRow();
+			_table.Rows.Add(row);
 			row[JOB] = jobName;
 			row[INPUTFILE] = jobFileName;
 			row[CYCLE] = cycleFileName;
 			row[STATUS] = data.RunStatus;
 			row[TIME] = data.Duration();
-			row[DISTANCE] = data.Distance();
-			row[SPEED] = data.Speed();
-			row[PPOS] = data.Ppos();
-			row[PNEG] = data.Pneg();
-			row[FCMAP] = data.FuelConsumption();
-			row[FCMAPKM] = data.FuelConsumptionPerKilometer();
-			row[FCAUXC] = data.FuelConsumptionAuxStartStopCorrected();
-			row[FCWHTCC] = data.FuelConsumptionWHTCCorrected();
-			row[PBRAKE] = data.PowerBrake();
-			row[EPOSICE] = data.WorkEnginePositive();
-			row[ENEGICE] = data.WorkEngineNegative();
-			row[EAIR] = data.WorkAirResistance();
-			row[EROLL] = data.WorkRollingResistance();
-			row[EGRAD] = data.WorkRoadGradientResistance();
-			row[EAUX] = data.WorkAuxiliaries();
-			row[EBRAKE] = data.WorkTotalMechanicalBrake();
-			row[ETRANSM] = data.WorkTransmission();
-			row[ERETARDER] = data.PowerLossRetarder();
-			row[EACC] = data.PowerAccelerations();
+			row[DISTANCE] = data.Distance().ConvertTo().Kilo.Meter;
+			row[SPEED] = data.Speed().ConvertTo().Kilo.Meter.Per.Hour;
 			row[ALTITUDE] = data.AltitudeDelta();
-
+			row[PPOS] = data.EnginePowerPositiveAverage().ConvertTo().Kilo.Watt;
+			row[PNEG] = data.EnginePowerNegativeAverage().ConvertTo().Kilo.Watt;
+			row[FCFINAL] = data.FuelConsumptionFinal().ConvertTo().Gramm.Per.Kilo.Meter;
+			row[FCFINAL_LITERPER100KM] = data.FuelConsumptionFinalLiterPer100Kilometer();
+			if (!vehicleLoading.IsEqual(0)) {
+				row[FCFINAL_LITERPER100TKM] = data.FuelConsumptionFinalLiterPer100Kilometer() / vehicleLoading.ConvertTo().Ton;
+			}
+			row[FCMAP] = data.FuelConsumptionPerSecond().ConvertTo().Gramm.Per.Hour;
+			row[FCMAPKM] = data.FuelConsumptionPerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
+			row[FCAUXC] = data.FuelConsumptionAuxStartStopCorrectedPerSecond().ConvertTo().Gramm.Per.Hour;
+			row[FCAUXCKM] = data.FuelConsumptionAuxStartStopCorrected().ConvertTo().Gramm.Per.Kilo.Meter;
+			row[FCWHTCC] = data.FuelConsumptionWHTCCorrectedPerSecond().ConvertTo().Gramm.Per.Hour;
+			row[FCWHTCCKM] = data.FuelConsumptionWHTCCorrected().ConvertTo().Gramm.Per.Kilo.Meter;
+			row[CO2KM] = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
+			if (!vehicleLoading.IsEqual(0)) {
+				row[CO2TKM] = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter / vehicleLoading.ConvertTo().Ton;
+			}
+			row[PWHEELPOS] = data.PowerWheelPositive().ConvertTo().Kilo.Watt;
+			row[PBRAKE] = data.PowerBrake().ConvertTo().Kilo.Watt;
+			row[EPOSICE] = data.EngineWorkPositive().ConvertTo().Kilo.Watt.Hour;
+			row[ENEGICE] = data.EngineWorkNegative().ConvertTo().Kilo.Watt.Hour;
+			row[EAIR] = data.WorkAirResistance().ConvertTo().Kilo.Watt.Hour;
+			row[EROLL] = data.WorkRollingResistance().ConvertTo().Kilo.Watt.Hour;
+			row[EGRAD] = data.WorkRoadGradientResistance().ConvertTo().Kilo.Watt.Hour;
+			row[EACC] = data.PowerAccelerations().ConvertTo().Kilo.Watt.Hour;
+			row[EAUX] = data.WorkAuxiliaries().ConvertTo().Kilo.Watt.Hour;
 			WriteAuxiliaries(data, row);
-
-			if (vehicleMass != null) {
-				row[MASS] = vehicleMass;
-			}
-
-			if (vehicleLoading != null) {
-				row[LOADING] = vehicleLoading;
-			}
-
-			row[ACCELERATIONS] = data.AverageAccelerations();
-			row[APOS] = data.AverageAccelerationsPositive();
-			row[ANEG] = data.AverageAccelerationsNegative();
+			row[EBRAKE] = data.WorkTotalMechanicalBrake().ConvertTo().Kilo.Watt.Hour;
+			row[ETRANSM] = data.WorkTransmission().ConvertTo().Kilo.Watt.Hour;
+			row[ERETARDER] = data.WorkRetarder().ConvertTo().Kilo.Watt.Hour;
+			row[ETORQUECONV] = data.WorkTorqueConverter().ConvertTo().Kilo.Watt.Hour;
+			row[MASS] = vehicleMass;
+			row[LOADING] = vehicleLoading;
+			row[ACCELERATIONS] = data.AccelerationAverage();
+			row[APOS] = data.AccelerationsPositive3SecondAverage();
+			row[ANEG] = data.AverageAccelerations3SecondNegative();
+			row[ACCNOISE] = data.AccelerationNoise();
 			row[PACC] = data.PercentAccelerationTime();
 			row[PDEC] = data.PercentDecelerationTime();
 			row[PCRUISE] = data.PercentCruiseTime();
 			row[PSTOP] = data.PercentStopTime();
-
-			_table.Rows.Add(row);
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
 		private void WriteAuxiliaries(IModalDataWriter data, DataRow row)
 		{
-			var simulationInterval = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
-
-			_auxColumns = _auxColumns.Union(data.Auxiliaries.Select(kv => "Eaux_" + kv.Key + " [kWh]")).ToList();
-
-			var sum = 0.SI().Kilo.Watt.Hour.ConvertTo().Kilo.Watt.Hour;
 			foreach (var aux in data.Auxiliaries) {
 				var colName = "Eaux_" + aux.Key + " [kWh]";
 				if (!_table.Columns.Contains(colName)) {
 					_table.Columns.Add(colName, typeof(SI));
+					_auxColumns.Add(colName);
 				}
 
-				var currentSum = data.GetValues<Watt>(aux.Value)
-					.Zip(simulationInterval, (P, dt) => P.ConvertTo().Kilo.Watt * dt.ConvertTo().Hour)
-					.Sum();
-				row[colName] = currentSum;
-				sum += currentSum;
+				row[colName] = data.AuxiliaryWork(aux.Value).ConvertTo().Kilo.Watt.Hour;
 			}
-			row[EAUX] = sum;
 		}
 
 		public virtual void Finish()
@@ -210,13 +206,16 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 				dataColumns.AddRange(_auxColumns);
 
 				dataColumns.AddRange(new[] {
-					PPOS, PNEG, FCMAP, FCMAPKM, FCAUXC, FCAUXCKM, FCWHTCC, FCWHTCCKM, CO2, CO2T, FCFINAL, FCFINAL_LITERPER100TKM,
-					FCFINAL_LITER, PWHEELPOS, PBRAKE, EPOSICE, ENEGICE, EAIR, EROLL, EGRAD, EACC, EAUX, EBRAKE, ETRANSM,
+					PPOS, PNEG, FCMAP, FCMAPKM, FCAUXC, FCAUXCKM, FCWHTCC, FCWHTCCKM, CO2KM, CO2TKM, FCFINAL, FCFINAL_LITERPER100KM,
+					FCFINAL_LITERPER100TKM, PWHEELPOS, PBRAKE, EPOSICE, ENEGICE, EAIR, EROLL, EGRAD, EACC, EAUX, EBRAKE, ETRANSM,
 					ERETARDER, ETORQUECONV, MASS, LOADING, ACCELERATIONS, APOS, ANEG, ACCNOISE, PACC, PDEC, PCRUISE, PSTOP
 				});
 			}
 
-			VectoCSVFile.Write(_sumFileName, new DataView(_table).ToTable(false, dataColumns.ToArray()));
+			var sortedAndFilteredTable = new DataView(_table, "", JOB, DataViewRowState.CurrentRows).ToTable(false,
+				dataColumns.ToArray());
+
+			VectoCSVFile.Write(_sumFileName, sortedAndFilteredTable);
 		}
 	}
 }

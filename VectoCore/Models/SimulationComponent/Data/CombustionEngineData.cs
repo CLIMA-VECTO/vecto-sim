@@ -23,6 +23,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 
 		public EngineFullLoadCurve FullLoadCurve { get; internal set; }
 
+		private double _whtcCorrectionFactor = 1;
+
+		public double WHTCCorrectionFactor
+		{
+			get { return _whtcCorrectionFactor; }
+			internal set { _whtcCorrectionFactor = value; }
+		}
+
 		#region Equality Member
 
 		protected bool Equals(CombustionEngineData other)
@@ -62,6 +70,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data
 				return hashCode;
 			}
 		}
+
 		#endregion
 	}
 }

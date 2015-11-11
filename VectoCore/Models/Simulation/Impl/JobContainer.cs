@@ -80,9 +80,6 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				entry.Started = true;
 				entry.Worker.RunWorkerAsync();
 			}
-			//Task.WaitAll(_runs.Select(r => Task.Factory.StartNew(r.Run)).ToArray());
-
-			//_sumWriter.Finish();
 		}
 
 		public void Cancel()

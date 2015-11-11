@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.FileIO.Reader;
@@ -11,6 +12,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 {
 	public class SimulatorFactory : LoggingObject
 	{
+		private static int _jobNumberCounter;
+
 		public enum FactoryMode
 		{
 			EngineeringMode,
@@ -23,7 +26,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 		public SimulatorFactory(FactoryMode mode, string jobFile)
 		{
 			Log.Fatal("########## VectoCore Version {0} ##########", Assembly.GetExecutingAssembly().GetName().Version);
-			JobNumber = 0;
+			JobNumber = Interlocked.Increment(ref _jobNumberCounter);
 			_mode = mode;
 			switch (mode) {
 				case FactoryMode.DeclarationMode:
@@ -67,7 +70,8 @@ namespace TUGraz.VectoCore.Models.Simulation.Impl
 				modWriter.WriteModalResults = WriteModalResults;
 				var builder = new PowertrainBuilder(modWriter,
 					DataReader.IsEngineOnly, (writer, mass, loading) =>
-						SumWriter.Write(d.IsEngineOnly, modWriter, d.JobFileName, string.Format("{0}-{1}", JobNumber, i++), d.Cycle.Name,
+						SumWriter.Write(d.IsEngineOnly, modWriter, d.JobFileName, string.Format("{0}-{1}", JobNumber, i++),
+							d.Cycle.Name + ".vdri",
 							mass, loading));
 
 				VectoRun run;

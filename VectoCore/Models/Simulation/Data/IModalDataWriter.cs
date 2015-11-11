@@ -77,7 +77,7 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			return data.GetValues<SI>(col).Where(filter ?? (x => x != null)).Sum();
 		}
 
-		public static SI Average(this IEnumerable<SI> self, Func<SI, bool> filter = null)
+		public static SI Average(this IEnumerable<SI> self, Func<SI, bool> filter)
 		{
 			var values = self.Where(filter ?? (x => x != null && !double.IsNaN(x.Value()))).ToList();
 			return values.Any() ? values.Sum() / values.Count : null;
@@ -93,58 +93,57 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			return self ?? defaultValue;
 		}
 
-		public static object AverageAccelerationsPositive(this IModalDataWriter data)
+		public static MeterPerSquareSecond AccelerationsPositive3SecondAverage(this IModalDataWriter data)
 		{
-			var acceleration3SecondAverage = Calculate3SecondAverage(Accelerations(data));
-			return acceleration3SecondAverage.Average(x => x > 0.125).DefaultIfNull();
+			var acceleration3SecondAverage = AccelerationPer3Seconds(data);
+			return acceleration3SecondAverage.Where(x => x > 0.125).Average();
 		}
 
-		public static object AverageAccelerationsNegative(this IModalDataWriter data)
+		public static MeterPerSquareSecond AccelerationNoise(this IModalDataWriter data)
 		{
-			var acceleration3SecondAverage = Calculate3SecondAverage(Accelerations(data));
-			return acceleration3SecondAverage.Average(x => x < -0.125).DefaultIfNull();
+			var avg = data.AccelerationAverage();
+			var accelerationAverages = AccelerationPerSecond(data).ToList();
+			var sqareAvg = accelerationAverages.Select(x => (x - avg) * (x - avg)).Sum() / accelerationAverages.Count;
+			return sqareAvg.Sqrt().Cast<MeterPerSquareSecond>();
 		}
 
-		public static object PercentAccelerationTime(this IModalDataWriter data)
+		public static MeterPerSquareSecond AverageAccelerations3SecondNegative(this IModalDataWriter data)
 		{
-			var acceleration3SecondAverage = Calculate3SecondAverage(Accelerations(data)).ToList();
+			var acceleration3SecondAverage = AccelerationPer3Seconds(data);
+			return acceleration3SecondAverage.Where(x => x < -0.125).Average();
+		}
+
+		public static Scalar PercentAccelerationTime(this IModalDataWriter data)
+		{
+			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
 			return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x > 0.125) / acceleration3SecondAverage.Count;
 		}
 
-		public static object PercentDecelerationTime(this IModalDataWriter data)
+		public static Scalar PercentDecelerationTime(this IModalDataWriter data)
 		{
-			var acceleration3SecondAverage = Calculate3SecondAverage(Accelerations(data)).ToList();
+			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
 			return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x < -0.125) / acceleration3SecondAverage.Count;
 		}
 
-		public static object PercentCruiseTime(this IModalDataWriter data)
+		public static Scalar PercentCruiseTime(this IModalDataWriter data)
 		{
-			var acceleration3SecondAverage = Calculate3SecondAverage(Accelerations(data)).ToList();
-			return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x < 0.125 && x > -0.125) /
+			var acceleration3SecondAverage = AccelerationPer3Seconds(data).ToList();
+			return 100.SI<Scalar>() * acceleration3SecondAverage.Count(x => x.IsBetween(-0.125, -0.125)) /
 					acceleration3SecondAverage.Count;
 		}
 
-		public static SI PercentStopTime(this IModalDataWriter data)
+		public static Scalar PercentStopTime(this IModalDataWriter data)
 		{
-			var acceleration3SecondAverage = Calculate3SecondAverage(Accelerations(data));
-			if (acceleration3SecondAverage.Any()) {}
-			var pStopTime = data.GetValues<SI>(ModalResultField.v_act)
-				.Zip(SimulationIntervals(data), (velocity, dt) => new { velocity, dt })
-				.Where(x => x.velocity < 0.1)
-				.Sum(x => x.dt.Value());
-			return 100 * pStopTime / SimulationIntervals(data).Sum();
+			var stopTime = data.GetValues<MeterPerSecond>(ModalResultField.v_act)
+				.Zip(data.SimulationIntervals(), (v, dt) => new { v, dt })
+				.Where(x => x.v < 0.1).Select(x => x.dt).Sum();
+
+			return 100 * (stopTime / data.Duration()).Cast<Scalar>();
 		}
 
-		public static SI AverageAccelerations(this IModalDataWriter data)
+		public static MeterPerSquareSecond AccelerationAverage(this IModalDataWriter data)
 		{
-			return Accelerations(data).Average();
-		}
-
-		public static List<SI> Accelerations(this IModalDataWriter data)
-		{
-			var accValues = data.GetValues<SI>(ModalResultField.acc).Cast<MeterPerSquareSecond>();
-			var accelerations = CalculateAverageOverSeconds(SimulationIntervals(data), accValues).ToList();
-			return accelerations;
+			return data.TimeIntegral<MeterPerSecond>(ModalResultField.acc) / data.Duration();
 		}
 
 		public static Second[] SimulationIntervals(this IModalDataWriter data)
@@ -152,188 +151,236 @@ namespace TUGraz.VectoCore.Models.Simulation.Data
 			return data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
 		}
 
-		public static SI AltitudeDelta(this IModalDataWriter data)
+		public static Meter AltitudeDelta(this IModalDataWriter data)
 		{
-			return data.GetValues<SI>(ModalResultField.altitude).Last() -
-					data.GetValues<SI>(ModalResultField.altitude).First();
+			return data.GetValues<Meter>(ModalResultField.altitude).Last() -
+					data.GetValues<Meter>(ModalResultField.altitude).First();
 		}
 
-		public static SI PowerAccelerations(this IModalDataWriter data)
+		public static WattSecond PowerAccelerations(this IModalDataWriter data)
 		{
-			var zero = 0.SI<Watt>();
-
-			var paeng = data.Sum(ModalResultField.PaEng) ?? zero;
-			var pagb = data.Sum(ModalResultField.PaGB) ?? zero;
-
-			return paeng + pagb;
+			var paEngine = data.TimeIntegral<WattSecond>(ModalResultField.PaEng);
+			var paGearbox = data.TimeIntegral<WattSecond>(ModalResultField.PaGB);
+			return paEngine + paGearbox;
 		}
 
-		public static SI WorkTransmission(this IModalDataWriter data)
+		public static WattSecond WorkTransmission(this IModalDataWriter data)
 		{
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
-			var plossdiff = TimeIntegralPower(ModalResultField.PlossGB, data, simulationIntervals);
-			var plossgb = TimeIntegralPower(ModalResultField.PlossDiff, data, simulationIntervals);
+			var plossdiff = data.TimeIntegral<WattSecond>(ModalResultField.PlossGB);
+			var plossgb = data.TimeIntegral<WattSecond>(ModalResultField.PlossDiff);
 			return plossdiff + plossgb;
 		}
 
-		public static object PowerLossRetarder(this IModalDataWriter data)
+		public static WattSecond WorkRetarder(this IModalDataWriter data)
 		{
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
-			return TimeIntegralPower(ModalResultField.PlossRetarder, data, simulationIntervals).DefaultIfNull();
+			return data.TimeIntegral<WattSecond>(ModalResultField.PlossRetarder);
 		}
 
-		public static SI Duration(this IModalDataWriter data)
+		public static WattSecond WorkTorqueConverter(this IModalDataWriter data)
 		{
-			return data.Max(ModalResultField.time) - data.Min(ModalResultField.time);
+			//TODO (MK, 2015-11-10): return torque converter work - this was currently not possible because torque converter is not implemented.
+			return 0.SI<WattSecond>();
 		}
 
-		public static SI Distance(this IModalDataWriter data)
+		public static Second Duration(this IModalDataWriter data)
 		{
-			return data.Max(ModalResultField.dist) - data.Min(ModalResultField.dist);
+			return (data.Max(ModalResultField.time) - data.Min(ModalResultField.time)).Cast<Second>();
+		}
+
+		public static Meter Distance(this IModalDataWriter data)
+		{
+			return (data.Max(ModalResultField.dist) - data.Min(ModalResultField.dist)).Cast<Meter>();
+		}
+
+		public static WattSecond WorkTotalMechanicalBrake(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.Pbrake);
+		}
+
+		public static WattSecond WorkAuxiliaries(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.Paux);
+		}
+
+		public static WattSecond WorkRoadGradientResistance(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.Pgrad);
+		}
+
+		public static WattSecond WorkRollingResistance(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.Proll);
+		}
+
+		public static WattSecond WorkAirResistance(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.Pair);
+		}
+
+		public static WattSecond EngineWorkPositive(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.Pe_eng, x => x > 0);
+		}
+
+		public static WattSecond EngineWorkNegative(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.Pe_eng, x => x < 0);
+		}
+
+		public static Watt PowerBrake(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.Pbrake) / data.Duration();
+		}
+
+		public static Watt PowerWheelPositive(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<WattSecond>(ModalResultField.Pwheel, x => x > 0) / data.Duration();
+		}
+
+		public static KilogramPerMeter FuelConsumptionWHTCCorrected(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / data.Distance();
+		}
+
+		public static KilogramPerSecond FuelConsumptionWHTCCorrectedPerSecond(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / data.Duration();
+		}
+
+		public static KilogramPerMeter FuelConsumptionAuxStartStopCorrected(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCAUXc) / data.Distance();
+		}
+
+		public static KilogramPerSecond FuelConsumptionAuxStartStopCorrectedPerSecond(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCAUXc) / data.Duration();
+		}
+
+		public static KilogramPerMeter FuelConsumptionFinal(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCWHTCc) / data.Distance();
+		}
+
+		public static SI FuelConsumptionFinalLiterPer100Kilometer(this IModalDataWriter data)
+		{
+			var fcVolumePerMeter = data.FuelConsumptionFinal() / Physics.FuelDensity;
+			return fcVolumePerMeter.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
+		}
+
+		public static KilogramPerMeter CO2PerMeter(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) * Physics.CO2PerFuelWeight / data.Distance();
+		}
+
+		public static SI FuelConsumptionLiterPer100Kilometer(this IModalDataWriter data)
+		{
+			var fcVolumePerMeter = data.FuelConsumptionPerMeter() / Physics.FuelDensity;
+			return fcVolumePerMeter.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
+		}
+
+		public static KilogramPerSecond FuelConsumptionPerSecond(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) / data.Duration();
+		}
+
+		public static KilogramPerMeter FuelConsumptionPerMeter(this IModalDataWriter data)
+		{
+			return data.TimeIntegral<Kilogram>(ModalResultField.FCMap) / data.Distance();
+		}
+
+		public static Watt EnginePowerNegativeAverage(this IModalDataWriter data)
+		{
+			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
+			var values = data.GetValues<Watt>(ModalResultField.Pe_eng)
+				.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
+				.Where(v => v.Value < 0).ToList();
+			if (values.Any()) {
+				return values.Select(v => v.Value).Sum() / values.Select(v => v.Dt).Sum();
+			}
+			return 0.SI<Watt>();
+		}
+
+		public static Watt EnginePowerPositiveAverage(this IModalDataWriter data)
+		{
+			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
+			var values = data.GetValues<Watt>(ModalResultField.Pe_eng)
+				.Zip(simulationIntervals, (value, dt) => new { Dt = dt, Value = value * dt })
+				.Where(v => v.Value > 0).ToList();
+			if (values.Any()) {
+				return values.Select(v => v.Value).Sum() / values.Select(v => v.Dt).Sum();
+			}
+			return 0.SI<Watt>();
+		}
+
+		public static MeterPerSecond Speed(this IModalDataWriter data)
+		{
+			return Distance(data) / Duration(data);
+		}
+
+		public static WattSecond AuxiliaryWork(this IModalDataWriter data, DataColumn auxCol)
+		{
+			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
+			return data.GetValues<Watt>(auxCol).Zip(simulationIntervals, (value, dt) => value * dt).Sum().Cast<WattSecond>();
 		}
 
 
-		public static object WorkTotalMechanicalBrake(this IModalDataWriter data)
+		private static T TimeIntegral<T>(this IModalDataWriter data, ModalResultField field, Func<SI, bool> filter = null)
+			where T : SIBase<T>
 		{
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
-			return TimeIntegralPower(ModalResultField.Pbrake, data, simulationIntervals).DefaultIfNull();
+			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval);
+			var filteredList = data.GetValues<SI>(field)
+				.Zip(simulationIntervals, (value, dt) => new { value, dt })
+				.Where(x => filter == null || filter(x.value)).ToList();
+
+			return filteredList.Any()
+				? filteredList.Select(x => (x.value == null ? SIBase<T>.Create(0) : x.value * x.dt)).Sum().Cast<T>()
+				: SIBase<T>.Create(0);
 		}
 
-		public static object WorkAuxiliaries(this IModalDataWriter data)
+		private static IEnumerable<MeterPerSquareSecond> AccelerationPer3Seconds(IModalDataWriter data)
 		{
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
-			return TimeIntegralPower(ModalResultField.Paux, data, simulationIntervals).DefaultIfNull();
-		}
+			var accelerationAverages = AccelerationPerSecond(data).ToList();
+			var runningAverage = (accelerationAverages[0] + accelerationAverages[1] + accelerationAverages[2]) / 3.0;
+			yield return runningAverage;
 
-		public static object WorkRoadGradientResistance(this IModalDataWriter data)
-		{
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
-			return TimeIntegralPower(ModalResultField.Pgrad, data, simulationIntervals).DefaultIfNull();
-		}
-
-		public static object WorkRollingResistance(this IModalDataWriter data)
-		{
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
-			return TimeIntegralPower(ModalResultField.Proll, data, simulationIntervals).DefaultIfNull();
-		}
-
-		public static object WorkAirResistance(this IModalDataWriter data)
-		{
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
-			return TimeIntegralPower(ModalResultField.Pair, data, simulationIntervals).DefaultIfNull();
-		}
-
-		public static object WorkEngineNegative(this IModalDataWriter data)
-		{
-			return data.Average(ModalResultField.Pe_eng, x => x < 0).DefaultIfNull();
-		}
-
-		public static object WorkEnginePositive(this IModalDataWriter data)
-		{
-			return data.Average(ModalResultField.Pe_eng, x => x > 0).DefaultIfNull();
-		}
-
-		public static object PowerBrake(this IModalDataWriter data)
-		{
-			return data.Average(ModalResultField.Pbrake).DefaultIfNull();
-		}
-
-		public static object FuelConsumptionWHTCCorrected(this IModalDataWriter data)
-		{
-			return data.Average(ModalResultField.FCWHTCc).DefaultIfNull();
-		}
-
-		public static object FuelConsumptionAuxStartStopCorrected(this IModalDataWriter data)
-		{
-			return data.Average(ModalResultField.FCAUXc).DefaultIfNull();
-		}
-
-		public static SI FuelConsumption(this IModalDataWriter data)
-		{
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
-			return
-				(TimeIntegralFuelConsumption(ModalResultField.FCMap, data, simulationIntervals) / Duration(data)).ConvertTo()
-					.Gramm.Per.Hour;
-		}
-
-		public static SI FuelConsumptionPerKilometer(this IModalDataWriter data)
-		{
-			var simulationIntervals = data.GetValues<Second>(ModalResultField.simulationInterval).ToArray();
-			return
-				(TimeIntegralFuelConsumption(ModalResultField.FCMap, data, simulationIntervals) / Distance(data)).ConvertTo()
-					.Gramm.Per.Kilo.Meter;
-		}
-
-		public static object Pneg(this IModalDataWriter data)
-		{
-			return data.Average(ModalResultField.Pe_eng, x => x < 0).DefaultIfNull();
-		}
-
-		public static object Ppos(this IModalDataWriter data)
-		{
-			return data.Average(ModalResultField.Pe_eng, x => x > 0).DefaultIfNull();
-		}
-
-		public static SI Speed(this IModalDataWriter data)
-		{
-			return (Distance(data) / Duration(data)).ConvertTo().Kilo.Meter.Per.Hour;
-		}
-
-		private static SI TimeIntegralPower(ModalResultField field, IModalDataWriter data,
-			IEnumerable<Second> simulationIntervals)
-		{
-			return data.GetValues<Watt>(field)
-				.Zip(simulationIntervals, (P, dt) => dt.ConvertTo().Hour * (P ?? 0.SI<Watt>()).ConvertTo().Kilo.Watt)
-				.Sum();
-		}
-
-		private static Kilogram TimeIntegralFuelConsumption(ModalResultField field, IModalDataWriter data,
-			IEnumerable<Second> simulationIntervals)
-		{
-			return data.GetValues<KilogramPerSecond>(field)
-				.Zip(simulationIntervals, (FC, dt) => dt * (FC ?? 0.SI<KilogramPerSecond>()))
-				.Sum().Cast<Kilogram>();
-		}
-
-		private static IEnumerable<SI> Calculate3SecondAverage(IReadOnlyList<SI> accelerations)
-		{
-			if (accelerations.Count >= 3) {
-				var runningAverage = (accelerations[0] + accelerations[1] + accelerations[2]) / 3.0;
-				for (var i = 2; i < accelerations.Count() - 1; i++) {
-					runningAverage -= accelerations[i - 2] / 3.0;
-					runningAverage += accelerations[i + 1] / 3.0;
-					yield return runningAverage;
-				}
+			for (var i = 2; i < accelerationAverages.Count() - 1; i++) {
+				runningAverage -= accelerationAverages[i - 2] / 3.0;
+				runningAverage += accelerationAverages[i + 1] / 3.0;
+				yield return runningAverage;
 			}
 		}
 
-
-		private static IEnumerable<SI> CalculateAverageOverSeconds(IEnumerable<Second> dtValues,
-			IEnumerable<MeterPerSquareSecond> accValues)
+		/// <summary>
+		/// Calculates the average acceleration for whole seconds.
+		/// </summary>
+		private static IEnumerable<MeterPerSquareSecond> AccelerationPerSecond(IModalDataWriter data)
 		{
-			var dtSum = 0.SI().Second;
-			var accSum = 0.SI().Meter.Per.Second;
-			var acceleration = dtValues.Zip(accValues, (dt, acc) => new { dt, acc }).ToList();
-			foreach (var x in acceleration.ToList()) {
-				var currentX = x;
+			var dtSum = 0.SI<Second>();
+			var accAvg = 0.SI<MeterPerSecond>();
 
-				while (dtSum + currentX.dt >= 1) {
-					var splitX = new { dt = 1.SI<Second>() - dtSum, currentX.acc };
-					yield return accSum;
+			var accValues = data.GetValues<MeterPerSquareSecond>(ModalResultField.acc);
+
+			foreach (var value in accValues.Zip(SimulationIntervals(data), (acc, dt) => new { acc, dt })) {
+				var dt = value.dt;
+				var acc = value.acc;
+
+				while (dtSum + dt >= 1) {
+					var diffDt = 1.SI<Second>() - dtSum;
+					yield return (accAvg + acc * diffDt) / 1.SI<Second>();
+					dt -= diffDt;
 					dtSum = 0.SI<Second>();
-					accSum = 0.SI<MeterPerSecond>();
-
-					currentX = new { dt = currentX.dt - splitX.dt, currentX.acc };
+					accAvg = 0.SI<MeterPerSecond>();
 				}
-				if (currentX.dt > 0) {
-					accSum += currentX.dt * currentX.acc ?? 0.SI();
-					dtSum += currentX.dt;
+				if (dt > 0) {
+					accAvg += acc * dt;
+					dtSum += dt;
 				}
 			}
 
 			// return remaining data. acts like extrapolation to next whole second.
 			if (dtSum > 0) {
-				yield return accSum;
+				yield return accAvg / 1.SI<Second>();
 			}
 		}
 	}
