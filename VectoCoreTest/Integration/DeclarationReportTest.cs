@@ -20,25 +20,17 @@ namespace TUGraz.VectoCore.Tests.Integration
 				File.Delete("job-report.pdf");
 			}
 
-			var sumWriter =
-				new SummaryFileWriter(
-					@"C:\Users\Krisper\Documents\vecto-sim\Generic Vehicles\Declaration Mode\40t Long Haul Truck\job-report.vsum");
+			var sumWriter = new SummaryFileWriter(@"job-report.vsum");
 			var jobContainer = new JobContainer(sumWriter);
-			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
-				@"C:\Users\Krisper\Documents\vecto-sim\Generic Vehicles\Declaration Mode\40t Long Haul Truck\40t_Long_Haul_Truck.vecto");
-			//var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, @"TestData\Jobs\job-report.vecto");
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode, @"TestData\Jobs\job-report.vecto");
 
 			jobContainer.AddRuns(factory);
 			jobContainer.Execute();
 
 			jobContainer.WaitFinished();
 
-			Assert.IsTrue(
-				File.Exists(
-					@"C:\Users\Krisper\Documents\vecto-sim\Generic Vehicles\Declaration Mode\40t Long Haul Truck\job-report.vsum"));
-			Assert.IsTrue(
-				File.Exists(
-					@"C:\Users\Krisper\Documents\vecto-sim\Generic Vehicles\Declaration Mode\40t Long Haul Truck\40t_Long_Haul_Truck.pdf"));
+			Assert.IsTrue(File.Exists(@"job-report.vsum"));
+			Assert.IsTrue(File.Exists(@"job-report.pdf"));
 		}
 	}
 }
