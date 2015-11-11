@@ -48,7 +48,8 @@ namespace TUGraz.VectoCore.Tests.Models.SimulationComponent
 					Tuple.Create((uint)i,
 						new GearData {
 							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap = TransmissionLossMap.ReadFromFile((i != 6) ? IndirectLossMap : DirectLossMap, ratio),
+							LossMap = TransmissionLossMap.ReadFromFile((i != 6) ? IndirectLossMap : DirectLossMap, ratio,
+								string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
 						}))
