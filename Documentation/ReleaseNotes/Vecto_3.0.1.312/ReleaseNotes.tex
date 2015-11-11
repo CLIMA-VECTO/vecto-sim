@@ -116,10 +116,38 @@ In case you find a bug or Vecto 3.0 does not behave as expected \textbf{please f
 	\item Software Tests: 258 successful unit- and integration tests
 	\begin{itemize}
 		\item Code coverage: 84\,\% \\
-		The main parts of the code are covered by tests, the main parts with low coverage are tests of auto-generated equality methods and parsing of input data
+		The main parts of the code are covered by tests, parts with low coverage are mainly auto-generated equality methods and parsing of input data (cf.~\Cref{fig:Vecto301_TestCoverage})
 	\end{itemize}
-	\item Code complexity\footnote{According to \textit{SourceMonitor}}: currently the max. complexity is 20 (single method) and 10 methods have a complexity $>$10. The most complex methods are in the ShiftStrategy, the DriverStrategy, and the Powertrain builder
+	\item Code complexity\footnote{According to \textit{SourceMonitor}}: currently the max. complexity is 20 (single method) and 10 methods have a complexity $>$10. The most complex methods are in the ShiftStrategy, the DriverStrategy, and the Powertrain builder; see \Cref{fig:Vecto301_Komplexity} and \Cref{fig:Vecto301_Kiviat}
 \end{itemize}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{img/Vecto3_0_1_TestCoverage.png}
+	\caption{Screenshot of Test-coverage Report (Microsoft Visual Studio)}
+	\label{fig:Vecto301_TestCoverage}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.6\textwidth]{img/Vecto3_0_1-Checkpoints.png}\\[1cm]
+
+	\includegraphics[width=0.6\textwidth]{img/Vecto3_0_1-ClassComplexity.png}\\[1cm]
+
+	\includegraphics[width=0.6\textwidth]{img/Vecto3_0_1-MethodComplexity.png}
+
+	\caption{Screenshots of code metrics (SourceMonitor): Checkpoints over time (top), list of classes sorted by complexity (middle), List of methods sorted by complexity (bottom)}
+	\label{fig:Vecto301_Komplexity}
+\end{figure}
+
+\begin{figure}
+	\centering
+
+	\includegraphics[width=0.6\textwidth]{img/Vecto3_0_1-Kiviat.png}
+	\caption{Kiviat Metrics Graph (SourceMonitor)}
+	\label{fig:Vecto301_Kiviat}
+\end{figure}
+
 
 %=========================================================================
 \subsection{Open Issues} % (fold)
@@ -136,7 +164,7 @@ In case you find a bug or Vecto 3.0 does not behave as expected \textbf{please f
 
 % subsection open_issues (end)
 
-
+\FloatBarrier
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{How to Submit a Bug Report} % (fold)
 \label{sec:how_to_submit_a_bug_report}
