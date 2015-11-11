@@ -30,7 +30,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			jobContainer.WaitFinished();
 
 			Assert.IsTrue(File.Exists(@"job-report.vsum"));
-			Assert.IsTrue(File.Exists(@"job-report.pdf"));
+			Assert.IsTrue(File.Exists(@"TestData\Jobs\job-report.pdf"));
 		}
 	}
 }
