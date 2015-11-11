@@ -170,7 +170,8 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			for (uint i = 0; i < gearbox.Body.Gears.Count; i++) {
 				var gearSettings = gearbox.Body.Gears[(int)i];
 				var lossMapPath = Path.Combine(gearbox.BasePath, gearSettings.LossMap);
-				var lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio);
+				var gearName = i == 0 ? "AxleGear" : string.Format("Gear {0}", i);
+				var lossMap = TransmissionLossMap.ReadFromFile(lossMapPath, gearSettings.Ratio, gearName);
 
 				var shiftPolygon = !string.IsNullOrEmpty(gearSettings.ShiftPolygon) && gearSettings.ShiftPolygon != "-" &&
 									gearSettings.ShiftPolygon != "<NOFILE>"

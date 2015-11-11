@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (_currentState.Velocity.IsEqual(0.SI<MeterPerSecond>(), Constants.SimulationSettings.VehicleSpeedHaltTolerance)) {
 				_currentState.Velocity = 0.SI<MeterPerSecond>();
 			}
-			_currentState.Distance = _previousState.Distance + dt * (_previousState.Velocity + _currentState.Velocity) / 2;
+			_currentState.Distance = _previousState.Distance + _previousState.Velocity * dt + acceleration * dt * dt / 2;
 
 			_currentState.DriverAcceleration = DriverAcceleration(acceleration);
 			_currentState.RollingResistance = RollingResistance(gradient);
@@ -167,7 +167,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 				Log.Warn("distance field is not set!");
 			} else {
 				var distance = (SI)writer[ModalResultField.dist];
-				if (!distance.IsEqual(_currentState.Distance, 1e-6.SI<Meter>())) {
+				if (!distance.IsEqual(_currentState.Distance, 1e-12.SI<Meter>())) {
 					Log.Warn("distance diverges: {0}, distance: {1}", (distance - _currentState.Distance).Value(), distance);
 				}
 			}

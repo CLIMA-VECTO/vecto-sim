@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using TUGraz.VectoCore.Utils;
+﻿using TUGraz.VectoCore.Utils;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Tests.Utils;
 using TUGraz.VectoCore.FileIO.Reader;
@@ -7,7 +6,6 @@ using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.Impl;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TUGraz.VectoCore.FileIO;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Impl;
 
@@ -27,9 +25,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			dataWriter.AddAuxiliary("AC");
 
 			var sumWriter = new SummaryFileWriter(@"AuxWriteModFileSumFile.vsum");
-			var deco = new SumWriterDecoratorFullPowertrain(sumWriter, "", "", "");
-
-			var container = new VehicleContainer(dataWriter, deco);
+			var container = new VehicleContainer(dataWriter,
+				(writer, mass, loading) => sumWriter.WriteFullPowertrain(dataWriter, "", "", "", null, null));
 			var data = DrivingCycleDataReader.ReadFromFileDistanceBased(@"TestData\Cycles\LongHaul_short.vdri");
 			var mockcycle = new MockDrivingCycle(container, data);
 			var port = new MockTnOutPort();
@@ -56,6 +53,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			for (var i = 0; i < 11; i++) {
 				aux.OutPort().Request(t, dt, torque, speed);
+				dataWriter[ModalResultField.dist] = i.SI<Meter>();
 				container.CommitSimulationStep(t, dt);
 				t += dt;
 			}
@@ -76,8 +74,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void AuxConstant()
 		{
 			var dataWriter = new MockModalDataWriter();
-			var sumWriter = new TestSumWriter();
-			var container = new VehicleContainer(dataWriter, sumWriter);
+			var container = new VehicleContainer(dataWriter);
 			var port = new MockTnOutPort();
 			var aux = new Auxiliary(container);
 			aux.InPort().Connect(port);
@@ -112,8 +109,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 		public void AuxDirect()
 		{
 			var dataWriter = new MockModalDataWriter();
-			var sumWriter = new TestSumWriter();
-			var container = new VehicleContainer(dataWriter, sumWriter);
+			var container = new VehicleContainer(dataWriter);
 			var data = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based short.vdri");
 			var cycle = new MockDrivingCycle(container, data);
 			var port = new MockTnOutPort();
@@ -145,8 +141,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			dataWriter.AddAuxiliary("ALT1");
 			dataWriter.AddAuxiliary("CONSTANT");
 
-			var sumWriter = new TestSumWriter();
-			var container = new VehicleContainer(dataWriter, sumWriter);
+			var container = new VehicleContainer(dataWriter);
 			var data = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based short.vdri");
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
 			// ALT1.aux file: nAuxiliary speed 2358: 0, 0.38, 0.49, 0.64, ...
@@ -202,8 +197,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			var dataWriter = new MockModalDataWriter();
 			dataWriter.AddAuxiliary(auxId);
 
-			var sumWriter = new TestSumWriter();
-			var container = new VehicleContainer(dataWriter, sumWriter);
+			var container = new VehicleContainer(dataWriter);
 			var data = DrivingCycleDataReader.ReadFromFileTimeBased(@"TestData\Cycles\Coach time based short.vdri");
 			// cycle ALT1 is set to values to equal the first few fixed points in the auxiliary file.
 			// ALT1.aux file: nAuxiliary speed 2358: 0, 0.38, 0.49, 0.64, ...

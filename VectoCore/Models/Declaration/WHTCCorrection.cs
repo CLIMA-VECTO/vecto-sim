@@ -8,7 +8,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 {
 	public class WHTCCorrection : LookupData<MissionType, double, double, double, double>
 	{
-		private Dictionary<MissionType, WHTCCorrectionEntry> _data = new Dictionary<MissionType, WHTCCorrectionEntry>();
+		private readonly Dictionary<MissionType, WHTCCorrectionEntry> _data =
+			new Dictionary<MissionType, WHTCCorrectionEntry>();
 
 		protected const string ResourceId = "TUGraz.VectoCore.Resources.Declaration.WHTC-Weighting-Factors.csv";
 

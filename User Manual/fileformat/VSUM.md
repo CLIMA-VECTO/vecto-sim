@@ -7,20 +7,22 @@ The .vsum file includes total / average results for each calculation run in one 
   
 |  Name | Unit | Description
 | ----- | ---- | -----------------------------------------
-|  Job | [-] | Job number. Format is "x-y" with x = file number and y = cycle number
+|  Job | [-] | Job number in the format "x-y" (where x = file number and y = cycle number)
 |  Input File | [-] | Name of the input file
 |  Cycle | [-] | Name of the cycle file
+|  Status | [-] | The result status of the run (Success, Aborted)
 |  time | [s] | Total simulation time
-|  distance | [km] | Total travelled distance
+|  distance | [km] | Total traveled distance
 |  speed | [km/h] | Average vehicle speed
 |  ∆altitude | [m] | Altitude difference between start and end of cycle
 |  Ppos | [kW] | Average positive engine power
 |  Pneg | [kW] | Average negative engine power 
-|  FC-Final | [g/km] \& [l/100km] \& [l/100tkm] | Average fuel consumption. Final value after all corrections.
-| FC-Map | [g/h] & [g/km] | Fuel consumption interpolated form [Fuel Map](#fuel-consumption-calculation).
-|  FC-AUXc | [g/km] | Fuel consumption after [Auxiliary-Start/Stop Correction](#fuel-consumption-calculation). (Based on FC.)
+|  FC-Final | [g/km], [l/100km], [l/100tkm] | Average fuel consumption. Final value after all corrections.
+|  FC-Map | [g/h], [g/km] | Fuel consumption interpolated fromm [Fuel Map](#fuel-consumption-calculation).
+|  FC-AUXc | [g/h], [g/km] | Fuel consumption after [Auxiliary-Start/Stop Correction](#fuel-consumption-calculation). (Based on FC.)
 |  FC-WHTCc | [g/km] | Fuel consumption after [WHTC Correction](#fuel-consumption-calculation). (Based on FC-AUXc.)
-| Co~2~ | [g/km] & [g/tkm] | Average CO~2~ emissions.
+|  Co~2~ | [g/km], [g/tkm] | Average CO~2~ emissions.
+|  PwheelPos | [kW] | Average positive wheel power
 |  Pbrake | [kW] | Average brake power (not including engine drag)
 |  EposICE | [kWh] | Total positive engine work
 |  EnegICE | [kWh] | Total negative engine work (engine brake)
@@ -33,10 +35,10 @@ The .vsum file includes total / average results for each calculation run in one 
 |  Ebrake | [kWh] | Total work dissipated in mechanical braking (sum of service brakes, retader and additional engine exhaust brakes)
 |  Etransm | [kWh] | Total work of transmission losses
 |  Eretarder | [kWh] | Total retarder losses
-| Etorqueconv | [kWh] | Total torque converter losses
+|  Etorqueconv | [kWh] | Total torque converter losses
 |  Mass | [kg] | Vehicle mass (equals **Curb Weight Vehicle** plus **Curb Weight Extra Trailer/Body**, see [Vehicle Editor](#vehicle-editor))
 |  Loading | [kg] | Vehicle loading (see [Vehicle Editor](#vehicle-editor))
-|  a | [m/s2] | Average acceleration
+|  a | [m/s²] | Average acceleration
 |  a_pos | [m/s²] | Average acceleration in acceleration phases \* 
 |  a_neg | [m/s²] | Average deceleration in deceleration phases \* 
 |  Acc.Noise | [m/s²] | Acceleration noise

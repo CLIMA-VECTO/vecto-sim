@@ -1,15 +1,12 @@
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using NLog;
 using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
-using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
 using TUGraz.VectoCore.Models.Simulation.Impl;
@@ -74,7 +71,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			VehicleStopped = false;
-			Log.Debug("==== DRIVER Request ====");
+			Log.Debug("==== DRIVER Request (distance) ====");
 			Log.Debug(
 				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}, vehicle stopped: {6}",
 				absTime, ds, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, VehicleStopped);
@@ -93,7 +90,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			VehicleStopped = true;
-			Log.Debug("==== DRIVER Request ====");
+			Log.Debug("==== DRIVER Request (time) ====");
 			Log.Debug(
 				"Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5} gear: {6}: vehicle stopped: {7}",
 				absTime, dt, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear, VehicleStopped);
@@ -631,11 +628,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} while (retryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
 
 			LogManager.EnableLogging();
-			Log.Warn("Exceeded max iterations when searching for operating point!");
-			Log.Warn("acceleration: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.acceleration)),
+			Log.Error("Exceeded max iterations when searching for operating point!");
+			Log.Error("acceleration: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.acceleration)),
 				", ".Join(debug.Slice(-6).Select(x => x.acceleration)));
-			Log.Warn("exceeded: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.delta)),
+			Log.Error("exceeded: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.delta)),
 				", ".Join(debug.Slice(-6).Select(x => x.delta)));
+			// issue request once more for logging...
+			NextComponent.Request(absTime, retVal.SimulationInterval, retVal.Acceleration, gradient, true);
 			Log.Error("Failed to find operating point! absTime: {0}", absTime);
 			throw new VectoSearchFailedException("Failed to find operating point!  exceeded: {0} ... {1}",
 				", ".Join(debug.Take(5).Select(x => x.delta)),
@@ -718,9 +717,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					retVal.SimulationInterval = ds / currentSpeed;
 					return retVal;
 				}
-				Log.Error("vehicle speed is {0}, acceleration is {1}", currentSpeed.Value(), acceleration.Value());
+				Log.Error("{2}: vehicle speed is {0}, acceleration is {1}", currentSpeed.Value(), acceleration.Value(),
+					DataBus.Distance);
 				throw new VectoSimulationException(
-					"vehicle speed has to be > 0 if acceleration = 0!  v: {0}, a: {1}", currentSpeed.Value(), acceleration.Value());
+					"vehicle speed has to be > 0 if acceleration = 0!  v: {0}, a: {1}, distance: ", currentSpeed.Value(),
+					acceleration.Value(), DataBus.Distance);
 			}
 
 			// we need to accelerate / decelerate. solve quadratic equation...

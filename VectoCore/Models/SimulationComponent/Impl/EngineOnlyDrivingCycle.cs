@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
@@ -20,6 +21,8 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		protected ITnOutPort NextComponent;
 		private IEnumerator<DrivingCycleData.DrivingCycleEntry> RightSample { get; set; }
 		private IEnumerator<DrivingCycleData.DrivingCycleEntry> LeftSample { get; set; }
+
+		protected Second AbsTime { get; set; }
 
 
 		public EngineOnlyDrivingCycle(IVehicleContainer container, DrivingCycleData cycle) : base(container)
@@ -65,7 +68,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (index >= Data.Entries.Count) {
 				return new ResponseCycleFinished();
 			}
-
+			AbsTime = absTime;
 			return NextComponent.Request(absTime, dt, Data.Entries[index].EngineTorque, Data.Entries[index].EngineSpeed);
 		}
 
@@ -77,12 +80,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 
 		public double Progress
 		{
-			get { throw new NotImplementedException(); }
+			get { return AbsTime.Value() / Data.Entries.Last().Time.Value(); }
 		}
+
 
 		public Meter StartDistance
 		{
-			get { throw new NotImplementedException(); }
+			get { return 0.SI<Meter>(); }
 		}
 
 		#endregion

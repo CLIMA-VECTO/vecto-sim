@@ -46,8 +46,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			Kilogram loading, bool overspeed = false)
 		{
 			var modalWriter = new ModalDataWriter(modFileName);
-			var sumWriter = new TestSumWriter();
-			var container = new VehicleContainer(modalWriter, sumWriter);
+			var container = new VehicleContainer(modalWriter);
 
 			var engineData = EngineeringModeSimulationDataReader.CreateEngineDataFromFile(EngineFile);
 			var axleGearData = CreateAxleGearData();
@@ -89,8 +88,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
 							LossMap =
 								(ratio != 1.0)
-									? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio)
-									: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio),
+									? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio, string.Format("Gear {0}", i))
+									: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygon.ReadFromFile(ShiftPolygonFile),
 							//ShiftPolygon =    DeclarationData.Gearbox.ComputeShiftPolygon(engineData.FullLoadCurve, engineData.IdleSpeed)
@@ -113,7 +112,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			const double ratio = 2.59;
 			return new GearData {
 				Ratio = ratio,
-				LossMap = TransmissionLossMap.ReadFromFile(AxleGearLossMap, ratio)
+				LossMap = TransmissionLossMap.ReadFromFile(AxleGearLossMap, ratio, "AxleGear")
 			};
 		}
 

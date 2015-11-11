@@ -45,8 +45,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrainOverload.vmod"); //new TestModalDataWriter();
-			var sumWriter = new TestSumWriter();
-			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
+			var vehicleContainer = new VehicleContainer(modalWriter);
 
 			var driver = new Driver(vehicleContainer, driverData, new DefaultDriverStrategy());
 			dynamic tmp = Port.AddComponent(driver, new Vehicle(vehicleContainer, vehicleData));
@@ -96,8 +95,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var driverData = CreateDriverData(AccelerationFile);
 
 			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrain.vmod"); //new TestModalDataWriter();
-			var sumWriter = new TestSumWriter();
-			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
+			var vehicleContainer = new VehicleContainer(modalWriter);
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
 
@@ -168,8 +166,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 
 			var modalWriter = new ModalDataWriter("Coach_MinimalPowertrainOverload.vmod",
 				SimulatorFactory.FactoryMode.EngineeringMode);
-			var sumWriter = new TestSumWriter();
-			var vehicleContainer = new VehicleContainer(modalWriter, sumWriter);
+			var vehicleContainer = new VehicleContainer(modalWriter);
 
 			var cycle = new DistanceBasedDrivingCycle(vehicleContainer, cycleData);
 
@@ -219,7 +216,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		{
 			return new GearData {
 				Ratio = 3.0 * 3.5,
-				LossMap = TransmissionLossMap.ReadFromFile(GbxLossMap, 3.0 * 3.5)
+				LossMap = TransmissionLossMap.ReadFromFile(GbxLossMap, 3.0 * 3.5, "AxleGear")
 			};
 		}
 

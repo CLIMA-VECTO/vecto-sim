@@ -6,6 +6,7 @@ using TUGraz.VectoCore.Configuration;
 using TUGraz.VectoCore.Exceptions;
 using TUGraz.VectoCore.Models.Connector.Ports;
 using TUGraz.VectoCore.Models.Connector.Ports.Impl;
+using TUGraz.VectoCore.Models.Declaration;
 using TUGraz.VectoCore.Models.Simulation;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.Simulation.DataBus;
@@ -214,8 +215,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			writer[ModalResultField.n] = CurrentState.EngineSpeed;
 
 			try {
-				writer[ModalResultField.FCMap] =
-					Data.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, CurrentState.EngineSpeed);
+				var fc = Data.ConsumptionMap.GetFuelConsumption(CurrentState.EngineTorque, CurrentState.EngineSpeed);
+				writer[ModalResultField.FCMap] = fc;
+
+				//todo (MK, 2015-11-11): calculate aux start stop correction when start stop functionality is implemented in v3
+				var fcaux = fc;
+				writer[ModalResultField.FCAUXc] = fcaux;
+				writer[ModalResultField.FCWHTCc] = fcaux * Data.WHTCCorrectionFactor;
 			} catch (VectoException ex) {
 				Log.Warn("t: {0} - {1} n: {2} Tq: {3}", CurrentState.AbsTime, ex.Message, CurrentState.EngineSpeed,
 					CurrentState.EngineTorque);
