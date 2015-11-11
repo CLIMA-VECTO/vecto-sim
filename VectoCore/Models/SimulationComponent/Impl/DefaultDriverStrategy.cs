@@ -83,6 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			DriverBehavior = DrivingBehavior.Halted;
+			CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 			return Driver.DrivingActionHalt(absTime, dt, targetVelocity, gradient);
 		}
 
