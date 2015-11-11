@@ -258,6 +258,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			jobContainer.AddRuns(factory);
 			jobContainer.Execute();
 
+			jobContainer.WaitFinished();
 			ResultFileHelper.TestSumFile(@"TestData\Results\Integration\job.vsum", @"job.vsum");
 
 			ResultFileHelper.TestModFile(@"TestData\Results\Integration\job_1-Gear-Test-dist.vmod",
@@ -275,7 +276,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					Tuple.Create((uint)i,
 						new GearData {
 							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
-							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio),
+							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
 						}))
@@ -296,7 +297,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 			var ratio = 3.240355;
 			return new GearData {
 				Ratio = ratio,
-				LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio)
+				LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, "AxleGear")
 			};
 		}
 
@@ -308,7 +309,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 					{
 						1, new GearData {
 							FullLoadCurve = null,
-							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio),
+							LossMap = TransmissionLossMap.ReadFromFile(GearboxLossMap, ratio, "Gear 1"),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
 						}

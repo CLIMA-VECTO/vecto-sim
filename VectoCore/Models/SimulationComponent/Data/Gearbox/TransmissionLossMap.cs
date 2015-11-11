@@ -24,17 +24,20 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 		private readonly PerSecond _maxSpeed = double.NegativeInfinity.SI<PerSecond>();
 		private readonly PerSecond _minSpeed = double.PositiveInfinity.SI<PerSecond>();
 
-		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio)
+		public string GearName { get; protected set; }
+
+
+		public static TransmissionLossMap ReadFromFile(string fileName, double gearRatio, string gearName)
 		{
 			var data = VectoCSVFile.Read(fileName, true);
 
 			if (data.Columns.Count < 3) {
-				throw new VectoException("TransmissionLossMap Data File must consist of at least 3 columns.");
+				throw new VectoException("TransmissionLossMap Data File for {0} must consist of at least 3 columns.", gearName);
 			}
 
 			if (data.Rows.Count < 4) {
 				throw new VectoException(
-					"TransmissionLossMap must consist of at least four lines with numeric values (below file header");
+					"TransmissionLossMap for {0} must consist of at least four lines with numeric values (below file header", gearName);
 			}
 
 			List<GearLossMapEntry> entries;
@@ -42,14 +45,14 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				entries = CreateFromColumnNames(data);
 			} else {
 				Logger<TransmissionLossMap>().Warn(
-					"TransmissionLossMap: Header line is not valid. Expected: '{0}, {1}, {2}, <{3}>'. Got: '{4}'. Falling back to column index.",
+					"TransmissionLossMap {5}: Header line is not valid. Expected: '{0}, {1}, {2}, <{3}>'. Got: '{4}'. Falling back to column index.",
 					Fields.InputSpeed, Fields.InputTorque, Fields.TorqeLoss, Fields.Efficiency,
-					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()));
+					string.Join(", ", data.Columns.Cast<DataColumn>().Select(c => c.ColumnName).Reverse()), gearName);
 
 				entries = CreateFromColumIndizes(data);
 			}
 
-			return new TransmissionLossMap(entries, gearRatio);
+			return new TransmissionLossMap(entries, gearRatio, gearName);
 		}
 
 		private static bool HeaderIsValid(DataColumnCollection columns)
@@ -85,8 +88,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				}).ToList();
 		}
 
-		private TransmissionLossMap(List<GearLossMapEntry> entries, double gearRatio)
+		private TransmissionLossMap(List<GearLossMapEntry> entries, double gearRatio, string gearName)
 		{
+			GearName = gearName;
 			_ratio = gearRatio;
 			_entries = entries;
 			_lossMap = new DelauneyMap();
@@ -104,6 +108,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			_lossMap.Triangulate();
 		}
 
+
 		/// <summary>
 		///	Computes the INPUT torque given by the input engineSpeed and the output torque.
 		/// </summary>
@@ -117,13 +122,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 				//var limitedTorque = VectoMath.Limit(outTorque, _minTorque, _maxTorque).Value();
 
 				var inTorque = _lossMap.Interpolate(inAngularVelocity.Value(), outTorque.Value()).SI<NewtonMeter>();
-				Log.Debug("GearboxLoss: {0}", inTorque - outTorque);
+				Log.Debug("GearboxLoss {0}: {1}", GearName, inTorque - outTorque);
 
 				// Limit input torque to a maximum value without losses (just torque/ratio)
 				return VectoMath.Max(inTorque, outTorque / _ratio);
 			} catch (VectoException) {
-				Log.Error("Failed to interpolate in TransmissionLossMap. angularVelocity: {0}, torque: {1}", inAngularVelocity,
-					outTorque);
+				Log.Error("{0} - Failed to interpolate in TransmissionLossMap. angularVelocity: {1}, torque: {2}", GearName,
+					inAngularVelocity, outTorque);
 				return outTorque / _ratio;
 			}
 		}

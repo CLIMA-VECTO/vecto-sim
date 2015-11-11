@@ -183,11 +183,13 @@ namespace TUGraz.VectoCore.FileIO.Reader.DataObjectAdaper
 			retVal.HasTorqueConverter = false;
 
 			var axleGear = gearbox.Body.Gears.First();
-			var axleLossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, axleGear.LossMap), axleGear.Ratio);
+			var axleLossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, axleGear.LossMap), axleGear.Ratio,
+				"AxleGear");
 			retVal.AxleGearData = new GearData { LossMap = axleLossMap, Ratio = axleGear.Ratio, TorqueConverterActive = false };
 
 			retVal.Gears = gearbox.Body.Gears.Skip(1).Select((gear, i) => {
-				var gearLossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, gear.LossMap), gear.Ratio);
+				var gearLossMap = TransmissionLossMap.ReadFromFile(Path.Combine(gearbox.BasePath, gear.LossMap), gear.Ratio,
+					string.Format("Gear {0}", i));
 				var gearFullLoad = (string.IsNullOrWhiteSpace(gear.FullLoadCurve) || gear.FullLoadCurve == "<NOFILE>")
 					? engine.FullLoadCurve
 					: FullLoadCurve.ReadFromFile(Path.Combine(gearbox.BasePath, gear.FullLoadCurve));

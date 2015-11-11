@@ -631,11 +631,13 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			} while (retryCount++ < Constants.SimulationSettings.DriverSearchLoopThreshold);
 
 			LogManager.EnableLogging();
-			Log.Warn("Exceeded max iterations when searching for operating point!");
-			Log.Warn("acceleration: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.acceleration)),
+			Log.Error("Exceeded max iterations when searching for operating point!");
+			Log.Error("acceleration: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.acceleration)),
 				", ".Join(debug.Slice(-6).Select(x => x.acceleration)));
-			Log.Warn("exceeded: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.delta)),
+			Log.Error("exceeded: {0} ... {1}", ", ".Join(debug.Take(5).Select(x => x.delta)),
 				", ".Join(debug.Slice(-6).Select(x => x.delta)));
+			// issue request once more for logging...
+			NextComponent.Request(absTime, retVal.SimulationInterval, retVal.Acceleration, gradient, true);
 			Log.Error("Failed to find operating point! absTime: {0}", absTime);
 			throw new VectoSearchFailedException("Failed to find operating point!  exceeded: {0} ... {1}",
 				", ".Join(debug.Take(5).Select(x => x.delta)),

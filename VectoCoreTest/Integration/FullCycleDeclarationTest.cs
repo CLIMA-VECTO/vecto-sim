@@ -152,5 +152,20 @@ namespace TUGraz.VectoCore.Tests.Integration
 				Assert.IsTrue(run.Run.FinishedWithoutErrors);
 			}
 		}
+
+		[TestMethod]
+		public void Truck12t_LongHaulCycle_RefLoad_Declaration()
+		{
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
+				@"c:\Users\Technik\Downloads\12t Delivery Truck\12t Delivery Truck.vecto");
+			factory.WriteModalResults = true;
+			factory.SumWriter = new SummaryFileWriter("Test.vsum");
+			var runs = factory.SimulationRuns().ToArray();
+
+			var run = runs[1];
+			run.Run();
+
+			Assert.IsTrue(run.FinishedWithoutErrors);
+		}
 	}
 }
