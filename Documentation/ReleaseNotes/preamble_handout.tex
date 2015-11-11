@@ -1,21 +1,49 @@
 % \pdfminorversion=5
 % \pdfminorversion=4
 \pdfobjcompresslevel=1
-\documentclass[14pt,handout]{beamer}
+% \documentclass[14pt,handout]{beamer}
+\documentclass[11pt,a4paper]{scrartcl}
 % \documentclass[14pt,aspectratio=169]{beamer} 
 
-\usepackage{../beamer_theme/pgfmorepages}
-% \usetheme[notes]{tugraz2013}
-\usepackage[institute]{../beamer_theme/beamerthemetugraz2013}
+% \usepackage{beamer_theme/pgfmorepages}
+% \usepackage[institute]{beamer_theme/beamerthemetugraz2013}
 
+\usepackage{graphicx}
 \usepackage{bookmark}
-\makeatletter
-\apptocmd{\beamer@@frametitle}{\only<1>{\bookmark[page=\the\c@page,level=5]{#1}}}%
-{\message{** patching of \string\beamer@@frametitle succeeded **}}%
-{\message{** patching of \string\beamer@@frametitle failed **}}%
-\makeatother
 
+\usepackage{geometry}
+\geometry{verbose,paperwidth=21cm,paperheight=29.7cm}
+  \geometry{tmargin=25mm,bmargin=25mm,lmargin=25mm,rmargin=25mm}
+
+% \makeatletter
+% \apptocmd{\beamer@@frametitle}{\only<1>{\bookmark[page=\the\c@page,level=5]{#1}}}%
+% {\message{** patching of \string\beamer@@frametitle succeeded **}}%
+% {\message{** patching of \string\beamer@@frametitle failed **}}%
+% \makeatother
+
+% \institute{Institute for Technical Informatics, TU Graz}
+\title{Vecto 3.x Release Notes}	% Kurztitel in []
+\author{DI Dr. Markus Quaritsch}
+\date{\today}		% \today für heutiges Datum verwenden
+
+\usepackage{pdfpages}
+\usepackage{pifont}
+
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{M}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\newlength{\IdColWidth}\setlength{\IdColWidth}{0.1\textwidth}
+\newlength{\ReqColWidth}\setlength{\ReqColWidth}{0.62\textwidth}
+\newlength{\StatusColWidth}\setlength{\StatusColWidth}{0.22\textwidth}
+
+\usepackage{cleveref}
+
+\newcommand{\Vcheck}{\ding{52}}
+\newcommand{\Vtodo}{ToDo}
 
 % \input{lecture_builder.tex}
 
-\input{header.tex}
+% \input{header.tex}
