@@ -128,7 +128,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 			if (_currentState.Velocity.IsEqual(0.SI<MeterPerSecond>(), Constants.SimulationSettings.VehicleSpeedHaltTolerance)) {
 				_currentState.Velocity = 0.SI<MeterPerSecond>();
 			}
-			_currentState.Distance = _previousState.Distance + dt * (_previousState.Velocity + _currentState.Velocity) / 2;
+			_currentState.Distance = _previousState.Distance + _previousState.Velocity * dt + acceleration * dt * dt / 2;
 
 			_currentState.DriverAcceleration = DriverAcceleration(acceleration);
 			_currentState.RollingResistance = RollingResistance(gradient);

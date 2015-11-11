@@ -83,6 +83,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			DriverBehavior = DrivingBehavior.Halted;
+			CurrentDrivingMode = DrivingMode.DrivingModeDrive;
 			return Driver.DrivingActionHalt(absTime, dt, targetVelocity, gradient);
 		}
 
@@ -510,6 +511,9 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 							if (!DataBus.ClutchClosed(absTime)) {
 								Log.Warn("Clutch is open - trying RollAction");
 								response = Driver.DrivingActionRoll(absTime, ds, targetVelocity, gradient);
+							} else {
+								Log.Warn("Clutch is open - trying AccelerateAction");
+								response = Driver.DrivingActionAccelerate(absTime, ds, targetVelocity, gradient);
 							}
 						});
 					break;

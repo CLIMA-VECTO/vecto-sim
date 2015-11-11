@@ -216,7 +216,7 @@ namespace TUGraz.VectoCore.Tests.Integration.SimulationRuns
 		{
 			return new GearData {
 				Ratio = 3.0 * 3.5,
-				LossMap = TransmissionLossMap.ReadFromFile(GbxLossMap, 3.0 * 3.5)
+				LossMap = TransmissionLossMap.ReadFromFile(GbxLossMap, 3.0 * 3.5, "AxleGear")
 			};
 		}
 

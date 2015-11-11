@@ -92,6 +92,8 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 			jobContainer.AddRuns(runsFactory);
 			jobContainer.Execute();
 
+			jobContainer.WaitFinished();
+
 			ResultFileHelper.TestSumFile(@"TestData\Results\EngineOnlyCycles\24t Coach.vsum", @"24t Coach.vsum");
 
 			ResultFileHelper.TestModFiles(new[] {

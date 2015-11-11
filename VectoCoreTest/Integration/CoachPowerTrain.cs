@@ -82,8 +82,8 @@ namespace TUGraz.VectoCore.Tests.Integration
 						new GearData {
 							FullLoadCurve = FullLoadCurve.ReadFromFile(GearboxFullLoadCurveFile),
 							LossMap = (ratio != 1.0)
-								? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio)
-								: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio),
+								? TransmissionLossMap.ReadFromFile(GearboxIndirectLoss, ratio, string.Format("Gear {0}", i))
+								: TransmissionLossMap.ReadFromFile(GearboxDirectLoss, ratio, string.Format("Gear {0}", i)),
 							Ratio = ratio,
 							ShiftPolygon = ShiftPolygon.ReadFromFile(GearboxShiftPolygonFile)
 						}))
@@ -104,7 +104,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 			const double ratio = 3.240355;
 			return new GearData {
 				Ratio = ratio,
-				LossMap = TransmissionLossMap.ReadFromFile(AxleGearLossMap, ratio)
+				LossMap = TransmissionLossMap.ReadFromFile(AxleGearLossMap, ratio, "AxleGear")
 			};
 		}
 
