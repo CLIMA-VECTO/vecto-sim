@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms.DataVisualization.Charting;
+using NLog;
 using TUGraz.VectoCore.Models.Simulation.Data;
 using TUGraz.VectoCore.Models.SimulationComponent.Data;
 using TUGraz.VectoCore.Utils;
@@ -162,13 +163,11 @@ namespace TUGraz.VectoCore.Models.Declaration
 		private Stream CreateTitlePage(Dictionary<MissionType, ResultContainer> missions)
 		{
 			var stream = new MemoryStream();
-
 			var resourceName = string.Format("{0}Report.title{1}CyclesTemplate.pdf", RessourceHelper.Namespace, missions.Count);
 			var inputStream = RessourceHelper.ReadStream(resourceName);
-
 			var reader = new PdfReader(inputStream);
-
 			var stamper = new PdfStamper(reader, stream);
+
 
 			var pdfFields = stamper.AcroFields;
 			pdfFields.SetField("version", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString());
@@ -191,33 +190,21 @@ namespace TUGraz.VectoCore.Models.Declaration
 			foreach (var results in missions.Values.OrderBy(m => m.Mission.MissionType)) {
 				pdfFields.SetField("Mission" + i, results.Mission.MissionType.ToString());
 
-				var m = results.ModData[LoadingType.ReferenceLoad];
-				var dt = m.GetValues<Second>(ModalResultField.simulationInterval);
-				var maxDistance = m.GetValues<Meter>(ModalResultField.dist).Max();
-				var maxTime = m.GetValues<Second>(ModalResultField.time).Max();
-
-				var avgSpeed = maxDistance / maxTime;
+				var data = results.ModData[LoadingType.ReferenceLoad];
 
 				pdfFields.SetField("Loading" + i, results.Mission.RefLoad.ConvertTo().Ton.ToOutputFormat(1) + " t");
-				pdfFields.SetField("Speed" + i, avgSpeed.ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1) + " km/h");
+				pdfFields.SetField("Speed" + i, data.Speed().ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1) + " km/h");
 
-				var fc = m.GetValues<KilogramPerSecond>(ModalResultField.FCMap);
-				var fcWeight = fc.Zip(dt, (fcVal, dtVal) => fcVal * dtVal).Sum();
-				var fcVolume = (fcWeight / Physics.FuelDensity).Cast<CubicMeter>();
-				var co2Weight = fcWeight * Physics.CO2PerFuelWeight;
-
-				var fcAvgVolume = fcVolume / maxDistance;
-				var co2AvgWeight = co2Weight / maxDistance;
+				var fcLiterPer100Km = data.FuelConsumptionLiterPer100Kilometer();
+				pdfFields.SetField("FC" + i, fcLiterPer100Km.ToOutputFormat(1));
 
 				var loadingTon = results.Mission.RefLoad.ConvertTo().Ton;
-
-				var fcLiterPer100Km = fcAvgVolume.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
 				var fcLiterPer100Tonkm = fcLiterPer100Km / loadingTon;
-				var co2GrammPerKm = co2AvgWeight.ConvertTo().Gramm.Per.Kilo.Meter;
+				pdfFields.SetField("FCt" + i, fcLiterPer100Tonkm.ToOutputFormat(1));
+
+				var co2GrammPerKm = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
 				var co2GrammPerTonKm = co2GrammPerKm / loadingTon;
 
-				pdfFields.SetField("FC" + i, fcLiterPer100Km.ToOutputFormat(1));
-				pdfFields.SetField("FCt" + i, fcLiterPer100Tonkm.ToOutputFormat(1));
 				pdfFields.SetField("CO2" + i, co2GrammPerKm.ToOutputFormat(1));
 				pdfFields.SetField("CO2t" + i, co2GrammPerTonKm.ToOutputFormat(1));
 				i++;
@@ -277,34 +264,23 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			foreach (var pair in results.ModData) {
 				var loadingType = pair.Key;
-				var m = pair.Value;
+				var data = pair.Value;
 
-				var dt = m.GetValues<Second>(ModalResultField.simulationInterval);
-				var maxDistance = m.GetValues<Meter>(ModalResultField.dist).Max();
-				var maxTime = m.GetValues<Second>(ModalResultField.time).Max();
-				var avgSpeed = maxDistance / maxTime;
-
-				var fc = m.GetValues<KilogramPerSecond>(ModalResultField.FCMap);
-				var fcWeight = fc.Zip(dt, (fcVal, dtVal) => fcVal * dtVal).Sum();
-				var fcVolume = (fcWeight / Physics.FuelDensity).Cast<CubicMeter>();
-				var co2Weight = fcWeight * Physics.CO2PerFuelWeight;
-				var fcAvgVolume = fcVolume / maxDistance;
-				var co2AvgWeight = co2Weight / maxDistance;
 				var loadingTon = results.Mission.Loadings[loadingType].ConvertTo().Ton;
+				var loadAppendix = loadingType.GetShortName();
 
-				var fcLiterPer100Km = fcAvgVolume.ConvertTo().Cubic.Dezi.Meter * 100.SI().Kilo.Meter;
-				var co2GrammPerKm = co2AvgWeight.ConvertTo().Gramm.Per.Kilo.Meter;
+				pdfFields.SetField("Load" + loadAppendix, loadingTon.ToOutputFormat(1) + " t");
+				pdfFields.SetField("Speed" + loadAppendix, data.Speed().ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1));
 
-				var loadString = loadingType.GetShortName();
-
-				pdfFields.SetField("Load" + loadString,
-					results.Mission.Loadings[loadingType].ConvertTo().Ton.ToOutputFormat(1) + " t");
-				pdfFields.SetField("Speed" + loadString, avgSpeed.ConvertTo().Kilo.Meter.Per.Hour.ToOutputFormat(1));
-				pdfFields.SetField("FCkm" + loadString, fcLiterPer100Km.ToOutputFormat(1));
-				pdfFields.SetField("FCtkm" + loadString,
+				var fcLiterPer100Km = data.FuelConsumptionLiterPer100Kilometer();
+				pdfFields.SetField("FCkm" + loadAppendix, fcLiterPer100Km.ToOutputFormat(1));
+				pdfFields.SetField("FCtkm" + loadAppendix,
 					loadingTon.IsEqual(0) ? "-" : (fcLiterPer100Km / loadingTon).ToOutputFormat(1));
-				pdfFields.SetField("CO2km" + loadString, co2GrammPerKm.ToOutputFormat(1));
-				pdfFields.SetField("CO2tkm" + loadString,
+
+
+				var co2GrammPerKm = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
+				pdfFields.SetField("CO2km" + loadAppendix, co2GrammPerKm.ToOutputFormat(1));
+				pdfFields.SetField("CO2tkm" + loadAppendix,
 					loadingTon.IsEqual(0) ? "-" : (co2GrammPerKm / loadingTon).ToOutputFormat(1));
 			}
 
@@ -387,24 +363,16 @@ namespace TUGraz.VectoCore.Models.Declaration
 			});
 
 			foreach (var missionResult in missions.OrderBy(m => m.Key)) {
-				var m = missionResult.Value.ModData[LoadingType.ReferenceLoad];
-				var fc = m.GetValues<KilogramPerSecond>(ModalResultField.FCMap);
-				var dt = m.GetValues<Second>(ModalResultField.simulationInterval);
+				var data = missionResult.Value.ModData[LoadingType.ReferenceLoad];
 
-				var fcWeight = fc.Zip(dt, (fcValue, dtValue) => fcValue * dtValue).Sum();
-
-				var maxDistance = m.GetValues<Meter>(ModalResultField.dist).Max();
-				var loading = missionResult.Value.Mission.Loadings[LoadingType.ReferenceLoad];
-
-				var co2Weight = fcWeight * Physics.CO2PerFuelWeight;
-
-				var co2GPerTonKm = co2Weight.ConvertTo().Gramm / (maxDistance.ConvertTo().Kilo.Meter * loading.ConvertTo().Ton);
+				var loadingTon = missionResult.Value.Mission.Loadings[LoadingType.ReferenceLoad].ConvertTo().Ton;
+				var co2GrammPerTonKm = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter / loadingTon;
 
 				var series = new Series(missionResult.Key + " (Ref. load.)");
 				var dataPoint = new DataPoint {
 					Name = missionResult.Key.ToString(),
-					YValues = new[] { co2GPerTonKm.Value() },
-					Label = co2GPerTonKm.ToOutputFormat(1, showUnit: true),
+					YValues = new[] { co2GrammPerTonKm.Value() },
+					Label = co2GrammPerTonKm.ToOutputFormat(1, showUnit: true),
 					Font = new Font("Helvetica", 20),
 					LabelBackColor = Color.White
 				};
@@ -458,23 +426,13 @@ namespace TUGraz.VectoCore.Models.Declaration
 					ChartType = SeriesChartType.Point
 				};
 				foreach (var pair in missionResult.Value.ModData) {
-					var modData = missionResult.Value.ModData[pair.Key];
-					var fc = modData.GetValues<KilogramPerSecond>(ModalResultField.FCMap);
-					var dt = modData.GetValues<Second>(ModalResultField.simulationInterval).ToList();
+					var data = missionResult.Value.ModData[pair.Key];
 
-					var fcSum = fc.Zip(dt, (fcValue, dtValue) => fcValue * dtValue).Sum();
+					var co2GramPerKilometer = data.CO2PerMeter().ConvertTo().Gramm.Per.Kilo.Meter;
+					var loadingTon = missionResult.Value.Mission.Loadings[pair.Key].ConvertTo().Ton;
 
-
-					var maxDistance = modData.GetValues<Meter>(ModalResultField.dist).Max();
-					var maxTime = modData.GetValues<Second>(ModalResultField.time).Max();
-
-					var avgKmh = maxDistance.ConvertTo().Kilo.Meter / maxTime.ConvertTo().Hour;
-					var co2GPerKm = fcSum.ConvertTo().Gramm * Physics.CO2PerFuelWeight / maxDistance.ConvertTo().Kilo.Meter;
-
-					var loading = missionResult.Value.Mission.Loadings[pair.Key].ConvertTo().Ton;
-
-					var point = new DataPoint(avgKmh.Value(), co2GPerKm.Value()) {
-						Label = string.Format(CultureInfo.InvariantCulture, "{0:0.0} t", loading.Value()),
+					var point = new DataPoint(data.Speed().ConvertTo().Kilo.Meter.Per.Hour.Value(), co2GramPerKilometer.Value()) {
+						Label = string.Format(CultureInfo.InvariantCulture, "{0:0.0} t", loadingTon.Value()),
 						Font = new Font("Helvetica", 16),
 						LabelBackColor = Color.White
 					};
@@ -627,8 +585,8 @@ namespace TUGraz.VectoCore.Models.Declaration
 
 			var dataPoints = new Series("load points (Ref. load.)") { ChartType = SeriesChartType.Point, Color = Color.Red };
 			dataPoints.Points.DataBindXY(
-				modData.GetValues<SI>(ModalResultField.n).Select(x => x.ConvertTo().Rounds.Per.Minute).ToDouble(),
-				modData.GetValues<SI>(ModalResultField.Tq_eng).ToDouble());
+				modData.GetValues<PerSecond>(ModalResultField.n).Select(x => x.ConvertTo().Rounds.Per.Minute).ToDouble(),
+				modData.GetValues<NewtonMeter>(ModalResultField.Tq_eng).ToDouble());
 			operatingPointsChart.Series.Add(dataPoints);
 
 			operatingPointsChart.Update();
