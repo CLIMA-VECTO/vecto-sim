@@ -129,6 +129,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Data.Gearbox
 			} catch (VectoException) {
 				Log.Error("{0} - Failed to interpolate in TransmissionLossMap. angularVelocity: {1}, torque: {2}", GearName,
 					inAngularVelocity, outTorque);
+
 				return outTorque / _ratio;
 			}
 		}

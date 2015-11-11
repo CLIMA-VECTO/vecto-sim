@@ -74,7 +74,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Meter ds, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			VehicleStopped = false;
-			Log.Debug("==== DRIVER Request ====");
+			Log.Debug("==== DRIVER Request (distance) ====");
 			Log.Debug(
 				"Request: absTime: {0},  ds: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5}, vehicle stopped: {6}",
 				absTime, ds, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, VehicleStopped);
@@ -93,7 +93,7 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 		public IResponse Request(Second absTime, Second dt, MeterPerSecond targetVelocity, Radian gradient)
 		{
 			VehicleStopped = true;
-			Log.Debug("==== DRIVER Request ====");
+			Log.Debug("==== DRIVER Request (time) ====");
 			Log.Debug(
 				"Request: absTime: {0},  dt: {1}, targetVelocity: {2}, gradient: {3} | distance: {4}, velocity: {5} gear: {6}: vehicle stopped: {7}",
 				absTime, dt, targetVelocity, gradient, DataBus.Distance, DataBus.VehicleSpeed, DataBus.Gear, VehicleStopped);
@@ -720,9 +720,11 @@ namespace TUGraz.VectoCore.Models.SimulationComponent.Impl
 					retVal.SimulationInterval = ds / currentSpeed;
 					return retVal;
 				}
-				Log.Error("vehicle speed is {0}, acceleration is {1}", currentSpeed.Value(), acceleration.Value());
+				Log.Error("{2}: vehicle speed is {0}, acceleration is {1}", currentSpeed.Value(), acceleration.Value(),
+					DataBus.Distance);
 				throw new VectoSimulationException(
-					"vehicle speed has to be > 0 if acceleration = 0!  v: {0}, a: {1}", currentSpeed.Value(), acceleration.Value());
+					"vehicle speed has to be > 0 if acceleration = 0!  v: {0}, a: {1}, distance: ", currentSpeed.Value(),
+					acceleration.Value(), DataBus.Distance);
 			}
 
 			// we need to accelerate / decelerate. solve quadratic equation...
