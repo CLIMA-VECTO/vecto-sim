@@ -156,6 +156,7 @@ namespace TUGraz.VectoCore.Tests.Integration
 		[TestMethod]
 		public void Truck12t_LongHaulCycle_RefLoad_Declaration()
 		{
+			// TODO: fails due to interpolaion failure in Gear 4
 			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
 				@"c:\Users\Technik\Downloads\12t Delivery Truck\12t Delivery Truck.vecto");
 			factory.WriteModalResults = true;
@@ -163,6 +164,22 @@ namespace TUGraz.VectoCore.Tests.Integration
 			var runs = factory.SimulationRuns().ToArray();
 
 			var run = runs[1];
+			run.Run();
+
+			Assert.IsTrue(run.FinishedWithoutErrors);
+		}
+
+		[TestMethod]
+		public void Truck12t_UrbanDeliveryCycle_RefLoad_Declaration()
+		{
+			// TODO: fails due to interpolaion failure in Gear 4
+			var factory = new SimulatorFactory(SimulatorFactory.FactoryMode.DeclarationMode,
+				@"c:\Users\Technik\Downloads\12t Delivery Truck\12t Delivery Truck.vecto");
+			factory.WriteModalResults = true;
+			factory.SumWriter = new SummaryFileWriter("Test.vsum");
+			var runs = factory.SimulationRuns().ToArray();
+
+			var run = runs[7];
 			run.Run();
 
 			Assert.IsTrue(run.FinishedWithoutErrors);

@@ -56,6 +56,7 @@ namespace TUGraz.VectoCore.Tests.Models.Simulation
 
 			for (var i = 0; i < 11; i++) {
 				aux.OutPort().Request(t, dt, torque, speed);
+				dataWriter[ModalResultField.dist] = i.SI<Meter>();
 				container.CommitSimulationStep(t, dt);
 				t += dt;
 			}
