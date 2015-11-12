@@ -5,6 +5,11 @@
 \label{sec:comparison_of_vecto_2_2_and_vecto_3_0_1}
 %=========================================================================
 
+%=========================================================================
+\subsection{Functional checks based on simple driving cycles} % (fold)
+\label{sub:functional_checks_based_on_simple_driving_cycles}
+%=========================================================================
+
 To compare the Driving behavior of Vecto~2.2 and Vecto~3.0.1 a number of simple driving cycles (about 2 -- 5\,km) have been used to visually compare the most important parameters such as 
 \begin{itemize}
 	\item Vehicle speed
@@ -16,11 +21,41 @@ To compare the Driving behavior of Vecto~2.2 and Vecto~3.0.1 a number of simple 
 \end{itemize}
 for two different vehicles: (i) 40t truck, and (ii) coach. The driving cycles tested are listed in \Cref{sec:driving_cycles_comparison}. \Cref{sec:comparison_vecto_2_2_and_vecto_3_0_1_on_the_basic_driving_cycles} contains graphs comparing the parameters listed above for Vecto~2.2 and Vecto~3.0.1 for the basic driving cycles.
 
+Main conclusions drawn from the overll comparisons are:
+\begin{itemize}
+	\item Overall model behaviour (vehicle speed distribution, fuel consumption) nearly unchanged.
+	\item Improvements compared to VECTO2.2 in several details:
+	\begin{itemize}
+		\item Vehicle operation in VECTO3.0 (nearly) exactly follows the rules defined for driver strategy (target speed + acceleration, coasting and braking events). This was not the case for VECTO2.2 due to the limitation of the fixed time step based simulation approach
+		\item VECTO3.0 has a much lower tendency to gear shift oscillations than VECTO2.2. (both model versions still use the gear shift strategy from the ACEA 2014 White book)
+		\item More stable software behaviour (all observed special cases where VECTO2.2 did not correctly finish the simulation were simulated successfully in VECTO3.0)
+	\end{itemize}
+\end{itemize}
+
+%=========================================================================
+\subsection{Comparison of model results for HDV CO2 mission profiles.} % (fold)
+\label{sub:comparison_of_model_results_for_hdv_co2_mission_profiles_}
+%=========================================================================
+
+A comparison of model results has also been performed for a 40t truck and a 12t truck in the applicable HDV CO2 mission profiles. For the 40t truck additionally a sensitivity analysis has been performed, whether the VECTO ranking for a set of 5 five vehicle variants (standard + modifications in auxiliaries, air drag, gearbox and rolling resistance) is affected by the change from VECTO~2.2 to Vecto~3.0.1.
+Observed differences in average vehicle speed between the two VECTO versions were in a range of +1.2 to -0.3\,\%. Change in Fuel consumption was observed from +2.3\,\% to -0.7\,\%. The relative difference between the vehicle variants in the sensitivity analysis was nearly identical between Vecto~2.2 and Vecto~3.0.1. \Cref{fig:sensitivity_analysis_40t_Truck} shows a table with the results for the sensitivity analysis performed for the 5 vehicle variants.
+
+
+% subsection comparison_of_model_results_for_hdv_co2_mission_profiles_ (end)
+
+
+% subsection functional_checks_based_on_simple_driving_cycles (end)
+
 \Cref{sec:comparison_of_vecto_2_2_and_vecto_3_0_1_on_the_declaration_cycle} shows a comparison of Vecto~2.2 and Vecto~3.0.1 for selected Declaration-Mode driving cycles (long-haul, regional delivery, and urban delivery) for different loadings and two different vehicles.
 
 \Cref{sec:declaration_results_report_for_vecto_2_2_and_vecto_3_0_1} contains Declaration Reports for different Vecto jobs, generated with version~2.2 and version~3.0.1
 
-
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{img/SensitivityAnalysis.png}
+	\caption{Sensitivity analysis for 5 variants of the 40\,t Truck}
+	\label{fig:sensitivity_analysis_40t_Truck}
+\end{figure}
 
 %=========================================================================
 \section{ACEA Requirements} % (fold)
@@ -132,17 +167,17 @@ Req 508 & The european comission should be responsible for the functionality of 
 \begin{tabular}{L{\IdColWidth}|L{\ReqColWidth}|M{\StatusColWidth}}
 ID & Requirement & Status Vecto 3.0.1 \\ \hline\hline
 Req 601 & There shall be a process for maintenance of the tool. & 
-	not applicable	 \\ \hline
+	to be discussed with the European Commission	 \\ \hline
 Req 602 & There shall be a process for validation of the tool. & 
-	not applicable	 \\ \hline
+	to be discussed with the European Commission	 \\ \hline
 Req 603 & There shall be a process for distribution of the tool. & 
-	not applicable	 \\ \hline
+	to be discussed with the European Commission	 \\ \hline
 Req 604 & There shall be a support organisation that provides quick solution of any type, permanent or non-permanent, within 48 hours to bug reports of critical nature.  A bug is considered critical if the application can’t provide a correct calculation when given correct input. & 
-	not applicable	 \\ \hline
+	to be discussed with the European Commission	 \\ \hline
 Req 606 & There shall be a support organisation that provides a response to bugs of non-critical nature, with the next release. & 
-	not applicable	 \\ \hline
+	to be discussed with the European Commission	 \\ \hline
 Req 607 & There shall be a support organisation that provides bug acknowledgement of any kind within 24 hours. & 
-	not applicable	 \\ \hline
+	to be discussed with the European Commission	 \\ \hline
 Req 608 & In order to support a broad target audience, the simulation tool's user and support documentation shall be available in English  & 
 	\Vcheck	 \\ \hline
 Req 609 & Simulation tool versions shall be backward compatible so rework at the OEM with regard to processing simulation tool input and output data shall be reduced to the minimum & 
@@ -150,9 +185,9 @@ Req 609 & Simulation tool versions shall be backward compatible so rework at the
 Req 610 & The simulation tool will be developed under version control, so stakeholders are able to trace simulation tool changes over time. & 
 	\Vcheck	 \\ \hline
 Req 611 & The provided interfaces shall be well documented so the OEM's are able to connect their own tools. & 
-	not applicable	 \\ \hline
+	\Vtodo	 \\ \hline
 Req 612 & Technical support in English shall be available at least from 8 to 18 CET Monday to Friday (except for common European public holidays) by telephone and email. & 
-	not applicable	 \\ \hline
+	to be discussed with the European Commission	 \\ \hline
 Req 613 & All documentation affected by the new release of the software must be updated. & 
 		 \\ \hline
 Req 614 & There shall be a platform by which all OEM's shall be able to view or get actively notified on all OEM bug reports and the solving proces for these bug reports. & 
