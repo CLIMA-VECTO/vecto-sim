@@ -79,7 +79,7 @@ In case you find a bug or Vecto 3.0 does not behave as expected \textbf{please f
 	\item New distance-based simulation model
 	\item Simulation with variable steps. The simulation distance is adapted such that the respective time is about 0.5\,s (parameter \textsc{TargetTimeInterval})
 	\item Accuracy of simulated distance vs. driving cycle distance $< 1\,\mu\textrm{m}$
-	\item New componend-based software architecture
+	\item New component-based software architecture
 	\begin{itemize}
 		\item Separate software component for every part of the power-train:
 		Combustion Engine,
@@ -99,14 +99,14 @@ In case you find a bug or Vecto 3.0 does not behave as expected \textbf{please f
 	\end{itemize}
 	\item \textsc{DriverStrategy} as separate component with well-defined interface
 	\item \textsc{GearshiftStrategy} as separate component with well-defined interface
-	\item All computations are done in SI units; datatypes reflect concrete SI units (i.e., kg, m, s, Nm, \ldots)
+	\item All computations are done in SI units; data-types reflect concrete SI units (i.e., kg, m, s, Nm, \ldots)
 	\item Run-time conformity check of SI units on all computations and SI conversions
 	\item Traction interruption of arbitrary time possible (also $<$ 1\,s), accurate simulation of traction interruption time
 	\item New \textsc{Idle-Controller} to simulate engine speed during traction interruption periods
 	\item Intelligent search of operating point during coasting, braking, and in engine-overload situations, deviation from FLD $<$ 0.5\,W (parameter \textsc{EnginePowerSearchTolerance}).
-	\item Exact analytical solutions instead of exhaustive search where possible, e.g., computing engine's preferred speed, computing time interval required for driving a certain distance, compute distance required to decelerate to a given target speed depending on the driver's deceleration curve, computation of distance to drive when accelerating before braking, \ldots
+	\item Exact analytic solutions instead of exhaustive search where possible, e.g., computing engine's preferred speed, computing time interval required for driving a certain distance, compute distance required to decelerate to a given target speed depending on the driver's deceleration curve, computation of distance to drive when accelerating before braking, \ldots
 	\item Support sparse representation of driving cycles. Instead of specifying the driving cycle on a per-meter basis only distance entries with speed or slope changes need to be specified. Reduction of 96\,\% in disk space
-	\item Multithreaded execution when multiple driving cycles resp. multiple Vecto jobs are executed
+	\item Multi-threaded execution when multiple driving cycles resp. multiple Vecto jobs are executed
 	\item Vecto 3.0.1 only supports the latest version of the input file formats (JSON), i.e., .vecto: v\,2; .vveh: v\,7; .vgbx: v\,5; .veng: v\,3
 	\item Support for arbitrary order of columns in CSV files if the header is given as specified in the Manual. If the header is not recognized: fall-back to column-based parsing
 	\item more energy-efficient implementation of \textit{Overspeed}: vehicle acceleration only due to road's slope, engine is on drag-curve
@@ -118,7 +118,7 @@ In case you find a bug or Vecto 3.0 does not behave as expected \textbf{please f
 		\item Code coverage: 84\,\% \\
 		The main parts of the code are covered by tests, parts with low coverage are mainly auto-generated equality methods and parsing of input data (cf.~\Cref{fig:Vecto301_TestCoverage})
 	\end{itemize}
-	\item Code complexity\footnote{According to \textit{SourceMonitor}}: currently the max. complexity is 20 (single method) and 10 methods have a complexity $>$10. The most complex methods are in the ShiftStrategy, the DriverStrategy, and the Powertrain builder; see \Cref{fig:Vecto301_Komplexity} and \Cref{fig:Vecto301_Kiviat}
+	\item Code complexity\footnote{According to \textit{SourceMonitor}}: currently the max. complexity is 20 (single method) and 10 methods have a complexity $>$10. The most complex methods are in the ShiftStrategy, the DriverStrategy, and the Powertrain builder; see \Cref{fig:Vecto301_Komplexity}.% and \Cref{fig:Vecto301_Kiviat}
 \end{itemize}
 
 \begin{figure}
@@ -140,13 +140,13 @@ In case you find a bug or Vecto 3.0 does not behave as expected \textbf{please f
 	\label{fig:Vecto301_Komplexity}
 \end{figure}
 
-\begin{figure}
-	\centering
+% \begin{figure}
+% 	\centering
 
-	\includegraphics[width=0.6\textwidth]{img/Vecto3_0_1-Kiviat.png}
-	\caption{Kiviat Metrics Graph (SourceMonitor)}
-	\label{fig:Vecto301_Kiviat}
-\end{figure}
+% 	\includegraphics[width=0.6\textwidth]{img/Vecto3_0_1-Kiviat.png}
+% 	\caption{Kiviat Metrics Graph (SourceMonitor)}
+% 	\label{fig:Vecto301_Kiviat}
+% \end{figure}
 
 
 %=========================================================================
@@ -170,7 +170,7 @@ In case you find a bug or Vecto 3.0 does not behave as expected \textbf{please f
 \label{sec:how_to_submit_a_bug_report}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-In case you encounter a bug or Vecto~3 is not behaving as you would expect it is of utmost importance that the developers can reproduce your results\footnote{\url{http://www.chiark.greenend.org.uk/~sgtatham/bugs.html}}. All bugs should be submitted as Jira Issue (either \textit{Bug} or \textit{Feature}/\textit{Task}) to maintain tracability. \\[0.5em]
+In case you encounter a bug or Vecto~3 is not behaving as you would expect it is of utmost importance that the developers can reproduce your results\footnote{\url{http://www.chiark.greenend.org.uk/~sgtatham/bugs.html}}. All bugs should be submitted as Jira Issue (either \textit{Bug} or \textit{Feature}/\textit{Task}) to maintain traceability. \\[0.5em]
 
 Every bug-report should contain a detailed description containing:
 \begin{itemize}
@@ -193,7 +193,7 @@ In addition a detailed log of your simulation is necessary. Please follow these 
 		\texttt{vectocmd.exe -t -vvvv -mod $<$jobfile.vecto$>$} \\
 		it is important to use  the option \texttt{-vvvv} and \texttt{-mod} which enable verbose logging and output of the mod-data file (\texttt{.vmod}. \\[0.5em]
 		If logging is enabled, the simulation runs are executed sequentially. If the error occurs only in some simulation runs (i.e., driving cycle and loading) you can cancel the other simulation runs by pressing \textit{Ctrl-c}. (Note: if verbose logging is enabled the simulation takes much longer)
-	\item File a new Jira issue with a detailed description (see above)
+	\item File a new Jira issue\footnote{\url{https://webgate.ec.europa.eu/CITnet/jira/secure/CreateIssue!default.jspa}} with a detailed description (see above)
 	\item Attach all data necessary to reproduce your results to the Jira issue, or if the data is confidential you can directly send it to the developers.
 	\begin{itemize}
 		\item All input files
