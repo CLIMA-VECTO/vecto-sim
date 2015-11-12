@@ -77,7 +77,7 @@ In case you find a bug or Vecto 3.0 does not behave as expected \textbf{please f
 
 \begin{itemize}
 	\item New distance-based simulation model
-	\item Simulation with variable steps. The simulation distance is adapted such that the respective time is about 0.5\,s (parameter \textsc{TargetTimeInterval})
+	\item Simulation with variable steps. The simulation distance is adapted such that the respective time is about 0.5\,s (parameter \textsc{TargetTimeInterval}). Certain simulation events are calculated using adapted time intervals (e.g. for traction interruption or to exactly meet the target speed vs. distance cycle).
 	\item Accuracy of simulated distance vs. driving cycle distance $< 1\,\mu\textrm{m}$
 	\item New component-based software architecture
 	\begin{itemize}
@@ -100,7 +100,7 @@ In case you find a bug or Vecto 3.0 does not behave as expected \textbf{please f
 	\item \textsc{DriverStrategy} as separate component with well-defined interface
 	\item \textsc{GearshiftStrategy} as separate component with well-defined interface
 	\item All computations are done in SI units; data-types reflect concrete SI units (i.e., kg, m, s, Nm, \ldots)
-	\item Run-time conformity check of SI units on all computations and SI conversions
+	\item Run-time conformity check of SI units on all computations and SI conversions. (might be relaxed for final relase version)
 	\item Traction interruption of arbitrary time possible (also $<$ 1\,s), accurate simulation of traction interruption time
 	\item New \textsc{Idle-Controller} to simulate engine speed during traction interruption periods
 	\item Intelligent search of operating point during coasting, braking, and in engine-overload situations, deviation from FLD $<$ 0.5\,W (parameter \textsc{EnginePowerSearchTolerance}).
@@ -111,9 +111,10 @@ In case you find a bug or Vecto 3.0 does not behave as expected \textbf{please f
 	\item Support for arbitrary order of columns in CSV files if the header is given as specified in the Manual. If the header is not recognized: fall-back to column-based parsing
 	\item more energy-efficient implementation of \textit{Overspeed}: vehicle acceleration only due to road's slope, engine is on drag-curve
 	\item Use of well-known logging framework (NLog) allows to configure logging output based on severity and namespace. Supports different logging targets
-	\item Implemented in C\#, requires .net Framework version 4.5
+	\item Implemented in C\#, requires .Net Framework version 4.5
 	\item Use of latest libraries for logging, parsing JSON files, and processing of PDF files
-	\item Software Tests: 258 successful unit- and integration tests
+	\item 270 unit- and integration-tests developed; 262 tests passed by Vecto release; 4 tests failed due to unreasonable vehicle configuration (torque outside loss-map range), 4 tests failed due to unreasonable driving cycles (15\,\% and 25\,\% uphill)
+	%Software Tests: 258 successful unit- and integration tests
 	\begin{itemize}
 		\item Code coverage: 84\,\% \\
 		The main parts of the code are covered by tests, parts with low coverage are mainly auto-generated equality methods and parsing of input data (cf.~\Cref{fig:Vecto301_TestCoverage})
